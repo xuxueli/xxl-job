@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context-3.0.xsd
+           http://www.springframework.org/schema/util 
+           http://www.springframework.org/schema/util/spring-util.xsd">
+
+	<!-- 全站静态化:Job Detail -->
+	<bean id="generateNetHtmlJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="triggerService" />
+		<property name="targetMethod" value="generateNetHtml" />
+		<property name="concurrent" value="false" />
+	</bean>
+	
+	<!-- 全站静态化:Cron Trigger (quartz-2.x的配置) -->
+	<bean id="generateNetHtmlTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="generateNetHtmlJobDetail" />
+		<property name="cronExpression" value="0 0/5 * * * ? *" />
+	</bean>
+	
+	<!-- 启动触发器的配置开始 -->
+	<bean name="startQuertz" lazy-init="false" autowire="no" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+				<ref bean="generateNetHtmlTrigger" />
+			</list>
+		</property>
+	</bean>
+
+</beans>
