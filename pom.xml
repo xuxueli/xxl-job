@@ -7,6 +7,8 @@
 	<packaging>pom</packaging>
 	<modules>
 		<module>xxl-job-core</module>
+		<module>xxl-job-demo</module>
+		<module>xxl-job-admin</module>
 	</modules>
 
 	<build>
