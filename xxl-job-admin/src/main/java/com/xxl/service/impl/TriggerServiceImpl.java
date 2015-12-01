@@ -1,5 +1,8 @@
 package com.xxl.service.impl;
 
+import java.util.Date;
+
+import org.apache.commons.lang.time.FastDateFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -19,12 +22,7 @@ public class TriggerServiceImpl implements ITriggerService {
 	 * 全站静态化
 	 */
 	public void generateNetHtml() {
-		long start = System.currentTimeMillis();
-		logger.info("全站静态化... start:{}", start);
-		
-			
-		long end = System.currentTimeMillis();
-		logger.info("全站静态化... end:{}, cost:{}", end, end - start);
+		logger.info("全站静态化 run at :{}", FastDateFormat.getInstance("yyyy-MM-dd HH:mm:ss").format(new Date()));
 	}
 	
 }
