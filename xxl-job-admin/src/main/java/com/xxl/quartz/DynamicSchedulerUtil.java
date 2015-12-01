@@ -47,6 +47,13 @@ public final class DynamicSchedulerUtil implements InitializingBean {
 			return null;
 		}
 	}
+	
+	public static void getJobDetail(String triggerKeyName){
+		// TriggerKey : name + group
+    	String group = Scheduler.DEFAULT_GROUP;
+        TriggerKey triggerKey = TriggerKey.triggerKey(triggerKeyName, group);
+        
+	}
 
 	// addJob 新增
     public static boolean addJob(String triggerKeyName, String cronExpression, Class<? extends Job> jobClass, Map<String, Object> jobData) throws SchedulerException {

@@ -128,12 +128,13 @@
 			<artifactId>quartz</artifactId>
 			<version>2.2.1</version>
 		</dependency>
-		<!-- xxl-mq-core -->
+		<!-- xxl-mq-core 
 		<dependency>
 			<groupId>com.xxl</groupId>
 			<artifactId>xxl-job-core</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
+		-->
 
 	</dependencies>
 
