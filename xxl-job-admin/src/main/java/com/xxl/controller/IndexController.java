@@ -1,8 +1,8 @@
 package com.xxl.controller;
 
-import java.util.Set;
+import java.util.List;
+import java.util.Map;
 
-import org.quartz.JobKey;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,8 +16,8 @@ public class IndexController {
 	
 	@RequestMapping("index")
 	public String index(Model model) {
-		Set<JobKey> list = DynamicSchedulerUtil.getJobKeys();
-		model.addAttribute("jobList", list);
+		List<Map<String, Object>> jobList = DynamicSchedulerUtil.getJobList();
+		model.addAttribute("jobList", jobList);
 		return "job/index";
 	}
 	

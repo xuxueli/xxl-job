@@ -29,7 +29,10 @@
 				<h4>在线任务：</h4>
 				<#if jobList?exists && jobList?size gt 0>
 				<#list jobList as item>
-				<p>${item}</p>
+				<p>${item['TriggerKey']}</p>
+				<p>${item['Trigger']}</p>
+				<p>${item['Trigger'].cronExpression}</p>
+				<p>${item['JobDetail']}</p>
 				</#list>
 				</#if>
             </div>
