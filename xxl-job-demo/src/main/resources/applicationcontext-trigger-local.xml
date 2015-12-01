@@ -22,7 +22,7 @@
 		<property name="cronExpression" value="0/3 * * * * ? *" />
 	</bean>
 	
-	<!-- 启动触发器的配置开始 -->
+	<!-- Job被加载到内存中，每个集群节点相互独立，都会执行该任务 -->
 	<bean name="startQuertz" lazy-init="false" autowire="no" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
 		<property name="triggers">
 			<list>
