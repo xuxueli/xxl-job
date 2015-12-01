@@ -2,12 +2,12 @@ package quartz;
 
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Set;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.quartz.JobKey;
 import org.quartz.SchedulerException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -21,7 +21,7 @@ public class JunitTest {
 	
 	@Test
     public void getJobKeys() throws SchedulerException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, InterruptedException {
-		Set<JobKey> list = DynamicSchedulerUtil.getJobKeys();
+		List<Map<String, Object>> list = DynamicSchedulerUtil.getJobList();
     	System.out.println(list);
     	TimeUnit.SECONDS.sleep(30);
     }

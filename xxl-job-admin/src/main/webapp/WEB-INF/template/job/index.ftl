@@ -33,7 +33,7 @@
 					<div class="box">
 			            <div class="box-header"><h3 class="box-title">任务列表</h3></div>
 			            <div class="box-body">
-			              	<table id="example1" class="table table-bordered table-striped">
+			              	<table id="job_list" class="table table-bordered table-striped">
 				                <thead>
 					            	<tr>
 					                	<th>任务ID</th>
@@ -82,11 +82,6 @@
 <!-- DataTables -->
 <script src="${request.contextPath}/static/adminlte/plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="${request.contextPath}/static/adminlte/plugins/datatables/dataTables.bootstrap.min.js"></script>
-<!-- page script -->
-<script>
-  $(function () {
-		$("#example1").DataTable();
-  });
-</script>
+<script src="${request.contextPath}/static/js/job.index.1.js"></script>
 </body>
 </html>
