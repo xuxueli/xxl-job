@@ -1,6 +1,9 @@
 package com.xxl.quartz;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -38,21 +41,30 @@ public final class DynamicSchedulerUtil implements InitializingBean {
     }
 	
 	// getJobKeys
-	public static Set<JobKey> getJobKeys(){
+	public static List<Map<String, Object>> getJobList(){
+		List<Map<String, Object>> jobList = new ArrayList<Map<String,Object>>();
+		
 		try {
 			String groupName = scheduler.getJobGroupNames().get(0);
-			return scheduler.getJobKeys(GroupMatcher.jobGroupEquals(groupName));
+			Set<JobKey> jobKeys = scheduler.getJobKeys(GroupMatcher.jobGroupEquals(groupName));
+			if (jobKeys!=null && jobKeys.size()>0) {
+				for (JobKey jobKey : jobKeys) {
+			        TriggerKey triggerKey = TriggerKey.triggerKey(jobKey.getName(), Scheduler.DEFAULT_GROUP);
+			        Trigger trigger = scheduler.getTrigger(triggerKey);
+			        JobDetail jobDetail = scheduler.getJobDetail(jobKey);
+			        Map<String, Object> jobMap = new HashMap<String, Object>();
+			        jobMap.put("TriggerKey", triggerKey);
+			        jobMap.put("Trigger", trigger);
+			        jobMap.put("JobDetail", jobDetail);
+			        jobList.add(jobMap);
+				}
+			}
+			
 		} catch (SchedulerException e) {
 			e.printStackTrace();
 			return null;
 		}
-	}
-	
-	public static void getJobDetail(String triggerKeyName){
-		// TriggerKey : name + group
-    	String group = Scheduler.DEFAULT_GROUP;
-        TriggerKey triggerKey = TriggerKey.triggerKey(triggerKeyName, group);
-        
+		return jobList;
 	}
 
 	// addJob 新增

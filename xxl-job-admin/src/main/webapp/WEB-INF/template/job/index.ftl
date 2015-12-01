@@ -4,6 +4,9 @@
   	<title>调度中心</title>
   	<#import "/common/common.macro.ftl" as netCommon>
 	<@netCommon.commonStyle />
+	<!-- DataTables -->
+  	<link rel="stylesheet" href="${request.contextPath}/static/adminlte/plugins/datatables/dataTables.bootstrap.css">
+  
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
@@ -22,22 +25,53 @@
 				<li class="active">使用教程</li>
 			</ol>
 		</section>
-
+		
 		<!-- Main content -->
-		<section class="content">
-            <div class="callout callout-info">
-				<h4>在线任务：</h4>
-				<#if jobList?exists && jobList?size gt 0>
-				<#list jobList as item>
-				<p>${item}</p>
-				</#list>
-				</#if>
-            </div>
-            
-		</section>
-		<!-- /.content -->
+	    <section class="content">
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="box">
+			            <div class="box-header"><h3 class="box-title">任务列表</h3></div>
+			            <div class="box-body">
+			              	<table id="example1" class="table table-bordered table-striped">
+				                <thead>
+					            	<tr>
+					                	<th>任务ID</th>
+					                  	<th>cron</th>
+					                  	<th>Job类路径</th>
+					                  	<th>简介</th>
+					                  	<th>操作</th>
+					                </tr>
+				                </thead>
+				                <tbody>
+			                		<#if jobList?exists && jobList?size gt 0>
+									<#list jobList as item>
+									<tr>
+					            		<td>${item['TriggerKey'].name}</td>
+					                  	<td>${item['Trigger'].cronExpression}</td>
+					                  	<td>${item['JobDetail'].jobClass}</td>
+					                  	<td>-</td>
+					                  	<td>X</td>
+					                </tr>
+									</#list>
+									</#if>
+				                </tbody>
+				                <tfoot>
+					            	<tr>
+					                  	<th>任务ID</th>
+					                  	<th>cron</th>
+					                  	<th>Job类路径</th>
+					                  	<th>简介</th>
+					                  	<th>操作</th>
+					                </tr>
+				                </tfoot>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+	    </section>
 	</div>
-	<!-- /.content-wrapper -->
 	
 	<!-- footer -->
 	<@netCommon.commonFooter />
@@ -45,5 +79,14 @@
 	<@netCommon.commonControl />
 </div>
 <@netCommon.commonScript />
+<!-- DataTables -->
+<script src="${request.contextPath}/static/adminlte/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="${request.contextPath}/static/adminlte/plugins/datatables/dataTables.bootstrap.min.js"></script>
+<!-- page script -->
+<script>
+  $(function () {
+		$("#example1").DataTable();
+  });
+</script>
 </body>
 </html>
