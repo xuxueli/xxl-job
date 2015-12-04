@@ -17,6 +17,7 @@ import org.quartz.JobKey;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.Trigger;
+import org.quartz.Trigger.TriggerState;
 import org.quartz.TriggerBuilder;
 import org.quartz.TriggerKey;
 import org.quartz.impl.matchers.GroupMatcher;
@@ -45,6 +46,9 @@ public final class DynamicSchedulerUtil implements InitializingBean {
 		List<Map<String, Object>> jobList = new ArrayList<Map<String,Object>>();
 		
 		try {
+			if (scheduler.getJobGroupNames()==null || scheduler.getJobGroupNames().size()==0) {
+				return null;
+			}
 			String groupName = scheduler.getJobGroupNames().get(0);
 			Set<JobKey> jobKeys = scheduler.getJobKeys(GroupMatcher.jobGroupEquals(groupName));
 			if (jobKeys!=null && jobKeys.size()>0) {
@@ -52,10 +56,12 @@ public final class DynamicSchedulerUtil implements InitializingBean {
 			        TriggerKey triggerKey = TriggerKey.triggerKey(jobKey.getName(), Scheduler.DEFAULT_GROUP);
 			        Trigger trigger = scheduler.getTrigger(triggerKey);
 			        JobDetail jobDetail = scheduler.getJobDetail(jobKey);
+			        TriggerState triggerState = scheduler.getTriggerState(triggerKey);
 			        Map<String, Object> jobMap = new HashMap<String, Object>();
 			        jobMap.put("TriggerKey", triggerKey);
 			        jobMap.put("Trigger", trigger);
 			        jobMap.put("JobDetail", jobDetail);
+			        jobMap.put("TriggerState", triggerState);
 			        jobList.add(jobMap);
 				}
 			}
@@ -67,6 +73,7 @@ public final class DynamicSchedulerUtil implements InitializingBean {
 		return jobList;
 	}
 
+	public static final String job_desc = "job_desc";
 	// addJob 新增
     public static boolean addJob(String triggerKeyName, String cronExpression, Class<? extends Job> jobClass, Map<String, Object> jobData) throws SchedulerException {
     	// TriggerKey : name + group
@@ -98,20 +105,6 @@ public final class DynamicSchedulerUtil implements InitializingBean {
         return true;
     }
     
-    // unscheduleJob 删除
-    public static boolean removeJob(String triggerKeyName) throws SchedulerException {
-    	// TriggerKey : name + group
-    	String group = Scheduler.DEFAULT_GROUP;
-        TriggerKey triggerKey = TriggerKey.triggerKey(triggerKeyName, group);
-        
-        boolean result = false;
-        if (scheduler.checkExists(triggerKey)) {
-            result = scheduler.unscheduleJob(triggerKey);
-        }
-        logger.info(">>>>>>>>>>> removeJob, triggerKey:{}, result [{}]", triggerKey, result);
-        return result;
-    }
-    
     // reschedule 重置cron
     public static boolean rescheduleJob(String triggerKeyName, String cronExpression) throws SchedulerException {
         // TriggerKey : name + group
@@ -130,6 +123,20 @@ public final class DynamicSchedulerUtil implements InitializingBean {
         } else {
         	logger.info(">>>>>>>>>>> resumeJob fail, triggerKey:{}, cronExpression:{}", triggerKey, cronExpression);
         }
+        return result;
+    }
+    
+    // unscheduleJob 删除
+    public static boolean removeJob(String triggerKeyName) throws SchedulerException {
+    	// TriggerKey : name + group
+    	String group = Scheduler.DEFAULT_GROUP;
+        TriggerKey triggerKey = TriggerKey.triggerKey(triggerKeyName, group);
+        
+        boolean result = false;
+        if (scheduler.checkExists(triggerKey)) {
+            result = scheduler.unscheduleJob(triggerKey);
+        }
+        logger.info(">>>>>>>>>>> removeJob, triggerKey:{}, result [{}]", triggerKey, result);
         return result;
     }
 
@@ -151,7 +158,7 @@ public final class DynamicSchedulerUtil implements InitializingBean {
     }
     
     // resume 重启 
-    public static boolean resumeTrigger(String triggerKeyName) throws SchedulerException {
+    public static boolean resumeJob(String triggerKeyName) throws SchedulerException {
         // TriggerKey : name + group
     	String group = Scheduler.DEFAULT_GROUP;
         TriggerKey triggerKey = TriggerKey.triggerKey(triggerKeyName, group);

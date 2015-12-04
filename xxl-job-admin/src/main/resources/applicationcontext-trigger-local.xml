@@ -9,16 +9,14 @@
            http://www.springframework.org/schema/util 
            http://www.springframework.org/schema/util/spring-util.xsd">
 
-	<!-- 全站静态化:Job Detail -->
-	<bean id="generateNetHtmlJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+	<bean id="beatJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 		<property name="targetObject" ref="triggerService" />
-		<property name="targetMethod" value="generateNetHtml" />
+		<property name="targetMethod" value="beat" />
 		<property name="concurrent" value="false" />
 	</bean>
 	
-	<!-- 全站静态化:Cron Trigger (quartz-2.x的配置) -->
-	<bean id="generateNetHtmlTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-		<property name="jobDetail" ref="generateNetHtmlJobDetail" />
+	<bean id="beatTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="beatJobDetail" />
 		<property name="cronExpression" value="0/10 * * * * ? *" />
 	</bean>
 	
@@ -26,7 +24,7 @@
 	<bean name="startQuertz" lazy-init="false" autowire="no" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
 		<property name="triggers">
 			<list>
-				<ref bean="generateNetHtmlTrigger" />
+				<ref bean="beatTrigger" />
 			</list>
 		</property>
 	</bean>

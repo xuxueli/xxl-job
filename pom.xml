@@ -6,8 +6,6 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<modules>
-		<module>xxl-job-core</module>
-		<module>xxl-job-demo</module>
 		<module>xxl-job-admin</module>
 	</modules>
 

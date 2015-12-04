@@ -1,6 +1,7 @@
 package quartz;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -27,9 +28,11 @@ public class JunitTest {
 	
     @Test
     public void addJob() throws SchedulerException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, InterruptedException {
-    	boolean ret = DynamicSchedulerUtil.addJob("demo-job02", "0/2 * * * * ?", TestDynamicJob.class, null);
+    	Map<String, Object> jobData = new HashMap<String, Object>();
+    	jobData.put(DynamicSchedulerUtil.job_desc, "测试调度03");
+    	boolean ret = DynamicSchedulerUtil.addJob("demo-job04", "0/4 * * * * ?", TestDynamicJob.class, jobData);
     	System.out.println(ret);
-    	TimeUnit.SECONDS.sleep(30);
+    	TimeUnit.SECONDS.sleep(3);
     }
     
     @Test
@@ -55,7 +58,7 @@ public class JunitTest {
     
     @Test
     public void resumeTrigger() throws SchedulerException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, InterruptedException {
-    	boolean ret = DynamicSchedulerUtil.resumeTrigger("demo-job02");
+    	boolean ret = DynamicSchedulerUtil.resumeJob("demo-job02");
     	System.out.println(ret);
     	TimeUnit.SECONDS.sleep(30);
     }
