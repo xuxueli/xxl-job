@@ -52,7 +52,7 @@ public class IndexController {
 			e1.printStackTrace();
 		}
 		if (clazz == null) {
-			return new ReturnT<String>(500, "请输入“任务Impl”");
+			return new ReturnT<String>(500, "“任务Impl”不合法");
 		}
 		if (!Job.class.isAssignableFrom(clazz)) {
 			return new ReturnT<String>(500, "“任务Impl”类必须继承Job接口");
