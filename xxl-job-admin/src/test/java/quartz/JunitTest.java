@@ -63,5 +63,4 @@ public class JunitTest {
     	TimeUnit.SECONDS.sleep(30);
     }
     
-    
 }
