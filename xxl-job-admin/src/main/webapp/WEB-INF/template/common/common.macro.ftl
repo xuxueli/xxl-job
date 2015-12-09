@@ -12,8 +12,6 @@
     <!-- Ionicons -->
     <!-- <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"> -->
     <link rel="stylesheet" href="${request.contextPath}/static/plugins/ionicons-2.0.1/css/ionicons.min.css">
-    <!-- jvectormap -->
-    <link rel="stylesheet" href="${request.contextPath}/static/adminlte/plugins/jvectormap/jquery-jvectormap-1.2.2.css">
     <!-- Theme style -->
     <link rel="stylesheet" href="${request.contextPath}/static/adminlte/dist/css/AdminLTE.min.css">
     <!-- AdminLTE Skins. Choose a skin from the css/skins folder instead of downloading all of them to reduce the load. -->
@@ -39,15 +37,8 @@
 	<script src="${request.contextPath}/static/adminlte/plugins/fastclick/fastclick.js"></script>
 	<!-- AdminLTE App -->
 	<script src="${request.contextPath}/static/adminlte/dist/js/app.min.js"></script>
-	<!-- Sparkline -->
-	<script src="${request.contextPath}/static/adminlte/plugins/sparkline/jquery.sparkline.min.js"></script>
-	<!-- jvectormap -->
-	<script src="${request.contextPath}/static/adminlte/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js"></script>
-	<script src="${request.contextPath}/static/adminlte/plugins/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
 	<!-- SlimScroll 1.3.0 -->
 	<script src="${request.contextPath}/static/adminlte/plugins/slimScroll/jquery.slimscroll.min.js"></script>
-	<!-- ChartJS 1.0.1 -->
-	<script src="${request.contextPath}/static/adminlte/plugins/chartjs/Chart.min.js"></script>
 
     <!-- scrollup -->
     <script src="${request.contextPath}/static/plugins/scrollup/jquery.scrollUp.min.js"></script>
