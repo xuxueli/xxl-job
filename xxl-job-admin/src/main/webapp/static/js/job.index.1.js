@@ -41,6 +41,9 @@ $(function() {
 		} else if ("job_del" == type) {
 			typeName = "删除";
 			url = base_url + "/job/remove";
+		} else if ("job_trigger" == type) {
+			typeName = "执行一次";
+			url = base_url + "/job/trigger";
 		} else {
 			return;
 		}
@@ -70,9 +73,16 @@ $(function() {
 		});
 	});
 	
+	// jquery.validate 自定义校验 “英文字母开头，只含有英文字母、数字和下划线”
+	jQuery.validator.addMethod("myValid01", function(value, element) {
+		var length = value.length;
+		var valid = /^[a-zA-Z][a-zA-Z0-9_]*$/;
+		return this.optional(element) || valid.test(value);
+	}, "只支持英文字母开头，只含有英文字母、数字和下划线");
+	
 	// 新增
 	$(".add").click(function(){
-		$('#addModal').modal('show');
+		$('#addModal').modal({backdrop: false, keyboard: false}).modal('show');
 	});
 	var addModalValidate = $("#addModal .form").validate({
 		errorElement : 'span',  
@@ -82,17 +92,22 @@ $(function() {
         	triggerKeyName : {  
         		required : true ,
                 minlength: 4,
-                maxlength: 100
+                maxlength: 100,
+                myValid01:true
             },  
             cronExpression : {  
             	required : true ,
                 maxlength: 100
             },  
-            jobClassName : {  
+            job_desc : {  
             	required : true ,
-                maxlength: 100
-            },  
-            jobDesc : {  
+                maxlength: 200
+            },
+            job_url : {
+            	required : true ,
+                maxlength: 200
+            },
+            handleName : {
             	required : true ,
                 maxlength: 200
             }
@@ -100,20 +115,24 @@ $(function() {
         messages : {  
         	triggerKeyName : {  
         		required :"请输入“任务Key”."  ,
-                minlength:"“任务Key”不应低于4位",
-                maxlength:"“任务Key”不应超过100位"
+                minlength:"“任务Key”长度不应低于4位",
+                maxlength:"“任务Key”长度不应超过100位"
             },  
             cronExpression : {
             	required :"请输入“任务Corn”."  ,
-                maxlength:"“任务Corn”不应超过100位"
+                maxlength:"“任务Corn”长度不应超过100位"
             },  
-            jobClassName : {
-            	required :"请输入“任务Impl”."  ,
-                maxlength:"“任务Impl”不应超过100位"
-            },  
-            jobDesc : {
+            job_desc : {
             	required :"请输入“任务描述”."  ,
-                maxlength:"“任务描述”不应超过200位"
+                maxlength:"“任务描述”长度不应超过200位"
+            },  
+            job_url : {
+            	required :"请输入“任务URL”."  ,
+                maxlength:"“任务URL”长度不应超过200位"
+            },
+            handleName : {
+            	required : "请输入“任务handler”."  ,
+                maxlength: "“任务handler”长度不应超过200位"
             }
         }, 
 		highlight : function(element) {  
@@ -127,32 +146,77 @@ $(function() {
             element.parent('div').append(error);  
         },
         submitHandler : function(form) {
-    		$.post(base_url + "/job/add", $("#addModal .form").serialize(), function(data, status) {
-    			if (data.code == "200") {
-    				ComAlert.show(1, "新增调度任务成功", function(){
-    					window.location.reload();
-    				});
-    			} else {
-    				if (data.msg) {
-    					ComAlert.show(2, data.msg);
-					} else {
-						ComAlert.show(2, "新增失败");
+        	
+        	var triggerKeyName = $('#addModal input[name="triggerKeyName"]').val();
+        	var cronExpression = $('#addModal input[name="cronExpression"]').val();
+        	var job_desc = $('#addModal input[name="job_desc"]').val();
+        	var job_url = $('#addModal input[name="job_url"]').val();
+        	var handleName = $('#addModal input[name="handleName"]').val();
+        	
+        	var paramStr = 'triggerKeyName=' + triggerKeyName + 
+        		'&cronExpression=' + cronExpression + 
+        		'&job_desc=' + job_desc +
+        		'&job_url=' + job_url +
+        		'&handleName=' + handleName;
+        	
+        	var ifFin = true;
+        	$('#addModal .newParam').each(function(){
+        		ifFin = false;
+        		var key = $(this).find('input[name="key"]').val();
+        		var value = $(this).find('input[name="value"]').val();
+        		if (!key) {
+        			ComAlert.show(2, "新增参数key不可为空");
+        			return;
+				} else {
+					if(!/^[a-zA-Z][a-zA-Z0-9_]*$/.test(key)){
+						ComAlert.show(2, "新增参数key不合法, 只支持英文字母开头，只含有英文字母、数字和下划线");
+	        			return;
 					}
-    			}
-    		});
+				}
+        		paramStr += "&" + key + "=" + value;
+        		ifFin = true;
+        	});
+        	
+        	if(ifFin){
+        		$.post(base_url + "/job/add", paramStr, function(data, status) {
+        			if (data.code == "200") {
+        				ComAlert.show(1, "新增调度任务成功", function(){
+        					window.location.reload();
+        				});
+        			} else {
+        				if (data.msg) {
+        					ComAlert.show(2, data.msg);
+        				} else {
+        					ComAlert.show(2, "新增失败");
+        				}
+        			}
+        		});
+        	}
 		}
 	});
 	$("#addModal").on('hide.bs.modal', function () {
 		$("#addModal .form")[0].reset()
 	});
 	
+	// 新增-添加参数
+	$("#addModal .addParam").on('click', function () {
+		var html = '<div class="form-group newParam">'+
+				'<label for="lastname" class="col-sm-2 control-label">参数&nbsp;<button class="btn btn-danger btn-xs removeParam" type="button">移除</button></label>'+
+				'<div class="col-sm-4"><input type="text" class="form-control" name="key" placeholder="请输入参数key[将会强转为String]" maxlength="200" /></div>'+
+				'<div class="col-sm-6"><input type="text" class="form-control" name="value" placeholder="请输入参数value[将会强转为String]" maxlength="200" /></div>'+
+			'</div>';
+		$(this).parents('.form-group').parent().append(html);
+		
+		$("#addModal .removeParam").on('click', function () {
+			$(this).parents('.form-group').remove();
+		});
+	});
+	
 	// 更新
 	$(".update").click(function(){
 		$("#updateModal .form input[name='triggerKeyName']").val($(this).parent('p').attr("name"));
 		$("#updateModal .form input[name='cronExpression']").val($(this).parent('p').attr("cronExpression"));
-		$("#updateModal .form input[name='jobClassName']").val($(this).parent('p').attr("jobClassName"));
-		$("#updateModal .form input[name='jobDesc']").val($(this).parent('p').attr("jobDesc"));
-		$('#updateModal').modal('show');
+		$('#updateModal').modal({backdrop: false, keyboard: false}).modal('show');
 	});
 	var updateModalValidate = $("#updateModal .form").validate({
 		errorElement : 'span',  
@@ -167,14 +231,6 @@ $(function() {
             cronExpression : {  
             	required : true ,
                 maxlength: 100
-            },  
-            jobClassName : {  
-            	required : true ,
-                maxlength: 100
-            },  
-            jobDesc : {  
-            	required : true ,
-                maxlength: 200
             }
         }, 
         messages : {  
@@ -186,14 +242,6 @@ $(function() {
             cronExpression : {
             	required :"请输入“任务Corn”."  ,
                 maxlength:"“任务Corn”不应超过100位"
-            },  
-            jobClassName : {
-            	required :"请输入“任务Impl”."  ,
-                maxlength:"“任务Impl”不应超过100位"
-            },  
-            jobDesc : {
-            	required :"请输入“任务描述”."  ,
-                maxlength:"“任务描述”不应超过200位"
             }
         }, 
 		highlight : function(element) {  

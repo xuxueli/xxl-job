@@ -4,11 +4,12 @@
 	<parent>
 		<groupId>com.xxl</groupId>
 		<artifactId>xxl-job</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>1.1.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>xxl-job-admin</artifactId>
+	<version>1.1.2-SNAPSHOT</version>
 	<packaging>war</packaging>
-	
+
 	<properties>
 		<spring.version>3.2.14.RELEASE</spring.version>
 	</properties>
@@ -128,13 +129,20 @@
 			<artifactId>quartz</artifactId>
 			<version>2.2.1</version>
 		</dependency>
-		<!-- xxl-mq-core 
+		
+		<!-- httpclient -->
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.3.6</version>
+		</dependency>
+		
+		<!-- xxl-job-client -->
 		<dependency>
 			<groupId>com.xxl</groupId>
-			<artifactId>xxl-job-core</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<artifactId>xxl-job-client</artifactId>
+			<version>1.1.2-SNAPSHOT</version>
 		</dependency>
-		-->
 
 	</dependencies>
 

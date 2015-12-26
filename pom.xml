@@ -3,10 +3,13 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.xxl</groupId>
 	<artifactId>xxl-job</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.1.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<modules>
 		<module>xxl-job-admin</module>
+		<module>xxl-job-client</module>
+		<module>xxl-job-client-demo</module>
+		<module>xxl-job-simple</module>
 	</modules>
 
 	<build>
