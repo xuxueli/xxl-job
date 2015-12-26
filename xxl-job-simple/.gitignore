@@ -1,1 +1,4 @@
 /target/
+/.settings/
+/bin/
+/.gitignore

@@ -29,7 +29,6 @@ import com.xxl.job.service.job.DemoJobBeanB;
  */
 @Controller
 public class IndexController {
-	
 	// local job bean list
 	public static Map<String, String> jobBeanMap = new HashMap<String, String>(); 
 	
