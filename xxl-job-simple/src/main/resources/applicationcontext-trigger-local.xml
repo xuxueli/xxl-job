@@ -20,11 +20,11 @@
 		<property name="cronExpression" value="0/10 * * * * ? *" />
 	</bean>
 	
-	<!-- Job被加载到内存中，每个集群节点相互独立，都会执行该任务 -->
-	<bean name="startQuertz" lazy-init="false" autowire="no" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+	<!-- 进程-调度器 -->
+	<bean name="jvmQuertz" lazy-init="false" autowire="no" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
 		<property name="triggers">
 			<list>
-				<ref bean="beatTrigger" />
+				<!-- <ref bean="beatTrigger" /> -->
 			</list>
 		</property>
 	</bean>
