@@ -15,7 +15,6 @@
 	<context:annotation-config />
 	<context:component-scan base-package="com.xxl.service.impl, com.xxl.dao.impl" />
 
-	<!-- c3p0：Main数据源  -->
 	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"  destroy-method="close">  
 	    <property name="driverClass" value="${c3p0.driverClass}" />  
 	    <property name="jdbcUrl" value="${c3p0.url}" />  
@@ -35,7 +34,7 @@
 		<property name="mapperLocations" value="classpath*:com/xxl/core/model/mapper/*.xml"/>
 	</bean>
     
-    <!-- Template在Junit测试的时候，必须使用scope="prototype"，原因未知 -->
+    <!-- scope must be "prototype" when junit -->
     <bean id="sqlSessionTemplate"  class="org.mybatis.spring.SqlSessionTemplate" scope="prototype">  
           <constructor-arg index="0" ref="sqlSessionFactory" />  
     </bean> 

@@ -9,7 +9,7 @@
 	<artifactId>xxl-job-simple</artifactId>
 	<version>1.1.2-SNAPSHOT</version>
 	<packaging>war</packaging>
-	
+
 	<properties>
 		<spring.version>3.2.14.RELEASE</spring.version>
 	</properties>
@@ -129,7 +129,14 @@
 			<artifactId>quartz</artifactId>
 			<version>2.2.1</version>
 		</dependency>
-
+		
+		<!-- httpclient -->
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.3.6</version>
+		</dependency>
+		
 	</dependencies>
 
 	<build>

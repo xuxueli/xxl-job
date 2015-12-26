@@ -19,10 +19,10 @@
 	<div class="content-wrapper">
 		<!-- Content Header (Page header) -->
 		<section class="content-header">
-			<h1>使用教程<small>调度管理平台</small></h1>
+			<h1>调度中心<small>调度管理</small></h1>
 			<ol class="breadcrumb">
 				<li><a><i class="fa fa-dashboard"></i>调度中心</a></li>
-				<li class="active">使用教程</li>
+				<li class="active">调度管理</li>
 			</ol>
 		</section>
 		
@@ -32,17 +32,17 @@
 				<div class="col-xs-12">
 					<div class="box">
 			            <div class="box-header">
-			            	<h3 class="box-title">任务列表</h3>
-			            	<button class="btn btn-primary btn-xs add" type="button">新增</button>
+			            	<h3 class="box-title">调度列表</h3>
+			            	<button class="btn btn-info btn-xs add" type="button">+新增任务</button>
 			            </div>
 			            <div class="box-body">
 			              	<table id="job_list" class="table table-bordered table-striped">
 				                <thead>
 					            	<tr>
-					                	<th>任务ID</th>
+					                	<th>调度key</th>
 					                  	<th>cron</th>
-					                  	<th>Job类路径</th>
-					                  	<th>简介</th>
+					                  	<!--<th>类路径</th>-->
+					                  	<th>参数</th>
 					                  	<th>状态</th>
 					                  	<th>操作</th>
 					                </tr>
@@ -53,11 +53,13 @@
 									<tr>
 					            		<td>${item['TriggerKey'].name}</td>
 					                  	<td>${item['Trigger'].cronExpression}</td>
-					                  	<td>${item['JobDetail'].jobClass}</td>
+					                  	<!--<td>${item['JobDetail'].jobClass}</td>-->
 					                  	<td>
-					                  		<#if item['JobDetail'].jobDataMap?exists>
-					                  			<#assign job_desc=item['JobDetail'].jobDataMap['job_desc'] />
-					                  			${job_desc}
+					                  		<#assign jobDataMap = item['JobDetail'].jobDataMap />
+					                  		<#if jobDataMap?exists && jobDataMap?keys?size gt 0>
+					                  			<#list jobDataMap?keys as key>
+					                  				${key}	=	${jobDataMap[key]}	<br>
+					                  			</#list>
 					                  		</#if>
 					                  	</td>
 					                  	<td state="${item['TriggerState']}" >
@@ -77,8 +79,9 @@
 												<#elseif item['TriggerState'] == 'PAUSED'>
 													<button class="btn btn-info btn-xs job_operate" type="job_resume" type="button">恢复</button>
 												</#if>
-												<button class="btn btn-info btn-xs update" type="button">修改</button>
+												<button class="btn btn-info btn-xs job_operate" type="job_trigger" type="button">执行一次</button>
 											  	<button class="btn btn-danger btn-xs job_operate" type="job_del" type="button">删除</button>
+												<button class="btn btn-info btn-xs update" type="button">更新corn</button>
 											</p>
 					                  	</td>
 					                </tr>
@@ -87,10 +90,10 @@
 				                </tbody>
 				                <tfoot>
 					            	<tr>
-					                  	<th>任务ID</th>
+					                  	<th>调度key</th>
 					                  	<th>cron</th>
-					                  	<th>Job类路径</th>
-					                  	<th>简介</th>
+					                  	<!--<th>类路径</th>-->
+					                  	<th>参数</th>
 					                  	<th>状态</th>
 					                  	<th>操作</th>
 					                </tr>
@@ -114,30 +117,39 @@
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
-            	<h4 class="modal-title" >新增调度任务</h4>
+            	<h4 class="modal-title" >新增调度信息</h4>
          	</div>
          	<div class="modal-body">
 				<form class="form-horizontal form" role="form" >
 					<div class="form-group">
-						<label for="firstname" class="col-sm-2 control-label">任务Key</label>
-						<div class="col-sm-10"><input type="text" class="form-control" name="triggerKeyName" placeholder="请输入任务Key" minlength="4" maxlength="100" ></div>
+						<label for="firstname" class="col-sm-3 control-label">任务Key</label>
+						<div class="col-sm-9"><input type="text" class="form-control" name="triggerKeyName" placeholder="请输入任务Key" minlength="4" maxlength="100" ></div>
 					</div>
 					<div class="form-group">
-						<label for="lastname" class="col-sm-2 control-label">任务Corn</label>
-						<div class="col-sm-10"><input type="text" class="form-control" name="cronExpression" placeholder="请输入任务Corn[允许修改]" maxlength="100" ></div>
+						<label for="lastname" class="col-sm-3 control-label">任务Corn</label>
+						<div class="col-sm-9"><input type="text" class="form-control" name="cronExpression" placeholder="请输入任务Corn[允许修改]" maxlength="100" ></div>
 					</div>
 					<div class="form-group">
-						<label for="lastname" class="col-sm-2 control-label">任务Impl</label>
-						<div class="col-sm-10"><input type="text" class="form-control" name="jobClassName" placeholder="请输入任务Impl[不支持修改]" maxlength="100" ></div>
+						<label for="lastname" class="col-sm-3 control-label">任务描述</label>
+						<div class="col-sm-9"><input type="text" class="form-control" name="job_desc" placeholder="请输入任务描述[不支持修改]" maxlength="200" ></div>
 					</div>
 					<div class="form-group">
-						<label for="lastname" class="col-sm-2 control-label">任务描述</label>
-						<div class="col-sm-10"><input type="text" class="form-control" name="jobDesc" placeholder="请输入任务描述[不支持修改]" maxlength="200" ></div>
+						<label for="lastname" class="col-sm-3 control-label">任务JobBean</label>
+						<div class="col-sm-9">
+							<select name="job_bean" >
+								<#if jobBeanMap?exists && jobBeanMap?size gt 0>
+									<#list jobBeanMap?keys as key>
+										<option value ="${key}" <#if key_index == 0>selected="selected"</#if> >${jobBeanMap[key]}[${key}]</option>
+									</#list>
+								</#if>
+							</select>
+						</div>
 					</div>
 					<div class="form-group">
-						<div class="col-sm-offset-2 col-sm-10">
+						<div class="col-sm-offset-3 col-sm-9">
 							<button type="submit" class="btn btn-primary"  >保存</button>
 							<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+							<button type="button" class="btn btn-info pull-right addParam">+ arg</button>
 						</div>
 					</div>
 				</form>
@@ -151,7 +163,7 @@
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
-            	<h4 class="modal-title" >更新配置</h4>
+            	<h4 class="modal-title" >更新corn</h4>
          	</div>
          	<div class="modal-body">
 				<form class="form-horizontal form" role="form" >
@@ -162,14 +174,6 @@
 					<div class="form-group">
 						<label for="lastname" class="col-sm-2 control-label">任务Corn</label>
 						<div class="col-sm-10"><input type="text" class="form-control" name="cronExpression" placeholder="请输入任务Corn" maxlength="100" ></div>
-					</div>
-					<div class="form-group">
-						<label for="lastname" class="col-sm-2 control-label">任务Impl</label>
-						<div class="col-sm-10"><input type="text" class="form-control" name="jobClassName" placeholder="请输入任务Impl" maxlength="100" readonly ></div>
-					</div>
-					<div class="form-group">
-						<label for="lastname" class="col-sm-2 control-label">任务描述</label>
-						<div class="col-sm-10"><input type="text" class="form-control" name="jobDesc" placeholder="请输入任务描述" maxlength="200" readonly ></div>
 					</div>
 					<div class="form-group">
 						<div class="col-sm-offset-2 col-sm-10">

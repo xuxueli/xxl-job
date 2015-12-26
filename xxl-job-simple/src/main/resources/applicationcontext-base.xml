@@ -10,18 +10,13 @@
            http://www.springframework.org/schema/util/spring-util.xsd">
 
 	<context:annotation-config />
-	<context:component-scan base-package="com.xxl.service.impl, com.xxl.dao.impl" />
+	<context:component-scan base-package="com.xxl.job.service" />
 
 	<bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
 		<property name="templateLoaderPath" value="/WEB-INF/template/" />
 		<property name="freemarkerSettings">
 			<bean class="org.springframework.beans.factory.config.PropertiesFactoryBean">
 				<property name="location" value="classpath:freemarker.properties" />
-			</bean>
-		</property>
-		<property name="freemarkerVariables">
-			<bean class="org.springframework.beans.factory.config.PropertiesFactoryBean">
-				<property name="location" value="classpath:freemarker.variables.properties" />
 			</bean>
 		</property>
 	</bean>
