@@ -27,3 +27,6 @@ git.osc地址：http://git.oschina.net/xuxueli0323/xxl-job
 		
 	Tips：如果您追求一个简单调度服务，这里也提供了一个简洁分支[xxl-job-simple]，它针对旧版调度框架做了细微完善；
 	
+# 其他说明
+	清楚僵尸任务：qrtz_cron_triggers、qrtz_triggers、qrtz_job_details顺序删除
+	

@@ -2,6 +2,7 @@ package com.xxl.job.client.handler;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -11,7 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.xxl.job.client.handler.IJobHandler.JobHandleStatus;
-import com.xxl.job.client.handler.IJobHandler.JobTriggerStatus;
+import com.xxl.job.client.util.HttpUtil;
+import com.xxl.job.client.util.JacksonUtil;
 
 
 /**
@@ -21,8 +23,11 @@ import com.xxl.job.client.handler.IJobHandler.JobTriggerStatus;
 public class HandlerRepository {
 	private static Logger logger = LoggerFactory.getLogger(HandlerRepository.class);
 	
-	public static final String triggerUuid = "triggerUuid";
+	public static final String job_desc = "job_desc";
+	public static final String job_url = "job_url";
 	public static final String handleName = "handleName";
+	public static final String triggerLogId = "triggerLogId";
+	public static final String triggerLogUrl = "triggerLogUrl";
 
 	// handler class map
 	private static ConcurrentHashMap<String, IJobHandler> handlerClassMap = new ConcurrentHashMap<String, IJobHandler>();
@@ -57,23 +62,36 @@ public class HandlerRepository {
 		public void run() {
 			while (isValid) {
 				LinkedBlockingQueue<Map<String, String>> handlerDateQueue = handlerDataQueueMap.get(_handleName);
-				Map<String, String> handlerDate = handlerDateQueue.poll();
-				if (handlerDate!=null) {
-					JobHandleStatus jobHandleStatus = null;
-					String jobHandleDetail = null;
+				Map<String, String> handlerData = handlerDateQueue.poll();
+				if (handlerData!=null) {
+					// handle job
+					JobHandleStatus _status = JobHandleStatus.FAIL;
+					String _msg = null;
 					try {
 						IJobHandler handler = handlerClassMap.get(_handleName);
-						jobHandleStatus = handler.handle(handlerDate);
+						_status = handler.handle(handlerData);
 					} catch (Exception e) {
 						e.printStackTrace();
-						jobHandleStatus = JobHandleStatus.FAIL;
+						_status = JobHandleStatus.FAIL;
 						StringWriter out = new StringWriter();
 						e.printStackTrace(new PrintWriter(out));
-						jobHandleDetail = out.toString();
+						_msg = out.toString();
 					}
-					String _triggerUuid = handlerDate.get(triggerUuid);
-					logger.info("<<<<<<<<<<< xxl-job thread handle, _triggerUuid:{}, _handleName:{}, jobHandleStatus:{}, jobHandleDetail:{}, thread:{}", 
-							new Object[]{_triggerUuid, _handleName, jobHandleStatus, jobHandleDetail, this});
+
+					// callback handler info
+					String callback_response[] = null;
+					try {
+						String _triggerLogUrl = handlerData.get(HandlerRepository.triggerLogUrl);
+						HashMap<String, String> params = new HashMap<String, String>();
+						params.put(HandlerRepository.triggerLogId, handlerData.get(HandlerRepository.triggerLogId));
+						params.put(HttpUtil.status, _status.name());
+						params.put(HttpUtil.msg, _msg);
+						callback_response = HttpUtil.post(_triggerLogUrl, params);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					logger.info("<<<<<<<<<<< xxl-job thread handle, handlerData:{}, callback_status:{}, callback_msg:{}, callback_response:{}, thread:{}", 
+							new Object[]{handlerData, _status, _msg, callback_response, this});
 				} else {
 					try {
 						TimeUnit.SECONDS.sleep(3);
@@ -86,51 +104,56 @@ public class HandlerRepository {
 	}
 	
 	// handler push to queue
-	public static String pushHandleQueue(String triggerUuid, String handleName, Map<String, String> _param) {
-		JobTriggerStatus _triggerStatus = JobTriggerStatus.FAIL;
-		String _triggerDetailLog = null;
+	public static String pushHandleQueue(Map<String, String> _param) {
 		
+		// resuolt
+		String _status = HttpUtil.FAIL;
+		String _msg = "";
+		// push data to queue
+		String _handleName = _param.get(HandlerRepository.handleName);
+		int _triggerLogId = Integer.valueOf(_param.get(HandlerRepository.triggerLogId));
 		try {
-			if (handleName!=null && handleName.trim().length()>0) {
-				IJobHandler handler = handlerClassMap.get(handleName);
+			if (_handleName!=null && _handleName.trim().length()>0) {
+				IJobHandler handler = handlerClassMap.get(_handleName);
 				if (handler != null) {
 					// push data to handler queue
-					LinkedBlockingQueue<Map<String, String>> handlerDateQueue = handlerDataQueueMap.get(handleName);
+					LinkedBlockingQueue<Map<String, String>> handlerDateQueue = handlerDataQueueMap.get(_handleName);
 					if (handlerDateQueue == null) {
 						handlerDateQueue = new LinkedBlockingQueue<Map<String, String>>();
-						handlerDataQueueMap.put(handleName, handlerDateQueue);
-						logger.info(">>>>>>>>>>> xxl-job handler lazy fresh handlerDateQueue, handleName:{}, handler:{}, handlerDateQueue:{}", 
-								new Object[]{handleName, handler, handlerDateQueue});
+						handlerDataQueueMap.put(_handleName, handlerDateQueue);
+						logger.info(">>>>>>>>>>> xxl-job handler lazy fresh handlerDateQueue, _handleName:{}, handler:{}, handlerDateQueue:{}", 
+								new Object[]{_handleName, handler, handlerDateQueue});
 					}
-					handlerDateQueue.offer(_param);
 					// check handler thread
-					HandlerThread handlerThreadOld = handlerTreadMap.get(handleName);
+					HandlerThread handlerThreadOld = handlerTreadMap.get(_handleName);
 					if (!handlerThreadOld.isAlive()) {
 						handlerThreadOld.stopThread();
-						HandlerThread handlerThread = new HandlerThread(handleName);
+						HandlerThread handlerThread = new HandlerThread(_handleName);
 						handlerThread.start();
-						handlerTreadMap.put(handleName, handlerThread);
-						logger.info(">>>>>>>>>>> xxl-job handler lazy fresh thread, handleName:{}, handler:{}, handlerThread:{}", 
-								new Object[]{handleName, handler, handlerThread});
+						handlerTreadMap.put(_handleName, handlerThread);
+						logger.info(">>>>>>>>>>> xxl-job handler lazy fresh thread, _handleName:{}, handler:{}, handlerThread:{}", 
+								new Object[]{_handleName, handler, handlerThread});
 					}
-					_triggerStatus = JobTriggerStatus.SUCCESS;
+					// push to queue
+					handlerDateQueue.offer(_param);
+					_status = HttpUtil.SUCCESS;
 				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			_triggerStatus = JobTriggerStatus.FAIL;
 			StringWriter out = new StringWriter();
 			e.printStackTrace(new PrintWriter(out));
-			_triggerDetailLog = out.toString();
+			_status = HttpUtil.FAIL;
+			_msg = out.toString();
 		}
-		logger.info(">>>>>>>>>>> xxl-job pushHandleQueue, triggerUuid:{}, handleName, _triggerStatus:{}, _triggerDetailLog", 
-				new Object[]{triggerUuid, handleName, _triggerStatus, _triggerDetailLog});
+		logger.info(">>>>>>>>>>> xxl-job pushHandleQueue, _handleName:{}, _triggerLogId:{}, _param:{}, _status:{}, _msg:{}", 
+				new Object[]{_handleName, _triggerLogId, _param, _status, _msg});
 		
-		String responseBody = _triggerStatus.name();
-		if (JobTriggerStatus.SUCCESS != _triggerStatus) {
-			responseBody += "#" + _triggerDetailLog;
-		}
-		return responseBody;
+		HashMap<String, String> triggerData = new HashMap<String, String>();
+		triggerData.put(HttpUtil.status, _status);
+		triggerData.put(HttpUtil.msg, _msg);
+		return JacksonUtil.writeValueAsString(triggerData);
+		
 		/**
 		 * trigger-log : 
 		 * 		trigger side : store trigger-info >> trigger request >> update trigger-response-status

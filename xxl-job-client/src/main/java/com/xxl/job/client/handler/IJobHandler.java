@@ -32,15 +32,4 @@ public abstract class IJobHandler extends HandlerRepository{
 		NOT_FOUND;
 	}
 	
-	public enum JobTriggerStatus{
-		/**
-		 * trigger success
-		 */
-		SUCCESS, 
-		/**
-		 * trigger fail
-		 */
-		FAIL;
-	}
-	
 }

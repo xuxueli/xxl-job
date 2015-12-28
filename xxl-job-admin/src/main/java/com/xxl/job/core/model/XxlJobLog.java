@@ -8,28 +8,52 @@ import java.util.Date;
  */
 public class XxlJobLog {
 	
-	private String jobTriggerUuid;
-	private String jobHandleName;
+	private int id;
+	// job info
+	private String jobName;
+	private String jobCron;
+	private String jobClass;
+	private String jobData;
+	
 	// trigger info
 	private Date triggerTime;
 	private String triggerStatus;
-	private String triggerDetailLog;
+	private String triggerMsg;
+	
 	// handle info
 	private Date handleTime;
 	private String handleStatus;
-	private String handleDetailLog;
+	private String handleMsg;
 	
-	public String getJobTriggerUuid() {
-		return jobTriggerUuid;
+	public int getId() {
+		return id;
 	}
-	public void setJobTriggerUuid(String jobTriggerUuid) {
-		this.jobTriggerUuid = jobTriggerUuid;
+	public void setId(int id) {
+		this.id = id;
 	}
-	public String getJobHandleName() {
-		return jobHandleName;
+	public String getJobName() {
+		return jobName;
 	}
-	public void setJobHandleName(String jobHandleName) {
-		this.jobHandleName = jobHandleName;
+	public void setJobName(String jobName) {
+		this.jobName = jobName;
+	}
+	public String getJobCron() {
+		return jobCron;
+	}
+	public void setJobCron(String jobCron) {
+		this.jobCron = jobCron;
+	}
+	public String getJobClass() {
+		return jobClass;
+	}
+	public void setJobClass(String jobClass) {
+		this.jobClass = jobClass;
+	}
+	public String getJobData() {
+		return jobData;
+	}
+	public void setJobData(String jobData) {
+		this.jobData = jobData;
 	}
 	public Date getTriggerTime() {
 		return triggerTime;
@@ -43,11 +67,11 @@ public class XxlJobLog {
 	public void setTriggerStatus(String triggerStatus) {
 		this.triggerStatus = triggerStatus;
 	}
-	public String getTriggerDetailLog() {
-		return triggerDetailLog;
+	public String getTriggerMsg() {
+		return triggerMsg;
 	}
-	public void setTriggerDetailLog(String triggerDetailLog) {
-		this.triggerDetailLog = triggerDetailLog;
+	public void setTriggerMsg(String triggerMsg) {
+		this.triggerMsg = triggerMsg;
 	}
 	public Date getHandleTime() {
 		return handleTime;
@@ -61,19 +85,19 @@ public class XxlJobLog {
 	public void setHandleStatus(String handleStatus) {
 		this.handleStatus = handleStatus;
 	}
-	public String getHandleDetailLog() {
-		return handleDetailLog;
+	public String getHandleMsg() {
+		return handleMsg;
 	}
-	public void setHandleDetailLog(String handleDetailLog) {
-		this.handleDetailLog = handleDetailLog;
+	public void setHandleMsg(String handleMsg) {
+		this.handleMsg = handleMsg;
 	}
 	
 	@Override
 	public String toString() {
-		return "XxlJobLog [jobTriggerUuid=" + jobTriggerUuid + ", jobHandleName=" + jobHandleName
-				+ ", triggerTime=" + triggerTime + ", triggerStatus=" + triggerStatus + ", triggerDetailLog="
-				+ triggerDetailLog + ", handleTime=" + handleTime + ", handleStatus=" + handleStatus
-				+ ", handleDetailLog=" + handleDetailLog + "]";
+		return "XxlJobLog [id=" + id + ", jobName=" + jobName + ", jobCron=" + jobCron + ", jobClass=" + jobClass
+				+ ", jobData=" + jobData + ", triggerTime=" + triggerTime + ", triggerStatus=" + triggerStatus
+				+ ", triggerMsg=" + triggerMsg + ", handleTime=" + handleTime + ", handleStatus=" + handleStatus
+				+ ", handleMsg=" + handleMsg + "]";
 	}
 	
 }

@@ -43,10 +43,8 @@ public class XxlJobServlet extends HttpServlet {
 				}
 			}
 		}
-		String _triggerUuid = _param.get(HandlerRepository.triggerUuid);
-		String _handleName = _param.get(HandlerRepository.handleName);
 		
-		String resp = HandlerRepository.pushHandleQueue(_triggerUuid, _handleName, _param);
+		String resp = HandlerRepository.pushHandleQueue(_param);
 		response.getWriter().append(resp);
 		return;
 	}

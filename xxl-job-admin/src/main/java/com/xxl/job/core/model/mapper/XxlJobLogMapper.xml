@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="XxlJobLogMapper">
+	
+	<resultMap id="XxlJobLog" type="com.xxl.job.core.model.XxlJobLog" >
+		<result column="id" property="id" />
+	
+	    <result column="job_name" property="jobName" />
+	    <result column="job_cron" property="jobCron" />
+	    <result column="job_class" property="jobClass" />
+	    <result column="job_data" property="jobData" />
+	    
+	    <result column="trigger_time" property="triggerTime" />
+	    <result column="trigger_status" property="triggerStatus" />
+	    <result column="trigger_msg" property="triggerMsg" />
+	    
+	    <result column="handle_time" property="handleTime" />
+	    <result column="handle_status" property="handleStatus" />
+	    <result column="handle_msg" property="handleMsg" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		t.id,
+		t.job_name,
+		t.job_cron,
+		t.job_class,
+		t.job_data,
+		t.trigger_time,
+		t.trigger_status,
+		t.trigger_msg,
+		t.handle_time,
+		t.handle_status,
+		t.handle_msg
+	</sql>
+	
+	<insert id="save" parameterType="com.xxl.job.core.model.XxlJobLog" useGeneratedKeys="true" keyProperty="id" >
+		INSERT INTO `qrtz_trigger_log` (
+			`job_name`, 
+			`job_cron`, 
+			`job_class`, 
+			`job_data`
+		) VALUES (
+			#{jobName}, 
+			#{jobCron}, 
+			#{jobClass}, 
+			#{jobData}
+		);
+		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id"> 
+			SELECT LAST_INSERT_ID() 
+		</selectKey> 
+	</insert>
+	
+	<select id="load" parameterType="java.lang.Integer" resultMap="XxlJobLog">
+		SELECT <include refid="Base_Column_List" />
+		FROM qrtz_trigger_log AS t
+		WHERE t.id = #{id}
+	</select>
+	
+	<update id="updateTriggerInfo">
+		UPDATE `qrtz_trigger_log` 
+		SET 
+			`trigger_time`= #{triggerTime}, 
+			`trigger_status`= #{triggerStatus}, 
+			`trigger_msg`= #{triggerMsg}
+		WHERE `id`= #{id}
+	</update>
+	
+	<update id="updateHandleInfo">
+		UPDATE `qrtz_trigger_log` 
+		SET 
+			`handle_time`= #{handleTime}, 
+			`handle_status`= #{handleStatus}, 
+			`handle_msg`= #{handleMsg} 
+		WHERE `id`= #{id}
+	</update>
+	
+	<select id="pageList" parameterType="java.util.HashMap" resultMap="XxlJobLog">
+		SELECT <include refid="Base_Column_List" />
+		FROM qrtz_trigger_log AS t
+		<if test="jobName != null and jobName!=''">
+			WHERE t.job_name = #{jobName}
+		</if>
+		LIMIT #{offset}, #{pagesize}
+	</select>
+	
+	<select id="pageListCount" parameterType="java.util.HashMap" resultType="int">
+		SELECT count(1)
+		FROM qrtz_trigger_log AS t
+		<if test="jobName != null and jobName!=''">
+			WHERE t.job_name = #{jobName}
+		</if>
+	</select>
+	
+</mapper>

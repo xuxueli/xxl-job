@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.Resource;
+
 import org.quartz.CronScheduleBuilder;
 import org.quartz.CronTrigger;
 import org.quartz.Job;
@@ -26,12 +28,24 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 
+import com.xxl.job.dao.IXxlJobLogDao;
+
 /**
  * base quartz scheduler util
  * @author xuxueli 2015-12-19 16:13:53
  */
 public final class DynamicSchedulerUtil implements InitializingBean {
     private static final Logger logger = LoggerFactory.getLogger(DynamicSchedulerUtil.class);
+    
+    // xxlJobLogDao
+    public static IXxlJobLogDao xxlJobLogDao;
+    @Resource
+    public void setXxlJobLogDao(IXxlJobLogDao xxlJobLogDao) {
+		DynamicSchedulerUtil.xxlJobLogDao = xxlJobLogDao;
+	}
+    public static IXxlJobLogDao getXxlJobLogDao() {
+		return xxlJobLogDao;
+	}
     
     // Scheduler
     private static Scheduler scheduler;
@@ -77,8 +91,6 @@ public final class DynamicSchedulerUtil implements InitializingBean {
 		return jobList;
 	}
 
-	public static final String job_desc = "job_desc";
-	public static final String job_url = "job_url";
 	// addJob 新增
     public static boolean addJob(String triggerKeyName, String cronExpression, Class<? extends Job> jobClass, Map<String, Object> jobData) throws SchedulerException {
     	// TriggerKey : name + group

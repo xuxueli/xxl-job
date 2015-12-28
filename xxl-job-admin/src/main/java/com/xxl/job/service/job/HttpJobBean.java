@@ -1,26 +1,11 @@
 package com.xxl.job.service.job;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.UUID;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.util.EntityUtils;
+import org.apache.commons.lang.StringUtils;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.slf4j.Logger;
@@ -28,9 +13,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
 import com.xxl.job.client.handler.HandlerRepository;
-import com.xxl.job.client.handler.IJobHandler.JobTriggerStatus;
+import com.xxl.job.client.util.HttpUtil;
+import com.xxl.job.client.util.JacksonUtil;
 import com.xxl.job.core.model.XxlJobLog;
 import com.xxl.job.core.util.DynamicSchedulerUtil;
+import com.xxl.job.core.util.PropertiesUtil;
 
 /**
  * http job bean
@@ -43,11 +30,9 @@ public class HttpJobBean extends QuartzJobBean {
 	protected void executeInternal(JobExecutionContext context)
 			throws JobExecutionException {
 		
-		String triggerKey = context.getTrigger().getKey().getName();
-		String triggerGroup = context.getTrigger().getKey().getGroup();
-		Map<String, Object> jobDataMap = context.getMergedJobDataMap().getWrappedMap();
-		
+		String triggerKey = context.getTrigger().getJobKey().getName();
 		// jobDataMap 2 params
+		Map<String, Object> jobDataMap = context.getMergedJobDataMap().getWrappedMap();
 		Map<String, String> params = new HashMap<String, String>();
 		if (jobDataMap!=null && jobDataMap.size()>0) {
 			for (Entry<String, Object> item : jobDataMap.entrySet()) {
@@ -55,83 +40,41 @@ public class HttpJobBean extends QuartzJobBean {
 			}
 		}
 		
-		String job_url = params.get(DynamicSchedulerUtil.job_url);
-		triggerPost(job_url, params);
-		
-		logger.info(">>>>>>>>>>> xxl-job run :jobId:{}, group:{}, jobDataMap:{}", 
-				new Object[]{triggerKey, triggerGroup, jobDataMap});
-    }
-	
-	public static void triggerPost(String reqURL, Map<String, String> params){
 		// save log
 		XxlJobLog jobLog = new XxlJobLog();
-		jobLog.setJobTriggerUuid(UUID.randomUUID().toString());
-		jobLog.setJobHandleName(params.get(HandlerRepository.handleName));
+		jobLog.setJobName(triggerKey);
+		jobLog.setJobCron(null);
+		jobLog.setJobClass(HttpJobBean.class.getName());
+		jobLog.setJobData(JacksonUtil.writeValueAsString(params));
+		DynamicSchedulerUtil.xxlJobLogDao.save(jobLog);
+		logger.info(">>>>>>>>>>> xxl-job trigger start, jobLog:{}", jobLog);
+		
+		// trigger request
+		params.put(HandlerRepository.triggerLogId, String.valueOf(jobLog.getId()));
+		params.put(HandlerRepository.triggerLogUrl, PropertiesUtil.getString(HandlerRepository.triggerLogUrl));
+		String[] postResp = HttpUtil.post(params.get(HandlerRepository.job_url), params);
+		logger.info(">>>>>>>>>>> xxl-job trigger http response, jobLog.id:{}, jobLog:{}", jobLog.getId(), jobLog);
+		
+		// parse trigger response
+		String responseMsg = postResp[0];
+		String exceptionMsg = postResp[1];
+		
 		jobLog.setTriggerTime(new Date());
-		logger.info(">>>>>>>>>>> xxl-job trigger start :jobLog:{}", jobLog);
-		
-		// post
-		String responseContent = null;
-		HttpPost httpPost = new HttpPost(reqURL);
-		CloseableHttpClient httpClient = HttpClients.createDefault();
-		try{
-			if (params != null && !params.isEmpty()) {
-				List<NameValuePair> formParams = new ArrayList<NameValuePair>();
-				for(Map.Entry<String,String> entry : params.entrySet()){
-					formParams.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
-				}
-				httpPost.setEntity(new UrlEncodedFormEntity(formParams, "UTF-8"));
+		jobLog.setTriggerStatus(HttpUtil.FAIL);
+		jobLog.setTriggerMsg(exceptionMsg);
+		if (StringUtils.isNotBlank(responseMsg)) {
+			@SuppressWarnings("unchecked")
+			Map<String, String> responseMap = JacksonUtil.readValue(responseMsg, Map.class);
+			if (responseMap!=null && StringUtils.isNotBlank(responseMap.get(HttpUtil.status))) {
+				jobLog.setTriggerStatus(responseMap.get(HttpUtil.status));
+				jobLog.setTriggerMsg(responseMap.get(HttpUtil.msg));
 			}
-			RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(5000).setConnectTimeout(5000).build();
-			httpPost.setConfig(requestConfig);
-			
-			HttpResponse response = httpClient.execute(httpPost);
-			HttpEntity entity = response.getEntity();
-			if (null != entity) {
-				responseContent = EntityUtils.toString(entity, "UTF-8");
-				EntityUtils.consume(entity);
-			}
-			logger.info(">>>>>>>>>>> xxl-job trigger ing :jobLog:{}, response:{}, responseContent:{}", jobLog, response, responseContent);
-		} catch (Exception e) {
-			e.printStackTrace();
-			
-			StringWriter out = new StringWriter();
-			e.printStackTrace(new PrintWriter(out));
-			responseContent = out.toString();
-		} finally{
-			httpPost.releaseConnection();
-			try {
-				httpClient.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			
-			// update trigger status
-			if (responseContent!=null && responseContent.equals(JobTriggerStatus.SUCCESS.name())) {
-				jobLog.setTriggerStatus(JobTriggerStatus.SUCCESS.name());
-			} else {
-				jobLog.setTriggerStatus(JobTriggerStatus.FAIL.name());
-			}
-			jobLog.setTriggerDetailLog(responseContent);
-			if (jobLog.getTriggerDetailLog()!=null && jobLog.getTriggerDetailLog().length()>1000) {
-				jobLog.setTriggerDetailLog(jobLog.getTriggerDetailLog().substring(0, 1000));
-			}
-			
-			logger.info(">>>>>>>>>>> xxl-job trigger end :jobLog:{}", jobLog);
 		}
 		
-	}
+		// update trigger info
+		DynamicSchedulerUtil.xxlJobLogDao.updateTriggerInfo(jobLog);
+		logger.info(">>>>>>>>>>> xxl-job trigger end, jobLog.id:{}, jobLog:{}", jobLog.getId(), jobLog);
+		
+    }
 	
-	public static void main(String[] args) {
-		String url = "http://localhost:8080/xxl-job-client-demo/xxlJobServlet";
-		
-		for (int i = 0; i < 3; i++) {
-			Map<String, String> params = new HashMap<String, String>();
-			params.put(HandlerRepository.handleName, "com.xxl.job.service.handler.DemoJobHandler");
-			params.put(HandlerRepository.triggerUuid, i+"");
-			params.put("key", i+"");
-			
-			triggerPost(url, params);
-		}
-	}
 }
