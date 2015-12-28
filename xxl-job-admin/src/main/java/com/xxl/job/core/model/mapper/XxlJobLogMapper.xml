@@ -81,6 +81,7 @@
 		<if test="jobName != null and jobName!=''">
 			WHERE t.job_name = #{jobName}
 		</if>
+		ORDER BY id DESC
 		LIMIT #{offset}, #{pagesize}
 	</select>
 	

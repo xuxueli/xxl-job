@@ -19,10 +19,10 @@
 	<div class="content-wrapper">
 		<!-- Content Header (Page header) -->
 		<section class="content-header">
-			<h1>调度中心<small>调度管理</small></h1>
+			<h1>调度管理<small>调度中心</small></h1>
 			<ol class="breadcrumb">
-				<li><a><i class="fa fa-dashboard"></i>调度中心</a></li>
-				<li class="active">调度管理</li>
+				<li><a><i class="fa fa-dashboard"></i>调度管理</a></li>
+				<li class="active">调度中心</li>
 			</ol>
 		</section>
 		

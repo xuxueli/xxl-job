@@ -2,6 +2,7 @@ package com.xxl.job.controller;
 
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -13,6 +14,7 @@ import org.quartz.CronExpression;
 import org.quartz.Job;
 import org.quartz.SchedulerException;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -28,6 +30,13 @@ import com.xxl.job.service.job.HttpJobBean;
 @Controller
 @RequestMapping("/job")
 public class JobController {
+	
+	@RequestMapping
+	public String index(Model model) {
+		List<Map<String, Object>> jobList = DynamicSchedulerUtil.getJobList();
+		model.addAttribute("jobList", jobList);
+		return "job/index";
+	}
 	
 	@RequestMapping("/add")
 	@ResponseBody
