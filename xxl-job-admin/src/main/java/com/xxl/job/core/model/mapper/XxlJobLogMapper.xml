@@ -78,9 +78,17 @@
 	<select id="pageList" parameterType="java.util.HashMap" resultMap="XxlJobLog">
 		SELECT <include refid="Base_Column_List" />
 		FROM qrtz_trigger_log AS t
-		<if test="jobName != null and jobName!=''">
-			WHERE t.job_name = #{jobName}
-		</if>
+		<trim prefix="WHERE" prefixOverrides="AND | OR" >
+			<if test="jobName != null and jobName!=''">
+				AND t.job_name = #{jobName}
+			</if>
+			<if test="triggerTimeStart != null">
+				AND t.trigger_time <![CDATA[ > ]]> #{triggerTimeStart}
+			</if>
+			<if test="triggerTimeEnd != null">
+				AND t.trigger_time <![CDATA[ < ]]> #{triggerTimeEnd}
+			</if>
+		</trim>
 		ORDER BY id DESC
 		LIMIT #{offset}, #{pagesize}
 	</select>
@@ -88,9 +96,17 @@
 	<select id="pageListCount" parameterType="java.util.HashMap" resultType="int">
 		SELECT count(1)
 		FROM qrtz_trigger_log AS t
-		<if test="jobName != null and jobName!=''">
-			WHERE t.job_name = #{jobName}
-		</if>
+		<trim prefix="WHERE" prefixOverrides="AND | OR" >
+			<if test="jobName != null and jobName!=''">
+				AND t.job_name = #{jobName}
+			</if>
+			<if test="triggerTimeStart != null">
+				AND t.trigger_time <![CDATA[ > ]]> #{triggerTimeStart}
+			</if>
+			<if test="triggerTimeEnd != null">
+				AND t.trigger_time <![CDATA[ < ]]> #{triggerTimeEnd}
+			</if>
+		</trim>
 	</select>
 	
 </mapper>

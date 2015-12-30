@@ -6,14 +6,8 @@
 	<@netCommon.commonStyle />
 	<!-- DataTables -->
   	<link rel="stylesheet" href="${request.contextPath}/static/adminlte/plugins/datatables/dataTables.bootstrap.css">
-  
-	<!-- DataTables CSS -->
-	<link rel="stylesheet" type="text/css" href="http://cdn.datatables.net/1.10.7/css/jquery.dataTables.css">
-	<!-- jQuery -->
-	<script type="text/javascript" charset="utf8" src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
-	<!-- DataTables -->
-	<script type="text/javascript" charset="utf8" src="http://cdn.datatables.net/1.10.7/js/jquery.dataTables.js"></script>
-  
+  	<!-- daterangepicker -->
+  	<link rel="stylesheet" href="${request.contextPath}/static/adminlte/plugins/daterangepicker/daterangepicker-bs3.css">
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
@@ -35,35 +29,51 @@
 		
 		<!-- Main content -->
 	    <section class="content">
+	    	<div class="row">
+	            <div class="col-xs-5">
+              		<div class="input-group">
+                		<span class="input-group-addon">
+	                  		调度时间
+	                	</span>
+	                	<input type="text" class="form-control" id="filterTime" readonly 
+	                		value="<#if triggerTimeStart?exists && triggerTimeEnd?exists >${triggerTimeStart?if_exists?string('yyyy-MM-dd HH:mm:ss')} - ${triggerTimeEnd?if_exists?string('yyyy-MM-dd HH:mm:ss')}</#if>"  >
+	              	</div>
+	            </div>
+	            <div class="col-xs-5">
+	              	<div class="input-group">
+	                	<span class="input-group-addon">
+	                  		jobName
+	                	</span>
+	                	<input type="text" class="form-control" id="jobName" value="${jobName}" autocomplete="on" >
+	              	</div>
+	            </div>
+	            <div class="col-xs-2">
+	            	<button class="btn btn-block btn-info" id="searchBtn">搜索</button>
+	            </div>
+          	</div>
+			
 			<div class="row">
 				<div class="col-xs-12">
 					<div class="box">
-			            <div class="box-header">
-			            	<h3 class="box-title">调度列表</h3>
-			            </div>
+			            <div class="box-header"><h3 class="box-title">调度日志</h3></div>
 			            <div class="box-body">
-			              	<table id="joblog_list" class="table table-bordered table-striped display">
+			              	<table id="joblog_list" class="table table-bordered table-striped display" width="100%" >
 				                <thead>
 					            	<tr>
 					                	<th>id</th>
 					                  	<th>jobName</th>
 					                  	<th>jobCron</th>
 					                  	<th>jobClass</th>
+					                  	<th>jobData</th>
+					                  	<th>triggerTime</th>
+					                  	<th>triggerStatus</th>
+					                  	<th>triggerMsg</th>
 					                  	<th>handleTime</th>
 					                  	<th>handleStatus</th>
+					                  	<th>handleMsg</th>
 					                </tr>
 				                </thead>
 				                <tbody></tbody>
-				                <tfoot>
-					            	<tr>
-					                  	<th>id</th>
-					                  	<th>jobName</th>
-					                  	<th>jobCron</th>
-					                  	<th>jobClass</th>
-					                  	<th>handleTime</th>
-					                  	<th>handleStatus</th>
-					                </tr>
-				                </tfoot>
 							</table>
 						</div>
 					</div>
@@ -83,6 +93,9 @@
 <!-- DataTables -->
 <script src="${request.contextPath}/static/adminlte/plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="${request.contextPath}/static/adminlte/plugins/datatables/dataTables.bootstrap.min.js"></script>
+<!-- daterangepicker -->
+<script src="${request.contextPath}/static/adminlte/plugins/daterangepicker/moment.min.js"></script>
+<script src="${request.contextPath}/static/adminlte/plugins/daterangepicker/daterangepicker.js"></script>
 <script>var base_url = '${request.contextPath}';</script>
 <script src="${request.contextPath}/static/js/joblog.index.1.js"></script>
 </body>

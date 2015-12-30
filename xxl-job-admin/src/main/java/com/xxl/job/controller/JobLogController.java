@@ -1,5 +1,6 @@
 package com.xxl.job.controller;
 
+import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -7,6 +8,8 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.time.DateUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,26 +45,39 @@ public class JobLogController {
 		return ReturnT.FAIL;
 	}
 	
-	@RequestMapping("/")
-	public String index(Model model) {
+	@RequestMapping
+	public String index(Model model, String jobName, String filterTime) {
+		model.addAttribute("jobName", jobName);
+		model.addAttribute("filterTime", filterTime);
 		return "joblog/index";
 	}
 	
 	@RequestMapping("/pageList")
 	@ResponseBody
-	public Map<String, Object> pageList(@RequestParam(required = false) String jobName,  
-		      @RequestParam(required = false, defaultValue = "0") int start,  
-		      @RequestParam(required = false, defaultValue = "10") int length) {
+	public Map<String, Object> pageList(@RequestParam(required = false, defaultValue = "0") int start,  
+			@RequestParam(required = false, defaultValue = "10") int length,
+			String jobName, String filterTime) {
+		// parse param
+		Date triggerTimeStart = null;
+		Date triggerTimeEnd = null;
+		if (StringUtils.isNotBlank(filterTime)) {
+			String[] temp = filterTime.split(" - ");
+			if (temp!=null && temp.length == 2) {
+				try {
+					triggerTimeEnd = DateUtils.parseDate(temp[0], new String[]{"yyyy-MM-dd HH:mm:ss"});
+					triggerTimeEnd = DateUtils.parseDate(temp[1], new String[]{"yyyy-MM-dd HH:mm:ss"});
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 		
-		System.out.println(start);
-		System.out.println(length);
-		System.out.println(jobName);
+		// page query
+		List<XxlJobLog> list = xxlJobLogDao.pageList(start, length, jobName, triggerTimeStart, triggerTimeEnd);
+		int list_count = xxlJobLogDao.pageListCount(start, length, jobName, triggerTimeStart, triggerTimeEnd);
 		
-		List<XxlJobLog> list = xxlJobLogDao.pageList(start, length, jobName);
-		int list_count = xxlJobLogDao.pageListCount(start, length, jobName);
-		
+		// package result
 		Map<String, Object> maps = new HashMap<String, Object>();
-		maps.put("draw", list_count);			// 请求次数
 	    maps.put("recordsTotal", list_count);	// 总记录数
 	    maps.put("recordsFiltered", list_count);// 过滤后的总记录数
 	    maps.put("data", list);  				// 分页列表

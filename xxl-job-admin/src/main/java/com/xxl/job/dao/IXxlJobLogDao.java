@@ -1,6 +1,7 @@
 package com.xxl.job.dao;
 
 
+import java.util.Date;
 import java.util.List;
 
 import com.xxl.job.core.model.XxlJobLog;
@@ -15,8 +16,8 @@ public interface IXxlJobLogDao {
 	
 	public int updateHandleInfo(XxlJobLog xxlJobLog);
 	
-	public List<XxlJobLog> pageList(int offset, int pagesize,String jobName);
+	public List<XxlJobLog> pageList(int offset, int pagesize,String jobName, Date triggerTimeStart, Date triggerTimeEnd);
 	
-	public int pageListCount(int offset, int pagesize,String jobName);
+	public int pageListCount(int offset, int pagesize,String jobName, Date triggerTimeStart, Date triggerTimeEnd);
 	
 }

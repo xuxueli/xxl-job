@@ -65,7 +65,7 @@
 			<ul class="sidebar-menu">
 				<li class="header">常用模块</li>
 				<li class="nav-click" ><a href="${request.contextPath}/job/"><i class="fa fa-circle-o text-red"></i> <span>调度管理</span></a></li>
-				<li class="nav-click" ><a href="${request.contextPath}/joblog/"><i class="fa fa-circle-o text-yellow"></i><span>调度日志</span></a></li>
+				<li class="nav-click" ><a href="${request.contextPath}/joblog"><i class="fa fa-circle-o text-yellow"></i><span>调度日志</span></a></li>
 				<li class="nav-click" ><a href="${request.contextPath}/help"><i class="fa fa-circle-o text-yellow"></i><span>使用教程</span></a></li>
 			</ul>
 		</section>
