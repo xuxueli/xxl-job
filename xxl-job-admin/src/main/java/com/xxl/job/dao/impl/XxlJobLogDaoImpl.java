@@ -1,5 +1,6 @@
 package com.xxl.job.dao.impl;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -38,20 +39,24 @@ public class XxlJobLogDaoImpl implements IXxlJobLogDao {
 	}
 
 	@Override
-	public List<XxlJobLog> pageList(int offset, int pagesize, String jobName) {
+	public List<XxlJobLog> pageList(int offset, int pagesize,String jobName, Date triggerTimeStart, Date triggerTimeEnd) {
 		HashMap<String, Object> params = new HashMap<String, Object>();
 		params.put("offset", offset);
 		params.put("pagesize", pagesize);
 		params.put("jobName", jobName);
+		params.put("triggerTimeStart", triggerTimeStart);
+		params.put("triggerTimeEnd", triggerTimeEnd);
 		return sqlSessionTemplate.selectList("XxlJobLogMapper.pageList", params);
 	}
 
 	@Override
-	public int pageListCount(int offset, int pagesize, String jobName) {
+	public int pageListCount(int offset, int pagesize,String jobName, Date triggerTimeStart, Date triggerTimeEnd) {
 		HashMap<String, Object> params = new HashMap<String, Object>();
 		params.put("offset", offset);
 		params.put("pagesize", pagesize);
 		params.put("jobName", jobName);
+		params.put("triggerTimeStart", triggerTimeStart);
+		params.put("triggerTimeEnd", triggerTimeEnd);
 		return sqlSessionTemplate.selectOne("XxlJobLogMapper.pageListCount", params);
 	}
 	

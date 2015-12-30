@@ -80,8 +80,10 @@
 													<button class="btn btn-info btn-xs job_operate" type="job_resume" type="button">恢复</button>
 												</#if>
 												<button class="btn btn-info btn-xs job_operate" type="job_trigger" type="button">执行一次</button>
-											  	<button class="btn btn-danger btn-xs job_operate" type="job_del" type="button">删除</button>
 												<button class="btn btn-info btn-xs update" type="button">更新corn</button>
+											  	<button class="btn btn-danger btn-xs job_operate" type="job_del" type="button">删除</button>
+											  	<button class="btn btn-warning btn-xs" type="job_del" type="button" 
+											  		onclick="javascript:window.open('${request.contextPath}/joblog?jobName=${item['TriggerKey'].name}')" >查看日志</button>
 											</p>
 					                  	</td>
 					                </tr>

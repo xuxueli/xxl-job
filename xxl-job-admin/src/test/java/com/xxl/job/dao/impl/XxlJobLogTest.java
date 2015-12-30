@@ -57,8 +57,8 @@ public class XxlJobLogTest {
 	
 	@Test
 	public void pageList(){
-		List<XxlJobLog> list = xxlJobLogDao.pageList(0, 20, null);
-		int list_count = xxlJobLogDao.pageListCount(0, 20, null);
+		List<XxlJobLog> list = xxlJobLogDao.pageList(0, 20, null, null, null);
+		int list_count = xxlJobLogDao.pageListCount(0, 20, null, null, null);
 		
 		System.out.println(list);
 		System.out.println(list_count);
