@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 import org.apache.commons.lang.StringUtils;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
+import org.quartz.impl.triggers.CronTriggerImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.quartz.QuartzJobBean;
@@ -40,10 +41,17 @@ public class HttpJobBean extends QuartzJobBean {
 			}
 		}
 		
+		// corn
+		String cornExp = null;
+		if (context.getTrigger() instanceof CronTriggerImpl) {
+			CronTriggerImpl trigger = (CronTriggerImpl) context.getTrigger();
+			cornExp = trigger.getCronExpression();
+		}
+		
 		// save log
 		XxlJobLog jobLog = new XxlJobLog();
 		jobLog.setJobName(triggerKey);
-		jobLog.setJobCron(null);
+		jobLog.setJobCron(cornExp);
 		jobLog.setJobClass(HttpJobBean.class.getName());
 		jobLog.setJobData(JacksonUtil.writeValueAsString(params));
 		DynamicSchedulerUtil.xxlJobLogDao.save(jobLog);

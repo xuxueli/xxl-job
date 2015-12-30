@@ -94,7 +94,7 @@ public class HandlerRepository {
 							new Object[]{handlerData, _status, _msg, callback_response, this});
 				} else {
 					try {
-						TimeUnit.SECONDS.sleep(1);
+						TimeUnit.MILLISECONDS.sleep(200);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}

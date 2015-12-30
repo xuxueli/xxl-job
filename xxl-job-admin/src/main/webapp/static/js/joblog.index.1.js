@@ -16,19 +16,25 @@ $(function() {
 	    "columns": [
 	                { "data": 'id', "bSortable": false, "visible" : false},
 	                { "data": 'jobName', "bSortable": false},
-	                { "data": 'jobCron', "bSortable": false},
-	                { "data": 'jobClass', "bSortable": false},
-	                { "data": 'jobData', "bSortable": false},
+	                { "data": 'jobCron', "bSortable": false, "visible" : false},
+	                { "data": 'jobClass', "bSortable": false, "visible" : false},
+	                { "data": 'jobData', "bSortable": false, "visible" : false},
 	                { 
 	                	"data": 'triggerTime', 
 	                	"bSortable": false, 
 	                	"render": function ( data, type, row ) {
-	                		return moment(new Date(data)).format("YYYY-MM-DD HH:mm:ss");
+	                		return data?moment(new Date(data)).format("YYYY-MM-DD HH:mm:ss"):"";
 	                	}
 	                },
 	                { "data": 'triggerStatus', "bSortable": false},
 	                { "data": 'triggerMsg',"bSortable": false},
-	                { "data": 'handleTime',"bSortable": false},
+	                { 
+	                	"data": 'handleTime',
+	                	"bSortable": false,
+	                	"render": function ( data, type, row ) {
+	                		return data?moment(new Date(data)).format("YYYY-MM-DD HH:mm:ss"):"";
+	                	}
+	                },
 	                { "data": 'handleStatus',"bSortable": false},
 	                { "data": 'handleMsg' , "bSortable": false}
 	            ],
