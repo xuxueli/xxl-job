@@ -43,9 +43,11 @@ public class HttpUtil {
 		String exceptionMsg = null;
 		
 		// do post
-		HttpPost httpPost = new HttpPost(reqURL);
-		CloseableHttpClient httpClient = HttpClients.createDefault();
+		HttpPost httpPost = null;
+		CloseableHttpClient httpClient = null;
 		try{
+			httpPost = new HttpPost(reqURL);
+			httpClient = HttpClients.createDefault();
 			if (params != null && !params.isEmpty()) {
 				List<NameValuePair> formParams = new ArrayList<NameValuePair>();
 				for(Map.Entry<String,String> entry : params.entrySet()){
@@ -68,11 +70,15 @@ public class HttpUtil {
 			e.printStackTrace(new PrintWriter(out));
 			exceptionMsg = out.toString();
 		} finally{
-			httpPost.releaseConnection();
-			try {
-				httpClient.close();
-			} catch (IOException e) {
-				e.printStackTrace();
+			if (httpPost!=null) {
+				httpPost.releaseConnection();
+			}
+			if (httpClient!=null) {
+				try {
+					httpClient.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 		

@@ -29,5 +29,5 @@ git.osc地址：http://git.oschina.net/xuxueli0323/xxl-job
 	
 # 其他说明
 	清楚僵尸任务：qrtz_cron_triggers、qrtz_triggers、qrtz_job_details顺序删除
-	V1.2新增任务日志，记得执行“qrtz_trigger_log”生成表结构
+	V1.2新增任务日志，记得执行“tables_xxl_log.sql”生成表结构
 	

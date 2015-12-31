@@ -69,7 +69,7 @@ public class HttpJobBean extends QuartzJobBean {
 		
 		jobLog.setTriggerTime(new Date());
 		jobLog.setTriggerStatus(HttpUtil.FAIL);
-		jobLog.setTriggerMsg(exceptionMsg);
+		jobLog.setTriggerMsg("[responseMsg]:"+responseMsg+"<br>[exceptionMsg]:"+exceptionMsg);
 		if (StringUtils.isNotBlank(responseMsg)) {
 			@SuppressWarnings("unchecked")
 			Map<String, String> responseMap = JacksonUtil.readValue(responseMsg, Map.class);

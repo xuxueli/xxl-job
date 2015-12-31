@@ -35,7 +35,7 @@
 	</sql>
 	
 	<insert id="save" parameterType="com.xxl.job.core.model.XxlJobLog" useGeneratedKeys="true" keyProperty="id" >
-		INSERT INTO `qrtz_trigger_log` (
+		INSERT INTO `xxl_job_qrtz_trigger_log` (
 			`job_name`, 
 			`job_cron`, 
 			`job_class`, 
@@ -53,12 +53,12 @@
 	
 	<select id="load" parameterType="java.lang.Integer" resultMap="XxlJobLog">
 		SELECT <include refid="Base_Column_List" />
-		FROM qrtz_trigger_log AS t
+		FROM xxl_job_qrtz_trigger_log AS t
 		WHERE t.id = #{id}
 	</select>
 	
 	<update id="updateTriggerInfo">
-		UPDATE `qrtz_trigger_log` 
+		UPDATE `xxl_job_qrtz_trigger_log` 
 		SET 
 			`trigger_time`= #{triggerTime}, 
 			`trigger_status`= #{triggerStatus}, 
@@ -67,7 +67,7 @@
 	</update>
 	
 	<update id="updateHandleInfo">
-		UPDATE `qrtz_trigger_log` 
+		UPDATE `xxl_job_qrtz_trigger_log` 
 		SET 
 			`handle_time`= #{handleTime}, 
 			`handle_status`= #{handleStatus}, 
@@ -77,7 +77,7 @@
 	
 	<select id="pageList" parameterType="java.util.HashMap" resultMap="XxlJobLog">
 		SELECT <include refid="Base_Column_List" />
-		FROM qrtz_trigger_log AS t
+		FROM xxl_job_qrtz_trigger_log AS t
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
 			<if test="jobName != null and jobName!=''">
 				AND t.job_name = #{jobName}
@@ -95,7 +95,7 @@
 	
 	<select id="pageListCount" parameterType="java.util.HashMap" resultType="int">
 		SELECT count(1)
-		FROM qrtz_trigger_log AS t
+		FROM xxl_job_qrtz_trigger_log AS t
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
 			<if test="jobName != null and jobName!=''">
 				AND t.job_name = #{jobName}
