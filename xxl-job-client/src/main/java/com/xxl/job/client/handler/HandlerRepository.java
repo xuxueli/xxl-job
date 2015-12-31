@@ -111,7 +111,7 @@ public class HandlerRepository {
 		String _msg = "";
 		// push data to queue
 		String _handleName = _param.get(HandlerRepository.handleName);
-		int _triggerLogId = Integer.valueOf(_param.get(HandlerRepository.triggerLogId));
+		int _triggerLogId = Integer.valueOf(_param.get(HandlerRepository.triggerLogId));	 // 次数应校验，停止队列功能为开发
 		try {
 			if (_handleName!=null && _handleName.trim().length()>0) {
 				IJobHandler handler = handlerClassMap.get(_handleName);
