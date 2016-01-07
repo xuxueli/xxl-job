@@ -12,7 +12,7 @@ $(function() {
                 d.jobName = $('#jobName').val()
             }
 	    },
-	    "scrollX": true,
+	    //"scrollX": true,	// X轴滚动条，取消自适应
 	    "columns": [
 	                { "data": 'id', "bSortable": false, "visible" : false},
 	                { "data": 'jobName', "bSortable": false},
@@ -27,7 +27,11 @@ $(function() {
 	                	}
 	                },
 	                { "data": 'triggerStatus', "bSortable": false},
-	                { "data": 'triggerMsg',"bSortable": false},
+	                { "data": 'triggerMsg',"bSortable": false,
+	                	"render": function ( data, type, row ) {
+	                		return data?'<a class="logTips" title="'+ data +'">调度日志</a>':"无";
+	                	}
+	                },
 	                { 
 	                	"data": 'handleTime',
 	                	"bSortable": false,
@@ -36,7 +40,11 @@ $(function() {
 	                	}
 	                },
 	                { "data": 'handleStatus',"bSortable": false},
-	                { "data": 'handleMsg' , "bSortable": false}
+	                { "data": 'handleMsg' , "bSortable": false,
+	                	"render": function ( data, type, row ) {
+	                		return data?'<a class="logTips" title="'+ data +'">执行日志</a>':"无";
+	                	}
+	                }
 	            ],
 	    "searching": false,
 	    "ordering": true,
@@ -64,6 +72,12 @@ $(function() {
 				"sSortDescending" : ": 以降序排列此列"
 			}
 		}
+	});
+	
+	// 日志弹框提示
+	$('#joblog_list').on('click', '.logTips', function(){
+		var title = $(this).attr('title');
+		ComAlert.show(2, title);
 	});
 	
 	// 过滤时间
