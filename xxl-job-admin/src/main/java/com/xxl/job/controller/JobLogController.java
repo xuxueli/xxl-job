@@ -1,6 +1,7 @@
 package com.xxl.job.controller;
 
 import java.text.ParseException;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -47,6 +48,15 @@ public class JobLogController {
 	
 	@RequestMapping
 	public String index(Model model, String jobName, String filterTime) {
+		
+		// 默认filterTime
+		Calendar todayz = Calendar.getInstance();
+		todayz.set(Calendar.HOUR_OF_DAY, 0);
+		todayz.set(Calendar.MINUTE, 0);
+		todayz.set(Calendar.SECOND, 0);
+		model.addAttribute("triggerTimeStart", todayz.getTime());
+		model.addAttribute("triggerTimeEnd", Calendar.getInstance().getTime());
+				
 		model.addAttribute("jobName", jobName);
 		model.addAttribute("filterTime", filterTime);
 		return "joblog/index";
