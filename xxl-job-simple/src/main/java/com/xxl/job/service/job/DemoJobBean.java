@@ -3,7 +3,9 @@ package com.xxl.job.service.job;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.TimeUnit;
 
+import org.quartz.DisallowConcurrentExecution;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.slf4j.Logger;
@@ -14,6 +16,8 @@ import org.springframework.scheduling.quartz.QuartzJobBean;
  * http job bean
  * @author xuxueli 2015-12-17 18:20:34
  */
+
+@DisallowConcurrentExecution	// 取消并发执行；线程数要多配置几个，否则不生效；
 public class DemoJobBean extends QuartzJobBean {
 	private static Logger logger = LoggerFactory.getLogger(DemoJobBean.class);
 
@@ -31,6 +35,12 @@ public class DemoJobBean extends QuartzJobBean {
 			for (Entry<String, Object> item : jobDataMap.entrySet()) {
 				params.put(item.getKey(), String.valueOf(item.getValue()));
 			}
+		}
+		
+		try {
+			TimeUnit.SECONDS.sleep(5);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		}
 		
 		logger.info(">>>>>>>>>>> xxl-job run :jobId:{}, group:{}, jobDataMap:{}", 

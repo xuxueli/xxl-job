@@ -11,7 +11,8 @@
 
 	<bean id="quartzScheduler" lazy-init="false" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
 		<property name="dataSource" ref="dataSource" />
-        <property name="autoStartup" value="true" />
+        <property name="autoStartup" value="true" />	<!--自动启动 -->
+        <property name="startupDelay" value="20" />		<!--延时启动 -->
 		<property name="applicationContextSchedulerContextKey"  value="applicationContextKey" /> 
         <property name="configLocation" value="classpath:quartz.properties"/>
 	</bean>
