@@ -195,7 +195,9 @@ $(function() {
 		}
 	});
 	$("#addModal").on('hide.bs.modal', function () {
-		$("#addModal .form")[0].reset()
+		//$("#addModal .form")[0].reset();
+		addModalValidate.resetForm();
+		$("#addModal .form .form-group").removeClass("has-error");
 	});
 	
 	// 新增-添加参数
