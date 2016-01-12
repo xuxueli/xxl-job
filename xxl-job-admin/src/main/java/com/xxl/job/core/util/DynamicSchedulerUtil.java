@@ -23,11 +23,14 @@ import org.quartz.Trigger.TriggerState;
 import org.quartz.TriggerBuilder;
 import org.quartz.TriggerKey;
 import org.quartz.impl.matchers.GroupMatcher;
+import org.quartz.impl.triggers.CronTriggerImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 
+import com.xxl.job.core.model.XxlJobInfo;
+import com.xxl.job.dao.IXxlJobInfoDao;
 import com.xxl.job.dao.IXxlJobLogDao;
 
 /**
@@ -43,8 +46,11 @@ public final class DynamicSchedulerUtil implements InitializingBean {
     public void setXxlJobLogDao(IXxlJobLogDao xxlJobLogDao) {
 		DynamicSchedulerUtil.xxlJobLogDao = xxlJobLogDao;
 	}
-    public static IXxlJobLogDao getXxlJobLogDao() {
-		return xxlJobLogDao;
+    // xxlJobInfoDao
+    public static IXxlJobInfoDao xxlJobInfoDao;
+    @Resource
+    public void setXxlJobInfoDao(IXxlJobInfoDao xxlJobInfoDao) {
+		DynamicSchedulerUtil.xxlJobInfoDao = xxlJobInfoDao;
 	}
     
     // Scheduler
@@ -89,6 +95,34 @@ public final class DynamicSchedulerUtil implements InitializingBean {
 			return null;
 		}
 		return jobList;
+	}
+	
+	// fill job info
+	public static void fillJobInfo(XxlJobInfo jobInfo) {
+		// TriggerKey : name + group
+        TriggerKey triggerKey = TriggerKey.triggerKey(jobInfo.getJobName(), Scheduler.DEFAULT_GROUP);
+        JobKey jobKey = new JobKey(jobInfo.getJobName(), Scheduler.DEFAULT_GROUP);
+        try {
+			Trigger trigger = scheduler.getTrigger(triggerKey);
+			JobDetail jobDetail = scheduler.getJobDetail(jobKey);
+			TriggerState triggerState = scheduler.getTriggerState(triggerKey);
+			
+			// parse params
+			if (trigger!=null && trigger instanceof CronTriggerImpl) {
+				String cronExpression = ((CronTriggerImpl) trigger).getCronExpression();
+				jobInfo.setJobCron(cronExpression);
+			}
+			if (jobDetail!=null) {
+				String jobClass = jobDetail.getJobClass().getName();
+				jobInfo.setJobClass(jobClass);
+			}
+			if (triggerState!=null) {
+				jobInfo.setJobStatus(triggerState.name());
+			}
+			
+		} catch (SchedulerException e) {
+			e.printStackTrace();
+		}
 	}
 
 	// addJob 新增

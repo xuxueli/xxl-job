@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
@@ -16,11 +17,15 @@ import org.quartz.SchedulerException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.xxl.job.client.handler.HandlerRepository;
+import com.xxl.job.client.util.JacksonUtil;
 import com.xxl.job.core.model.ReturnT;
+import com.xxl.job.core.model.XxlJobInfo;
 import com.xxl.job.core.util.DynamicSchedulerUtil;
+import com.xxl.job.dao.IXxlJobInfoDao;
 import com.xxl.job.service.job.HttpJobBean;
 
 /**
@@ -31,11 +36,39 @@ import com.xxl.job.service.job.HttpJobBean;
 @RequestMapping("/job")
 public class JobController {
 	
+	@Resource
+	private IXxlJobInfoDao xxlJobInfoDao;
+	
 	@RequestMapping
 	public String index(Model model) {
-		List<Map<String, Object>> jobList = DynamicSchedulerUtil.getJobList();
-		model.addAttribute("jobList", jobList);
+		//List<Map<String, Object>> jobList = DynamicSchedulerUtil.getJobList();
+		//model.addAttribute("jobList", jobList);
 		return "job/index";
+	}
+	
+	@RequestMapping("/pageList")
+	@ResponseBody
+	public Map<String, Object> pageList(@RequestParam(required = false, defaultValue = "0") int start,  
+			@RequestParam(required = false, defaultValue = "10") int length,
+			String jobName, String filterTime) {
+		
+		// page list
+		List<XxlJobInfo> list = xxlJobInfoDao.pageList(start, length, jobName, null, null);
+		int list_count = xxlJobInfoDao.pageListCount(start, length, jobName, null, null);
+		
+		// fill job info
+		if (list!=null && list.size()>0) {
+			for (XxlJobInfo jobInfo : list) {
+				DynamicSchedulerUtil.fillJobInfo(jobInfo);
+			}
+		}
+		
+		// package result
+		Map<String, Object> maps = new HashMap<String, Object>();
+	    maps.put("recordsTotal", list_count);		// 总记录数
+	    maps.put("recordsFiltered", list_count);	// 过滤后的总记录数
+	    maps.put("data", list);  					// 分页列表
+		return maps;
 	}
 	
 	@RequestMapping("/add")
@@ -43,7 +76,7 @@ public class JobController {
 	public ReturnT<String> add(HttpServletRequest request) {
 		String triggerKeyName = null;
 		String cronExpression = null;
-		Map<String, Object> jobData = new HashMap<String, Object>();
+		Map<String, String> jobData = new HashMap<String, String>();
 		
 		try {
 			request.setCharacterEncoding("utf-8");
@@ -58,7 +91,7 @@ public class JobController {
 			} else if (param.getKey().equals("cronExpression")) {
 				cronExpression = param.getValue()[0];
 			} else {
-				jobData.put(param.getKey(), param.getValue().length>0?param.getValue()[0]:param.getValue());
+				jobData.put(param.getKey(), (String) (param.getValue().length>0?param.getValue()[0]:param.getValue()));
 			}
 		}
 		
@@ -90,10 +123,19 @@ public class JobController {
 		Class<? extends Job> jobClass = HttpJobBean.class;
 		
 		try {
-			boolean result = DynamicSchedulerUtil.addJob(triggerKeyName, cronExpression, jobClass, jobData);
+			// add job 2 quartz
+			boolean result = DynamicSchedulerUtil.addJob(triggerKeyName, cronExpression, jobClass, null);
 			if (!result) {
 				return new ReturnT<String>(500, "任务ID重复，请更换确认");
 			}
+			// Backup to the database
+			XxlJobInfo jobInfo = new XxlJobInfo();
+			jobInfo.setJobName(triggerKeyName);
+			jobInfo.setJobCron(cronExpression);
+			jobInfo.setJobClass(jobClass.getName());
+			jobInfo.setJobData(JacksonUtil.writeValueAsString(jobData));
+			xxlJobInfoDao.save(jobInfo);
+			
 			return ReturnT.SUCCESS;
 		} catch (SchedulerException e) {
 			e.printStackTrace();
@@ -117,6 +159,13 @@ public class JobController {
 		}
 		try {
 			DynamicSchedulerUtil.rescheduleJob(triggerKeyName, cronExpression);
+			
+			// update
+			XxlJobInfo jobInfo = xxlJobInfoDao.load(triggerKeyName);
+			if (jobInfo!=null) {
+				jobInfo.setJobCron(cronExpression);
+				xxlJobInfoDao.update(jobInfo);
+			}
 			return ReturnT.SUCCESS;
 		} catch (SchedulerException e) {
 			e.printStackTrace();
@@ -128,12 +177,15 @@ public class JobController {
 	@ResponseBody
 	public ReturnT<String> remove(String triggerKeyName) {
 		try {
-			DynamicSchedulerUtil.removeJob(triggerKeyName);
-			return ReturnT.SUCCESS;
+			if (triggerKeyName!=null) {
+				DynamicSchedulerUtil.removeJob(triggerKeyName);
+				xxlJobInfoDao.delete(triggerKeyName);
+				return ReturnT.SUCCESS;
+			}
 		} catch (SchedulerException e) {
 			e.printStackTrace();
-			return ReturnT.FAIL;
 		}
+		return ReturnT.FAIL;
 	}
 	
 	@RequestMapping("/pause")
@@ -141,6 +193,12 @@ public class JobController {
 	public ReturnT<String> pause(String triggerKeyName) {
 		try {
 			DynamicSchedulerUtil.pauseJob(triggerKeyName);
+			// update
+			XxlJobInfo jobInfo = xxlJobInfoDao.load(triggerKeyName);
+			if (jobInfo!=null) {
+				jobInfo.setJobStatus("PAUSED");
+				xxlJobInfoDao.update(jobInfo);
+			}
 			return ReturnT.SUCCESS;
 		} catch (SchedulerException e) {
 			e.printStackTrace();
@@ -153,6 +211,12 @@ public class JobController {
 	public ReturnT<String> resume(String triggerKeyName) {
 		try {
 			DynamicSchedulerUtil.resumeJob(triggerKeyName);
+			// update
+			XxlJobInfo jobInfo = xxlJobInfoDao.load(triggerKeyName);
+			if (jobInfo!=null) {
+				jobInfo.setJobStatus("NORMAL");
+				xxlJobInfoDao.update(jobInfo);
+			}
 			return ReturnT.SUCCESS;
 		} catch (SchedulerException e) {
 			e.printStackTrace();

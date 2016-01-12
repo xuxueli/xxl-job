@@ -64,6 +64,9 @@ public class HttpUtil {
 				responseMsg = EntityUtils.toString(entity, "UTF-8");
 				EntityUtils.consume(entity);
 			}
+			if (response.getStatusLine().getStatusCode() != 200) {
+				exceptionMsg = "response.getStatusLine().getStatusCode() = " + response.getStatusLine().getStatusCode();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			StringWriter out = new StringWriter();
