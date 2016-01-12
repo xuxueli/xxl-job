@@ -39,13 +39,13 @@ public class XxlJobInfoTest {
 		System.out.println(count);
 		System.out.println(info.getId());
 		
-		XxlJobInfo item = xxlJobInfoDao.load(info.getId());
+		XxlJobInfo item = xxlJobInfoDao.load("job_name");
 		System.out.println(item);
 	}
 	
 	@Test
 	public void update(){
-		XxlJobInfo item = xxlJobInfoDao.load(2);
+		XxlJobInfo item = xxlJobInfoDao.load("job_name");
 		
 		item.setJobCron("jobCron2");
 		item.setJobData("jobData2");
