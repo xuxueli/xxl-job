@@ -12,6 +12,10 @@ import org.springframework.stereotype.Repository;
 import com.xxl.job.core.model.XxlJobLog;
 import com.xxl.job.dao.IXxlJobLogDao;
 
+/**
+ * job log
+ * @author xuxueli 2016-1-12 18:03:06
+ */
 @Repository
 public class XxlJobLogDaoImpl implements IXxlJobLogDao {
 	

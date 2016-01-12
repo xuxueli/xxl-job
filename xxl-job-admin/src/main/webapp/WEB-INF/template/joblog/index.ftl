@@ -84,8 +84,6 @@
 	
 	<!-- footer -->
 	<@netCommon.commonFooter />
-	<!-- control -->
-	<@netCommon.commonControl />
 </div>
 
 <@netCommon.commonScript />

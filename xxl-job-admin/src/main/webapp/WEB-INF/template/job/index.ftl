@@ -28,32 +28,53 @@
 		
 		<!-- Main content -->
 	    <section class="content">
+	    
+	    	<div class="row">
+	            <div class="col-xs-4">
+	              	<div class="input-group">
+	                	<span class="input-group-addon">
+	                  		jobName
+	                	</span>
+	                	<input type="text" class="form-control" id="jobName" value="${jobName}" autocomplete="on" >
+	              	</div>
+	            </div>
+	            <div class="col-xs-2">
+	            	<button class="btn btn-block btn-info" id="searchBtn">搜索</button>
+	            </div>
+	            <div class="col-xs-2">
+	            	<button class="btn btn-block btn-success add" type="button">+新增任务</button>
+	            </div>
+          	</div>
+	    	
 			<div class="row">
 				<div class="col-xs-12">
 					<div class="box">
 			            <div class="box-header">
 			            	<h3 class="box-title">调度列表</h3>
-			            	<button class="btn btn-info btn-xs add" type="button">+新增任务</button>
 			            </div>
 			            <div class="box-body">
 			              	<table id="job_list" class="table table-bordered table-striped">
 				                <thead>
 					            	<tr>
-					                	<th>调度key</th>
-					                  	<th>cron</th>
-					                  	<!--<th>类路径</th>-->
+					            		<th>id</th>
+					                	<th>任务Key</th>
+					                  	<th>任务Cron</th>
+					                  	<th>任务Class</th>
+					                  	<th>状态Status</th>
 					                  	<th>参数</th>
-					                  	<th>状态</th>
+					                  	<th>addTime</th>
+					                  	<th>updateTime</th>
 					                  	<th>操作</th>
 					                </tr>
 				                </thead>
 				                <tbody>
+				                	<#--
 			                		<#if jobList?exists && jobList?size gt 0>
 									<#list jobList as item>
 									<tr>
 					            		<td>${item['TriggerKey'].name}</td>
 					                  	<td>${item['Trigger'].cronExpression}</td>
-					                  	<!--<td>${item['JobDetail'].jobClass}</td>-->
+					                  	<td>${item['JobDetail'].jobClass}</td>
 					                  	<td>
 					                  		<#assign jobDataMap = item['JobDetail'].jobDataMap />
 					                  		<#if jobDataMap?exists && jobDataMap?keys?size gt 0>
@@ -89,17 +110,10 @@
 					                </tr>
 									</#list>
 									</#if>
+									
+									-->
 				                </tbody>
-				                <tfoot>
-					            	<tr>
-					                  	<th>调度key</th>
-					                  	<th>cron</th>
-					                  	<!--<th>类路径</th>-->
-					                  	<th>参数</th>
-					                  	<th>状态</th>
-					                  	<th>操作</th>
-					                </tr>
-				                </tfoot>
+				                <tfoot></tfoot>
 							</table>
 						</div>
 					</div>
@@ -110,8 +124,6 @@
 	
 	<!-- footer -->
 	<@netCommon.commonFooter />
-	<!-- control -->
-	<@netCommon.commonControl />
 </div>
 
 <!-- job新增.模态框 -->
@@ -129,19 +141,19 @@
 					</div>
 					<div class="form-group">
 						<label for="lastname" class="col-sm-3 control-label">任务Corn</label>
-						<div class="col-sm-9"><input type="text" class="form-control" name="cronExpression" placeholder="请输入任务Corn[允许修改]" maxlength="100" ></div>
+						<div class="col-sm-9"><input type="text" class="form-control" name="cronExpression" placeholder="请输入任务Corn" maxlength="100" ></div>
 					</div>
 					<div class="form-group">
 						<label for="lastname" class="col-sm-3 control-label">任务描述</label>
-						<div class="col-sm-9"><input type="text" class="form-control" name="job_desc" placeholder="请输入任务描述[不支持修改]" maxlength="200" ></div>
+						<div class="col-sm-9"><input type="text" class="form-control" name="job_desc" placeholder="请输入任务描述" maxlength="200" ></div>
 					</div>
 					<div class="form-group">
 						<label for="lastname" class="col-sm-3 control-label">任务URL</label>
-						<div class="col-sm-9"><input type="text" class="form-control" name="job_url" placeholder="请输入任务URL[不支持修改]" maxlength="200" ></div>
+						<div class="col-sm-9"><input type="text" class="form-control" name="job_url" placeholder="请输入任务URL" maxlength="200" ></div>
 					</div>
 					<div class="form-group">
 						<label for="lastname" class="col-sm-3 control-label">任务handler</label>
-						<div class="col-sm-9"><input type="text" class="form-control" name="handleName" placeholder="请输入任务handler[不支持修改]" maxlength="200" ></div>
+						<div class="col-sm-9"><input type="text" class="form-control" name="handleName" placeholder="请输入任务handler" maxlength="200" ></div>
 					</div>
 					<div class="form-group">
 						<div class="col-sm-offset-3 col-sm-9">
@@ -166,12 +178,24 @@
          	<div class="modal-body">
 				<form class="form-horizontal form" role="form" >
 					<div class="form-group">
-						<label for="firstname" class="col-sm-2 control-label">任务Key</label>
-						<div class="col-sm-10"><input type="text" class="form-control" name="triggerKeyName" placeholder="请输入任务Key" minlength="4" maxlength="100" readonly ></div>
+						<label for="firstname" class="col-sm-3 control-label">任务Key</label>
+						<div class="col-sm-9"><input type="text" class="form-control" name="triggerKeyName" placeholder="请输入任务Key" minlength="4" maxlength="100" readonly ></div>
 					</div>
 					<div class="form-group">
-						<label for="lastname" class="col-sm-2 control-label">任务Corn</label>
-						<div class="col-sm-10"><input type="text" class="form-control" name="cronExpression" placeholder="请输入任务Corn" maxlength="100" ></div>
+						<label for="lastname" class="col-sm-3 control-label">任务Corn</label>
+						<div class="col-sm-9"><input type="text" class="form-control" name="cronExpression" placeholder="请输入任务Corn" maxlength="100" ></div>
+					</div>
+					<div class="form-group">
+						<label for="lastname" class="col-sm-3 control-label">任务描述</label>
+						<div class="col-sm-9"><input type="text" class="form-control" name="job_desc" placeholder="请输入任务描述" maxlength="200" ></div>
+					</div>
+					<div class="form-group">
+						<label for="lastname" class="col-sm-3 control-label">任务URL</label>
+						<div class="col-sm-9"><input type="text" class="form-control" name="job_url" placeholder="请输入任务URL" maxlength="200" ></div>
+					</div>
+					<div class="form-group">
+						<label for="lastname" class="col-sm-3 control-label">任务handler</label>
+						<div class="col-sm-9"><input type="text" class="form-control" name="handleName" placeholder="请输入任务handler" maxlength="200" ></div>
 					</div>
 					<div class="form-group">
 						<div class="col-sm-offset-2 col-sm-10">
@@ -191,6 +215,9 @@
 <script src="${request.contextPath}/static/adminlte/plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="${request.contextPath}/static/adminlte/plugins/datatables/dataTables.bootstrap.min.js"></script>
 <script src="${request.contextPath}/static/plugins/jquery/jquery.validate.min.js"></script>
+<!-- daterangepicker -->
+<script src="${request.contextPath}/static/adminlte/plugins/daterangepicker/moment.min.js"></script>
+<script src="${request.contextPath}/static/adminlte/plugins/daterangepicker/daterangepicker.js"></script>
 <script>var base_url = '${request.contextPath}';</script>
 <script src="${request.contextPath}/static/js/job.index.1.js"></script>
 </body>

@@ -29,7 +29,7 @@ $(function() {
 	                { "data": 'triggerStatus', "bSortable": false},
 	                { "data": 'triggerMsg',"bSortable": false,
 	                	"render": function ( data, type, row ) {
-	                		return data?'<a class="logTips" title="'+ data +'">调度日志</a>':"无";
+	                		return data?'<a class="logTips" href="javascript:;" >调度日志<span style="display:none;">'+ data +'</span></a>':"无";
 	                	}
 	                },
 	                { 
@@ -42,7 +42,7 @@ $(function() {
 	                { "data": 'handleStatus',"bSortable": false},
 	                { "data": 'handleMsg' , "bSortable": false,
 	                	"render": function ( data, type, row ) {
-	                		return data?'<a class="logTips" title="'+ data +'">执行日志</a>':"无";
+	                		return data?'<a class="logTips" href="javascript:;" >执行日志<span style="display:none;">'+ data +'</span></a>':"无";
 	                	}
 	                }
 	            ],
@@ -76,8 +76,8 @@ $(function() {
 	
 	// 日志弹框提示
 	$('#joblog_list').on('click', '.logTips', function(){
-		var title = $(this).attr('title');
-		ComAlertTec.show(title);
+		var msg = $(this).find('span').html();
+		ComAlertTec.show(msg);
 	});
 	
 	// 过滤时间

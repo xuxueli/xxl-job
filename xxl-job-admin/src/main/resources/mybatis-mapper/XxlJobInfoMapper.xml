@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="XxlJobInfoMapper">
+	
+	<resultMap id="XxlJobInfo" type="com.xxl.job.core.model.XxlJobInfo" >
+		<result column="id" property="id" />
+	
+	    <result column="job_name" property="jobName" />
+	    <result column="job_cron" property="jobCron" />
+	    <result column="job_class" property="jobClass" />
+	    <result column="job_data" property="jobData" />
+	    
+	    <result column="add_time" property="addTime" />
+	    <result column="update_time" property="updateTime" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		t.id,
+		t.job_name,
+		t.job_cron,
+		t.job_class,
+		t.job_data,
+		t.add_time,
+		t.update_time
+	</sql>
+	
+	<select id="pageList" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
+		SELECT <include refid="Base_Column_List" />
+		FROM xxl_job_qrtz_trigger_info AS t
+		<trim prefix="WHERE" prefixOverrides="AND | OR" >
+			<if test="jobName != null and jobName!=''">
+				AND t.job_name = #{jobName}
+			</if>
+			<if test="addTimeStart != null">
+				AND t.add_time <![CDATA[ > ]]> #{addTimeStart}
+			</if>
+			<if test="addTimeEnd != null">
+				AND t.add_time <![CDATA[ < ]]> #{addTimeEnd}
+			</if>
+		</trim>
+		ORDER BY id DESC
+		LIMIT #{offset}, #{pagesize}
+	</select>
+	
+	<select id="pageListCount" parameterType="java.util.HashMap" resultType="int">
+		SELECT count(1)
+		FROM xxl_job_qrtz_trigger_info AS t
+		<trim prefix="WHERE" prefixOverrides="AND | OR" >
+			<if test="jobName != null and jobName!=''">
+				AND t.job_name = #{jobName}
+			</if>
+			<if test="addTimeStart != null">
+				AND t.add_time <![CDATA[ > ]]> #{addTimeStart}
+			</if>
+			<if test="addTimeEnd != null">
+				AND t.add_time <![CDATA[ < ]]> #{addTimeEnd}
+			</if>
+		</trim>
+	</select>
+	
+	<insert id="save" parameterType="com.xxl.job.core.model.XxlJobInfo" useGeneratedKeys="true" keyProperty="id" >
+		INSERT INTO `xxl_job_qrtz_trigger_info` (
+			`job_name`, 
+			`job_cron`, 
+			`job_class`, 
+			`job_data`,
+			`add_time`,
+			`update_time`
+		) VALUES (
+			#{jobName}, 
+			#{jobCron}, 
+			#{jobClass}, 
+			#{jobData},
+			NOW(),
+			NOW()
+		);
+		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id"> 
+			SELECT LAST_INSERT_ID() 
+		</selectKey> 
+	</insert>
+	
+	<select id="load" parameterType="java.lang.String" resultMap="XxlJobInfo">
+		SELECT <include refid="Base_Column_List" />
+		FROM xxl_job_qrtz_trigger_info AS t
+		WHERE t.job_name = #{jobName}
+	</select>
+	
+	<update id="update">
+		UPDATE `xxl_job_qrtz_trigger_info` 
+		SET `job_cron`= #{jobCron}, 
+			`job_data`= #{jobData},
+			`update_time`= NOW()
+		WHERE `id`= #{id}
+	</update>
+	
+	<delete id="delete" parameterType="java.lang.String">
+		delete from xxl_job_qrtz_trigger_info
+		where job_name = #{jobName}
+	</delete>
+	
+</mapper>
