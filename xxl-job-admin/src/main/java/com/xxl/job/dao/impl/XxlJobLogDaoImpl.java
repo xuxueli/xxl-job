@@ -23,18 +23,52 @@ public class XxlJobLogDaoImpl implements IXxlJobLogDao {
 	public SqlSessionTemplate sqlSessionTemplate;
 
 	@Override
-	public int save(XxlJobLog xxlJobLog) {
-		if (xxlJobLog!=null && xxlJobLog.getJobData().length()>2000) {
-			xxlJobLog.setJobData(xxlJobLog.getJobData().substring(0, 2000));
-		}
-		return sqlSessionTemplate.insert("XxlJobLogMapper.save", xxlJobLog);
+	public List<XxlJobLog> pageList(int offset, int pagesize, String jobGroup, String jobName, Date triggerTimeStart, Date triggerTimeEnd) {
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put("offset", offset);
+		params.put("pagesize", pagesize);
+		params.put("jobGroup", jobGroup);
+		params.put("jobName", jobName);
+		params.put("triggerTimeStart", triggerTimeStart);
+		params.put("triggerTimeEnd", triggerTimeEnd);
+		
+		return sqlSessionTemplate.selectList("XxlJobLogMapper.pageList", params);
+	}
+
+	@Override
+	public int pageListCount(int offset, int pagesize, String jobGroup, String jobName, Date triggerTimeStart, Date triggerTimeEnd) {
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put("offset", offset);
+		params.put("pagesize", pagesize);
+		params.put("jobGroup", jobGroup);
+		params.put("jobName", jobName);
+		params.put("triggerTimeStart", triggerTimeStart);
+		params.put("triggerTimeEnd", triggerTimeEnd);
+		
+		return sqlSessionTemplate.selectOne("XxlJobLogMapper.pageListCount", params);
 	}
 
 	@Override
 	public XxlJobLog load(int id) {
 		return sqlSessionTemplate.selectOne("XxlJobLogMapper.load", id);
 	}
+	
+	@Override
+	public XxlJobLog loadByGroupAndName(String jobGroup, String jobName) {
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put("jobGroup", jobGroup);
+		params.put("jobName", jobName);
+		return sqlSessionTemplate.selectOne("XxlJobLogMapper.loadByGroupAndName", params);
+	}
 
+	@Override
+	public int save(XxlJobLog xxlJobLog) {
+		if (xxlJobLog!=null && xxlJobLog.getJobData().length()>2000) {
+			xxlJobLog.setJobData(xxlJobLog.getJobData().substring(0, 2000));
+		}
+		return sqlSessionTemplate.insert("XxlJobLogMapper.save", xxlJobLog);
+	}
+	
 	@Override
 	public int updateTriggerInfo(XxlJobLog xxlJobLog) {
 		if (xxlJobLog!=null && xxlJobLog.getTriggerMsg().length()>2000) {
@@ -49,28 +83,6 @@ public class XxlJobLogDaoImpl implements IXxlJobLogDao {
 			xxlJobLog.setHandleMsg(xxlJobLog.getHandleMsg().substring(0, 2000));
 		}
 		return sqlSessionTemplate.update("XxlJobLogMapper.updateHandleInfo", xxlJobLog);
-	}
-
-	@Override
-	public List<XxlJobLog> pageList(int offset, int pagesize,String jobName, Date triggerTimeStart, Date triggerTimeEnd) {
-		HashMap<String, Object> params = new HashMap<String, Object>();
-		params.put("offset", offset);
-		params.put("pagesize", pagesize);
-		params.put("jobName", jobName);
-		params.put("triggerTimeStart", triggerTimeStart);
-		params.put("triggerTimeEnd", triggerTimeEnd);
-		return sqlSessionTemplate.selectList("XxlJobLogMapper.pageList", params);
-	}
-
-	@Override
-	public int pageListCount(int offset, int pagesize,String jobName, Date triggerTimeStart, Date triggerTimeEnd) {
-		HashMap<String, Object> params = new HashMap<String, Object>();
-		params.put("offset", offset);
-		params.put("pagesize", pagesize);
-		params.put("jobName", jobName);
-		params.put("triggerTimeStart", triggerTimeStart);
-		params.put("triggerTimeEnd", triggerTimeEnd);
-		return sqlSessionTemplate.selectOne("XxlJobLogMapper.pageListCount", params);
 	}
 	
 }

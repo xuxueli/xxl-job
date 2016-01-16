@@ -38,6 +38,8 @@
 		<property name="order" value="0" />
 	</bean>
 	
+	<bean id="exceptionResolver" class="com.xxl.job.core.resolver.WebExceptionResolver" />
+	
 	<!--
 	// 自定义拦截器，支持SSO登陆拦截 
 	<mvc:interceptors>

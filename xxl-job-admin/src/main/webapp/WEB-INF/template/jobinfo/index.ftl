@@ -30,6 +30,16 @@
 	    <section class="content">
 	    
 	    	<div class="row">
+	    		<div class="col-xs-4">
+	              	<div class="input-group">
+	                	<span class="input-group-addon">任务组</span>
+                		<select class="form-control" id="jobGroup" >
+                			<#list JobGroupList as group>
+                				<option value="${group}" >${group.desc}</option>
+                			</#list>
+	                  	</select>
+	              	</div>
+	            </div>
 	            <div class="col-xs-4">
 	              	<div class="input-group">
 	                	<span class="input-group-addon">
@@ -128,16 +138,24 @@
 
 <!-- job新增.模态框 -->
 <div class="modal fade" id="addModal" tabindex="-1" role="dialog"  aria-hidden="true">
-	<div class="modal-dialog">
+	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">
-            	<h4 class="modal-title" >新增调度信息</h4>
+            	<h4 class="modal-title" >新增任务调度信息</h4>
          	</div>
          	<div class="modal-body">
 				<form class="form-horizontal form" role="form" >
 					<div class="form-group">
-						<label for="firstname" class="col-sm-3 control-label">任务Key</label>
-						<div class="col-sm-9"><input type="text" class="form-control" name="triggerKeyName" placeholder="请输入任务Key" minlength="4" maxlength="100" ></div>
+						<label for="firstname" class="col-sm-2 control-label">任务组</label>
+						<div class="col-sm-4">
+							<select class="form-control" name="jobGroup" >
+		            			<#list JobGroupList as group>
+		            				<option value="${group}" >${group.desc}</option>
+		            			</#list>
+		                  	</select>
+						</div>
+						<label for="firstname" class="col-sm-2 control-label">任务名</label>
+						<div class="col-sm-4"><input type="text" class="form-control" name="triggerKeyName" placeholder="请输入任务Key" minlength="4" maxlength="100" ></div>
 					</div>
 					<div class="form-group">
 						<label for="lastname" class="col-sm-3 control-label">任务Corn</label>
@@ -219,6 +237,6 @@
 <script src="${request.contextPath}/static/adminlte/plugins/daterangepicker/moment.min.js"></script>
 <script src="${request.contextPath}/static/adminlte/plugins/daterangepicker/daterangepicker.js"></script>
 <script>var base_url = '${request.contextPath}';</script>
-<script src="${request.contextPath}/static/js/job.index.1.js"></script>
+<script src="${request.contextPath}/static/js/jobinfo.index.1.js"></script>
 </body>
 </html>

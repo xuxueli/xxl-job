@@ -10,6 +10,7 @@
 # DROP TABLE IF EXISTS XXL_JOB_QRTZ_JOB_DETAILS;
 # DROP TABLE IF EXISTS XXL_JOB_QRTZ_CALENDARS;
 # DROP TABLE IF EXISTS `xxl_job_qrtz_trigger_log`;
+# DROP TABLE IF EXISTS `xxl_job_qrtz_trigger_info`;
 
 CREATE TABLE XXL_JOB_QRTZ_JOB_DETAILS
   (
@@ -158,18 +159,35 @@ CREATE TABLE XXL_JOB_QRTZ_LOCKS
 
 CREATE TABLE `xxl_job_qrtz_trigger_log` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `job_name` varchar(255) NOT NULL,
-  `job_cron` varchar(128) DEFAULT NULL,
-  `job_class` varchar(255) DEFAULT NULL,
-  `job_data` varchar(2048) DEFAULT NULL,
-  `trigger_time` datetime DEFAULT NULL,
-  `trigger_status` varchar(255) DEFAULT NULL,
-  `trigger_msg` varchar(2048) DEFAULT NULL,
-  `handle_time` datetime DEFAULT NULL,
-  `handle_status` varchar(255) DEFAULT NULL,
-  `handle_msg` varchar(2048) DEFAULT NULL,
+  `job_group` varchar(255) NOT NULL COMMENT '任务组',
+  `job_name` varchar(255) NOT NULL COMMENT '任务名',
+  `job_cron` varchar(128) NOT NULL COMMENT '任务执行CORN表达式',
+  `job_class` varchar(255) NOT NULL COMMENT '任务执行JobBean',
+  `job_data` varchar(2048) DEFAULT NULL COMMENT '任务执行数据',
+  `trigger_time` datetime DEFAULT NULL COMMENT '调度-时间',
+  `trigger_status` varchar(255) DEFAULT NULL COMMENT '调度-结果',
+  `trigger_msg` varchar(2048) DEFAULT NULL COMMENT '调度-日志',
+  `handle_time` datetime DEFAULT NULL COMMENT '执行-时间',
+  `handle_status` varchar(255) DEFAULT NULL COMMENT '执行-状态',
+  `handle_msg` varchar(2048) DEFAULT NULL COMMENT '执行-日志',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=127 DEFAULT CHARSET=utf8;
+);
+
+CREATE TABLE `xxl_job_qrtz_trigger_log` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `job_group` varchar(255) NOT NULL COMMENT '任务组',
+  `job_name` varchar(255) NOT NULL COMMENT '任务名',
+  `job_cron` varchar(128) NOT NULL COMMENT '任务执行CORN表达式',
+  `job_class` varchar(255) NOT NULL COMMENT '任务执行JobBean',
+  `job_data` varchar(2048) DEFAULT NULL COMMENT '任务执行数据',
+  `trigger_time` datetime DEFAULT NULL COMMENT '调度-时间',
+  `trigger_status` varchar(255) DEFAULT NULL COMMENT '调度-结果',
+  `trigger_msg` varchar(2048) DEFAULT NULL COMMENT '调度-日志',
+  `handle_time` datetime DEFAULT NULL COMMENT '执行-时间',
+  `handle_status` varchar(255) DEFAULT NULL COMMENT '执行-状态',
+  `handle_msg` varchar(2048) DEFAULT NULL COMMENT '执行-日志',
+  PRIMARY KEY (`id`)
+);
 
 commit;
 
