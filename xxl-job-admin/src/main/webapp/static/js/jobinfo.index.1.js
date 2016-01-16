@@ -63,7 +63,9 @@ $(function() {
 	                		if ('NORMAL' == data) {
 	                			return '<small class="label label-success" ><i class="fa fa-clock-o"></i>'+ data +'</small>'; 
 							} else if ('PAUSED' == data){
-								return '<small class="label label-default"><i class="fa fa-clock-o"></i>'+ data +'</small>'; 
+								return '<small class="label label-default" title="暂停" ><i class="fa fa-clock-o"></i>'+ data +'</small>'; 
+							} else if ('BLOCKED' == data){
+								return '<small class="label label-default" title="阻塞[串行]" ><i class="fa fa-clock-o"></i>'+ data +'</small>'; 
 							}
 	                		return data;
 	                	}
@@ -238,11 +240,11 @@ $(function() {
             	required : true ,
                 maxlength: 200
             },
-            alarm_email : {
+            alarmEmail : {
             	required : true ,
                 maxlength: 200
             },
-            alarm_threshold : {
+            alarmThreshold : {
             	required : true ,
             	digits:true
             }
@@ -273,11 +275,11 @@ $(function() {
             	required : "请输入“负责人”."  ,
                 maxlength: "“负责人”长度不应超过50位"
             },
-            alarm_email : {
+            alarmEmail : {
             	required : "请输入“报警邮件”."  ,
                 maxlength: "“报警邮件”长度不应超过200位"
             },
-            alarm_threshold : {
+            alarmThreshold : {
             	required : "请输入“报警阈值”."  ,
             	digits:"阀值应该为整数."
             }
@@ -295,9 +297,8 @@ $(function() {
         submitHandler : function(form) {
         	$.post(base_url + "/jobinfo/add",  $("#addModal .form").serialize(), function(data, status) {
     			if (data.code == "200") {
-    				ComAlert.show(1, "新增调度任务成功", function(){
-    					ComAlert.show(1, "新增任务成功");
-    					jobTable.fnDraw();
+    				ComAlert.show(1, "新增任务成功", function(){
+    					window.location.reload();
     				});
     			} else {
     				if (data.msg) {
@@ -310,29 +311,44 @@ $(function() {
 		}
 	});
 	$("#addModal").on('hide.bs.modal', function () {
-		//$("#addModal .form")[0].reset();
+		$("#addModal .form")[0].reset();
 		addModalValidate.resetForm();
 		$("#addModal .form .form-group").removeClass("has-error");
+		$(".remote_panel").show();	// remote
 	});
 	
 	// 远程任务/本地任务，切换
 	$("#addModal select[name='jobClass']").change(function() {
-		//console.log($(this).val());
-		console.log( $(this).val().indexOf('HttpJobBean') );
-		if($(this).val().indexOf('HttpJobBean') > -1){
+		//console.log( $(this).val().indexOf('RemoteHttpJobBean') );
+		
+		if($(this).val().indexOf('RemoteHttpJobBean') > -1){
 			$(".remote_panel").show();	// remote
-		} else if($(this).val().indexOf('HttpJobBean') == -1){
+		} else if($(this).val().indexOf('RemoteHttpJobBean') == -1){
 			$(".remote_panel").hide();	// local
 		}
     });
 	
 	// 更新
 	$("#job_list").on('click', '.update',function() {
-		$("#updateModal .form input[name='triggerKeyName']").val($(this).parent('p').attr("jobName"));
-		$("#updateModal .form input[name='cronExpression']").val($(this).parent('p').attr("cronExpression"));
-		$("#updateModal .form input[name='job_desc']").val($(this).parent('p').attr("job_desc"));
-		$("#updateModal .form input[name='job_url']").val($(this).parent('p').attr("job_url"));
-		$("#updateModal .form input[name='handleName']").val($(this).parent('p').attr("handleName"));
+		$("#updateModal .form input[name='jobGroup']").val($(this).parent('p').attr("jobGroup"));
+		$("#updateModal .form input[name='jobName']").val($(this).parent('p').attr("jobName"));
+		$("#updateModal .form input[name='jobCron']").val($(this).parent('p').attr("jobCron"));
+		$("#updateModal .form input[name='jobDesc']").val($(this).parent('p').attr("jobDesc"));
+		$("#updateModal .form input[name='jobClass']").val($(this).parent('p').attr("jobClass"));
+		$("#updateModal .form input[name='handler_params']").val($(this).parent('p').attr("handler_params"));
+		$("#updateModal .form input[name='handler_address']").val($(this).parent('p').attr("handler_address"));
+		$("#updateModal .form input[name='handler_name']").val($(this).parent('p').attr("handler_name"));
+		$("#updateModal .form input[name='author']").val($(this).parent('p').attr("author"));
+		$("#updateModal .form input[name='alarmEmail']").val($(this).parent('p').attr("alarmEmail"));
+		$("#updateModal .form input[name='alarmThreshold']").val($(this).parent('p').attr("alarmThreshold"));
+		
+		var _jobClass = $(this).parent('p').attr("jobClass");
+		if(_jobClass.indexOf('RemoteHttpJobBean') > -1){
+			$(".remote_panel").show();	// remote
+		} else if($(this).val().indexOf('RemoteHttpJobBean') == -1){
+			$(".remote_panel").hide();	// local
+		}
+		
 		$('#updateModal').modal({backdrop: false, keyboard: false}).modal('show');
 	});
 	var updateModalValidate = $("#updateModal .form").validate({
@@ -340,49 +356,63 @@ $(function() {
         errorClass : 'help-block',
         focusInvalid : true,  
         rules : {  
-        	triggerKeyName : {  
-        		required : true ,
-                minlength: 4,
-                maxlength: 100
-            },  
-            cronExpression : {  
+            jobCron : {  
             	required : true ,
                 maxlength: 100
             },  
-            job_desc : {  
+            jobDesc : {  
             	required : true ,
                 maxlength: 200
             },
-            job_url : {
+            handler_address : {
             	required : true ,
                 maxlength: 200
             },
-            handleName : {
+            handler_name : {
             	required : true ,
                 maxlength: 200
+            },
+            author : {
+            	required : true ,
+                maxlength: 200
+            },
+            alarmEmail : {
+            	required : true ,
+                maxlength: 200
+            },
+            alarmThreshold : {
+            	required : true ,
+            	digits:true
             }
         }, 
         messages : {  
-        	triggerKeyName : {  
-        		required :"请输入“任务Key”."  ,
-                minlength:"“任务Key”不应低于4位",
-                maxlength:"“任务Key”不应超过100位"
+            jobCron : {
+            	required :"请输入“Corn”."  ,
+                maxlength:"“Corn”长度不应超过100位"
             },  
-            cronExpression : {
-            	required :"请输入“任务Corn”."  ,
-                maxlength:"“任务Corn”不应超过100位"
-            },  
-            job_desc : {
+            jobDesc : {
             	required :"请输入“任务描述”."  ,
                 maxlength:"“任务描述”长度不应超过200位"
             },  
-            job_url : {
-            	required :"请输入“任务URL”."  ,
-                maxlength:"“任务URL”长度不应超过200位"
+            handler_address : {
+            	required :"请输入“远程-机器地址”."  ,
+                maxlength:"“远程-机器地址”长度不应超过200位"
             },
-            handleName : {
-            	required : "请输入“任务handler”."  ,
-                maxlength: "“任务handler”长度不应超过200位"
+            handler_name : {
+            	required : "请输入“远程-执行器”."  ,
+                maxlength: "“远程-执行器”长度不应超过200位"
+            },
+            author : {
+            	required : "请输入“负责人”."  ,
+                maxlength: "“负责人”长度不应超过50位"
+            },
+            alarmEmail : {
+            	required : "请输入“报警邮件”."  ,
+                maxlength: "“报警邮件”长度不应超过200位"
+            },
+            alarmThreshold : {
+            	required : "请输入“报警阈值”."  ,
+            	digits:"阀值应该为整数."
             }
         }, 
 		highlight : function(element) {  
@@ -396,7 +426,7 @@ $(function() {
             element.parent('div').append(error);  
         },
         submitHandler : function(form) {
-    		$.post(base_url + "/job/reschedule", $("#updateModal .form").serialize(), function(data, status) {
+    		$.post(base_url + "/jobinfo/reschedule", $("#updateModal .form").serialize(), function(data, status) {
     			if (data.code == "200") {
     				ComAlert.show(1, "更新成功", function(){
     					window.location.reload();

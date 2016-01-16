@@ -24,14 +24,15 @@ import com.xxl.job.core.model.ReturnT;
 import com.xxl.job.core.model.XxlJobInfo;
 import com.xxl.job.core.util.DynamicSchedulerUtil;
 import com.xxl.job.dao.IXxlJobInfoDao;
-import com.xxl.job.service.job.HttpJobBean;
-import com.xxl.job.service.job.LocalJobBean;
-import com.xxl.job.service.job.LocalJobBeanB;
+import com.xxl.job.service.job.RemoteHttpJobBean;
+import com.xxl.job.service.job.impl.DemoConcurrentJobBean;
+import com.xxl.job.service.job.impl.DemoNomalJobBean;
 
 /**
  * index controller
  * @author xuxueli 2015-12-19 16:13:16
  */
+@SuppressWarnings("unchecked")
 @Controller
 @RequestMapping("/jobinfo")
 public class JobInfoController {
@@ -40,12 +41,12 @@ public class JobInfoController {
 	private IXxlJobInfoDao xxlJobInfoDao;
 	
 	// remote job bean
-	public static Class <? extends Job> remoteJobBean = HttpJobBean.class;
+	public static Class <? extends Job> remoteJobBean = RemoteHttpJobBean.class;
 	// loacal job bean
 	public static List<Class <? extends Job>> localJobBeanList = new ArrayList<Class<? extends Job>>();
 	static{
-		localJobBeanList.add(LocalJobBean.class);
-		localJobBeanList.add(LocalJobBeanB.class);
+		localJobBeanList.add((Class<? extends Job>) DemoNomalJobBean.class);
+		localJobBeanList.add((Class<? extends Job>) DemoConcurrentJobBean.class);
 	}
 	
 	@RequestMapping
@@ -81,12 +82,11 @@ public class JobInfoController {
 		return maps;
 	}
 	
-	@SuppressWarnings("unchecked")
 	@RequestMapping("/add")
 	@ResponseBody
 	public ReturnT<String> add(String jobGroup, String jobName, String jobCron, String jobDesc, String jobClass,
 			String handler_params, String handler_address, String handler_name, 
-			String author, String alarm_email, int alarm_threshold) {
+			String author, String alarmEmail, int alarmThreshold) {
 		
 		// valid
 		if (JobGroupEnum.match(jobGroup) == null) {
@@ -124,7 +124,7 @@ public class JobInfoController {
 		if (StringUtils.isBlank(author)) {
 			return new ReturnT<String>(500, "请输入“负责人”");
 		}
-		if (StringUtils.isBlank(alarm_email)) {
+		if (StringUtils.isBlank(alarmEmail)) {
 			return new ReturnT<String>(500, "请输入“报警邮件”");
 		}
 		
@@ -137,6 +137,7 @@ public class JobInfoController {
 			return new ReturnT<String>(500, "此任务已存在，请更换任务组或任务名");
 		}
 		
+		// parse jobDataMap
 		HashMap<String, String> jobDataMap = new HashMap<String, String>();
 		jobDataMap.put(HandlerRepository.HANDLER_PARAMS, handler_params);
 		jobDataMap.put(HandlerRepository.HANDLER_ADDRESS, handler_address);
@@ -151,8 +152,8 @@ public class JobInfoController {
 		jobInfo.setJobClass(jobClass);
 		jobInfo.setJobData(JacksonUtil.writeValueAsString(jobDataMap));
 		jobInfo.setAuthor(author);
-		jobInfo.setAlarmEmail(alarm_email);
-		jobInfo.setAlarmThreshold(alarm_threshold);
+		jobInfo.setAlarmEmail(alarmEmail);
+		jobInfo.setAlarmThreshold(alarmThreshold);
 		xxlJobInfoDao.save(jobInfo);
 		
 		try {
@@ -174,7 +175,7 @@ public class JobInfoController {
 	@ResponseBody
 	public ReturnT<String> reschedule(String jobGroup, String jobName, String jobCron, String jobDesc, String jobClass,
 			String handler_params, String handler_address, String handler_name, 
-			String author, String alarm_email, int alarm_threshold) {
+			String author, String alarmEmail, int alarmThreshold) {
 		
 		// valid
 		if (JobGroupEnum.match(jobGroup) == null) {
@@ -187,8 +188,19 @@ public class JobInfoController {
 			return new ReturnT<String>(500, "“corn”不合法");
 		}
 		
+		// parse jobDataMap
+		HashMap<String, String> jobDataMap = new HashMap<String, String>();
+		jobDataMap.put(HandlerRepository.HANDLER_PARAMS, handler_params);
+		jobDataMap.put(HandlerRepository.HANDLER_ADDRESS, handler_address);
+		jobDataMap.put(HandlerRepository.HANDLER_NAME, handler_name);
+		
 		XxlJobInfo jobInfo = xxlJobInfoDao.load(jobGroup, jobName);
 		jobInfo.setJobCron(jobCron);
+		jobInfo.setJobDesc(jobDesc);
+		jobInfo.setJobData(JacksonUtil.writeValueAsString(jobDataMap));
+		jobInfo.setAuthor(author);
+		jobInfo.setAlarmEmail(alarmEmail);
+		jobInfo.setAlarmThreshold(alarmThreshold);
 		
 		try {
 			// fresh quartz

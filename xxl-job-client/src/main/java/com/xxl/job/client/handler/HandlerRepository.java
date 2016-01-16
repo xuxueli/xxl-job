@@ -43,13 +43,19 @@ public class HandlerRepository {
 		String _msg = "";
 		
 		// push data to queue
-		HandlerThread handlerThread = handlerTreadMap.get(_param.get(HandlerRepository.HANDLER_NAME));
-		if (handlerThread != null) {
-			handlerThread.pushData(_param);
-			_status = HttpUtil.SUCCESS;
-		} else {
-			_msg = "handler not found.";
+		String handler_name = _param.get(HandlerRepository.HANDLER_NAME);
+		if (handler_name!=null && handler_name.trim().length()>0) {
+			HandlerThread handlerThread = handlerTreadMap.get(handler_name);
+			if (handlerThread != null) {
+				handlerThread.pushData(_param);
+				_status = HttpUtil.SUCCESS;
+			} else {
+				_msg = "handler not found.";
+			}
+		}else{
+			_msg = "param[HANDLER_NAME] not exists.";
 		}
+		
 		
 		HashMap<String, String> triggerData = new HashMap<String, String>();
 		triggerData.put(HandlerRepository.TRIGGER_LOG_ID, _param.get(HandlerRepository.TRIGGER_LOG_ID));
