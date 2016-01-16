@@ -1,6 +1,5 @@
 package com.xxl.job.dao;
 
-import java.util.Date;
 import java.util.List;
 
 import com.xxl.job.core.model.XxlJobInfo;
@@ -11,15 +10,15 @@ import com.xxl.job.core.model.XxlJobInfo;
  */
 public interface IXxlJobInfoDao {
 
-	public List<XxlJobInfo> pageList(int offset, int pagesize, String jobName, Date addTimeStart, Date addTimeEnd);
-	public int pageListCount(int offset, int pagesize, String jobName, Date addTimeStart, Date addTimeEnd);
+	public List<XxlJobInfo> pageList(int offset, int pagesize, String jobGroup, String jobName);
+	public int pageListCount(int offset, int pagesize, String jobGroup, String jobName);
 	
 	public int save(XxlJobInfo info);
 	
-	public XxlJobInfo load(String jobName);
+	public XxlJobInfo load(String jobGroup, String jobName);
 	
 	public int update(XxlJobInfo item);
 	
-	public int delete(String jobName);
+	public int delete(String jobGroup, String jobName);
 	
 }

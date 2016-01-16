@@ -3,6 +3,7 @@ package com.xxl.job.core.util;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -29,6 +30,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 
+import com.xxl.job.client.util.JacksonUtil;
 import com.xxl.job.core.model.XxlJobInfo;
 import com.xxl.job.dao.IXxlJobInfoDao;
 import com.xxl.job.dao.IXxlJobLogDao;
@@ -124,29 +126,42 @@ public final class DynamicSchedulerUtil implements InitializingBean {
 			e.printStackTrace();
 		}
 	}
+	
+	// check if exists
+	public static boolean checkExists(String jobName, String jobGroup) throws SchedulerException{
+		TriggerKey triggerKey = TriggerKey.triggerKey(jobName, jobGroup);
+		return scheduler.checkExists(triggerKey);
+	}
 
 	// addJob 新增
-    public static boolean addJob(String triggerKeyName, String cronExpression, Class<? extends Job> jobClass, Map<String, Object> jobData) throws SchedulerException {
+    @SuppressWarnings("unchecked")
+	public static boolean addJob(XxlJobInfo jobInfo) throws SchedulerException {
     	// TriggerKey : name + group
-    	String group = Scheduler.DEFAULT_GROUP;
-        TriggerKey triggerKey = TriggerKey.triggerKey(triggerKeyName, group);
+        TriggerKey triggerKey = TriggerKey.triggerKey(jobInfo.getJobName(), jobInfo.getJobGroup());
+        JobKey jobKey = new JobKey(jobInfo.getJobName(), jobInfo.getJobGroup());
         
         // TriggerKey valid if_exists
-        if (scheduler.checkExists(triggerKey)) {
-            Trigger trigger = scheduler.getTrigger(triggerKey);
-            logger.info(">>>>>>>>> Already exist trigger [" + trigger + "] by key [" + triggerKey + "] in Scheduler");
+        if (checkExists(jobInfo.getJobName(), jobInfo.getJobGroup())) {
+            logger.info(">>>>>>>>> addJob fail, job already exist, jobInfo:{}", jobInfo);
             return false;
         }
         
         // CronTrigger : TriggerKey + cronExpression	// withMisfireHandlingInstructionDoNothing 忽略掉调度终止过程中忽略的调度
-        CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.cronSchedule(cronExpression).withMisfireHandlingInstructionDoNothing();
+        CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.cronSchedule(jobInfo.getJobCron()).withMisfireHandlingInstructionDoNothing();
         CronTrigger cronTrigger = TriggerBuilder.newTrigger().withIdentity(triggerKey).withSchedule(cronScheduleBuilder).build();
 
         // JobDetail : jobClass
-        JobDetail jobDetail = JobBuilder.newJob(jobClass).withIdentity(triggerKeyName, group).build();
-        if (jobData!=null && jobData.size() > 0) {
+		Class<? extends Job> jobClass_ = null;
+		try {
+			jobClass_ = (Class<? extends Job>)Class.forName(jobInfo.getJobClass());
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+        
+		JobDetail jobDetail = JobBuilder.newJob(jobClass_).withIdentity(jobKey).build();
+        if (jobInfo.getJobData()!=null) {
         	JobDataMap jobDataMap = jobDetail.getJobDataMap();
-        	jobDataMap.putAll(jobData);	// JobExecutionContext context.getMergedJobDataMap().get("mailGuid");
+        	jobDataMap.putAll(JacksonUtil.readValue(jobInfo.getJobData(), Map.class));	// JobExecutionContext context.getMergedJobDataMap().get("mailGuid");
 		}
         
         // schedule : jobDetail + cronTrigger
@@ -156,49 +171,60 @@ public final class DynamicSchedulerUtil implements InitializingBean {
         return true;
     }
     
-    // reschedule 重置cron
-    public static boolean rescheduleJob(String triggerKeyName, String cronExpression) throws SchedulerException {
-        // TriggerKey : name + group
-    	String group = Scheduler.DEFAULT_GROUP;
-        TriggerKey triggerKey = TriggerKey.triggerKey(triggerKeyName, group);
-        
-        boolean result = false;
-        if (scheduler.checkExists(triggerKey)) {
-            // CronTrigger : TriggerKey + cronExpression
-            CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.cronSchedule(cronExpression).withMisfireHandlingInstructionDoNothing();
-            CronTrigger cronTrigger = TriggerBuilder.newTrigger().withIdentity(triggerKey).withSchedule(cronScheduleBuilder).build();
-            
-            Date date = scheduler.rescheduleJob(triggerKey, cronTrigger);
-            result = true;
-            logger.info(">>>>>>>>>>> resumeJob success, triggerKey:{}, cronExpression:{}, date:{}", triggerKey, cronExpression, date);
-        } else {
-        	logger.info(">>>>>>>>>>> resumeJob fail, triggerKey:{}, cronExpression:{}", triggerKey, cronExpression);
+    // reschedule
+    @SuppressWarnings("unchecked")
+	public static boolean rescheduleJob(XxlJobInfo jobInfo) throws SchedulerException {
+    	
+    	// TriggerKey valid if_exists
+        if (!checkExists(jobInfo.getJobName(), jobInfo.getJobGroup())) {
+        	logger.info(">>>>>>>>>>> rescheduleJob fail, job not exists, jobInfo:{}", jobInfo);
+            return false;
         }
-        return result;
+        
+        // TriggerKey : name + group
+        TriggerKey triggerKey = TriggerKey.triggerKey(jobInfo.getJobName(), jobInfo.getJobGroup());
+        JobKey jobKey = new JobKey(jobInfo.getJobName(), jobInfo.getJobGroup());
+        
+        // CronTrigger : TriggerKey + cronExpression
+        CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.cronSchedule(jobInfo.getJobCron()).withMisfireHandlingInstructionDoNothing();
+        CronTrigger cronTrigger = TriggerBuilder.newTrigger().withIdentity(triggerKey).withSchedule(cronScheduleBuilder).build();
+        
+        //scheduler.rescheduleJob(triggerKey, cronTrigger);
+        
+        // JobDetail-JobDataMap fresh
+        JobDetail jobDetail = scheduler.getJobDetail(jobKey);
+    	JobDataMap jobDataMap = jobDetail.getJobDataMap();
+    	jobDataMap.clear();
+    	jobDataMap.putAll(JacksonUtil.readValue(jobInfo.getJobData(), Map.class));
+    	
+    	// Trigger fresh
+    	HashSet<Trigger> triggerSet = new HashSet<Trigger>();
+    	triggerSet.add(cronTrigger);
+        
+        scheduler.scheduleJob(jobDetail, triggerSet, true);
+        logger.info(">>>>>>>>>>> resumeJob success, jobInfo:{}", jobInfo);
+        return true;
     }
     
-    // unscheduleJob 删除
-    public static boolean removeJob(String triggerKeyName) throws SchedulerException {
+    // unscheduleJob
+    public static boolean removeJob(String jobName, String jobGroup) throws SchedulerException {
     	// TriggerKey : name + group
-    	String group = Scheduler.DEFAULT_GROUP;
-        TriggerKey triggerKey = TriggerKey.triggerKey(triggerKeyName, group);
-        
+        TriggerKey triggerKey = TriggerKey.triggerKey(jobName, jobGroup);
         boolean result = false;
-        if (scheduler.checkExists(triggerKey)) {
+        if (checkExists(jobName, jobGroup)) {
             result = scheduler.unscheduleJob(triggerKey);
+            logger.info(">>>>>>>>>>> removeJob, triggerKey:{}, result [{}]", triggerKey, result);
         }
-        logger.info(">>>>>>>>>>> removeJob, triggerKey:{}, result [{}]", triggerKey, result);
-        return result;
+        return true;
     }
 
-    // Pause 暂停
-    public static boolean pauseJob(String triggerKeyName) throws SchedulerException {
+    // Pause
+    public static boolean pauseJob(String jobName, String jobGroup) throws SchedulerException {
     	// TriggerKey : name + group
-    	String group = Scheduler.DEFAULT_GROUP;
-        TriggerKey triggerKey = TriggerKey.triggerKey(triggerKeyName, group);
+    	TriggerKey triggerKey = TriggerKey.triggerKey(jobName, jobGroup);
         
         boolean result = false;
-        if (scheduler.checkExists(triggerKey)) {
+        if (checkExists(jobName, jobGroup)) {
             scheduler.pauseTrigger(triggerKey);
             result = true;
             logger.info(">>>>>>>>>>> pauseJob success, triggerKey:{}", triggerKey);
@@ -208,14 +234,13 @@ public final class DynamicSchedulerUtil implements InitializingBean {
         return result;
     }
     
-    // resume 重启 
-    public static boolean resumeJob(String triggerKeyName) throws SchedulerException {
-        // TriggerKey : name + group
-    	String group = Scheduler.DEFAULT_GROUP;
-        TriggerKey triggerKey = TriggerKey.triggerKey(triggerKeyName, group);
+    // resume
+    public static boolean resumeJob(String jobName, String jobGroup) throws SchedulerException {
+    	// TriggerKey : name + group
+    	TriggerKey triggerKey = TriggerKey.triggerKey(jobName, jobGroup);
         
         boolean result = false;
-        if (scheduler.checkExists(triggerKey)) {
+        if (checkExists(jobName, jobGroup)) {
             scheduler.resumeTrigger(triggerKey);
             result = true;
             logger.info(">>>>>>>>>>> resumeJob success, triggerKey:{}", triggerKey);
@@ -225,14 +250,13 @@ public final class DynamicSchedulerUtil implements InitializingBean {
         return result;
     }
     
-    // run 执行一次 
-    public static boolean triggerJob(String triggerKeyName) throws SchedulerException {
-        // TriggerKey : name + group
-    	String group = Scheduler.DEFAULT_GROUP;
-        JobKey jobKey = JobKey.jobKey(triggerKeyName, group);
+    // run
+    public static boolean triggerJob(String jobName, String jobGroup) throws SchedulerException {
+    	// TriggerKey : name + group
+    	JobKey jobKey = new JobKey(jobName, jobGroup);
         
         boolean result = false;
-        if (scheduler.checkExists(jobKey)) {
+        if (checkExists(jobName, jobGroup)) {
             scheduler.triggerJob(jobKey);
             result = true;
             logger.info(">>>>>>>>>>> runJob success, jobKey:{}", jobKey);

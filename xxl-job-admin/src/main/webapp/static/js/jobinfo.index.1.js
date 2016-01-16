@@ -7,32 +7,68 @@ $(function() {
 		"ajax": {
 			url: base_url + "/jobinfo/pageList",
 	        data : function ( d ) {
-                d.jobName = $('#jobName').val()
+	        	d.jobGroup = $('#jobGroup').val();
+                d.jobName = $('#jobName').val();
             }
 	    },
+	    "searching": false,
+	    "ordering": false,
 	    //"scrollX": true,	// X轴滚动条，取消自适应
 	    "columns": [
 	                { "data": 'id', "bSortable": false, "visible" : false},
-	                { "data": 'jobName', "bSortable": false},
-	                { "data": 'jobCron', "bSortable": false, "visible" : true},
-	                { "data": 'jobClass', "bSortable": false, "visible" : false},
-	                { "data": 'jobStatus', "bSortable": false, "visible" : true},
-	                { "data": 'jobData', "bSortable": false, "visible" : true},
+	                { 
+	                	"data": 'jobGroup', 
+	                	"render": function ( data, type, row ) {
+	            			var groupMenu = $("#jobGroup").find("option");
+	            			for ( var index in $("#jobGroup").find("option")) {
+	            				if ($(groupMenu[index]).attr('value') == data) {
+									return $(groupMenu[index]).html();
+								}
+							}
+	            			return data;
+	            		}
+            		},
+	                { "data": 'jobName'},
+	                { "data": 'jobCron', "visible" : true},
+	                { "data": 'jobDesc', "visible" : false},
+	                { "data": 'jobClass', "visible" : true},
+	                { 
+	                	"data": 'jobData',
+	                	"visible" : true,
+	                	"render": function ( data, type, row ) {
+	                		return data?'<a class="logTips" href="javascript:;" >查看<span style="display:none;">'+ data +'</span></a>':"无";
+	                	}
+	                },
 	                { 
 	                	"data": 'addTime', 
-	                	"bSortable": false, 
+	                	"visible" : false, 
 	                	"render": function ( data, type, row ) {
 	                		return data?moment(new Date(data)).format("YYYY-MM-DD HH:mm:ss"):"";
 	                	}
 	                },
 	                { 
 	                	"data": 'updateTime', 
-	                	"bSortable": false, 
+	                	"visible" : false, 
 	                	"render": function ( data, type, row ) {
 	                		return data?moment(new Date(data)).format("YYYY-MM-DD HH:mm:ss"):"";
 	                	}
 	                },
-	                { "data": '操作' , "bSortable": false,
+	                { "data": 'author', "visible" : true},
+	                { "data": 'alarmEmail', "visible" : false},
+	                { "data": 'alarmThreshold', "visible" : false},
+	                { 
+	                	"data": 'jobStatus', 
+	                	"visible" : true,
+	                	"render": function ( data, type, row ) {
+	                		if ('NORMAL' == data) {
+	                			return '<small class="label label-success" ><i class="fa fa-clock-o"></i>'+ data +'</small>'; 
+							} else if ('PAUSED' == data){
+								return '<small class="label label-default"><i class="fa fa-clock-o"></i>'+ data +'</small>'; 
+							}
+	                		return data;
+	                	}
+	                },
+	                { "data": '操作' ,
 	                	"render": function ( data, type, row ) {
 	                		return function(){
 	                			// status
@@ -43,23 +79,31 @@ $(function() {
 									pause_resume = '<button class="btn btn-info btn-xs job_operate" type="job_resume" type="button">恢复</button>  ';
 								}
 	                			// log url
-	                			var logUrl = base_url +'/joblog?jobName='+ row.jobName;
+	                			var logUrl = base_url +'/joblog?jobGroup='+ row.jobGroup +'&jobName='+ row.jobName;
 	                			
 	                			// job data
 	                			var jobDataMap = eval('(' + row.jobData + ')');
 	                			
-	                			var html = '<p jobName="'+ row.jobName +'" '+
-	                							' cronExpression="'+ row.jobCron +'" '+
-	                							' job_desc="'+jobDataMap.job_desc +'" '+
-	                							' job_url="'+ jobDataMap.job_url +'" '+
-	                							' handleName="'+ jobDataMap.handleName +'" '+
+	                			var html = '<p id="'+ row.id +'" '+
+	                							' jobGroup="'+ row.jobGroup +'" '+
+	                							' jobName="'+ row.jobName +'" '+
+	                							' jobCron="'+ row.jobCron +'" '+
+	                							' jobDesc="'+ row.jobDesc +'" '+
+	                							' jobClass="'+ row.jobClass +'" '+
+	                							' jobData="'+ row.jobData +'" '+
+	                							' author="'+ row.author +'" '+
+	                							' alarmEmail="'+ row.alarmEmail +'" '+
+	                							' alarmThreshold="'+ row.alarmThreshold +'" '+
+	                							' handler_params="'+jobDataMap.handler_params +'" '+
+	                							' handler_address="'+ jobDataMap.handler_address +'" '+
+	                							' handler_name="'+ jobDataMap.handler_name +'" '+
 	                							'>'+
 	                					pause_resume +
 										'<button class="btn btn-info btn-xs job_operate" type="job_trigger" type="button">执行</button>  '+
-										'<button class="btn btn-info btn-xs update" type="button">更新corn</button>  '+
-									  	'<button class="btn btn-danger btn-xs job_operate" type="job_del" type="button">删除</button>  '+
+										'<button class="btn btn-warning btn-xs update" type="button">编辑</button><br> '+
 									  	'<button class="btn btn-warning btn-xs" type="job_del" type="button" '+
-									  		'onclick="javascript:window.open(\'' + logUrl + '\')" >查看日志</button>'+
+									  		'onclick="javascript:window.open(\'' + logUrl + '\')" >查看日志</button> '+
+								  		'<button class="btn btn-danger btn-xs job_operate" type="job_del" type="button">删除</button>  '+
 									'</p>';
 									
 	                			
@@ -68,8 +112,6 @@ $(function() {
 	                	}
 	                }
 	            ],
-	    "searching": false,
-	    "ordering": true,
 		"language" : {
 			"sProcessing" : "处理中...",
 			"sLengthMenu" : "每页 _MENU_ 条记录",
@@ -96,6 +138,12 @@ $(function() {
 		}
 	});
 	
+	// 日志弹框提示
+	$('#job_list').on('click', '.logTips', function(){
+		var msg = $(this).find('span').html();
+		ComAlertTec.show(msg);
+	});
+	
 	// 搜索按钮
 	$('#searchBtn').on('click', function(){
 		jobTable.fnDraw();
@@ -108,28 +156,30 @@ $(function() {
 		var type = $(this).attr("type");
 		if ("job_pause" == type) {
 			typeName = "暂停";
-			url = base_url + "/job/pause";
+			url = base_url + "/jobinfo/pause";
 		} else if ("job_resume" == type) {
 			typeName = "恢复";
-			url = base_url + "/job/resume";
+			url = base_url + "/jobinfo/resume";
 		} else if ("job_del" == type) {
 			typeName = "删除";
-			url = base_url + "/job/remove";
+			url = base_url + "/jobinfo/remove";
 		} else if ("job_trigger" == type) {
-			typeName = "执行一次";
-			url = base_url + "/job/trigger";
+			typeName = "执行";
+			url = base_url + "/jobinfo/trigger";
 		} else {
 			return;
 		}
 		
-		var name = $(this).parent('p').attr("jobName");
+		var jobGroup = $(this).parent('p').attr("jobGroup");
+		var jobName = $(this).parent('p').attr("jobName");
 		
 		ComConfirm.show("确认" + typeName + "?", function(){
 			$.ajax({
 				type : 'POST',
 				url : url,
 				data : {
-					"triggerKeyName" :	name
+					"jobGroup" : jobGroup,
+					"jobName"  : jobName
 				},
 				dataType : "json",
 				success : function(data){
@@ -162,50 +212,74 @@ $(function() {
         errorClass : 'help-block',
         focusInvalid : true,  
         rules : {  
-        	triggerKeyName : {  
+        	jobName : {  
         		required : true ,
                 minlength: 4,
                 maxlength: 100,
                 myValid01:true
             },  
-            cronExpression : {  
+            jobCron : {  
             	required : true ,
                 maxlength: 100
             },  
-            job_desc : {  
+            jobDesc : {  
             	required : true ,
                 maxlength: 200
             },
-            job_url : {
+            handler_address : {
             	required : true ,
                 maxlength: 200
             },
-            handleName : {
+            handler_name : {
             	required : true ,
                 maxlength: 200
+            },
+            author : {
+            	required : true ,
+                maxlength: 200
+            },
+            alarm_email : {
+            	required : true ,
+                maxlength: 200
+            },
+            alarm_threshold : {
+            	required : true ,
+            	digits:true
             }
         }, 
         messages : {  
-        	triggerKeyName : {  
-        		required :"请输入“任务Key”."  ,
-                minlength:"“任务Key”长度不应低于4位",
-                maxlength:"“任务Key”长度不应超过100位"
+        	jobName : {  
+        		required :"请输入“任务名”"  ,
+                minlength:"“任务名”长度不应低于4位",
+                maxlength:"“任务名”长度不应超过100位"
             },  
-            cronExpression : {
-            	required :"请输入“任务Corn”."  ,
-                maxlength:"“任务Corn”长度不应超过100位"
+            jobCron : {
+            	required :"请输入“Corn”."  ,
+                maxlength:"“Corn”长度不应超过100位"
             },  
-            job_desc : {
+            jobDesc : {
             	required :"请输入“任务描述”."  ,
                 maxlength:"“任务描述”长度不应超过200位"
             },  
-            job_url : {
-            	required :"请输入“任务URL”."  ,
-                maxlength:"“任务URL”长度不应超过200位"
+            handler_address : {
+            	required :"请输入“远程-机器地址”."  ,
+                maxlength:"“远程-机器地址”长度不应超过200位"
             },
-            handleName : {
-            	required : "请输入“任务handler”."  ,
-                maxlength: "“任务handler”长度不应超过200位"
+            handler_name : {
+            	required : "请输入“远程-执行器”."  ,
+                maxlength: "“远程-执行器”长度不应超过200位"
+            },
+            author : {
+            	required : "请输入“负责人”."  ,
+                maxlength: "“负责人”长度不应超过50位"
+            },
+            alarm_email : {
+            	required : "请输入“报警邮件”."  ,
+                maxlength: "“报警邮件”长度不应超过200位"
+            },
+            alarm_threshold : {
+            	required : "请输入“报警阈值”."  ,
+            	digits:"阀值应该为整数."
             }
         }, 
 		highlight : function(element) {  
@@ -219,52 +293,20 @@ $(function() {
             element.parent('div').append(error);  
         },
         submitHandler : function(form) {
-        	
-        	var triggerKeyName = $('#addModal input[name="triggerKeyName"]').val();
-        	var cronExpression = $('#addModal input[name="cronExpression"]').val();
-        	var job_desc = $('#addModal input[name="job_desc"]').val();
-        	var job_url = $('#addModal input[name="job_url"]').val();
-        	var handleName = $('#addModal input[name="handleName"]').val();
-        	
-        	var paramStr = 'triggerKeyName=' + triggerKeyName + 
-        		'&cronExpression=' + cronExpression + 
-        		'&job_desc=' + job_desc +
-        		'&job_url=' + job_url +
-        		'&handleName=' + handleName;
-        	
-        	var ifFin = true;
-        	$('#addModal .newParam').each(function(){
-        		ifFin = false;
-        		var key = $(this).find('input[name="key"]').val();
-        		var value = $(this).find('input[name="value"]').val();
-        		if (!key) {
-        			ComAlert.show(2, "新增参数key不可为空");
-        			return;
-				} else {
-					if(!/^[a-zA-Z][a-zA-Z0-9_]*$/.test(key)){
-						ComAlert.show(2, "新增参数key不合法, 只支持英文字母开头，只含有英文字母、数字和下划线");
-	        			return;
-					}
-				}
-        		paramStr += "&" + key + "=" + value;
-        		ifFin = true;
-        	});
-        	
-        	if(ifFin){
-        		$.post(base_url + "/job/add", paramStr, function(data, status) {
-        			if (data.code == "200") {
-        				ComAlert.show(1, "新增调度任务成功", function(){
-        					window.location.reload();
-        				});
-        			} else {
-        				if (data.msg) {
-        					ComAlert.show(2, data.msg);
-        				} else {
-        					ComAlert.show(2, "新增失败");
-        				}
-        			}
-        		});
-        	}
+        	$.post(base_url + "/jobinfo/add",  $("#addModal .form").serialize(), function(data, status) {
+    			if (data.code == "200") {
+    				ComAlert.show(1, "新增调度任务成功", function(){
+    					ComAlert.show(1, "新增任务成功");
+    					jobTable.fnDraw();
+    				});
+    			} else {
+    				if (data.msg) {
+    					ComAlert.show(2, data.msg);
+    				} else {
+    					ComAlert.show(2, "新增失败");
+    				}
+    			}
+    		});
 		}
 	});
 	$("#addModal").on('hide.bs.modal', function () {
@@ -273,19 +315,16 @@ $(function() {
 		$("#addModal .form .form-group").removeClass("has-error");
 	});
 	
-	// 新增-添加参数
-	$("#addModal .addParam").on('click', function () {
-		var html = '<div class="form-group newParam">'+
-				'<label for="lastname" class="col-sm-2 control-label">参数&nbsp;<button class="btn btn-danger btn-xs removeParam" type="button">移除</button></label>'+
-				'<div class="col-sm-4"><input type="text" class="form-control" name="key" placeholder="请输入参数key[将会强转为String]" maxlength="200" /></div>'+
-				'<div class="col-sm-6"><input type="text" class="form-control" name="value" placeholder="请输入参数value[将会强转为String]" maxlength="200" /></div>'+
-			'</div>';
-		$(this).parents('.form-group').parent().append(html);
-		
-		$("#addModal .removeParam").on('click', function () {
-			$(this).parents('.form-group').remove();
-		});
-	});
+	// 远程任务/本地任务，切换
+	$("#addModal select[name='jobClass']").change(function() {
+		//console.log($(this).val());
+		console.log( $(this).val().indexOf('HttpJobBean') );
+		if($(this).val().indexOf('HttpJobBean') > -1){
+			$(".remote_panel").show();	// remote
+		} else if($(this).val().indexOf('HttpJobBean') == -1){
+			$(".remote_panel").hide();	// local
+		}
+    });
 	
 	// 更新
 	$("#job_list").on('click', '.update',function() {
@@ -376,4 +415,20 @@ $(function() {
 		$("#updateModal .form")[0].reset()
 	});
 	
+	
+	/*
+	// 新增-添加参数
+	$("#addModal .addParam").on('click', function () {
+		var html = '<div class="form-group newParam">'+
+				'<label for="lastname" class="col-sm-2 control-label">参数&nbsp;<button class="btn btn-danger btn-xs removeParam" type="button">移除</button></label>'+
+				'<div class="col-sm-4"><input type="text" class="form-control" name="key" placeholder="请输入参数key[将会强转为String]" maxlength="200" /></div>'+
+				'<div class="col-sm-6"><input type="text" class="form-control" name="value" placeholder="请输入参数value[将会强转为String]" maxlength="200" /></div>'+
+			'</div>';
+		$(this).parents('.form-group').parent().append(html);
+		
+		$("#addModal .removeParam").on('click', function () {
+			$(this).parents('.form-group').remove();
+		});
+	});
+	*/
 });

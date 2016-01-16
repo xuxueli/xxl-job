@@ -35,7 +35,7 @@
 	                	<span class="input-group-addon">任务组</span>
                 		<select class="form-control" id="jobGroup" >
                 			<#list JobGroupList as group>
-                				<option value="${group}" <#if jobInfo?exists && group == jobInfo.jobGroup>selected</#if> >${group.desc}</option>
+                				<option value="${group}" <#if jobGroup == group>selected</#if> >${group.desc}</option>
                 			</#list>
 	                  	</select>
 	              	</div>
@@ -74,6 +74,7 @@
 					                	<th name="jobGroup" >任务组</th>
 					                  	<th name="jobName" >任务名</th>
 					                  	<th name="jobCron" >Cron</th>
+					                  	<th name="jobDesc" >描述</th>
 					                  	<th name="jobClass" >JobBean</th>
 					                  	<th name="jobData" >任务数据</th>
 					                  	<th name="triggerTime" >调度时间</th>

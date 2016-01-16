@@ -6,37 +6,45 @@
 	<resultMap id="XxlJobInfo" type="com.xxl.job.core.model.XxlJobInfo" >
 		<result column="id" property="id" />
 	
+		<result column="job_group" property="jobGroup" />
 	    <result column="job_name" property="jobName" />
 	    <result column="job_cron" property="jobCron" />
+	    <result column="job_desc" property="jobDesc" />
 	    <result column="job_class" property="jobClass" />
 	    <result column="job_data" property="jobData" />
 	    
 	    <result column="add_time" property="addTime" />
 	    <result column="update_time" property="updateTime" />
+	    
+	    <result column="author" property="author" />
+	    <result column="alarm_email" property="alarmEmail" />
+	    <result column="alarm_threshold" property="alarmThreshold" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
 		t.id,
+		t.job_group,
 		t.job_name,
 		t.job_cron,
+		t.job_desc,
 		t.job_class,
 		t.job_data,
 		t.add_time,
-		t.update_time
+		t.update_time,
+		t.author,
+		t.alarm_email,
+		t.alarm_threshold
 	</sql>
 	
 	<select id="pageList" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
 		SELECT <include refid="Base_Column_List" />
 		FROM xxl_job_qrtz_trigger_info AS t
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
-			<if test="jobName != null and jobName!=''">
-				AND t.job_name = #{jobName}
+			<if test="jobGroup != null and jobGroup != ''">
+				AND t.job_group = #{jobGroup}
 			</if>
-			<if test="addTimeStart != null">
-				AND t.add_time <![CDATA[ > ]]> #{addTimeStart}
-			</if>
-			<if test="addTimeEnd != null">
-				AND t.add_time <![CDATA[ < ]]> #{addTimeEnd}
+			<if test="jobName != null and jobName != ''">
+				AND t.job_name like CONCAT(CONCAT('%', #{jobName}), '%')
 			</if>
 		</trim>
 		ORDER BY id DESC
@@ -47,56 +55,74 @@
 		SELECT count(1)
 		FROM xxl_job_qrtz_trigger_info AS t
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
-			<if test="jobName != null and jobName!=''">
-				AND t.job_name = #{jobName}
+			<if test="jobGroup != null and jobGroup != ''">
+				AND t.job_group = #{jobGroup}
 			</if>
-			<if test="addTimeStart != null">
-				AND t.add_time <![CDATA[ > ]]> #{addTimeStart}
-			</if>
-			<if test="addTimeEnd != null">
-				AND t.add_time <![CDATA[ < ]]> #{addTimeEnd}
+			<if test="jobName != null and jobName != ''">
+				AND t.job_name like CONCAT(CONCAT('%', #{jobName}), '%')
 			</if>
 		</trim>
 	</select>
 	
 	<insert id="save" parameterType="com.xxl.job.core.model.XxlJobInfo" useGeneratedKeys="true" keyProperty="id" >
 		INSERT INTO `xxl_job_qrtz_trigger_info` (
-			`job_name`, 
-			`job_cron`, 
-			`job_class`, 
-			`job_data`,
-			`add_time`,
-			`update_time`
+			job_group,
+			job_name,
+			job_cron,
+			job_desc,
+			job_class,
+			job_data,
+			add_time,
+			update_time,
+			author,
+			alarm_email,
+			alarm_threshold
 		) VALUES (
+			#{jobGroup}, 
 			#{jobName}, 
 			#{jobCron}, 
+			#{jobDesc}, 
 			#{jobClass}, 
 			#{jobData},
 			NOW(),
-			NOW()
+			NOW(),
+			#{author},
+			#{alarmEmail},
+			#{alarmThreshold}
 		);
 		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id"> 
 			SELECT LAST_INSERT_ID() 
 		</selectKey> 
 	</insert>
 	
-	<select id="load" parameterType="java.lang.String" resultMap="XxlJobInfo">
+	<select id="load" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
 		SELECT <include refid="Base_Column_List" />
 		FROM xxl_job_qrtz_trigger_info AS t
-		WHERE t.job_name = #{jobName}
+		WHERE t.job_group = #{jobGroup}
+			AND t.job_name = #{jobName}
 	</select>
 	
-	<update id="update">
+	<update id="update" parameterType="com.xxl.job.core.model.XxlJobInfo" >
 		UPDATE `xxl_job_qrtz_trigger_info` 
-		SET `job_cron`= #{jobCron}, 
-			`job_data`= #{jobData},
-			`update_time`= NOW()
-		WHERE `id`= #{id}
+		SET 
+			job_cron = #{jobCron},
+			job_desc = #{jobDesc},
+			job_data = #{jobData},
+			update_time = NOW(),
+			author = #{author},
+			alarm_email = #{alarmEmail},
+			alarm_threshold = #{alarmThreshold}
+		WHERE job_group = #{jobGroup}
+			AND job_name = #{jobName}
 	</update>
 	
 	<delete id="delete" parameterType="java.lang.String">
-		delete from xxl_job_qrtz_trigger_info
-		where job_name = #{jobName}
+		DELETE
+		FROM
+			xxl_job_qrtz_trigger_info
+		WHERE
+			job_group = #{jobGroup}
+		AND job_name = #{jobName}
 	</delete>
 	
 </mapper>

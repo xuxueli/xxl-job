@@ -10,21 +10,22 @@ public class XxlJobInfo {
 	
 	private int id;
 	
-	private String jobGroup;	// base on quartz	任务组
-	private String jobName;		// base on quartz	任务名
-	private String jobCron;		// base on quartz	任务执行CRON表达式
-	private String jobClass;	// base on quartz	任务执行JobBean
-	private String jobData;		// base on db, Map-JSON-String	任务执行数据
+	private String jobGroup;	// 任务组
+	private String jobName;		// 任务名
+	private String jobCron;		// 任务执行CRON表达式 【base on quartz】
+	private String jobDesc;
+	private String jobClass;	// 任务执行JobBean 【base on quartz】
+	private String jobData;		// 任务执行数据 Map-JSON-String
 	
 	private Date addTime;
 	private Date updateTime;
 	
-	private String author;		// 作者
+	private String author;		// 负责人
 	private String alarmEmail;	// 报警邮件
 	private int alarmThreshold;	// 报警阀值
 	
 	// copy from quartz
-	private String jobStatus;	// 任务状态
+	private String jobStatus;	// 任务状态 【base on quartz】
 
 	public int getId() {
 		return id;
@@ -56,6 +57,14 @@ public class XxlJobInfo {
 
 	public void setJobCron(String jobCron) {
 		this.jobCron = jobCron;
+	}
+
+	public String getJobDesc() {
+		return jobDesc;
+	}
+
+	public void setJobDesc(String jobDesc) {
+		this.jobDesc = jobDesc;
 	}
 
 	public String getJobClass() {
@@ -125,9 +134,9 @@ public class XxlJobInfo {
 	@Override
 	public String toString() {
 		return "XxlJobInfo [id=" + id + ", jobGroup=" + jobGroup + ", jobName=" + jobName + ", jobCron=" + jobCron
-				+ ", jobClass=" + jobClass + ", jobData=" + jobData + ", addTime=" + addTime + ", updateTime="
-				+ updateTime + ", author=" + author + ", alarmEmail=" + alarmEmail + ", alarmThreshold="
-				+ alarmThreshold + ", jobStatus=" + jobStatus + "]";
+				+ ", jobDesc=" + jobDesc + ", jobClass=" + jobClass + ", jobData=" + jobData + ", addTime=" + addTime
+				+ ", updateTime=" + updateTime + ", author=" + author + ", alarmEmail=" + alarmEmail
+				+ ", alarmThreshold=" + alarmThreshold + ", jobStatus=" + jobStatus + "]";
 	}
-	
+
 }

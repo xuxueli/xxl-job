@@ -1,14 +1,11 @@
 package com.xxl.job.controller;
 
-import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.quartz.CronExpression;
@@ -28,6 +25,8 @@ import com.xxl.job.core.model.XxlJobInfo;
 import com.xxl.job.core.util.DynamicSchedulerUtil;
 import com.xxl.job.dao.IXxlJobInfoDao;
 import com.xxl.job.service.job.HttpJobBean;
+import com.xxl.job.service.job.LocalJobBean;
+import com.xxl.job.service.job.LocalJobBeanB;
 
 /**
  * index controller
@@ -40,9 +39,20 @@ public class JobInfoController {
 	@Resource
 	private IXxlJobInfoDao xxlJobInfoDao;
 	
+	// remote job bean
+	public static Class <? extends Job> remoteJobBean = HttpJobBean.class;
+	// loacal job bean
+	public static List<Class <? extends Job>> localJobBeanList = new ArrayList<Class<? extends Job>>();
+	static{
+		localJobBeanList.add(LocalJobBean.class);
+		localJobBeanList.add(LocalJobBeanB.class);
+	}
+	
 	@RequestMapping
 	public String index(Model model) {
-		model.addAttribute("JobGroupList", JobGroupEnum.values());
+		model.addAttribute("localJobBeanList", localJobBeanList);			// 本地任务-列表
+		model.addAttribute("remoteJobBean", remoteJobBean);	// 远程任务-jobBean
+		model.addAttribute("JobGroupList", JobGroupEnum.values());			// 任务组列表
 		return "jobinfo/index";
 	}
 	
@@ -50,11 +60,11 @@ public class JobInfoController {
 	@ResponseBody
 	public Map<String, Object> pageList(@RequestParam(required = false, defaultValue = "0") int start,  
 			@RequestParam(required = false, defaultValue = "10") int length,
-			String jobName, String filterTime) {
+			String jobGroup, String jobName, String filterTime) {
 		
 		// page list
-		List<XxlJobInfo> list = xxlJobInfoDao.pageList(start, length, jobName, null, null);
-		int list_count = xxlJobInfoDao.pageListCount(start, length, jobName, null, null);
+		List<XxlJobInfo> list = xxlJobInfoDao.pageList(start, length, jobGroup, jobName);
+		int list_count = xxlJobInfoDao.pageListCount(start, length, jobGroup, jobName);
 		
 		// fill job info
 		if (list!=null && list.size()>0) {
@@ -71,72 +81,89 @@ public class JobInfoController {
 		return maps;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@RequestMapping("/add")
 	@ResponseBody
-	public ReturnT<String> add(HttpServletRequest request) {
-		String triggerKeyName = null;
-		String cronExpression = null;
-		Map<String, String> jobData = new HashMap<String, String>();
+	public ReturnT<String> add(String jobGroup, String jobName, String jobCron, String jobDesc, String jobClass,
+			String handler_params, String handler_address, String handler_name, 
+			String author, String alarm_email, int alarm_threshold) {
 		
-		try {
-			request.setCharacterEncoding("utf-8");
-		} catch (UnsupportedEncodingException e1) {
-			e1.printStackTrace();
+		// valid
+		if (JobGroupEnum.match(jobGroup) == null) {
+			return new ReturnT<String>(500, "请选择“任务组”");
 		}
-		@SuppressWarnings("unchecked")
-		Set<Map.Entry<String, String[]>> paramSet = request.getParameterMap().entrySet();
-		for (Entry<String, String[]> param : paramSet) {
-			if (param.getKey().equals("triggerKeyName")) {
-				triggerKeyName = param.getValue()[0];
-			} else if (param.getKey().equals("cronExpression")) {
-				cronExpression = param.getValue()[0];
-			} else {
-				jobData.put(param.getKey(), (String) (param.getValue().length>0?param.getValue()[0]:param.getValue()));
-			}
+		if (StringUtils.isBlank(jobName)) {
+			return new ReturnT<String>(500, "请输入“任务名”");
 		}
-		
-		// triggerKeyName
-		if (StringUtils.isBlank(triggerKeyName)) {
-			return new ReturnT<String>(500, "请输入“任务key”");
+		if (!CronExpression.isValidExpression(jobCron)) {
+			return new ReturnT<String>(500, "“corn”不合法");
 		}
-		
-		// cronExpression
-		if (StringUtils.isBlank(cronExpression)) {
-			return new ReturnT<String>(500, "请输入“任务corn”");
-		}
-		if (!CronExpression.isValidExpression(cronExpression)) {
-			return new ReturnT<String>(500, "“任务corn”不合法");
-		}
-		
-		// jobData
-		if (jobData.get(HandlerRepository.job_desc)==null || jobData.get(HandlerRepository.job_desc).toString().trim().length()==0) {
+		if (StringUtils.isBlank(jobDesc)) {
 			return new ReturnT<String>(500, "请输入“任务描述”");
 		}
-		if (jobData.get(HandlerRepository.job_url)==null || jobData.get(HandlerRepository.job_url).toString().trim().length()==0) {
-			return new ReturnT<String>(500, "请输入“任务URL”");
+		Class<? extends Job> jobClass_ = null;
+		try {
+			Class<?> clazz = Class.forName(jobClass);
+			if (clazz!=null) {
+				jobClass_ = (Class<? extends Job>) clazz;
+			}
+		} catch (ClassNotFoundException e1) {
+			e1.printStackTrace();
 		}
-		if (jobData.get(HandlerRepository.handleName)==null || jobData.get(HandlerRepository.handleName).toString().trim().length()==0) {
-			return new ReturnT<String>(500, "请输入“任务handler”");
+		if (jobClass_ == null) {
+			return new ReturnT<String>(500, "请选择“JobBean”");
+		}
+		if (jobClass_.getClass().getName().equals(remoteJobBean.getName())) {
+			if (StringUtils.isBlank(handler_address)) {
+				return new ReturnT<String>(500, "请输入“远程-机器地址”");
+			}
+			if (StringUtils.isBlank(handler_name)) {
+				return new ReturnT<String>(500, "请输入“远程-执行器”");
+			}
+		}
+		if (StringUtils.isBlank(author)) {
+			return new ReturnT<String>(500, "请输入“负责人”");
+		}
+		if (StringUtils.isBlank(alarm_email)) {
+			return new ReturnT<String>(500, "请输入“报警邮件”");
 		}
 		
-		// jobClass
-		Class<? extends Job> jobClass = HttpJobBean.class;
+		try {
+			if (DynamicSchedulerUtil.checkExists(jobName, jobGroup)) {
+				return new ReturnT<String>(500, "此任务已存在，请更换任务组或任务名");
+			}
+		} catch (SchedulerException e1) {
+			e1.printStackTrace();
+			return new ReturnT<String>(500, "此任务已存在，请更换任务组或任务名");
+		}
+		
+		HashMap<String, String> jobDataMap = new HashMap<String, String>();
+		jobDataMap.put(HandlerRepository.HANDLER_PARAMS, handler_params);
+		jobDataMap.put(HandlerRepository.HANDLER_ADDRESS, handler_address);
+		jobDataMap.put(HandlerRepository.HANDLER_NAME, handler_name);
+		
+		// Backup to the database
+		XxlJobInfo jobInfo = new XxlJobInfo();
+		jobInfo.setJobGroup(jobGroup);
+		jobInfo.setJobName(jobName);
+		jobInfo.setJobCron(jobCron);
+		jobInfo.setJobDesc(jobDesc);
+		jobInfo.setJobClass(jobClass);
+		jobInfo.setJobData(JacksonUtil.writeValueAsString(jobDataMap));
+		jobInfo.setAuthor(author);
+		jobInfo.setAlarmEmail(alarm_email);
+		jobInfo.setAlarmThreshold(alarm_threshold);
+		xxlJobInfoDao.save(jobInfo);
 		
 		try {
 			// add job 2 quartz
-			boolean result = DynamicSchedulerUtil.addJob(triggerKeyName, cronExpression, jobClass, null);
-			if (!result) {
-				return new ReturnT<String>(500, "任务ID重复，请更换确认");
+			boolean result = DynamicSchedulerUtil.addJob(jobInfo);
+			if (result) {
+				return ReturnT.SUCCESS;
+			} else {
+				xxlJobInfoDao.delete(jobGroup, jobName);
+				return new ReturnT<String>(500, "新增任务失败");
 			}
-			// Backup to the database
-			XxlJobInfo jobInfo = new XxlJobInfo();
-			jobInfo.setJobName(triggerKeyName);
-			jobInfo.setJobCron(cronExpression);
-			jobInfo.setJobClass(jobClass.getName());
-			jobInfo.setJobData(JacksonUtil.writeValueAsString(jobData));
-			xxlJobInfoDao.save(jobInfo);
-			
-			return ReturnT.SUCCESS;
 		} catch (SchedulerException e) {
 			e.printStackTrace();
 		}
@@ -145,27 +172,30 @@ public class JobInfoController {
 	
 	@RequestMapping("/reschedule")
 	@ResponseBody
-	public ReturnT<String> reschedule(String triggerKeyName, String cronExpression) {
-		// triggerKeyName
-		if (StringUtils.isBlank(triggerKeyName)) {
-			return new ReturnT<String>(500, "请输入“任务key”");
+	public ReturnT<String> reschedule(String jobGroup, String jobName, String jobCron, String jobDesc, String jobClass,
+			String handler_params, String handler_address, String handler_name, 
+			String author, String alarm_email, int alarm_threshold) {
+		
+		// valid
+		if (JobGroupEnum.match(jobGroup) == null) {
+			return new ReturnT<String>(500, "请选择“任务组”");
 		}
-		// cronExpression
-		if (StringUtils.isBlank(cronExpression)) {
-			return new ReturnT<String>(500, "请输入“任务corn”");
+		if (StringUtils.isBlank(jobName)) {
+			return new ReturnT<String>(500, "请输入“任务名”");
 		}
-		if (!CronExpression.isValidExpression(cronExpression)) {
-			return new ReturnT<String>(500, "“任务corn”不合法");
+		if (!CronExpression.isValidExpression(jobCron)) {
+			return new ReturnT<String>(500, "“corn”不合法");
 		}
+		
+		XxlJobInfo jobInfo = xxlJobInfoDao.load(jobGroup, jobName);
+		jobInfo.setJobCron(jobCron);
+		
 		try {
-			DynamicSchedulerUtil.rescheduleJob(triggerKeyName, cronExpression);
+			// fresh quartz
+			DynamicSchedulerUtil.rescheduleJob(jobInfo);
 			
-			// update
-			XxlJobInfo jobInfo = xxlJobInfoDao.load(triggerKeyName);
-			if (jobInfo!=null) {
-				jobInfo.setJobCron(cronExpression);
-				xxlJobInfoDao.update(jobInfo);
-			}
+			// fresh db
+			xxlJobInfoDao.update(jobInfo);
 			return ReturnT.SUCCESS;
 		} catch (SchedulerException e) {
 			e.printStackTrace();
@@ -175,13 +205,11 @@ public class JobInfoController {
 	
 	@RequestMapping("/remove")
 	@ResponseBody
-	public ReturnT<String> remove(String triggerKeyName) {
+	public ReturnT<String> remove(String jobGroup, String jobName) {
 		try {
-			if (triggerKeyName!=null) {
-				DynamicSchedulerUtil.removeJob(triggerKeyName);
-				xxlJobInfoDao.delete(triggerKeyName);
-				return ReturnT.SUCCESS;
-			}
+			DynamicSchedulerUtil.removeJob(jobName, jobGroup);
+			xxlJobInfoDao.delete(jobGroup, jobName);
+			return ReturnT.SUCCESS;
 		} catch (SchedulerException e) {
 			e.printStackTrace();
 		}
@@ -190,15 +218,9 @@ public class JobInfoController {
 	
 	@RequestMapping("/pause")
 	@ResponseBody
-	public ReturnT<String> pause(String triggerKeyName) {
+	public ReturnT<String> pause(String jobGroup, String jobName) {
 		try {
-			DynamicSchedulerUtil.pauseJob(triggerKeyName);
-			// update
-			XxlJobInfo jobInfo = xxlJobInfoDao.load(triggerKeyName);
-			if (jobInfo!=null) {
-				jobInfo.setJobStatus("PAUSED");
-				xxlJobInfoDao.update(jobInfo);
-			}
+			DynamicSchedulerUtil.pauseJob(jobName, jobGroup);	// jobStatus do not store
 			return ReturnT.SUCCESS;
 		} catch (SchedulerException e) {
 			e.printStackTrace();
@@ -208,15 +230,9 @@ public class JobInfoController {
 	
 	@RequestMapping("/resume")
 	@ResponseBody
-	public ReturnT<String> resume(String triggerKeyName) {
+	public ReturnT<String> resume(String jobGroup, String jobName) {
 		try {
-			DynamicSchedulerUtil.resumeJob(triggerKeyName);
-			// update
-			XxlJobInfo jobInfo = xxlJobInfoDao.load(triggerKeyName);
-			if (jobInfo!=null) {
-				jobInfo.setJobStatus("NORMAL");
-				xxlJobInfoDao.update(jobInfo);
-			}
+			DynamicSchedulerUtil.resumeJob(jobName, jobGroup);
 			return ReturnT.SUCCESS;
 		} catch (SchedulerException e) {
 			e.printStackTrace();
@@ -226,9 +242,9 @@ public class JobInfoController {
 	
 	@RequestMapping("/trigger")
 	@ResponseBody
-	public ReturnT<String> triggerJob(String triggerKeyName) {
+	public ReturnT<String> triggerJob(String jobGroup, String jobName) {
 		try {
-			DynamicSchedulerUtil.triggerJob(triggerKeyName);
+			DynamicSchedulerUtil.triggerJob(jobName, jobGroup);
 			return ReturnT.SUCCESS;
 		} catch (SchedulerException e) {
 			e.printStackTrace();

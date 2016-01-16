@@ -1,6 +1,5 @@
 package com.xxl.job.service.handler;
 
-import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -20,12 +19,12 @@ public class DemoJobHandler extends IJobHandler {
 	private static transient Logger logger = LoggerFactory.getLogger(DemoJobHandler.class);
 	
 	public DemoJobHandler() {
-		HandlerRepository.regist(DemoJobHandler.class.getName(), this);
+		HandlerRepository.regist("demoJobHandler", this);
 	}
 	
 	@Override
-	public JobHandleStatus handle(Map<String, String> param) throws Exception {
-		logger.info(" ... param:{}", param);
+	public JobHandleStatus handle(String... params) throws Exception {
+		logger.info(" ... params:" + params);
 		TimeUnit.SECONDS.sleep(new Random().nextInt(5));
 		return JobHandleStatus.SUCCESS;
 	}

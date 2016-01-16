@@ -1,7 +1,5 @@
 package com.xxl.job.client.handler;
 
-import java.util.Map;
-
 /**
  * remote job handler
  * @author xuxueli 2015-12-19 19:06:38
@@ -15,7 +13,7 @@ public abstract class IJobHandler extends HandlerRepository{
 	 * @return 
 	 * @throws Exception
 	 */
-	public abstract JobHandleStatus handle(Map<String, String> param) throws Exception;
+	public abstract JobHandleStatus handle(String... params) throws Exception;
 	
 	public enum JobHandleStatus{
 		/**

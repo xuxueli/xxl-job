@@ -1,6 +1,5 @@
 package com.xxl.job.dao.impl;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -23,25 +22,23 @@ public class XxlJobInfoDaoImpl implements IXxlJobInfoDao {
 	public SqlSessionTemplate sqlSessionTemplate;
 
 	@Override
-	public List<XxlJobInfo> pageList(int offset, int pagesize, String jobName, Date addTimeStart, Date addTimeEnd) {
+	public List<XxlJobInfo> pageList(int offset, int pagesize, String jobGroup, String jobName) {
 		HashMap<String, Object> params = new HashMap<String, Object>();
 		params.put("offset", offset);
 		params.put("pagesize", pagesize);
+		params.put("jobGroup", jobGroup);
 		params.put("jobName", jobName);
-		params.put("addTimeStart", addTimeStart);
-		params.put("addTimeEnd", addTimeEnd);
 		
 		return sqlSessionTemplate.selectList("XxlJobInfoMapper.pageList", params);
 	}
 
 	@Override
-	public int pageListCount(int offset, int pagesize, String jobName, Date addTimeStart, Date addTimeEnd) {
+	public int pageListCount(int offset, int pagesize, String jobGroup, String jobName) {
 		HashMap<String, Object> params = new HashMap<String, Object>();
 		params.put("offset", offset);
 		params.put("pagesize", pagesize);
+		params.put("jobGroup", jobGroup);
 		params.put("jobName", jobName);
-		params.put("addTimeStart", addTimeStart);
-		params.put("addTimeEnd", addTimeEnd);
 		
 		return sqlSessionTemplate.selectOne("XxlJobInfoMapper.pageListCount", params);
 	}
@@ -52,8 +49,12 @@ public class XxlJobInfoDaoImpl implements IXxlJobInfoDao {
 	}
 
 	@Override
-	public XxlJobInfo load(String jobName) {
-		return sqlSessionTemplate.selectOne("XxlJobInfoMapper.load", jobName);
+	public XxlJobInfo load(String jobGroup, String jobName) {
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put("jobGroup", jobGroup);
+		params.put("jobName", jobName);
+		
+		return sqlSessionTemplate.selectOne("XxlJobInfoMapper.load", params);
 	}
 
 	@Override
@@ -62,8 +63,12 @@ public class XxlJobInfoDaoImpl implements IXxlJobInfoDao {
 	}
 
 	@Override
-	public int delete(String jobName) {
-		return sqlSessionTemplate.update("XxlJobInfoMapper.delete", jobName);
+	public int delete(String jobGroup, String jobName) {
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put("jobGroup", jobGroup);
+		params.put("jobName", jobName);
+		
+		return sqlSessionTemplate.update("XxlJobInfoMapper.delete", params);
 	}
 	
 }

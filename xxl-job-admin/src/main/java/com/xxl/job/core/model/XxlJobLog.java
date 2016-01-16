@@ -14,6 +14,7 @@ public class XxlJobLog {
 	private String jobGroup;
 	private String jobName;
 	private String jobCron;
+	private String jobDesc;
 	private String jobClass;
 	private String jobData;
 	
@@ -26,7 +27,6 @@ public class XxlJobLog {
 	private Date handleTime;
 	private String handleStatus;
 	private String handleMsg;
-	
 	public int getId() {
 		return id;
 	}
@@ -50,6 +50,12 @@ public class XxlJobLog {
 	}
 	public void setJobCron(String jobCron) {
 		this.jobCron = jobCron;
+	}
+	public String getJobDesc() {
+		return jobDesc;
+	}
+	public void setJobDesc(String jobDesc) {
+		this.jobDesc = jobDesc;
 	}
 	public String getJobClass() {
 		return jobClass;
@@ -103,9 +109,9 @@ public class XxlJobLog {
 	@Override
 	public String toString() {
 		return "XxlJobLog [id=" + id + ", jobGroup=" + jobGroup + ", jobName=" + jobName + ", jobCron=" + jobCron
-				+ ", jobClass=" + jobClass + ", jobData=" + jobData + ", triggerTime=" + triggerTime
-				+ ", triggerStatus=" + triggerStatus + ", triggerMsg=" + triggerMsg + ", handleTime=" + handleTime
-				+ ", handleStatus=" + handleStatus + ", handleMsg=" + handleMsg + "]";
+				+ ", jobDesc=" + jobDesc + ", jobClass=" + jobClass + ", jobData=" + jobData + ", triggerTime="
+				+ triggerTime + ", triggerStatus=" + triggerStatus + ", triggerMsg=" + triggerMsg + ", handleTime="
+				+ handleTime + ", handleStatus=" + handleStatus + ", handleMsg=" + handleMsg + "]";
 	}
 	
 }

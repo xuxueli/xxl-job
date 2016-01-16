@@ -42,9 +42,7 @@
 	            </div>
 	            <div class="col-xs-4">
 	              	<div class="input-group">
-	                	<span class="input-group-addon">
-	                  		jobName
-	                	</span>
+	                	<span class="input-group-addon">任务名</span>
 	                	<input type="text" class="form-control" id="jobName" value="${jobName}" autocomplete="on" >
 	              	</div>
 	            </div>
@@ -66,63 +64,23 @@
 			              	<table id="job_list" class="table table-bordered table-striped">
 				                <thead>
 					            	<tr>
-					            		<th>id</th>
-					                	<th>任务Key</th>
-					                  	<th>任务Cron</th>
-					                  	<th>任务Class</th>
-					                  	<th>状态Status</th>
-					                  	<th>参数</th>
-					                  	<th>addTime</th>
-					                  	<th>updateTime</th>
+					            		<th name="id" >id</th>
+					                	<th name="jobGroup" >任务组</th>
+					                  	<th name="jobName" >任务名</th>
+					                  	<th name="jobCron" >Cron</th>
+					                  	<th name="jobDesc" >描述</th>
+					                  	<th name="jobClass" >JobBean</th>
+					                  	<th name="jobData" >任务数据</th>
+					                  	<th name="addTime" >新增时间</th>
+					                  	<th name="updateTime" >更新时间</th>
+					                  	<th name="author" >负责人</th>
+					                  	<th name="alarmEmail" >报警邮件</th>
+					                  	<th name="alarmThreshold" >报警阀值</th>
+					                  	<th name="jobStatus" >状态</th>
 					                  	<th>操作</th>
 					                </tr>
 				                </thead>
-				                <tbody>
-				                	<#--
-			                		<#if jobList?exists && jobList?size gt 0>
-									<#list jobList as item>
-									<tr>
-					            		<td>${item['TriggerKey'].name}</td>
-					                  	<td>${item['Trigger'].cronExpression}</td>
-					                  	<td>${item['JobDetail'].jobClass}</td>
-					                  	<td>
-					                  		<#assign jobDataMap = item['JobDetail'].jobDataMap />
-					                  		<#if jobDataMap?exists && jobDataMap?keys?size gt 0>
-					                  			<#list jobDataMap?keys as key>
-					                  				${key}	=	${jobDataMap[key]}	<br>
-					                  			</#list>
-					                  		</#if>
-					                  	</td>
-					                  	<td state="${item['TriggerState']}" >
-					                  		<#if item['TriggerState'] == 'NORMAL'>
-					                  			<button class="btn btn-block btn-success" type="button">运行ing</button>
-					                  		<#elseif item['TriggerState'] == 'PAUSED'>
-					                  			<button class="btn btn-block btn-warning" type="button">暂停ing</button>
-					                  		<#else>
-					                  			<button class="btn btn-block" type="button">${item['TriggerState']}</button>
-					                  		</#if>
-					                  	</td>
-					                  	<td>
-											<p name="${item['TriggerKey'].name}" group="${item['TriggerKey'].group}" 
-												cronExpression="${item['Trigger'].cronExpression}" jobClassName="${item['JobDetail'].jobClass}" jobDesc="${job_desc?if_exists}" >
-												<#if item['TriggerState'] == 'NORMAL'>
-													<button class="btn btn-info btn-xs job_operate" type="job_pause" type="button">暂停</button>
-												<#elseif item['TriggerState'] == 'PAUSED'>
-													<button class="btn btn-info btn-xs job_operate" type="job_resume" type="button">恢复</button>
-												</#if>
-												<button class="btn btn-info btn-xs job_operate" type="job_trigger" type="button">执行一次</button>
-												<button class="btn btn-info btn-xs update" type="button">更新corn</button>
-											  	<button class="btn btn-danger btn-xs job_operate" type="job_del" type="button">删除</button>
-											  	<button class="btn btn-warning btn-xs" type="job_del" type="button" 
-											  		onclick="javascript:window.open('${request.contextPath}/joblog?jobName=${item['TriggerKey'].name}')" >查看日志</button>
-											</p>
-					                  	</td>
-					                </tr>
-									</#list>
-									</#if>
-									
-									-->
-				                </tbody>
+				                <tbody></tbody>
 				                <tfoot></tfoot>
 							</table>
 						</div>
@@ -155,29 +113,51 @@
 		                  	</select>
 						</div>
 						<label for="firstname" class="col-sm-2 control-label">任务名</label>
-						<div class="col-sm-4"><input type="text" class="form-control" name="triggerKeyName" placeholder="请输入任务Key" minlength="4" maxlength="100" ></div>
+						<div class="col-sm-4"><input type="text" class="form-control" name="jobName" placeholder="请输入“任务名”" minlength="4" maxlength="100" ></div>
 					</div>
 					<div class="form-group">
-						<label for="lastname" class="col-sm-3 control-label">任务Corn</label>
-						<div class="col-sm-9"><input type="text" class="form-control" name="cronExpression" placeholder="请输入任务Corn" maxlength="100" ></div>
+						<label for="lastname" class="col-sm-2 control-label">Corn</label>
+						<div class="col-sm-4"><input type="text" class="form-control" name="jobCron" placeholder="请输入“Corn”" maxlength="100" ></div>
+						<label for="lastname" class="col-sm-2 control-label">描述</label>
+						<div class="col-sm-4"><input type="text" class="form-control" name="jobDesc" placeholder="请输入“描述”" maxlength="200" ></div>
 					</div>
 					<div class="form-group">
-						<label for="lastname" class="col-sm-3 control-label">任务描述</label>
-						<div class="col-sm-9"><input type="text" class="form-control" name="job_desc" placeholder="请输入任务描述" maxlength="200" ></div>
+						<label for="firstname" class="col-sm-2 control-label">JobBean</label>
+						<div class="col-sm-4">
+							<select class="form-control" name="jobClass" >
+								<#if remoteJobBean?exists >
+								<option value="${remoteJobBean.name}" jobClassType="remote" >【远程任务】</option>
+								</#if>
+								<#if localJobBeanList?exists && localJobBeanList?size gt 0 >
+								<#list localJobBeanList as localJobBean>
+									<option value="${localJobBean.name}" jobClassType="local" >${localJobBean.name}</option>
+								</#list>
+								</#if>
+		                  	</select>
+						</div>
+						<label for="firstname" class="col-sm-2 control-label">执行参数</label>
+						<div class="col-sm-4"><input type="text" class="form-control" name="handler_params" placeholder="请输入“执行参数”" maxlength="100" ></div>
+					</div>
+					<div class="form-group remote_panel">
+						<label for="lastname" class="col-sm-2 control-label">远程-机器地址</label>
+						<div class="col-sm-4"><input type="text" class="form-control" name="handler_address" placeholder="请输入“远程-机器地址”" maxlength="200" ></div>
+						<label for="lastname" class="col-sm-2 control-label">远程-执行器</label>
+						<div class="col-sm-4"><input type="text" class="form-control" name="handler_name" placeholder="请输入“远程-执行器”" maxlength="200" ></div>
 					</div>
 					<div class="form-group">
-						<label for="lastname" class="col-sm-3 control-label">任务URL</label>
-						<div class="col-sm-9"><input type="text" class="form-control" name="job_url" placeholder="请输入任务URL" maxlength="200" ></div>
+						<label for="lastname" class="col-sm-2 control-label">负责人</label>
+						<div class="col-sm-4"><input type="text" class="form-control" name="author" placeholder="请输入“负责人”" maxlength="200" ></div>
+						<label for="lastname" class="col-sm-2 control-label">报警邮件</label>
+						<div class="col-sm-4"><input type="text" class="form-control" name="alarm_email" placeholder="请输入“报警邮件”，多个邮件地址逗号分隔" maxlength="200" ></div>
 					</div>
 					<div class="form-group">
-						<label for="lastname" class="col-sm-3 control-label">任务handler</label>
-						<div class="col-sm-9"><input type="text" class="form-control" name="handleName" placeholder="请输入任务handler" maxlength="200" ></div>
+						<label for="lastname" class="col-sm-2 control-label">报警阈值</label>
+						<div class="col-sm-4"><input type="text" class="form-control" name="alarm_threshold" placeholder="请输入“报警阈值”" maxlength="200" ></div>
 					</div>
 					<div class="form-group">
 						<div class="col-sm-offset-3 col-sm-9">
 							<button type="submit" class="btn btn-primary"  >保存</button>
 							<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-							<button type="button" class="btn btn-info pull-right addParam">+ arg</button>
 						</div>
 					</div>
 				</form>

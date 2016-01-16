@@ -33,6 +33,7 @@ $(function() {
             		},
 	                { "data": 'jobName'},
 	                { "data": 'jobCron', "visible" : false},
+	                { "data": 'jobDesc', "visible" : false},
 	                { "data": 'jobClass', "visible" : false},
 	                { 
 	                	"data": 'jobData',

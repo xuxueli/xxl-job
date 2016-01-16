@@ -9,6 +9,7 @@
 	    <result column="job_group" property="jobGroup" />
 	    <result column="job_name" property="jobName" />
 	    <result column="job_cron" property="jobCron" />
+	    <result column="job_desc" property="jobDesc" />
 	    <result column="job_class" property="jobClass" />
 	    <result column="job_data" property="jobData" />
 	    
@@ -26,8 +27,9 @@
 		t.job_group,
 		t.job_name,
 		t.job_cron,
+		t.job_desc,
 		t.job_class,
-		t.job_data,
+		t.job_desc,
 		t.trigger_time,
 		t.trigger_status,
 		t.trigger_msg,
@@ -94,12 +96,14 @@
 			`job_group`,
 			`job_name`,
 			`job_cron`, 
+			`job_desc`,
 			`job_class`, 
 			`job_data`
 		) VALUES (
 			#{jobGroup}, 
 			#{jobName},
 			#{jobCron},
+			#{jobDesc},
 			#{jobClass},
 			#{jobData}
 		);

@@ -33,7 +33,9 @@ public class JobLogController {
 	public IXxlJobLogDao xxlJobLogDao;
 	
 	@RequestMapping
-	public String index(Model model) {
+	public String index(Model model, String jobGroup, String jobName) {
+		model.addAttribute("jobGroup", jobGroup);
+		model.addAttribute("jobName", jobName);
 		model.addAttribute("JobGroupList", JobGroupEnum.values());
 		return "joblog/index";
 	}
@@ -71,8 +73,8 @@ public class JobLogController {
 	
 	@RequestMapping("/save")
 	@ResponseBody
-	public ReturnT<String> triggerLog(int triggerLogId, String status, String msg) {
-		XxlJobLog log = xxlJobLogDao.load(triggerLogId);
+	public ReturnT<String> triggerLog(int trigger_log_id, String status, String msg) {
+		XxlJobLog log = xxlJobLogDao.load(trigger_log_id);
 		if (log!=null) {
 			log.setHandleTime(new Date());
 			log.setHandleStatus(status);

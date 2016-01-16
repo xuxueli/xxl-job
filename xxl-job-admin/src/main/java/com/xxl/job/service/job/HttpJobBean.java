@@ -5,9 +5,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.quartz.DisallowConcurrentExecution;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
-import org.quartz.impl.triggers.CronTriggerImpl;
+import org.quartz.JobKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.quartz.QuartzJobBean;
@@ -22,44 +23,43 @@ import com.xxl.job.core.util.PropertiesUtil;
 
 /**
  * http job bean
+ * “@DisallowConcurrentExecution” diable concurrent, thread size can not be only one, better given more
  * @author xuxueli 2015-12-17 18:20:34
  */
+@DisallowConcurrentExecution
 public class HttpJobBean extends QuartzJobBean {
 	private static Logger logger = LoggerFactory.getLogger(HttpJobBean.class);
-
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void executeInternal(JobExecutionContext context)
 			throws JobExecutionException {
-		String triggerKey = context.getTrigger().getJobKey().getName();
+		JobKey jobKey = context.getTrigger().getJobKey();
 		
-		// jobDataMap 2 params
-		Map<String, String> params = new HashMap<String, String>();
-		XxlJobInfo jobInfo = DynamicSchedulerUtil.xxlJobInfoDao.load(triggerKey);
-		if (jobInfo!=null && jobInfo.getJobData()!=null) {
-			params = JacksonUtil.readValue(jobInfo.getJobData(), Map.class);
-		}
-		
-		// corn
-		String cornExp = null;
-		if (context.getTrigger() instanceof CronTriggerImpl) {
-			CronTriggerImpl trigger = (CronTriggerImpl) context.getTrigger();
-			cornExp = trigger.getCronExpression();
-		}
-		
+		XxlJobInfo jobInfo = DynamicSchedulerUtil.xxlJobInfoDao.load(jobKey.getGroup(), jobKey.getName());
+		HashMap<String, String> jobDataMap = (HashMap<String, String>) JacksonUtil.readValueRefer(jobInfo.getJobData(), Map.class);
 		// save log
 		XxlJobLog jobLog = new XxlJobLog();
-		jobLog.setJobName(triggerKey);
-		jobLog.setJobCron(cornExp);
+		jobLog.setJobGroup(jobInfo.getJobGroup());
+		jobLog.setJobName(jobInfo.getJobName());
+		jobLog.setJobCron(jobInfo.getJobCron());
+		jobLog.setJobDesc(jobInfo.getJobDesc());
+		jobLog.setJobClass(jobInfo.getJobClass());
+		jobLog.setJobData(jobInfo.getJobData());
+		
 		jobLog.setJobClass(HttpJobBean.class.getName());
 		jobLog.setJobData(jobInfo.getJobData());
 		DynamicSchedulerUtil.xxlJobLogDao.save(jobLog);
 		logger.info(">>>>>>>>>>> xxl-job trigger start, jobLog:{}", jobLog);
 		
 		// trigger request
-		params.put(HandlerRepository.triggerLogId, String.valueOf(jobLog.getId()));
-		params.put(HandlerRepository.triggerLogUrl, PropertiesUtil.getString(HandlerRepository.triggerLogUrl));
-		String[] postResp = HttpUtil.post(params.get(HandlerRepository.job_url), params);
+		HashMap<String, String> params = new HashMap<String, String>();
+		params.put(HandlerRepository.TRIGGER_LOG_URL, PropertiesUtil.getString(HandlerRepository.TRIGGER_LOG_URL));
+		params.put(HandlerRepository.TRIGGER_LOG_ID, String.valueOf(jobLog.getId()));
+		params.put(HandlerRepository.HANDLER_NAME, jobDataMap.get(HandlerRepository.HANDLER_NAME));
+		params.put(HandlerRepository.HANDLER_PARAMS, jobDataMap.get(HandlerRepository.HANDLER_PARAMS));
+		
+		String[] postResp = HttpUtil.post(jobDataMap.get(HandlerRepository.HANDLER_ADDRESS), params);
 		logger.info(">>>>>>>>>>> xxl-job trigger http response, jobLog.id:{}, jobLog:{}", jobLog.getId(), jobLog);
 		
 		// parse trigger response
