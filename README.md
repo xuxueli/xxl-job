@@ -17,7 +17,12 @@ git.osc地址：http://git.oschina.net/xuxueli0323/xxl-job
 	7、支持任务执行日志；
 	8、支持自定义参数；
 
-# 新版本 V1.2.x ：架构模块化		【开发中...】
+# 新版本 V1.2.x，新特性
+	1、支持任务分组；
+	2、支持“本地任务”、“远程任务”；
+	3、支持“任务日志”；
+	4、支持“串行执行”，并行执行；
+	
 	说明：V1.2版本将系统架构按功能拆分为：
 		调度模块[xxl-job-admin]：负责管理调度信息，按照调度配置发出调度请求；
 		任务模块[xxl-job-client-demo]：负责接收调度请求并执行任务逻辑；任务模块可以方便的嵌入web项目，可以参考此demo；
@@ -26,8 +31,6 @@ git.osc地址：http://git.oschina.net/xuxueli0323/xxl-job
 		解耦：任务模块提供任务接口，调度模块维护调度信息，业务相互独立；
 		高扩展性；
 		稳定性；
-		
-	Tips：如果您追求一个简单调度服务，这里也提供了一个简洁分支[xxl-job-simple]，它针对旧版调度框架做了细微完善；
 	
 # 其他说明
 	清楚僵尸任务：qrtz_cron_triggers、qrtz_triggers、qrtz_job_details顺序删除
