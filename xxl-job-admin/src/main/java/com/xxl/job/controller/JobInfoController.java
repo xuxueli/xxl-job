@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.xxl.job.client.handler.HandlerRepository;
 import com.xxl.job.client.util.JacksonUtil;
+import com.xxl.job.core.constant.Constants.JobGroupEnum;
 import com.xxl.job.core.model.ReturnT;
 import com.xxl.job.core.model.XxlJobInfo;
 import com.xxl.job.core.util.DynamicSchedulerUtil;
@@ -33,17 +34,16 @@ import com.xxl.job.service.job.HttpJobBean;
  * @author xuxueli 2015-12-19 16:13:16
  */
 @Controller
-@RequestMapping("/job")
-public class JobController {
+@RequestMapping("/jobinfo")
+public class JobInfoController {
 	
 	@Resource
 	private IXxlJobInfoDao xxlJobInfoDao;
 	
 	@RequestMapping
 	public String index(Model model) {
-		//List<Map<String, Object>> jobList = DynamicSchedulerUtil.getJobList();
-		//model.addAttribute("jobList", jobList);
-		return "job/index";
+		model.addAttribute("JobGroupList", JobGroupEnum.values());
+		return "jobinfo/index";
 	}
 	
 	@RequestMapping("/pageList")

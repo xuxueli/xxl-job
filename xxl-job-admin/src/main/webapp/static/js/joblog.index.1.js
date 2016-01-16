@@ -8,46 +8,66 @@ $(function() {
 		"ajax": {
 	        url: base_url + "/joblog/pageList" ,
 	        data : function ( d ) {
+                d.jobGroup = $('#jobGroup').val();
+                d.jobName = $('#jobName').val();
                 d.filterTime = $('#filterTime').val();
-                d.jobName = $('#jobName').val()
             }
 	    },
-	    //"scrollX": true,	// X轴滚动条，取消自适应
+	    "searching": false,
+	    "ordering": false,
+	    //"scrollX": false,
 	    "columns": [
 	                { "data": 'id', "bSortable": false, "visible" : false},
-	                { "data": 'jobName', "bSortable": false},
-	                { "data": 'jobCron', "bSortable": false, "visible" : false},
-	                { "data": 'jobClass', "bSortable": false, "visible" : false},
-	                { "data": 'jobData', "bSortable": false, "visible" : false},
+	                { 
+	                	"data": 'jobGroup', 
+	                	"bSortable": false, 
+	                	"render": function ( data, type, row ) {
+	            			var groupMenu = $("#jobGroup").find("option");
+	            			for ( var index in $("#jobGroup").find("option")) {
+	            				if ($(groupMenu[index]).attr('value') == data) {
+									return $(groupMenu[index]).html();
+								}
+							}
+	            			return data;
+	            		}
+            		},
+	                { "data": 'jobName'},
+	                { "data": 'jobCron', "visible" : false},
+	                { "data": 'jobClass', "visible" : false},
+	                { 
+	                	"data": 'jobData',
+	                	"visible" : false,
+	                	"render": function ( data, type, row ) {
+	                		return data?'<a class="logTips" href="javascript:;" >查看<span style="display:none;">'+ data +'</span></a>':"无";
+	                	}
+	                },
 	                { 
 	                	"data": 'triggerTime', 
-	                	"bSortable": false, 
 	                	"render": function ( data, type, row ) {
 	                		return data?moment(new Date(data)).format("YYYY-MM-DD HH:mm:ss"):"";
 	                	}
 	                },
-	                { "data": 'triggerStatus', "bSortable": false},
-	                { "data": 'triggerMsg',"bSortable": false,
+	                { "data": 'triggerStatus'},
+	                { 
+	                	"data": 'triggerMsg',
 	                	"render": function ( data, type, row ) {
-	                		return data?'<a class="logTips" href="javascript:;" >调度日志<span style="display:none;">'+ data +'</span></a>':"无";
+	                		return data?'<a class="logTips" href="javascript:;" >查看<span style="display:none;">'+ data +'</span></a>':"无";
 	                	}
 	                },
 	                { 
 	                	"data": 'handleTime',
-	                	"bSortable": false,
 	                	"render": function ( data, type, row ) {
 	                		return data?moment(new Date(data)).format("YYYY-MM-DD HH:mm:ss"):"";
 	                	}
 	                },
 	                { "data": 'handleStatus',"bSortable": false},
-	                { "data": 'handleMsg' , "bSortable": false,
+	                { 
+	                	"data": 'handleMsg',
 	                	"render": function ( data, type, row ) {
-	                		return data?'<a class="logTips" href="javascript:;" >执行日志<span style="display:none;">'+ data +'</span></a>':"无";
+	                		return data?'<a class="logTips" href="javascript:;" >查看<span style="display:none;">'+ data +'</span></a>':"无";
 	                	}
 	                }
 	            ],
-	    "searching": false,
-	    "ordering": true,
 		"language" : {
 			"sProcessing" : "处理中...",
 			"sLengthMenu" : "每页 _MENU_ 条记录",
@@ -94,7 +114,7 @@ $(function() {
             '最近7日': [moment().subtract('days', 6), moment()],
             '最近30日': [moment().subtract('days', 29), moment()]
         },
-        opens : 'right', //日期选择框的弹出位置
+        opens : 'left', //日期选择框的弹出位置
         locale : {
         	customRangeLabel : '自定义',
             applyLabel : '确定',
@@ -106,6 +126,7 @@ $(function() {
             firstDay : 1
         }
 	});
+	$('#filterTime').val( moment(new Date()).format("YYYY-MM-DD 00:00:00") + ' - ' + moment(new Date()).format("YYYY-MM-DD HH:mm:ss") );
 	
 	// 搜索按钮
 	$('#searchBtn').on('click', function(){

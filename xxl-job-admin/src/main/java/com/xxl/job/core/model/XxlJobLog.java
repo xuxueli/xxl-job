@@ -9,7 +9,9 @@ import java.util.Date;
 public class XxlJobLog {
 	
 	private int id;
+	
 	// job info
+	private String jobGroup;
 	private String jobName;
 	private String jobCron;
 	private String jobClass;
@@ -30,6 +32,12 @@ public class XxlJobLog {
 	}
 	public void setId(int id) {
 		this.id = id;
+	}
+	public String getJobGroup() {
+		return jobGroup;
+	}
+	public void setJobGroup(String jobGroup) {
+		this.jobGroup = jobGroup;
 	}
 	public String getJobName() {
 		return jobName;
@@ -94,10 +102,10 @@ public class XxlJobLog {
 	
 	@Override
 	public String toString() {
-		return "XxlJobLog [id=" + id + ", jobName=" + jobName + ", jobCron=" + jobCron + ", jobClass=" + jobClass
-				+ ", jobData=" + jobData + ", triggerTime=" + triggerTime + ", triggerStatus=" + triggerStatus
-				+ ", triggerMsg=" + triggerMsg + ", handleTime=" + handleTime + ", handleStatus=" + handleStatus
-				+ ", handleMsg=" + handleMsg + "]";
+		return "XxlJobLog [id=" + id + ", jobGroup=" + jobGroup + ", jobName=" + jobName + ", jobCron=" + jobCron
+				+ ", jobClass=" + jobClass + ", jobData=" + jobData + ", triggerTime=" + triggerTime
+				+ ", triggerStatus=" + triggerStatus + ", triggerMsg=" + triggerMsg + ", handleTime=" + handleTime
+				+ ", handleStatus=" + handleStatus + ", handleMsg=" + handleMsg + "]";
 	}
 	
 }

@@ -13,7 +13,7 @@ public class IndexController {
 
 	@RequestMapping("/")
 	public String index(Model model) {
-		return "redirect:job";
+		return "redirect:jobinfo";
 	}
 	
 	@RequestMapping("/help")

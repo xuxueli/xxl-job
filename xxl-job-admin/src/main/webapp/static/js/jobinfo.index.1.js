@@ -5,7 +5,7 @@ $(function() {
 		"processing" : true, 
 	    "serverSide": true,
 		"ajax": {
-			url: base_url + "/job/pageList",
+			url: base_url + "/jobinfo/pageList",
 	        data : function ( d ) {
                 d.jobName = $('#jobName').val()
             }
