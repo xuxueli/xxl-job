@@ -71,7 +71,7 @@ public class XxlJobLogDaoImpl implements IXxlJobLogDao {
 	
 	@Override
 	public int updateTriggerInfo(XxlJobLog xxlJobLog) {
-		if (xxlJobLog!=null && xxlJobLog.getTriggerMsg().length()>2000) {
+		if (xxlJobLog!=null && xxlJobLog.getTriggerMsg()!=null && xxlJobLog.getTriggerMsg().length()>2000) {
 			xxlJobLog.setTriggerMsg(xxlJobLog.getTriggerMsg().substring(0, 2000));
 		}
 		return sqlSessionTemplate.update("XxlJobLogMapper.updateTriggerInfo", xxlJobLog);
@@ -79,7 +79,7 @@ public class XxlJobLogDaoImpl implements IXxlJobLogDao {
 
 	@Override
 	public int updateHandleInfo(XxlJobLog xxlJobLog) {
-		if (xxlJobLog!=null && xxlJobLog.getHandleMsg().length()>2000) {
+		if (xxlJobLog!=null && xxlJobLog.getHandleMsg()!=null && xxlJobLog.getHandleMsg().length()>2000) {
 			xxlJobLog.setHandleMsg(xxlJobLog.getHandleMsg().substring(0, 2000));
 		}
 		return sqlSessionTemplate.update("XxlJobLogMapper.updateHandleInfo", xxlJobLog);

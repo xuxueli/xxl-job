@@ -9,8 +9,8 @@
 # DROP TABLE IF EXISTS XXL_JOB_QRTZ_TRIGGERS;
 # DROP TABLE IF EXISTS XXL_JOB_QRTZ_JOB_DETAILS;
 # DROP TABLE IF EXISTS XXL_JOB_QRTZ_CALENDARS;
-# DROP TABLE IF EXISTS `xxl_job_qrtz_trigger_log`;
 # DROP TABLE IF EXISTS `xxl_job_qrtz_trigger_info`;
+# DROP TABLE IF EXISTS `xxl_job_qrtz_trigger_log`;
 
 CREATE TABLE XXL_JOB_QRTZ_JOB_DETAILS
   (
@@ -157,29 +157,32 @@ CREATE TABLE XXL_JOB_QRTZ_LOCKS
 );
 
 
-CREATE TABLE `xxl_job_qrtz_trigger_log` (
+DROP TABLE IF EXISTS `xxl_job_qrtz_trigger_info`;
+CREATE TABLE `xxl_job_qrtz_trigger_info` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `job_group` varchar(255) NOT NULL COMMENT '任务组',
   `job_name` varchar(255) NOT NULL COMMENT '任务名',
-  `job_cron` varchar(128) NOT NULL COMMENT '任务执行CORN表达式',
+  `job_cron` varchar(128) NOT NULL COMMENT '任务执行CORN',
+  `job_desc` varchar(255) NOT NULL,
   `job_class` varchar(255) NOT NULL COMMENT '任务执行JobBean',
-  `job_data` varchar(2048) DEFAULT NULL COMMENT '任务执行数据',
-  `trigger_time` datetime DEFAULT NULL COMMENT '调度-时间',
-  `trigger_status` varchar(255) DEFAULT NULL COMMENT '调度-结果',
-  `trigger_msg` varchar(2048) DEFAULT NULL COMMENT '调度-日志',
-  `handle_time` datetime DEFAULT NULL COMMENT '执行-时间',
-  `handle_status` varchar(255) DEFAULT NULL COMMENT '执行-状态',
-  `handle_msg` varchar(2048) DEFAULT NULL COMMENT '执行-日志',
+  `job_data` varchar(512) DEFAULT NULL COMMENT '任务执行数据',
+  `add_time` datetime DEFAULT NULL,
+  `update_time` datetime DEFAULT NULL,
+  `author` varchar(64) DEFAULT NULL COMMENT '作者',
+  `alarm_email` varchar(255) DEFAULT NULL COMMENT '报警邮件',
+  `alarm_threshold` int(11) DEFAULT NULL COMMENT '报警阀值(连续失败次数)',
   PRIMARY KEY (`id`)
 );
 
+DROP TABLE IF EXISTS `xxl_job_qrtz_trigger_log`;
 CREATE TABLE `xxl_job_qrtz_trigger_log` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `job_group` varchar(255) NOT NULL COMMENT '任务组',
   `job_name` varchar(255) NOT NULL COMMENT '任务名',
   `job_cron` varchar(128) NOT NULL COMMENT '任务执行CORN表达式',
+  `job_desc` varchar(255) NOT NULL,
   `job_class` varchar(255) NOT NULL COMMENT '任务执行JobBean',
-  `job_data` varchar(2048) DEFAULT NULL COMMENT '任务执行数据',
+  `job_data` varchar(512) DEFAULT NULL COMMENT '任务执行数据',
   `trigger_time` datetime DEFAULT NULL COMMENT '调度-时间',
   `trigger_status` varchar(255) DEFAULT NULL COMMENT '调度-结果',
   `trigger_msg` varchar(2048) DEFAULT NULL COMMENT '调度-日志',

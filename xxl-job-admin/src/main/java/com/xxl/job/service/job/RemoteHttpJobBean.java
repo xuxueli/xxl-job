@@ -27,8 +27,8 @@ import com.xxl.job.core.util.PropertiesUtil;
  * @author xuxueli 2015-12-17 18:20:34
  */
 @DisallowConcurrentExecution
-public class HttpJobBean extends QuartzJobBean {
-	private static Logger logger = LoggerFactory.getLogger(HttpJobBean.class);
+public class RemoteHttpJobBean extends QuartzJobBean {
+	private static Logger logger = LoggerFactory.getLogger(RemoteHttpJobBean.class);
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -47,7 +47,7 @@ public class HttpJobBean extends QuartzJobBean {
 		jobLog.setJobClass(jobInfo.getJobClass());
 		jobLog.setJobData(jobInfo.getJobData());
 		
-		jobLog.setJobClass(HttpJobBean.class.getName());
+		jobLog.setJobClass(RemoteHttpJobBean.class.getName());
 		jobLog.setJobData(jobInfo.getJobData());
 		DynamicSchedulerUtil.xxlJobLogDao.save(jobLog);
 		logger.info(">>>>>>>>>>> xxl-job trigger start, jobLog:{}", jobLog);
