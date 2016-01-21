@@ -102,8 +102,8 @@ public final class DynamicSchedulerUtil implements InitializingBean {
 	// fill job info
 	public static void fillJobInfo(XxlJobInfo jobInfo) {
 		// TriggerKey : name + group
-        TriggerKey triggerKey = TriggerKey.triggerKey(jobInfo.getJobName(), Scheduler.DEFAULT_GROUP);
-        JobKey jobKey = new JobKey(jobInfo.getJobName(), Scheduler.DEFAULT_GROUP);
+        TriggerKey triggerKey = TriggerKey.triggerKey(jobInfo.getJobName(), jobInfo.getJobGroup());
+        JobKey jobKey = new JobKey(jobInfo.getJobName(), jobInfo.getJobGroup());
         try {
 			Trigger trigger = scheduler.getTrigger(triggerKey);
 			JobDetail jobDetail = scheduler.getJobDetail(jobKey);
