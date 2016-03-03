@@ -23,7 +23,7 @@
 	<!-- Xxl Job Servlet -->
 	<servlet>
 		<servlet-name>XxlJobServlet</servlet-name>
-		<servlet-class>com.xxl.job.client.netcom.http.XxlJobServlet</servlet-class>
+		<servlet-class>com.xxl.job.client.netcom.servlet.XxlJobServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 	<servlet-mapping>

@@ -24,6 +24,13 @@
 			<version>2.1</version>
 			<scope>provided</scope>
 		</dependency>
+
+		<!-- jetty -->
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-server</artifactId>
+			<version>7.6.9.v20130131</version>
+		</dependency>
 				
 		<!-- slf4j -->
 		<dependency>
@@ -45,7 +52,7 @@
 			<artifactId>httpclient</artifactId>
 			<version>4.3.6</version>
 		</dependency>
-		
+
 	</dependencies>
 
 	<build>

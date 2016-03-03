@@ -58,10 +58,16 @@ public class RemoteHttpJobBean extends QuartzJobBean {
 		params.put(HandlerRepository.TRIGGER_LOG_ID, String.valueOf(jobLog.getId()));
 		params.put(HandlerRepository.HANDLER_NAME, jobDataMap.get(HandlerRepository.HANDLER_NAME));
 		params.put(HandlerRepository.HANDLER_PARAMS, jobDataMap.get(HandlerRepository.HANDLER_PARAMS));
-		
-		String[] postResp = HttpUtil.post(jobDataMap.get(HandlerRepository.HANDLER_ADDRESS), params);
+
+		// handler address, netty or servlet
+		String handler_address = jobDataMap.get(HandlerRepository.HANDLER_ADDRESS);
+		if (!handler_address.startsWith("http")){
+			handler_address = "http://" + handler_address + "/";
+		}
+
+		String[] postResp = HttpUtil.post(handler_address, params);
 		logger.info(">>>>>>>>>>> xxl-job trigger http response, jobLog.id:{}, jobLog:{}", jobLog.getId(), jobLog);
-		
+
 		// parse trigger response
 		String responseMsg = postResp[0];
 		String exceptionMsg = postResp[1];
