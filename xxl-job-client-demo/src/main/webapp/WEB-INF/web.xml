@@ -20,7 +20,8 @@
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
 	
-	<!-- Xxl Job Servlet -->
+	<!-- Servlet任务执行器，推荐使用Jetty任务执行器 -->
+	<!-- 
 	<servlet>
 		<servlet-name>XxlJobServlet</servlet-name>
 		<servlet-class>com.xxl.job.client.netcom.servlet.XxlJobServlet</servlet-class>
@@ -29,7 +30,8 @@
 	<servlet-mapping>
 		<servlet-name>XxlJobServlet</servlet-name>
 		<url-pattern>/xxlJobServlet</url-pattern>
-	</servlet-mapping>
+	</servlet-mapping> 
+	-->
 	
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
