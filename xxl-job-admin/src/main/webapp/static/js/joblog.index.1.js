@@ -196,7 +196,11 @@ $(function() {
 		ComConfirm.show("确认主动终止任务?", function(){
 			$.ajax({
 				type : 'POST',
+<<<<<<< HEAD
 				url : base_url + 'joblog/logKill',
+=======
+				url : base_url + 'joblog/ferrariJobKill',
+>>>>>>> branch 'master' of https://github.com/xuxueli/xxl-job.git
 				data : {"id":_id},
 				dataType : "json",
 				success : function(data){
