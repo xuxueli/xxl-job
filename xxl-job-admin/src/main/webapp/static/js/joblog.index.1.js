@@ -48,6 +48,7 @@ $(function() {
 	                { "data": 'id', "bSortable": false, "visible" : false},
 	                { 
 	                	"data": 'jobGroup', 
+	                	"visible" : false, 
 	                	"bSortable": false, 
 	                	"render": function ( data, type, row ) {
 	            			var groupMenu = $("#jobGroup").find("option");
@@ -65,9 +66,14 @@ $(function() {
 	                { "data": 'jobClass', "visible" : false},
 	                { 
 	                	"data": 'jobData',
-	                	"visible" : false,
+	                	"visible" : true,
 	                	"render": function ( data, type, row ) {
-	                		return data?'<a class="logTips" href="javascript:;" >查看<span style="display:none;">'+ data +'</span></a>':"无";
+	                		var _jobData = eval('(' + data + ')');	// row.jobData
+	                		var html = "<p title='" + data + "'>执行器：" + _jobData.handler_name +
+	                			"<br>执行参数：" + _jobData.handler_params + 
+	                			"<br>执行机器：" + _jobData.handler_address + "</p>";
+	                		
+	                		return data?'<a class="logMsg" href="javascript:;" >查看<span style="display:none;">'+ html +'</span></a>':"无";
 	                	}
 	                },
 	                { 
@@ -94,6 +100,27 @@ $(function() {
 	                	"data": 'handleMsg',
 	                	"render": function ( data, type, row ) {
 	                		return data?'<a class="logTips" href="javascript:;" >查看<span style="display:none;">'+ data +'</span></a>':"无";
+	                	}
+	                },
+	                { "data": 'handleMsg' , "bSortable": false,
+	                	"render": function ( data, type, row ) {
+	                		// better support expression or string, not function
+	                		return function () {
+	                			// local job do not support trigger detail log, now
+		                		var _jobData = eval('(' + row.jobData + ')'); 
+		                		if (!_jobData.handler_address) {
+		                			return;
+		                		}
+		                		
+		                		if (row.triggerStatus == 'SUCCESS'){
+		                			var temp = '<a href="javascript:;" class="logDetail" _id="'+ row.id +'">查看日志</a>';
+		                			if(!row.handleStatus){
+		                				temp += '<br><a href="javascript:;" class="logKill" _id="'+ row.id +'">终止任务</a>';
+		                			}
+		                			return temp;
+		                		}
+		                		return null;	
+	                		}
 	                	}
 	                }
 	            ],
@@ -123,17 +150,65 @@ $(function() {
 		}
 	});
 	
+	// 任务数据
+	$('#joblog_list').on('click', '.logMsg', function(){
+		var msg = $(this).find('span').html();
+		ComAlert.show(2, msg);
+	});
+	
 	// 日志弹框提示
 	$('#joblog_list').on('click', '.logTips', function(){
 		var msg = $(this).find('span').html();
 		ComAlertTec.show(msg);
 	});
 	
-	
-	
 	// 搜索按钮
 	$('#searchBtn').on('click', function(){
 		logTable.fnDraw();
+	});
+	
+	// 查看执行器详细执行日志
+	$('#joblog_list').on('click', '.logDetail', function(){
+		var _id = $(this).attr('_id');
+		
+		window.open(base_url + 'joblog/logDetailPage?id=' + _id);
+		return;
+		
+		/*
+		$.ajax({
+			type : 'POST',
+			url : base_url + 'joblog/logDetail',
+			data : {"id":_id},
+			dataType : "json",
+			success : function(data){
+				if (data.code == 200) {
+					ComAlertTec.show('<pre style="color: white;background-color: black;width2:'+ $(window).width()*2/3 +'px;" >'+ data.content +'</pre>');
+				} else {
+					ComAlertTec.show(data.msg);
+				}
+			},
+		});
+		*/
+	});
+	
+	$('#joblog_list').on('click', '.logKill', function(){
+		var _id = $(this).attr('_id');
+		ComConfirm.show("确认主动终止任务?", function(){
+			$.ajax({
+				type : 'POST',
+				url : base_url + 'joblog/logKill',
+				data : {"id":_id},
+				dataType : "json",
+				success : function(data){
+					if (data.code == 200) {
+						ComAlert.show(1, '操作成功');
+						logTable.fnDraw();
+					} else {
+						ComAlert.show(2, data.msg);
+					}
+				},
+			});
+		});
 	});
 	
 });

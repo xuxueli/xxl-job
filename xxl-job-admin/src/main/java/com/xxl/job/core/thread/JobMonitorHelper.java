@@ -41,6 +41,11 @@ public class JobMonitorHelper {
 						XxlJobLog log = DynamicSchedulerUtil.xxlJobLogDao.load(jobLogId);
 						if (log!=null) {
 							if (RemoteCallBack.SUCCESS.equals(log.getTriggerStatus()) && StringUtils.isBlank(log.getHandleStatus())) {
+								try {
+									TimeUnit.SECONDS.sleep(10);
+								} catch (InterruptedException e) {
+									e.printStackTrace();
+								}
 								JobMonitorHelper.monitor(jobLogId);
 							}
 							if (RemoteCallBack.SUCCESS.equals(log.getTriggerStatus()) && RemoteCallBack.SUCCESS.equals(log.getHandleStatus())) {

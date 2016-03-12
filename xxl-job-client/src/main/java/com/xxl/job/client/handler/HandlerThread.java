@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.xxl.job.client.handler.IJobHandler.JobHandleStatus;
+import com.xxl.job.client.log.XxlJobFileAppender;
 import com.xxl.job.client.util.HttpUtil;
 import com.xxl.job.client.util.HttpUtil.RemoteCallBack;
 
@@ -25,11 +26,24 @@ public class HandlerThread extends Thread{
 	private IJobHandler handler;
 	private LinkedBlockingQueue<Map<String, String>> handlerDataQueue;
 	private ConcurrentHashSet<String> logIdSet;		// avoid repeat trigger for the same TRIGGER_LOG_ID
+	private boolean toStop = false;
 	
 	public HandlerThread(IJobHandler handler) {
 		this.handler = handler;
 		handlerDataQueue = new LinkedBlockingQueue<Map<String,String>>();
 		logIdSet = new ConcurrentHashSet<String>();
+	}
+	
+	public IJobHandler getHandler() {
+		return handler;
+	}
+	public void toStop() {
+		/**
+		 * Thread.interrupt只支持终止线程的阻塞状态(wait、join、sleep)，
+		 * 在阻塞出抛出InterruptedException异常,但是并不会终止运行的线程本身；
+		 * 所以需要注意，此处彻底销毁本线程，需要通过共享变量方式；
+		 */
+		this.toStop = true;
 	}
 	
 	public void pushData(Map<String, String> param) {
@@ -41,7 +55,7 @@ public class HandlerThread extends Thread{
 	int i = 1;
 	@Override
 	public void run() {
-		while(true){
+		while(!toStop){
 			try {
 				Map<String, String> handlerData = handlerDataQueue.poll();
 				if (handlerData!=null) {
@@ -63,6 +77,7 @@ public class HandlerThread extends Thread{
 					JobHandleStatus _status = JobHandleStatus.FAIL;
 					String _msg = null;
 					try {
+						XxlJobFileAppender.contextHolder.set(trigger_log_id);
 						_status = handler.handle(handlerParams);
 					} catch (Exception e) {
 						logger.info("HandlerThread Exception:", e);
@@ -100,5 +115,6 @@ public class HandlerThread extends Thread{
 				logger.info("HandlerThread Exception:", e);
 			}
 		}
+		logger.info(">>>>>>>>>>>> xxl-job handlerThrad stoped, hashCode:{}", Thread.currentThread());
 	}
 }

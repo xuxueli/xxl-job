@@ -29,7 +29,7 @@
 		t.job_cron,
 		t.job_desc,
 		t.job_class,
-		t.job_desc,
+		t.job_data,
 		t.trigger_time,
 		t.trigger_status,
 		t.trigger_msg,

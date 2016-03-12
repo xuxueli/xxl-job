@@ -18,6 +18,7 @@ $(function() {
 	                { "data": 'id', "bSortable": false, "visible" : false},
 	                { 
 	                	"data": 'jobGroup', 
+	                	"visible" : false,
 	                	"render": function ( data, type, row ) {
 	            			var groupMenu = $("#jobGroup").find("option");
 	            			for ( var index in $("#jobGroup").find("option")) {
@@ -29,14 +30,18 @@ $(function() {
 	            		}
             		},
 	                { "data": 'jobName'},
+	                { "data": 'jobDesc', "visible" : true},
 	                { "data": 'jobCron', "visible" : true},
-	                { "data": 'jobDesc', "visible" : false},
-	                { "data": 'jobClass', "visible" : true},
+	                { "data": 'jobClass', "visible" : false},
 	                { 
 	                	"data": 'jobData',
 	                	"visible" : true,
 	                	"render": function ( data, type, row ) {
-	                		return data?'<a class="logTips" href="javascript:;" >查看<span style="display:none;">'+ data +'</span></a>':"无";
+	                		var _jobData = eval('(' + data + ')');	// row.jobData
+	                		var html = "<p title='" + data + "'>执行器：" + _jobData.handler_name +
+	                			"<br>执行参数：" + _jobData.handler_params + 
+	                			"<br>执行机器：" + _jobData.handler_address + "</p>";
+	                		return html;
 	                	}
 	                },
 	                { 
@@ -101,8 +106,8 @@ $(function() {
 	                							' handler_name="'+ jobDataMap.handler_name +'" '+
 	                							'>'+
 	                					pause_resume +
-										'<button class="btn btn-info btn-xs job_operate" type="job_trigger" type="button">执行</button>  '+
-										'<button class="btn btn-warning btn-xs update" type="button">编辑</button><br> '+
+										'<button class="btn btn-info btn-xs job_operate" type="job_trigger" type="button">执行</button>'+
+										'<button class="btn btn-warning btn-xs update" type="button">编辑</button><br>'+
 									  	'<button class="btn btn-warning btn-xs" type="job_del" type="button" '+
 									  		'onclick="javascript:window.open(\'' + logUrl + '\')" >查看日志</button> '+
 								  		'<button class="btn btn-danger btn-xs job_operate" type="job_del" type="button">删除</button>  '+
@@ -138,12 +143,6 @@ $(function() {
 				"sSortDescending" : ": 以降序排列此列"
 			}
 		}
-	});
-	
-	// 日志弹框提示
-	$('#job_list').on('click', '.logTips', function(){
-		var msg = $(this).find('span').html();
-		ComAlertTec.show(msg);
 	});
 	
 	// 搜索按钮
