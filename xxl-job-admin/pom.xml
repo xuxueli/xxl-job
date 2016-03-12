@@ -130,6 +130,13 @@
 			<version>4.3.6</version>
 		</dependency>
 		
+		<!-- javax.mail -->
+		<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>mail</artifactId>
+			<version>1.4.6</version>
+		</dependency>
+		
 		<!-- quartz ：quartz-2.2.1/c3p0-0.9.1.1/slf4j-api-1.6.6 -->
 		<dependency>
 			<groupId>org.quartz-scheduler</groupId>

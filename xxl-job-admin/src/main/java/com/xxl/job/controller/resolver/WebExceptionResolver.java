@@ -1,4 +1,4 @@
-package com.xxl.job.core.resolver;
+package com.xxl.job.controller.resolver;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

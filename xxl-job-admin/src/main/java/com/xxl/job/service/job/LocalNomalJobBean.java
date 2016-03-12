@@ -19,6 +19,7 @@ import com.xxl.job.client.util.HttpUtil;
 import com.xxl.job.client.util.JacksonUtil;
 import com.xxl.job.core.model.XxlJobInfo;
 import com.xxl.job.core.model.XxlJobLog;
+import com.xxl.job.core.thread.JobMonitorHelper;
 import com.xxl.job.core.util.DynamicSchedulerUtil;
 
 /**
@@ -81,6 +82,7 @@ public abstract class LocalNomalJobBean extends QuartzJobBean {
 		// update trigger info
 		DynamicSchedulerUtil.xxlJobLogDao.updateTriggerInfo(jobLog);
 		DynamicSchedulerUtil.xxlJobLogDao.updateHandleInfo(jobLog);
+		JobMonitorHelper.monitor(jobLog.getId());
 		logger.info(">>>>>>>>>>> xxl-job trigger end, jobLog.id:{}, jobLog:{}", jobLog.getId(), jobLog);
 		
     }

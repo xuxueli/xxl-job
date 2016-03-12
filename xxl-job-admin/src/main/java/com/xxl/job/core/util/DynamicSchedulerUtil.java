@@ -67,6 +67,7 @@ public final class DynamicSchedulerUtil implements ApplicationContextAware, Init
     }
 	
 	// getJobKeys
+	@Deprecated
 	public static List<Map<String, Object>> getJobList(){
 		List<Map<String, Object>> jobList = new ArrayList<Map<String,Object>>();
 		
