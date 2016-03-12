@@ -13,7 +13,7 @@
     <!-- <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"> -->
     <link rel="stylesheet" href="${request.contextPath}/static/plugins/ionicons-2.0.1/css/ionicons.min.css">
     <!-- Theme style -->
-    <link rel="stylesheet" href="${request.contextPath}/static/adminlte/dist/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="${request.contextPath}/static/adminlte/dist/css/AdminLTE-local.min.css">
     <!-- AdminLTE Skins. Choose a skin from the css/skins folder instead of downloading all of them to reduce the load. -->
     <link rel="stylesheet" href="${request.contextPath}/static/adminlte/dist/css/skins/_all-skins.min.css">
       
@@ -40,6 +40,7 @@
 
     <!-- scrollup -->
     <script src="${request.contextPath}/static/plugins/scrollup/jquery.scrollUp.min.js"></script>
+    <script src="${request.contextPath}/static/plugins/jquery/jquery.cookie.js"></script>
     <script src="${request.contextPath}/static/js/common.1.js"></script>
 </#macro>
 

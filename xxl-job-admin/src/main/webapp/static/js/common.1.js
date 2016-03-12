@@ -15,6 +15,7 @@ $(function(){
 		scrollImg: true
 	});
 	
+	// logout
 	$("#logoutBtn").click(function(){
 		$.post(base_url + "/logout", function(data, status) {
 			if (data.code == "S") {
@@ -28,4 +29,18 @@ $(function(){
 		});
 	});
 	
+	// adminlte_settings
+	$('.sidebar-toggle').click(function(){
+		var adminlte_settings = $.cookie('adminlte_settings');
+		if ('off' == adminlte_settings) {
+			adminlte_settings = 'on';
+		} else {
+			adminlte_settings = 'off';
+		}
+		$.cookie('adminlte_settings', adminlte_settings, { expires: 7 });	//$.cookie('the_cookie', '', { expires: -1 });
+	});
+	var adminlte_settings = $.cookie('adminlte_settings');
+	if (adminlte_settings == 'off') {
+		$('body').addClass('sidebar-collapse');
+	}
 });

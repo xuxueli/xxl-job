@@ -57,7 +57,7 @@ public class JobMonitorHelper {
 								XxlJobInfo info = DynamicSchedulerUtil.xxlJobInfoDao.load(log.getJobGroup(), log.getJobName());
 								if (count >= info.getAlarmThreshold()) {
 									MailUtil.sendMail(info.getAlarmEmail(), "《调度平台中心-监控报警》", 
-											MessageFormat.format("调度任务[{0}]失败报警", monotorKey), false, null);
+											MessageFormat.format("调度任务[{0}]失败报警，连续失败次数：", monotorKey, count), false, null);
 									countMap.remove(monotorKey);
 								}
 							}
