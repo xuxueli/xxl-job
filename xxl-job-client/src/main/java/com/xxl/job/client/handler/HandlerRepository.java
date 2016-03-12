@@ -22,6 +22,7 @@ public class HandlerRepository {
 	
 	public static final String TRIGGER_LOG_ID = "trigger_log_id";
 	public static final String TRIGGER_LOG_URL = "trigger_log_url";
+	public static final String TRIGGER_TIMESTAMP = "trigger_timestamp";
 	
 	public static ConcurrentHashMap<String, HandlerThread> handlerTreadMap = new ConcurrentHashMap<String, HandlerThread>();
 	
@@ -41,6 +42,13 @@ public class HandlerRepository {
 		RemoteCallBack callback = new RemoteCallBack();
 		callback.setStatus(RemoteCallBack.FAIL);
 		
+		// encryption check
+		long timestamp = _param.get(HandlerRepository.TRIGGER_TIMESTAMP)!=null?Long.valueOf(_param.get(HandlerRepository.TRIGGER_TIMESTAMP)):-1;
+		if (System.currentTimeMillis() - timestamp > 60000) {
+			callback.setMsg("Timestamp check failed.");
+			return JacksonUtil.writeValueAsString(callback);
+		}
+				
 		// push data to queue
 		String handler_name = _param.get(HandlerRepository.HANDLER_NAME);
 		if (handler_name!=null && handler_name.trim().length()>0) {
