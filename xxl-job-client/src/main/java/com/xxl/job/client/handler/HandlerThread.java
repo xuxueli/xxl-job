@@ -97,7 +97,7 @@ public class HandlerThread extends Thread{
 					} catch (Exception e) {
 						logger.info("HandlerThread Exception:", e);
 					}
-					logger.info("<<<<<<<<<<< xxl-job thread handle, handlerData:{}, callback_status:{}, callback_msg:{}, callback:{}, thread:{}", 
+					logger.info(">>>>>>>>>>> xxl-job thread handle, handlerData:{}, callback_status:{}, callback_msg:{}, callback:{}, thread:{}", 
 							new Object[]{handlerData, _status, _msg, callback, this});
 				} else {
 					i++;
