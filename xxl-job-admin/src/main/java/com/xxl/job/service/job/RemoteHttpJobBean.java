@@ -55,6 +55,7 @@ public class RemoteHttpJobBean extends QuartzJobBean {
 		
 		// trigger request
 		HashMap<String, String> params = new HashMap<String, String>();
+		params.put(HandlerRepository.NAMESPACE, HandlerRepository.NameSpaceEnum.RUN.name());
 		params.put(HandlerRepository.TRIGGER_LOG_URL, PropertiesUtil.getString(HandlerRepository.TRIGGER_LOG_URL));
 		params.put(HandlerRepository.TRIGGER_LOG_ID, String.valueOf(jobLog.getId()));
 		params.put(HandlerRepository.TRIGGER_TIMESTAMP, String.valueOf(System.currentTimeMillis()));

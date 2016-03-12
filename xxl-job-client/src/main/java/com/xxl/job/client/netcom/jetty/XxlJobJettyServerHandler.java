@@ -32,7 +32,7 @@ public class XxlJobJettyServerHandler extends AbstractHandler {
 			}
 		}
 
-		String resp = HandlerRepository.pushHandleQueue(_param);
+		String resp = HandlerRepository.service(_param);
 
 		httpServletResponse.setContentType("text/html;charset=utf-8");
 		httpServletResponse.setStatus(HttpServletResponse.SC_OK);

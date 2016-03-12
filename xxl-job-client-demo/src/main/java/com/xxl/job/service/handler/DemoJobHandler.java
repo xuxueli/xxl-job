@@ -1,6 +1,5 @@
 package com.xxl.job.service.handler;
 
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
@@ -25,7 +24,10 @@ public class DemoJobHandler extends IJobHandler {
 	@Override
 	public JobHandleStatus handle(String... params) throws Exception {
 		logger.info(" ... params:" + params);
-		TimeUnit.SECONDS.sleep(new Random().nextInt(5));
+		for (int i = 0; i < 10; i++) {
+			TimeUnit.SECONDS.sleep(1);
+			logger.info("handler run:{}", i);
+		}
 		return JobHandleStatus.SUCCESS;
 	}
 	

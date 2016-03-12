@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.xxl.job.client.handler.IJobHandler.JobHandleStatus;
+import com.xxl.job.client.log.XxlJobFileAppender;
 import com.xxl.job.client.util.HttpUtil;
 import com.xxl.job.client.util.HttpUtil.RemoteCallBack;
 
@@ -63,6 +64,7 @@ public class HandlerThread extends Thread{
 					JobHandleStatus _status = JobHandleStatus.FAIL;
 					String _msg = null;
 					try {
+						XxlJobFileAppender.contextHolder.set(trigger_log_id);
 						_status = handler.handle(handlerParams);
 					} catch (Exception e) {
 						logger.info("HandlerThread Exception:", e);

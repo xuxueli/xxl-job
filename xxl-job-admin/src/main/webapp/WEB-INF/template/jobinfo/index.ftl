@@ -67,8 +67,8 @@
 					            		<th name="id" >id</th>
 					                	<th name="jobGroup" >任务组</th>
 					                  	<th name="jobName" >任务名</th>
-					                  	<th name="jobCron" >Cron</th>
 					                  	<th name="jobDesc" >描述</th>
+					                  	<th name="jobCron" >Cron</th>
 					                  	<th name="jobClass" >JobBean</th>
 					                  	<th name="jobData" >任务数据</th>
 					                  	<th name="addTime" >新增时间</th>

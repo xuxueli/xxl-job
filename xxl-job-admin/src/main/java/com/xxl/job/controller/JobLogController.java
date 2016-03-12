@@ -16,8 +16,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.xxl.job.client.handler.HandlerRepository;
+import com.xxl.job.client.util.HttpUtil;
 import com.xxl.job.client.util.HttpUtil.RemoteCallBack;
+import com.xxl.job.client.util.JacksonUtil;
 import com.xxl.job.core.constant.Constants.JobGroupEnum;
+import com.xxl.job.core.model.ReturnT;
 import com.xxl.job.core.model.XxlJobLog;
 import com.xxl.job.dao.IXxlJobLogDao;
 
@@ -86,6 +90,43 @@ public class JobLogController {
 			return callBack;
 		}
 		return callBack;
+	}
+	
+	@RequestMapping("/logDetail")
+	@ResponseBody
+	public ReturnT<String> logDetail(int id){
+		// base check
+		XxlJobLog log = xxlJobLogDao.load(id);
+		if (log == null) {
+			return new ReturnT<String>(500, "参数异常");
+		}
+		
+		// server address
+		@SuppressWarnings("unchecked")
+		Map<String, String> jobDataMap = JacksonUtil.readValue(log.getJobData(), Map.class);
+		String handler_address = jobDataMap.get(HandlerRepository.HANDLER_ADDRESS);
+		if (!handler_address.startsWith("http")){
+			handler_address = "http://" + handler_address + "/";
+		}
+		// trigger id, trigger time
+		Map<String, String> reqMap = new HashMap<String, String>();
+		reqMap.put(HandlerRepository.NAMESPACE, HandlerRepository.NameSpaceEnum.LOG.name());
+		reqMap.put(HandlerRepository.TRIGGER_LOG_ID, String.valueOf(id));
+		reqMap.put(HandlerRepository.TRIGGER_TIMESTAMP, String.valueOf(log.getTriggerTime().getTime()));
+		
+		RemoteCallBack callBack = HttpUtil.post(handler_address, reqMap);
+		if (HttpUtil.RemoteCallBack.SUCCESS.equals(callBack.getStatus())) {
+			return new ReturnT<String>(callBack.getMsg());
+		} else {
+			return new ReturnT<String>(500, callBack.getMsg());
+		}
+	}
+	
+	@RequestMapping("/logDetailPage")
+	public String logDetailPage(int id, Model model){
+		ReturnT<String> data = logDetail(id);
+		model.addAttribute("result", data);
+		return "joblog/logdetail";
 	}
 	
 }

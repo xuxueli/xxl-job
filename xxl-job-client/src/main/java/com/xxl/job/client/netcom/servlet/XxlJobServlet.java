@@ -44,7 +44,7 @@ public class XxlJobServlet extends HttpServlet {
 			}
 		}
 		
-		String resp = HandlerRepository.pushHandleQueue(_param);
+		String resp = HandlerRepository.service(_param);
 		response.getWriter().append(resp);
 		return;
 	}

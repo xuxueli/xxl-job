@@ -83,6 +83,7 @@
 					                  	<th name="handleTime" >执行时间</th>
 					                  	<th name="handleStatus" >执行结果</th>
 					                  	<th name="handleMsg" >执行日志</th>
+					                  	<th class="handleMsg" >操作</th>
 					                </tr>
 				                </thead>
 				                <tbody></tbody>
