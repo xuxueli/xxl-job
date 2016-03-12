@@ -7,6 +7,10 @@ import org.slf4j.LoggerFactory;
 
 import com.xxl.job.service.job.LocalNomalJobBean;
 
+/**
+ * demo job bean for concurrent
+ * @author xuxueli 2016-3-12 14:25:57
+ */
 public class DemoNomalJobBean extends LocalNomalJobBean {
 	private static Logger Logger = LoggerFactory.getLogger(DemoNomalJobBean.class);
 	

@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.annotation.Resource;
-
 import org.quartz.CronScheduleBuilder;
 import org.quartz.CronTrigger;
 import org.quartz.Job;
@@ -27,7 +25,10 @@ import org.quartz.impl.matchers.GroupMatcher;
 import org.quartz.impl.triggers.CronTriggerImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.util.Assert;
 
 import com.xxl.job.client.util.JacksonUtil;
@@ -39,32 +40,30 @@ import com.xxl.job.dao.IXxlJobLogDao;
  * base quartz scheduler util
  * @author xuxueli 2015-12-19 16:13:53
  */
-public final class DynamicSchedulerUtil implements InitializingBean {
+public final class DynamicSchedulerUtil implements ApplicationContextAware, InitializingBean {
     private static final Logger logger = LoggerFactory.getLogger(DynamicSchedulerUtil.class);
-    
-    // xxlJobLogDao
-    public static IXxlJobLogDao xxlJobLogDao;
-    @Resource
-    public void setXxlJobLogDao(IXxlJobLogDao xxlJobLogDao) {
-		DynamicSchedulerUtil.xxlJobLogDao = xxlJobLogDao;
-	}
-    // xxlJobInfoDao
-    public static IXxlJobInfoDao xxlJobInfoDao;
-    @Resource
-    public void setXxlJobInfoDao(IXxlJobInfoDao xxlJobInfoDao) {
-		DynamicSchedulerUtil.xxlJobInfoDao = xxlJobInfoDao;
-	}
     
     // Scheduler
     private static Scheduler scheduler;
     public static void setScheduler(Scheduler scheduler) {
 		DynamicSchedulerUtil.scheduler = scheduler;
 	}
+    
+    // xxlJobLogDao、xxlJobInfoDao
+    public static IXxlJobLogDao xxlJobLogDao;
+    public static IXxlJobInfoDao xxlJobInfoDao;
 
+    @Override
+	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+		DynamicSchedulerUtil.xxlJobLogDao = applicationContext.getBean(IXxlJobLogDao.class);
+		DynamicSchedulerUtil.xxlJobInfoDao = applicationContext.getBean(IXxlJobInfoDao.class);
+	}
+    
 	@Override
     public void afterPropertiesSet() throws Exception {
         Assert.notNull(scheduler, "quartz scheduler is null");
         logger.info(">>>>>>>>> init quartz scheduler success.[{}]", scheduler);
+       
     }
 	
 	// getJobKeys
@@ -265,5 +264,6 @@ public final class DynamicSchedulerUtil implements InitializingBean {
         }
         return result;
     }
+
 
 }

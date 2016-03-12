@@ -6,6 +6,10 @@ import org.quartz.DisallowConcurrentExecution;
 
 import com.xxl.job.service.job.LocalNomalJobBean;
 
+/**
+ * demo job bean for no-concurrent
+ * @author xuxueli 2016-3-12 14:25:14
+ */
 @DisallowConcurrentExecution	// 串行；线程数要多配置几个，否则不生效；
 public class DemoConcurrentJobBean extends LocalNomalJobBean {
 
