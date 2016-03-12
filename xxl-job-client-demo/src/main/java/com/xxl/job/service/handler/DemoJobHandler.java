@@ -24,7 +24,11 @@ public class DemoJobHandler extends IJobHandler {
 	@Override
 	public JobHandleStatus handle(String... params) throws Exception {
 		logger.info(" ... params:" + params);
+<<<<<<< HEAD
 		for (int i = 0; i < 60; i++) {
+=======
+		for (int i = 0; i < 10; i++) {
+>>>>>>> branch 'master' of https://github.com/xuxueli/xxl-job.git
 			TimeUnit.SECONDS.sleep(1);
 			logger.info("handler run:{}", i);
 		}
