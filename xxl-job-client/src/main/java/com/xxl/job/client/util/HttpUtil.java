@@ -25,12 +25,28 @@ import org.apache.http.util.EntityUtils;
  */
 public class HttpUtil {
 	
-	// response param
-	public static final String status = "status";
-	public static final String msg = "msg";
-	// response status enum
-	public static final String SUCCESS = "SUCCESS";
-	public static final String FAIL = "FAIL";
+	/**
+	 * http remote callback
+	 */
+	public static class RemoteCallBack{
+		public static final String SUCCESS = "SUCCESS";
+		public static final String FAIL = "FAIL";
+		
+		private String status;
+		private String msg;
+		public void setStatus(String status) {
+			this.status = status;
+		}
+		public String getStatus() {
+			return status;
+		}
+		public void setMsg(String msg) {
+			this.msg = msg;
+		}
+		public String getMsg() {
+			return msg;
+		}
+	}
 	
 	/**
 	 * http post request
@@ -38,9 +54,9 @@ public class HttpUtil {
 	 * @param params
 	 * @return	[0]=responseMsg, [1]=exceptionMsg
 	 */
-	public static String[] post(String reqURL, Map<String, String> params){
-		String responseMsg = null;
-		String exceptionMsg = null;
+	public static RemoteCallBack post(String reqURL, Map<String, String> params){
+		RemoteCallBack callback = new RemoteCallBack();
+		callback.setStatus(RemoteCallBack.FAIL);
 		
 		// do post
 		HttpPost httpPost = null;
@@ -60,18 +76,25 @@ public class HttpUtil {
 			
 			HttpResponse response = httpClient.execute(httpPost);
 			HttpEntity entity = response.getEntity();
-			if (null != entity) {
-				responseMsg = EntityUtils.toString(entity, "UTF-8");
-				EntityUtils.consume(entity);
-			}
-			if (response.getStatusLine().getStatusCode() != 200) {
-				exceptionMsg = "response.getStatusLine().getStatusCode() = " + response.getStatusLine().getStatusCode();
+			if (response.getStatusLine().getStatusCode() == 200) {
+				if (null != entity) {
+					String responseMsg = EntityUtils.toString(entity, "UTF-8");
+					callback = JacksonUtil.readValue(responseMsg, RemoteCallBack.class);
+					if (callback == null) {
+						callback = new RemoteCallBack();
+						callback.setStatus(RemoteCallBack.FAIL);
+						callback.setMsg("responseMsg parse json fail, responseMsg:" + responseMsg);
+					}
+					EntityUtils.consume(entity);
+				}
+			} else {
+				callback.setMsg("http statusCode error, statusCode:" + response.getStatusLine().getStatusCode());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			StringWriter out = new StringWriter();
 			e.printStackTrace(new PrintWriter(out));
-			exceptionMsg = out.toString();
+			callback.setMsg(out.toString());
 		} finally{
 			if (httpPost!=null) {
 				httpPost.releaseConnection();
@@ -85,9 +108,6 @@ public class HttpUtil {
 			}
 		}
 		
-		String[] result = new String[2];
-		result[0] = responseMsg;
-		result[1] = exceptionMsg;
-		return result;
+		return callback;
 	}
 }

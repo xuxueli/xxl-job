@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import com.xxl.job.client.handler.IJobHandler.JobHandleStatus;
 import com.xxl.job.client.util.HttpUtil;
+import com.xxl.job.client.util.HttpUtil.RemoteCallBack;
 
 /**
  * handler thread
@@ -65,19 +66,19 @@ public class HandlerThread extends Thread{
 					}
 
 					// callback handler info
-					String callback_response[] = null;
+					RemoteCallBack callback = null;
 					try {
 						
 						HashMap<String, String> params = new HashMap<String, String>();
 						params.put(HandlerRepository.TRIGGER_LOG_ID, trigger_log_id);
-						params.put(HttpUtil.status, _status.name());
-						params.put(HttpUtil.msg, _msg);
-						callback_response = HttpUtil.post(trigger_log_url, params);
+						params.put("status", _status.name());
+						params.put("msg", _msg);
+						callback = HttpUtil.post(trigger_log_url, params);
 					} catch (Exception e) {
 						logger.info("HandlerThread Exception:", e);
 					}
-					logger.info("<<<<<<<<<<< xxl-job thread handle, handlerData:{}, callback_status:{}, callback_msg:{}, callback_response:{}, thread:{}", 
-							new Object[]{handlerData, _status, _msg, callback_response, this});
+					logger.info("<<<<<<<<<<< xxl-job thread handle, handlerData:{}, callback_status:{}, callback_msg:{}, callback:{}, thread:{}", 
+							new Object[]{handlerData, _status, _msg, callback, this});
 				} else {
 					try {
 						TimeUnit.MILLISECONDS.sleep(i * 100);

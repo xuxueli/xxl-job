@@ -11,7 +11,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.xxl.job.client.handler.IJobHandler;
-import com.xxl.job.client.util.HttpUtil;
+import com.xxl.job.client.util.HttpUtil.RemoteCallBack;
 import com.xxl.job.core.model.XxlJobLog;
 import com.xxl.job.dao.IXxlJobLogDao;
 
@@ -41,7 +41,7 @@ public class XxlJobLogTest {
 	public void updateTriggerInfo(){
 		XxlJobLog xxlJobLog = xxlJobLogDao.load(29);
 		xxlJobLog.setTriggerTime(new Date());
-		xxlJobLog.setTriggerStatus(HttpUtil.SUCCESS);
+		xxlJobLog.setTriggerStatus(RemoteCallBack.SUCCESS);
 		xxlJobLog.setTriggerMsg("trigger msg");
 		xxlJobLogDao.updateTriggerInfo(xxlJobLog);
 	}

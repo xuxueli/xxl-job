@@ -1,13 +1,12 @@
 package com.xxl.job.client.handler;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.xxl.job.client.util.HttpUtil;
+import com.xxl.job.client.util.HttpUtil.RemoteCallBack;
 import com.xxl.job.client.util.JacksonUtil;
 
 /**
@@ -38,9 +37,9 @@ public class HandlerRepository {
 	public static String pushHandleQueue(Map<String, String> _param) {
 		logger.info(">>>>>>>>>>> xxl-job pushHandleQueue start, _param:{}", new Object[]{_param});
 		
-		// result
-		String _status = HttpUtil.FAIL;
-		String _msg = "";
+		// callback
+		RemoteCallBack callback = new RemoteCallBack();
+		callback.setStatus(RemoteCallBack.FAIL);
 		
 		// push data to queue
 		String handler_name = _param.get(HandlerRepository.HANDLER_NAME);
@@ -48,22 +47,16 @@ public class HandlerRepository {
 			HandlerThread handlerThread = handlerTreadMap.get(handler_name);
 			if (handlerThread != null) {
 				handlerThread.pushData(_param);
-				_status = HttpUtil.SUCCESS;
+				callback.setStatus(RemoteCallBack.SUCCESS);
 			} else {
-				_msg = "handler not found.";
+				callback.setMsg("handler[" + handler_name + "] not found.");
 			}
 		}else{
-			_msg = "param[HANDLER_NAME] not exists.";
+			callback.setMsg("param[HANDLER_NAME] can not be null.");
 		}
 		
-		
-		HashMap<String, String> triggerData = new HashMap<String, String>();
-		triggerData.put(HandlerRepository.TRIGGER_LOG_ID, _param.get(HandlerRepository.TRIGGER_LOG_ID));
-		triggerData.put(HttpUtil.status, _status);
-		triggerData.put(HttpUtil.msg, _msg);
-		
-		logger.info(">>>>>>>>>>> xxl-job pushHandleQueue end, triggerData:{}", new Object[]{triggerData});
-		return JacksonUtil.writeValueAsString(triggerData);
+		logger.info(">>>>>>>>>>> xxl-job pushHandleQueue end, triggerData:{}", new Object[]{callback});
+		return JacksonUtil.writeValueAsString(callback);
 	}
 	
 }

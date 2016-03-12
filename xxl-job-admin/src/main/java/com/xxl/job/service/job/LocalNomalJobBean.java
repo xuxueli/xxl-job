@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
 import com.xxl.job.client.handler.HandlerRepository;
-import com.xxl.job.client.util.HttpUtil;
+import com.xxl.job.client.util.HttpUtil.RemoteCallBack;
 import com.xxl.job.client.util.JacksonUtil;
 import com.xxl.job.core.model.XxlJobInfo;
 import com.xxl.job.core.model.XxlJobLog;
@@ -60,14 +60,14 @@ public abstract class LocalNomalJobBean extends QuartzJobBean {
 		}
 		
 		jobLog.setTriggerTime(new Date());
-		jobLog.setTriggerStatus(HttpUtil.SUCCESS);
+		jobLog.setTriggerStatus(RemoteCallBack.SUCCESS);
 		jobLog.setTriggerMsg(null);
 		
 		try {
 			Object responseMsg = this.handle(handlerParams);
 			
 			jobLog.setHandleTime(new Date());
-			jobLog.setHandleStatus(HttpUtil.SUCCESS);
+			jobLog.setHandleStatus(RemoteCallBack.SUCCESS);
 			jobLog.setHandleMsg(JacksonUtil.writeValueAsString(responseMsg));
 		} catch (Exception e) {
 			logger.info("HandlerThread Exception:", e);
@@ -75,7 +75,7 @@ public abstract class LocalNomalJobBean extends QuartzJobBean {
 			e.printStackTrace(new PrintWriter(out));
 			
 			jobLog.setHandleTime(new Date());
-			jobLog.setHandleStatus(HttpUtil.FAIL);
+			jobLog.setHandleStatus(RemoteCallBack.FAIL);
 			jobLog.setHandleMsg(out.toString());
 		}
 		

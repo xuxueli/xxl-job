@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.lang.StringUtils;
 import org.quartz.DisallowConcurrentExecution;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -15,6 +14,7 @@ import org.springframework.scheduling.quartz.QuartzJobBean;
 
 import com.xxl.job.client.handler.HandlerRepository;
 import com.xxl.job.client.util.HttpUtil;
+import com.xxl.job.client.util.HttpUtil.RemoteCallBack;
 import com.xxl.job.client.util.JacksonUtil;
 import com.xxl.job.core.model.XxlJobInfo;
 import com.xxl.job.core.model.XxlJobLog;
@@ -60,35 +60,25 @@ public class RemoteHttpJobBean extends QuartzJobBean {
 		params.put(HandlerRepository.HANDLER_NAME, jobDataMap.get(HandlerRepository.HANDLER_NAME));
 		params.put(HandlerRepository.HANDLER_PARAMS, jobDataMap.get(HandlerRepository.HANDLER_PARAMS));
 
-		// handler address, netty or servlet
+		// handler address, jetty or servlet
 		String handler_address = jobDataMap.get(HandlerRepository.HANDLER_ADDRESS);
 		if (!handler_address.startsWith("http")){
 			handler_address = "http://" + handler_address + "/";
 		}
 
-		String[] postResp = HttpUtil.post(handler_address, params);
-		logger.info(">>>>>>>>>>> xxl-job trigger http response, jobLog.id:{}, jobLog:{}", jobLog.getId(), jobLog);
+		RemoteCallBack callback = HttpUtil.post(handler_address, params);
+		logger.info(">>>>>>>>>>> xxl-job trigger http response, jobLog.id:{}, jobLog:{}, callback:{}", jobLog.getId(), jobLog, callback);
 
-		// parse trigger response
-		String responseMsg = postResp[0];
-		String exceptionMsg = postResp[1];
-		
-		jobLog.setTriggerTime(new Date());
-		jobLog.setTriggerStatus(HttpUtil.FAIL);
-		jobLog.setTriggerMsg("[responseMsg]:"+responseMsg+"<br>[exceptionMsg]:"+exceptionMsg);
-		if (StringUtils.isNotBlank(responseMsg) && responseMsg.indexOf("{")>-1 ) {
-			Map<String, String> responseMap = JacksonUtil.readValue(responseMsg, Map.class);
-			if (responseMap!=null && StringUtils.isNotBlank(responseMap.get(HttpUtil.status))) {
-				jobLog.setTriggerStatus(responseMap.get(HttpUtil.status));
-				jobLog.setTriggerMsg(responseMap.get(HttpUtil.msg));
-			}
-		}
-		
 		// update trigger info
+		jobLog.setTriggerTime(new Date());
+		jobLog.setTriggerStatus(callback.getStatus());
+		jobLog.setTriggerMsg(callback.getMsg());
 		DynamicSchedulerUtil.xxlJobLogDao.updateTriggerInfo(jobLog);
+
+		// monitor triger
 		JobMonitorHelper.monitor(jobLog.getId());
-		logger.info(">>>>>>>>>>> xxl-job trigger end, jobLog.id:{}, jobLog:{}", jobLog.getId(), jobLog);
 		
+		logger.info(">>>>>>>>>>> xxl-job trigger end, jobLog.id:{}, jobLog:{}", jobLog.getId(), jobLog);
     }
 	
 }

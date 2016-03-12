@@ -11,7 +11,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.xxl.job.client.util.HttpUtil;
+import com.xxl.job.client.util.HttpUtil.RemoteCallBack;
 import com.xxl.job.core.model.XxlJobInfo;
 import com.xxl.job.core.model.XxlJobLog;
 import com.xxl.job.core.util.DynamicSchedulerUtil;
@@ -40,13 +40,13 @@ public class JobMonitorHelper {
 					if (jobLogId != null && jobLogId > 0) {
 						XxlJobLog log = DynamicSchedulerUtil.xxlJobLogDao.load(jobLogId);
 						if (log!=null) {
-							if (HttpUtil.SUCCESS.equals(log.getTriggerStatus()) && StringUtils.isBlank(log.getHandleStatus())) {
+							if (RemoteCallBack.SUCCESS.equals(log.getTriggerStatus()) && StringUtils.isBlank(log.getHandleStatus())) {
 								JobMonitorHelper.monitor(jobLogId);
 							}
-							if (HttpUtil.SUCCESS.equals(log.getTriggerStatus()) && HttpUtil.SUCCESS.equals(log.getHandleStatus())) {
+							if (RemoteCallBack.SUCCESS.equals(log.getTriggerStatus()) && RemoteCallBack.SUCCESS.equals(log.getHandleStatus())) {
 								// pass
 							}
-							if (HttpUtil.FAIL.equals(log.getTriggerStatus()) || HttpUtil.FAIL.equals(log.getHandleStatus())) {
+							if (RemoteCallBack.FAIL.equals(log.getTriggerStatus()) || RemoteCallBack.FAIL.equals(log.getHandleStatus())) {
 								String monotorKey = log.getJobGroup().concat("_").concat(log.getJobName());
 								Integer count = countMap.get(monotorKey);
 								if (count == null) {
