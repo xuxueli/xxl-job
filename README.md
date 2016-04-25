@@ -1,4 +1,4 @@
-# 分布式任务调度框架xxl-job
+# 分布式任务调度平台xxl-job
 github地址：https://github.com/xuxueli/xxl-job
 
 git.osc地址：http://git.oschina.net/xuxueli0323/xxl-job
@@ -7,7 +7,7 @@ git.osc地址：http://git.oschina.net/xuxueli0323/xxl-job
 
 技术交流群(仅作技术交流)：367260654
 	
-# 特点：基于quartz封装实现的的集群任务调度管理平台
+# 特点：集群任务调度管理
 	1、简单：支持通过Web页面对任务进行CRUD操作，操作简单，一分钟上手；
 	2、动态：支持动态修改任务状态，动态暂停/恢复任务，即时生效；
 	3、服务HA：任务信息持久化到mysql中，Job服务天然支持集群，保证服务HA；
