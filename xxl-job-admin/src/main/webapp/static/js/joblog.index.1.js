@@ -171,13 +171,13 @@ $(function() {
 	$('#joblog_list').on('click', '.logDetail', function(){
 		var _id = $(this).attr('_id');
 		
-		window.open(base_url + 'joblog/logDetailPage?id=' + _id);
+		window.open(base_url + '/joblog/logDetailPage?id=' + _id);
 		return;
 		
 		/*
 		$.ajax({
 			type : 'POST',
-			url : base_url + 'joblog/logDetail',
+			url : base_url + '/joblog/logDetail',
 			data : {"id":_id},
 			dataType : "json",
 			success : function(data){
@@ -196,7 +196,7 @@ $(function() {
 		ComConfirm.show("确认主动终止任务?", function(){
 			$.ajax({
 				type : 'POST',
-				url : base_url + 'joblog/logKill',
+				url : base_url + '/joblog/logKill',
 				data : {"id":_id},
 				dataType : "json",
 				success : function(data){
