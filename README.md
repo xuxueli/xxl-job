@@ -6,6 +6,9 @@ git.osc地址：http://git.oschina.net/xuxueli0323/xxl-job
 博客地址(内附使用教程)：http://www.cnblogs.com/xuxueli/p/5021979.html
 
 技术交流群(仅作技术交流)：367260654
+
+![image](http://images2015.cnblogs.com/blog/554415/201605/554415-20160513183306234-1939652116.png)
+技术的发展离不开你的支持，请作者喝杯咖啡吧！
 	
 # 特点：集群任务调度管理
 	1、简单：支持通过Web页面对任务进行CRUD操作，操作简单，一分钟上手；
