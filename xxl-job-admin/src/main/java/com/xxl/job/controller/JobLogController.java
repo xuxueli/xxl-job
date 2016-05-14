@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.xxl.job.client.handler.HandlerRepository;
 import com.xxl.job.client.util.HttpUtil;
 import com.xxl.job.client.util.HttpUtil.RemoteCallBack;
+import com.xxl.job.controller.annotation.PermessionLimit;
 import com.xxl.job.client.util.JacksonUtil;
 import com.xxl.job.core.constant.Constants.JobGroupEnum;
 import com.xxl.job.core.model.ReturnT;
@@ -77,6 +78,7 @@ public class JobLogController {
 	
 	@RequestMapping("/save")
 	@ResponseBody
+	@PermessionLimit(limit=false)
 	public RemoteCallBack triggerLog(int trigger_log_id, String status, String msg) {
 		RemoteCallBack callBack = new RemoteCallBack();
 		callBack.setStatus(RemoteCallBack.FAIL);

@@ -18,9 +18,8 @@ $(function(){
 	// logout
 	$("#logoutBtn").click(function(){
 		$.post(base_url + "/logout", function(data, status) {
-			if (data.code == "S") {
+			if (data.code == "200") {
 				ComAlert.show(1, "注销成功", function(){
-					//window.location.reload();
 					window.location.href = base_url;
 				});
 			} else {

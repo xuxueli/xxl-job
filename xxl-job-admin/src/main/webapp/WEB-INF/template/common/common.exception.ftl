@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title>应用程序异常 (500)</title> 
+	<title>应用程序异常 (error)</title> 
     <style type="text/css"> 
         body { background-color: #fff; color: #666; text-align: center; font-family: arial, sans-serif; }
         div.dialog {
