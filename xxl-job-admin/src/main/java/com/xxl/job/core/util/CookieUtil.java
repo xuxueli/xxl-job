@@ -19,10 +19,19 @@ public class CookieUtil {
 	 * @param response
 	 * @param key
 	 * @param value
+	 * @param ifRemember 
 	 */
-	public static void set(HttpServletResponse response, String key, String value) {
+	public static void set(HttpServletResponse response, String key, String value, boolean ifRemember) {
+		
+		int age = COOKIE_MAX_AGE;
+		if (ifRemember) {
+			age = COOKIE_MAX_AGE;
+		} else {
+			age = -1;
+		}
+		
 		Cookie cookie = new Cookie(key, value);
-		cookie.setMaxAge(COOKIE_MAX_AGE);	// Cookie过期时间,单位/秒
+		cookie.setMaxAge(age);				// Cookie过期时间,单位/秒
 		cookie.setPath(COOKIE_PATH);		// Cookie适用的路径
 		response.addCookie(cookie);
 	}

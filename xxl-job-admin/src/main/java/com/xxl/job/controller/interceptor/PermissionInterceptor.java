@@ -18,8 +18,8 @@ public class PermissionInterceptor extends HandlerInterceptorAdapter {
 	public static final String LOGIN_IDENTITY_KEY = "LOGIN_IDENTITY";
 	public static final String LOGIN_IDENTITY_VAL = "sdf!121sdf$78sd!8";
 	
-	public static boolean login(HttpServletResponse response){
-		CookieUtil.set(response, LOGIN_IDENTITY_KEY, LOGIN_IDENTITY_VAL);
+	public static boolean login(HttpServletResponse response, boolean ifRemember){
+		CookieUtil.set(response, LOGIN_IDENTITY_KEY, LOGIN_IDENTITY_VAL, ifRemember);
 		return true;
 	}
 	public static void logout(HttpServletRequest request, HttpServletResponse response){

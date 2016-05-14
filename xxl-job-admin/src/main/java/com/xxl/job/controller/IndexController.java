@@ -42,11 +42,15 @@ public class IndexController {
 	@RequestMapping(value="login", method=RequestMethod.POST)
 	@ResponseBody
 	@PermessionLimit(limit=false)
-	public ReturnT<String> loginDo(HttpServletRequest request, HttpServletResponse response, String userName, String password){
+	public ReturnT<String> loginDo(HttpServletRequest request, HttpServletResponse response, String userName, String password, String ifRemember){
 		if (!PermissionInterceptor.ifLogin(request)) {
 			if (StringUtils.isNotBlank(userName) && StringUtils.isNotBlank(password)
 					&& "admin".equals(userName) && "123456".equals(password)) {
-				PermissionInterceptor.login(response);
+				boolean ifRem = false;
+				if (StringUtils.isNotBlank(ifRemember) && "on".equals(ifRemember)) {
+					ifRem = true;
+				}
+				PermissionInterceptor.login(response, ifRem);
 			} else {
 				return new ReturnT<String>(500, "账号或密码错误");
 			}
