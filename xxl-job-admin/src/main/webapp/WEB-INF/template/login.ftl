@@ -41,7 +41,6 @@
 <@netCommon.comAlert />
 <script src="${request.contextPath}/static/plugins/jquery/jquery.validate.min.js"></script>
 <script src="${request.contextPath}/static/plugins/iCheck/icheck.min.js"></script>
-<script>var base_url = '${request.contextPath}';</script>
 <script src="${request.contextPath}/static/js/login.1.js"></script>
 
 </body>

@@ -230,7 +230,6 @@
 <!-- daterangepicker -->
 <script src="${request.contextPath}/static/adminlte/plugins/daterangepicker/moment.min.js"></script>
 <script src="${request.contextPath}/static/adminlte/plugins/daterangepicker/daterangepicker.js"></script>
-<script>var base_url = '${request.contextPath}';</script>
 <script src="${request.contextPath}/static/js/jobinfo.index.1.js"></script>
 </body>
 </html>
