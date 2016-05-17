@@ -23,6 +23,7 @@ git.osc地址：http://git.oschina.net/xuxueli0323/xxl-job
 	9、支持任务失败次数超阈值邮件报警；
 	10、支持在线查看，执行器详细日志；
 	11、支持远程任务执行终止；
+	12、支持登录验证；
 
 # 新版本 V1.2.x，新特性
 	1、支持任务分组；
@@ -41,4 +42,6 @@ git.osc地址：http://git.oschina.net/xuxueli0323/xxl-job
 	
 # 其他说明
 	清楚僵尸任务：qrtz_cron_triggers、qrtz_triggers、qrtz_job_details顺序删除
-	V1.2新增任务日志，记得执行“tables_xxl_log.sql”生成表结构
+
+# 规划中
+	1、任务执行器支持远程加载Groovy；

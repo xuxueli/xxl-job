@@ -26,6 +26,8 @@
   
 	<!-- scrollup -->
 	<link rel="stylesheet" href="${request.contextPath}/static/plugins/scrollup/image.css">
+	<!-- pace -->
+	<link rel="stylesheet" href="${request.contextPath}/static/plugins/pace/pace-theme-minimal.css">
 </#macro>
 
 <#macro commonScript>
@@ -40,6 +42,8 @@
 
     <!-- scrollup -->
     <script src="${request.contextPath}/static/plugins/scrollup/jquery.scrollUp.min.js"></script>
+    <!-- pace -->
+    <script src="${request.contextPath}/static/plugins/pace/pace.min.js"></script>
     <script src="${request.contextPath}/static/plugins/jquery/jquery.cookie.js"></script>
     <script src="${request.contextPath}/static/js/common.1.js"></script>
 </#macro>
