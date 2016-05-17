@@ -62,7 +62,7 @@ public class RemoteHttpJobBean extends QuartzJobBean {
 		params.put(HandlerRepository.HANDLER_NAME, jobDataMap.get(HandlerRepository.HANDLER_NAME));
 		params.put(HandlerRepository.HANDLER_PARAMS, jobDataMap.get(HandlerRepository.HANDLER_PARAMS));
 
-		// handler address, jetty or servlet
+		// handler address, jetty (servlet dead)
 		String handler_address = jobDataMap.get(HandlerRepository.HANDLER_ADDRESS);
 		if (!handler_address.startsWith("http")){
 			handler_address = "http://" + handler_address + "/";

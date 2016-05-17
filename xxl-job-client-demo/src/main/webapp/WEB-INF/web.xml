@@ -20,7 +20,7 @@
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
 	
-	<!-- Servlet任务执行器，推荐使用Jetty任务执行器 -->
+	<!-- [@Deprecated] Servlet任务执行器，推荐使用Jetty任务执行器 -->
 	<!-- 
 	<servlet>
 		<servlet-name>XxlJobServlet</servlet-name>

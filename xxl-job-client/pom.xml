@@ -52,6 +52,14 @@
 			<artifactId>httpclient</artifactId>
 			<version>4.3.6</version>
 		</dependency>
+		
+		<!-- spring-context -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>3.2.14.RELEASE</version>
+			<scope>compile</scope>
+		</dependency>
 
 	</dependencies>
 

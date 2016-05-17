@@ -24,7 +24,7 @@ import com.xxl.job.core.util.MailUtil;
 public class JobMonitorHelper {
 	private static Logger logger = LoggerFactory.getLogger(JobMonitorHelper.class);
 	
-	public static JobMonitorHelper helper = new JobMonitorHelper();
+	private static JobMonitorHelper helper = new JobMonitorHelper();
 	private ExecutorService executor = Executors.newCachedThreadPool();
 	private LinkedBlockingQueue<Integer> queue = new LinkedBlockingQueue<Integer>(0xfff8);
 	private ConcurrentHashMap<String, Integer> countMap = new ConcurrentHashMap<String, Integer>();
