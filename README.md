@@ -39,9 +39,21 @@ git.osc地址：http://git.oschina.net/xuxueli0323/xxl-job
 		解耦：任务模块提供任务接口，调度模块维护调度信息，业务相互独立；
 		高扩展性；
 		稳定性；
+
+# 新版本 V1.3.x，新特性
+	1、遗弃“本地任务”开发模式，推荐使用“远程任务”，易于系统解耦；
+	2、遗弃“servlet”方式底层系统通讯，推荐使用JETTY方式，重构通讯逻辑；
+	3、【重要】“远程任务”细分为：BEAN、GLUE两种开发模式，其中GLUE方式“远程任务”的逻辑代码托管至云端，详情请前往博客查看；
+		
 	
 # 其他说明
 	清楚僵尸任务：qrtz_cron_triggers、qrtz_triggers、qrtz_job_details顺序删除
 
 # 规划中
 	1、任务执行器支持远程加载Groovy；
+	
+# Tips
+	首先感谢您对XXL-JOB的关注，经过一年时间的完善和发展XXL-JOB已经应用到许多线上产品线，如大数据处理、电商和O2O...，我将再接再厉。
+	同时在此承诺XXL-JOB永远开源免费，为开源奉献力量我很光荣。
+	如果贵公司已经接入XXL-JOB，请留下 “公司名称 + 公司官网地址”，让更多的人更加信赖XXL-JOB，填写地址如下：
+	https://github.com/xuxueli/xxl-job/issues/1
