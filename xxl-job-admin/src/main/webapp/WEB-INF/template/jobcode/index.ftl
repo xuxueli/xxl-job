@@ -15,7 +15,7 @@
 		}
     </style>
 </head>
-<body>
+<body class=" layout-top-nav">
 
 <div class="wrapper">
 	
@@ -27,12 +27,11 @@
 		
 		<!-- Main content -->
 	    <section class="content">
-	    
 	    	<div class="row">
 	    		<div class="col-xs-4">
 					<div class="input-group margin">
                     	<div class="input-group-btn">
-                      		<button type="button" class="btn btn-default">版本回溯</button>
+                      		<button type="button" class="btn btn-info">版本回溯</button>
                     	</div>
                     	<select class="form-control" id="jobGroup" >
             				<option value="999" >逻辑调整版本C</option>
@@ -45,15 +44,15 @@
 	            <div class="col-xs-4">
 	            	<div class="input-group margin">
                     	<div class="input-group-btn">
-                      		<button type="button" class="btn btn-default">Action</button>
+                      		<button type="button" class="btn btn-info">备注</button>
                     	</div>
-                    	<input type="text" class="form-control" id="jobName" value="${jobName}" autocomplete="on" >
+                    	<input type="text" class="form-control" id="codeRemark" value="${jobName}" autocomplete="on" >
                   	</div>
 	            </div>
 	            <div class="col-xs-2">
 	            	<div class="input-group margin">
                     	<div class="input-group-btn">
-                      		<button type="button" class="btn btn-info">保存</button>
+                      		<button type="button" class="btn btn-primary" id="save" >保存</button>
                     	</div>
                   	</div>
 	            </div>
@@ -61,8 +60,18 @@
 	    	
 			<div class="row">
 				<div class="col-xs-12">
-					<div class="box">
-						<textarea id="editor" >
+					<div class="box callout callout-info">
+						<textarea id="codeSource" ></textarea>
+					</div>
+				</div>
+			</div>
+	    </section>
+	</div>
+	<!-- footer -->
+	<@netCommon.commonFooter />
+</div>
+
+<textarea id="demoCode" >
 package com.xxl.job.service.handler;
 
 import org.slf4j.Logger;
@@ -83,16 +92,7 @@ public class DemoJobHandler extends IJobHandler {
 		return JobHandleStatus.SUCCESS;
 	}
 }
-						</textarea>
-					</div>
-				</div>
-			</div>
-	    </section>
-	</div>
-	
-	<!-- footer -->
-	<@netCommon.commonFooter />
-</div>
+</textarea>
 	
 <@netCommon.comAlert />
 <@netCommon.commonScript />
@@ -100,6 +100,9 @@ public class DemoJobHandler extends IJobHandler {
 <script src="${request.contextPath}/static/plugins/codemirror/mode/clike/clike.js"></script>
 <script src="${request.contextPath}/static/plugins/codemirror/addon/hint/show-hint.js"></script>
 <script src="${request.contextPath}/static/plugins/codemirror/addon/hint/anyword-hint.js"></script>
+<script>
+var id = ${id!-1};
+</script>
 <script src="${request.contextPath}/static/js/jobcode.index.1.js"></script>
 </body>
 </html>

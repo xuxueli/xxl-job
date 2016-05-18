@@ -5,6 +5,10 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.xxl.job.core.model.ReturnT;
+import com.xxl.job.core.model.XxlJobInfo;
 
 /**
  * job code controller
@@ -17,6 +21,13 @@ public class JobCodeController {
 	@RequestMapping
 	public String index(Model model, HttpServletRequest request) {
 		return "jobcode/index";
+	}
+	
+	@RequestMapping("/save")
+	@ResponseBody
+	public ReturnT<String> save(Model model, XxlJobInfo jobInfo, HttpServletRequest request) {
+		
+		return ReturnT.SUCCESS;
 	}
 	
 }
