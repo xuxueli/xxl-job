@@ -53,7 +53,7 @@ git.osc地址：http://git.oschina.net/xuxueli0323/xxl-job
 	1、任务执行器支持远程加载Groovy；
 	
 # Tips
-	首先感谢您对XXL-JOB的关注，经过一年时间的完善和发展XXL-JOB已经应用到许多线上产品线，如大数据处理、电商和O2O...，我将再接再厉。
+	首先感谢您对XXL-JOB的关注，经过一年时间的完善和发展XXL-JOB已经应用到许多线上产品线，如大数据处理、电商和O2O（如我司大众点评，内部在XXL-JOB的基础上定制更名为Ferrari）...，我将再接再厉。
 	同时在此承诺XXL-JOB永远开源免费，为开源奉献力量我很光荣。
-	如果贵公司已经接入XXL-JOB，请留下 “公司名称 + 公司官网地址”，让更多的人更加信赖XXL-JOB，填写地址如下：
+	如果贵公司已经接入XXL-JOB，请留下 “公司名称 + 公司官网地址”，让更多的人了解和信赖XXL-JOB，填写地址如下：
 	https://github.com/xuxueli/xxl-job/issues/1
