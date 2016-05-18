@@ -81,12 +81,14 @@ $(function() {
 	                			// status
 	                			var pause_resume = "";
 	                			if ('NORMAL' == row.jobStatus) {
-	                				pause_resume = '<button class="btn btn-info btn-xs job_operate" type="job_pause" type="button">暂停</button>  ';
+	                				pause_resume = '<button class="btn btn-primary btn-xs job_operate" type="job_pause" type="button">暂停</button>  ';
 								} else if ('PAUSED' == row.jobStatus){
-									pause_resume = '<button class="btn btn-info btn-xs job_operate" type="job_resume" type="button">恢复</button>  ';
+									pause_resume = '<button class="btn btn-primary btn-xs job_operate" type="job_resume" type="button">恢复</button>  ';
 								}
 	                			// log url
 	                			var logUrl = base_url +'/joblog?jobGroup='+ row.jobGroup +'&jobName='+ row.jobName;
+	                			// log url
+	                			var codeUrl = base_url +'/jobcode?id='+ row.id;
 	                			
 	                			// job data
 	                			var jobDataMap = eval('(' + row.jobData + ')');
@@ -105,11 +107,11 @@ $(function() {
 	                							' handler_address="'+ jobDataMap.handler_address +'" '+
 	                							' handler_name="'+ jobDataMap.handler_name +'" '+
 	                							'>'+
-	                					pause_resume +
-										'<button class="btn btn-info btn-xs job_operate" type="job_trigger" type="button">执行</button>'+
-										'<button class="btn btn-warning btn-xs update" type="button">编辑</button><br>'+
-									  	'<button class="btn btn-warning btn-xs" type="job_del" type="button" '+
-									  		'onclick="javascript:window.open(\'' + logUrl + '\')" >查看日志</button> '+
+										'<button class="btn btn-primary btn-xs job_operate" type="job_trigger" type="button">执行</button>  '+
+										pause_resume +
+										'<button class="btn btn-primary btn-xs" type="job_del" type="button" onclick="javascript:window.open(\'' + logUrl + '\')" >日志</button><br>  '+
+										'<button class="btn btn-warning btn-xs update" type="button">编辑</button>  '+
+										'<button class="btn btn-warning btn-xs" type="button" onclick="javascript:window.open(\'' + codeUrl + '\')" >CODE</button>  '+
 								  		'<button class="btn btn-danger btn-xs job_operate" type="job_del" type="button">删除</button>  '+
 									'</p>';
 									
@@ -263,12 +265,12 @@ $(function() {
                 maxlength:"“任务描述”长度不应超过200位"
             },  
             handler_address : {
-            	required :"请输入“远程-机器地址”."  ,
-                maxlength:"“远程-机器地址”长度不应超过200位"
+            	required :"请输入“机器地址”."  ,
+                maxlength:"“机器地址”长度不应超过200位"
             },
             handler_name : {
-            	required : "请输入“远程-执行器”."  ,
-                maxlength: "“远程-执行器”长度不应超过200位"
+            	required : "请输入“执行器”."  ,
+                maxlength: "“执行器”长度不应超过200位"
             },
             author : {
             	required : "请输入“负责人”."  ,
@@ -316,37 +318,18 @@ $(function() {
 		$(".remote_panel").show();	// remote
 	});
 	
-	// 远程任务/本地任务，切换
-	$("#addModal select[name='jobClass']").change(function() {
-		//console.log( $(this).val().indexOf('RemoteHttpJobBean') );
-		
-		if($(this).val().indexOf('RemoteHttpJobBean') > -1){
-			$(".remote_panel").show();	// remote
-		} else if($(this).val().indexOf('RemoteHttpJobBean') == -1){
-			$(".remote_panel").hide();	// local
-		}
-    });
-	
 	// 更新
 	$("#job_list").on('click', '.update',function() {
 		$("#updateModal .form input[name='jobGroup']").val($(this).parent('p').attr("jobGroup"));
 		$("#updateModal .form input[name='jobName']").val($(this).parent('p').attr("jobName"));
 		$("#updateModal .form input[name='jobCron']").val($(this).parent('p').attr("jobCron"));
 		$("#updateModal .form input[name='jobDesc']").val($(this).parent('p').attr("jobDesc"));
-		$("#updateModal .form input[name='jobClass']").val($(this).parent('p').attr("jobClass"));
-		$("#updateModal .form input[name='handler_params']").val($(this).parent('p').attr("handler_params"));
 		$("#updateModal .form input[name='handler_address']").val($(this).parent('p').attr("handler_address"));
 		$("#updateModal .form input[name='handler_name']").val($(this).parent('p').attr("handler_name"));
+		$("#updateModal .form input[name='handler_params']").val($(this).parent('p').attr("handler_params"));
 		$("#updateModal .form input[name='author']").val($(this).parent('p').attr("author"));
 		$("#updateModal .form input[name='alarmEmail']").val($(this).parent('p').attr("alarmEmail"));
 		$("#updateModal .form input[name='alarmThreshold']").val($(this).parent('p').attr("alarmThreshold"));
-		
-		var _jobClass = $(this).parent('p').attr("jobClass");
-		if(_jobClass.indexOf('RemoteHttpJobBean') > -1){
-			$(".remote_panel").show();	// remote
-		} else if($(this).val().indexOf('RemoteHttpJobBean') == -1){
-			$(".remote_panel").hide();	// local
-		}
 		
 		$('#updateModal').modal({backdrop: false, keyboard: false}).modal('show');
 	});
@@ -394,12 +377,12 @@ $(function() {
                 maxlength:"“任务描述”长度不应超过200位"
             },  
             handler_address : {
-            	required :"请输入“远程-机器地址”."  ,
-                maxlength:"“远程-机器地址”长度不应超过200位"
+            	required :"请输入“机器地址”."  ,
+                maxlength:"“机器地址”长度不应超过200位"
             },
             handler_name : {
-            	required : "请输入“远程-执行器”."  ,
-                maxlength: "“远程-执行器”长度不应超过200位"
+            	required : "请输入“执行器”."  ,
+                maxlength: "“执行器”长度不应超过200位"
             },
             author : {
             	required : "请输入“负责人”."  ,

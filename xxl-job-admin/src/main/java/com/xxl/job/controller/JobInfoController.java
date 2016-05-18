@@ -1,6 +1,5 @@
 package com.xxl.job.controller;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,7 +8,6 @@ import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
 import org.quartz.CronExpression;
-import org.quartz.Job;
 import org.quartz.SchedulerException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,14 +23,11 @@ import com.xxl.job.core.model.XxlJobInfo;
 import com.xxl.job.core.util.DynamicSchedulerUtil;
 import com.xxl.job.dao.IXxlJobInfoDao;
 import com.xxl.job.service.job.RemoteHttpJobBean;
-import com.xxl.job.service.job.impl.DemoConcurrentJobBean;
-import com.xxl.job.service.job.impl.DemoNomalJobBean;
 
 /**
  * index controller
  * @author xuxueli 2015-12-19 16:13:16
  */
-@SuppressWarnings("unchecked")
 @Controller
 @RequestMapping("/jobinfo")
 public class JobInfoController {
@@ -40,19 +35,8 @@ public class JobInfoController {
 	@Resource
 	private IXxlJobInfoDao xxlJobInfoDao;
 	
-	// remote job bean
-	public static Class <? extends Job> remoteJobBean = RemoteHttpJobBean.class;
-	// loacal job bean
-	public static List<Class <? extends Job>> localJobBeanList = new ArrayList<Class<? extends Job>>();
-	static{
-		localJobBeanList.add((Class<? extends Job>) DemoNomalJobBean.class);
-		localJobBeanList.add((Class<? extends Job>) DemoConcurrentJobBean.class);
-	}
-	
 	@RequestMapping
 	public String index(Model model) {
-		model.addAttribute("localJobBeanList", localJobBeanList);			// 本地任务-列表
-		model.addAttribute("remoteJobBean", remoteJobBean);	// 远程任务-jobBean
 		model.addAttribute("JobGroupList", JobGroupEnum.values());			// 任务组列表
 		return "jobinfo/index";
 	}
@@ -84,8 +68,8 @@ public class JobInfoController {
 	
 	@RequestMapping("/add")
 	@ResponseBody
-	public ReturnT<String> add(String jobGroup, String jobName, String jobCron, String jobDesc, String jobClass,
-			String handler_params, String handler_address, String handler_name, 
+	public ReturnT<String> add(String jobGroup, String jobName, String jobCron, String jobDesc,
+			String handler_address, String handler_name, String handler_params, 
 			String author, String alarmEmail, int alarmThreshold) {
 		
 		// valid
@@ -101,31 +85,20 @@ public class JobInfoController {
 		if (StringUtils.isBlank(jobDesc)) {
 			return new ReturnT<String>(500, "请输入“任务描述”");
 		}
-		Class<? extends Job> jobClass_ = null;
-		try {
-			Class<?> clazz = Class.forName(jobClass);
-			if (clazz!=null) {
-				jobClass_ = (Class<? extends Job>) clazz;
-			}
-		} catch (ClassNotFoundException e1) {
-			e1.printStackTrace();
+		if (StringUtils.isBlank(handler_address)) {
+			return new ReturnT<String>(500, "请输入“机器地址”");
 		}
-		if (jobClass_ == null) {
-			return new ReturnT<String>(500, "请选择“JobBean”");
-		}
-		if (jobClass_.getClass().getName().equals(remoteJobBean.getName())) {
-			if (StringUtils.isBlank(handler_address)) {
-				return new ReturnT<String>(500, "请输入“远程-机器地址”");
-			}
-			if (StringUtils.isBlank(handler_name)) {
-				return new ReturnT<String>(500, "请输入“远程-执行器”");
-			}
+		if (StringUtils.isBlank(handler_name)) {
+			return new ReturnT<String>(500, "请输入“执行器”");
 		}
 		if (StringUtils.isBlank(author)) {
 			return new ReturnT<String>(500, "请输入“负责人”");
 		}
 		if (StringUtils.isBlank(alarmEmail)) {
 			return new ReturnT<String>(500, "请输入“报警邮件”");
+		}
+		if (alarmThreshold < 0) {
+			alarmThreshold = 0;
 		}
 		
 		try {
@@ -139,9 +112,9 @@ public class JobInfoController {
 		
 		// parse jobDataMap
 		HashMap<String, String> jobDataMap = new HashMap<String, String>();
-		jobDataMap.put(HandlerRepository.HANDLER_PARAMS, handler_params);
 		jobDataMap.put(HandlerRepository.HANDLER_ADDRESS, handler_address);
 		jobDataMap.put(HandlerRepository.HANDLER_NAME, handler_name);
+		jobDataMap.put(HandlerRepository.HANDLER_PARAMS, handler_params);
 		
 		// Backup to the database
 		XxlJobInfo jobInfo = new XxlJobInfo();
@@ -149,7 +122,7 @@ public class JobInfoController {
 		jobInfo.setJobName(jobName);
 		jobInfo.setJobCron(jobCron);
 		jobInfo.setJobDesc(jobDesc);
-		jobInfo.setJobClass(jobClass);
+		jobInfo.setJobClass(RemoteHttpJobBean.class.getName());
 		jobInfo.setJobData(JacksonUtil.writeValueAsString(jobDataMap));
 		jobInfo.setAuthor(author);
 		jobInfo.setAlarmEmail(alarmEmail);
@@ -173,8 +146,8 @@ public class JobInfoController {
 	
 	@RequestMapping("/reschedule")
 	@ResponseBody
-	public ReturnT<String> reschedule(String jobGroup, String jobName, String jobCron, String jobDesc, String jobClass,
-			String handler_params, String handler_address, String handler_name, 
+	public ReturnT<String> reschedule(String jobGroup, String jobName, String jobCron, String jobDesc,
+			String handler_address, String handler_name, String handler_params, 
 			String author, String alarmEmail, int alarmThreshold) {
 		
 		// valid
@@ -187,12 +160,30 @@ public class JobInfoController {
 		if (!CronExpression.isValidExpression(jobCron)) {
 			return new ReturnT<String>(500, "“corn”不合法");
 		}
+		if (StringUtils.isBlank(jobDesc)) {
+			return new ReturnT<String>(500, "请输入“任务描述”");
+		}
+		if (StringUtils.isBlank(handler_address)) {
+			return new ReturnT<String>(500, "请输入“机器地址”");
+		}
+		if (StringUtils.isBlank(handler_name)) {
+			return new ReturnT<String>(500, "请输入“执行器”");
+		}
+		if (StringUtils.isBlank(author)) {
+			return new ReturnT<String>(500, "请输入“负责人”");
+		}
+		if (StringUtils.isBlank(alarmEmail)) {
+			return new ReturnT<String>(500, "请输入“报警邮件”");
+		}
+		if (alarmThreshold < 0) {
+			alarmThreshold = 0;
+		}
 		
 		// parse jobDataMap
 		HashMap<String, String> jobDataMap = new HashMap<String, String>();
-		jobDataMap.put(HandlerRepository.HANDLER_PARAMS, handler_params);
 		jobDataMap.put(HandlerRepository.HANDLER_ADDRESS, handler_address);
 		jobDataMap.put(HandlerRepository.HANDLER_NAME, handler_name);
+		jobDataMap.put(HandlerRepository.HANDLER_PARAMS, handler_params);
 		
 		XxlJobInfo jobInfo = xxlJobInfoDao.load(jobGroup, jobName);
 		jobInfo.setJobCron(jobCron);

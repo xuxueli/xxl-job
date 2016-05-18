@@ -21,7 +21,7 @@ $(function(){
 			$.post(base_url + "/logout", function(data, status) {
 				if (data.code == "200") {
 					ComAlert.show(1, "注销成功", function(){
-						window.location.href = base_url;
+						window.location.href = base_url + "/";
 					});
 				} else {
 					ComAlert.show(1, data.msg);

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  	<title>调度日志</title>
+  	<title>任务调度中心</title>
   	<#import "/common/common.macro.ftl" as netCommon>
 	<@netCommon.commonStyle />
 	<!-- DataTables -->
@@ -20,11 +20,13 @@
 	<div class="content-wrapper">
 		<!-- Content Header (Page header) -->
 		<section class="content-header">
-			<h1>调度日志<small>调度中心</small></h1>
+			<h1>任务调度中心<small>调度日志</small></h1>
+			<!--
 			<ol class="breadcrumb">
 				<li><a><i class="fa fa-dashboard"></i>调度日志</a></li>
 				<li class="active">调度管理</li>
 			</ol>
+			-->
 		</section>
 		
 		<!-- Main content -->

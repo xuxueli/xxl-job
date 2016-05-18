@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  	<title>调度中心</title>
+  	<title>任务调度中心</title>
   	<#import "/common/common.macro.ftl" as netCommon>
 	<@netCommon.commonStyle />
 	<!-- DataTables -->
@@ -19,11 +19,13 @@
 	<div class="content-wrapper">
 		<!-- Content Header (Page header) -->
 		<section class="content-header">
-			<h1>调度管理<small>调度中心</small></h1>
+			<h1>任务调度中心<small>调度管理</small></h1>
+			<!--
 			<ol class="breadcrumb">
 				<li><a><i class="fa fa-dashboard"></i>调度管理</a></li>
 				<li class="active">调度中心</li>
 			</ol>
+			-->
 		</section>
 		
 		<!-- Main content -->
@@ -104,7 +106,7 @@
          	<div class="modal-body">
 				<form class="form-horizontal form" role="form" >
 					<div class="form-group">
-						<label for="firstname" class="col-sm-2 control-label">任务组</label>
+						<label for="firstname" class="col-sm-2 control-label">任务组<font color="red">*</font></label>
 						<div class="col-sm-4">
 							<select class="form-control" name="jobGroup" >
 		            			<#list JobGroupList as group>
@@ -112,46 +114,31 @@
 		            			</#list>
 		                  	</select>
 						</div>
-						<label for="firstname" class="col-sm-2 control-label">任务名</label>
+						<label for="firstname" class="col-sm-2 control-label">任务名<font color="red">*</font></label>
 						<div class="col-sm-4"><input type="text" class="form-control" name="jobName" placeholder="请输入“任务名”" minlength="4" maxlength="100" ></div>
 					</div>
 					<div class="form-group">
-						<label for="lastname" class="col-sm-2 control-label">Corn</label>
+						<label for="lastname" class="col-sm-2 control-label">Corn<font color="red">*</font></label>
 						<div class="col-sm-4"><input type="text" class="form-control" name="jobCron" placeholder="请输入“Corn”" maxlength="100" ></div>
-						<label for="lastname" class="col-sm-2 control-label">描述</label>
+						<label for="lastname" class="col-sm-2 control-label">描述<font color="red">*</font></label>
 						<div class="col-sm-4"><input type="text" class="form-control" name="jobDesc" placeholder="请输入“描述”" maxlength="200" ></div>
 					</div>
 					<div class="form-group">
-						<label for="firstname" class="col-sm-2 control-label">JobBean</label>
-						<div class="col-sm-4">
-							<select class="form-control" name="jobClass" >
-								<#if remoteJobBean?exists >
-								<option value="${remoteJobBean.name}" jobClassType="remote" >【远程任务】</option>
-								</#if>
-								<#if localJobBeanList?exists && localJobBeanList?size gt 0 >
-								<#list localJobBeanList as localJobBean>
-									<option value="${localJobBean.name}" jobClassType="local" >${localJobBean.name}</option>
-								</#list>
-								</#if>
-		                  	</select>
-						</div>
-						<label for="firstname" class="col-sm-2 control-label">执行参数</label>
-						<div class="col-sm-4"><input type="text" class="form-control" name="handler_params" placeholder="请输入“执行参数”" maxlength="100" ></div>
-					</div>
-					<div class="form-group remote_panel">
-						<label for="lastname" class="col-sm-2 control-label">远程-机器地址</label>
+						<label for="lastname" class="col-sm-2 control-label">机器地址<font color="red">*</font></label>
 						<div class="col-sm-4"><input type="text" class="form-control" name="handler_address" placeholder="请输入“远程-机器地址”" maxlength="200" ></div>
-						<label for="lastname" class="col-sm-2 control-label">远程-执行器</label>
+						<label for="lastname" class="col-sm-2 control-label">执行器<font color="red">*</font></label>
 						<div class="col-sm-4"><input type="text" class="form-control" name="handler_name" placeholder="请输入“远程-执行器”" maxlength="200" ></div>
 					</div>
 					<div class="form-group">
-						<label for="lastname" class="col-sm-2 control-label">负责人</label>
+						<label for="firstname" class="col-sm-2 control-label">执行参数<font color="black">*</font></label>
+						<div class="col-sm-4"><input type="text" class="form-control" name="handler_params" placeholder="请输入“执行参数”" maxlength="100" ></div>
+						<label for="lastname" class="col-sm-2 control-label">负责人<font color="red">*</font></label>
 						<div class="col-sm-4"><input type="text" class="form-control" name="author" placeholder="请输入“负责人”" maxlength="200" ></div>
-						<label for="lastname" class="col-sm-2 control-label">报警邮件</label>
-						<div class="col-sm-4"><input type="text" class="form-control" name="alarmEmail" placeholder="请输入“报警邮件”，多个邮件地址逗号分隔" maxlength="200" ></div>
 					</div>
 					<div class="form-group">
-						<label for="lastname" class="col-sm-2 control-label">报警阈值</label>
+						<label for="lastname" class="col-sm-2 control-label">报警邮件<font color="red">*</font></label>
+						<div class="col-sm-4"><input type="text" class="form-control" name="alarmEmail" placeholder="请输入“报警邮件”，多个邮件地址逗号分隔" maxlength="200" ></div>
+						<label for="lastname" class="col-sm-2 control-label">报警阈值<font color="red">*</font></label>
 						<div class="col-sm-4"><input type="text" class="form-control" name="alarmThreshold" placeholder="请输入“报警阈值”" maxlength="200" ></div>
 					</div>
 					<div class="form-group">
@@ -176,37 +163,34 @@
          	<div class="modal-body">
 				<form class="form-horizontal form" role="form" >
 					<div class="form-group">
-						<label for="firstname" class="col-sm-2 control-label">任务组</label>
+						<label for="firstname" class="col-sm-2 control-label">任务组<font color="red">*</font></label>
 						<div class="col-sm-4"><input type="text" class="form-control" name="jobGroup" placeholder="请输入“任务组”" minlength="4" maxlength="100" readonly ></div>
-						<label for="firstname" class="col-sm-2 control-label">任务名</label>
+						<label for="firstname" class="col-sm-2 control-label">任务名<font color="red">*</font></label>
 						<div class="col-sm-4"><input type="text" class="form-control" name="jobName" placeholder="请输入“任务名”" minlength="4" maxlength="100" readonly ></div>
 					</div>
 					<div class="form-group">
-						<label for="lastname" class="col-sm-2 control-label">Corn</label>
+						<label for="lastname" class="col-sm-2 control-label">Corn<font color="red">*</font></label>
 						<div class="col-sm-4"><input type="text" class="form-control" name="jobCron" placeholder="请输入“Corn”" maxlength="100" ></div>
-						<label for="lastname" class="col-sm-2 control-label">描述</label>
+						<label for="lastname" class="col-sm-2 control-label">描述<font color="red">*</font></label>
 						<div class="col-sm-4"><input type="text" class="form-control" name="jobDesc" placeholder="请输入“描述”" maxlength="200" ></div>
 					</div>
+					
 					<div class="form-group">
-						<label for="firstname" class="col-sm-2 control-label">JobBean</label>
-						<div class="col-sm-4"><input type="text" class="form-control" name="jobClass" placeholder="请输入“执行参数”" maxlength="100" readonly ></div>
-						<label for="firstname" class="col-sm-2 control-label">执行参数</label>
-						<div class="col-sm-4"><input type="text" class="form-control" name="handler_params" placeholder="请输入“执行参数”" maxlength="100" ></div>
-					</div>
-					<div class="form-group remote_panel">
-						<label for="lastname" class="col-sm-2 control-label">远程-机器地址</label>
+						<label for="lastname" class="col-sm-2 control-label">机器地址<font color="red">*</font></label>
 						<div class="col-sm-4"><input type="text" class="form-control" name="handler_address" placeholder="请输入“远程-机器地址”" maxlength="200" ></div>
-						<label for="lastname" class="col-sm-2 control-label">远程-执行器</label>
+						<label for="lastname" class="col-sm-2 control-label">执行器<font color="red">*</font></label>
 						<div class="col-sm-4"><input type="text" class="form-control" name="handler_name" placeholder="请输入“远程-执行器”" maxlength="200" ></div>
 					</div>
 					<div class="form-group">
-						<label for="lastname" class="col-sm-2 control-label">负责人</label>
+						<label for="firstname" class="col-sm-2 control-label">执行参数<font color="black">*</font></label>
+						<div class="col-sm-4"><input type="text" class="form-control" name="handler_params" placeholder="请输入“执行参数”" maxlength="100" ></div>
+						<label for="lastname" class="col-sm-2 control-label">负责人<font color="red">*</font></label>
 						<div class="col-sm-4"><input type="text" class="form-control" name="author" placeholder="请输入“负责人”" maxlength="200" ></div>
-						<label for="lastname" class="col-sm-2 control-label">报警邮件</label>
-						<div class="col-sm-4"><input type="text" class="form-control" name="alarmEmail" placeholder="请输入“报警邮件”，多个邮件地址逗号分隔" maxlength="200" ></div>
 					</div>
 					<div class="form-group">
-						<label for="lastname" class="col-sm-2 control-label">报警阈值</label>
+						<label for="lastname" class="col-sm-2 control-label">报警邮件<font color="red">*</font></label>
+						<div class="col-sm-4"><input type="text" class="form-control" name="alarmEmail" placeholder="请输入“报警邮件”，多个邮件地址逗号分隔" maxlength="200" ></div>
+						<label for="lastname" class="col-sm-2 control-label">报警阈值<font color="red">*</font></label>
 						<div class="col-sm-4"><input type="text" class="form-control" name="alarmThreshold" placeholder="请输入“报警阈值”" maxlength="200" ></div>
 					</div>
 					<div class="form-group">

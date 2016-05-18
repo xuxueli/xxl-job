@@ -46,6 +46,12 @@ public class HttpUtil {
 		public String getMsg() {
 			return msg;
 		}
+		
+		@Override
+		public String toString() {
+			return "RemoteCallBack [status=" + status + ", msg=" + msg + "]";
+		}
+		
 	}
 	
 	/**
