@@ -15,5 +15,10 @@
 	<bean id="xxlJobJettyServer" class="com.xxl.job.client.netcom.jetty.XxlJobJettyServer" init-method="start">
 		<property name="port" value="9999" />
 	</bean>
+	
+	<bean id="glueFactory" class="com.xxl.job.client.glue.GlueFactory">
+		<property name="cacheTimeout" value="5000" />
+		<property name="glueLoader" ref="dbGlueLoader" />
+	</bean>
 
 </beans>

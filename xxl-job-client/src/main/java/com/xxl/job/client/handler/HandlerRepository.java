@@ -7,8 +7,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.xxl.job.client.util.HttpUtil.RemoteCallBack;
+import com.xxl.job.client.handler.impl.GlueJobHandler;
 import com.xxl.job.client.log.XxlJobFileAppender;
+import com.xxl.job.client.util.HttpUtil.RemoteCallBack;
 import com.xxl.job.client.util.JacksonUtil;
 
 /**
@@ -22,8 +23,12 @@ public class HandlerRepository {
 	public enum NameSpaceEnum{RUN, KILL, LOG}
 	
 	public static final String HANDLER_ADDRESS = "handler_address";
-	public static final String HANDLER_NAME = "handler_name";
 	public static final String HANDLER_PARAMS = "handler_params";
+	
+	public static final String HANDLER_GLUE_SWITCH = "handler_glue_switch";
+	public static final String HANDLER_NAME = "handler_name";
+	public static final String HANDLER_JOB_GROUP = "handler_job_group";
+	public static final String HANDLER_JOB_NAME = "handler_job_name";
 	
 	public static final String TRIGGER_LOG_ID = "trigger_log_id";
 	public static final String TRIGGER_LOG_URL = "trigger_log_url";
@@ -64,19 +69,38 @@ public class HandlerRepository {
 			}
 					
 			// push data to queue
-			String handler_name = _param.get(HandlerRepository.HANDLER_NAME);
-			if (handler_name!=null && handler_name.trim().length()>0) {
-				HandlerThread handlerThread = handlerTreadMap.get(handler_name);
-				if (handlerThread != null) {
-					handlerThread.pushData(_param);
-					callback.setStatus(RemoteCallBack.SUCCESS);
-				} else {
-					callback.setMsg("handler[" + handler_name + "] not found.");
+			String handler_glue_switch = _param.get(HandlerRepository.HANDLER_GLUE_SWITCH);
+			HandlerThread handlerThread = null;
+			if ("0".equals(handler_glue_switch)) {
+				// bean model
+				String handler_name = _param.get(HandlerRepository.HANDLER_NAME);
+				if (handler_name == null || handler_name.trim().length()==0) {
+					callback.setMsg("bean model handler[HANDLER_NAME] not found.");
+					return JacksonUtil.writeValueAsString(callback);
 				}
-			}else{
-				callback.setMsg("param[HANDLER_NAME] can not be null.");
+				handlerThread = handlerTreadMap.get(handler_name);
+				if (handlerThread == null) {
+					callback.setMsg("handler[" + handler_name + "] not found.");
+					return JacksonUtil.writeValueAsString(callback);
+				}
+			} else {
+				// glue
+				String handler_job_group = _param.get(HandlerRepository.HANDLER_JOB_GROUP);
+				String handler_job_name = _param.get(HandlerRepository.HANDLER_JOB_NAME);
+				if (handler_job_group == null || handler_job_group.trim().length()==0 || handler_job_name == null || handler_job_name.trim().length()==0) {
+					callback.setMsg("glue model handler[job group or name] is null.");
+					return JacksonUtil.writeValueAsString(callback);
+				}
+				String glueHandleName = "glue_".concat(handler_job_group).concat("_").concat(handler_job_name);
+				handlerThread = handlerTreadMap.get(glueHandleName);
+				if (handlerThread==null) {
+					HandlerRepository.regist(glueHandleName, new GlueJobHandler(handler_job_group, handler_job_name));
+				}
+				handlerThread = handlerTreadMap.get(glueHandleName);
 			}
 			
+			handlerThread.pushData(_param);
+			callback.setStatus(RemoteCallBack.SUCCESS);
 		} else if (namespace.equals(HandlerRepository.NameSpaceEnum.LOG.name())) {
 			String trigger_log_id = _param.get(HandlerRepository.TRIGGER_LOG_ID);
 			String trigger_timestamp = _param.get(HandlerRepository.TRIGGER_TIMESTAMP);
@@ -128,7 +152,7 @@ public class HandlerRepository {
 			return JacksonUtil.writeValueAsString(callback);
 		}
 		
-		logger.info(">>>>>>>>>>> xxl-job service end, triggerData:{}", new Object[]{callback});
+		logger.info(">>>>>>>>>>> xxl-job service end, triggerData:{}");
 		return JacksonUtil.writeValueAsString(callback); 
 	}
 	

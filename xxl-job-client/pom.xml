@@ -60,6 +60,13 @@
 			<version>3.2.14.RELEASE</version>
 			<scope>compile</scope>
 		</dependency>
+		
+		<!-- groovy-all -->
+		<dependency>
+			<groupId>org.codehaus.groovy</groupId>
+			<artifactId>groovy-all</artifactId>
+			<version>2.4.5</version>
+		</dependency>
 
 	</dependencies>
 

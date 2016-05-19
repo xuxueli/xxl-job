@@ -15,7 +15,7 @@ public abstract class IJobHandler extends HandlerRepository{
 	 */
 	public abstract JobHandleStatus handle(String... params) throws Exception;
 	
-	public enum JobHandleStatus{
+	public static enum JobHandleStatus{
 		/**
 		 * handle success
 		 */

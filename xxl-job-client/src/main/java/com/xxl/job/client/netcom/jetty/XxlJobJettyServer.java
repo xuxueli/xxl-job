@@ -16,7 +16,7 @@ import org.springframework.context.ApplicationContextAware;
 
 import com.xxl.job.client.handler.HandlerRepository;
 import com.xxl.job.client.handler.IJobHandler;
-import com.xxl.job.client.handler.JobHander;
+import com.xxl.job.client.handler.annotation.JobHander;
 
 /**
  * Created by xuxueli on 2016/3/2 21:14.

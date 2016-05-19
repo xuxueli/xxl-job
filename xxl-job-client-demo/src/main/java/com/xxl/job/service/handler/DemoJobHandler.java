@@ -7,7 +7,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.xxl.job.client.handler.IJobHandler;
-import com.xxl.job.client.handler.JobHander;
+import com.xxl.job.client.handler.IJobHandler.JobHandleStatus;
+import com.xxl.job.client.handler.annotation.JobHander;
 
 /**
  * demo job handler
@@ -30,7 +31,7 @@ public class DemoJobHandler extends IJobHandler {
 	
 	public static void main(String[] args) {
 		System.out.println(DemoJobHandler.class.getName());
-		System.out.println(DemoJobHandler.class);
+		System.out.println(JobHandleStatus.class);
 	}
 	
 }

@@ -1,4 +1,4 @@
-package com.xxl.job.client.handler;
+package com.xxl.job.client.handler.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
