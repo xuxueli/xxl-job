@@ -9,7 +9,7 @@
 		</layout>
 	</appender>
 	
-    <appender name="ROOT" class="org.apache.log4j.DailyRollingFileAppender">
+    <appender name="FILE" class="org.apache.log4j.DailyRollingFileAppender">
         <param name="file" value="/logs/xxl-job-client-demo.log"/>
         <param name="append" value="true"/>
         <param name="encoding" value="UTF-8"/>
@@ -27,20 +27,23 @@
         </layout>
     </appender>
     
+    <root>
+        <level value="INFO" />
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="FILE" />
+        <appender-ref ref="xxl-job"/>
+    </root>
     <logger name="com.xxl.job.service.handler" additivity="false">
     	<level value="INFO" />
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="FILE" />
         <appender-ref ref="xxl-job"/>
     </logger>
     <logger name="com.xxl.job.client" additivity="false">
     	<level value="INFO" />
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="FILE" />
         <appender-ref ref="xxl-job"/>
     </logger>
-
-    <root>
-        <level value="INFO" />
-        <appender-ref ref="CONSOLE" />
-        <appender-ref ref="ROOT" />
-        <appender-ref ref="xxl-job"/>
-    </root>
     
 </log4j:configuration>
