@@ -21,4 +21,6 @@ public interface IXxlJobLogDao {
 	public int updateTriggerInfo(XxlJobLog xxlJobLog);
 	public int updateHandleInfo(XxlJobLog xxlJobLog);
 	
+	public int delete(String jobGroup, String jobName);
+	
 }

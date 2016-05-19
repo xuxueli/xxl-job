@@ -84,5 +84,13 @@ public class XxlJobLogDaoImpl implements IXxlJobLogDao {
 		}
 		return sqlSessionTemplate.update("XxlJobLogMapper.updateHandleInfo", xxlJobLog);
 	}
+
+	@Override
+	public int delete(String jobGroup, String jobName) {
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put("jobGroup", jobGroup);
+		params.put("jobName", jobName);
+		return sqlSessionTemplate.delete("XxlJobLogMapper.delete", params);
+	}
 	
 }

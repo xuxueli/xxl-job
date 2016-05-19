@@ -130,4 +130,10 @@
 		WHERE `id`= #{id}
 	</update>
 	
+	<delete id="delete">
+		delete from `xxl_job_qrtz_trigger_log` 
+		WHERE job_group = #{jobGroup}
+			AND job_name = #{jobName}
+	</delete>
+	
 </mapper>

@@ -92,7 +92,7 @@ $(function() {
 	                			// log url
 	                			var codeHtml = "";
 	                			if(row.glueSwitch != 0){
-	                				var codeUrl = base_url +'/jobcode?id='+ row.id;
+	                				var codeUrl = base_url +'/jobcode?jobGroup='+ row.jobGroup +'&jobName='+ row.jobName;
 	                				codeHtml = '<button class="btn btn-warning btn-xs" type="button" onclick="javascript:window.open(\'' + codeUrl + '\')" >GLUE</button>  '
 	                			}
 	                			

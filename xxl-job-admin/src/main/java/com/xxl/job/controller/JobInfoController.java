@@ -22,6 +22,8 @@ import com.xxl.job.core.model.ReturnT;
 import com.xxl.job.core.model.XxlJobInfo;
 import com.xxl.job.core.util.DynamicSchedulerUtil;
 import com.xxl.job.dao.IXxlJobInfoDao;
+import com.xxl.job.dao.IXxlJobLogDao;
+import com.xxl.job.dao.IXxlJobLogGlueDao;
 import com.xxl.job.service.job.RemoteHttpJobBean;
 
 /**
@@ -34,6 +36,10 @@ public class JobInfoController {
 	
 	@Resource
 	private IXxlJobInfoDao xxlJobInfoDao;
+	@Resource
+	public IXxlJobLogDao xxlJobLogDao;
+	@Resource
+	private IXxlJobLogGlueDao xxlJobLogGlueDao;
 	
 	@RequestMapping
 	public String index(Model model) {
@@ -216,6 +222,8 @@ public class JobInfoController {
 		try {
 			DynamicSchedulerUtil.removeJob(jobName, jobGroup);
 			xxlJobInfoDao.delete(jobGroup, jobName);
+			xxlJobLogDao.delete(jobGroup, jobName);
+			xxlJobLogGlueDao.delete(jobGroup, jobName);
 			return ReturnT.SUCCESS;
 		} catch (SchedulerException e) {
 			e.printStackTrace();

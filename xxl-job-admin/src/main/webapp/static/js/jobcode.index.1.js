@@ -1,12 +1,23 @@
 $(function() {
 
 	// init code editor
-	var codeEditor = CodeMirror.fromTextArea(document.getElementById("codeSource"), {
+	var codeEditor = CodeMirror.fromTextArea(document.getElementById("glueSource"), {
 		mode : "text/x-java",
 		lineNumbers : true,
 		matchBrackets : true
 	});
-	codeEditor.setValue( $("#demoCode").val() );
+	codeEditor.setValue( $("#glue_now").val() );
+	
+	// code change
+	$("#glue_version").change(function(){
+		var temp = $( "#" + $(this).val() ).val();
+		codeEditor.setValue( temp );
+	});
+	
+	// democode
+	$("#demoCode_btn").click(function() {
+		codeEditor.setValue( $("#demoCode").val() );
+	});
 	
 	// editor height
 	var height = Math.max(document.documentElement.clientHeight, document.body.offsetHeight);
@@ -14,14 +25,14 @@ $(function() {
 	
 	// code source save
 	$("#save").click(function() {
-		var codeSource = codeEditor.getValue();
-		var codeRemark = $("#codeRemark").val();
+		var glueSource = codeEditor.getValue();
+		var glueRemark = $("#glueRemark").val();
 		
-		if (!codeRemark) {
+		if (!glueRemark) {
 			ComAlert.show(2, "请输入备注");
 			return;
 		}
-		if (codeRemark.length < 6|| codeRemark.length > 100) {
+		if (glueRemark.length < 6|| glueRemark.length > 100) {
 			ComAlert.show(2, "备注长度应该在6至100之间");
 			return;
 		}
@@ -31,9 +42,10 @@ $(function() {
 				type : 'POST',
 				url : base_url + '/jobcode/save',
 				data : {
-					'jobInfo.id' : id,
-					'jobInfo.codeSource' : codeSource,
-					'jobInfo.codeRemark' : codeRemark
+					'jobGroup' : jobGroup,
+					'jobName' : jobName,
+					'glueSource' : glueSource,
+					'glueRemark' : glueRemark
 				},
 				dataType : "json",
 				success : function(data){
@@ -43,7 +55,7 @@ $(function() {
 							window.location.reload();
 						});
 					} else {
-						ComAlert.alert(data.msg);
+						ComAlert.show(2, data.msg);
 					}
 				}
 			});
