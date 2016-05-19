@@ -70,7 +70,7 @@ public class JobInfoController {
 	@ResponseBody
 	public ReturnT<String> add(String jobGroup, String jobName, String jobCron, String jobDesc,
 			String handler_address, String handler_name, String handler_params, 
-			String author, String alarmEmail, int alarmThreshold) {
+			String author, String alarmEmail, int alarmThreshold, int glueSwitch) {
 		
 		// valid
 		if (JobGroupEnum.match(jobGroup) == null) {
@@ -88,7 +88,7 @@ public class JobInfoController {
 		if (StringUtils.isBlank(handler_address)) {
 			return new ReturnT<String>(500, "请输入“机器地址”");
 		}
-		if (StringUtils.isBlank(handler_name)) {
+		if (glueSwitch==0 && StringUtils.isBlank(handler_name)) {
 			return new ReturnT<String>(500, "请输入“执行器”");
 		}
 		if (StringUtils.isBlank(author)) {
@@ -127,6 +127,9 @@ public class JobInfoController {
 		jobInfo.setAuthor(author);
 		jobInfo.setAlarmEmail(alarmEmail);
 		jobInfo.setAlarmThreshold(alarmThreshold);
+		jobInfo.setGlueSwitch(glueSwitch);
+		jobInfo.setGlueSource(null);
+		jobInfo.setGlueRemark(null);
 		xxlJobInfoDao.save(jobInfo);
 		
 		try {
@@ -148,7 +151,7 @@ public class JobInfoController {
 	@ResponseBody
 	public ReturnT<String> reschedule(String jobGroup, String jobName, String jobCron, String jobDesc,
 			String handler_address, String handler_name, String handler_params, 
-			String author, String alarmEmail, int alarmThreshold) {
+			String author, String alarmEmail, int alarmThreshold, int glueSwitch) {
 		
 		// valid
 		if (JobGroupEnum.match(jobGroup) == null) {
@@ -166,7 +169,7 @@ public class JobInfoController {
 		if (StringUtils.isBlank(handler_address)) {
 			return new ReturnT<String>(500, "请输入“机器地址”");
 		}
-		if (StringUtils.isBlank(handler_name)) {
+		if (glueSwitch==0 && StringUtils.isBlank(handler_name)) {
 			return new ReturnT<String>(500, "请输入“执行器”");
 		}
 		if (StringUtils.isBlank(author)) {
@@ -192,6 +195,7 @@ public class JobInfoController {
 		jobInfo.setAuthor(author);
 		jobInfo.setAlarmEmail(alarmEmail);
 		jobInfo.setAlarmThreshold(alarmThreshold);
+		jobInfo.setGlueSwitch(glueSwitch);
 		
 		try {
 			// fresh quartz

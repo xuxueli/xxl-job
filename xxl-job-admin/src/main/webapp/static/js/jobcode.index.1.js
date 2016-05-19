@@ -8,10 +8,11 @@ $(function() {
 	});
 	codeEditor.setValue( $("#demoCode").val() );
 	
+	// editor height
 	var height = Math.max(document.documentElement.clientHeight, document.body.offsetHeight);
 	$(".CodeMirror").attr('style', 'height:'+ height +'px');
 	
-	
+	// code source save
 	$("#save").click(function() {
 		var codeSource = codeEditor.getValue();
 		var codeRemark = $("#codeRemark").val();

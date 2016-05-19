@@ -78,6 +78,7 @@
 					                  	<th name="author" >负责人</th>
 					                  	<th name="alarmEmail" >报警邮件</th>
 					                  	<th name="alarmThreshold" >报警阀值</th>
+					                  	<th name="glueSwitch" >GLUE模式</th>
 					                  	<th name="jobStatus" >状态</th>
 					                  	<th>操作</th>
 					                </tr>
@@ -142,9 +143,15 @@
 						<div class="col-sm-4"><input type="text" class="form-control" name="alarmThreshold" placeholder="请输入“报警阈值”" maxlength="200" ></div>
 					</div>
 					<div class="form-group">
-						<div class="col-sm-offset-3 col-sm-9">
+						<div class="col-sm-offset-3 col-sm-6">
 							<button type="submit" class="btn btn-primary"  >保存</button>
 							<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+						</div>
+						<div class="col-sm-3">
+							<div class="checkbox">
+		                        <label><input type="checkbox" class="ifGLUE" >开启GLUE模式<font color="black">*</font></label>
+		                        <input type="hidden" name="glueSwitch" value="0" >
+	                    	</div>
 						</div>
 					</div>
 				</form>
@@ -194,9 +201,15 @@
 						<div class="col-sm-4"><input type="text" class="form-control" name="alarmThreshold" placeholder="请输入“报警阈值”" maxlength="200" ></div>
 					</div>
 					<div class="form-group">
-						<div class="col-sm-offset-3 col-sm-9">
+						<div class="col-sm-offset-3 col-sm-6">
 							<button type="submit" class="btn btn-primary"  >保存</button>
 							<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+						</div>
+						<div class="col-sm-3">
+							<div class="checkbox">
+		                        <label><input type="checkbox" class="ifGLUE" >开启GLUE模式<font color="black">*</font></label>
+		                        <input type="hidden" name="glueSwitch" value="0" >
+	                    	</div>
 						</div>
 					</div>
 				</form>

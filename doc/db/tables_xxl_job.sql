@@ -1,7 +1,3 @@
-# DROP TABLE IF EXISTS XXL_JOB_QRTZ_FIRED_TRIGGERS;
-# DROP TABLE IF EXISTS XXL_JOB_QRTZ_PAUSED_TRIGGER_GRPS;
-# DROP TABLE IF EXISTS XXL_JOB_QRTZ_SCHEDULER_STATE;
-# DROP TABLE IF EXISTS XXL_JOB_QRTZ_LOCKS;
 
 CREATE TABLE XXL_JOB_QRTZ_JOB_DETAILS
   (
@@ -160,6 +156,9 @@ CREATE TABLE `xxl_job_qrtz_trigger_info` (
   `author` varchar(64) DEFAULT NULL COMMENT '作者',
   `alarm_email` varchar(255) DEFAULT NULL COMMENT '报警邮件',
   `alarm_threshold` int(11) DEFAULT NULL COMMENT '报警阀值(连续失败次数)',
+  `glue_switch` int(11) DEFAULT '0' COMMENT 'GLUE模式开关：0-否，1-是',
+  `glue_source` text COMMENT 'GLUE源代码',
+  `glue_remark` varchar(128) DEFAULT NULL COMMENT 'GLUE备注',
   PRIMARY KEY (`id`)
 );
 
@@ -179,6 +178,18 @@ CREATE TABLE `xxl_job_qrtz_trigger_log` (
   `handle_msg` varchar(2048) DEFAULT NULL COMMENT '执行-日志',
   PRIMARY KEY (`id`)
 );
+
+CREATE TABLE `xxl_job_qrtz_trigger_logglue` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `job_group` varchar(255) NOT NULL,
+  `job_name` varchar(255) NOT NULL,
+  `glue_source` text,
+  `glue_remark` varchar(128) NOT NULL,
+  `add_time` timestamp NULL DEFAULT NULL,
+  `update_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ;
+
 
 commit;
 

@@ -24,6 +24,10 @@ public class XxlJobInfo {
 	private String alarmEmail;	// 报警邮件
 	private int alarmThreshold;	// 报警阀值
 	
+	private int glueSwitch;		// GLUE模式开关：0-否，1-是
+	private String glueSource;	// GLUE源代码
+	private String glueRemark;	// GLUE备注
+	
 	// copy from quartz
 	private String jobStatus;	// 任务状态 【base on quartz】
 
@@ -131,12 +135,37 @@ public class XxlJobInfo {
 		this.jobStatus = jobStatus;
 	}
 
+	public int getGlueSwitch() {
+		return glueSwitch;
+	}
+
+	public void setGlueSwitch(int glueSwitch) {
+		this.glueSwitch = glueSwitch;
+	}
+
+	public String getGlueSource() {
+		return glueSource;
+	}
+
+	public void setGlueSource(String glueSource) {
+		this.glueSource = glueSource;
+	}
+
+	public String getGlueRemark() {
+		return glueRemark;
+	}
+
+	public void setGlueRemark(String glueRemark) {
+		this.glueRemark = glueRemark;
+	}
+
 	@Override
 	public String toString() {
 		return "XxlJobInfo [id=" + id + ", jobGroup=" + jobGroup + ", jobName=" + jobName + ", jobCron=" + jobCron
 				+ ", jobDesc=" + jobDesc + ", jobClass=" + jobClass + ", jobData=" + jobData + ", addTime=" + addTime
 				+ ", updateTime=" + updateTime + ", author=" + author + ", alarmEmail=" + alarmEmail
-				+ ", alarmThreshold=" + alarmThreshold + ", jobStatus=" + jobStatus + "]";
+				+ ", alarmThreshold=" + alarmThreshold + ", glueSwitch=" + glueSwitch + ", glueSource=" + glueSource
+				+ ", glueRemark=" + glueRemark + ", jobStatus=" + jobStatus + "]";
 	}
-
+	
 }

@@ -61,6 +61,7 @@ $(function() {
 	                { "data": 'author', "visible" : true},
 	                { "data": 'alarmEmail', "visible" : false},
 	                { "data": 'alarmThreshold', "visible" : false},
+	                { "data": 'glueSwitch', "visible" : false},
 	                { 
 	                	"data": 'jobStatus', 
 	                	"visible" : true,
@@ -87,8 +88,13 @@ $(function() {
 								}
 	                			// log url
 	                			var logUrl = base_url +'/joblog?jobGroup='+ row.jobGroup +'&jobName='+ row.jobName;
+	                			
 	                			// log url
-	                			var codeUrl = base_url +'/jobcode?id='+ row.id;
+	                			var codeHtml = "";
+	                			if(row.glueSwitch != 0){
+	                				var codeUrl = base_url +'/jobcode?id='+ row.id;
+	                				codeHtml = '<button class="btn btn-warning btn-xs" type="button" onclick="javascript:window.open(\'' + codeUrl + '\')" >GLUE</button>  '
+	                			}
 	                			
 	                			// job data
 	                			var jobDataMap = eval('(' + row.jobData + ')');
@@ -100,18 +106,19 @@ $(function() {
 	                							' jobDesc="'+ row.jobDesc +'" '+
 	                							' jobClass="'+ row.jobClass +'" '+
 	                							' jobData="'+ row.jobData +'" '+
-	                							' author="'+ row.author +'" '+
-	                							' alarmEmail="'+ row.alarmEmail +'" '+
-	                							' alarmThreshold="'+ row.alarmThreshold +'" '+
 	                							' handler_params="'+jobDataMap.handler_params +'" '+
 	                							' handler_address="'+ jobDataMap.handler_address +'" '+
 	                							' handler_name="'+ jobDataMap.handler_name +'" '+
+	                							' author="'+ row.author +'" '+
+	                							' alarmEmail="'+ row.alarmEmail +'" '+
+	                							' alarmThreshold="'+ row.alarmThreshold +'" '+
+	                							' glueSwitch="'+ row.glueSwitch +'" '+
 	                							'>'+
 										'<button class="btn btn-primary btn-xs job_operate" type="job_trigger" type="button">执行</button>  '+
 										pause_resume +
 										'<button class="btn btn-primary btn-xs" type="job_del" type="button" onclick="javascript:window.open(\'' + logUrl + '\')" >日志</button><br>  '+
 										'<button class="btn btn-warning btn-xs update" type="button">编辑</button>  '+
-										'<button class="btn btn-warning btn-xs" type="button" onclick="javascript:window.open(\'' + codeUrl + '\')" >GLUE</button>  '+
+										codeHtml +
 								  		'<button class="btn btn-danger btn-xs job_operate" type="job_del" type="button">删除</button>  '+
 									'</p>';
 									
@@ -318,6 +325,34 @@ $(function() {
 		$(".remote_panel").show();	// remote
 	});
 	
+	// GLUE模式开启
+	$("#addModal .form .ifGLUE").click(function(){
+		var ifGLUE = $(this).is(':checked');
+		var $handler_name = $("#addModal .form input[name='handler_name']");
+		var $glueSwitch = $("#addModal .form input[name='glueSwitch']");
+		if (ifGLUE) {
+			$handler_name.val("");
+			$handler_name.attr("readonly","readonly");
+			$glueSwitch.val(1);
+		} else {
+			$handler_name.removeAttr("readonly");
+			$glueSwitch.val(0);
+		}
+	});
+	$("#updateModal .form .ifGLUE").click(function(){
+		var ifGLUE = $(this).is(':checked');
+		var $handler_name = $("#updateModal .form input[name='handler_name']");
+		var $glueSwitch = $("#updateModal .form input[name='glueSwitch']");
+		if (ifGLUE) {
+			$handler_name.val("");
+			$handler_name.attr("readonly","readonly");
+			$glueSwitch.val(1);
+		} else {
+			$handler_name.removeAttr("readonly");
+			$glueSwitch.val(0);
+		}
+	});
+	
 	// 更新
 	$("#job_list").on('click', '.update',function() {
 		$("#updateModal .form input[name='jobGroup']").val($(this).parent('p').attr("jobGroup"));
@@ -330,6 +365,18 @@ $(function() {
 		$("#updateModal .form input[name='author']").val($(this).parent('p').attr("author"));
 		$("#updateModal .form input[name='alarmEmail']").val($(this).parent('p').attr("alarmEmail"));
 		$("#updateModal .form input[name='alarmThreshold']").val($(this).parent('p').attr("alarmThreshold"));
+		$("#updateModal .form input[name='glueSwitch']").val($(this).parent('p').attr("glueSwitch"));
+		
+		// GLUE check
+		var $glueSwitch = $("#updateModal .form input[name='glueSwitch']");
+		var $handler_name = $("#updateModal .form input[name='handler_name']");
+		if ($glueSwitch.val() != 0) {
+			$handler_name.attr("readonly","readonly");
+			$("#updateModal .form .ifGLUE").attr("checked", true);
+		} else {
+			$handler_name.removeAttr("readonly");
+			$("#updateModal .form .ifGLUE").attr("checked", false);
+		}
 		
 		$('#updateModal').modal({backdrop: false, keyboard: false}).modal('show');
 	});
