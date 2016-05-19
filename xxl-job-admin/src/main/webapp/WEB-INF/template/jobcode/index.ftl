@@ -10,8 +10,7 @@
 		.CodeMirror {
       		border: 0px solid black;
       		font-size:16px;
-      		height: 95%;
-      		row:200;
+      		height: 100%;
 		}
     </style>
 </head>
@@ -71,7 +70,7 @@
 	<@netCommon.commonFooter />
 </div>
 
-<textarea id="demoCode" >
+<textarea id="demoCode" style="display:none;" >
 package com.xxl.job.service.handler;
 
 import org.slf4j.Logger;

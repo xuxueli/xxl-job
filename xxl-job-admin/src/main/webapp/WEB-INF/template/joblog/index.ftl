@@ -9,7 +9,7 @@
   	<!-- daterangepicker -->
   	<link rel="stylesheet" href="${request.contextPath}/static/adminlte/plugins/daterangepicker/daterangepicker-bs3.css">
 </head>
-<body class="hold-transition skin-blue sidebar-mini">
+<body class="hold-transition skin-blue sidebar-mini <#if cookieMap?exists && "off" == cookieMap["adminlte_settings"].value >sidebar-collapse</#if> ">
 <div class="wrapper">
 	<!-- header -->
 	<@netCommon.commonHeader />

@@ -1,6 +1,6 @@
 $(function(){
 	
-	// 导航栏,选中样式处理
+	// 导航栏,选中样式处理，js遍历匹配url（遗弃）
 	$(".nav-click").removeClass("active");
 	$(".nav-click").each(function(){
 		if( window.location.href.indexOf( $(this).find("a").attr("href") ) > -1){
@@ -30,9 +30,9 @@ $(function(){
 		});
 	});
 	
-	// adminlte_settings
+	// 左侧菜单状态，js + 后端 + cookie方式（新）
 	$('.sidebar-toggle').click(function(){
-		var adminlte_settings = $.cookie('adminlte_settings');
+		var adminlte_settings = $.cookie('adminlte_settings');	// 左侧菜单展开状态[adminlte_settings]：on=展开，off=折叠
 		if ('off' == adminlte_settings) {
 			adminlte_settings = 'on';
 		} else {
@@ -40,8 +40,12 @@ $(function(){
 		}
 		$.cookie('adminlte_settings', adminlte_settings, { expires: 7 });	//$.cookie('the_cookie', '', { expires: -1 });
 	});
+	// 左侧菜单状态，js + cookie方式（遗弃）
+	/*
 	var adminlte_settings = $.cookie('adminlte_settings');
 	if (adminlte_settings == 'off') {
 		$('body').addClass('sidebar-collapse');
 	}
+	*/
+	
 });

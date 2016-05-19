@@ -69,7 +69,7 @@ public class IndexController {
 	}
 	
 	@RequestMapping("/help")
-	public String help(Model model) {
+	public String help() {
 		return "help";
 	}
 	

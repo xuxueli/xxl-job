@@ -8,17 +8,20 @@ $(function() {
 	});
 	codeEditor.setValue( $("#demoCode").val() );
 	
+	var height = Math.max(document.documentElement.clientHeight, document.body.offsetHeight);
+	$(".CodeMirror").attr('style', 'height:'+ height +'px');
+	
 	
 	$("#save").click(function() {
 		var codeSource = codeEditor.getValue();
 		var codeRemark = $("#codeRemark").val();
 		
 		if (!codeRemark) {
-			ComAlert.show(1, "请输入备注");
+			ComAlert.show(2, "请输入备注");
 			return;
 		}
 		if (codeRemark.length < 6|| codeRemark.length > 100) {
-			ComAlert.show(1, "备注长度应该在6至100之间");
+			ComAlert.show(2, "备注长度应该在6至100之间");
 			return;
 		}
 		
@@ -34,7 +37,7 @@ $(function() {
 				dataType : "json",
 				success : function(data){
 					if (data.code == 200) {
-						ComAlert.show(1, '提交成功', function(){
+						ComAlert.show(1, '保存成功', function(){
 							//$(window).unbind('beforeunload');
 							window.location.reload();
 						});
