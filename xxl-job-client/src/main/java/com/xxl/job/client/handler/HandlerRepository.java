@@ -46,7 +46,7 @@ public class HandlerRepository {
 	
 	// handler push to queue
 	public static String service(Map<String, String> _param) {
-		logger.info(">>>>>>>>>>> xxl-job service start, _param:{}", new Object[]{_param});
+		logger.debug(">>>>>>>>>>> xxl-job service start, _param:{}", new Object[]{_param});
 		
 		// callback
 		RemoteCallBack callback = new RemoteCallBack();
@@ -152,7 +152,7 @@ public class HandlerRepository {
 			return JacksonUtil.writeValueAsString(callback);
 		}
 		
-		logger.info(">>>>>>>>>>> xxl-job service end, triggerData:{}");
+		logger.debug(">>>>>>>>>>> xxl-job service end, triggerData:{}");
 		return JacksonUtil.writeValueAsString(callback); 
 	}
 	
