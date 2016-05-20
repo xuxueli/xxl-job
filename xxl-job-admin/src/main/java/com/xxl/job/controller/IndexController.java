@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.xxl.job.controller.annotation.PermessionLimit;
 import com.xxl.job.controller.interceptor.PermissionInterceptor;
 import com.xxl.job.core.model.ReturnT;
+import com.xxl.job.core.util.PropertiesUtil;
 
 /**
  * index controller
@@ -45,7 +46,8 @@ public class IndexController {
 	public ReturnT<String> loginDo(HttpServletRequest request, HttpServletResponse response, String userName, String password, String ifRemember){
 		if (!PermissionInterceptor.ifLogin(request)) {
 			if (StringUtils.isNotBlank(userName) && StringUtils.isNotBlank(password)
-					&& "admin".equals(userName) && "123456".equals(password)) {
+					&& PropertiesUtil.getString("login.username").equals(userName) 
+					&& PropertiesUtil.getString("login.password").equals(password)) {
 				boolean ifRem = false;
 				if (StringUtils.isNotBlank(ifRemember) && "on".equals(ifRemember)) {
 					ifRem = true;
