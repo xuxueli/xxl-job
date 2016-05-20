@@ -101,48 +101,25 @@ public class GlueFactory implements ApplicationContextAware {
 	}
 	
 	// ----------------------------- load instance -----------------------------
-	
-	// load class, 
-	public static String generateClassCacheKey(String job_group, String job_name){
-		return job_group.concat("_").concat(job_name).concat("_class");
-	}
-	public Class<?> loadClass(String job_group, String job_name) throws Exception{
-		if (job_group==null || job_group.trim().length()==0 || job_name==null || job_name.trim().length()==0) {
-			return null;
-		}
-		String cacheClassKey = generateClassCacheKey(job_group, job_name);
-		Object cacheClass = LocalCache.getInstance().get(cacheClassKey);
-		if (cacheClass != null) {
-			return (Class<?>) cacheClass;
-		}
-		String codeSource = glueLoader.load(job_group, job_name);
-		if (codeSource!=null && codeSource.trim().length()>0) {
-			Class<?> clazz = groovyClassLoader.parseClass(codeSource);
-			if (clazz!=null) {
-				LocalCache.getInstance().set(cacheClassKey, clazz, cacheTimeout);
-				logger.info(">>>>>>>>>>>> xxl-glue, fresh class, cacheClassKey:{}", cacheClassKey);
-				return clazz;
-			}
-		}
-		return null;
-	}
-	
 	// load new instance, prototype
 	public IJobHandler loadNewInstance(String job_group, String job_name) throws Exception{
 		if (job_group==null || job_group.trim().length()==0 || job_name==null || job_name.trim().length()==0) {
 			return null;
 		}
-		Class<?> clazz = loadClass(job_group, job_name);
-		if (clazz!=null) {
-			Object instance = clazz.newInstance();
-			if (instance!=null) {
-				if (!(instance instanceof IJobHandler)) {
-					throw new IllegalArgumentException(">>>>>>>>>>> xxl-glue, loadNewInstance error, "
-							+ "cannot convert from instance["+ instance.getClass() +"] to IJobHandler");
+		String codeSource = glueLoader.load(job_group, job_name);
+		if (codeSource!=null && codeSource.trim().length()>0) {
+			Class<?> clazz = groovyClassLoader.parseClass(codeSource);
+			if (clazz != null) {
+				Object instance = clazz.newInstance();
+				if (instance!=null) {
+					if (instance instanceof IJobHandler) {
+						this.injectService(instance);
+						return (IJobHandler) instance;
+					} else {
+						throw new IllegalArgumentException(">>>>>>>>>>> xxl-glue, loadNewInstance error, "
+								+ "cannot convert from instance["+ instance.getClass() +"] to IJobHandler");
+					}
 				}
-				
-				this.injectService(instance);
-				return (IJobHandler) instance;
 			}
 		}
 		throw new IllegalArgumentException(">>>>>>>>>>> xxl-glue, loadNewInstance error, instance is null");
