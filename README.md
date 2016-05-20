@@ -7,10 +7,6 @@ git.osc地址：http://git.oschina.net/xuxueli0323/xxl-job
 
 技术交流群(仅作技术交流)：367260654
 
-![image](http://images2015.cnblogs.com/blog/554415/201605/554415-20160513183306234-1939652116.png)
-
-技术的发展离不开你的支持，请作者喝杯咖啡吧！
-	
 # 特点：集群任务调度管理
 	1、简单：支持通过Web页面对任务进行CRUD操作，操作简单，一分钟上手；
 	2、动态：支持动态修改任务状态，动态暂停/恢复任务，即时生效；
@@ -69,7 +65,10 @@ git.osc地址：http://git.oschina.net/xuxueli0323/xxl-job
 	1、任务执行器支持远程加载Groovy；
 	
 # Tips
-	首先感谢您对XXL-JOB的关注，经过一年时间的完善和发展XXL-JOB已经应用到许多线上产品线，如大数据处理、电商和O2O（如我司大众点评，内部在XXL-JOB的基础上定制更名为Ferrari）...，我将再接再厉。
-	同时在此承诺XXL-JOB永远开源免费，为开源奉献力量我很光荣。
-	如果贵公司已经接入XXL-JOB，请留下 “公司名称 + 公司官网地址”，让更多的人了解和信赖XXL-JOB，填写地址如下：
-	https://github.com/xuxueli/xxl-job/issues/1
+	感谢您对XXL-JOB的关注，经过一年时间的完善和发展XXL-JOB已经应用到许多线上产品线，如大数据处理、电商和O2O（如我司大众点评，内部在XXL-JOB的基础上定制更名为Ferrari）...
+	更多接入公司，欢迎在https://github.com/xuxueli/xxl-job/issues/1 登记
+	
+	
+![image](http://images2015.cnblogs.com/blog/554415/201605/554415-20160513183306234-1939652116.png)
+
+技术的发展离不开你的支持，请作者喝杯咖啡吧！
