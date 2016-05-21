@@ -58,17 +58,10 @@ git.osc地址：http://git.oschina.net/xuxueli0323/xxl-job
 			GLUE模式执行器：每个执行器对应一段代码，在线Web编辑和维护，动态编译生效，执行器负责加载GLUE代码和执行；
 		
 	
-# 其他说明
-	清楚僵尸任务：qrtz_cron_triggers、qrtz_triggers、qrtz_job_details顺序删除
-
-# 规划中
-	1、任务执行器支持远程加载Groovy；
-	
 # Tips
-	感谢您对XXL-JOB的关注，经过一年时间的完善和发展XXL-JOB已经应用到许多线上产品线，如大数据处理、电商和O2O（如我司大众点评，内部在XXL-JOB的基础上定制更名为Ferrari）...
-	更多接入公司，欢迎在https://github.com/xuxueli/xxl-job/issues/1 登记
+	更多接入公司，欢迎在https://github.com/xuxueli/xxl-job/issues/1 登记。
+	我司大众点评已接入XXL-JOB，内部别名《Ferrari》（Ferrari基于XXL-JOB的V1.1版本定制而成）。自2016-01-21接入至2016-05-20未知，内部XXL-JOB系统已调度40000余次，表现优异。新接入应用推荐使用最新版本V1.3，因为经过两个大版本的更新，系统的任务模型、UI交互模型以及底层调度通讯模型都有了较大的提升，核心功能更加稳定高效。
 	
 	
 ![image](http://images2015.cnblogs.com/blog/554415/201605/554415-20160513183306234-1939652116.png)
-
 技术的发展离不开你的支持，请作者喝杯咖啡吧！
