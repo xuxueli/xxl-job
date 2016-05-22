@@ -93,10 +93,10 @@ public class JobInfoController {
 			return new ReturnT<String>(500, "请输入“任务描述”");
 		}
 		if (StringUtils.isBlank(handler_address)) {
-			return new ReturnT<String>(500, "请输入“机器地址”");
+			return new ReturnT<String>(500, "请输入“执行器地址”");
 		}
 		if (glueSwitch==0 && StringUtils.isBlank(handler_name)) {
-			return new ReturnT<String>(500, "请输入“执行器”");
+			return new ReturnT<String>(500, "请输入“jobHandler”");
 		}
 		if (StringUtils.isBlank(author)) {
 			return new ReturnT<String>(500, "请输入“负责人”");
@@ -174,10 +174,10 @@ public class JobInfoController {
 			return new ReturnT<String>(500, "请输入“任务描述”");
 		}
 		if (StringUtils.isBlank(handler_address)) {
-			return new ReturnT<String>(500, "请输入“机器地址”");
+			return new ReturnT<String>(500, "请输入“执行器地址”");
 		}
 		if (glueSwitch==0 && StringUtils.isBlank(handler_name)) {
-			return new ReturnT<String>(500, "请输入“执行器”");
+			return new ReturnT<String>(500, "请输入“jobHandler”");
 		}
 		if (StringUtils.isBlank(author)) {
 			return new ReturnT<String>(500, "请输入“负责人”");

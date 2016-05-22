@@ -69,9 +69,9 @@ $(function() {
 	                	"visible" : true,
 	                	"render": function ( data, type, row ) {
 	                		var _jobData = eval('(' + data + ')');	// row.jobData
-	                		var html = "<p title='" + data + "'>执行器：" + _jobData.handler_name +
+	                		var html = "<p title='" + data + "'>JobHandler：" + _jobData.handler_name +
 	                			"<br>执行参数：" + _jobData.handler_params + 
-	                			"<br>执行机器：" + _jobData.handler_address + "</p>";
+	                			"<br>执行器地址：" + _jobData.handler_address + "</p>";
 	                		
 	                		return data?'<a class="logMsg" href="javascript:;" >查看<span style="display:none;">'+ html +'</span></a>':"无";
 	                	}

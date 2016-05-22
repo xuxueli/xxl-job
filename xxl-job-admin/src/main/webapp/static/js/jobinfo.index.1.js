@@ -40,7 +40,7 @@ $(function() {
 	                		var _jobData = eval('(' + data + ')');	// row.jobData
 	                		var html = "<p title='" + data + "'>执行器：" + _jobData.handler_name +
 	                			"<br>执行参数：" + _jobData.handler_params + 
-	                			"<br>执行机器：" + _jobData.handler_address + "</p>";
+	                			"<br>执行器地址：" + _jobData.handler_address + "</p>";
 	                		return html;
 	                	}
 	                },
@@ -272,12 +272,12 @@ $(function() {
                 maxlength:"“任务描述”长度不应超过200位"
             },  
             handler_address : {
-            	required :"请输入“机器地址”."  ,
-                maxlength:"“机器地址”长度不应超过200位"
+            	required :"请输入“执行器地址”."  ,
+                maxlength:"“执行器地址”长度不应超过200位"
             },
             handler_name : {
-            	required : "请输入“执行器”."  ,
-                maxlength: "“执行器”长度不应超过200位"
+            	required : "请输入“jobHandler”."  ,
+                maxlength: "“jobHandler”长度不应超过200位"
             },
             author : {
             	required : "请输入“负责人”."  ,
@@ -424,12 +424,12 @@ $(function() {
                 maxlength:"“任务描述”长度不应超过200位"
             },  
             handler_address : {
-            	required :"请输入“机器地址”."  ,
-                maxlength:"“机器地址”长度不应超过200位"
+            	required :"请输入“执行器地址”."  ,
+                maxlength:"“执行器地址”长度不应超过200位"
             },
             handler_name : {
-            	required : "请输入“执行器”."  ,
-                maxlength: "“执行器”长度不应超过200位"
+            	required : "请输入“jobHandler”."  ,
+                maxlength: "“jobHandler”长度不应超过200位"
             },
             author : {
             	required : "请输入“负责人”."  ,

@@ -75,7 +75,7 @@ public class XxlJobJettyServer implements ApplicationContextAware {
 		Map<String, Object> serviceBeanMap = XxlJobJettyServer.applicationContext.getBeansWithAnnotation(JobHander.class);
         if (serviceBeanMap!=null && serviceBeanMap.size()>0) {
             for (Object serviceBean : serviceBeanMap.values()) {
-                String jobName = serviceBean.getClass().getAnnotation(JobHander.class).jobName();
+                String jobName = serviceBean.getClass().getAnnotation(JobHander.class).name();
                 if (jobName!=null && jobName.trim().length()>0 && serviceBean instanceof IJobHandler) {
                 	IJobHandler handler = (IJobHandler) serviceBean;
                 	HandlerRepository.regist(jobName, handler);

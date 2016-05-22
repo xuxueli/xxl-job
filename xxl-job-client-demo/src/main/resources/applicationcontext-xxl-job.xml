@@ -11,7 +11,7 @@
 
 	<context:component-scan base-package="com.xxl.job.service" />
 
-	<!-- Jetty任务执行器 -->
+	<!-- 执行器 -->
 	<bean id="xxlJobJettyServer" class="com.xxl.job.client.netcom.jetty.XxlJobJettyServer" init-method="start">
 		<property name="port" value="9999" />
 	</bean>

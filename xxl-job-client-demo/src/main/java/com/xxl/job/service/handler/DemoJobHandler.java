@@ -11,7 +11,7 @@ import com.xxl.job.client.handler.annotation.JobHander;
  * demo job handler
  * @author xuxueli 2015-12-19 19:43:36
  */
-@JobHander(jobName="demoJobHandler")
+@JobHander(name="demoJobHandler")
 @Service
 public class DemoJobHandler extends IJobHandler {
 	private static transient Logger logger = LoggerFactory.getLogger(DemoJobHandler.class);

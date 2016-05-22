@@ -125,10 +125,10 @@
 						<div class="col-sm-4"><input type="text" class="form-control" name="jobDesc" placeholder="请输入“描述”" maxlength="200" ></div>
 					</div>
 					<div class="form-group">
-						<label for="lastname" class="col-sm-2 control-label">机器地址<font color="red">*</font></label>
-						<div class="col-sm-4"><input type="text" class="form-control" name="handler_address" placeholder="请输入“远程-机器地址”" maxlength="200" ></div>
-						<label for="lastname" class="col-sm-2 control-label">执行器<font color="red">*</font></label>
-						<div class="col-sm-4"><input type="text" class="form-control" name="handler_name" placeholder="请输入“远程-执行器”" maxlength="200" ></div>
+						<label for="lastname" class="col-sm-2 control-label">执行器地址<font color="red">*</font></label>
+						<div class="col-sm-4"><input type="text" class="form-control" name="handler_address" placeholder="请输入“执行器地址”" maxlength="200" ></div>
+						<label for="lastname" class="col-sm-2 control-label">jobHandler<font color="red">*</font></label>
+						<div class="col-sm-4"><input type="text" class="form-control" name="handler_name" placeholder="请输入“jobHandler”" maxlength="200" ></div>
 					</div>
 					<div class="form-group">
 						<label for="firstname" class="col-sm-2 control-label">执行参数<font color="black">*</font></label>
@@ -206,10 +206,10 @@ public class DemoJobHandler extends IJobHandler {
 					</div>
 					
 					<div class="form-group">
-						<label for="lastname" class="col-sm-2 control-label">机器地址<font color="red">*</font></label>
-						<div class="col-sm-4"><input type="text" class="form-control" name="handler_address" placeholder="请输入“远程-机器地址”" maxlength="200" ></div>
-						<label for="lastname" class="col-sm-2 control-label">执行器<font color="red">*</font></label>
-						<div class="col-sm-4"><input type="text" class="form-control" name="handler_name" placeholder="请输入“远程-执行器”" maxlength="200" ></div>
+						<label for="lastname" class="col-sm-2 control-label">执行器地址<font color="red">*</font></label>
+						<div class="col-sm-4"><input type="text" class="form-control" name="handler_address" placeholder="请输入“执行器地址”" maxlength="200" ></div>
+						<label for="lastname" class="col-sm-2 control-label">jobHandler<font color="red">*</font></label>
+						<div class="col-sm-4"><input type="text" class="form-control" name="handler_name" placeholder="请输入“jobHandler”" maxlength="200" ></div>
 					</div>
 					<div class="form-group">
 						<label for="firstname" class="col-sm-2 control-label">执行参数<font color="black">*</font></label>
