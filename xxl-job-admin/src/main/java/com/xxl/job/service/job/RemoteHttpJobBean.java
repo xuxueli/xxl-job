@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.quartz.DisallowConcurrentExecution;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.quartz.JobKey;
@@ -27,7 +26,7 @@ import com.xxl.job.core.util.DynamicSchedulerUtil;
  * “@DisallowConcurrentExecution” diable concurrent, thread size can not be only one, better given more
  * @author xuxueli 2015-12-17 18:20:34
  */
-@DisallowConcurrentExecution
+//@DisallowConcurrentExecution
 public class RemoteHttpJobBean extends QuartzJobBean {
 	private static Logger logger = LoggerFactory.getLogger(RemoteHttpJobBean.class);
 	
