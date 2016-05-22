@@ -1,13 +1,10 @@
 package com.xxl.job.service.handler;
 
-import java.util.concurrent.TimeUnit;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.xxl.job.client.handler.IJobHandler;
-import com.xxl.job.client.handler.IJobHandler.JobHandleStatus;
 import com.xxl.job.client.handler.annotation.JobHander;
 
 /**
@@ -21,17 +18,8 @@ public class DemoJobHandler extends IJobHandler {
 	
 	@Override
 	public JobHandleStatus handle(String... params) throws Exception {
-		logger.info(" ... params:" + params);
-		for (int i = 0; i < 5; i++) {
-			TimeUnit.SECONDS.sleep(1);
-			logger.info("handler run:{}", i);
-		}
+		logger.info("XXL-JOB, Hello World.");
 		return JobHandleStatus.SUCCESS;
-	}
-	
-	public static void main(String[] args) {
-		System.out.println(DemoJobHandler.class.getName());
-		System.out.println(JobHandleStatus.class);
 	}
 	
 }
