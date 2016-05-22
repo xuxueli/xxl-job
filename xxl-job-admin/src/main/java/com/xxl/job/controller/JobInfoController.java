@@ -76,7 +76,8 @@ public class JobInfoController {
 	@ResponseBody
 	public ReturnT<String> add(String jobGroup, String jobName, String jobCron, String jobDesc,
 			String handler_address, String handler_name, String handler_params, 
-			String author, String alarmEmail, int alarmThreshold, int glueSwitch) {
+			String author, String alarmEmail, int alarmThreshold, 
+			int glueSwitch, String glueSource, String glueRemark) {
 		
 		// valid
 		if (JobGroupEnum.match(jobGroup) == null) {
@@ -134,8 +135,8 @@ public class JobInfoController {
 		jobInfo.setAlarmEmail(alarmEmail);
 		jobInfo.setAlarmThreshold(alarmThreshold);
 		jobInfo.setGlueSwitch(glueSwitch);
-		jobInfo.setGlueSource(null);
-		jobInfo.setGlueRemark(null);
+		jobInfo.setGlueSource(glueSource);
+		jobInfo.setGlueRemark(glueRemark);
 		xxlJobInfoDao.save(jobInfo);
 		
 		try {

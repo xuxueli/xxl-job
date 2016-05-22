@@ -71,9 +71,6 @@
 	                    	<div class="input-group-btn">
 	                      		<button type="button" class="btn btn-primary" id="save" >保存</button>
 	                    	</div>
-	                    	<div class="input-group-btn">
-	                      		<button type="button" class="btn btn-default" id="demoCode_btn" >DEMO</button>
-	                    	</div>
 	                  	</div>
 		            </div>
 	          	</div>
@@ -90,27 +87,6 @@
 		<!-- footer -->
 		<@netCommon.commonFooter />
 	</div>
-
-<textarea id="demoCode" style="display:none;" >
-package com.xxl.job.service.handler;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.xxl.job.client.handler.IJobHandler;
-import com.xxl.job.client.handler.IJobHandler.JobHandleStatus;
-
-public class DemoJobHandler extends IJobHandler {
-	private static transient Logger logger = LoggerFactory.getLogger(DemoJobHandler.class);
-	
-	@Override
-	public JobHandleStatus handle(String... params) throws Exception {
-		logger.info("XXL-JOB, Hello World.");
-		return JobHandleStatus.SUCCESS;
-	}
-	
-}
-</textarea>
 	
 <@netCommon.comAlert />
 <@netCommon.commonScript />

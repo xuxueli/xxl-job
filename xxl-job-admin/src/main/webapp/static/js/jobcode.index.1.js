@@ -14,11 +14,6 @@ $(function() {
 		codeEditor.setValue( temp );
 	});
 	
-	// democode
-	$("#demoCode_btn").click(function() {
-		codeEditor.setValue( $("#demoCode").val() );
-	});
-	
 	// editor height
 	var height = Math.max(document.documentElement.clientHeight, document.body.offsetHeight);
 	$(".CodeMirror").attr('style', 'height:'+ height +'px');

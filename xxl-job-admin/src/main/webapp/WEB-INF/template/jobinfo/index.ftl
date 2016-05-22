@@ -154,6 +154,29 @@
 	                    	</div>
 						</div>
 					</div>
+
+<input type="hidden" name="glueRemark" value="GLUE代码初始化" >
+<textarea name="glueSource" style="display:none;" >
+package com.xxl.job.service.handler;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.xxl.job.client.handler.IJobHandler;
+import com.xxl.job.client.handler.IJobHandler.JobHandleStatus;
+
+public class DemoJobHandler extends IJobHandler {
+	private static transient Logger logger = LoggerFactory.getLogger(DemoJobHandler.class);
+	
+	@Override
+	public JobHandleStatus handle(String... params) throws Exception {
+		logger.info("XXL-JOB, Hello World.");
+		return JobHandleStatus.SUCCESS;
+	}
+	
+}
+</textarea>
+					
 				</form>
          	</div>
 		</div>

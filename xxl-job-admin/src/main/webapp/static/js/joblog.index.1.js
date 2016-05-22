@@ -113,7 +113,7 @@ $(function() {
 		                		}
 		                		
 		                		if (row.triggerStatus == 'SUCCESS'){
-		                			var temp = '<a href="javascript:;" class="logDetail" _id="'+ row.id +'">查看日志</a>';
+		                			var temp = '<a href="javascript:;" class="logDetail" _id="'+ row.id +'">执行日志</a>';
 		                			if(!row.handleStatus){
 		                				temp += '<br><a href="javascript:;" class="logKill" _id="'+ row.id +'">终止任务</a>';
 		                			}
