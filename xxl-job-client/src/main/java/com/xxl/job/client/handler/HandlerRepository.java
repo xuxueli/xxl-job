@@ -31,7 +31,7 @@ public class HandlerRepository {
 	public static final String HANDLER_JOB_NAME = "handler_job_name";
 	
 	public static final String TRIGGER_LOG_ID = "trigger_log_id";
-	public static final String TRIGGER_LOG_URL = "trigger_log_url";
+	public static final String TRIGGER_LOG_ADDRESS = "trigger_log_address";
 	public static final String TRIGGER_TIMESTAMP = "trigger_timestamp";
 	
 	public static ConcurrentHashMap<String, HandlerThread> handlerTreadMap = new ConcurrentHashMap<String, HandlerThread>();

@@ -116,4 +116,14 @@ public class HttpUtil {
 		
 		return callback;
 	}
+	
+	/**
+	 * parse address ip:port to url http://.../ 
+	 * @param address
+	 * @return
+	 */
+	public static String addressToUrl(String address){
+		return "http://" + address + "/";
+	}
+	
 }

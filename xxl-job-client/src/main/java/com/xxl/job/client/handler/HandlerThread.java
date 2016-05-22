@@ -60,7 +60,7 @@ public class HandlerThread extends Thread{
 				Map<String, String> handlerData = handlerDataQueue.poll();
 				if (handlerData!=null) {
 					i= 0;
-					String trigger_log_url = handlerData.get(HandlerRepository.TRIGGER_LOG_URL);
+					String trigger_log_address = handlerData.get(HandlerRepository.TRIGGER_LOG_ADDRESS);
 					String trigger_log_id = handlerData.get(HandlerRepository.TRIGGER_LOG_ID);
 					String handler_params = handlerData.get(HandlerRepository.HANDLER_PARAMS);
 					logIdSet.remove(trigger_log_id);
@@ -97,7 +97,7 @@ public class HandlerThread extends Thread{
 					RemoteCallBack callback = null;
 					logger.info(">>>>>>>>>>> xxl-job callback start.");
 					try {
-						callback = HttpUtil.post(trigger_log_url, params);
+						callback = HttpUtil.post(HttpUtil.addressToUrl(trigger_log_address), params);
 					} catch (Exception e) {
 						logger.info("HandlerThread Exception:", e);
 					}

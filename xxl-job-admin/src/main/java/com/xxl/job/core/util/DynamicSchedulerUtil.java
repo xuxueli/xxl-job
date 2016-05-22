@@ -32,6 +32,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.util.Assert;
 
 import com.xxl.job.client.util.JacksonUtil;
+import com.xxl.job.core.callback.XxlJobCallbackServer;
 import com.xxl.job.core.model.XxlJobInfo;
 import com.xxl.job.dao.IXxlJobInfoDao;
 import com.xxl.job.dao.IXxlJobLogDao;
@@ -48,6 +49,22 @@ public final class DynamicSchedulerUtil implements ApplicationContextAware, Init
     public static void setScheduler(Scheduler scheduler) {
 		DynamicSchedulerUtil.scheduler = scheduler;
 	}
+    
+    // trigger callback port
+    private int callBackPort = 8888;
+    public void setCallBackPort(int callBackPort) {
+		this.callBackPort = callBackPort;
+	}
+    
+    // init
+    public void init(){
+    	try {
+    		// start callback server
+			new XxlJobCallbackServer().start(callBackPort);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+    }
     
     // xxlJobLogDao、xxlJobInfoDao
     public static IXxlJobLogDao xxlJobLogDao;

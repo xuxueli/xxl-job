@@ -16,11 +16,11 @@ import com.xxl.job.client.handler.HandlerRepository;
 import com.xxl.job.client.util.HttpUtil;
 import com.xxl.job.client.util.HttpUtil.RemoteCallBack;
 import com.xxl.job.client.util.JacksonUtil;
+import com.xxl.job.core.callback.XxlJobCallbackServer;
 import com.xxl.job.core.model.XxlJobInfo;
 import com.xxl.job.core.model.XxlJobLog;
 import com.xxl.job.core.thread.JobMonitorHelper;
 import com.xxl.job.core.util.DynamicSchedulerUtil;
-import com.xxl.job.core.util.PropertiesUtil;
 
 /**
  * http job bean
@@ -58,8 +58,8 @@ public class RemoteHttpJobBean extends QuartzJobBean {
 		params.put(HandlerRepository.TRIGGER_TIMESTAMP, String.valueOf(System.currentTimeMillis()));
 		params.put(HandlerRepository.NAMESPACE, HandlerRepository.NameSpaceEnum.RUN.name());
 		
-		params.put(HandlerRepository.TRIGGER_LOG_URL, PropertiesUtil.getString(HandlerRepository.TRIGGER_LOG_URL));
 		params.put(HandlerRepository.TRIGGER_LOG_ID, String.valueOf(jobLog.getId()));
+		params.put(HandlerRepository.TRIGGER_LOG_ADDRESS, XxlJobCallbackServer.getTrigger_log_address());
 		
 		params.put(HandlerRepository.HANDLER_NAME, jobDataMap.get(HandlerRepository.HANDLER_NAME));
 		params.put(HandlerRepository.HANDLER_PARAMS, jobDataMap.get(HandlerRepository.HANDLER_PARAMS));
@@ -71,11 +71,8 @@ public class RemoteHttpJobBean extends QuartzJobBean {
 
 		// handler address, jetty (servlet dead)
 		String handler_address = jobDataMap.get(HandlerRepository.HANDLER_ADDRESS);
-		if (!handler_address.startsWith("http")){
-			handler_address = "http://" + handler_address + "/";
-		}
 
-		RemoteCallBack callback = HttpUtil.post(handler_address, params);
+		RemoteCallBack callback = HttpUtil.post(HttpUtil.addressToUrl(handler_address), params);
 		logger.info(">>>>>>>>>>> xxl-job trigger http response, jobLog.id:{}, jobLog:{}, callback:{}", jobLog.getId(), jobLog, callback);
 
 		// update trigger info
