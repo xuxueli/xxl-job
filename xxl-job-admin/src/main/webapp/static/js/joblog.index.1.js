@@ -26,7 +26,7 @@ $(function() {
             firstDay : 1
         }
 	});
-	$('#filterTime').val( moment(new Date()).format("YYYY-MM-DD 00:00:00") + ' - ' + moment(new Date()).format("YYYY-MM-DD HH:mm:ss") );
+	$('#filterTime').val( moment(new Date()).format("YYYY-MM-DD 00:00:00") + ' - ' + moment(new Date()).add(1, 'days').format("YYYY-MM-DD 00:00:00") );	// YYYY-MM-DD HH:mm:ss
 	
 	// init date tables
 	var logTable = $("#joblog_list").dataTable({
