@@ -219,7 +219,7 @@ public final class DynamicSchedulerUtil implements ApplicationContextAware, Init
     	triggerSet.add(cronTrigger);
         
         scheduler.scheduleJob(jobDetail, triggerSet, true);
-        logger.info(">>>>>>>>>>> resumeJob success, jobInfo:{}", jobInfo);
+        logger.info(">>>>>>>>>>> resumeJob success, JobGroup:{}, JobName:{}", jobInfo.getJobGroup(), jobInfo.getJobName());
         return true;
     }
     
