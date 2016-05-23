@@ -33,17 +33,18 @@
         <appender-ref ref="FILE" />
         <appender-ref ref="xxl-job"/>
     </root>
-    <logger name="com.xxl.job.service.handler" additivity="false">
+    <logger name="com.xxl.job.core" additivity="false">
     	<level value="INFO" />
         <appender-ref ref="CONSOLE" />
         <appender-ref ref="FILE" />
         <appender-ref ref="xxl-job"/>
     </logger>
-    <logger name="com.xxl.job.client" additivity="false">
+    <logger name="com.xxl.job.executor.service.jobhandler" additivity="false">
     	<level value="INFO" />
         <appender-ref ref="CONSOLE" />
         <appender-ref ref="FILE" />
         <appender-ref ref="xxl-job"/>
     </logger>
+    
     
 </log4j:configuration>

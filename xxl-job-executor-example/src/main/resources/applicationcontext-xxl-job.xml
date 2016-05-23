@@ -12,7 +12,7 @@
 	<context:component-scan base-package="com.xxl.job.executor" />
 
 	<!-- 执行器 -->
-	<bean id="xxlJobJettyServer" class="com.xxl.job.core.executor.jetty.XxlJobExecutor" init-method="start">
+	<bean id="xxlJobExecutor" class="com.xxl.job.core.executor.jetty.XxlJobExecutor" init-method="start">
 		<property name="port" value="9999" />
 	</bean>
 	
