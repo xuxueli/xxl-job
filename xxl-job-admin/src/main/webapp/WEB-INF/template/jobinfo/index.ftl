@@ -162,14 +162,14 @@ package com.xxl.job.service.handler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.xxl.job.client.handler.IJobHandler;
-import com.xxl.job.client.handler.IJobHandler.JobHandleStatus;
+import com.xxl.job.core.handler.IJobHandler;
+import com.xxl.job.core.handler.IJobHandler.JobHandleStatus;
 
 public class DemoJobHandler extends IJobHandler {
 	private static transient Logger logger = LoggerFactory.getLogger(DemoJobHandler.class);
 	
 	@Override
-	public JobHandleStatus handle(String... params) throws Exception {
+	public JobHandleStatus execute(String... params) throws Exception {
 		logger.info("XXL-JOB, Hello World.");
 		return JobHandleStatus.SUCCESS;
 	}
