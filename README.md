@@ -39,9 +39,9 @@ git.osc地址：http://git.oschina.net/xuxueli0323/xxl-job
 	5、支持“串行执行”，并行执行；
 	
 	说明：V1.2版本将系统架构按功能拆分为：
-		调度模块[xxl-job-admin]：负责管理调度信息，按照调度配置发出调度请求；
-		任务模块[xxl-job-client-demo]：负责接收调度请求并执行任务逻辑；任务模块可以方便的嵌入web项目，可以参考此demo；
-		通讯模块[xxl-job-client]：负责调度模块和任务模块之间的信息通讯；
+		调度模块（调度中心）：负责管理调度信息，按照调度配置发出调度请求；
+		执行模块（执行器）：负责接收调度请求并执行任务逻辑；
+		通讯模块：负责调度模块和任务模块之间的信息通讯；
 	优点：
 		解耦：任务模块提供任务接口，调度模块维护调度信息，业务相互独立；
 		高扩展性；
@@ -56,7 +56,13 @@ git.osc地址：http://git.oschina.net/xuxueli0323/xxl-job
 		“执行器” 模式简介：
 			BEAN模式执行器：每个执行器都是Spring的一个Bean实例，XXL-JOB通过注解@JobHander识别和调度执行器；
 			GLUE模式执行器：每个执行器对应一段代码，在线Web编辑和维护，动态编译生效，执行器负责加载GLUE代码和执行；
-		
+
+# 源码目录说明
+	/xxl-job-admin					【调度中心】：负责管理调度信息，按照调度配置发出调度请求；
+	/xxl-job-core					公共依赖
+	/xxl-job-executor-example	【执行器】：负责接收调度请求并执行任务逻辑；
+	/db		建表脚本
+	/doc	用户手册
 	
 # Tips
 	更多接入公司，欢迎在https://github.com/xuxueli/xxl-job/issues/1 登记。
@@ -64,4 +70,5 @@ git.osc地址：http://git.oschina.net/xuxueli0323/xxl-job
 	
 	
 ![image](http://images2015.cnblogs.com/blog/554415/201605/554415-20160513183306234-1939652116.png)
+
 技术的发展离不开你的支持，请作者喝杯咖啡吧！

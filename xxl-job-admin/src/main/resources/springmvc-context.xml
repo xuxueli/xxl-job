@@ -19,7 +19,7 @@
 		http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
 
 	<mvc:annotation-driven /> 
-	<context:component-scan base-package="com.xxl.job.controller" />
+	<context:component-scan base-package="com.xxl.job.admin.controller" />
 	
 	<mvc:resources mapping="/favicon.ico" location="/favicon.ico" />
 	<mvc:resources mapping="/static/**" location="/static/" />
@@ -41,13 +41,13 @@
  	<mvc:interceptors>
 		<mvc:interceptor>
 			<mvc:mapping path="/**"/>
-			<bean class="com.xxl.job.controller.interceptor.PermissionInterceptor"/>
+			<bean class="com.xxl.job.admin.controller.interceptor.PermissionInterceptor"/>
 		</mvc:interceptor>
 		<mvc:interceptor>
 			<mvc:mapping path="/**"/>
-			<bean class="com.xxl.job.controller.interceptor.CookieInterceptor"/>
+			<bean class="com.xxl.job.admin.controller.interceptor.CookieInterceptor"/>
 		</mvc:interceptor>
 	</mvc:interceptors>
-	<bean id="exceptionResolver" class="com.xxl.job.controller.resolver.WebExceptionResolver" />
+	<bean id="exceptionResolver" class="com.xxl.job.admin.controller.resolver.WebExceptionResolver" />
 	
 </beans>

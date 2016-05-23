@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context-3.0.xsd
+           http://www.springframework.org/schema/util 
+           http://www.springframework.org/schema/util/spring-util.xsd">
+
+	<context:component-scan base-package="com.xxl.job.executor" />
+
+	<!-- 执行器 -->
+	<bean id="xxlJobJettyServer" class="com.xxl.job.core.executor.jetty.XxlJobExecutor" init-method="start">
+		<property name="port" value="9999" />
+	</bean>
+	
+	<bean id="glueFactory" class="com.xxl.job.core.glue.GlueFactory">
+		<property name="cacheTimeout" value="5000" />
+		<property name="glueLoader" ref="dbGlueLoader" />	<!-- GLUE 代码加载器，推荐将该服务配置成RPC服务 -->
+	</bean>
+
+</beans>

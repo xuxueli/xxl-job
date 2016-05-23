@@ -9,8 +9,8 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.xxl.job.core.model.XxlJobInfo;
-import com.xxl.job.dao.IXxlJobInfoDao;
+import com.xxl.job.admin.core.model.XxlJobInfo;
+import com.xxl.job.admin.dao.IXxlJobInfoDao;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath*:applicationcontext-*.xml")

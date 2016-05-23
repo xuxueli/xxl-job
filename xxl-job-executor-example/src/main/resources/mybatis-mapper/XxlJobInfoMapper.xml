@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="XxlJobInfoMapper">
+	
+	<resultMap id="XxlJobInfo" type="com.xxl.job.executor.loader.dao.model.XxlJobInfo" >
+		<result column="job_group" property="jobGroup" />
+	    <result column="job_name" property="jobName" />
+	    <result column="glue_source" property="glueSource" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		t.job_group,
+		t.job_name,
+		t.glue_source
+	</sql>
+	
+	<select id="load" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
+		SELECT <include refid="Base_Column_List" />
+		FROM xxl_job_qrtz_trigger_info AS t
+		WHERE t.job_group = #{jobGroup}
+			AND t.job_name = #{jobName}
+	</select>
+	
+	
+</mapper>

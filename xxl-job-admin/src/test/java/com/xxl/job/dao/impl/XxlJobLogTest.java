@@ -10,10 +10,10 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.xxl.job.client.handler.IJobHandler;
-import com.xxl.job.client.util.HttpUtil.RemoteCallBack;
-import com.xxl.job.core.model.XxlJobLog;
-import com.xxl.job.dao.IXxlJobLogDao;
+import com.xxl.job.admin.core.model.XxlJobLog;
+import com.xxl.job.admin.dao.IXxlJobLogDao;
+import com.xxl.job.core.handler.IJobHandler;
+import com.xxl.job.core.util.HttpUtil.RemoteCallBack;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath*:applicationcontext-*.xml")
