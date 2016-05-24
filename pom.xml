@@ -7,8 +7,8 @@
 	<packaging>pom</packaging>
 	<modules>
 		<module>xxl-job-admin</module>
-		<module>xxl-job-client</module>
-		<module>xxl-job-client-demo</module>
+		<module>xxl-job-core</module>
+		<module>xxl-job-executor-example</module>
 	</modules>
 
 	<build>
