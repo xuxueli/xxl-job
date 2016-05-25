@@ -39,7 +39,7 @@
 	
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="dataSource" />
-		<property name="mapperLocations" value="classpath*:mybatis-mapper/*.xml"/>
+		<property name="mapperLocations" value="classpath:mybatis-mapper/*.xml"/>
 	</bean>
     
     <!-- scope must be "prototype" when junit -->
