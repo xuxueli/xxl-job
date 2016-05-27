@@ -67,5 +67,5 @@ public class LocalCache implements ICache{
 		System.out.println(LocalCache.getInstance().get(key));
 		
 	}
-	
+
 }

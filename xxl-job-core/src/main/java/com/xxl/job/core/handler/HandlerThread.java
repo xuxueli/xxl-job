@@ -20,7 +20,7 @@ import com.xxl.job.core.util.HttpUtil.RemoteCallBack;
  * handler thread
  * @author xuxueli 2016-1-16 19:52:47
  */
-public class HandlerThread extends Thread{
+public class  HandlerThread extends Thread{
 	private static Logger logger = LoggerFactory.getLogger(HandlerThread.class);
 	
 	private IJobHandler handler;
@@ -81,7 +81,7 @@ public class HandlerThread extends Thread{
 						logger.info(">>>>>>>>>>> xxl-job handle start.");
 						_status = handler.execute(handlerParams);
 					} catch (Exception e) {
-						logger.info("HandlerThread Exception:", e);
+						logger.error("HandlerThread Exception:", e);
 						StringWriter out = new StringWriter();
 						e.printStackTrace(new PrintWriter(out));
 						_msg = out.toString();
@@ -116,7 +116,7 @@ public class HandlerThread extends Thread{
 					}
 				}
 			} catch (Exception e) {
-				logger.info("HandlerThread Exception:", e);
+				logger.error("HandlerThread Exception:", e);
 			}
 		}
 		logger.info(">>>>>>>>>>>> xxl-job handlerThrad stoped, hashCode:{}", Thread.currentThread());
