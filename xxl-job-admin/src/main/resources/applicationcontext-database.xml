@@ -48,6 +48,7 @@
     </bean> 
     
     <!-- part 2 :for tx -->
+    <!--
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource" ref="dataSource" />
 	</bean>
@@ -70,5 +71,6 @@
 		<aop:pointcut id="txoperation" expression="execution(* com.xxl.job.admin.service.imp.*.*(..))" />
 		<aop:advisor pointcut-ref="txoperation" advice-ref="txAdvice" />
 	</aop:config>
+	-->
 	
 </beans>
