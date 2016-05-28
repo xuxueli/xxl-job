@@ -21,7 +21,7 @@
 	<bean id="dynamicSchedulerUtil" class="com.xxl.job.admin.core.util.DynamicSchedulerUtil" init-method="init">
 		<!-- (轻易不要变更“调度器名称”, 任务创建时会绑定该“调度器名称”) -->
         <property name="scheduler" ref="quartzScheduler"/>
-        <property name="callBackPort" value="8888"/>
+        <property name="callBackPort" value="8081"/>
     </bean>
 
 </beans>

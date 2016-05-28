@@ -1,3 +1,7 @@
 /.settings/
 /.project
 /xxl-job.iml
+
+#idea
+.idea
+*.iml

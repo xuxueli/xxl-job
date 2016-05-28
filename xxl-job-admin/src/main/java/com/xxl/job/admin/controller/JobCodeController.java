@@ -1,20 +1,18 @@
 package com.xxl.job.admin.controller;
 
-import java.util.List;
-
-import javax.annotation.Resource;
-
+import com.xxl.job.admin.core.model.ReturnT;
+import com.xxl.job.admin.core.model.XxlJobInfo;
+import com.xxl.job.admin.core.model.XxlJobLogGlue;
+import com.xxl.job.admin.dao.IXxlJobInfoDao;
+import com.xxl.job.admin.dao.IXxlJobLogGlueDao;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.xxl.job.admin.core.model.ReturnT;
-import com.xxl.job.admin.core.model.XxlJobInfo;
-import com.xxl.job.admin.core.model.XxlJobLogGlue;
-import com.xxl.job.admin.dao.IXxlJobInfoDao;
-import com.xxl.job.admin.dao.IXxlJobLogGlueDao;
+import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * job code controller
