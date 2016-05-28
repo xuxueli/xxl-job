@@ -4,6 +4,7 @@ import java.text.MessageFormat;
 import java.util.Date;
 import java.util.HashMap;
 
+import org.apache.commons.lang.StringUtils;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.quartz.JobKey;
@@ -89,18 +90,20 @@ public class RemoteHttpJobBean extends QuartzJobBean {
 		if (handler_address.split(",").length > 1) {
 			String failoverMessage = "";
 			for (String address : handler_address.split(",")) {
-				HashMap<String, String> params = new HashMap<String, String>();
-				params.put(HandlerParamEnum.TIMESTAMP.name(), String.valueOf(System.currentTimeMillis()));
-				params.put(HandlerParamEnum.ACTION.name(), ActionEnum.BEAT.name());
-				RemoteCallBack beatResult = HttpUtil.post(HttpUtil.addressToUrl(address), params);
-				failoverMessage += MessageFormat.format("BEAT running, <br>>>>[address] : {0}, <br>>>>[status] : {1}, <br>>>>[msg] : {2} <br><hr>", address, beatResult.getStatus(), beatResult.getMsg());
-				if (RemoteCallBack.SUCCESS.equals(beatResult.getStatus())) {
-					jobLog.setExecutorAddress(address);
-					RemoteCallBack triggerCallback = HttpUtil.post(HttpUtil.addressToUrl(address), handler_params);
-					triggerCallback.setStatus(RemoteCallBack.SUCCESS);
-					failoverMessage += MessageFormat.format("Trigger running, <br>>>>[address] : {0}, <br>>>>[status] : {1}, <br>>>>[msg] : {2} <br><hr>", address, triggerCallback.getStatus(), triggerCallback.getMsg());
-					triggerCallback.setMsg(failoverMessage);
-					return triggerCallback;
+				if (StringUtils.isNotBlank(address)) {
+					HashMap<String, String> params = new HashMap<String, String>();
+					params.put(HandlerParamEnum.TIMESTAMP.name(), String.valueOf(System.currentTimeMillis()));
+					params.put(HandlerParamEnum.ACTION.name(), ActionEnum.BEAT.name());
+					RemoteCallBack beatResult = HttpUtil.post(HttpUtil.addressToUrl(address), params);
+					failoverMessage += MessageFormat.format("BEAT running, <br>>>>[address] : {0}, <br>>>>[status] : {1}, <br>>>>[msg] : {2} <br><hr>", address, beatResult.getStatus(), beatResult.getMsg());
+					if (RemoteCallBack.SUCCESS.equals(beatResult.getStatus())) {
+						jobLog.setExecutorAddress(address);
+						RemoteCallBack triggerCallback = HttpUtil.post(HttpUtil.addressToUrl(address), handler_params);
+						triggerCallback.setStatus(RemoteCallBack.SUCCESS);
+						failoverMessage += MessageFormat.format("Trigger running, <br>>>>[address] : {0}, <br>>>>[status] : {1}, <br>>>>[msg] : {2} <br><hr>", address, triggerCallback.getStatus(), triggerCallback.getMsg());
+						triggerCallback.setMsg(failoverMessage);
+						return triggerCallback;
+					}
 				}
 			}
 			
