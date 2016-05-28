@@ -31,11 +31,16 @@
 				<h4>简介：XXL_JOB</h4>
 				<br>
 				<p>
-					<a target="_blank" href="https://github.com/xuxueli/xxl-job">github地址</a><br><br>
+					<a target="_blank" href="https://github.com/xuxueli/xxl-job">github地址</a>&nbsp;&nbsp;&nbsp;&nbsp;
+					<iframe src="https://ghbtns.com/github-btn.html?user=xuxueli&repo=xxl-job&type=star&count=true" frameborder="0" scrolling="0" width="170px" height="20px" style="margin-bottom:-5px;"></iframe> 
+					<br><br>
 					<a target="_blank" href="http://git.oschina.net/xuxueli0323/xxl-job">git.osc地址</a><br><br>
-					<a target="_blank" href="http://www.cnblogs.com/xuxueli/p/5021979.html">博客地址(内附使用教程)</a><br><br>
-					<a >技术交流群(仅作技术交流)：367260654</a>&nbsp;&nbsp;
-					<a target="_blank" href="http://shang.qq.com/wpa/qunwpa?idkey=4686e3fe01118445c75673a66b4cc6b2c7ce0641528205b6f403c179062b0a52"><img border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="《xxl-javaer》" title="《xxl-javaer》"></a>
+					<a target="_blank" href="http://www.cnblogs.com/xuxueli/p/5021979.html">博客地址(内附使用教程)</a>
+					<br><br>
+					<a >技术交流群(仅作技术交流)：367260654</a>&nbsp;&nbsp;&nbsp;&nbsp;
+					<a target="_blank" href="http://shang.qq.com/wpa/qunwpa?idkey=4686e3fe01118445c75673a66b4cc6b2c7ce0641528205b6f403c179062b0a52">
+						<img border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="《xxl-javaer》" title="《xxl-javaer》">
+					</a>
 				</p>
 				<p></p>
             </div>

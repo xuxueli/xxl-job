@@ -27,7 +27,7 @@
 	<!-- scrollup -->
 	<link rel="stylesheet" href="${request.contextPath}/static/plugins/scrollup/image.css">
 	<!-- pace -->
-	<link rel="stylesheet" href="${request.contextPath}/static/plugins/pace/pace-theme-minimal.css">
+	<link rel="stylesheet" href="${request.contextPath}/static/plugins/pace/themes/pace-theme-flash.css">
 </#macro>
 
 <#macro commonScript>
@@ -170,10 +170,10 @@
 		<div class="pull-right hidden-xs">
 			<b>Version</b> 1.0
 		</div>
-		<strong>Copyright &copy; 2015-2015 &nbsp;
+		<strong>Copyright &copy; 2015-${.now?string('yyyy')} &nbsp;
 			<a href="https://github.com/xuxueli/xxl-job" target="_blank" >github</a>&nbsp;
-			<a href="http://www.cnblogs.com/xuxueli/p/5021979.html" target="_blank" >cnblog</a>.
-		</strong> All rights reserved.
+			<a href="http://www.cnblogs.com/xuxueli/p/5021979.html" target="_blank" >cnblog</a>
+		</strong><!-- All rights reserved. -->
 	</footer>
 </#macro>
 

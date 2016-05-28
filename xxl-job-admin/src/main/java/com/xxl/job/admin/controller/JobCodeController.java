@@ -35,7 +35,7 @@ public class JobCodeController {
 		List<XxlJobLogGlue> jobLogGlues = xxlJobLogGlueDao.selectList(jobGroup, jobName);
 		model.addAttribute("jobInfo", jobInfo);
 		model.addAttribute("jobLogGlues", jobLogGlues);
-		return "jobcode/index";
+		return "jobcode/jobcode.index";
 	}
 	
 	@RequestMapping("/save")

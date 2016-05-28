@@ -44,7 +44,7 @@ public class JobInfoController {
 	@RequestMapping
 	public String index(Model model) {
 		model.addAttribute("JobGroupList", JobGroupEnum.values());			// 任务组列表
-		return "jobinfo/index";
+		return "jobinfo/jobinfo.index";
 	}
 	
 	@RequestMapping("/pageList")
