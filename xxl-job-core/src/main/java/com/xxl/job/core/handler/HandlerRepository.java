@@ -1,14 +1,17 @@
 package com.xxl.job.core.handler;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.xxl.job.core.handler.impl.GlueJobHandler;
 import com.xxl.job.core.log.XxlJobFileAppender;
+import com.xxl.job.core.util.HttpUtil;
 import com.xxl.job.core.util.HttpUtil.RemoteCallBack;
 import com.xxl.job.core.util.JacksonUtil;
 
@@ -193,6 +196,33 @@ public class HandlerRepository {
 		
 		logger.debug(">>>>>>>>>>> xxl-job service end, triggerData:{}");
 		return JacksonUtil.writeValueAsString(callback); 
+	}
+	
+	// ----------------------- for callback log -----------------------
+	private static LinkedBlockingQueue<HashMap<String, String>> callBackQueue = new LinkedBlockingQueue<HashMap<String, String>>();
+	static {
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					HashMap<String, String> item = callBackQueue.poll();
+					if (item != null) {
+						RemoteCallBack callback = null;
+						try {
+							callback = HttpUtil.post(item.get("_address"), item);
+						} catch (Exception e) {
+							logger.info("HandlerThread Exception:", e);
+						}
+						logger.info(">>>>>>>>>>> xxl-job callback , params:{}, result:{}", new Object[]{item, callback});
+					} 
+				} catch (Exception e) {
+				}
+			}
+		});
+	}
+	public static void pushCallBack(String address, HashMap<String, String> params){
+		params.put("_address", address);
+		callBackQueue.add(params);
 	}
 	
 }

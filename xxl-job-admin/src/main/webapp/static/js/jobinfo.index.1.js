@@ -317,27 +317,27 @@ $(function() {
 	// GLUE模式开启
 	$("#addModal .form .ifGLUE").click(function(){
 		var ifGLUE = $(this).is(':checked');
-		var $handler_name = $("#addModal .form input[name='handler_name']");
+		var $executorHandler = $("#addModal .form input[name='executorHandler']");
 		var $glueSwitch = $("#addModal .form input[name='glueSwitch']");
 		if (ifGLUE) {
-			$handler_name.val("");
-			$handler_name.attr("readonly","readonly");
+			$executorHandler.val("");
+			$executorHandler.attr("readonly","readonly");
 			$glueSwitch.val(1);
 		} else {
-			$handler_name.removeAttr("readonly");
+			$executorHandler.removeAttr("readonly");
 			$glueSwitch.val(0);
 		}
 	});
 	$("#updateModal .form .ifGLUE").click(function(){
 		var ifGLUE = $(this).is(':checked');
-		var $handler_name = $("#updateModal .form input[name='handler_name']");
+		var $executorHandler = $("#updateModal .form input[name='executorHandler']");
 		var $glueSwitch = $("#updateModal .form input[name='glueSwitch']");
 		if (ifGLUE) {
-			$handler_name.val("");
-			$handler_name.attr("readonly","readonly");
+			$executorHandler.val("");
+			$executorHandler.attr("readonly","readonly");
 			$glueSwitch.val(1);
 		} else {
-			$handler_name.removeAttr("readonly");
+			$executorHandler.removeAttr("readonly");
 			$glueSwitch.val(0);
 		}
 	});
@@ -358,12 +358,12 @@ $(function() {
 		
 		// GLUE check
 		var $glueSwitch = $("#updateModal .form input[name='glueSwitch']");
-		var $handler_name = $("#updateModal .form input[name='handler_name']");
+		var $executorHandler = $("#updateModal .form input[name='executorHandler']");
 		if ($glueSwitch.val() != 0) {
-			$handler_name.attr("readonly","readonly");
+			$executorHandler.attr("readonly","readonly");
 			$("#updateModal .form .ifGLUE").attr("checked", true);
 		} else {
-			$handler_name.removeAttr("readonly");
+			$executorHandler.removeAttr("readonly");
 			$("#updateModal .form .ifGLUE").attr("checked", false);
 		}
 		

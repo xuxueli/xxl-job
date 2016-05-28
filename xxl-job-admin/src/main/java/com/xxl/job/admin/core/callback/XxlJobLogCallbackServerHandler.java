@@ -28,15 +28,15 @@ public class XxlJobLogCallbackServerHandler extends AbstractHandler {
 		httpServletResponse.setCharacterEncoding("UTF-8");
 
 		// parse param
-		String trigger_log_id = httpServletRequest.getParameter("trigger_log_id");
+		String log_id = httpServletRequest.getParameter("log_id");
 		String status = httpServletRequest.getParameter("status");
 		String msg = httpServletRequest.getParameter("msg");
 		
 		// process
 		RemoteCallBack callBack = new RemoteCallBack();
 		callBack.setStatus(RemoteCallBack.FAIL);
-		if (StringUtils.isNumeric(trigger_log_id) && StringUtils.isNotBlank(status)) {
-			XxlJobLog log = DynamicSchedulerUtil.xxlJobLogDao.load(Integer.valueOf(trigger_log_id));
+		if (StringUtils.isNumeric(log_id) && StringUtils.isNotBlank(status)) {
+			XxlJobLog log = DynamicSchedulerUtil.xxlJobLogDao.load(Integer.valueOf(log_id));
 			if (log!=null) {
 				log.setHandleTime(new Date());
 				log.setHandleStatus(status);

@@ -15,7 +15,6 @@ import com.xxl.job.core.handler.HandlerRepository.HandlerParamEnum;
 import com.xxl.job.core.handler.IJobHandler.JobHandleStatus;
 import com.xxl.job.core.log.XxlJobFileAppender;
 import com.xxl.job.core.util.HttpUtil;
-import com.xxl.job.core.util.HttpUtil.RemoteCallBack;
 
 /**
  * handler thread
@@ -61,10 +60,10 @@ public class HandlerThread extends Thread{
 				Map<String, String> handlerData = handlerDataQueue.poll();
 				if (handlerData!=null) {
 					i= 0;
-					String trigger_log_address = handlerData.get(HandlerParamEnum.LOG_ADDRESS.name());
-					String trigger_log_id = handlerData.get(HandlerParamEnum.LOG_ID.name());
+					String log_address = handlerData.get(HandlerParamEnum.LOG_ADDRESS.name());
+					String log_id = handlerData.get(HandlerParamEnum.LOG_ID.name());
 					String handler_params = handlerData.get(HandlerParamEnum.EXECUTOR_PARAMS.name());
-					logIdSet.remove(trigger_log_id);
+					logIdSet.remove(log_id);
 					
 					// parse param
 					String[] handlerParams = null; 
@@ -78,7 +77,7 @@ public class HandlerThread extends Thread{
 					JobHandleStatus _status = JobHandleStatus.FAIL;
 					String _msg = null;
 					try {
-						XxlJobFileAppender.contextHolder.set(trigger_log_id);
+						XxlJobFileAppender.contextHolder.set(log_id);
 						logger.info(">>>>>>>>>>> xxl-job handle start.");
 						_status = handler.execute(handlerParams);
 					} catch (Exception e) {
@@ -89,21 +88,15 @@ public class HandlerThread extends Thread{
 					}
 					logger.info(">>>>>>>>>>> xxl-job handle end, handlerParams:{}, _status:{}, _msg:{}", 
 							new Object[]{handlerParams, _status, _msg});
-
-					// callback handler info
-					HashMap<String, String> params = new HashMap<String, String>();
-					params.put("trigger_log_id", trigger_log_id);
-					params.put("status", _status.name());
-					params.put("msg", _msg);
-					RemoteCallBack callback = null;
-					logger.info(">>>>>>>>>>> xxl-job callback start.");
-					try {
-						callback = HttpUtil.post(HttpUtil.addressToUrl(trigger_log_address), params);
-					} catch (Exception e) {
-						logger.info("HandlerThread Exception:", e);
-					}
-					logger.info(">>>>>>>>>>> xxl-job callback end, params:{}, result:{}", new Object[]{params, callback.toString()});
 					
+					// callback handler info
+					if (!toStop) {
+						HashMap<String, String> params = new HashMap<String, String>();
+						params.put("log_id", log_id);
+						params.put("status", _status.name());
+						params.put("msg", _msg);
+						HandlerRepository.pushCallBack(HttpUtil.addressToUrl(log_address), params);
+					}
 				} else {
 					i++;
 					logIdSet.clear();

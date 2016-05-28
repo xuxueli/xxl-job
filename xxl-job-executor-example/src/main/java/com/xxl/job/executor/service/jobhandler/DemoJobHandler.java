@@ -1,5 +1,7 @@
 package com.xxl.job.executor.service.jobhandler;
 
+import java.util.concurrent.TimeUnit;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -26,6 +28,11 @@ public class DemoJobHandler extends IJobHandler {
 	@Override
 	public JobHandleStatus execute(String... params) throws Exception {
 		logger.info("XXL-JOB, Hello World.");
+		
+		for (int i = 0; i < 10; i++) {
+			System.out.println(i);
+			TimeUnit.SECONDS.sleep(2);
+		}
 		return JobHandleStatus.SUCCESS;
 	}
 	
