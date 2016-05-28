@@ -204,21 +204,24 @@ public class HandlerRepository {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				try {
-					HashMap<String, String> item = callBackQueue.poll();
-					if (item != null) {
-						RemoteCallBack callback = null;
-						try {
-							callback = HttpUtil.post(item.get("_address"), item);
-						} catch (Exception e) {
-							logger.info("HandlerThread Exception:", e);
-						}
-						logger.info(">>>>>>>>>>> xxl-job callback , params:{}, result:{}", new Object[]{item, callback});
-					} 
-				} catch (Exception e) {
+				while(true){
+					try {
+						HashMap<String, String> item = callBackQueue.poll();
+						if (item != null) {
+							RemoteCallBack callback = null;
+							try {
+								callback = HttpUtil.post(item.get("_address"), item);
+							} catch (Exception e) {
+								logger.info("HandlerThread Exception:", e);
+							}
+							logger.info(">>>>>>>>>>> xxl-job callback , params:{}, result:{}", new Object[]{item, callback});
+						} 
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 				}
 			}
-		});
+		}).start();
 	}
 	public static void pushCallBack(String address, HashMap<String, String> params){
 		params.put("_address", address);
