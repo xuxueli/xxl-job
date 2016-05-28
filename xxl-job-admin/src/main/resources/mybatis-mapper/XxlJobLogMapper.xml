@@ -11,7 +11,10 @@
 	    <result column="job_cron" property="jobCron" />
 	    <result column="job_desc" property="jobDesc" />
 	    <result column="job_class" property="jobClass" />
-	    <result column="job_data" property="jobData" />
+	    
+	    <result column="executor_address" property="executorAddress" />
+	    <result column="executor_handler" property="executorHandler" />
+	    <result column="executor_param" property="executorParam" />
 	    
 	    <result column="trigger_time" property="triggerTime" />
 	    <result column="trigger_status" property="triggerStatus" />
@@ -20,6 +23,7 @@
 	    <result column="handle_time" property="handleTime" />
 	    <result column="handle_status" property="handleStatus" />
 	    <result column="handle_msg" property="handleMsg" />
+	    
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -29,7 +33,9 @@
 		t.job_cron,
 		t.job_desc,
 		t.job_class,
-		t.job_data,
+		t.executor_address,
+		t.executor_handler,
+		t.executor_param,
 		t.trigger_time,
 		t.trigger_status,
 		t.trigger_msg,
@@ -98,14 +104,18 @@
 			`job_cron`, 
 			`job_desc`,
 			`job_class`, 
-			`job_data`
+			`executor_address`,
+			`executor_handler`,
+			`executor_param`
 		) VALUES (
 			#{jobGroup}, 
 			#{jobName},
 			#{jobCron},
 			#{jobDesc},
 			#{jobClass},
-			#{jobData}
+			#{executorAddress},
+			#{executorHandler},
+			#{executorParam}
 		);
 		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id"> 
 			SELECT LAST_INSERT_ID() 
@@ -117,7 +127,10 @@
 		SET 
 			`trigger_time`= #{triggerTime}, 
 			`trigger_status`= #{triggerStatus}, 
-			`trigger_msg`= #{triggerMsg}
+			`trigger_msg`= #{triggerMsg},
+			`executor_address`= #{executorAddress},
+			`executor_handler`= #{executorHandler},
+			`executor_param`= #{executorParam}
 		WHERE `id`= #{id}
 	</update>
 	

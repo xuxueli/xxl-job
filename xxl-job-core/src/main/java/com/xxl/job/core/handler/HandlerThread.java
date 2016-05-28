@@ -11,6 +11,7 @@ import org.eclipse.jetty.util.ConcurrentHashSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.xxl.job.core.handler.HandlerRepository.HandlerParamEnum;
 import com.xxl.job.core.handler.IJobHandler.JobHandleStatus;
 import com.xxl.job.core.log.XxlJobFileAppender;
 import com.xxl.job.core.util.HttpUtil;
@@ -47,7 +48,7 @@ public class HandlerThread extends Thread{
 	}
 	
 	public void pushData(Map<String, String> param) {
-		if (param.get(HandlerRepository.TRIGGER_LOG_ID)!=null && !logIdSet.contains(param.get(HandlerRepository.TRIGGER_LOG_ID))) {
+		if (param.get(HandlerParamEnum.LOG_ID.name())!=null && !logIdSet.contains(param.get(HandlerParamEnum.LOG_ID.name()))) {
 			handlerDataQueue.offer(param);
 		}
 	}
@@ -60,9 +61,9 @@ public class HandlerThread extends Thread{
 				Map<String, String> handlerData = handlerDataQueue.poll();
 				if (handlerData!=null) {
 					i= 0;
-					String trigger_log_address = handlerData.get(HandlerRepository.TRIGGER_LOG_ADDRESS);
-					String trigger_log_id = handlerData.get(HandlerRepository.TRIGGER_LOG_ID);
-					String handler_params = handlerData.get(HandlerRepository.HANDLER_PARAMS);
+					String trigger_log_address = handlerData.get(HandlerParamEnum.LOG_ADDRESS.name());
+					String trigger_log_id = handlerData.get(HandlerParamEnum.LOG_ID.name());
+					String handler_params = handlerData.get(HandlerParamEnum.EXECUTOR_PARAMS.name());
 					logIdSet.remove(trigger_log_id);
 					
 					// parse param

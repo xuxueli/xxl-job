@@ -72,7 +72,9 @@
 					                  	<th name="jobDesc" >描述</th>
 					                  	<th name="jobCron" >Cron</th>
 					                  	<th name="jobClass" >JobBean</th>
-					                  	<th name="jobData" >任务数据</th>
+					                  	<th name="executorAddress" >执行器地址</th>
+					                  	<th name="executorHandler" >JobHandler</th>
+					                  	<th name="executorParam" >任务参数</th>
 					                  	<th name="addTime" >新增时间</th>
 					                  	<th name="updateTime" >更新时间</th>
 					                  	<th name="author" >负责人</th>
@@ -126,13 +128,13 @@
 					</div>
 					<div class="form-group">
 						<label for="lastname" class="col-sm-2 control-label">执行器地址<font color="red">*</font></label>
-						<div class="col-sm-4"><input type="text" class="form-control" name="handler_address" placeholder="请输入“执行器地址”" maxlength="200" ></div>
+						<div class="col-sm-4"><input type="text" class="form-control" name="executorAddress" placeholder="请输入“执行器地址”，多个地址逗号分隔" maxlength="200" ></div>
 						<label for="lastname" class="col-sm-2 control-label">jobHandler<font color="red">*</font></label>
-						<div class="col-sm-4"><input type="text" class="form-control" name="handler_name" placeholder="请输入“jobHandler”" maxlength="200" ></div>
+						<div class="col-sm-4"><input type="text" class="form-control" name="executorHandler" placeholder="请输入“jobHandler”" maxlength="200" ></div>
 					</div>
 					<div class="form-group">
 						<label for="firstname" class="col-sm-2 control-label">执行参数<font color="black">*</font></label>
-						<div class="col-sm-4"><input type="text" class="form-control" name="handler_params" placeholder="请输入“执行参数”" maxlength="100" ></div>
+						<div class="col-sm-4"><input type="text" class="form-control" name="executorParam" placeholder="请输入“执行参数”" maxlength="100" ></div>
 						<label for="lastname" class="col-sm-2 control-label">负责人<font color="red">*</font></label>
 						<div class="col-sm-4"><input type="text" class="form-control" name="author" placeholder="请输入“负责人”" maxlength="200" ></div>
 					</div>
@@ -207,13 +209,13 @@ public class DemoJobHandler extends IJobHandler {
 					
 					<div class="form-group">
 						<label for="lastname" class="col-sm-2 control-label">执行器地址<font color="red">*</font></label>
-						<div class="col-sm-4"><input type="text" class="form-control" name="handler_address" placeholder="请输入“执行器地址”" maxlength="200" ></div>
+						<div class="col-sm-4"><input type="text" class="form-control" name="executorAddress" placeholder="请输入“执行器地址”，多个地址逗号分隔" maxlength="200" ></div>
 						<label for="lastname" class="col-sm-2 control-label">jobHandler<font color="red">*</font></label>
-						<div class="col-sm-4"><input type="text" class="form-control" name="handler_name" placeholder="请输入“jobHandler”" maxlength="200" ></div>
+						<div class="col-sm-4"><input type="text" class="form-control" name="executorHandler" placeholder="请输入“jobHandler”" maxlength="200" ></div>
 					</div>
 					<div class="form-group">
 						<label for="firstname" class="col-sm-2 control-label">执行参数<font color="black">*</font></label>
-						<div class="col-sm-4"><input type="text" class="form-control" name="handler_params" placeholder="请输入“执行参数”" maxlength="100" ></div>
+						<div class="col-sm-4"><input type="text" class="form-control" name="executorParam" placeholder="请输入“执行参数”" maxlength="100" ></div>
 						<label for="lastname" class="col-sm-2 control-label">负责人<font color="red">*</font></label>
 						<div class="col-sm-4"><input type="text" class="form-control" name="author" placeholder="请输入“负责人”" maxlength="200" ></div>
 					</div>

@@ -1,8 +1,8 @@
 package com.xxl.job.admin.core.jobbean;
 
+import java.text.MessageFormat;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Map;
 
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -16,10 +16,10 @@ import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.admin.core.thread.JobMonitorHelper;
 import com.xxl.job.admin.core.util.DynamicSchedulerUtil;
-import com.xxl.job.core.handler.HandlerRepository;
+import com.xxl.job.core.handler.HandlerRepository.ActionEnum;
+import com.xxl.job.core.handler.HandlerRepository.HandlerParamEnum;
 import com.xxl.job.core.util.HttpUtil;
 import com.xxl.job.core.util.HttpUtil.RemoteCallBack;
-import com.xxl.job.core.util.JacksonUtil;
 
 /**
  * http job bean
@@ -30,14 +30,12 @@ import com.xxl.job.core.util.JacksonUtil;
 public class RemoteHttpJobBean extends QuartzJobBean {
 	private static Logger logger = LoggerFactory.getLogger(RemoteHttpJobBean.class);
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	protected void executeInternal(JobExecutionContext context)
 			throws JobExecutionException {
 		JobKey jobKey = context.getTrigger().getJobKey();
 		
 		XxlJobInfo jobInfo = DynamicSchedulerUtil.xxlJobInfoDao.load(jobKey.getGroup(), jobKey.getName());
-		HashMap<String, String> jobDataMap = (HashMap<String, String>) JacksonUtil.readValueRefer(jobInfo.getJobData(), Map.class);
 		// save log
 		XxlJobLog jobLog = new XxlJobLog();
 		jobLog.setJobGroup(jobInfo.getJobGroup());
@@ -45,35 +43,30 @@ public class RemoteHttpJobBean extends QuartzJobBean {
 		jobLog.setJobCron(jobInfo.getJobCron());
 		jobLog.setJobDesc(jobInfo.getJobDesc());
 		jobLog.setJobClass(jobInfo.getJobClass());
-		jobLog.setJobData(jobInfo.getJobData());
-		
-		jobLog.setJobClass(RemoteHttpJobBean.class.getName());
-		jobLog.setJobData(jobInfo.getJobData());
 		DynamicSchedulerUtil.xxlJobLogDao.save(jobLog);
-		logger.info(">>>>>>>>>>> xxl-job trigger start, jobLog:{}", jobLog);
+		logger.info(">>>>>>>>>>> xxl-job trigger start, jobId:{}", jobLog.getId());
 		
 		// trigger request
 		HashMap<String, String> params = new HashMap<String, String>();
-		params.put(HandlerRepository.TRIGGER_TIMESTAMP, String.valueOf(System.currentTimeMillis()));
-		params.put(HandlerRepository.NAMESPACE, HandlerRepository.NameSpaceEnum.RUN.name());
+		params.put(HandlerParamEnum.TIMESTAMP.name(), String.valueOf(System.currentTimeMillis()));
+		params.put(HandlerParamEnum.ACTION.name(), ActionEnum.RUN.name());
 		
-		params.put(HandlerRepository.TRIGGER_LOG_ID, String.valueOf(jobLog.getId()));
-		params.put(HandlerRepository.TRIGGER_LOG_ADDRESS, XxlJobLogCallbackServer.getTrigger_log_address());
+		params.put(HandlerParamEnum.LOG_ADDRESS.name(), XxlJobLogCallbackServer.getTrigger_log_address());
+		params.put(HandlerParamEnum.LOG_ID.name(), String.valueOf(jobLog.getId()));
 		
-		params.put(HandlerRepository.HANDLER_NAME, jobDataMap.get(HandlerRepository.HANDLER_NAME));
-		params.put(HandlerRepository.HANDLER_PARAMS, jobDataMap.get(HandlerRepository.HANDLER_PARAMS));
+		params.put(HandlerParamEnum.EXECUTOR_HANDLER.name(), jobInfo.getExecutorHandler());
+		params.put(HandlerParamEnum.EXECUTOR_PARAMS.name(), jobInfo.getExecutorParam());
 		
-		params.put(HandlerRepository.HANDLER_GLUE_SWITCH, String.valueOf(jobInfo.getGlueSwitch()));
-		params.put(HandlerRepository.HANDLER_JOB_GROUP, jobInfo.getJobGroup());
-		params.put(HandlerRepository.HANDLER_JOB_NAME, jobInfo.getJobName());
-		
+		params.put(HandlerParamEnum.GLUE_SWITCH.name(), String.valueOf(jobInfo.getGlueSwitch()));
+		params.put(HandlerParamEnum.JOB_GROUP.name(), jobInfo.getJobGroup());
+		params.put(HandlerParamEnum.JOB_NAME.name(), jobInfo.getJobName());
 
-		// handler address, jetty (servlet dead)
-		String handler_address = jobDataMap.get(HandlerRepository.HANDLER_ADDRESS);
-
-		RemoteCallBack callback = HttpUtil.post(HttpUtil.addressToUrl(handler_address), params);
-		logger.info(">>>>>>>>>>> xxl-job trigger http response, jobLog.id:{}, jobLog:{}, callback:{}", jobLog.getId(), jobLog, callback);
-
+		// failover trigger
+		RemoteCallBack callback = failoverTrigger(jobInfo.getExecutorAddress(), params, jobLog);
+		jobLog.setExecutorHandler(jobInfo.getGlueSwitch()==0?jobInfo.getExecutorHandler():"GLUE任务");
+		jobLog.setExecutorParam(jobInfo.getExecutorParam());
+		logger.info(">>>>>>>>>>> xxl-job failoverTrigger response, jobId:{}, callback:{}", jobLog.getId(), callback);
+		
 		// update trigger info
 		jobLog.setTriggerTime(new Date());
 		jobLog.setTriggerStatus(callback.getStatus());
@@ -83,7 +76,45 @@ public class RemoteHttpJobBean extends QuartzJobBean {
 		// monitor triger
 		JobMonitorHelper.monitor(jobLog.getId());
 		
-		logger.info(">>>>>>>>>>> xxl-job trigger end, jobLog.id:{}, jobLog:{}", jobLog.getId(), jobLog);
+		logger.info(">>>>>>>>>>> xxl-job trigger end, jobId:{}", jobLog.getId());
     }
+	
+	
+	/**
+	 * failover for trigger remote address
+	 * @param addressArr
+	 * @return
+	 */
+	public RemoteCallBack failoverTrigger(String handler_address, HashMap<String, String> handler_params, XxlJobLog jobLog){
+		if (handler_address.split(",").length > 1) {
+			String failoverMessage = "";
+			for (String address : handler_address.split(",")) {
+				HashMap<String, String> params = new HashMap<String, String>();
+				params.put(HandlerParamEnum.TIMESTAMP.name(), String.valueOf(System.currentTimeMillis()));
+				params.put(HandlerParamEnum.ACTION.name(), ActionEnum.BEAT.name());
+				RemoteCallBack beatResult = HttpUtil.post(HttpUtil.addressToUrl(address), params);
+				failoverMessage += MessageFormat.format("BEAT running, <br>>>>[address] : {0}, <br>>>>[status] : {1}, <br>>>>[msg] : {2} <br><hr>", address, beatResult.getStatus(), beatResult.getMsg());
+				if (RemoteCallBack.SUCCESS.equals(beatResult.getStatus())) {
+					jobLog.setExecutorAddress(address);
+					RemoteCallBack triggerCallback = HttpUtil.post(HttpUtil.addressToUrl(address), handler_params);
+					triggerCallback.setStatus(RemoteCallBack.SUCCESS);
+					failoverMessage += MessageFormat.format("Trigger running, <br>>>>[address] : {0}, <br>>>>[status] : {1}, <br>>>>[msg] : {2} <br><hr>", address, triggerCallback.getStatus(), triggerCallback.getMsg());
+					triggerCallback.setMsg(failoverMessage);
+					return triggerCallback;
+				}
+			}
+			
+			RemoteCallBack result = new RemoteCallBack();
+			result.setStatus(RemoteCallBack.FAIL);
+			result.setMsg(failoverMessage);
+			return result;
+		} else {
+			jobLog.setExecutorAddress(handler_address);
+			RemoteCallBack triggerCallback = HttpUtil.post(HttpUtil.addressToUrl(handler_address), handler_params);
+			String failoverMessage = MessageFormat.format("Trigger running, <br>>>>[address] : {0}, <br>>>>[status] : {1}, <br>>>>[msg] : {2} <br><hr>", handler_address, triggerCallback.getStatus(), triggerCallback.getMsg());
+			triggerCallback.setMsg(failoverMessage);
+			return triggerCallback;
+		}
+	}
 	
 }

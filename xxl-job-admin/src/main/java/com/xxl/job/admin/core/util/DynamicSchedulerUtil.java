@@ -12,7 +12,6 @@ import org.quartz.CronScheduleBuilder;
 import org.quartz.CronTrigger;
 import org.quartz.Job;
 import org.quartz.JobBuilder;
-import org.quartz.JobDataMap;
 import org.quartz.JobDetail;
 import org.quartz.JobKey;
 import org.quartz.Scheduler;
@@ -35,7 +34,6 @@ import com.xxl.job.admin.core.callback.XxlJobLogCallbackServer;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.dao.IXxlJobInfoDao;
 import com.xxl.job.admin.dao.IXxlJobLogDao;
-import com.xxl.job.core.util.JacksonUtil;
 
 /**
  * base quartz scheduler util
@@ -151,7 +149,7 @@ public final class DynamicSchedulerUtil implements ApplicationContextAware, Init
 	}
 
 	// addJob 新增
-    @SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked")
 	public static boolean addJob(XxlJobInfo jobInfo) throws SchedulerException {
     	// TriggerKey : name + group
         TriggerKey triggerKey = TriggerKey.triggerKey(jobInfo.getJobName(), jobInfo.getJobGroup());
@@ -176,10 +174,11 @@ public final class DynamicSchedulerUtil implements ApplicationContextAware, Init
 		}
         
 		JobDetail jobDetail = JobBuilder.newJob(jobClass_).withIdentity(jobKey).build();
-        if (jobInfo.getJobData()!=null) {
+        /*if (jobInfo.getJobData()!=null) {
         	JobDataMap jobDataMap = jobDetail.getJobDataMap();
-        	jobDataMap.putAll(JacksonUtil.readValue(jobInfo.getJobData(), Map.class));	// JobExecutionContext context.getMergedJobDataMap().get("mailGuid");
-		}
+        	jobDataMap.putAll(JacksonUtil.readValue(jobInfo.getJobData(), Map.class));	
+        	// JobExecutionContext context.getMergedJobDataMap().get("mailGuid");
+		}*/
         
         // schedule : jobDetail + cronTrigger
         Date date = scheduler.scheduleJob(jobDetail, cronTrigger);
@@ -189,7 +188,6 @@ public final class DynamicSchedulerUtil implements ApplicationContextAware, Init
     }
     
     // reschedule
-    @SuppressWarnings("unchecked")
 	public static boolean rescheduleJob(XxlJobInfo jobInfo) throws SchedulerException {
     	
     	// TriggerKey valid if_exists
@@ -210,9 +208,9 @@ public final class DynamicSchedulerUtil implements ApplicationContextAware, Init
         
         // JobDetail-JobDataMap fresh
         JobDetail jobDetail = scheduler.getJobDetail(jobKey);
-    	JobDataMap jobDataMap = jobDetail.getJobDataMap();
+    	/*JobDataMap jobDataMap = jobDetail.getJobDataMap();
     	jobDataMap.clear();
-    	jobDataMap.putAll(JacksonUtil.readValue(jobInfo.getJobData(), Map.class));
+    	jobDataMap.putAll(JacksonUtil.readValue(jobInfo.getJobData(), Map.class));*/
     	
     	// Trigger fresh
     	HashSet<Trigger> triggerSet = new HashSet<Trigger>();

@@ -78,7 +78,9 @@
 					                  	<th name="jobCron" >Cron</th>
 					                  	<th name="jobDesc" >描述</th>
 					                  	<th name="jobClass" >JobBean</th>
-					                  	<th name="jobData" >任务数据</th>
+					                  	<th name="executorAddress" >执行器地址</th>
+					                  	<th name="executorHandler" >JobHandler</th>
+					                  	<th name="executorParam" >任务参数</th>
 					                  	<th name="triggerTime" >调度时间</th>
 					                  	<th name="triggerStatus" >调度结果</th>
 					                  	<th name="triggerMsg" >调度日志</th>

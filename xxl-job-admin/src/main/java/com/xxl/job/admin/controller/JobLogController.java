@@ -20,10 +20,10 @@ import com.xxl.job.admin.core.constant.Constants.JobGroupEnum;
 import com.xxl.job.admin.core.model.ReturnT;
 import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.admin.dao.IXxlJobLogDao;
-import com.xxl.job.core.handler.HandlerRepository;
+import com.xxl.job.core.handler.HandlerRepository.ActionEnum;
+import com.xxl.job.core.handler.HandlerRepository.HandlerParamEnum;
 import com.xxl.job.core.util.HttpUtil;
 import com.xxl.job.core.util.HttpUtil.RemoteCallBack;
-import com.xxl.job.core.util.JacksonUtil;
 
 /**
  * index controller
@@ -41,7 +41,7 @@ public class JobLogController {
 		model.addAttribute("jobGroup", jobGroup);
 		model.addAttribute("jobName", jobName);
 		model.addAttribute("JobGroupList", JobGroupEnum.values());
-		return "joblog/index";
+		return "joblog/joblog.index";
 	}
 	
 	@RequestMapping("/pageList")
@@ -101,21 +101,18 @@ public class JobLogController {
 		if (log == null) {
 			return new ReturnT<String>(500, "参数异常");
 		}
-		
-		// server address
-		@SuppressWarnings("unchecked")
-		Map<String, String> jobDataMap = JacksonUtil.readValue(log.getJobData(), Map.class);
-		String handler_address = jobDataMap.get(HandlerRepository.HANDLER_ADDRESS);
-		if (!handler_address.startsWith("http")){
-			handler_address = "http://" + handler_address + "/";
+		if (!RemoteCallBack.SUCCESS.equals(log.getTriggerStatus())) {
+			return new ReturnT<String>(500, "调度失败，无法查看执行日志");
 		}
+		
 		// trigger id, trigger time
 		Map<String, String> reqMap = new HashMap<String, String>();
-		reqMap.put(HandlerRepository.NAMESPACE, HandlerRepository.NameSpaceEnum.LOG.name());
-		reqMap.put(HandlerRepository.TRIGGER_LOG_ID, String.valueOf(id));
-		reqMap.put(HandlerRepository.TRIGGER_TIMESTAMP, String.valueOf(log.getTriggerTime().getTime()));
+		reqMap.put(HandlerParamEnum.TIMESTAMP.name(), String.valueOf(System.currentTimeMillis()));
+		reqMap.put(HandlerParamEnum.ACTION.name(), ActionEnum.LOG.name());
+		reqMap.put(HandlerParamEnum.LOG_ID.name(), String.valueOf(id));
+		reqMap.put(HandlerParamEnum.LOG_DATE.name(), String.valueOf(log.getTriggerTime().getTime()));
 		
-		RemoteCallBack callBack = HttpUtil.post(handler_address, reqMap);
+		RemoteCallBack callBack = HttpUtil.post(HttpUtil.addressToUrl(log.getExecutorAddress()), reqMap);
 		if (HttpUtil.RemoteCallBack.SUCCESS.equals(callBack.getStatus())) {
 			return new ReturnT<String>(callBack.getMsg());
 		} else {
@@ -138,23 +135,19 @@ public class JobLogController {
 		if (log == null) {
 			return new ReturnT<String>(500, "参数异常");
 		}
-		
-		// server address
-		@SuppressWarnings("unchecked")
-		Map<String, String> jobDataMap = JacksonUtil.readValue(log.getJobData(), Map.class);
-		String handler_address = jobDataMap.get(HandlerRepository.HANDLER_ADDRESS);
-		if (!handler_address.startsWith("http")){
-			handler_address = "http://" + handler_address + "/";
+		if (!RemoteCallBack.SUCCESS.equals(log.getTriggerStatus())) {
+			return new ReturnT<String>(500, "调度失败，无法终止日志");
 		}
-		String handler_name = jobDataMap.get(HandlerRepository.HANDLER_NAME);
 		
-		// trigger id, trigger time
+		// request
 		Map<String, String> reqMap = new HashMap<String, String>();
-		reqMap.put(HandlerRepository.NAMESPACE, HandlerRepository.NameSpaceEnum.KILL.name());
-		reqMap.put(HandlerRepository.HANDLER_NAME, handler_name);
-		reqMap.put(HandlerRepository.TRIGGER_TIMESTAMP, String.valueOf(System.currentTimeMillis()));
+		reqMap.put(HandlerParamEnum.TIMESTAMP.name(), String.valueOf(System.currentTimeMillis()));
+		reqMap.put(HandlerParamEnum.ACTION.name(), ActionEnum.KILL.name());
+		reqMap.put(HandlerParamEnum.EXECUTOR_HANDLER.name(), log.getExecutorHandler());
+		reqMap.put(HandlerParamEnum.JOB_GROUP.name(), log.getJobGroup());
+		reqMap.put(HandlerParamEnum.JOB_NAME.name(), log.getJobName());
 		
-		RemoteCallBack callBack = HttpUtil.post(handler_address, reqMap);
+		RemoteCallBack callBack = HttpUtil.post(HttpUtil.addressToUrl(log.getExecutorAddress()), reqMap);
 		if (HttpUtil.RemoteCallBack.SUCCESS.equals(callBack.getStatus())) {
 			log.setHandleStatus(HttpUtil.RemoteCallBack.FAIL);
 			log.setHandleMsg("人为操作主动终止");

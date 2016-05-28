@@ -16,7 +16,10 @@ public class XxlJobLog {
 	private String jobCron;
 	private String jobDesc;
 	private String jobClass;
-	private String jobData;
+	
+	private String executorAddress;	// 执行器地址，有多个则逗号分隔
+	private String executorHandler;	// 执行器，任务Handler名称
+	private String executorParam;	// 执行器，任务参数
 	
 	// trigger info
 	private Date triggerTime;
@@ -27,6 +30,7 @@ public class XxlJobLog {
 	private Date handleTime;
 	private String handleStatus;
 	private String handleMsg;
+	
 	public int getId() {
 		return id;
 	}
@@ -63,11 +67,23 @@ public class XxlJobLog {
 	public void setJobClass(String jobClass) {
 		this.jobClass = jobClass;
 	}
-	public String getJobData() {
-		return jobData;
+	public String getExecutorAddress() {
+		return executorAddress;
 	}
-	public void setJobData(String jobData) {
-		this.jobData = jobData;
+	public void setExecutorAddress(String executorAddress) {
+		this.executorAddress = executorAddress;
+	}
+	public String getExecutorHandler() {
+		return executorHandler;
+	}
+	public void setExecutorHandler(String executorHandler) {
+		this.executorHandler = executorHandler;
+	}
+	public String getExecutorParam() {
+		return executorParam;
+	}
+	public void setExecutorParam(String executorParam) {
+		this.executorParam = executorParam;
 	}
 	public Date getTriggerTime() {
 		return triggerTime;
@@ -104,14 +120,6 @@ public class XxlJobLog {
 	}
 	public void setHandleMsg(String handleMsg) {
 		this.handleMsg = handleMsg;
-	}
-	
-	@Override
-	public String toString() {
-		return "XxlJobLog [id=" + id + ", jobGroup=" + jobGroup + ", jobName=" + jobName + ", jobCron=" + jobCron
-				+ ", jobDesc=" + jobDesc + ", jobClass=" + jobClass + ", jobData=" + jobData + ", triggerTime="
-				+ triggerTime + ", triggerStatus=" + triggerStatus + ", triggerMsg=" + triggerMsg + ", handleTime="
-				+ handleTime + ", handleStatus=" + handleStatus + ", handleMsg=" + handleMsg + "]";
 	}
 	
 }

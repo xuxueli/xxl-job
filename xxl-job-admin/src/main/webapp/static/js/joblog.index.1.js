@@ -60,22 +60,14 @@ $(function() {
 	            			return data;
 	            		}
             		},
-	                { "data": 'jobName'},
+	                { "data": 'jobName', "visible" : false},
 	                { "data": 'jobCron', "visible" : false},
 	                { "data": 'jobDesc', "visible" : false},
 	                { "data": 'jobClass', "visible" : false},
-	                { 
-	                	"data": 'jobData',
-	                	"visible" : true,
-	                	"render": function ( data, type, row ) {
-	                		var _jobData = eval('(' + data + ')');	// row.jobData
-	                		var html = "<p title='" + data + "'>JobHandler：" + _jobData.handler_name +
-	                			"<br>执行参数：" + _jobData.handler_params + 
-	                			"<br>执行器地址：" + _jobData.handler_address + "</p>";
-	                		
-	                		return data?'<a class="logMsg" href="javascript:;" >查看<span style="display:none;">'+ html +'</span></a>':"无";
-	                	}
-	                },
+	                
+	                { "data": 'executorAddress', "visible" : true},
+	                { "data": 'executorHandler', "visible" : true},
+	                { "data": 'executorParam', "visible" : true},
 	                { 
 	                	"data": 'triggerTime', 
 	                	"render": function ( data, type, row ) {
@@ -106,12 +98,6 @@ $(function() {
 	                	"render": function ( data, type, row ) {
 	                		// better support expression or string, not function
 	                		return function () {
-	                			// local job do not support trigger detail log, now
-		                		var _jobData = eval('(' + row.jobData + ')'); 
-		                		if (!_jobData.handler_address) {
-		                			return;
-		                		}
-		                		
 		                		if (row.triggerStatus == 'SUCCESS'){
 		                			var temp = '<a href="javascript:;" class="logDetail" _id="'+ row.id +'">执行日志</a>';
 		                			if(!row.handleStatus){

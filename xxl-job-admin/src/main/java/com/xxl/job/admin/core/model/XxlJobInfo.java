@@ -15,7 +15,7 @@ public class XxlJobInfo {
 	private String jobCron;		// 任务执行CRON表达式 【base on quartz】
 	private String jobDesc;
 	private String jobClass;	// 任务执行JobBean 【base on quartz】
-	private String jobData;		// 任务执行数据 Map-JSON-String
+	//private String jobData;		// 任务执行数据 Map-JSON-String
 	
 	private Date addTime;
 	private Date updateTime;
@@ -23,6 +23,10 @@ public class XxlJobInfo {
 	private String author;		// 负责人
 	private String alarmEmail;	// 报警邮件
 	private int alarmThreshold;	// 报警阀值
+	
+	private String executorAddress;	// 执行器地址，有多个则逗号分隔
+	private String executorHandler;	// 执行器，任务Handler名称
+	private String executorParam;	// 执行器，任务参数
 	
 	private int glueSwitch;		// GLUE模式开关：0-否，1-是
 	private String glueSource;	// GLUE源代码
@@ -79,14 +83,6 @@ public class XxlJobInfo {
 		this.jobClass = jobClass;
 	}
 
-	public String getJobData() {
-		return jobData;
-	}
-
-	public void setJobData(String jobData) {
-		this.jobData = jobData;
-	}
-
 	public Date getAddTime() {
 		return addTime;
 	}
@@ -127,12 +123,28 @@ public class XxlJobInfo {
 		this.alarmThreshold = alarmThreshold;
 	}
 
-	public String getJobStatus() {
-		return jobStatus;
+	public String getExecutorAddress() {
+		return executorAddress;
 	}
 
-	public void setJobStatus(String jobStatus) {
-		this.jobStatus = jobStatus;
+	public void setExecutorAddress(String executorAddress) {
+		this.executorAddress = executorAddress;
+	}
+
+	public String getExecutorHandler() {
+		return executorHandler;
+	}
+
+	public void setExecutorHandler(String executorHandler) {
+		this.executorHandler = executorHandler;
+	}
+
+	public String getExecutorParam() {
+		return executorParam;
+	}
+
+	public void setExecutorParam(String executorParam) {
+		this.executorParam = executorParam;
 	}
 
 	public int getGlueSwitch() {
@@ -159,13 +171,12 @@ public class XxlJobInfo {
 		this.glueRemark = glueRemark;
 	}
 
-	@Override
-	public String toString() {
-		return "XxlJobInfo [id=" + id + ", jobGroup=" + jobGroup + ", jobName=" + jobName + ", jobCron=" + jobCron
-				+ ", jobDesc=" + jobDesc + ", jobClass=" + jobClass + ", jobData=" + jobData + ", addTime=" + addTime
-				+ ", updateTime=" + updateTime + ", author=" + author + ", alarmEmail=" + alarmEmail
-				+ ", alarmThreshold=" + alarmThreshold + ", glueSwitch=" + glueSwitch + ", glueSource=" + glueSource
-				+ ", glueRemark=" + glueRemark + ", jobStatus=" + jobStatus + "]";
+	public String getJobStatus() {
+		return jobStatus;
+	}
+
+	public void setJobStatus(String jobStatus) {
+		this.jobStatus = jobStatus;
 	}
 	
 }

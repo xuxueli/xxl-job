@@ -1,8 +1,6 @@
 package com.xxl.job.core.util;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -98,9 +96,10 @@ public class HttpUtil {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			StringWriter out = new StringWriter();
+			/*StringWriter out = new StringWriter();
 			e.printStackTrace(new PrintWriter(out));
-			callback.setMsg(out.toString());
+			callback.setMsg(out.toString());*/
+			callback.setMsg(e.getMessage());
 		} finally{
 			if (httpPost!=null) {
 				httpPost.releaseConnection();

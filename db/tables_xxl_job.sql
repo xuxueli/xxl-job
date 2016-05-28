@@ -150,17 +150,19 @@ CREATE TABLE `xxl_job_qrtz_trigger_info` (
   `job_cron` varchar(128) NOT NULL COMMENT '任务执行CORN',
   `job_desc` varchar(255) NOT NULL,
   `job_class` varchar(255) NOT NULL COMMENT '任务执行JobBean',
-  `job_data` varchar(512) DEFAULT NULL COMMENT '任务执行数据',
   `add_time` datetime DEFAULT NULL,
   `update_time` datetime DEFAULT NULL,
   `author` varchar(64) DEFAULT NULL COMMENT '作者',
   `alarm_email` varchar(255) DEFAULT NULL COMMENT '报警邮件',
   `alarm_threshold` int(11) DEFAULT NULL COMMENT '报警阀值(连续失败次数)',
+  `executor_address` varchar(255) DEFAULT NULL COMMENT '执行器地址，有多个则逗号分隔',
+  `executor_handler` varchar(255) DEFAULT NULL COMMENT '执行器任务handler',
+  `executor_param` varchar(255) DEFAULT NULL COMMENT '执行器任务参数',
   `glue_switch` int(11) DEFAULT '0' COMMENT 'GLUE模式开关：0-否，1-是',
   `glue_source` text COMMENT 'GLUE源代码',
   `glue_remark` varchar(128) DEFAULT NULL COMMENT 'GLUE备注',
   PRIMARY KEY (`id`)
-);
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `xxl_job_qrtz_trigger_log` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -169,7 +171,9 @@ CREATE TABLE `xxl_job_qrtz_trigger_log` (
   `job_cron` varchar(128) NOT NULL COMMENT '任务执行CORN表达式',
   `job_desc` varchar(255) NOT NULL,
   `job_class` varchar(255) NOT NULL COMMENT '任务执行JobBean',
-  `job_data` varchar(512) DEFAULT NULL COMMENT '任务执行数据',
+  `executor_address` varchar(255) DEFAULT NULL COMMENT '执行器地址，本次执行的地址',
+  `executor_handler` varchar(255) DEFAULT NULL COMMENT '执行器任务handler',
+  `executor_param` varchar(255) DEFAULT NULL COMMENT 'executor_param',
   `trigger_time` datetime DEFAULT NULL COMMENT '调度-时间',
   `trigger_status` varchar(255) DEFAULT NULL COMMENT '调度-结果',
   `trigger_msg` varchar(2048) DEFAULT NULL COMMENT '调度-日志',
@@ -177,7 +181,7 @@ CREATE TABLE `xxl_job_qrtz_trigger_log` (
   `handle_status` varchar(255) DEFAULT NULL COMMENT '执行-状态',
   `handle_msg` varchar(2048) DEFAULT NULL COMMENT '执行-日志',
   PRIMARY KEY (`id`)
-);
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `xxl_job_qrtz_trigger_logglue` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -188,7 +192,8 @@ CREATE TABLE `xxl_job_qrtz_trigger_logglue` (
   `add_time` timestamp NULL DEFAULT NULL,
   `update_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+
 
 
 commit;
