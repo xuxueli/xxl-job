@@ -71,6 +71,13 @@ git.osc地址：http://git.oschina.net/xuxueli0323/xxl-job
 	2、执行器异步回调执行日志；
 	3、【重要】在 “调度中心” 支持HA的基础上，扩展执行器的Failover支持，支持配置多执行期地址；
 
+# 规划中
+	1、任务终止时，任务队列中调度回调通过被终止的接口；
+	2、任务执行规则自定义：假如前一个任务正在执行，后续调度执行规则支持自定义；
+		串行（默认，当前逻辑）：后续调度入调度队列；
+		并行：后续调度并行执行；
+		Pass：后续调度被Pass；
+
 # 源码目录说明
 	/xxl-job-admin					【调度中心】：负责管理调度信息，按照调度配置发出调度请求；
 	/xxl-job-core					公共依赖
@@ -87,3 +94,4 @@ git.osc地址：http://git.oschina.net/xuxueli0323/xxl-job
 	4、人人聚财金服；
 	5、……
 	更多接入公司，欢迎在https://github.com/xuxueli/xxl-job/issues/1 登记。
+	

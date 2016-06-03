@@ -29,12 +29,14 @@ public class XxlJobExecutor implements ApplicationContextAware {
         this.port = port;
     }
 
+    // ---------------------------------- job server ------------------------------------
+    Server server = null;
     public void start() throws Exception {
 
         new Thread(new Runnable() {
             @Override
             public void run() {
-                Server server = new Server();
+                server = new Server();
                 server.setThreadPool(new ExecutorThreadPool(200, 200, 30000));	// 非阻塞
 
                 // connector
@@ -60,7 +62,18 @@ public class XxlJobExecutor implements ApplicationContextAware {
         }).start();
 
     }
+    
+    public void destroy(){
+    	if (server!=null) {
+    		try {
+				server.stop();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+    }
 
+    // ---------------------------------- init job handler ------------------------------------
     public static ApplicationContext applicationContext;
 	@Override
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {

@@ -96,6 +96,12 @@ public class HandlerThread extends Thread{
 						params.put("status", _status.name());
 						params.put("msg", _msg);
 						HandlerRepository.pushCallBack(HttpUtil.addressToUrl(log_address), params);
+					} else {
+						HashMap<String, String> params = new HashMap<String, String>();
+						params.put("log_id", log_id);
+						params.put("status", JobHandleStatus.FAIL.name());
+						params.put("msg", "人工手动终止[业务运行中，被强制终止]");
+						HandlerRepository.pushCallBack(HttpUtil.addressToUrl(log_address), params);
 					}
 				} else {
 					i++;
@@ -113,6 +119,22 @@ public class HandlerThread extends Thread{
 				logger.info("HandlerThread Exception:", e);
 			}
 		}
+		
+		// callback trigger request in queue
+		while(handlerDataQueue!=null && handlerDataQueue.size()>0){
+			Map<String, String> handlerData = handlerDataQueue.poll();
+			if (handlerData!=null) {
+				String log_address = handlerData.get(HandlerParamEnum.LOG_ADDRESS.name());
+				String log_id = handlerData.get(HandlerParamEnum.LOG_ID.name());
+				
+				HashMap<String, String> params = new HashMap<String, String>();
+				params.put("log_id", log_id);
+				params.put("status", JobHandleStatus.FAIL.name());
+				params.put("msg", "人工手动终止[任务尚未执行，在调度队列中被终止]");
+				HandlerRepository.pushCallBack(HttpUtil.addressToUrl(log_address), params);
+			}
+		}
+		
 		logger.info(">>>>>>>>>>>> xxl-job handlerThrad stoped, hashCode:{}", Thread.currentThread());
 	}
 }

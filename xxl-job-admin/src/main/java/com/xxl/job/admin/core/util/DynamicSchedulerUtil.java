@@ -55,12 +55,21 @@ public final class DynamicSchedulerUtil implements ApplicationContextAware, Init
 	}
     
     // init
+    XxlJobLogCallbackServer xxlJobLogCallbackServer = null;
     public void init(){
     	try {
     		// start callback server
-			new XxlJobLogCallbackServer().start(callBackPort);
+    		xxlJobLogCallbackServer = new XxlJobLogCallbackServer();
+    		xxlJobLogCallbackServer.start(callBackPort);
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+    }
+    
+    // destroy
+    public void destroy(){
+    	if (xxlJobLogCallbackServer!=null) {
+    		xxlJobLogCallbackServer.destroy();
 		}
     }
     

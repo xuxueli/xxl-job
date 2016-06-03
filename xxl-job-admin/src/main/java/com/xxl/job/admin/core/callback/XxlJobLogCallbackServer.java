@@ -22,6 +22,7 @@ public class XxlJobLogCallbackServer {
 		return trigger_log_address;
 	}
     
+    Server server = null;
     public void start(int callBackPort) throws Exception {
     	// init address
     	
@@ -32,7 +33,7 @@ public class XxlJobLogCallbackServer {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                Server server = new Server();
+                server = new Server();
                 server.setThreadPool(new ExecutorThreadPool(200, 200, 30000));	// 非阻塞
 
                 // connector
@@ -58,5 +59,15 @@ public class XxlJobLogCallbackServer {
         }).start();
 
     }
+
+	public void destroy() {
+		if (server!=null) {
+			try {
+				server.stop();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
 
 }
