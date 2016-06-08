@@ -121,8 +121,8 @@
 						<div class="col-sm-4"><input type="text" class="form-control" name="jobName" placeholder="请输入“任务名”" minlength="4" maxlength="100" ></div>
 					</div>
 					<div class="form-group">
-						<label for="lastname" class="col-sm-2 control-label">Corn<font color="red">*</font></label>
-						<div class="col-sm-4"><input type="text" class="form-control" name="jobCron" placeholder="请输入“Corn”" maxlength="100" ></div>
+						<label for="lastname" class="col-sm-2 control-label">Cron<font color="red">*</font></label>
+						<div class="col-sm-4"><input type="text" class="form-control" name="jobCron" placeholder="请输入“Cron”" maxlength="100" ></div>
 						<label for="lastname" class="col-sm-2 control-label">描述<font color="red">*</font></label>
 						<div class="col-sm-4"><input type="text" class="form-control" name="jobDesc" placeholder="请输入“描述”" maxlength="200" ></div>
 					</div>
@@ -201,8 +201,8 @@ public class DemoJobHandler extends IJobHandler {
 						<div class="col-sm-4"><input type="text" class="form-control" name="jobName" placeholder="请输入“任务名”" minlength="4" maxlength="100" readonly ></div>
 					</div>
 					<div class="form-group">
-						<label for="lastname" class="col-sm-2 control-label">Corn<font color="red">*</font></label>
-						<div class="col-sm-4"><input type="text" class="form-control" name="jobCron" placeholder="请输入“Corn”" maxlength="100" ></div>
+						<label for="lastname" class="col-sm-2 control-label">Cron<font color="red">*</font></label>
+						<div class="col-sm-4"><input type="text" class="form-control" name="jobCron" placeholder="请输入“Cron”" maxlength="100" ></div>
 						<label for="lastname" class="col-sm-2 control-label">描述<font color="red">*</font></label>
 						<div class="col-sm-4"><input type="text" class="form-control" name="jobDesc" placeholder="请输入“描述”" maxlength="200" ></div>
 					</div>

@@ -70,7 +70,7 @@ public class XxlJobServiceImpl implements IXxlJobService {
 			return new ReturnT<String>(500, "请输入“任务名”");
 		}
 		if (!CronExpression.isValidExpression(jobCron)) {
-			return new ReturnT<String>(500, "请输入格式正确的“corn”");
+			return new ReturnT<String>(500, "请输入格式正确的“Cron”");
 		}
 		if (StringUtils.isBlank(jobDesc)) {
 			return new ReturnT<String>(500, "请输入“任务描述”");
@@ -146,7 +146,7 @@ public class XxlJobServiceImpl implements IXxlJobService {
 			return new ReturnT<String>(500, "请输入“任务名”");
 		}
 		if (!CronExpression.isValidExpression(jobCron)) {
-			return new ReturnT<String>(500, "请输入格式正确的“corn”");
+			return new ReturnT<String>(500, "请输入格式正确的“Cron”");
 		}
 		if (StringUtils.isBlank(jobDesc)) {
 			return new ReturnT<String>(500, "请输入“任务描述”");

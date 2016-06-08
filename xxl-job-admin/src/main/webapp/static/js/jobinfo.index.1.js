@@ -253,8 +253,8 @@ $(function() {
                 maxlength:"“任务名”长度不应超过100位"
             },  
             jobCron : {
-            	required :"请输入“Corn”."  ,
-                maxlength:"“Corn”长度不应超过100位"
+            	required :"请输入“Cron”."  ,
+                maxlength:"“Cron”长度不应超过100位"
             },  
             jobDesc : {
             	required :"请输入“任务描述”."  ,
@@ -405,8 +405,8 @@ $(function() {
         }, 
         messages : {  
             jobCron : {
-            	required :"请输入“Corn”."  ,
-                maxlength:"“Corn”长度不应超过100位"
+            	required :"请输入“Cron”."  ,
+                maxlength:"“Cron”长度不应超过100位"
             },  
             jobDesc : {
             	required :"请输入“任务描述”."  ,
