@@ -4,9 +4,10 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.LineNumberReader;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -133,48 +134,89 @@ public class XxlJobFileAppender extends AppenderSkeleton {
 		String logFileName = trigger_log_id.concat(".log");
 		File logFile = new File(filePathDateDir, logFileName);	
 		if (!logFile.exists()) {
-			try {
-				logFile.createNewFile();
-			} catch (IOException e) {
-				e.printStackTrace();
-				return null;
+			return null;
+		}
+		
+		String logData = readLines(logFile);
+		return logData;
+	}
+	
+	/**
+	 * read log data
+	 * @param logFile
+	 * @return
+	 */
+	public static String readLines(File logFile){
+		BufferedReader reader = null;
+		try {
+			reader = new BufferedReader(new InputStreamReader(new FileInputStream(logFile), "utf-8"));
+			if (reader != null) {
+				StringBuilder sb = new StringBuilder();
+				String line = null;
+				while ((line = reader.readLine()) != null) {
+					sb.append(line).append("\n");
+				}
+				return sb.toString();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (reader != null) {
+				try {
+					reader.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		} 
+		return null;
+	}
+	
+	/**
+	 * read data from line num
+	 * @param sourceFile
+	 * @param fromLineNum
+	 * @return
+	 * @throws Exception
+	 */
+	public static String readLinesFrom(File logFile, int fromLineNum) {  
+        LineNumberReader reader = null;
+		try {
+			reader = new LineNumberReader(new FileReader(logFile));
+			
+			// sBuffer
+	        StringBuffer sBuffer = new StringBuffer();
+	    	String line = null;
+	    	int maxLineNum = 0;
+	    	while ((line = reader.readLine())!=null) {
+	    		maxLineNum++;
+	    		if (reader.getLineNumber() >= fromLineNum) {
+	    			sBuffer.append(line).append("\n");
+				}
+			}
+	    	
+	    	System.out.println("maxLineNum : " + maxLineNum);
+	    	return sBuffer.toString();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (reader != null) {
+				try {
+					reader.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 		
-		try {
-			InputStream ins = null;
-			BufferedReader reader = null;
-			try {
-				ins = new FileInputStream(logFile);
-				reader = new BufferedReader(new InputStreamReader(ins, "utf-8"));
-				if (reader != null) {
-					String content = null;
-					StringBuilder sb = new StringBuilder();
-					while ((content = reader.readLine()) != null) {
-						sb.append(content).append("\n");
-					}
-					return sb.toString();
-				}
-			} finally {
-				if (ins != null) {
-					try {
-						ins.close();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
-				if (reader != null) {
-					try {
-						reader.close();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
-			} 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 		return null;
-	}
+		
+        /*
+        // it will return the number of characters actually skipped
+        reader.skip(Long.MAX_VALUE);	
+        int maxLineNum = reader.getLineNumber();  
+        maxLineNum++;	// 最大行号
+        */
+    }
 	
 }
