@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.xxl.job.admin.core.constant.Constants.JobGroupEnum;
 import com.xxl.job.admin.core.model.ReturnT;
+import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
+import com.xxl.job.admin.dao.IXxlJobInfoDao;
 import com.xxl.job.admin.dao.IXxlJobLogDao;
 import com.xxl.job.core.handler.HandlerRepository.ActionEnum;
 import com.xxl.job.core.handler.HandlerRepository.HandlerParamEnum;
@@ -35,6 +37,8 @@ public class JobLogController {
 
 	@Resource
 	public IXxlJobLogDao xxlJobLogDao;
+	@Resource
+	public IXxlJobInfoDao xxlJobInfoDao;
 	
 	@RequestMapping
 	public String index(Model model, String jobGroup, String jobName) {
@@ -132,7 +136,8 @@ public class JobLogController {
 	public ReturnT<String> logKill(int id){
 		// base check
 		XxlJobLog log = xxlJobLogDao.load(id);
-		if (log == null) {
+		XxlJobInfo jobInfo = xxlJobInfoDao.load(log.getJobGroup(), log.getJobName());
+		if (log == null || jobInfo==null) {
 			return new ReturnT<String>(500, "参数异常");
 		}
 		if (!RemoteCallBack.SUCCESS.equals(log.getTriggerStatus())) {
@@ -143,6 +148,7 @@ public class JobLogController {
 		Map<String, String> reqMap = new HashMap<String, String>();
 		reqMap.put(HandlerParamEnum.TIMESTAMP.name(), String.valueOf(System.currentTimeMillis()));
 		reqMap.put(HandlerParamEnum.ACTION.name(), ActionEnum.KILL.name());
+		reqMap.put(HandlerParamEnum.GLUE_SWITCH.name(), String.valueOf(jobInfo.getGlueSwitch()));
 		reqMap.put(HandlerParamEnum.EXECUTOR_HANDLER.name(), log.getExecutorHandler());
 		reqMap.put(HandlerParamEnum.JOB_GROUP.name(), log.getJobGroup());
 		reqMap.put(HandlerParamEnum.JOB_NAME.name(), log.getJobName());
