@@ -3,7 +3,9 @@ github地址：https://github.com/xuxueli/xxl-job
 
 git.osc地址：http://git.oschina.net/xuxueli0323/xxl-job
 
-博客地址(内附使用教程)：http://www.cnblogs.com/xuxueli/p/5021979.html
+cnblogs地址：http://www.cnblogs.com/xuxueli/p/5021979.html
+
+oschina地址：http://my.oschina.net/xuxueli/blog/690978
 
 技术交流群(仅作技术交流)：367260654    [![image](http://pub.idqqimg.com/wpa/images/group.png)](http://shang.qq.com/wpa/qunwpa?idkey=4686e3fe01118445c75673a66b4cc6b2c7ce0641528205b6f403c179062b0a52)
 
