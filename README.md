@@ -1,14 +1,16 @@
 # 分布式任务调度平台xxl-job
-- 源码地址
+源码地址
+
 - github地址：https://github.com/xuxueli/xxl-job
 - git.osc地址：http://git.oschina.net/xuxueli0323/xxl-job
 
-- 博客地址
+博客地址
+
 - oschina地址：http://my.oschina.net/xuxueli/blog/690978
 - cnblogs地址：http://www.cnblogs.com/xuxueli/p/5021979.html
 - csdn地址：http://blog.csdn.net/xuxueli0323/article/details/51674330
 
-- 技术交流群(仅作技术交流)：367260654    [![image](http://pub.idqqimg.com/wpa/images/group.png)](http://shang.qq.com/wpa/qunwpa?idkey=4686e3fe01118445c75673a66b4cc6b2c7ce0641528205b6f403c179062b0a52)
+技术交流群(仅作技术交流)：367260654    [![image](http://pub.idqqimg.com/wpa/images/group.png)](http://shang.qq.com/wpa/qunwpa?idkey=4686e3fe01118445c75673a66b4cc6b2c7ce0641528205b6f403c179062b0a52)
 
 
 # 特点：
@@ -82,6 +84,7 @@
 		并行：后续调度并行执行；
 		Pass：后续调度被Pass；
 - 3、兼容oracle；
+- 4、任务依赖；
 
 # 源码目录说明
 	/xxl-job-admin					【调度中心】：负责管理调度信息，按照调度配置发出调度请求；
@@ -93,11 +96,11 @@
 # Tips
 	我司大众点评已接入XXL-JOB，内部别名《Ferrari》（于V1.1.x版本，XXL-JOB正式应用于我司，内部定制别名为 “Ferrari”，新接入应用推荐使用最新版本V1.3.x）。自2016-01-21接入至2016-05-20未知，内部XXL-JOB系统已调度45000余次，表现优异。新接入应用推荐使用最新版本V1.3，因为经过两个大版本的更新，系统的任务模型、UI交互模型以及底层调度通讯模型都有了较大的提升，核心功能更加稳定高效。
 	XXL-JOB已接入多家公司的线上产品线，接入场景如电商业务，O2O业务和大数据作业等，截止2016-05-20为止，XXL-JOB已接入的公司包括不限于：
-	- 1、大众点评；
-	- 2、山东学而网络科技有限公司；
-	- 3、安徽慧通互联科技有限公司；
-	- 4、人人聚财金服；
-	- 5、上海棠棣信息科技股份有限公司
-	- 6、……
+	1、大众点评；
+	2、山东学而网络科技有限公司；
+	3、安徽慧通互联科技有限公司；
+	4、人人聚财金服；
+	5、上海棠棣信息科技股份有限公司
+	6、……
 	更多接入公司，欢迎在https://github.com/xuxueli/xxl-job/issues/1 登记。
 	
