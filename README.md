@@ -77,6 +77,7 @@ git.osc地址：http://git.oschina.net/xuxueli0323/xxl-job
 		串行（默认，当前逻辑）：后续调度入调度队列；
 		并行：后续调度并行执行；
 		Pass：后续调度被Pass；
+	3、兼容oracle；
 
 # 源码目录说明
 	/xxl-job-admin					【调度中心】：负责管理调度信息，按照调度配置发出调度请求；
