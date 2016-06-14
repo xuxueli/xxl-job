@@ -92,6 +92,7 @@ git.osc地址：http://git.oschina.net/xuxueli0323/xxl-job
 	2、山东学而网络科技有限公司；
 	3、安徽慧通互联科技有限公司；
 	4、人人聚财金服；
-	5、……
+	5、上海棠棣信息科技股份有限公司
+	6、……
 	更多接入公司，欢迎在https://github.com/xuxueli/xxl-job/issues/1 登记。
 	
