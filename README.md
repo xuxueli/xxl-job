@@ -7,7 +7,7 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 
 - github地址：https://github.com/xuxueli/xxl-job
 - git.osc地址：http://git.oschina.net/xuxueli0323/xxl-job
-- 我将会在两个git仓库同步发布最新代码；用户手册放置在源码“/doc”目录下（https://github.com/xuxueli/xxl-job/tree/master/doc）；开箱即用；
+- 我将会在两个git仓库同步发布最新代码；用户手册放置在源码“/doc”目录下（ https://github.com/xuxueli/xxl-job/tree/master/doc ）；开箱即用；
 
 博客地址
 
