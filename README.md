@@ -3,6 +3,7 @@
 
 - github地址：https://github.com/xuxueli/xxl-job
 - git.osc地址：http://git.oschina.net/xuxueli0323/xxl-job
+- 我将会在两个git仓库同步发布最新代码；用户手册放置在源码“/doc”目录下（https://github.com/xuxueli/xxl-job/tree/master/doc）；开箱即用；
 
 博客地址
 
@@ -11,7 +12,6 @@
 - csdn地址：http://blog.csdn.net/xuxueli0323/article/details/51674330
 
 技术交流群(仅作技术交流)：367260654    [![image](http://pub.idqqimg.com/wpa/images/group.png)](http://shang.qq.com/wpa/qunwpa?idkey=4686e3fe01118445c75673a66b4cc6b2c7ce0641528205b6f403c179062b0a52)
-
 
 # 特点：
 - 1、简单：支持通过Web页面对任务进行CRUD操作，操作简单，一分钟上手；
