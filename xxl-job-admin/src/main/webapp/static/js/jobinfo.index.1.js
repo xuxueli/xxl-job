@@ -10,6 +10,8 @@ $(function() {
 	        	var obj = {};
 	        	obj.jobGroup = $('#jobGroup').val();
 	        	obj.jobName = $('#jobName').val();
+	        	obj.start = d.start;
+	        	obj.length = d.length;
                 return obj;
             }
 	    },
