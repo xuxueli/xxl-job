@@ -98,7 +98,7 @@ public class RemoteHttpJobBean extends QuartzJobBean {
 			
 			// for failover
 			String failoverMessage = "";
-			for (String address : handler_address.split(",")) {
+			for (String address : addressList) {
 				if (StringUtils.isNotBlank(address)) {
 					HashMap<String, String> params = new HashMap<String, String>();
 					params.put(HandlerParamEnum.TIMESTAMP.name(), String.valueOf(System.currentTimeMillis()));
