@@ -1,8 +1,11 @@
 package com.xxl.job.admin.core.jobbean;
 
 import java.text.MessageFormat;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.quartz.JobExecutionContext;
@@ -88,6 +91,12 @@ public class RemoteHttpJobBean extends QuartzJobBean {
 	 */
 	public RemoteCallBack failoverTrigger(String handler_address, HashMap<String, String> handler_params, XxlJobLog jobLog){
 		if (handler_address.split(",").length > 1) {
+			
+			// for ha
+			List<String> addressList = Arrays.asList(handler_address.split(","));
+			Collections.shuffle(addressList);
+			
+			// for failover
 			String failoverMessage = "";
 			for (String address : handler_address.split(",")) {
 				if (StringUtils.isNotBlank(address)) {
