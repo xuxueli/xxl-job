@@ -36,9 +36,11 @@ $(function() {
 		"ajax": {
 	        url: base_url + "/joblog/pageList" ,
 	        data : function ( d ) {
-                d.jobGroup = $('#jobGroup').val();
-                d.jobName = $('#jobName').val();
-                d.filterTime = $('#filterTime').val();
+	        	var obj = {};
+	        	obj.jobGroup = $('#jobGroup').val();
+                obj.jobName = $('#jobName').val();
+                obj.filterTime = $('#filterTime').val();
+                return obj;
             }
 	    },
 	    "searching": false,

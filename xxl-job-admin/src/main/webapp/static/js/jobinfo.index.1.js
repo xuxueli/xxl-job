@@ -7,8 +7,10 @@ $(function() {
 		"ajax": {
 			url: base_url + "/jobinfo/pageList",
 	        data : function ( d ) {
-	        	d.jobGroup = $('#jobGroup').val();
-                d.jobName = $('#jobName').val();
+	        	var obj = {};
+	        	obj.jobGroup = $('#jobGroup').val();
+	        	obj.jobName = $('#jobName').val();
+                return obj;
             }
 	    },
 	    "searching": false,
