@@ -57,10 +57,12 @@ public class JobInfoController {
     public ReturnT<String> reschedule(String jobGroup, String jobName, String jobCron,
                                       String jobDesc, String executorAddress,
                                       String executorHandler, String executorParam, String author,
-                                      String alarmEmail, int alarmThreshold, int glueSwitch) {
+                                      String alarmEmail, int alarmThreshold, int jobType,
+                                      String jobPath) {
 
         return xxlJobService.reschedule(jobGroup, jobName, jobCron, jobDesc, executorAddress,
-                executorHandler, executorParam, author, alarmEmail, alarmThreshold, glueSwitch);
+                executorHandler, executorParam, author, alarmEmail, alarmThreshold, jobType,
+                jobPath);
     }
 
     @RequestMapping("/remove")

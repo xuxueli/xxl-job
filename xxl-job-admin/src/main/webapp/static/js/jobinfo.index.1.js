@@ -333,18 +333,25 @@ $(function() {
 		}
 		
 	});
-	$("#updateModal .form .ifGLUE").click(function(){
-		var ifGLUE = $(this).is(':checked');
+	
+	$("#job_type_2").change(function(){
+		var typeVal = $(this).val();
 		var $executorHandler = $("#updateModal .form input[name='executorHandler']");
-		var $glueSwitch = $("#updateModal .form input[name='glueSwitch']");
-		if (ifGLUE) {
+		var jobPath = $("#updateModal .form input[name='jobPath']");
+		if (typeVal==1||typeVal==2||typeVal==3||typeVal==4) {
 			$executorHandler.val("");
 			$executorHandler.attr("readonly","readonly");
-			$glueSwitch.val(1);
 		} else {
 			$executorHandler.removeAttr("readonly");
-			$glueSwitch.val(0);
 		}
+		
+		if (typeVal==2||typeVal==3||typeVal==4) {
+			jobPath.removeAttr("readonly");
+		}else{
+			jobPath.val("");
+			jobPath.attr("readonly","readonly");
+		}
+		
 	});
 	
 	// 更新
@@ -359,19 +366,8 @@ $(function() {
 		$("#updateModal .form input[name='author']").val($(this).parent('p').attr("author"));
 		$("#updateModal .form input[name='alarmEmail']").val($(this).parent('p').attr("alarmEmail"));
 		$("#updateModal .form input[name='alarmThreshold']").val($(this).parent('p').attr("alarmThreshold"));
-		$("#updateModal .form input[name='glueSwitch']").val($(this).parent('p').attr("glueSwitch"));
-		
-		// GLUE check
-		var $glueSwitch = $("#updateModal .form input[name='glueSwitch']");
-		var $executorHandler = $("#updateModal .form input[name='executorHandler']");
-		if ($glueSwitch.val() != 0) {
-			$executorHandler.attr("readonly","readonly");
-			$("#updateModal .form .ifGLUE").attr("checked", true);
-		} else {
-			$executorHandler.removeAttr("readonly");
-			$("#updateModal .form .ifGLUE").attr("checked", false);
-		}
-		
+		$("#updateModal .form input[name='jobType']").val($(this).parent('p').attr("jobType"));
+		$("#updateModal .form input[name='jobPath']").val($(this).parent('p').attr("jobPath"));
 		$('#updateModal').modal({backdrop: false, keyboard: false}).modal('show');
 	});
 	var updateModalValidate = $("#updateModal .form").validate({

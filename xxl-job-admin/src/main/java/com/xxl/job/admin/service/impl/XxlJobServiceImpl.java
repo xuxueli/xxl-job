@@ -135,7 +135,8 @@ public class XxlJobServiceImpl implements IXxlJobService {
     public ReturnT<String> reschedule(String jobGroup, String jobName, String jobCron,
                                       String jobDesc, String executorAddress,
                                       String executorHandler, String executorParam, String author,
-                                      String alarmEmail, int alarmThreshold, int jobType) {
+                                      String alarmEmail, int alarmThreshold, int jobType,
+                                      String jobPath) {
 
         // valid
         if (JobGroupEnum.match(jobGroup) == null) {
@@ -173,6 +174,7 @@ public class XxlJobServiceImpl implements IXxlJobService {
         jobInfo.setAlarmEmail(alarmEmail);
         jobInfo.setAlarmThreshold(alarmThreshold);
         jobInfo.setJobType(jobType);
+        jobInfo.setJobPath(jobPath);
         jobInfo.setExecutorAddress(executorAddress);
         jobInfo.setExecutorHandler(executorHandler);
         jobInfo.setExecutorParam(executorParam);

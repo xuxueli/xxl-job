@@ -22,7 +22,7 @@ public interface IXxlJobService {
     public ReturnT<String> reschedule(String jobGroup, String jobName, String jobCron,
                                       String jobDesc, String handler_address, String handler_name,
                                       String handler_params, String author, String alarmEmail,
-                                      int alarmThreshold, int jobType);
+                                      int alarmThreshold, int jobType, String jobPath);
 
     public ReturnT<String> remove(String jobGroup, String jobName);
 

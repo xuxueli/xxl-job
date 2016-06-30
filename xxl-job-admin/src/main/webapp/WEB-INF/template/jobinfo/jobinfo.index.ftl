@@ -234,15 +234,23 @@ public class DemoJobHandler extends IJobHandler {
 						<div class="col-sm-4"><input type="text" class="form-control" name="alarmThreshold" placeholder="请输入“报警阈值”" maxlength="200" ></div>
 					</div>
 					<div class="form-group">
+						<label for="firstname" class="col-sm-2 control-label">任务类型<font color="red">*</font></label>
+						<div class="col-sm-4">
+							<select class="form-control" name="jobType" id="job_type_2" >
+		            			<option value="0" >Java</option>
+		            			<option value="1" >Groovy</option>
+		            			<option value="2" >Http</option>
+		            			<option value="3" >Python</option>
+		            			<option value="4" >Shell</option>
+		                  	</select>
+						</div>
+						<label for="firstname" class="col-sm-2 control-label">任务路径<font color="red">*</font></label>
+						<div class="col-sm-4"><input type="text" class="form-control" name="jobPath" placeholder="请输入“任务路径”" minlength="4" maxlength="100" readonly="readonly"></div>
+					</div>
+					<div class="form-group">
 						<div class="col-sm-offset-3 col-sm-6">
 							<button type="submit" class="btn btn-primary"  >保存</button>
 							<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-						</div>
-						<div class="col-sm-3">
-							<div class="checkbox">
-		                        <label><input type="checkbox" class="ifGLUE" >开启GLUE模式<font color="black">*</font></label>
-		                        <input type="hidden" name="glueSwitch" value="0" >
-	                    	</div>
 						</div>
 					</div>
 				</form>
