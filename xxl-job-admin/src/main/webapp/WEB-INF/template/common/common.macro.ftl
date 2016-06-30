@@ -53,7 +53,7 @@
 <#macro commonHeader>
 	<header class="main-header">
 		<a href="${request.contextPath}/" class="logo">
-			<span class="logo-mini"><b>X</b>XL</span>
+			<span class="logo-mini"><b>T</b>ASK</span>
 			<span class="logo-lg"><b>任务调度</b>中心</span>
 		</a>
 		<nav class="navbar navbar-static-top" role="navigation">

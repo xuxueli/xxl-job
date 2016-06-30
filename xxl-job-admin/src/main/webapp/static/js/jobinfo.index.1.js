@@ -53,7 +53,7 @@ $(function() {
 	                { "data": 'author', "visible" : true},
 	                { "data": 'alarmEmail', "visible" : false},
 	                { "data": 'alarmThreshold', "visible" : false},
-	                { "data": 'glueSwitch', "visible" : false},
+	                { "data": 'jobType', "visible" : false},
 	                { 
 	                	"data": 'jobStatus', 
 	                	"visible" : true,
@@ -101,7 +101,7 @@ $(function() {
 	                							' author="'+ row.author +'" '+
 	                							' alarmEmail="'+ row.alarmEmail +'" '+
 	                							' alarmThreshold="'+ row.alarmThreshold +'" '+
-	                							' glueSwitch="'+ row.glueSwitch +'" '+
+	                							' jobType="'+ row.jobType +'" '+
 	                							'>'+
 										'<button class="btn btn-primary btn-xs job_operate" type="job_trigger" type="button">执行</button>  '+
 										pause_resume +
@@ -314,19 +314,24 @@ $(function() {
 		$(".remote_panel").show();	// remote
 	});
 	
-	// GLUE模式开启
-	$("#addModal .form .ifGLUE").click(function(){
-		var ifGLUE = $(this).is(':checked');
+	$("#job_type").change(function(){
+		var typeVal = $(this).val();
 		var $executorHandler = $("#addModal .form input[name='executorHandler']");
-		var $glueSwitch = $("#addModal .form input[name='glueSwitch']");
-		if (ifGLUE) {
+		var jobPath = $("#addModal .form input[name='jobPath']");
+		if (typeVal==1||typeVal==2||typeVal==3||typeVal==4) {
 			$executorHandler.val("");
 			$executorHandler.attr("readonly","readonly");
-			$glueSwitch.val(1);
 		} else {
 			$executorHandler.removeAttr("readonly");
-			$glueSwitch.val(0);
 		}
+		
+		if (typeVal==2||typeVal==3||typeVal==4) {
+			jobPath.removeAttr("readonly");
+		}else{
+			jobPath.val("");
+			jobPath.attr("readonly","readonly");
+		}
+		
 	});
 	$("#updateModal .form .ifGLUE").click(function(){
 		var ifGLUE = $(this).is(':checked');
