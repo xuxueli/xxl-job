@@ -67,7 +67,6 @@ public class HttpUtil {
 		CloseableHttpClient httpClient = null;
 		try{
 			httpPost = new HttpPost(reqURL);
-			httpClient = HttpClients.createDefault();
 			if (params != null && !params.isEmpty()) {
 				List<NameValuePair> formParams = new ArrayList<NameValuePair>();
 				for(Map.Entry<String,String> entry : params.entrySet()){
@@ -77,6 +76,9 @@ public class HttpUtil {
 			}
 			RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(5000).setConnectTimeout(5000).build();
 			httpPost.setConfig(requestConfig);
+			
+			//httpClient = HttpClients.createDefault();	// default retry 3 times
+			httpClient = HttpClients.custom().disableAutomaticRetries().build();
 			
 			HttpResponse response = httpClient.execute(httpPost);
 			HttpEntity entity = response.getEntity();
