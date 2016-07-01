@@ -368,9 +368,25 @@ $(function() {
 		$("#updateModal .form input[name='author']").val($(this).parent('p').attr("author"));
 		$("#updateModal .form input[name='alarmEmail']").val($(this).parent('p').attr("alarmEmail"));
 		$("#updateModal .form input[name='alarmThreshold']").val($(this).parent('p').attr("alarmThreshold"));
-		alert($(this).parent('p').attr("jobType"));
-		alert($("#updateModal .form input[name='jobType']"));
-		$("#updateModal .form input[name='jobPath']").val($(this).parent('p').attr("jobPath"));
+		$("#job_type_2").get(0).selectedIndex=$(this).parent('p').attr("jobType");
+		$("#job_type_2").attr("disabled","disabled");  
+		$("#updateModal .form input[name='jobPath']").val($(this).parent('p').attr("jobPath"));	
+		var typeVal = $(this).parent('p').attr("jobType");
+		var $executorHandler = $("#updateModal .form input[name='executorHandler']");
+		var jobPath = $("#updateModal .form input[name='jobPath']");
+		if (typeVal==1||typeVal==2||typeVal==3||typeVal==4) {
+			$executorHandler.val("");
+			$executorHandler.attr("readonly","readonly");
+		} else {
+			$executorHandler.removeAttr("readonly");
+		}
+		
+		if (typeVal==2||typeVal==3||typeVal==4) {
+			jobPath.removeAttr("readonly");
+		}else{
+			jobPath.val("");
+			jobPath.attr("readonly","readonly");
+		}
 		$('#updateModal').modal({backdrop: false, keyboard: false}).modal('show');
 	});
 	var updateModalValidate = $("#updateModal .form").validate({
