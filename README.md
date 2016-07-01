@@ -2,7 +2,7 @@
 
 修改by chenke
 
-1、去除了groovy玩具级别的代码，不在classloader下去装载业务代码，跑groovy其实用处并不大。
+1、去除了groovy玩具级别的代码，不在一个classloader下去装载业务代码，跑groovy其实用处并不大。
 
 2、添加了http调用的功能
 
