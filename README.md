@@ -1,7 +1,19 @@
 # 分布式任务调度平台xxl-job
-github地址：https://github.com/xuxueli/xxl-job
 
-git.osc地址：http://git.oschina.net/xuxueli0323/xxl-job
+修改by chenke
+
+1、去除了groovy玩具级别的代码，你不在一个classloader下去装载业务代码，跑groovy有毛用？
+
+2、添加了http调用的功能
+
+3、添加了python执行功能
+
+4、添加了shell执行的功能
+
+
+github地址：https://github.com/lingqi1818/xxl-job
+
+某种角度来讲，要不是比较忙，我是不建议使用这个工程的，作者写的代码从软件工程的角度来讲，比如配置文件的值等都需要直接修改代码，并无统一修改的地方，还是挺麻烦的。
 
 博客地址(内附使用教程)：http://www.cnblogs.com/xuxueli/p/5021979.html
 
