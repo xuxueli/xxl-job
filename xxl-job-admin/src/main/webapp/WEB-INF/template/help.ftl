@@ -41,7 +41,7 @@
 
 					4、添加了shell执行的功能<br>
 					<a target="_blank" href="https://github.com/lingqi1818/xxl-job">github地址</a>&nbsp;&nbsp;&nbsp;&nbsp;
-					<iframe src="https://ghbtns.com/github-btn.html?user=xuxueli&repo=xxl-job&type=star&count=true" frameborder="0" scrolling="0" width="170px" height="20px" style="margin-bottom:-5px;"></iframe> 
+					<iframe src="https://ghbtns.com/github-btn.html?user=lingqi1818&repo=xxl-job&type=star&count=true" frameborder="0" scrolling="0" width="170px" height="20px" style="margin-bottom:-5px;"></iframe> 
 					<br><br>
 					<a target="_blank" href="http://www.cnblogs.com/xuxueli/p/5021979.html">博客地址(内附使用教程)</a>
 					<br><br>
