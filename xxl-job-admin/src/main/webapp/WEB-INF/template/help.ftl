@@ -31,10 +31,18 @@
 				<h4>简介：XXL_JOB</h4>
 				<br>
 				<p>
-					<a target="_blank" href="https://github.com/xuxueli/xxl-job">github地址</a>&nbsp;&nbsp;&nbsp;&nbsp;
+					修改by chenke<br>
+				
+					1、去除了groovy玩具级别的代码，你不在一个classloader下去装载业务代码，跑groovy有毛用？<br>
+
+					2、添加了http调用的功能<br>
+
+					3、添加了python执行功能<br>
+
+					4、添加了shell执行的功能<br>
+					<a target="_blank" href="https://github.com/lingqi1818/xxl-job">github地址</a>&nbsp;&nbsp;&nbsp;&nbsp;
 					<iframe src="https://ghbtns.com/github-btn.html?user=xuxueli&repo=xxl-job&type=star&count=true" frameborder="0" scrolling="0" width="170px" height="20px" style="margin-bottom:-5px;"></iframe> 
 					<br><br>
-					<a target="_blank" href="http://git.oschina.net/xuxueli0323/xxl-job">git.osc地址</a><br><br>
 					<a target="_blank" href="http://www.cnblogs.com/xuxueli/p/5021979.html">博客地址(内附使用教程)</a>
 					<br><br>
 					<a >技术交流群(仅作技术交流)：367260654</a>&nbsp;&nbsp;&nbsp;&nbsp;
