@@ -147,19 +147,14 @@ public class HandlerRepository {
             callback.setMsg(logConteng);
         } else if (namespace.equals(ActionEnum.KILL.name())) {
             // kill handlerThread, and create new one
-            String jobType = _param.get(HandlerParamEnum.JOB_TYPE.name());
             String handlerName = null;
-            if ("0".equals(jobType)) {
-                String executor_handler = _param.get(HandlerParamEnum.EXECUTOR_HANDLER.name());
-                if (executor_handler == null) {
-                    callback.setMsg("bean job , param[EXECUTOR_HANDLER] is null");
-                    return JacksonUtil.writeValueAsString(callback);
-                }
-                handlerName = executor_handler;
-            } else {
-                handlerName = _param.get(HandlerParamEnum.JOB_PATH.name());
+            String executor_handler = _param.get(HandlerParamEnum.EXECUTOR_HANDLER.name());
+            String[] handerStrs = executor_handler.replace("，", ",").split(",");
+            if (handerStrs == null || handerStrs.length != 2) {
+                callback.setMsg("bean job , param[EXECUTOR_HANDLER] is null");
+                return JacksonUtil.writeValueAsString(callback);
             }
-
+            handlerName = handerStrs[1];
             HandlerThread handlerThread = handlerTreadMap.get(handlerName);
             if (handlerThread != null) {
                 IJobHandler handler = handlerThread.getHandler();

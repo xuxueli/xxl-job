@@ -70,19 +70,19 @@ public class RemoteHttpJobBean extends QuartzJobBean {
         String handler = "未知任务";
         switch (jobInfo.getJobType()) {
             case 0:
-                handler = "JAVA任务，" + jobInfo.getExecutorHandler();
+                handler = "JAVA任务," + jobInfo.getExecutorHandler();
                 break;
             case 1:
-                handler = "Groovy任务，" + jobInfo.getJobPath();
+                handler = "Groovy任务," + jobInfo.getJobPath();
                 break;
             case 2:
-                handler = "Http任务，" + jobInfo.getJobPath();
+                handler = "Http任务," + jobInfo.getJobPath();
                 break;
             case 3:
-                handler = "Python任务，" + jobInfo.getJobPath();
+                handler = "Python任务," + jobInfo.getJobPath();
                 break;
             case 4:
-                handler = "Shell任务，" + jobInfo.getJobPath();
+                handler = "Shell任务," + jobInfo.getJobPath();
                 break;
 
             default:
