@@ -16,7 +16,9 @@ import com.xxl.job.core.util.HttpUtil.RemoteCallBack;
 public class HttpJobHandler extends IJobHandler {
     private static Logger logger = LoggerFactory.getLogger(HttpJobHandler.class);
 
+    @SuppressWarnings("unused")
     private String        job_group;
+    @SuppressWarnings("unused")
     private String        job_name;
     private String        job_path;
 
@@ -29,10 +31,29 @@ public class HttpJobHandler extends IJobHandler {
     @Override
     public JobHandleStatus execute(String... params) throws Exception {
         RemoteCallBack callback = null;
+        int timeout = 5000;
         if (params != null && params.length >= 1) {
-            callback = HttpUtil.get(job_path + "?" + params[0]);
+            StringBuilder sb = new StringBuilder();
+            int i = 0;
+            for (String param : params) {
+                i++;
+                String[] kvs = param.split("=");
+                if (kvs.length != 2) {
+                    continue;
+                }
+                if ("timeout".equalsIgnoreCase(kvs[0])) {
+                    timeout = Integer.valueOf(kvs[1]);
+                    continue;
+                }
+                if (i == params.length) {
+                    sb.append(param);
+                } else {
+                    sb.append(param).append("&");
+                }
+            }
+            callback = HttpUtil.get(job_path + "?" + sb.toString(), timeout);
         } else {
-            callback = HttpUtil.get(job_path);
+            callback = HttpUtil.get(job_path, timeout);
         }
         logger.info(job_path + ",status:" + callback.getStatus() + ",msg:" + callback.getMsg());
         if (RemoteCallBack.SUCCESS.equalsIgnoreCase(callback.getStatus())) {

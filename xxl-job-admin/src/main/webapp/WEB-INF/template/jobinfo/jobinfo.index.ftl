@@ -134,8 +134,8 @@
 						<div class="col-sm-4"><input type="text" class="form-control" name="executorHandler" placeholder="请输入“jobHandler”" maxlength="200" ></div>
 					</div>
 					<div class="form-group">
-						<label for="firstname" class="col-sm-2 control-label">执行参数<font color="black">*</font></label>
-						<div class="col-sm-4"><input type="text" class="form-control" name="executorParam" placeholder="请输入“执行参数”" maxlength="100" ></div>
+						<label for="firstname" class="col-sm-2 control-label">执行参数，超时时间用timeout表示<font color="black">*</font></label>
+						<div class="col-sm-4"><input type="text" class="form-control" name="executorParam" placeholder="请输入“执行参数”,多个参数用“,”号分隔" maxlength="100" ></div>
 						<label for="lastname" class="col-sm-2 control-label">负责人<font color="red">*</font></label>
 						<div class="col-sm-4"><input type="text" class="form-control" name="author" placeholder="请输入“负责人”" maxlength="200" ></div>
 					</div>

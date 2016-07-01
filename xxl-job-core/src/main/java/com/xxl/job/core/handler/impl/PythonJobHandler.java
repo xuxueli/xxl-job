@@ -31,7 +31,11 @@ public class PythonJobHandler extends IJobHandler {
     public JobHandleStatus execute(String... params) throws Exception {
         Process p = null;
         if (params != null && params.length >= 1) {
-            p = Runtime.getRuntime().exec("python " + job_path + " " + params[0]);
+            StringBuilder sb = new StringBuilder();
+            for (String param : params) {
+                sb.append(" ").append(param);
+            }
+            p = Runtime.getRuntime().exec("python " + job_path + " " + sb.toString());
         } else {
             p = Runtime.getRuntime().exec("python " + job_path);
         }

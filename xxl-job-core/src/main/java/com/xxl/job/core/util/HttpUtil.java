@@ -132,7 +132,7 @@ public class HttpUtil {
      * @param reqURL
      * @return [0]=responseMsg, [1]=exceptionMsg
      */
-    public static RemoteCallBack get(String reqURL) {
+    public static RemoteCallBack get(String reqURL, int timeout) {
         RemoteCallBack callback = new RemoteCallBack();
         callback.setStatus(RemoteCallBack.FAIL);
 
@@ -142,8 +142,8 @@ public class HttpUtil {
         try {
             httpGet = new HttpGet(reqURL);
             httpClient = HttpClients.createDefault();
-            RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(5000)
-                    .setConnectTimeout(5000).build();
+            RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(timeout)
+                    .setConnectTimeout(timeout).build();
             httpGet.setConfig(requestConfig);
 
             HttpResponse response = httpClient.execute(httpGet);
