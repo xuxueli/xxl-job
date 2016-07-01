@@ -117,34 +117,11 @@ public class HandlerRepository {
             // push data to queue
             String jobType = _param.get(HandlerParamEnum.JOB_TYPE.name());
             HandlerThread handlerThread = getHandlerThread(jobType, _param);
-            //			if ("0".equals(handler_glue_switch)) {
-            //				// bean model
-            //				String handler_name = _param.get(HandlerParamEnum.EXECUTOR_HANDLER.name());
-            //				if (handler_name == null || handler_name.trim().length()==0) {
-            //					callback.setMsg("bean model handler[HANDLER_NAME] not found.");
-            //					return JacksonUtil.writeValueAsString(callback);
-            //				}
-            //				handlerThread = handlerTreadMap.get(handler_name);
-            //				if (handlerThread == null) {
-            //					callback.setMsg("handler[" + handler_name + "] not found.");
-            //					return JacksonUtil.writeValueAsString(callback);
-            //				}
-            //			} else {
-            //				// glue
-            //				String job_group = _param.get(HandlerParamEnum.JOB_GROUP.name());
-            //				String job_name = _param.get(HandlerParamEnum.JOB_NAME.name());
-            //				if (job_group == null || job_group.trim().length()==0 || job_name == null || job_name.trim().length()==0) {
-            //					callback.setMsg("glue model handler[job group or name] is null.");
-            //					return JacksonUtil.writeValueAsString(callback);
-            //				}
-            //				String glueHandleName = "glue_".concat(job_group).concat("_").concat(job_name);
-            //				handlerThread = handlerTreadMap.get(glueHandleName);
-            //				if (handlerThread==null) {
-            //					HandlerRepository.regist(glueHandleName, new GlueJobHandler(job_group, job_name));
-            //				}
-            //				handlerThread = handlerTreadMap.get(glueHandleName);
-            //			}
+            if (handlerThread == null) {
+                callback.setMsg("bean model handler[HANDLER_NAME] not found.");
+                return JacksonUtil.writeValueAsString(callback);
 
+            }
             handlerThread.pushData(_param);
             callback.setStatus(RemoteCallBack.SUCCESS);
         } else if (namespace.equals(ActionEnum.LOG.name())) {

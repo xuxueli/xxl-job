@@ -81,6 +81,7 @@
 					                  	<th name="alarmEmail" >报警邮件</th>
 					                  	<th name="alarmThreshold" >报警阀值</th>
 					                  	<th name="jobType" >任务类型</th>
+					                  	<th name="jobPath" >任务路径</th>
 					                  	<th name="jobStatus" >状态</th>
 					                  	<th>操作</th>
 					                </tr>
@@ -149,7 +150,7 @@
 						<div class="col-sm-4">
 							<select class="form-control" name="jobType" id="job_type" >
 		            			<option value="0" >Java</option>
-		            			<option value="1" >Groovy</option>
+		            		<!--	<option value="1" >Groovy</option> -->
 		            			<option value="2" >Http</option>
 		            			<option value="3" >Python</option>
 		            			<option value="4" >Shell</option>
@@ -238,7 +239,7 @@ public class DemoJobHandler extends IJobHandler {
 						<div class="col-sm-4">
 							<select class="form-control" name="jobType" id="job_type_2" >
 		            			<option value="0" >Java</option>
-		            			<option value="1" >Groovy</option>
+		            		<!--	<option value="1" >Groovy</option> -->
 		            			<option value="2" >Http</option>
 		            			<option value="3" >Python</option>
 		            			<option value="4" >Shell</option>

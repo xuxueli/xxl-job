@@ -15,7 +15,7 @@ $(function() {
 	    "ordering": false,
 	    //"scrollX": true,	// X轴滚动条，取消自适应
 	    "columns": [
-	                { "data": 'id', "bSortable": false, "visible" : false},
+	                { "data": 'id', "bSortable": false, "visible" : true},
 	                { 
 	                	"data": 'jobGroup', 
 	                	"visible" : false,
@@ -54,6 +54,7 @@ $(function() {
 	                { "data": 'alarmEmail', "visible" : false},
 	                { "data": 'alarmThreshold', "visible" : false},
 	                { "data": 'jobType', "visible" : false},
+	                { "data": 'jobPath', "visible" : true},
 	                { 
 	                	"data": 'jobStatus', 
 	                	"visible" : true,
@@ -102,6 +103,7 @@ $(function() {
 	                							' alarmEmail="'+ row.alarmEmail +'" '+
 	                							' alarmThreshold="'+ row.alarmThreshold +'" '+
 	                							' jobType="'+ row.jobType +'" '+
+	                							' jobPath="'+ row.jobPath +'" '+
 	                							'>'+
 										'<button class="btn btn-primary btn-xs job_operate" type="job_trigger" type="button">执行</button>  '+
 										pause_resume +
@@ -366,7 +368,8 @@ $(function() {
 		$("#updateModal .form input[name='author']").val($(this).parent('p').attr("author"));
 		$("#updateModal .form input[name='alarmEmail']").val($(this).parent('p').attr("alarmEmail"));
 		$("#updateModal .form input[name='alarmThreshold']").val($(this).parent('p').attr("alarmThreshold"));
-		$("#updateModal .form input[name='jobType']").val($(this).parent('p').attr("jobType"));
+		alert($(this).parent('p').attr("jobType"));
+		alert($("#updateModal .form input[name='jobType']"));
 		$("#updateModal .form input[name='jobPath']").val($(this).parent('p').attr("jobPath"));
 		$('#updateModal').modal({backdrop: false, keyboard: false}).modal('show');
 	});
