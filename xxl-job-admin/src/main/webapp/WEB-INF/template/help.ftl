@@ -33,7 +33,7 @@
 				<p>
 					修改by chenke<br>
 				
-					1、去除了groovy玩具级别的代码，你不在一个classloader下去装载业务代码，跑groovy有毛用？<br>
+					1、去除了groovy玩具级别的代码，不在一个classloader下去装载业务代码，跑groovy用处并不大。<br>
 
 					2、添加了http调用的功能<br>
 
