@@ -157,15 +157,7 @@ public class HandlerRepository {
                 }
                 handlerName = executor_handler;
             } else {
-                // glue
-                String job_group = _param.get(HandlerParamEnum.JOB_GROUP.name());
-                String job_name = _param.get(HandlerParamEnum.JOB_NAME.name());
-                if (job_group == null || job_group.trim().length() == 0 || job_name == null
-                        || job_name.trim().length() == 0) {
-                    callback.setMsg("glue job , param[JOB_GROUP or JOB_NAME] is null");
-                    return JacksonUtil.writeValueAsString(callback);
-                }
-                handlerName = "glue_".concat(job_group).concat("_").concat(job_name);
+                handlerName = _param.get(HandlerParamEnum.JOB_PATH.name());
             }
 
             HandlerThread handlerThread = handlerTreadMap.get(handlerName);
