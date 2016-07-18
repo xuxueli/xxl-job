@@ -3,6 +3,7 @@ package com.xxl.job.admin.service.impl;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.annotation.Resource;
 
@@ -36,11 +37,11 @@ public class XxlJobServiceImpl implements IXxlJobService {
 	private IXxlJobLogGlueDao xxlJobLogGlueDao;
 	
 	@Override
-	public Map<String, Object> pageList(int start, int length, String jobGroup, String jobName, String filterTime) {
+	public Map<String, Object> pageList(int start, int length, String jobGroup, String jobDesc, String filterTime) {
 		
 		// page list
-		List<XxlJobInfo> list = xxlJobInfoDao.pageList(start, length, jobGroup, jobName);
-		int list_count = xxlJobInfoDao.pageListCount(start, length, jobGroup, jobName);
+		List<XxlJobInfo> list = xxlJobInfoDao.pageList(start, length, jobGroup, jobDesc);
+		int list_count = xxlJobInfoDao.pageListCount(start, length, jobGroup, jobDesc);
 		
 		// fill job info
 		if (list!=null && list.size()>0) {
@@ -58,16 +59,13 @@ public class XxlJobServiceImpl implements IXxlJobService {
 	}
 
 	@Override
-	public ReturnT<String> add(String jobGroup, String jobName, String jobCron, String jobDesc, 
+	public ReturnT<String> add(String jobGroup, String jobCron, String jobDesc,
 			String executorAddress,	String executorHandler, String executorParam, 
 			String author, String alarmEmail, int alarmThreshold,
 			int glueSwitch, String glueSource, String glueRemark) {
 		// valid
 		if (JobGroupEnum.match(jobGroup) == null) {
 			return new ReturnT<String>(500, "请选择“任务组”");
-		}
-		if (StringUtils.isBlank(jobName)) {
-			return new ReturnT<String>(500, "请输入“任务名”");
 		}
 		if (!CronExpression.isValidExpression(jobCron)) {
 			return new ReturnT<String>(500, "请输入格式正确的“Cron”");
@@ -90,7 +88,9 @@ public class XxlJobServiceImpl implements IXxlJobService {
 		if (alarmThreshold < 0) {
 			alarmThreshold = 0;
 		}
-		
+
+		// generate jobName
+		String jobName = UUID.randomUUID().toString();
 		try {
 			if (DynamicSchedulerUtil.checkExists(jobName, jobGroup)) {
 				return new ReturnT<String>(500, "此任务已存在，请更换任务组或任务名");
@@ -99,7 +99,7 @@ public class XxlJobServiceImpl implements IXxlJobService {
 			e1.printStackTrace();
 			return new ReturnT<String>(500, "此任务已存在，请更换任务组或任务名");
 		}
-		
+
 		// Backup to the database
 		XxlJobInfo jobInfo = new XxlJobInfo();
 		jobInfo.setJobGroup(jobGroup);
@@ -117,7 +117,7 @@ public class XxlJobServiceImpl implements IXxlJobService {
 		jobInfo.setExecutorHandler(executorHandler);
 		jobInfo.setExecutorParam(executorParam);
 		xxlJobInfoDao.save(jobInfo);
-		
+
 		try {
 			// add job 2 quartz
 			boolean result = DynamicSchedulerUtil.addJob(jobInfo);
@@ -168,8 +168,8 @@ public class XxlJobServiceImpl implements IXxlJobService {
 		}
 		
 		XxlJobInfo jobInfo = xxlJobInfoDao.load(jobGroup, jobName);
-		jobInfo.setJobCron(jobCron);
 		jobInfo.setJobDesc(jobDesc);
+		jobInfo.setJobCron(jobCron);
 		jobInfo.setAuthor(author);
 		jobInfo.setAlarmEmail(alarmEmail);
 		jobInfo.setAlarmThreshold(alarmThreshold);

@@ -143,7 +143,9 @@ CREATE TABLE XXL_JOB_QRTZ_LOCKS
     PRIMARY KEY (SCHED_NAME,LOCK_NAME)
 );
 
-CREATE TABLE `xxl_job_qrtz_trigger_info` (
+
+
+CREATE TABLE XXL_JOB_QRTZ_TRIGGER_INFO (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `job_group` varchar(255) NOT NULL COMMENT '任务组',
   `job_name` varchar(255) NOT NULL COMMENT '任务名',
@@ -162,9 +164,9 @@ CREATE TABLE `xxl_job_qrtz_trigger_info` (
   `glue_source` text COMMENT 'GLUE源代码',
   `glue_remark` varchar(128) DEFAULT NULL COMMENT 'GLUE备注',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `xxl_job_qrtz_trigger_log` (
+CREATE TABLE XXL_JOB_QRTZ_TRIGGER_LOG (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `job_group` varchar(255) NOT NULL COMMENT '任务组',
   `job_name` varchar(255) NOT NULL COMMENT '任务名',
@@ -181,9 +183,9 @@ CREATE TABLE `xxl_job_qrtz_trigger_log` (
   `handle_status` varchar(255) DEFAULT NULL COMMENT '执行-状态',
   `handle_msg` varchar(2048) DEFAULT NULL COMMENT '执行-日志',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `xxl_job_qrtz_trigger_logglue` (
+CREATE TABLE XXL_JOB_QRTZ_TRIGGER_LOGGLUE (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `job_group` varchar(255) NOT NULL,
   `job_name` varchar(255) NOT NULL,
@@ -192,7 +194,7 @@ CREATE TABLE `xxl_job_qrtz_trigger_logglue` (
   `add_time` timestamp NULL DEFAULT NULL,
   `update_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 

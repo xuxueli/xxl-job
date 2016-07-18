@@ -11,9 +11,9 @@ import com.xxl.job.admin.core.model.ReturnT;
  */
 public interface IXxlJobService {
 	
-	public Map<String, Object> pageList(int start, int length, String jobGroup, String jobName, String filterTime);
+	public Map<String, Object> pageList(int start, int length, String jobGroup, String jobDesc, String filterTime);
 	
-	public ReturnT<String> add(String jobGroup, String jobName, String jobCron, String jobDesc, 
+	public ReturnT<String> add(String jobGroup, String jobCron, String jobDesc,
 			String executorAddress,	String executorHandler, String executorParam, 
 			String author, String alarmEmail, int alarmThreshold,
 			int glueSwitch, String glueSource, String glueRemark);

@@ -7,9 +7,9 @@ package com.xxl.job.admin.core.constant;
 public class Constants {
 	
 	public enum JobGroupEnum{
-		DEFAULT("默认"),
-		WAIMAI("外卖"),
-		MOVIE("电影");
+		defaults("默认"),
+		waimai("外卖"),
+		movie("电影");
 		private String desc;
 		private JobGroupEnum(String desc){
 			this.desc = desc;

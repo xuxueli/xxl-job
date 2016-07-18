@@ -50,13 +50,13 @@
 	
 	<select id="pageList" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
 		SELECT <include refid="Base_Column_List" />
-		FROM xxl_job_qrtz_trigger_info AS t
+		FROM XXL_JOB_QRTZ_TRIGGER_INFO AS t
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
 			<if test="jobGroup != null and jobGroup != ''">
 				AND t.job_group = #{jobGroup}
 			</if>
-			<if test="jobName != null and jobName != ''">
-				AND t.job_name like CONCAT(CONCAT('%', #{jobName}), '%')
+			<if test="jobDesc != null and jobDesc != ''">
+				AND t.job_desc like CONCAT(CONCAT('%', #{jobDesc}), '%')
 			</if>
 		</trim>
 		ORDER BY id DESC
@@ -65,19 +65,19 @@
 	
 	<select id="pageListCount" parameterType="java.util.HashMap" resultType="int">
 		SELECT count(1)
-		FROM xxl_job_qrtz_trigger_info AS t
+		FROM XXL_JOB_QRTZ_TRIGGER_INFO AS t
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
 			<if test="jobGroup != null and jobGroup != ''">
 				AND t.job_group = #{jobGroup}
 			</if>
-			<if test="jobName != null and jobName != ''">
-				AND t.job_name like CONCAT(CONCAT('%', #{jobName}), '%')
+			<if test="jobDesc != null and jobDesc != ''">
+				AND t.job_desc like CONCAT(CONCAT('%', #{jobDesc}), '%')
 			</if>
 		</trim>
 	</select>
 	
 	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobInfo" useGeneratedKeys="true" keyProperty="id" >
-		INSERT INTO `xxl_job_qrtz_trigger_info` (
+		INSERT INTO XXL_JOB_QRTZ_TRIGGER_INFO (
 			job_group,
 			job_name,
 			job_cron,
@@ -119,13 +119,13 @@
 	
 	<select id="load" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
 		SELECT <include refid="Base_Column_List" />
-		FROM xxl_job_qrtz_trigger_info AS t
+		FROM XXL_JOB_QRTZ_TRIGGER_INFO AS t
 		WHERE t.job_group = #{jobGroup}
 			AND t.job_name = #{jobName}
 	</select>
 	
 	<update id="update" parameterType="com.xxl.job.admin.core.model.XxlJobInfo" >
-		UPDATE `xxl_job_qrtz_trigger_info` 
+		UPDATE XXL_JOB_QRTZ_TRIGGER_INFO
 		SET 
 			job_cron = #{jobCron},
 			job_desc = #{jobDesc},
@@ -146,10 +146,16 @@
 	<delete id="delete" parameterType="java.lang.String">
 		DELETE
 		FROM
-			xxl_job_qrtz_trigger_info
+			XXL_JOB_QRTZ_TRIGGER_INFO
 		WHERE
 			job_group = #{jobGroup}
 		AND job_name = #{jobName}
 	</delete>
+
+	<select id="getJobsByGroup" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
+		SELECT <include refid="Base_Column_List" />
+		FROM XXL_JOB_QRTZ_TRIGGER_INFO AS t
+		WHERE t.job_group = #{jobGroup}
+	</select>
 	
 </mapper>

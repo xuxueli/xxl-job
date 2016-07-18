@@ -34,18 +34,21 @@
 	    	<div class="row">
 	    		<div class="col-xs-3">
  					<div class="input-group">
-	                	<span class="input-group-addon">任务组</span>
-                		<select class="form-control" id="jobGroup" >
+	                	<span class="input-group-addon">分组</span>
+                		<select class="form-control" id="jobGroup"  paramVal="${jobGroup}" >
+                            <option value="" selected>请选择</option>
                 			<#list JobGroupList as group>
-                				<option value="${group}" <#if jobGroup == group>selected</#if> >${group.desc}</option>
+                				<option value="${group}" <#if jobGroup == group && false>selected</#if> >${group.desc}</option>
                 			</#list>
 	                  	</select>
 	              	</div>
 	            </div>
 	            <div class="col-xs-3">
 	              	<div class="input-group">
-	                	<span class="input-group-addon">任务名</span>
-	                	<input type="text" class="form-control" id="jobName" value="${jobName}" autocomplete="on" >
+	                	<span class="input-group-addon">名称</span>
+                        <select class="form-control" id="jobName" paramVal="${jobName}" >
+                            <option value="" >请选择</option>
+						</select>
 	              	</div>
 	            </div>
 	            <div class="col-xs-4">

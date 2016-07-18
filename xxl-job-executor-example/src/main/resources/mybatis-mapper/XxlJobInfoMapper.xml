@@ -17,7 +17,7 @@
 	
 	<select id="load" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
 		SELECT <include refid="Base_Column_List" />
-		FROM xxl_job_qrtz_trigger_info AS t
+		FROM XXL_JOB_QRTZ_TRIGGER_INFO AS t
 		WHERE t.job_group = #{jobGroup}
 			AND t.job_name = #{jobName}
 	</select>

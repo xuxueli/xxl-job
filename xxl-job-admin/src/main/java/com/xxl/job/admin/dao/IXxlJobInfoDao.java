@@ -3,6 +3,7 @@ package com.xxl.job.admin.dao;
 import java.util.List;
 
 import com.xxl.job.admin.core.model.XxlJobInfo;
+import com.xxl.job.admin.core.model.XxlJobLog;
 
 
 /**
@@ -11,8 +12,8 @@ import com.xxl.job.admin.core.model.XxlJobInfo;
  */
 public interface IXxlJobInfoDao {
 
-	public List<XxlJobInfo> pageList(int offset, int pagesize, String jobGroup, String jobName);
-	public int pageListCount(int offset, int pagesize, String jobGroup, String jobName);
+	public List<XxlJobInfo> pageList(int offset, int pagesize, String jobGroup, String jobDesc);
+	public int pageListCount(int offset, int pagesize, String jobGroup, String jobDesc);
 	
 	public int save(XxlJobInfo info);
 	
@@ -21,5 +22,6 @@ public interface IXxlJobInfoDao {
 	public int update(XxlJobInfo item);
 	
 	public int delete(String jobGroup, String jobName);
-	
+
+	public List<XxlJobLog> getJobsByGroup(String jobGroup);
 }

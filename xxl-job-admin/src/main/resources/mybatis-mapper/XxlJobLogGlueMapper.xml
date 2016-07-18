@@ -46,7 +46,7 @@
 	
 	<select id="selectList" parameterType="java.util.HashMap" resultMap="XxlJobLogGlue">
 		SELECT <include refid="Base_Column_List" />
-		FROM xxl_job_qrtz_trigger_logglue AS t
+		FROM XXL_JOB_QRTZ_TRIGGER_LOGGLUE AS t
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
 			<if test="jobGroup != null and jobGroup != ''">
 				AND t.job_group = #{jobGroup}
@@ -59,10 +59,10 @@
 	</select>
 	
 	<delete id="removeOld" parameterType="java.util.HashMap" >
-		DELETE FROM xxl_job_qrtz_trigger_logglue
+		DELETE FROM XXL_JOB_QRTZ_TRIGGER_LOGGLUE
 		WHERE id NOT in(
 			SELECT id FROM(
-				SELECT id FROM xxl_job_qrtz_trigger_logglue
+				SELECT id FROM XXL_JOB_QRTZ_TRIGGER_LOGGLUE
 				WHERE `job_group` = #{jobGroup} and `job_name` = #{jobName}
 				ORDER BY update_time desc
 				LIMIT 0, #{limit}
@@ -71,7 +71,7 @@
 	</delete>
 	
 	<delete id="delete" parameterType="java.util.HashMap" >
-		DELETE FROM xxl_job_qrtz_trigger_logglue
+		DELETE FROM XXL_JOB_QRTZ_TRIGGER_LOGGLUE
 		WHERE job_group = #{jobGroup} and job_name = #{jobName}
 	</delete>
 	

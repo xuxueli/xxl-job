@@ -47,6 +47,13 @@ public class JobLogController {
 		model.addAttribute("JobGroupList", JobGroupEnum.values());
 		return "joblog/joblog.index";
 	}
+
+	@RequestMapping("/getJobsByGroup")
+	@ResponseBody
+	public ReturnT<List<XxlJobLog>> listJobByGroup(String jobGroup){
+		List<XxlJobLog> list = xxlJobInfoDao.getJobsByGroup(jobGroup);
+		return new ReturnT<List<XxlJobLog>>(list);
+	}
 	
 	@RequestMapping("/pageList")
 	@ResponseBody

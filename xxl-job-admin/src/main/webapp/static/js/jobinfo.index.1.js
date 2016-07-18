@@ -6,10 +6,11 @@ $(function() {
 	    "serverSide": true,
 		"ajax": {
 			url: base_url + "/jobinfo/pageList",
+			type:"post",
 	        data : function ( d ) {
 	        	var obj = {};
 	        	obj.jobGroup = $('#jobGroup').val();
-	        	obj.jobName = $('#jobName').val();
+	        	obj.jobDesc = $('#jobDesc').val();
 	        	obj.start = d.start;
 	        	obj.length = d.length;
                 return obj;
@@ -33,7 +34,7 @@ $(function() {
 	            			return data;
 	            		}
             		},
-	                { "data": 'jobName'},
+	                { "data": 'jobName', "visible" : false},
 	                { "data": 'jobDesc', "visible" : true},
 	                { "data": 'jobCron', "visible" : true},
 	                { "data": 'jobClass', "visible" : false},
@@ -98,7 +99,6 @@ $(function() {
 	                							' jobCron="'+ row.jobCron +'" '+
 	                							' jobDesc="'+ row.jobDesc +'" '+
 	                							' jobClass="'+ row.jobClass +'" '+
-	                							' jobData="'+ row.jobData +'" '+
 	                							' executorAddress="'+row.executorAddress +'" '+
 	                							' executorHandler="'+ row.executorHandler +'" '+
 	                							' executorParam="'+ row.executorParam +'" '+
@@ -214,77 +214,55 @@ $(function() {
 		errorElement : 'span',  
         errorClass : 'help-block',
         focusInvalid : true,  
-        rules : {  
-        	jobName : {  
-        		required : true ,
-                minlength: 4,
-                maxlength: 100,
-                myValid01:true
-            },  
-            jobCron : {  
-            	required : true ,
-                maxlength: 100
-            },  
-            jobDesc : {  
-            	required : true ,
-                maxlength: 200
+        rules : {
+			jobDesc : {
+				required : true,
+				maxlength: 50
+			},
+            jobCron : {
+            	required : true
             },
             executorAddress : {
-            	required : true ,
-                maxlength: 200
+            	required : true
             },
             executorHandler : {
-            	required : true ,
-                maxlength: 200
-            },
-            author : {
-            	required : true ,
-                maxlength: 200
+            	required : true
             },
             alarmEmail : {
-            	required : true ,
-                maxlength: 200
+            	required : true
             },
             alarmThreshold : {
             	required : true ,
             	digits:true
-            }
+            },
+			author : {
+				required : true
+			}
         }, 
         messages : {  
-        	jobName : {  
-        		required :"请输入“任务名”"  ,
-                minlength:"“任务名”长度不应低于4位",
-                maxlength:"“任务名”长度不应超过100位"
-            },  
-            jobCron : {
-            	required :"请输入“Cron”."  ,
-                maxlength:"“Cron”长度不应超过100位"
-            },  
             jobDesc : {
-            	required :"请输入“任务描述”."  ,
-                maxlength:"“任务描述”长度不应超过200位"
-            },  
+            	required :"请输入“名称”."
+            },
+            jobCron : {
+            	required :"请输入“Cron”."
+            },
             executorAddress : {
-            	required :"请输入“执行器地址”."  ,
-                maxlength:"“执行器地址”长度不应超过200位"
+            	required :"请输入“执行器地址”."
             },
             executorHandler : {
-            	required : "请输入“jobHandler”."  ,
-                maxlength: "“jobHandler”长度不应超过200位"
-            },
-            author : {
-            	required : "请输入“负责人”."  ,
-                maxlength: "“负责人”长度不应超过50位"
+            	required : "请输入“JobHandler”."
             },
             alarmEmail : {
-            	required : "请输入“报警邮件”."  ,
-                maxlength: "“报警邮件”长度不应超过200位"
+            	required : "请输入“报警邮件”."
             },
             alarmThreshold : {
             	required : "请输入“报警阈值”."  ,
             	digits:"阀值应该为整数."
+            },
+            author : {
+            	required : "请输入“负责人”."
             }
-        }, 
+        },
 		highlight : function(element) {  
             $(element).closest('.form-group').addClass('has-error');  
         },
@@ -348,10 +326,13 @@ $(function() {
 	
 	// 更新
 	$("#job_list").on('click', '.update',function() {
+
+		// base data
+		$("#updateModal .form input[name='jobGroupTitle']").find("option[value='" + $(this).parent('p').attr("jobGroup") + "']").attr("selected",true);
 		$("#updateModal .form input[name='jobGroup']").val($(this).parent('p').attr("jobGroup"));
 		$("#updateModal .form input[name='jobName']").val($(this).parent('p').attr("jobName"));
-		$("#updateModal .form input[name='jobCron']").val($(this).parent('p').attr("jobCron"));
 		$("#updateModal .form input[name='jobDesc']").val($(this).parent('p').attr("jobDesc"));
+		$("#updateModal .form input[name='jobCron']").val($(this).parent('p').attr("jobCron"));
 		$("#updateModal .form input[name='executorAddress']").val($(this).parent('p').attr("executorAddress"));
 		$("#updateModal .form input[name='executorHandler']").val($(this).parent('p').attr("executorHandler"));
 		$("#updateModal .form input[name='executorParam']").val($(this).parent('p').attr("executorParam"));
@@ -359,7 +340,7 @@ $(function() {
 		$("#updateModal .form input[name='alarmEmail']").val($(this).parent('p').attr("alarmEmail"));
 		$("#updateModal .form input[name='alarmThreshold']").val($(this).parent('p').attr("alarmThreshold"));
 		$("#updateModal .form input[name='glueSwitch']").val($(this).parent('p').attr("glueSwitch"));
-		
+
 		// GLUE check
 		var $glueSwitch = $("#updateModal .form input[name='glueSwitch']");
 		var $executorHandler = $("#updateModal .form input[name='executorHandler']");
@@ -376,68 +357,58 @@ $(function() {
 	var updateModalValidate = $("#updateModal .form").validate({
 		errorElement : 'span',  
         errorClass : 'help-block',
-        focusInvalid : true,  
-        rules : {  
-            jobCron : {  
-            	required : true ,
-                maxlength: 100
-            },  
-            jobDesc : {  
-            	required : true ,
-                maxlength: 200
-            },
-            executorAddress : {
-            	required : true ,
-                maxlength: 200
-            },
-            executorHandler : {
-            	required : true ,
-                maxlength: 200
-            },
-            author : {
-            	required : true ,
-                maxlength: 200
-            },
-            alarmEmail : {
-            	required : true ,
-                maxlength: 200
-            },
-            alarmThreshold : {
-            	required : true ,
-            	digits:true
-            }
-        }, 
-        messages : {  
-            jobCron : {
-            	required :"请输入“Cron”."  ,
-                maxlength:"“Cron”长度不应超过100位"
-            },  
-            jobDesc : {
-            	required :"请输入“任务描述”."  ,
-                maxlength:"“任务描述”长度不应超过200位"
-            },  
-            executorAddress : {
-            	required :"请输入“执行器地址”."  ,
-                maxlength:"“执行器地址”长度不应超过200位"
-            },
-            executorHandler : {
-            	required : "请输入“jobHandler”."  ,
-                maxlength: "“jobHandler”长度不应超过200位"
-            },
-            author : {
-            	required : "请输入“负责人”."  ,
-                maxlength: "“负责人”长度不应超过50位"
-            },
-            alarmEmail : {
-            	required : "请输入“报警邮件”."  ,
-                maxlength: "“报警邮件”长度不应超过200位"
-            },
-            alarmThreshold : {
-            	required : "请输入“报警阈值”."  ,
-            	digits:"阀值应该为整数."
-            }
-        }, 
-		highlight : function(element) {  
+        focusInvalid : true,
+
+		rules : {
+			jobDesc : {
+				required : true,
+				maxlength: 50
+			},
+			jobCron : {
+				required : true
+			},
+			executorAddress : {
+				required : true
+			},
+			executorHandler : {
+				required : true
+			},
+			alarmEmail : {
+				required : true
+			},
+			alarmThreshold : {
+				required : true ,
+				digits:true
+			},
+			author : {
+				required : true
+			}
+		},
+		messages : {
+			jobDesc : {
+				required :"请输入“名称”."
+			},
+			jobCron : {
+				required :"请输入“Cron”."
+			},
+			executorAddress : {
+				required :"请输入“执行器地址”."
+			},
+			executorHandler : {
+				required : "请输入“JobHandler”."
+			},
+			alarmEmail : {
+				required : "请输入“报警邮件”."
+			},
+			alarmThreshold : {
+				required : "请输入“报警阈值”."  ,
+				digits:"阀值应该为整数."
+			},
+			author : {
+				required : "请输入“负责人”."
+			}
+		},
+		highlight : function(element) {
             $(element).closest('.form-group').addClass('has-error');  
         },
         success : function(label) {  

@@ -35,9 +35,9 @@ public class JobInfoController {
 	@ResponseBody
 	public Map<String, Object> pageList(@RequestParam(required = false, defaultValue = "0") int start,  
 			@RequestParam(required = false, defaultValue = "10") int length,
-			String jobGroup, String jobName, String filterTime) {
+			String jobGroup, String jobDesc, String filterTime) {
 		
-		return xxlJobService.pageList(start, length, jobGroup, jobName, filterTime);
+		return xxlJobService.pageList(start, length, jobGroup, jobDesc, filterTime);
 	}
 	
 	@RequestMapping("/add")
@@ -47,7 +47,7 @@ public class JobInfoController {
 			String author, String alarmEmail, int alarmThreshold, 
 			int glueSwitch, String glueSource, String glueRemark) {
 		
-		return xxlJobService.add(jobGroup, jobName, jobCron, jobDesc, executorAddress, executorHandler, executorParam,
+		return xxlJobService.add(jobGroup, jobCron, jobDesc, executorAddress, executorHandler, executorParam,
 				author, alarmEmail, alarmThreshold, glueSwitch, glueSource, glueRemark);
 	}
 	
