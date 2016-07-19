@@ -40,7 +40,7 @@ public class HandlerRepository {
 		 */
 		EXECUTOR_PARAMS,
 		/**
-		 * switch of job, if open glue model
+		 * switch of glue job: 0-no，1-yes
 		 */
 		GLUE_SWITCH,
 		/**
