@@ -9,7 +9,7 @@ public abstract class IJobHandler extends HandlerRepository{
 	/**
 	 * job handler <br><br>
 	 * the return Object will be and stored
-	 * @param param
+	 * @param params
 	 * @return 
 	 * @throws Exception
 	 */
