@@ -1,18 +1,16 @@
 package com.xxl.job.admin.controller;
 
-import java.util.Map;
-
-import javax.annotation.Resource;
-
+import com.xxl.job.admin.core.constant.Constants.JobGroupEnum;
+import com.xxl.job.admin.core.model.ReturnT;
+import com.xxl.job.admin.service.IXxlJobService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.xxl.job.admin.core.constant.Constants.JobGroupEnum;
-import com.xxl.job.admin.core.model.ReturnT;
-import com.xxl.job.admin.service.IXxlJobService;
+import javax.annotation.Resource;
+import java.util.Map;
 
 /**
  * index controller
@@ -43,22 +41,22 @@ public class JobInfoController {
 	@RequestMapping("/add")
 	@ResponseBody
 	public ReturnT<String> add(String jobGroup, String jobName, String jobCron, String jobDesc,
-			String executorAddress, String executorHandler, String executorParam, 
+			String executorAddress, String executorParam,
 			String author, String alarmEmail, int alarmThreshold, 
 			int glueSwitch, String glueSource, String glueRemark) {
 		
-		return xxlJobService.add(jobGroup, jobCron, jobDesc, executorAddress, executorHandler, executorParam,
+		return xxlJobService.add(jobGroup, jobCron, jobDesc, executorAddress, executorParam,
 				author, alarmEmail, alarmThreshold, glueSwitch, glueSource, glueRemark);
 	}
 	
 	@RequestMapping("/reschedule")
 	@ResponseBody
 	public ReturnT<String> reschedule(String jobGroup, String jobName, String jobCron, String jobDesc,
-			String executorAddress, String executorHandler, String executorParam, 
-			String author, String alarmEmail, int alarmThreshold, int glueSwitch) {
-		
-		return xxlJobService.reschedule(jobGroup, jobName, jobCron, jobDesc, executorAddress, executorHandler, executorParam, author,
-				alarmEmail, alarmThreshold, glueSwitch);
+			String executorAddress, String executorParam,
+			String author, String alarmEmail, int alarmThreshold) {
+
+		return xxlJobService.reschedule(jobGroup, jobName, jobCron, jobDesc, executorAddress, executorParam, author,
+				alarmEmail, alarmThreshold);
 	}
 	
 	@RequestMapping("/remove")

@@ -73,7 +73,6 @@
 					                  	<th name="jobCron" >Cron</th>
 					                  	<th name="jobClass" >JobBean</th>
 					                  	<th name="executorAddress" >执行器地址</th>
-					                  	<th name="executorHandler" >JobHandler</th>
 					                  	<th name="executorParam" >任务参数</th>
 					                  	<th name="addTime" >新增时间</th>
 					                  	<th name="updateTime" >更新时间</th>
@@ -121,16 +120,16 @@
                         <div class="col-sm-4"><input type="text" class="form-control" name="jobDesc" placeholder="请输入“描述”" maxlength="50" ></div>
 					</div>
 					<div class="form-group">
-                        <label for="lastname" class="col-sm-2 control-label">Cron<font color="red">*</font></label>
-                        <div class="col-sm-4"><input type="text" class="form-control" name="jobCron" placeholder="请输入“Cron”" maxlength="20" ></div>
                         <label for="lastname" class="col-sm-2 control-label">执行器地址<font color="red">*</font></label>
                         <div class="col-sm-4"><input type="text" class="form-control" name="executorAddress" placeholder="请输入“执行器地址”，多个地址逗号分隔" maxlength="50" ></div>
+                        <label for="lastname" class="col-sm-2 control-label">Cron<font color="red">*</font></label>
+                        <div class="col-sm-4"><input type="text" class="form-control" name="jobCron" placeholder="请输入“Cron”" maxlength="20" ></div>
 					</div>
 					<div class="form-group">
-						<label for="lastname" class="col-sm-2 control-label">JobHandler<font color="red">*</font></label>
-						<div class="col-sm-4"><input type="text" class="form-control" name="executorHandler" placeholder="请输入“jobHandler”" maxlength="50" ></div>
                         <label for="firstname" class="col-sm-2 control-label">执行参数<font color="black">*</font></label>
                         <div class="col-sm-4"><input type="text" class="form-control" name="executorParam" placeholder="请输入“执行参数”" maxlength="100" ></div>
+                        <label for="lastname" class="col-sm-2 control-label">负责人<font color="red">*</font></label>
+                        <div class="col-sm-4"><input type="text" class="form-control" name="author" placeholder="请输入“负责人”" maxlength="50" ></div>
 					</div>
 					<div class="form-group">
 						<label for="lastname" class="col-sm-2 control-label">报警邮件<font color="red">*</font></label>
@@ -139,19 +138,18 @@
 						<div class="col-sm-4"><input type="text" class="form-control" name="alarmThreshold" placeholder="请输入“报警阈值”" maxlength="5" ></div>
 					</div>
                     <div class="form-group">
-                        <label for="lastname" class="col-sm-2 control-label">负责人<font color="red">*</font></label>
-                        <div class="col-sm-4"><input type="text" class="form-control" name="author" placeholder="请输入“负责人”" maxlength="50" ></div>
+                        <label for="firstname" class="col-sm-2 control-label">任务模式<font color="red">*</font></label>
+                        <div class="col-sm-4">
+                            <select class="form-control" name="glueSwitch" >
+                                <option value="0" >BEAN模式</option>
+                                <option value="1" >GLUE模式</option>
+                            </select>
+                        </div>
                     </div>
 					<div class="form-group">
 						<div class="col-sm-offset-3 col-sm-6">
 							<button type="submit" class="btn btn-primary"  >保存</button>
 							<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-						</div>
-						<div class="col-sm-3">
-							<div class="checkbox">
-		                        <label><input type="checkbox" class="ifGLUE" >开启GLUE模式<font color="black">*</font></label>
-		                        <input type="hidden" name="glueSwitch" value="0" >
-	                    	</div>
 						</div>
 					</div>
 
@@ -207,17 +205,17 @@ public class DemoJobHandler extends IJobHandler {
                         <div class="col-sm-4"><input type="text" class="form-control" name="jobDesc" placeholder="请输入“描述”" maxlength="50" ></div>
 					</div>
 					<div class="form-group">
-						<label for="lastname" class="col-sm-2 control-label">Cron<font color="red">*</font></label>
-						<div class="col-sm-4"><input type="text" class="form-control" name="jobCron" placeholder="请输入“Cron”" maxlength="20" ></div>
                         <label for="lastname" class="col-sm-2 control-label">执行器地址<font color="red">*</font></label>
                         <div class="col-sm-4"><input type="text" class="form-control" name="executorAddress" placeholder="请输入“执行器地址”，多个地址逗号分隔" maxlength="50" ></div>
+                        <label for="lastname" class="col-sm-2 control-label">Cron<font color="red">*</font></label>
+                        <div class="col-sm-4"><input type="text" class="form-control" name="jobCron" placeholder="请输入“Cron”" maxlength="20" ></div>
 					</div>
 					
 					<div class="form-group">
-						<label for="lastname" class="col-sm-2 control-label">JobHandler<font color="red">*</font></label>
-						<div class="col-sm-4"><input type="text" class="form-control" name="executorHandler" placeholder="请输入“jobHandler”" maxlength="50" ></div>
                         <label for="firstname" class="col-sm-2 control-label">执行参数<font color="black">*</font></label>
                         <div class="col-sm-4"><input type="text" class="form-control" name="executorParam" placeholder="请输入“执行参数”" maxlength="100" ></div>
+                        <label for="lastname" class="col-sm-2 control-label">负责人<font color="red">*</font></label>
+                        <div class="col-sm-4"><input type="text" class="form-control" name="author" placeholder="请输入“负责人”" maxlength="50" ></div>
 					</div>
 					<div class="form-group">
 						<label for="lastname" class="col-sm-2 control-label">报警邮件<font color="red">*</font></label>
@@ -226,19 +224,20 @@ public class DemoJobHandler extends IJobHandler {
 						<div class="col-sm-4"><input type="text" class="form-control" name="alarmThreshold" placeholder="请输入“报警阈值”" maxlength="5" ></div>
 					</div>
                     <div class="form-group">
-                        <label for="lastname" class="col-sm-2 control-label">负责人<font color="red">*</font></label>
-                        <div class="col-sm-4"><input type="text" class="form-control" name="author" placeholder="请输入“负责人”" maxlength="50" ></div>
+                        <label for="firstname" class="col-sm-2 control-label">任务模式<font color="red">*</font></label>
+                        <div class="col-sm-4">
+                            <select class="form-control" name="glueSwitch" disabled >
+                                <option value="0" >BEAN模式</option>
+                                <option value="1" >GLUE模式</option>
+                            </select>
+                        </div>
+                        <label for="lastname" class="col-sm-2 control-label">JobKey</label>
+                        <div class="col-sm-4"><input type="text" class="form-control" name="jobKey" placeholder="请输入“jobHandler”" readonly ></div>
                     </div>
 					<div class="form-group">
 						<div class="col-sm-offset-3 col-sm-6">
 							<button type="submit" class="btn btn-primary"  >保存</button>
 							<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-						</div>
-						<div class="col-sm-3">
-							<div class="checkbox">
-		                        <label><input type="checkbox" class="ifGLUE" >开启GLUE模式<font color="black">*</font></label>
-		                        <input type="hidden" name="glueSwitch" value="0" >
-	                    	</div>
 						</div>
 					</div>
 				</form>

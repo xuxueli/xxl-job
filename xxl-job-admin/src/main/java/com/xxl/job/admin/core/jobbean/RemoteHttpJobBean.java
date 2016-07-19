@@ -58,12 +58,11 @@ public class RemoteHttpJobBean extends QuartzJobBean {
 		params.put(HandlerParamEnum.LOG_ADDRESS.name(), XxlJobLogCallbackServer.getTrigger_log_address());
 		params.put(HandlerParamEnum.LOG_ID.name(), String.valueOf(jobLog.getId()));
 
-		params.put(HandlerParamEnum.EXECUTOR_HANDLER.name(), jobInfo.getExecutorHandler());
+		params.put(HandlerParamEnum.JOB_GROUP.name(), jobInfo.getJobGroup());
+		params.put(HandlerParamEnum.JOB_NAME.name(), jobInfo.getJobName());
 		params.put(HandlerParamEnum.EXECUTOR_PARAMS.name(), jobInfo.getExecutorParam());
 
 		params.put(HandlerParamEnum.GLUE_SWITCH.name(), String.valueOf(jobInfo.getGlueSwitch()));
-		params.put(HandlerParamEnum.JOB_GROUP.name(), jobInfo.getJobGroup());
-		params.put(HandlerParamEnum.JOB_NAME.name(), jobInfo.getJobName());
 
 		// failover trigger
 		RemoteCallBack callback = failoverTrigger(jobInfo.getExecutorAddress(), params, jobLog);
@@ -86,7 +85,7 @@ public class RemoteHttpJobBean extends QuartzJobBean {
 	
 	/**
 	 * failover for trigger remote address
-	 * @param addressArr
+	 * @param handler_address
 	 * @return
 	 */
 	public RemoteCallBack failoverTrigger(String handler_address, HashMap<String, String> handler_params, XxlJobLog jobLog){

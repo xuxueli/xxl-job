@@ -39,7 +39,6 @@ $(function() {
 	                { "data": 'jobCron', "visible" : true},
 	                { "data": 'jobClass', "visible" : false},
 	                { "data": 'executorAddress', "visible" : false},
-	                { "data": 'executorHandler', "visible" : false},
 	                { "data": 'executorParam', "visible" : false},
 	                { 
 	                	"data": 'addTime', 
@@ -100,7 +99,6 @@ $(function() {
 	                							' jobDesc="'+ row.jobDesc +'" '+
 	                							' jobClass="'+ row.jobClass +'" '+
 	                							' executorAddress="'+row.executorAddress +'" '+
-	                							' executorHandler="'+ row.executorHandler +'" '+
 	                							' executorParam="'+ row.executorParam +'" '+
 	                							' author="'+ row.author +'" '+
 	                							' alarmEmail="'+ row.alarmEmail +'" '+
@@ -225,9 +223,6 @@ $(function() {
             executorAddress : {
             	required : true
             },
-            executorHandler : {
-            	required : true
-            },
             alarmEmail : {
             	required : true
             },
@@ -248,9 +243,6 @@ $(function() {
             },
             executorAddress : {
             	required :"请输入“执行器地址”."
-            },
-            executorHandler : {
-            	required : "请输入“JobHandler”."
             },
             alarmEmail : {
             	required : "请输入“报警邮件”."
@@ -296,50 +288,28 @@ $(function() {
 		$(".remote_panel").show();	// remote
 	});
 	
-	// GLUE模式开启
-	$("#addModal .form .ifGLUE").click(function(){
-		var ifGLUE = $(this).is(':checked');
-		var $executorHandler = $("#addModal .form input[name='executorHandler']");
-		var $glueSwitch = $("#addModal .form input[name='glueSwitch']");
-		if (ifGLUE) {
-			$executorHandler.val("");
-			$executorHandler.attr("readonly","readonly");
-			$glueSwitch.val(1);
-		} else {
-			$executorHandler.removeAttr("readonly");
-			$glueSwitch.val(0);
-		}
-	});
-	$("#updateModal .form .ifGLUE").click(function(){
-		var ifGLUE = $(this).is(':checked');
-		var $executorHandler = $("#updateModal .form input[name='executorHandler']");
-		var $glueSwitch = $("#updateModal .form input[name='glueSwitch']");
-		if (ifGLUE) {
-			$executorHandler.val("");
-			$executorHandler.attr("readonly","readonly");
-			$glueSwitch.val(1);
-		} else {
-			$executorHandler.removeAttr("readonly");
-			$glueSwitch.val(0);
-		}
-	});
-	
 	// 更新
 	$("#job_list").on('click', '.update',function() {
 
 		// base data
-		$("#updateModal .form input[name='jobGroupTitle']").find("option[value='" + $(this).parent('p').attr("jobGroup") + "']").attr("selected",true);
 		$("#updateModal .form input[name='jobGroup']").val($(this).parent('p').attr("jobGroup"));
 		$("#updateModal .form input[name='jobName']").val($(this).parent('p').attr("jobName"));
 		$("#updateModal .form input[name='jobDesc']").val($(this).parent('p').attr("jobDesc"));
 		$("#updateModal .form input[name='jobCron']").val($(this).parent('p').attr("jobCron"));
 		$("#updateModal .form input[name='executorAddress']").val($(this).parent('p').attr("executorAddress"));
-		$("#updateModal .form input[name='executorHandler']").val($(this).parent('p').attr("executorHandler"));
 		$("#updateModal .form input[name='executorParam']").val($(this).parent('p').attr("executorParam"));
 		$("#updateModal .form input[name='author']").val($(this).parent('p').attr("author"));
 		$("#updateModal .form input[name='alarmEmail']").val($(this).parent('p').attr("alarmEmail"));
 		$("#updateModal .form input[name='alarmThreshold']").val($(this).parent('p').attr("alarmThreshold"));
-		$("#updateModal .form input[name='glueSwitch']").val($(this).parent('p').attr("glueSwitch"));
+
+		// job group selected
+		$("#updateModal .form select[name='jobGroupTitle']").find("option[value='" + $(this).parent('p').attr("jobGroup") + "']").attr("selected",true);
+
+		// job group selected
+		$("#updateModal .form select[name='glueSwitch']").find("option[value='" + $(this).parent('p').attr("glueSwitch") + "']").attr("selected",true);
+
+		// generate job key
+		$("#updateModal .form input[name='jobKey']").val( $(this).parent('p').attr("jobGroup") + "_" + $(this).parent('p').attr("jobName") );
 
 		// GLUE check
 		var $glueSwitch = $("#updateModal .form input[name='glueSwitch']");
@@ -370,9 +340,6 @@ $(function() {
 			executorAddress : {
 				required : true
 			},
-			executorHandler : {
-				required : true
-			},
 			alarmEmail : {
 				required : true
 			},
@@ -393,9 +360,6 @@ $(function() {
 			},
 			executorAddress : {
 				required :"请输入“执行器地址”."
-			},
-			executorHandler : {
-				required : "请输入“JobHandler”."
 			},
 			alarmEmail : {
 				required : "请输入“报警邮件”."
@@ -419,6 +383,8 @@ $(function() {
             element.parent('div').append(error);  
         },
         submitHandler : function(form) {
+
+			// post
     		$.post(base_url + "/jobinfo/reschedule", $("#updateModal .form").serialize(), function(data, status) {
     			if (data.code == "200") {
     				ComAlert.show(1, "更新成功", function(){
@@ -437,8 +403,24 @@ $(function() {
 	$("#updateModal").on('hide.bs.modal', function () {
 		$("#updateModal .form")[0].reset()
 	});
-	
-	
+
+	// GLUE模式开启
+	/*
+	 $("#addModal .form .ifGLUE").click(function(){
+         var ifGLUE = $(this).is(':checked');
+         var $executorHandler = $("#addModal .form input[name='executorHandler']");
+         var $glueSwitch = $("#addModal .form input[name='glueSwitch']");
+         if (ifGLUE) {
+         $executorHandler.val("");
+         $executorHandler.attr("readonly","readonly");
+         $glueSwitch.val(1);
+         } else {
+         $executorHandler.removeAttr("readonly");
+         $glueSwitch.val(0);
+         }
+	 });
+	 */
+
 	/*
 	// 新增-添加参数
 	$("#addModal .addParam").on('click', function () {
@@ -454,4 +436,5 @@ $(function() {
 		});
 	});
 	*/
+
 });

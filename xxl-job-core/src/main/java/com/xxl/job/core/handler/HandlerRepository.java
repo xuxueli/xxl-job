@@ -1,19 +1,18 @@
 package com.xxl.job.core.handler;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.LinkedBlockingQueue;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.xxl.job.core.handler.impl.GlueJobHandler;
 import com.xxl.job.core.log.XxlJobFileAppender;
 import com.xxl.job.core.util.HttpUtil;
 import com.xxl.job.core.util.HttpUtil.RemoteCallBack;
 import com.xxl.job.core.util.JacksonUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * handler repository
@@ -32,9 +31,13 @@ public class HandlerRepository {
 		 */
 		ACTION,
 		/**
-		 * remote executor jobhandler
+		 * job group
 		 */
-		EXECUTOR_HANDLER,
+		JOB_GROUP,
+		/**
+		 * job name
+		 */
+		JOB_NAME,
 		/**
 		 * params of jobhandler
 		 */
@@ -43,14 +46,6 @@ public class HandlerRepository {
 		 * switch of glue job: 0-no，1-yes
 		 */
 		GLUE_SWITCH,
-		/**
-		 * job group
-		 */
-		JOB_GROUP,
-		/**
-		 * job name
-		 */
-		JOB_NAME,
 		/**
 		 * address for callback log
 		 */
@@ -99,37 +94,39 @@ public class HandlerRepository {
 					
 		// parse namespace
 		if (namespace.equals(ActionEnum.RUN.name())) {
-			// push data to queue
+
+			// generate jobKey
+			String job_group = _param.get(HandlerParamEnum.JOB_GROUP.name());
+			String job_name = _param.get(HandlerParamEnum.JOB_NAME.name());
+			if (job_group == null || job_group.trim().length()==0 || job_name == null || job_name.trim().length()==0) {
+				callback.setMsg("JOB_GROUP or JOB_NAME is null.");
+				return JacksonUtil.writeValueAsString(callback);
+			}
+			String jobKey = job_group.concat("_").concat(job_name);
+
+			// glue switch
 			String handler_glue_switch = _param.get(HandlerParamEnum.GLUE_SWITCH.name());
-			HandlerThread handlerThread = null;
+			if (handler_glue_switch==null || handler_glue_switch.trim().length()==0){
+				callback.setMsg("GLUE_SWITCH is null.");
+				return JacksonUtil.writeValueAsString(callback);
+			}
+
+			HandlerThread handlerThread = handlerTreadMap.get(jobKey);;
 			if ("0".equals(handler_glue_switch)) {
 				// bean model
-				String handler_name = _param.get(HandlerParamEnum.EXECUTOR_HANDLER.name());
-				if (handler_name == null || handler_name.trim().length()==0) {
-					callback.setMsg("bean model handler[HANDLER_NAME] not found.");
-					return JacksonUtil.writeValueAsString(callback);
-				}
-				handlerThread = handlerTreadMap.get(handler_name);
 				if (handlerThread == null) {
-					callback.setMsg("handler[" + handler_name + "] not found.");
+					callback.setMsg("handler for jobKey=[" + jobKey + "] not found.");
 					return JacksonUtil.writeValueAsString(callback);
 				}
 			} else {
 				// glue
-				String job_group = _param.get(HandlerParamEnum.JOB_GROUP.name());
-				String job_name = _param.get(HandlerParamEnum.JOB_NAME.name());
-				if (job_group == null || job_group.trim().length()==0 || job_name == null || job_name.trim().length()==0) {
-					callback.setMsg("glue model handler[job group or name] is null.");
-					return JacksonUtil.writeValueAsString(callback);
-				}
-				String glueHandleName = "glue_".concat(job_group).concat("_").concat(job_name);
-				handlerThread = handlerTreadMap.get(glueHandleName);
 				if (handlerThread==null) {
-					HandlerRepository.regist(glueHandleName, new GlueJobHandler(job_group, job_name));
+					HandlerRepository.regist(jobKey, new GlueJobHandler(job_group, job_name));
 				}
-				handlerThread = handlerTreadMap.get(glueHandleName);
+				handlerThread = handlerTreadMap.get(jobKey);
 			}
-			
+
+			// push data to queue
 			handlerThread.pushData(_param);
 			callback.setStatus(RemoteCallBack.SUCCESS);
 		} else if (namespace.equals(ActionEnum.LOG.name())) {
@@ -154,36 +151,25 @@ public class HandlerRepository {
 			callback.setStatus(RemoteCallBack.SUCCESS);
 			callback.setMsg(logConteng);
 		} else if (namespace.equals(ActionEnum.KILL.name())) {
-			// kill handlerThread, and create new one
-			String handler_glue_switch = _param.get(HandlerParamEnum.GLUE_SWITCH.name());
-			String handlerName = null;
-			if ("0".equals(handler_glue_switch)) {
-				String executor_handler = _param.get(HandlerParamEnum.EXECUTOR_HANDLER.name());
-				if (executor_handler==null) {
-					callback.setMsg("bean job , param[EXECUTOR_HANDLER] is null");
-					return JacksonUtil.writeValueAsString(callback);
-				}
-				handlerName = executor_handler;
-			} else {
-				// glue
-				String job_group = _param.get(HandlerParamEnum.JOB_GROUP.name());
-				String job_name = _param.get(HandlerParamEnum.JOB_NAME.name());
-				if (job_group==null || job_group.trim().length()==0 || job_name==null || job_name.trim().length()==0) {
-					callback.setMsg("glue job , param[JOB_GROUP or JOB_NAME] is null");
-					return JacksonUtil.writeValueAsString(callback);
-				}
-				handlerName = "glue_".concat(job_group).concat("_").concat(job_name);
+			// generate jobKey
+			String job_group = _param.get(HandlerParamEnum.JOB_GROUP.name());
+			String job_name = _param.get(HandlerParamEnum.JOB_NAME.name());
+			if (job_group == null || job_group.trim().length()==0 || job_name == null || job_name.trim().length()==0) {
+				callback.setMsg("JOB_GROUP or JOB_NAME is null.");
+				return JacksonUtil.writeValueAsString(callback);
 			}
-			
-			HandlerThread handlerThread = handlerTreadMap.get(handlerName);
+			String jobKey = job_group.concat("_").concat(job_name);
+
+			// kill handlerThread, and create new one
+			HandlerThread handlerThread = handlerTreadMap.get(jobKey);
 			if (handlerThread != null) {
 				IJobHandler handler = handlerThread.getHandler();
 				handlerThread.toStop();
 				handlerThread.interrupt();
-				regist(handlerName, handler);
+				regist(jobKey, handler);
 				callback.setStatus(RemoteCallBack.SUCCESS);
 			} else {
-				callback.setMsg("job handler[" + handlerName + "] not found.");
+				callback.setMsg("handler for jobKey=[" + jobKey + "] not found.");
 			}
 				
 		} else if (namespace.equals(ActionEnum.BEAT.name())) {

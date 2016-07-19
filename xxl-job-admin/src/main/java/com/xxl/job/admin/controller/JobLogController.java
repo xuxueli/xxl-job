@@ -1,21 +1,5 @@
 package com.xxl.job.admin.controller;
 
-import java.text.ParseException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.time.DateUtils;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.xxl.job.admin.core.constant.Constants.JobGroupEnum;
 import com.xxl.job.admin.core.model.ReturnT;
 import com.xxl.job.admin.core.model.XxlJobInfo;
@@ -26,6 +10,20 @@ import com.xxl.job.core.handler.HandlerRepository.ActionEnum;
 import com.xxl.job.core.handler.HandlerRepository.HandlerParamEnum;
 import com.xxl.job.core.util.HttpUtil;
 import com.xxl.job.core.util.HttpUtil.RemoteCallBack;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.time.DateUtils;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.annotation.Resource;
+import java.text.ParseException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * index controller
@@ -155,11 +153,10 @@ public class JobLogController {
 		Map<String, String> reqMap = new HashMap<String, String>();
 		reqMap.put(HandlerParamEnum.TIMESTAMP.name(), String.valueOf(System.currentTimeMillis()));
 		reqMap.put(HandlerParamEnum.ACTION.name(), ActionEnum.KILL.name());
-		reqMap.put(HandlerParamEnum.GLUE_SWITCH.name(), String.valueOf(jobInfo.getGlueSwitch()));
-		reqMap.put(HandlerParamEnum.EXECUTOR_HANDLER.name(), log.getExecutorHandler());
 		reqMap.put(HandlerParamEnum.JOB_GROUP.name(), log.getJobGroup());
 		reqMap.put(HandlerParamEnum.JOB_NAME.name(), log.getJobName());
-		
+		reqMap.put(HandlerParamEnum.GLUE_SWITCH.name(), String.valueOf(jobInfo.getGlueSwitch()));
+
 		RemoteCallBack callBack = HttpUtil.post(HttpUtil.addressToUrl(log.getExecutorAddress()), reqMap);
 		if (HttpUtil.RemoteCallBack.SUCCESS.equals(callBack.getStatus())) {
 			log.setHandleStatus(HttpUtil.RemoteCallBack.FAIL);

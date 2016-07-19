@@ -1,13 +1,12 @@
 package com.xxl.job.admin.service.impl;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.time.DateFormatUtils;
+import org.apache.commons.lang.time.FastDateFormat;
 import org.quartz.CronExpression;
 import org.quartz.SchedulerException;
 import org.springframework.stereotype.Service;
@@ -60,7 +59,7 @@ public class XxlJobServiceImpl implements IXxlJobService {
 
 	@Override
 	public ReturnT<String> add(String jobGroup, String jobCron, String jobDesc,
-			String executorAddress,	String executorHandler, String executorParam, 
+			String executorAddress,	String executorParam,
 			String author, String alarmEmail, int alarmThreshold,
 			int glueSwitch, String glueSource, String glueRemark) {
 		// valid
@@ -76,9 +75,6 @@ public class XxlJobServiceImpl implements IXxlJobService {
 		if (StringUtils.isBlank(executorAddress)) {
 			return new ReturnT<String>(500, "请输入“执行器地址”");
 		}
-		if (glueSwitch==0 && StringUtils.isBlank(executorHandler)) {
-			return new ReturnT<String>(500, "请输入“jobHandler”");
-		}
 		if (StringUtils.isBlank(author)) {
 			return new ReturnT<String>(500, "请输入“负责人”");
 		}
@@ -90,14 +86,14 @@ public class XxlJobServiceImpl implements IXxlJobService {
 		}
 
 		// generate jobName
-		String jobName = UUID.randomUUID().toString();
+		String jobName = FastDateFormat.getInstance("yyyyMMddHHmmssSSSS").format(new Date());
 		try {
 			if (DynamicSchedulerUtil.checkExists(jobName, jobGroup)) {
-				return new ReturnT<String>(500, "此任务已存在，请更换任务组或任务名");
+				return new ReturnT<String>(500, "系统繁忙，请稍后重试");
 			}
 		} catch (SchedulerException e1) {
 			e1.printStackTrace();
-			return new ReturnT<String>(500, "此任务已存在，请更换任务组或任务名");
+			return new ReturnT<String>(500, "系统繁忙，请稍后重试");
 		}
 
 		// Backup to the database
@@ -114,7 +110,6 @@ public class XxlJobServiceImpl implements IXxlJobService {
 		jobInfo.setGlueSource(glueSource);
 		jobInfo.setGlueRemark(glueRemark);
 		jobInfo.setExecutorAddress(executorAddress);
-		jobInfo.setExecutorHandler(executorHandler);
 		jobInfo.setExecutorParam(executorParam);
 		xxlJobInfoDao.save(jobInfo);
 
@@ -135,8 +130,8 @@ public class XxlJobServiceImpl implements IXxlJobService {
 
 	@Override
 	public ReturnT<String> reschedule(String jobGroup, String jobName, String jobCron, String jobDesc,
-			String executorAddress,	String executorHandler, String executorParam, 
-			String author, String alarmEmail, int alarmThreshold, int glueSwitch) {
+			String executorAddress, String executorParam,
+			String author, String alarmEmail, int alarmThreshold) {
 		
 		// valid
 		if (JobGroupEnum.match(jobGroup) == null) {
@@ -154,17 +149,11 @@ public class XxlJobServiceImpl implements IXxlJobService {
 		if (StringUtils.isBlank(executorAddress)) {
 			return new ReturnT<String>(500, "请输入“执行器地址”");
 		}
-		if (glueSwitch==0 && StringUtils.isBlank(executorHandler)) {
-			return new ReturnT<String>(500, "请输入“jobHandler”");
-		}
 		if (StringUtils.isBlank(author)) {
 			return new ReturnT<String>(500, "请输入“负责人”");
 		}
 		if (StringUtils.isBlank(alarmEmail)) {
 			return new ReturnT<String>(500, "请输入“报警邮件”");
-		}
-		if (alarmThreshold < 0) {
-			alarmThreshold = 0;
 		}
 		
 		XxlJobInfo jobInfo = xxlJobInfoDao.load(jobGroup, jobName);
@@ -173,9 +162,7 @@ public class XxlJobServiceImpl implements IXxlJobService {
 		jobInfo.setAuthor(author);
 		jobInfo.setAlarmEmail(alarmEmail);
 		jobInfo.setAlarmThreshold(alarmThreshold);
-		jobInfo.setGlueSwitch(glueSwitch);
 		jobInfo.setExecutorAddress(executorAddress);
-		jobInfo.setExecutorHandler(executorHandler);
 		jobInfo.setExecutorParam(executorParam);
 		
 		try {

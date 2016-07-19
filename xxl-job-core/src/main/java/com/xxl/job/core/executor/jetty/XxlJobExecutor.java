@@ -88,7 +88,7 @@ public class XxlJobExecutor implements ApplicationContextAware {
 		Map<String, Object> serviceBeanMap = XxlJobExecutor.applicationContext.getBeansWithAnnotation(JobHander.class);
         if (serviceBeanMap!=null && serviceBeanMap.size()>0) {
             for (Object serviceBean : serviceBeanMap.values()) {
-                String jobName = serviceBean.getClass().getAnnotation(JobHander.class).name();
+                String jobName = serviceBean.getClass().getAnnotation(JobHander.class).value();
                 if (jobName!=null && jobName.trim().length()>0 && serviceBean instanceof IJobHandler) {
                 	IJobHandler handler = (IJobHandler) serviceBean;
                 	HandlerRepository.regist(jobName, handler);
