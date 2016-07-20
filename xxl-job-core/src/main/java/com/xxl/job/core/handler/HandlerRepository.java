@@ -206,7 +206,7 @@ public class HandlerRepository {
 			public void run() {
 				while(true){
 					try {
-						HashMap<String, String> item = callBackQueue.poll();
+						HashMap<String, String> item = callBackQueue.take();
 						if (item != null) {
 							RemoteCallBack callback = null;
 							try {
