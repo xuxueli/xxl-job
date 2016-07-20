@@ -145,20 +145,17 @@ CREATE TABLE XXL_JOB_QRTZ_LOCKS
 
 
 
-CREATE TABLE XXL_JOB_QRTZ_TRIGGER_INFO (
+CREATE TABLE `XXL_JOB_QRTZ_TRIGGER_INFO` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `job_group` varchar(255) NOT NULL COMMENT '任务组',
   `job_name` varchar(255) NOT NULL COMMENT '任务名',
   `job_cron` varchar(128) NOT NULL COMMENT '任务执行CRON',
   `job_desc` varchar(255) NOT NULL,
-  `job_class` varchar(255) NOT NULL COMMENT '任务执行JobBean',
   `add_time` datetime DEFAULT NULL,
   `update_time` datetime DEFAULT NULL,
   `author` varchar(64) DEFAULT NULL COMMENT '作者',
   `alarm_email` varchar(255) DEFAULT NULL COMMENT '报警邮件',
-  `alarm_threshold` int(11) DEFAULT NULL COMMENT '报警阀值(连续失败次数)',
   `executor_address` varchar(255) DEFAULT NULL COMMENT '执行器地址，有多个则逗号分隔',
-  `executor_handler` varchar(255) DEFAULT NULL COMMENT '执行器任务handler',
   `executor_param` varchar(255) DEFAULT NULL COMMENT '执行器任务参数',
   `glue_switch` int(11) DEFAULT '0' COMMENT 'GLUE模式开关：0-否，1-是',
   `glue_source` text COMMENT 'GLUE源代码',
@@ -166,15 +163,12 @@ CREATE TABLE XXL_JOB_QRTZ_TRIGGER_INFO (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE XXL_JOB_QRTZ_TRIGGER_LOG (
+
+CREATE TABLE `XXL_JOB_QRTZ_TRIGGER_LOG` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `job_group` varchar(255) NOT NULL COMMENT '任务组',
   `job_name` varchar(255) NOT NULL COMMENT '任务名',
-  `job_cron` varchar(128) NOT NULL COMMENT '任务执行CRON表达式',
-  `job_desc` varchar(255) NOT NULL,
-  `job_class` varchar(255) NOT NULL COMMENT '任务执行JobBean',
   `executor_address` varchar(255) DEFAULT NULL COMMENT '执行器地址，本次执行的地址',
-  `executor_handler` varchar(255) DEFAULT NULL COMMENT '执行器任务handler',
   `executor_param` varchar(255) DEFAULT NULL COMMENT 'executor_param',
   `trigger_time` datetime DEFAULT NULL COMMENT '调度-时间',
   `trigger_status` varchar(255) DEFAULT NULL COMMENT '调度-结果',

@@ -34,10 +34,10 @@ $(function() {
 	            			return data;
 	            		}
             		},
-	                { "data": 'jobName', "visible" : false},
+					{ "data": 'jobName', "visible" : false},
+					{ "data": 'jobKey', "visible" : true},
 	                { "data": 'jobDesc', "visible" : true},
 	                { "data": 'jobCron', "visible" : true},
-	                { "data": 'jobClass', "visible" : false},
 	                { "data": 'executorAddress', "visible" : false},
 	                { "data": 'executorParam', "visible" : false},
 	                { 
@@ -56,7 +56,6 @@ $(function() {
 	                },
 	                { "data": 'author', "visible" : true},
 	                { "data": 'alarmEmail', "visible" : false},
-	                { "data": 'alarmThreshold', "visible" : false},
 	                { "data": 'glueSwitch', "visible" : false},
 	                { 
 	                	"data": 'jobStatus', 
@@ -95,14 +94,13 @@ $(function() {
 	                			var html = '<p id="'+ row.id +'" '+
 	                							' jobGroup="'+ row.jobGroup +'" '+
 	                							' jobName="'+ row.jobName +'" '+
+												' jobKey="'+ row.jobKey +'" '+
 	                							' jobCron="'+ row.jobCron +'" '+
 	                							' jobDesc="'+ row.jobDesc +'" '+
-	                							' jobClass="'+ row.jobClass +'" '+
 	                							' executorAddress="'+row.executorAddress +'" '+
 	                							' executorParam="'+ row.executorParam +'" '+
 	                							' author="'+ row.author +'" '+
 	                							' alarmEmail="'+ row.alarmEmail +'" '+
-	                							' alarmThreshold="'+ row.alarmThreshold +'" '+
 	                							' glueSwitch="'+ row.glueSwitch +'" '+
 	                							'>'+
 										'<button class="btn btn-primary btn-xs job_operate" type="job_trigger" type="button">执行</button>  '+
@@ -226,17 +224,13 @@ $(function() {
             alarmEmail : {
             	required : true
             },
-            alarmThreshold : {
-            	required : true ,
-            	digits:true
-            },
 			author : {
 				required : true
 			}
         }, 
         messages : {  
             jobDesc : {
-            	required :"请输入“名称”."
+            	required :"请输入“描述”."
             },
             jobCron : {
             	required :"请输入“Cron”."
@@ -246,10 +240,6 @@ $(function() {
             },
             alarmEmail : {
             	required : "请输入“报警邮件”."
-            },
-            alarmThreshold : {
-            	required : "请输入“报警阈值”."  ,
-            	digits:"阀值应该为整数."
             },
             author : {
             	required : "请输入“负责人”."
@@ -294,25 +284,20 @@ $(function() {
 		// base data
 		$("#updateModal .form input[name='jobGroup']").val($(this).parent('p').attr("jobGroup"));
 		$("#updateModal .form input[name='jobName']").val($(this).parent('p').attr("jobName"));
+		$("#updateModal .form .jobKey").val( $(this).parent('p').attr("jobKey") );
 		$("#updateModal .form input[name='jobDesc']").val($(this).parent('p').attr("jobDesc"));
 		$("#updateModal .form input[name='jobCron']").val($(this).parent('p').attr("jobCron"));
 		$("#updateModal .form input[name='executorAddress']").val($(this).parent('p').attr("executorAddress"));
 		$("#updateModal .form input[name='executorParam']").val($(this).parent('p').attr("executorParam"));
 		$("#updateModal .form input[name='author']").val($(this).parent('p').attr("author"));
 		$("#updateModal .form input[name='alarmEmail']").val($(this).parent('p').attr("alarmEmail"));
-		$("#updateModal .form input[name='alarmThreshold']").val($(this).parent('p').attr("alarmThreshold"));
 
 		// jobGroupTitle
 		var jobGroupTitle = $("#addModal .form select[name='jobGroup']").find("option[value='" + $(this).parent('p').attr("jobGroup") + "']").text();
 		$("#updateModal .form .jobGroupTitle").val(jobGroupTitle);
 
-        // jobKey
-        var jobKey = $(this).parent('p').attr("jobGroup") + "_" + $(this).parent('p').attr("jobName");
-        $("#updateModal .form .jobKey").val(jobKey);
-
         // glueSwitchTitle
 		$("#updateModal .form .glueSwitchTitle").val( ($(this).parent('p').attr("glueSwitch") == 0)?"BEAN模式":"GLUE模式" );
-
 
 		// show
 		$('#updateModal').modal({backdrop: false, keyboard: false}).modal('show');
@@ -336,17 +321,13 @@ $(function() {
 			alarmEmail : {
 				required : true
 			},
-			alarmThreshold : {
-				required : true ,
-				digits:true
-			},
 			author : {
 				required : true
 			}
 		},
 		messages : {
 			jobDesc : {
-				required :"请输入“名称”."
+				required :"请输入“描述”."
 			},
 			jobCron : {
 				required :"请输入“Cron”."
@@ -356,10 +337,6 @@ $(function() {
 			},
 			alarmEmail : {
 				required : "请输入“报警邮件”."
-			},
-			alarmThreshold : {
-				required : "请输入“报警阈值”."  ,
-				digits:"阀值应该为整数."
 			},
 			author : {
 				required : "请输入“负责人”."

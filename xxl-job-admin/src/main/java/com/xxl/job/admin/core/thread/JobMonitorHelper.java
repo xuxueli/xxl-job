@@ -1,21 +1,16 @@
 package com.xxl.job.admin.core.thread;
 
-import java.text.MessageFormat;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.admin.core.util.DynamicSchedulerUtil;
 import com.xxl.job.admin.core.util.MailUtil;
 import com.xxl.job.core.util.HttpUtil.RemoteCallBack;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.text.MessageFormat;
+import java.util.concurrent.*;
 
 /**
  * job monitor helper
@@ -52,18 +47,10 @@ public class JobMonitorHelper {
 								// pass
 							}
 							if (RemoteCallBack.FAIL.equals(log.getTriggerStatus()) || RemoteCallBack.FAIL.equals(log.getHandleStatus())) {
-								String monotorKey = log.getJobGroup().concat("_").concat(log.getJobName());
-								Integer count = countMap.get(monotorKey);
-								if (count == null) {
-									count = new Integer(0);
-								}
-								count += 1;
-								countMap.put(monotorKey, count);
 								XxlJobInfo info = DynamicSchedulerUtil.xxlJobInfoDao.load(log.getJobGroup(), log.getJobName());
-								if (count >= info.getAlarmThreshold()) {
-									MailUtil.sendMail(info.getAlarmEmail(), "《调度平台中心-监控报警》", 
-											MessageFormat.format("调度任务[{0}]失败报警，连续失败次数：{1}", monotorKey, count), false, null);
-									countMap.remove(monotorKey);
+								if (info!=null && info.getAlarmEmail()!=null && info.getAlarmEmail().trim().length()>0) {
+									MailUtil.sendMail(info.getAlarmEmail(), "《调度监控报警-调度平台平台XXL-JOB》",
+											MessageFormat.format("任务调度失败, JobKey={0}, 任务描述:{1}.", info.getJobKey(), info.getJobDesc()), false, null);
 								}
 							}
 						}

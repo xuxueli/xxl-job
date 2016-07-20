@@ -14,13 +14,11 @@ public interface IXxlJobService {
 	public Map<String, Object> pageList(int start, int length, String jobGroup, String jobDesc, String filterTime);
 	
 	public ReturnT<String> add(String jobGroup, String jobCron, String jobDesc,
-			String executorAddress,	String executorParam,
-			String author, String alarmEmail, int alarmThreshold,
+			String executorAddress,	String executorParam, String author, String alarmEmail,
 			int glueSwitch, String glueSource, String glueRemark);
 	
 	public ReturnT<String> reschedule(String jobGroup, String jobName, String jobCron, String jobDesc,
-			String handler_address, String handler_params,
-			String author, String alarmEmail, int alarmThreshold);
+			String handler_address, String handler_params, String author, String alarmEmail);
 	
 	public ReturnT<String> remove(String jobGroup, String jobName);
 	

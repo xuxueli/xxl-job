@@ -8,12 +8,8 @@
 	
 	    <result column="job_group" property="jobGroup" />
 	    <result column="job_name" property="jobName" />
-	    <result column="job_cron" property="jobCron" />
-	    <result column="job_desc" property="jobDesc" />
-	    <result column="job_class" property="jobClass" />
 	    
 	    <result column="executor_address" property="executorAddress" />
-	    <result column="executor_handler" property="executorHandler" />
 	    <result column="executor_param" property="executorParam" />
 	    
 	    <result column="trigger_time" property="triggerTime" />
@@ -30,11 +26,7 @@
 		t.id,
 		t.job_group,
 		t.job_name,
-		t.job_cron,
-		t.job_desc,
-		t.job_class,
 		t.executor_address,
-		t.executor_handler,
 		t.executor_param,
 		t.trigger_time,
 		t.trigger_status,
@@ -101,20 +93,12 @@
 		INSERT INTO XXL_JOB_QRTZ_TRIGGER_LOG (
 			`job_group`,
 			`job_name`,
-			`job_cron`, 
-			`job_desc`,
-			`job_class`, 
 			`executor_address`,
-			`executor_handler`,
 			`executor_param`
 		) VALUES (
 			#{jobGroup}, 
 			#{jobName},
-			#{jobCron},
-			#{jobDesc},
-			#{jobClass},
 			#{executorAddress},
-			#{executorHandler},
 			#{executorParam}
 		);
 		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id"> 
@@ -129,7 +113,6 @@
 			`trigger_status`= #{triggerStatus}, 
 			`trigger_msg`= #{triggerMsg},
 			`executor_address`= #{executorAddress},
-			`executor_handler`= #{executorHandler},
 			`executor_param`= #{executorParam}
 		WHERE `id`= #{id}
 	</update>

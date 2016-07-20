@@ -33,7 +33,6 @@ public class XxlJobInfoTest {
 		XxlJobInfo info = new XxlJobInfo();
 		info.setJobName("job_name");
 		info.setJobCron("jobCron");
-		info.setJobClass("jobClass");
 		int count = xxlJobInfoDao.save(info);
 		System.out.println(count);
 		System.out.println(info.getId());

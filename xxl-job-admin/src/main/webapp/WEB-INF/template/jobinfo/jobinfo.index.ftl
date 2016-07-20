@@ -38,7 +38,7 @@
 	    <section class="content">
 	    
 	    	<div class="row">
-	    		<div class="col-xs-4">
+	    		<div class="col-xs-2">
 	              	<div class="input-group">
 	                	<span class="input-group-addon">分组</span>
                 		<select class="form-control" id="jobGroup" >
@@ -48,9 +48,15 @@
 	                  	</select>
 	              	</div>
 	            </div>
-	            <div class="col-xs-4">
+                <div class="col-xs-3">
+                    <div class="input-group">
+                        <span class="input-group-addon">JobKey</span>
+                        <input type="text" class="form-control" id="JobKey" value="${jobName}" autocomplete="on" >
+                    </div>
+                </div>
+	            <div class="col-xs-3">
 	              	<div class="input-group">
-	                	<span class="input-group-addon">名称</span>
+	                	<span class="input-group-addon">描述</span>
 	                	<input type="text" class="form-control" id="jobDesc" value="${jobName}" autocomplete="on" >
 	              	</div>
 	            </div>
@@ -75,16 +81,15 @@
 					            		<th name="id" >id</th>
 					                	<th name="jobGroup" >jobGroup</th>
 					                  	<th name="jobName" >jobName</th>
-					                  	<th name="jobDesc" >名称</th>
+                                        <th name="JobKey" >JobKey</th>
+					                  	<th name="jobDesc" >描述</th>
 					                  	<th name="jobCron" >Cron</th>
-					                  	<th name="jobClass" >JobBean</th>
 					                  	<th name="executorAddress" >执行器地址</th>
 					                  	<th name="executorParam" >任务参数</th>
 					                  	<th name="addTime" >新增时间</th>
 					                  	<th name="updateTime" >更新时间</th>
 					                  	<th name="author" >负责人</th>
 					                  	<th name="alarmEmail" >报警邮件</th>
-					                  	<th name="alarmThreshold" >报警阀值</th>
 					                  	<th name="glueSwitch" >GLUE模式</th>
 					                  	<th name="jobStatus" >状态</th>
 					                  	<th>操作</th>
@@ -122,7 +127,7 @@
 		            			</#list>
 		                  	</select>
 						</div>
-                        <label for="lastname" class="col-sm-2 control-label">名称<font color="red">*</font></label>
+                        <label for="lastname" class="col-sm-2 control-label">描述<font color="red">*</font></label>
                         <div class="col-sm-4"><input type="text" class="form-control" name="jobDesc" placeholder="请输入“描述”" maxlength="50" ></div>
 					</div>
 					<div class="form-group">
@@ -134,16 +139,6 @@
 					<div class="form-group">
                         <label for="firstname" class="col-sm-2 control-label">执行参数<font color="black">*</font></label>
                         <div class="col-sm-4"><input type="text" class="form-control" name="executorParam" placeholder="请输入“执行参数”" maxlength="100" ></div>
-                        <label for="lastname" class="col-sm-2 control-label">负责人<font color="red">*</font></label>
-                        <div class="col-sm-4"><input type="text" class="form-control" name="author" placeholder="请输入“负责人”" maxlength="50" ></div>
-					</div>
-					<div class="form-group">
-						<label for="lastname" class="col-sm-2 control-label">报警邮件<font color="red">*</font></label>
-						<div class="col-sm-4"><input type="text" class="form-control" name="alarmEmail" placeholder="请输入“报警邮件”，多个邮件地址逗号分隔" maxlength="100" ></div>
-						<label for="lastname" class="col-sm-2 control-label">报警阈值<font color="red">*</font></label>
-						<div class="col-sm-4"><input type="text" class="form-control" name="alarmThreshold" placeholder="请输入“报警阈值”" maxlength="5" ></div>
-					</div>
-                    <div class="form-group">
                         <label for="firstname" class="col-sm-2 control-label">任务模式<font color="red">*</font></label>
                         <div class="col-sm-4">
                             <select class="form-control" name="glueSwitch" >
@@ -151,7 +146,13 @@
                                 <option value="1" >GLUE模式</option>
                             </select>
                         </div>
-                    </div>
+					</div>
+					<div class="form-group">
+						<label for="lastname" class="col-sm-2 control-label">报警邮件<font color="red">*</font></label>
+						<div class="col-sm-4"><input type="text" class="form-control" name="alarmEmail" placeholder="请输入“报警邮件”，多个邮件地址逗号分隔" maxlength="100" ></div>
+                        <label for="lastname" class="col-sm-2 control-label">负责人<font color="red">*</font></label>
+                        <div class="col-sm-4"><input type="text" class="form-control" name="author" placeholder="请输入“负责人”" maxlength="50" ></div>
+					</div>
                     <hr>
 					<div class="form-group">
 						<div class="col-sm-offset-3 col-sm-6">
@@ -202,7 +203,7 @@ public class DemoJobHandler extends IJobHandler {
                         <div class="col-sm-4">
 							<input type="text" class="form-control jobGroupTitle" maxlength="50" readonly >
 						</div>
-                        <label for="lastname" class="col-sm-2 control-label">名称<font color="red">*</font></label>
+                        <label for="lastname" class="col-sm-2 control-label">描述<font color="red">*</font></label>
                         <div class="col-sm-4"><input type="text" class="form-control" name="jobDesc" placeholder="请输入“描述”" maxlength="50" ></div>
 					</div>
 					<div class="form-group">
@@ -215,21 +216,17 @@ public class DemoJobHandler extends IJobHandler {
 					<div class="form-group">
                         <label for="firstname" class="col-sm-2 control-label">执行参数<font color="black">*</font></label>
                         <div class="col-sm-4"><input type="text" class="form-control" name="executorParam" placeholder="请输入“执行参数”" maxlength="100" ></div>
-                        <label for="lastname" class="col-sm-2 control-label">负责人<font color="red">*</font></label>
-                        <div class="col-sm-4"><input type="text" class="form-control" name="author" placeholder="请输入“负责人”" maxlength="50" ></div>
+                        <label for="firstname" class="col-sm-2 control-label">任务模式<font color="red">*</font></label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control glueSwitchTitle" readonly >
+                        </div>
 					</div>
 					<div class="form-group">
 						<label for="lastname" class="col-sm-2 control-label">报警邮件<font color="red">*</font></label>
 						<div class="col-sm-4"><input type="text" class="form-control" name="alarmEmail" placeholder="请输入“报警邮件”，多个邮件地址逗号分隔" maxlength="100" ></div>
-						<label for="lastname" class="col-sm-2 control-label">报警阈值<font color="red">*</font></label>
-						<div class="col-sm-4"><input type="text" class="form-control" name="alarmThreshold" placeholder="请输入“报警阈值”" maxlength="5" ></div>
+                        <label for="lastname" class="col-sm-2 control-label">负责人<font color="red">*</font></label>
+                        <div class="col-sm-4"><input type="text" class="form-control" name="author" placeholder="请输入“负责人”" maxlength="50" ></div>
 					</div>
-                    <div class="form-group">
-                        <label for="firstname" class="col-sm-2 control-label">任务模式<font color="red">*</font></label>
-                        <div class="col-sm-4">
-							<input type="text" class="form-control glueSwitchTitle" readonly >
-						</div>
-                    </div>
 					<hr>
 					<div class="form-group">
 						<div class="col-sm-offset-3 col-sm-3">

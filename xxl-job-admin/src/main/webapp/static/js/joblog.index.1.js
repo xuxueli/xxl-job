@@ -96,12 +96,7 @@ $(function() {
 	            		}
             		},
 	                { "data": 'jobName', "visible" : false},
-	                { "data": 'jobCron', "visible" : false},
-	                { "data": 'jobDesc', "visible" : false},
-	                { "data": 'jobClass', "visible" : false},
-	                
 	                { "data": 'executorAddress', "visible" : true},
-	                { "data": 'executorHandler', "visible" : true},
 	                { "data": 'executorParam', "visible" : true},
 	                { 
 	                	"data": 'triggerTime', 

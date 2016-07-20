@@ -10,17 +10,14 @@
 	    <result column="job_name" property="jobName" />
 	    <result column="job_cron" property="jobCron" />
 	    <result column="job_desc" property="jobDesc" />
-	    <result column="job_class" property="jobClass" />
 	    
 	    <result column="add_time" property="addTime" />
 	    <result column="update_time" property="updateTime" />
 	    
 	    <result column="author" property="author" />
 	    <result column="alarm_email" property="alarmEmail" />
-	    <result column="alarm_threshold" property="alarmThreshold" />
 	    
 	    <result column="executor_address" property="executorAddress" />
-	    <result column="executor_handler" property="executorHandler" />
 	    <result column="executor_param" property="executorParam" />
 	    
 	    <result column="glue_switch" property="glueSwitch" />
@@ -34,14 +31,11 @@
 		t.job_name,
 		t.job_cron,
 		t.job_desc,
-		t.job_class,
 		t.add_time,
 		t.update_time,
 		t.author,
 		t.alarm_email,
-		t.alarm_threshold,
 		t.executor_address,
-		t.executor_handler,
 		t.executor_param,
 		t.glue_switch,
 		t.glue_source,
@@ -82,14 +76,11 @@
 			job_name,
 			job_cron,
 			job_desc,
-			job_class,
 			add_time,
 			update_time,
 			author,
 			alarm_email,
-			alarm_threshold,
 			executor_address,
-			executor_handler,
 			executor_param,
 			glue_switch,
 			glue_source,
@@ -98,15 +89,12 @@
 			#{jobGroup}, 
 			#{jobName}, 
 			#{jobCron}, 
-			#{jobDesc}, 
-			#{jobClass}, 
+			#{jobDesc},
 			NOW(),
 			NOW(),
 			#{author},
 			#{alarmEmail},
-			#{alarmThreshold},
 			#{executorAddress},
-			#{executorHandler},
 			#{executorParam},
 			#{glueSwitch},
 			#{glueSource},
@@ -132,9 +120,7 @@
 			update_time = NOW(),
 			author = #{author},
 			alarm_email = #{alarmEmail},
-			alarm_threshold = #{alarmThreshold},
 			executor_address = #{executorAddress},
-			executor_handler = #{executorHandler},
 			executor_param = #{executorParam},
 			glue_switch = #{glueSwitch},
 			glue_source = #{glueSource},

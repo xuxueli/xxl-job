@@ -13,12 +13,8 @@ public class XxlJobLog {
 	// job info
 	private String jobGroup;
 	private String jobName;
-	private String jobCron;
-	private String jobDesc;
-	private String jobClass;
 	
 	private String executorAddress;	// 执行器地址，有多个则逗号分隔
-	private String executorHandler;	// 执行器，任务Handler名称
 	private String executorParam;	// 执行器，任务参数
 	
 	// trigger info
@@ -49,35 +45,11 @@ public class XxlJobLog {
 	public void setJobName(String jobName) {
 		this.jobName = jobName;
 	}
-	public String getJobCron() {
-		return jobCron;
-	}
-	public void setJobCron(String jobCron) {
-		this.jobCron = jobCron;
-	}
-	public String getJobDesc() {
-		return jobDesc;
-	}
-	public void setJobDesc(String jobDesc) {
-		this.jobDesc = jobDesc;
-	}
-	public String getJobClass() {
-		return jobClass;
-	}
-	public void setJobClass(String jobClass) {
-		this.jobClass = jobClass;
-	}
 	public String getExecutorAddress() {
 		return executorAddress;
 	}
 	public void setExecutorAddress(String executorAddress) {
 		this.executorAddress = executorAddress;
-	}
-	public String getExecutorHandler() {
-		return executorHandler;
-	}
-	public void setExecutorHandler(String executorHandler) {
-		this.executorHandler = executorHandler;
 	}
 	public String getExecutorParam() {
 		return executorParam;

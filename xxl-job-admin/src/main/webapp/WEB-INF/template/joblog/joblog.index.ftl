@@ -78,11 +78,7 @@
 					                	<th name="id" >id</th>
 					                	<th name="jobGroup" >任务组</th>
 					                  	<th name="jobName" >任务名</th>
-					                  	<th name="jobCron" >Cron</th>
-					                  	<th name="jobDesc" >描述</th>
-					                  	<th name="jobClass" >JobBean</th>
 					                  	<th name="executorAddress" >执行器地址</th>
-					                  	<th name="executorHandler" >JobHandler</th>
 					                  	<th name="executorParam" >任务参数</th>
 					                  	<th name="triggerTime" >调度时间</th>
 					                  	<th name="triggerStatus" >调度结果</th>

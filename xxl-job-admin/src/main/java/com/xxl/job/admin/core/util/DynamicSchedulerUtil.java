@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.xxl.job.admin.core.jobbean.RemoteHttpJobBean;
 import org.quartz.CronScheduleBuilder;
 import org.quartz.CronTrigger;
 import org.quartz.Job;
@@ -130,7 +131,7 @@ public final class DynamicSchedulerUtil implements ApplicationContextAware, Init
         JobKey jobKey = new JobKey(jobInfo.getJobName(), jobInfo.getJobGroup());
         try {
 			Trigger trigger = scheduler.getTrigger(triggerKey);
-			JobDetail jobDetail = scheduler.getJobDetail(jobKey);
+
 			TriggerState triggerState = scheduler.getTriggerState(triggerKey);
 			
 			// parse params
@@ -138,10 +139,10 @@ public final class DynamicSchedulerUtil implements ApplicationContextAware, Init
 				String cronExpression = ((CronTriggerImpl) trigger).getCronExpression();
 				jobInfo.setJobCron(cronExpression);
 			}
-			if (jobDetail!=null) {
-				String jobClass = jobDetail.getJobClass().getName();
-				jobInfo.setJobClass(jobClass);
-			}
+
+            //JobDetail jobDetail = scheduler.getJobDetail(jobKey);
+            //String jobClass = jobDetail.getJobClass().getName();
+
 			if (triggerState!=null) {
 				jobInfo.setJobStatus(triggerState.name());
 			}
@@ -175,12 +176,7 @@ public final class DynamicSchedulerUtil implements ApplicationContextAware, Init
         CronTrigger cronTrigger = TriggerBuilder.newTrigger().withIdentity(triggerKey).withSchedule(cronScheduleBuilder).build();
 
         // JobDetail : jobClass
-		Class<? extends Job> jobClass_ = null;
-		try {
-			jobClass_ = (Class<? extends Job>)Class.forName(jobInfo.getJobClass());
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
+		Class<? extends Job> jobClass_ = RemoteHttpJobBean.class;   // Class.forName(jobInfo.getJobClass());
         
 		JobDetail jobDetail = JobBuilder.newJob(jobClass_).withIdentity(jobKey).build();
         /*if (jobInfo.getJobData()!=null) {

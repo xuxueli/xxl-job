@@ -26,8 +26,6 @@ public class XxlJobLogTest {
 	public void save_load(){
 		XxlJobLog xxlJobLog = new XxlJobLog();
 		xxlJobLog.setJobName("job_name");
-		xxlJobLog.setJobCron("jobCron");
-		xxlJobLog.setJobClass("jobClass");
 		int count = xxlJobLogDao.save(xxlJobLog);
 		System.out.println(count);
 		System.out.println(xxlJobLog.getId());

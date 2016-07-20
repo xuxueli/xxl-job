@@ -1,20 +1,5 @@
 package com.xxl.job.admin.core.jobbean;
 
-import java.text.MessageFormat;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-
-import org.apache.commons.lang.StringUtils;
-import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
-import org.quartz.JobKey;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.scheduling.quartz.QuartzJobBean;
-
 import com.xxl.job.admin.core.callback.XxlJobLogCallbackServer;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
@@ -24,6 +9,16 @@ import com.xxl.job.core.handler.HandlerRepository.ActionEnum;
 import com.xxl.job.core.handler.HandlerRepository.HandlerParamEnum;
 import com.xxl.job.core.util.HttpUtil;
 import com.xxl.job.core.util.HttpUtil.RemoteCallBack;
+import org.apache.commons.lang.StringUtils;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
+import org.quartz.JobKey;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.quartz.QuartzJobBean;
+
+import java.text.MessageFormat;
+import java.util.*;
 
 /**
  * http job bean
@@ -44,9 +39,6 @@ public class RemoteHttpJobBean extends QuartzJobBean {
 		XxlJobLog jobLog = new XxlJobLog();
 		jobLog.setJobGroup(jobInfo.getJobGroup());
 		jobLog.setJobName(jobInfo.getJobName());
-		jobLog.setJobCron(jobInfo.getJobCron());
-		jobLog.setJobDesc(jobInfo.getJobDesc());
-		jobLog.setJobClass(jobInfo.getJobClass());
 		DynamicSchedulerUtil.xxlJobLogDao.save(jobLog);
 		logger.info(">>>>>>>>>>> xxl-job trigger start, jobId:{}", jobLog.getId());
 		
@@ -66,7 +58,6 @@ public class RemoteHttpJobBean extends QuartzJobBean {
 
 		// failover trigger
 		RemoteCallBack callback = failoverTrigger(jobInfo.getExecutorAddress(), params, jobLog);
-		jobLog.setExecutorHandler(jobInfo.getGlueSwitch()==0?jobInfo.getExecutorHandler():"GLUE任务");
 		jobLog.setExecutorParam(jobInfo.getExecutorParam());
 		logger.info(">>>>>>>>>>> xxl-job failoverTrigger response, jobId:{}, callback:{}", jobLog.getId(), callback);
 		

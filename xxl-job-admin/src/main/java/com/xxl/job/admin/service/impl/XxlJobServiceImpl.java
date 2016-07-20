@@ -59,8 +59,7 @@ public class XxlJobServiceImpl implements IXxlJobService {
 
 	@Override
 	public ReturnT<String> add(String jobGroup, String jobCron, String jobDesc,
-			String executorAddress,	String executorParam,
-			String author, String alarmEmail, int alarmThreshold,
+			String executorAddress,	String executorParam, String author, String alarmEmail,
 			int glueSwitch, String glueSource, String glueRemark) {
 		// valid
 		if (JobGroupEnum.match(jobGroup) == null) {
@@ -81,9 +80,6 @@ public class XxlJobServiceImpl implements IXxlJobService {
 		if (StringUtils.isBlank(alarmEmail)) {
 			return new ReturnT<String>(500, "请输入“报警邮件”");
 		}
-		if (alarmThreshold < 0) {
-			alarmThreshold = 0;
-		}
 
 		// generate jobName
 		String jobName = FastDateFormat.getInstance("yyyyMMddHHmmssSSSS").format(new Date());
@@ -102,10 +98,8 @@ public class XxlJobServiceImpl implements IXxlJobService {
 		jobInfo.setJobName(jobName);
 		jobInfo.setJobCron(jobCron);
 		jobInfo.setJobDesc(jobDesc);
-		jobInfo.setJobClass(RemoteHttpJobBean.class.getName());
 		jobInfo.setAuthor(author);
 		jobInfo.setAlarmEmail(alarmEmail);
-		jobInfo.setAlarmThreshold(alarmThreshold);
 		jobInfo.setGlueSwitch(glueSwitch);
 		jobInfo.setGlueSource(glueSource);
 		jobInfo.setGlueRemark(glueRemark);
@@ -131,7 +125,7 @@ public class XxlJobServiceImpl implements IXxlJobService {
 	@Override
 	public ReturnT<String> reschedule(String jobGroup, String jobName, String jobCron, String jobDesc,
 			String executorAddress, String executorParam,
-			String author, String alarmEmail, int alarmThreshold) {
+			String author, String alarmEmail) {
 		
 		// valid
 		if (JobGroupEnum.match(jobGroup) == null) {
@@ -161,7 +155,6 @@ public class XxlJobServiceImpl implements IXxlJobService {
 		jobInfo.setJobCron(jobCron);
 		jobInfo.setAuthor(author);
 		jobInfo.setAlarmEmail(alarmEmail);
-		jobInfo.setAlarmThreshold(alarmThreshold);
 		jobInfo.setExecutorAddress(executorAddress);
 		jobInfo.setExecutorParam(executorParam);
 		

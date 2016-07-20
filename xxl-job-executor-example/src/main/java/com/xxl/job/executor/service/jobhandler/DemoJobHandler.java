@@ -20,7 +20,7 @@ import com.xxl.job.core.handler.annotation.JobHander;
  * 
  * @author xuxueli 2015-12-19 19:43:36
  */
-@JobHander(value="defaults_201607192256270689,defaults_201607192256270689")
+@JobHander(value="waimai_201607202316260736,waimai_201607202316260736")
 @Service
 public class DemoJobHandler extends IJobHandler {
 	private static transient Logger logger = LoggerFactory.getLogger(DemoJobHandler.class);
