@@ -172,7 +172,7 @@
 		</div>
 		<strong>Copyright &copy; 2015-${.now?string('yyyy')} &nbsp;
 			<a href="https://github.com/xuxueli/xxl-job" target="_blank" >github</a>&nbsp;
-			<a href="http://www.cnblogs.com/xuxueli/p/5021979.html" target="_blank" >cnblog</a>
+			<a href="http://my.oschina.net/xuxueli/blog/690978" target="_blank" >oschina</a>
 		</strong><!-- All rights reserved. -->
 	</footer>
 </#macro>
