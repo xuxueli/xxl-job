@@ -1,20 +1,18 @@
 package com.xxl.job.core.handler;
 
+import com.xxl.job.core.handler.HandlerRepository.HandlerParamEnum;
+import com.xxl.job.core.handler.IJobHandler.JobHandleStatus;
+import com.xxl.job.core.log.XxlJobFileAppender;
+import com.xxl.job.core.util.HttpUtil;
+import org.eclipse.jetty.util.ConcurrentHashSet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
-
-import org.eclipse.jetty.util.ConcurrentHashSet;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.xxl.job.core.handler.HandlerRepository.HandlerParamEnum;
-import com.xxl.job.core.handler.IJobHandler.JobHandleStatus;
-import com.xxl.job.core.log.XxlJobFileAppender;
-import com.xxl.job.core.util.HttpUtil;
 
 /**
  * handler thread
@@ -57,7 +55,7 @@ public class HandlerThread extends Thread{
 	public void run() {
 		while(!toStop){
 			try {
-				Map<String, String> handlerData = handlerDataQueue.poll();
+				Map<String, String> handlerData = handlerDataQueue.take();
 				if (handlerData!=null) {
 					i= 0;
 					String log_address = handlerData.get(HandlerParamEnum.LOG_ADDRESS.name());
@@ -102,17 +100,6 @@ public class HandlerThread extends Thread{
 						params.put("status", JobHandleStatus.FAIL.name());
 						params.put("msg", "人工手动终止[业务运行中，被强制终止]");
 						HandlerRepository.pushCallBack(HttpUtil.addressToUrl(log_address), params);
-					}
-				} else {
-					i++;
-					logIdSet.clear();
-					try {
-						TimeUnit.MILLISECONDS.sleep(i * 100);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-					if (i>5) {
-						i= 0;
 					}
 				}
 			} catch (Exception e) {

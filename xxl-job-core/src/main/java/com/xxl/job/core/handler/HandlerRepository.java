@@ -192,7 +192,7 @@ public class HandlerRepository {
 			public void run() {
 				while(true){
 					try {
-						HashMap<String, String> item = callBackQueue.poll();
+						HashMap<String, String> item = callBackQueue.take();
 						if (item != null) {
 							RemoteCallBack callback = null;
 							try {
@@ -201,7 +201,7 @@ public class HandlerRepository {
 								logger.info("HandlerThread Exception:", e);
 							}
 							logger.info(">>>>>>>>>>> xxl-job callback , params:{}, result:{}", new Object[]{item, callback});
-						} 
+						}
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
