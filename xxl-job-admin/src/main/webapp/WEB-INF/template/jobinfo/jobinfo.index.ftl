@@ -6,7 +6,13 @@
 	<@netCommon.commonStyle />
 	<!-- DataTables -->
   	<link rel="stylesheet" href="${request.contextPath}/static/adminlte/plugins/datatables/dataTables.bootstrap.css">
-  
+
+	<#-- select2
+    <link rel="stylesheet" href="${request.contextPath}/static/adminlte/plugins/select2/select2.min.css">
+    <script src="${request.contextPath}/static/adminlte/plugins/select2/select2.min.js"></script>
+    //$(".select2").select2();
+    -->
+
 </head>
 <body class="hold-transition skin-blue sidebar-mini <#if cookieMap?exists && "off" == cookieMap["adminlte_settings"].value >sidebar-collapse</#if>">
 <div class="wrapper">
@@ -146,6 +152,7 @@
                             </select>
                         </div>
                     </div>
+                    <hr>
 					<div class="form-group">
 						<div class="col-sm-offset-3 col-sm-6">
 							<button type="submit" class="btn btn-primary"  >保存</button>
@@ -193,9 +200,7 @@ public class DemoJobHandler extends IJobHandler {
 					<div class="form-group">
                         <label for="firstname" class="col-sm-2 control-label">分组<font color="red">*</font></label>
                         <div class="col-sm-4">
-							<input type="text" class="form-control" name="jobGroupTitle" maxlength="50" readonly >
-                            <input type="hidden" name="jobGroup" >
-                            <input type="hidden" name="jobName" >
+							<input type="text" class="form-control jobGroupTitle" maxlength="50" readonly >
 						</div>
                         <label for="lastname" class="col-sm-2 control-label">名称<font color="red">*</font></label>
                         <div class="col-sm-4"><input type="text" class="form-control" name="jobDesc" placeholder="请输入“描述”" maxlength="50" ></div>
@@ -222,18 +227,21 @@ public class DemoJobHandler extends IJobHandler {
                     <div class="form-group">
                         <label for="firstname" class="col-sm-2 control-label">任务模式<font color="red">*</font></label>
                         <div class="col-sm-4">
-							<input type="text" class="form-control" name="glueSwitchTitle"  readonly >
-						</div>
-                        <label for="lastname" class="col-sm-2 control-label">JobKey</label>
-                        <div class="col-sm-4">
-							<input type="text" class="form-control" name="jobKey" placeholder="请输入“jobHandler”" readonly >
+							<input type="text" class="form-control glueSwitchTitle" readonly >
 						</div>
                     </div>
+					<hr>
 					<div class="form-group">
-						<div class="col-sm-offset-3 col-sm-6">
+						<div class="col-sm-offset-3 col-sm-3">
 							<button type="submit" class="btn btn-primary"  >保存</button>
 							<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                            <input type="hidden" name="jobGroup" >
+                            <input type="hidden" name="jobName" >
 						</div>
+                        <label for="firstname" class="col-sm-2 control-label">JobKey</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control jobKey" readonly >
+                        </div>
 					</div>
 				</form>
          	</div>

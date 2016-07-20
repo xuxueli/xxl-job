@@ -302,22 +302,17 @@ $(function() {
 		$("#updateModal .form input[name='alarmEmail']").val($(this).parent('p').attr("alarmEmail"));
 		$("#updateModal .form input[name='alarmThreshold']").val($(this).parent('p').attr("alarmThreshold"));
 
-		// job group selected
+		// jobGroupTitle
 		var jobGroupTitle = $("#addModal .form select[name='jobGroup']").find("option[value='" + $(this).parent('p').attr("jobGroup") + "']").text();
-		$("#updateModal .form input[name='jobGroupTitle']").val(jobGroupTitle);
+		$("#updateModal .form .jobGroupTitle").val(jobGroupTitle);
 
-		// glueSwitch and jobKey
-		var glueSwitchTitle;
-		var jobKey;
-		if ($(this).parent('p').attr("glueSwitch") == 0) {
-			glueSwitchTitle = "BEAN模式";
-			jobKey = $(this).parent('p').attr("jobGroup") + "_" + $(this).parent('p').attr("jobName");
-		} else {
-			glueSwitchTitle = "GLUE模式";
-			jobKey = "无";
-		}
-		$("#updateModal .form input[name='glueSwitchTitle']").val(glueSwitchTitle);
-		$("#updateModal .form input[name='jobKey']").val(jobKey);
+        // jobKey
+        var jobKey = $(this).parent('p').attr("jobGroup") + "_" + $(this).parent('p').attr("jobName");
+        $("#updateModal .form .jobKey").val(jobKey);
+
+        // glueSwitchTitle
+		$("#updateModal .form .glueSwitchTitle").val( ($(this).parent('p').attr("glueSwitch") == 0)?"BEAN模式":"GLUE模式" );
+
 
 		// show
 		$('#updateModal').modal({backdrop: false, keyboard: false}).modal('show');
