@@ -193,14 +193,10 @@ public class DemoJobHandler extends IJobHandler {
 					<div class="form-group">
                         <label for="firstname" class="col-sm-2 control-label">分组<font color="red">*</font></label>
                         <div class="col-sm-4">
-                            <select class="form-control" name="jobGroupTitle"  disabled>
-							<#list JobGroupList as group>
-                                <option value="${group}" >${group.desc}</option>
-							</#list>
-                            </select>
+							<input type="text" class="form-control" name="jobGroupTitle" maxlength="50" readonly >
                             <input type="hidden" name="jobGroup" >
                             <input type="hidden" name="jobName" >
-                        </div>
+						</div>
                         <label for="lastname" class="col-sm-2 control-label">名称<font color="red">*</font></label>
                         <div class="col-sm-4"><input type="text" class="form-control" name="jobDesc" placeholder="请输入“描述”" maxlength="50" ></div>
 					</div>
@@ -226,13 +222,12 @@ public class DemoJobHandler extends IJobHandler {
                     <div class="form-group">
                         <label for="firstname" class="col-sm-2 control-label">任务模式<font color="red">*</font></label>
                         <div class="col-sm-4">
-                            <select class="form-control" name="glueSwitch" disabled >
-                                <option value="0" >BEAN模式</option>
-                                <option value="1" >GLUE模式</option>
-                            </select>
-                        </div>
+							<input type="text" class="form-control" name="glueSwitchTitle"  readonly >
+						</div>
                         <label for="lastname" class="col-sm-2 control-label">JobKey</label>
-                        <div class="col-sm-4"><input type="text" class="form-control" name="jobKey" placeholder="请输入“jobHandler”" readonly ></div>
+                        <div class="col-sm-4">
+							<input type="text" class="form-control" name="jobKey" placeholder="请输入“jobHandler”" readonly >
+						</div>
                     </div>
 					<div class="form-group">
 						<div class="col-sm-offset-3 col-sm-6">

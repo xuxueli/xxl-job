@@ -91,7 +91,7 @@ $(function() {
 	                				var codeUrl = base_url +'/jobcode?jobGroup='+ row.jobGroup +'&jobName='+ row.jobName;
 	                				codeBtn = '<button class="btn btn-warning btn-xs" type="button" onclick="javascript:window.open(\'' + codeUrl + '\')" >GLUE</button>  '
 	                			}
-	                			
+
 	                			var html = '<p id="'+ row.id +'" '+
 	                							' jobGroup="'+ row.jobGroup +'" '+
 	                							' jobName="'+ row.jobName +'" '+
@@ -303,25 +303,23 @@ $(function() {
 		$("#updateModal .form input[name='alarmThreshold']").val($(this).parent('p').attr("alarmThreshold"));
 
 		// job group selected
-		$("#updateModal .form select[name='jobGroupTitle']").find("option[value='" + $(this).parent('p').attr("jobGroup") + "']").attr("selected",true);
+		var jobGroupTitle = $("#addModal .form select[name='jobGroup']").find("option[value='" + $(this).parent('p').attr("jobGroup") + "']").text();
+		$("#updateModal .form input[name='jobGroupTitle']").val(jobGroupTitle);
 
-		// job group selected
-		$("#updateModal .form select[name='glueSwitch']").find("option[value='" + $(this).parent('p').attr("glueSwitch") + "']").attr("selected",true);
-
-		// generate job key
-		$("#updateModal .form input[name='jobKey']").val( $(this).parent('p').attr("jobGroup") + "_" + $(this).parent('p').attr("jobName") );
-
-		// GLUE check
-		var $glueSwitch = $("#updateModal .form input[name='glueSwitch']");
-		var $executorHandler = $("#updateModal .form input[name='executorHandler']");
-		if ($glueSwitch.val() != 0) {
-			$executorHandler.attr("readonly","readonly");
-			$("#updateModal .form .ifGLUE").attr("checked", true);
+		// glueSwitch and jobKey
+		var glueSwitchTitle;
+		var jobKey;
+		if ($(this).parent('p').attr("glueSwitch") == 0) {
+			glueSwitchTitle = "BEAN模式";
+			jobKey = $(this).parent('p').attr("jobGroup") + "_" + $(this).parent('p').attr("jobName");
 		} else {
-			$executorHandler.removeAttr("readonly");
-			$("#updateModal .form .ifGLUE").attr("checked", false);
+			glueSwitchTitle = "GLUE模式";
+			jobKey = "无";
 		}
-		
+		$("#updateModal .form input[name='glueSwitchTitle']").val(glueSwitchTitle);
+		$("#updateModal .form input[name='jobKey']").val(jobKey);
+
+		// show
 		$('#updateModal').modal({backdrop: false, keyboard: false}).modal('show');
 	});
 	var updateModalValidate = $("#updateModal .form").validate({

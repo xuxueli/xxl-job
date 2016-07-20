@@ -1,6 +1,6 @@
 package com.xxl.job.core.executor.jetty;
 
-import java.util.Map;
+import java.util.*;
 
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Handler;
@@ -88,11 +88,16 @@ public class XxlJobExecutor implements ApplicationContextAware {
 		Map<String, Object> serviceBeanMap = XxlJobExecutor.applicationContext.getBeansWithAnnotation(JobHander.class);
         if (serviceBeanMap!=null && serviceBeanMap.size()>0) {
             for (Object serviceBean : serviceBeanMap.values()) {
-                String jobName = serviceBean.getClass().getAnnotation(JobHander.class).value();
-                if (jobName!=null && jobName.trim().length()>0 && serviceBean instanceof IJobHandler) {
-                	IJobHandler handler = (IJobHandler) serviceBean;
-                	HandlerRepository.regist(jobName, handler);
-				}
+                if (serviceBean instanceof IJobHandler){
+                    String jobKeys = serviceBean.getClass().getAnnotation(JobHander.class).value();
+                    if (jobKeys!=null && jobKeys.trim().length()>0) {
+                        Set<String> jobKeySet = new HashSet<String>(Arrays.asList(jobKeys.split(",")));
+                        for (String jobKey : jobKeySet) {
+                            IJobHandler handler = (IJobHandler) serviceBean;
+                            HandlerRepository.regist(jobKey, handler);
+                        }
+                    }
+                }
             }
         }
 	}

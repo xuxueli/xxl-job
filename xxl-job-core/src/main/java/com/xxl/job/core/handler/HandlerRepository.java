@@ -102,7 +102,6 @@ public class HandlerRepository {
 				callback.setMsg("JOB_GROUP or JOB_NAME is null.");
 				return JacksonUtil.writeValueAsString(callback);
 			}
-			String jobKey = job_group.concat("_").concat(job_name);
 
 			// glue switch
 			String handler_glue_switch = _param.get(HandlerParamEnum.GLUE_SWITCH.name());
@@ -111,7 +110,8 @@ public class HandlerRepository {
 				return JacksonUtil.writeValueAsString(callback);
 			}
 
-			HandlerThread handlerThread = handlerTreadMap.get(jobKey);;
+			String jobKey = job_group.concat("_").concat(job_name);
+			HandlerThread handlerThread = handlerTreadMap.get(jobKey);
 			if ("0".equals(handler_glue_switch)) {
 				// bean model
 				if (handlerThread == null) {
@@ -129,27 +129,6 @@ public class HandlerRepository {
 			// push data to queue
 			handlerThread.pushData(_param);
 			callback.setStatus(RemoteCallBack.SUCCESS);
-		} else if (namespace.equals(ActionEnum.LOG.name())) {
-			String log_id = _param.get(HandlerParamEnum.LOG_ID.name());
-			String log_date = _param.get(HandlerParamEnum.LOG_DATE.name());
-			if (log_id==null || log_date==null) {
-				callback.setMsg("LOG_ID | LOG_DATE can not be null.");
-				return JacksonUtil.writeValueAsString(callback);
-			}
-			int logId = -1;
-			Date triggerDate = null;
-			try {
-				logId = Integer.valueOf(log_id);
-				triggerDate = new Date(Long.valueOf(log_date));
-			} catch (Exception e) {
-			}
-			if (logId<=0 || triggerDate==null) {
-				callback.setMsg("LOG_ID | LOG_DATE parse error.");
-				return JacksonUtil.writeValueAsString(callback);
-			}
-			String logConteng = XxlJobFileAppender.readLog(triggerDate, log_id);
-			callback.setStatus(RemoteCallBack.SUCCESS);
-			callback.setMsg(logConteng);
 		} else if (namespace.equals(ActionEnum.KILL.name())) {
 			// generate jobKey
 			String job_group = _param.get(HandlerParamEnum.JOB_GROUP.name());
@@ -171,7 +150,28 @@ public class HandlerRepository {
 			} else {
 				callback.setMsg("handler for jobKey=[" + jobKey + "] not found.");
 			}
-				
+
+		} else if (namespace.equals(ActionEnum.LOG.name())) {
+			String log_id = _param.get(HandlerParamEnum.LOG_ID.name());
+			String log_date = _param.get(HandlerParamEnum.LOG_DATE.name());
+			if (log_id==null || log_date==null) {
+				callback.setMsg("LOG_ID | LOG_DATE can not be null.");
+				return JacksonUtil.writeValueAsString(callback);
+			}
+			int logId = -1;
+			Date triggerDate = null;
+			try {
+				logId = Integer.valueOf(log_id);
+				triggerDate = new Date(Long.valueOf(log_date));
+			} catch (Exception e) {
+			}
+			if (logId<=0 || triggerDate==null) {
+				callback.setMsg("LOG_ID | LOG_DATE parse error.");
+				return JacksonUtil.writeValueAsString(callback);
+			}
+			String logConteng = XxlJobFileAppender.readLog(triggerDate, log_id);
+			callback.setStatus(RemoteCallBack.SUCCESS);
+			callback.setMsg(logConteng);
 		} else if (namespace.equals(ActionEnum.BEAT.name())) {
 			callback.setStatus(RemoteCallBack.SUCCESS);
 			callback.setMsg(null);

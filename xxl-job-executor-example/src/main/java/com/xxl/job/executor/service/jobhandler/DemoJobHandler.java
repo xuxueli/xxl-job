@@ -16,11 +16,11 @@ import com.xxl.job.core.handler.annotation.JobHander;
  * 开发步骤：
  * 1、继承 “IJobHandler” ；
  * 2、装配到Spring，例如加 “@Service” 注解；
- * 3、加 “@JobHander” 注解，自定义属性name的值；name值在配置新任务是使用；
+ * 3、加 “@JobHander” 注解，注解value值为新增任务生成的JobKey的值;多个JobKey用逗号分割;
  * 
  * @author xuxueli 2015-12-19 19:43:36
  */
-@JobHander(value="defaults_201607192222270796")
+@JobHander(value="defaults_201607192256270689,defaults_201607192256270689")
 @Service
 public class DemoJobHandler extends IJobHandler {
 	private static transient Logger logger = LoggerFactory.getLogger(DemoJobHandler.class);
