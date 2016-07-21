@@ -30,36 +30,35 @@ public class JobMonitorHelper {
 			@Override
 			public void run() {
 				while (true) {
-					logger.info(">>>>>>>>>>> job monitor run ... ");
-					Integer jobLogId = JobMonitorHelper.helper.queue.poll();
-					if (jobLogId != null && jobLogId > 0) {
-						XxlJobLog log = DynamicSchedulerUtil.xxlJobLogDao.load(jobLogId);
-						if (log!=null) {
-							if (RemoteCallBack.SUCCESS.equals(log.getTriggerStatus()) && StringUtils.isBlank(log.getHandleStatus())) {
-								try {
-									TimeUnit.SECONDS.sleep(10);
-								} catch (InterruptedException e) {
-									e.printStackTrace();
+					try {
+						logger.info(">>>>>>>>>>> job monitor beat ... ");
+						Integer jobLogId = JobMonitorHelper.helper.queue.take();
+						if (jobLogId != null && jobLogId > 0) {
+							logger.info(">>>>>>>>>>> job monitor heat success, JobLogId:{}", jobLogId);
+							XxlJobLog log = DynamicSchedulerUtil.xxlJobLogDao.load(jobLogId);
+							if (log!=null) {
+								if (RemoteCallBack.SUCCESS.equals(log.getTriggerStatus()) && StringUtils.isBlank(log.getHandleStatus())) {
+									try {
+										TimeUnit.SECONDS.sleep(10);
+									} catch (InterruptedException e) {
+										e.printStackTrace();
+									}
+									JobMonitorHelper.monitor(jobLogId);
 								}
-								JobMonitorHelper.monitor(jobLogId);
-							}
-							if (RemoteCallBack.SUCCESS.equals(log.getTriggerStatus()) && RemoteCallBack.SUCCESS.equals(log.getHandleStatus())) {
-								// pass
-							}
-							if (RemoteCallBack.FAIL.equals(log.getTriggerStatus()) || RemoteCallBack.FAIL.equals(log.getHandleStatus())) {
-								XxlJobInfo info = DynamicSchedulerUtil.xxlJobInfoDao.load(log.getJobGroup(), log.getJobName());
-								if (info!=null && info.getAlarmEmail()!=null && info.getAlarmEmail().trim().length()>0) {
-									MailUtil.sendMail(info.getAlarmEmail(), "《调度监控报警-调度平台平台XXL-JOB》",
-											MessageFormat.format("任务调度失败, JobKey={0}, 任务描述:{1}.", info.getJobKey(), info.getJobDesc()), false, null);
+								if (RemoteCallBack.SUCCESS.equals(log.getTriggerStatus()) && RemoteCallBack.SUCCESS.equals(log.getHandleStatus())) {
+									// pass
+								}
+								if (RemoteCallBack.FAIL.equals(log.getTriggerStatus()) || RemoteCallBack.FAIL.equals(log.getHandleStatus())) {
+									XxlJobInfo info = DynamicSchedulerUtil.xxlJobInfoDao.load(log.getJobGroup(), log.getJobName());
+									if (info!=null && info.getAlarmEmail()!=null && info.getAlarmEmail().trim().length()>0) {
+										MailUtil.sendMail(info.getAlarmEmail(), "《调度监控报警-调度平台平台XXL-JOB》",
+												MessageFormat.format("任务调度失败, 任务组:{0}, 任务描述:{1}.", info.getJobGroup(), info.getJobDesc()), false, null);
+									}
 								}
 							}
 						}
-					} else {
-						try {
-							TimeUnit.SECONDS.sleep(20);
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}
+					} catch (Exception e) {
+						logger.error("job monitor error:{}", e);
 					}
 				}
 			}

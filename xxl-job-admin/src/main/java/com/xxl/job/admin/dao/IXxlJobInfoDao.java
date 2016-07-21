@@ -12,8 +12,8 @@ import com.xxl.job.admin.core.model.XxlJobLog;
  */
 public interface IXxlJobInfoDao {
 
-	public List<XxlJobInfo> pageList(int offset, int pagesize, String jobGroup, String jobDesc);
-	public int pageListCount(int offset, int pagesize, String jobGroup, String jobDesc);
+	public List<XxlJobInfo> pageList(int offset, int pagesize, String jobGroup, String executorHandler);
+	public int pageListCount(int offset, int pagesize, String jobGroup, String executorHandler);
 	
 	public int save(XxlJobInfo info);
 	

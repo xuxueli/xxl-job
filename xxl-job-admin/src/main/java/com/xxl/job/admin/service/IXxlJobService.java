@@ -11,14 +11,13 @@ import com.xxl.job.admin.core.model.ReturnT;
  */
 public interface IXxlJobService {
 	
-	public Map<String, Object> pageList(int start, int length, String jobGroup, String jobDesc, String filterTime);
+	public Map<String, Object> pageList(int start, int length, String jobGroup, String executorHandler, String filterTime);
 	
-	public ReturnT<String> add(String jobGroup, String jobCron, String jobDesc,
-			String executorAddress,	String executorParam, String author, String alarmEmail,
-			int glueSwitch, String glueSource, String glueRemark);
+	public ReturnT<String> add(String jobGroup, String jobCron, String jobDesc,String author, String alarmEmail,
+			String executorAddress,	String executorHandler, String executorParam, int glueSwitch, String glueSource, String glueRemark);
 	
-	public ReturnT<String> reschedule(String jobGroup, String jobName, String jobCron, String jobDesc,
-			String handler_address, String handler_params, String author, String alarmEmail);
+	public ReturnT<String> reschedule(String jobGroup, String jobName, String jobCron, String jobDesc, String author, String alarmEmail,
+			String executorAddress, String executorHandler, String executorParam, int glueSwitch);
 	
 	public ReturnT<String> remove(String jobGroup, String jobName);
 	

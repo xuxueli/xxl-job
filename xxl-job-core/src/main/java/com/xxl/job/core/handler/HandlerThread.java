@@ -56,6 +56,7 @@ public class HandlerThread extends Thread{
 	public void run() {
 		while(!toStop){
 			try {
+				// to check toStop signal, we need cycle, so wo cannot use queue.take(), instand of poll(timeout)
 				Map<String, String> handlerData = handlerDataQueue.poll(3L, TimeUnit.SECONDS);
 				if (handlerData!=null) {
 					i= 0;

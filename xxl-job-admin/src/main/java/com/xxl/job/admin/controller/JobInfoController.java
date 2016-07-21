@@ -33,27 +33,27 @@ public class JobInfoController {
 	@ResponseBody
 	public Map<String, Object> pageList(@RequestParam(required = false, defaultValue = "0") int start,  
 			@RequestParam(required = false, defaultValue = "10") int length,
-			String jobGroup, String jobDesc, String filterTime) {
+			String jobGroup, String executorHandler, String filterTime) {
 		
-		return xxlJobService.pageList(start, length, jobGroup, jobDesc, filterTime);
+		return xxlJobService.pageList(start, length, jobGroup, executorHandler, filterTime);
 	}
 	
 	@RequestMapping("/add")
 	@ResponseBody
-	public ReturnT<String> add(String jobGroup, String jobCron, String jobDesc,
-			String executorAddress, String executorParam, String author, String alarmEmail,
-			int glueSwitch, String glueSource, String glueRemark) {
+	public ReturnT<String> add(String jobGroup, String jobCron, String jobDesc, String author, String alarmEmail,
+			String executorAddress, String executorHandler, String executorParam, int glueSwitch, String glueSource, String glueRemark) {
 		
-		return xxlJobService.add(jobGroup, jobCron, jobDesc, executorAddress, executorParam,
-				author, alarmEmail, glueSwitch, glueSource, glueRemark);
+		return xxlJobService.add(jobGroup, jobCron, jobDesc, author, alarmEmail,
+				executorAddress, executorHandler, executorParam, glueSwitch, glueSource, glueRemark);
 	}
 	
 	@RequestMapping("/reschedule")
 	@ResponseBody
-	public ReturnT<String> reschedule(String jobGroup, String jobName, String jobCron, String jobDesc,
-			String executorAddress, String executorParam, String author, String alarmEmail) {
+	public ReturnT<String> reschedule(String jobGroup, String jobName, String jobCron, String jobDesc, String author, String alarmEmail,
+			String executorAddress, String executorHandler, String executorParam, int glueSwitch) {
 
-		return xxlJobService.reschedule(jobGroup, jobName, jobCron, jobDesc, executorAddress, executorParam, author, alarmEmail);
+		return xxlJobService.reschedule(jobGroup, jobName, jobCron, jobDesc, author, alarmEmail,
+				executorAddress, executorHandler, executorParam, glueSwitch);
 	}
 	
 	@RequestMapping("/remove")

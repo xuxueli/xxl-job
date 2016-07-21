@@ -23,23 +23,23 @@ public class XxlJobInfoDaoImpl implements IXxlJobInfoDao {
 	public SqlSessionTemplate sqlSessionTemplate;
 
 	@Override
-	public List<XxlJobInfo> pageList(int offset, int pagesize, String jobGroup, String jobDesc) {
+	public List<XxlJobInfo> pageList(int offset, int pagesize, String jobGroup, String executorHandler) {
 		HashMap<String, Object> params = new HashMap<String, Object>();
 		params.put("offset", offset);
 		params.put("pagesize", pagesize);
 		params.put("jobGroup", jobGroup);
-		params.put("jobDesc", jobDesc);
+		params.put("executorHandler", executorHandler);
 		
 		return sqlSessionTemplate.selectList("XxlJobInfoMapper.pageList", params);
 	}
 
 	@Override
-	public int pageListCount(int offset, int pagesize, String jobGroup, String jobDesc) {
+	public int pageListCount(int offset, int pagesize, String jobGroup, String executorHandler) {
 		HashMap<String, Object> params = new HashMap<String, Object>();
 		params.put("offset", offset);
 		params.put("pagesize", pagesize);
 		params.put("jobGroup", jobGroup);
-		params.put("jobDesc", jobDesc);
+		params.put("executorHandler", executorHandler);
 		
 		return sqlSessionTemplate.selectOne("XxlJobInfoMapper.pageListCount", params);
 	}

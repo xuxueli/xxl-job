@@ -22,6 +22,7 @@ public class XxlJobInfo {
 	private String alarmEmail;	// 报警邮件
 	
 	private String executorAddress;	// 执行器地址，有多个则逗号分隔
+	private String executorHandler;	// 执行器，任务Handler名称
 	private String executorParam;	// 执行器，任务参数
 	
 	private int glueSwitch;		// GLUE模式开关：0-否，1-是
@@ -30,9 +31,6 @@ public class XxlJobInfo {
 	
 	// copy from quartz
 	private String jobStatus;	// 任务状态 【base on quartz】
-
-	// generate job key
-	private String jobKey;
 
 	public int getId() {
 		return id;
@@ -114,6 +112,14 @@ public class XxlJobInfo {
 		this.executorAddress = executorAddress;
 	}
 
+	public String getExecutorHandler() {
+		return executorHandler;
+	}
+
+	public void setExecutorHandler(String executorHandler) {
+		this.executorHandler = executorHandler;
+	}
+
 	public String getExecutorParam() {
 		return executorParam;
 	}
@@ -152,14 +158,6 @@ public class XxlJobInfo {
 
 	public void setJobStatus(String jobStatus) {
 		this.jobStatus = jobStatus;
-	}
-
-	public String getJobKey() {
-		return jobGroup.concat("_").concat(jobName);
-	}
-
-	public void setJobKey(String jobKey) {
-		this.jobKey = jobKey;
 	}
 
 }

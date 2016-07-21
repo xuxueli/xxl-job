@@ -18,6 +18,7 @@
 	    <result column="alarm_email" property="alarmEmail" />
 	    
 	    <result column="executor_address" property="executorAddress" />
+		<result column="executor_handler" property="executorHandler" />
 	    <result column="executor_param" property="executorParam" />
 	    
 	    <result column="glue_switch" property="glueSwitch" />
@@ -36,6 +37,7 @@
 		t.author,
 		t.alarm_email,
 		t.executor_address,
+		t.executor_handler,
 		t.executor_param,
 		t.glue_switch,
 		t.glue_source,
@@ -49,8 +51,8 @@
 			<if test="jobGroup != null and jobGroup != ''">
 				AND t.job_group = #{jobGroup}
 			</if>
-			<if test="jobDesc != null and jobDesc != ''">
-				AND t.job_desc like CONCAT(CONCAT('%', #{jobDesc}), '%')
+			<if test="executorHandler != null and executorHandler != ''">
+				AND t.executor_handler like CONCAT(CONCAT('%', #{executorHandler}), '%')
 			</if>
 		</trim>
 		ORDER BY id DESC
@@ -64,8 +66,8 @@
 			<if test="jobGroup != null and jobGroup != ''">
 				AND t.job_group = #{jobGroup}
 			</if>
-			<if test="jobDesc != null and jobDesc != ''">
-				AND t.job_desc like CONCAT(CONCAT('%', #{jobDesc}), '%')
+			<if test="executorHandler != null and executorHandler != ''">
+				AND t.executor_handler like CONCAT(CONCAT('%', #{executorHandler}), '%')
 			</if>
 		</trim>
 	</select>
@@ -81,6 +83,7 @@
 			author,
 			alarm_email,
 			executor_address,
+			executor_handler,
 			executor_param,
 			glue_switch,
 			glue_source,
@@ -95,6 +98,7 @@
 			#{author},
 			#{alarmEmail},
 			#{executorAddress},
+			#{executorHandler},
 			#{executorParam},
 			#{glueSwitch},
 			#{glueSource},
@@ -121,6 +125,7 @@
 			author = #{author},
 			alarm_email = #{alarmEmail},
 			executor_address = #{executorAddress},
+			executor_handler = #{executorHandler},
 			executor_param = #{executorParam},
 			glue_switch = #{glueSwitch},
 			glue_source = #{glueSource},
