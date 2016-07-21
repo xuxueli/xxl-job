@@ -15,6 +15,7 @@ public class XxlJobLog {
 	private String jobName;
 	
 	private String executorAddress;	// 执行器地址，有多个则逗号分隔
+	private String executorHandler;	// 执行器Handler
 	private String executorParam;	// 执行器，任务参数
 	
 	// trigger info
@@ -50,6 +51,12 @@ public class XxlJobLog {
 	}
 	public void setExecutorAddress(String executorAddress) {
 		this.executorAddress = executorAddress;
+	}
+	public String getExecutorHandler() {
+		return executorHandler;
+	}
+	public void setExecutorHandler(String executorHandler) {
+		this.executorHandler = executorHandler;
 	}
 	public String getExecutorParam() {
 		return executorParam;

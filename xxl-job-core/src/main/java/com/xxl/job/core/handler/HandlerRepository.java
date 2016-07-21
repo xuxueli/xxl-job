@@ -41,6 +41,10 @@ public class HandlerRepository {
 		/**
 		 * params of jobhandler
 		 */
+		EXECUTOR_HANDLER,
+		/**
+		 * params of jobhandler
+		 */
 		EXECUTOR_PARAMS,
 		/**
 		 * switch of glue job: 0-no，1-yes
@@ -60,21 +64,27 @@ public class HandlerRepository {
 		LOG_DATE
 	}
 	public enum ActionEnum{RUN, KILL, LOG, BEAT}
-	
+
+	// jobhandler repository
+	private static ConcurrentHashMap<String, IJobHandler> handlerRepository = new ConcurrentHashMap<String, IJobHandler>();
+	public static void registJobHandler(String name, IJobHandler jobHandler){
+		handlerRepository.put(name, jobHandler);
+		logger.info("xxl-job register jobhandler success, name:{}, jobHandler:{}", name, jobHandler);
+	}
+
+	// thread repository of jobhandler
 	public static ConcurrentHashMap<String, HandlerThread> handlerTreadMap = new ConcurrentHashMap<String, HandlerThread>();
-	
-	// regist handler
-	public static void regist(String handleName, IJobHandler handler){
+	public static HandlerThread registJobHandlerThread(String jobkey, IJobHandler handler){
 		HandlerThread handlerThread = new HandlerThread(handler);
 		handlerThread.start();
-		handlerTreadMap.put(handleName, handlerThread);	// putIfAbsent
-		logger.info(">>>>>>>>>>> xxl-job regist handler success, handleName:{}, handler:{}", new Object[]{handleName, handler});
+		logger.info(">>>>>>>>>>> xxl-job regist handler success, jobkey:{}, handler:{}", new Object[]{jobkey, handler});
+		return handlerTreadMap.put(jobkey, handlerThread);	// putIfAbsent
 	}
-	
+
 	// handler push to queue
 	public static String service(Map<String, String> _param) {
 		logger.debug(">>>>>>>>>>> xxl-job service start, _param:{}", new Object[]{_param});
-		
+
 		// callback
 		RemoteCallBack callback = new RemoteCallBack();
 		callback.setStatus(RemoteCallBack.FAIL);
@@ -91,7 +101,7 @@ public class HandlerRepository {
 			callback.setMsg("Timestamp check failed.");
 			return JacksonUtil.writeValueAsString(callback);
 		}
-					
+
 		// parse namespace
 		if (namespace.equals(ActionEnum.RUN.name())) {
 
@@ -110,20 +120,40 @@ public class HandlerRepository {
 				return JacksonUtil.writeValueAsString(callback);
 			}
 
+			// load old thread
 			String jobKey = job_group.concat("_").concat(job_name);
 			HandlerThread handlerThread = handlerTreadMap.get(jobKey);
+
 			if ("0".equals(handler_glue_switch)) {
 				// bean model
-				if (handlerThread == null) {
-					callback.setMsg("handler for jobKey=[" + jobKey + "] not found.");
+
+				// handler name
+				String executor_handler = _param.get(HandlerParamEnum.EXECUTOR_HANDLER.name());
+				if (executor_handler==null || executor_handler.trim().length()==0){
+					callback.setMsg("EXECUTOR_HANDLER is null.");
 					return JacksonUtil.writeValueAsString(callback);
+				}
+
+				// handler instance
+				IJobHandler jobHandler = handlerRepository.get(executor_handler);
+
+				if (handlerThread == null) {
+					// jobhandler match
+					if (jobHandler==null) {
+						callback.setMsg("handler for jobKey=[" + jobKey + "] not found.");
+						return JacksonUtil.writeValueAsString(callback);
+					}
+					handlerThread = HandlerRepository.registJobHandlerThread(jobKey, jobHandler);
+				} else {
+					if (handlerThread.getHandler() != jobHandler) {
+						handlerThread = HandlerRepository.registJobHandlerThread(jobKey, jobHandler);
+					}
 				}
 			} else {
 				// glue
-				if (handlerThread==null) {
-					HandlerRepository.regist(jobKey, new GlueJobHandler(job_group, job_name));
+				if (handlerThread == null) {
+					handlerThread = HandlerRepository.registJobHandlerThread(jobKey, new GlueJobHandler(job_group, job_name));
 				}
-				handlerThread = handlerTreadMap.get(jobKey);
 			}
 
 			// push data to queue
@@ -145,7 +175,7 @@ public class HandlerRepository {
 				IJobHandler handler = handlerThread.getHandler();
 				handlerThread.toStop();
 				handlerThread.interrupt();
-				regist(jobKey, handler);
+				HandlerRepository.registJobHandlerThread(jobKey, handler);
 				callback.setStatus(RemoteCallBack.SUCCESS);
 			} else {
 				callback.setMsg("handler for jobKey=[" + jobKey + "] not found.");
@@ -179,11 +209,11 @@ public class HandlerRepository {
 			callback.setMsg("param[Action] is not valid.");
 			return JacksonUtil.writeValueAsString(callback);
 		}
-		
+
 		logger.debug(">>>>>>>>>>> xxl-job service end, triggerData:{}");
-		return JacksonUtil.writeValueAsString(callback); 
+		return JacksonUtil.writeValueAsString(callback);
 	}
-	
+
 	// ----------------------- for callback log -----------------------
 	private static LinkedBlockingQueue<HashMap<String, String>> callBackQueue = new LinkedBlockingQueue<HashMap<String, String>>();
 	static {

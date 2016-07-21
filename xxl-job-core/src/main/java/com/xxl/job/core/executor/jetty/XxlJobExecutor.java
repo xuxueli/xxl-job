@@ -1,7 +1,8 @@
 package com.xxl.job.core.executor.jetty;
 
-import java.util.*;
-
+import com.xxl.job.core.handler.HandlerRepository;
+import com.xxl.job.core.handler.IJobHandler;
+import com.xxl.job.core.handler.annotation.JobHander;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
@@ -14,9 +15,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
-import com.xxl.job.core.handler.HandlerRepository;
-import com.xxl.job.core.handler.IJobHandler;
-import com.xxl.job.core.handler.annotation.JobHander;
+import java.util.Map;
 
 /**
  * Created by xuxueli on 2016/3/2 21:14.
@@ -89,14 +88,9 @@ public class XxlJobExecutor implements ApplicationContextAware {
         if (serviceBeanMap!=null && serviceBeanMap.size()>0) {
             for (Object serviceBean : serviceBeanMap.values()) {
                 if (serviceBean instanceof IJobHandler){
-                    String jobKeys = serviceBean.getClass().getAnnotation(JobHander.class).value();
-                    if (jobKeys!=null && jobKeys.trim().length()>0) {
-                        Set<String> jobKeySet = new HashSet<String>(Arrays.asList(jobKeys.split(",")));
-                        for (String jobKey : jobKeySet) {
-                            IJobHandler handler = (IJobHandler) serviceBean;
-                            HandlerRepository.regist(jobKey, handler);
-                        }
-                    }
+                    String name = serviceBean.getClass().getAnnotation(JobHander.class).value();
+                    IJobHandler handler = (IJobHandler) serviceBean;
+                    HandlerRepository.registJobHandler(name, handler);
                 }
             }
         }

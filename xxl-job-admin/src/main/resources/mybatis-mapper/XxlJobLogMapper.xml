@@ -10,6 +10,7 @@
 	    <result column="job_name" property="jobName" />
 	    
 	    <result column="executor_address" property="executorAddress" />
+		<result column="executor_handler" property="executorHandler" />
 	    <result column="executor_param" property="executorParam" />
 	    
 	    <result column="trigger_time" property="triggerTime" />
@@ -27,6 +28,7 @@
 		t.job_group,
 		t.job_name,
 		t.executor_address,
+		t.executor_handler,
 		t.executor_param,
 		t.trigger_time,
 		t.trigger_status,
@@ -94,11 +96,13 @@
 			`job_group`,
 			`job_name`,
 			`executor_address`,
+			`executor_handler`,
 			`executor_param`
 		) VALUES (
 			#{jobGroup}, 
 			#{jobName},
 			#{executorAddress},
+			#{executorHandler},
 			#{executorParam}
 		);
 		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id"> 
@@ -113,6 +117,7 @@
 			`trigger_status`= #{triggerStatus}, 
 			`trigger_msg`= #{triggerMsg},
 			`executor_address`= #{executorAddress},
+			`executor_handler`=#{executorHandler},
 			`executor_param`= #{executorParam}
 		WHERE `id`= #{id}
 	</update>

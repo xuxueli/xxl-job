@@ -1,6 +1,6 @@
 $(function() {
 
-	// 分组列表选中, 任务列表初始化和选中
+	// 任务组列表选中, 任务列表初始化和选中
     var ifParam = true;
 	$("#jobGroup").on("change", function () {
 		var jobGroup = $(this).children('option:selected').val();
@@ -97,6 +97,7 @@ $(function() {
             		},
 	                { "data": 'jobName', "visible" : false},
 	                { "data": 'executorAddress', "visible" : true},
+					{ "data": 'executorHandler', "visible" : true},
 	                { "data": 'executorParam', "visible" : true},
 	                { 
 	                	"data": 'triggerTime', 

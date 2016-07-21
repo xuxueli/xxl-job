@@ -10,6 +10,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.MessageFormat;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.*;
 
 /**
@@ -51,8 +54,13 @@ public class JobMonitorHelper {
 								if (RemoteCallBack.FAIL.equals(log.getTriggerStatus()) || RemoteCallBack.FAIL.equals(log.getHandleStatus())) {
 									XxlJobInfo info = DynamicSchedulerUtil.xxlJobInfoDao.load(log.getJobGroup(), log.getJobName());
 									if (info!=null && info.getAlarmEmail()!=null && info.getAlarmEmail().trim().length()>0) {
-										MailUtil.sendMail(info.getAlarmEmail(), "《调度监控报警-调度平台平台XXL-JOB》",
-												MessageFormat.format("任务调度失败, 任务组:{0}, 任务描述:{1}.", info.getJobGroup(), info.getJobDesc()), false, null);
+
+										Set<String> emailSet = new HashSet<String>(Arrays.asList(info.getAlarmEmail().split(",")));
+										for (String email: emailSet) {
+											String title = "《调度监控报警-调度平台平台XXL-JOB》";
+											String content = MessageFormat.format("任务调度失败, 任务组:{0}, 任务描述:{1}.", info.getJobGroup(), info.getJobDesc());
+											MailUtil.sendMail(email, title, content, false, null);
+										}
 									}
 								}
 							}
