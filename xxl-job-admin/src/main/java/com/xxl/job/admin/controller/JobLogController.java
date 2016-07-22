@@ -110,7 +110,7 @@ public class JobLogController {
 		if (log == null) {
 			return new ReturnT<String>(500, "参数异常");
 		}
-		if (!ResponseModel.SUCCESS.equals(log.getTriggerStatus())) {
+		if (!(ResponseModel.SUCCESS.equals(log.getTriggerStatus()) || StringUtils.isNotBlank(log.getHandleStatus()))) {
 			return new ReturnT<String>(500, "调度失败，无法查看执行日志");
 		}
 		

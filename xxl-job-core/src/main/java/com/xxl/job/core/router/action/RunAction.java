@@ -27,20 +27,17 @@ public class RunAction extends IAction {
 
             // handler instance
             IJobHandler jobHandler = HandlerRouter.loadJobHandler(requestModel.getExecutorHandler());
+            if (jobHandler==null) {
+                return new ResponseModel(ResponseModel.FAIL, "job handler for jobKey=[" + jobKey + "] not found.");
+            }
 
             if (jobThread == null) {
-                // jobhandler match
-                if (jobHandler==null) {
-                    return new ResponseModel(ResponseModel.FAIL, "job handler for jobKey=[" + jobKey + "] not found.");
-                }
                 jobThread = HandlerRouter.registJobThread(jobKey, jobHandler);
             } else {
-
                 // job handler update, kill old job thread
                 if (jobThread.getHandler() != jobHandler) {
-
                     // kill old job thread
-                    jobThread.toStop("人工手动终止");
+                    jobThread.toStop("更换任务模式或JobHandler,终止旧任务线程");
                     jobThread.interrupt();
 
                     // new thread, with new job handler
@@ -49,14 +46,25 @@ public class RunAction extends IAction {
             }
         } else {
             // glue model
-
             if (jobThread == null) {
                 jobThread = HandlerRouter.registJobThread(jobKey, new GlueJobHandler(requestModel.getJobGroup(), requestModel.getJobName()));
+            } else {
+                // job handler update, kill old job thread
+                if (!(jobThread.getHandler() instanceof GlueJobHandler)) {
+                    // kill old job thread
+                    jobThread.toStop("更换任务模式或JobHandler,终止旧任务线程");
+                    jobThread.interrupt();
+
+                    // new thread, with new job handler
+                    jobThread = HandlerRouter.registJobThread(jobKey, new GlueJobHandler(requestModel.getJobGroup(), requestModel.getJobName()));
+                }
             }
         }
 
         // sometime, cmap.get can not return given value, i do not know why
-        jobThread = HandlerRouter.loadJobThread(jobKey);
+        if (jobThread == null) {
+            jobThread = HandlerRouter.loadJobThread(jobKey);
+        }
 
         // push data to queue
         jobThread.pushTriggerQueue(requestModel);

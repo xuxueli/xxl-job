@@ -39,6 +39,7 @@ public class TriggerCallbackThread {
     }
     public static void pushCallBack(RequestModel callback){
         callBackQueue.add(callback);
+        logger.debug(">>>>>>>>>>> xxl-job, push callback request, logId:{}", callback.getLogId());
     }
 
 }

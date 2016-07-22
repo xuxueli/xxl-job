@@ -130,7 +130,7 @@ $(function() {
 	                	"render": function ( data, type, row ) {
 	                		// better support expression or string, not function
 	                		return function () {
-		                		if (row.triggerStatus == 'SUCCESS'){
+		                		if (row.triggerStatus == 'SUCCESS' || row.handleStatus){
 		                			var temp = '<a href="javascript:;" class="logDetail" _id="'+ row.id +'">执行日志</a>';
 		                			if(!row.handleStatus){
 		                				temp += '<br><a href="javascript:;" class="logKill" _id="'+ row.id +'">终止任务</a>';

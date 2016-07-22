@@ -4,7 +4,6 @@ import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.handler.IJobHandler.JobHandleStatus;
 import com.xxl.job.core.log.XxlJobFileAppender;
 import com.xxl.job.core.router.model.RequestModel;
-import com.xxl.job.core.util.XxlJobNetCommUtil;
 import org.eclipse.jetty.util.ConcurrentHashSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -88,7 +87,7 @@ public class JobThread extends Thread{
 						e.printStackTrace(new PrintWriter(out));
 						_msg = out.toString();
 					}
-					logger.info("----------- xxl-job job handle end ----------- <br>: ExecutorParams:{}, Status:{}, Msg:{}",
+					logger.info("----------- xxl-job job handle end ----------- <br> Look : ExecutorParams:{}, Status:{}, Msg:{}",
 							new Object[]{handlerParams, _status, _msg});
 					
 					// callback handler info
@@ -100,7 +99,7 @@ public class JobThread extends Thread{
 					} else {
 						// is killed
 						triggerDate.setStatus(JobHandleStatus.FAIL.name());
-						triggerDate.setMsg(stopReason + "人工手动终止[业务运行中，被强制终止]");
+						triggerDate.setMsg(stopReason + " [业务运行中，被强制终止]");
 						TriggerCallbackThread.pushCallBack(triggerDate);
 					}
 				}
@@ -114,12 +113,9 @@ public class JobThread extends Thread{
 			RequestModel triggerDate = triggerQueue.poll();
 			if (triggerDate!=null) {
 				// is killed
-				RequestModel callback = new RequestModel();
-				callback.setLogAddress(XxlJobNetCommUtil.addressToUrl(triggerDate.getLogAddress()));
-				callback.setLogId(triggerDate.getLogId());
-				callback.setStatus(JobHandleStatus.FAIL.name());
-				callback.setMsg(stopReason + "[任务尚未执行，在调度队列中被终止]");
-				TriggerCallbackThread.pushCallBack(callback);
+				triggerDate.setStatus(JobHandleStatus.FAIL.name());
+				triggerDate.setMsg(stopReason + " [任务尚未执行，在调度队列中被终止]");
+				TriggerCallbackThread.pushCallBack(triggerDate);
 			}
 		}
 		

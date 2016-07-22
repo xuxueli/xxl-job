@@ -37,10 +37,10 @@ public class HandlerRouter {
      */
 	private static ConcurrentHashMap<String, JobThread> JobThreadRepository = new ConcurrentHashMap<String, JobThread>();
 	public static JobThread registJobThread(String jobkey, IJobHandler handler){
-		JobThread handlerThread = new JobThread(handler);
-		handlerThread.start();
-		logger.info(">>>>>>>>>>> xxl-job regist handler success, jobkey:{}, handler:{}", new Object[]{jobkey, handler});
-		return HandlerRouter.JobThreadRepository.put(jobkey, handlerThread);	// putIfAbsent
+		JobThread jobThread = new JobThread(handler);
+		jobThread.start();
+		logger.info(">>>>>>>>>>> xxl-job regist JobThread success, jobkey:{}, handler:{}", new Object[]{jobkey, handler});
+		return HandlerRouter.JobThreadRepository.put(jobkey, jobThread);	// putIfAbsent
 	}
 	public static JobThread loadJobThread(String jobKey){
 		return HandlerRouter.JobThreadRepository.get(jobKey);
