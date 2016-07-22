@@ -4,7 +4,7 @@ import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.admin.core.util.DynamicSchedulerUtil;
 import com.xxl.job.admin.core.util.MailUtil;
-import com.xxl.job.core.util.HttpUtil.RemoteCallBack;
+import com.xxl.job.core.router.model.ResponseModel;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,7 +40,7 @@ public class JobMonitorHelper {
 							logger.info(">>>>>>>>>>> job monitor heat success, JobLogId:{}", jobLogId);
 							XxlJobLog log = DynamicSchedulerUtil.xxlJobLogDao.load(jobLogId);
 							if (log!=null) {
-								if (RemoteCallBack.SUCCESS.equals(log.getTriggerStatus()) && StringUtils.isBlank(log.getHandleStatus())) {
+								if (ResponseModel.SUCCESS.equals(log.getTriggerStatus()) && StringUtils.isBlank(log.getHandleStatus())) {
 									try {
 										TimeUnit.SECONDS.sleep(10);
 									} catch (InterruptedException e) {
@@ -48,10 +48,10 @@ public class JobMonitorHelper {
 									}
 									JobMonitorHelper.monitor(jobLogId);
 								}
-								if (RemoteCallBack.SUCCESS.equals(log.getTriggerStatus()) && RemoteCallBack.SUCCESS.equals(log.getHandleStatus())) {
+								if (ResponseModel.SUCCESS.equals(log.getTriggerStatus()) && ResponseModel.SUCCESS.equals(log.getHandleStatus())) {
 									// pass
 								}
-								if (RemoteCallBack.FAIL.equals(log.getTriggerStatus()) || RemoteCallBack.FAIL.equals(log.getHandleStatus())) {
+								if (ResponseModel.FAIL.equals(log.getTriggerStatus()) || ResponseModel.FAIL.equals(log.getHandleStatus())) {
 									XxlJobInfo info = DynamicSchedulerUtil.xxlJobInfoDao.load(log.getJobGroup(), log.getJobName());
 									if (info!=null && info.getAlarmEmail()!=null && info.getAlarmEmail().trim().length()>0) {
 

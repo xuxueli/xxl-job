@@ -1,12 +1,12 @@
 package com.xxl.job.admin.core.jobbean.impl;
-//package com.xxl.job.service.job.impl;
+//package com.xxl.job.action.job.impl;
 //
 //import java.util.concurrent.TimeUnit;
 //
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;
 //
-//import com.xxl.job.service.job.LocalNomalJobBean;
+//import com.xxl.job.action.job.LocalNomalJobBean;
 //
 ///**
 // * demo job bean for concurrent

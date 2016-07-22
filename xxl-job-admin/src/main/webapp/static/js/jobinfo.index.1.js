@@ -265,7 +265,9 @@ $(function() {
         	$.post(base_url + "/jobinfo/add",  $("#addModal .form").serialize(), function(data, status) {
     			if (data.code == "200") {
     				ComAlert.show(1, "新增任务成功", function(){
-    					window.location.reload();
+    					//window.location.reload();
+						$('#addModal').modal('hide');
+						jobTable.fnDraw();
     				});
     			} else {
     				if (data.msg) {
@@ -395,7 +397,9 @@ $(function() {
     		$.post(base_url + "/jobinfo/reschedule", $("#updateModal .form").serialize(), function(data, status) {
     			if (data.code == "200") {
     				ComAlert.show(1, "更新成功", function(){
-    					window.location.reload();
+    					//window.location.reload();
+						$('#updateModal').modal('hide');
+						jobTable.fnDraw();
     				});
     			} else {
     				if (data.msg) {

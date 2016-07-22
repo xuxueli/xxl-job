@@ -1,5 +1,5 @@
 package com.xxl.job.admin.core.jobbean;
-//package com.xxl.job.service.job;
+//package com.xxl.job.action.job;
 //
 //import java.io.PrintWriter;
 //import java.io.StringWriter;
@@ -15,8 +15,8 @@ package com.xxl.job.admin.core.jobbean;
 //import org.slf4j.LoggerFactory;
 //import org.springframework.scheduling.quartz.QuartzJobBean;
 //
-//import com.xxl.job.client.handler.HandlerRepository;
-//import com.xxl.job.client.util.HttpUtil.RemoteCallBack;
+//import com.xxl.job.client.handler.HandlerRouter;
+//import com.xxl.job.client.util.XxlJobNetCommUtil.RemoteCallBack;
 //import com.xxl.job.client.util.JacksonUtil;
 //import com.xxl.job.core.model.XxlJobInfo;
 //import com.xxl.job.core.model.XxlJobLog;
@@ -55,7 +55,7 @@ package com.xxl.job.admin.core.jobbean;
 //		logger.info(">>>>>>>>>>> xxl-job trigger start, jobLog:{}", jobLog);
 //		
 //		// trigger request
-//		String handler_params = jobDataMap.get(HandlerRepository.HANDLER_PARAMS);
+//		String handler_params = jobDataMap.get(HandlerRouter.HANDLER_PARAMS);
 //		String[] handlerParams = null;
 //		if (StringUtils.isNotBlank(handler_params)) {
 //			handlerParams = handler_params.split(",");
@@ -72,7 +72,7 @@ package com.xxl.job.admin.core.jobbean;
 //			jobLog.setHandleStatus(RemoteCallBack.SUCCESS);
 //			jobLog.setHandleMsg(JacksonUtil.writeValueAsString(responseMsg));
 //		} catch (Exception e) {
-//			logger.info("HandlerThread Exception:", e);
+//			logger.info("JobThread Exception:", e);
 //			StringWriter out = new StringWriter();
 //			e.printStackTrace(new PrintWriter(out));
 //			

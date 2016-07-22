@@ -1,16 +1,14 @@
 package com.xxl.job.dao.impl;
 
-import java.util.List;
-
-import javax.annotation.Resource;
-
+import com.xxl.job.admin.core.model.XxlJobInfo;
+import com.xxl.job.admin.dao.IXxlJobInfoDao;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.xxl.job.admin.core.model.XxlJobInfo;
-import com.xxl.job.admin.dao.IXxlJobInfoDao;
+import javax.annotation.Resource;
+import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath*:applicationcontext-*.xml")

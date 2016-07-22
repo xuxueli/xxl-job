@@ -5,7 +5,7 @@ import java.util.Map;
 import com.xxl.job.admin.core.model.ReturnT;
 
 /**
- * core job service for xxl-job
+ * core job action for xxl-job
  * 
  * @author xuxueli 2016-5-28 15:30:33
  */

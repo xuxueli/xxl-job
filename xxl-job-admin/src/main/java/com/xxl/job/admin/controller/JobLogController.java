@@ -6,10 +6,10 @@ import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.admin.dao.IXxlJobInfoDao;
 import com.xxl.job.admin.dao.IXxlJobLogDao;
-import com.xxl.job.core.handler.HandlerRepository.ActionEnum;
-import com.xxl.job.core.handler.HandlerRepository.HandlerParamEnum;
-import com.xxl.job.core.util.HttpUtil;
-import com.xxl.job.core.util.HttpUtil.RemoteCallBack;
+import com.xxl.job.core.router.HandlerRouter.ActionRepository;
+import com.xxl.job.core.router.model.RequestModel;
+import com.xxl.job.core.router.model.ResponseModel;
+import com.xxl.job.core.util.XxlJobNetCommUtil;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.stereotype.Controller;
@@ -110,22 +110,22 @@ public class JobLogController {
 		if (log == null) {
 			return new ReturnT<String>(500, "参数异常");
 		}
-		if (!RemoteCallBack.SUCCESS.equals(log.getTriggerStatus())) {
+		if (!ResponseModel.SUCCESS.equals(log.getTriggerStatus())) {
 			return new ReturnT<String>(500, "调度失败，无法查看执行日志");
 		}
 		
 		// trigger id, trigger time
-		Map<String, String> reqMap = new HashMap<String, String>();
-		reqMap.put(HandlerParamEnum.TIMESTAMP.name(), String.valueOf(System.currentTimeMillis()));
-		reqMap.put(HandlerParamEnum.ACTION.name(), ActionEnum.LOG.name());
-		reqMap.put(HandlerParamEnum.LOG_ID.name(), String.valueOf(id));
-		reqMap.put(HandlerParamEnum.LOG_DATE.name(), String.valueOf(log.getTriggerTime().getTime()));
-		
-		RemoteCallBack callBack = HttpUtil.post(HttpUtil.addressToUrl(log.getExecutorAddress()), reqMap);
-		if (HttpUtil.RemoteCallBack.SUCCESS.equals(callBack.getStatus())) {
-			return new ReturnT<String>(callBack.getMsg());
+		RequestModel requestModel = new RequestModel();
+		requestModel.setTimestamp(System.currentTimeMillis());
+		requestModel.setAction(ActionRepository.LOG.name());
+		requestModel.setLogId(id);
+		requestModel.setLogDateTim(log.getTriggerTime().getTime());
+
+		ResponseModel responseModel = XxlJobNetCommUtil.postHex(XxlJobNetCommUtil.addressToUrl(log.getExecutorAddress()), requestModel);
+		if (ResponseModel.SUCCESS.equals(responseModel.getStatus())) {
+			return new ReturnT<String>(responseModel.getMsg());
 		} else {
-			return new ReturnT<String>(500, callBack.getMsg());
+			return new ReturnT<String>(500, responseModel.getMsg());
 		}
 	}
 	
@@ -145,27 +145,26 @@ public class JobLogController {
 		if (log == null || jobInfo==null) {
 			return new ReturnT<String>(500, "参数异常");
 		}
-		if (!RemoteCallBack.SUCCESS.equals(log.getTriggerStatus())) {
+		if (!ResponseModel.SUCCESS.equals(log.getTriggerStatus())) {
 			return new ReturnT<String>(500, "调度失败，无法终止日志");
 		}
 		
-		// request
-		Map<String, String> reqMap = new HashMap<String, String>();
-		reqMap.put(HandlerParamEnum.TIMESTAMP.name(), String.valueOf(System.currentTimeMillis()));
-		reqMap.put(HandlerParamEnum.ACTION.name(), ActionEnum.KILL.name());
-		reqMap.put(HandlerParamEnum.JOB_GROUP.name(), log.getJobGroup());
-		reqMap.put(HandlerParamEnum.JOB_NAME.name(), log.getJobName());
-		reqMap.put(HandlerParamEnum.GLUE_SWITCH.name(), String.valueOf(jobInfo.getGlueSwitch()));
+		// request of kill
+		RequestModel requestModel = new RequestModel();
+		requestModel.setTimestamp(System.currentTimeMillis());
+		requestModel.setAction(ActionRepository.KILL.name());
+		requestModel.setJobGroup(log.getJobGroup());
+		requestModel.setJobName(log.getJobName());
 
-		RemoteCallBack callBack = HttpUtil.post(HttpUtil.addressToUrl(log.getExecutorAddress()), reqMap);
-		if (HttpUtil.RemoteCallBack.SUCCESS.equals(callBack.getStatus())) {
-			log.setHandleStatus(HttpUtil.RemoteCallBack.FAIL);
+		ResponseModel responseModel = XxlJobNetCommUtil.postHex(XxlJobNetCommUtil.addressToUrl(log.getExecutorAddress()), requestModel);
+		if (ResponseModel.SUCCESS.equals(responseModel.getStatus())) {
+			log.setHandleStatus(ResponseModel.FAIL);
 			log.setHandleMsg("人为操作主动终止");
 			log.setHandleTime(new Date());
 			xxlJobLogDao.updateHandleInfo(log);
-			return new ReturnT<String>(callBack.getMsg());
+			return new ReturnT<String>(responseModel.getMsg());
 		} else {
-			return new ReturnT<String>(500, callBack.getMsg());
+			return new ReturnT<String>(500, responseModel.getMsg());
 		}
 	}
 }

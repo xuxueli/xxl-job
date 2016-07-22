@@ -59,7 +59,7 @@ public class GlueFactory implements ApplicationContextAware {
 	}
 	
 	/**
-	 * inject service of spring
+	 * inject action of spring
 	 * @param instance
 	 */
 	public void injectService(Object instance){

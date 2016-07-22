@@ -1,6 +1,6 @@
 package com.xxl.job.core.executor.jetty;
 
-import com.xxl.job.core.handler.HandlerRepository;
+import com.xxl.job.core.router.HandlerRouter;
 import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.handler.annotation.JobHander;
 import org.eclipse.jetty.server.Connector;
@@ -81,7 +81,7 @@ public class XxlJobExecutor implements ApplicationContextAware {
 	}
 	
 	/**
-	 * init job handler service
+	 * init job handler action
 	 */
 	public void initJobHandler(){
 		Map<String, Object> serviceBeanMap = XxlJobExecutor.applicationContext.getBeansWithAnnotation(JobHander.class);
@@ -90,7 +90,7 @@ public class XxlJobExecutor implements ApplicationContextAware {
                 if (serviceBean instanceof IJobHandler){
                     String name = serviceBean.getClass().getAnnotation(JobHander.class).value();
                     IJobHandler handler = (IJobHandler) serviceBean;
-                    HandlerRepository.registJobHandler(name, handler);
+                    HandlerRouter.registJobHandler(name, handler);
                 }
             }
         }
