@@ -98,7 +98,13 @@ $(function() {
             		},
 	                { "data": 'jobName', "visible" : false},
 	                { "data": 'executorAddress', "visible" : true},
-					{ "data": 'executorHandler', "visible" : true},
+					{
+						"data": 'executorHandler',
+						"visible" : true,
+						"render": function ( data, type, row ) {
+							return (row.executorHandler)?row.executorHandler:"GLUE模式";
+						}
+					},
 	                { "data": 'executorParam', "visible" : true},
 	                { 
 	                	"data": 'triggerTime', 
