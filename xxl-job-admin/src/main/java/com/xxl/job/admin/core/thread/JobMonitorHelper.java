@@ -57,7 +57,7 @@ public class JobMonitorHelper {
 
 										Set<String> emailSet = new HashSet<String>(Arrays.asList(info.getAlarmEmail().split(",")));
 										for (String email: emailSet) {
-											String title = "《调度监控报警-调度平台平台XXL-JOB》";
+											String title = "《调度监控报警-任务调度中心XXL-JOB》";
 											String content = MessageFormat.format("任务调度失败, 任务组:{0}, 任务描述:{1}.", info.getJobGroup(), info.getJobDesc());
 											MailUtil.sendMail(email, title, content, false, null);
 										}
