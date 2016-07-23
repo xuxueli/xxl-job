@@ -61,11 +61,6 @@ public class RunAction extends IAction {
             }
         }
 
-        // sometime, cmap.get can not return given value, i do not know why
-        if (jobThread == null) {
-            jobThread = HandlerRouter.loadJobThread(jobKey);
-        }
-
         // push data to queue
         jobThread.pushTriggerQueue(requestModel);
         return new ResponseModel(ResponseModel.SUCCESS, null);

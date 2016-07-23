@@ -40,7 +40,8 @@ public class HandlerRouter {
 		JobThread jobThread = new JobThread(handler);
 		jobThread.start();
 		logger.info(">>>>>>>>>>> xxl-job regist JobThread success, jobkey:{}, handler:{}", new Object[]{jobkey, handler});
-		return HandlerRouter.JobThreadRepository.put(jobkey, jobThread);	// putIfAbsent
+		HandlerRouter.JobThreadRepository.put(jobkey, jobThread);	// putIfAbsent | oh my god, map's put method return the old value!!!
+		return jobThread;
 	}
 	public static JobThread loadJobThread(String jobKey){
 		return HandlerRouter.JobThreadRepository.get(jobKey);
