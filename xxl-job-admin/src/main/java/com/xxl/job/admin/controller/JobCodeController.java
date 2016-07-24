@@ -69,7 +69,7 @@ public class JobCodeController {
 		if (StringUtils.isNotBlank(xxlJobLogGlue.getGlueSource()) && StringUtils.isNotBlank(xxlJobLogGlue.getGlueRemark())) {
 			xxlJobLogGlueDao.save(xxlJobLogGlue);
 			// remove code backup more than 30
-			xxlJobLogGlueDao.removeOld(xxlJobLogGlue.getJobGroup(), xxlJobLogGlue.getJobName(), 3);
+			xxlJobLogGlueDao.removeOld(xxlJobLogGlue.getJobGroup(), xxlJobLogGlue.getJobName(), 30);
 		}
 		
 		
