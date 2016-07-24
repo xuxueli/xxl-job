@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.text.MessageFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -84,6 +85,21 @@ public class XxlJobServiceImpl implements IXxlJobService {
 		}
 		if (glueSwitch==0 && StringUtils.isBlank(executorHandler)) {
 			return new ReturnT<String>(500, "请输入“JobHandler”");
+		}
+
+		// childJobKey valid
+		if (StringUtils.isNotBlank(childJobKey)) {
+			String[] childJobKeys = childJobKey.split(",");
+			for (String childJobKeyItem: childJobKeys) {
+				String[] childJobKeyArr = childJobKeyItem.split("_");
+				if (childJobKeyArr.length!=2) {
+					return new ReturnT<String>(500, MessageFormat.format("子任务Key({0})格式错误", childJobKeyItem));
+				}
+				XxlJobInfo childJobInfo = xxlJobInfoDao.load(childJobKeyArr[0], childJobKeyArr[1]);
+				if (childJobInfo==null) {
+					return new ReturnT<String>(500, MessageFormat.format("子任务Key({0})无效", childJobKeyItem));
+				}
+			}
 		}
 
 		// generate jobName
@@ -156,6 +172,21 @@ public class XxlJobServiceImpl implements IXxlJobService {
 		}
 		if (glueSwitch==0 && StringUtils.isBlank(executorHandler)) {
 			return new ReturnT<String>(500, "请输入“JobHandler”");
+		}
+
+		// childJobKey valid
+		if (StringUtils.isNotBlank(childJobKey)) {
+			String[] childJobKeys = childJobKey.split(",");
+			for (String childJobKeyItem: childJobKeys) {
+				String[] childJobKeyArr = childJobKeyItem.split("_");
+				if (childJobKeyArr.length!=2) {
+					return new ReturnT<String>(500, MessageFormat.format("子任务Key({0})格式错误", childJobKeyItem));
+				}
+				XxlJobInfo childJobInfo = xxlJobInfoDao.load(childJobKeyArr[0], childJobKeyArr[1]);
+				if (childJobInfo==null) {
+					return new ReturnT<String>(500, MessageFormat.format("子任务Key({0})无效", childJobKeyItem));
+				}
+			}
 		}
 
 		// stage job info

@@ -47,24 +47,32 @@ public class XxlJobLogCallbackServerHandler extends AbstractHandler {
 			if (!ResponseModel.SUCCESS.equals(log.getHandleStatus())) {
 				XxlJobInfo xxlJobInfo = DynamicSchedulerUtil.xxlJobInfoDao.load(log.getJobGroup(), log.getJobName());
 				if (xxlJobInfo!=null && StringUtils.isNotBlank(xxlJobInfo.getChildJobKey())) {
-					String[] jobKeyArr = xxlJobInfo.getChildJobKey().split("_");
-					if (jobKeyArr!=null && jobKeyArr.length==2) {
-						XxlJobInfo childJobInfo = DynamicSchedulerUtil.xxlJobInfoDao.load(jobKeyArr[0], jobKeyArr[1]);
-						if (childJobInfo!=null) {
-							try {
-								boolean ret = DynamicSchedulerUtil.triggerJob(childJobInfo.getJobName(), childJobInfo.getJobGroup());
+					childTriggerMsg = "<hr>";
+                    String[] childJobKeys = xxlJobInfo.getChildJobKey().split(",");
+					for (int i = 0; i < childJobKeys.length; i++) {
+						String[] jobKeyArr = childJobKeys[i].split("_");
+						if (jobKeyArr!=null && jobKeyArr.length==2) {
+							XxlJobInfo childJobInfo = DynamicSchedulerUtil.xxlJobInfoDao.load(jobKeyArr[0], jobKeyArr[1]);
+							if (childJobInfo!=null) {
+								try {
+									boolean ret = DynamicSchedulerUtil.triggerJob(childJobInfo.getJobName(), childJobInfo.getJobGroup());
 
-								// add msg
-                                childTriggerMsg += MessageFormat.format("<br> 触发子任务成功, 子任务Key: {0}, status: {1}, 子任务描述: {2}", xxlJobInfo.getChildJobKey(), ret, childJobInfo.getJobDesc());
-							} catch (SchedulerException e) {
-								logger.error("", e);
+									// add msg
+									childTriggerMsg += MessageFormat.format("<br> {0}/{1} 触发子任务成功, 子任务Key: {2}, status: {3}, 子任务描述: {4}",
+											(i+1), childJobKeys.length, childJobKeys[i], ret, childJobInfo.getJobDesc());
+								} catch (SchedulerException e) {
+									logger.error("", e);
+								}
+							} else {
+								childTriggerMsg += MessageFormat.format("<br> {0}/{1} 触发子任务失败, 子任务xxlJobInfo不存在, 子任务Key: {2}",
+										(i+1), childJobKeys.length, childJobKeys[i]);
 							}
 						} else {
-                            childTriggerMsg = "<br> 触发子任务失败, 子任务xxlJobInfo不存在, 子任务Key:" + xxlJobInfo.getChildJobKey();
-                        }
-					} else {
-                        childTriggerMsg = "<br> 触发子任务失败, 子任务Key格式错误, 子任务Key:" + xxlJobInfo.getChildJobKey();
-                    }
+							childTriggerMsg += MessageFormat.format("<br> {0}/{1} 触发子任务失败, 子任务Key格式错误, 子任务Key: {2}",
+									(i+1), childJobKeys.length, childJobKeys[i]);
+						}
+					}
+
 				}
 			}
 

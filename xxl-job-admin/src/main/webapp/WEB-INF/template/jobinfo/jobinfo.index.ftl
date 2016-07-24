@@ -151,7 +151,7 @@
 					</div>
                     <div class="form-group">
                         <label for="lastname" class="col-sm-2 control-label">子任务Key<font color="black">*</font></label>
-                        <div class="col-sm-4"><input type="text" class="form-control" name="childJobKey" placeholder="请输入子任务的任务Key" maxlength="100" ></div>
+                        <div class="col-sm-4"><input type="text" class="form-control" name="childJobKey" placeholder="请输入子任务的任务Key,如存在多个逗号分隔" maxlength="100" ></div>
                     </div>
                     <hr>
 					<div class="form-group">
@@ -232,7 +232,7 @@ public class DemoJobHandler extends IJobHandler {
 					</div>
                     <div class="form-group">
                         <label for="lastname" class="col-sm-2 control-label">子任务Key<font color="black">*</font></label>
-                        <div class="col-sm-4"><input type="text" class="form-control" name="childJobKey" placeholder="请输入子任务的任务Key" maxlength="100" ></div>
+                        <div class="col-sm-4"><input type="text" class="form-control" name="childJobKey" placeholder="请输入子任务的任务Key,如存在多个逗号分隔" maxlength="100" ></div>
                     </div>
 					<hr>
 					<div class="form-group">
