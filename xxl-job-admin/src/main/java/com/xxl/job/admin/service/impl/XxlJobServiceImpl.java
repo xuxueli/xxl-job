@@ -61,7 +61,8 @@ public class XxlJobServiceImpl implements IXxlJobService {
 
 	@Override
 	public ReturnT<String> add(String jobGroup, String jobCron, String jobDesc, String author, String alarmEmail,
-			String executorAddress,	String executorHandler, String executorParam, int glueSwitch, String glueSource, String glueRemark) {
+			String executorAddress,	String executorHandler, String executorParam, int glueSwitch, String glueSource, String glueRemark,
+			String childJobKey) {
 		// valid
 		if (JobGroupEnum.match(jobGroup) == null) {
 			return new ReturnT<String>(500, "请选择“任务组”");
@@ -110,6 +111,7 @@ public class XxlJobServiceImpl implements IXxlJobService {
 		jobInfo.setGlueSwitch(glueSwitch);
 		jobInfo.setGlueSource(glueSource);
 		jobInfo.setGlueRemark(glueRemark);
+		jobInfo.setChildJobKey(childJobKey);
 
 		try {
 			// add job 2 quartz
@@ -128,7 +130,7 @@ public class XxlJobServiceImpl implements IXxlJobService {
 
 	@Override
 	public ReturnT<String> reschedule(String jobGroup, String jobName, String jobCron, String jobDesc, String author, String alarmEmail,
-			String executorAddress, String executorHandler, String executorParam, int glueSwitch) {
+			String executorAddress, String executorHandler, String executorParam, int glueSwitch, String childJobKey) {
 
 		// valid
 		if (JobGroupEnum.match(jobGroup) == null) {
@@ -166,6 +168,7 @@ public class XxlJobServiceImpl implements IXxlJobService {
 		jobInfo.setExecutorHandler(executorHandler);
 		jobInfo.setExecutorParam(executorParam);
 		jobInfo.setGlueSwitch(glueSwitch);
+		jobInfo.setChildJobKey(childJobKey);
 		
 		try {
 			// fresh quartz

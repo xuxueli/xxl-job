@@ -35,6 +35,14 @@ $(function() {
 	            		}
             		},
 					{ "data": 'jobName', "visible" : false},
+					{
+						"data": 'childJobKey',
+						"visible" : true,
+						"render": function ( data, type, row ) {
+							var jobKey = row.jobGroup + "_" + row.jobName;
+							return jobKey;
+						}
+					},
 	                { "data": 'jobDesc', "visible" : true},
 	                { "data": 'jobCron', "visible" : true},
 	                { "data": 'executorAddress', "visible" : false},
@@ -103,6 +111,7 @@ $(function() {
 									' executorHandler="'+row.executorHandler +'" '+
 									' executorParam="'+ row.executorParam +'" '+
 									' glueSwitch="'+ row.glueSwitch +'" '+
+                                    ' childJobKey="'+ row.childJobKey +'" '+
 									'>'+
 									'<button class="btn btn-primary btn-xs job_operate" type="job_trigger" type="button">执行</button>  '+
 									pause_resume +
@@ -284,6 +293,8 @@ $(function() {
 		addModalValidate.resetForm();
 		$("#addModal .form .form-group").removeClass("has-error");
 		$(".remote_panel").show();	// remote
+
+		$("#addModal .form input[name='executorHandler']").removeAttr("readonly");
 	});
 
 	// GLUE模式开启
@@ -314,6 +325,7 @@ $(function() {
 		$("#updateModal .form input[name='executorAddress']").val($(this).parent('p').attr("executorAddress"));
 		$("#updateModal .form input[name='executorHandler']").val($(this).parent('p').attr("executorHandler"));
 		$("#updateModal .form input[name='executorParam']").val($(this).parent('p').attr("executorParam"));
+        $("#updateModal .form input[name='childJobKey']").val($(this).parent('p').attr("childJobKey"));
 
 		// jobGroupTitle
 		var jobGroupTitle = $("#addModal .form select[name='jobGroup']").find("option[value='" + $(this).parent('p').attr("jobGroup") + "']").text();

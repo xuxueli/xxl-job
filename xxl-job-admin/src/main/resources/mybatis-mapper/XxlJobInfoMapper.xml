@@ -24,6 +24,8 @@
 	    <result column="glue_switch" property="glueSwitch" />
 	    <result column="glue_source" property="glueSource" />
 	    <result column="glue_remark" property="glueRemark" />
+
+		<result column="child_jobkey" property="childJobKey" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -41,7 +43,8 @@
 		t.executor_param,
 		t.glue_switch,
 		t.glue_source,
-		t.glue_remark
+		t.glue_remark,
+		t.child_jobkey
 	</sql>
 	
 	<select id="pageList" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
@@ -87,7 +90,8 @@
 			executor_param,
 			glue_switch,
 			glue_source,
-			glue_remark
+			glue_remark,
+			child_jobkey
 		) VALUES (
 			#{jobGroup}, 
 			#{jobName}, 
@@ -102,7 +106,8 @@
 			#{executorParam},
 			#{glueSwitch},
 			#{glueSource},
-			#{glueRemark}
+			#{glueRemark},
+			#{childJobKey}
 		);
 		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id"> 
 			SELECT LAST_INSERT_ID() 
@@ -129,7 +134,8 @@
 			executor_param = #{executorParam},
 			glue_switch = #{glueSwitch},
 			glue_source = #{glueSource},
-			glue_remark = #{glueRemark}
+			glue_remark = #{glueRemark},
+			child_jobkey = #{childJobKey}
 		WHERE job_group = #{jobGroup}
 			AND job_name = #{jobName}
 	</update>
