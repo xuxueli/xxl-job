@@ -43,6 +43,7 @@ public class XxlJobLogCallbackServerHandler extends AbstractHandler {
 		if (log!=null) {
 
 			// trigger success, to trigger child job, and avoid repeat trigger child job
+            String childTriggerMsg = null;
 			if (!ResponseModel.SUCCESS.equals(log.getHandleStatus())) {
 				XxlJobInfo xxlJobInfo = DynamicSchedulerUtil.xxlJobInfoDao.load(log.getJobGroup(), log.getJobName());
 				if (xxlJobInfo!=null && StringUtils.isNotBlank(xxlJobInfo.getChildJobKey())) {
@@ -54,21 +55,23 @@ public class XxlJobLogCallbackServerHandler extends AbstractHandler {
 								boolean ret = DynamicSchedulerUtil.triggerJob(childJobInfo.getJobName(), childJobInfo.getJobGroup());
 
 								// add msg
-								String msg = requestModel.getMsg();
-								msg += MessageFormat.format("<br> 触发子任务执行, jobKey:{0}, status:{1}, 描述:{2}", xxlJobInfo.getChildJobKey(), ret, childJobInfo.getJobDesc());
-								requestModel.setMsg(msg);
+                                childTriggerMsg += MessageFormat.format("<br> 触发子任务成功, 子任务Key: {0}, status: {1}, 子任务描述: {2}", xxlJobInfo.getChildJobKey(), ret, childJobInfo.getJobDesc());
 							} catch (SchedulerException e) {
 								logger.error("", e);
 							}
-						}
-					}
+						} else {
+                            childTriggerMsg = "<br> 触发子任务失败, 子任务xxlJobInfo不存在, 子任务Key:" + xxlJobInfo.getChildJobKey();
+                        }
+					} else {
+                        childTriggerMsg = "<br> 触发子任务失败, 子任务Key格式错误, 子任务Key:" + xxlJobInfo.getChildJobKey();
+                    }
 				}
 			}
 
 			// save log
 			log.setHandleTime(new Date());
 			log.setHandleStatus(requestModel.getStatus());
-			log.setHandleMsg(requestModel.getMsg());
+			log.setHandleMsg(requestModel.getMsg() + childTriggerMsg);
 			DynamicSchedulerUtil.xxlJobLogDao.updateHandleInfo(log);
 			responseModel = new ResponseModel(ResponseModel.SUCCESS, null);
 		} else {
