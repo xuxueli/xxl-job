@@ -161,16 +161,21 @@ $(function() {
 	$("#job_list").on('click', '.job_operate',function() {
 		var typeName;
 		var url;
+		var needFresh = false;
+
 		var type = $(this).attr("type");
 		if ("job_pause" == type) {
 			typeName = "暂停";
 			url = base_url + "/jobinfo/pause";
+			needFresh = true;
 		} else if ("job_resume" == type) {
 			typeName = "恢复";
 			url = base_url + "/jobinfo/resume";
+			needFresh = true;
 		} else if ("job_del" == type) {
 			typeName = "删除";
 			url = base_url + "/jobinfo/remove";
+			needFresh = true;
 		} else if ("job_trigger" == type) {
 			typeName = "执行";
 			url = base_url + "/jobinfo/trigger";
@@ -193,8 +198,10 @@ $(function() {
 				success : function(data){
 					if (data.code == 200) {
 						ComAlert.show(1, typeName + "成功", function(){
-							//window.location.reload();
-							jobTable.fnDraw();
+							if (needFresh) {
+								//window.location.reload();
+								jobTable.fnDraw();
+							}
 						});
 					} else {
 						ComAlert.show(1, typeName + "失败");
