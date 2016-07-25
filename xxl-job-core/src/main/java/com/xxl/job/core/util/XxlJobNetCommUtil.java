@@ -54,7 +54,8 @@ public class XxlJobNetCommUtil {
     }
 
     public static void main(String[] args) {
-        System.out.println(parseHexJson2Obj("7B22737461747573223A2253554343455353222C226D7367223A2254696D657374616D702054696D656F75742E227D", ResponseModel.class));
+		System.out.println(parseHexJson2Obj("7B2274696D657374616D70223A313436393432323136303032362C22616374696F6E223A2252554E222C226A6F6247726F7570223A2264656661756C7473222C226A6F624E616D65223A22323031363037323530393030353730363632222C226578656375746F7248616E646C6572223A2264656D6F4A6F6248616E646C6572222C226578656375746F72506172616D73223A2231303030303030222C22676C7565537769746368223A66616C73652C226C6F6741646472657373223A2231302E35372E3132332E32383A38383838222C226C6F674964223A3138382C226C6F674461746554696D223A302C22737461747573223A2253554343455353222C226D7367223A6E756C6C7D", RequestModel.class));
+        System.out.println(parseHexJson2Obj("7B22737461747573223A2253554343455353222C226D7367223A6E756C6C7D", ResponseModel.class));
     }
 
 	/**
@@ -89,7 +90,8 @@ public class XxlJobNetCommUtil {
 			HttpEntity entity = response.getEntity();
 			if (response.getStatusLine().getStatusCode() == 200 && null != entity) {
                 String responseHex = EntityUtils.toString(entity, "UTF-8");
-                EntityUtils.consume(entity);
+				logger.debug("xxl-job, net comm success, requestHex:{}, responseHex:{}", requestHex, responseHex);
+				EntityUtils.consume(entity);
 
                 // i do not know why
                 responseHex = responseHex.replace("\n", "");
