@@ -108,10 +108,10 @@ public class JobLogController {
 		// base check
 		XxlJobLog log = xxlJobLogDao.load(id);
 		if (log == null) {
-			return new ReturnT<String>(500, "参数异常");
+			return new ReturnT<String>(500, "查看执行日志失败: 参数异常");
 		}
 		if (!(ResponseModel.SUCCESS.equals(log.getTriggerStatus()) || StringUtils.isNotBlank(log.getHandleStatus()))) {
-			return new ReturnT<String>(500, "调度失败，无法查看执行日志");
+			return new ReturnT<String>(500, "查看执行日志失败: 任务发起调度失败，无法查看执行日志");
 		}
 		
 		// trigger id, trigger time
@@ -125,7 +125,7 @@ public class JobLogController {
 		if (ResponseModel.SUCCESS.equals(responseModel.getStatus())) {
 			return new ReturnT<String>(responseModel.getMsg());
 		} else {
-			return new ReturnT<String>(500, responseModel.getMsg());
+			return new ReturnT<String>(500, "查看执行日志失败: " + responseModel.getMsg());
 		}
 	}
 	

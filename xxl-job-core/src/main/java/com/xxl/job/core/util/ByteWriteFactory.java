@@ -16,6 +16,9 @@ public class ByteWriteFactory {
 	public ByteWriteFactory() {
 		m_byteBuf = ByteBuffer.allocate(1024 * 4);
 	}
+	public ByteWriteFactory(int capacity) {
+		m_byteBuf = ByteBuffer.allocate(capacity);
+	}
 	
 	public void writeInt(int intValue) {
 		byte[] intBytes = new byte[4];

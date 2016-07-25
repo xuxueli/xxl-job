@@ -42,7 +42,7 @@ public class XxlJobNetCommUtil {
 		int len = ByteHexConverter.getByteLen(json);
 
 		// json to byte[]
-		ByteWriteFactory byteWriteFactory = new ByteWriteFactory();
+		ByteWriteFactory byteWriteFactory = new ByteWriteFactory(4 + len);
 		byteWriteFactory.writeInt(len);
 		byteWriteFactory.writeString(json, len);
 		byte[] bytes = byteWriteFactory.getBytes();
