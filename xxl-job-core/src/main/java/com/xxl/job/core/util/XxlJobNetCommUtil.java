@@ -30,14 +30,25 @@ public class XxlJobNetCommUtil {
     // hex param key
     public static final String HEX = "hex";
 
+
     /**
      * format object to hex-json
      * @param obj
      * @return
      */
     public static String formatObj2HexJson(Object obj){
+    	// obj to json
         String json = JacksonUtil.writeValueAsString(obj);
-        String hex = ByteHexConverter.byte2hex(json.getBytes());
+		int len = ByteHexConverter.getByteLen(json);
+
+		// json to byte[]
+		ByteWriteFactory byteWriteFactory = new ByteWriteFactory();
+		byteWriteFactory.writeInt(len);
+		byteWriteFactory.writeString(json, len);
+		byte[] bytes = byteWriteFactory.getBytes();
+
+		// byte to hex
+        String hex = ByteHexConverter.byte2hex(bytes);
         return hex;
     }
 
@@ -48,14 +59,25 @@ public class XxlJobNetCommUtil {
      * @return
      */
     public static <T> T parseHexJson2Obj(String hex, Class<T> clazz){
-        String json = new String(ByteHexConverter.hex2Byte(hex));
+    	// hex to byte[]
+    	byte[] bytes = ByteHexConverter.hex2Byte(hex);
+
+		// byte[] to json
+		ByteReadFactory byteReadFactory = new ByteReadFactory(bytes);
+		String json = byteReadFactory.readString(byteReadFactory.readInt());
+
+		// json to obj
         T obj = JacksonUtil.readValue(json, clazz);
         return obj;
     }
 
     public static void main(String[] args) {
-		System.out.println(parseHexJson2Obj("7B2274696D657374616D70223A313436393432323136303032362C22616374696F6E223A2252554E222C226A6F6247726F7570223A2264656661756C7473222C226A6F624E616D65223A22323031363037323530393030353730363632222C226578656375746F7248616E646C6572223A2264656D6F4A6F6248616E646C6572222C226578656375746F72506172616D73223A2231303030303030222C22676C7565537769746368223A66616C73652C226C6F6741646472657373223A2231302E35372E3132332E32383A38383838222C226C6F674964223A3138382C226C6F674461746554696D223A302C22737461747573223A2253554343455353222C226D7367223A6E756C6C7D", RequestModel.class));
-        System.out.println(parseHexJson2Obj("7B22737461747573223A2253554343455353222C226D7367223A6E756C6C7D", ResponseModel.class));
+		RequestModel requestModel = new RequestModel();
+		requestModel.setJobGroup("group");
+
+		String hex = formatObj2HexJson(requestModel);
+		System.out.println(hex);
+        System.out.println(parseHexJson2Obj(hex, RequestModel.class));
     }
 
 	/**
@@ -94,8 +116,12 @@ public class XxlJobNetCommUtil {
 				EntityUtils.consume(entity);
 
                 // i do not know why
-                responseHex = responseHex.replace("\n", "");
-                responseHex = responseHex.replace("\r", "");
+                //responseHex = responseHex.replace("\n", "");
+                //responseHex = responseHex.replace("\r", "");
+
+				if (responseHex!=null) {
+					responseHex = responseHex.trim();
+				}
 
                 // parse hex-json to ResponseModel
                 ResponseModel responseModel = XxlJobNetCommUtil.parseHexJson2Obj(responseHex, ResponseModel.class);

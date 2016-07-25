@@ -42,7 +42,25 @@ public class ByteHexConverter {
 	public static byte[] radix2byte(String val, int radix){
 		return new BigInteger(val, radix).toByteArray();
 	}
-	 
+
+	/**
+	 * get length of string
+	 * @param str
+	 * @return
+	 */
+	public static int getByteLen(String str){
+		if (str==null || str.length()==0) {
+			return 0;
+		}
+		// because java base on unicode, and one china code's length is one, but it's cost 2 bytes.
+		int len = str.getBytes().length * 2;
+		if (len % 4 != 0) {
+			// Length is best in multiples of four
+			len = (len/4 + 1) * 4;
+		}
+		return len;
+	}
+
 	public static void main(String[] args) {
 		// hex - byte[] 方案A：位移
 		String temp = "1111111111113d1f3a51sd3f1a32sd1f32as1df2a13sd21f3a2s1df32a13sd2f123s2a3d13fa13sd9999999999";
