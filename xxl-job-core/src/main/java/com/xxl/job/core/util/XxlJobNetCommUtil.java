@@ -90,11 +90,12 @@ public class XxlJobNetCommUtil {
 			HttpEntity entity = response.getEntity();
 			if (response.getStatusLine().getStatusCode() == 200 && null != entity) {
                 String responseHex = EntityUtils.toString(entity, "UTF-8");
-				logger.debug("xxl-job, net comm success, requestHex:{}, responseHex:{}", requestHex, responseHex);
+				logger.info("xxl-job, net comm success, requestHex:{}, responseHex:{}", requestHex, responseHex);
 				EntityUtils.consume(entity);
 
                 // i do not know why
                 responseHex = responseHex.replace("\n", "");
+                responseHex = responseHex.replace("\r", "");
 
                 // parse hex-json to ResponseModel
                 ResponseModel responseModel = XxlJobNetCommUtil.parseHexJson2Obj(responseHex, ResponseModel.class);
