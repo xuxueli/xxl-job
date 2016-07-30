@@ -1,5 +1,9 @@
+# for eclipse
 /.settings/
 /.project
-/xxl-job.iml
+
+# for idea
+*.iml
 /.idea
+*/target
 .DS_Store
