@@ -44,7 +44,7 @@ public class XxlJobLogCallbackServerHandler extends AbstractHandler {
 
 			// trigger success, to trigger child job, and avoid repeat trigger child job
             String childTriggerMsg = null;
-			if (!ResponseModel.SUCCESS.equals(log.getHandleStatus())) {
+			if (ResponseModel.SUCCESS.equals(requestModel.getStatus()) && !ResponseModel.SUCCESS.equals(log.getHandleStatus())) {
 				XxlJobInfo xxlJobInfo = DynamicSchedulerUtil.xxlJobInfoDao.load(log.getJobGroup(), log.getJobName());
 				if (xxlJobInfo!=null && StringUtils.isNotBlank(xxlJobInfo.getChildJobKey())) {
 					childTriggerMsg = "<hr>";
