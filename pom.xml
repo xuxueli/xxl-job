@@ -14,6 +14,7 @@
 
 	<properties>
 		<xxl-job.version>1.4.0</xxl-job.version>
+		<spring.version>3.2.14.RELEASE</spring.version>
 	</properties>
 
 	<build>
@@ -26,6 +27,22 @@
 					<source>1.6</source>
 					<target>1.6</target>
 					<encoding>UTF8</encoding>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.2</version>
+				<configuration>
+					<archiveClasses>false</archiveClasses>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.19.1</version>
+				<configuration>
+					<skip>true</skip>
 				</configuration>
 			</plugin>
 		</plugins>
