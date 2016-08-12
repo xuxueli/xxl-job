@@ -1,5 +1,6 @@
 package com.xxl.job.admin.core.thread;
 
+import com.xxl.job.admin.core.constant.Constants;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.admin.core.util.DynamicSchedulerUtil;
@@ -58,7 +59,8 @@ public class JobMonitorHelper {
 										Set<String> emailSet = new HashSet<String>(Arrays.asList(info.getAlarmEmail().split(",")));
 										for (String email: emailSet) {
 											String title = "《调度监控报警-任务调度中心XXL-JOB》";
-											String content = MessageFormat.format("任务调度失败, 任务组:{0}, 任务描述:{1}.", info.getJobGroup(), info.getJobDesc());
+											String content = MessageFormat.format("任务调度失败, 任务组:{0}, 任务描述:{1}.",
+													Constants.JobGroupEnum.match(info.getJobGroup()).getDesc(), info.getJobDesc());
 											MailUtil.sendMail(email, title, content, false, null);
 										}
 									}
