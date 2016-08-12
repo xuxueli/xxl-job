@@ -88,7 +88,6 @@
 		<@netCommon.commonFooter />
 	</div>
 	
-<@netCommon.comAlert />
 <@netCommon.commonScript />
 <script src="${request.contextPath}/static/plugins/codemirror/lib/codemirror.js"></script>
 <script src="${request.contextPath}/static/plugins/codemirror/mode/clike/clike.js"></script>

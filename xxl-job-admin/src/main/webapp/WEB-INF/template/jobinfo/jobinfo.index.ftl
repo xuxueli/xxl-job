@@ -250,7 +250,6 @@ public class DemoJobHandler extends IJobHandler {
 </div>
 
 <@netCommon.commonScript />
-<@netCommon.comAlert />
 <!-- DataTables -->
 <script src="${request.contextPath}/static/adminlte/plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="${request.contextPath}/static/adminlte/plugins/datatables/dataTables.bootstrap.min.js"></script>

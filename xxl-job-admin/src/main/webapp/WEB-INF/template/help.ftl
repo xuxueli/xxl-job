@@ -52,6 +52,5 @@
 	<@netCommon.commonFooter />
 </div>
 <@netCommon.commonScript />
-<@netCommon.comAlert />
 </body>
 </html>
