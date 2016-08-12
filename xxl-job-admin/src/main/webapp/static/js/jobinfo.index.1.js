@@ -46,7 +46,13 @@ $(function() {
 	                { "data": 'jobDesc', "visible" : true},
 	                { "data": 'jobCron', "visible" : true},
 	                { "data": 'executorAddress', "visible" : false},
-					{ "data": 'executorHandler', "visible" : false},
+					{
+						"data": 'executorHandler',
+						"visible" : true,
+						"render": function ( data, type, row ) {
+							return (row.glueSwitch > 0)? "GLUE模式" : data;
+						}
+					},
 	                { "data": 'executorParam', "visible" : false},
 	                { 
 	                	"data": 'addTime', 
