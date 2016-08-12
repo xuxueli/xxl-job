@@ -13,7 +13,7 @@
 	</modules>
 
 	<properties>
-		<xxl-job.version>1.4.0-SNAPSHOT</xxl-job.version>
+		<xxl-job.version>1.4.0</xxl-job.version>
 	</properties>
 
 	<build>
