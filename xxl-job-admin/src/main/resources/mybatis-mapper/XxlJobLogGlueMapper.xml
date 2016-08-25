@@ -24,7 +24,7 @@
 	</sql>
 	
 	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobLogGlue" useGeneratedKeys="true" keyProperty="id" >
-		INSERT INTO `xxl_job_qrtz_trigger_logglue` (
+		INSERT INTO XXL_JOB_QRTZ_TRIGGER_LOGGLUE (
 			`job_group`,
 			`job_name`,
 			`glue_source`, 
