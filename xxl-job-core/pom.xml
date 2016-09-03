@@ -9,6 +9,11 @@
 	<artifactId>xxl-job-core</artifactId>
 	<version>${xxl-job.version}</version>
 
+	<properties>
+		<xxl-job.version>1.4.0</xxl-job.version>
+		<spring.version>3.2.14.RELEASE</spring.version>
+	</properties>
+
 	<dependencies>
 		<!-- servlet -->
 		<dependency>

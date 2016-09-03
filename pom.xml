@@ -48,4 +48,26 @@
 		</plugins>
 	</build>
 
+
+	<licenses>
+		<license>
+			<name>GNU General Public License, version 2</name>
+			<url>http://opensource.org/licenses/GPL-2.0</url>
+		</license>
+	</licenses>
+	<scm>
+		<tag>master</tag>
+		<url>https://github.com/xuxueli/xxl-job.git</url>
+		<connection>scm:git:https://github.com/xuxueli/xxl-job.git</connection>
+		<developerConnection>scm:git:git@github.com:xuxueli/xxl-job.git</developerConnection>
+	</scm>
+	<developers>
+		<developer>
+			<id>XXL</id>
+			<name>xuxueli</name>
+			<email>931591021@qq.com</email>
+			<url>https://github.com/xuxueli</url>
+		</developer>
+	</developers>
+
 </project>
