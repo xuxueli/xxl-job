@@ -2,7 +2,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>com.xxl</groupId>
+		<groupId>com.xuxueli</groupId>
 		<artifactId>xxl-job</artifactId>
 		<version>${xxl-job.version}</version>
 	</parent>
@@ -10,7 +10,7 @@
 	<version>${xxl-job.version}</version>
 
 	<properties>
-		<xxl-job.version>1.4.0</xxl-job.version>
+		<xxl-job.version>1.4.1</xxl-job.version>
 		<spring.version>3.2.14.RELEASE</spring.version>
 	</properties>
 

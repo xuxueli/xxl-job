@@ -1,5 +1,9 @@
 package com.xxl.job.core.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 
 /**
@@ -7,7 +11,8 @@ import java.math.BigInteger;
  * @author xuxueli 2015-11-14 22:47:28
  */
 public class ByteHexConverter {
-	
+	private static Logger logger = LoggerFactory.getLogger(ByteHexConverter.class);
+
 	/**
 	 * byte - to - radix, use BigInteger
 	 */
@@ -53,7 +58,15 @@ public class ByteHexConverter {
 			return 0;
 		}
 		// because java base on unicode, and one china code's length is one, but it's cost 2 bytes.
-		int len = str.getBytes().length * 2;
+		//int len = str.getBytes().length * 2;
+		int len = 0;
+		try {
+			len = str.getBytes("UTF-8").length;
+		} catch (UnsupportedEncodingException e) {
+			logger.error("", e);
+			len = str.getBytes().length * 2;
+		}
+
 		if (len % 4 != 0) {
 			// Length is best in multiples of four
 			len = (len/4 + 1) * 4;
