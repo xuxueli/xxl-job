@@ -12,7 +12,7 @@ public abstract class IJobHandler extends HandlerRouter {
 	 * job handler <br><br>
 	 * the return Object will be and stored
 	 * @param params
-	 * @return 
+	 * @return job status
 	 * @throws Exception
 	 */
 	public abstract JobHandleStatus execute(String... params) throws Exception;

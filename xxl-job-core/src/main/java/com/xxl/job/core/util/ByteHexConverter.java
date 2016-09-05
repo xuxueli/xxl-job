@@ -51,7 +51,7 @@ public class ByteHexConverter {
 	/**
 	 * get length of string
 	 * @param str
-	 * @return
+	 * @return len of string byte
 	 */
 	public static int getByteLen(String str){
 		if (str==null || str.length()==0) {

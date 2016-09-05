@@ -103,7 +103,7 @@ public class XxlJobFileAppender extends AppenderSkeleton {
 	 * support read log-file
 	 * @param triggerDate
 	 * @param trigger_log_id
-	 * @return
+	 * @return log content
 	 */
 	public static String readLog(Date triggerDate, int trigger_log_id ){
 		if (triggerDate==null || trigger_log_id<=0) {
@@ -137,7 +137,7 @@ public class XxlJobFileAppender extends AppenderSkeleton {
 	/**
 	 * read log data
 	 * @param logFile
-	 * @return
+	 * @return log line content
 	 */
 	public static String readLines(File logFile){
 		BufferedReader reader = null;
@@ -167,9 +167,9 @@ public class XxlJobFileAppender extends AppenderSkeleton {
 	
 	/**
 	 * read data from line num
-	 * @param sourceFile
+	 * @param logFile
 	 * @param fromLineNum
-	 * @return
+	 * @return log content
 	 * @throws Exception
 	 */
 	public static String readLinesFrom(File logFile, int fromLineNum) {  

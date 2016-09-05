@@ -34,7 +34,7 @@ public class XxlJobNetCommUtil {
     /**
      * format object to hex-json
      * @param obj
-     * @return
+     * @return result
      */
     public static String formatObj2HexJson(Object obj){
     	// obj to json
@@ -56,7 +56,7 @@ public class XxlJobNetCommUtil {
      * parse hex-json to object
      * @param hex
      * @param clazz
-     * @return
+     * @return result
      */
     public static <T> T parseHexJson2Obj(String hex, Class<T> clazz){
     	// hex to byte[]
@@ -161,7 +161,7 @@ public class XxlJobNetCommUtil {
 	/**
 	 * parse address ip:port to url http://.../ 
 	 * @param address
-	 * @return
+	 * @return result
 	 */
 	public static String addressToUrl(String address){
 		return "http://" + address + "/";
