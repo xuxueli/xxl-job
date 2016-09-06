@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.xuxueli</groupId>
 	<artifactId>xxl-job</artifactId>
-	<version>${xxl-job.version}</version>
+	<version>1.4.1</version>
 	<packaging>pom</packaging>
 
 	<name>xxl-job</name>
@@ -11,15 +11,10 @@
 	<url>http://www.xuxueli.com/</url>
 
 	<modules>
-		<module>xxl-job-admin</module>
 		<module>xxl-job-core</module>
+		<module>xxl-job-admin</module>
 		<module>xxl-job-executor-example</module>
 	</modules>
-
-	<properties>
-		<xxl-job.version>1.4.1</xxl-job.version>
-		<spring.version>3.2.14.RELEASE</spring.version>
-	</properties>
 
 	<build>
 		<plugins>

@@ -4,10 +4,9 @@
 	<parent>
 		<groupId>com.xuxueli</groupId>
 		<artifactId>xxl-job</artifactId>
-		<version>${xxl-job.version}</version>
+		<version>1.4.1</version>
 	</parent>
 	<artifactId>xxl-job-executor-example</artifactId>
-	<version>${xxl-job.version}</version>
 	<packaging>war</packaging>
 
 	<properties>
