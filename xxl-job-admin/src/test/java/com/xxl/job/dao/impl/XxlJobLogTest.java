@@ -2,7 +2,6 @@ package com.xxl.job.dao.impl;
 
 import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.admin.dao.IXxlJobLogDao;
-import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.router.model.ResponseModel;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -45,7 +44,7 @@ public class XxlJobLogTest {
 	public void updateHandleInfo(){
 		XxlJobLog xxlJobLog = xxlJobLogDao.load(29);
 		xxlJobLog.setHandleTime(new Date());
-		xxlJobLog.setHandleStatus(IJobHandler.JobHandleStatus.SUCCESS.name());
+		xxlJobLog.setHandleStatus(ResponseModel.SUCCESS);
 		xxlJobLog.setHandleMsg("handle msg");
 		xxlJobLogDao.updateHandleInfo(xxlJobLog);
 	}

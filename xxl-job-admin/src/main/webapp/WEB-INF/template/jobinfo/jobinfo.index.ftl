@@ -169,15 +169,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.xxl.job.core.handler.IJobHandler;
-import com.xxl.job.core.handler.IJobHandler.JobHandleStatus;
 
-public class DemoJobHandler extends IJobHandler {
-	private static transient Logger logger = LoggerFactory.getLogger(DemoJobHandler.class);
+public class DemoGlueJobHandler extends IJobHandler {
+	private static transient Logger logger = LoggerFactory.getLogger(DemoGlueJobHandler.class);
 	
 	@Override
-	public JobHandleStatus execute(String... params) throws Exception {
+	public void execute(String... params) throws Exception {
 		logger.info("XXL-JOB, Hello World.");
-		return JobHandleStatus.SUCCESS;
 	}
 	
 }

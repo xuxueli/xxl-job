@@ -1,9 +1,9 @@
 package com.xxl.job.core.router.thread;
 
 import com.xxl.job.core.handler.IJobHandler;
-import com.xxl.job.core.handler.IJobHandler.JobHandleStatus;
 import com.xxl.job.core.log.XxlJobFileAppender;
 import com.xxl.job.core.router.model.RequestModel;
+import com.xxl.job.core.router.model.ResponseModel;
 import org.eclipse.jetty.util.ConcurrentHashSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,15 +74,16 @@ public class JobThread extends Thread{
 							? (String[])(Arrays.asList(triggerDate.getExecutorParams().split(",")).toArray()) : null;
 					
 					// handle job
-					JobHandleStatus _status = JobHandleStatus.FAIL;
+					String _status = ResponseModel.SUCCESS;
 					String _msg = null;
 
 					try {
 						XxlJobFileAppender.contextHolder.set(String.valueOf(triggerDate.getLogId()));
 						logger.info("----------- xxl-job job handle start -----------");
-						_status = handler.execute(handlerParams);
+						handler.execute(handlerParams);
 					} catch (Exception e) {
 						logger.info("JobThread Exception:", e);
+						_status = ResponseModel.FAIL;
 						StringWriter out = new StringWriter();
 						e.printStackTrace(new PrintWriter(out));
 						_msg = out.toString();
@@ -93,12 +94,12 @@ public class JobThread extends Thread{
 					// callback handler info
 					if (!toStop) {
 						// commonm
-						triggerDate.setStatus(_status.name());
+						triggerDate.setStatus(_status);
 						triggerDate.setMsg(_msg);
 						TriggerCallbackThread.pushCallBack(triggerDate);
 					} else {
 						// is killed
-						triggerDate.setStatus(JobHandleStatus.FAIL.name());
+						triggerDate.setStatus(ResponseModel.FAIL);
 						triggerDate.setMsg(stopReason + " [业务运行中，被强制终止]");
 						TriggerCallbackThread.pushCallBack(triggerDate);
 					}
@@ -113,7 +114,7 @@ public class JobThread extends Thread{
 			RequestModel triggerDate = triggerQueue.poll();
 			if (triggerDate!=null) {
 				// is killed
-				triggerDate.setStatus(JobHandleStatus.FAIL.name());
+				triggerDate.setStatus(ResponseModel.FAIL);
 				triggerDate.setMsg(stopReason + " [任务尚未执行，在调度队列中被终止]");
 				TriggerCallbackThread.pushCallBack(triggerDate);
 			}
