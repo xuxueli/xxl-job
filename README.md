@@ -1,4 +1,4 @@
-# 《分布式任务调度平台XXL-JOB》(最新版本V1.4.1)
+# 《分布式任务调度平台XXL-JOB》(最新版本V1.4.2-SNAPSHOT)
 ## 一、简介
 
 #### 1.1 概述
@@ -19,6 +19,7 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 - 12、GLUE：提供Web IDE，支持在线开发任务逻辑代码，动态发布，实时编译生效，省略部署上线的过程。支持30个版本的历史版本回溯。
 - 13、数据加密：调度中心和执行器之间的通讯进行数据加密，提升调度信息安全性；
 - 14、任务依赖：支持配置子任务依赖，当父任务执行结束且执行成功后将会主动触发一次子任务的执行, 多个子任务用逗号分隔；
+- 15、推送maven中央仓库: 将会把最新稳定版推送到maven中央仓库, 方便用户接入和使用;
 
 #### 1.3 发展
 于2015年中，我在github上创建XXL-JOB项目仓库并提交第一个commit，随之进行系统结构设计，UI选型，交互设计……
@@ -48,18 +49,28 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 欢迎大家的关注和使用，XXL-JOB也将拥抱变化，持续发展。
 
 #### 1.4 下载
-源码地址 (将会在两个git仓库同步发布最新代码)
+##### 源码地址 (将会在两个git仓库同步发布最新代码)
 
 - [github地址](https://github.com/xuxueli/xxl-job)
 - [git.osc地址](http://git.oschina.net/xuxueli0323/xxl-job)
 
-博客地址
+##### 中央仓库地址 (将会把上个版本的公共依赖,推送到中央仓库)
+    ```
+    <!-- http://repo1.maven.org/maven2/com/xuxueli/xxl-job-core/ -->
+    <dependency>
+        <groupId>com.xuxueli</groupId>
+        <artifactId>xxl-job-core</artifactId>
+        <version>1.4.1</version>
+    </dependency>
+    ```
+
+##### 博客地址
 
 - [oschina地址](http://my.oschina.net/xuxueli/blog/690978)
 - [cnblogs地址](http://www.cnblogs.com/xuxueli/p/5021979.html)
 - [csdn地址](http://blog.csdn.net/xuxueli0323/article/details/51674330)
 
-技术交流群(仅作技术交流)：367260654    [![image](http://pub.idqqimg.com/wpa/images/group.png)](http://shang.qq.com/wpa/qunwpa?idkey=4686e3fe01118445c75673a66b4cc6b2c7ce0641528205b6f403c179062b0a52 )
+##### 技术交流群(仅作技术交流)：367260654    [![image](http://pub.idqqimg.com/wpa/images/group.png)](http://shang.qq.com/wpa/qunwpa?idkey=4686e3fe01118445c75673a66b4cc6b2c7ce0641528205b6f403c179062b0a52 )
 
 
 **Download**: 历史Release版本下载位置如下图所示,请自行前往进行选择和下载。
@@ -586,13 +597,22 @@ XXL-JOB会为每次调度请求生成一个单独的日志文件，通过重写L
     - 6.5、远程调度优化,禁用retry策略,解决一处可能导致重复调用的问题;
     
 #### 6.7 版本 V1.4.1 新特性
-- 1、groupId从com.xxl改为com.xuxueli,为推送maven中央仓库做前期准备;
-- 2、系统版本不在维护在项目跟pom中,各个子模块单独配置版本配置,解决子模块无法单独编译的问题;
-- 3、底层RPC通讯,传输数据的字节长度统计规则优化,可节省50%数据传输量;
-- 4、IJobHandler取消任务返回值,原通过返回值判断执行状态,逻辑改为:默认任务执行成功,仅在捕获异常时认定任务执行失败。
-- 5、系统公共弹框功能,插件化;
-- 6、底层表结构,表明统一大写;
-- 7、调度中心,异常处理器JSON响应的ContentType修改,修复浏览器不识别的问题;
+- 1、项目成功推送maven中央仓库, 中央仓库地址以及依赖如下: 
+    ```
+    <!-- http://repo1.maven.org/maven2/com/xuxueli/xxl-job-core/ -->
+    <dependency>
+        <groupId>com.xuxueli</groupId>
+        <artifactId>xxl-job-core</artifactId>
+        <version>1.4.1</version>
+    </dependency>
+    ```
+- 2、为适配中央仓库规则, 项目groupId从com.xxl改为com.xuxueli。
+- 3、系统版本不在维护在项目跟pom中,各个子模块单独配置版本配置,解决子模块无法单独编译的问题;
+- 4、底层RPC通讯,传输数据的字节长度统计规则优化,可节省50%数据传输量;
+- 5、IJobHandler取消任务返回值,原通过返回值判断执行状态,逻辑改为:默认任务执行成功,仅在捕获异常时认定任务执行失败。
+- 6、系统公共弹框功能,插件化;
+- 7、底层表结构,表明统一大写;
+- 8、调度中心,异常处理器JSON响应的ContentType修改,修复浏览器不识别的问题;
 
 
 Tips: 历史版本(V1.3.x)目前已经Release至稳定版本, 进入维护阶段, 地址见分支 [V1.3](https://github.com/xuxueli/xxl-job/tree/v1.3) 。新特性将会在master分支持续更新。
