@@ -83,8 +83,10 @@ var ComConfirm = {
         $('#ComConfirm .ok').click(function(){
             $('#ComConfirm').modal('hide');
             if(typeof callback == 'function') {
-                callback();
-                return;
+                setTimeout(function(){
+                    callback();
+                    return;
+                }, 315);
             }
         });
 
