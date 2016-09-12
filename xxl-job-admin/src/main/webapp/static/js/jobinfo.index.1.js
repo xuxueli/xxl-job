@@ -423,11 +423,13 @@ $(function() {
 			// post
     		$.post(base_url + "/jobinfo/reschedule", $("#updateModal .form").serialize(), function(data, status) {
     			if (data.code == "200") {
-    				ComAlert.show(1, "更新成功", function(){
-    					//window.location.reload();
-						$('#updateModal').modal('hide');
-						jobTable.fnDraw();
-    				});
+					$('#updateModal').modal('hide');
+					setTimeout(function () {
+						ComAlert.show(1, "更新成功", function(){
+							//window.location.reload();
+							jobTable.fnDraw();
+						});
+					}, 315);
     			} else {
     				if (data.msg) {
     					ComAlert.show(2, data.msg);
