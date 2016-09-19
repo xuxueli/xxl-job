@@ -85,13 +85,13 @@ public class HandlerRouter {
 
 		// timestamp check
 		if (System.currentTimeMillis() - requestModel.getTimestamp() > 60000) {
-			return new ResponseModel(ResponseModel.SUCCESS, "Timestamp Timeout.");
+			return new ResponseModel(ResponseModel.FAIL, "Timestamp Timeout.");
 		}
 
 		// match action
 		IAction action = ActionRepository.matchAction(requestModel.getAction());
 		if (action == null) {
-			return new ResponseModel(ResponseModel.SUCCESS, "Action match fail.");
+			return new ResponseModel(ResponseModel.FAIL, "Action match fail.");
 		}
 
 		return action.execute(requestModel);
