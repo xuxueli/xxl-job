@@ -1,20 +1,19 @@
 package com.xxl.job.core.handler;
 
+import com.xxl.job.core.handler.HandlerRepository.HandlerParamEnum;
+import com.xxl.job.core.handler.IJobHandler.JobHandleStatus;
+import com.xxl.job.core.log.XxlJobFileAppender;
+import com.xxl.job.core.util.HttpUtil;
+import org.eclipse.jetty.util.ConcurrentHashSet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
-
-import org.eclipse.jetty.util.ConcurrentHashSet;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.xxl.job.core.handler.HandlerRepository.HandlerParamEnum;
-import com.xxl.job.core.handler.IJobHandler.JobHandleStatus;
-import com.xxl.job.core.log.XxlJobFileAppender;
-import com.xxl.job.core.util.HttpUtil;
 
 /**
  * handler thread
@@ -57,7 +56,7 @@ public class HandlerThread extends Thread{
 	public void run() {
 		while(!toStop){
 			try {
-				Map<String, String> handlerData = handlerDataQueue.poll();
+				Map<String, String> handlerData = handlerDataQueue.poll(3L ,TimeUnit.SECONDS);
 				if (handlerData!=null) {
 					i= 0;
 					String log_address = handlerData.get(HandlerParamEnum.LOG_ADDRESS.name());
