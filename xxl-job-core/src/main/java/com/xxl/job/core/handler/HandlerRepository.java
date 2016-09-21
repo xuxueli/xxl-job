@@ -187,6 +187,10 @@ public class HandlerRepository {
             return null;
         }
 
+        if ("0".equals(jobType)) {
+            return handlerTreadMap.get(_param.get(HandlerParamEnum.EXECUTOR_HANDLER.name()));
+        }
+
         if ("2".equals(jobType)) {
             String jobPath = _param.get(HandlerParamEnum.JOB_PATH.name());
             handlerThread = handlerTreadMap.get(jobPath);

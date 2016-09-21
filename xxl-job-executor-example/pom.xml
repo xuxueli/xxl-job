@@ -4,10 +4,9 @@
 	<parent>
 		<groupId>com.xxl</groupId>
 		<artifactId>xxl-job</artifactId>
-		<version>1.3.0-SNAPSHOT</version>
-	</parent>
+	<version>1.3.2-SNAPSHOT</version>
+    </parent>
 	<artifactId>xxl-job-executor-example</artifactId>
-	<version>1.3.1-SNAPSHOT</version>
 	<packaging>war</packaging>
 
 	<properties>
@@ -43,14 +42,14 @@
 			<artifactId>aspectjweaver</artifactId>
 			<version>1.8.7</version>
 		</dependency>
-		
+
 		<!-- slf4j -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
 			<version>1.7.5</version>
 		</dependency>
-		
+
 		<!-- c3p0 -->
 		<dependency>
 			<groupId>c3p0</groupId>
@@ -74,14 +73,14 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<version>5.1.29</version>
 		</dependency>
-		
+
 		<!-- xxl-job-core -->
 		<dependency>
 			<groupId>com.xxl</groupId>
 			<artifactId>xxl-job-core</artifactId>
 			<version>1.3.2</version>
 		</dependency>
-		
+
 	</dependencies>
 
 	<build>

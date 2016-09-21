@@ -13,7 +13,7 @@
 
 	<!-- 执行器 -->
 	<bean id="xxlJobExecutor" class="com.xxl.job.core.executor.jetty.XxlJobExecutor" init-method="start">
-		<property name="port" value="9999" />
+		<property name="port" value="9797" />
 	</bean>
 	
 	<bean id="glueFactory" class="com.xxl.job.core.glue.GlueFactory">

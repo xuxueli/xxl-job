@@ -10,7 +10,7 @@
 	</appender>
 	
     <appender name="FILE" class="org.apache.log4j.DailyRollingFileAppender">
-        <param name="file" value="/logs/xxl-job-client-demo.log"/>
+        <param name="file" value="/home/sysop/logs/xxl-job-client-demo.log"/>
         <param name="append" value="true"/>
         <param name="encoding" value="UTF-8"/>
         <layout class="org.apache.log4j.PatternLayout">
@@ -19,7 +19,7 @@
     </appender>
     
     <appender name="xxl-job" class="com.xxl.job.core.log.XxlJobFileAppender">
-        <param name="filePath" value="/logs/xxl-job/"/>
+        <param name="filePath" value="/home/sysop/logs/xxl-job/"/>
         <param name="append" value="true"/>
         <param name="encoding" value="UTF-8"/>
         <layout class="org.apache.log4j.PatternLayout">

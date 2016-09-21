@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.xxl.job.admin.core.model.ReturnT;
 import com.xxl.job.admin.core.model.XxlJobInfo;
-import com.xxl.job.admin.dao.IXxlJobInfoDao;
+import com.xxl.job.admin.dao.impl.XxlJobInfoDaoImpl;
 
 /**
  * job code controller
@@ -21,11 +21,11 @@ import com.xxl.job.admin.dao.IXxlJobInfoDao;
 public class JobCodeController {
 
     @Resource
-    private IXxlJobInfoDao xxlJobInfoDao;
+    private XxlJobInfoDaoImpl xxlJobInfoDaoImpl;
 
     @RequestMapping
     public String index(Model model, String jobGroup, String jobName) {
-        XxlJobInfo jobInfo = xxlJobInfoDao.load(jobGroup, jobName);
+        XxlJobInfo jobInfo = xxlJobInfoDaoImpl.load(jobGroup, jobName);
         model.addAttribute("jobInfo", jobInfo);
         return "jobcode/jobcode.index";
     }
@@ -41,7 +41,7 @@ public class JobCodeController {
         if (glueRemark.length() < 6 || glueRemark.length() > 100) {
             return new ReturnT<String>(500, "备注长度应该在6至100之间");
         }
-        XxlJobInfo jobInfoOld = xxlJobInfoDao.load(jobGroup, jobName);
+        XxlJobInfo jobInfoOld = xxlJobInfoDaoImpl.load(jobGroup, jobName);
         if (jobInfoOld == null) {
             return new ReturnT<String>(500, "任务不存在");
         }
@@ -58,7 +58,7 @@ public class JobCodeController {
         //		jobInfoOld.setGlueRemark(glueRemark);
 
         // update new code ,and log old code
-        xxlJobInfoDao.update(jobInfoOld);
+        xxlJobInfoDaoImpl.update(jobInfoOld);
         //		if (StringUtils.isNotBlank(xxlJobLogGlue.getGlueSource()) && StringUtils.isNotBlank(xxlJobLogGlue.getGlueRemark())) {
         //			xxlJobLogGlueDao.save(xxlJobLogGlue);
         //			// remove code backup more than 30

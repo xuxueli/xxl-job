@@ -24,7 +24,8 @@ import com.xxl.job.core.handler.annotation.JobHander;
 public class XxlJobExecutor implements ApplicationContextAware {
     private static final Logger logger = LoggerFactory.getLogger(XxlJobExecutor.class);
 
-    private int port = 9999;
+    private int                 port   = 9999;
+
     public void setPort(int port) {
         this.port = port;
     }
@@ -35,7 +36,7 @@ public class XxlJobExecutor implements ApplicationContextAware {
             @Override
             public void run() {
                 Server server = new Server();
-                server.setThreadPool(new ExecutorThreadPool(200, 200, 30000));	// 非阻塞
+                server.setThreadPool(new ExecutorThreadPool(200, 200, 30000)); // 非阻塞
 
                 // connector
                 SelectChannelConnector connector = new SelectChannelConnector();
@@ -44,14 +45,15 @@ public class XxlJobExecutor implements ApplicationContextAware {
                 server.setConnectors(new Connector[] { connector });
 
                 // handler
-                HandlerCollection handlerc =new HandlerCollection();
-                handlerc.setHandlers(new Handler[]{new XxlJobExecutorHandler()});
+                HandlerCollection handlerc = new HandlerCollection();
+                handlerc.setHandlers(new Handler[] { new XxlJobExecutorHandler() });
                 server.setHandler(handlerc);
 
                 try {
                     server.start();
-                    logger.info(">>>>>>>>>>>> xxl-job jetty server start success at port:{}.", port);
-                    server.join();  // block until server ready
+                    logger.info(">>>>>>>>>>>> xxl-job jetty server start success at port:{}.",
+                            port);
+                    server.join(); // block until server ready
                     logger.info(">>>>>>>>>>>> xxl-job jetty server join success at port:{}.", port);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -62,26 +64,29 @@ public class XxlJobExecutor implements ApplicationContextAware {
     }
 
     public static ApplicationContext applicationContext;
-	@Override
-	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-		XxlJobExecutor.applicationContext = applicationContext;
-		initJobHandler();
-	}
-	
-	/**
-	 * init job handler service
-	 */
-	public void initJobHandler(){
-		Map<String, Object> serviceBeanMap = XxlJobExecutor.applicationContext.getBeansWithAnnotation(JobHander.class);
-        if (serviceBeanMap!=null && serviceBeanMap.size()>0) {
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        XxlJobExecutor.applicationContext = applicationContext;
+        initJobHandler();
+    }
+
+    /**
+     * init job handler service
+     */
+    public void initJobHandler() {
+        Map<String, Object> serviceBeanMap = XxlJobExecutor.applicationContext
+                .getBeansWithAnnotation(JobHander.class);
+        if (serviceBeanMap != null && serviceBeanMap.size() > 0) {
             for (Object serviceBean : serviceBeanMap.values()) {
                 String jobName = serviceBean.getClass().getAnnotation(JobHander.class).name();
-                if (jobName!=null && jobName.trim().length()>0 && serviceBean instanceof IJobHandler) {
-                	IJobHandler handler = (IJobHandler) serviceBean;
-                	HandlerRepository.regist(jobName, handler);
-				}
+                if (jobName != null && jobName.trim().length() > 0
+                        && serviceBean instanceof IJobHandler) {
+                    IJobHandler handler = (IJobHandler) serviceBean;
+                    HandlerRepository.regist(jobName, handler);
+                }
             }
         }
-	}
+    }
 
 }

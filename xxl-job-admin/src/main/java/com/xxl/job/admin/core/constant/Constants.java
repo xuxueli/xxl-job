@@ -14,7 +14,10 @@ public class Constants {
         ITEM("商品"),
         PAY("支付"),
         MSG("消息"),
-        SEARCH("搜索");
+        SEARCH("搜索"),
+        FAMILY("家族"),
+        ACTIVITY("活动"),
+        REFUND("退款");
         private String desc;
 
         private JobGroupEnum(String desc) {
