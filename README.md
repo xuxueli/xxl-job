@@ -309,6 +309,20 @@ GLUE任务开发：进入任务管理界面，选中指定任务。点击该任�
 
 ![输入图片说明](https://static.oschina.net/uploads/img/201607/24140048_hIci.png "在这里输入图片标题")
 
+任务终止时通过 "interrupt" 执行线程的方式实现, 将会触发 "InterruptedException" 异常。因此如果JobHandler内部catch到了该异常并消化掉的话, 任务终止功能将不可用。
+
+因此, 如果遇到上述任务终止不可用的情况, 需要在JobHandler中应该针对 "InterruptedException" 异常进行特殊处理 (向上抛出) , 正确逻辑如下:
+```
+try{
+    // TODO
+} catch (Exception e) {
+    if (e instanceof InterruptedException) {
+        throw e;
+    }
+    logger.warn("{}", e);
+}
+```
+
 #### 4.9 删除任务
 点击删除按钮，可以删除对应任务。
 
