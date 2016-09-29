@@ -26,7 +26,7 @@ public class KillAction extends IAction {
             jobThread.toStop("人工手动终止");
             jobThread.interrupt();
             HandlerRouter.registJobThread(jobKey, handler);
-            return new ResponseModel(ResponseModel.SUCCESS, "job thread kull success.");
+            return new ResponseModel(ResponseModel.SUCCESS, "job thread kill success.");
         }
 
         return new ResponseModel(ResponseModel.FAIL, "job thread not found.");
