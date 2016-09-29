@@ -62,7 +62,7 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
     <dependency>
         <groupId>com.xuxueli</groupId>
         <artifactId>xxl-job-core</artifactId>
-        <version>1.4.1</version>
+        <version>1.4.2</version>
     </dependency>
     ```
 
@@ -620,7 +620,7 @@ Tips: 历史版本(V1.3.x)目前已经Release至稳定版本, 进入维护阶段
     <dependency>
         <groupId>com.xuxueli</groupId>
         <artifactId>xxl-job-core</artifactId>
-        <version>1.4.1</version>
+        <version>${最新稳定版}</version>
     </dependency>
     ```
 - 2、为适配中央仓库规则, 项目groupId从com.xxl改为com.xuxueli。
@@ -632,10 +632,11 @@ Tips: 历史版本(V1.3.x)目前已经Release至稳定版本, 进入维护阶段
 - 8、调度中心,异常处理器JSON响应的ContentType修改,修复浏览器不识别的问题;
 
 #### 6.8 版本 V1.4.2 新特性  
-- 1、任务新增时,任务列表偏移问题修复;
-- 2、修复一处因bootstrap不支持模态框重叠而导致的样式错乱的问题, 在任务编辑时会出现该问题;
-- 3、调度超时和Handler匹配不到时,调度状态优化;
-- 4、因catch异常,导致任务不可终止的问题,给出解决方案, 见文档;
+- 1、推送新版本 V1.4.2 至中央仓库, 大版本 V1.4 进入维护阶段;
+- 2、任务新增时,任务列表偏移问题修复;
+- 3、修复一处因bootstrap不支持模态框重叠而导致的样式错乱的问题, 在任务编辑时会出现该问题;
+- 4、调度超时和Handler匹配不到时,调度状态优化;
+- 5、因catch异常,导致任务不可终止的问题,给出解决方案, 见文档;
 
 #### 规划中
 - 1、任务执行规则自定义：假如前一个任务正在执行，后续调度执行规则支持自定义；
