@@ -7,17 +7,51 @@
            http://www.springframework.org/schema/context
            http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
+	<!-- scan job handler -->
 	<context:component-scan base-package="com.xxl.job.executor" />
 
-	<!-- 执行器 -->
+	<!-- 执行器
+	……………………………………………………………………………………………………………………
+	port : 执行器端口号
+	-->
 	<bean id="xxlJobExecutor" class="com.xxl.job.core.executor.jetty.XxlJobExecutor" init-method="start" destroy-method="destroy" >
 		<property name="port" value="9999" />
 	</bean>
 
-	<!-- glue factory -->
+	<!-- glue factory (开启GLUE任务时才需要, 否则可以删除)
+	……………………………………………………………………………………………………………………
+	cacheTimeout : GLUE任务示例缓存失效时间, 单位/ms
+	glueLoader : GLUE 代码加载器，推荐将该服务配置成RPC服务
+	dataSource : XXL-JOB公共数据源
+	-->
 	<bean id="glueFactory" class="com.xxl.job.core.glue.GlueFactory">
 		<property name="cacheTimeout" value="10000" />
-		<property name="glueLoader" ref="dbGlueLoader" />	<!-- GLUE 代码加载器，推荐将该服务配置成RPC服务 -->
+		<property name="glueLoader" >
+			<bean class="com.xxl.job.core.glue.loader.impl.DbGlueLoader" >
+				<property name="dataSource" ref="dataSource" />
+			</bean>
+		</property>
+	</bean>
+
+	<!-- XXL-JOB公共数据源 (开启GLUE任务时才需要, 否则可以删除) -->
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"  destroy-method="close">
+		<property name="driverClass" value="${c3p0.driverClass}" />
+		<property name="jdbcUrl" value="${c3p0.url}" />
+		<property name="user" value="${c3p0.user}" />
+		<property name="password" value="${c3p0.password}" />
+		<property name="initialPoolSize" value="3" />
+		<property name="minPoolSize" value="2" />
+		<property name="maxPoolSize" value="10" />
+		<property name="maxIdleTime" value="60" />
+		<property name="acquireRetryDelay" value="1000" />
+		<property name="acquireRetryAttempts" value="10" />
+		<property name="preferredTestQuery" value="SELECT 1" />
+	</bean>
+	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="fileEncoding" value="utf-8" />
+		<property name="location">
+			<value>classpath:jdbc.properties</value>
+		</property>
 	</bean>
 
 </beans>

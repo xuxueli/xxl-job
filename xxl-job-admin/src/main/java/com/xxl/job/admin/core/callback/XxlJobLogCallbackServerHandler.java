@@ -1,6 +1,5 @@
 package com.xxl.job.admin.core.callback;
 
-import com.xxl.job.admin.core.model.ReturnT;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.admin.core.util.DynamicSchedulerUtil;
@@ -35,56 +34,9 @@ public class XxlJobLogCallbackServerHandler extends AbstractHandler {
 
 		// parse hex-json to request model
 		String requestHex = httpServletRequest.getParameter(XxlJobNetCommUtil.HEX);
-		RequestModel requestModel = XxlJobNetCommUtil.parseHexJson2Obj(requestHex, RequestModel.class);
 
-		// process
-		ResponseModel responseModel = null;
-		XxlJobLog log = DynamicSchedulerUtil.xxlJobLogDao.load(requestModel.getLogId());
-		if (log!=null) {
-
-			// trigger success, to trigger child job, and avoid repeat trigger child job
-            String childTriggerMsg = null;
-			if (ResponseModel.SUCCESS.equals(requestModel.getStatus()) && !ResponseModel.SUCCESS.equals(log.getHandleStatus())) {
-				XxlJobInfo xxlJobInfo = DynamicSchedulerUtil.xxlJobInfoDao.load(log.getJobGroup(), log.getJobName());
-				if (xxlJobInfo!=null && StringUtils.isNotBlank(xxlJobInfo.getChildJobKey())) {
-					childTriggerMsg = "<hr>";
-                    String[] childJobKeys = xxlJobInfo.getChildJobKey().split(",");
-					for (int i = 0; i < childJobKeys.length; i++) {
-						String[] jobKeyArr = childJobKeys[i].split("_");
-						if (jobKeyArr!=null && jobKeyArr.length==2) {
-							XxlJobInfo childJobInfo = DynamicSchedulerUtil.xxlJobInfoDao.load(jobKeyArr[0], jobKeyArr[1]);
-							if (childJobInfo!=null) {
-								try {
-									boolean ret = DynamicSchedulerUtil.triggerJob(childJobInfo.getJobName(), childJobInfo.getJobGroup());
-
-									// add msg
-									childTriggerMsg += MessageFormat.format("<br> {0}/{1} 触发子任务成功, 子任务Key: {2}, status: {3}, 子任务描述: {4}",
-											(i+1), childJobKeys.length, childJobKeys[i], ret, childJobInfo.getJobDesc());
-								} catch (SchedulerException e) {
-									logger.error("", e);
-								}
-							} else {
-								childTriggerMsg += MessageFormat.format("<br> {0}/{1} 触发子任务失败, 子任务xxlJobInfo不存在, 子任务Key: {2}",
-										(i+1), childJobKeys.length, childJobKeys[i]);
-							}
-						} else {
-							childTriggerMsg += MessageFormat.format("<br> {0}/{1} 触发子任务失败, 子任务Key格式错误, 子任务Key: {2}",
-									(i+1), childJobKeys.length, childJobKeys[i]);
-						}
-					}
-
-				}
-			}
-
-			// save log
-			log.setHandleTime(new Date());
-			log.setHandleStatus(requestModel.getStatus());
-			log.setHandleMsg(requestModel.getMsg() + childTriggerMsg);
-			DynamicSchedulerUtil.xxlJobLogDao.updateHandleInfo(log);
-			responseModel = new ResponseModel(ResponseModel.SUCCESS, null);
-		} else {
-			responseModel = new ResponseModel(ResponseModel.FAIL, "log item not found.");
-		}
+		// do biz
+		ResponseModel responseModel = dobiz(requestHex);
 
 		// format response model to hex-json
 		String responseHex = XxlJobNetCommUtil.formatObj2HexJson(responseModel);
@@ -94,6 +46,68 @@ public class XxlJobLogCallbackServerHandler extends AbstractHandler {
 		httpServletResponse.setStatus(HttpServletResponse.SC_OK);
 		baseRequest.setHandled(true);
 		httpServletResponse.getWriter().println(responseHex);
+	}
+
+	private ResponseModel dobiz(String requestHex){
+
+		// valid hex
+		if (requestHex==null || requestHex.trim().length()==0) {
+			return new ResponseModel(ResponseModel.FAIL, "request hex is null.");
+		}
+
+		// valid request model
+		RequestModel requestModel = XxlJobNetCommUtil.parseHexJson2Obj(requestHex, RequestModel.class);
+		if (requestModel==null) {
+			return new ResponseModel(ResponseModel.FAIL, "request hex parse fail.");
+		}
+
+		// valid log item
+		XxlJobLog log = DynamicSchedulerUtil.xxlJobLogDao.load(requestModel.getLogId());
+		if (log == null) {
+			return new ResponseModel(ResponseModel.FAIL, "log item not found.");
+		}
+
+		// trigger success, to trigger child job, and avoid repeat trigger child job
+		String childTriggerMsg = null;
+		if (ResponseModel.SUCCESS.equals(requestModel.getStatus()) && !ResponseModel.SUCCESS.equals(log.getHandleStatus())) {
+			XxlJobInfo xxlJobInfo = DynamicSchedulerUtil.xxlJobInfoDao.load(log.getJobGroup(), log.getJobName());
+			if (xxlJobInfo!=null && StringUtils.isNotBlank(xxlJobInfo.getChildJobKey())) {
+				childTriggerMsg = "<hr>";
+				String[] childJobKeys = xxlJobInfo.getChildJobKey().split(",");
+				for (int i = 0; i < childJobKeys.length; i++) {
+					String[] jobKeyArr = childJobKeys[i].split("_");
+					if (jobKeyArr!=null && jobKeyArr.length==2) {
+						XxlJobInfo childJobInfo = DynamicSchedulerUtil.xxlJobInfoDao.load(jobKeyArr[0], jobKeyArr[1]);
+						if (childJobInfo!=null) {
+							try {
+								boolean ret = DynamicSchedulerUtil.triggerJob(childJobInfo.getJobName(), childJobInfo.getJobGroup());
+
+								// add msg
+								childTriggerMsg += MessageFormat.format("<br> {0}/{1} 触发子任务成功, 子任务Key: {2}, status: {3}, 子任务描述: {4}",
+										(i+1), childJobKeys.length, childJobKeys[i], ret, childJobInfo.getJobDesc());
+							} catch (SchedulerException e) {
+								logger.error("", e);
+							}
+						} else {
+							childTriggerMsg += MessageFormat.format("<br> {0}/{1} 触发子任务失败, 子任务xxlJobInfo不存在, 子任务Key: {2}",
+									(i+1), childJobKeys.length, childJobKeys[i]);
+						}
+					} else {
+						childTriggerMsg += MessageFormat.format("<br> {0}/{1} 触发子任务失败, 子任务Key格式错误, 子任务Key: {2}",
+								(i+1), childJobKeys.length, childJobKeys[i]);
+					}
+				}
+
+			}
+		}
+
+		// success, save log
+		log.setHandleTime(new Date());
+		log.setHandleStatus(requestModel.getStatus());
+		log.setHandleMsg(requestModel.getMsg() + childTriggerMsg);
+		DynamicSchedulerUtil.xxlJobLogDao.updateHandleInfo(log);
+
+		return new ResponseModel(ResponseModel.SUCCESS, null);
 	}
 
 }
