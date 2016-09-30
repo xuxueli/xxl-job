@@ -1,5 +1,6 @@
 package com.xxl.job.core.router.action;
 
+import com.xxl.job.core.glue.GlueFactory;
 import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.handler.impl.GlueJobHandler;
 import com.xxl.job.core.router.HandlerRouter;
@@ -25,7 +26,7 @@ public class RunAction extends IAction {
         if (!requestModel.isGlueSwitch()) {
             // bean model
 
-            // handler instance
+            // valid handler instance
             IJobHandler jobHandler = HandlerRouter.loadJobHandler(requestModel.getExecutorHandler());
             if (jobHandler==null) {
                 return new ResponseModel(ResponseModel.FAIL, "job handler for jobKey=[" + jobKey + "] not found.");
@@ -46,6 +47,12 @@ public class RunAction extends IAction {
             }
         } else {
             // glue model
+
+            // valid glueloader
+            if (!GlueFactory.isActive()) {
+                return new ResponseModel(ResponseModel.FAIL, "glueLoader for jobKey=[" + jobKey + "] not found.");
+            }
+
             if (jobThread == null) {
                 jobThread = HandlerRouter.registJobThread(jobKey, new GlueJobHandler(requestModel.getJobGroup(), requestModel.getJobName()));
             } else {

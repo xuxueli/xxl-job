@@ -43,7 +43,10 @@ public class GlueFactory implements ApplicationContextAware {
 	public void setGlueLoader(GlueLoader glueLoader) {
 		this.glueLoader = glueLoader;
 	}
-	
+	public static boolean isActive() {
+		return GlueFactory.glueFactory.glueLoader!=null;
+	}
+
 	// ----------------------------- spring support -----------------------------
 	private static ApplicationContext applicationContext;
 	private static GlueFactory glueFactory;
@@ -122,7 +125,7 @@ public class GlueFactory implements ApplicationContextAware {
 	}
 	
 	// // load instance, singleton
-	public static String generateInstanceCacheKey(String job_group, String job_name){
+	private static String generateInstanceCacheKey(String job_group, String job_name){
 		return job_group.concat("_").concat(job_name).concat("_instance");
 	}
 	public IJobHandler loadInstance(String job_group, String job_name) throws Exception{

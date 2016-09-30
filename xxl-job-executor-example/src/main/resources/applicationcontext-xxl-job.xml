@@ -15,9 +15,10 @@
 	<bean id="xxlJobExecutor" class="com.xxl.job.core.executor.jetty.XxlJobExecutor" init-method="start" destroy-method="destroy" >
 		<property name="port" value="9999" />
 	</bean>
-	
+
+	<!-- glue factory -->
 	<bean id="glueFactory" class="com.xxl.job.core.glue.GlueFactory">
-		<property name="cacheTimeout" value="5000" />
+		<property name="cacheTimeout" value="10000" />
 		<property name="glueLoader" ref="dbGlueLoader" />	<!-- GLUE 代码加载器，推荐将该服务配置成RPC服务 -->
 	</bean>
 
