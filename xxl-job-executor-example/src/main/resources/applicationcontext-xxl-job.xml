@@ -16,6 +16,15 @@
 	<bean id="xxlJobExecutor" class="com.xxl.job.core.executor.jetty.XxlJobExecutor" init-method="start" destroy-method="destroy" >
 		<!-- 执行器端口号 -->
 		<property name="port" value="9999" />
+        <property name="appName" value="xxl-job-executor-example" />
+        <!-- 执行器注册器，默认使用系统提供的 "DbRegistHelper", 推荐将其改为公共的RPC服务 -->
+        <property name="registHelper" >
+            <!-- DbRegistHelper, 依赖 "XXL-JOB公共数据源" -->
+            <bean class="com.xxl.job.core.registry.impl.DbRegistHelper" >
+                <!-- XXL-JOB公共数据源 -->
+                <property name="dataSource" ref="dataSource" />
+            </bean>
+        </property>
 	</bean>
 
     <!-- ********************************* "GlueFactory" 配置, 仅在启动 "GLUE模式任务" 时才需要, 否则可删除 ********************************* -->
@@ -34,7 +43,7 @@
 		</property>
 	</bean>
 
-    <!-- ********************************* "XXL-JOB公共数据源" 配置, 仅在启动 "GLUE模式任务" 的 "DbGlueLoader" 时才需要, 否则可删除 ********************************* -->
+    <!-- ********************************* "XXL-JOB公共数据源" 配置, 仅在启动 "DbRegistHelper" 或 "DbGlueLoader" 时才需要, 否则可删除 ********************************* -->
 
 	<!-- 配置04、XXL-JOB公共数据源 -->
 	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"  destroy-method="close">
