@@ -78,6 +78,7 @@
                                         <th name="childJobKey" >任务Key</th>
 					                  	<th name="jobDesc" >描述</th>
 					                  	<th name="jobCron" >Cron</th>
+                                        <th name="executorAppname" >执行器Appname</th>
 					                  	<th name="executorAddress" >执行器地址</th>
                                         <th name="executorHandler" >JobJandler</th>
 					                  	<th name="executorParam" >任务参数</th>
@@ -126,8 +127,14 @@
                         <div class="col-sm-4"><input type="text" class="form-control" name="jobDesc" placeholder="请输入“描述”" maxlength="50" ></div>
 					</div>
 					<div class="form-group">
-                        <label for="lastname" class="col-sm-2 control-label">执行器地址<font color="red">*</font></label>
-                        <div class="col-sm-4"><input type="text" class="form-control" name="executorAddress" placeholder="请输入“执行器地址”，多个地址逗号分隔" maxlength="50" ></div>
+						<div class="executorAddress">
+							<label for="lastname" class="col-sm-2 control-label">执行器地址<font color="red">*</font></label>
+							<div class="col-sm-4"><input type="text" class="form-control" name="executorAddress" placeholder="请输入“执行器地址”，多个地址逗号分隔" maxlength="50" ></div>
+                        </div>
+						<div class="executorAppname" style="display:none;">
+							<label for="lastname" class="col-sm-2 control-label">AppName<font color="red">*</font></label>
+							<div class="col-sm-4"><input type="text" class="form-control" name="executorAppname" placeholder="请输入执行器对应Appname, 自动发现注册的人任务" maxlength="100" ></div>
+                        </div>
                         <label for="lastname" class="col-sm-2 control-label">Cron<font color="red">*</font></label>
                         <div class="col-sm-4"><input type="text" class="form-control" name="jobCron" placeholder="请输入“Cron”" maxlength="20" ></div>
 					</div>
@@ -159,6 +166,9 @@
 							<button type="submit" class="btn btn-primary"  >保存</button>
 							<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
 						</div>
+                        <div class="col-sm-offset-0 col-sm-3">
+                            启动注册&nbsp;<input type="checkbox" class="ifAppName" >
+                        </div>
 					</div>
 
 <input type="hidden" name="glueRemark" value="GLUE代码初始化" >
@@ -205,8 +215,14 @@ public class DemoGlueJobHandler extends IJobHandler {
                         <div class="col-sm-4"><input type="text" class="form-control" name="jobDesc" placeholder="请输入“描述”" maxlength="50" ></div>
 					</div>
 					<div class="form-group">
-                        <label for="lastname" class="col-sm-2 control-label">执行器地址<font color="red">*</font></label>
-                        <div class="col-sm-4"><input type="text" class="form-control" name="executorAddress" placeholder="请输入“执行器地址”，多个地址逗号分隔" maxlength="50" ></div>
+                        <div class="executorAddress">
+                            <label for="lastname" class="col-sm-2 control-label">执行器地址<font color="red">*</font></label>
+                            <div class="col-sm-4"><input type="text" class="form-control" name="executorAddress" placeholder="请输入“执行器地址”，多个地址逗号分隔" maxlength="50" ></div>
+                        </div>
+                        <div class="executorAppname" style="display:none;">
+                            <label for="lastname" class="col-sm-2 control-label">AppName<font color="red">*</font></label>
+                            <div class="col-sm-4"><input type="text" class="form-control" name="executorAppname" placeholder="请输入执行器对应Appname, 自动发现注册的人任务" maxlength="100" ></div>
+                        </div>
                         <label for="lastname" class="col-sm-2 control-label">Cron<font color="red">*</font></label>
                         <div class="col-sm-4"><input type="text" class="form-control" name="jobCron" placeholder="请输入“Cron”" maxlength="20" ></div>
 					</div>
@@ -240,6 +256,9 @@ public class DemoGlueJobHandler extends IJobHandler {
                             <input type="hidden" name="jobGroup" >
                             <input type="hidden" name="jobName" >
 						</div>
+                        <div class="col-sm-offset-0 col-sm-3">
+                            启动注册&nbsp;<input type="checkbox" class="ifAppName" >
+                        </div>
 					</div>
 				</form>
          	</div>

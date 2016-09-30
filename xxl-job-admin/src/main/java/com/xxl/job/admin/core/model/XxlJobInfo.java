@@ -20,7 +20,8 @@ public class XxlJobInfo {
 	
 	private String author;		// 负责人
 	private String alarmEmail;	// 报警邮件
-	
+
+	private String executorAppname;	// 执行器对应的AppName
 	private String executorAddress;	// 执行器地址，有多个则逗号分隔
 	private String executorHandler;	// 执行器，任务Handler名称
 	private String executorParam;	// 执行器，任务参数
@@ -104,6 +105,14 @@ public class XxlJobInfo {
 
 	public void setAlarmEmail(String alarmEmail) {
 		this.alarmEmail = alarmEmail;
+	}
+
+	public String getExecutorAppname() {
+		return executorAppname;
+	}
+
+	public void setExecutorAppname(String executorAppname) {
+		this.executorAppname = executorAppname;
 	}
 
 	public String getExecutorAddress() {

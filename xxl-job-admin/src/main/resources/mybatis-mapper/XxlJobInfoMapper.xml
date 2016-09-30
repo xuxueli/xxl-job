@@ -16,7 +16,8 @@
 	    
 	    <result column="author" property="author" />
 	    <result column="alarm_email" property="alarmEmail" />
-	    
+
+		<result column="executor_appname" property="executorAppname" />
 	    <result column="executor_address" property="executorAddress" />
 		<result column="executor_handler" property="executorHandler" />
 	    <result column="executor_param" property="executorParam" />
@@ -38,6 +39,7 @@
 		t.update_time,
 		t.author,
 		t.alarm_email,
+		t.executor_appname,
 		t.executor_address,
 		t.executor_handler,
 		t.executor_param,
@@ -85,6 +87,7 @@
 			update_time,
 			author,
 			alarm_email,
+			executor_appname,
 			executor_address,
 			executor_handler,
 			executor_param,
@@ -101,6 +104,7 @@
 			NOW(),
 			#{author},
 			#{alarmEmail},
+			#{executorAppname},
 			#{executorAddress},
 			#{executorHandler},
 			#{executorParam},
@@ -129,6 +133,7 @@
 			update_time = NOW(),
 			author = #{author},
 			alarm_email = #{alarmEmail},
+			executor_appname = #{executorAppname},
 			executor_address = #{executorAddress},
 			executor_handler = #{executorHandler},
 			executor_param = #{executorParam},
