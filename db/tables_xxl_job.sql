@@ -155,6 +155,7 @@ CREATE TABLE `XXL_JOB_QRTZ_TRIGGER_INFO` (
   `update_time` datetime DEFAULT NULL,
   `author` varchar(64) DEFAULT NULL COMMENT '作者',
   `alarm_email` varchar(255) DEFAULT NULL COMMENT '报警邮件',
+  `executor_registry_switch` int(11) DEFAULT NULL COMMENT '注册模式开关：0-否、1-是',
   `executor_address` varchar(255) DEFAULT NULL COMMENT '执行器地址，有多个则逗号分隔',
   `executor_handler` varchar(255) DEFAULT NULL COMMENT '执行器任务handler',
   `executor_param` varchar(255) DEFAULT NULL COMMENT '执行器任务参数',
