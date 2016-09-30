@@ -7,6 +7,8 @@
            http://www.springframework.org/schema/context
            http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
+    <!-- ********************************* 基础配置 ********************************* -->
+
 	<!-- 配置01、JobHandler 扫描路径 -->
 	<context:component-scan base-package="com.xxl.job.executor.service.jobhandler" />
 
@@ -16,12 +18,15 @@
 		<property name="port" value="9999" />
 	</bean>
 
-	<!-- 配置03、GlueFactory (启用GLUE任务时才需要, 否则可删除) -->
+    <!-- ********************************* "GlueFactory" 配置, 仅在启动 "GLUE模式任务" 时才需要, 否则可删除 ********************************* -->
+
+	<!-- 配置03、GlueFactory -->
 	<bean id="glueFactory" class="com.xxl.job.core.glue.GlueFactory">
 		<!-- GLUE任务示例缓存失效时间, 单位/ms -->
 		<property name="cacheTimeout" value="10000" />
-		<!-- GLUE 代码加载器，推荐将该服务配置成RPC服务 -->
+		<!-- GLUE源码加载器，默认使用系统提供的 "DbGlueLoader", 推荐将其改为公共的RPC服务 -->
 		<property name="glueLoader" >
+            <!-- DbGlueLoader, 依赖 "XXL-JOB公共数据源" -->
 			<bean class="com.xxl.job.core.glue.loader.impl.DbGlueLoader" >
 				<!-- XXL-JOB公共数据源 -->
 				<property name="dataSource" ref="dataSource" />
@@ -29,7 +34,9 @@
 		</property>
 	</bean>
 
-	<!-- 配置04、XXL-JOB公共数据源 (启用GLUE任务, 且使用 "DbGlueLoader" 作为 "GLUE源码加载器" 时才需要, 否则可删除) -->
+    <!-- ********************************* "XXL-JOB公共数据源" 配置, 仅在启动 "GLUE模式任务" 的 "DbGlueLoader" 时才需要, 否则可删除 ********************************* -->
+
+	<!-- 配置04、XXL-JOB公共数据源 -->
 	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"  destroy-method="close">
 		<property name="driverClass" value="${c3p0.driverClass}" />
 		<property name="jdbcUrl" value="${c3p0.url}" />
