@@ -1,26 +1,13 @@
 package com.xxl.job.admin.core.util;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import com.xxl.job.admin.core.callback.XxlJobLogCallbackServer;
 import com.xxl.job.admin.core.jobbean.RemoteHttpJobBean;
-import org.quartz.CronScheduleBuilder;
-import org.quartz.CronTrigger;
-import org.quartz.Job;
-import org.quartz.JobBuilder;
-import org.quartz.JobDetail;
-import org.quartz.JobKey;
-import org.quartz.Scheduler;
-import org.quartz.SchedulerException;
-import org.quartz.Trigger;
+import com.xxl.job.admin.core.model.XxlJobInfo;
+import com.xxl.job.admin.dao.IXxlJobInfoDao;
+import com.xxl.job.admin.dao.IXxlJobLogDao;
+import com.xxl.job.admin.dao.IXxlJobRegistryDao;
+import org.quartz.*;
 import org.quartz.Trigger.TriggerState;
-import org.quartz.TriggerBuilder;
-import org.quartz.TriggerKey;
 import org.quartz.impl.matchers.GroupMatcher;
 import org.quartz.impl.triggers.CronTriggerImpl;
 import org.slf4j.Logger;
@@ -31,10 +18,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.util.Assert;
 
-import com.xxl.job.admin.core.callback.XxlJobLogCallbackServer;
-import com.xxl.job.admin.core.model.XxlJobInfo;
-import com.xxl.job.admin.dao.IXxlJobInfoDao;
-import com.xxl.job.admin.dao.IXxlJobLogDao;
+import java.util.*;
 
 /**
  * base quartz scheduler util
@@ -77,11 +61,13 @@ public final class DynamicSchedulerUtil implements ApplicationContextAware, Init
     // xxlJobLogDao、xxlJobInfoDao
     public static IXxlJobLogDao xxlJobLogDao;
     public static IXxlJobInfoDao xxlJobInfoDao;
+    public static IXxlJobRegistryDao xxlJobRegistryDao;
 
     @Override
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 		DynamicSchedulerUtil.xxlJobLogDao = applicationContext.getBean(IXxlJobLogDao.class);
 		DynamicSchedulerUtil.xxlJobInfoDao = applicationContext.getBean(IXxlJobInfoDao.class);
+        DynamicSchedulerUtil.xxlJobRegistryDao = applicationContext.getBean(IXxlJobRegistryDao.class);
 	}
     
 	@Override

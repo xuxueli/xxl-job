@@ -3,8 +3,10 @@ package com.xxl.job.admin.core.jobbean;
 import com.xxl.job.admin.core.callback.XxlJobLogCallbackServer;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
+import com.xxl.job.admin.core.model.XxlJobRegistry;
 import com.xxl.job.admin.core.thread.JobMonitorHelper;
 import com.xxl.job.admin.core.util.DynamicSchedulerUtil;
+import com.xxl.job.core.registry.RegistHelper;
 import com.xxl.job.core.router.HandlerRouter.ActionRepository;
 import com.xxl.job.core.router.model.RequestModel;
 import com.xxl.job.core.router.model.ResponseModel;
@@ -18,10 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
 import java.text.MessageFormat;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * http job bean
@@ -57,8 +56,25 @@ public class RemoteHttpJobBean extends QuartzJobBean {
 		requestModel.setLogAddress(XxlJobLogCallbackServer.getTrigger_log_address());
 		requestModel.setLogId(jobLog.getId());
 
+		// parse address
+		List<String> addressList = new ArrayList<String>();
+		String parseAddressMsg = null;
+		if (StringUtils.isNotBlank(jobInfo.getExecutorAppname())) {
+			List<XxlJobRegistry> xxlJobRegistryList = DynamicSchedulerUtil.xxlJobRegistryDao.findRegistrys(RegistHelper.RegistType.EXECUTOR.name(), jobInfo.getExecutorAppname());
+			if (xxlJobRegistryList!=null && xxlJobRegistryList.size()>0) {
+				for (XxlJobRegistry item: xxlJobRegistryList) {
+					addressList.add(item.getRegistryValue());
+				}
+			}
+			parseAddressMsg = MessageFormat.format("Parse Address (Appname注册方式) <br>>>>[address list] : {0}<br><hr>", addressList.toArray());
+		} else {
+			List<String> addressArr = Arrays.asList(jobInfo.getExecutorAddress().split(","));
+			addressList.addAll(addressArr);
+			parseAddressMsg = MessageFormat.format("Parse Address (地址配置方式) <br>>>>[address list] : {0}<br><hr>", addressList.toArray());
+		}
+
 		// failover trigger
-		ResponseModel responseModel = failoverTrigger(jobInfo.getExecutorAddress(), requestModel, jobLog);
+		ResponseModel responseModel = failoverTrigger(addressList, requestModel, jobLog);
 		jobLog.setExecutorHandler(jobInfo.getExecutorHandler());
 		jobLog.setExecutorParam(jobInfo.getExecutorParam());
 		logger.info(">>>>>>>>>>> xxl-job failoverTrigger response, jobId:{}, responseModel:{}", jobLog.getId(), responseModel.toString());
@@ -66,7 +82,7 @@ public class RemoteHttpJobBean extends QuartzJobBean {
 		// update trigger info
 		jobLog.setTriggerTime(new Date());
 		jobLog.setTriggerStatus(responseModel.getStatus());
-		jobLog.setTriggerMsg(responseModel.getMsg());
+		jobLog.setTriggerMsg(parseAddressMsg + responseModel.getMsg());
 		DynamicSchedulerUtil.xxlJobLogDao.updateTriggerInfo(jobLog);
 
 		// monitor triger
@@ -78,16 +94,14 @@ public class RemoteHttpJobBean extends QuartzJobBean {
 	
 	/**
 	 * failover for trigger remote address
-	 * @param handler_address
 	 * @return
 	 */
-	public ResponseModel failoverTrigger(String handler_address, RequestModel requestModel, XxlJobLog jobLog){
-		if (handler_address.split(",").length > 1) {
+	public ResponseModel failoverTrigger(List<String> addressList, RequestModel requestModel, XxlJobLog jobLog){
+		if (addressList.size() > 1) {
 			
 			// for ha
-			List<String> addressList = Arrays.asList(handler_address.split(","));
 			Collections.shuffle(addressList);
-			
+
 			// for failover
 			String failoverMessage = "";
 			for (String address : addressList) {
@@ -119,14 +133,20 @@ public class RemoteHttpJobBean extends QuartzJobBean {
 			result.setStatus(ResponseModel.FAIL);
 			result.setMsg(failoverMessage);
 			return result;
-		} else {
+		} else if (addressList.size() == 1) {
+			String address = addressList.get(0);
 			// store real address
-			jobLog.setExecutorAddress(handler_address);
+			jobLog.setExecutorAddress(address);
 
-			ResponseModel triggerCallback = XxlJobNetCommUtil.postHex(XxlJobNetCommUtil.addressToUrl(handler_address), requestModel);
-			String failoverMessage = MessageFormat.format("Trigger running, <br>>>>[address] : {0}, <br>>>>[status] : {1}, <br>>>>[msg] : {2} <br><hr>", handler_address, triggerCallback.getStatus(), triggerCallback.getMsg());
+			ResponseModel triggerCallback = XxlJobNetCommUtil.postHex(XxlJobNetCommUtil.addressToUrl(address), requestModel);
+			String failoverMessage = MessageFormat.format("Trigger running, <br>>>>[address] : {0}, <br>>>>[status] : {1}, <br>>>>[msg] : {2} <br><hr>", address, triggerCallback.getStatus(), triggerCallback.getMsg());
 			triggerCallback.setMsg(failoverMessage);
 			return triggerCallback;
+		} else {
+			ResponseModel result = new ResponseModel();
+			result.setStatus(ResponseModel.FAIL);
+			result.setMsg( "Trigger error, <br>>>>address list is null <br><hr>" );
+			return result;
 		}
 	}
 

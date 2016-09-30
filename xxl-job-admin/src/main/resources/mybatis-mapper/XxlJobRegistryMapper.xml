@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="XxlJobRegistryMapper">
+	
+	<resultMap id="XxlJobRegistry" type="com.xxl.job.admin.core.model.XxlJobRegistry" >
+		<result column="id" property="id" />
+	    <result column="registry_group" property="registryGroup" />
+	    <result column="registry_key" property="registryKey" />
+	    <result column="registry_value" property="registryValue" />
+		<result column="update_time" property="updateTime" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		t.id,
+		t.registry_group,
+		t.registry_key,
+		t.registry_value,
+		t.update_time
+	</sql>
+	
+	<select id="findRegistrys" parameterType="java.util.HashMap" resultMap="XxlJobRegistry">
+		SELECT <include refid="Base_Column_List" />
+		FROM XXL_JOB_QRTZ_TRIGGER_REGISTRY AS t
+		WHERE t.registry_group = #{registryGroup}
+			AND t.registry_key = #{registryKey}
+			AND t.update_time <![CDATA[ > ]]> DATE_ADD(NOW(),INTERVAL -30 SECOND)
+	</select>
+
+	<delete id="refresh" >
+		delete from XXL_JOB_QRTZ_TRIGGER_REGISTRY
+		WHERE update_time <![CDATA[ < ]]> DATE_ADD(NOW(),INTERVAL -30 SECOND)
+	</delete>
+	
+</mapper>
