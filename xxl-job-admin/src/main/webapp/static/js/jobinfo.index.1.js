@@ -312,6 +312,10 @@ $(function() {
 		$(".remote_panel").show();	// remote
 
 		$("#addModal .form input[name='executorHandler']").removeAttr("readonly");
+
+		// 注册模式 reset
+		$("#addModal .form .executorAddress").show();
+		$("#addModal .form .executorAppname").hide();
 	});
 
 	// 注册模式
