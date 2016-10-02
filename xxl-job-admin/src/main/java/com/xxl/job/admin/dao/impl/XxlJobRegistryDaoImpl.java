@@ -6,7 +6,9 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by xuxueli on 16/9/30.
@@ -25,6 +27,26 @@ public class XxlJobRegistryDaoImpl implements IXxlJobRegistryDao {
     @Override
     public List<XxlJobRegistry> findAll(int timeout) {
         return sqlSessionTemplate.selectList("XxlJobRegistryMapper.findAll", timeout);
+    }
+
+    @Override
+    public int registryUpdate(String registryGroup, String registryKey, String registryValue) {
+        Map<String, Object> params = new HashMap();
+        params.put("registryGroup", registryGroup);
+        params.put("registryKey", registryKey);
+        params.put("registryValue", registryValue);
+
+        return sqlSessionTemplate.update("XxlJobRegistryMapper.registryUpdate", params);
+    }
+
+    @Override
+    public int registrySave(String registryGroup, String registryKey, String registryValue) {
+        Map<String, Object> params = new HashMap();
+        params.put("registryGroup", registryGroup);
+        params.put("registryKey", registryKey);
+        params.put("registryValue", registryValue);
+
+        return sqlSessionTemplate.update("XxlJobRegistryMapper.registrySave", params);
     }
 
 }

@@ -1,5 +1,6 @@
 package com.xxl.job.admin.core.thread;
 
+import com.xxl.job.admin.core.callback.XxlJobLogCallbackServer;
 import com.xxl.job.admin.core.model.XxlJobRegistry;
 import com.xxl.job.admin.core.util.DynamicSchedulerUtil;
 import com.xxl.job.core.registry.RegistHelper;
@@ -28,8 +29,14 @@ public class JobRegistryHelper {
 				int timeout = 15;
 				while (true) {
 					try {
+                        // registry admin
+                        int ret = DynamicSchedulerUtil.xxlJobRegistryDao.registryUpdate(RegistHelper.RegistType.ADMIN.name(), RegistHelper.RegistType.ADMIN.name(), XxlJobLogCallbackServer.getTrigger_log_address());
+                        if (ret < 1) {
+                            DynamicSchedulerUtil.xxlJobRegistryDao.registrySave(RegistHelper.RegistType.ADMIN.name(), RegistHelper.RegistType.ADMIN.name(), XxlJobLogCallbackServer.getTrigger_log_address());
+                        }
+
+                        // fresh registry map
 						ConcurrentHashMap<String, List<String>> temp = new ConcurrentHashMap<String, List<String>>();
-						// do biz
 						DynamicSchedulerUtil.xxlJobRegistryDao.removeDead(RegistHelper.TIMEOUT*2);
 						List<XxlJobRegistry> list = DynamicSchedulerUtil.xxlJobRegistryDao.findAll(RegistHelper.TIMEOUT*2);
 						if (list != null) {
@@ -43,9 +50,7 @@ public class JobRegistryHelper {
 								temp.put(groupKey, dataSet);
 							}
 						}
-						// gresh registry
 						registMap = temp;
-						logger.error("job registry :{}", list);
 					} catch (Exception e) {
 						logger.error("job registry helper error:{}", e);
 					}
