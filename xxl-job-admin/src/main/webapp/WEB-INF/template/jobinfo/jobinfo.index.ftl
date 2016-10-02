@@ -25,7 +25,7 @@
 	<div class="content-wrapper">
 		<!-- Content Header (Page header) -->
 		<section class="content-header">
-			<h1>任务调度中心<small>调度管理</small></h1>
+			<h1>调度管理任务调度中心<small></small></h1>
 			<!--
 			<ol class="breadcrumb">
 				<li><a><i class="fa fa-dashboard"></i>调度管理</a></li>
@@ -182,12 +182,12 @@ import com.xxl.job.core.handler.IJobHandler;
 
 public class DemoGlueJobHandler extends IJobHandler {
 	private static transient Logger logger = LoggerFactory.getLogger(DemoGlueJobHandler.class);
-	
+
 	@Override
 	public void execute(String... params) throws Exception {
 		logger.info("XXL-JOB, Hello World.");
 	}
-	
+
 }
 </textarea>
 					

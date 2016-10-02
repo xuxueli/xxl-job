@@ -313,7 +313,7 @@ $(function() {
 
 		$("#addModal .form input[name='executorHandler']").removeAttr("readonly");
 
-		// 注册模式 reset
+		// 注册模式
 		$("#addModal .form .executorAddress").show();
 		$("#addModal .form .executorAppname").hide();
 	});

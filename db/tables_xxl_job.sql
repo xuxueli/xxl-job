@@ -203,5 +203,12 @@ CREATE TABLE XXL_JOB_QRTZ_TRIGGER_REGISTRY (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE XXL_JOB_QRTZ_TRIGGER_GROUP (
+  `group_name` varchar(255) NOT NULL,
+  `group_desc` varchar(255) NOT NULL,
+  `order` int(11) NOT NULL,
+  PRIMARY KEY (`group_name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 commit;
 
