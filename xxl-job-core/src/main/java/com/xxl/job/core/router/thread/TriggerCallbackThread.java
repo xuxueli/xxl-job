@@ -23,11 +23,16 @@ public class TriggerCallbackThread {
                     try {
                         RequestModel callback = callBackQueue.take();
                         if (callback != null) {
-                            try {
-                                ResponseModel responseModel = XxlJobNetCommUtil.postHex(XxlJobNetCommUtil.addressToUrl(callback.getLogAddress()), callback);
-                                logger.info(">>>>>>>>>>> xxl-job callback , RequestModel:{}, ResponseModel:{}", new Object[]{callback.toString(), responseModel.toString()});
-                            } catch (Exception e) {
-                                logger.info("JobThread Exception:", e);
+                            for (String address : callback.getLogAddress()) {
+                                try {
+                                    ResponseModel responseModel = XxlJobNetCommUtil.postHex(XxlJobNetCommUtil.addressToUrl(address), callback);
+                                    logger.info(">>>>>>>>>>> xxl-job callback , RequestModel:{}, ResponseModel:{}", new Object[]{callback.toString(), responseModel.toString()});
+                                    if (ResponseModel.SUCCESS.equals(responseModel.getStatus())) {
+                                        break;
+                                    }
+                                } catch (Exception e) {
+                                    logger.info("JobThread Exception:", e);
+                                }
                             }
                         }
                     } catch (Exception e) {

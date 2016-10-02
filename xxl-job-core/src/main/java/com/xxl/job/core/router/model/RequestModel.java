@@ -1,5 +1,7 @@
 package com.xxl.job.core.router.model;
 
+import java.util.Set;
+
 /**
  * Created by xuxueli on 16/7/22.
  */
@@ -16,12 +18,13 @@ public class RequestModel {
 
     private boolean glueSwitch;
 
-    private String logAddress;
+    private Set<String> logAddress;
     private int logId;
     private long logDateTim;
 
     private String status;
     private String msg;
+
 
     public long getTimestamp() {
         return timestamp;
@@ -79,11 +82,11 @@ public class RequestModel {
         this.glueSwitch = glueSwitch;
     }
 
-    public String getLogAddress() {
+    public Set<String> getLogAddress() {
         return logAddress;
     }
 
-    public void setLogAddress(String logAddress) {
+    public void setLogAddress(Set<String> logAddress) {
         this.logAddress = logAddress;
     }
 
@@ -129,12 +132,11 @@ public class RequestModel {
                 ", executorHandler='" + executorHandler + '\'' +
                 ", executorParams='" + executorParams + '\'' +
                 ", glueSwitch=" + glueSwitch +
-                ", logAddress='" + logAddress + '\'' +
+                ", logAddress=" + logAddress +
                 ", logId=" + logId +
                 ", logDateTim=" + logDateTim +
                 ", status='" + status + '\'' +
                 ", msg='" + msg + '\'' +
                 '}';
     }
-
 }

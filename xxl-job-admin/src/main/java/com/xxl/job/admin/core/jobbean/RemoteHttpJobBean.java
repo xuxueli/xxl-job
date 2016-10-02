@@ -30,7 +30,7 @@ import java.util.*;
 //@DisallowConcurrentExecution
 public class RemoteHttpJobBean extends QuartzJobBean {
 	private static Logger logger = LoggerFactory.getLogger(RemoteHttpJobBean.class);
-	
+
 	@Override
 	protected void executeInternal(JobExecutionContext context)
 			throws JobExecutionException {
@@ -43,7 +43,15 @@ public class RemoteHttpJobBean extends QuartzJobBean {
 		jobLog.setJobName(jobInfo.getJobName());
 		DynamicSchedulerUtil.xxlJobLogDao.save(jobLog);
 		logger.info(">>>>>>>>>>> xxl-job trigger start, jobId:{}", jobLog.getId());
-		
+
+        // admin address
+        List<String> adminAddressList = JobRegistryHelper.discover(RegistHelper.RegistType.ADMIN.name(), RegistHelper.RegistType.ADMIN.name());
+		Set<String> adminAddressSet = new HashSet<String>();
+        if (adminAddressList!=null) {
+            adminAddressSet.addAll(adminAddressList);
+        }
+        adminAddressSet.add(XxlJobLogCallbackServer.getTrigger_log_address());
+
 		// trigger request
 		RequestModel requestModel = new RequestModel();
 		requestModel.setTimestamp(System.currentTimeMillis());
@@ -53,7 +61,7 @@ public class RemoteHttpJobBean extends QuartzJobBean {
 		requestModel.setExecutorHandler(jobInfo.getExecutorHandler());
 		requestModel.setExecutorParams(jobInfo.getExecutorParam());
 		requestModel.setGlueSwitch((jobInfo.getGlueSwitch()==0)?false:true);
-		requestModel.setLogAddress(XxlJobLogCallbackServer.getTrigger_log_address());
+		requestModel.setLogAddress(adminAddressSet);
 		requestModel.setLogId(jobLog.getId());
 
 		// parse address
