@@ -8,5 +8,7 @@ import java.util.List;
  * Created by xuxueli on 16/9/30.
  */
 public interface IXxlJobRegistryDao {
-    List<XxlJobRegistry> findRegistrys(String registryGroup, String registryKey);
+    public int removeDead(int timeout);
+
+    public List<XxlJobRegistry> findAll(int timeout);
 }

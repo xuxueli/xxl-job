@@ -3,6 +3,7 @@ package com.xxl.job.admin.core.util;
 import com.xxl.job.admin.core.callback.XxlJobLogCallbackServer;
 import com.xxl.job.admin.core.jobbean.RemoteHttpJobBean;
 import com.xxl.job.admin.core.model.XxlJobInfo;
+import com.xxl.job.admin.core.thread.JobRegistryHelper;
 import com.xxl.job.admin.dao.IXxlJobInfoDao;
 import com.xxl.job.admin.dao.IXxlJobLogDao;
 import com.xxl.job.admin.dao.IXxlJobRegistryDao;
@@ -49,6 +50,9 @@ public final class DynamicSchedulerUtil implements ApplicationContextAware, Init
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
+		// init JobRegistryHelper
+        JobRegistryHelper.discover("g", "k");
     }
     
     // destroy

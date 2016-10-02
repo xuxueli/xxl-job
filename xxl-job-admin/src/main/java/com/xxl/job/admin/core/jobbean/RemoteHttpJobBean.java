@@ -3,8 +3,8 @@ package com.xxl.job.admin.core.jobbean;
 import com.xxl.job.admin.core.callback.XxlJobLogCallbackServer;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
-import com.xxl.job.admin.core.model.XxlJobRegistry;
 import com.xxl.job.admin.core.thread.JobMonitorHelper;
+import com.xxl.job.admin.core.thread.JobRegistryHelper;
 import com.xxl.job.admin.core.util.DynamicSchedulerUtil;
 import com.xxl.job.core.registry.RegistHelper;
 import com.xxl.job.core.router.HandlerRouter.ActionRepository;
@@ -60,17 +60,12 @@ public class RemoteHttpJobBean extends QuartzJobBean {
 		List<String> addressList = new ArrayList<String>();
 		String parseAddressMsg = null;
 		if (StringUtils.isNotBlank(jobInfo.getExecutorAppname())) {
-			List<XxlJobRegistry> xxlJobRegistryList = DynamicSchedulerUtil.xxlJobRegistryDao.findRegistrys(RegistHelper.RegistType.EXECUTOR.name(), jobInfo.getExecutorAppname());
-			if (xxlJobRegistryList!=null && xxlJobRegistryList.size()>0) {
-				for (XxlJobRegistry item: xxlJobRegistryList) {
-					addressList.add(item.getRegistryValue());
-				}
-			}
-			parseAddressMsg = MessageFormat.format("Parse Address (Appname注册方式) <br>>>>[address list] : {0}<br><hr>", addressList.toArray());
+			addressList = JobRegistryHelper.discover(RegistHelper.RegistType.EXECUTOR.name(), jobInfo.getExecutorAppname());
+			parseAddressMsg = MessageFormat.format("Parse Address (Appname注册方式) <br>>>>[address list] : {0}<br><hr>", addressList);
 		} else {
 			List<String> addressArr = Arrays.asList(jobInfo.getExecutorAddress().split(","));
 			addressList.addAll(addressArr);
-			parseAddressMsg = MessageFormat.format("Parse Address (地址配置方式) <br>>>>[address list] : {0}<br><hr>", addressList.toArray());
+			parseAddressMsg = MessageFormat.format("Parse Address (地址配置方式) <br>>>>[address list] : {0}<br><hr>", addressList);
 		}
 
 		// failover trigger
@@ -97,7 +92,21 @@ public class RemoteHttpJobBean extends QuartzJobBean {
 	 * @return
 	 */
 	public ResponseModel failoverTrigger(List<String> addressList, RequestModel requestModel, XxlJobLog jobLog){
-		if (addressList.size() > 1) {
+		 if (addressList==null || addressList.size() < 1) {
+			ResponseModel result = new ResponseModel();
+			result.setStatus(ResponseModel.FAIL);
+			result.setMsg( "Trigger error, <br>>>>address list is null <br><hr>" );
+			return result;
+		} else if (addressList.size() == 1) {
+			 String address = addressList.get(0);
+			 // store real address
+			 jobLog.setExecutorAddress(address);
+
+			 ResponseModel triggerCallback = XxlJobNetCommUtil.postHex(XxlJobNetCommUtil.addressToUrl(address), requestModel);
+			 String failoverMessage = MessageFormat.format("Trigger running, <br>>>>[address] : {0}, <br>>>>[status] : {1}, <br>>>>[msg] : {2} <br><hr>", address, triggerCallback.getStatus(), triggerCallback.getMsg());
+			 triggerCallback.setMsg(failoverMessage);
+			 return triggerCallback;
+		 } else {
 			
 			// for ha
 			Collections.shuffle(addressList);
@@ -132,20 +141,6 @@ public class RemoteHttpJobBean extends QuartzJobBean {
 			ResponseModel result = new ResponseModel();
 			result.setStatus(ResponseModel.FAIL);
 			result.setMsg(failoverMessage);
-			return result;
-		} else if (addressList.size() == 1) {
-			String address = addressList.get(0);
-			// store real address
-			jobLog.setExecutorAddress(address);
-
-			ResponseModel triggerCallback = XxlJobNetCommUtil.postHex(XxlJobNetCommUtil.addressToUrl(address), requestModel);
-			String failoverMessage = MessageFormat.format("Trigger running, <br>>>>[address] : {0}, <br>>>>[status] : {1}, <br>>>>[msg] : {2} <br><hr>", address, triggerCallback.getStatus(), triggerCallback.getMsg());
-			triggerCallback.setMsg(failoverMessage);
-			return triggerCallback;
-		} else {
-			ResponseModel result = new ResponseModel();
-			result.setStatus(ResponseModel.FAIL);
-			result.setMsg( "Trigger error, <br>>>>address list is null <br><hr>" );
 			return result;
 		}
 	}
