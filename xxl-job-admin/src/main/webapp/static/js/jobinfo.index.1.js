@@ -45,7 +45,6 @@ $(function() {
 					},
 	                { "data": 'jobDesc', "visible" : true},
 	                { "data": 'jobCron', "visible" : true},
-					{ "data": 'executorAppname', "visible" : false},
 	                { "data": 'executorAddress', "visible" : false},
 					{
 						"data": 'executorHandler',
@@ -114,7 +113,6 @@ $(function() {
 									' jobDesc="'+ row.jobDesc +'" '+
 									' author="'+ row.author +'" '+
 									' alarmEmail="'+ row.alarmEmail +'" '+
-									' executorAppname="'+row.executorAppname +'" '+
 									' executorAddress="'+row.executorAddress +'" '+
 									' executorHandler="'+row.executorHandler +'" '+
 									' executorParam="'+ row.executorParam +'" '+
@@ -312,29 +310,18 @@ $(function() {
 		$(".remote_panel").show();	// remote
 
 		$("#addModal .form input[name='executorHandler']").removeAttr("readonly");
-
-		// 注册模式
-		$("#addModal .form .executorAddress").show();
-		$("#addModal .form .executorAppname").hide();
 	});
 
-	// 注册模式
-	$(".ifAppName").click(function(){
-		var ifAppName = $(this).is(':checked');
-
+	// Auto 注册模式
+	$(".addressAuto").click(function(){
+		var addressAuto = $(this).is(':checked');
 		var $executorAddress = $(this).parents("form").find("input[name='executorAddress']");
-		var $executorAppname = $(this).parents("form").find("input[name='executorAppname']");
-		$($executorAddress).val("");
-		$($executorAppname).val("");
-
-		var $executorAddressDiv = $(this).parents("form").find(".executorAddress");
-		var $executorAppnameDiv = $(this).parents("form").find(".executorAppname");
-		if (ifAppName) {
-			$($executorAddressDiv).hide();
-			$($executorAppnameDiv).show();
+		if (addressAuto) {
+			$executorAddress.val("");
+			$executorAddress.attr("readonly","readonly");
 		} else {
-			$($executorAddressDiv).show();
-			$($executorAppnameDiv).hide();
+			$executorAddress.val("");
+			$executorAddress.removeAttr("readonly");
 		}
 	});
 
@@ -363,27 +350,26 @@ $(function() {
 		$("#updateModal .form input[name='jobCron']").val($(this).parent('p').attr("jobCron"));
 		$("#updateModal .form input[name='author']").val($(this).parent('p').attr("author"));
 		$("#updateModal .form input[name='alarmEmail']").val($(this).parent('p').attr("alarmEmail"));
-		$("#updateModal .form input[name='executorAppname']").val($(this).parent('p').attr("executorAppname"));
 		$("#updateModal .form input[name='executorAddress']").val($(this).parent('p').attr("executorAddress"));
 		$("#updateModal .form input[name='executorHandler']").val($(this).parent('p').attr("executorHandler"));
 		$("#updateModal .form input[name='executorParam']").val($(this).parent('p').attr("executorParam"));
         $("#updateModal .form input[name='childJobKey']").val($(this).parent('p').attr("childJobKey"));
 
+		// addressAuto
+		var executorAddress = $(this).parent('p').attr("executorAddress");
+		var $addressAuto = $("#updateModal .addressAuto");
+		var $executorAddress = $("#updateModal .form input[name='executorAddress']");
+		if (executorAddress) {
+			$addressAuto.attr("checked", false);
+			$executorAddress.removeAttr("readonly");
+		} else {
+			$addressAuto.attr("checked", true);
+			$executorAddress.attr("readonly","readonly");
+		}
+
 		// jobGroupTitle
 		var jobGroupTitle = $("#addModal .form select[name='jobGroup']").find("option[value='" + $(this).parent('p').attr("jobGroup") + "']").text();
 		$("#updateModal .form .jobGroupTitle").val(jobGroupTitle);
-
-		// appname / address, switch
-		var $executorAppname = $(this).parent('p').attr("executorAppname");
-		if ($executorAppname) {
-			$("#updateModal .form .ifAppName").attr("checked", true);
-			$("#updateModal .form .executorAppname").show();
-			$("#updateModal .form .executorAddress").hide();
-		} else {
-			$("#updateModal .form .ifAppName").attr("checked", false);
-			$("#updateModal .form .executorAppname").hide();
-			$("#updateModal .form .executorAddress").show();
-		}
 
         // glueSwitch
 		var glueSwitch = $(this).parent('p').attr("glueSwitch");

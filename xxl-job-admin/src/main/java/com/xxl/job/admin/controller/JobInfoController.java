@@ -53,7 +53,7 @@ public class JobInfoController {
 			int glueSwitch, String glueSource, String glueRemark, String childJobKey) {
 		
 		return xxlJobService.add(jobGroup, jobCron, jobDesc, author, alarmEmail,
-				executorAppname, executorAddress, executorHandler, executorParam,
+				executorAddress, executorHandler, executorParam,
 				glueSwitch, glueSource, glueRemark, childJobKey);
 	}
 	
@@ -64,7 +64,7 @@ public class JobInfoController {
 			int glueSwitch, String childJobKey) {
 
 		return xxlJobService.reschedule(jobGroup, jobName, jobCron, jobDesc, author, alarmEmail,
-				executorAppname, executorAddress, executorHandler, executorParam, glueSwitch, childJobKey);
+				executorAddress, executorHandler, executorParam, glueSwitch, childJobKey);
 	}
 	
 	@RequestMapping("/remove")

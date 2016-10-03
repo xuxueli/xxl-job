@@ -65,7 +65,7 @@ public class XxlJobServiceImpl implements IXxlJobService {
 
 	@Override
 	public ReturnT<String> add(String jobGroup, String jobCron, String jobDesc,String author, String alarmEmail,
-			String executorAppname, String executorAddress,	String executorHandler, String executorParam,
+			String executorAddress,	String executorHandler, String executorParam,
 			int glueSwitch, String glueSource, String glueRemark, String childJobKey) {
 		// valid
 		XxlJobGroup group = xxlJobGroupDao.load(jobGroup);
@@ -83,12 +83,6 @@ public class XxlJobServiceImpl implements IXxlJobService {
 		}
 		if (StringUtils.isBlank(alarmEmail)) {
 			return new ReturnT<String>(500, "请输入“报警邮件”");
-		}
-		if (StringUtils.isBlank(executorAppname) && StringUtils.isBlank(executorAddress)) {
-			return new ReturnT<String>(500, "“执行器AppName”和“执行器地址”不可同时为空");
-		}
-		if (StringUtils.isNotBlank(executorAppname) && StringUtils.isNotBlank(executorAddress)) {
-			return new ReturnT<String>(500, "“执行器AppName”和“执行器地址” 不可同时使用");
 		}
 		if (glueSwitch==0 && StringUtils.isBlank(executorHandler)) {
 			return new ReturnT<String>(500, "请输入“JobHandler”");
@@ -128,7 +122,6 @@ public class XxlJobServiceImpl implements IXxlJobService {
 		jobInfo.setJobDesc(jobDesc);
 		jobInfo.setAuthor(author);
 		jobInfo.setAlarmEmail(alarmEmail);
-		jobInfo.setExecutorAppname(executorAppname);
 		jobInfo.setExecutorAddress(executorAddress);
 		jobInfo.setExecutorHandler(executorHandler);
 		jobInfo.setExecutorParam(executorParam);
@@ -154,7 +147,7 @@ public class XxlJobServiceImpl implements IXxlJobService {
 
 	@Override
 	public ReturnT<String> reschedule(String jobGroup, String jobName, String jobCron, String jobDesc, String author, String alarmEmail,
-			String executorAppname, String executorAddress, String executorHandler, String executorParam, int glueSwitch, String childJobKey) {
+			String executorAddress, String executorHandler, String executorParam, int glueSwitch, String childJobKey) {
 
 		// valid
 		XxlJobGroup group = xxlJobGroupDao.load(jobGroup);
@@ -175,12 +168,6 @@ public class XxlJobServiceImpl implements IXxlJobService {
 		}
 		if (StringUtils.isBlank(alarmEmail)) {
 			return new ReturnT<String>(500, "请输入“报警邮件”");
-		}
-		if (StringUtils.isBlank(executorAppname) && StringUtils.isBlank(executorAddress)) {
-			return new ReturnT<String>(500, "“执行器AppName”和“执行器地址”不可同时为空");
-		}
-		if (StringUtils.isNotBlank(executorAppname) && StringUtils.isNotBlank(executorAddress)) {
-			return new ReturnT<String>(500, "“执行器AppName”和“执行器地址” 不可同时使用");
 		}
 		if (glueSwitch==0 && StringUtils.isBlank(executorHandler)) {
 			return new ReturnT<String>(500, "请输入“JobHandler”");
@@ -207,7 +194,6 @@ public class XxlJobServiceImpl implements IXxlJobService {
 		jobInfo.setJobDesc(jobDesc);
 		jobInfo.setAuthor(author);
 		jobInfo.setAlarmEmail(alarmEmail);
-		jobInfo.setExecutorAppname(executorAppname);
 		jobInfo.setExecutorAddress(executorAddress);
 		jobInfo.setExecutorHandler(executorHandler);
 		jobInfo.setExecutorParam(executorParam);

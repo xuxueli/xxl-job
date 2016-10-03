@@ -1,6 +1,7 @@
 package com.xxl.job.admin.core.jobbean;
 
 import com.xxl.job.admin.core.callback.XxlJobLogCallbackServer;
+import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.admin.core.thread.JobMonitorHelper;
@@ -67,13 +68,16 @@ public class RemoteHttpJobBean extends QuartzJobBean {
 		// parse address
 		List<String> addressList = new ArrayList<String>();
 		String parseAddressMsg = null;
-		if (StringUtils.isNotBlank(jobInfo.getExecutorAppname())) {
-			addressList = JobRegistryHelper.discover(RegistHelper.RegistType.EXECUTOR.name(), jobInfo.getExecutorAppname());
-			parseAddressMsg = MessageFormat.format("Parse Address (Appname注册方式) <br>>>>[address list] : {0}<br><hr>", addressList);
-		} else {
+		if (StringUtils.isNotBlank(jobInfo.getExecutorAddress())) {
 			List<String> addressArr = Arrays.asList(jobInfo.getExecutorAddress().split(","));
 			addressList.addAll(addressArr);
 			parseAddressMsg = MessageFormat.format("Parse Address (地址配置方式) <br>>>>[address list] : {0}<br><hr>", addressList);
+		} else {
+			XxlJobGroup group = DynamicSchedulerUtil.xxlJobGroupDao.load(jobInfo.getJobGroup());
+			if (group!=null) {
+				addressList = JobRegistryHelper.discover(RegistHelper.RegistType.EXECUTOR.name(), group.getAppName());
+			}
+			parseAddressMsg = MessageFormat.format("Parse Address (Appname注册方式) <br>>>>[address list] : {0}<br><hr>", addressList);
 		}
 
 		// failover trigger
