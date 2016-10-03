@@ -37,7 +37,7 @@ public class RemoteHttpJobBean extends QuartzJobBean {
 			throws JobExecutionException {
 		JobKey jobKey = context.getTrigger().getJobKey();
 		
-		XxlJobInfo jobInfo = DynamicSchedulerUtil.xxlJobInfoDao.load(jobKey.getGroup(), jobKey.getName());
+		XxlJobInfo jobInfo = DynamicSchedulerUtil.xxlJobInfoDao.load(Integer.valueOf(jobKey.getGroup()), jobKey.getName());
 		// save log
 		XxlJobLog jobLog = new XxlJobLog();
 		jobLog.setJobGroup(jobInfo.getJobGroup());
@@ -57,7 +57,7 @@ public class RemoteHttpJobBean extends QuartzJobBean {
 		RequestModel requestModel = new RequestModel();
 		requestModel.setTimestamp(System.currentTimeMillis());
 		requestModel.setAction(ActionRepository.RUN.name());
-		requestModel.setJobGroup(jobInfo.getJobGroup());
+		requestModel.setJobGroup(String.valueOf(jobInfo.getJobGroup()));
 		requestModel.setJobName(jobInfo.getJobName());
 		requestModel.setExecutorHandler(jobInfo.getExecutorHandler());
 		requestModel.setExecutorParams(jobInfo.getExecutorParam());
@@ -67,17 +67,9 @@ public class RemoteHttpJobBean extends QuartzJobBean {
 
 		// parse address
 		List<String> addressList = new ArrayList<String>();
-		String parseAddressMsg = null;
-		if (StringUtils.isNotBlank(jobInfo.getExecutorAddress())) {
-			List<String> addressArr = Arrays.asList(jobInfo.getExecutorAddress().split(","));
-			addressList.addAll(addressArr);
-			parseAddressMsg = MessageFormat.format("Parse Address (地址配置方式) <br>>>>[address list] : {0}<br><hr>", addressList);
-		} else {
-			XxlJobGroup group = DynamicSchedulerUtil.xxlJobGroupDao.load(Integer.valueOf(jobInfo.getJobGroup()));
-			if (group!=null) {
-				addressList = JobRegistryHelper.discover(RegistHelper.RegistType.EXECUTOR.name(), group.getAppName());
-			}
-			parseAddressMsg = MessageFormat.format("Parse Address (Appname注册方式) <br>>>>[address list] : {0}<br><hr>", addressList);
+		XxlJobGroup group = DynamicSchedulerUtil.xxlJobGroupDao.load(Integer.valueOf(jobInfo.getJobGroup()));
+		if (group!=null) {
+			addressList = JobRegistryHelper.discover(RegistHelper.RegistType.EXECUTOR.name(), group.getAppName());
 		}
 
 		// failover trigger
@@ -89,7 +81,7 @@ public class RemoteHttpJobBean extends QuartzJobBean {
 		// update trigger info
 		jobLog.setTriggerTime(new Date());
 		jobLog.setTriggerStatus(responseModel.getStatus());
-		jobLog.setTriggerMsg(parseAddressMsg + responseModel.getMsg());
+		jobLog.setTriggerMsg(responseModel.getMsg());
 		DynamicSchedulerUtil.xxlJobLogDao.updateTriggerInfo(jobLog);
 
 		// monitor triger
@@ -107,7 +99,7 @@ public class RemoteHttpJobBean extends QuartzJobBean {
 		 if (addressList==null || addressList.size() < 1) {
 			ResponseModel result = new ResponseModel();
 			result.setStatus(ResponseModel.FAIL);
-			result.setMsg( "Trigger error, <br>>>>address list is null <br><hr>" );
+			result.setMsg( "Trigger error, <br>>>>[address] is null <br><hr>" );
 			return result;
 		} else if (addressList.size() == 1) {
 			 String address = addressList.get(0);

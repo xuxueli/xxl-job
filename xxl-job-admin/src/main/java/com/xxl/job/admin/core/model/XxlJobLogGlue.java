@@ -8,7 +8,7 @@ public class XxlJobLogGlue {
 	
 	private int id;
 	
-	private String jobGroup;
+	private int jobGroup;
 	private String jobName;
 	
 	private String glueSource;
@@ -22,10 +22,10 @@ public class XxlJobLogGlue {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public String getJobGroup() {
+	public int getJobGroup() {
 		return jobGroup;
 	}
-	public void setJobGroup(String jobGroup) {
+	public void setJobGroup(int jobGroup) {
 		this.jobGroup = jobGroup;
 	}
 	public String getJobName() {

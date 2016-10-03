@@ -42,7 +42,7 @@ public class XxlJobServiceImpl implements IXxlJobService {
 	private IXxlJobLogGlueDao xxlJobLogGlueDao;
 	
 	@Override
-	public Map<String, Object> pageList(int start, int length, String jobGroup, String executorHandler, String filterTime) {
+	public Map<String, Object> pageList(int start, int length, int jobGroup, String executorHandler, String filterTime) {
 
 		// page list
 		List<XxlJobInfo> list = xxlJobInfoDao.pageList(start, length, jobGroup, executorHandler);
@@ -96,7 +96,7 @@ public class XxlJobServiceImpl implements IXxlJobService {
 				if (childJobKeyArr.length!=2) {
 					return new ReturnT<String>(500, MessageFormat.format("子任务Key({0})格式错误", childJobKeyItem));
 				}
-				XxlJobInfo childJobInfo = xxlJobInfoDao.load(childJobKeyArr[0], childJobKeyArr[1]);
+				XxlJobInfo childJobInfo = xxlJobInfoDao.load(Integer.valueOf(childJobKeyArr[0]), childJobKeyArr[1]);
 				if (childJobInfo==null) {
 					return new ReturnT<String>(500, MessageFormat.format("子任务Key({0})无效", childJobKeyItem));
 				}
@@ -116,13 +116,12 @@ public class XxlJobServiceImpl implements IXxlJobService {
 
 		// Backup to the database
 		XxlJobInfo jobInfo = new XxlJobInfo();
-		jobInfo.setJobGroup(String.valueOf(jobGroup));
+		jobInfo.setJobGroup(jobGroup);
 		jobInfo.setJobName(jobName);
 		jobInfo.setJobCron(jobCron);
 		jobInfo.setJobDesc(jobDesc);
 		jobInfo.setAuthor(author);
 		jobInfo.setAlarmEmail(alarmEmail);
-		jobInfo.setExecutorAddress(executorAddress);
 		jobInfo.setExecutorHandler(executorHandler);
 		jobInfo.setExecutorParam(executorParam);
 		jobInfo.setGlueSwitch(glueSwitch);
@@ -132,7 +131,7 @@ public class XxlJobServiceImpl implements IXxlJobService {
 
 		try {
 			// add job 2 quartz
-			boolean result = DynamicSchedulerUtil.addJob(jobInfo);
+			boolean result = DynamicSchedulerUtil.addJob(String.valueOf(jobGroup), jobName, jobCron);
 			if (result) {
 				xxlJobInfoDao.save(jobInfo);
 				return ReturnT.SUCCESS;
@@ -181,7 +180,7 @@ public class XxlJobServiceImpl implements IXxlJobService {
 				if (childJobKeyArr.length!=2) {
 					return new ReturnT<String>(500, MessageFormat.format("子任务Key({0})格式错误", childJobKeyItem));
 				}
-				XxlJobInfo childJobInfo = xxlJobInfoDao.load(childJobKeyArr[0], childJobKeyArr[1]);
+				XxlJobInfo childJobInfo = xxlJobInfoDao.load(Integer.valueOf(childJobKeyArr[0]), childJobKeyArr[1]);
 				if (childJobInfo==null) {
 					return new ReturnT<String>(500, MessageFormat.format("子任务Key({0})无效", childJobKeyItem));
 				}
@@ -189,12 +188,11 @@ public class XxlJobServiceImpl implements IXxlJobService {
 		}
 
 		// stage job info
-		XxlJobInfo jobInfo = xxlJobInfoDao.load(String.valueOf(jobGroup), jobName);
+		XxlJobInfo jobInfo = xxlJobInfoDao.load(jobGroup, jobName);
 		jobInfo.setJobCron(jobCron);
 		jobInfo.setJobDesc(jobDesc);
 		jobInfo.setAuthor(author);
 		jobInfo.setAlarmEmail(alarmEmail);
-		jobInfo.setExecutorAddress(executorAddress);
 		jobInfo.setExecutorHandler(executorHandler);
 		jobInfo.setExecutorParam(executorParam);
 		jobInfo.setGlueSwitch(glueSwitch);
@@ -202,7 +200,7 @@ public class XxlJobServiceImpl implements IXxlJobService {
 		
 		try {
 			// fresh quartz
-			boolean ret = DynamicSchedulerUtil.rescheduleJob(jobInfo);
+			boolean ret = DynamicSchedulerUtil.rescheduleJob(String.valueOf(jobGroup), jobName, jobCron);
 			if (ret) {
 				xxlJobInfoDao.update(jobInfo);
 				return ReturnT.SUCCESS;
@@ -216,9 +214,9 @@ public class XxlJobServiceImpl implements IXxlJobService {
 	}
 
 	@Override
-	public ReturnT<String> remove(String jobGroup, String jobName) {
+	public ReturnT<String> remove(int jobGroup, String jobName) {
 		try {
-			DynamicSchedulerUtil.removeJob(jobName, jobGroup);
+			DynamicSchedulerUtil.removeJob(jobName, String.valueOf(jobGroup));
 			xxlJobInfoDao.delete(jobGroup, jobName);
 			xxlJobLogDao.delete(jobGroup, jobName);
 			xxlJobLogGlueDao.delete(jobGroup, jobName);
@@ -230,9 +228,9 @@ public class XxlJobServiceImpl implements IXxlJobService {
 	}
 
 	@Override
-	public ReturnT<String> pause(String jobGroup, String jobName) {
+	public ReturnT<String> pause(int jobGroup, String jobName) {
 		try {
-			DynamicSchedulerUtil.pauseJob(jobName, jobGroup);	// jobStatus do not store
+			DynamicSchedulerUtil.pauseJob(jobName, String.valueOf(jobGroup));	// jobStatus do not store
 			return ReturnT.SUCCESS;
 		} catch (SchedulerException e) {
 			e.printStackTrace();
@@ -241,9 +239,9 @@ public class XxlJobServiceImpl implements IXxlJobService {
 	}
 
 	@Override
-	public ReturnT<String> resume(String jobGroup, String jobName) {
+	public ReturnT<String> resume(int jobGroup, String jobName) {
 		try {
-			DynamicSchedulerUtil.resumeJob(jobName, jobGroup);
+			DynamicSchedulerUtil.resumeJob(jobName, String.valueOf(jobGroup));
 			return ReturnT.SUCCESS;
 		} catch (SchedulerException e) {
 			e.printStackTrace();
@@ -252,9 +250,9 @@ public class XxlJobServiceImpl implements IXxlJobService {
 	}
 
 	@Override
-	public ReturnT<String> triggerJob(String jobGroup, String jobName) {
+	public ReturnT<String> triggerJob(int jobGroup, String jobName) {
 		try {
-			DynamicSchedulerUtil.triggerJob(jobName, jobGroup);
+			DynamicSchedulerUtil.triggerJob(jobName, String.valueOf(jobGroup));
 			return ReturnT.SUCCESS;
 		} catch (SchedulerException e) {
 			e.printStackTrace();

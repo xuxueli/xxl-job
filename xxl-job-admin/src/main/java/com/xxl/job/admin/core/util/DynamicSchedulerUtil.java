@@ -120,8 +120,8 @@ public final class DynamicSchedulerUtil implements ApplicationContextAware, Init
 	// fill job info
 	public static void fillJobInfo(XxlJobInfo jobInfo) {
 		// TriggerKey : name + group
-        TriggerKey triggerKey = TriggerKey.triggerKey(jobInfo.getJobName(), jobInfo.getJobGroup());
-        JobKey jobKey = new JobKey(jobInfo.getJobName(), jobInfo.getJobGroup());
+        TriggerKey triggerKey = TriggerKey.triggerKey(jobInfo.getJobName(), String.valueOf(jobInfo.getJobGroup()));
+
         try {
 			Trigger trigger = scheduler.getTrigger(triggerKey);
 
@@ -133,6 +133,7 @@ public final class DynamicSchedulerUtil implements ApplicationContextAware, Init
 				jobInfo.setJobCron(cronExpression);
 			}
 
+			//JobKey jobKey = new JobKey(jobInfo.getJobName(), String.valueOf(jobInfo.getJobGroup()));
             //JobDetail jobDetail = scheduler.getJobDetail(jobKey);
             //String jobClass = jobDetail.getJobClass().getName();
 
@@ -153,19 +154,19 @@ public final class DynamicSchedulerUtil implements ApplicationContextAware, Init
 
 	// addJob 新增
 	@SuppressWarnings("unchecked")
-	public static boolean addJob(XxlJobInfo jobInfo) throws SchedulerException {
+	public static boolean addJob(String jobGroup, String jobName, String cronExpression) throws SchedulerException {
     	// TriggerKey : name + group
-        TriggerKey triggerKey = TriggerKey.triggerKey(jobInfo.getJobName(), jobInfo.getJobGroup());
-        JobKey jobKey = new JobKey(jobInfo.getJobName(), jobInfo.getJobGroup());
+        TriggerKey triggerKey = TriggerKey.triggerKey(jobName, jobGroup);
+        JobKey jobKey = new JobKey(jobName, jobGroup);
         
         // TriggerKey valid if_exists
-        if (checkExists(jobInfo.getJobName(), jobInfo.getJobGroup())) {
-            logger.info(">>>>>>>>> addJob fail, job already exist, jobInfo:{}", jobInfo);
+        if (checkExists(jobName, jobGroup)) {
+            logger.info(">>>>>>>>> addJob fail, job already exist, jobGroup:{}, jobName:{}", jobGroup, jobName);
             return false;
         }
         
         // CronTrigger : TriggerKey + cronExpression	// withMisfireHandlingInstructionDoNothing 忽略掉调度终止过程中忽略的调度
-        CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.cronSchedule(jobInfo.getJobCron()).withMisfireHandlingInstructionDoNothing();
+        CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.cronSchedule(cronExpression).withMisfireHandlingInstructionDoNothing();
         CronTrigger cronTrigger = TriggerBuilder.newTrigger().withIdentity(triggerKey).withSchedule(cronScheduleBuilder).build();
 
         // JobDetail : jobClass
@@ -186,20 +187,20 @@ public final class DynamicSchedulerUtil implements ApplicationContextAware, Init
     }
     
     // reschedule
-	public static boolean rescheduleJob(XxlJobInfo jobInfo) throws SchedulerException {
+	public static boolean rescheduleJob(String jobGroup, String jobName, String cronExpression) throws SchedulerException {
     	
     	// TriggerKey valid if_exists
-        if (!checkExists(jobInfo.getJobName(), jobInfo.getJobGroup())) {
-        	logger.info(">>>>>>>>>>> rescheduleJob fail, job not exists, jobInfo:{}", jobInfo);
+        if (!checkExists(jobName, jobGroup)) {
+        	logger.info(">>>>>>>>>>> rescheduleJob fail, job not exists, JobGroup:{}, JobName:{}", jobGroup, jobName);
             return false;
         }
         
         // TriggerKey : name + group
-        TriggerKey triggerKey = TriggerKey.triggerKey(jobInfo.getJobName(), jobInfo.getJobGroup());
-        JobKey jobKey = new JobKey(jobInfo.getJobName(), jobInfo.getJobGroup());
+        TriggerKey triggerKey = TriggerKey.triggerKey(jobName, jobGroup);
+        JobKey jobKey = new JobKey(jobName, jobGroup);
         
         // CronTrigger : TriggerKey + cronExpression
-        CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.cronSchedule(jobInfo.getJobCron()).withMisfireHandlingInstructionDoNothing();
+        CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.cronSchedule(cronExpression).withMisfireHandlingInstructionDoNothing();
         CronTrigger cronTrigger = TriggerBuilder.newTrigger().withIdentity(triggerKey).withSchedule(cronScheduleBuilder).build();
         
         //scheduler.rescheduleJob(triggerKey, cronTrigger);
@@ -215,7 +216,7 @@ public final class DynamicSchedulerUtil implements ApplicationContextAware, Init
     	triggerSet.add(cronTrigger);
         
         scheduler.scheduleJob(jobDetail, triggerSet, true);
-        logger.info(">>>>>>>>>>> resumeJob success, JobGroup:{}, JobName:{}", jobInfo.getJobGroup(), jobInfo.getJobName());
+        logger.info(">>>>>>>>>>> resumeJob success, JobGroup:{}, JobName:{}", jobGroup, jobName);
         return true;
     }
     

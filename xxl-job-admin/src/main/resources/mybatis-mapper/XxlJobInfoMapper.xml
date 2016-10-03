@@ -17,7 +17,6 @@
 	    <result column="author" property="author" />
 	    <result column="alarm_email" property="alarmEmail" />
 
-	    <result column="executor_address" property="executorAddress" />
 		<result column="executor_handler" property="executorHandler" />
 	    <result column="executor_param" property="executorParam" />
 	    
@@ -38,7 +37,6 @@
 		t.update_time,
 		t.author,
 		t.alarm_email,
-		t.executor_address,
 		t.executor_handler,
 		t.executor_param,
 		t.glue_switch,
@@ -51,7 +49,7 @@
 		SELECT <include refid="Base_Column_List" />
 		FROM XXL_JOB_QRTZ_TRIGGER_INFO AS t
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
-			<if test="jobGroup != null and jobGroup != ''">
+			<if test="jobGroup gt 0">
 				AND t.job_group = #{jobGroup}
 			</if>
 			<if test="executorHandler != null and executorHandler != ''">
@@ -66,7 +64,7 @@
 		SELECT count(1)
 		FROM XXL_JOB_QRTZ_TRIGGER_INFO AS t
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
-			<if test="jobGroup != null and jobGroup != ''">
+			<if test="jobGroup gt 0">
 				AND t.job_group = #{jobGroup}
 			</if>
 			<if test="executorHandler != null and executorHandler != ''">
@@ -85,7 +83,6 @@
 			update_time,
 			author,
 			alarm_email,
-			executor_address,
 			executor_handler,
 			executor_param,
 			glue_switch,
@@ -101,7 +98,6 @@
 			NOW(),
 			#{author},
 			#{alarmEmail},
-			#{executorAddress},
 			#{executorHandler},
 			#{executorParam},
 			#{glueSwitch},
@@ -129,7 +125,6 @@
 			update_time = NOW(),
 			author = #{author},
 			alarm_email = #{alarmEmail},
-			executor_address = #{executorAddress},
 			executor_handler = #{executorHandler},
 			executor_param = #{executorParam},
 			glue_switch = #{glueSwitch},
@@ -140,7 +135,7 @@
 			AND job_name = #{jobName}
 	</update>
 	
-	<delete id="delete" parameterType="java.lang.String">
+	<delete id="delete" parameterType="java.util.HashMap">
 		DELETE
 		FROM
 			XXL_JOB_QRTZ_TRIGGER_INFO

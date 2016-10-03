@@ -48,7 +48,7 @@
 		SELECT <include refid="Base_Column_List" />
 		FROM XXL_JOB_QRTZ_TRIGGER_LOGGLUE AS t
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
-			<if test="jobGroup != null and jobGroup != ''">
+			<if test="jobGroup gt 0">
 				AND t.job_group = #{jobGroup}
 			</if>
 			<if test="jobName != null and jobName != ''">

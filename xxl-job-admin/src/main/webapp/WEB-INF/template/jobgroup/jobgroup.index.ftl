@@ -41,7 +41,7 @@
                                         <th name="appName" >AppName</th>
                                         <th name="title" >名称</th>
 					                  	<th name="order" >排序</th>
-                                        <th name="registryList" >OnLine</th>
+                                        <th name="registryList" >OnLine 机器</th>
                                         <th name="operate" >操作</th>
 					                </tr>
 				                </thead>

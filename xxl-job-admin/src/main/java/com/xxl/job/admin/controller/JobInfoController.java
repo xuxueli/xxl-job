@@ -41,7 +41,7 @@ public class JobInfoController {
 	@ResponseBody
 	public Map<String, Object> pageList(@RequestParam(required = false, defaultValue = "0") int start,  
 			@RequestParam(required = false, defaultValue = "10") int length,
-			String jobGroup, String executorHandler, String filterTime) {
+			int jobGroup, String executorHandler, String filterTime) {
 		
 		return xxlJobService.pageList(start, length, jobGroup, executorHandler, filterTime);
 	}
@@ -69,25 +69,25 @@ public class JobInfoController {
 	
 	@RequestMapping("/remove")
 	@ResponseBody
-	public ReturnT<String> remove(String jobGroup, String jobName) {
+	public ReturnT<String> remove(int jobGroup, String jobName) {
 		return xxlJobService.remove(jobGroup, jobName);
 	}
 	
 	@RequestMapping("/pause")
 	@ResponseBody
-	public ReturnT<String> pause(String jobGroup, String jobName) {
+	public ReturnT<String> pause(int jobGroup, String jobName) {
 		return xxlJobService.pause(jobGroup, jobName);
 	}
 	
 	@RequestMapping("/resume")
 	@ResponseBody
-	public ReturnT<String> resume(String jobGroup, String jobName) {
+	public ReturnT<String> resume(int jobGroup, String jobName) {
 		return xxlJobService.resume(jobGroup, jobName);
 	}
 	
 	@RequestMapping("/trigger")
 	@ResponseBody
-	public ReturnT<String> triggerJob(String jobGroup, String jobName) {
+	public ReturnT<String> triggerJob(int jobGroup, String jobName) {
 		return xxlJobService.triggerJob(jobGroup, jobName);
 	}
 	

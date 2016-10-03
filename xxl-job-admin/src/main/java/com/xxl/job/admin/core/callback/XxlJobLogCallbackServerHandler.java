@@ -77,10 +77,10 @@ public class XxlJobLogCallbackServerHandler extends AbstractHandler {
 				for (int i = 0; i < childJobKeys.length; i++) {
 					String[] jobKeyArr = childJobKeys[i].split("_");
 					if (jobKeyArr!=null && jobKeyArr.length==2) {
-						XxlJobInfo childJobInfo = DynamicSchedulerUtil.xxlJobInfoDao.load(jobKeyArr[0], jobKeyArr[1]);
+						XxlJobInfo childJobInfo = DynamicSchedulerUtil.xxlJobInfoDao.load(Integer.valueOf(jobKeyArr[0]), jobKeyArr[1]);
 						if (childJobInfo!=null) {
 							try {
-								boolean ret = DynamicSchedulerUtil.triggerJob(childJobInfo.getJobName(), childJobInfo.getJobGroup());
+								boolean ret = DynamicSchedulerUtil.triggerJob(childJobInfo.getJobName(), String.valueOf(childJobInfo.getJobGroup()));
 
 								// add msg
 								childTriggerMsg += MessageFormat.format("<br> {0}/{1} 触发子任务成功, 子任务Key: {2}, status: {3}, 子任务描述: {4}",

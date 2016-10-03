@@ -10,7 +10,7 @@ public class XxlJobInfo {
 	
 	private int id;
 	
-	private String jobGroup;	// 任务组
+	private int jobGroup;		// 任务组 (执行器ID)
 	private String jobName;		// 任务名
 	private String jobCron;		// 任务执行CRON表达式 【base on quartz】
 	private String jobDesc;
@@ -21,7 +21,6 @@ public class XxlJobInfo {
 	private String author;		// 负责人
 	private String alarmEmail;	// 报警邮件
 
-	private String executorAddress;	// 执行器地址，有多个则逗号分隔
 	private String executorHandler;	// 执行器，任务Handler名称
 	private String executorParam;	// 执行器，任务参数
 	
@@ -42,11 +41,11 @@ public class XxlJobInfo {
 		this.id = id;
 	}
 
-	public String getJobGroup() {
+	public int getJobGroup() {
 		return jobGroup;
 	}
 
-	public void setJobGroup(String jobGroup) {
+	public void setJobGroup(int jobGroup) {
 		this.jobGroup = jobGroup;
 	}
 
@@ -104,14 +103,6 @@ public class XxlJobInfo {
 
 	public void setAlarmEmail(String alarmEmail) {
 		this.alarmEmail = alarmEmail;
-	}
-
-	public String getExecutorAddress() {
-		return executorAddress;
-	}
-
-	public void setExecutorAddress(String executorAddress) {
-		this.executorAddress = executorAddress;
 	}
 
 	public String getExecutorHandler() {

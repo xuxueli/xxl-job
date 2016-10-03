@@ -36,7 +36,7 @@
  					<div class="input-group">
 	                	<span class="input-group-addon">执行器</span>
                 		<select class="form-control" id="jobGroup"  paramVal="${jobGroup}" >
-                            <option value="" selected>请选择</option>
+                            <option value="0" selected>请选择</option>
                 			<#list JobGroupList as group>
                 				<option value="${group.id}" <#if jobGroup == group.appName && false>selected</#if> >${group.title}</option>
                 			</#list>

@@ -19,8 +19,8 @@ public class XxlJobInfoTest {
 	
 	@Test
 	public void pageList(){
-		List<XxlJobInfo> list = xxlJobInfoDao.pageList(0, 20, null, null);
-		int list_count = xxlJobInfoDao.pageListCount(0, 20, null, null);
+		List<XxlJobInfo> list = xxlJobInfoDao.pageList(0, 20, 0, null);
+		int list_count = xxlJobInfoDao.pageListCount(0, 20, 0, null);
 		
 		System.out.println(list);
 		System.out.println(list_count);
@@ -35,13 +35,13 @@ public class XxlJobInfoTest {
 		System.out.println(count);
 		System.out.println(info.getId());
 		
-		XxlJobInfo item = xxlJobInfoDao.load(null ,"job_name");
+		XxlJobInfo item = xxlJobInfoDao.load(0 ,"job_name");
 		System.out.println(item);
 	}
 	
 	@Test
 	public void update(){
-		XxlJobInfo item = xxlJobInfoDao.load(null ,"job_name");
+		XxlJobInfo item = xxlJobInfoDao.load(0 ,"job_name");
 		
 		item.setJobCron("jobCron2");
 		xxlJobInfoDao.update(item);

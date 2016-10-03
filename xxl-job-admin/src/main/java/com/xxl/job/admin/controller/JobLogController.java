@@ -65,7 +65,7 @@ public class JobLogController {
 	@ResponseBody
 	public Map<String, Object> pageList(@RequestParam(required = false, defaultValue = "0") int start,  
 			@RequestParam(required = false, defaultValue = "10") int length,
-			String jobGroup, String jobName, String filterTime) {
+			int jobGroup, String jobName, String filterTime) {
 		
 		// parse param
 		Date triggerTimeStart = null;
@@ -161,7 +161,7 @@ public class JobLogController {
 		RequestModel requestModel = new RequestModel();
 		requestModel.setTimestamp(System.currentTimeMillis());
 		requestModel.setAction(ActionRepository.KILL.name());
-		requestModel.setJobGroup(log.getJobGroup());
+		requestModel.setJobGroup(String.valueOf(log.getJobGroup()));
 		requestModel.setJobName(log.getJobName());
 
 		ResponseModel responseModel = XxlJobNetCommUtil.postHex(XxlJobNetCommUtil.addressToUrl(log.getExecutorAddress()), requestModel);

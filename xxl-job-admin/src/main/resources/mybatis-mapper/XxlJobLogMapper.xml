@@ -83,13 +83,7 @@
 		FROM XXL_JOB_QRTZ_TRIGGER_LOG AS t
 		WHERE t.id = #{id}
 	</select>
-	
-	<select id="loadByGroupAndName" parameterType="java.util.HashMap" resultMap="XxlJobLog">
-		SELECT <include refid="Base_Column_List" />
-		FROM XXL_JOB_QRTZ_TRIGGER_LOG AS t
-		WHERE t.job_group = #{jobGroup}
-			AND t.job_name = #{jobName}
-	</select>
+
 	
 	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobLog" useGeneratedKeys="true" keyProperty="id" >
 		INSERT INTO XXL_JOB_QRTZ_TRIGGER_LOG (

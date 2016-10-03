@@ -11,7 +11,7 @@ public class XxlJobLog {
 	private int id;
 	
 	// job info
-	private String jobGroup;
+	private int jobGroup;
 	private String jobName;
 	
 	private String executorAddress;	// 执行器地址，有多个则逗号分隔
@@ -34,10 +34,10 @@ public class XxlJobLog {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public String getJobGroup() {
+	public int getJobGroup() {
 		return jobGroup;
 	}
-	public void setJobGroup(String jobGroup) {
+	public void setJobGroup(int jobGroup) {
 		this.jobGroup = jobGroup;
 	}
 	public String getJobName() {
