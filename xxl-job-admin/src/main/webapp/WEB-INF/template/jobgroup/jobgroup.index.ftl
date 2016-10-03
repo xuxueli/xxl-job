@@ -32,6 +32,8 @@
 			            <div class="box-header">
 							<h3 class="box-title">执行器列表</h3>&nbsp;&nbsp;
                             <button class="btn btn-info btn-xs pull-left2 add" >+新增执行器</button>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            调度中心OnLine:<#if adminAddressList?exists><#list adminAddressList as item><span class="badge bg-green">${item}</span></#list></#if>
 						</div>
 			            <div class="box-body">
 			              	<table id="joblog_list" class="table table-bordered table-striped display" width="100%" >

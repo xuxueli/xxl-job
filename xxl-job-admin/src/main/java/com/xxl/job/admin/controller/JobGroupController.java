@@ -26,12 +26,16 @@ public class JobGroupController {
 
 	@Resource
 	public IXxlJobInfoDao xxlJobInfoDao;
-
 	@Resource
 	public IXxlJobGroupDao xxlJobGroupDao;
 
 	@RequestMapping
 	public String index(Model model) {
+
+		// job admin
+		List<String> adminAddressList = JobRegistryHelper.discover(RegistHelper.RegistType.ADMIN.name(), RegistHelper.RegistType.ADMIN.name());
+
+		// job group (executor)
 		List<XxlJobGroup> list = xxlJobGroupDao.findAll();
 
 		if (CollectionUtils.isNotEmpty(list)) {
@@ -41,6 +45,7 @@ public class JobGroupController {
 			}
 		}
 
+		model.addAttribute("adminAddressList", adminAddressList);
 		model.addAttribute("list", list);
 		return "jobgroup/jobgroup.index";
 	}
