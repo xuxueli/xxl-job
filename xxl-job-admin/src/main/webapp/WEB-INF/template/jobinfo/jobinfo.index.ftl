@@ -40,10 +40,10 @@
 	    	<div class="row">
 	    		<div class="col-xs-4">
 	              	<div class="input-group">
-	                	<span class="input-group-addon">任务组</span>
+	                	<span class="input-group-addon">执行器</span>
                 		<select class="form-control" id="jobGroup" >
                 			<#list JobGroupList as group>
-                				<option value="${group}" >${group.desc}</option>
+                				<option value="${group.appName}" >${group.title}</option>
                 			</#list>
 	                  	</select>
 	              	</div>
@@ -115,11 +115,11 @@
          	<div class="modal-body">
 				<form class="form-horizontal form" role="form" >
 					<div class="form-group">
-						<label for="firstname" class="col-sm-2 control-label">任务组<font color="red">*</font></label>
+						<label for="firstname" class="col-sm-2 control-label">执行器<font color="red">*</font></label>
 						<div class="col-sm-4">
 							<select class="form-control" name="jobGroup" >
 		            			<#list JobGroupList as group>
-		            				<option value="${group}" >${group.desc}</option>
+		            				<option value="${group.appName}" >${group.title}</option>
 		            			</#list>
 		                  	</select>
 						</div>
@@ -207,7 +207,7 @@ public class DemoGlueJobHandler extends IJobHandler {
          	<div class="modal-body">
 				<form class="form-horizontal form" role="form" >
 					<div class="form-group">
-                        <label for="firstname" class="col-sm-2 control-label">任务组<font color="red">*</font></label>
+                        <label for="firstname" class="col-sm-2 control-label">执行器<font color="red">*</font></label>
                         <div class="col-sm-4">
 							<input type="text" class="form-control jobGroupTitle" maxlength="50" readonly >
 						</div>

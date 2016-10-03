@@ -4,6 +4,7 @@ import com.xxl.job.admin.core.callback.XxlJobLogCallbackServer;
 import com.xxl.job.admin.core.jobbean.RemoteHttpJobBean;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.thread.JobRegistryHelper;
+import com.xxl.job.admin.dao.IXxlJobGroupDao;
 import com.xxl.job.admin.dao.IXxlJobInfoDao;
 import com.xxl.job.admin.dao.IXxlJobLogDao;
 import com.xxl.job.admin.dao.IXxlJobRegistryDao;
@@ -66,12 +67,14 @@ public final class DynamicSchedulerUtil implements ApplicationContextAware, Init
     public static IXxlJobLogDao xxlJobLogDao;
     public static IXxlJobInfoDao xxlJobInfoDao;
     public static IXxlJobRegistryDao xxlJobRegistryDao;
+    public static IXxlJobGroupDao xxlJobGroupDao;
 
     @Override
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 		DynamicSchedulerUtil.xxlJobLogDao = applicationContext.getBean(IXxlJobLogDao.class);
 		DynamicSchedulerUtil.xxlJobInfoDao = applicationContext.getBean(IXxlJobInfoDao.class);
         DynamicSchedulerUtil.xxlJobRegistryDao = applicationContext.getBean(IXxlJobRegistryDao.class);
+        DynamicSchedulerUtil.xxlJobGroupDao = applicationContext.getBean(IXxlJobGroupDao.class);
 	}
     
 	@Override

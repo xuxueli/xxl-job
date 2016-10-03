@@ -1,9 +1,10 @@
 package com.xxl.job.admin.service.impl;
 
-import com.xxl.job.admin.core.constant.Constants.JobGroupEnum;
 import com.xxl.job.admin.core.model.ReturnT;
+import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.util.DynamicSchedulerUtil;
+import com.xxl.job.admin.dao.IXxlJobGroupDao;
 import com.xxl.job.admin.dao.IXxlJobInfoDao;
 import com.xxl.job.admin.dao.IXxlJobLogDao;
 import com.xxl.job.admin.dao.IXxlJobLogGlueDao;
@@ -31,6 +32,8 @@ import java.util.Map;
 public class XxlJobServiceImpl implements IXxlJobService {
 	private static Logger logger = LoggerFactory.getLogger(XxlJobServiceImpl.class);
 
+	@Resource
+	private IXxlJobGroupDao xxlJobGroupDao;
 	@Resource
 	private IXxlJobInfoDao xxlJobInfoDao;
 	@Resource
@@ -65,8 +68,9 @@ public class XxlJobServiceImpl implements IXxlJobService {
 			String executorAppname, String executorAddress,	String executorHandler, String executorParam,
 			int glueSwitch, String glueSource, String glueRemark, String childJobKey) {
 		// valid
-		if (JobGroupEnum.match(jobGroup) == null) {
-			return new ReturnT<String>(500, "请选择“任务组”");
+		XxlJobGroup group = xxlJobGroupDao.load(jobGroup);
+		if (group == null) {
+			return new ReturnT<String>(500, "请选择“执行器”");
 		}
 		if (!CronExpression.isValidExpression(jobCron)) {
 			return new ReturnT<String>(500, "请输入格式正确的“Cron”");
@@ -153,8 +157,9 @@ public class XxlJobServiceImpl implements IXxlJobService {
 			String executorAppname, String executorAddress, String executorHandler, String executorParam, int glueSwitch, String childJobKey) {
 
 		// valid
-		if (JobGroupEnum.match(jobGroup) == null) {
-			return new ReturnT<String>(500, "请选择“任务组”");
+		XxlJobGroup group = xxlJobGroupDao.load(jobGroup);
+		if (group == null) {
+			return new ReturnT<String>(500, "请选择“执行器”");
 		}
 		if (StringUtils.isBlank(jobName)) {
 			return new ReturnT<String>(500, "请输入“任务名”");

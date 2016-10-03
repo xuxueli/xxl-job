@@ -34,11 +34,11 @@
 	    	<div class="row">
 	    		<div class="col-xs-3">
  					<div class="input-group">
-	                	<span class="input-group-addon">任务组</span>
+	                	<span class="input-group-addon">执行器</span>
                 		<select class="form-control" id="jobGroup"  paramVal="${jobGroup}" >
                             <option value="" selected>请选择</option>
                 			<#list JobGroupList as group>
-                				<option value="${group}" <#if jobGroup == group && false>selected</#if> >${group.desc}</option>
+                				<option value="${group.appName}" <#if jobGroup == group.appName && false>selected</#if> >${group.title}</option>
                 			</#list>
 	                  	</select>
 	              	</div>

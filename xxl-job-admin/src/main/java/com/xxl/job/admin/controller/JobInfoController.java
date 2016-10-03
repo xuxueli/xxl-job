@@ -1,7 +1,8 @@
 package com.xxl.job.admin.controller;
 
-import com.xxl.job.admin.core.constant.Constants.JobGroupEnum;
 import com.xxl.job.admin.core.model.ReturnT;
+import com.xxl.job.admin.core.model.XxlJobGroup;
+import com.xxl.job.admin.dao.IXxlJobGroupDao;
 import com.xxl.job.admin.service.IXxlJobService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -19,13 +21,19 @@ import java.util.Map;
 @Controller
 @RequestMapping("/jobinfo")
 public class JobInfoController {
-	
+
+	@Resource
+	private IXxlJobGroupDao xxlJobGroupDao;
 	@Resource
 	private IXxlJobService xxlJobService;
 	
 	@RequestMapping
 	public String index(Model model) {
-		model.addAttribute("JobGroupList", JobGroupEnum.values());			// 任务组列表
+
+		// 任务组
+		List<XxlJobGroup> jobGroupList =  xxlJobGroupDao.findAll();
+
+		model.addAttribute("JobGroupList", jobGroupList);
 		return "jobinfo/jobinfo.index";
 	}
 	

@@ -1,9 +1,10 @@
 package com.xxl.job.admin.controller;
 
-import com.xxl.job.admin.core.constant.Constants.JobGroupEnum;
 import com.xxl.job.admin.core.model.ReturnT;
+import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
+import com.xxl.job.admin.dao.IXxlJobGroupDao;
 import com.xxl.job.admin.dao.IXxlJobInfoDao;
 import com.xxl.job.admin.dao.IXxlJobLogDao;
 import com.xxl.job.core.router.HandlerRouter.ActionRepository;
@@ -34,15 +35,21 @@ import java.util.Map;
 public class JobLogController {
 
 	@Resource
-	public IXxlJobLogDao xxlJobLogDao;
+	private IXxlJobGroupDao xxlJobGroupDao;
 	@Resource
 	public IXxlJobInfoDao xxlJobInfoDao;
-	
+	@Resource
+	public IXxlJobLogDao xxlJobLogDao;
+
 	@RequestMapping
 	public String index(Model model, String jobGroup, String jobName) {
+
+		// 任务组
+		List<XxlJobGroup> jobGroupList =  xxlJobGroupDao.findAll();
+
 		model.addAttribute("jobGroup", jobGroup);
 		model.addAttribute("jobName", jobName);
-		model.addAttribute("JobGroupList", JobGroupEnum.values());
+		model.addAttribute("JobGroupList", jobGroupList);
 		return "joblog/joblog.index";
 	}
 
