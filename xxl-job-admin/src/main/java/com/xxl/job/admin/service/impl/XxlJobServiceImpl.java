@@ -64,7 +64,7 @@ public class XxlJobServiceImpl implements IXxlJobService {
 	}
 
 	@Override
-	public ReturnT<String> add(String jobGroup, String jobCron, String jobDesc,String author, String alarmEmail,
+	public ReturnT<String> add(int jobGroup, String jobCron, String jobDesc,String author, String alarmEmail,
 			String executorAddress,	String executorHandler, String executorParam,
 			int glueSwitch, String glueSource, String glueRemark, String childJobKey) {
 		// valid
@@ -106,7 +106,7 @@ public class XxlJobServiceImpl implements IXxlJobService {
 		// generate jobName
 		String jobName = FastDateFormat.getInstance("yyyyMMddHHmmssSSSS").format(new Date());
 		try {
-			if (DynamicSchedulerUtil.checkExists(jobName, jobGroup)) {
+			if (DynamicSchedulerUtil.checkExists(jobName, String.valueOf(jobGroup))) {
 				return new ReturnT<String>(500, "系统繁忙，请稍后重试");
 			}
 		} catch (SchedulerException e1) {
@@ -116,7 +116,7 @@ public class XxlJobServiceImpl implements IXxlJobService {
 
 		// Backup to the database
 		XxlJobInfo jobInfo = new XxlJobInfo();
-		jobInfo.setJobGroup(jobGroup);
+		jobInfo.setJobGroup(String.valueOf(jobGroup));
 		jobInfo.setJobName(jobName);
 		jobInfo.setJobCron(jobCron);
 		jobInfo.setJobDesc(jobDesc);
@@ -146,7 +146,7 @@ public class XxlJobServiceImpl implements IXxlJobService {
 	}
 
 	@Override
-	public ReturnT<String> reschedule(String jobGroup, String jobName, String jobCron, String jobDesc, String author, String alarmEmail,
+	public ReturnT<String> reschedule(int jobGroup, String jobName, String jobCron, String jobDesc, String author, String alarmEmail,
 			String executorAddress, String executorHandler, String executorParam, int glueSwitch, String childJobKey) {
 
 		// valid
@@ -189,7 +189,7 @@ public class XxlJobServiceImpl implements IXxlJobService {
 		}
 
 		// stage job info
-		XxlJobInfo jobInfo = xxlJobInfoDao.load(jobGroup, jobName);
+		XxlJobInfo jobInfo = xxlJobInfoDao.load(String.valueOf(jobGroup), jobName);
 		jobInfo.setJobCron(jobCron);
 		jobInfo.setJobDesc(jobDesc);
 		jobInfo.setAuthor(author);

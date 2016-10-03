@@ -60,12 +60,6 @@ public class JobGroupController {
 			return new ReturnT<String>(500, "请输入名称");
 		}
 
-		// check repeat
-		XxlJobGroup group = xxlJobGroupDao.load(xxlJobGroup.getAppName());
-		if (group!=null) {
-			return new ReturnT<String>(500, "AppName对应的执行器已存在, 请勿重复添加");
-		}
-
 		int ret = xxlJobGroupDao.save(xxlJobGroup);
 		return (ret>0)?ReturnT.SUCCESS:ReturnT.FAIL;
 	}
@@ -90,10 +84,10 @@ public class JobGroupController {
 
 	@RequestMapping("/remove")
 	@ResponseBody
-	public ReturnT<String> remove(String appName){
+	public ReturnT<String> remove(int id){
 
 		// valid
-		int count = xxlJobInfoDao.pageListCount(0, 10, appName, null);
+		int count = xxlJobInfoDao.pageListCount(0, 10, String.valueOf(id), null);
 		if (count > 0) {
 			return new ReturnT<String>(500, "该分组使用中, 不可删除");
 		}
@@ -103,7 +97,7 @@ public class JobGroupController {
 			return new ReturnT<String>(500, "删除失败, 系统需要至少预留一个默认分组");
 		}
 
-		int ret = xxlJobGroupDao.remove(appName);
+		int ret = xxlJobGroupDao.remove(id);
 		return (ret>0)?ReturnT.SUCCESS:ReturnT.FAIL;
 	}
 

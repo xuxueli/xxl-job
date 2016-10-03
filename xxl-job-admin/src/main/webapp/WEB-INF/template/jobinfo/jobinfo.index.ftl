@@ -43,7 +43,7 @@
 	                	<span class="input-group-addon">执行器</span>
                 		<select class="form-control" id="jobGroup" >
                 			<#list JobGroupList as group>
-                				<option value="${group.appName}" >${group.title}</option>
+                				<option value="${group.id}" >${group.title}</option>
                 			</#list>
 	                  	</select>
 	              	</div>
@@ -118,7 +118,7 @@
 						<div class="col-sm-4">
 							<select class="form-control" name="jobGroup" >
 		            			<#list JobGroupList as group>
-		            				<option value="${group.appName}" >${group.title}</option>
+		            				<option value="${group.id}" >${group.title}</option>
 		            			</#list>
 		                  	</select>
 						</div>

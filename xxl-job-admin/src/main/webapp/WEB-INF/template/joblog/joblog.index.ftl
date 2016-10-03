@@ -38,7 +38,7 @@
                 		<select class="form-control" id="jobGroup"  paramVal="${jobGroup}" >
                             <option value="" selected>请选择</option>
                 			<#list JobGroupList as group>
-                				<option value="${group.appName}" <#if jobGroup == group.appName && false>selected</#if> >${group.title}</option>
+                				<option value="${group.id}" <#if jobGroup == group.appName && false>selected</#if> >${group.title}</option>
                 			</#list>
 	                  	</select>
 	              	</div>

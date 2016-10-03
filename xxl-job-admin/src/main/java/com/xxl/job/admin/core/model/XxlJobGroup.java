@@ -7,12 +7,21 @@ import java.util.List;
  */
 public class XxlJobGroup {
 
+    private int id;
     private String appName;
     private String title;
     private int order;
 
     // registry list
     private List<String> registryList;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getAppName() {
         return appName;

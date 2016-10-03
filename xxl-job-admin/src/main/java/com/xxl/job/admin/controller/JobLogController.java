@@ -45,6 +45,7 @@ public class JobLogController {
 	public String index(Model model, String jobGroup, String jobName) {
 
 		// 任务组
+
 		List<XxlJobGroup> jobGroupList =  xxlJobGroupDao.findAll();
 
 		model.addAttribute("jobGroup", jobGroup);

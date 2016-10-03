@@ -37,6 +37,7 @@
 			              	<table id="joblog_list" class="table table-bordered table-striped display" width="100%" >
 				                <thead>
 					            	<tr>
+                                        <th name="id" >ID</th>
                                         <th name="appName" >AppName</th>
                                         <th name="title" >名称</th>
 					                  	<th name="order" >排序</th>
@@ -48,13 +49,14 @@
 								<#if list?exists && list?size gt 0>
 								<#list list as group>
 									<tr>
+                                        <td>${group.id}</td>
                                         <td>${group.appName}</td>
                                         <td>${group.title}</td>
                                         <td>${group.order}</td>
                                         <td><#if group.registryList?exists><#list group.registryList as item><span class="badge bg-green">${item}</span><br></#list></#if></td>
 										<td>
-                                            <button class="btn btn-warning btn-xs update" appName="${group.appName}" title="${group.title}" order="${group.order}" >编辑</button>
-                                            <button class="btn btn-danger btn-xs remove" appName="${group.appName}" >删除</button>
+                                            <button class="btn btn-warning btn-xs update" id="${group.id}" appName="${group.appName}" title="${group.title}" order="${group.order}" >编辑</button>
+                                            <button class="btn btn-danger btn-xs remove" id="${group.id}" >删除</button>
 										</td>
 									</tr>
 								</#list>
@@ -113,7 +115,7 @@
                     <form class="form-horizontal form" role="form" >
                         <div class="form-group">
                             <label for="lastname" class="col-sm-2 control-label">AppName<font color="red">*</font></label>
-                            <div class="col-sm-10"><input type="text" class="form-control" name="appName" placeholder="请输入“AppName”" maxlength="64" readonly ></div>
+                            <div class="col-sm-10"><input type="text" class="form-control" name="appName" placeholder="请输入“AppName”" maxlength="64" ></div>
                         </div>
                         <div class="form-group">
                             <label for="lastname" class="col-sm-2 control-label">名称<font color="red">*</font></label>
@@ -128,6 +130,7 @@
                             <div class="col-sm-offset-3 col-sm-6">
                                 <button type="submit" class="btn btn-primary"  >保存</button>
                                 <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                                <input type="hidden" name="id" >
                             </div>
                         </div>
                     </form>

@@ -73,7 +73,7 @@ public class RemoteHttpJobBean extends QuartzJobBean {
 			addressList.addAll(addressArr);
 			parseAddressMsg = MessageFormat.format("Parse Address (地址配置方式) <br>>>>[address list] : {0}<br><hr>", addressList);
 		} else {
-			XxlJobGroup group = DynamicSchedulerUtil.xxlJobGroupDao.load(jobInfo.getJobGroup());
+			XxlJobGroup group = DynamicSchedulerUtil.xxlJobGroupDao.load(Integer.valueOf(jobInfo.getJobGroup()));
 			if (group!=null) {
 				addressList = JobRegistryHelper.discover(RegistHelper.RegistType.EXECUTOR.name(), group.getAppName());
 			}

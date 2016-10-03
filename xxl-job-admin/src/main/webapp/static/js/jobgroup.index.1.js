@@ -2,13 +2,13 @@ $(function() {
 
 	// remove
 	$('.remove').on('click', function(){
-		var appName = $(this).attr('appName');
+		var id = $(this).attr('id');
 
 		ComConfirm.show("确认删除分组?", function(){
 			$.ajax({
 				type : 'POST',
 				url : base_url + '/jobgroup/remove',
-				data : {"appName":appName},
+				data : {"id":id},
 				dataType : "json",
 				success : function(data){
 					if (data.code == 200) {
@@ -108,6 +108,7 @@ $(function() {
 	});
 
 	$('.update').on('click', function(){
+		$("#updateModal .form input[name='id']").val($(this).attr("id"));
 		$("#updateModal .form input[name='appName']").val($(this).attr("appName"));
 		$("#updateModal .form input[name='title']").val($(this).attr("title"));
 		$("#updateModal .form input[name='order']").val($(this).attr("order"));
