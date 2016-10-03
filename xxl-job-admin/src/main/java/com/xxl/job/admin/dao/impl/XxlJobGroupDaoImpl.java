@@ -33,13 +33,13 @@ public class XxlJobGroupDaoImpl implements IXxlJobGroupDao {
     }
 
     @Override
-    public int remove(String groupName) {
-        return sqlSessionTemplate.delete("XxlJobGroupMapper.remove", groupName);
+    public int remove(String appName) {
+        return sqlSessionTemplate.delete("XxlJobGroupMapper.remove", appName);
     }
 
     @Override
-    public XxlJobGroup load(String groupName) {
-        return sqlSessionTemplate.selectOne("XxlJobGroupMapper.load", groupName);
+    public XxlJobGroup load(String appName) {
+        return sqlSessionTemplate.selectOne("XxlJobGroupMapper.load", appName);
     }
 
 

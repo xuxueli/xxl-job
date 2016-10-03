@@ -20,7 +20,7 @@
 	<div class="content-wrapper">
 		<!-- Content Header (Page header) -->
 		<section class="content-header">
-			<h1>分组管理<small>任务调度中心</small></h1>
+			<h1>执行器管理<small>任务调度中心</small></h1>
 		</section>
 
 		<!-- Main content -->
@@ -30,16 +30,17 @@
 				<div class="col-xs-12">
 					<div class="box">
 			            <div class="box-header">
-							<h3 class="box-title">分组管理</h3>
-                            <button class="btn btn-success btn-xs pull-left2 add" >+新增分组</button>
+							<h3 class="box-title">执行器列表</h3>&nbsp;&nbsp;
+                            <button class="btn btn-info btn-xs pull-left2 add" >+新增执行器</button>
 						</div>
 			            <div class="box-body">
 			              	<table id="joblog_list" class="table table-bordered table-striped display" width="100%" >
 				                <thead>
 					            	<tr>
-                                        <th name="groupDesc" >名称</th>
-                                        <th name="groupName" >AppName</th>
+                                        <th name="appName" >AppName</th>
+                                        <th name="title" >名称</th>
 					                  	<th name="order" >排序</th>
+                                        <th name="registryList" >OnLine</th>
                                         <th name="operate" >操作</th>
 					                </tr>
 				                </thead>
@@ -47,12 +48,13 @@
 								<#if list?exists && list?size gt 0>
 								<#list list as group>
 									<tr>
-                                        <td>${group.groupDesc}</td>
-                                        <td>${group.groupName}</td>
+                                        <td>${group.appName}</td>
+                                        <td>${group.title}</td>
                                         <td>${group.order}</td>
+                                        <td><#if group.registryList?exists><#list group.registryList as item><span class="badge bg-green">${item}</span><br></#list></#if></td>
 										<td>
-                                            <button class="btn btn-warning btn-xs update" groupName="${group.groupName}" groupDesc="${group.groupDesc}" order="${group.order}" >编辑</button>
-                                            <button class="btn btn-danger btn-xs remove" groupName="${group.groupName}" >删除</button>
+                                            <button class="btn btn-warning btn-xs update" appName="${group.appName}" title="${group.title}" order="${group.order}" >编辑</button>
+                                            <button class="btn btn-danger btn-xs remove" appName="${group.appName}" >删除</button>
 										</td>
 									</tr>
 								</#list>
@@ -71,17 +73,17 @@
         <div class="modal-dialog ">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title" >新增分组</h4>
+                    <h4 class="modal-title" >新增执行器</h4>
                 </div>
                 <div class="modal-body">
                     <form class="form-horizontal form" role="form" >
                         <div class="form-group">
-                            <label for="lastname" class="col-sm-2 control-label">分组<font color="red">*</font></label>
-                            <div class="col-sm-10"><input type="text" class="form-control" name="groupName" placeholder="请输入“分组”" maxlength="200" ></div>
+                            <label for="lastname" class="col-sm-2 control-label">AppName<font color="red">*</font></label>
+                            <div class="col-sm-10"><input type="text" class="form-control" name="appName" placeholder="请输入“AppName”" maxlength="64" ></div>
                         </div>
                         <div class="form-group">
-                            <label for="lastname" class="col-sm-2 control-label">描述<font color="red">*</font></label>
-                            <div class="col-sm-10"><input type="text" class="form-control" name="groupDesc" placeholder="请输入“描述”" maxlength="200" ></div>
+                            <label for="lastname" class="col-sm-2 control-label">名称<font color="red">*</font></label>
+                            <div class="col-sm-10"><input type="text" class="form-control" name="title" placeholder="请输入“名称”" maxlength="12" ></div>
                         </div>
                         <div class="form-group">
                             <label for="lastname" class="col-sm-2 control-label">排序<font color="red">*</font></label>
@@ -105,17 +107,17 @@
         <div class="modal-dialog ">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title" >编辑分组</h4>
+                    <h4 class="modal-title" >编辑执行器</h4>
                 </div>
                 <div class="modal-body">
                     <form class="form-horizontal form" role="form" >
                         <div class="form-group">
-                            <label for="lastname" class="col-sm-2 control-label">分组<font color="red">*</font></label>
-                            <div class="col-sm-10"><input type="text" class="form-control" name="groupName" placeholder="请输入“分组”" maxlength="200" readonly ></div>
+                            <label for="lastname" class="col-sm-2 control-label">AppName<font color="red">*</font></label>
+                            <div class="col-sm-10"><input type="text" class="form-control" name="appName" placeholder="请输入“AppName”" maxlength="64" readonly ></div>
                         </div>
                         <div class="form-group">
-                            <label for="lastname" class="col-sm-2 control-label">描述<font color="red">*</font></label>
-                            <div class="col-sm-10"><input type="text" class="form-control" name="groupDesc" placeholder="请输入“描述”" maxlength="200" ></div>
+                            <label for="lastname" class="col-sm-2 control-label">名称<font color="red">*</font></label>
+                            <div class="col-sm-10"><input type="text" class="form-control" name="title" placeholder="请输入“名称”" maxlength="12" ></div>
                         </div>
                         <div class="form-group">
                             <label for="lastname" class="col-sm-2 control-label">排序<font color="red">*</font></label>

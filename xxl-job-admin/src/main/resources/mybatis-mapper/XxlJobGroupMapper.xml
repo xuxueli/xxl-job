@@ -4,14 +4,14 @@
 <mapper namespace="XxlJobGroupMapper">
 	
 	<resultMap id="XxlJobGroup" type="com.xxl.job.admin.core.model.XxlJobGroup" >
-	    <result column="group_name" property="groupName" />
-	    <result column="group_desc" property="groupDesc" />
+	    <result column="app_name" property="appName" />
+	    <result column="title" property="title" />
 	    <result column="order" property="order" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
-		t.group_name,
-		t.group_desc,
+		t.app_name,
+		t.title,
 		t.order
 	</sql>
 
@@ -22,26 +22,26 @@
 	</select>
 
 	<insert id="save" parameterType="java.util.Map" >
-		INSERT INTO XXL_JOB_QRTZ_TRIGGER_GROUP ( `group_name`, `group_desc`, `order`)
-		values ( #{groupName}, #{groupDesc}, #{order});
+		INSERT INTO XXL_JOB_QRTZ_TRIGGER_GROUP ( `app_name`, `title`, `order`)
+		values ( #{appName}, #{title}, #{order});
 	</insert>
 
 	<update id="update" parameterType="java.util.Map" >
 		UPDATE XXL_JOB_QRTZ_TRIGGER_GROUP
-		SET `group_desc` = #{groupDesc},
+		SET `title` = #{title},
 			`order` = #{order}
-		WHERE group_name = #{groupName}
+		WHERE app_name = #{appName}
 	</update>
 
 	<delete id="remove" parameterType="java.lang.String" >
 		DELETE FROM XXL_JOB_QRTZ_TRIGGER_GROUP
-		WHERE group_name = #{groupName}
+		WHERE app_name = #{appName}
 	</delete>
 
 	<select id="load" parameterType="java.lang.String" resultMap="XxlJobGroup">
 		SELECT <include refid="Base_Column_List" />
 		FROM XXL_JOB_QRTZ_TRIGGER_GROUP AS t
-		WHERE t.group_name = #{groupName}
+		WHERE t.app_name = #{appName}
 	</select>
 
 </mapper>

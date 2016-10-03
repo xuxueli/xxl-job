@@ -42,12 +42,12 @@ public class JobRegistryHelper {
 						if (list != null) {
 							for (XxlJobRegistry item: list) {
 								String groupKey = makeGroupKey(item.getRegistryGroup(), item.getRegistryKey());
-								List<String> dataSet = temp.get(groupKey);
-								if (dataSet == null) {
-									dataSet = new ArrayList<String>();
+								List<String> registryList = temp.get(groupKey);
+								if (registryList == null) {
+									registryList = new ArrayList<String>();
 								}
-								dataSet.add(item.getRegistryValue());
-								temp.put(groupKey, dataSet);
+								registryList.add(item.getRegistryValue());
+								temp.put(groupKey, registryList);
 							}
 						}
 						registMap = temp;

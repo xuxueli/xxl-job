@@ -204,11 +204,12 @@ CREATE TABLE XXL_JOB_QRTZ_TRIGGER_REGISTRY (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE XXL_JOB_QRTZ_TRIGGER_GROUP (
-  `group_name` varchar(255) NOT NULL,
-  `group_desc` varchar(255) NOT NULL,
-  `order` int(11) NOT NULL,
-  PRIMARY KEY (`group_name`)
+  `app_name` varchar(64) NOT NULL,
+  `title` varchar(12) NOT NULL,
+  `order` tinyint(4) NOT NULL,
+  PRIMARY KEY (`app_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+INSERT INTO XXL_JOB_QRTZ_TRIGGER_GROUP VALUES ('xxl-job-executor-example', '示例项目', '1');
 
 commit;
 

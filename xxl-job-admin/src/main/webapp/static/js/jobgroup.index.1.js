@@ -2,20 +2,24 @@ $(function() {
 
 	// remove
 	$('.remove').on('click', function(){
-		var groupName = $(this).attr('groupName');
+		var appName = $(this).attr('appName');
 
 		ComConfirm.show("确认删除分组?", function(){
 			$.ajax({
 				type : 'POST',
 				url : base_url + '/jobgroup/remove',
-				data : {"groupName":groupName},
+				data : {"appName":appName},
 				dataType : "json",
 				success : function(data){
 					if (data.code == 200) {
 						ComAlert.show(1, '删除成功');
 						window.location.reload();
 					} else {
-						ComAlert.show(2, '删除失败');
+						if (data.msg) {
+							ComAlert.show(2, data.msg);
+						} else {
+							ComAlert.show(2, '删除失败');
+						}
 					}
 				},
 			});
@@ -37,12 +41,12 @@ $(function() {
 		errorClass : 'help-block',
 		focusInvalid : true,
 		rules : {
-			groupName : {
+			appName : {
 				required : true,
-				rangelength:[4,200],
+				rangelength:[4,64],
 				myValid01 : true
 			},
-			groupDesc : {
+			title : {
 				required : true,
 				rangelength:[4, 12]
 			},
@@ -53,13 +57,13 @@ $(function() {
 			}
 		},
 		messages : {
-			groupName : {
-				required :"请输入“分组”",
-				rangelength:"长度限制为4~200",
+			appName : {
+				required :"请输入“AppName”",
+				rangelength:"AppName长度限制为4~64",
 				myValid01: "限制以小写字母开头，由小写字母、数字和中划线组成"
 			},
-			groupDesc : {
-				required :"请输入“描述”",
+			title : {
+				required :"请输入“执行器名称”",
 				rangelength:"长度限制为4~12"
 			},
 			order : {
@@ -104,8 +108,8 @@ $(function() {
 	});
 
 	$('.update').on('click', function(){
-		$("#updateModal .form input[name='groupName']").val($(this).attr("groupName"));
-		$("#updateModal .form input[name='groupDesc']").val($(this).attr("groupDesc"));
+		$("#updateModal .form input[name='appName']").val($(this).attr("appName"));
+		$("#updateModal .form input[name='title']").val($(this).attr("title"));
 		$("#updateModal .form input[name='order']").val($(this).attr("order"));
 
 		$('#updateModal').modal({backdrop: false, keyboard: false}).modal('show');
@@ -115,12 +119,12 @@ $(function() {
 		errorClass : 'help-block',
 		focusInvalid : true,
 		rules : {
-			groupName : {
+			appName : {
 				required : true,
-				rangelength:[4,200],
+				rangelength:[4,64],
 				myValid01 : true
 			},
-			groupDesc : {
+			title : {
 				required : true,
 				rangelength:[4, 12]
 			},
@@ -131,13 +135,13 @@ $(function() {
 			}
 		},
 		messages : {
-			groupName : {
-				required :"请输入“分组”",
-				rangelength:"长度限制为4~200",
+			appName : {
+				required :"请输入“AppName”",
+				rangelength:"AppName长度限制为4~64",
 				myValid01: "限制以小写字母开头，由小写字母、数字和中划线组成"
 			},
-			groupDesc : {
-				required :"请输入“描述”",
+			title : {
+				required :"请输入“执行器名称”",
 				rangelength:"长度限制为4~12"
 			},
 			order : {

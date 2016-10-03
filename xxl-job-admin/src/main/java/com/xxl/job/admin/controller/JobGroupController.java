@@ -2,8 +2,11 @@ package com.xxl.job.admin.controller;
 
 import com.xxl.job.admin.core.model.ReturnT;
 import com.xxl.job.admin.core.model.XxlJobGroup;
+import com.xxl.job.admin.core.thread.JobRegistryHelper;
 import com.xxl.job.admin.dao.IXxlJobGroupDao;
 import com.xxl.job.admin.dao.IXxlJobInfoDao;
+import com.xxl.job.core.registry.RegistHelper;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,6 +33,14 @@ public class JobGroupController {
 	@RequestMapping
 	public String index(Model model) {
 		List<XxlJobGroup> list = xxlJobGroupDao.findAll();
+
+		if (CollectionUtils.isNotEmpty(list)) {
+			for (XxlJobGroup group: list) {
+				List<String> registryList = JobRegistryHelper.discover(RegistHelper.RegistType.EXECUTOR.name(), group.getAppName());
+				group.setRegistryList(registryList);
+			}
+		}
+
 		model.addAttribute("list", list);
 		return "jobgroup/jobgroup.index";
 	}
@@ -39,17 +50,20 @@ public class JobGroupController {
 	public ReturnT<String> save(XxlJobGroup xxlJobGroup){
 
 		// valid
-		if (xxlJobGroup.getGroupName()==null || StringUtils.isBlank(xxlJobGroup.getGroupName())) {
-			return new ReturnT<String>(500, "请输入分组");
+		if (xxlJobGroup.getAppName()==null || StringUtils.isBlank(xxlJobGroup.getAppName())) {
+			return new ReturnT<String>(500, "请输入AppName");
 		}
-		if (xxlJobGroup.getGroupDesc()==null || StringUtils.isBlank(xxlJobGroup.getGroupDesc())) {
-			return new ReturnT<String>(500, "请输入描述");
+		if (xxlJobGroup.getAppName().length()>64) {
+			return new ReturnT<String>(500, "AppName长度限制为4~64");
+		}
+		if (xxlJobGroup.getTitle()==null || StringUtils.isBlank(xxlJobGroup.getTitle())) {
+			return new ReturnT<String>(500, "请输入名称");
 		}
 
 		// check repeat
-		XxlJobGroup group = xxlJobGroupDao.load(xxlJobGroup.getGroupName());
+		XxlJobGroup group = xxlJobGroupDao.load(xxlJobGroup.getAppName());
 		if (group!=null) {
-			return new ReturnT<String>(500, "分组已存在, 请勿重复添加");
+			return new ReturnT<String>(500, "AppName对应的执行器已存在, 请勿重复添加");
 		}
 
 		int ret = xxlJobGroupDao.save(xxlJobGroup);
@@ -59,21 +73,37 @@ public class JobGroupController {
 	@RequestMapping("/update")
 	@ResponseBody
 	public ReturnT<String> update(XxlJobGroup xxlJobGroup){
+		// valid
+		if (xxlJobGroup.getAppName()==null || StringUtils.isBlank(xxlJobGroup.getAppName())) {
+			return new ReturnT<String>(500, "请输入AppName");
+		}
+		if (xxlJobGroup.getAppName().length()>64) {
+			return new ReturnT<String>(500, "AppName长度限制为4~64");
+		}
+		if (xxlJobGroup.getTitle()==null || StringUtils.isBlank(xxlJobGroup.getTitle())) {
+			return new ReturnT<String>(500, "请输入名称");
+		}
+
 		int ret = xxlJobGroupDao.update(xxlJobGroup);
 		return (ret>0)?ReturnT.SUCCESS:ReturnT.FAIL;
 	}
 
 	@RequestMapping("/remove")
 	@ResponseBody
-	public ReturnT<String> remove(String groupName){
+	public ReturnT<String> remove(String appName){
 
 		// valid
-		int count = xxlJobInfoDao.pageListCount(0, 10, groupName, null);
+		int count = xxlJobInfoDao.pageListCount(0, 10, appName, null);
 		if (count > 0) {
 			return new ReturnT<String>(500, "该分组使用中, 不可删除");
 		}
 
-		int ret = xxlJobGroupDao.remove(groupName);
+		List<XxlJobGroup> allList = xxlJobGroupDao.findAll();
+		if (allList.size() == 1) {
+			return new ReturnT<String>(500, "删除失败, 系统需要至少预留一个默认分组");
+		}
+
+		int ret = xxlJobGroupDao.remove(appName);
 		return (ret>0)?ReturnT.SUCCESS:ReturnT.FAIL;
 	}
 

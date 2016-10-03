@@ -1,28 +1,33 @@
 package com.xxl.job.admin.core.model;
 
+import java.util.List;
+
 /**
  * Created by xuxueli on 16/9/30.
  */
 public class XxlJobGroup {
 
-    private String groupName;
-    private String groupDesc;
+    private String appName;
+    private String title;
     private int order;
 
-    public String getGroupName() {
-        return groupName;
+    // registry list
+    private List<String> registryList;
+
+    public String getAppName() {
+        return appName;
     }
 
-    public void setGroupName(String groupName) {
-        this.groupName = groupName;
+    public void setAppName(String appName) {
+        this.appName = appName;
     }
 
-    public String getGroupDesc() {
-        return groupDesc;
+    public String getTitle() {
+        return title;
     }
 
-    public void setGroupDesc(String groupDesc) {
-        this.groupDesc = groupDesc;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public int getOrder() {
@@ -31,5 +36,13 @@ public class XxlJobGroup {
 
     public void setOrder(int order) {
         this.order = order;
+    }
+
+    public List<String> getRegistryList() {
+        return registryList;
+    }
+
+    public void setRegistryList(List<String> registryList) {
+        this.registryList = registryList;
     }
 }

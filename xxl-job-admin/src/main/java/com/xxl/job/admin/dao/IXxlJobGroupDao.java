@@ -15,7 +15,7 @@ public interface IXxlJobGroupDao {
 
     public int update(XxlJobGroup xxlJobGroup);
 
-    public int remove(String groupName);
+    public int remove(String appName);
 
-    public XxlJobGroup load(String groupName);
+    public XxlJobGroup load(String appName);
 }
