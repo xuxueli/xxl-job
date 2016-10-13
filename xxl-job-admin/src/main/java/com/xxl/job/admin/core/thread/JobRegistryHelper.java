@@ -26,7 +26,6 @@ public class JobRegistryHelper {
 		Thread registryThread = new Thread(new Runnable() {
 			@Override
 			public void run() {
-				int timeout = 15;
 				while (true) {
 					try {
                         // registry admin
