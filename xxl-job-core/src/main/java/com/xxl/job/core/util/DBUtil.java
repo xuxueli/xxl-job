@@ -78,7 +78,7 @@ public class DBUtil {
 
     private static List<Map<String, Object>> resultSetToList(ResultSet resultSet) throws SQLException {
         if (resultSet == null) {
-            return Collections.EMPTY_LIST;
+            return new ArrayList<Map<String, Object>>();
         }
 
         ResultSetMetaData resultSetMetaData = resultSet.getMetaData(); // 得到结果集(rs)的结构信息，比如字段数、字段名等

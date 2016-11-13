@@ -31,7 +31,7 @@ public class XxlJobRegistryDaoImpl implements IXxlJobRegistryDao {
 
     @Override
     public int registryUpdate(String registryGroup, String registryKey, String registryValue) {
-        Map<String, Object> params = new HashMap();
+        Map<String, Object> params = new HashMap<String, Object>();
         params.put("registryGroup", registryGroup);
         params.put("registryKey", registryKey);
         params.put("registryValue", registryValue);
@@ -41,7 +41,7 @@ public class XxlJobRegistryDaoImpl implements IXxlJobRegistryDao {
 
     @Override
     public int registrySave(String registryGroup, String registryKey, String registryValue) {
-        Map<String, Object> params = new HashMap();
+        Map<String, Object> params = new HashMap<String, Object>();
         params.put("registryGroup", registryGroup);
         params.put("registryKey", registryKey);
         params.put("registryValue", registryValue);

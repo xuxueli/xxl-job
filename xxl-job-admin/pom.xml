@@ -4,14 +4,14 @@
 	<parent>
 		<groupId>com.xuxueli</groupId>
 		<artifactId>xxl-job</artifactId>
-		<version>1.5.0</version>
+		<version>1.5.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>xxl-job-admin</artifactId>
 	<packaging>war</packaging>
 
 	<properties>
-		<xxl-job.version>1.5.0</xxl-job.version>
-		<spring.version>3.2.14.RELEASE</spring.version>
+		<xxl-job.version>1.5.1-SNAPSHOT</xxl-job.version>
+		<spring.version>3.2.17.RELEASE</spring.version>
 	</properties>
 
 	<dependencies>
@@ -82,13 +82,12 @@
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
 			<version>2.5</version>
-			<scope>provided</scope>
+			<!--<scope>provided</scope>-->
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet.jsp</groupId>
 			<artifactId>jsp-api</artifactId>
 			<version>2.1</version>
-			<scope>provided</scope>
 		</dependency>
 
 		<!-- junit -->
