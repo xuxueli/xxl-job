@@ -59,8 +59,8 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 - [git.osc地址](http://git.oschina.net/xuxueli0323/xxl-job)
 
 
-    最新 Release 版本: v1.5.0
-    最新 SNAPSHOT 版本: v1.5.1
+    最新 Release 版本: v1.5.1
+    最新 SNAPSHOT 版本: v1.5.2-SNAPSHOT
 
 ##### 中央仓库地址 (最新Release版本)
 
@@ -69,7 +69,7 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 <dependency>
     <groupId>com.xuxueli</groupId>
     <artifactId>xxl-job-core</artifactId>
-    <version>1.5.0</version>
+    <version>1.5.1</version>
 </dependency>
 ```
 
@@ -691,6 +691,7 @@ Tips: 历史版本(V1.3.x)目前已经Release至稳定版本, 进入维护阶段
 - 2、Servlet/JSP Spec设定为3.0/2.2
 - 3、Spring升级至3.2.17.RELEASE版本；
 - 4、Jetty升级版本至8.2.0.v20160908；
+- 5、已推送V1.5.0和V1.5.1至Maven中央仓库；
 
 
 #### 规划中
