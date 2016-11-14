@@ -710,7 +710,7 @@ Tips: 历史版本(V1.3.x)目前已经Release至稳定版本, 进入维护阶段
 ## 七、其他
 
 #### 7.1 报告问题
-XXL-JOB托管在Github上，如有问题可在 [ISSUES](https://github.com/xuxueli/xxl-job/issues/) 上提问，也可以加入技术交流群(仅作技术交流)：367260654
+XXL-JOB托管在Github上，如有问题可在 [ISSUES](https://github.com/xuxueli/xxl-job/issues/) 上提问，也可以加入上文技术交流群；
 
 #### 7.2 接入登记（登记仅为了推广，产品开源免费）
 更多接入公司，欢迎在github [登记](https://github.com/xuxueli/xxl-job/issues/1 )
