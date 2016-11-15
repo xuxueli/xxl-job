@@ -79,7 +79,7 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 - [oschina地址](http://my.oschina.net/xuxueli/blog/690978)
 - [cnblogs地址](http://www.cnblogs.com/xuxueli/p/5021979.html)
 
-##### 技术交流群(仅作技术交流，群1如若已满，可加群2)：
+##### 技术交流群 (仅作技术交流)
 
 - 群2：438249535    [![image](http://pub.idqqimg.com/wpa/images/group.png)](http://shang.qq.com/wpa/qunwpa?idkey=e288e6a50a82a1eeed89117f45b4839b4ba69db9a87da63ea915fae5294cc50d )
 - 群1：367260654    [![image](http://pub.idqqimg.com/wpa/images/group.png)](http://shang.qq.com/wpa/qunwpa?idkey=4686e3fe01118445c75673a66b4cc6b2c7ce0641528205b6f403c179062b0a52 )   （群1已满，请加群2）
