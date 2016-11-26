@@ -197,7 +197,7 @@ CREATE TABLE XXL_JOB_QRTZ_TRIGGER_REGISTRY (
   `registry_group` varchar(255) NOT NULL,
   `registry_key` varchar(255) NOT NULL,
   `registry_value` varchar(255) NOT NULL,
-  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
