@@ -17,8 +17,8 @@ public class GlueJobHandler extends IJobHandler {
 	}
 
 	@Override
-	public JobHandleStatus execute(String... params) throws Exception {
-		return GlueFactory.glue(job_group, job_name, params);
+	public void execute(String... params) throws Exception {
+		GlueFactory.glue(job_group, job_name, params);
 	}
 
 }

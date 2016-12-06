@@ -1,13 +1,16 @@
 package com.xxl.job.admin.controller;
 
-import java.text.ParseException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-
+import com.xxl.job.admin.core.model.ReturnT;
+import com.xxl.job.admin.core.model.XxlJobGroup;
+import com.xxl.job.admin.core.model.XxlJobInfo;
+import com.xxl.job.admin.core.model.XxlJobLog;
+import com.xxl.job.admin.dao.IXxlJobGroupDao;
+import com.xxl.job.admin.dao.IXxlJobInfoDao;
+import com.xxl.job.admin.dao.IXxlJobLogDao;
+import com.xxl.job.core.router.HandlerRouter.ActionRepository;
+import com.xxl.job.core.router.model.RequestModel;
+import com.xxl.job.core.router.model.ResponseModel;
+import com.xxl.job.core.util.XxlJobNetCommUtil;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.stereotype.Controller;
@@ -16,16 +19,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.xxl.job.admin.core.constant.Constants.JobGroupEnum;
-import com.xxl.job.admin.core.model.ReturnT;
-import com.xxl.job.admin.core.model.XxlJobInfo;
-import com.xxl.job.admin.core.model.XxlJobLog;
-import com.xxl.job.admin.dao.IXxlJobInfoDao;
-import com.xxl.job.admin.dao.IXxlJobLogDao;
-import com.xxl.job.core.handler.HandlerRepository.ActionEnum;
-import com.xxl.job.core.handler.HandlerRepository.HandlerParamEnum;
-import com.xxl.job.core.util.HttpUtil;
-import com.xxl.job.core.util.HttpUtil.RemoteCallBack;
+import javax.annotation.Resource;
+import java.text.ParseException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * index controller
@@ -36,23 +35,37 @@ import com.xxl.job.core.util.HttpUtil.RemoteCallBack;
 public class JobLogController {
 
 	@Resource
-	public IXxlJobLogDao xxlJobLogDao;
+	private IXxlJobGroupDao xxlJobGroupDao;
 	@Resource
 	public IXxlJobInfoDao xxlJobInfoDao;
-	
+	@Resource
+	public IXxlJobLogDao xxlJobLogDao;
+
 	@RequestMapping
 	public String index(Model model, String jobGroup, String jobName) {
+
+		// 任务组
+
+		List<XxlJobGroup> jobGroupList =  xxlJobGroupDao.findAll();
+
 		model.addAttribute("jobGroup", jobGroup);
 		model.addAttribute("jobName", jobName);
-		model.addAttribute("JobGroupList", JobGroupEnum.values());
+		model.addAttribute("JobGroupList", jobGroupList);
 		return "joblog/joblog.index";
+	}
+
+	@RequestMapping("/getJobsByGroup")
+	@ResponseBody
+	public ReturnT<List<XxlJobLog>> listJobByGroup(String jobGroup){
+		List<XxlJobLog> list = xxlJobInfoDao.getJobsByGroup(jobGroup);
+		return new ReturnT<List<XxlJobLog>>(list);
 	}
 	
 	@RequestMapping("/pageList")
 	@ResponseBody
 	public Map<String, Object> pageList(@RequestParam(required = false, defaultValue = "0") int start,  
 			@RequestParam(required = false, defaultValue = "10") int length,
-			String jobGroup, String jobName, String filterTime) {
+			int jobGroup, String jobName, String filterTime) {
 		
 		// parse param
 		Date triggerTimeStart = null;
@@ -103,24 +116,24 @@ public class JobLogController {
 		// base check
 		XxlJobLog log = xxlJobLogDao.load(id);
 		if (log == null) {
-			return new ReturnT<String>(500, "参数异常");
+			return new ReturnT<String>(500, "查看执行日志失败: 参数异常");
 		}
-		if (!RemoteCallBack.SUCCESS.equals(log.getTriggerStatus())) {
-			return new ReturnT<String>(500, "调度失败，无法查看执行日志");
+		if (!(ResponseModel.SUCCESS.equals(log.getTriggerStatus()) || StringUtils.isNotBlank(log.getHandleStatus()))) {
+			return new ReturnT<String>(500, "查看执行日志失败: 任务发起调度失败，无法查看执行日志");
 		}
 		
 		// trigger id, trigger time
-		Map<String, String> reqMap = new HashMap<String, String>();
-		reqMap.put(HandlerParamEnum.TIMESTAMP.name(), String.valueOf(System.currentTimeMillis()));
-		reqMap.put(HandlerParamEnum.ACTION.name(), ActionEnum.LOG.name());
-		reqMap.put(HandlerParamEnum.LOG_ID.name(), String.valueOf(id));
-		reqMap.put(HandlerParamEnum.LOG_DATE.name(), String.valueOf(log.getTriggerTime().getTime()));
-		
-		RemoteCallBack callBack = HttpUtil.post(HttpUtil.addressToUrl(log.getExecutorAddress()), reqMap);
-		if (HttpUtil.RemoteCallBack.SUCCESS.equals(callBack.getStatus())) {
-			return new ReturnT<String>(callBack.getMsg());
+		RequestModel requestModel = new RequestModel();
+		requestModel.setTimestamp(System.currentTimeMillis());
+		requestModel.setAction(ActionRepository.LOG.name());
+		requestModel.setLogId(id);
+		requestModel.setLogDateTim(log.getTriggerTime().getTime());
+
+		ResponseModel responseModel = XxlJobNetCommUtil.postHex(XxlJobNetCommUtil.addressToUrl(log.getExecutorAddress()), requestModel);
+		if (ResponseModel.SUCCESS.equals(responseModel.getStatus())) {
+			return new ReturnT<String>(responseModel.getMsg());
 		} else {
-			return new ReturnT<String>(500, callBack.getMsg());
+			return new ReturnT<String>(500, "查看执行日志失败: " + responseModel.getMsg());
 		}
 	}
 	
@@ -140,28 +153,26 @@ public class JobLogController {
 		if (log == null || jobInfo==null) {
 			return new ReturnT<String>(500, "参数异常");
 		}
-		if (!RemoteCallBack.SUCCESS.equals(log.getTriggerStatus())) {
+		if (!ResponseModel.SUCCESS.equals(log.getTriggerStatus())) {
 			return new ReturnT<String>(500, "调度失败，无法终止日志");
 		}
 		
-		// request
-		Map<String, String> reqMap = new HashMap<String, String>();
-		reqMap.put(HandlerParamEnum.TIMESTAMP.name(), String.valueOf(System.currentTimeMillis()));
-		reqMap.put(HandlerParamEnum.ACTION.name(), ActionEnum.KILL.name());
-		reqMap.put(HandlerParamEnum.GLUE_SWITCH.name(), String.valueOf(jobInfo.getGlueSwitch()));
-		reqMap.put(HandlerParamEnum.EXECUTOR_HANDLER.name(), log.getExecutorHandler());
-		reqMap.put(HandlerParamEnum.JOB_GROUP.name(), log.getJobGroup());
-		reqMap.put(HandlerParamEnum.JOB_NAME.name(), log.getJobName());
-		
-		RemoteCallBack callBack = HttpUtil.post(HttpUtil.addressToUrl(log.getExecutorAddress()), reqMap);
-		if (HttpUtil.RemoteCallBack.SUCCESS.equals(callBack.getStatus())) {
-			log.setHandleStatus(HttpUtil.RemoteCallBack.FAIL);
+		// request of kill
+		RequestModel requestModel = new RequestModel();
+		requestModel.setTimestamp(System.currentTimeMillis());
+		requestModel.setAction(ActionRepository.KILL.name());
+		requestModel.setJobGroup(String.valueOf(log.getJobGroup()));
+		requestModel.setJobName(log.getJobName());
+
+		ResponseModel responseModel = XxlJobNetCommUtil.postHex(XxlJobNetCommUtil.addressToUrl(log.getExecutorAddress()), requestModel);
+		if (ResponseModel.SUCCESS.equals(responseModel.getStatus())) {
+			log.setHandleStatus(ResponseModel.FAIL);
 			log.setHandleMsg("人为操作主动终止");
 			log.setHandleTime(new Date());
 			xxlJobLogDao.updateHandleInfo(log);
-			return new ReturnT<String>(callBack.getMsg());
+			return new ReturnT<String>(responseModel.getMsg());
 		} else {
-			return new ReturnT<String>(500, callBack.getMsg());
+			return new ReturnT<String>(500, responseModel.getMsg());
 		}
 	}
 }

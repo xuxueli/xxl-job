@@ -1,19 +1,12 @@
 package com.xxl.job.core.log;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.LineNumberReader;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import org.apache.log4j.AppenderSkeleton;
 import org.apache.log4j.Layout;
 import org.apache.log4j.spi.LoggingEvent;
+
+import java.io.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * store trigger log in each log-file
@@ -21,7 +14,7 @@ import org.apache.log4j.spi.LoggingEvent;
  */
 public class XxlJobFileAppender extends AppenderSkeleton {
 	
-	// for HandlerThread
+	// for JobThread
 	public static ThreadLocal<String> contextHolder = new ThreadLocal<String>();
 	public static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	
@@ -110,10 +103,10 @@ public class XxlJobFileAppender extends AppenderSkeleton {
 	 * support read log-file
 	 * @param triggerDate
 	 * @param trigger_log_id
-	 * @return
+	 * @return log content
 	 */
-	public static String readLog(Date triggerDate, String trigger_log_id ){
-		if (triggerDate==null || trigger_log_id==null || trigger_log_id.trim().length()==0) {
+	public static String readLog(Date triggerDate, int trigger_log_id ){
+		if (triggerDate==null || trigger_log_id<=0) {
 			return null;
 		}
 		
@@ -131,7 +124,7 @@ public class XxlJobFileAppender extends AppenderSkeleton {
 		}
 		
 		// filePath/yyyy-MM-dd/9999.log
-		String logFileName = trigger_log_id.concat(".log");
+		String logFileName = String.valueOf(trigger_log_id).concat(".log");
 		File logFile = new File(filePathDateDir, logFileName);	
 		if (!logFile.exists()) {
 			return null;
@@ -144,7 +137,7 @@ public class XxlJobFileAppender extends AppenderSkeleton {
 	/**
 	 * read log data
 	 * @param logFile
-	 * @return
+	 * @return log line content
 	 */
 	public static String readLines(File logFile){
 		BufferedReader reader = null;
@@ -174,9 +167,9 @@ public class XxlJobFileAppender extends AppenderSkeleton {
 	
 	/**
 	 * read data from line num
-	 * @param sourceFile
+	 * @param logFile
 	 * @param fromLineNum
-	 * @return
+	 * @return log content
 	 * @throws Exception
 	 */
 	public static String readLinesFrom(File logFile, int fromLineNum) {  

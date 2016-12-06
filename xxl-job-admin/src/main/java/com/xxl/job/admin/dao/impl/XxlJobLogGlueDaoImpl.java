@@ -1,15 +1,13 @@
 package com.xxl.job.admin.dao.impl;
 
-import java.util.HashMap;
-import java.util.List;
-
-import javax.annotation.Resource;
-
+import com.xxl.job.admin.core.model.XxlJobLogGlue;
+import com.xxl.job.admin.dao.IXxlJobLogGlueDao;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.xxl.job.admin.core.model.XxlJobLogGlue;
-import com.xxl.job.admin.dao.IXxlJobLogGlueDao;
+import javax.annotation.Resource;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * job log for glue
@@ -27,7 +25,7 @@ public class XxlJobLogGlueDaoImpl implements IXxlJobLogGlueDao {
 	}
 
 	@Override
-	public List<XxlJobLogGlue> selectList(String jobGroup, String jobName) {
+	public List<XxlJobLogGlue> selectList(int jobGroup, String jobName) {
 		HashMap<String, Object> params = new HashMap<String, Object>();
 		params.put("jobGroup", jobGroup);
 		params.put("jobName", jobName);
@@ -35,7 +33,7 @@ public class XxlJobLogGlueDaoImpl implements IXxlJobLogGlueDao {
 	}
 
 	@Override
-	public int removeOld(String jobGroup, String jobName, int limit) {
+	public int removeOld(int jobGroup, String jobName, int limit) {
 		HashMap<String, Object> params = new HashMap<String, Object>();
 		params.put("jobGroup", jobGroup);
 		params.put("jobName", jobName);
@@ -44,7 +42,7 @@ public class XxlJobLogGlueDaoImpl implements IXxlJobLogGlueDao {
 	}
 
 	@Override
-	public int delete(String jobGroup, String jobName) {
+	public int delete(int jobGroup, String jobName) {
 		HashMap<String, Object> params = new HashMap<String, Object>();
 		params.put("jobGroup", jobGroup);
 		params.put("jobName", jobName);

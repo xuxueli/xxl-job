@@ -1,5 +1,37 @@
 $(function() {
 
+	// 任务组列表选中, 任务列表初始化和选中
+    var ifParam = true;
+	$("#jobGroup").on("change", function () {
+		var jobGroup = $(this).children('option:selected').val();
+		$.ajax({
+			type : 'POST',
+            async: false,   // async, avoid js invoke pagelist before jobName data init
+			url : base_url + '/joblog/getJobsByGroup',
+			data : {"jobGroup":jobGroup},
+			dataType : "json",
+			success : function(data){
+				if (data.code == 200) {
+					$("#jobName").html('<option value="" >请选择</option>');
+                        $.each(data.content, function (n, value) {
+                        $("#jobName").append('<option value="' + value.jobName + '" >' + value.jobDesc + '</option>');
+                    });
+                    if ($("#jobName").attr("paramVal")){
+                        $("#jobName").find("option[value='" + $("#jobName").attr("paramVal") + "']").attr("selected",true);
+                        $("#jobName").attr("paramVal")
+                    }
+				} else {
+					ComAlertTec.show(data.msg);
+				}
+			},
+		});
+	});
+	if ($("#jobGroup").attr("paramVal")){
+		$("#jobGroup").find("option[value='" + $("#jobGroup").attr("paramVal") + "']").attr("selected",true);
+        $("#jobGroup").change();
+        $("#jobGroup").attr("")
+	}
+
 	// 过滤时间
 	$('#filterTime').daterangepicker({
 		timePicker: true, 			//是否显示小时和分钟
@@ -39,6 +71,7 @@ $(function() {
 	        	var obj = {};
 	        	obj.jobGroup = $('#jobGroup').val();
 	        	obj.jobName = $('#jobName').val();
+				obj.filterTime = $('#filterTime').val();
 	        	obj.start = d.start;
 	        	obj.length = d.length;
                 return obj;
@@ -64,12 +97,14 @@ $(function() {
 	            		}
             		},
 	                { "data": 'jobName', "visible" : false},
-	                { "data": 'jobCron', "visible" : false},
-	                { "data": 'jobDesc', "visible" : false},
-	                { "data": 'jobClass', "visible" : false},
-	                
 	                { "data": 'executorAddress', "visible" : true},
-	                { "data": 'executorHandler', "visible" : true},
+					{
+						"data": 'executorHandler',
+						"visible" : true,
+						"render": function ( data, type, row ) {
+							return (row.executorHandler)?row.executorHandler:"GLUE模式";
+						}
+					},
 	                { "data": 'executorParam', "visible" : true},
 	                { 
 	                	"data": 'triggerTime', 
@@ -101,7 +136,7 @@ $(function() {
 	                	"render": function ( data, type, row ) {
 	                		// better support expression or string, not function
 	                		return function () {
-		                		if (row.triggerStatus == 'SUCCESS'){
+		                		if (row.triggerStatus == 'SUCCESS' || row.handleStatus){
 		                			var temp = '<a href="javascript:;" class="logDetail" _id="'+ row.id +'">执行日志</a>';
 		                			if(!row.handleStatus){
 		                				temp += '<br><a href="javascript:;" class="logKill" _id="'+ row.id +'">终止任务</a>';

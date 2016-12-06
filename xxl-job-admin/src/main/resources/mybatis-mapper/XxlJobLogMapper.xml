@@ -8,12 +8,9 @@
 	
 	    <result column="job_group" property="jobGroup" />
 	    <result column="job_name" property="jobName" />
-	    <result column="job_cron" property="jobCron" />
-	    <result column="job_desc" property="jobDesc" />
-	    <result column="job_class" property="jobClass" />
 	    
 	    <result column="executor_address" property="executorAddress" />
-	    <result column="executor_handler" property="executorHandler" />
+		<result column="executor_handler" property="executorHandler" />
 	    <result column="executor_param" property="executorParam" />
 	    
 	    <result column="trigger_time" property="triggerTime" />
@@ -30,9 +27,6 @@
 		t.id,
 		t.job_group,
 		t.job_name,
-		t.job_cron,
-		t.job_desc,
-		t.job_class,
 		t.executor_address,
 		t.executor_handler,
 		t.executor_param,
@@ -46,7 +40,7 @@
 	
 	<select id="pageList" parameterType="java.util.HashMap" resultMap="XxlJobLog">
 		SELECT <include refid="Base_Column_List" />
-		FROM xxl_job_qrtz_trigger_log AS t
+		FROM XXL_JOB_QRTZ_TRIGGER_LOG AS t
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
 			<if test="jobGroup != null and jobGroup != ''">
 				AND t.job_group = #{jobGroup}
@@ -67,7 +61,7 @@
 	
 	<select id="pageListCount" parameterType="java.util.HashMap" resultType="int">
 		SELECT count(1)
-		FROM xxl_job_qrtz_trigger_log AS t
+		FROM XXL_JOB_QRTZ_TRIGGER_LOG AS t
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
 			<if test="jobGroup != null and jobGroup != ''">
 				AND t.job_group = #{jobGroup}
@@ -86,33 +80,21 @@
 	
 	<select id="load" parameterType="java.lang.Integer" resultMap="XxlJobLog">
 		SELECT <include refid="Base_Column_List" />
-		FROM xxl_job_qrtz_trigger_log AS t
+		FROM XXL_JOB_QRTZ_TRIGGER_LOG AS t
 		WHERE t.id = #{id}
 	</select>
-	
-	<select id="loadByGroupAndName" parameterType="java.util.HashMap" resultMap="XxlJobLog">
-		SELECT <include refid="Base_Column_List" />
-		FROM xxl_job_qrtz_trigger_log AS t
-		WHERE t.job_group = #{jobGroup}
-			AND t.job_name = #{jobName}
-	</select>
+
 	
 	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobLog" useGeneratedKeys="true" keyProperty="id" >
-		INSERT INTO `xxl_job_qrtz_trigger_log` (
+		INSERT INTO XXL_JOB_QRTZ_TRIGGER_LOG (
 			`job_group`,
 			`job_name`,
-			`job_cron`, 
-			`job_desc`,
-			`job_class`, 
 			`executor_address`,
 			`executor_handler`,
 			`executor_param`
 		) VALUES (
 			#{jobGroup}, 
 			#{jobName},
-			#{jobCron},
-			#{jobDesc},
-			#{jobClass},
 			#{executorAddress},
 			#{executorHandler},
 			#{executorParam}
@@ -123,19 +105,19 @@
 	</insert>
 	
 	<update id="updateTriggerInfo">
-		UPDATE `xxl_job_qrtz_trigger_log` 
+		UPDATE XXL_JOB_QRTZ_TRIGGER_LOG
 		SET 
 			`trigger_time`= #{triggerTime}, 
 			`trigger_status`= #{triggerStatus}, 
 			`trigger_msg`= #{triggerMsg},
 			`executor_address`= #{executorAddress},
-			`executor_handler`= #{executorHandler},
+			`executor_handler`=#{executorHandler},
 			`executor_param`= #{executorParam}
 		WHERE `id`= #{id}
 	</update>
 	
 	<update id="updateHandleInfo">
-		UPDATE `xxl_job_qrtz_trigger_log` 
+		UPDATE XXL_JOB_QRTZ_TRIGGER_LOG
 		SET 
 			`handle_time`= #{handleTime}, 
 			`handle_status`= #{handleStatus}, 
@@ -144,7 +126,7 @@
 	</update>
 	
 	<delete id="delete">
-		delete from `xxl_job_qrtz_trigger_log` 
+		delete from XXL_JOB_QRTZ_TRIGGER_LOG
 		WHERE job_group = #{jobGroup}
 			AND job_name = #{jobName}
 	</delete>

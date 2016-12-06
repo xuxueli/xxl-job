@@ -1,8 +1,9 @@
 package com.xxl.job.admin.dao;
 
-import java.util.List;
-
 import com.xxl.job.admin.core.model.XxlJobInfo;
+import com.xxl.job.admin.core.model.XxlJobLog;
+
+import java.util.List;
 
 
 /**
@@ -11,15 +12,16 @@ import com.xxl.job.admin.core.model.XxlJobInfo;
  */
 public interface IXxlJobInfoDao {
 
-	public List<XxlJobInfo> pageList(int offset, int pagesize, String jobGroup, String jobName);
-	public int pageListCount(int offset, int pagesize, String jobGroup, String jobName);
+	public List<XxlJobInfo> pageList(int offset, int pagesize, int jobGroup, String executorHandler);
+	public int pageListCount(int offset, int pagesize, int jobGroup, String executorHandler);
 	
 	public int save(XxlJobInfo info);
 	
-	public XxlJobInfo load(String jobGroup, String jobName);
+	public XxlJobInfo load(int jobGroup, String jobName);
 	
 	public int update(XxlJobInfo item);
 	
-	public int delete(String jobGroup, String jobName);
-	
+	public int delete(int jobGroup, String jobName);
+
+	public List<XxlJobLog> getJobsByGroup(String jobGroup);
 }

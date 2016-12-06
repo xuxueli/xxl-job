@@ -20,7 +20,7 @@
 	<div class="content-wrapper">
 		<!-- Content Header (Page header) -->
 		<section class="content-header">
-			<h1>任务调度中心<small>调度日志</small></h1>
+			<h1>调度日志<small>任务调度中心</small></h1>
 			<!--
 			<ol class="breadcrumb">
 				<li><a><i class="fa fa-dashboard"></i>调度日志</a></li>
@@ -34,18 +34,21 @@
 	    	<div class="row">
 	    		<div class="col-xs-3">
  					<div class="input-group">
-	                	<span class="input-group-addon">任务组</span>
-                		<select class="form-control" id="jobGroup" >
+	                	<span class="input-group-addon">执行器</span>
+                		<select class="form-control" id="jobGroup"  paramVal="${jobGroup}" >
+                            <option value="0" selected>请选择</option>
                 			<#list JobGroupList as group>
-                				<option value="${group}" <#if jobGroup == group>selected</#if> >${group.desc}</option>
+                				<option value="${group.id}" <#if jobGroup == group.appName && false>selected</#if> >${group.title}</option>
                 			</#list>
 	                  	</select>
 	              	</div>
 	            </div>
 	            <div class="col-xs-3">
 	              	<div class="input-group">
-	                	<span class="input-group-addon">任务名</span>
-	                	<input type="text" class="form-control" id="jobName" value="${jobName}" autocomplete="on" >
+	                	<span class="input-group-addon">描述</span>
+                        <select class="form-control" id="jobName" paramVal="${jobName}" >
+                            <option value="" >请选择</option>
+						</select>
 	              	</div>
 	            </div>
 	            <div class="col-xs-4">
@@ -67,7 +70,7 @@
 			<div class="row">
 				<div class="col-xs-12">
 					<div class="box">
-			            <div class="box-header"><h3 class="box-title">调度日志</h3></div>
+			            <div class="box-header hide"><h3 class="box-title">调度日志</h3></div>
 			            <div class="box-body">
 			              	<table id="joblog_list" class="table table-bordered table-striped display" width="100%" >
 				                <thead>
@@ -75,18 +78,15 @@
 					                	<th name="id" >id</th>
 					                	<th name="jobGroup" >任务组</th>
 					                  	<th name="jobName" >任务名</th>
-					                  	<th name="jobCron" >Cron</th>
-					                  	<th name="jobDesc" >描述</th>
-					                  	<th name="jobClass" >JobBean</th>
 					                  	<th name="executorAddress" >执行器地址</th>
-					                  	<th name="executorHandler" >JobHandler</th>
+                                        <th name="executorHandler" >JobHandler</th>
 					                  	<th name="executorParam" >任务参数</th>
 					                  	<th name="triggerTime" >调度时间</th>
 					                  	<th name="triggerStatus" >调度结果</th>
-					                  	<th name="triggerMsg" >调度日志</th>
+					                  	<th name="triggerMsg" >调度备注</th>
 					                  	<th name="handleTime" >执行时间</th>
 					                  	<th name="handleStatus" >执行结果</th>
-					                  	<th name="handleMsg" >执行日志</th>
+					                  	<th name="handleMsg" >执行备注</th>
 					                  	<th name="handleMsg" >操作</th>
 					                </tr>
 				                </thead>
@@ -104,7 +104,6 @@
 </div>
 
 <@netCommon.commonScript />
-<@netCommon.comAlert />
 <!-- DataTables -->
 <script src="${request.contextPath}/static/adminlte/plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="${request.contextPath}/static/adminlte/plugins/datatables/dataTables.bootstrap.min.js"></script>

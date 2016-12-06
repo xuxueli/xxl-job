@@ -1,13 +1,12 @@
 package com.xxl.job.admin.controller.interceptor;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.xxl.job.admin.controller.annotation.PermessionLimit;
+import com.xxl.job.admin.core.util.CookieUtil;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
-import com.xxl.job.admin.controller.annotation.PermessionLimit;
-import com.xxl.job.admin.core.util.CookieUtil;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 权限拦截, 简易版
@@ -44,7 +43,7 @@ public class PermissionInterceptor extends HandlerInterceptorAdapter {
 			HandlerMethod method = (HandlerMethod)handler;
 			PermessionLimit permission = method.getMethodAnnotation(PermessionLimit.class);
 			if (permission == null || permission.limit()) {
-				throw new Exception("登陆实效");
+				throw new Exception("登陆失效");
 			}
 		}
 		

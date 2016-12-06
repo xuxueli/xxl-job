@@ -1,8 +1,8 @@
 package com.xxl.job.admin.dao;
 
-import java.util.List;
-
 import com.xxl.job.admin.core.model.XxlJobLogGlue;
+
+import java.util.List;
 
 /**
  * job log for glue
@@ -12,10 +12,10 @@ public interface IXxlJobLogGlueDao {
 	
 	public int save(XxlJobLogGlue xxlJobLogGlue);
 	
-	public List<XxlJobLogGlue> selectList(String jobGroup, String jobName);
+	public List<XxlJobLogGlue> selectList(int jobGroup, String jobName);
 
-	public int removeOld(String jobGroup, String jobName, int limit);
+	public int removeOld(int jobGroup, String jobName, int limit);
 
-	public int delete(String jobGroup, String jobName);
+	public int delete(int jobGroup, String jobName);
 	
 }

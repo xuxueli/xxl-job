@@ -10,7 +10,7 @@
 //import javax.servlet.http.HttpServletRequest;
 //import javax.servlet.http.HttpServletResponse;
 //
-//import com.xxl.job.client.handler.HandlerRepository;
+//import com.xxl.job.client.handler.HandlerRouter;
 //
 //
 ///**
@@ -45,7 +45,7 @@
 //			}
 //		}
 //		
-//		String resp = HandlerRepository.service(_param);
+//		String resp = HandlerRouter.action(_param);
 //		response.getWriter().append(resp);
 //		return;
 //	}

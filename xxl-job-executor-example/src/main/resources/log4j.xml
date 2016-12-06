@@ -5,25 +5,25 @@
 	<appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
 		<param name="Target" value="System.out" />
 		<layout class="org.apache.log4j.PatternLayout">
-			<param name="ConversionPattern" value="%-d{yyyy-MM-dd HH:mm:ss} [%c]-[%t]-[%M]-[%L]-[%p] %m%n" />
+            <param name="ConversionPattern" value="%-d{yyyy-MM-dd HH:mm:ss} xxl-job-executor-example [%c]-[%t]-[%M]-[%L]-[%p] %m%n"/>
 		</layout>
 	</appender>
 	
     <appender name="FILE" class="org.apache.log4j.DailyRollingFileAppender">
-        <param name="file" value="/logs/xxl-job-client-demo.log"/>
+        <param name="file" value="/data/applogs/xxl-job/xxl-job-executor-example.log"/>
         <param name="append" value="true"/>
         <param name="encoding" value="UTF-8"/>
         <layout class="org.apache.log4j.PatternLayout">
-            <param name="ConversionPattern" value="%-d{yyyy-MM-dd HH:mm:ss} [%c]-[%t]-[%M]-[%L]-[%p] %m%n"/>
+            <param name="ConversionPattern" value="%-d{yyyy-MM-dd HH:mm:ss} xxl-job-executor-example [%c]-[%t]-[%M]-[%L]-[%p] %m%n"/>
         </layout>
     </appender>
     
     <appender name="xxl-job" class="com.xxl.job.core.log.XxlJobFileAppender">
-        <param name="filePath" value="/logs/xxl-job/"/>
+        <param name="filePath" value="/data/applogs/xxl-job/jobhandler/"/>
         <param name="append" value="true"/>
         <param name="encoding" value="UTF-8"/>
         <layout class="org.apache.log4j.PatternLayout">
-            <param name="ConversionPattern" value="%-d{yyyy-MM-dd HH:mm:ss} [%c]-[%t]-[%M]-[%L]-[%p] %m%n"/>
+            <param name="ConversionPattern" value="%-d{yyyy-MM-dd HH:mm:ss} xxl-job-executor-example [%c]-[%t]-[%M]-[%L]-[%p] %m%n"/>
         </layout>
     </appender>
     

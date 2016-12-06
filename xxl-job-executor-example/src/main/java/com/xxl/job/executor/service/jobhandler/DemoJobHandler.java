@@ -1,13 +1,12 @@
 package com.xxl.job.executor.service.jobhandler;
 
-import java.util.concurrent.TimeUnit;
-
+import com.xxl.job.core.handler.IJobHandler;
+import com.xxl.job.core.handler.annotation.JobHander;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.xxl.job.core.handler.IJobHandler;
-import com.xxl.job.core.handler.annotation.JobHander;
+import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -16,24 +15,23 @@ import com.xxl.job.core.handler.annotation.JobHander;
  * 开发步骤：
  * 1、继承 “IJobHandler” ；
  * 2、装配到Spring，例如加 “@Service” 注解；
- * 3、加 “@JobHander” 注解，自定义属性name的值；name值在配置新任务是使用；
+ * 3、加 “@JobHander” 注解，注解value值为新增任务生成的JobKey的值;多个JobKey用逗号分割;
  * 
  * @author xuxueli 2015-12-19 19:43:36
  */
-@JobHander(name="demoJobHandler")
+@JobHander(value="demoJobHandler")
 @Service
 public class DemoJobHandler extends IJobHandler {
 	private static transient Logger logger = LoggerFactory.getLogger(DemoJobHandler.class);
 	
 	@Override
-	public JobHandleStatus execute(String... params) throws Exception {
+	public void execute(String... params) throws Exception {
 		logger.info("XXL-JOB, Hello World.");
 		
-		for (int i = 0; i < 10; i++) {
-			System.out.println(i);
+		for (int i = 0; i < 2; i++) {
+			logger.info("beat at:{}", i);
 			TimeUnit.SECONDS.sleep(2);
 		}
-		return JobHandleStatus.SUCCESS;
 	}
 	
 }

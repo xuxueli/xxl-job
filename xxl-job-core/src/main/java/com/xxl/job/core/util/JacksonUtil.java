@@ -1,15 +1,15 @@
 package com.xxl.job.core.util;
 
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Jackson util
@@ -29,7 +29,7 @@ public class JacksonUtil {
      * bean、array、List、Map --> json
      * 
      * @param obj
-     * @return
+     * @return json string
      * @throws Exception
      */
     public static String writeValueAsString(Object obj) {
@@ -50,7 +50,7 @@ public class JacksonUtil {
      * 
      * @param jsonStr
      * @param clazz
-     * @return
+     * @return obj
      * @throws Exception
      */
     public static <T> T readValue(String jsonStr, Class<T> clazz) {

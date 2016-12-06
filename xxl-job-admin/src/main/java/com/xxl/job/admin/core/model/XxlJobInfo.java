@@ -10,27 +10,25 @@ public class XxlJobInfo {
 	
 	private int id;
 	
-	private String jobGroup;	// 任务组
+	private int jobGroup;		// 任务组 (执行器ID)
 	private String jobName;		// 任务名
 	private String jobCron;		// 任务执行CRON表达式 【base on quartz】
 	private String jobDesc;
-	private String jobClass;	// 任务执行JobBean 【base on quartz】
-	//private String jobData;		// 任务执行数据 Map-JSON-String
 	
 	private Date addTime;
 	private Date updateTime;
 	
 	private String author;		// 负责人
 	private String alarmEmail;	// 报警邮件
-	private int alarmThreshold;	// 报警阀值
-	
-	private String executorAddress;	// 执行器地址，有多个则逗号分隔
+
 	private String executorHandler;	// 执行器，任务Handler名称
 	private String executorParam;	// 执行器，任务参数
 	
 	private int glueSwitch;		// GLUE模式开关：0-否，1-是
 	private String glueSource;	// GLUE源代码
 	private String glueRemark;	// GLUE备注
+
+	private String childJobKey;		// 子任务Key
 	
 	// copy from quartz
 	private String jobStatus;	// 任务状态 【base on quartz】
@@ -43,11 +41,11 @@ public class XxlJobInfo {
 		this.id = id;
 	}
 
-	public String getJobGroup() {
+	public int getJobGroup() {
 		return jobGroup;
 	}
 
-	public void setJobGroup(String jobGroup) {
+	public void setJobGroup(int jobGroup) {
 		this.jobGroup = jobGroup;
 	}
 
@@ -73,14 +71,6 @@ public class XxlJobInfo {
 
 	public void setJobDesc(String jobDesc) {
 		this.jobDesc = jobDesc;
-	}
-
-	public String getJobClass() {
-		return jobClass;
-	}
-
-	public void setJobClass(String jobClass) {
-		this.jobClass = jobClass;
 	}
 
 	public Date getAddTime() {
@@ -113,22 +103,6 @@ public class XxlJobInfo {
 
 	public void setAlarmEmail(String alarmEmail) {
 		this.alarmEmail = alarmEmail;
-	}
-
-	public int getAlarmThreshold() {
-		return alarmThreshold;
-	}
-
-	public void setAlarmThreshold(int alarmThreshold) {
-		this.alarmThreshold = alarmThreshold;
-	}
-
-	public String getExecutorAddress() {
-		return executorAddress;
-	}
-
-	public void setExecutorAddress(String executorAddress) {
-		this.executorAddress = executorAddress;
 	}
 
 	public String getExecutorHandler() {
@@ -171,6 +145,14 @@ public class XxlJobInfo {
 		this.glueRemark = glueRemark;
 	}
 
+	public String getChildJobKey() {
+		return childJobKey;
+	}
+
+	public void setChildJobKey(String childJobKey) {
+		this.childJobKey = childJobKey;
+	}
+
 	public String getJobStatus() {
 		return jobStatus;
 	}
@@ -178,5 +160,5 @@ public class XxlJobInfo {
 	public void setJobStatus(String jobStatus) {
 		this.jobStatus = jobStatus;
 	}
-	
+
 }

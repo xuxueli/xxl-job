@@ -1,25 +1,15 @@
 package com.xxl.job.admin.core.util;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.quartz.CronScheduleBuilder;
-import org.quartz.CronTrigger;
-import org.quartz.Job;
-import org.quartz.JobBuilder;
-import org.quartz.JobDetail;
-import org.quartz.JobKey;
-import org.quartz.Scheduler;
-import org.quartz.SchedulerException;
-import org.quartz.Trigger;
+import com.xxl.job.admin.core.callback.XxlJobLogCallbackServer;
+import com.xxl.job.admin.core.jobbean.RemoteHttpJobBean;
+import com.xxl.job.admin.core.model.XxlJobInfo;
+import com.xxl.job.admin.core.thread.JobRegistryHelper;
+import com.xxl.job.admin.dao.IXxlJobGroupDao;
+import com.xxl.job.admin.dao.IXxlJobInfoDao;
+import com.xxl.job.admin.dao.IXxlJobLogDao;
+import com.xxl.job.admin.dao.IXxlJobRegistryDao;
+import org.quartz.*;
 import org.quartz.Trigger.TriggerState;
-import org.quartz.TriggerBuilder;
-import org.quartz.TriggerKey;
 import org.quartz.impl.matchers.GroupMatcher;
 import org.quartz.impl.triggers.CronTriggerImpl;
 import org.slf4j.Logger;
@@ -30,10 +20,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.util.Assert;
 
-import com.xxl.job.admin.core.callback.XxlJobLogCallbackServer;
-import com.xxl.job.admin.core.model.XxlJobInfo;
-import com.xxl.job.admin.dao.IXxlJobInfoDao;
-import com.xxl.job.admin.dao.IXxlJobLogDao;
+import java.util.*;
 
 /**
  * base quartz scheduler util
@@ -64,6 +51,9 @@ public final class DynamicSchedulerUtil implements ApplicationContextAware, Init
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
+		// init JobRegistryHelper
+        JobRegistryHelper.discover("g", "k");
     }
     
     // destroy
@@ -76,11 +66,15 @@ public final class DynamicSchedulerUtil implements ApplicationContextAware, Init
     // xxlJobLogDao、xxlJobInfoDao
     public static IXxlJobLogDao xxlJobLogDao;
     public static IXxlJobInfoDao xxlJobInfoDao;
+    public static IXxlJobRegistryDao xxlJobRegistryDao;
+    public static IXxlJobGroupDao xxlJobGroupDao;
 
     @Override
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 		DynamicSchedulerUtil.xxlJobLogDao = applicationContext.getBean(IXxlJobLogDao.class);
 		DynamicSchedulerUtil.xxlJobInfoDao = applicationContext.getBean(IXxlJobInfoDao.class);
+        DynamicSchedulerUtil.xxlJobRegistryDao = applicationContext.getBean(IXxlJobRegistryDao.class);
+        DynamicSchedulerUtil.xxlJobGroupDao = applicationContext.getBean(IXxlJobGroupDao.class);
 	}
     
 	@Override
@@ -126,11 +120,11 @@ public final class DynamicSchedulerUtil implements ApplicationContextAware, Init
 	// fill job info
 	public static void fillJobInfo(XxlJobInfo jobInfo) {
 		// TriggerKey : name + group
-        TriggerKey triggerKey = TriggerKey.triggerKey(jobInfo.getJobName(), jobInfo.getJobGroup());
-        JobKey jobKey = new JobKey(jobInfo.getJobName(), jobInfo.getJobGroup());
+        TriggerKey triggerKey = TriggerKey.triggerKey(jobInfo.getJobName(), String.valueOf(jobInfo.getJobGroup()));
+
         try {
 			Trigger trigger = scheduler.getTrigger(triggerKey);
-			JobDetail jobDetail = scheduler.getJobDetail(jobKey);
+
 			TriggerState triggerState = scheduler.getTriggerState(triggerKey);
 			
 			// parse params
@@ -138,10 +132,11 @@ public final class DynamicSchedulerUtil implements ApplicationContextAware, Init
 				String cronExpression = ((CronTriggerImpl) trigger).getCronExpression();
 				jobInfo.setJobCron(cronExpression);
 			}
-			if (jobDetail!=null) {
-				String jobClass = jobDetail.getJobClass().getName();
-				jobInfo.setJobClass(jobClass);
-			}
+
+			//JobKey jobKey = new JobKey(jobInfo.getJobName(), String.valueOf(jobInfo.getJobGroup()));
+            //JobDetail jobDetail = scheduler.getJobDetail(jobKey);
+            //String jobClass = jobDetail.getJobClass().getName();
+
 			if (triggerState!=null) {
 				jobInfo.setJobStatus(triggerState.name());
 			}
@@ -159,28 +154,23 @@ public final class DynamicSchedulerUtil implements ApplicationContextAware, Init
 
 	// addJob 新增
 	@SuppressWarnings("unchecked")
-	public static boolean addJob(XxlJobInfo jobInfo) throws SchedulerException {
+	public static boolean addJob(String jobGroup, String jobName, String cronExpression) throws SchedulerException {
     	// TriggerKey : name + group
-        TriggerKey triggerKey = TriggerKey.triggerKey(jobInfo.getJobName(), jobInfo.getJobGroup());
-        JobKey jobKey = new JobKey(jobInfo.getJobName(), jobInfo.getJobGroup());
+        TriggerKey triggerKey = TriggerKey.triggerKey(jobName, jobGroup);
+        JobKey jobKey = new JobKey(jobName, jobGroup);
         
         // TriggerKey valid if_exists
-        if (checkExists(jobInfo.getJobName(), jobInfo.getJobGroup())) {
-            logger.info(">>>>>>>>> addJob fail, job already exist, jobInfo:{}", jobInfo);
+        if (checkExists(jobName, jobGroup)) {
+            logger.info(">>>>>>>>> addJob fail, job already exist, jobGroup:{}, jobName:{}", jobGroup, jobName);
             return false;
         }
         
         // CronTrigger : TriggerKey + cronExpression	// withMisfireHandlingInstructionDoNothing 忽略掉调度终止过程中忽略的调度
-        CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.cronSchedule(jobInfo.getJobCron()).withMisfireHandlingInstructionDoNothing();
+        CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.cronSchedule(cronExpression).withMisfireHandlingInstructionDoNothing();
         CronTrigger cronTrigger = TriggerBuilder.newTrigger().withIdentity(triggerKey).withSchedule(cronScheduleBuilder).build();
 
         // JobDetail : jobClass
-		Class<? extends Job> jobClass_ = null;
-		try {
-			jobClass_ = (Class<? extends Job>)Class.forName(jobInfo.getJobClass());
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
+		Class<? extends Job> jobClass_ = RemoteHttpJobBean.class;   // Class.forName(jobInfo.getJobClass());
         
 		JobDetail jobDetail = JobBuilder.newJob(jobClass_).withIdentity(jobKey).build();
         /*if (jobInfo.getJobData()!=null) {
@@ -197,20 +187,20 @@ public final class DynamicSchedulerUtil implements ApplicationContextAware, Init
     }
     
     // reschedule
-	public static boolean rescheduleJob(XxlJobInfo jobInfo) throws SchedulerException {
+	public static boolean rescheduleJob(String jobGroup, String jobName, String cronExpression) throws SchedulerException {
     	
     	// TriggerKey valid if_exists
-        if (!checkExists(jobInfo.getJobName(), jobInfo.getJobGroup())) {
-        	logger.info(">>>>>>>>>>> rescheduleJob fail, job not exists, jobInfo:{}", jobInfo);
+        if (!checkExists(jobName, jobGroup)) {
+        	logger.info(">>>>>>>>>>> rescheduleJob fail, job not exists, JobGroup:{}, JobName:{}", jobGroup, jobName);
             return false;
         }
         
         // TriggerKey : name + group
-        TriggerKey triggerKey = TriggerKey.triggerKey(jobInfo.getJobName(), jobInfo.getJobGroup());
-        JobKey jobKey = new JobKey(jobInfo.getJobName(), jobInfo.getJobGroup());
+        TriggerKey triggerKey = TriggerKey.triggerKey(jobName, jobGroup);
+        JobKey jobKey = new JobKey(jobName, jobGroup);
         
         // CronTrigger : TriggerKey + cronExpression
-        CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.cronSchedule(jobInfo.getJobCron()).withMisfireHandlingInstructionDoNothing();
+        CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.cronSchedule(cronExpression).withMisfireHandlingInstructionDoNothing();
         CronTrigger cronTrigger = TriggerBuilder.newTrigger().withIdentity(triggerKey).withSchedule(cronScheduleBuilder).build();
         
         //scheduler.rescheduleJob(triggerKey, cronTrigger);
@@ -226,7 +216,7 @@ public final class DynamicSchedulerUtil implements ApplicationContextAware, Init
     	triggerSet.add(cronTrigger);
         
         scheduler.scheduleJob(jobDetail, triggerSet, true);
-        logger.info(">>>>>>>>>>> resumeJob success, JobGroup:{}, JobName:{}", jobInfo.getJobGroup(), jobInfo.getJobName());
+        logger.info(">>>>>>>>>>> resumeJob success, JobGroup:{}, JobName:{}", jobGroup, jobName);
         return true;
     }
     

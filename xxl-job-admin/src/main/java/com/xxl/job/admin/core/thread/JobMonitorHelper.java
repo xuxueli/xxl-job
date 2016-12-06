@@ -1,21 +1,20 @@
 package com.xxl.job.admin.core.thread;
 
-import java.text.MessageFormat;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.admin.core.util.DynamicSchedulerUtil;
 import com.xxl.job.admin.core.util.MailUtil;
-import com.xxl.job.core.util.HttpUtil.RemoteCallBack;
+import com.xxl.job.core.router.model.ResponseModel;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.text.MessageFormat;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.*;
 
 /**
  * job monitor helper
@@ -35,44 +34,41 @@ public class JobMonitorHelper {
 			@Override
 			public void run() {
 				while (true) {
-					logger.info(">>>>>>>>>>> job monitor run ... ");
-					Integer jobLogId = JobMonitorHelper.helper.queue.poll();
-					if (jobLogId != null && jobLogId > 0) {
-						XxlJobLog log = DynamicSchedulerUtil.xxlJobLogDao.load(jobLogId);
-						if (log!=null) {
-							if (RemoteCallBack.SUCCESS.equals(log.getTriggerStatus()) && StringUtils.isBlank(log.getHandleStatus())) {
-								try {
-									TimeUnit.SECONDS.sleep(10);
-								} catch (InterruptedException e) {
-									e.printStackTrace();
+					try {
+						logger.info(">>>>>>>>>>> job monitor beat ... ");
+						Integer jobLogId = JobMonitorHelper.helper.queue.take();
+						if (jobLogId != null && jobLogId > 0) {
+							logger.info(">>>>>>>>>>> job monitor heat success, JobLogId:{}", jobLogId);
+							XxlJobLog log = DynamicSchedulerUtil.xxlJobLogDao.load(jobLogId);
+							if (log!=null) {
+								if (ResponseModel.SUCCESS.equals(log.getTriggerStatus()) && StringUtils.isBlank(log.getHandleStatus())) {
+									try {
+										TimeUnit.SECONDS.sleep(10);
+									} catch (InterruptedException e) {
+										e.printStackTrace();
+									}
+									JobMonitorHelper.monitor(jobLogId);
 								}
-								JobMonitorHelper.monitor(jobLogId);
-							}
-							if (RemoteCallBack.SUCCESS.equals(log.getTriggerStatus()) && RemoteCallBack.SUCCESS.equals(log.getHandleStatus())) {
-								// pass
-							}
-							if (RemoteCallBack.FAIL.equals(log.getTriggerStatus()) || RemoteCallBack.FAIL.equals(log.getHandleStatus())) {
-								String monotorKey = log.getJobGroup().concat("_").concat(log.getJobName());
-								Integer count = countMap.get(monotorKey);
-								if (count == null) {
-									count = new Integer(0);
+								if (ResponseModel.SUCCESS.equals(log.getTriggerStatus()) && ResponseModel.SUCCESS.equals(log.getHandleStatus())) {
+									// pass
 								}
-								count += 1;
-								countMap.put(monotorKey, count);
-								XxlJobInfo info = DynamicSchedulerUtil.xxlJobInfoDao.load(log.getJobGroup(), log.getJobName());
-								if (count >= info.getAlarmThreshold()) {
-									MailUtil.sendMail(info.getAlarmEmail(), "《调度平台中心-监控报警》", 
-											MessageFormat.format("调度任务[{0}]失败报警，连续失败次数：{1}", monotorKey, count), false, null);
-									countMap.remove(monotorKey);
+								if (ResponseModel.FAIL.equals(log.getTriggerStatus()) || ResponseModel.FAIL.equals(log.getHandleStatus())) {
+									XxlJobInfo info = DynamicSchedulerUtil.xxlJobInfoDao.load(log.getJobGroup(), log.getJobName());
+									if (info!=null && info.getAlarmEmail()!=null && info.getAlarmEmail().trim().length()>0) {
+
+										Set<String> emailSet = new HashSet<String>(Arrays.asList(info.getAlarmEmail().split(",")));
+										for (String email: emailSet) {
+											String title = "《调度监控报警-任务调度中心XXL-JOB》";
+											XxlJobGroup group = DynamicSchedulerUtil.xxlJobGroupDao.load(Integer.valueOf(info.getJobGroup()));
+											String content = MessageFormat.format("任务调度失败, 执行器名称:{0}, 任务描述:{1}.", group!=null?group.getTitle():"null", info.getJobDesc());
+											MailUtil.sendMail(email, title, content, false, null);
+										}
+									}
 								}
 							}
 						}
-					} else {
-						try {
-							TimeUnit.SECONDS.sleep(20);
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}
+					} catch (Exception e) {
+						logger.error("job monitor error:{}", e);
 					}
 				}
 			}

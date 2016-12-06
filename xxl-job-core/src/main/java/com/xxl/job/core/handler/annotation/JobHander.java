@@ -15,6 +15,6 @@ import java.lang.annotation.Target;
 @Inherited
 public @interface JobHander {
 
-    String name();
+    String value() default "";
     
 }

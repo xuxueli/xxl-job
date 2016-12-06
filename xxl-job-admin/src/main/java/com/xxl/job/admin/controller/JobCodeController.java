@@ -1,20 +1,18 @@
 package com.xxl.job.admin.controller;
 
-import java.util.List;
-
-import javax.annotation.Resource;
-
+import com.xxl.job.admin.core.model.ReturnT;
+import com.xxl.job.admin.core.model.XxlJobInfo;
+import com.xxl.job.admin.core.model.XxlJobLogGlue;
+import com.xxl.job.admin.dao.IXxlJobInfoDao;
+import com.xxl.job.admin.dao.IXxlJobLogGlueDao;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.xxl.job.admin.core.model.ReturnT;
-import com.xxl.job.admin.core.model.XxlJobInfo;
-import com.xxl.job.admin.core.model.XxlJobLogGlue;
-import com.xxl.job.admin.dao.IXxlJobInfoDao;
-import com.xxl.job.admin.dao.IXxlJobLogGlueDao;
+import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * job code controller
@@ -30,7 +28,7 @@ public class JobCodeController {
 	private IXxlJobLogGlueDao xxlJobLogGlueDao;
 
 	@RequestMapping
-	public String index(Model model, String jobGroup, String jobName) {
+	public String index(Model model, int jobGroup, String jobName) {
 		XxlJobInfo jobInfo = xxlJobInfoDao.load(jobGroup, jobName);
 		List<XxlJobLogGlue> jobLogGlues = xxlJobLogGlueDao.selectList(jobGroup, jobName);
 		model.addAttribute("jobInfo", jobInfo);
@@ -40,7 +38,7 @@ public class JobCodeController {
 	
 	@RequestMapping("/save")
 	@ResponseBody
-	public ReturnT<String> save(Model model, String jobGroup, String jobName, String glueSource, String glueRemark) {
+	public ReturnT<String> save(Model model, int jobGroup, String jobName, String glueSource, String glueRemark) {
 		// valid
 		if (glueRemark==null) {
 			return new ReturnT<String>(500, "请输入备注");
@@ -69,7 +67,7 @@ public class JobCodeController {
 		if (StringUtils.isNotBlank(xxlJobLogGlue.getGlueSource()) && StringUtils.isNotBlank(xxlJobLogGlue.getGlueRemark())) {
 			xxlJobLogGlueDao.save(xxlJobLogGlue);
 			// remove code backup more than 30
-			xxlJobLogGlueDao.removeOld(xxlJobLogGlue.getJobGroup(), xxlJobLogGlue.getJobName(), 3);
+			xxlJobLogGlueDao.removeOld(xxlJobLogGlue.getJobGroup(), xxlJobLogGlue.getJobName(), 30);
 		}
 		
 		

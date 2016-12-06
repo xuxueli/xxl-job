@@ -1,15 +1,14 @@
 package com.xxl.job.admin.dao.impl;
 
-import java.util.HashMap;
-import java.util.List;
-
-import javax.annotation.Resource;
-
+import com.xxl.job.admin.core.model.XxlJobInfo;
+import com.xxl.job.admin.core.model.XxlJobLog;
+import com.xxl.job.admin.dao.IXxlJobInfoDao;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.xxl.job.admin.core.model.XxlJobInfo;
-import com.xxl.job.admin.dao.IXxlJobInfoDao;
+import javax.annotation.Resource;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * job info
@@ -22,23 +21,23 @@ public class XxlJobInfoDaoImpl implements IXxlJobInfoDao {
 	public SqlSessionTemplate sqlSessionTemplate;
 
 	@Override
-	public List<XxlJobInfo> pageList(int offset, int pagesize, String jobGroup, String jobName) {
+	public List<XxlJobInfo> pageList(int offset, int pagesize, int jobGroup, String executorHandler) {
 		HashMap<String, Object> params = new HashMap<String, Object>();
 		params.put("offset", offset);
 		params.put("pagesize", pagesize);
 		params.put("jobGroup", jobGroup);
-		params.put("jobName", jobName);
+		params.put("executorHandler", executorHandler);
 		
 		return sqlSessionTemplate.selectList("XxlJobInfoMapper.pageList", params);
 	}
 
 	@Override
-	public int pageListCount(int offset, int pagesize, String jobGroup, String jobName) {
+	public int pageListCount(int offset, int pagesize, int jobGroup, String executorHandler) {
 		HashMap<String, Object> params = new HashMap<String, Object>();
 		params.put("offset", offset);
 		params.put("pagesize", pagesize);
 		params.put("jobGroup", jobGroup);
-		params.put("jobName", jobName);
+		params.put("executorHandler", executorHandler);
 		
 		return sqlSessionTemplate.selectOne("XxlJobInfoMapper.pageListCount", params);
 	}
@@ -49,7 +48,7 @@ public class XxlJobInfoDaoImpl implements IXxlJobInfoDao {
 	}
 
 	@Override
-	public XxlJobInfo load(String jobGroup, String jobName) {
+	public XxlJobInfo load(int jobGroup, String jobName) {
 		HashMap<String, Object> params = new HashMap<String, Object>();
 		params.put("jobGroup", jobGroup);
 		params.put("jobName", jobName);
@@ -63,12 +62,17 @@ public class XxlJobInfoDaoImpl implements IXxlJobInfoDao {
 	}
 
 	@Override
-	public int delete(String jobGroup, String jobName) {
+	public int delete(int jobGroup, String jobName) {
 		HashMap<String, Object> params = new HashMap<String, Object>();
 		params.put("jobGroup", jobGroup);
 		params.put("jobName", jobName);
 		
 		return sqlSessionTemplate.update("XxlJobInfoMapper.delete", params);
 	}
-	
+
+	@Override
+	public List<XxlJobLog> getJobsByGroup(String jobGroup) {
+		return sqlSessionTemplate.selectList("XxlJobInfoMapper.getJobsByGroup", jobGroup);
+	}
+
 }

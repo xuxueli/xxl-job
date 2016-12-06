@@ -1,10 +1,9 @@
 package com.xxl.job.core.glue;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-
-import javax.annotation.Resource;
-
+import com.xxl.job.core.glue.cache.LocalCache;
+import com.xxl.job.core.glue.loader.GlueLoader;
+import com.xxl.job.core.handler.IJobHandler;
+import groovy.lang.GroovyClassLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -13,12 +12,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.annotation.AnnotationUtils;
 
-import com.xxl.job.core.glue.cache.LocalCache;
-import com.xxl.job.core.glue.loader.GlueLoader;
-import com.xxl.job.core.handler.IJobHandler;
-import com.xxl.job.core.handler.IJobHandler.JobHandleStatus;
-
-import groovy.lang.GroovyClassLoader;
+import javax.annotation.Resource;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 
 /**
  * glue factory, product class/object by name
@@ -47,7 +43,10 @@ public class GlueFactory implements ApplicationContextAware {
 	public void setGlueLoader(GlueLoader glueLoader) {
 		this.glueLoader = glueLoader;
 	}
-	
+	public static boolean isActive() {
+		return GlueFactory.glueFactory.glueLoader!=null;
+	}
+
 	// ----------------------------- spring support -----------------------------
 	private static ApplicationContext applicationContext;
 	private static GlueFactory glueFactory;
@@ -59,7 +58,7 @@ public class GlueFactory implements ApplicationContextAware {
 	}
 	
 	/**
-	 * inject service of spring
+	 * inject action of spring
 	 * @param instance
 	 */
 	public void injectService(Object instance){
@@ -126,7 +125,7 @@ public class GlueFactory implements ApplicationContextAware {
 	}
 	
 	// // load instance, singleton
-	public static String generateInstanceCacheKey(String job_group, String job_name){
+	private static String generateInstanceCacheKey(String job_group, String job_name){
 		return job_group.concat("_").concat(job_name).concat("_instance");
 	}
 	public IJobHandler loadInstance(String job_group, String job_name) throws Exception{
@@ -157,8 +156,8 @@ public class GlueFactory implements ApplicationContextAware {
 	}
 	
 	// ----------------------------- util -----------------------------
-	public static JobHandleStatus glue(String job_group, String job_name, String... params) throws Exception{
-		return GlueFactory.glueFactory.loadInstance(job_group, job_name).execute(params);
+	public static void glue(String job_group, String job_name, String... params) throws Exception{
+		GlueFactory.glueFactory.loadInstance(job_group, job_name).execute(params);
 	}
 	
 }
