@@ -21,6 +21,7 @@ public class RequestModel {
     private Set<String> logAddress;
     private int logId;
     private long logDateTim;
+    private int logStart=0;
 
     private String status;
     private String msg;
@@ -106,7 +107,15 @@ public class RequestModel {
         this.logDateTim = logDateTim;
     }
 
-    public String getStatus() {
+    public int getLogStart() {
+		return logStart;
+	}
+
+	public void setLogStart(int logStart) {
+		this.logStart = logStart;
+	}
+
+	public String getStatus() {
         return status;
     }
 
