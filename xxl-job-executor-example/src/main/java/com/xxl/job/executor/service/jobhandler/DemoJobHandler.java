@@ -1,12 +1,13 @@
 package com.xxl.job.executor.service.jobhandler;
 
-import com.xxl.job.core.handler.IJobHandler;
-import com.xxl.job.core.handler.annotation.JobHander;
+import java.util.concurrent.TimeUnit;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.concurrent.TimeUnit;
+import com.xxl.job.core.handler.IJobHandler;
+import com.xxl.job.core.handler.annotation.JobHander;
 
 
 /**
@@ -26,11 +27,14 @@ public class DemoJobHandler extends IJobHandler {
 	
 	@Override
 	public void execute(String... params) throws Exception {
+		for (String string : params) {
+			logger.info(string);
+		}
 		logger.info("XXL-JOB, Hello World.");
 		
 		for (int i = 0; i < 2; i++) {
 			logger.info("beat at:{}", i);
-			TimeUnit.SECONDS.sleep(2);
+			TimeUnit.SECONDS.sleep(20);
 		}
 	}
 	

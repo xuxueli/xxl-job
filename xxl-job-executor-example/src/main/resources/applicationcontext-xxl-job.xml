@@ -15,8 +15,8 @@
 	<!-- 配置02、执行器 -->
 	<bean id="xxlJobExecutor" class="com.xxl.job.core.executor.jetty.XxlJobExecutor" init-method="start" destroy-method="destroy" >
 		<!-- 执行器端口号 -->
-		<property name="port" value="9999" />
-        <property name="appName" value="xxl-job-executor-example" />
+		<property name="port" value="${job.port}" />
+        <property name="appName" value="${job.appName}" />
         <!-- 执行器注册器，默认使用系统提供的 "DbRegistHelper", 推荐将其改为公共的RPC服务 -->
         <property name="registHelper" >
             <!-- DbRegistHelper, 依赖 "XXL-JOB公共数据源" -->
@@ -62,7 +62,7 @@
 	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="fileEncoding" value="utf-8" />
 		<property name="location">
-			<value>classpath:jdbc.properties</value>
+			<value>classpath:config.properties</value>
 		</property>
 	</bean>
 
