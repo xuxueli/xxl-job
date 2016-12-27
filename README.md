@@ -239,7 +239,7 @@ Bean模式任务：任务逻辑以JobHandler的形式存在于“执行器”所
 
 ![输入图片说明](https://static.oschina.net/uploads/img/201607/23232347_oLlM.png "在这里输入图片标题")
 
-- **步骤二：调度中心，新建调度任务并配置（BEAN模式）**，
+- **步骤二：调度中心，新建调度任务并配置（BEAN模式）**
 
 参考上文“配置属性详细说明”对新建的任务进行参数配置，需要注意的是“JobHandler + GLUE复选框”任务属性，需要按照“GLUE模式”任务进行配置；
 
@@ -252,7 +252,7 @@ GLUE模式任务：任务逻辑以GLUE代码的形式存储在DB中，支持通�
 
 参考上文“配置属性详细说明”对新建的任务进行参数配置，需要注意的是“JobHandler + GLUE复选框”任务属性，需要按照“GLUE模式”任务进行配置；
 
-![输入图片说明](https://static.oschina.net/uploads/img/201607/24192014_9YEz.png "在这里输入图片标题")
+![输入图片说明](https://static.oschina.net/uploads/img/201610/03201536_AITu.png "在这里输入图片标题")
 
 - **步骤二：开发GLUE代码**：
 
