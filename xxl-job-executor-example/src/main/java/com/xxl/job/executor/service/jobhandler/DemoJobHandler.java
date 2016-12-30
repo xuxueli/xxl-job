@@ -37,6 +37,7 @@ public class DemoJobHandler extends IJobHandler {
 			logger.info(string);
 		}
 		List<Log> logs=sqlManager.select("log.all", Log.class, new HashMap<>());
+		
 		for (Log log : logs) {
 			logger.info("job {} at:{}", log.getJobName(),log.getHandleTime());
 		}
