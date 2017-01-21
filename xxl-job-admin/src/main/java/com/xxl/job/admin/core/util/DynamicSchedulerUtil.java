@@ -8,6 +8,7 @@ import com.xxl.job.admin.dao.IXxlJobGroupDao;
 import com.xxl.job.admin.dao.IXxlJobInfoDao;
 import com.xxl.job.admin.dao.IXxlJobLogDao;
 import com.xxl.job.admin.dao.IXxlJobRegistryDao;
+import com.xxl.job.core.util.IpUtil;
 import org.quartz.*;
 import org.quartz.Trigger.TriggerState;
 import org.quartz.impl.matchers.GroupMatcher;
@@ -35,12 +36,21 @@ public final class DynamicSchedulerUtil implements ApplicationContextAware, Init
 		DynamicSchedulerUtil.scheduler = scheduler;
 	}
     
-    // trigger callback port
+    // trigger callback address
+    private String callBackIp;
     private int callBackPort = 8888;
+    private static String callbackAddress;
+
+    public void setCallBackIp(String callBackIp) {
+        this.callBackIp = callBackIp;
+    }
     public void setCallBackPort(int callBackPort) {
 		this.callBackPort = callBackPort;
 	}
-    
+    public static String getCallbackAddress(){
+        return callbackAddress;
+    }
+
     // init
     XxlJobLogCallbackServer xxlJobLogCallbackServer = null;
     public void init(){
@@ -51,6 +61,13 @@ public final class DynamicSchedulerUtil implements ApplicationContextAware, Init
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
+		// init callbackAddress
+        if (callBackIp!=null && callBackIp.trim().length()>0) {
+            callbackAddress = callBackIp.trim().concat(":").concat(String.valueOf(callBackPort));
+        } else {
+            callbackAddress = IpUtil.getIpPort(callBackPort);;
+        }
 
 		// init JobRegistryHelper
         JobRegistryHelper.discover("g", "k");

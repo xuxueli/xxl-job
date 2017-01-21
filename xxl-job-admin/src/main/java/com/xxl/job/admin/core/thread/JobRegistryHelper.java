@@ -1,6 +1,5 @@
 package com.xxl.job.admin.core.thread;
 
-import com.xxl.job.admin.core.callback.XxlJobLogCallbackServer;
 import com.xxl.job.admin.core.model.XxlJobRegistry;
 import com.xxl.job.admin.core.util.DynamicSchedulerUtil;
 import com.xxl.job.core.registry.RegistHelper;
@@ -29,9 +28,9 @@ public class JobRegistryHelper {
 				while (true) {
 					try {
                         // registry admin
-                        int ret = DynamicSchedulerUtil.xxlJobRegistryDao.registryUpdate(RegistHelper.RegistType.ADMIN.name(), RegistHelper.RegistType.ADMIN.name(), XxlJobLogCallbackServer.getTrigger_log_address());
+                        int ret = DynamicSchedulerUtil.xxlJobRegistryDao.registryUpdate(RegistHelper.RegistType.ADMIN.name(), RegistHelper.RegistType.ADMIN.name(), DynamicSchedulerUtil.getCallbackAddress());
                         if (ret < 1) {
-                            DynamicSchedulerUtil.xxlJobRegistryDao.registrySave(RegistHelper.RegistType.ADMIN.name(), RegistHelper.RegistType.ADMIN.name(), XxlJobLogCallbackServer.getTrigger_log_address());
+                            DynamicSchedulerUtil.xxlJobRegistryDao.registrySave(RegistHelper.RegistType.ADMIN.name(), RegistHelper.RegistType.ADMIN.name(), DynamicSchedulerUtil.getCallbackAddress());
                         }
 
                         // fresh registry map

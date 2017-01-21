@@ -1,6 +1,5 @@
 package com.xxl.job.admin.core.jobbean;
 
-import com.xxl.job.admin.core.callback.XxlJobLogCallbackServer;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
@@ -51,7 +50,7 @@ public class RemoteHttpJobBean extends QuartzJobBean {
         if (adminAddressList!=null) {
             adminAddressSet.addAll(adminAddressList);
         }
-        adminAddressSet.add(XxlJobLogCallbackServer.getTrigger_log_address());
+        adminAddressSet.add(DynamicSchedulerUtil.getCallbackAddress());
 
 		// trigger request
 		RequestModel requestModel = new RequestModel();

@@ -26,9 +26,14 @@ import java.util.concurrent.TimeUnit;
 public class XxlJobExecutor implements ApplicationContextAware {
     private static final Logger logger = LoggerFactory.getLogger(XxlJobExecutor.class);
 
+    private String ip;
     private int port = 9999;
     private String appName;
     private RegistHelper registHelper;
+
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
     public void setPort(int port) {
         this.port = port;
     }
@@ -94,7 +99,15 @@ public class XxlJobExecutor implements ApplicationContextAware {
             public void run() {
                 while (true) {
                     try {
-                        String address = IpUtil.getIpPort(port);
+
+                        // generate addredd = ip:port
+                        String address = null;
+                        if (ip != null && ip.trim().length()>0) {
+                            address = ip.trim().concat(":").concat(String.valueOf(port));
+                        } else {
+                            address = IpUtil.getIpPort(port);
+                        }
+
                         registHelper.registry(RegistHelper.RegistType.EXECUTOR.name(), appName, address);
                         TimeUnit.SECONDS.sleep(RegistHelper.TIMEOUT);
                     } catch (Exception e) {
