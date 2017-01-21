@@ -7,6 +7,7 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.UnknownHostException;
 import java.util.Enumeration;
+import java.util.regex.Pattern;
 
 /**
  * get ip
@@ -15,36 +16,112 @@ import java.util.Enumeration;
 public class IpUtil {
 	private static final Logger logger = LoggerFactory.getLogger(IpUtil.class);
 
+	public static final String ANYHOST = "0.0.0.0";
+	public static final String LOCALHOST = "127.0.0.1";
+	private static final Pattern IP_PATTERN = Pattern.compile("\\d{1,3}(\\.\\d{1,3}){3,5}$");
+
+	private static volatile InetAddress LOCAL_ADDRESS = null;
+
 	/**
-	 * 获取本机ip
-	 * @return ip
+	 * valid address
+	 * @param address
+	 * @return
 	 */
-	public static String getIp() {
+	private static boolean isValidAddress(InetAddress address) {
+		if (address == null || address.isLoopbackAddress())
+			return false;
+		String name = address.getHostAddress();
+		return (name != null
+				&& ! ANYHOST.equals(name)
+				&& ! LOCALHOST.equals(name)
+				&& IP_PATTERN.matcher(name).matches());
+	}
+
+	/**
+	 * get first valid addredd
+	 * @return
+	 */
+	private static InetAddress getFirstValidAddress() {
+		InetAddress localAddress = null;
+		try {
+			localAddress = InetAddress.getLocalHost();
+			if (isValidAddress(localAddress)) {
+				return localAddress;
+			}
+		} catch (Throwable e) {
+			logger.warn("Failed to retriving ip address, " + e.getMessage(), e);
+		}
 		try {
 			Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
-			InetAddress address = null;
-			while (interfaces.hasMoreElements()) {
-				NetworkInterface ni = interfaces.nextElement();
-				Enumeration<InetAddress> addresses = ni.getInetAddresses();
-				while (addresses.hasMoreElements()) {
-					address = addresses.nextElement();
-					if (!address.isLoopbackAddress() && address.getHostAddress().indexOf(":") == -1) {
-						return address.getHostAddress();
+			if (interfaces != null) {
+				while (interfaces.hasMoreElements()) {
+					try {
+						NetworkInterface network = interfaces.nextElement();
+						Enumeration<InetAddress> addresses = network.getInetAddresses();
+						if (addresses != null) {
+							while (addresses.hasMoreElements()) {
+								try {
+									InetAddress address = addresses.nextElement();
+									if (isValidAddress(address)) {
+										return address;
+									}
+								} catch (Throwable e) {
+									logger.warn("Failed to retriving ip address, " + e.getMessage(), e);
+								}
+							}
+						}
+					} catch (Throwable e) {
+						logger.warn("Failed to retriving ip address, " + e.getMessage(), e);
 					}
 				}
 			}
-			logger.info("xxl job getHostAddress fail");
-			return null;
-		} catch (Throwable t) {
-			logger.error("xxl job getHostAddress error, {}", t);
+		} catch (Throwable e) {
+			logger.warn("Failed to retriving ip address, " + e.getMessage(), e);
+		}
+		logger.error("Could not get local host ip address, will use 127.0.0.1 instead.");
+		return localAddress;
+	}
+
+	/**
+	 * get address
+	 * @return
+	 */
+	private static InetAddress getAddress() {
+		if (LOCAL_ADDRESS != null)
+			return LOCAL_ADDRESS;
+		InetAddress localAddress = getFirstValidAddress();
+		LOCAL_ADDRESS = localAddress;
+		return localAddress;
+	}
+
+	/**
+	 * get ip
+	 * @return
+	 */
+	public static String getIp(){
+		InetAddress address = getAddress();
+		if (address==null) {
 			return null;
 		}
+		return address.getHostAddress();
+	}
+
+	/**
+	 * get ip:port
+	 * @param port
+	 * @return
+	 */
+	public static String getIpPort(int port){
+		String ip = getIp();
+		if (ip==null) {
+			return null;
+		}
+		return ip.concat(":").concat(String.valueOf(port));
 	}
 
 	public static void main(String[] args) throws UnknownHostException {
-		System.out.println(InetAddress.getLocalHost().getCanonicalHostName());
-		System.out.println(InetAddress.getLocalHost().getHostName());
 		System.out.println(getIp());
+		System.out.println(getIpPort(8080));
 	}
 
 }

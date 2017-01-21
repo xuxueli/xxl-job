@@ -24,10 +24,9 @@ public class XxlJobLogCallbackServer {
     
     Server server = null;
     public void start(int callBackPort) throws Exception {
+
     	// init address
-    	
-    	String ip = IpUtil.getIp();
-    	trigger_log_address = ip.concat(":").concat(String.valueOf(callBackPort));
+        trigger_log_address = IpUtil.getIpPort(callBackPort);
 		
     	final int port = Integer.valueOf(callBackPort);
         new Thread(new Runnable() {

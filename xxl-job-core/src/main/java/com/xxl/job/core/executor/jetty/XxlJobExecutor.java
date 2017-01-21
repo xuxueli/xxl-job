@@ -94,7 +94,7 @@ public class XxlJobExecutor implements ApplicationContextAware {
             public void run() {
                 while (true) {
                     try {
-                        String address = IpUtil.getIp().concat(":").concat(String.valueOf(port));
+                        String address = IpUtil.getIpPort(port);
                         registHelper.registry(RegistHelper.RegistType.EXECUTOR.name(), appName, address);
                         TimeUnit.SECONDS.sleep(RegistHelper.TIMEOUT);
                     } catch (Exception e) {
