@@ -10,15 +10,15 @@
     <!-- ********************************* 基础配置 ********************************* -->
 
 	<!-- 配置01、JobHandler 扫描路径 -->
-	<context:component-scan base-package="com.xxl.job.executor.service.jobhandler" />
+	<context:component-scan base-package="com.xxl.job.executor" />
 
 	<!-- 配置02、执行器 -->
 	<bean id="xxlJobExecutor" class="com.xxl.job.core.executor.jetty.XxlJobExecutor" init-method="start" destroy-method="destroy" >
 		<!-- 执行器IP[选填]，为空则自动获取 -->
 		<property name="ip" value="" />
 		<!-- 执行器端口号 -->
-		<property name="port" value="9999" />
-        <property name="appName" value="xxl-job-executor-example" />
+		<property name="port" value="${job.port}" />
+        <property name="appName" value="${job.appName}" />
         <!-- 执行器注册器，默认使用系统提供的 "DbRegistHelper", 推荐将其改为公共的RPC服务 -->
         <property name="registHelper" >
             <!-- DbRegistHelper, 依赖 "XXL-JOB公共数据源" -->
@@ -46,13 +46,13 @@
 	</bean>
 
     <!-- ********************************* "XXL-JOB公共数据源" 配置, 仅在启动 "DbRegistHelper" 或 "DbGlueLoader" 时才需要, 否则可删除 ********************************* -->
-
+	
 	<!-- 配置04、XXL-JOB公共数据源 -->
 	<bean id="xxlJobDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
-		<property name="driverClass" value="${c3p0.driverClass}" />
-		<property name="jdbcUrl" value="${c3p0.url}" />
-		<property name="user" value="${c3p0.user}" />
-		<property name="password" value="${c3p0.password}" />
+		<property name="driverClass" value="${jdbc.driverClass}" />
+		<property name="jdbcUrl" value="${jdbc.url}" />
+		<property name="user" value="${jdbc.user}" />
+		<property name="password" value="${jdbc.password}" />
 		<property name="initialPoolSize" value="3" />
 		<property name="minPoolSize" value="2" />
 		<property name="maxPoolSize" value="10" />
@@ -61,11 +61,45 @@
 		<property name="acquireRetryAttempts" value="10" />
 		<property name="preferredTestQuery" value="SELECT 1" />
 	</bean>
-	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-		<property name="fileEncoding" value="utf-8" />
-		<property name="location">
-			<value>classpath:jdbc.properties</value>
+	<!-- DAO接口所在包名，Spring会自动查找其下的类 -->
+	<bean name="beetlSqlScannerConfigurer" class="org.beetl.sql.ext.spring4.BeetlSqlScannerConfigurer">
+		<!-- 哪些类可以自动注入 -->
+		<property name="basePackage" value="com.xxl.job.executor" />
+		<property name="daoSuffix" value="Dao" />
+		<property name="sqlManagerFactoryBeanName" value="sqlManagerFactoryBean" />
+	</bean>
+	<bean id="sqlManagerFactoryBean" class="org.beetl.sql.ext.spring4.SqlManagerFactoryBean">
+		<property name="cs">
+			<bean class="org.beetl.sql.ext.spring4.BeetlSqlDataSource">
+				<property name="masterSource" ref="xxlJobDataSource"></property>
+			</bean>
+		</property>
+		<property name="dbStyle">
+			<bean class="org.beetl.sql.core.db.MySqlStyle">
+			</bean>
+		</property>
+		<property name="sqlLoader">
+			<bean class="org.beetl.sql.core.ClasspathLoader">
+				<property name="sqlRoot" value="/sql"></property>
+			</bean>
+		</property>
+		<property name="nc">
+			<bean class="org.beetl.sql.core.UnderlinedNameConversion">
+			</bean>
+		</property>
+		<property name="interceptors">
+			<list>
+				<bean class="org.beetl.sql.ext.DebugInterceptor"></bean>
+			</list>
 		</property>
 	</bean>
-
+	
+	<!-- <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="fileEncoding" value="utf-8" />
+		<property name="location">
+			<value>classpath:config.properties</value>
+		</property>
+	</bean> -->
+	  <context:property-placeholder location="classpath:config.properties"/>
+	
 </beans>

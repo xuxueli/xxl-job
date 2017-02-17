@@ -137,7 +137,7 @@
                         <div class="col-sm-4"><input type="text" class="form-control" name="executorParam" placeholder="请输入“执行参数”" maxlength="100" ></div>
 					</div>
                     <div class="form-group">
-                        <label for="lastname" class="col-sm-2 control-label">Cron<font color="red">*</font></label>
+                        <label for="lastname" class="col-sm-2 control-label"><a target="_blank"  href="http://cron.qqe2.com/">Cron</a><font color="red">*</font></label>
                         <div class="col-sm-4"><input type="text" class="form-control" name="jobCron" placeholder="请输入“Cron”" maxlength="20" ></div>
                         <label for="lastname" class="col-sm-2 control-label">子任务Key<font color="black">*</font></label>
                         <div class="col-sm-4"><input type="text" class="form-control" name="childJobKey" placeholder="请输入子任务的任务Key,如存在多个逗号分隔" maxlength="100" ></div>
@@ -212,7 +212,7 @@ public class DemoGlueJobHandler extends IJobHandler {
                         <div class="col-sm-4"><input type="text" class="form-control" name="executorParam" placeholder="请输入“执行参数”" maxlength="100" ></div>
                     </div>
                     <div class="form-group">
-                        <label for="lastname" class="col-sm-2 control-label">Cron<font color="red">*</font></label>
+                        <label for="lastname" class="col-sm-2 control-label"><a target="_blank"  href="http://cron.qqe2.com/">Cron</a><font color="red">*</font></label>
                         <div class="col-sm-4"><input type="text" class="form-control" name="jobCron" placeholder="请输入“Cron”" maxlength="20" ></div>
                         <label for="lastname" class="col-sm-2 control-label">子任务Key<font color="black">*</font></label>
                         <div class="col-sm-4"><input type="text" class="form-control" name="childJobKey" placeholder="请输入子任务的任务Key,如存在多个逗号分隔" maxlength="100" ></div>

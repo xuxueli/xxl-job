@@ -1,5 +1,21 @@
 package com.xxl.job.admin.service.impl;
 
+import java.text.MessageFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.time.FastDateFormat;
+import org.quartz.CronExpression;
+import org.quartz.SchedulerException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
 import com.xxl.job.admin.core.model.ReturnT;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
@@ -9,20 +25,6 @@ import com.xxl.job.admin.dao.IXxlJobInfoDao;
 import com.xxl.job.admin.dao.IXxlJobLogDao;
 import com.xxl.job.admin.dao.IXxlJobLogGlueDao;
 import com.xxl.job.admin.service.IXxlJobService;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.time.FastDateFormat;
-import org.quartz.CronExpression;
-import org.quartz.SchedulerException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-
-import javax.annotation.Resource;
-import java.text.MessageFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * core job action for xxl-job
@@ -255,6 +257,19 @@ public class XxlJobServiceImpl implements IXxlJobService {
 			DynamicSchedulerUtil.triggerJob(jobName, String.valueOf(jobGroup));
 			return ReturnT.SUCCESS;
 		} catch (SchedulerException e) {
+			e.printStackTrace();
+			return ReturnT.FAIL;
+		}
+	}
+	@Override
+	public ReturnT<String> triggerJob(int jobGroup, String jobName,String executorParam) {
+		try {
+			XxlJobInfo jobInfo = xxlJobInfoDao.load(jobGroup, jobName);
+			jobInfo.setExecutorParam(executorParam);
+			xxlJobInfoDao.update(jobInfo);
+			DynamicSchedulerUtil.triggerJob(jobName, String.valueOf(jobGroup));
+			return ReturnT.SUCCESS;
+		}catch (SchedulerException e) {
 			e.printStackTrace();
 			return ReturnT.FAIL;
 		}

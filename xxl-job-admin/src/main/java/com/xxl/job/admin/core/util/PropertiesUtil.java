@@ -48,6 +48,9 @@ public class PropertiesUtil {
 
 	public static String getString(String key) {
 		Properties prop = loadProperties(file_name);
+		if (key==null) {
+			return null;
+		}
 		if (prop!=null) {
 			return prop.getProperty(key);
 		}
@@ -55,7 +58,13 @@ public class PropertiesUtil {
 	}
 	
 	public static void main(String[] args) {
-		System.out.println(getString("triggerLogUrl"));
+		System.out.println(getString("login.username"));
+
+		/*SecureRandom ranGen = new SecureRandom();
+		byte[] aesKey = new byte[64]; // 16 bytes = 128 bits
+		ranGen.nextBytes(aesKey);
+		System.out.println(UUID.nameUUIDFromBytes(aesKey));*/
+		
 	}
 
 }

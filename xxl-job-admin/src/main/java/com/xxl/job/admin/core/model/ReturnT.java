@@ -10,6 +10,7 @@ public class ReturnT<T> {
 	public static final ReturnT<String> FAIL = new ReturnT<String>(500, null);
 	
 	private int code;
+	private int size;
 	private String msg;
 	private T content;
 	
@@ -21,12 +22,29 @@ public class ReturnT<T> {
 		this.code = 200;
 		this.content = content;
 	}
+	public ReturnT(T content,int size) {
+		this.code = 200;
+		this.size=size;
+		this.content = content;
+	}
+	public ReturnT(T content,String msg,int size) {
+		this.code = 200;
+		this.size=size;
+		this.msg=msg;
+		this.content = content;
+	}
 	
 	public int getCode() {
 		return code;
 	}
 	public void setCode(int code) {
 		this.code = code;
+	}
+	public int getSize() {
+		return size;
+	}
+	public void setSize(int size) {
+		this.size = size;
 	}
 	public String getMsg() {
 		return msg;

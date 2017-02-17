@@ -1,12 +1,17 @@
 package com.xxl.job.executor.service.jobhandler;
 
-import com.xxl.job.core.handler.IJobHandler;
-import com.xxl.job.core.handler.annotation.JobHander;
+import java.util.HashMap;
+import java.util.List;
+
+import org.beetl.sql.core.SQLManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.concurrent.TimeUnit;
+import com.xxl.job.core.handler.IJobHandler;
+import com.xxl.job.core.handler.annotation.JobHander;
+import com.xxl.job.executor.model.Log;
 
 
 /**
@@ -20,18 +25,23 @@ import java.util.concurrent.TimeUnit;
  * @author xuxueli 2015-12-19 19:43:36
  */
 @JobHander(value="demoJobHandler")
+
 @Service
 public class DemoJobHandler extends IJobHandler {
 	private static transient Logger logger = LoggerFactory.getLogger(DemoJobHandler.class);
-	
+	@Autowired
+	SQLManager sqlManager;
 	@Override
 	public void execute(String... params) throws Exception {
-		logger.info("XXL-JOB, Hello World.");
-		
-		for (int i = 0; i < 2; i++) {
-			logger.info("beat at:{}", i);
-			TimeUnit.SECONDS.sleep(2);
+		for (String string : params) {
+			logger.info(string);
 		}
+		List<Log> logs=sqlManager.select("log.all", Log.class, new HashMap<>());
+		
+		for (Log log : logs) {
+			logger.info("job {} at:{}", log.getJobName(),log.getHandleTime());
+		}
+		
 	}
 	
 }

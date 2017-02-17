@@ -1,12 +1,19 @@
 package com.xxl.job.core.log;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.LineNumberReader;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.apache.log4j.AppenderSkeleton;
 import org.apache.log4j.Layout;
 import org.apache.log4j.spi.LoggingEvent;
-
-import java.io.*;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * store trigger log in each log-file
@@ -105,7 +112,7 @@ public class XxlJobFileAppender extends AppenderSkeleton {
 	 * @param trigger_log_id
 	 * @return log content
 	 */
-	public static String readLog(Date triggerDate, int trigger_log_id ){
+	public static TwoTuple<String,Integer> readLog(Date triggerDate, int trigger_log_id ,int trigger_log_start){
 		if (triggerDate==null || trigger_log_id<=0) {
 			return null;
 		}
@@ -129,9 +136,12 @@ public class XxlJobFileAppender extends AppenderSkeleton {
 		if (!logFile.exists()) {
 			return null;
 		}
+		if (trigger_log_start<=0) {
+			return readLines(logFile);
+		}else {
+			return readLinesFrom(logFile,trigger_log_start);
+		}
 		
-		String logData = readLines(logFile);
-		return logData;
 	}
 	
 	/**
@@ -139,17 +149,19 @@ public class XxlJobFileAppender extends AppenderSkeleton {
 	 * @param logFile
 	 * @return log line content
 	 */
-	public static String readLines(File logFile){
+	public static TwoTuple<String,Integer> readLines(File logFile){
 		BufferedReader reader = null;
 		try {
-			reader = new BufferedReader(new InputStreamReader(new FileInputStream(logFile), "utf-8"));
+			reader = new BufferedReader(new InputStreamReader(new FileInputStream(logFile), "utf-8"),5*1024*1024);
 			if (reader != null) {
 				StringBuilder sb = new StringBuilder();
 				String line = null;
+				int maxLineNum = 0;
 				while ((line = reader.readLine()) != null) {
+					maxLineNum++;
 					sb.append(line).append("\n");
 				}
-				return sb.toString();
+				return new TwoTuple(sb.toString(),maxLineNum);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -172,7 +184,7 @@ public class XxlJobFileAppender extends AppenderSkeleton {
 	 * @return log content
 	 * @throws Exception
 	 */
-	public static String readLinesFrom(File logFile, int fromLineNum) {  
+	public static TwoTuple<String,Integer> readLinesFrom(File logFile, int fromLineNum) {  
         LineNumberReader reader = null;
 		try {
 			reader = new LineNumberReader(new FileReader(logFile));
@@ -188,8 +200,8 @@ public class XxlJobFileAppender extends AppenderSkeleton {
 				}
 			}
 	    	
-	    	System.out.println("maxLineNum : " + maxLineNum);
-	    	return sBuffer.toString();
+	    	//System.out.println("maxLineNum : " + maxLineNum);
+	    	return new TwoTuple(sBuffer.toString(),maxLineNum);
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {

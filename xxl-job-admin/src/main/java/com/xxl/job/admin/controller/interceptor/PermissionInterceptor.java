@@ -1,12 +1,14 @@
 package com.xxl.job.admin.controller.interceptor;
 
-import com.xxl.job.admin.controller.annotation.PermessionLimit;
-import com.xxl.job.admin.core.util.CookieUtil;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import com.xxl.job.admin.controller.annotation.PermessionLimit;
+import com.xxl.job.admin.core.util.CookieUtil;
+import com.xxl.job.admin.core.util.PropertiesUtil;
 
 /**
  * 权限拦截, 简易版
@@ -25,6 +27,13 @@ public class PermissionInterceptor extends HandlerInterceptorAdapter {
 		CookieUtil.remove(request, response, LOGIN_IDENTITY_KEY);
 	}
 	public static boolean ifLogin(HttpServletRequest request){
+		//增加appkey，appsecret验证
+		String appkey=request.getParameter("appkey");
+		String appsecret=request.getParameter("appsecret");
+		String appsecret2=PropertiesUtil.getString(appkey);
+		if (appsecret2!=null&&appsecret2.equals(appsecret)) {
+			return true;
+		}
 		String indentityInfo = CookieUtil.getValue(request, LOGIN_IDENTITY_KEY);
 		if (indentityInfo==null || !LOGIN_IDENTITY_VAL.equals(indentityInfo.trim())) {
 			return false;
