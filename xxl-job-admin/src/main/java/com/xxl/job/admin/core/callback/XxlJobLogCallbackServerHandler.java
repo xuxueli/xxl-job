@@ -103,7 +103,9 @@ public class XxlJobLogCallbackServerHandler extends AbstractHandler {
 
 		// handle msg
 		StringBuffer handleMsg = new StringBuffer();
-		handleMsg.append("执行备注：").append(requestModel.getMsg());
+        if (requestModel.getMsg() != null) {
+            handleMsg.append("执行备注：").append(requestModel.getMsg());
+        }
 		if (childTriggerMsg !=null) {
 			handleMsg.append("<br>子任务触发备注：").append(childTriggerMsg);
 		}
