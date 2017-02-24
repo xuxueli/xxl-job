@@ -15,7 +15,7 @@
 	<!-- 配置02、执行器 -->
 	<bean id="xxlJobExecutor" class="com.xxl.job.core.executor.jetty.XxlJobExecutor" init-method="start" destroy-method="destroy" >
 		<!-- 执行器IP[选填]，为空则自动获取 -->
-		<property name="ip" value="" />
+		<!--<property name="ip" value="" />-->
 		<!-- 执行器端口号 -->
 		<property name="port" value="9999" />
         <property name="appName" value="xxl-job-executor-example" />
