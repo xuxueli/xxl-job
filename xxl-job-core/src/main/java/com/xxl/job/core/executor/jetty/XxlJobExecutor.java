@@ -16,6 +16,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.ApplicationEvent;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextClosedEvent;
 
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -23,7 +26,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by xuxueli on 2016/3/2 21:14.
  */
-public class XxlJobExecutor implements ApplicationContextAware {
+public class XxlJobExecutor implements ApplicationContextAware, ApplicationListener {
     private static final Logger logger = LoggerFactory.getLogger(XxlJobExecutor.class);
 
     private String ip;
@@ -143,5 +146,13 @@ public class XxlJobExecutor implements ApplicationContextAware {
             }
         }
 	}
+
+    // ---------------------------------- destory job executor ------------------------------------
+    @Override
+    public void onApplicationEvent(ApplicationEvent applicationEvent) {
+        if(applicationEvent instanceof ContextClosedEvent){
+            // TODO
+        }
+    }
 
 }
