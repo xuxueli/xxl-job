@@ -21,7 +21,7 @@ public class DbRegistHelper implements RegistHelper {
         String insertSql = "INSERT INTO XXL_JOB_QRTZ_TRIGGER_REGISTRY( `registry_group` , `registry_key` , `registry_value`, `update_time`) VALUES(? , ? , ?, NOW())";
         int ret = DBUtil.update(dataSource, updateSql, new Object[]{registGroup, registryKey, registryValue});
         if (ret<1) {
-            //ret = DBUtil.update(dataSource, insertSql, new Object[]{registGroup, registryKey, registryValue});
+            ret = DBUtil.update(dataSource, insertSql, new Object[]{registGroup, registryKey, registryValue});
         }
         return ret;
     }
