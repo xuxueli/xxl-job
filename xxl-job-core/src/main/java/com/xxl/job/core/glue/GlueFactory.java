@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.annotation.AnnotationUtils;
@@ -76,14 +77,24 @@ public class GlueFactory implements ApplicationContextAware {
 			// with bean-id, bean could be found by both @Resource and @Autowired, or bean could only be found by @Autowired
 			if (AnnotationUtils.getAnnotation(field, Resource.class) != null) {
 				try {
-					fieldBean = applicationContext.getBean(field.getName());
+					Resource resource = AnnotationUtils.getAnnotation(field, Resource.class);
+					if (resource.name()!=null && resource.name().length()>0){
+						fieldBean = applicationContext.getBean(resource.name());
+					} else {
+						fieldBean = applicationContext.getBean(field.getName());
+					}
 				} catch (Exception e) {
 				}
 				if (fieldBean==null ) {
 					fieldBean = applicationContext.getBean(field.getType());
 				}
 			} else if (AnnotationUtils.getAnnotation(field, Autowired.class) != null) {
-				fieldBean = applicationContext.getBean(field.getType());		
+				Qualifier qualifier = AnnotationUtils.getAnnotation(field, Qualifier.class);
+				if (qualifier!=null && qualifier.value()!=null && qualifier.value().length()>0) {
+					fieldBean = applicationContext.getBean(qualifier.value());
+				} else {
+					fieldBean = applicationContext.getBean(field.getType());
+				}
 			}
 			
 			if (fieldBean!=null) {
