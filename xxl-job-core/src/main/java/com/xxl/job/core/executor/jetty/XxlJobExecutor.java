@@ -45,7 +45,7 @@ public class XxlJobExecutor implements ApplicationContextAware {
     }
 
     // ---------------------------------- job server ------------------------------------
-    Server server = null;
+    private Server server = null;
     public void start() throws Exception {
 
         Thread executorTnread = new Thread(new Runnable() {
