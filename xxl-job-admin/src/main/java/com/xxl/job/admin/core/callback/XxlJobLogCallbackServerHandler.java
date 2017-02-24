@@ -101,10 +101,17 @@ public class XxlJobLogCallbackServerHandler extends AbstractHandler {
 			}
 		}
 
+		// handle msg
+		StringBuffer handleMsg = new StringBuffer();
+		handleMsg.append("执行备注：").append(requestModel.getMsg());
+		if (childTriggerMsg !=null) {
+			handleMsg.append("<br>子任务触发备注：").append(childTriggerMsg);
+		}
+
 		// success, save log
 		log.setHandleTime(new Date());
 		log.setHandleStatus(requestModel.getStatus());
-		log.setHandleMsg(requestModel.getMsg() + childTriggerMsg);
+		log.setHandleMsg(handleMsg.toString());
 		DynamicSchedulerUtil.xxlJobLogDao.updateHandleInfo(log);
 
 		return new ResponseModel(ResponseModel.SUCCESS, null);
