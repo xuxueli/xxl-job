@@ -26,7 +26,8 @@
             <param name="ConversionPattern" value="%-d{yyyy-MM-dd HH:mm:ss} xxl-job-executor-example [%c]-[%t]-[%M]-[%L]-[%p] %m%n"/>
         </layout>
     </appender>
-    
+
+
     <logger name="com.xxl.job.core" additivity="false">
     	<level value="INFO" />
         <appender-ref ref="CONSOLE" />
