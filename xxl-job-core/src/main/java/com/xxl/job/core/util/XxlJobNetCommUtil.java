@@ -112,7 +112,7 @@ public class XxlJobNetCommUtil {
 			HttpEntity entity = response.getEntity();
 			if (response.getStatusLine().getStatusCode() == 200 && null != entity) {
                 String responseHex = EntityUtils.toString(entity, "UTF-8");
-				logger.info("xxl-job, net comm success, requestHex:{}, responseHex:{}", requestHex, responseHex);
+				logger.debug("xxl-job, net comm success, requestHex:{}, responseHex:{}", requestHex, responseHex);
 				EntityUtils.consume(entity);
 
                 // i do not know why
@@ -133,7 +133,7 @@ public class XxlJobNetCommUtil {
 				failMsg = "http statusCode error, statusCode:" + response.getStatusLine().getStatusCode();
 			}
 		} catch (Exception e) {
-            logger.info("", e);
+            logger.error("", e);
 			/*StringWriter out = new StringWriter();
 			e.printStackTrace(new PrintWriter(out));
 			callback.setMsg(out.toString());*/
@@ -146,7 +146,7 @@ public class XxlJobNetCommUtil {
 				try {
 					httpClient.close();
 				} catch (IOException e) {
-                    logger.info("", e);
+                    logger.error("", e);
 				}
 			}
 		}

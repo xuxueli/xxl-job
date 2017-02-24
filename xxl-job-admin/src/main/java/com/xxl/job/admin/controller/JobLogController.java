@@ -45,7 +45,6 @@ public class JobLogController {
 	public String index(Model model, String jobGroup, String jobName) {
 
 		// 任务组
-
 		List<XxlJobGroup> jobGroupList =  xxlJobGroupDao.findAll();
 
 		model.addAttribute("jobGroup", jobGroup);
@@ -91,24 +90,6 @@ public class JobLogController {
 	    maps.put("data", list);  					// 分页列表
 		return maps;
 	}
-	
-	/*@RequestMapping("/save")
-	@ResponseBody
-	@PermessionLimit(limit=false)
-	public RemoteCallBack triggerLog(int trigger_log_id, String status, String msg) {
-		RemoteCallBack callBack = new RemoteCallBack();
-		callBack.setStatus(RemoteCallBack.FAIL);
-		XxlJobLog log = xxlJobLogDao.load(trigger_log_id);
-		if (log!=null) {
-			log.setHandleTime(new Date());
-			log.setHandleStatus(status);
-			log.setHandleMsg(msg);
-			xxlJobLogDao.updateHandleInfo(log);
-			callBack.setStatus(RemoteCallBack.SUCCESS);
-			return callBack;
-		}
-		return callBack;
-	}*/
 	
 	@RequestMapping("/logDetail")
 	@ResponseBody

@@ -42,7 +42,7 @@ public class RemoteHttpJobBean extends QuartzJobBean {
 		jobLog.setJobGroup(jobInfo.getJobGroup());
 		jobLog.setJobName(jobInfo.getJobName());
 		DynamicSchedulerUtil.xxlJobLogDao.save(jobLog);
-		logger.info(">>>>>>>>>>> xxl-job trigger start, jobId:{}", jobLog.getId());
+		logger.debug(">>>>>>>>>>> xxl-job trigger start, jobId:{}", jobLog.getId());
 
         // admin address
         List<String> adminAddressList = JobRegistryHelper.discover(RegistHelper.RegistType.ADMIN.name(), RegistHelper.RegistType.ADMIN.name());
@@ -89,7 +89,7 @@ public class RemoteHttpJobBean extends QuartzJobBean {
 		// monitor triger
 		JobMonitorHelper.monitor(jobLog.getId());
 		
-		logger.info(">>>>>>>>>>> xxl-job trigger end, jobId:{}", jobLog.getId());
+		logger.debug(">>>>>>>>>>> xxl-job trigger end, jobId:{}", jobLog.getId());
     }
 	
 	

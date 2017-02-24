@@ -35,7 +35,7 @@ public class JobMonitorHelper {
 			public void run() {
 				while (true) {
 					try {
-						logger.info(">>>>>>>>>>> job monitor beat ... ");
+						logger.debug(">>>>>>>>>>> job monitor beat ... ");
 						Integer jobLogId = JobMonitorHelper.helper.queue.take();
 						if (jobLogId != null && jobLogId > 0) {
 							logger.info(">>>>>>>>>>> job monitor heat success, JobLogId:{}", jobLogId);

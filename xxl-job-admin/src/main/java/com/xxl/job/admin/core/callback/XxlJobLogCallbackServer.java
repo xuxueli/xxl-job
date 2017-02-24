@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 public class XxlJobLogCallbackServer {
     private static final Logger logger = LoggerFactory.getLogger(XxlJobLogCallbackServer.class);
 
-    Server server = null;
+    private Server server = null;
     public void start(int callBackPort) throws Exception {
 
     	final int port = Integer.valueOf(callBackPort);

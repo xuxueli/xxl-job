@@ -31,7 +31,7 @@ public class TriggerCallbackThread {
                                         break;
                                     }
                                 } catch (Exception e) {
-                                    logger.info("JobThread Exception:", e);
+                                    logger.error(">>>>>>>>>>> xxl-job TriggerCallbackThread Exception:", e);
                                 }
                             }
                         }

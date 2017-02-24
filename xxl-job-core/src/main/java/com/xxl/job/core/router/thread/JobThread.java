@@ -40,7 +40,7 @@ public class JobThread extends Thread{
 
 	public void pushTriggerQueue(RequestModel requestModel) {
 		if (triggerLogIdSet.contains(requestModel.getLogId())) {
-			logger.info("repeate trigger job, logId:{}", requestModel.getLogId());
+			logger.debug("repeate trigger job, logId:{}", requestModel.getLogId());
 			return;
 		}
 
@@ -57,8 +57,6 @@ public class JobThread extends Thread{
 		this.toStop = true;
 		this.stopReason = stopReason;
 	}
-	
-
 	
 	int i = 1;
 	@Override
@@ -83,16 +81,16 @@ public class JobThread extends Thread{
 						String logFileName = XxlJobFileAppender.makeLogFileName(new Date(triggerDate.getLogDateTim()), triggerDate.getLogId());
 
 						XxlJobFileAppender.contextHolder.set(logFileName);
-						logger.info("----------- xxl-job job handle start -----------");
+						logger.info("----------- xxl-job job execute start -----------");
 						handler.execute(handlerParams);
 					} catch (Exception e) {
-						logger.info("JobThread Exception:", e);
+						logger.error("JobThread Exception:", e);
 						_status = ResponseModel.FAIL;
 						StringWriter out = new StringWriter();
 						e.printStackTrace(new PrintWriter(out));
 						_msg = out.toString();
 					}
-					logger.info("----------- xxl-job job handle end ----------- <br> Look : ExecutorParams:{}, Status:{}, Msg:{}",
+					logger.info("----------- xxl-job job execute end ----------- <br> Look : ExecutorParams:{}, Status:{}, Msg:{}",
 							new Object[]{handlerParams, _status, _msg});
 					
 					// callback handler info
@@ -109,7 +107,7 @@ public class JobThread extends Thread{
 					}
 				}
 			} catch (Exception e) {
-				logger.info("JobThread Exception:", e);
+				logger.error("----------- xxl-job JobThread Exception:", e);
 			}
 		}
 		
@@ -124,6 +122,6 @@ public class JobThread extends Thread{
 			}
 		}
 		
-		logger.info(">>>>>>>>>>>> xxl-job handlerThrad stoped, hashCode:{}", Thread.currentThread());
+		logger.info(">>>>>>>>>>>> xxl-job JobThread stoped, hashCode:{}", Thread.currentThread());
 	}
 }
