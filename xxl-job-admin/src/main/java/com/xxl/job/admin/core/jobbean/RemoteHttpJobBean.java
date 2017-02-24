@@ -52,6 +52,9 @@ public class RemoteHttpJobBean extends QuartzJobBean {
         }
         adminAddressSet.add(DynamicSchedulerUtil.getCallbackAddress());
 
+		// update trigger info 1/2
+		jobLog.setTriggerTime(new Date());
+
 		// trigger request
 		RequestModel requestModel = new RequestModel();
 		requestModel.setTimestamp(System.currentTimeMillis());
@@ -63,6 +66,7 @@ public class RemoteHttpJobBean extends QuartzJobBean {
 		requestModel.setGlueSwitch((jobInfo.getGlueSwitch()==0)?false:true);
 		requestModel.setLogAddress(adminAddressSet);
 		requestModel.setLogId(jobLog.getId());
+		requestModel.setLogDateTim(jobLog.getTriggerTime().getTime());
 
 		// parse address
 		List<String> addressList = new ArrayList<String>();
@@ -77,8 +81,7 @@ public class RemoteHttpJobBean extends QuartzJobBean {
 		jobLog.setExecutorParam(jobInfo.getExecutorParam());
 		logger.info(">>>>>>>>>>> xxl-job failoverTrigger response, jobId:{}, responseModel:{}", jobLog.getId(), responseModel.toString());
 		
-		// update trigger info
-		jobLog.setTriggerTime(new Date());
+		// update trigger info 2/2
 		jobLog.setTriggerStatus(responseModel.getStatus());
 		jobLog.setTriggerMsg(responseModel.getMsg());
 		DynamicSchedulerUtil.xxlJobLogDao.updateTriggerInfo(jobLog);

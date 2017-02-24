@@ -23,30 +23,43 @@ public class XxlJobFileAppender extends AppenderSkeleton {
 	public void setFilePath(String filePath) {
 		XxlJobFileAppender.filePath = filePath;
 	}
-	
+
+	/**
+	 * log filename: yyyy-MM-dd/9999.log
+	 *
+	 * @param triggerDate
+	 * @param logId
+	 * @return
+	 */
+	public static String makeLogFileName(Date triggerDate, int logId) {
+
+        // filePath/
+        File filePathDir = new File(filePath);
+        if (!filePathDir.exists()) {
+            filePathDir.mkdirs();
+        }
+
+        // filePath/yyyy-MM-dd/
+        String nowFormat = sdf.format(new Date());
+        File filePathDateDir = new File(filePathDir, nowFormat);
+        if (!filePathDateDir.exists()) {
+            filePathDateDir.mkdirs();
+        }
+
+        // filePath/yyyy-MM-dd/9999.log
+		String logFileName = XxlJobFileAppender.sdf.format(triggerDate).concat("/").concat(String.valueOf(logId)).concat(".log");
+		return logFileName;
+	}
+
 	@Override
 	protected void append(LoggingEvent event) {
-		String trigger_log_id = contextHolder.get();
-		if (trigger_log_id==null || trigger_log_id.trim().length()==0) {
+
+		String logFileName = contextHolder.get();
+		if (logFileName==null || logFileName.trim().length()==0) {
 			return;
 		}
-		
-		// filePath/
-		File filePathDir = new File(filePath);	
-		if (!filePathDir.exists()) {
-			filePathDir.mkdirs();
-		}
-		
-		// filePath/yyyy-MM-dd/
-		String nowFormat = sdf.format(new Date());
-		File filePathDateDir = new File(filePathDir, nowFormat);	
-		if (!filePathDateDir.exists()) {
-			filePathDateDir.mkdirs();
-		}
-		
-		// filePath/yyyy-MM-dd/9999.log
-		String logFileName = trigger_log_id.concat(".log");
-		File logFile = new File(filePathDateDir, logFileName);	
+		File logFile = new File(filePath, logFileName);
+
 		if (!logFile.exists()) {
 			try {
 				logFile.createNewFile();
@@ -101,31 +114,16 @@ public class XxlJobFileAppender extends AppenderSkeleton {
 	
 	/**
 	 * support read log-file
-	 * @param triggerDate
-	 * @param trigger_log_id
+	 * @param logFileName
 	 * @return log content
 	 */
-	public static String readLog(Date triggerDate, int trigger_log_id ){
-		if (triggerDate==null || trigger_log_id<=0) {
+	public static String readLog(String logFileName ){
+
+		if (logFileName==null || logFileName.trim().length()==0) {
 			return null;
 		}
-		
-		// filePath/
-		File filePathDir = new File(filePath);	
-		if (!filePathDir.exists()) {
-			filePathDir.mkdirs();
-		}
-		
-		// filePath/yyyy-MM-dd/
-		String nowFormat = sdf.format(triggerDate);
-		File filePathDateDir = new File(filePathDir, nowFormat);	
-		if (!filePathDateDir.exists()) {
-			filePathDateDir.mkdirs();
-		}
-		
-		// filePath/yyyy-MM-dd/9999.log
-		String logFileName = String.valueOf(trigger_log_id).concat(".log");
-		File logFile = new File(filePathDateDir, logFileName);	
+		File logFile = new File(filePath, logFileName);
+
 		if (!logFile.exists()) {
 			return null;
 		}

@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
@@ -78,7 +79,10 @@ public class JobThread extends Thread{
 					String _msg = null;
 
 					try {
-						XxlJobFileAppender.contextHolder.set(String.valueOf(triggerDate.getLogId()));
+						// log filename: yyyy-MM-dd/9999.log
+						String logFileName = XxlJobFileAppender.makeLogFileName(new Date(triggerDate.getLogDateTim()), triggerDate.getLogId());
+
+						XxlJobFileAppender.contextHolder.set(logFileName);
 						logger.info("----------- xxl-job job handle start -----------");
 						handler.execute(handlerParams);
 					} catch (Exception e) {

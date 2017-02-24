@@ -14,7 +14,10 @@ public class LogAction extends IAction {
 
     @Override
     public ResponseModel execute(RequestModel requestModel) {
-        String logConteng = XxlJobFileAppender.readLog(new Date(requestModel.getLogDateTim()), requestModel.getLogId());
+        // log filename: yyyy-MM-dd/9999.log
+        String logFileName = XxlJobFileAppender.makeLogFileName(new Date(requestModel.getLogDateTim()), requestModel.getLogId());
+
+        String logConteng = XxlJobFileAppender.readLog(logFileName);
         return new ResponseModel(ResponseModel.SUCCESS, logConteng);
     }
 
