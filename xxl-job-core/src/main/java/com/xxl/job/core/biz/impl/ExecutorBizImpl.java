@@ -35,11 +35,11 @@ public class ExecutorBizImpl implements ExecutorBiz {
             IJobHandler handler = jobThread.getHandler();
             jobThread.toStop("人工手动终止");
             jobThread.interrupt();
-            //XxlJobExecutor.registJobThread(jobKey, handler);
+            XxlJobExecutor.removeJobThread(jobKey);
             return ReturnT.SUCCESS;
         }
 
-        return new ReturnT<String>(ReturnT.FAIL_CODE, "job thread not found.");
+        return new ReturnT<String>(ReturnT.SUCCESS_CODE, "job thread aleady killed.");
     }
 
     @Override

@@ -101,5 +101,8 @@ public class XxlJobExecutor implements ApplicationContextAware, ApplicationListe
     public static JobThread loadJobThread(String jobKey){
         return JobThreadRepository.get(jobKey);
     }
+    public static void removeJobThread(String jobKey){
+        JobThreadRepository.remove(jobKey);
+    }
 
 }

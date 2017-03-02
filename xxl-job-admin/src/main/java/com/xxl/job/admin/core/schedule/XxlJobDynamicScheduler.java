@@ -2,6 +2,7 @@ package com.xxl.job.admin.core.schedule;
 
 import com.xxl.job.admin.core.jobbean.RemoteHttpJobBean;
 import com.xxl.job.admin.core.model.XxlJobInfo;
+import com.xxl.job.admin.core.thread.JobMonitorHelper;
 import com.xxl.job.admin.core.thread.JobRegistryHelper;
 import com.xxl.job.admin.dao.IXxlJobGroupDao;
 import com.xxl.job.admin.dao.IXxlJobInfoDao;
@@ -67,12 +68,21 @@ public final class XxlJobDynamicScheduler implements ApplicationContextAware, In
             callbackAddress = IpUtil.getIpPort(callBackPort);;
         }
 
-		// init JobRegistryHelper
-        JobRegistryHelper.discover("g", "k");
+		// admin registry run
+        JobRegistryHelper.getInstance().start();
+
+        // admin monitor run
+        JobMonitorHelper.getInstance().start();
     }
     
     // destroy
     public void destroy(){
+        // admin registry stop
+        JobRegistryHelper.getInstance().stop();
+
+        // admin monitor stop
+        JobMonitorHelper.getInstance().stop();
+
         serverFactory.destroy();
     }
     

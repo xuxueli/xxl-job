@@ -12,20 +12,26 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 /**
- * job registry helper
+ * job registry instance
  * @author xuxueli 2016-10-02 19:10:24
  */
 public class JobRegistryHelper {
 	private static Logger logger = LoggerFactory.getLogger(JobRegistryHelper.class);
 
-	private static JobRegistryHelper helper = new JobRegistryHelper();
+	private static JobRegistryHelper instance = new JobRegistryHelper();
+	public static JobRegistryHelper getInstance(){
+		return instance;
+	}
+
 	private ConcurrentHashMap<String, List<String>> registMap = new ConcurrentHashMap<String, List<String>>();
 
-	public JobRegistryHelper(){
-		Thread registryThread = new Thread(new Runnable() {
+	private Thread registryThread;
+	private boolean toStop = false;
+	public void start(){
+		registryThread = new Thread(new Runnable() {
 			@Override
 			public void run() {
-				while (true) {
+				while (!toStop) {
 					try {
                         // registry admin
                         int ret = XxlJobDynamicScheduler.xxlJobRegistryDao.registryUpdate(RegistHelper.RegistType.ADMIN.name(), RegistHelper.RegistType.ADMIN.name(), XxlJobDynamicScheduler.getCallbackAddress());
@@ -50,19 +56,23 @@ public class JobRegistryHelper {
 						}
 						registMap = temp;
 					} catch (Exception e) {
-						logger.error("job registry helper error:{}", e);
+						logger.error("job registry instance error:{}", e);
 					}
 					try {
 						TimeUnit.SECONDS.sleep(RegistHelper.TIMEOUT);
 					} catch (InterruptedException e) {
-						logger.error("job registry helper error:{}", e);
+						logger.error("job registry instance error:{}", e);
 					}
 				}
 			}
 		});
 		registryThread.setDaemon(true);
 		registryThread.start();
+	}
 
+	public void stop(){
+		toStop = true;
+		//registryThread.interrupt();
 	}
 
 	private static String makeGroupKey(String registryGroup, String registryKey){
@@ -71,7 +81,7 @@ public class JobRegistryHelper {
 	
 	public static List<String> discover(String registryGroup, String registryKey){
 		String groupKey = makeGroupKey(registryGroup, registryKey);
-		return helper.registMap.get(groupKey);
+		return instance.registMap.get(groupKey);
 	}
 	
 }

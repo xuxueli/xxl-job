@@ -16,28 +16,32 @@ import java.util.Set;
 import java.util.concurrent.*;
 
 /**
- * job monitor helper
+ * job monitor instance
  * @author xuxueli 2015-9-1 18:05:56
  */
 public class JobMonitorHelper {
 	private static Logger logger = LoggerFactory.getLogger(JobMonitorHelper.class);
 	
-	private static JobMonitorHelper helper = new JobMonitorHelper();
-	private ExecutorService executor = Executors.newCachedThreadPool();
+	private static JobMonitorHelper instance = new JobMonitorHelper();
+	public static JobMonitorHelper getInstance(){
+		return instance;
+	}
+
 	private LinkedBlockingQueue<Integer> queue = new LinkedBlockingQueue<Integer>(0xfff8);
-	private ConcurrentHashMap<String, Integer> countMap = new ConcurrentHashMap<String, Integer>();
-	
-	public JobMonitorHelper(){
-		// consumer
-		executor.execute(new Runnable() {
+
+	private Thread monitorThread;
+	private boolean toStop = false;
+	public void start(){
+		monitorThread = new Thread(new Runnable() {
+
 			@Override
 			public void run() {
 				while (true) {
 					try {
 						logger.debug(">>>>>>>>>>> job monitor beat ... ");
-						Integer jobLogId = JobMonitorHelper.helper.queue.take();
+						Integer jobLogId = JobMonitorHelper.instance.queue.take();
 						if (jobLogId != null && jobLogId > 0) {
-							logger.info(">>>>>>>>>>> job monitor heat success, JobLogId:{}", jobLogId);
+							logger.debug(">>>>>>>>>>> job monitor heat success, JobLogId:{}", jobLogId);
 							XxlJobLog log = XxlJobDynamicScheduler.xxlJobLogDao.load(jobLogId);
 							if (log!=null) {
 								if (ReturnT.SUCCESS_CODE==log.getTriggerCode() && log.getHandleCode()==0) {
@@ -73,11 +77,18 @@ public class JobMonitorHelper {
 				}
 			}
 		});
+		monitorThread.setDaemon(true);
+		monitorThread.start();
+	}
+
+	public void stop(){
+		toStop = true;
+		//monitorThread.interrupt();
 	}
 	
 	// producer
 	public static void monitor(int jobLogId){
-		JobMonitorHelper.helper.queue.offer(jobLogId);
+		getInstance().queue.offer(jobLogId);
 	}
 	
 }

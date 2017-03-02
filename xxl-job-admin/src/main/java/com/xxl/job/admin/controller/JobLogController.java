@@ -149,8 +149,8 @@ public class JobLogController {
 		ReturnT<String> runResult = executorBiz.kill(String.valueOf(log.getJobGroup()), log.getJobName());
 
 		if (ReturnT.SUCCESS_CODE == runResult.getCode()) {
-			log.setHandleCode(ReturnT.SUCCESS_CODE);
-			log.setHandleMsg("人为操作主动终止");
+			log.setHandleCode(ReturnT.FAIL_CODE);
+			log.setHandleMsg("人为操作主动终止:" + (runResult.getMsg()!=null?runResult.getMsg():""));
 			log.setHandleTime(new Date());
 			xxlJobLogDao.updateHandleInfo(log);
 			return new ReturnT<String>(runResult.getMsg());

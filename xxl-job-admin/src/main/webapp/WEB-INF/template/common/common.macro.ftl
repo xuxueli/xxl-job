@@ -173,7 +173,7 @@
 <#macro commonFooter >
 	<footer class="main-footer">
 		<div class="pull-right hidden-xs">
-			<b>Version</b> 1.5
+			<b>Version</b> 1.6
 		</div>
 		<strong>Copyright &copy; 2015-${.now?string('yyyy')} &nbsp;
 			<a href="https://github.com/xuxueli/xxl-job" target="_blank" >github</a>&nbsp;

@@ -112,7 +112,13 @@ $(function() {
 	                		return data?moment(new Date(data)).format("YYYY-MM-DD HH:mm:ss"):"";
 	                	}
 	                },
-	                { "data": 'triggerStatus'},
+	                {
+						"data": 'triggerCode',
+						"render": function ( data, type, row ) {
+							return (data==200)?'<span style="color: green">成功</span>':(data==500)?'<span style="color: red">失败</span>':(data==0)?'':data;
+						}
+
+	                },
 	                { 
 	                	"data": 'triggerMsg',
 	                	"render": function ( data, type, row ) {
@@ -125,7 +131,12 @@ $(function() {
 	                		return data?moment(new Date(data)).format("YYYY-MM-DD HH:mm:ss"):"";
 	                	}
 	                },
-	                { "data": 'handleStatus',"bSortable": false},
+	                {
+						"data": 'handleCode',
+						"render": function ( data, type, row ) {
+							return (data==200)?'<span style="color: green">成功</span>':(data==500)?'<span style="color: red">失败</span>':(data==0)?'':data;
+						}
+	                },
 	                { 
 	                	"data": 'handleMsg',
 	                	"render": function ( data, type, row ) {
@@ -136,9 +147,9 @@ $(function() {
 	                	"render": function ( data, type, row ) {
 	                		// better support expression or string, not function
 	                		return function () {
-		                		if (row.triggerStatus == 'SUCCESS' || row.handleStatus){
+		                		if (row.triggerCode == 200){
 		                			var temp = '<a href="javascript:;" class="logDetail" _id="'+ row.id +'">执行日志</a>';
-		                			if(!row.handleStatus){
+		                			if(row.handleCode == 0){
 		                				temp += '<br><a href="javascript:;" class="logKill" _id="'+ row.id +'">终止任务</a>';
 		                			}
 		                			return temp;
