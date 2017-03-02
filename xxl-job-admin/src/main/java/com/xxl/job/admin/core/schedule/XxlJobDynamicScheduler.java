@@ -78,10 +78,10 @@ public final class XxlJobDynamicScheduler implements ApplicationContextAware, In
     // destroy
     public void destroy(){
         // admin registry stop
-        JobRegistryHelper.getInstance().stop();
+        JobRegistryHelper.getInstance().toStop();
 
         // admin monitor stop
-        JobMonitorHelper.getInstance().stop();
+        JobMonitorHelper.getInstance().toStop();
 
         serverFactory.destroy();
     }

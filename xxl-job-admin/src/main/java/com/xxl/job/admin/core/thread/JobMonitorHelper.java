@@ -36,7 +36,7 @@ public class JobMonitorHelper {
 
 			@Override
 			public void run() {
-				while (true) {
+				while (!toStop) {
 					try {
 						logger.debug(">>>>>>>>>>> job monitor beat ... ");
 						Integer jobLogId = JobMonitorHelper.instance.queue.take();
@@ -81,7 +81,7 @@ public class JobMonitorHelper {
 		monitorThread.start();
 	}
 
-	public void stop(){
+	public void toStop(){
 		toStop = true;
 		//monitorThread.interrupt();
 	}

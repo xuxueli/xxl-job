@@ -70,7 +70,7 @@ public class JobRegistryHelper {
 		registryThread.start();
 	}
 
-	public void stop(){
+	public void toStop(){
 		toStop = true;
 		//registryThread.interrupt();
 	}

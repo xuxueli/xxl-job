@@ -15,14 +15,23 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class TriggerCallbackThread {
     private static Logger logger = LoggerFactory.getLogger(TriggerCallbackThread.class);
 
-    private static LinkedBlockingQueue<HandleCallbackParam> callBackQueue = new LinkedBlockingQueue<HandleCallbackParam>();
-    static {
-        new Thread(new Runnable() {
+    private static TriggerCallbackThread instance = new TriggerCallbackThread();
+    public static TriggerCallbackThread getInstance(){
+        return instance;
+    }
+
+    private LinkedBlockingQueue<HandleCallbackParam> callBackQueue = new LinkedBlockingQueue<HandleCallbackParam>();
+
+    private Thread triggerCallbackThread;
+    private boolean toStop = false;
+    public void start() {
+        triggerCallbackThread = new Thread(new Runnable() {
+
             @Override
             public void run() {
-                while(true){
+                while(!toStop){
                     try {
-                        HandleCallbackParam callback = callBackQueue.take();
+                        HandleCallbackParam callback = getInstance().callBackQueue.take();
                         if (callback != null) {
                             for (String address : callback.getLogAddress()) {
                                 try {
@@ -44,10 +53,16 @@ public class TriggerCallbackThread {
                     }
                 }
             }
-        }).start();
+        });
+        triggerCallbackThread.setDaemon(true);
+        triggerCallbackThread.start();
     }
+    public void toStop(){
+        toStop = true;
+    }
+
     public static void pushCallBack(HandleCallbackParam callback){
-        callBackQueue.add(callback);
+        getInstance().callBackQueue.add(callback);
         logger.debug(">>>>>>>>>>> xxl-job, push callback request, logId:{}", callback.getLogId());
     }
 

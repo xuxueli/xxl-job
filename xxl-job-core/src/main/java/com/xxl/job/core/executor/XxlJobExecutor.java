@@ -6,7 +6,9 @@ import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.handler.annotation.JobHander;
 import com.xxl.job.core.registry.RegistHelper;
 import com.xxl.job.core.rpc.netcom.NetComServerFactory;
+import com.xxl.job.core.thread.ExecutorRegistryThread;
 import com.xxl.job.core.thread.JobThread;
+import com.xxl.job.core.thread.TriggerCallbackThread;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -46,11 +48,33 @@ public class XxlJobExecutor implements ApplicationContextAware, ApplicationListe
     // ---------------------------------- job server ------------------------------------
     private NetComServerFactory serverFactory = new NetComServerFactory();
     public void start() throws Exception {
+        // executor start
         NetComServerFactory.putService(ExecutorBiz.class, new ExecutorBizImpl());
         serverFactory.start(port, ip, appName, registHelper);
+
+        // trigger callback thread start
+        TriggerCallbackThread.getInstance().start();
     }
     public void destroy(){
+        // executor stop
         serverFactory.destroy();
+
+        // job thread repository destory
+        if (JobThreadRepository.size() > 0) {
+            for (Map.Entry<String, JobThread> item: JobThreadRepository.entrySet()) {
+                JobThread jobThread = item.getValue();
+                jobThread.toStop("Web容器销毁终止");
+                jobThread.interrupt();
+
+            }
+            JobThreadRepository.clear();
+        }
+
+        // trigger callback thread stop
+        TriggerCallbackThread.getInstance().toStop();
+
+        // executor registry thread stop
+        ExecutorRegistryThread.getInstance().toStop();
     }
 
     // ---------------------------------- init job handler ------------------------------------
@@ -99,7 +123,8 @@ public class XxlJobExecutor implements ApplicationContextAware, ApplicationListe
         return jobThread;
     }
     public static JobThread loadJobThread(String jobKey){
-        return JobThreadRepository.get(jobKey);
+        JobThread jobThread = JobThreadRepository.get(jobKey);
+        return jobThread;
     }
     public static void removeJobThread(String jobKey){
         JobThreadRepository.remove(jobKey);
