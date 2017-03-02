@@ -165,7 +165,7 @@ CREATE TABLE XXL_JOB_QRTZ_TRIGGER_INFO (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-CREATE TABLE XXL_JOB_QRTZ_TRIGGER_LOG (
+CREATE TABLE `XXL_JOB_QRTZ_TRIGGER_LOG` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `job_group` int(11) NOT NULL COMMENT '任务组',
   `job_name` varchar(255) NOT NULL COMMENT '任务名',
@@ -173,10 +173,10 @@ CREATE TABLE XXL_JOB_QRTZ_TRIGGER_LOG (
   `executor_handler` varchar(255) DEFAULT NULL COMMENT '执行器任务handler',
   `executor_param` varchar(255) DEFAULT NULL COMMENT 'executor_param',
   `trigger_time` datetime DEFAULT NULL COMMENT '调度-时间',
-  `trigger_status` varchar(255) DEFAULT NULL COMMENT '调度-结果',
+  `trigger_code` varchar(255) DEFAULT NULL COMMENT '调度-结果',
   `trigger_msg` varchar(2048) DEFAULT NULL COMMENT '调度-日志',
   `handle_time` datetime DEFAULT NULL COMMENT '执行-时间',
-  `handle_status` varchar(255) DEFAULT NULL COMMENT '执行-状态',
+  `handle_code` varchar(255) DEFAULT NULL COMMENT '执行-状态',
   `handle_msg` varchar(2048) DEFAULT NULL COMMENT '执行-日志',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

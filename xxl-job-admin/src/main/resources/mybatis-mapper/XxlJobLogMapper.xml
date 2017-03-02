@@ -14,11 +14,11 @@
 	    <result column="executor_param" property="executorParam" />
 	    
 	    <result column="trigger_time" property="triggerTime" />
-	    <result column="trigger_status" property="triggerStatus" />
+	    <result column="trigger_code" property="triggerCode" />
 	    <result column="trigger_msg" property="triggerMsg" />
 	    
 	    <result column="handle_time" property="handleTime" />
-	    <result column="handle_status" property="handleStatus" />
+	    <result column="handle_code" property="handleCode" />
 	    <result column="handle_msg" property="handleMsg" />
 	    
 	</resultMap>
@@ -31,10 +31,10 @@
 		t.executor_handler,
 		t.executor_param,
 		t.trigger_time,
-		t.trigger_status,
+		t.trigger_code,
 		t.trigger_msg,
 		t.handle_time,
-		t.handle_status,
+		t.handle_code,
 		t.handle_msg
 	</sql>
 	
@@ -108,7 +108,7 @@
 		UPDATE XXL_JOB_QRTZ_TRIGGER_LOG
 		SET 
 			`trigger_time`= #{triggerTime}, 
-			`trigger_status`= #{triggerStatus}, 
+			`trigger_code`= #{triggerCode},
 			`trigger_msg`= #{triggerMsg},
 			`executor_address`= #{executorAddress},
 			`executor_handler`=#{executorHandler},
@@ -120,7 +120,7 @@
 		UPDATE XXL_JOB_QRTZ_TRIGGER_LOG
 		SET 
 			`handle_time`= #{handleTime}, 
-			`handle_status`= #{handleStatus}, 
+			`handle_code`= #{handleCode},
 			`handle_msg`= #{handleMsg} 
 		WHERE `id`= #{id}
 	</update>

@@ -4,8 +4,8 @@ import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.admin.core.schedule.DynamicSchedulerUtil;
 import com.xxl.job.core.biz.AdminBiz;
+import com.xxl.job.core.biz.model.HandleCallbackParam;
 import com.xxl.job.core.biz.model.ReturnT;
-import com.xxl.job.core.biz.model.TriggerParam;
 import org.apache.commons.lang.StringUtils;
 import org.quartz.SchedulerException;
 import org.slf4j.Logger;
@@ -21,17 +21,17 @@ public class AdminBizImpl implements AdminBiz {
     private static Logger logger = LoggerFactory.getLogger(AdminBizImpl.class);
 
     @Override
-    public ReturnT<String> callback(TriggerParam triggerParam) {
+    public ReturnT<String> callback(HandleCallbackParam handleCallbackParam) {
 
         // valid log item
-        XxlJobLog log = DynamicSchedulerUtil.xxlJobLogDao.load(triggerParam.getLogId());
+        XxlJobLog log = DynamicSchedulerUtil.xxlJobLogDao.load(handleCallbackParam.getLogId());
         if (log == null) {
             return new ReturnT(ReturnT.FAIL_CODE, "log item not found.");
         }
 
         // trigger success, to trigger child job, and avoid repeat trigger child job
         String childTriggerMsg = null;
-        if ((ReturnT.SUCCESS_CODE+"").equals(triggerParam.getStatus()) && !(ReturnT.SUCCESS_CODE+"").equals(log.getHandleStatus())) {
+        if (ReturnT.SUCCESS_CODE==handleCallbackParam.getCode() && ReturnT.SUCCESS_CODE!=log.getHandleCode()) {
             XxlJobInfo xxlJobInfo = DynamicSchedulerUtil.xxlJobInfoDao.load(log.getJobGroup(), log.getJobName());
             if (xxlJobInfo!=null && StringUtils.isNotBlank(xxlJobInfo.getChildJobKey())) {
                 childTriggerMsg = "<hr>";
@@ -65,8 +65,11 @@ public class AdminBizImpl implements AdminBiz {
 
         // handle msg
         StringBuffer handleMsg = new StringBuffer();
-        if (triggerParam.getMsg() != null) {
-            handleMsg.append("执行备注：").append(triggerParam.getMsg());
+        if (log.getHandleMsg()!=null) {
+            handleMsg.append(log.getHandleMsg()).append("<br>");
+        }
+        if (handleCallbackParam.getMsg() != null) {
+            handleMsg.append("执行备注：").append(handleCallbackParam.getMsg());
         }
         if (childTriggerMsg !=null) {
             handleMsg.append("<br>子任务触发备注：").append(childTriggerMsg);
@@ -74,7 +77,7 @@ public class AdminBizImpl implements AdminBiz {
 
         // success, save log
         log.setHandleTime(new Date());
-        log.setHandleStatus(triggerParam.getStatus());
+        log.setHandleCode(handleCallbackParam.getCode());
         log.setHandleMsg(handleMsg.toString());
         DynamicSchedulerUtil.xxlJobLogDao.updateHandleInfo(log);
 

@@ -97,7 +97,7 @@ public class JobLogController {
 		if (log == null) {
 			return new ReturnT<String>(500, "查看执行日志失败: 参数异常");
 		}
-		if (!((ReturnT.SUCCESS_CODE+"").equals(log.getTriggerStatus()) || StringUtils.isNotBlank(log.getHandleStatus()))) {
+		if (ReturnT.SUCCESS_CODE != log.getTriggerCode()) {
 			return new ReturnT<String>(500, "查看执行日志失败: 任务发起调度失败，无法查看执行日志");
 		}
 		
@@ -134,7 +134,7 @@ public class JobLogController {
 		if (log == null || jobInfo==null) {
 			return new ReturnT<String>(500, "参数异常");
 		}
-		if (!(ReturnT.SUCCESS_CODE +"").equals(log.getTriggerStatus())) {
+		if (ReturnT.SUCCESS_CODE != log.getTriggerCode()) {
 			return new ReturnT<String>(500, "调度失败，无法终止日志");
 		}
 
@@ -149,7 +149,7 @@ public class JobLogController {
 		ReturnT<String> runResult = executorBiz.kill(String.valueOf(log.getJobGroup()), log.getJobName());
 
 		if (ReturnT.SUCCESS_CODE == runResult.getCode()) {
-			log.setHandleStatus(ReturnT.SUCCESS_CODE+"");
+			log.setHandleCode(ReturnT.SUCCESS_CODE);
 			log.setHandleMsg("人为操作主动终止");
 			log.setHandleTime(new Date());
 			xxlJobLogDao.updateHandleInfo(log);

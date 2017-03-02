@@ -80,7 +80,7 @@ public class RemoteHttpJobBean extends QuartzJobBean {
 		logger.info(">>>>>>>>>>> xxl-job failoverTrigger response, jobId:{}, responseModel:{}", jobLog.getId(), responseModel.toString());
 		
 		// update trigger info 2/2
-		jobLog.setTriggerStatus(responseModel.getCode()+"");
+		jobLog.setTriggerCode(responseModel.getCode());
 		jobLog.setTriggerMsg(responseModel.getMsg());
 		DynamicSchedulerUtil.xxlJobLogDao.updateTriggerInfo(jobLog);
 

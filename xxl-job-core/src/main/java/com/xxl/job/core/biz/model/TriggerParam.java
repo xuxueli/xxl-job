@@ -23,9 +23,6 @@ public class TriggerParam implements Serializable{
     private int logId;
     private long logDateTim;
 
-    private String status;
-    private String msg;
-
     public String getAction() {
         return action;
     }
@@ -98,22 +95,6 @@ public class TriggerParam implements Serializable{
         this.logDateTim = logDateTim;
     }
 
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getMsg() {
-        return msg;
-    }
-
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
-
     @Override
     public String toString() {
         return "RequestModel{" +
@@ -126,8 +107,6 @@ public class TriggerParam implements Serializable{
                 ", logAddress=" + logAddress +
                 ", logId=" + logId +
                 ", logDateTim=" + logDateTim +
-                ", status='" + status + '\'' +
-                ", msg='" + msg + '\'' +
                 '}';
     }
 }

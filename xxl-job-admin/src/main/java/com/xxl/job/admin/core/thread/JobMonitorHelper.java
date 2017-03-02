@@ -6,7 +6,6 @@ import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.admin.core.schedule.DynamicSchedulerUtil;
 import com.xxl.job.admin.core.util.MailUtil;
 import com.xxl.job.core.biz.model.ReturnT;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,7 +40,8 @@ public class JobMonitorHelper {
 							logger.info(">>>>>>>>>>> job monitor heat success, JobLogId:{}", jobLogId);
 							XxlJobLog log = DynamicSchedulerUtil.xxlJobLogDao.load(jobLogId);
 							if (log!=null) {
-								if ((ReturnT.SUCCESS_CODE+"").equals(log.getTriggerStatus()) && StringUtils.isBlank(log.getHandleStatus())) {
+								if (ReturnT.SUCCESS_CODE==log.getTriggerCode() && log.getHandleCode()==0) {
+									// running
 									try {
 										TimeUnit.SECONDS.sleep(10);
 									} catch (InterruptedException e) {
@@ -49,16 +49,16 @@ public class JobMonitorHelper {
 									}
 									JobMonitorHelper.monitor(jobLogId);
 								}
-								if ((ReturnT.SUCCESS_CODE+"").equals(log.getTriggerStatus()) && (ReturnT.SUCCESS_CODE+"").equals(log.getHandleStatus())) {
+								if (ReturnT.SUCCESS_CODE==log.getTriggerCode() && ReturnT.SUCCESS_CODE==log.getHandleCode()) {
 									// pass
 								}
-								if ((ReturnT.FAIL+"").equals(log.getTriggerStatus()) || (ReturnT.FAIL+"").equals(log.getHandleStatus())) {
+								if (ReturnT.FAIL_CODE == log.getTriggerCode()|| ReturnT.FAIL_CODE==log.getHandleCode()) {
 									XxlJobInfo info = DynamicSchedulerUtil.xxlJobInfoDao.load(log.getJobGroup(), log.getJobName());
 									if (info!=null && info.getAlarmEmail()!=null && info.getAlarmEmail().trim().length()>0) {
 
 										Set<String> emailSet = new HashSet<String>(Arrays.asList(info.getAlarmEmail().split(",")));
 										for (String email: emailSet) {
-											String title = "《调度监控报警-任务调度中心XXL-JOB》";
+											String title = "《调度监控报警》(任务调度中心XXL-JOB)";
 											XxlJobGroup group = DynamicSchedulerUtil.xxlJobGroupDao.load(Integer.valueOf(info.getJobGroup()));
 											String content = MessageFormat.format("任务调度失败, 执行器名称:{0}, 任务描述:{1}.", group!=null?group.getTitle():"null", info.getJobDesc());
 											MailUtil.sendMail(email, title, content, false, null);

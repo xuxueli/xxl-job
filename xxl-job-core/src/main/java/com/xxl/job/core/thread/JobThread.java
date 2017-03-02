@@ -1,5 +1,6 @@
 package com.xxl.job.core.thread;
 
+import com.xxl.job.core.biz.model.HandleCallbackParam;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.biz.model.TriggerParam;
 import com.xxl.job.core.handler.IJobHandler;
@@ -96,14 +97,10 @@ public class JobThread extends Thread{
 					// callback handler info
 					if (!toStop) {
 						// commonm
-						triggerParam.setStatus(_code+"");
-						triggerParam.setMsg(_msg);
-						TriggerCallbackThread.pushCallBack(triggerParam);
+						TriggerCallbackThread.pushCallBack(new HandleCallbackParam(triggerParam.getLogId(), triggerParam.getLogAddress(), _code, _msg));
 					} else {
 						// is killed
-						triggerParam.setStatus(ReturnT.FAIL_CODE+"");
-						triggerParam.setMsg(stopReason + " [业务运行中，被强制终止]");
-						TriggerCallbackThread.pushCallBack(triggerParam);
+						TriggerCallbackThread.pushCallBack(new HandleCallbackParam(triggerParam.getLogId(), triggerParam.getLogAddress(), ReturnT.FAIL_CODE, stopReason + " [业务运行中，被强制终止]"));
 					}
 				}
 			} catch (Exception e) {
@@ -116,9 +113,7 @@ public class JobThread extends Thread{
 			TriggerParam triggerParam = triggerQueue.poll();
 			if (triggerParam!=null) {
 				// is killed
-				triggerParam.setStatus(ReturnT.FAIL_CODE+"");
-				triggerParam.setMsg(stopReason + " [任务尚未执行，在调度队列中被终止]");
-				TriggerCallbackThread.pushCallBack(triggerParam);
+				TriggerCallbackThread.pushCallBack(new HandleCallbackParam(triggerParam.getLogId(), triggerParam.getLogAddress(), ReturnT.FAIL_CODE, stopReason + " [任务尚未执行，在调度队列中被终止]"));
 			}
 		}
 		

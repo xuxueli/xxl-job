@@ -1,8 +1,8 @@
 package com.xxl.job.core.thread;
 
 import com.xxl.job.core.biz.AdminBiz;
+import com.xxl.job.core.biz.model.HandleCallbackParam;
 import com.xxl.job.core.biz.model.ReturnT;
-import com.xxl.job.core.biz.model.TriggerParam;
 import com.xxl.job.core.rpc.netcom.NetComClientProxy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,18 +15,17 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class TriggerCallbackThread {
     private static Logger logger = LoggerFactory.getLogger(TriggerCallbackThread.class);
 
-    private static LinkedBlockingQueue<TriggerParam> callBackQueue = new LinkedBlockingQueue<TriggerParam>();
+    private static LinkedBlockingQueue<HandleCallbackParam> callBackQueue = new LinkedBlockingQueue<HandleCallbackParam>();
     static {
         new Thread(new Runnable() {
             @Override
             public void run() {
                 while(true){
                     try {
-                        TriggerParam callback = callBackQueue.take();
+                        HandleCallbackParam callback = callBackQueue.take();
                         if (callback != null) {
                             for (String address : callback.getLogAddress()) {
                                 try {
-
                                     // callback
                                     AdminBiz adminBiz = (AdminBiz) new NetComClientProxy(AdminBiz.class, address).getObject();
                                     ReturnT<String> callbackResult = adminBiz.callback(callback);
@@ -47,7 +46,7 @@ public class TriggerCallbackThread {
             }
         }).start();
     }
-    public static void pushCallBack(TriggerParam callback){
+    public static void pushCallBack(HandleCallbackParam callback){
         callBackQueue.add(callback);
         logger.debug(">>>>>>>>>>> xxl-job, push callback request, logId:{}", callback.getLogId());
     }
