@@ -3,9 +3,9 @@ package com.xxl.job.admin.core.jobbean;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
+import com.xxl.job.admin.core.schedule.XxlJobDynamicScheduler;
 import com.xxl.job.admin.core.thread.JobMonitorHelper;
 import com.xxl.job.admin.core.thread.JobRegistryHelper;
-import com.xxl.job.admin.core.schedule.DynamicSchedulerUtil;
 import com.xxl.job.core.biz.ExecutorBiz;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.biz.model.TriggerParam;
@@ -36,12 +36,12 @@ public class RemoteHttpJobBean extends QuartzJobBean {
 			throws JobExecutionException {
 		JobKey jobKey = context.getTrigger().getJobKey();
 		
-		XxlJobInfo jobInfo = DynamicSchedulerUtil.xxlJobInfoDao.load(Integer.valueOf(jobKey.getGroup()), jobKey.getName());
+		XxlJobInfo jobInfo = XxlJobDynamicScheduler.xxlJobInfoDao.load(Integer.valueOf(jobKey.getGroup()), jobKey.getName());
 		// save log
 		XxlJobLog jobLog = new XxlJobLog();
 		jobLog.setJobGroup(jobInfo.getJobGroup());
 		jobLog.setJobName(jobInfo.getJobName());
-		DynamicSchedulerUtil.xxlJobLogDao.save(jobLog);
+		XxlJobDynamicScheduler.xxlJobLogDao.save(jobLog);
 		logger.debug(">>>>>>>>>>> xxl-job trigger start, jobId:{}", jobLog.getId());
 
         // admin address
@@ -50,7 +50,7 @@ public class RemoteHttpJobBean extends QuartzJobBean {
         if (adminAddressList!=null) {
             adminAddressSet.addAll(adminAddressList);
         }
-        adminAddressSet.add(DynamicSchedulerUtil.getCallbackAddress());
+        adminAddressSet.add(XxlJobDynamicScheduler.getCallbackAddress());
 
 		// update trigger info 1/2
 		jobLog.setTriggerTime(new Date());
@@ -68,7 +68,7 @@ public class RemoteHttpJobBean extends QuartzJobBean {
 
 		// parse address
 		List<String> addressList = new ArrayList<String>();
-		XxlJobGroup group = DynamicSchedulerUtil.xxlJobGroupDao.load(Integer.valueOf(jobInfo.getJobGroup()));
+		XxlJobGroup group = XxlJobDynamicScheduler.xxlJobGroupDao.load(Integer.valueOf(jobInfo.getJobGroup()));
 		if (group!=null) {
 			addressList = JobRegistryHelper.discover(RegistHelper.RegistType.EXECUTOR.name(), group.getAppName());
 		}
@@ -82,7 +82,7 @@ public class RemoteHttpJobBean extends QuartzJobBean {
 		// update trigger info 2/2
 		jobLog.setTriggerCode(responseModel.getCode());
 		jobLog.setTriggerMsg(responseModel.getMsg());
-		DynamicSchedulerUtil.xxlJobLogDao.updateTriggerInfo(jobLog);
+		XxlJobDynamicScheduler.xxlJobLogDao.updateTriggerInfo(jobLog);
 
 		// monitor triger
 		JobMonitorHelper.monitor(jobLog.getId());

@@ -1,7 +1,7 @@
 package com.xxl.job.admin.core.thread;
 
 import com.xxl.job.admin.core.model.XxlJobRegistry;
-import com.xxl.job.admin.core.schedule.DynamicSchedulerUtil;
+import com.xxl.job.admin.core.schedule.XxlJobDynamicScheduler;
 import com.xxl.job.core.registry.RegistHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,15 +28,15 @@ public class JobRegistryHelper {
 				while (true) {
 					try {
                         // registry admin
-                        int ret = DynamicSchedulerUtil.xxlJobRegistryDao.registryUpdate(RegistHelper.RegistType.ADMIN.name(), RegistHelper.RegistType.ADMIN.name(), DynamicSchedulerUtil.getCallbackAddress());
+                        int ret = XxlJobDynamicScheduler.xxlJobRegistryDao.registryUpdate(RegistHelper.RegistType.ADMIN.name(), RegistHelper.RegistType.ADMIN.name(), XxlJobDynamicScheduler.getCallbackAddress());
                         if (ret < 1) {
-                            DynamicSchedulerUtil.xxlJobRegistryDao.registrySave(RegistHelper.RegistType.ADMIN.name(), RegistHelper.RegistType.ADMIN.name(), DynamicSchedulerUtil.getCallbackAddress());
+                            XxlJobDynamicScheduler.xxlJobRegistryDao.registrySave(RegistHelper.RegistType.ADMIN.name(), RegistHelper.RegistType.ADMIN.name(), XxlJobDynamicScheduler.getCallbackAddress());
                         }
 
                         // fresh registry map
 						ConcurrentHashMap<String, List<String>> temp = new ConcurrentHashMap<String, List<String>>();
-						DynamicSchedulerUtil.xxlJobRegistryDao.removeDead(RegistHelper.TIMEOUT*2);
-						List<XxlJobRegistry> list = DynamicSchedulerUtil.xxlJobRegistryDao.findAll(RegistHelper.TIMEOUT*2);
+						XxlJobDynamicScheduler.xxlJobRegistryDao.removeDead(RegistHelper.TIMEOUT*2);
+						List<XxlJobRegistry> list = XxlJobDynamicScheduler.xxlJobRegistryDao.findAll(RegistHelper.TIMEOUT*2);
 						if (list != null) {
 							for (XxlJobRegistry item: list) {
 								String groupKey = makeGroupKey(item.getRegistryGroup(), item.getRegistryKey());

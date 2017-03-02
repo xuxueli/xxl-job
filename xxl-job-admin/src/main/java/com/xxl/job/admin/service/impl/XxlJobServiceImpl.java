@@ -2,7 +2,7 @@ package com.xxl.job.admin.service.impl;
 
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
-import com.xxl.job.admin.core.schedule.DynamicSchedulerUtil;
+import com.xxl.job.admin.core.schedule.XxlJobDynamicScheduler;
 import com.xxl.job.admin.dao.IXxlJobGroupDao;
 import com.xxl.job.admin.dao.IXxlJobInfoDao;
 import com.xxl.job.admin.dao.IXxlJobLogDao;
@@ -51,7 +51,7 @@ public class XxlJobServiceImpl implements IXxlJobService {
 		// fill job info
 		if (list!=null && list.size()>0) {
 			for (XxlJobInfo jobInfo : list) {
-				DynamicSchedulerUtil.fillJobInfo(jobInfo);
+				XxlJobDynamicScheduler.fillJobInfo(jobInfo);
 			}
 		}
 		
@@ -106,7 +106,7 @@ public class XxlJobServiceImpl implements IXxlJobService {
 		// generate jobName
 		String jobName = FastDateFormat.getInstance("yyyyMMddHHmmssSSSS").format(new Date());
 		try {
-			if (DynamicSchedulerUtil.checkExists(jobName, String.valueOf(jobGroup))) {
+			if (XxlJobDynamicScheduler.checkExists(jobName, String.valueOf(jobGroup))) {
 				return new ReturnT<String>(500, "系统繁忙，请稍后重试");
 			}
 		} catch (SchedulerException e1) {
@@ -131,7 +131,7 @@ public class XxlJobServiceImpl implements IXxlJobService {
 
 		try {
 			// add job 2 quartz
-			boolean result = DynamicSchedulerUtil.addJob(String.valueOf(jobGroup), jobName, jobCron);
+			boolean result = XxlJobDynamicScheduler.addJob(String.valueOf(jobGroup), jobName, jobCron);
 			if (result) {
 				xxlJobInfoDao.save(jobInfo);
 				return ReturnT.SUCCESS;
@@ -200,7 +200,7 @@ public class XxlJobServiceImpl implements IXxlJobService {
 		
 		try {
 			// fresh quartz
-			boolean ret = DynamicSchedulerUtil.rescheduleJob(String.valueOf(jobGroup), jobName, jobCron);
+			boolean ret = XxlJobDynamicScheduler.rescheduleJob(String.valueOf(jobGroup), jobName, jobCron);
 			if (ret) {
 				xxlJobInfoDao.update(jobInfo);
 				return ReturnT.SUCCESS;
@@ -216,7 +216,7 @@ public class XxlJobServiceImpl implements IXxlJobService {
 	@Override
 	public ReturnT<String> remove(int jobGroup, String jobName) {
 		try {
-			DynamicSchedulerUtil.removeJob(jobName, String.valueOf(jobGroup));
+			XxlJobDynamicScheduler.removeJob(jobName, String.valueOf(jobGroup));
 			xxlJobInfoDao.delete(jobGroup, jobName);
 			xxlJobLogDao.delete(jobGroup, jobName);
 			xxlJobLogGlueDao.delete(jobGroup, jobName);
@@ -230,7 +230,7 @@ public class XxlJobServiceImpl implements IXxlJobService {
 	@Override
 	public ReturnT<String> pause(int jobGroup, String jobName) {
 		try {
-			DynamicSchedulerUtil.pauseJob(jobName, String.valueOf(jobGroup));	// jobStatus do not store
+			XxlJobDynamicScheduler.pauseJob(jobName, String.valueOf(jobGroup));	// jobStatus do not store
 			return ReturnT.SUCCESS;
 		} catch (SchedulerException e) {
 			e.printStackTrace();
@@ -241,7 +241,7 @@ public class XxlJobServiceImpl implements IXxlJobService {
 	@Override
 	public ReturnT<String> resume(int jobGroup, String jobName) {
 		try {
-			DynamicSchedulerUtil.resumeJob(jobName, String.valueOf(jobGroup));
+			XxlJobDynamicScheduler.resumeJob(jobName, String.valueOf(jobGroup));
 			return ReturnT.SUCCESS;
 		} catch (SchedulerException e) {
 			e.printStackTrace();
@@ -252,7 +252,7 @@ public class XxlJobServiceImpl implements IXxlJobService {
 	@Override
 	public ReturnT<String> triggerJob(int jobGroup, String jobName) {
 		try {
-			DynamicSchedulerUtil.triggerJob(jobName, String.valueOf(jobGroup));
+			XxlJobDynamicScheduler.triggerJob(jobName, String.valueOf(jobGroup));
 			return ReturnT.SUCCESS;
 		} catch (SchedulerException e) {
 			e.printStackTrace();

@@ -29,13 +29,13 @@ import java.util.*;
  * base quartz scheduler util
  * @author xuxueli 2015-12-19 16:13:53
  */
-public final class DynamicSchedulerUtil implements ApplicationContextAware, InitializingBean {
-    private static final Logger logger = LoggerFactory.getLogger(DynamicSchedulerUtil.class);
+public final class XxlJobDynamicScheduler implements ApplicationContextAware, InitializingBean {
+    private static final Logger logger = LoggerFactory.getLogger(XxlJobDynamicScheduler.class);
     
     // Scheduler
     private static Scheduler scheduler;
     public static void setScheduler(Scheduler scheduler) {
-		DynamicSchedulerUtil.scheduler = scheduler;
+		XxlJobDynamicScheduler.scheduler = scheduler;
 	}
     
     // trigger callback address
@@ -84,10 +84,10 @@ public final class DynamicSchedulerUtil implements ApplicationContextAware, Init
 
     @Override
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-		DynamicSchedulerUtil.xxlJobLogDao = applicationContext.getBean(IXxlJobLogDao.class);
-		DynamicSchedulerUtil.xxlJobInfoDao = applicationContext.getBean(IXxlJobInfoDao.class);
-        DynamicSchedulerUtil.xxlJobRegistryDao = applicationContext.getBean(IXxlJobRegistryDao.class);
-        DynamicSchedulerUtil.xxlJobGroupDao = applicationContext.getBean(IXxlJobGroupDao.class);
+		XxlJobDynamicScheduler.xxlJobLogDao = applicationContext.getBean(IXxlJobLogDao.class);
+		XxlJobDynamicScheduler.xxlJobInfoDao = applicationContext.getBean(IXxlJobInfoDao.class);
+        XxlJobDynamicScheduler.xxlJobRegistryDao = applicationContext.getBean(IXxlJobRegistryDao.class);
+        XxlJobDynamicScheduler.xxlJobGroupDao = applicationContext.getBean(IXxlJobGroupDao.class);
 	}
     
 	@Override

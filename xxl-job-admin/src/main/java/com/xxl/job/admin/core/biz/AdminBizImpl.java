@@ -2,7 +2,7 @@ package com.xxl.job.admin.core.biz;
 
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
-import com.xxl.job.admin.core.schedule.DynamicSchedulerUtil;
+import com.xxl.job.admin.core.schedule.XxlJobDynamicScheduler;
 import com.xxl.job.core.biz.AdminBiz;
 import com.xxl.job.core.biz.model.HandleCallbackParam;
 import com.xxl.job.core.biz.model.ReturnT;
@@ -24,7 +24,7 @@ public class AdminBizImpl implements AdminBiz {
     public ReturnT<String> callback(HandleCallbackParam handleCallbackParam) {
 
         // valid log item
-        XxlJobLog log = DynamicSchedulerUtil.xxlJobLogDao.load(handleCallbackParam.getLogId());
+        XxlJobLog log = XxlJobDynamicScheduler.xxlJobLogDao.load(handleCallbackParam.getLogId());
         if (log == null) {
             return new ReturnT(ReturnT.FAIL_CODE, "log item not found.");
         }
@@ -32,17 +32,17 @@ public class AdminBizImpl implements AdminBiz {
         // trigger success, to trigger child job, and avoid repeat trigger child job
         String childTriggerMsg = null;
         if (ReturnT.SUCCESS_CODE==handleCallbackParam.getCode() && ReturnT.SUCCESS_CODE!=log.getHandleCode()) {
-            XxlJobInfo xxlJobInfo = DynamicSchedulerUtil.xxlJobInfoDao.load(log.getJobGroup(), log.getJobName());
+            XxlJobInfo xxlJobInfo = XxlJobDynamicScheduler.xxlJobInfoDao.load(log.getJobGroup(), log.getJobName());
             if (xxlJobInfo!=null && StringUtils.isNotBlank(xxlJobInfo.getChildJobKey())) {
                 childTriggerMsg = "<hr>";
                 String[] childJobKeys = xxlJobInfo.getChildJobKey().split(",");
                 for (int i = 0; i < childJobKeys.length; i++) {
                     String[] jobKeyArr = childJobKeys[i].split("_");
                     if (jobKeyArr!=null && jobKeyArr.length==2) {
-                        XxlJobInfo childJobInfo = DynamicSchedulerUtil.xxlJobInfoDao.load(Integer.valueOf(jobKeyArr[0]), jobKeyArr[1]);
+                        XxlJobInfo childJobInfo = XxlJobDynamicScheduler.xxlJobInfoDao.load(Integer.valueOf(jobKeyArr[0]), jobKeyArr[1]);
                         if (childJobInfo!=null) {
                             try {
-                                boolean ret = DynamicSchedulerUtil.triggerJob(childJobInfo.getJobName(), String.valueOf(childJobInfo.getJobGroup()));
+                                boolean ret = XxlJobDynamicScheduler.triggerJob(childJobInfo.getJobName(), String.valueOf(childJobInfo.getJobGroup()));
 
                                 // add msg
                                 childTriggerMsg += MessageFormat.format("<br> {0}/{1} 触发子任务成功, 子任务Key: {2}, status: {3}, 子任务描述: {4}",
@@ -79,7 +79,7 @@ public class AdminBizImpl implements AdminBiz {
         log.setHandleTime(new Date());
         log.setHandleCode(handleCallbackParam.getCode());
         log.setHandleMsg(handleMsg.toString());
-        DynamicSchedulerUtil.xxlJobLogDao.updateHandleInfo(log);
+        XxlJobDynamicScheduler.xxlJobLogDao.updateHandleInfo(log);
 
         return new ReturnT(ReturnT.SUCCESS_CODE, null);
     }
