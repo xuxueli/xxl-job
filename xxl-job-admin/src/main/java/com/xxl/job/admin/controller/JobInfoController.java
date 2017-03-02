@@ -1,9 +1,9 @@
 package com.xxl.job.admin.controller;
 
-import com.xxl.job.admin.core.model.ReturnT;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.dao.IXxlJobGroupDao;
 import com.xxl.job.admin.service.IXxlJobService;
+import com.xxl.job.core.biz.model.ReturnT;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -49,8 +49,8 @@ public class JobInfoController {
 	@RequestMapping("/add")
 	@ResponseBody
 	public ReturnT<String> add(int jobGroup, String jobCron, String jobDesc, String author, String alarmEmail,
-			String executorAppname, String executorAddress, String executorHandler, String executorParam,
-			int glueSwitch, String glueSource, String glueRemark, String childJobKey) {
+							   String executorAppname, String executorAddress, String executorHandler, String executorParam,
+							   int glueSwitch, String glueSource, String glueRemark, String childJobKey) {
 		
 		return xxlJobService.add(jobGroup, jobCron, jobDesc, author, alarmEmail,
 				executorAddress, executorHandler, executorParam,

@@ -38,12 +38,10 @@ public class CookieUtil {
 
 	/**
 	 * 保存
-	 * @param request
 	 * @param response
 	 * @param key
 	 * @param value
 	 * @param maxAge
-	 * @param domain
 	 */
 	private static void set(HttpServletResponse response, 
 			String key, String value, int maxAge, String path) {

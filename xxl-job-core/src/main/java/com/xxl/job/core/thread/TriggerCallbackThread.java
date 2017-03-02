@@ -1,8 +1,9 @@
-package com.xxl.job.core.router.thread;
+package com.xxl.job.core.thread;
 
-import com.xxl.job.core.router.model.RequestModel;
-import com.xxl.job.core.router.model.ResponseModel;
-import com.xxl.job.core.util.XxlJobNetCommUtil;
+import com.xxl.job.core.biz.AdminBiz;
+import com.xxl.job.core.biz.model.ReturnT;
+import com.xxl.job.core.biz.model.TriggerParam;
+import com.xxl.job.core.rpc.netcom.NetComClientProxy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,20 +15,24 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class TriggerCallbackThread {
     private static Logger logger = LoggerFactory.getLogger(TriggerCallbackThread.class);
 
-    private static LinkedBlockingQueue<RequestModel> callBackQueue = new LinkedBlockingQueue<RequestModel>();
+    private static LinkedBlockingQueue<TriggerParam> callBackQueue = new LinkedBlockingQueue<TriggerParam>();
     static {
         new Thread(new Runnable() {
             @Override
             public void run() {
                 while(true){
                     try {
-                        RequestModel callback = callBackQueue.take();
+                        TriggerParam callback = callBackQueue.take();
                         if (callback != null) {
                             for (String address : callback.getLogAddress()) {
                                 try {
-                                    ResponseModel responseModel = XxlJobNetCommUtil.postHex(XxlJobNetCommUtil.addressToUrl(address), callback);
-                                    logger.info(">>>>>>>>>>> xxl-job callback , RequestModel:{}, ResponseModel:{}", new Object[]{callback.toString(), responseModel.toString()});
-                                    if (ResponseModel.SUCCESS.equals(responseModel.getStatus())) {
+
+                                    // callback
+                                    AdminBiz adminBiz = (AdminBiz) new NetComClientProxy(AdminBiz.class, address).getObject();
+                                    ReturnT<String> callbackResult = adminBiz.callback(callback);
+
+                                    logger.info(">>>>>>>>>>> xxl-job callback , CallbackParam:{}, callbackResult:{}", new Object[]{callback.toString(), callbackResult.toString()});
+                                    if (ReturnT.SUCCESS_CODE == callbackResult.getCode()) {
                                         break;
                                     }
                                 } catch (Exception e) {
@@ -42,7 +47,7 @@ public class TriggerCallbackThread {
             }
         }).start();
     }
-    public static void pushCallBack(RequestModel callback){
+    public static void pushCallBack(TriggerParam callback){
         callBackQueue.add(callback);
         logger.debug(">>>>>>>>>>> xxl-job, push callback request, logId:{}", callback.getLogId());
     }

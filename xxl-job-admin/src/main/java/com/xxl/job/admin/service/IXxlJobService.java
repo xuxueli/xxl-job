@@ -1,6 +1,7 @@
 package com.xxl.job.admin.service;
 
-import com.xxl.job.admin.core.model.ReturnT;
+
+import com.xxl.job.core.biz.model.ReturnT;
 
 import java.util.Map;
 
@@ -13,9 +14,9 @@ public interface IXxlJobService {
 	
 	public Map<String, Object> pageList(int start, int length, int jobGroup, String executorHandler, String filterTime);
 	
-	public ReturnT<String> add(int jobGroup, String jobCron, String jobDesc,String author, String alarmEmail,
-			String executorAddress,	String executorHandler, String executorParam,
-			int glueSwitch, String glueSource, String glueRemark, String childJobKey);
+	public ReturnT<String> add(int jobGroup, String jobCron, String jobDesc, String author, String alarmEmail,
+							   String executorAddress, String executorHandler, String executorParam,
+							   int glueSwitch, String glueSource, String glueRemark, String childJobKey);
 	
 	public ReturnT<String> reschedule(int jobGroup, String jobName, String jobCron, String jobDesc, String author, String alarmEmail,
 			String executorAddress, String executorHandler, String executorParam, int glueSwitch, String childJobKey);

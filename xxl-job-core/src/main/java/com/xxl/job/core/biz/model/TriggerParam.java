@@ -1,13 +1,14 @@
-package com.xxl.job.core.router.model;
+package com.xxl.job.core.biz.model;
 
+import java.io.Serializable;
 import java.util.Set;
 
 /**
  * Created by xuxueli on 16/7/22.
  */
-public class RequestModel {
+public class TriggerParam implements Serializable{
+    private static final long serialVersionUID = 42L;
 
-    private long timestamp;
     private String action;
 
     private String jobGroup;
@@ -24,15 +25,6 @@ public class RequestModel {
 
     private String status;
     private String msg;
-
-
-    public long getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(long timestamp) {
-        this.timestamp = timestamp;
-    }
 
     public String getAction() {
         return action;
@@ -125,7 +117,6 @@ public class RequestModel {
     @Override
     public String toString() {
         return "RequestModel{" +
-                "timestamp=" + timestamp +
                 ", action='" + action + '\'' +
                 ", jobGroup='" + jobGroup + '\'' +
                 ", jobName='" + jobName + '\'' +

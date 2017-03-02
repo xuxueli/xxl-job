@@ -1,16 +1,14 @@
 package com.xxl.job.admin.controller;
 
-import com.xxl.job.admin.core.model.ReturnT;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.admin.dao.IXxlJobGroupDao;
 import com.xxl.job.admin.dao.IXxlJobInfoDao;
 import com.xxl.job.admin.dao.IXxlJobLogDao;
-import com.xxl.job.core.router.HandlerRouter.ActionRepository;
-import com.xxl.job.core.router.model.RequestModel;
-import com.xxl.job.core.router.model.ResponseModel;
-import com.xxl.job.core.util.XxlJobNetCommUtil;
+import com.xxl.job.core.biz.ExecutorBiz;
+import com.xxl.job.core.biz.model.ReturnT;
+import com.xxl.job.core.rpc.netcom.NetComClientProxy;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.stereotype.Controller;
@@ -99,22 +97,24 @@ public class JobLogController {
 		if (log == null) {
 			return new ReturnT<String>(500, "查看执行日志失败: 参数异常");
 		}
-		if (!(ResponseModel.SUCCESS.equals(log.getTriggerStatus()) || StringUtils.isNotBlank(log.getHandleStatus()))) {
+		if (!((ReturnT.SUCCESS_CODE+"").equals(log.getTriggerStatus()) || StringUtils.isNotBlank(log.getHandleStatus()))) {
 			return new ReturnT<String>(500, "查看执行日志失败: 任务发起调度失败，无法查看执行日志");
 		}
 		
 		// trigger id, trigger time
-		RequestModel requestModel = new RequestModel();
-		requestModel.setTimestamp(System.currentTimeMillis());
-		requestModel.setAction(ActionRepository.LOG.name());
-		requestModel.setLogId(id);
-		requestModel.setLogDateTim(log.getTriggerTime().getTime());
+		ExecutorBiz executorBiz = null;
+		try {
+			executorBiz = (ExecutorBiz) new NetComClientProxy(ExecutorBiz.class, log.getExecutorAddress()).getObject();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ReturnT<String>(500, e.getMessage());
+		}
+		ReturnT<String> logResult = executorBiz.log(log.getTriggerTime().getTime(), id);
 
-		ResponseModel responseModel = XxlJobNetCommUtil.postHex(XxlJobNetCommUtil.addressToUrl(log.getExecutorAddress()), requestModel);
-		if (ResponseModel.SUCCESS.equals(responseModel.getStatus())) {
-			return new ReturnT<String>(responseModel.getMsg());
+		if (ReturnT.SUCCESS_CODE == logResult.getCode()) {
+			return new ReturnT<String>(logResult.getMsg());
 		} else {
-			return new ReturnT<String>(500, "查看执行日志失败: " + responseModel.getMsg());
+			return new ReturnT<String>(500, "查看执行日志失败: " + logResult.getMsg());
 		}
 	}
 	
@@ -134,26 +134,28 @@ public class JobLogController {
 		if (log == null || jobInfo==null) {
 			return new ReturnT<String>(500, "参数异常");
 		}
-		if (!ResponseModel.SUCCESS.equals(log.getTriggerStatus())) {
+		if (!(ReturnT.SUCCESS_CODE +"").equals(log.getTriggerStatus())) {
 			return new ReturnT<String>(500, "调度失败，无法终止日志");
 		}
-		
-		// request of kill
-		RequestModel requestModel = new RequestModel();
-		requestModel.setTimestamp(System.currentTimeMillis());
-		requestModel.setAction(ActionRepository.KILL.name());
-		requestModel.setJobGroup(String.valueOf(log.getJobGroup()));
-		requestModel.setJobName(log.getJobName());
 
-		ResponseModel responseModel = XxlJobNetCommUtil.postHex(XxlJobNetCommUtil.addressToUrl(log.getExecutorAddress()), requestModel);
-		if (ResponseModel.SUCCESS.equals(responseModel.getStatus())) {
-			log.setHandleStatus(ResponseModel.FAIL);
+		// request of kill
+		ExecutorBiz executorBiz = null;
+		try {
+			executorBiz = (ExecutorBiz) new NetComClientProxy(ExecutorBiz.class, log.getExecutorAddress()).getObject();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ReturnT<String>(500, e.getMessage());
+		}
+		ReturnT<String> runResult = executorBiz.kill(String.valueOf(log.getJobGroup()), log.getJobName());
+
+		if (ReturnT.SUCCESS_CODE == runResult.getCode()) {
+			log.setHandleStatus(ReturnT.SUCCESS_CODE+"");
 			log.setHandleMsg("人为操作主动终止");
 			log.setHandleTime(new Date());
 			xxlJobLogDao.updateHandleInfo(log);
-			return new ReturnT<String>(responseModel.getMsg());
+			return new ReturnT<String>(runResult.getMsg());
 		} else {
-			return new ReturnT<String>(500, responseModel.getMsg());
+			return new ReturnT<String>(500, runResult.getMsg());
 		}
 	}
 }

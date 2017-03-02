@@ -1,10 +1,10 @@
 package com.xxl.job.admin.controller;
 
-import com.xxl.job.admin.core.model.ReturnT;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLogGlue;
 import com.xxl.job.admin.dao.IXxlJobInfoDao;
 import com.xxl.job.admin.dao.IXxlJobLogGlueDao;
+import com.xxl.job.core.biz.model.ReturnT;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

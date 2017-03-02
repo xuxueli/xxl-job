@@ -1,7 +1,7 @@
 package com.xxl.job.admin.core.thread;
 
 import com.xxl.job.admin.core.model.XxlJobRegistry;
-import com.xxl.job.admin.core.util.DynamicSchedulerUtil;
+import com.xxl.job.admin.core.schedule.DynamicSchedulerUtil;
 import com.xxl.job.core.registry.RegistHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

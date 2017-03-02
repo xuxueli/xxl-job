@@ -1,10 +1,10 @@
 package com.xxl.job.admin.controller;
 
-import com.xxl.job.admin.core.model.ReturnT;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.thread.JobRegistryHelper;
 import com.xxl.job.admin.dao.IXxlJobGroupDao;
 import com.xxl.job.admin.dao.IXxlJobInfoDao;
+import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.registry.RegistHelper;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;

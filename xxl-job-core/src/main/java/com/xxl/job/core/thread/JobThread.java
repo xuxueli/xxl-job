@@ -1,9 +1,9 @@
-package com.xxl.job.core.router.thread;
+package com.xxl.job.core.thread;
 
+import com.xxl.job.core.biz.model.ReturnT;
+import com.xxl.job.core.biz.model.TriggerParam;
 import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.log.XxlJobFileAppender;
-import com.xxl.job.core.router.model.RequestModel;
-import com.xxl.job.core.router.model.ResponseModel;
 import org.eclipse.jetty.util.ConcurrentHashSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +23,7 @@ public class JobThread extends Thread{
 	private static Logger logger = LoggerFactory.getLogger(JobThread.class);
 	
 	private IJobHandler handler;
-	private LinkedBlockingQueue<RequestModel> triggerQueue;
+	private LinkedBlockingQueue<TriggerParam> triggerQueue;
 	private ConcurrentHashSet<Integer> triggerLogIdSet;		// avoid repeat trigger for the same TRIGGER_LOG_ID
 
 	private boolean toStop = false;
@@ -31,21 +31,21 @@ public class JobThread extends Thread{
 
 	public JobThread(IJobHandler handler) {
 		this.handler = handler;
-		triggerQueue = new LinkedBlockingQueue<RequestModel>();
+		triggerQueue = new LinkedBlockingQueue<TriggerParam>();
 		triggerLogIdSet = new ConcurrentHashSet<Integer>();
 	}
 	public IJobHandler getHandler() {
 		return handler;
 	}
 
-	public void pushTriggerQueue(RequestModel requestModel) {
-		if (triggerLogIdSet.contains(requestModel.getLogId())) {
-			logger.debug("repeate trigger job, logId:{}", requestModel.getLogId());
+	public void pushTriggerQueue(TriggerParam triggerParam) {
+		if (triggerLogIdSet.contains(triggerParam.getLogId())) {
+			logger.debug("repeate trigger job, logId:{}", triggerParam.getLogId());
 			return;
 		}
 
-		triggerLogIdSet.add(requestModel.getLogId());
-		triggerQueue.add(requestModel);
+		triggerLogIdSet.add(triggerParam.getLogId());
+		triggerQueue.add(triggerParam);
 	}
 
 	public void toStop(String stopReason) {
@@ -64,46 +64,46 @@ public class JobThread extends Thread{
 		while(!toStop){
 			try {
 				// to check toStop signal, we need cycle, so wo cannot use queue.take(), instand of poll(timeout)
-				RequestModel triggerDate = triggerQueue.poll(3L, TimeUnit.SECONDS);
-				if (triggerDate!=null) {
-					triggerLogIdSet.remove(triggerDate.getLogId());
+				TriggerParam triggerParam = triggerQueue.poll(3L, TimeUnit.SECONDS);
+				if (triggerParam!=null) {
+					triggerLogIdSet.remove(triggerParam.getLogId());
 					
 					// parse param
-					String[] handlerParams = (triggerDate.getExecutorParams()!=null && triggerDate.getExecutorParams().trim().length()>0)
-							? (String[])(Arrays.asList(triggerDate.getExecutorParams().split(",")).toArray()) : null;
+					String[] handlerParams = (triggerParam.getExecutorParams()!=null && triggerParam.getExecutorParams().trim().length()>0)
+							? (String[])(Arrays.asList(triggerParam.getExecutorParams().split(",")).toArray()) : null;
 					
 					// handle job
-					String _status = ResponseModel.SUCCESS;
+					int _code = ReturnT.SUCCESS_CODE;
 					String _msg = null;
 
 					try {
 						// log filename: yyyy-MM-dd/9999.log
-						String logFileName = XxlJobFileAppender.makeLogFileName(new Date(triggerDate.getLogDateTim()), triggerDate.getLogId());
+						String logFileName = XxlJobFileAppender.makeLogFileName(new Date(triggerParam.getLogDateTim()), triggerParam.getLogId());
 
 						XxlJobFileAppender.contextHolder.set(logFileName);
 						logger.info("----------- xxl-job job execute start -----------");
 						handler.execute(handlerParams);
 					} catch (Exception e) {
 						logger.error("JobThread Exception:", e);
-						_status = ResponseModel.FAIL;
+						_code = ReturnT.FAIL_CODE;
 						StringWriter out = new StringWriter();
 						e.printStackTrace(new PrintWriter(out));
 						_msg = out.toString();
 					}
-					logger.info("----------- xxl-job job execute end ----------- <br> Look : ExecutorParams:{}, Status:{}, Msg:{}",
-							new Object[]{handlerParams, _status, _msg});
+					logger.info("----------- xxl-job job execute end ----------- <br> Look : ExecutorParams:{}, Code:{}, Msg:{}",
+							new Object[]{handlerParams, _code, _msg});
 					
 					// callback handler info
 					if (!toStop) {
 						// commonm
-						triggerDate.setStatus(_status);
-						triggerDate.setMsg(_msg);
-						TriggerCallbackThread.pushCallBack(triggerDate);
+						triggerParam.setStatus(_code+"");
+						triggerParam.setMsg(_msg);
+						TriggerCallbackThread.pushCallBack(triggerParam);
 					} else {
 						// is killed
-						triggerDate.setStatus(ResponseModel.FAIL);
-						triggerDate.setMsg(stopReason + " [业务运行中，被强制终止]");
-						TriggerCallbackThread.pushCallBack(triggerDate);
+						triggerParam.setStatus(ReturnT.FAIL_CODE+"");
+						triggerParam.setMsg(stopReason + " [业务运行中，被强制终止]");
+						TriggerCallbackThread.pushCallBack(triggerParam);
 					}
 				}
 			} catch (Exception e) {
@@ -113,12 +113,12 @@ public class JobThread extends Thread{
 		
 		// callback trigger request in queue
 		while(triggerQueue !=null && triggerQueue.size()>0){
-			RequestModel triggerDate = triggerQueue.poll();
-			if (triggerDate!=null) {
+			TriggerParam triggerParam = triggerQueue.poll();
+			if (triggerParam!=null) {
 				// is killed
-				triggerDate.setStatus(ResponseModel.FAIL);
-				triggerDate.setMsg(stopReason + " [任务尚未执行，在调度队列中被终止]");
-				TriggerCallbackThread.pushCallBack(triggerDate);
+				triggerParam.setStatus(ReturnT.FAIL_CODE+"");
+				triggerParam.setMsg(stopReason + " [任务尚未执行，在调度队列中被终止]");
+				TriggerCallbackThread.pushCallBack(triggerParam);
 			}
 		}
 		
