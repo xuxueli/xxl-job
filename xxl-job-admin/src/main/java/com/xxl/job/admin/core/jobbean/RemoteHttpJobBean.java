@@ -6,6 +6,7 @@ import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.admin.core.schedule.XxlJobDynamicScheduler;
 import com.xxl.job.admin.core.thread.JobMonitorHelper;
 import com.xxl.job.admin.core.thread.JobRegistryHelper;
+import com.xxl.job.admin.utils.MsgUtils;
 import com.xxl.job.core.biz.ExecutorBiz;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.biz.model.TriggerParam;
@@ -82,6 +83,7 @@ public class RemoteHttpJobBean extends QuartzJobBean {
 		// update trigger info 2/2
 		jobLog.setTriggerCode(triggerResult.getCode());
 		jobLog.setTriggerMsg(triggerResult.getMsg());
+		MsgUtils.whenTriggerMsgOverSize(jobLog);
 		XxlJobDynamicScheduler.xxlJobLogDao.updateTriggerInfo(jobLog);
 
 		// monitor triger
@@ -89,8 +91,8 @@ public class RemoteHttpJobBean extends QuartzJobBean {
 		
 		logger.debug(">>>>>>>>>>> xxl-job trigger end, jobId:{}", jobLog.getId());
     }
-	
-	
+
+
 	/**
 	 * failover for trigger remote address
 	 * @return

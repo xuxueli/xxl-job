@@ -2,6 +2,7 @@ package com.xxl.job.admin.dao;
 
 import com.xxl.job.admin.core.model.XxlJobLogGlue;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -14,10 +15,10 @@ public interface IXxlJobLogGlueDao {
 	
 	public int save(XxlJobLogGlue xxlJobLogGlue);
 	
-	public List<XxlJobLogGlue> selectList(int jobGroup, String jobName);
+	public List<XxlJobLogGlue> selectList(@Param("jobGroup") int jobGroup, @Param("jobName")String jobName);
 
-	public int removeOld(int jobGroup, String jobName, int limit);
+	public int removeOld(@Param("jobGroup")int jobGroup, @Param("jobName")String jobName, @Param("limit")int limit);
 
-	public int delete(int jobGroup, String jobName);
+	public int delete(@Param("jobGroup")int jobGroup, @Param("jobName")String jobName);
 	
 }

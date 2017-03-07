@@ -2,6 +2,7 @@ package com.xxl.job.admin.dao;
 
 import com.xxl.job.admin.core.model.XxlJobRegistry;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -14,8 +15,8 @@ public interface IXxlJobRegistryDao {
 
     public List<XxlJobRegistry> findAll(int timeout);
 
-    public int registryUpdate(String registryGroup, String registryKey, String registryValue);
+    public int registryUpdate(@Param("registryGroup") String registryGroup, @Param("registryKey")String registryKey, @Param("registryValue") String registryValue);
 
-    public int registrySave(String registryGroup, String registryKey, String registryValue);
+    public int registrySave(@Param("registryGroup") String registryGroup, @Param("registryKey")String registryKey, @Param("registryValue")String registryValue);
 
 }

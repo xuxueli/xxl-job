@@ -3,6 +3,7 @@ package com.xxl.job.admin.core.biz;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.admin.core.schedule.XxlJobDynamicScheduler;
+import com.xxl.job.admin.utils.MsgUtils;
 import com.xxl.job.core.biz.AdminBiz;
 import com.xxl.job.core.biz.model.HandleCallbackParam;
 import com.xxl.job.core.biz.model.ReturnT;
@@ -79,6 +80,7 @@ public class AdminBizImpl implements AdminBiz {
         log.setHandleTime(new Date());
         log.setHandleCode(handleCallbackParam.getCode());
         log.setHandleMsg(handleMsg.toString());
+        MsgUtils.whenHandleMsgOverSize(log);
         XxlJobDynamicScheduler.xxlJobLogDao.updateHandleInfo(log);
 
         return new ReturnT(ReturnT.SUCCESS_CODE, null);
