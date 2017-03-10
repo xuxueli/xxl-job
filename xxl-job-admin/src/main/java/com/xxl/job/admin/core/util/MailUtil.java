@@ -1,19 +1,18 @@
 package com.xxl.job.admin.core.util;
 
-import java.io.File;
-import java.util.Properties;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeUtility;
-
 import org.apache.commons.lang.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
+
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeUtility;
+import java.io.File;
+import java.util.Properties;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * 邮件发送.Util
@@ -29,12 +28,12 @@ public class MailUtil {
 	private static String sendFrom;
 	private static String sendNick;
 	static{
-		host = PropertiesUtil.getString("mail.host");
-		port = PropertiesUtil.getString("mail.port");
-		username = PropertiesUtil.getString("mail.username");
-		password = PropertiesUtil.getString("mail.password");
-		sendFrom = PropertiesUtil.getString("mail.sendFrom");
-		sendNick = PropertiesUtil.getString("mail.sendNick");
+		host = PropertiesUtil.getString("xxl.job.mail.host");
+		port = PropertiesUtil.getString("xxl.job.mail.port");
+		username = PropertiesUtil.getString("xxl.job.mail.username");
+		password = PropertiesUtil.getString("xxl.job.mail.password");
+		sendFrom = PropertiesUtil.getString("xxl.job.mail.sendFrom");
+		sendNick = PropertiesUtil.getString("xxl.job.mail.sendNick");
 	}
 	
 	/**
@@ -56,14 +55,14 @@ public class MailUtil {
 	/**
 	 * 发送邮件 (完整版)(结合Spring)
 	 * 
-	 * @param javaMailSender: 发送Bean
-	 * @param sendFrom		: 发送人邮箱
-	 * @param sendNick		: 发送人昵称
+	 * //@param javaMailSender: 发送Bean
+	 * //@param sendFrom		: 发送人邮箱
+	 * //@param sendNick		: 发送人昵称
 	 * @param toAddress		: 收件人邮箱
 	 * @param mailSubject	: 邮件主题
 	 * @param mailBody		: 邮件正文
 	 * @param mailBodyIsHtml: 邮件正文格式,true:HTML格式;false:文本格式
-	 * @param files[]		: 附件
+	 * @param attachments	: 附件
 	 */
 	@SuppressWarnings("null")
 	public static boolean sendMailSpring(String toAddress, String mailSubject, String mailBody, boolean mailBodyIsHtml,File[] attachments) {
@@ -106,8 +105,8 @@ public class MailUtil {
 	 * @param mailSubject	: 邮件主题
 	 * @param mailBody		: 邮件正文
 	 * @param mailBodyIsHtml: 邮件正文格式,true:HTML格式;false:文本格式
-	 * @param inLineFile	: 内嵌文件
-	 * @param files[]		: 附件
+	 * //@param inLineFile	: 内嵌文件
+	 * @param attachments	: 附件
 	 */
 	public static boolean sendMail (String toAddress, String mailSubject, String mailBody, 
 			boolean mailBodyIsHtml, File[] attachments){

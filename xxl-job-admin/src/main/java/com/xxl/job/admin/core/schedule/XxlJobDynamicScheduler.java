@@ -35,7 +35,7 @@ public final class XxlJobDynamicScheduler implements ApplicationContextAware, In
     
     // Scheduler
     private static Scheduler scheduler;
-    public static void setScheduler(Scheduler scheduler) {
+    public void setScheduler(Scheduler scheduler) {
 		XxlJobDynamicScheduler.scheduler = scheduler;
 	}
     

@@ -45,8 +45,8 @@ public class IndexController {
 	public ReturnT<String> loginDo(HttpServletRequest request, HttpServletResponse response, String userName, String password, String ifRemember){
 		if (!PermissionInterceptor.ifLogin(request)) {
 			if (StringUtils.isNotBlank(userName) && StringUtils.isNotBlank(password)
-					&& PropertiesUtil.getString("login.username").equals(userName) 
-					&& PropertiesUtil.getString("login.password").equals(password)) {
+					&& PropertiesUtil.getString("xxl.job.login.username").equals(userName)
+					&& PropertiesUtil.getString("xxl.job.login.password").equals(password)) {
 				boolean ifRem = false;
 				if (StringUtils.isNotBlank(ifRemember) && "on".equals(ifRemember)) {
 					ifRem = true;

@@ -1,13 +1,13 @@
 package com.xxl.job.admin.core.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.Properties;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * properties util
@@ -15,12 +15,11 @@ import org.slf4j.LoggerFactory;
  */
 public class PropertiesUtil {
 	private static Logger logger = LoggerFactory.getLogger(PropertiesUtil.class);
-	private static final String file_name = "config.properties";
+	private static final String file_name = "xxl-job-admin.properties";
 	
 	/**
 	 * load properties
 	 * @param propertyFileName
-	 * @param ifClassPath
 	 * @return
 	 */
 	public static Properties loadProperties(String propertyFileName) {
@@ -55,7 +54,7 @@ public class PropertiesUtil {
 	}
 	
 	public static void main(String[] args) {
-		System.out.println(getString("triggerLogUrl"));
+		System.out.println(getString("xxl.job.login.username"));
 	}
 
 }
