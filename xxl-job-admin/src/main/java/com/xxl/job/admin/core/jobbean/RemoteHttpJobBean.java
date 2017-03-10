@@ -82,7 +82,7 @@ public class RemoteHttpJobBean extends QuartzJobBean {
 			}
 			groupAddressInfo += "，地址列表：" + addressList.toString();
 		}
-        groupAddressInfo += "<br>";
+        groupAddressInfo += "<br><br>";
 
 		// failover trigger
 		ReturnT<String> triggerResult = failoverTrigger(addressList, triggerParam, jobLog);
