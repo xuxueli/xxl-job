@@ -65,7 +65,7 @@ public class XxlJobServiceImpl implements IXxlJobService {
 
 	@Override
 	public ReturnT<String> add(int jobGroup, String jobCron, String jobDesc, String author, String alarmEmail,
-							   String executorAddress, String executorHandler, String executorParam,
+							   String executorHandler, String executorParam,
 							   int glueSwitch, String glueSource, String glueRemark, String childJobKey) {
 		// valid
 		XxlJobGroup group = xxlJobGroupDao.load(jobGroup);
@@ -146,7 +146,7 @@ public class XxlJobServiceImpl implements IXxlJobService {
 
 	@Override
 	public ReturnT<String> reschedule(int jobGroup, String jobName, String jobCron, String jobDesc, String author, String alarmEmail,
-			String executorAddress, String executorHandler, String executorParam, int glueSwitch, String childJobKey) {
+			String executorHandler, String executorParam, int glueSwitch, String childJobKey) {
 
 		// valid
 		XxlJobGroup group = xxlJobGroupDao.load(jobGroup);

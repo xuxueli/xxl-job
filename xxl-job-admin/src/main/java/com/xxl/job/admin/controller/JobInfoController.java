@@ -49,22 +49,20 @@ public class JobInfoController {
 	@RequestMapping("/add")
 	@ResponseBody
 	public ReturnT<String> add(int jobGroup, String jobCron, String jobDesc, String author, String alarmEmail,
-							   String executorAppname, String executorAddress, String executorHandler, String executorParam,
-							   int glueSwitch, String glueSource, String glueRemark, String childJobKey) {
+							   String executorHandler, String executorParam, int glueSwitch, String glueSource, String glueRemark, String childJobKey) {
 		
 		return xxlJobService.add(jobGroup, jobCron, jobDesc, author, alarmEmail,
-				executorAddress, executorHandler, executorParam,
+				executorHandler, executorParam,
 				glueSwitch, glueSource, glueRemark, childJobKey);
 	}
 	
 	@RequestMapping("/reschedule")
 	@ResponseBody
 	public ReturnT<String> reschedule(int jobGroup, String jobName, String jobCron, String jobDesc, String author, String alarmEmail,
-			String executorAppname, String executorAddress, String executorHandler, String executorParam,
-			int glueSwitch, String childJobKey) {
+			String executorHandler, String executorParam, int glueSwitch, String childJobKey) {
 
 		return xxlJobService.reschedule(jobGroup, jobName, jobCron, jobDesc, author, alarmEmail,
-				executorAddress, executorHandler, executorParam, glueSwitch, childJobKey);
+				executorHandler, executorParam, glueSwitch, childJobKey);
 	}
 	
 	@RequestMapping("/remove")
