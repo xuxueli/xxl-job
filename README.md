@@ -118,25 +118,35 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
     调度中心项目：xxl-job-admin
     作用：统一管理任务调度平台上调度任务，负责触发调度执行。
 
-- **A：配置调度中心JDBC链接**：       
-请在下图所示位置配置jdbc链接地址，链接地址请保持和 2.1章节 所创建的调度数据库的地址一致。
+**调度中心配置**：配置文件以及配置属性如下图所示。
 
-![输入图片说明](https://static.oschina.net/uploads/img/201607/23222438_wZv9.png "在这里输入图片标题")
-
-- **B：配置报警邮箱和登陆账号**：        
-请在下图所示位置，设置自己的报警邮件发送邮箱和登陆账号密码。
-
-![输入图片说明](https://static.oschina.net/uploads/img/201607/23223008_ArvZ.png "在这里输入图片标题")
-
-- **C：配置“调度中心”任务执行结果回调端口**：     
-由于“调度中心”和“执行器”部署在不同项目中，“执行器”会请求该端口回调通知任务执行结果。如下图所示，默认回调服务端口号为8888。（此端口除非与现有端口冲突，可自行修改，否则可忽视）
-
-![输入图片说明](https://static.oschina.net/uploads/img/201607/23223301_I03k.png "在这里输入图片标题")
+![输入图片说明](https://static.oschina.net/uploads/img/201703/10172754_5DUl.png "在这里输入图片标题")
+    
+    ### 调度中心JDBC链接：链接地址请保持和 2.1章节 所创建的调度数据库的地址一致
+    xxl.job.db.driverClass=com.mysql.jdbc.Driver
+    xxl.job.db.url=jdbc:mysql://localhost:3306/xxl-job?useUnicode=true&amp;characterEncoding=UTF-8
+    xxl.job.db.user=root
+    xxl.job.db.password=root_pwd
+    
+    ### “调度中心”任务回调服务地址：“执行器”将会回调该地址通知任务执行结果，改地址将会用于回调服务注册。回调服务默认端口为8888，回调IP默认为空表示自动获取IP，多网卡时可手动设置指定IP；
+    xxl.job.callBackIp=
+    xxl.job.callBackPort=8888
+    
+    ### 报警邮箱
+    xxl.job.mail.host=smtp.163.com
+    xxl.job.mail.port=25
+    xxl.job.mail.username=ovono802302@163.com
+    xxl.job.mail.password=asdfzxcv
+    xxl.job.mail.sendFrom=ovono802302@163.com
+    xxl.job.mail.sendNick=《任务调度平台XXL-JOB》
+    
+    # 登陆账号
+    xxl.job.login.username=admin
+    xxl.job.login.password=123456
 
 **部署项目**：如果已经正确进行上述配置，可将项目编译打war包并部署到tomcat中。
 
 访问链接：http://localhost:8080/xxl-job-admin/ ，登陆界面如下图所示
-
 
 ![输入图片说明](https://static.oschina.net/uploads/img/201607/23223648_b8Dx.png "在这里输入图片标题")
 
@@ -146,24 +156,34 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 
     “执行器”项目：xxl-job-executor-example
     作用：负责接收“调度中心”的调度并执行；
+    
+**执行器配置**：配置文件以及配置属性如下图所示。
 
-- **A：配置Jdbc链接**：(执行器 "DbRegistHelper" 和 "DbGlueLoader" 依赖JDBC配置; 推荐将其抽象为RPC远程服务, 可取消对JDBC的依赖)
+![输入图片说明](https://static.oschina.net/uploads/img/201703/10174923_TgNO.png "在这里输入图片标题")
 
-请在下图所示位置配置jdbc链接地址，链接地址请保持和 2.1章节 所创建的调度数据库的地址一致。
+    ### 执行器JDBC链接：请保持和调度中心JDBC连接配置一致；(执行器 "DbRegistHelper" 和 "DbGlueLoader" 依赖JDBC配置; 推荐将其抽象为RPC远程服务, 可取消对JDBC的依赖)
+    xxl.job.db.driverClass=com.mysql.jdbc.Driver
+    xxl.job.db.url=jdbc:mysql://localhost:3306/xxl-job?useUnicode=true&amp;characterEncoding=UTF-8
+    xxl.job.db.user=root
+    xxl.job.db.password=root_pwd
+    
+    ### 执行器"AppName"和地址信息配置：AppName为执行器分组依据。“调度中心”将会请求该地址触发任务，改地址将会用于执行器注册。执行器默认端口为9999，执行器IP默认为空表示自动获取IP，多网卡时可手动设置指定IP；
+    xxl.job.executor.appname=xxl-job-executor-example
+    xxl.job.executor.ip=
+    xxl.job.executor.port=9999
+    
+    ### GLUE模式任务有效缓存时间：单位毫秒，超过有效缓存时间将会重新加载GLUE源码初始化新的GLUE任务实例。
+    xxl.job.glue.cache.time=10000
 
-![输入图片说明](https://static.oschina.net/uploads/img/201607/23224042_MeRg.png "在这里输入图片标题")
 
-- **B：配置“执行器”**：
+**组件配置**：配置内容如下图所示。
 
-![输入图片说明](https://static.oschina.net/uploads/img/201610/03194148_kn9K.jpg "在这里输入图片标题")
+![输入图片说明](https://static.oschina.net/uploads/img/201703/10181042_h87Q.png "在这里输入图片标题")
 
-    1、JobHandler 扫描路径
-    2、执行器端口 "port": 默认9999
-    3、执行器注册器 "registHelper": 默认使用系统提供的 "DbRegistHelper"(依赖JDBC), 推荐将其改为公共的RPC服务
-    3、GLUE源码加载器 "glueLoader": 默认使用系统提供的 "DbGlueLoader"(依赖JDBC), 推荐将其改为公共的RPC服务
+    1、JobHandler 扫描路径：自动扫描容器中JobHandler；
+    3、执行器注册器(XxlJobExecutor.registHelper): 默认使用系统提供的 "DbRegistHelper"(依赖JDBC), 推荐将其改为公共的RPC服务
+    3、GLUE源码加载器(GlueFactory.glueLoader): 默认使用系统提供的 "DbGlueLoader"(依赖JDBC), 推荐将其改为公共的RPC服务
     4、XXL-JOB公共数据源 "xxlJobDataSource": 仅在启动 "DbRegistHelper" 或 "DbGlueLoader" 时才需要, 否则可删除
-
-执行器端口：由于“调度中心”和“执行器”部署在不同项目，“调度中心”会请求该端口触发任务执行。如上图所示，默认的“执行器”端口是9999，如果与系统现有端口冲突可自行修改，如若不冲突，可忽略。
 
 **部署项目**：       
 至此“执行器”项目已经部署结束。
