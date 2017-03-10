@@ -145,7 +145,7 @@ CREATE TABLE XXL_JOB_QRTZ_LOCKS
 
 
 
-CREATE TABLE XXL_JOB_QRTZ_TRIGGER_INFO (
+CREATE TABLE `XXL_JOB_QRTZ_TRIGGER_INFO` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `job_group` int(11) NOT NULL COMMENT '任务组(执行器ID)',
   `job_name` varchar(255) NOT NULL COMMENT '任务名',
@@ -155,6 +155,7 @@ CREATE TABLE XXL_JOB_QRTZ_TRIGGER_INFO (
   `update_time` datetime DEFAULT NULL,
   `author` varchar(64) DEFAULT NULL COMMENT '作者',
   `alarm_email` varchar(255) DEFAULT NULL COMMENT '报警邮件',
+  `executor_route_strategy` varchar(20) DEFAULT NULL COMMENT '执行器路由策略',
   `executor_handler` varchar(255) DEFAULT NULL COMMENT '执行器任务handler',
   `executor_param` varchar(255) DEFAULT NULL COMMENT '执行器任务参数',
   `glue_switch` int(11) DEFAULT '0' COMMENT 'GLUE模式开关：0-否，1-是',
@@ -163,7 +164,6 @@ CREATE TABLE XXL_JOB_QRTZ_TRIGGER_INFO (
   `child_jobkey` varchar(255) DEFAULT NULL COMMENT '子任务Key',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 
 CREATE TABLE `XXL_JOB_QRTZ_TRIGGER_LOG` (
   `id` int(11) NOT NULL AUTO_INCREMENT,

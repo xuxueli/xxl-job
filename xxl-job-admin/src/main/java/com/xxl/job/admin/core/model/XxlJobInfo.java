@@ -21,8 +21,9 @@ public class XxlJobInfo {
 	private String author;		// 负责人
 	private String alarmEmail;	// 报警邮件
 
-	private String executorHandler;	// 执行器，任务Handler名称
-	private String executorParam;	// 执行器，任务参数
+	private String executorRouteStrategy;	// 执行器路由策略
+	private String executorHandler;		    // 执行器，任务Handler名称
+	private String executorParam;		    // 执行器，任务参数
 	
 	private int glueSwitch;		// GLUE模式开关：0-否，1-是
 	private String glueSource;	// GLUE源代码
@@ -105,7 +106,15 @@ public class XxlJobInfo {
 		this.alarmEmail = alarmEmail;
 	}
 
-	public String getExecutorHandler() {
+    public String getExecutorRouteStrategy() {
+        return executorRouteStrategy;
+    }
+
+    public void setExecutorRouteStrategy(String executorRouteStrategy) {
+        this.executorRouteStrategy = executorRouteStrategy;
+    }
+
+    public String getExecutorHandler() {
 		return executorHandler;
 	}
 

@@ -17,6 +17,7 @@
 	    <result column="author" property="author" />
 	    <result column="alarm_email" property="alarmEmail" />
 
+		<result column="executor_route_strategy" property="executorRouteStrategy" />
 		<result column="executor_handler" property="executorHandler" />
 	    <result column="executor_param" property="executorParam" />
 	    
@@ -37,6 +38,7 @@
 		t.update_time,
 		t.author,
 		t.alarm_email,
+		t.executor_route_strategy,
 		t.executor_handler,
 		t.executor_param,
 		t.glue_switch,
@@ -83,6 +85,7 @@
 			update_time,
 			author,
 			alarm_email,
+            executor_route_strategy,
 			executor_handler,
 			executor_param,
 			glue_switch,
@@ -98,6 +101,7 @@
 			NOW(),
 			#{author},
 			#{alarmEmail},
+			#{executorRouteStrategy},
 			#{executorHandler},
 			#{executorParam},
 			#{glueSwitch},
@@ -125,6 +129,7 @@
 			update_time = NOW(),
 			author = #{author},
 			alarm_email = #{alarmEmail},
+			executor_route_strategy = #{executorRouteStrategy},
 			executor_handler = #{executorHandler},
 			executor_param = #{executorParam},
 			glue_switch = #{glueSwitch},
