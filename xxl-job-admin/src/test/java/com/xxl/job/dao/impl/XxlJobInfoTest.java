@@ -11,7 +11,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "classpath*:applicationcontext-*.xml")
+@ContextConfiguration(locations = "classpath*:spring/applicationcontext-*.xml")
 public class XxlJobInfoTest {
 	
 	@Resource
