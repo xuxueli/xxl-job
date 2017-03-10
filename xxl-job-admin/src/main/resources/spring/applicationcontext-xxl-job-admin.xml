@@ -19,8 +19,9 @@
 		</property>
 	</bean>
 
-	<!-- part 1 :for datasource -->
-	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"  destroy-method="close">  
+	<!-- ********************************* part 1 :for datasource ********************************* -->
+
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"  destroy-method="close">
 	    <property name="driverClass" value="${xxl.job.db.driverClass}" />
 	    <property name="jdbcUrl" value="${xxl.job.db.url}" />
 	    <property name="user" value="${xxl.job.db.user}" />
@@ -44,7 +45,8 @@
           <constructor-arg index="0" ref="sqlSessionFactory" />  
     </bean> 
     
-    <!-- part 2 :for tx -->
+	<!-- ********************************* part 2 :for tx ********************************* -->
+
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource" ref="dataSource" />
 	</bean>
@@ -68,7 +70,8 @@
 		<aop:advisor pointcut-ref="txoperation" advice-ref="txAdvice" />
 	</aop:config>
 
-	<!-- part 3 :for quartz -->
+	<!-- ********************************* part 3 :for xxl-job scheduler ********************************* -->
+
 	<bean id="quartzScheduler" lazy-init="false" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
 		<property name="dataSource" ref="dataSource" />
 		<property name="autoStartup" value="true" />	<!--自动启动 -->
@@ -77,7 +80,6 @@
 		<property name="configLocation" value="classpath:quartz.properties"/>
 	</bean>
 
-	<!-- 协同-调度器 -->
 	<bean id="xxlJobDynamicScheduler" class="com.xxl.job.admin.core.schedule.XxlJobDynamicScheduler" init-method="init" destroy-method="destroy" >
 		<!-- (轻易不要变更“调度器名称”, 任务创建时会绑定该“调度器名称”) -->
 		<property name="scheduler" ref="quartzScheduler"/>

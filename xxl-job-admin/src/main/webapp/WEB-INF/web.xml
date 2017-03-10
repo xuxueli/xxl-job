@@ -11,7 +11,7 @@
 
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
-		<param-value>classpath*:applicationcontext-*.xml</param-value>
+		<param-value>classpath*:spring/applicationcontext-*.xml</param-value>
 	</context-param>
 
 	<listener>
@@ -43,7 +43,7 @@
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
 		<init-param>
 			<param-name>contextConfigLocation</param-name>
-			<param-value>classpath*:springmvc-context.xml</param-value>
+			<param-value>classpath*:spring/springmvc-context.xml</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
