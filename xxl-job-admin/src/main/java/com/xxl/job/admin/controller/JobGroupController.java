@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -40,7 +41,14 @@ public class JobGroupController {
 
 		if (CollectionUtils.isNotEmpty(list)) {
 			for (XxlJobGroup group: list) {
-				List<String> registryList = JobRegistryHelper.discover(RegistHelper.RegistType.EXECUTOR.name(), group.getAppName());
+				List<String> registryList = null;
+				if (group.getAddressType() == 0) {
+					registryList = JobRegistryHelper.discover(RegistHelper.RegistType.EXECUTOR.name(), group.getAppName());
+				} else {
+					if (StringUtils.isNotBlank(group.getAddressList())) {
+						registryList = Arrays.asList(group.getAddressList().split(","));
+					}
+				}
 				group.setRegistryList(registryList);
 			}
 		}
@@ -64,6 +72,17 @@ public class JobGroupController {
 		if (xxlJobGroup.getTitle()==null || StringUtils.isBlank(xxlJobGroup.getTitle())) {
 			return new ReturnT<String>(500, "请输入名称");
 		}
+		if (xxlJobGroup.getAddressType()!=0) {
+			if (StringUtils.isBlank(xxlJobGroup.getAddressList())) {
+				return new ReturnT<String>(500, "手动录入注册方式，机器地址不可为空");
+			}
+			String[] addresss = xxlJobGroup.getAddressList().split(",");
+			for (String item: addresss) {
+				if (StringUtils.isBlank(item)) {
+					return new ReturnT<String>(500, "机器地址非法");
+				}
+			}
+		}
 
 		int ret = xxlJobGroupDao.save(xxlJobGroup);
 		return (ret>0)?ReturnT.SUCCESS:ReturnT.FAIL;
@@ -81,6 +100,17 @@ public class JobGroupController {
 		}
 		if (xxlJobGroup.getTitle()==null || StringUtils.isBlank(xxlJobGroup.getTitle())) {
 			return new ReturnT<String>(500, "请输入名称");
+		}
+		if (xxlJobGroup.getAddressType()!=0) {
+			if (StringUtils.isBlank(xxlJobGroup.getAddressList())) {
+				return new ReturnT<String>(500, "手动录入注册方式，机器地址不可为空");
+			}
+			String[] addresss = xxlJobGroup.getAddressList().split(",");
+			for (String item: addresss) {
+				if (StringUtils.isBlank(item)) {
+					return new ReturnT<String>(500, "机器地址非法");
+				}
+			}
 		}
 
 		int ret = xxlJobGroupDao.update(xxlJobGroup);

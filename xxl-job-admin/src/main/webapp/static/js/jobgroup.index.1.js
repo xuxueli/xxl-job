@@ -107,11 +107,32 @@ $(function() {
 		$("#addModal .form .form-group").removeClass("has-error");
 	});
 
+	// 注册方式，切换
+	$("#addModal input[name=addressType], #updateModal input[name=addressType]").click(function(){
+		var addressType = $(this).val();
+		var $addressList = $(this).parents("form").find("input[name=addressList]");
+		if (addressType == 0) {
+			$addressList.val("");
+			$addressList.attr("readonly","readonly");
+		} else {
+			$addressList.removeAttr("readonly");
+		}
+	});
+
+	// update
 	$('.update').on('click', function(){
 		$("#updateModal .form input[name='id']").val($(this).attr("id"));
 		$("#updateModal .form input[name='appName']").val($(this).attr("appName"));
 		$("#updateModal .form input[name='title']").val($(this).attr("title"));
 		$("#updateModal .form input[name='order']").val($(this).attr("order"));
+
+		// 注册方式
+		var addressType = $(this).attr("addressType");
+		$("#updateModal .form input[name='addressType']").removeAttr('checked');
+		//$("#updateModal .form input[name='addressType'][value='"+ addressType +"']").attr('checked', 'true');
+		$("#updateModal .form input[name='addressType'][value='"+ addressType +"']").click();
+		// 机器地址
+		$("#updateModal .form input[name='addressList']").val($(this).attr("addressList"));
 
 		$('#updateModal').modal({backdrop: false, keyboard: false}).modal('show');
 	});

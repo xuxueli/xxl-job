@@ -8,13 +8,17 @@
 	    <result column="app_name" property="appName" />
 	    <result column="title" property="title" />
 	    <result column="order" property="order" />
+		<result column="address_type" property="addressType" />
+		<result column="address_list" property="addressList" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
 		t.id,
 		t.app_name,
 		t.title,
-		t.order
+		t.order,
+		t.address_type,
+		t.address_list
 	</sql>
 
 	<select id="findAll" parameterType="java.lang.Integer" resultMap="XxlJobGroup">
@@ -24,15 +28,17 @@
 	</select>
 
 	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobGroup" >
-		INSERT INTO XXL_JOB_QRTZ_TRIGGER_GROUP ( `app_name`, `title`, `order`)
-		values ( #{appName}, #{title}, #{order});
+		INSERT INTO XXL_JOB_QRTZ_TRIGGER_GROUP ( `app_name`, `title`, `order`, `address_type`, `address_list`)
+		values ( #{appName}, #{title}, #{order}, #{addressType}, #{addressList});
 	</insert>
 
 	<update id="update" parameterType="com.xxl.job.admin.core.model.XxlJobGroup" >
 		UPDATE XXL_JOB_QRTZ_TRIGGER_GROUP
 		SET `app_name` = #{appName},
 			`title` = #{title},
-			`order` = #{order}
+			`order` = #{order},
+			`address_type` = #{addressType},
+			`address_list` = #{addressList}
 		WHERE id = #{id}
 	</update>
 

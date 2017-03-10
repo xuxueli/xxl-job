@@ -33,16 +33,17 @@
 							<h3 class="box-title">执行器列表</h3>&nbsp;&nbsp;
                             <button class="btn btn-info btn-xs pull-left2 add" >+新增执行器</button>
                             &nbsp;&nbsp;&nbsp;&nbsp;
-                            调度中心OnLine：<#if adminAddressList?exists><#list adminAddressList as item><span class="badge bg-green">${item}</span></#list></#if>
+                            调度中心OnLine机器：<#if adminAddressList?exists><#list adminAddressList as item><span class="badge bg-green">${item}</span></#list></#if>
 						</div>
 			            <div class="box-body">
 			              	<table id="joblog_list" class="table table-bordered table-striped display" width="100%" >
 				                <thead>
 					            	<tr>
-                                        <th name="id" >ID</th>
+                                        <#--<th name="id" >ID</th>-->
+                                        <th name="order" >排序</th>
                                         <th name="appName" >AppName</th>
                                         <th name="title" >名称</th>
-					                  	<th name="order" >排序</th>
+                                        <th name="addressType" >注册方式</th>
                                         <th name="registryList" >OnLine 机器</th>
                                         <th name="operate" >操作</th>
 					                </tr>
@@ -51,13 +52,20 @@
 								<#if list?exists && list?size gt 0>
 								<#list list as group>
 									<tr>
-                                        <td>${group.id}</td>
+                                        <#--<td>${group.id}</td>-->
+                                        <td>${group.order}</td>
                                         <td>${group.appName}</td>
                                         <td>${group.title}</td>
-                                        <td>${group.order}</td>
+                                        <td><#if group.addressType==0>自动注册<#else>手动录入</#if></td>
                                         <td><#if group.registryList?exists><#list group.registryList as item><span class="badge bg-green">${item}</span><br></#list></#if></td>
 										<td>
-                                            <button class="btn btn-warning btn-xs update" id="${group.id}" appName="${group.appName}" title="${group.title}" order="${group.order}" >编辑</button>
+                                            <button class="btn btn-warning btn-xs update"
+                                                    id="${group.id}"
+                                                    appName="${group.appName}"
+                                                    title="${group.title}"
+                                                    order="${group.order}"
+                                                    addressType="${group.addressType}"
+                                                    addressList="${group.addressList}" >编辑</button>
                                             <button class="btn btn-danger btn-xs remove" id="${group.id}" >删除</button>
 										</td>
 									</tr>
@@ -93,6 +101,18 @@
                             <label for="lastname" class="col-sm-2 control-label">排序<font color="red">*</font></label>
                             <div class="col-sm-10"><input type="text" class="form-control" name="order" placeholder="请输入“排序”" maxlength="50" ></div>
                         </div>
+                        <div class="form-group">
+                            <label for="lastname" class="col-sm-2 control-label">注册方式<font color="red">*</font></label>
+                            <div class="col-sm-10">
+                                <input type="radio" name="addressType" value="0" checked />自动注册
+                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                <input type="radio" name="addressType" value="1" />手动录入
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="lastname" class="col-sm-2 control-label">机器地址<font color="red">*</font></label>
+                            <div class="col-sm-10"><input type="text" class="form-control" name="addressList" placeholder="请输入执行器地址列表，多地址逗号分隔" maxlength="200" readonly="readonly" ></div>
+                        </div>
                         <hr>
                         <div class="form-group">
                             <div class="col-sm-offset-3 col-sm-6">
@@ -126,6 +146,18 @@
                         <div class="form-group">
                             <label for="lastname" class="col-sm-2 control-label">排序<font color="red">*</font></label>
                             <div class="col-sm-10"><input type="text" class="form-control" name="order" placeholder="请输入“排序”" maxlength="50" ></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="lastname" class="col-sm-2 control-label">注册方式<font color="red">*</font></label>
+                            <div class="col-sm-10">
+                                <input type="radio" name="addressType" value="0" />自动注册
+                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                <input type="radio" name="addressType" value="1" />手动录入
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="lastname" class="col-sm-2 control-label">机器地址<font color="red">*</font></label>
+                            <div class="col-sm-10"><input type="text" class="form-control" name="addressList" placeholder="请输入执行器地址列表，多地址逗号分隔" maxlength="200" readonly="readonly" ></div>
                         </div>
                         <hr>
                         <div class="form-group">

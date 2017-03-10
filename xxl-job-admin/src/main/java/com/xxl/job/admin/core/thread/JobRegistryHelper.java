@@ -39,9 +39,11 @@ public class JobRegistryHelper {
                             XxlJobDynamicScheduler.xxlJobRegistryDao.registrySave(RegistHelper.RegistType.ADMIN.name(), RegistHelper.RegistType.ADMIN.name(), XxlJobDynamicScheduler.getCallbackAddress());
                         }
 
+                        // remove dead admin/executor
+						XxlJobDynamicScheduler.xxlJobRegistryDao.removeDead(RegistHelper.TIMEOUT*2);
+
                         // fresh registry map
 						ConcurrentHashMap<String, List<String>> temp = new ConcurrentHashMap<String, List<String>>();
-						XxlJobDynamicScheduler.xxlJobRegistryDao.removeDead(RegistHelper.TIMEOUT*2);
 						List<XxlJobRegistry> list = XxlJobDynamicScheduler.xxlJobRegistryDao.findAll(RegistHelper.TIMEOUT*2);
 						if (list != null) {
 							for (XxlJobRegistry item: list) {
