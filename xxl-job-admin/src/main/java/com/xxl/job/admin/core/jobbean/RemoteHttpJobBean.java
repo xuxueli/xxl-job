@@ -67,11 +67,22 @@ public class RemoteHttpJobBean extends QuartzJobBean {
 		triggerParam.setLogDateTim(jobLog.getTriggerTime().getTime());
 
 		// parse address
+		String groupAddressInfo = "注册方式：";
 		List<String> addressList = new ArrayList<String>();
 		XxlJobGroup group = XxlJobDynamicScheduler.xxlJobGroupDao.load(Integer.valueOf(jobInfo.getJobGroup()));
 		if (group!=null) {
-			addressList = JobRegistryHelper.discover(RegistHelper.RegistType.EXECUTOR.name(), group.getAppName());
+			if (group.getAddressType() == 0) {
+				groupAddressInfo += "自动注册";
+				addressList = JobRegistryHelper.discover(RegistHelper.RegistType.EXECUTOR.name(), group.getAppName());
+			} else {
+				groupAddressInfo += "手动录入";
+				if (StringUtils.isNotBlank(group.getAddressList())) {
+					addressList = Arrays.asList(group.getAddressList().split(","));
+				}
+			}
+			groupAddressInfo += "，地址列表：" + addressList.toString();
 		}
+        groupAddressInfo += "<br>";
 
 		// failover trigger
 		ReturnT<String> triggerResult = failoverTrigger(addressList, triggerParam, jobLog);
@@ -81,7 +92,7 @@ public class RemoteHttpJobBean extends QuartzJobBean {
 		
 		// update trigger info 2/2
 		jobLog.setTriggerCode(triggerResult.getCode());
-		jobLog.setTriggerMsg(triggerResult.getMsg());
+		jobLog.setTriggerMsg(groupAddressInfo + triggerResult.getMsg());
 		XxlJobDynamicScheduler.xxlJobLogDao.updateTriggerInfo(jobLog);
 
 		// monitor triger
