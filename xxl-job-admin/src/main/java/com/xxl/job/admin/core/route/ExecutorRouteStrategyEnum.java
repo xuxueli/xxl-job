@@ -12,6 +12,8 @@ public enum ExecutorRouteStrategyEnum {
     ROUND("轮询", new ExecutorRouteRound()),
     RANDOM("随机", new ExecutorRouteRandom()),
     CONSISTENT_HASH("一致性HASH", new ExecutorRouteConsistentHash()),
+    LEAST_FREQUENTLY_USED("最不经常使用", new ExecutorRouteLFU()),
+    LEAST_RECENTLY_USED("最近最久未使用", new ExecutorRouteLRU()),
     FAILOVER("故障转移", null);
 
     ExecutorRouteStrategyEnum(String title, ExecutorRouter router) {
