@@ -16,10 +16,18 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ExecutorRouteLRU extends ExecutorRouter {
 
     private static ConcurrentHashMap<Integer, LinkedHashMap<String, String>> jobLRUMap = new ConcurrentHashMap<Integer, LinkedHashMap<String, String>>();
+    private static long CACHE_VALID_TIME = 0;
 
     @Override
     public String route(int jobId, ArrayList<String> addressList) {
 
+        // cache clear
+        if (System.currentTimeMillis() > CACHE_VALID_TIME) {
+            jobLRUMap.clear();
+            CACHE_VALID_TIME = System.currentTimeMillis() + 1000*60*60*24;
+        }
+
+        // init lru
         LinkedHashMap<String, String> lruItem = jobLRUMap.get(jobId);
         if (lruItem == null) {
             /**
@@ -31,12 +39,14 @@ public class ExecutorRouteLRU extends ExecutorRouter {
             jobLRUMap.put(jobId, lruItem);
         }
 
+        // put
         for (String address: addressList) {
             if (!lruItem.containsKey(address)) {
                 lruItem.put(address, address);
             }
         }
 
+        // load
         String eldestKey = lruItem.entrySet().iterator().next().getKey();
         String eldestValue = lruItem.get(eldestKey);
         return eldestValue;
