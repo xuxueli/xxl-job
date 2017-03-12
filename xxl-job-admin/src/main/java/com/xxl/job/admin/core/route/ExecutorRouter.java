@@ -25,7 +25,7 @@ public abstract class ExecutorRouter {
 
 
         for (int i = 0; i < 100; i++) {
-            String ret = ExecutorRouter.route(666, new ArrayList<String>(Arrays.asList("127.0.0.1:0000", "127.0.0.1:2222", "127.0.0.1:3333")), ExecutorRouteStrategyEnum.LEAST_RECENTLY_USED.name());
+            String ret = ExecutorRouter.route(666, new ArrayList<String>(Arrays.asList("127.0.0.1:0000", "127.0.0.1:2222", "127.0.0.1:3333")), ExecutorRouteStrategyEnum.LEAST_FREQUENTLY_USED.name());
             System.out.println(ret);
         }
 
