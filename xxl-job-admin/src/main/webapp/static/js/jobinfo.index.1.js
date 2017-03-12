@@ -75,7 +75,7 @@ $(function() {
 	                	"render": function ( data, type, row ) {
 	                		if ('NORMAL' == data) {
 	                			return '<small class="label label-success" ><i class="fa fa-clock-o"></i>'+ data +'</small>'; 
-							} else if ('PAUSED' == data || 'NONE' == data){
+							} else if ('PAUSED' == data){
 								return '<small class="label label-default" title="暂停" ><i class="fa fa-clock-o"></i>'+ data +'</small>'; 
 							} else if ('BLOCKED' == data){
 								return '<small class="label label-default" title="阻塞[串行]" ><i class="fa fa-clock-o"></i>'+ data +'</small>'; 
@@ -90,7 +90,7 @@ $(function() {
 	                			var pause_resume = "";
 	                			if ('NORMAL' == row.jobStatus) {
 	                				pause_resume = '<button class="btn btn-primary btn-xs job_operate" type="job_pause" type="button">暂停</button>  ';
-								} else if ('PAUSED' == row.jobStatus || 'NONE' == row.jobStatus){
+								} else if ('PAUSED' == row.jobStatus){
 									pause_resume = '<button class="btn btn-primary btn-xs job_operate" type="job_resume" type="button">恢复</button>  ';
 								}
 	                			// log url

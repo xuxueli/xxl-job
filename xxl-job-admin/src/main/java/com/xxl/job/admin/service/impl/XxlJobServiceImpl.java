@@ -105,11 +105,27 @@ public class XxlJobServiceImpl implements IXxlJobService {
 
 		// add in db
 		xxlJobInfoDao.save(jobInfo);
-		int jobId = jobInfo.getId();
-		if (jobId < 1) {
+		if (jobInfo.getId() < 1) {
 			return new ReturnT<String>(500, "新增任务失败");
 		}
-		return ReturnT.SUCCESS;
+
+		// add in quartz
+        String qz_group = String.valueOf(jobInfo.getJobGroup());
+        String qz_name = String.valueOf(jobInfo.getId());
+        try {
+            XxlJobDynamicScheduler.addJob(qz_name, qz_group, jobInfo.getJobCron());
+            XxlJobDynamicScheduler.pauseJob(qz_name, qz_group);
+            return ReturnT.SUCCESS;
+        } catch (SchedulerException e) {
+            logger.error("", e);
+            try {
+                xxlJobInfoDao.delete(jobInfo.getId());
+                XxlJobDynamicScheduler.removeJob(qz_name, qz_group);
+            } catch (SchedulerException e1) {
+                logger.error("", e1);
+            }
+            return new ReturnT<String>(500, "新增任务失败:" + e.getMessage());
+        }
 	}
 
 	@Override
@@ -206,8 +222,8 @@ public class XxlJobServiceImpl implements IXxlJobService {
         String name = String.valueOf(xxlJobInfo.getId());
 
 		try {
-			XxlJobDynamicScheduler.pauseJob(name, group);	// jobStatus do not store
-			return ReturnT.SUCCESS;
+            boolean ret = XxlJobDynamicScheduler.pauseJob(name, group);	// jobStatus do not store
+            return ret?ReturnT.SUCCESS:ReturnT.FAIL;
 		} catch (SchedulerException e) {
 			e.printStackTrace();
 			return ReturnT.FAIL;
@@ -221,12 +237,7 @@ public class XxlJobServiceImpl implements IXxlJobService {
         String name = String.valueOf(xxlJobInfo.getId());
 
 		try {
-			boolean ret = false;
-			if (XxlJobDynamicScheduler.checkExists(name, group)) {
-				ret = XxlJobDynamicScheduler.resumeJob(name, group);
-			} else {
-				ret = XxlJobDynamicScheduler.addJob(name, group, xxlJobInfo.getJobCron());
-			}
+			boolean ret = XxlJobDynamicScheduler.resumeJob(name, group);
 			return ret?ReturnT.SUCCESS:ReturnT.FAIL;
 		} catch (SchedulerException e) {
 			e.printStackTrace();
