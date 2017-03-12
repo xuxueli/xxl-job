@@ -94,8 +94,7 @@
 <script src="${request.contextPath}/static/plugins/codemirror/addon/hint/show-hint.js"></script>
 <script src="${request.contextPath}/static/plugins/codemirror/addon/hint/anyword-hint.js"></script>
 <script>
-var jobGroup = '${jobInfo.jobGroup}';
-var jobName = '${jobInfo.jobName}';
+var id = '${jobInfo.id}';
 </script>
 <script src="${request.contextPath}/static/js/jobcode.index.1.js"></script>
 

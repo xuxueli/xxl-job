@@ -48,6 +48,11 @@ public class XxlJobInfoDaoImpl implements IXxlJobInfoDao {
 	}
 
 	@Override
+	public XxlJobInfo loadById(int id) {
+		return sqlSessionTemplate.selectOne("XxlJobInfoMapper.loadById", id);
+	}
+
+	@Override
 	public XxlJobInfo load(int jobGroup, String jobName) {
 		HashMap<String, Object> params = new HashMap<String, Object>();
 		params.put("jobGroup", jobGroup);

@@ -37,8 +37,7 @@ $(function() {
 				type : 'POST',
 				url : base_url + '/jobcode/save',
 				data : {
-					'jobGroup' : jobGroup,
-					'jobName' : jobName,
+					'id' : id,
 					'glueSource' : glueSource,
 					'glueRemark' : glueRemark
 				},

@@ -25,28 +25,21 @@ public class XxlJobLogGlueDaoImpl implements IXxlJobLogGlueDao {
 	}
 
 	@Override
-	public List<XxlJobLogGlue> selectList(int jobGroup, String jobName) {
-		HashMap<String, Object> params = new HashMap<String, Object>();
-		params.put("jobGroup", jobGroup);
-		params.put("jobName", jobName);
-		return sqlSessionTemplate.selectList("XxlJobLogGlueMapper.selectList", params);
+	public List<XxlJobLogGlue> findByJobId(int jobId) {
+		return sqlSessionTemplate.selectList("XxlJobLogGlueMapper.findByJobId", jobId);
 	}
 
 	@Override
-	public int removeOld(int jobGroup, String jobName, int limit) {
+	public int removeOld(int jobId, int limit) {
 		HashMap<String, Object> params = new HashMap<String, Object>();
-		params.put("jobGroup", jobGroup);
-		params.put("jobName", jobName);
+		params.put("jobId", jobId);
 		params.put("limit", limit);
 		return sqlSessionTemplate.delete("XxlJobLogGlueMapper.removeOld", params);
 	}
 
 	@Override
-	public int delete(int jobGroup, String jobName) {
-		HashMap<String, Object> params = new HashMap<String, Object>();
-		params.put("jobGroup", jobGroup);
-		params.put("jobName", jobName);
-		return sqlSessionTemplate.delete("XxlJobLogGlueMapper.delete", params);
+	public int deleteByJobId(int jobId) {
+		return sqlSessionTemplate.delete("XxlJobLogGlueMapper.deleteByJobId", jobId);
 	}
 	
 }

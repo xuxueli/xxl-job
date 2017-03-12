@@ -12,10 +12,10 @@ public interface IXxlJobLogGlueDao {
 	
 	public int save(XxlJobLogGlue xxlJobLogGlue);
 	
-	public List<XxlJobLogGlue> selectList(int jobGroup, String jobName);
+	public List<XxlJobLogGlue> findByJobId(int jobId);
 
-	public int removeOld(int jobGroup, String jobName, int limit);
+	public int removeOld(int jobId, int limit);
 
-	public int delete(int jobGroup, String jobName);
+	public int deleteByJobId(int jobId);
 	
 }

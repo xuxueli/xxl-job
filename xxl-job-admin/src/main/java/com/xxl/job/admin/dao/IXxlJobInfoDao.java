@@ -16,7 +16,8 @@ public interface IXxlJobInfoDao {
 	public int pageListCount(int offset, int pagesize, int jobGroup, String executorHandler);
 	
 	public int save(XxlJobInfo info);
-	
+
+	public XxlJobInfo loadById(int id);
 	public XxlJobInfo load(int jobGroup, String jobName);
 	
 	public int update(XxlJobInfo item);

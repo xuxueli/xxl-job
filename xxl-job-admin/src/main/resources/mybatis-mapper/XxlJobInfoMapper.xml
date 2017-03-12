@@ -113,7 +113,13 @@
 			SELECT LAST_INSERT_ID() 
 		</selectKey> 
 	</insert>
-	
+
+	<select id="loadById" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
+		SELECT <include refid="Base_Column_List" />
+		FROM XXL_JOB_QRTZ_TRIGGER_INFO AS t
+		WHERE t.id = #{id}
+	</select>
+
 	<select id="load" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
 		SELECT <include refid="Base_Column_List" />
 		FROM XXL_JOB_QRTZ_TRIGGER_INFO AS t

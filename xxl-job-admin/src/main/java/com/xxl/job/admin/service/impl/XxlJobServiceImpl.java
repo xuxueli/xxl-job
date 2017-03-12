@@ -2,6 +2,7 @@ package com.xxl.job.admin.service.impl;
 
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
+import com.xxl.job.admin.core.route.ExecutorRouteStrategyEnum;
 import com.xxl.job.admin.core.schedule.XxlJobDynamicScheduler;
 import com.xxl.job.admin.dao.IXxlJobGroupDao;
 import com.xxl.job.admin.dao.IXxlJobInfoDao;
@@ -64,33 +65,34 @@ public class XxlJobServiceImpl implements IXxlJobService {
 	}
 
 	@Override
-	public ReturnT<String> add(int jobGroup, String jobCron, String jobDesc, String author, String alarmEmail,
-							   String executorHandler, String executorParam,
-							   int glueSwitch, String glueSource, String glueRemark, String childJobKey) {
+	public ReturnT<String> add(XxlJobInfo jobInfo) {
 		// valid
-		XxlJobGroup group = xxlJobGroupDao.load(jobGroup);
+		XxlJobGroup group = xxlJobGroupDao.load(jobInfo.getJobGroup());
 		if (group == null) {
 			return new ReturnT<String>(500, "请选择“执行器”");
 		}
-		if (!CronExpression.isValidExpression(jobCron)) {
+		if (!CronExpression.isValidExpression(jobInfo.getJobCron())) {
 			return new ReturnT<String>(500, "请输入格式正确的“Cron”");
 		}
-		if (StringUtils.isBlank(jobDesc)) {
+		if (StringUtils.isBlank(jobInfo.getJobDesc())) {
 			return new ReturnT<String>(500, "请输入“任务描述”");
 		}
-		if (StringUtils.isBlank(author)) {
+		if (StringUtils.isBlank(jobInfo.getAuthor())) {
 			return new ReturnT<String>(500, "请输入“负责人”");
 		}
-		if (StringUtils.isBlank(alarmEmail)) {
+		if (StringUtils.isBlank(jobInfo.getAlarmEmail())) {
 			return new ReturnT<String>(500, "请输入“报警邮件”");
 		}
-		if (glueSwitch==0 && StringUtils.isBlank(executorHandler)) {
+		if (ExecutorRouteStrategyEnum.match(jobInfo.getExecutorRouteStrategy(), null) == null) {
+			return new ReturnT<String>(500, "路由策略非法");
+		}
+		if (jobInfo.getGlueSwitch()==0 && StringUtils.isBlank(jobInfo.getExecutorHandler())) {
 			return new ReturnT<String>(500, "请输入“JobHandler”");
 		}
 
 		// childJobKey valid
-		if (StringUtils.isNotBlank(childJobKey)) {
-			String[] childJobKeys = childJobKey.split(",");
+		if (StringUtils.isNotBlank(jobInfo.getChildJobKey())) {
+			String[] childJobKeys = jobInfo.getChildJobKey().split(",");
 			for (String childJobKeyItem: childJobKeys) {
 				String[] childJobKeyArr = childJobKeyItem.split("_");
 				if (childJobKeyArr.length!=2) {
@@ -105,8 +107,9 @@ public class XxlJobServiceImpl implements IXxlJobService {
 
 		// generate jobName
 		String jobName = FastDateFormat.getInstance("yyyyMMddHHmmssSSSS").format(new Date());
+		jobInfo.setJobName(jobName);
 		try {
-			if (XxlJobDynamicScheduler.checkExists(jobName, String.valueOf(jobGroup))) {
+			if (XxlJobDynamicScheduler.checkExists(jobName, String.valueOf(jobInfo.getJobGroup()))) {
 				return new ReturnT<String>(500, "系统繁忙，请稍后重试");
 			}
 		} catch (SchedulerException e1) {
@@ -115,7 +118,7 @@ public class XxlJobServiceImpl implements IXxlJobService {
 		}
 
 		// Backup to the database
-		XxlJobInfo jobInfo = new XxlJobInfo();
+		/*XxlJobInfo jobInfo = new XxlJobInfo();
 		jobInfo.setJobGroup(jobGroup);
 		jobInfo.setJobName(jobName);
 		jobInfo.setJobCron(jobCron);
@@ -127,11 +130,11 @@ public class XxlJobServiceImpl implements IXxlJobService {
 		jobInfo.setGlueSwitch(glueSwitch);
 		jobInfo.setGlueSource(glueSource);
 		jobInfo.setGlueRemark(glueRemark);
-		jobInfo.setChildJobKey(childJobKey);
+		jobInfo.setChildJobKey(childJobKey);*/
 
 		try {
 			// add job 2 quartz
-			boolean result = XxlJobDynamicScheduler.addJob(String.valueOf(jobGroup), jobName, jobCron);
+			boolean result = XxlJobDynamicScheduler.addJob(String.valueOf(jobInfo.getJobGroup()), jobName, jobInfo.getJobCron());
 			if (result) {
 				xxlJobInfoDao.save(jobInfo);
 				return ReturnT.SUCCESS;
@@ -145,36 +148,31 @@ public class XxlJobServiceImpl implements IXxlJobService {
 	}
 
 	@Override
-	public ReturnT<String> reschedule(int jobGroup, String jobName, String jobCron, String jobDesc, String author, String alarmEmail,
-			String executorHandler, String executorParam, int glueSwitch, String childJobKey) {
+	public ReturnT<String> reschedule(XxlJobInfo jobInfo) {
 
 		// valid
-		XxlJobGroup group = xxlJobGroupDao.load(jobGroup);
-		if (group == null) {
-			return new ReturnT<String>(500, "请选择“执行器”");
-		}
-		if (StringUtils.isBlank(jobName)) {
-			return new ReturnT<String>(500, "请输入“任务名”");
-		}
-		if (!CronExpression.isValidExpression(jobCron)) {
+		if (!CronExpression.isValidExpression(jobInfo.getJobCron())) {
 			return new ReturnT<String>(500, "请输入格式正确的“Cron”");
 		}
-		if (StringUtils.isBlank(jobDesc)) {
+		if (StringUtils.isBlank(jobInfo.getJobDesc())) {
 			return new ReturnT<String>(500, "请输入“任务描述”");
 		}
-		if (StringUtils.isBlank(author)) {
+		if (StringUtils.isBlank(jobInfo.getAuthor())) {
 			return new ReturnT<String>(500, "请输入“负责人”");
 		}
-		if (StringUtils.isBlank(alarmEmail)) {
+		if (StringUtils.isBlank(jobInfo.getAlarmEmail())) {
 			return new ReturnT<String>(500, "请输入“报警邮件”");
 		}
-		if (glueSwitch==0 && StringUtils.isBlank(executorHandler)) {
+		if (ExecutorRouteStrategyEnum.match(jobInfo.getExecutorRouteStrategy(), null) == null) {
+			return new ReturnT<String>(500, "路由策略非法");
+		}
+		if (jobInfo.getGlueSwitch()==0 && StringUtils.isBlank(jobInfo.getExecutorHandler())) {
 			return new ReturnT<String>(500, "请输入“JobHandler”");
 		}
 
 		// childJobKey valid
-		if (StringUtils.isNotBlank(childJobKey)) {
-			String[] childJobKeys = childJobKey.split(",");
+		if (StringUtils.isNotBlank(jobInfo.getChildJobKey())) {
+			String[] childJobKeys = jobInfo.getChildJobKey().split(",");
 			for (String childJobKeyItem: childJobKeys) {
 				String[] childJobKeyArr = childJobKeyItem.split("_");
 				if (childJobKeyArr.length!=2) {
@@ -188,21 +186,26 @@ public class XxlJobServiceImpl implements IXxlJobService {
 		}
 
 		// stage job info
-		XxlJobInfo jobInfo = xxlJobInfoDao.load(jobGroup, jobName);
-		jobInfo.setJobCron(jobCron);
-		jobInfo.setJobDesc(jobDesc);
-		jobInfo.setAuthor(author);
-		jobInfo.setAlarmEmail(alarmEmail);
-		jobInfo.setExecutorHandler(executorHandler);
-		jobInfo.setExecutorParam(executorParam);
-		jobInfo.setGlueSwitch(glueSwitch);
-		jobInfo.setChildJobKey(childJobKey);
+		XxlJobInfo exists_jobInfo = xxlJobInfoDao.loadById(jobInfo.getId());
+		if (exists_jobInfo == null) {
+			return new ReturnT<String>(500, "参数异常");
+		}
+
+		exists_jobInfo.setJobCron(jobInfo.getJobCron());
+		exists_jobInfo.setJobDesc(jobInfo.getJobDesc());
+		exists_jobInfo.setAuthor(jobInfo.getAuthor());
+		exists_jobInfo.setAlarmEmail(jobInfo.getAlarmEmail());
+		exists_jobInfo.setExecutorRouteStrategy(jobInfo.getExecutorRouteStrategy());
+		exists_jobInfo.setExecutorHandler(jobInfo.getExecutorHandler());
+		exists_jobInfo.setExecutorParam(jobInfo.getExecutorParam());
+		exists_jobInfo.setGlueSwitch(jobInfo.getGlueSwitch());
+		exists_jobInfo.setChildJobKey(jobInfo.getChildJobKey());
 		
 		try {
 			// fresh quartz
-			boolean ret = XxlJobDynamicScheduler.rescheduleJob(String.valueOf(jobGroup), jobName, jobCron);
+			boolean ret = XxlJobDynamicScheduler.rescheduleJob(String.valueOf(exists_jobInfo.getJobGroup()), exists_jobInfo.getJobName(), exists_jobInfo.getJobCron());
 			if (ret) {
-				xxlJobInfoDao.update(jobInfo);
+				xxlJobInfoDao.update(exists_jobInfo);
 				return ReturnT.SUCCESS;
 			} else {
 				return new ReturnT<String>(500, "更新任务失败");
@@ -215,11 +218,13 @@ public class XxlJobServiceImpl implements IXxlJobService {
 
 	@Override
 	public ReturnT<String> remove(int jobGroup, String jobName) {
+		XxlJobInfo xxlJobInfo = xxlJobInfoDao.load(jobGroup, jobName);
+
 		try {
 			XxlJobDynamicScheduler.removeJob(jobName, String.valueOf(jobGroup));
 			xxlJobInfoDao.delete(jobGroup, jobName);
 			xxlJobLogDao.delete(jobGroup, jobName);
-			xxlJobLogGlueDao.delete(jobGroup, jobName);
+			xxlJobLogGlueDao.deleteByJobId(xxlJobInfo.getId());
 			return ReturnT.SUCCESS;
 		} catch (SchedulerException e) {
 			e.printStackTrace();

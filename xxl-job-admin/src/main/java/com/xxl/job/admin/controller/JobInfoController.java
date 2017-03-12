@@ -1,6 +1,8 @@
 package com.xxl.job.admin.controller;
 
 import com.xxl.job.admin.core.model.XxlJobGroup;
+import com.xxl.job.admin.core.model.XxlJobInfo;
+import com.xxl.job.admin.core.route.ExecutorRouteStrategyEnum;
 import com.xxl.job.admin.dao.IXxlJobGroupDao;
 import com.xxl.job.admin.service.IXxlJobService;
 import com.xxl.job.core.biz.model.ReturnT;
@@ -30,9 +32,11 @@ public class JobInfoController {
 	@RequestMapping
 	public String index(Model model) {
 
+		// 路由策略-列表
+		model.addAttribute("ExecutorRouteStrategyEnum", ExecutorRouteStrategyEnum.values());
+
 		// 任务组
 		List<XxlJobGroup> jobGroupList =  xxlJobGroupDao.findAll();
-
 		model.addAttribute("JobGroupList", jobGroupList);
 		return "jobinfo/jobinfo.index";
 	}
@@ -48,21 +52,14 @@ public class JobInfoController {
 	
 	@RequestMapping("/add")
 	@ResponseBody
-	public ReturnT<String> add(int jobGroup, String jobCron, String jobDesc, String author, String alarmEmail,
-							   String executorHandler, String executorParam, int glueSwitch, String glueSource, String glueRemark, String childJobKey) {
-		
-		return xxlJobService.add(jobGroup, jobCron, jobDesc, author, alarmEmail,
-				executorHandler, executorParam,
-				glueSwitch, glueSource, glueRemark, childJobKey);
+	public ReturnT<String> add(XxlJobInfo jobInfo) {
+		return xxlJobService.add(jobInfo);
 	}
 	
 	@RequestMapping("/reschedule")
 	@ResponseBody
-	public ReturnT<String> reschedule(int jobGroup, String jobName, String jobCron, String jobDesc, String author, String alarmEmail,
-			String executorHandler, String executorParam, int glueSwitch, String childJobKey) {
-
-		return xxlJobService.reschedule(jobGroup, jobName, jobCron, jobDesc, author, alarmEmail,
-				executorHandler, executorParam, glueSwitch, childJobKey);
+	public ReturnT<String> reschedule(XxlJobInfo jobInfo) {
+		return xxlJobService.reschedule(jobInfo);
 	}
 	
 	@RequestMapping("/remove")

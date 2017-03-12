@@ -5,7 +5,6 @@ import com.xxl.job.admin.core.model.XxlJobLogGlue;
 import com.xxl.job.admin.dao.IXxlJobInfoDao;
 import com.xxl.job.admin.dao.IXxlJobLogGlueDao;
 import com.xxl.job.core.biz.model.ReturnT;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,9 +27,9 @@ public class JobCodeController {
 	private IXxlJobLogGlueDao xxlJobLogGlueDao;
 
 	@RequestMapping
-	public String index(Model model, int jobGroup, String jobName) {
-		XxlJobInfo jobInfo = xxlJobInfoDao.load(jobGroup, jobName);
-		List<XxlJobLogGlue> jobLogGlues = xxlJobLogGlueDao.selectList(jobGroup, jobName);
+	public String index(Model model, int jobId) {
+		XxlJobInfo jobInfo = xxlJobInfoDao.loadById(jobId);
+		List<XxlJobLogGlue> jobLogGlues = xxlJobLogGlueDao.findByJobId(jobId);
 		model.addAttribute("jobInfo", jobInfo);
 		model.addAttribute("jobLogGlues", jobLogGlues);
 		return "jobcode/jobcode.index";
@@ -38,7 +37,7 @@ public class JobCodeController {
 	
 	@RequestMapping("/save")
 	@ResponseBody
-	public ReturnT<String> save(Model model, int jobGroup, String jobName, String glueSource, String glueRemark) {
+	public ReturnT<String> save(Model model, int id, String glueSource, String glueRemark) {
 		// valid
 		if (glueRemark==null) {
 			return new ReturnT<String>(500, "请输入备注");
@@ -46,31 +45,26 @@ public class JobCodeController {
 		if (glueRemark.length()<6 || glueRemark.length()>100) {
 			return new ReturnT<String>(500, "备注长度应该在6至100之间");
 		}
-		XxlJobInfo jobInfoOld = xxlJobInfoDao.load(jobGroup, jobName);
-		if (jobInfoOld == null) {
-			return new ReturnT<String>(500, "任务不存在");
+		XxlJobInfo exists_jobInfo = xxlJobInfoDao.loadById(id);
+		if (exists_jobInfo == null) {
+			return new ReturnT<String>(500, "参数异常");
 		}
 		
 		// log old code
 		XxlJobLogGlue xxlJobLogGlue = new XxlJobLogGlue();
-		xxlJobLogGlue.setJobGroup(jobInfoOld.getJobGroup());
-		xxlJobLogGlue.setJobName(jobInfoOld.getJobName());
-		xxlJobLogGlue.setGlueSource(jobInfoOld.getGlueSource());
-		xxlJobLogGlue.setGlueRemark(jobInfoOld.getGlueRemark());
+		xxlJobLogGlue.setJobId(exists_jobInfo.getId());
+		xxlJobLogGlue.setGlueSource(exists_jobInfo.getGlueSource());
+		xxlJobLogGlue.setGlueRemark(exists_jobInfo.getGlueRemark());
+		xxlJobLogGlueDao.save(xxlJobLogGlue);
 		
-		// init new code
-		jobInfoOld.setGlueSource(glueSource);
-		jobInfoOld.setGlueRemark(glueRemark);
-		
-		// update new code ,and log old code
-		xxlJobInfoDao.update(jobInfoOld);
-		if (StringUtils.isNotBlank(xxlJobLogGlue.getGlueSource()) && StringUtils.isNotBlank(xxlJobLogGlue.getGlueRemark())) {
-			xxlJobLogGlueDao.save(xxlJobLogGlue);
-			// remove code backup more than 30
-			xxlJobLogGlueDao.removeOld(xxlJobLogGlue.getJobGroup(), xxlJobLogGlue.getJobName(), 30);
-		}
-		
-		
+		// update new code
+		exists_jobInfo.setGlueSource(glueSource);
+		exists_jobInfo.setGlueRemark(glueRemark);
+		xxlJobInfoDao.update(exists_jobInfo);
+
+		// remove code backup more than 30
+		xxlJobLogGlueDao.removeOld(exists_jobInfo.getId(), 3);
+
 		return ReturnT.SUCCESS;
 	}
 	

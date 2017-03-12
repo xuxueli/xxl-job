@@ -100,7 +100,7 @@ $(function() {
 	                			// log url
 	                			var codeBtn = "";
 	                			if(row.glueSwitch > 0){
-									var codeUrl = base_url +'/jobcode?jobGroup='+ row.jobGroup +'&jobName='+ row.jobName;
+									var codeUrl = base_url +'/jobcode?jobId='+ row.id;
 									codeBtn = '<button class="btn btn-warning btn-xs" type="button" onclick="javascript:window.open(\'' + codeUrl + '\')" >GLUE</button>  '
 								}
 
@@ -112,6 +112,7 @@ $(function() {
 									' jobDesc="'+ row.jobDesc +'" '+
 									' author="'+ row.author +'" '+
 									' alarmEmail="'+ row.alarmEmail +'" '+
+									' executorRouteStrategy="'+row.executorRouteStrategy +'" '+
 									' executorHandler="'+row.executorHandler +'" '+
 									' executorParam="'+ row.executorParam +'" '+
 									' glueSwitch="'+ row.glueSwitch +'" '+
@@ -323,19 +324,16 @@ $(function() {
 	$("#job_list").on('click', '.update',function() {
 
 		// base data
-		$("#updateModal .form input[name='jobGroup']").val($(this).parent('p').attr("jobGroup"));
-		$("#updateModal .form input[name='jobName']").val($(this).parent('p').attr("jobName"));
+		$("#updateModal .form input[name='id']").val($(this).parent('p').attr("id"));
+		$('#updateModal .form select[name=jobGroup] option[value='+ $(this).parent('p').attr("jobGroup") +']').prop('selected', true);
 		$("#updateModal .form input[name='jobDesc']").val($(this).parent('p').attr("jobDesc"));
 		$("#updateModal .form input[name='jobCron']").val($(this).parent('p').attr("jobCron"));
 		$("#updateModal .form input[name='author']").val($(this).parent('p').attr("author"));
 		$("#updateModal .form input[name='alarmEmail']").val($(this).parent('p').attr("alarmEmail"));
+		$('#updateModal .form select[name=executorRouteStrategy] option[value='+ $(this).parent('p').attr("executorRouteStrategy") +']').prop('selected', true);
 		$("#updateModal .form input[name='executorHandler']").val($(this).parent('p').attr("executorHandler"));
 		$("#updateModal .form input[name='executorParam']").val($(this).parent('p').attr("executorParam"));
         $("#updateModal .form input[name='childJobKey']").val($(this).parent('p').attr("childJobKey"));
-
-		// jobGroupTitle
-		var jobGroupTitle = $("#addModal .form select[name='jobGroup']").find("option[value='" + $(this).parent('p').attr("jobGroup") + "']").text();
-		$("#updateModal .form .jobGroupTitle").val(jobGroupTitle);
 
         // glueSwitch
 		var glueSwitch = $(this).parent('p').attr("glueSwitch");

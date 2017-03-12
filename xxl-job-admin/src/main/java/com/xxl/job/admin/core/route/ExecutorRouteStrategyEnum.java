@@ -32,9 +32,11 @@ public enum ExecutorRouteStrategyEnum {
     }
 
     public static ExecutorRouteStrategyEnum match(String name, ExecutorRouteStrategyEnum defaultItem){
-        for (ExecutorRouteStrategyEnum item: ExecutorRouteStrategyEnum.values()) {
-            if (item.name().equals(name)) {
-                return item;
+        if (name != null) {
+            for (ExecutorRouteStrategyEnum item: ExecutorRouteStrategyEnum.values()) {
+                if (item.name().equals(name)) {
+                    return item;
+                }
             }
         }
         return defaultItem;
