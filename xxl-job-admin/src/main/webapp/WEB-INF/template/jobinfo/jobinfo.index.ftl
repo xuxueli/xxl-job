@@ -68,17 +68,17 @@
 			            <div class="box-header">
 			            	<h3 class="box-title">调度列表</h3>
 			            </div>
-			            <div class="box-body">
+			            <div class="box-body" >
 			              	<table id="job_list" class="table table-bordered table-striped">
 				                <thead>
 					            	<tr>
 					            		<th name="id" >id</th>
 					                	<th name="jobGroup" >jobGroup</th>
-                                        <th name="childJobKey" >任务Key</th>
+                                        <th name="childJobKey" >JobKey</th>
 					                  	<th name="jobDesc" >描述</th>
-					                  	<th name="jobCron" >Cron</th>
                                         <th name="executorHandler" >JobJandler</th>
 					                  	<th name="executorParam" >任务参数</th>
+                                        <th name="jobCron" >Cron</th>
 					                  	<th name="addTime" >新增时间</th>
 					                  	<th name="updateTime" >更新时间</th>
 					                  	<th name="author" >负责人</th>

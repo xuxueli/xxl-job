@@ -63,7 +63,7 @@
 	                    	<div class="input-group-btn">
 	                      		<button type="button" class="btn btn-info">备注</button>
 	                    	</div>
-	                    	<input type="text" class="form-control" id="glueRemark" value="${jobName}" autocomplete="on" >
+	                    	<input type="text" class="form-control" id="glueRemark" value="" autocomplete="on" >
 	                  	</div>
 		            </div>
 		            <div class="col-xs-2">

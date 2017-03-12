@@ -36,22 +36,24 @@ $(function() {
             		},
 					{
 						"data": 'childJobKey',
+						"width":'10%',
 						"visible" : true,
 						"render": function ( data, type, row ) {
 							var jobKey = row.jobGroup + "_" + row.id;
 							return jobKey;
 						}
 					},
-	                { "data": 'jobDesc', "visible" : true},
-	                { "data": 'jobCron', "visible" : true},
+	                { "data": 'jobDesc', "visible" : true,"width":'20%'},
 					{
 						"data": 'executorHandler',
+						"width":'20%',
 						"visible" : true,
 						"render": function ( data, type, row ) {
 							return (row.glueSwitch > 0)? "GLUE模式" : data;
 						}
 					},
 	                { "data": 'executorParam', "visible" : false},
+					{ "data": 'jobCron', "visible" : true,"width":'10%'},
 	                { 
 	                	"data": 'addTime', 
 	                	"visible" : false, 
@@ -66,11 +68,12 @@ $(function() {
 	                		return data?moment(new Date(data)).format("YYYY-MM-DD HH:mm:ss"):"";
 	                	}
 	                },
-	                { "data": 'author', "visible" : true},
+	                { "data": 'author', "visible" : true, "width":'10%'},
 	                { "data": 'alarmEmail', "visible" : false},
 	                { "data": 'glueSwitch', "visible" : false},
 	                { 
-	                	"data": 'jobStatus', 
+	                	"data": 'jobStatus',
+						"width":'10%',
 	                	"visible" : true,
 	                	"render": function ( data, type, row ) {
 	                		if ('NORMAL' == data) {
@@ -83,7 +86,9 @@ $(function() {
 	                		return data;
 	                	}
 	                },
-	                { "data": '操作' ,
+	                {
+						"data": '操作' ,
+						"width":'15%',
 	                	"render": function ( data, type, row ) {
 	                		return function(){
 	                			// status
