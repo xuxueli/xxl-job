@@ -17,7 +17,9 @@ public interface IXxlJobLogDao {
 	public XxlJobLog load(int id);
 
 	public int save(XxlJobLog xxlJobLog);
+
 	public int updateTriggerInfo(XxlJobLog xxlJobLog);
+
 	public int updateHandleInfo(XxlJobLog xxlJobLog);
 	
 	public int delete(int jobId);

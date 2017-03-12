@@ -154,7 +154,7 @@ CREATE TABLE `XXL_JOB_QRTZ_TRIGGER_INFO` (
   `update_time` datetime DEFAULT NULL,
   `author` varchar(64) DEFAULT NULL COMMENT '作者',
   `alarm_email` varchar(255) DEFAULT NULL COMMENT '报警邮件',
-  `executor_route_strategy` varchar(20) DEFAULT NULL COMMENT '执行器路由策略',
+  `executor_route_strategy` varchar(50) DEFAULT NULL COMMENT '执行器路由策略',
   `executor_handler` varchar(255) DEFAULT NULL COMMENT '执行器任务handler',
   `executor_param` varchar(255) DEFAULT NULL COMMENT '执行器任务参数',
   `glue_switch` int(11) DEFAULT '0' COMMENT 'GLUE模式开关：0-否，1-是',

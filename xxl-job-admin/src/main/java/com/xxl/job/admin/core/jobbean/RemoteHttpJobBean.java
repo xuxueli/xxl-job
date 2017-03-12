@@ -3,6 +3,7 @@ package com.xxl.job.admin.core.jobbean;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
+import com.xxl.job.admin.core.route.ExecutorRouteStrategyEnum;
 import com.xxl.job.admin.core.schedule.XxlJobDynamicScheduler;
 import com.xxl.job.admin.core.thread.JobMonitorHelper;
 import com.xxl.job.admin.core.thread.JobRegistryHelper;
@@ -11,6 +12,7 @@ import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.biz.model.TriggerParam;
 import com.xxl.job.core.registry.RegistHelper;
 import com.xxl.job.core.rpc.netcom.NetComClientProxy;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -19,7 +21,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
-import java.text.MessageFormat;
 import java.util.*;
 
 /**
@@ -34,26 +35,23 @@ public class RemoteHttpJobBean extends QuartzJobBean {
 	@Override
 	protected void executeInternal(JobExecutionContext context)
 			throws JobExecutionException {
+
+		// load job
 		JobKey jobKey = context.getTrigger().getJobKey();
 		Integer jobId = Integer.valueOf(jobKey.getName());
 		XxlJobInfo jobInfo = XxlJobDynamicScheduler.xxlJobInfoDao.loadById(jobId);
 
-		// save log
+		// log part-1
 		XxlJobLog jobLog = new XxlJobLog();
 		jobLog.setJobGroup(jobInfo.getJobGroup());
 		jobLog.setJobId(jobInfo.getId());
 		XxlJobDynamicScheduler.xxlJobLogDao.save(jobLog);
 		logger.debug(">>>>>>>>>>> xxl-job trigger start, jobId:{}", jobLog.getId());
 
-        // admin address
-        List<String> adminAddressList = JobRegistryHelper.discover(RegistHelper.RegistType.ADMIN.name(), RegistHelper.RegistType.ADMIN.name());
-		Set<String> adminAddressSet = new HashSet<String>();
-        if (adminAddressList!=null) {
-            adminAddressSet.addAll(adminAddressList);
-        }
-        adminAddressSet.add(XxlJobDynamicScheduler.getCallbackAddress());
-
-		// update trigger info 1/2
+		// log part-2 param
+		//jobLog.setExecutorAddress(executorAddress);
+		jobLog.setExecutorHandler(jobInfo.getExecutorHandler());
+		jobLog.setExecutorParam(jobInfo.getExecutorParam());
 		jobLog.setTriggerTime(new Date());
 
 		// trigger request
@@ -64,114 +62,152 @@ public class RemoteHttpJobBean extends QuartzJobBean {
 		triggerParam.setGlueSwitch((jobInfo.getGlueSwitch()==0)?false:true);
 		triggerParam.setLogId(jobLog.getId());
 		triggerParam.setLogDateTim(jobLog.getTriggerTime().getTime());
-		triggerParam.setLogAddress(adminAddressSet);
+		triggerParam.setLogAddress(findCallbackAddressList());		// callback address list
 
-		// parse address
-		String groupAddressInfo = "注册方式：";
-		List<String> addressList = new ArrayList<String>();
-		XxlJobGroup group = XxlJobDynamicScheduler.xxlJobGroupDao.load(Integer.valueOf(jobInfo.getJobGroup()));
-		if (group!=null) {
-			if (group.getAddressType() == 0) {
-				groupAddressInfo += "自动注册";
-				addressList = JobRegistryHelper.discover(RegistHelper.RegistType.EXECUTOR.name(), group.getAppName());
-			} else {
-				groupAddressInfo += "手动录入";
-				if (StringUtils.isNotBlank(group.getAddressList())) {
-					addressList = Arrays.asList(group.getAddressList().split(","));
-				}
-			}
-			groupAddressInfo += "，地址列表：" + addressList.toString();
-		}
-        groupAddressInfo += "<br><br>";
+		// do trigger
+		ReturnT<String> triggerResult = doTrigger(triggerParam, jobInfo, jobLog);
 
-		// failover trigger
-		ReturnT<String> triggerResult = failoverTrigger(addressList, triggerParam, jobLog);
-		jobLog.setExecutorHandler(jobInfo.getExecutorHandler());
-		jobLog.setExecutorParam(jobInfo.getExecutorParam());
-		logger.info(">>>>>>>>>>> xxl-job failoverTrigger, jobId:{}, triggerResult:{}", jobLog.getId(), triggerResult.toString());
-		
-		// update trigger info 2/2
+		// log part-2
 		jobLog.setTriggerCode(triggerResult.getCode());
-		jobLog.setTriggerMsg(groupAddressInfo + triggerResult.getMsg());
+		jobLog.setTriggerMsg(triggerResult.getMsg());
 		XxlJobDynamicScheduler.xxlJobLogDao.updateTriggerInfo(jobLog);
 
 		// monitor triger
 		JobMonitorHelper.monitor(jobLog.getId());
-		
 		logger.debug(">>>>>>>>>>> xxl-job trigger end, jobId:{}", jobLog.getId());
     }
-	
-	
-	/**
-	 * failover for trigger remote address
-	 * @return
-	 */
-	public ReturnT<String> failoverTrigger(List<String> addressList, TriggerParam triggerParam, XxlJobLog jobLog){
-		 if (addressList==null || addressList.size() < 1) {
-			 return new ReturnT<String>(ReturnT.FAIL_CODE, "Trigger error, <br>>>>[address] is null <br><hr>");
-		} else if (addressList.size() == 1) {
-			 String address = addressList.get(0);
-			 // store real address
-			 jobLog.setExecutorAddress(address);
 
-			 // real trigger
-			 ExecutorBiz executorBiz = null;
-			 try {
-				 executorBiz = (ExecutorBiz) new NetComClientProxy(ExecutorBiz.class, address).getObject();
-			 } catch (Exception e) {
-				 e.printStackTrace();
-				 return new ReturnT<String>(ReturnT.FAIL_CODE, e.getMessage());
-			 }
-			 ReturnT<String> runResult = executorBiz.run(triggerParam);
+    public ReturnT<String> doTrigger(TriggerParam triggerParam, XxlJobInfo jobInfo, XxlJobLog jobLog){
+		StringBuffer triggerSb = new StringBuffer();
 
-			 String failoverMessage = MessageFormat.format("Trigger running, <br>>>>[address] : {0}, <br>>>>[code] : {1}, <br>>>>[msg] : {2} <br><hr>",
-					 address, runResult.getCode(), runResult.getMsg());
-			 runResult.setMsg(runResult.getMsg() + failoverMessage);
-			 return runResult;
-		 } else {
-			
-			// for ha
-			Collections.shuffle(addressList);
+		// exerutor address list
+		ArrayList<String> addressList = null;
+		XxlJobGroup group = XxlJobDynamicScheduler.xxlJobGroupDao.load(jobInfo.getJobGroup());
+		if (group.getAddressType() == 0) {
+			triggerSb.append("注册方式：自动注册");
+			addressList = (ArrayList<String>) JobRegistryHelper.discover(RegistHelper.RegistType.EXECUTOR.name(), group.getAppName());
+		} else {
+			triggerSb.append("注册方式：手动录入");
+			if (StringUtils.isNotBlank(group.getAddressList())) {
+				addressList = new ArrayList<String>(Arrays.asList(group.getAddressList().split(",")));
+			}
+		}
+		triggerSb.append("<br>地址列表：").append(addressList!=null?addressList.toString():"");
+		if (CollectionUtils.isEmpty(addressList)) {
+			triggerSb.append("<hr>调度失败：").append("执行器地址为空");
+			return new ReturnT<String>(ReturnT.FAIL_CODE, triggerSb.toString());
+		}
 
-			// for failover
-			String failoverMessage = "";
-			for (String address : addressList) {
-				if (StringUtils.isNotBlank(address)) {
+		// trigger remote executor
+		if (addressList.size() == 1) {
+			String address = addressList.get(0);
+			jobLog.setExecutorAddress(address);
 
+			ReturnT<String> runResult = runExecutor(triggerParam, address);
+			triggerSb.append("<hr>").append(runResult.getMsg());
 
-                    ExecutorBiz executorBiz = null;
-                    try {
-                        executorBiz = (ExecutorBiz) new NetComClientProxy(ExecutorBiz.class, address).getObject();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        return new ReturnT<String>(ReturnT.FAIL_CODE, e.getMessage());
-                    }
-
-                    // beat check
-					ReturnT<String> beatResult = executorBiz.beat();
-					failoverMessage += MessageFormat.format("BEAT running, <br>>>>[address] : {0}, <br>>>>[code] : {1}, <br>>>>[msg] : {2} <br><hr>",
-							address, beatResult.getCode(), beatResult.getMsg());
-
-					// beat success, trigger do
-					if (beatResult.getCode() == ReturnT.SUCCESS_CODE) {
-						// store real address
-						jobLog.setExecutorAddress(address);
-
-						// real trigger
-						ReturnT<String> runResult = executorBiz.run(triggerParam);
-
-						failoverMessage += MessageFormat.format("Trigger running, <br>>>>[address] : {0}, <br>>>>[status] : {1}, <br>>>>[msg] : {2} <br><hr>",
-								address, runResult.getCode(), runResult.getMsg());
-						runResult.setMsg( runResult.getMsg() + failoverMessage);
-						return runResult;
-					}
-
-				}
+			return new ReturnT<String>(runResult.getCode(), triggerSb.toString());
+		} else {
+			// executor route strategy
+			ExecutorRouteStrategyEnum executorRouteStrategyEnum = ExecutorRouteStrategyEnum.match(jobInfo.getExecutorRouteStrategy(), null);
+			triggerSb.append("<br>路由策略：").append(executorRouteStrategyEnum!=null?(executorRouteStrategyEnum.name() + "-" + executorRouteStrategyEnum.getTitle()):null);
+			if (executorRouteStrategyEnum == null) {
+				triggerSb.append("<hr>调度失败：").append("执行器路由策略为空");
+				return new ReturnT<String>(ReturnT.FAIL_CODE, triggerSb.toString());
 			}
 
-			return new ReturnT<String>(ReturnT.FAIL_CODE, failoverMessage);
+			if (executorRouteStrategyEnum != ExecutorRouteStrategyEnum.FAILOVER) {
+				// get address
+				String address = executorRouteStrategyEnum.getRouter().route(jobInfo.getId(), addressList);
+				jobLog.setExecutorAddress(address);
+
+				// run
+				ReturnT<String> runResult = runExecutor(triggerParam, address);
+				triggerSb.append("<hr>").append(runResult.getMsg());
+
+				return new ReturnT<String>(runResult.getCode(), triggerSb.toString());
+			} else {
+				for (String address : addressList) {
+					// beat
+					ReturnT<String> beatResult = beatExecutor(address);
+					triggerSb.append("<hr>").append(beatResult.getMsg());
+
+					if (beatResult.getCode() == ReturnT.SUCCESS_CODE) {
+						jobLog.setExecutorAddress(address);
+
+						ReturnT<String> runResult = runExecutor(triggerParam, address);
+						triggerSb.append("<hr>").append(runResult.getMsg());
+
+						return new ReturnT<String>(runResult.getCode(), triggerSb.toString());
+					}
+				}
+				return new ReturnT<String>(ReturnT.FAIL_CODE, triggerSb.toString());
+			}
 		}
 	}
 
-	
+	/**
+	 * run executor
+	 * @param address
+	 * @return
+	 */
+	public ReturnT<String> beatExecutor(String address){
+		ReturnT<String> beatResult = null;
+		try {
+			ExecutorBiz executorBiz = (ExecutorBiz) new NetComClientProxy(ExecutorBiz.class, address).getObject();
+			beatResult = executorBiz.beat();
+		} catch (Exception e) {
+			logger.error("", e);
+			beatResult = new ReturnT<String>(ReturnT.FAIL_CODE, ""+e );
+		}
+
+		StringBuffer sb = new StringBuffer("心跳检测：");
+		sb.append("<br>address：").append(address);
+		sb.append("<br>code：").append(beatResult.getCode());
+		sb.append("<br>msg：").append(beatResult.getMsg());
+		beatResult.setMsg(sb.toString());
+
+		return beatResult;
+	}
+
+	/**
+	 * run executor
+	 * @param triggerParam
+	 * @param address
+	 * @return
+	 */
+	public ReturnT<String> runExecutor(TriggerParam triggerParam, String address){
+		ReturnT<String> runResult = null;
+		try {
+			ExecutorBiz executorBiz = (ExecutorBiz) new NetComClientProxy(ExecutorBiz.class, address).getObject();
+			runResult = executorBiz.run(triggerParam);
+		} catch (Exception e) {
+			logger.error("", e);
+			runResult = new ReturnT<String>(ReturnT.FAIL_CODE, ""+e );
+		}
+
+		StringBuffer sb = new StringBuffer("触发调度：");
+		sb.append("<br>address：").append(address);
+		sb.append("<br>code：").append(runResult.getCode());
+		sb.append("<br>msg：").append(runResult.getMsg());
+		runResult.setMsg(sb.toString());
+
+		return runResult;
+	}
+
+	/**
+	 * find callback address list
+	 * @return
+	 */
+	public Set<String> findCallbackAddressList(){
+		Set<String> adminAddressSet = new HashSet<String>();
+		adminAddressSet.add(XxlJobDynamicScheduler.getCallbackAddress());
+
+		List<String> adminAddressList = JobRegistryHelper.discover(RegistHelper.RegistType.ADMIN.name(), RegistHelper.RegistType.ADMIN.name());
+		if (adminAddressList!=null) {
+			adminAddressSet.addAll(adminAddressList);
+		}
+		return adminAddressSet;
+	}
+
 }

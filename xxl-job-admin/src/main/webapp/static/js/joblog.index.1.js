@@ -81,6 +81,25 @@ $(function() {
 	                { "data": 'id', "bSortable": false, "visible" : false},
 					{ "data": 'jobGroup', "visible" : false},
 	                { "data": 'jobId', "visible" : false},
+					{
+						"data": 'triggerTime',
+						"render": function ( data, type, row ) {
+							return data?moment(new Date(data)).format("YYYY-MM-DD HH:mm:ss"):"";
+						}
+					},
+					{
+						"data": 'triggerCode',
+						"render": function ( data, type, row ) {
+							return (data==200)?'<span style="color: green">成功</span>':(data==500)?'<span style="color: red">失败</span>':(data==0)?'':data;
+						}
+
+					},
+					{
+						"data": 'triggerMsg',
+						"render": function ( data, type, row ) {
+							return data?'<a class="logTips" href="javascript:;" >查看<span style="display:none;">'+ data +'</span></a>':"无";
+						}
+					},
 	                { "data": 'executorAddress', "visible" : true},
 					{
 						"data": 'executorHandler',
@@ -90,25 +109,7 @@ $(function() {
 						}
 					},
 	                { "data": 'executorParam', "visible" : true},
-	                { 
-	                	"data": 'triggerTime', 
-	                	"render": function ( data, type, row ) {
-	                		return data?moment(new Date(data)).format("YYYY-MM-DD HH:mm:ss"):"";
-	                	}
-	                },
-	                {
-						"data": 'triggerCode',
-						"render": function ( data, type, row ) {
-							return (data==200)?'<span style="color: green">成功</span>':(data==500)?'<span style="color: red">失败</span>':(data==0)?'':data;
-						}
 
-	                },
-	                { 
-	                	"data": 'triggerMsg',
-	                	"render": function ( data, type, row ) {
-	                		return data?'<a class="logTips" href="javascript:;" >查看<span style="display:none;">'+ data +'</span></a>':"无";
-	                	}
-	                },
 	                { 
 	                	"data": 'handleTime',
 	                	"render": function ( data, type, row ) {
@@ -147,7 +148,7 @@ $(function() {
 			"sProcessing" : "处理中...",
 			"sLengthMenu" : "每页 _MENU_ 条记录",
 			"sZeroRecords" : "没有匹配结果",
-			"sInfo" : "第 _PAGE_ 页 ( 总共 _PAGES_ 页 )",
+			"sInfo" : "第 _PAGE_ 页 ( 总共 _PAGES_ 页，_TOTAL_ 条记录 )",
 			"sInfoEmpty" : "无记录",
 			"sInfoFiltered" : "(由 _MAX_ 项结果过滤)",
 			"sInfoPostFix" : "",

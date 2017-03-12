@@ -1,5 +1,7 @@
 package com.xxl.job.core.util;
 
+import com.xxl.job.core.rpc.codec.RpcResponse;
+import com.xxl.job.core.rpc.serialize.HessianSerializer;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -8,6 +10,8 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -18,6 +22,7 @@ import java.io.InputStream;
  * @author xuxueli 2015-10-31 19:50:41
  */
 public class HttpClientUtil {
+	private static Logger logger = LoggerFactory.getLogger(HttpClientUtil.class);
 
 	/**
 	 * post request
@@ -47,7 +52,11 @@ public class HttpClientUtil {
 				EntityUtils.consume(entity);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("", e);
+
+			RpcResponse rpcResponse = new RpcResponse();
+			rpcResponse.setError(e.getMessage());
+			responseBytes = HessianSerializer.serialize(rpcResponse);
 		} finally {
 			httpPost.releaseConnection();
 			try {

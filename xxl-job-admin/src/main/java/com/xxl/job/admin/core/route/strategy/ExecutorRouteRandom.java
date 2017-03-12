@@ -14,6 +14,7 @@ public class ExecutorRouteRandom extends ExecutorRouter {
 
     @Override
     public String route(int jobId, ArrayList<String> addressList) {
+        // Collections.shuffle(addressList);
         return addressList.get(localRandom.nextInt(addressList.size()));
     }
 

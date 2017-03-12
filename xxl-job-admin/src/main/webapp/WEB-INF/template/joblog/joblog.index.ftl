@@ -78,12 +78,12 @@
 					                	<th name="id" >id</th>
                                         <th name="jobGroup" >执行器ID</th>
 					                	<th name="jobId" >任务ID</th>
+                                        <th name="triggerTime" >调度时间</th>
+                                        <th name="triggerCode" >调度结果</th>
+                                        <th name="triggerMsg" >调度备注</th>
 					                  	<th name="executorAddress" >执行器地址</th>
                                         <th name="executorHandler" >JobHandler</th>
 					                  	<th name="executorParam" >任务参数</th>
-					                  	<th name="triggerTime" >调度时间</th>
-					                  	<th name="triggerCode" >调度结果</th>
-					                  	<th name="triggerMsg" >调度备注</th>
 					                  	<th name="handleTime" >执行时间</th>
 					                  	<th name="handleCode" >执行结果</th>
 					                  	<th name="handleMsg" >执行备注</th>

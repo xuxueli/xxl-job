@@ -55,7 +55,7 @@ public class XxlJobLogDaoImpl implements IXxlJobLogDao {
 	public int save(XxlJobLog xxlJobLog) {
 		return sqlSessionTemplate.insert("XxlJobLogMapper.save", xxlJobLog);
 	}
-	
+
 	@Override
 	public int updateTriggerInfo(XxlJobLog xxlJobLog) {
 		if (xxlJobLog.getTriggerMsg()!=null && xxlJobLog.getTriggerMsg().length()>2000) {

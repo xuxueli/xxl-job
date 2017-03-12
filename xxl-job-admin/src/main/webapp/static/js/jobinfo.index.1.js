@@ -138,7 +138,7 @@ $(function() {
 			"sProcessing" : "处理中...",
 			"sLengthMenu" : "每页 _MENU_ 条记录",
 			"sZeroRecords" : "没有匹配结果",
-			"sInfo" : "第 _PAGE_ 页 ( 总共 _PAGES_ 页 )",
+			"sInfo" : "第 _PAGE_ 页 ( 总共 _PAGES_ 页，_TOTAL_ 条记录 )",
 			"sInfoEmpty" : "无记录",
 			"sInfoFiltered" : "(由 _MAX_ 项结果过滤)",
 			"sInfoPostFix" : "",
