@@ -29,19 +29,19 @@ public class XxlJobInfoTest {
 	@Test
 	public void save_load(){
 		XxlJobInfo info = new XxlJobInfo();
-		info.setJobName("job_name");
+		info.setJobGroup(1);
 		info.setJobCron("jobCron");
 		int count = xxlJobInfoDao.save(info);
 		System.out.println(count);
 		System.out.println(info.getId());
-		
-		XxlJobInfo item = xxlJobInfoDao.load(0 ,"job_name");
+
+		XxlJobInfo item = xxlJobInfoDao.loadById(2);
 		System.out.println(item);
 	}
 	
 	@Test
 	public void update(){
-		XxlJobInfo item = xxlJobInfoDao.load(0 ,"job_name");
+		XxlJobInfo item = xxlJobInfoDao.loadById(2);
 		
 		item.setJobCron("jobCron2");
 		xxlJobInfoDao.update(item);

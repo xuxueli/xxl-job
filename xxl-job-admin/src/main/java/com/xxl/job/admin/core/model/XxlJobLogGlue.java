@@ -7,7 +7,7 @@ package com.xxl.job.admin.core.model;
 public class XxlJobLogGlue {
 	
 	private int id;
-	private int jobId;
+	private int jobId;				// 任务主键ID
 	private String glueSource;
 	private String glueRemark;
 	private String addTime;

@@ -35,19 +35,19 @@
 	    		<div class="col-xs-3">
  					<div class="input-group">
 	                	<span class="input-group-addon">执行器</span>
-                		<select class="form-control" id="jobGroup"  paramVal="${jobGroup}" >
-                            <option value="0" selected>请选择</option>
+                		<select class="form-control" id="jobGroup"  paramVal="<#if jobInfo?exists>${jobInfo.jobGroup}</#if>" >
+                            <option value="0" >请选择</option>
                 			<#list JobGroupList as group>
-                				<option value="${group.id}" <#if jobGroup == group.appName && false>selected</#if> >${group.title}</option>
+                				<option value="${group.id}" >${group.title}</option>
                 			</#list>
 	                  	</select>
 	              	</div>
 	            </div>
 	            <div class="col-xs-3">
 	              	<div class="input-group">
-	                	<span class="input-group-addon">描述</span>
-                        <select class="form-control" id="jobName" paramVal="${jobName}" >
-                            <option value="" >请选择</option>
+	                	<span class="input-group-addon">任务</span>
+                        <select class="form-control" id="jobId" paramVal="<#if jobInfo?exists>${jobInfo.id}</#if>" >
+                            <option value="0" >请选择</option>
 						</select>
 	              	</div>
 	            </div>
@@ -76,8 +76,8 @@
 				                <thead>
 					            	<tr>
 					                	<th name="id" >id</th>
-					                	<th name="jobGroup" >任务组</th>
-					                  	<th name="jobName" >任务名</th>
+                                        <th name="jobGroup" >执行器ID</th>
+					                	<th name="jobId" >任务ID</th>
 					                  	<th name="executorAddress" >执行器地址</th>
                                         <th name="executorHandler" >JobHandler</th>
 					                  	<th name="executorParam" >任务参数</th>

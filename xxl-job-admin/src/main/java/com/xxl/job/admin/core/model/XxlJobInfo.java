@@ -8,10 +8,9 @@ import java.util.Date;
  */
 public class XxlJobInfo {
 	
-	private int id;
+	private int id;				// 主键ID	    (JobKey.name)
 	
-	private int jobGroup;		// 任务组 (执行器ID)
-	private String jobName;		// 任务名
+	private int jobGroup;		// 执行器主键ID	(JobKey.group)
 	private String jobCron;		// 任务执行CRON表达式 【base on quartz】
 	private String jobDesc;
 	
@@ -48,14 +47,6 @@ public class XxlJobInfo {
 
 	public void setJobGroup(int jobGroup) {
 		this.jobGroup = jobGroup;
-	}
-
-	public String getJobName() {
-		return jobName;
-	}
-
-	public void setJobName(String jobName) {
-		this.jobName = jobName;
 	}
 
 	public String getJobCron() {

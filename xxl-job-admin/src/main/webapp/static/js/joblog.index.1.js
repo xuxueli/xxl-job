@@ -1,24 +1,22 @@
 $(function() {
 
 	// 任务组列表选中, 任务列表初始化和选中
-    var ifParam = true;
 	$("#jobGroup").on("change", function () {
 		var jobGroup = $(this).children('option:selected').val();
 		$.ajax({
 			type : 'POST',
-            async: false,   // async, avoid js invoke pagelist before jobName data init
+            async: false,   // async, avoid js invoke pagelist before jobId data init
 			url : base_url + '/joblog/getJobsByGroup',
 			data : {"jobGroup":jobGroup},
 			dataType : "json",
 			success : function(data){
 				if (data.code == 200) {
-					$("#jobName").html('<option value="" >请选择</option>');
-                        $.each(data.content, function (n, value) {
-                        $("#jobName").append('<option value="' + value.jobName + '" >' + value.jobDesc + '</option>');
+					$("#jobId").html('<option value="" >请选择</option>');
+					$.each(data.content, function (n, value) {
+                        $("#jobId").append('<option value="' + value.id + '" >' + value.jobDesc + '</option>');
                     });
-                    if ($("#jobName").attr("paramVal")){
-                        $("#jobName").find("option[value='" + $("#jobName").attr("paramVal") + "']").attr("selected",true);
-                        $("#jobName").attr("paramVal")
+                    if ($("#jobId").attr("paramVal")){
+                        $("#jobId").find("option[value='" + $("#jobId").attr("paramVal") + "']").attr("selected",true);
                     }
 				} else {
 					ComAlertTec.show(data.msg);
@@ -29,7 +27,6 @@ $(function() {
 	if ($("#jobGroup").attr("paramVal")){
 		$("#jobGroup").find("option[value='" + $("#jobGroup").attr("paramVal") + "']").attr("selected",true);
         $("#jobGroup").change();
-        $("#jobGroup").attr("")
 	}
 
 	// 过滤时间
@@ -70,7 +67,7 @@ $(function() {
 	        data : function ( d ) {
 	        	var obj = {};
 	        	obj.jobGroup = $('#jobGroup').val();
-	        	obj.jobName = $('#jobName').val();
+	        	obj.jobId = $('#jobId').val();
 				obj.filterTime = $('#filterTime').val();
 	        	obj.start = d.start;
 	        	obj.length = d.length;
@@ -82,21 +79,8 @@ $(function() {
 	    //"scrollX": false,
 	    "columns": [
 	                { "data": 'id', "bSortable": false, "visible" : false},
-	                { 
-	                	"data": 'jobGroup', 
-	                	"visible" : false, 
-	                	"bSortable": false, 
-	                	"render": function ( data, type, row ) {
-	            			var groupMenu = $("#jobGroup").find("option");
-	            			for ( var index in $("#jobGroup").find("option")) {
-	            				if ($(groupMenu[index]).attr('value') == data) {
-									return $(groupMenu[index]).html();
-								}
-							}
-	            			return data;
-	            		}
-            		},
-	                { "data": 'jobName', "visible" : false},
+					{ "data": 'jobGroup', "visible" : false},
+	                { "data": 'jobId', "visible" : false},
 	                { "data": 'executorAddress', "visible" : true},
 					{
 						"data": 'executorHandler',

@@ -19,12 +19,12 @@ public interface IXxlJobService {
 	
 	public ReturnT<String> reschedule(XxlJobInfo jobInfo);
 	
-	public ReturnT<String> remove(int jobGroup, String jobName);
+	public ReturnT<String> remove(int id);
 	
-	public ReturnT<String> pause(int jobGroup, String jobName);
+	public ReturnT<String> pause(int id);
 	
-	public ReturnT<String> resume(int jobGroup, String jobName);
+	public ReturnT<String> resume(int id);
 	
-	public ReturnT<String> triggerJob(int jobGroup, String jobName);
+	public ReturnT<String> triggerJob(int id);
 	
 }

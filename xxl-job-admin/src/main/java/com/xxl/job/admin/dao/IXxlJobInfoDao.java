@@ -1,7 +1,6 @@
 package com.xxl.job.admin.dao;
 
 import com.xxl.job.admin.core.model.XxlJobInfo;
-import com.xxl.job.admin.core.model.XxlJobLog;
 
 import java.util.List;
 
@@ -18,11 +17,10 @@ public interface IXxlJobInfoDao {
 	public int save(XxlJobInfo info);
 
 	public XxlJobInfo loadById(int id);
-	public XxlJobInfo load(int jobGroup, String jobName);
 	
 	public int update(XxlJobInfo item);
 	
-	public int delete(int jobGroup, String jobName);
+	public int delete(int id);
 
-	public List<XxlJobLog> getJobsByGroup(String jobGroup);
+	public List<XxlJobInfo> getJobsByGroup(String jobGroup);
 }

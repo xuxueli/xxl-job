@@ -7,7 +7,6 @@
 		<result column="id" property="id" />
 	
 		<result column="job_group" property="jobGroup" />
-	    <result column="job_name" property="jobName" />
 	    <result column="job_cron" property="jobCron" />
 	    <result column="job_desc" property="jobDesc" />
 	    
@@ -31,7 +30,6 @@
 	<sql id="Base_Column_List">
 		t.id,
 		t.job_group,
-		t.job_name,
 		t.job_cron,
 		t.job_desc,
 		t.add_time,
@@ -74,11 +72,10 @@
 			</if>
 		</trim>
 	</select>
-	
+
 	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobInfo" useGeneratedKeys="true" keyProperty="id" >
 		INSERT INTO XXL_JOB_QRTZ_TRIGGER_INFO (
 			job_group,
-			job_name,
 			job_cron,
 			job_desc,
 			add_time,
@@ -93,8 +90,7 @@
 			glue_remark,
 			child_jobkey
 		) VALUES (
-			#{jobGroup}, 
-			#{jobName}, 
+			#{jobGroup},
 			#{jobCron}, 
 			#{jobDesc},
 			NOW(),
@@ -109,22 +105,16 @@
 			#{glueRemark},
 			#{childJobKey}
 		);
-		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id"> 
-			SELECT LAST_INSERT_ID() 
-		</selectKey> 
+		<!--<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+			SELECT LAST_INSERT_ID()
+			/*SELECT @@IDENTITY AS id*/
+		</selectKey>-->
 	</insert>
 
 	<select id="loadById" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
 		SELECT <include refid="Base_Column_List" />
 		FROM XXL_JOB_QRTZ_TRIGGER_INFO AS t
 		WHERE t.id = #{id}
-	</select>
-
-	<select id="load" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
-		SELECT <include refid="Base_Column_List" />
-		FROM XXL_JOB_QRTZ_TRIGGER_INFO AS t
-		WHERE t.job_group = #{jobGroup}
-			AND t.job_name = #{jobName}
 	</select>
 	
 	<update id="update" parameterType="com.xxl.job.admin.core.model.XxlJobInfo" >
@@ -142,17 +132,13 @@
 			glue_source = #{glueSource},
 			glue_remark = #{glueRemark},
 			child_jobkey = #{childJobKey}
-		WHERE job_group = #{jobGroup}
-			AND job_name = #{jobName}
+		WHERE id = #{id}
 	</update>
 	
 	<delete id="delete" parameterType="java.util.HashMap">
 		DELETE
-		FROM
-			XXL_JOB_QRTZ_TRIGGER_INFO
-		WHERE
-			job_group = #{jobGroup}
-		AND job_name = #{jobName}
+		FROM XXL_JOB_QRTZ_TRIGGER_INFO
+		WHERE id = #{id}
 	</delete>
 
 	<select id="getJobsByGroup" parameterType="java.util.HashMap" resultMap="XxlJobInfo">

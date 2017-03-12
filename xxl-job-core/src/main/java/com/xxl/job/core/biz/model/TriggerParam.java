@@ -9,42 +9,24 @@ import java.util.Set;
 public class TriggerParam implements Serializable{
     private static final long serialVersionUID = 42L;
 
-    private String action;
-
-    private String jobGroup;
-    private String jobName;
+    private int jobId;
 
     private String executorHandler;
     private String executorParams;
 
     private boolean glueSwitch;
 
-    private Set<String> logAddress;
     private int logId;
     private long logDateTim;
 
-    public String getAction() {
-        return action;
+    private Set<String> logAddress;
+
+    public int getJobId() {
+        return jobId;
     }
 
-    public void setAction(String action) {
-        this.action = action;
-    }
-
-    public String getJobGroup() {
-        return jobGroup;
-    }
-
-    public void setJobGroup(String jobGroup) {
-        this.jobGroup = jobGroup;
-    }
-
-    public String getJobName() {
-        return jobName;
-    }
-
-    public void setJobName(String jobName) {
-        this.jobName = jobName;
+    public void setJobId(int jobId) {
+        this.jobId = jobId;
     }
 
     public String getExecutorHandler() {
@@ -71,14 +53,6 @@ public class TriggerParam implements Serializable{
         this.glueSwitch = glueSwitch;
     }
 
-    public Set<String> getLogAddress() {
-        return logAddress;
-    }
-
-    public void setLogAddress(Set<String> logAddress) {
-        this.logAddress = logAddress;
-    }
-
     public int getLogId() {
         return logId;
     }
@@ -95,18 +69,11 @@ public class TriggerParam implements Serializable{
         this.logDateTim = logDateTim;
     }
 
-    @Override
-    public String toString() {
-        return "RequestModel{" +
-                ", action='" + action + '\'' +
-                ", jobGroup='" + jobGroup + '\'' +
-                ", jobName='" + jobName + '\'' +
-                ", executorHandler='" + executorHandler + '\'' +
-                ", executorParams='" + executorParams + '\'' +
-                ", glueSwitch=" + glueSwitch +
-                ", logAddress=" + logAddress +
-                ", logId=" + logId +
-                ", logDateTim=" + logDateTim +
-                '}';
+    public Set<String> getLogAddress() {
+        return logAddress;
+    }
+
+    public void setLogAddress(Set<String> logAddress) {
+        this.logAddress = logAddress;
     }
 }

@@ -51,7 +51,7 @@
                 <div class="col-xs-4">
                     <div class="input-group">
                         <span class="input-group-addon">JobHandler</span>
-                        <input type="text" class="form-control" id="executorHandler" value="${jobName}" autocomplete="on" >
+                        <input type="text" class="form-control" id="executorHandler" autocomplete="on" >
                     </div>
                 </div>
 	            <div class="col-xs-2">
@@ -74,7 +74,6 @@
 					            	<tr>
 					            		<th name="id" >id</th>
 					                	<th name="jobGroup" >jobGroup</th>
-					                  	<th name="jobName" >jobName</th>
                                         <th name="childJobKey" >任务Key</th>
 					                  	<th name="jobDesc" >描述</th>
 					                  	<th name="jobCron" >Cron</th>

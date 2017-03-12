@@ -8,10 +8,9 @@ public interface GlueLoader {
 
 	/**
 	 * load code source by name, ensure every load is the latest.
-	 * @param job_group
-	 * @param job_name
+	 * @param jobId
 	 * @return code source
 	 */
-	public String load(String job_group, String job_name);
+	public String load(int jobId);
 	
 }

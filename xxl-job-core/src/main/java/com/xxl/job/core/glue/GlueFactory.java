@@ -112,11 +112,11 @@ public class GlueFactory implements ApplicationContextAware {
 	
 	// ----------------------------- load instance -----------------------------
 	// load new instance, prototype
-	public IJobHandler loadNewInstance(String job_group, String job_name) throws Exception{
-		if (job_group==null || job_group.trim().length()==0 || job_name==null || job_name.trim().length()==0) {
+	public IJobHandler loadNewInstance(int jobId) throws Exception{
+		if (jobId==0) {
 			return null;
 		}
-		String codeSource = glueLoader.load(job_group, job_name);
+		String codeSource = glueLoader.load(jobId);
 		if (codeSource!=null && codeSource.trim().length()>0) {
 			Class<?> clazz = groovyClassLoader.parseClass(codeSource);
 			if (clazz != null) {
@@ -136,14 +136,14 @@ public class GlueFactory implements ApplicationContextAware {
 	}
 	
 	// // load instance, singleton
-	private static String generateInstanceCacheKey(String job_group, String job_name){
-		return job_group.concat("_").concat(job_name).concat("_instance");
+	private static String generateInstanceCacheKey(int jobId){
+		return String.valueOf(jobId).concat("_instance");
 	}
-	public IJobHandler loadInstance(String job_group, String job_name) throws Exception{
-		if (job_group==null || job_group.trim().length()==0 || job_name==null || job_name.trim().length()==0) {
+	public IJobHandler loadInstance(int jobId) throws Exception{
+		if (jobId==0) {
 			return null;
 		}
-		String cacheInstanceKey = generateInstanceCacheKey(job_group, job_name);
+		String cacheInstanceKey = generateInstanceCacheKey(jobId);
 		Object cacheInstance = LocalCache.getInstance().get(cacheInstanceKey);
 		if (cacheInstance!=null) {
 			if (!(cacheInstance instanceof IJobHandler)) {
@@ -152,7 +152,7 @@ public class GlueFactory implements ApplicationContextAware {
 			}
 			return (IJobHandler) cacheInstance;
 		}
-		Object instance = loadNewInstance(job_group, job_name);
+		Object instance = loadNewInstance(jobId);
 		if (instance!=null) {
 			if (!(instance instanceof IJobHandler)) {
 				throw new IllegalArgumentException(">>>>>>>>>>> xxl-glue, loadInstance error, "
@@ -167,8 +167,8 @@ public class GlueFactory implements ApplicationContextAware {
 	}
 	
 	// ----------------------------- util -----------------------------
-	public static void glue(String job_group, String job_name, String... params) throws Exception{
-		GlueFactory.glueFactory.loadInstance(job_group, job_name).execute(params);
+	public static void glue(int jobId, String... params) throws Exception{
+		GlueFactory.glueFactory.loadInstance(jobId).execute(params);
 	}
 	
 }

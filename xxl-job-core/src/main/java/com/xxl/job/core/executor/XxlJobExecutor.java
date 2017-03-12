@@ -61,7 +61,7 @@ public class XxlJobExecutor implements ApplicationContextAware, ApplicationListe
 
         // job thread repository destory
         if (JobThreadRepository.size() > 0) {
-            for (Map.Entry<String, JobThread> item: JobThreadRepository.entrySet()) {
+            for (Map.Entry<Integer, JobThread> item: JobThreadRepository.entrySet()) {
                 JobThread jobThread = item.getValue();
                 jobThread.toStop("Web容器销毁终止");
                 jobThread.interrupt();
@@ -114,20 +114,20 @@ public class XxlJobExecutor implements ApplicationContextAware, ApplicationListe
     }
 
     // ---------------------------------- job thread repository
-    private static ConcurrentHashMap<String, JobThread> JobThreadRepository = new ConcurrentHashMap<String, JobThread>();
-    public static JobThread registJobThread(String jobkey, IJobHandler handler){
+    private static ConcurrentHashMap<Integer, JobThread> JobThreadRepository = new ConcurrentHashMap<Integer, JobThread>();
+    public static JobThread registJobThread(int jobId, IJobHandler handler){
         JobThread jobThread = new JobThread(handler);
         jobThread.start();
-        logger.info(">>>>>>>>>>> xxl-job regist JobThread success, jobkey:{}, handler:{}", new Object[]{jobkey, handler});
-        JobThreadRepository.put(jobkey, jobThread);	// putIfAbsent | oh my god, map's put method return the old value!!!
+        logger.info(">>>>>>>>>>> xxl-job regist JobThread success, jobId:{}, handler:{}", new Object[]{jobId, handler});
+        JobThreadRepository.put(jobId, jobThread);	// putIfAbsent | oh my god, map's put method return the old value!!!
         return jobThread;
     }
-    public static JobThread loadJobThread(String jobKey){
-        JobThread jobThread = JobThreadRepository.get(jobKey);
+    public static JobThread loadJobThread(int jobId){
+        JobThread jobThread = JobThreadRepository.get(jobId);
         return jobThread;
     }
-    public static void removeJobThread(String jobKey){
-        JobThreadRepository.remove(jobKey);
+    public static void removeJobThread(int jobId){
+        JobThreadRepository.remove(jobId);
     }
 
 }

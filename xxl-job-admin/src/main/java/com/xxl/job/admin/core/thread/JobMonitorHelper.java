@@ -57,7 +57,7 @@ public class JobMonitorHelper {
 									// pass
 								}
 								if (ReturnT.FAIL_CODE == log.getTriggerCode()|| ReturnT.FAIL_CODE==log.getHandleCode()) {
-									XxlJobInfo info = XxlJobDynamicScheduler.xxlJobInfoDao.load(log.getJobGroup(), log.getJobName());
+									XxlJobInfo info = XxlJobDynamicScheduler.xxlJobInfoDao.loadById(log.getJobId());
 									if (info!=null && info.getAlarmEmail()!=null && info.getAlarmEmail().trim().length()>0) {
 
 										Set<String> emailSet = new HashSet<String>(Arrays.asList(info.getAlarmEmail().split(",")));

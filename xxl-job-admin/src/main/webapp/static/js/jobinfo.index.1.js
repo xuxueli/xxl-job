@@ -34,12 +34,11 @@ $(function() {
 	            			return data;
 	            		}
             		},
-					{ "data": 'jobName', "visible" : false},
 					{
 						"data": 'childJobKey',
 						"visible" : true,
 						"render": function ( data, type, row ) {
-							var jobKey = row.jobGroup + "_" + row.jobName;
+							var jobKey = row.jobGroup + "_" + row.id;
 							return jobKey;
 						}
 					},
@@ -76,7 +75,7 @@ $(function() {
 	                	"render": function ( data, type, row ) {
 	                		if ('NORMAL' == data) {
 	                			return '<small class="label label-success" ><i class="fa fa-clock-o"></i>'+ data +'</small>'; 
-							} else if ('PAUSED' == data){
+							} else if ('PAUSED' == data || 'NONE' == data){
 								return '<small class="label label-default" title="暂停" ><i class="fa fa-clock-o"></i>'+ data +'</small>'; 
 							} else if ('BLOCKED' == data){
 								return '<small class="label label-default" title="阻塞[串行]" ><i class="fa fa-clock-o"></i>'+ data +'</small>'; 
@@ -91,11 +90,11 @@ $(function() {
 	                			var pause_resume = "";
 	                			if ('NORMAL' == row.jobStatus) {
 	                				pause_resume = '<button class="btn btn-primary btn-xs job_operate" type="job_pause" type="button">暂停</button>  ';
-								} else if ('PAUSED' == row.jobStatus){
+								} else if ('PAUSED' == row.jobStatus || 'NONE' == row.jobStatus){
 									pause_resume = '<button class="btn btn-primary btn-xs job_operate" type="job_resume" type="button">恢复</button>  ';
 								}
 	                			// log url
-	                			var logUrl = base_url +'/joblog?jobGroup='+ row.jobGroup +'&jobName='+ row.jobName;
+	                			var logUrl = base_url +'/joblog?jobId='+ row.id;
 	                			
 	                			// log url
 	                			var codeBtn = "";
@@ -107,7 +106,6 @@ $(function() {
 								// html
 								var html = '<p id="'+ row.id +'" '+
 									' jobGroup="'+ row.jobGroup +'" '+
-									' jobName="'+ row.jobName +'" '+
 									' jobCron="'+ row.jobCron +'" '+
 									' jobDesc="'+ row.jobDesc +'" '+
 									' author="'+ row.author +'" '+
@@ -188,16 +186,14 @@ $(function() {
 			return;
 		}
 		
-		var jobGroup = $(this).parent('p').attr("jobGroup");
-		var jobName = $(this).parent('p').attr("jobName");
+		var id = $(this).parent('p').attr("id");
 		
 		ComConfirm.show("确认" + typeName + "?", function(){
 			$.ajax({
 				type : 'POST',
 				url : url,
 				data : {
-					"jobGroup" : jobGroup,
-					"jobName"  : jobName
+					"id" : id
 				},
 				dataType : "json",
 				success : function(data){

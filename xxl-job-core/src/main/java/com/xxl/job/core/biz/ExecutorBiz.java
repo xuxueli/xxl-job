@@ -16,11 +16,10 @@ public interface ExecutorBiz {
 
     /**
      * kill
-     * @param jobGroup
-     * @param jobName
+     * @param jobId
      * @return
      */
-    public ReturnT<String> kill(String jobGroup, String jobName);
+    public ReturnT<String> kill(int jobId);
 
     /**
      * log

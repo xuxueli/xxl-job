@@ -1,7 +1,6 @@
 package com.xxl.job.admin.dao.impl;
 
 import com.xxl.job.admin.core.model.XxlJobInfo;
-import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.admin.dao.IXxlJobInfoDao;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
@@ -53,30 +52,17 @@ public class XxlJobInfoDaoImpl implements IXxlJobInfoDao {
 	}
 
 	@Override
-	public XxlJobInfo load(int jobGroup, String jobName) {
-		HashMap<String, Object> params = new HashMap<String, Object>();
-		params.put("jobGroup", jobGroup);
-		params.put("jobName", jobName);
-		
-		return sqlSessionTemplate.selectOne("XxlJobInfoMapper.load", params);
-	}
-
-	@Override
 	public int update(XxlJobInfo item) {
 		return sqlSessionTemplate.update("XxlJobInfoMapper.update", item);
 	}
 
 	@Override
-	public int delete(int jobGroup, String jobName) {
-		HashMap<String, Object> params = new HashMap<String, Object>();
-		params.put("jobGroup", jobGroup);
-		params.put("jobName", jobName);
-		
-		return sqlSessionTemplate.update("XxlJobInfoMapper.delete", params);
+	public int delete(int id) {
+		return sqlSessionTemplate.update("XxlJobInfoMapper.delete", id);
 	}
 
 	@Override
-	public List<XxlJobLog> getJobsByGroup(String jobGroup) {
+	public List<XxlJobInfo> getJobsByGroup(String jobGroup) {
 		return sqlSessionTemplate.selectList("XxlJobInfoMapper.getJobsByGroup", jobGroup);
 	}
 

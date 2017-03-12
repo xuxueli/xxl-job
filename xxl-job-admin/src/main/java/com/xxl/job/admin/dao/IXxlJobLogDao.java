@@ -11,8 +11,8 @@ import java.util.List;
  */
 public interface IXxlJobLogDao {
 	
-	public List<XxlJobLog> pageList(int offset, int pagesize, int jobGroup, String jobName, Date triggerTimeStart, Date triggerTimeEnd);
-	public int pageListCount(int offset, int pagesize, int jobGroup, String jobName, Date triggerTimeStart, Date triggerTimeEnd);
+	public List<XxlJobLog> pageList(int offset, int pagesize, int jobGroup, int jobId, Date triggerTimeStart, Date triggerTimeEnd);
+	public int pageListCount(int offset, int pagesize, int jobGroup, int jobId, Date triggerTimeStart, Date triggerTimeEnd);
 	
 	public XxlJobLog load(int id);
 
@@ -20,6 +20,6 @@ public interface IXxlJobLogDao {
 	public int updateTriggerInfo(XxlJobLog xxlJobLog);
 	public int updateHandleInfo(XxlJobLog xxlJobLog);
 	
-	public int delete(int jobGroup, String jobName);
+	public int delete(int jobId);
 	
 }

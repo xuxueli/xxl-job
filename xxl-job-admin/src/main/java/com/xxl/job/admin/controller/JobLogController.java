@@ -40,29 +40,33 @@ public class JobLogController {
 	public IXxlJobLogDao xxlJobLogDao;
 
 	@RequestMapping
-	public String index(Model model, String jobGroup, String jobName) {
+	public String index(Model model, @RequestParam(required = false, defaultValue = "0") Integer jobId) {
 
-		// 任务组
+		// 执行器列表
 		List<XxlJobGroup> jobGroupList =  xxlJobGroupDao.findAll();
-
-		model.addAttribute("jobGroup", jobGroup);
-		model.addAttribute("jobName", jobName);
 		model.addAttribute("JobGroupList", jobGroupList);
+
+		// 任务
+		if (jobId > 0) {
+			XxlJobInfo jobInfo = xxlJobInfoDao.loadById(jobId);
+			model.addAttribute("jobInfo", jobInfo);
+		}
+
 		return "joblog/joblog.index";
 	}
 
 	@RequestMapping("/getJobsByGroup")
 	@ResponseBody
-	public ReturnT<List<XxlJobLog>> listJobByGroup(String jobGroup){
-		List<XxlJobLog> list = xxlJobInfoDao.getJobsByGroup(jobGroup);
-		return new ReturnT<List<XxlJobLog>>(list);
+	public ReturnT<List<XxlJobInfo>> listJobByGroup(String jobGroup){
+		List<XxlJobInfo> list = xxlJobInfoDao.getJobsByGroup(jobGroup);
+		return new ReturnT<List<XxlJobInfo>>(list);
 	}
 	
 	@RequestMapping("/pageList")
 	@ResponseBody
 	public Map<String, Object> pageList(@RequestParam(required = false, defaultValue = "0") int start,  
 			@RequestParam(required = false, defaultValue = "10") int length,
-			int jobGroup, String jobName, String filterTime) {
+			int jobGroup, int jobId, String filterTime) {
 		
 		// parse param
 		Date triggerTimeStart = null;
@@ -78,8 +82,8 @@ public class JobLogController {
 		}
 		
 		// page query
-		List<XxlJobLog> list = xxlJobLogDao.pageList(start, length, jobGroup, jobName, triggerTimeStart, triggerTimeEnd);
-		int list_count = xxlJobLogDao.pageListCount(start, length, jobGroup, jobName, triggerTimeStart, triggerTimeEnd);
+		List<XxlJobLog> list = xxlJobLogDao.pageList(start, length, jobGroup, jobId, triggerTimeStart, triggerTimeEnd);
+		int list_count = xxlJobLogDao.pageListCount(start, length, jobGroup, jobId, triggerTimeStart, triggerTimeEnd);
 		
 		// package result
 		Map<String, Object> maps = new HashMap<String, Object>();
@@ -130,8 +134,8 @@ public class JobLogController {
 	public ReturnT<String> logKill(int id){
 		// base check
 		XxlJobLog log = xxlJobLogDao.load(id);
-		XxlJobInfo jobInfo = xxlJobInfoDao.load(log.getJobGroup(), log.getJobName());
-		if (log == null || jobInfo==null) {
+		XxlJobInfo jobInfo = xxlJobInfoDao.loadById(log.getJobId());
+		if (jobInfo==null) {
 			return new ReturnT<String>(500, "参数异常");
 		}
 		if (ReturnT.SUCCESS_CODE != log.getTriggerCode()) {
@@ -146,7 +150,7 @@ public class JobLogController {
 			e.printStackTrace();
 			return new ReturnT<String>(500, e.getMessage());
 		}
-		ReturnT<String> runResult = executorBiz.kill(String.valueOf(log.getJobGroup()), log.getJobName());
+		ReturnT<String> runResult = executorBiz.kill(jobInfo.getId());
 
 		if (ReturnT.SUCCESS_CODE == runResult.getCode()) {
 			log.setHandleCode(ReturnT.FAIL_CODE);

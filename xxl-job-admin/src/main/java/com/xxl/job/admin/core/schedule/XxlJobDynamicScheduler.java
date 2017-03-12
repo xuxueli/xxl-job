@@ -143,7 +143,9 @@ public final class XxlJobDynamicScheduler implements ApplicationContextAware, In
 	// fill job info
 	public static void fillJobInfo(XxlJobInfo jobInfo) {
 		// TriggerKey : name + group
-        TriggerKey triggerKey = TriggerKey.triggerKey(jobInfo.getJobName(), String.valueOf(jobInfo.getJobGroup()));
+        String group = String.valueOf(jobInfo.getJobGroup());
+        String name = String.valueOf(jobInfo.getId());
+        TriggerKey triggerKey = TriggerKey.triggerKey(name, group);
 
         try {
 			Trigger trigger = scheduler.getTrigger(triggerKey);
@@ -177,7 +179,7 @@ public final class XxlJobDynamicScheduler implements ApplicationContextAware, In
 
 	// addJob 新增
 	@SuppressWarnings("unchecked")
-	public static boolean addJob(String jobGroup, String jobName, String cronExpression) throws SchedulerException {
+	public static boolean addJob(String jobName, String jobGroup, String cronExpression) throws SchedulerException {
     	// TriggerKey : name + group
         TriggerKey triggerKey = TriggerKey.triggerKey(jobName, jobGroup);
         JobKey jobKey = new JobKey(jobName, jobGroup);

@@ -9,16 +9,14 @@ import com.xxl.job.core.handler.IJobHandler;
  */
 public class GlueJobHandler extends IJobHandler {
 	
-	private String job_group;
-	private String job_name;
-	public GlueJobHandler(String job_group, String job_name) {
-		this.job_group = job_group;
-		this.job_name = job_name;
+	private int jobId;
+	public GlueJobHandler(int jobId) {
+		this.jobId = jobId;
 	}
 
 	@Override
 	public void execute(String... params) throws Exception {
-		GlueFactory.glue(job_group, job_name, params);
+		GlueFactory.glue(jobId, params);
 	}
 
 }

@@ -23,19 +23,15 @@ public class ExecutorBizImpl implements ExecutorBiz {
     }
 
     @Override
-    public ReturnT<String> kill(String jobGroup, String jobName) {
-
-        // generate jobKey
-        String jobKey = jobGroup.concat("_").concat(jobName);
-
+    public ReturnT<String> kill(int jobId) {
         // kill handlerThread, and create new one
-        JobThread jobThread = XxlJobExecutor.loadJobThread(jobKey);
+        JobThread jobThread = XxlJobExecutor.loadJobThread(jobId);
 
         if (jobThread != null) {
             IJobHandler handler = jobThread.getHandler();
             jobThread.toStop("人工手动终止");
             jobThread.interrupt();
-            XxlJobExecutor.removeJobThread(jobKey);
+            XxlJobExecutor.removeJobThread(jobId);
             return ReturnT.SUCCESS;
         }
 
@@ -53,11 +49,8 @@ public class ExecutorBizImpl implements ExecutorBiz {
 
     @Override
     public ReturnT<String> run(TriggerParam triggerParam) {
-        // generate jobKey
-        String jobKey = triggerParam.getJobGroup().concat("_").concat(triggerParam.getJobName());
-
         // load old thread
-        JobThread jobThread = XxlJobExecutor.loadJobThread(jobKey);
+        JobThread jobThread = XxlJobExecutor.loadJobThread(triggerParam.getJobId());
 
         if (!triggerParam.isGlueSwitch()) {
             // bean model
@@ -65,11 +58,11 @@ public class ExecutorBizImpl implements ExecutorBiz {
             // valid handler instance
             IJobHandler jobHandler = XxlJobExecutor.loadJobHandler(triggerParam.getExecutorHandler());
             if (jobHandler==null) {
-                return new ReturnT(ReturnT.FAIL_CODE, "job handler for jobKey=[" + jobKey + "] not found.");
+                return new ReturnT(ReturnT.FAIL_CODE, "job handler for JobId=[" + triggerParam.getJobId() + "] not found.");
             }
 
             if (jobThread == null) {
-                jobThread = XxlJobExecutor.registJobThread(jobKey, jobHandler);
+                jobThread = XxlJobExecutor.registJobThread(triggerParam.getJobId(), jobHandler);
             } else {
                 // job handler update, kill old job thread
                 if (jobThread.getHandler() != jobHandler) {
@@ -78,7 +71,7 @@ public class ExecutorBizImpl implements ExecutorBiz {
                     jobThread.interrupt();
 
                     // new thread, with new job handler
-                    jobThread = XxlJobExecutor.registJobThread(jobKey, jobHandler);
+                    jobThread = XxlJobExecutor.registJobThread(triggerParam.getJobId(), jobHandler);
                 }
             }
         } else {
@@ -86,11 +79,11 @@ public class ExecutorBizImpl implements ExecutorBiz {
 
             // valid glueloader
             if (!GlueFactory.isActive()) {
-                return new ReturnT(ReturnT.FAIL_CODE, "glueLoader for jobKey=[" + jobKey + "] not found.");
+                return new ReturnT(ReturnT.FAIL_CODE, "glueLoader for JobId=[" + triggerParam.getJobId() + "] not found.");
             }
 
             if (jobThread == null) {
-                jobThread = XxlJobExecutor.registJobThread(jobKey, new GlueJobHandler(triggerParam.getJobGroup(), triggerParam.getJobName()));
+                jobThread = XxlJobExecutor.registJobThread(triggerParam.getJobId(), new GlueJobHandler(triggerParam.getJobId()));
             } else {
                 // job handler update, kill old job thread
                 if (!(jobThread.getHandler() instanceof GlueJobHandler)) {
@@ -99,7 +92,7 @@ public class ExecutorBizImpl implements ExecutorBiz {
                     jobThread.interrupt();
 
                     // new thread, with new job handler
-                    jobThread = XxlJobExecutor.registJobThread(jobKey, new GlueJobHandler(triggerParam.getJobGroup(), triggerParam.getJobName()));
+                    jobThread = XxlJobExecutor.registJobThread(triggerParam.getJobId(), new GlueJobHandler(triggerParam.getJobId()));
                 }
             }
         }

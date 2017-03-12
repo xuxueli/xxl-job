@@ -12,7 +12,7 @@ public class XxlJobLog {
 	
 	// job info
 	private int jobGroup;
-	private String jobName;
+	private int jobId;
 
 	// execute info
 	private String executorAddress;
@@ -45,12 +45,12 @@ public class XxlJobLog {
 		this.jobGroup = jobGroup;
 	}
 
-	public String getJobName() {
-		return jobName;
+	public int getJobId() {
+		return jobId;
 	}
 
-	public void setJobName(String jobName) {
-		this.jobName = jobName;
+	public void setJobId(int jobId) {
+		this.jobId = jobId;
 	}
 
 	public String getExecutorAddress() {

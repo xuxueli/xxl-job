@@ -21,12 +21,12 @@ public class XxlJobLogDaoImpl implements IXxlJobLogDao {
 	public SqlSessionTemplate sqlSessionTemplate;
 
 	@Override
-	public List<XxlJobLog> pageList(int offset, int pagesize, int jobGroup, String jobName, Date triggerTimeStart, Date triggerTimeEnd) {
+	public List<XxlJobLog> pageList(int offset, int pagesize, int jobGroup, int jobId, Date triggerTimeStart, Date triggerTimeEnd) {
 		HashMap<String, Object> params = new HashMap<String, Object>();
 		params.put("offset", offset);
 		params.put("pagesize", pagesize);
 		params.put("jobGroup", jobGroup);
-		params.put("jobName", jobName);
+		params.put("jobId", jobId);
 		params.put("triggerTimeStart", triggerTimeStart);
 		params.put("triggerTimeEnd", triggerTimeEnd);
 		
@@ -34,12 +34,12 @@ public class XxlJobLogDaoImpl implements IXxlJobLogDao {
 	}
 
 	@Override
-	public int pageListCount(int offset, int pagesize, int jobGroup, String jobName, Date triggerTimeStart, Date triggerTimeEnd) {
+	public int pageListCount(int offset, int pagesize, int jobGroup, int jobId, Date triggerTimeStart, Date triggerTimeEnd) {
 		HashMap<String, Object> params = new HashMap<String, Object>();
 		params.put("offset", offset);
 		params.put("pagesize", pagesize);
 		params.put("jobGroup", jobGroup);
-		params.put("jobName", jobName);
+		params.put("jobId", jobId);
 		params.put("triggerTimeStart", triggerTimeStart);
 		params.put("triggerTimeEnd", triggerTimeEnd);
 		
@@ -73,11 +73,8 @@ public class XxlJobLogDaoImpl implements IXxlJobLogDao {
 	}
 
 	@Override
-	public int delete(int jobGroup, String jobName) {
-		HashMap<String, Object> params = new HashMap<String, Object>();
-		params.put("jobGroup", jobGroup);
-		params.put("jobName", jobName);
-		return sqlSessionTemplate.delete("XxlJobLogMapper.delete", params);
+	public int delete(int jobId) {
+		return sqlSessionTemplate.delete("XxlJobLogMapper.delete", jobId);
 	}
 	
 }

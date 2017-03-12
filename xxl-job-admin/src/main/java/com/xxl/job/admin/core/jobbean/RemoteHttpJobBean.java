@@ -35,12 +35,13 @@ public class RemoteHttpJobBean extends QuartzJobBean {
 	protected void executeInternal(JobExecutionContext context)
 			throws JobExecutionException {
 		JobKey jobKey = context.getTrigger().getJobKey();
-		
-		XxlJobInfo jobInfo = XxlJobDynamicScheduler.xxlJobInfoDao.load(Integer.valueOf(jobKey.getGroup()), jobKey.getName());
+		Integer jobId = Integer.valueOf(jobKey.getName());
+		XxlJobInfo jobInfo = XxlJobDynamicScheduler.xxlJobInfoDao.loadById(jobId);
+
 		// save log
 		XxlJobLog jobLog = new XxlJobLog();
 		jobLog.setJobGroup(jobInfo.getJobGroup());
-		jobLog.setJobName(jobInfo.getJobName());
+		jobLog.setJobId(jobInfo.getId());
 		XxlJobDynamicScheduler.xxlJobLogDao.save(jobLog);
 		logger.debug(">>>>>>>>>>> xxl-job trigger start, jobId:{}", jobLog.getId());
 
@@ -57,14 +58,13 @@ public class RemoteHttpJobBean extends QuartzJobBean {
 
 		// trigger request
 		TriggerParam triggerParam = new TriggerParam();
-		triggerParam.setJobGroup(String.valueOf(jobInfo.getJobGroup()));
-		triggerParam.setJobName(jobInfo.getJobName());
+		triggerParam.setJobId(jobInfo.getId());
 		triggerParam.setExecutorHandler(jobInfo.getExecutorHandler());
 		triggerParam.setExecutorParams(jobInfo.getExecutorParam());
 		triggerParam.setGlueSwitch((jobInfo.getGlueSwitch()==0)?false:true);
-		triggerParam.setLogAddress(adminAddressSet);
 		triggerParam.setLogId(jobLog.getId());
 		triggerParam.setLogDateTim(jobLog.getTriggerTime().getTime());
+		triggerParam.setLogAddress(adminAddressSet);
 
 		// parse address
 		String groupAddressInfo = "注册方式：";

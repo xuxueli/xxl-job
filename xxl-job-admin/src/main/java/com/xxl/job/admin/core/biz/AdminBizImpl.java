@@ -32,17 +32,17 @@ public class AdminBizImpl implements AdminBiz {
         // trigger success, to trigger child job, and avoid repeat trigger child job
         String childTriggerMsg = null;
         if (ReturnT.SUCCESS_CODE==handleCallbackParam.getCode() && ReturnT.SUCCESS_CODE!=log.getHandleCode()) {
-            XxlJobInfo xxlJobInfo = XxlJobDynamicScheduler.xxlJobInfoDao.load(log.getJobGroup(), log.getJobName());
+            XxlJobInfo xxlJobInfo = XxlJobDynamicScheduler.xxlJobInfoDao.loadById(log.getJobId());
             if (xxlJobInfo!=null && StringUtils.isNotBlank(xxlJobInfo.getChildJobKey())) {
                 childTriggerMsg = "<hr>";
                 String[] childJobKeys = xxlJobInfo.getChildJobKey().split(",");
                 for (int i = 0; i < childJobKeys.length; i++) {
                     String[] jobKeyArr = childJobKeys[i].split("_");
                     if (jobKeyArr!=null && jobKeyArr.length==2) {
-                        XxlJobInfo childJobInfo = XxlJobDynamicScheduler.xxlJobInfoDao.load(Integer.valueOf(jobKeyArr[0]), jobKeyArr[1]);
+                        XxlJobInfo childJobInfo = XxlJobDynamicScheduler.xxlJobInfoDao.loadById(Integer.valueOf(jobKeyArr[1]));
                         if (childJobInfo!=null) {
                             try {
-                                boolean ret = XxlJobDynamicScheduler.triggerJob(childJobInfo.getJobName(), String.valueOf(childJobInfo.getJobGroup()));
+                                boolean ret = XxlJobDynamicScheduler.triggerJob(String.valueOf(childJobInfo.getId()), String.valueOf(childJobInfo.getJobGroup()));
 
                                 // add msg
                                 childTriggerMsg += MessageFormat.format("<br> {0}/{1} 触发子任务成功, 子任务Key: {2}, status: {3}, 子任务描述: {4}",

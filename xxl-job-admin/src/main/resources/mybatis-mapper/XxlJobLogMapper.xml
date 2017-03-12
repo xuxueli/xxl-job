@@ -5,10 +5,10 @@
 	
 	<resultMap id="XxlJobLog" type="com.xxl.job.admin.core.model.XxlJobLog" >
 		<result column="id" property="id" />
-	
-	    <result column="job_group" property="jobGroup" />
-	    <result column="job_name" property="jobName" />
-	    
+
+		<result column="job_group" property="jobGroup" />
+		<result column="job_id" property="jobId" />
+
 	    <result column="executor_address" property="executorAddress" />
 		<result column="executor_handler" property="executorHandler" />
 	    <result column="executor_param" property="executorParam" />
@@ -26,7 +26,7 @@
 	<sql id="Base_Column_List">
 		t.id,
 		t.job_group,
-		t.job_name,
+		t.job_id,
 		t.executor_address,
 		t.executor_handler,
 		t.executor_param,
@@ -45,8 +45,8 @@
 			<if test="jobGroup != null and jobGroup != ''">
 				AND t.job_group = #{jobGroup}
 			</if>
-			<if test="jobName != null and jobName != ''">
-				AND t.job_name = #{jobName}
+			<if test="jobId gt 0">
+				AND t.job_id = #{jobId}
 			</if>
 			<if test="triggerTimeStart != null">
 				AND t.trigger_time <![CDATA[ >= ]]> #{triggerTimeStart}
@@ -66,8 +66,8 @@
 			<if test="jobGroup != null and jobGroup != ''">
 				AND t.job_group = #{jobGroup}
 			</if>
-			<if test="jobName != null and jobName != ''">
-				AND t.job_name = #{jobName}
+			<if test="jobId gt 0">
+				AND t.job_id = #{jobId}
 			</if>
 			<if test="triggerTimeStart != null">
 				AND t.trigger_time <![CDATA[ >= ]]> #{triggerTimeStart}
@@ -88,13 +88,13 @@
 	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobLog" useGeneratedKeys="true" keyProperty="id" >
 		INSERT INTO XXL_JOB_QRTZ_TRIGGER_LOG (
 			`job_group`,
-			`job_name`,
+			`job_id`,
 			`executor_address`,
 			`executor_handler`,
 			`executor_param`
 		) VALUES (
-			#{jobGroup}, 
-			#{jobName},
+			#{jobGroup},
+			#{jobId},
 			#{executorAddress},
 			#{executorHandler},
 			#{executorParam}
@@ -127,8 +127,7 @@
 	
 	<delete id="delete">
 		delete from XXL_JOB_QRTZ_TRIGGER_LOG
-		WHERE job_group = #{jobGroup}
-			AND job_name = #{jobName}
+		WHERE job_id = #{jobId}
 	</delete>
 	
 </mapper>

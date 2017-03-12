@@ -64,26 +64,26 @@ public class JobInfoController {
 	
 	@RequestMapping("/remove")
 	@ResponseBody
-	public ReturnT<String> remove(int jobGroup, String jobName) {
-		return xxlJobService.remove(jobGroup, jobName);
+	public ReturnT<String> remove(int id) {
+		return xxlJobService.remove(id);
 	}
 	
 	@RequestMapping("/pause")
 	@ResponseBody
-	public ReturnT<String> pause(int jobGroup, String jobName) {
-		return xxlJobService.pause(jobGroup, jobName);
+	public ReturnT<String> pause(int id) {
+		return xxlJobService.pause(id);
 	}
 	
 	@RequestMapping("/resume")
 	@ResponseBody
-	public ReturnT<String> resume(int jobGroup, String jobName) {
-		return xxlJobService.resume(jobGroup, jobName);
+	public ReturnT<String> resume(int id) {
+		return xxlJobService.resume(id);
 	}
 	
 	@RequestMapping("/trigger")
 	@ResponseBody
-	public ReturnT<String> triggerJob(int jobGroup, String jobName) {
-		return xxlJobService.triggerJob(jobGroup, jobName);
+	public ReturnT<String> triggerJob(int id) {
+		return xxlJobService.triggerJob(id);
 	}
 	
 }
