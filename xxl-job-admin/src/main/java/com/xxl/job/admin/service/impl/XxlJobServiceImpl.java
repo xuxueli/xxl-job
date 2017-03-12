@@ -168,6 +168,7 @@ public class XxlJobServiceImpl implements IXxlJobService {
 
 		// stage job info
 		XxlJobInfo exists_jobInfo = xxlJobInfoDao.loadById(jobInfo.getId());
+        String old_cron = exists_jobInfo.getJobCron();
 		if (exists_jobInfo == null) {
 			return new ReturnT<String>(500, "参数异常");
 		}
@@ -181,19 +182,16 @@ public class XxlJobServiceImpl implements IXxlJobService {
 		exists_jobInfo.setExecutorParam(jobInfo.getExecutorParam());
 		exists_jobInfo.setGlueSwitch(jobInfo.getGlueSwitch());
 		exists_jobInfo.setChildJobKey(jobInfo.getChildJobKey());
-		
-		try {
-			// fresh quartz
-			boolean ret = XxlJobDynamicScheduler.rescheduleJob(String.valueOf(exists_jobInfo.getJobGroup()), String.valueOf(exists_jobInfo.getId()), exists_jobInfo.getJobCron());
-			if (ret) {
-				xxlJobInfoDao.update(exists_jobInfo);
-				return ReturnT.SUCCESS;
-			} else {
-				return new ReturnT<String>(500, "更新任务失败");
-			}
-		} catch (SchedulerException e) {
-			logger.error("", e);
-		}
+        xxlJobInfoDao.update(exists_jobInfo);
+
+        try {
+            // fresh quartz
+            boolean ret = XxlJobDynamicScheduler.rescheduleJob(String.valueOf(exists_jobInfo.getJobGroup()), String.valueOf(exists_jobInfo.getId()), exists_jobInfo.getJobCron());
+            return ret?ReturnT.SUCCESS:ReturnT.FAIL;
+        } catch (SchedulerException e) {
+            logger.error("", e);
+        }
+
 		return ReturnT.FAIL;
 	}
 

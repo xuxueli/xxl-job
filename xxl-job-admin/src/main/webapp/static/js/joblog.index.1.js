@@ -11,7 +11,7 @@ $(function() {
 			dataType : "json",
 			success : function(data){
 				if (data.code == 200) {
-					$("#jobId").html('<option value="" >请选择</option>');
+					$("#jobId").html('<option value="0" >请选择</option>');
 					$.each(data.content, function (n, value) {
                         $("#jobId").append('<option value="' + value.id + '" >' + value.jobDesc + '</option>');
                     });
