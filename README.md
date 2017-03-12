@@ -237,7 +237,14 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 
     - 执行器：任务的绑定的执行器，任务触发调度时将会自动发现注册成功的执行器, 实现任务自动发现功能; 另一方面也可以方便的进行任务分组。每个任务必须绑定一个执行器, 可在 "执行器管理" 进行设置;
     - 描述：任务的描述信息，便于任务管理；
-    - 执行器地址：执行器接受任务调度的地址，格式为“IP:Port”，支持配置多个地址进行Failover，当存在多个地址时用逗号分隔，格式为“IP1:Port,IP2:Port...”
+    - 路由策略：当执行器集群部署时，执行器路由规则；
+        FIRST：固定选择第一个；
+        LAST：最后一个；
+        ROUND：轮询；
+        RANDOM：RANDOM；
+        CONSISTENT_HASH：一致性HASH；
+        LEAST_RECENTLY_USED：LEAST_RECENTLY_USED；
+        FAILOVER：故障转移；
     - Cron：触发任务执行的Cron表达式；
     - JobHandler + GLUE复选框：
         BEAN模式任务：不选中GLUE复选框，JobHandler输入框为必填项，需要输入该任务对应的JobHandler的名称，即执行器中新开发的JobHandler类“@JobHander”注解自定义的value值；
