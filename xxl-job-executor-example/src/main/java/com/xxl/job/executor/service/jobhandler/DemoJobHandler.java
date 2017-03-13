@@ -28,7 +28,7 @@ public class DemoJobHandler extends IJobHandler {
 	public void execute(String... params) throws Exception {
 		logger.info("XXL-JOB, Hello World.");
 		
-		for (int i = 0; i < 2; i++) {
+		for (int i = 0; i < 5; i++) {
 			logger.info("beat at:{}", i);
 			TimeUnit.SECONDS.sleep(2);
 		}

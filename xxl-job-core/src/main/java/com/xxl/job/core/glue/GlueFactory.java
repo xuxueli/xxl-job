@@ -1,6 +1,5 @@
 package com.xxl.job.core.glue;
 
-import com.xxl.job.core.glue.cache.LocalCache;
 import com.xxl.job.core.glue.loader.GlueLoader;
 import com.xxl.job.core.handler.IJobHandler;
 import groovy.lang.GroovyClassLoader;
@@ -30,14 +29,6 @@ public class GlueFactory implements ApplicationContextAware {
 	private GroovyClassLoader groovyClassLoader = new GroovyClassLoader();
 	
 	/**
-	 * glue cache timeout / second
-	 */
-	private long cacheTimeout = 5000;
-	public void setCacheTimeout(long cacheTimeout) {
-		this.cacheTimeout = cacheTimeout;
-	}
-	
-	/**
 	 * code source loader
 	 */
 	private GlueLoader glueLoader;
@@ -51,6 +42,9 @@ public class GlueFactory implements ApplicationContextAware {
 	// ----------------------------- spring support -----------------------------
 	private static ApplicationContext applicationContext;
 	private static GlueFactory glueFactory;
+	public static GlueFactory getInstance(){
+		return glueFactory;
+	}
 	
 	@Override
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
@@ -134,41 +128,5 @@ public class GlueFactory implements ApplicationContextAware {
 		}
 		throw new IllegalArgumentException(">>>>>>>>>>> xxl-glue, loadNewInstance error, instance is null");
 	}
-	
-	// // load instance, singleton
-	private static String generateInstanceCacheKey(int jobId){
-		return String.valueOf(jobId).concat("_instance");
-	}
-	public IJobHandler loadInstance(int jobId) throws Exception{
-		if (jobId==0) {
-			return null;
-		}
-		String cacheInstanceKey = generateInstanceCacheKey(jobId);
-		Object cacheInstance = LocalCache.getInstance().get(cacheInstanceKey);
-		if (cacheInstance!=null) {
-			if (!(cacheInstance instanceof IJobHandler)) {
-				throw new IllegalArgumentException(">>>>>>>>>>> xxl-glue, loadInstance error, "
-						+ "cannot convert from cacheClass["+ cacheInstance.getClass() +"] to IJobHandler");
-			}
-			return (IJobHandler) cacheInstance;
-		}
-		Object instance = loadNewInstance(jobId);
-		if (instance!=null) {
-			if (!(instance instanceof IJobHandler)) {
-				throw new IllegalArgumentException(">>>>>>>>>>> xxl-glue, loadInstance error, "
-						+ "cannot convert from instance["+ instance.getClass() +"] to IJobHandler");
-			}
-			
-			LocalCache.getInstance().set(cacheInstanceKey, instance, cacheTimeout);
-			logger.info(">>>>>>>>>>>> xxl-glue, fresh instance, cacheInstanceKey:{}", cacheInstanceKey);
-			return (IJobHandler) instance;
-		}
-		throw new IllegalArgumentException(">>>>>>>>>>> xxl-glue, loadInstance error, instance is null");
-	}
-	
-	// ----------------------------- util -----------------------------
-	public static void glue(int jobId, String... params) throws Exception{
-		GlueFactory.glueFactory.loadInstance(jobId).execute(params);
-	}
-	
+
 }

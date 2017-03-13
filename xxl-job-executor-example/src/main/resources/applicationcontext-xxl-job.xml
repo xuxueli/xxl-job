@@ -42,8 +42,6 @@
 
 	<!-- 配置03、GlueFactory -->
 	<bean id="glueFactory" class="com.xxl.job.core.glue.GlueFactory">
-		<!-- GLUE任务示例缓存失效时间, 单位/ms -->
-		<property name="cacheTimeout" value="${xxl.job.glue.cache.time}" />
 		<!-- GLUE源码加载器，默认使用系统提供的 "DbGlueLoader", 推荐将其改为公共的RPC服务 -->
 		<property name="glueLoader" >
             <!-- DbGlueLoader, 依赖 "XXL-JOB公共数据源" -->
