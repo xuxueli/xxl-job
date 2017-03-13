@@ -27,6 +27,7 @@ public class XxlJobInfo {
 	private int glueSwitch;		// GLUE模式开关：0-否，1-是
 	private String glueSource;	// GLUE源代码
 	private String glueRemark;	// GLUE备注
+	private Date glueUpdatetime;// GLUE更新时间
 
 	private String childJobKey;		// 子任务Key
 	
@@ -143,6 +144,14 @@ public class XxlJobInfo {
 
 	public void setGlueRemark(String glueRemark) {
 		this.glueRemark = glueRemark;
+	}
+
+	public Date getGlueUpdatetime() {
+		return glueUpdatetime;
+	}
+
+	public void setGlueUpdatetime(Date glueUpdatetime) {
+		this.glueUpdatetime = glueUpdatetime;
 	}
 
 	public String getChildJobKey() {

@@ -23,6 +23,7 @@
 	    <result column="glue_switch" property="glueSwitch" />
 	    <result column="glue_source" property="glueSource" />
 	    <result column="glue_remark" property="glueRemark" />
+		<result column="glue_updatetime" property="glueUpdatetime" />
 
 		<result column="child_jobkey" property="childJobKey" />
 	</resultMap>
@@ -42,6 +43,7 @@
 		t.glue_switch,
 		t.glue_source,
 		t.glue_remark,
+		t.glue_updatetime,
 		t.child_jobkey
 	</sql>
 	
@@ -88,6 +90,7 @@
 			glue_switch,
 			glue_source,
 			glue_remark,
+			glue_updatetime,
 			child_jobkey
 		) VALUES (
 			#{jobGroup},
@@ -103,6 +106,7 @@
 			#{glueSwitch},
 			#{glueSource},
 			#{glueRemark},
+			NOW(),
 			#{childJobKey}
 		);
 		<!--<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
@@ -131,6 +135,7 @@
 			glue_switch = #{glueSwitch},
 			glue_source = #{glueSource},
 			glue_remark = #{glueRemark},
+			glue_updatetime = #{glueUpdatetime},
 			child_jobkey = #{childJobKey}
 		WHERE id = #{id}
 	</update>

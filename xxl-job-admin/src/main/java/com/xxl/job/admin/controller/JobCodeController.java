@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -60,6 +61,7 @@ public class JobCodeController {
 		// update new code
 		exists_jobInfo.setGlueSource(glueSource);
 		exists_jobInfo.setGlueRemark(glueRemark);
+		exists_jobInfo.setGlueUpdatetime(new Date());
 		xxlJobInfoDao.update(exists_jobInfo);
 
 		// remove code backup more than 30
