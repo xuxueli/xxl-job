@@ -61,7 +61,7 @@ public class ExecutorBizImpl implements ExecutorBiz {
             // valid handler
             IJobHandler jobHandler = XxlJobExecutor.loadJobHandler(triggerParam.getExecutorHandler());
             if (jobHandler==null) {
-                return new ReturnT(ReturnT.FAIL_CODE, "job handler for JobId=[" + triggerParam.getJobId() + "] not found.");
+                return new ReturnT<String>(ReturnT.FAIL_CODE, "job handler for JobId=[" + triggerParam.getJobId() + "] not found.");
             }
 
             // valid exists job thread：change handler, need kill old thread
@@ -83,7 +83,7 @@ public class ExecutorBizImpl implements ExecutorBiz {
 
             // valid glueloader
             if (!GlueFactory.isActive()) {
-                return new ReturnT(ReturnT.FAIL_CODE, "glueLoader for JobId=[" + triggerParam.getJobId() + "] not found.");
+                return new ReturnT<String>(ReturnT.FAIL_CODE, "glueLoader for JobId=[" + triggerParam.getJobId() + "] not found.");
             }
 
             // valid exists job thread：change handler or glue timeout, need kill old thread
@@ -104,7 +104,7 @@ public class ExecutorBizImpl implements ExecutorBiz {
                     jobHandler = GlueFactory.getInstance().loadNewInstance(triggerParam.getJobId());
                 } catch (Exception e) {
                     logger.error("", e);
-                    return new ReturnT(ReturnT.FAIL_CODE, e.getMessage());
+                    return new ReturnT<String>(ReturnT.FAIL_CODE, e.getMessage());
                 }
                 jobThread = XxlJobExecutor.registJobThread(triggerParam.getJobId(), new GlueJobHandler(jobHandler, triggerParam.getGlueUpdatetime()));
             }
