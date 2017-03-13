@@ -86,7 +86,7 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 
 ##### Download: 历史Release版本下载位置如下图所示,请自行前往进行选择和下载。
 
-![输入图片说明](https://static.oschina.net/uploads/img/201703/07162326_L3VB.png "在这里输入图片标题")
+![输入图片说明](https://static.oschina.net/uploads/img/201703/13204008_b8vA.png "在这里输入图片标题")
 
 #### 1.5 环境
 - Servlet/JSP Spec：3.0/2.2
