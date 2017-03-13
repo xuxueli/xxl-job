@@ -26,7 +26,7 @@ public class AdminBizImpl implements AdminBiz {
         // valid log item
         XxlJobLog log = XxlJobDynamicScheduler.xxlJobLogDao.load(handleCallbackParam.getLogId());
         if (log == null) {
-            return new ReturnT(ReturnT.FAIL_CODE, "log item not found.");
+            return new ReturnT<String>(ReturnT.FAIL_CODE, "log item not found.");
         }
 
         // trigger success, to trigger child job, and avoid repeat trigger child job
@@ -81,7 +81,7 @@ public class AdminBizImpl implements AdminBiz {
         log.setHandleMsg(handleMsg.toString());
         XxlJobDynamicScheduler.xxlJobLogDao.updateHandleInfo(log);
 
-        return new ReturnT(ReturnT.SUCCESS_CODE, null);
+        return new ReturnT<String>(ReturnT.SUCCESS_CODE, null);
     }
 
 }
