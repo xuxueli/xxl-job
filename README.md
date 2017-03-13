@@ -160,7 +160,7 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
     
 **执行器配置**：配置文件以及配置属性如下图所示。
 
-![输入图片说明](https://static.oschina.net/uploads/img/201703/10174923_TgNO.png "在这里输入图片标题")
+![输入图片说明](https://static.oschina.net/uploads/img/201703/13150738_Fv8v.png "在这里输入图片标题")
 
     ### 执行器JDBC链接：请保持和调度中心JDBC连接配置一致；(执行器 "DbRegistHelper" 和 "DbGlueLoader" 依赖JDBC配置; 推荐将其抽象为RPC远程服务, 可取消对JDBC的依赖)
     xxl.job.db.driverClass=com.mysql.jdbc.Driver
@@ -172,14 +172,11 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
     xxl.job.executor.appname=xxl-job-executor-example
     xxl.job.executor.ip=
     xxl.job.executor.port=9999
-    
-    ### GLUE模式任务有效缓存时间：单位毫秒，超过有效缓存时间将会重新加载GLUE源码初始化新的GLUE任务实例。
-    xxl.job.glue.cache.time=10000
 
 
 **组件配置**：配置内容如下图所示。
 
-![输入图片说明](https://static.oschina.net/uploads/img/201703/10181042_h87Q.png "在这里输入图片标题")
+![输入图片说明](https://static.oschina.net/uploads/img/201703/13151030_Afad.png "在这里输入图片标题")
 
     1、JobHandler 扫描路径：自动扫描容器中JobHandler；
     3、执行器注册器(XxlJobExecutor.registHelper): 默认使用系统提供的 "DbRegistHelper"(依赖JDBC), 推荐将其改为公共的RPC服务
@@ -767,6 +764,7 @@ Tips: 历史版本(V1.3.x)目前已经Release至稳定版本, 进入维护阶段
 - 6、CleanCode，清理无效的历史参数；
 - 7、底层扩展数据结构以及相关表结构调整；
 - 8、新建任务默认为非运行状态；
+- 9、GLUE模式任务实例更新逻辑优化，原根据超时时间更新改为根据版本号更新，源码变动版本号加一；
 
 #### TODO LIST
 - 1、支持脚本JOB(源码或指定路径), 即shell/python/php等, 日志实时输出并支持在线监控；定制JobHandler实现;
