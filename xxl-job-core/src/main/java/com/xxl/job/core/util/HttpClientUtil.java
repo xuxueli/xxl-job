@@ -1,7 +1,5 @@
 package com.xxl.job.core.util;
 
-import com.xxl.job.core.rpc.codec.RpcResponse;
-import com.xxl.job.core.rpc.serialize.HessianSerializer;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -27,7 +25,7 @@ public class HttpClientUtil {
 	/**
 	 * post request
 	 */
-	public static byte[] postRequest(String reqURL, byte[] date) {
+	public static byte[] postRequest(String reqURL, byte[] date) throws Exception {
 		byte[] responseBytes = null;
 		
 		HttpPost httpPost = new HttpPost(reqURL);
@@ -53,10 +51,7 @@ public class HttpClientUtil {
 			}
 		} catch (Exception e) {
 			logger.error("", e);
-
-			RpcResponse rpcResponse = new RpcResponse();
-			rpcResponse.setError(e.getMessage());
-			responseBytes = HessianSerializer.serialize(rpcResponse);
+			throw e;
 		} finally {
 			httpPost.releaseConnection();
 			try {
@@ -93,6 +88,7 @@ public class HttpClientUtil {
 				return message;
 			} catch (IOException e) {
 				e.printStackTrace();
+				throw e;
 			}
 		}
 		return new byte[] {};

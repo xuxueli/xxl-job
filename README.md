@@ -768,6 +768,7 @@ Tips: 历史版本(V1.3.x)目前已经Release至稳定版本, 进入维护阶段
 
 #### 6.12 版本 V1.6.1 特性 (Coding)
 - 1、rolling日志，日志界面风格同glue任务编辑器；
+- 2、
 
 
 #### TODO LIST
