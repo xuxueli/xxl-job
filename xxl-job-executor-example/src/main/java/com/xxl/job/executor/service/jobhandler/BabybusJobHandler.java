@@ -38,6 +38,7 @@ public class BabybusJobHandler extends IJobHandler{
 			}
 		} catch (Exception e) {
 			// TODO: handle exception
+			e.printStackTrace();
 		}
 	}
 	
