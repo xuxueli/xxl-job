@@ -31,6 +31,11 @@ public class JobCodeController {
 	public String index(Model model, int jobId) {
 		XxlJobInfo jobInfo = xxlJobInfoDao.loadById(jobId);
 		List<XxlJobLogGlue> jobLogGlues = xxlJobLogGlueDao.findByJobId(jobId);
+
+		if (jobInfo == null) {
+			throw new RuntimeException("抱歉，任务不存在.");
+		}
+
 		model.addAttribute("jobInfo", jobInfo);
 		model.addAttribute("jobLogGlues", jobLogGlues);
 		return "jobcode/jobcode.index";

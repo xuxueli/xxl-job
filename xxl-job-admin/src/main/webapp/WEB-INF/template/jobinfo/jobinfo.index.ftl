@@ -19,7 +19,7 @@
 	<!-- header -->
 	<@netCommon.commonHeader />
 	<!-- left -->
-	<@netCommon.commonLeft />
+	<@netCommon.commonLeft "jobinfo" />
 	
 	<!-- Content Wrapper. Contains page content -->
 	<div class="content-wrapper">

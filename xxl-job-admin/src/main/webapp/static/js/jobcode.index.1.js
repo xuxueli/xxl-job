@@ -6,25 +6,27 @@ $(function() {
 		lineNumbers : true,
 		matchBrackets : true
 	});*/
-	var codeEditor = CodeMirror(document.getElementById("glueSource"), {
+	var codeEditor = CodeMirror(document.getElementById("ideWindow"), {
 		mode : "text/x-java",
 		lineNumbers : true,
-		matchBrackets : true
+		matchBrackets : true,
+		value: $("#version_now").val()
 	});
-	codeEditor.setValue( $("#glue_now").val() );
-	
+
 	// code change
-	$("#glue_version").change(function(){
-		var temp = $( "#" + $(this).val() ).val();
+	$(".source_version").click(function(){
+		var sourceId = $(this).attr('version');
+		var temp = $( "#" + sourceId ).val();
 		codeEditor.setValue( temp );
 	});
-	
-	// editor height
-	var height = Math.max(document.documentElement.clientHeight, document.body.offsetHeight);
-	$(".CodeMirror").attr('style', 'height:'+ height +'px');
-	
+
 	// code source save
 	$("#save").click(function() {
+		$('#saveModal').modal({backdrop: false, keyboard: false}).modal('show');
+	});
+
+	$("#saveModal .ok").click(function() {
+
 		var glueSource = codeEditor.getValue();
 		var glueRemark = $("#glueRemark").val();
 		

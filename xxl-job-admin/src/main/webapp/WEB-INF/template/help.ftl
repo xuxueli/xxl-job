@@ -10,7 +10,7 @@
 	<!-- header -->
 	<@netCommon.commonHeader />
 	<!-- left -->
-	<@netCommon.commonLeft />
+	<@netCommon.commonLeft "help" />
 	
 	<!-- Content Wrapper. Contains page content -->
 	<div class="content-wrapper">

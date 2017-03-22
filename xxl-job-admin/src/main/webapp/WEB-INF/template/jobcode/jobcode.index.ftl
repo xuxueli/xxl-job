@@ -8,85 +8,97 @@
 	<link rel="stylesheet" href="${request.contextPath}/static/plugins/codemirror/addon/hint/show-hint.css">
 	<style type="text/css">
 		.CodeMirror {
-      		border: 0px solid black;
       		font-size:16px;
+            width: 100%;
       		height: 100%;
+            /*bottom: 0;
+            top: 0px;*/
+            position: absolute;
 		}
     </style>
 </head>
-<body class=" layout-top-nav">
+<body class="skin-blue fixed layout-top-nav">
 
-<#if !jobInfo?exists>
 	<div class="wrapper">
-		<div class="content-wrapper">
-			<section class="content-header">
-				<h1>抱歉，任务不存在.</small></h1>
-			</section>
-		</div>
-	</div>
-<#else>
-	<div class="wrapper">
-		
-		<div class="content-wrapper">
-			<!-- Content Header (Page header) -->
-			<#--<section class="content-header">
-				<h1>任务调度中心<small>任务GLUE管理</small></h1>
-			</section>-->
-			<!-- Main content -->
-		    <section class="content">
-		    	<div class="row">
-		    		<div class="col-xs-4">
-						<div class="input-group margin">
-	                    	<div class="input-group-btn">
-	                      		<button type="button" class="btn btn-info">版本回溯</button>
-	                    	</div>
-	                    	<select class="form-control" id="glue_version" >
-	            				<option value="glue_now" >${jobInfo.glueRemark}【线上】</option>
-	            				<#if jobLogGlues?exists && jobLogGlues?size gt 0 >
-			                  	<#list jobLogGlues as glue>
-			                  		<option value="glue_log_${glue.id}" >${glue.glueRemark}</option>
-			                  	</#list>
-			                  	</#if>
-		                  	</select>
-		                  	
-		                  	<textarea id="glue_now" style="display:none;" >${jobInfo.glueSource}</textarea>
-		                  	<#if jobLogGlues?exists && jobLogGlues?size gt 0 >
-		                  	<#list jobLogGlues as glue>
-		                  		<textarea id="glue_log_${glue.id}" style="display:none;" >${glue.glueSource}</textarea>
-		                  	</#list>
-		                  	</#if>
-		                  	
-						</div>
-		            </div>
-		            <div class="col-xs-4">
-		            	<div class="input-group margin">
-	                    	<div class="input-group-btn">
-	                      		<button type="button" class="btn btn-info">备注</button>
-	                    	</div>
-	                    	<input type="text" class="form-control" id="glueRemark" value="" autocomplete="on" >
-	                  	</div>
-		            </div>
-		            <div class="col-xs-2">
-		            	<div class="input-group margin">
-	                    	<div class="input-group-btn">
-	                      		<button type="button" class="btn btn-primary" id="save" >保存</button>
-	                    	</div>
-	                  	</div>
-		            </div>
-	          	</div>
-		    	
-				<div class="row" id="glueSource" >
-					<#--<div class="col-xs-12">
-						<div class="box callout callout-info">
-							<textarea id="glueSource" ></textarea>
-						</div>
-					</div>-->
-				</div>
-		    </section>
-		</div>
+
+        <header class="main-header">
+            <nav class="navbar navbar-static-top">
+                <div class="container">
+					<#-- icon -->
+                    <div class="navbar-header">
+                        <a href="../../index2.html" class="navbar-brand"><b>Web</b>IDE</a>
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                    </div>
+
+                    <#-- left nav -->
+                    <div class="collapse navbar-collapse pull-left" id="navbar-collapse">
+                        <ul class="nav navbar-nav">
+                            <li class="active" ><a href="#">任务：${jobInfo.jobDesc}<span class="sr-only">(current)</span></a></li>
+                        </ul>
+                    </div>
+
+					<#-- right nav -->
+                    <div class="navbar-custom-menu">
+                        <ul class="nav navbar-nav">
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">版本回溯 <span class="caret"></span></a>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="javascript:;" class="source_version" version="version_now" >${jobInfo.glueRemark}【OnLine】</a></li>
+                                    <textarea id="version_now" style="display:none;" >${jobInfo.glueSource}</textarea>
+									<#if jobLogGlues?exists && jobLogGlues?size gt 0 >
+										<#list jobLogGlues as glue>
+                                            <li><a href="javascript:;" class="source_version" version="version_${glue.id}" >${glue.glueRemark}</a></li>
+                                            <textarea id="version_${glue.id}" style="display:none;" >${glue.glueSource}</textarea>
+										</#list>
+									</#if>
+                                </ul>
+                            </li>
+                            <li id="save" >
+								<a href="javascript:;" >
+									<i class="fa fa-fw fa-save" ></i>
+                                    保存
+								</a>
+							</li>
+                        </ul>
+                    </div>
+
+                </div>
+            </nav>
+        </header>
+
+		<div class="content-wrapper" id="ideWindow" ></div>
+
 		<!-- footer -->
 		<#--<@netCommon.commonFooter />-->
 	</div>
+
+    <!-- 保存.模态框 -->
+    <div class="modal fade" id="saveModal" tabindex="-1" role="dialog"  aria-hidden="true">
+        <div class="modal-dialog ">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" ><i class="fa fa-bars"></i>保存</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal form" role="form" >
+                        <div class="form-group">
+                            <label for="lastname" class="col-sm-2 control-label">源码备注<font color="red">*</font></label>
+                            <div class="col-sm-10"><input type="text" class="form-control" id="glueRemark" placeholder="请输入备注信息" maxlength="64" ></div>
+                        </div>
+                        <hr>
+                        <div class="form-group">
+                            <div class="col-sm-offset-3 col-sm-6">
+                                <button type="button" class="btn btn-primary ok" >保存</button>
+                                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 	
 <@netCommon.commonScript />
 <script src="${request.contextPath}/static/plugins/codemirror/lib/codemirror.js"></script>
@@ -98,6 +110,5 @@ var id = '${jobInfo.id}';
 </script>
 <script src="${request.contextPath}/static/js/jobcode.index.1.js"></script>
 
-</#if>
 </body>
 </html>

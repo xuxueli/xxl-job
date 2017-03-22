@@ -14,7 +14,7 @@
 	<!-- header -->
 	<@netCommon.commonHeader />
 	<!-- left -->
-	<@netCommon.commonLeft />
+	<@netCommon.commonLeft "joblog" />
 	
 	<!-- Content Wrapper. Contains page content -->
 	<div class="content-wrapper">
