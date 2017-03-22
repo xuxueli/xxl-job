@@ -35,7 +35,7 @@
                     <#-- left nav -->
                     <div class="collapse navbar-collapse pull-left" id="navbar-collapse">
                         <ul class="nav navbar-nav">
-                            <li class="active" ><a href="#">任务：${jobInfo.jobDesc}<span class="sr-only">(current)</span></a></li>
+                            <li class="active" ><a href="javascript:;">任务：${jobInfo.jobDesc}<span class="sr-only">(current)</span></a></li>
                         </ul>
                     </div>
 
@@ -79,7 +79,7 @@
         <div class="modal-dialog ">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title" ><i class="fa fa-bars"></i>保存</h4>
+                    <h4 class="modal-title" ><i class="fa fa-fw fa-save"></i>保存</h4>
                 </div>
                 <div class="modal-body">
                     <form class="form-horizontal form" role="form" >
