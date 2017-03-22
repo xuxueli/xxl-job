@@ -29,9 +29,9 @@
 		
 		<div class="content-wrapper">
 			<!-- Content Header (Page header) -->
-			<section class="content-header">
+			<#--<section class="content-header">
 				<h1>任务调度中心<small>任务GLUE管理</small></h1>
-			</section>
+			</section>-->
 			<!-- Main content -->
 		    <section class="content">
 		    	<div class="row">
@@ -75,17 +75,17 @@
 		            </div>
 	          	</div>
 		    	
-				<div class="row">
-					<div class="col-xs-12">
+				<div class="row" id="glueSource" >
+					<#--<div class="col-xs-12">
 						<div class="box callout callout-info">
 							<textarea id="glueSource" ></textarea>
 						</div>
-					</div>
+					</div>-->
 				</div>
 		    </section>
 		</div>
 		<!-- footer -->
-		<@netCommon.commonFooter />
+		<#--<@netCommon.commonFooter />-->
 	</div>
 	
 <@netCommon.commonScript />
