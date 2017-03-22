@@ -39,29 +39,28 @@ $(function() {
 			return;
 		}
 		
-		ComConfirm.show("是否执行保存操作?", function(){
-			$.ajax({
-				type : 'POST',
-				url : base_url + '/jobcode/save',
-				data : {
-					'id' : id,
-					'glueSource' : glueSource,
-					'glueRemark' : glueRemark
-				},
-				dataType : "json",
-				success : function(data){
-					if (data.code == 200) {
-						ComAlert.show(1, '保存成功', function(){
-							//$(window).unbind('beforeunload');
-							window.location.reload();
-						});
-					} else {
-						ComAlert.show(2, data.msg);
-					}
+
+		$.ajax({
+			type : 'POST',
+			url : base_url + '/jobcode/save',
+			data : {
+				'id' : id,
+				'glueSource' : glueSource,
+				'glueRemark' : glueRemark
+			},
+			dataType : "json",
+			success : function(data){
+				if (data.code == 200) {
+					ComAlert.show(1, '保存成功', function(){
+						//$(window).unbind('beforeunload');
+						window.location.reload();
+					});
+				} else {
+					ComAlert.show(2, data.msg);
 				}
-			});
+			}
 		});
-		
+
 	});
 	
 	// before upload
