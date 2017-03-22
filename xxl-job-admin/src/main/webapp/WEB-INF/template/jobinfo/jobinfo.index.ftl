@@ -76,7 +76,7 @@
 					                	<th name="jobGroup" >jobGroup</th>
                                         <th name="childJobKey" >JobKey</th>
 					                  	<th name="jobDesc" >描述</th>
-                                        <th name="executorHandler" >JobJandler</th>
+                                        <th name="executorHandler" >JobHandler</th>
 					                  	<th name="executorParam" >任务参数</th>
                                         <th name="jobCron" >Cron</th>
 					                  	<th name="addTime" >新增时间</th>
