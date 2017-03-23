@@ -1,5 +1,6 @@
 package com.xxl.job.core.log;
 
+import com.xxl.job.core.biz.model.LogResult;
 import org.apache.log4j.AppenderSkeleton;
 import org.apache.log4j.Layout;
 import org.apache.log4j.spi.LoggingEvent;
@@ -117,8 +118,9 @@ public class XxlJobFileAppender extends AppenderSkeleton {
 	 * @param logFileName
 	 * @return log content
 	 */
-	public static String readLog(String logFileName ){
+	public static LogResult readLog(String logFileName, int fromLineNum){
 
+		// valid log file
 		if (logFileName==null || logFileName.trim().length()==0) {
 			return null;
 		}
@@ -127,11 +129,49 @@ public class XxlJobFileAppender extends AppenderSkeleton {
 		if (!logFile.exists()) {
 			return null;
 		}
-		
-		String logData = readLines(logFile);
-		return logData;
+
+		// read file
+		StringBuffer logContentBuffer = new StringBuffer();
+		int toLineNum = 0;
+		LineNumberReader reader = null;
+		try {
+			reader = new LineNumberReader(new FileReader(logFile));
+			String line = null;
+
+			while ((line = reader.readLine())!=null) {
+				toLineNum++;
+				if (reader.getLineNumber() >= fromLineNum) {
+					logContentBuffer.append(line).append("\n");
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (reader != null) {
+				try {
+					reader.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+		// result
+		LogResult logResult = new LogResult();
+		logResult.setFromLineNum(fromLineNum);
+		logResult.setToLineNum(toLineNum);
+		logResult.setLogContent(logContentBuffer.toString());
+		logResult.setEnd(false);
+		return logResult;
+
+		/*
+        // it will return the number of characters actually skipped
+        reader.skip(Long.MAX_VALUE);
+        int maxLineNum = reader.getLineNumber();
+        maxLineNum++;	// 最大行号
+        */
 	}
-	
+
 	/**
 	 * read log data
 	 * @param logFile
@@ -162,52 +202,5 @@ public class XxlJobFileAppender extends AppenderSkeleton {
 		} 
 		return null;
 	}
-	
-	/**
-	 * read data from line num
-	 * @param logFile
-	 * @param fromLineNum
-	 * @return log content
-	 * @throws Exception
-	 */
-	public static String readLinesFrom(File logFile, int fromLineNum) {  
-        LineNumberReader reader = null;
-		try {
-			reader = new LineNumberReader(new FileReader(logFile));
-			
-			// sBuffer
-	        StringBuffer sBuffer = new StringBuffer();
-	    	String line = null;
-	    	int maxLineNum = 0;
-	    	while ((line = reader.readLine())!=null) {
-	    		maxLineNum++;
-	    		if (reader.getLineNumber() >= fromLineNum) {
-	    			sBuffer.append(line).append("\n");
-				}
-			}
-	    	
-	    	System.out.println("maxLineNum : " + maxLineNum);
-	    	return sBuffer.toString();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			if (reader != null) {
-				try {
-					reader.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-		
-		return null;
-		
-        /*
-        // it will return the number of characters actually skipped
-        reader.skip(Long.MAX_VALUE);	
-        int maxLineNum = reader.getLineNumber();  
-        maxLineNum++;	// 最大行号
-        */
-    }
-	
+
 }

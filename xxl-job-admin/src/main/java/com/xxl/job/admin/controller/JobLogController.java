@@ -7,6 +7,7 @@ import com.xxl.job.admin.dao.IXxlJobGroupDao;
 import com.xxl.job.admin.dao.IXxlJobInfoDao;
 import com.xxl.job.admin.dao.IXxlJobLogDao;
 import com.xxl.job.core.biz.ExecutorBiz;
+import com.xxl.job.core.biz.model.LogResult;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.rpc.netcom.NetComClientProxy;
 import org.apache.commons.lang.StringUtils;
@@ -92,43 +93,42 @@ public class JobLogController {
 	    maps.put("data", list);  					// 分页列表
 		return maps;
 	}
-	
-	@RequestMapping("/logDetail")
-	@ResponseBody
-	public ReturnT<String> logDetail(int id){
-		// base check
-		XxlJobLog log = xxlJobLogDao.load(id);
-		if (log == null) {
-			return new ReturnT<String>(500, "查看执行日志失败: 参数异常");
-		}
-		if (ReturnT.SUCCESS_CODE != log.getTriggerCode()) {
-			return new ReturnT<String>(500, "查看执行日志失败: 任务发起调度失败，无法查看执行日志");
-		}
-		
-		// trigger id, trigger time
-		ExecutorBiz executorBiz = null;
-		try {
-			executorBiz = (ExecutorBiz) new NetComClientProxy(ExecutorBiz.class, log.getExecutorAddress()).getObject();
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new ReturnT<String>(500, e.getMessage());
-		}
-		ReturnT<String> logResult = executorBiz.log(log.getTriggerTime().getTime(), id);
 
-		if (ReturnT.SUCCESS_CODE == logResult.getCode()) {
-			return new ReturnT<String>(logResult.getMsg());
-		} else {
-			return new ReturnT<String>(500, "查看执行日志失败: " + logResult.getMsg());
-		}
-	}
-	
 	@RequestMapping("/logDetailPage")
 	public String logDetailPage(int id, Model model){
-		ReturnT<String> data = logDetail(id);
-		model.addAttribute("result", data);
+
+		// base check
+		ReturnT<String> logStatue = ReturnT.SUCCESS;
+		XxlJobLog jobLog = xxlJobLogDao.load(id);
+		if (jobLog == null) {
+			logStatue = new ReturnT<String>(ReturnT.FAIL_CODE, "查看执行日志失败: 日志ID非法");
+		} else {
+			if (ReturnT.SUCCESS_CODE != jobLog.getTriggerCode()) {
+				logStatue = new ReturnT<String>(ReturnT.FAIL_CODE, "查看执行日志失败: 任务发起调度失败，无法查看执行日志");
+			}
+
+			model.addAttribute("executorAddress", jobLog.getExecutorAddress());
+			model.addAttribute("triggerTime", jobLog.getTriggerTime().getTime());
+			model.addAttribute("logId", jobLog.getId());
+		}
+
+		model.addAttribute("logStatue", logStatue);
 		return "joblog/logdetail";
 	}
-	
+
+	@RequestMapping("/logDetailCat")
+	@ResponseBody
+	public ReturnT<LogResult> logDetailCat(String executorAddress, long triggerTime, int logId, int fromLineNum){
+		try {
+			ExecutorBiz executorBiz = (ExecutorBiz) new NetComClientProxy(ExecutorBiz.class, executorAddress).getObject();
+			ReturnT<LogResult> logResult = executorBiz.log(triggerTime, logId, fromLineNum);
+			return logResult;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ReturnT<LogResult>(ReturnT.FAIL_CODE, e.getMessage());
+		}
+	}
+
 	@RequestMapping("/logKill")
 	@ResponseBody
 	public ReturnT<String> logKill(int id){
