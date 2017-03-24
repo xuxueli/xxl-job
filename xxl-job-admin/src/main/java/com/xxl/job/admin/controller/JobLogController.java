@@ -101,18 +101,14 @@ public class JobLogController {
 		ReturnT<String> logStatue = ReturnT.SUCCESS;
 		XxlJobLog jobLog = xxlJobLogDao.load(id);
 		if (jobLog == null) {
-			logStatue = new ReturnT<String>(ReturnT.FAIL_CODE, "查看执行日志失败: 日志ID非法");
-		} else {
-			if (ReturnT.SUCCESS_CODE != jobLog.getTriggerCode()) {
-				logStatue = new ReturnT<String>(ReturnT.FAIL_CODE, "查看执行日志失败: 任务发起调度失败，无法查看执行日志");
-			}
-
-			model.addAttribute("executorAddress", jobLog.getExecutorAddress());
-			model.addAttribute("triggerTime", jobLog.getTriggerTime().getTime());
-			model.addAttribute("logId", jobLog.getId());
+            throw new RuntimeException("抱歉，日志ID非法.");
 		}
 
-		model.addAttribute("logStatue", logStatue);
+        model.addAttribute("triggerCode", jobLog.getTriggerCode());
+        model.addAttribute("handleCode", jobLog.getHandleCode());
+        model.addAttribute("executorAddress", jobLog.getExecutorAddress());
+        model.addAttribute("triggerTime", jobLog.getTriggerTime().getTime());
+        model.addAttribute("logId", jobLog.getId());
 		return "joblog/logdetail";
 	}
 

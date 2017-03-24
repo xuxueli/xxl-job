@@ -122,12 +122,12 @@ public class XxlJobFileAppender extends AppenderSkeleton {
 
 		// valid log file
 		if (logFileName==null || logFileName.trim().length()==0) {
-			return null;
+            return new LogResult(fromLineNum, -1, "readLog fail, logFile not found", true);
 		}
 		File logFile = new File(filePath, logFileName);
 
 		if (!logFile.exists()) {
-			return null;
+            return new LogResult(fromLineNum, -1, "readLog fail, logFile not exists", true);
 		}
 
 		// read file
@@ -157,11 +157,7 @@ public class XxlJobFileAppender extends AppenderSkeleton {
 		}
 
 		// result
-		LogResult logResult = new LogResult();
-		logResult.setFromLineNum(fromLineNum);
-		logResult.setToLineNum(toLineNum);
-		logResult.setLogContent(logContentBuffer.toString());
-		logResult.setEnd(false);
+		LogResult logResult = new LogResult(fromLineNum, toLineNum, logContentBuffer.toString(), false);
 		return logResult;
 
 		/*

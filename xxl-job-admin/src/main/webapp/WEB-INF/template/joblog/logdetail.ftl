@@ -14,9 +14,10 @@
             position: absolute;
             /*color:white;background-color:black*/
         }
-        .logConsoleRunning {
+        #logConsoleRunning {
             font-size: 20px;
             margin-top: 7px;
+            float: left;
         }
     </style>
 </head>
@@ -59,35 +60,22 @@
     </header>
 
     <div class="content-wrapper" >
-        <pre class="logConsolePre"><div id="logConsole"></div><li class="fa fa-refresh fa-spin logConsoleRunning" ></li></pre>
+        <pre class="logConsolePre"><div id="logConsole"></div>
+            <li class="fa fa-refresh fa-spin" id="logConsoleRunning" ></li>
+            <div style="margin-top: 50px;" ></div>
+        </pre>
     </div>
 
 </div>
 
 <@netCommon.commonScript />
 <script>
-
     // 参数
-    var running = true;     // 允许运行
-    var executorAddress;
-    var triggerTime;
-    var logId;
-
-    // init
-    <#if logStatue.code == 200>
-        running = true;
-        $('.logConsoleRunning').show();
-
-        executorAddress = '${executorAddress}';
-        triggerTime = '${triggerTime}';
-        logId = '${logId}';
-    <#else>
-        running = false;
-        $('.logConsoleRunning').hide();
-
-        $('.logConsole').append('${logStatue.msg}');
-    </#if>
-
+    var triggerCode = '${triggerCode}';
+    var handleCode = '${handleCode}';
+    var executorAddress = '${executorAddress}';
+    var triggerTime = '${triggerTime}';
+    var logId = '${logId}';
 </script>
 <script src="${request.contextPath}/static/js/logdetail.index.1.js"></script>
 

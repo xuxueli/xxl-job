@@ -1,78 +1,88 @@
 $(function() {
 
-	// valid
-	if (!running) {
-		return;
-	}
+    // trigger fail, end
+    if (triggerCode != 200) {
+        $('#logConsoleRunning').hide();
+        $('#logConsole').append('<span style="color: red;">任务发起调度失败，无法查看执行日志</span>');
+        return;
+    }
 
-	// 加载日志
-	var fromLineNum = 0;
-	var pullFailCount = 0;
-	function pullLog() {
+    // pull log
+    var fromLineNum = 0;
+    var pullFailCount = 0;
+    function pullLog() {
+        // pullFailCount, max=20
+        if (pullFailCount++ > 20) {
+            logRunStop('<span style="color: red;">终止请求Rolling日志,请求失败次数超上限,可刷新页面重新加载日志</span>');
+            return;
+        }
 
-		// pullFailCount, max=20
-		if (pullFailCount >= 20) {
-			console.log("pullLog fail-count limit");
-			running = false;
-		}
+        // load
+        console.log("pullLog, fromLineNum:" + fromLineNum);
 
-		// valid
-		if (!running) {
-			$('.logConsoleRunning').hide();
-			logRun = window.clearInterval(logRun)
-			return;
-		}
+        $.ajax({
+            type : 'POST',
+            async: false,   // sync, make log ordered
+            url : base_url + '/joblog/logDetailCat',
+            data : {
+                "executorAddress":executorAddress,
+                "triggerTime":triggerTime,
+                "logId":logId,
+                "fromLineNum":fromLineNum
+            },
+            dataType : "json",
+            success : function(data){
 
-		// load
-		console.log("pullLog, fromLineNum:" + fromLineNum);
-		$.ajax({
-			type : 'POST',
-			async: false,   // async, avoid js invoke pagelist before jobId data init
-			url : base_url + '/joblog/logDetailCat',
-			data : {
-				"executorAddress":executorAddress,
-				"triggerTime":triggerTime,
-				"logId":logId,
-				"fromLineNum":fromLineNum
-			},
-			dataType : "json",
-			success : function(data){
-				pullFailCount++;
-				if (data.code == 200) {
-					if (!data.content) {
-						console.log('pullLog fail');
-						return;
-					}
-					if (fromLineNum != data.content.fromLineNum) {
-						console.log('pullLog fromLineNum not match');
-						return;
-					}
-					if (fromLineNum == (data.content.toLineNum + 1) ) {
-						console.log('pullLog already line-end');
-						return;
-					}
+                if (data.code == 200) {
+                    if (!data.content) {
+                        console.log('pullLog fail');
+                        return;
+                    }
+                    if (fromLineNum != data.content.fromLineNum) {
+                        console.log('pullLog fromLineNum not match');
+                        return;
+                    }
+                    if (fromLineNum == (data.content.toLineNum + 1) ) {
+                        console.log('pullLog already line-end');
+                        return;
+                    }
 
-					// append
-					fromLineNum = data.content.toLineNum + 1;
-					$('#logConsole').append(data.content.logContent);
-					pullFailCount = 0;
+                    // append
+                    fromLineNum = data.content.toLineNum + 1;
+                    $('#logConsole').append(data.content.logContent);
+                    pullFailCount = 0;
 
-					// valid end
-					if (data.content.end) {
-						running = false;
-						console.log("pullLog already file-end");
-					}
-				} else {
-					ComAlertTec.show(data.msg);
-				}
-			}
-		});
-	}
+                    // valid end
+                    if (data.content.end) {
+                        logRunStop('<span style="color: green;">[Rolling Log Finish]</span>');
+                        return;
+                    }
+                } else {
+                    console.log('pullLog fail:'+data.msg);
+                }
+            }
+        });
+    }
 
-	// 周期运行
-	pullLog();
-	var logRun = setInterval(function () {
-		pullLog()
-	}, 3000);
+    // pull first page
+    pullLog();
+
+    // handler already callback, end
+    if (handleCode > 0) {
+        logRunStop('<span style="color: green;">[Log Finish]</span>');
+        return;
+    }
+
+    // round until end
+    var logRun = setInterval(function () {
+        pullLog()
+    }, 3000);
+    function logRunStop(content){
+        $('#logConsoleRunning').hide();
+        logRun = window.clearInterval(logRun);
+        $('#logConsole').append(content);
+    }
+
+
 
 });
