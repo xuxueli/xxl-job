@@ -4,26 +4,10 @@
     <title>任务调度中心</title>
 <#import "/common/common.macro.ftl" as netCommon>
 <@netCommon.commonStyle />
-    <style type="text/css">
-        .logConsolePre {
-            font-size:12px;
-            width: 100%;
-            height: 100%;
-            /*bottom: 0;
-            top: 0px;*/
-            position: absolute;
-            /*color:white;background-color:black*/
-        }
-        #logConsoleRunning {
-            font-size: 20px;
-            margin-top: 7px;
-            float: left;
-        }
-    </style>
 </head>
-<body class="skin-blue fixed layout-top-nav">
+<body class="hold-transition skin-blue layout-top-nav">
 
-<div class="wrapper">
+<div class2="wrapper">
 
     <header class="main-header">
         <nav class="navbar navbar-static-top">
@@ -59,14 +43,18 @@
         </nav>
     </header>
 
-    <div class="content-wrapper" >
-        <pre class="logConsolePre"><div id="logConsole"></div>
-            <li class="fa fa-refresh fa-spin" id="logConsoleRunning" ></li>
+    <div>
+        <pre>
+            <div id="logConsole"></div>
+            <li class="fa fa-refresh fa-spin" style="font-size: 20px;float: left;" id="logConsoleRunning" ></li>
             <div style="margin-top: 50px;" ></div>
         </pre>
     </div>
 
 </div>
+
+
+
 
 <@netCommon.commonScript />
 <script>

@@ -8,7 +8,7 @@ $(function() {
     }
 
     // pull log
-    var fromLineNum = 0;
+    var fromLineNum = 0;    // [from, to]
     var pullFailCount = 0;
     function pullLog() {
         // pullFailCount, max=20
@@ -42,8 +42,13 @@ $(function() {
                         console.log('pullLog fromLineNum not match');
                         return;
                     }
-                    if (fromLineNum == (data.content.toLineNum + 1) ) {
+                    if (fromLineNum > data.content.toLineNum ) {
                         console.log('pullLog already line-end');
+                        // valid end
+                        if (data.content.end) {
+                            logRunStop('<span style="color: green;">[Rolling Log Finish]</span>');
+                            return;
+                        }
                         return;
                     }
 
@@ -52,11 +57,9 @@ $(function() {
                     $('#logConsole').append(data.content.logContent);
                     pullFailCount = 0;
 
-                    // valid end
-                    if (data.content.end) {
-                        logRunStop('<span style="color: green;">[Rolling Log Finish]</span>');
-                        return;
-                    }
+                    // scroll to bottom
+                    scrollTo(0, document.body.scrollHeight);
+
                 } else {
                     console.log('pullLog fail:'+data.msg);
                 }
@@ -69,7 +72,7 @@ $(function() {
 
     // handler already callback, end
     if (handleCode > 0) {
-        logRunStop('<span style="color: green;">[Log Finish]</span>');
+        logRunStop('<span style="color: green;">[Load Log Finish]</span>');
         return;
     }
 
