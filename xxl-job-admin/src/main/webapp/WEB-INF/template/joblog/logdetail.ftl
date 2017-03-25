@@ -4,6 +4,9 @@
     <title>任务调度中心</title>
 <#import "/common/common.macro.ftl" as netCommon>
 <@netCommon.commonStyle />
+    <style>
+        html{  background-color: whitesmoke;  }
+    </style>
 </head>
 <body class="hold-transition skin-blue layout-top-nav">
 
@@ -52,9 +55,6 @@
     </div>
 
 </div>
-
-
-
 
 <@netCommon.commonScript />
 <script>

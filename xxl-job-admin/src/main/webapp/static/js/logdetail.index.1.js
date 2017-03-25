@@ -86,6 +86,4 @@ $(function() {
         $('#logConsole').append(content);
     }
 
-
-
 });
