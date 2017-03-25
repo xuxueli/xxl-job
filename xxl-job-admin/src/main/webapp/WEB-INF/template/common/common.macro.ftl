@@ -30,11 +30,11 @@
 
 <#macro commonScript>
 	<!-- jQuery 2.1.4 -->
-	<script src="${request.contextPath}/static/adminlte/plugins/jQuery/jQuery-2.1.4.min.js"></script>
+	<script src="${request.contextPath}/static/adminlte/plugins/jQuery/jquery-2.2.3.min.js"></script>
 	<!-- Bootstrap 3.3.5 -->
 	<script src="${request.contextPath}/static/adminlte/bootstrap/js/bootstrap.min.js"></script>
 	<!-- FastClick -->
-	<script src="${request.contextPath}/static/adminlte/plugins/fastclick/fastclick.js"></script>
+	<script src="${request.contextPath}/static/adminlte/plugins/fastclick/fastclick.min.js"></script>
 	<!-- AdminLTE App -->
 	<script src="${request.contextPath}/static/adminlte/dist/js/app.min.js"></script>
 	<#-- jquery.slimscroll -->
