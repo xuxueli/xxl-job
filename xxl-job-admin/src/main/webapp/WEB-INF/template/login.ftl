@@ -4,7 +4,7 @@
   	<title>调度中心</title>
   	<#import "/common/common.macro.ftl" as netCommon>
 	<@netCommon.commonStyle />
-    <link rel="stylesheet" href="${request.contextPath}/static/plugins/iCheck/square/blue.css">
+    <link rel="stylesheet" href="${request.contextPath}/static/adminlte/plugins/iCheck/square/blue.css">
 </head>
 <body class="hold-transition login-page">
 	<div class="login-box">
@@ -39,7 +39,7 @@
 	</div>
 <@netCommon.commonScript />
 <script src="${request.contextPath}/static/plugins/jquery/jquery.validate.min.js"></script>
-<script src="${request.contextPath}/static/plugins/iCheck/icheck.min.js"></script>
+<script src="${request.contextPath}/static/adminlte/plugins/iCheck/icheck.min.js"></script>
 <script src="${request.contextPath}/static/js/login.1.js"></script>
 
 </body>
