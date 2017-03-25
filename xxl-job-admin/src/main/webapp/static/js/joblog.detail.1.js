@@ -58,7 +58,8 @@ $(function() {
                     pullFailCount = 0;
 
                     // scroll to bottom
-                    scrollTo(0, document.body.scrollHeight);
+                    //scrollTo(0, document.body.scrollHeight);
+                    $('#logConsolePre').scrollTop( document.body.scrollHeight + 300 );
 
                 } else {
                     console.log('pullLog fail:'+data.msg);

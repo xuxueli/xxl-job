@@ -4,10 +4,6 @@
     <title>任务调度中心</title>
 <#import "/common/common.macro.ftl" as netCommon>
 <@netCommon.commonStyle />
-    <style>
-        html{  background-color: whitesmoke;  }
-        .skin-blue .wrapper {  background-color: whitesmoke;  }
-    </style>
 </head>
 <body class="hold-transition skin-blue layout-top-nav">
 
@@ -47,11 +43,11 @@
         </nav>
     </header>
 
-    <div>
-        <pre>
+    <div class="content-wrapper" >
+        <pre style="font-size:12px;position: absolute; height:100%;width:100%;" id="logConsolePre" >
             <div id="logConsole"></div>
             <li class="fa fa-refresh fa-spin" style="font-size: 20px;float: left;" id="logConsoleRunning" ></li>
-            <div style="margin-top: 50px;" ></div>
+            <div><hr><i class="fa fa-fw fa-hand-pointer-o"></i><hr></div>
         </pre>
     </div>
 
