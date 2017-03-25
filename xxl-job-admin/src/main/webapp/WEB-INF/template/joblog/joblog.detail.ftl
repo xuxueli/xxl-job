@@ -6,11 +6,12 @@
 <@netCommon.commonStyle />
     <style>
         html{  background-color: whitesmoke;  }
+        .skin-blue .wrapper {  background-color: whitesmoke;  }
     </style>
 </head>
 <body class="hold-transition skin-blue layout-top-nav">
 
-<div class2="wrapper">
+<div class="wrapper">
 
     <header class="main-header">
         <nav class="navbar navbar-static-top">
