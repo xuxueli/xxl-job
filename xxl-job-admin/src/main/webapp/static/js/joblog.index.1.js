@@ -36,13 +36,15 @@ $(function() {
 		timePicker12Hour : false,	//是否使用12小时制来显示时间
 		format: 'YYYY-MM-DD HH:mm:ss',
 		separator : ' - ',
-		ranges : {
-            '最近1小时': [moment().subtract('hours',1), moment()],
-            '今日': [moment().startOf('day'), moment()],
-            '昨日': [moment().subtract('days', 1).startOf('day'), moment().subtract('days', 1).endOf('day')],
-            '最近7日': [moment().subtract('days', 6), moment()],
-            '最近30日': [moment().subtract('days', 29), moment()]
-        },
+		ranges: {
+			'最近1小时': [moment().subtract(1, 'hours'), moment()],
+			'今日': [moment(), moment()],
+			'昨日': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+			'最近7日': [moment().subtract(6, 'days'), moment()],
+			'最近30日': [moment().subtract(29, 'days'), moment()],
+			'本月': [moment().startOf('month'), moment().endOf('month')],
+			'上个月': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+		},
         opens : 'left', //日期选择框的弹出位置
         locale : {
         	customRangeLabel : '自定义',
