@@ -31,22 +31,25 @@ $(function() {
 
 	// 过滤时间
 	$('#filterTime').daterangepicker({
-		timePicker: true, 			//是否显示小时和分钟
-		timePickerIncrement: 10, 	//时间的增量，单位为分钟
-		timePicker12Hour : false,	//是否使用12小时制来显示时间
-		format: 'YYYY-MM-DD HH:mm:ss',
-		separator : ' - ',
+        autoApply:false,
+        singleDatePicker:false,
+        showDropdowns:false,        // 是否显示年月选择条件
+		timePicker: true, 			// 是否显示小时和分钟选择条件
+		timePickerIncrement: 10, 	// 时间的增量，单位为分钟
+        timePicker24Hour : true,
+        opens : 'left', //日期选择框的弹出位置
 		ranges: {
 			'最近1小时': [moment().subtract(1, 'hours'), moment()],
-			'今日': [moment(), moment()],
-			'昨日': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+			'今日': [moment().startOf('day'), moment().endOf('day')],
+			'昨日': [moment().subtract(1, 'days').startOf('day'), moment().subtract(1, 'days').endOf('day')],
 			'最近7日': [moment().subtract(6, 'days'), moment()],
 			'最近30日': [moment().subtract(29, 'days'), moment()],
 			'本月': [moment().startOf('month'), moment().endOf('month')],
 			'上个月': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
 		},
-        opens : 'left', //日期选择框的弹出位置
         locale : {
+            format: 'YYYY-MM-DD HH:mm:ss',
+            separator : ' - ',
         	customRangeLabel : '自定义',
             applyLabel : '确定',
             cancelLabel : '取消',
@@ -54,11 +57,12 @@ $(function() {
             toLabel : '结束时间',
             daysOfWeek : [ '日', '一', '二', '三', '四', '五', '六' ],
             monthNames : [ '一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月' ],
-            firstDay : 1
+            firstDay : 1,
+            startDate: moment().startOf('day'),
+            endDate: moment().endOf('day')
         }
 	});
-	$('#filterTime').val( moment(new Date()).format("YYYY-MM-DD 00:00:00") + ' - ' + moment(new Date()).add(1, 'days').format("YYYY-MM-DD 00:00:00") );	// YYYY-MM-DD HH:mm:ss
-	
+
 	// init date tables
 	var logTable = $("#joblog_list").dataTable({
 		"deferRender": true,
