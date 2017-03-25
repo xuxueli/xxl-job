@@ -204,7 +204,7 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 
 ![输入图片说明](https://static.oschina.net/uploads/img/201610/03200312_EhFJ.png "在这里输入图片标题")
 
-![输入图片说明](https://static.oschina.net/uploads/img/201607/23225327_Y1cn.png "在这里输入图片标题")
+![输入图片说明](https://static.oschina.net/uploads/img/201703/25124117_hYaV.png "在这里输入图片标题")
 
 - **步骤三（触发执行）**：    
 点击下图所示“执行”按钮，可手动触发一次任务执行（通常情况下，通过配置Cron表达式进行任务调度出发）。
@@ -224,7 +224,7 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 
 （图2.5G：“调度中心”管理管理界面，任务日志入口）
 
-![输入图片说明](https://static.oschina.net/uploads/img/201607/23230416_2cLu.png "在这里输入图片标题")
+![输入图片说明](https://static.oschina.net/uploads/img/201703/25124816_tvGI.png "在这里输入图片标题")
 
 （图2.5H：“调度中心”管理管理界面，任务日志入口）
 
@@ -330,7 +330,7 @@ GLUE任务开发：进入任务管理界面，选中指定任务。点击该任�
 
 ![输入图片说明](https://static.oschina.net/uploads/img/201607/24125405_tk1u.png "在这里输入图片标题")
 
-![输入图片说明](https://static.oschina.net/uploads/img/201607/24125452_qwGM.png "在这里输入图片标题")
+![输入图片说明](https://static.oschina.net/uploads/img/201703/25124117_hYaV.png "在这里输入图片标题")
 
 #### 4.4 暂停/恢复任务
 可对任务进行“暂停”和“恢复”操作。
@@ -366,7 +366,7 @@ GLUE任务开发：进入任务管理界面，选中指定任务。点击该任�
 #### 4.7 查看执行日志
 点击执行日志右侧的 “执行日志” 按钮，可跳转至执行日志界面，可以查看业务代码中打印的完整日志，如下图；
 
-![输入图片说明](https://static.oschina.net/uploads/img/201607/24134243_BGuL.png "在这里输入图片标题")
+![输入图片说明](https://static.oschina.net/uploads/img/201703/25124816_tvGI.png "在这里输入图片标题")
 
 #### 4.8 终止运行中的任务
 仅针对执行中的任务。
@@ -772,8 +772,6 @@ Tips: 历史版本(V1.3.x)目前已经Release至稳定版本, 进入维护阶段
 - 3、通讯增强校验，有效过滤非正常请求；
 - 4、权限增强校验，采用动态登录TOKEN（推荐接入内部SSO）；
 - 5、数据库配置优化，解决乱码问题；
-
-
 
 
 #### TODO LIST
