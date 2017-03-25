@@ -109,7 +109,7 @@ public class JobLogController {
         model.addAttribute("executorAddress", jobLog.getExecutorAddress());
         model.addAttribute("triggerTime", jobLog.getTriggerTime().getTime());
         model.addAttribute("logId", jobLog.getId());
-		return "joblog/logdetail";
+		return "joblog/joblog.detail";
 	}
 
 	@RequestMapping("/logDetailCat")
