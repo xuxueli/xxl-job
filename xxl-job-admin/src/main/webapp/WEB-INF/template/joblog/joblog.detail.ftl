@@ -47,7 +47,7 @@
         <pre style="font-size:12px;position: absolute; height:100%;width:100%;" id="logConsolePre" >
             <div id="logConsole"></div>
             <li class="fa fa-refresh fa-spin" style="font-size: 20px;float: left;" id="logConsoleRunning" ></li>
-            <div><hr><i class2="fa fa-fw fa-hand-pointer-o"></i><hr></div>
+            <div><hr><hr></div>
         </pre>
     </div>
 
