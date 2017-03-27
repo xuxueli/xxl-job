@@ -44,12 +44,17 @@
     </header>
 
     <div class="content-wrapper" >
-        <pre style="font-size:12px;position: absolute; height:100%;width:100%;" id="logConsolePre" >
-            <div id="logConsole"></div>
-            <li class="fa fa-refresh fa-spin" style="font-size: 20px;float: left;" id="logConsoleRunning" ></li>
-            <div><hr><hr></div>
-        </pre>
+        <section class="content">
+            <pre style="font-size:12px;position:relative;" >
+                <div id="logConsole"></div>
+                <li class="fa fa-refresh fa-spin" style="font-size: 20px;float: left;" id="logConsoleRunning" ></li>
+                <div><hr><hr></div>
+            </pre>
+        </section>
     </div>
+
+    <!-- footer -->
+    <@netCommon.commonFooter />
 
 </div>
 
