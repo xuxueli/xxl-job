@@ -788,5 +788,6 @@ XXL-JOB托管在Github上，如有问题可在 [ISSUES](https://github.com/xuxue
 更多接入公司，欢迎在github [登记](https://github.com/xuxueli/xxl-job/issues/1 )
 
 ---
-支持的话可以扫一扫，支持 [XXL系列](https://github.com/xuxueli) 的建设。
+#### 支持的话可以扫一扫，支持 [XXL系列](https://github.com/xuxueli) 的建设。
+
 ![输入图片说明](http://images2015.cnblogs.com/blog/554415/201605/554415-20160513183306234-1939652116.png "在这里输入图片标题")
