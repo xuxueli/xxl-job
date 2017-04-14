@@ -41,7 +41,6 @@
                     <a target="_blank" href="http://shang.qq.com/wpa/qunwpa?idkey=bab676dc27c7e855da54da433fc39cef8474db6c7095711e4bd21097f89bf320">
                         <img border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="《xxl-javaer》（三群）" title="《xxl-javaer》（三群）">
                     </a>
-                    （群即将满，请加群3）
                     <br><br>
 
                     <a >技术交流群2：438249535</a>&nbsp;&nbsp;&nbsp;&nbsp;
