@@ -36,16 +36,26 @@
 					<br><br>
 					<a target="_blank" href="http://my.oschina.net/xuxueli/blog/690978">oschina地址</a>
                     <br><br>
+
+                    <a >技术交流群3：242151780</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a target="_blank" href="http://shang.qq.com/wpa/qunwpa?idkey=bab676dc27c7e855da54da433fc39cef8474db6c7095711e4bd21097f89bf320">
+                        <img border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="《xxl-javaer》（三群）" title="《xxl-javaer》（三群）">
+                    </a>
+                    （群即将满，请加群3）
+                    <br><br>
+
                     <a >技术交流群2：438249535</a>&nbsp;&nbsp;&nbsp;&nbsp;
                     <a target="_blank" href="http://shang.qq.com/wpa/qunwpa?idkey=555701907c3d37a6a48c165c57f417438f0b7a44e3c648ff5aac94dfdf0522b7">
 						<img border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="《xxl-javaer》（二群）" title="《xxl-javaer》（二群）">
 					</a>
+                    （群即将满，请加群3）
                     <br><br>
+
                     <a >技术交流群1：367260654</a>&nbsp;&nbsp;&nbsp;&nbsp;
                     <a target="_blank" href="http://shang.qq.com/wpa/qunwpa?idkey=4686e3fe01118445c75673a66b4cc6b2c7ce0641528205b6f403c179062b0a52">
                         <img border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="《xxl-javaer》" title="《xxl-javaer》">
                     </a>
-                    （群1已满，请加群2）
+                    （群即将满，请加群3）
 
 				</p>
 				<p></p>
