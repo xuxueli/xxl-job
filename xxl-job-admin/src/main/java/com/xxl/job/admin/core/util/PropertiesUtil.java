@@ -32,7 +32,7 @@ public class PropertiesUtil {
 			in = new InputStreamReader(new FileInputStream(url.getPath()), "UTF-8");
 			prop.load(in);
 		} catch (IOException e) {
-			logger.error("load {} error!", propertyFileName);
+			logger.error("load {} error: " + e.getMessage(), propertyFileName);
 		} finally {
 			if (in != null) {
 				try {
