@@ -4,12 +4,12 @@ import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.route.ExecutorRouteStrategyEnum;
 import com.xxl.job.admin.core.schedule.XxlJobDynamicScheduler;
-import com.xxl.job.admin.dao.IXxlJobGroupDao;
-import com.xxl.job.admin.dao.IXxlJobInfoDao;
-import com.xxl.job.admin.dao.IXxlJobLogDao;
-import com.xxl.job.admin.dao.IXxlJobLogGlueDao;
+import com.xxl.job.admin.core.thread.JobRegistryHelper;
+import com.xxl.job.admin.dao.*;
 import com.xxl.job.admin.service.IXxlJobService;
 import com.xxl.job.core.biz.model.ReturnT;
+import com.xxl.job.core.registry.RegistHelper;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.quartz.CronExpression;
 import org.quartz.SchedulerException;
@@ -19,9 +19,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.text.MessageFormat;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * core job action for xxl-job
@@ -257,5 +255,40 @@ public class XxlJobServiceImpl implements IXxlJobService {
 			return ReturnT.FAIL;
 		}
 	}
-	
+
+	@Override
+	public Map<String, Object> dashboardInfo() {
+
+		int jobInfoCount = xxlJobInfoDao.findAllCount();
+		int jobLogCount = xxlJobLogDao.findByHandleCodeCount(-1);
+		int jobLogSuccessCount = xxlJobLogDao.findByHandleCodeCount(ReturnT.SUCCESS_CODE);
+
+		// executor count
+		Set<String> executerAddressSet = new HashSet<String>();
+		List<XxlJobGroup> groupList = xxlJobGroupDao.findAll();
+		if (CollectionUtils.isNotEmpty(groupList)) {
+			for (XxlJobGroup group: groupList) {
+				List<String> registryList = null;
+				if (group.getAddressType() == 0) {
+					registryList = JobRegistryHelper.discover(RegistHelper.RegistType.EXECUTOR.name(), group.getAppName());
+				} else {
+					if (StringUtils.isNotBlank(group.getAddressList())) {
+						registryList = Arrays.asList(group.getAddressList().split(","));
+					}
+				}
+				if (CollectionUtils.isNotEmpty(registryList)) {
+					executerAddressSet.addAll(registryList);
+				}
+			}
+		}
+		int executorCount = executerAddressSet.size();
+
+		Map<String, Object> dashboardMap = new HashMap<String, Object>();
+		dashboardMap.put("jobInfoCount", jobInfoCount);
+		dashboardMap.put("jobLogCount", jobLogCount);
+		dashboardMap.put("jobLogSuccessCount", jobLogSuccessCount);
+		dashboardMap.put("executorCount", executorCount);
+		return dashboardMap;
+	}
+
 }

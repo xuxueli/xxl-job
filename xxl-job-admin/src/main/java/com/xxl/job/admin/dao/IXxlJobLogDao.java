@@ -23,5 +23,7 @@ public interface IXxlJobLogDao {
 	public int updateHandleInfo(XxlJobLog xxlJobLog);
 	
 	public int delete(int jobId);
-	
+
+	public int findByHandleCodeCount(int handleCode);
+
 }

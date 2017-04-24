@@ -23,4 +23,7 @@ public interface IXxlJobInfoDao {
 	public int delete(int id);
 
 	public List<XxlJobInfo> getJobsByGroup(String jobGroup);
+
+	public int findAllCount();
+
 }

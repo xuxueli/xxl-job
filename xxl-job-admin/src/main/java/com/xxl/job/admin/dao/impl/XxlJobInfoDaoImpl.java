@@ -66,4 +66,9 @@ public class XxlJobInfoDaoImpl implements IXxlJobInfoDao {
 		return sqlSessionTemplate.selectList("XxlJobInfoMapper.getJobsByGroup", jobGroup);
 	}
 
+	@Override
+	public int findAllCount() {
+		return sqlSessionTemplate.selectOne("XxlJobInfoMapper.findAllCount");
+	}
+
 }

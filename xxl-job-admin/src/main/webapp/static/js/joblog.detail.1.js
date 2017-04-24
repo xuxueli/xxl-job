@@ -47,7 +47,7 @@ $(function() {
 
                         // valid end
                         if (data.content.end) {
-                            logRunStop('<span style="color: green;">[Rolling Log Finish]</span>');
+                            logRunStop('<br><span style="color: green;">[Rolling Log Finish]</span>');
                             return;
                         }
 

@@ -3,6 +3,7 @@ package com.xxl.job.admin.controller;
 import com.xxl.job.admin.controller.annotation.PermessionLimit;
 import com.xxl.job.admin.controller.interceptor.PermissionInterceptor;
 import com.xxl.job.admin.core.util.PropertiesUtil;
+import com.xxl.job.admin.service.IXxlJobService;
 import com.xxl.job.core.biz.model.ReturnT;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
@@ -11,8 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
 
 /**
  * index controller
@@ -21,13 +24,16 @@ import javax.servlet.http.HttpServletResponse;
 @Controller
 public class IndexController {
 
+	@Resource
+	private IXxlJobService xxlJobService;
+
 	@RequestMapping("/")
-	@PermessionLimit(limit=false)
-	public String index(Model model, HttpServletRequest request) {
-		if (!PermissionInterceptor.ifLogin(request)) {
-			return "redirect:/toLogin";
-		}
-		return "redirect:/jobinfo";
+	public String index(Model model) {
+
+		Map<String, Object> dashboardMap = xxlJobService.dashboardInfo();
+		model.addAllAttributes(dashboardMap);
+
+		return "index";
 	}
 	
 	@RequestMapping("/toLogin")
@@ -71,6 +77,11 @@ public class IndexController {
 	
 	@RequestMapping("/help")
 	public String help() {
+
+		/*if (!PermissionInterceptor.ifLogin(request)) {
+			return "redirect:/toLogin";
+		}*/
+
 		return "help";
 	}
 	

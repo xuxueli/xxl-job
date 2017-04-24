@@ -76,5 +76,10 @@ public class XxlJobLogDaoImpl implements IXxlJobLogDao {
 	public int delete(int jobId) {
 		return sqlSessionTemplate.delete("XxlJobLogMapper.delete", jobId);
 	}
-	
+
+	@Override
+	public int findByHandleCodeCount(int handleCode) {
+		return sqlSessionTemplate.selectOne("XxlJobLogMapper.findByHandleCodeCount", handleCode);
+	}
+
 }

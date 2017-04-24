@@ -151,5 +151,10 @@
 		FROM XXL_JOB_QRTZ_TRIGGER_INFO AS t
 		WHERE t.job_group = #{jobGroup}
 	</select>
-	
+
+	<select id="findAllCount" resultType="int">
+		SELECT count(1)
+		FROM XXL_JOB_QRTZ_TRIGGER_INFO
+	</select>
+
 </mapper>

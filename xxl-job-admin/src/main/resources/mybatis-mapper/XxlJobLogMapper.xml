@@ -123,5 +123,15 @@
 		delete from XXL_JOB_QRTZ_TRIGGER_LOG
 		WHERE job_id = #{jobId}
 	</delete>
+
+	<select id="findByHandleCodeCount" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+		SELECT count(1)
+		FROM XXL_JOB_QRTZ_TRIGGER_LOG AS t
+		<trim prefix="WHERE" prefixOverrides="AND | OR" >
+			<if test="_parameter gt 0">
+				AND t.handle_code = #{handleCode}
+			</if>
+		</trim>
+	</select>
 	
 </mapper>

@@ -26,5 +26,6 @@ public interface IXxlJobService {
 	public ReturnT<String> resume(int id);
 	
 	public ReturnT<String> triggerJob(int id);
-	
+
+    Map<String,Object> dashboardInfo();
 }
