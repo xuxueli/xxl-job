@@ -9,6 +9,7 @@ import javax.annotation.Resource;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * job log
@@ -78,8 +79,16 @@ public class XxlJobLogDaoImpl implements IXxlJobLogDao {
 	}
 
 	@Override
-	public int findByHandleCodeCount(int handleCode) {
-		return sqlSessionTemplate.selectOne("XxlJobLogMapper.findByHandleCodeCount", handleCode);
+	public int triggerCountByHandleCode(int handleCode) {
+		return sqlSessionTemplate.selectOne("XxlJobLogMapper.triggerCountByHandleCode", handleCode);
+	}
+
+	@Override
+	public Map<String, Integer> triggerCountByDay(Date from, Date to) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("from", from);
+		params.put("to", to);
+		return sqlSessionTemplate.selectOne("XxlJobLogMapper.triggerCountByDay", params);
 	}
 
 }

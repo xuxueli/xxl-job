@@ -35,6 +35,12 @@ public class IndexController {
 
 		return "index";
 	}
+
+    @RequestMapping("/triggerChartDate")
+	public ReturnT<Map<String, Object>> triggerChartDate() {
+        ReturnT<Map<String, Object>> triggerChartDate = xxlJobService.triggerChartDate();
+        return triggerChartDate;
+    }
 	
 	@RequestMapping("/toLogin")
 	@PermessionLimit(limit=false)

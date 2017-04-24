@@ -11,6 +11,7 @@ import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.registry.RegistHelper;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.time.DateUtils;
 import org.quartz.CronExpression;
 import org.quartz.SchedulerException;
 import org.slf4j.Logger;
@@ -260,8 +261,8 @@ public class XxlJobServiceImpl implements IXxlJobService {
 	public Map<String, Object> dashboardInfo() {
 
 		int jobInfoCount = xxlJobInfoDao.findAllCount();
-		int jobLogCount = xxlJobLogDao.findByHandleCodeCount(-1);
-		int jobLogSuccessCount = xxlJobLogDao.findByHandleCodeCount(ReturnT.SUCCESS_CODE);
+		int jobLogCount = xxlJobLogDao.triggerCountByHandleCode(-1);
+		int jobLogSuccessCount = xxlJobLogDao.triggerCountByHandleCode(ReturnT.SUCCESS_CODE);
 
 		// executor count
 		Set<String> executerAddressSet = new HashSet<String>();
@@ -289,6 +290,16 @@ public class XxlJobServiceImpl implements IXxlJobService {
 		dashboardMap.put("jobLogSuccessCount", jobLogSuccessCount);
 		dashboardMap.put("executorCount", executorCount);
 		return dashboardMap;
+	}
+
+	@Override
+	public ReturnT<Map<String, Object>> triggerChartDate() {
+		Date from = DateUtils.addDays(new Date(), -30);
+		Date to = new Date();
+
+		Map<String, Integer> triggerCountMap = xxlJobLogDao.triggerCountByDay(from, to);
+
+		return null;
 	}
 
 }

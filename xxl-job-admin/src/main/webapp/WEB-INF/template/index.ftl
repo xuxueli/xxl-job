@@ -16,7 +16,7 @@
 	<div class="content-wrapper">
 		<!-- Content Header (Page header) -->
 		<section class="content-header">
-			<h1>仪表盘<small>任务调度中心</small></h1>
+			<h1>运行报表<small>任务调度中心</small></h1>
 			<!--
 			<ol class="breadcrumb">
 				<li><a><i class="fa fa-dashboard"></i>调度中心</a></li>
@@ -28,7 +28,7 @@
 		<!-- Main content -->
 		<section class="content">
 
-            <!-- 简要报表 -->
+            <!-- 任务信息 -->
             <div class="row">
 
                 <#-- 任务信息 -->
@@ -49,7 +49,7 @@
                 </div>
 
                 <#-- 调度信息 -->
-                <div class="col-md-4 col-sm-6 col-xs-12">
+                <div class="col-md-4 col-sm-6 col-xs-12" style="display: none;">
                     <div class="info-box bg-yellow">
                         <span class="info-box-icon"><i class="fa fa-calendar"></i></span>
 
@@ -70,7 +70,7 @@
                 <#-- 执行器 -->
                 <div class="col-md-4 col-sm-6 col-xs-12">
                     <div class="info-box bg-green">
-                        <span class="info-box-icon"><i class="fa fa-thumbs-o-up"></i></span>
+                        <span class="info-box-icon"><i class="fa ion-ios-settings-strong"></i></span>
 
                         <div class="info-box-content">
                             <span class="info-box-text">执行器数量</span>
@@ -85,7 +85,31 @@
                 </div>
 
             </div>
-            <!-- /.row -->
+
+            <#-- 调度报表：时间区间筛选，左侧折线图 + 右侧饼图 -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">调度报表</h3>
+                            <#--<input type="text" class="form-control" id="filterTime" readonly >-->
+                        </div>
+                        <div class="box-body">
+                            <div class="row">
+                                <#-- 左侧折线图 -->
+                                <div class="col-md-8">
+                                    <div id="lineChart" style="height: 350px;"></div>
+                                </div>
+                                <#-- 右侧饼图 -->
+                                <div class="col-md-4">
+                                    <div id="pieChart" style="height: 350px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
 
 		</section>
 		<!-- /.content -->
@@ -96,5 +120,10 @@
 	<@netCommon.commonFooter />
 </div>
 <@netCommon.commonScript />
+<#--<script src="${request.contextPath}/static/adminlte/plugins/daterangepicker/moment.min.js"></script>
+<script src="${request.contextPath}/static/adminlte/plugins/daterangepicker/daterangepicker.js"></script>-->
+<script src="${request.contextPath}/static/plugins/echarts/echarts.common.min.js"></script>
+<script src="${request.contextPath}/static/js/index.js"></script>
+
 </body>
 </html>
