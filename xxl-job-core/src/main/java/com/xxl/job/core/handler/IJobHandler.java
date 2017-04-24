@@ -1,5 +1,7 @@
 package com.xxl.job.core.handler;
 
+import com.xxl.job.core.biz.model.ReturnT;
+
 /**
  * remote job handler
  * @author xuxueli 2015-12-19 19:06:38
@@ -7,11 +9,11 @@ package com.xxl.job.core.handler;
 public abstract class IJobHandler {
 	
 	/**
-	 * job handler <br><br>
-	 * the return Object will be and stored
+	 * job handler
 	 * @param params
-	 * @throws Exception  default sussecc, fail if catch exception
+	 * @return
+	 * @throws Exception
 	 */
-	public abstract void execute(String... params) throws Exception;
+	public abstract ReturnT<String> execute(String... params) throws Exception;
 	
 }

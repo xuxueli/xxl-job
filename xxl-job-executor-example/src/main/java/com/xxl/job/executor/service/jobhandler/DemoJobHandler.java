@@ -1,5 +1,6 @@
 package com.xxl.job.executor.service.jobhandler;
 
+import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.handler.annotation.JobHander;
 import org.slf4j.Logger;
@@ -25,13 +26,14 @@ public class DemoJobHandler extends IJobHandler {
 	private static transient Logger logger = LoggerFactory.getLogger(DemoJobHandler.class);
 	
 	@Override
-	public void execute(String... params) throws Exception {
+	public ReturnT<String> execute(String... params) throws Exception {
 		logger.info("XXL-JOB, Hello World.");
 		
 		for (int i = 0; i < 5; i++) {
 			logger.info("beat at:{}", i);
 			TimeUnit.SECONDS.sleep(2);
 		}
+		return ReturnT.SUCCESS;
 	}
 	
 }

@@ -172,14 +172,16 @@ package com.xxl.job.service.handler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.handler.IJobHandler;
 
 public class DemoGlueJobHandler extends IJobHandler {
 	private static transient Logger logger = LoggerFactory.getLogger(DemoGlueJobHandler.class);
 
 	@Override
-	public void execute(String... params) throws Exception {
+	public ReturnT<String> execute(String... params) throws Exception {
 		logger.info("XXL-JOB, Hello World.");
+		return ReturnT.SUCCESS;
 	}
 
 }

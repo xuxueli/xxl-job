@@ -122,12 +122,12 @@ public class XxlJobFileAppender extends AppenderSkeleton {
 
 		// valid log file
 		if (logFileName==null || logFileName.trim().length()==0) {
-            return new LogResult(fromLineNum, -1, "readLog fail, logFile not found", true);
+            return new LogResult(fromLineNum, 0, "readLog fail, logFile not found", true);
 		}
 		File logFile = new File(filePath, logFileName);
 
 		if (!logFile.exists()) {
-            return new LogResult(fromLineNum, -1, "readLog fail, logFile not exists", true);
+            return new LogResult(fromLineNum, 0, "readLog fail, logFile not exists", true);
 		}
 
 		// read file
@@ -139,8 +139,8 @@ public class XxlJobFileAppender extends AppenderSkeleton {
 			String line = null;
 
 			while ((line = reader.readLine())!=null) {
-				toLineNum++;
-				if (reader.getLineNumber() >= fromLineNum) {
+				toLineNum = reader.getLineNumber();		// [from, to], start as 1
+				if (toLineNum >= fromLineNum) {
 					logContentBuffer.append(line).append("\n");
 				}
 			}

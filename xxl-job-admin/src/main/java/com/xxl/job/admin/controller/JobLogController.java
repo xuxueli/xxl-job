@@ -120,12 +120,10 @@ public class JobLogController {
 			ReturnT<LogResult> logResult = executorBiz.log(triggerTime, logId, fromLineNum);
 
 			// is end
-			if (logResult.getContent()!=null && logResult.getContent().getFromLineNum() > logResult.getContent().getToLineNum()) {
-				XxlJobLog jobLog = xxlJobLogDao.load(logId);
-				if (jobLog.getHandleCode() > 0) {
-					logResult.getContent().setEnd(true);
-				}
-			}
+			/*XxlJobLog jobLog = xxlJobLogDao.load(logId);
+			if (jobLog.getHandleCode() > 0) {
+				logResult.getContent().setEnd(true);
+			}*/
 
 			return logResult;
 		} catch (Exception e) {

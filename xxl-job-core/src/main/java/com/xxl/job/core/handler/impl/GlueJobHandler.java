@@ -1,5 +1,6 @@
 package com.xxl.job.core.handler.impl;
 
+import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.handler.IJobHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,9 +23,10 @@ public class GlueJobHandler extends IJobHandler {
 	}
 
 	@Override
-	public void execute(String... params) throws Exception {
+	public ReturnT<String> execute(String... params) throws Exception {
 		logger.info("----------- glue.version:{} -----------", glueUpdatetime);
 		jobHandler.execute(params);
+		return ReturnT.SUCCESS;
 	}
 
 }

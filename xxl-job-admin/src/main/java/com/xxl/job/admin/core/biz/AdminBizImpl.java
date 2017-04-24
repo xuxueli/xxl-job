@@ -31,7 +31,7 @@ public class AdminBizImpl implements AdminBiz {
 
         // trigger success, to trigger child job, and avoid repeat trigger child job
         String childTriggerMsg = null;
-        if (ReturnT.SUCCESS_CODE==handleCallbackParam.getCode() && ReturnT.SUCCESS_CODE!=log.getHandleCode()) {
+        if (ReturnT.SUCCESS_CODE==handleCallbackParam.getExecuteResult().getCode() && ReturnT.SUCCESS_CODE!=log.getHandleCode()) {
             XxlJobInfo xxlJobInfo = XxlJobDynamicScheduler.xxlJobInfoDao.loadById(log.getJobId());
             if (xxlJobInfo!=null && StringUtils.isNotBlank(xxlJobInfo.getChildJobKey())) {
                 childTriggerMsg = "<hr>";
@@ -68,8 +68,8 @@ public class AdminBizImpl implements AdminBiz {
         if (log.getHandleMsg()!=null) {
             handleMsg.append(log.getHandleMsg()).append("<br>");
         }
-        if (handleCallbackParam.getMsg() != null) {
-            handleMsg.append("执行备注：").append(handleCallbackParam.getMsg());
+        if (handleCallbackParam.getExecuteResult().getMsg() != null) {
+            handleMsg.append("执行备注：").append(handleCallbackParam.getExecuteResult().getMsg());
         }
         if (childTriggerMsg !=null) {
             handleMsg.append("<br>子任务触发备注：").append(childTriggerMsg);
@@ -77,7 +77,7 @@ public class AdminBizImpl implements AdminBiz {
 
         // success, save log
         log.setHandleTime(new Date());
-        log.setHandleCode(handleCallbackParam.getCode());
+        log.setHandleCode(handleCallbackParam.getExecuteResult().getCode());
         log.setHandleMsg(handleMsg.toString());
         XxlJobDynamicScheduler.xxlJobLogDao.updateHandleInfo(log);
 

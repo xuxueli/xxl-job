@@ -12,14 +12,12 @@ public class HandleCallbackParam implements Serializable {
     private int logId;
     private Set<String> logAddress;
 
-    private int code;
-    private String msg;
+    private ReturnT<String> executeResult;
 
-    public HandleCallbackParam(int logId, Set<String> logAddress, int code, String msg) {
+    public HandleCallbackParam(int logId, Set<String> logAddress, ReturnT<String> executeResult) {
         this.logId = logId;
         this.logAddress = logAddress;
-        this.code = code;
-        this.msg = msg;
+        this.executeResult = executeResult;
     }
 
     public int getLogId() {
@@ -38,20 +36,11 @@ public class HandleCallbackParam implements Serializable {
         this.logAddress = logAddress;
     }
 
-    public int getCode() {
-        return code;
+    public ReturnT<String> getExecuteResult() {
+        return executeResult;
     }
 
-    public void setCode(int code) {
-        this.code = code;
+    public void setExecuteResult(ReturnT<String> executeResult) {
+        this.executeResult = executeResult;
     }
-
-    public String getMsg() {
-        return msg;
-    }
-
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
-
 }

@@ -74,33 +74,36 @@ public class JobThread extends Thread{
 							? (String[])(Arrays.asList(triggerParam.getExecutorParams().split(",")).toArray()) : null;
 					
 					// handle job
-					int _code = ReturnT.SUCCESS_CODE;
-					String _msg = null;
-
+					ReturnT<String> executeResult = null;
 					try {
 						// log filename: yyyy-MM-dd/9999.log
 						String logFileName = XxlJobFileAppender.makeLogFileName(new Date(triggerParam.getLogDateTim()), triggerParam.getLogId());
 
 						XxlJobFileAppender.contextHolder.set(logFileName);
 						logger.info("----------- xxl-job job execute start -----------");
-						handler.execute(handlerParams);
+
+						executeResult = handler.execute(handlerParams);
+						if (executeResult == null) {
+							executeResult = ReturnT.FAIL;
+						}
 					} catch (Exception e) {
 						logger.error("JobThread Exception:", e);
-						_code = ReturnT.FAIL_CODE;
 						StringWriter out = new StringWriter();
 						e.printStackTrace(new PrintWriter(out));
-						_msg = out.toString();
+
+						executeResult = new ReturnT<String>(ReturnT.FAIL_CODE, out.toString());
 					}
 					logger.info("----------- xxl-job job execute end ----------- <br> Look : ExecutorParams:{}, Code:{}, Msg:{}",
-							new Object[]{handlerParams, _code, _msg});
+							new Object[]{handlerParams, executeResult.getCode(), executeResult.getMsg()});
 					
 					// callback handler info
 					if (!toStop) {
 						// commonm
-						TriggerCallbackThread.pushCallBack(new HandleCallbackParam(triggerParam.getLogId(), triggerParam.getLogAddress(), _code, _msg));
+						TriggerCallbackThread.pushCallBack(new HandleCallbackParam(triggerParam.getLogId(), triggerParam.getLogAddress(), executeResult));
 					} else {
 						// is killed
-						TriggerCallbackThread.pushCallBack(new HandleCallbackParam(triggerParam.getLogId(), triggerParam.getLogAddress(), ReturnT.FAIL_CODE, stopReason + " [业务运行中，被强制终止]"));
+						ReturnT stopResult = new ReturnT<String>(ReturnT.FAIL_CODE, stopReason + " [业务运行中，被强制终止]");
+						TriggerCallbackThread.pushCallBack(new HandleCallbackParam(triggerParam.getLogId(), triggerParam.getLogAddress(), stopResult));
 					}
 				}
 			} catch (Exception e) {
@@ -113,7 +116,8 @@ public class JobThread extends Thread{
 			TriggerParam triggerParam = triggerQueue.poll();
 			if (triggerParam!=null) {
 				// is killed
-				TriggerCallbackThread.pushCallBack(new HandleCallbackParam(triggerParam.getLogId(), triggerParam.getLogAddress(), ReturnT.FAIL_CODE, stopReason + " [任务尚未执行，在调度队列中被终止]"));
+				ReturnT stopResult = new ReturnT<String>(ReturnT.FAIL_CODE, stopReason + " [任务尚未执行，在调度队列中被终止]");
+				TriggerCallbackThread.pushCallBack(new HandleCallbackParam(triggerParam.getLogId(), triggerParam.getLogAddress(), stopResult));
 			}
 		}
 		
