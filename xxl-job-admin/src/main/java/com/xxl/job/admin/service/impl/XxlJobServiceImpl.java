@@ -12,6 +12,7 @@ import com.xxl.job.core.registry.RegistHelper;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
+import org.apache.commons.lang.time.FastDateFormat;
 import org.quartz.CronExpression;
 import org.quartz.SchedulerException;
 import org.slf4j.Logger;
@@ -329,7 +330,11 @@ public class XxlJobServiceImpl implements IXxlJobService {
 				triggerCountFailTotal += dayFailCount;
 			}
 		} else {
-			return new ReturnT<Map<String, Object>>(ReturnT.FAIL_CODE, null);
+            for (int i = 4; i > -1; i--) {
+                triggerDayList.add(FastDateFormat.getInstance("yyyy-MM-dd").format(DateUtils.addDays(new Date(), -i)));
+                triggerDayCountSucList.add(0);
+                triggerDayCountFailList.add(0);
+            }
 		}
 
 		Map<String, Object> result = new HashMap<String, Object>();

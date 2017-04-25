@@ -58,10 +58,12 @@
                             <span class="info-box-number">${jobLogCount}</span>
 
                             <div class="progress">
-                                <div class="progress-bar" style="width: ${(jobLogSuccessCount*100/jobLogCount)?string("0.00")}%"></div>
+                                <div class="progress-bar" <#if jobLogCount gt 0> style="width: ${(jobLogSuccessCount*100/jobLogCount)?string("0.00")}%" </#if> ></div>
                             </div>
                             <span class="progress-description">
-                                调度成功率：${(jobLogSuccessCount*100/jobLogCount)?string("0.00")}<small>%</small>
+                                <#if jobLogCount gt 0>
+                                    调度成功率：${(jobLogSuccessCount*100/jobLogCount)?string("0.00")}<small>%</small>
+                                </#if>
                             </span>
                         </div>
                     </div>

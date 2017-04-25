@@ -47,7 +47,7 @@ $(function () {
                },
                toolbox: {
                    feature: {
-                       saveAsImage: {}
+                       /*saveAsImage: {}*/
                    }
                },
                grid: {
