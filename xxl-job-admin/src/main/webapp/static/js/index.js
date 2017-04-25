@@ -60,7 +60,7 @@ $(function () {
                    {
                        type : 'category',
                        boundaryGap : false,
-                       data : ['2017-10-01','2017-10-02','2017-10-03','2017-10-04','2017-10-05','2017-10-06','2017-10-07']
+                       data : data.content.triggerDayList
                    }
                ],
                yAxis : [
@@ -74,7 +74,7 @@ $(function () {
                        type:'line',
                        stack: '总量',
                        areaStyle: {normal: {}},
-                       data:[820, 932, 901, 934, 1290, 1330, 1320]
+                       data: data.content.triggerDayCountSucList
                    },
                    {
                        name:'失败调度次数',
@@ -87,7 +87,7 @@ $(function () {
                            }
                        },
                        areaStyle: {normal: {}},
-                       data:[120, 132, 101, 134, 90, 230, 210]
+                       data: data.content.triggerDayCountFailList
                    }
                ],
                 color:['#00A65A', '#F39C12']
