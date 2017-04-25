@@ -58,12 +58,13 @@
                             <span class="info-box-number">${jobLogCount}</span>
 
                             <div class="progress">
-                                <div class="progress-bar" <#if jobLogCount gt 0> style="width: ${(jobLogSuccessCount*100/jobLogCount)?string("0.00")}%" </#if> ></div>
+                                <div class="progress-bar" style="width: 100%" ></div>
                             </div>
                             <span class="progress-description">
-                                <#if jobLogCount gt 0>
+                                调度中心触发的调度次数
+                                <#--<#if jobLogCount gt 0>
                                     调度成功率：${(jobLogSuccessCount*100/jobLogCount)?string("0.00")}<small>%</small>
-                                </#if>
+                                </#if>-->
                             </span>
                         </div>
                     </div>

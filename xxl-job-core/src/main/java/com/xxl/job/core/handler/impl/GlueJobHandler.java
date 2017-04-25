@@ -25,8 +25,7 @@ public class GlueJobHandler extends IJobHandler {
 	@Override
 	public ReturnT<String> execute(String... params) throws Exception {
 		logger.info("----------- glue.version:{} -----------", glueUpdatetime);
-		jobHandler.execute(params);
-		return ReturnT.SUCCESS;
+		return jobHandler.execute(params);
 	}
 
 }

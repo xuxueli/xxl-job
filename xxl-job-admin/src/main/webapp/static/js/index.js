@@ -103,7 +103,7 @@ $(function () {
     function pieChartInit(data) {
         var option = {
             title : {
-                text: '调度总次数',
+                text: '成功比例图',
                 /*subtext: 'subtext',*/
                 x:'center'
             },
