@@ -5,11 +5,30 @@
 
 $(function () {
 
-    // lineChart
-    var lineChart = echarts.init(document.getElementById('lineChart'));
-    lineChart.setOption(lineChartDate());
+    /**
+     *
+     */
+    $.ajax({
+        type : 'POST',
+        url : base_url + '/triggerChartDate',
+        data : {        },
+        dataType : "json",
+        success : function(data){
+            if (data.code == 200) {
+                lineChartInit(data)
+                pieChartInit(data);
+            } else {
+                ComAlert.show(2, data.msg || '调度报表数据加载异常' );
+            }
+        }
+    });
 
-    function lineChartDate() {
+
+
+    /**
+     * 折线图
+     */
+    function lineChartInit(data) {
         var option = {
                title: {
                    text: '日期分布图'
@@ -73,15 +92,16 @@ $(function () {
                ],
                 color:['#00A65A', '#F39C12']
         };
-        return option;
+
+        var lineChart = echarts.init(document.getElementById('lineChart'));
+        lineChart.setOption(option);
     }
 
-    // pie chart
-    var pieChart = echarts.init(document.getElementById('pieChart'));
-    pieChart.setOption(pieChartDate());
-
-    function pieChartDate() {
-        option = {
+    /**
+     * 饼图
+     */
+    function pieChartInit(data) {
+        var option = {
             title : {
                 text: '调度总次数',
                 /*subtext: 'subtext',*/
@@ -103,8 +123,14 @@ $(function () {
                     radius : '55%',
                     center: ['50%', '60%'],
                     data:[
-                        {value:800, name:'成功调度次数'},
-                        {value:200, name:'失败调度次数'}
+                        {
+                            value:data.content.triggerCountSucTotal,
+                            name:'成功调度次数'
+                        },
+                        {
+                            value:data.content.triggerCountFailTotal,
+                            name:'失败调度次数'
+                        }
                     ],
                     itemStyle: {
                         emphasis: {
@@ -117,7 +143,8 @@ $(function () {
             ],
             color:['#00A65A', '#F39C12']
         };
-        return option;
+        var pieChart = echarts.init(document.getElementById('pieChart'));
+        pieChart.setOption(option);
     }
 
     // 过滤时间

@@ -37,6 +37,7 @@ public class IndexController {
 	}
 
     @RequestMapping("/triggerChartDate")
+	@ResponseBody
 	public ReturnT<Map<String, Object>> triggerChartDate() {
         ReturnT<Map<String, Object>> triggerChartDate = xxlJobService.triggerChartDate();
         return triggerChartDate;

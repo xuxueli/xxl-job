@@ -27,6 +27,6 @@ public interface IXxlJobLogDao {
 
 	public int triggerCountByHandleCode(int handleCode);
 
-    Map<String,Integer> triggerCountByDay(Date from, Date to);
+	public List<Map<String, Object>> triggerCountByDay(Date from, Date to, int handleCode);
 
 }

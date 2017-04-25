@@ -297,9 +297,48 @@ public class XxlJobServiceImpl implements IXxlJobService {
 		Date from = DateUtils.addDays(new Date(), -30);
 		Date to = new Date();
 
-		Map<String, Integer> triggerCountMap = xxlJobLogDao.triggerCountByDay(from, to);
+		List<String> triggerDayList = new ArrayList<String>();
+		List<Integer> triggerDayCountSucList = new ArrayList<Integer>();
+		List<Integer> triggerDayCountFailList = new ArrayList<Integer>();
+		int triggerCountSucTotal = 0;
+		int triggerCountFailTotal = 0;
 
-		return null;
+		List<Map<String, Object>> triggerCountMapAll = xxlJobLogDao.triggerCountByDay(from, to, -1);
+		List<Map<String, Object>> triggerCountMapSuc = xxlJobLogDao.triggerCountByDay(from, to, ReturnT.SUCCESS_CODE);
+		if (CollectionUtils.isNotEmpty(triggerCountMapAll)) {
+			for (Map<String, Object> item: triggerCountMapAll) {
+				String day = String.valueOf(item.get("triggerDay"));
+				int dayAllCount = Integer.valueOf(String.valueOf(item.get("triggerCount")));
+				int daySucCount = 0;
+				int dayFailCount = dayAllCount - daySucCount;
+
+				if (CollectionUtils.isNotEmpty(triggerCountMapSuc)) {
+					for (Map<String, Object> sucItem: triggerCountMapSuc) {
+						String daySuc = String.valueOf(sucItem.get("triggerDay"));
+						if (day.equals(daySuc)) {
+							daySucCount = Integer.valueOf(String.valueOf(sucItem.get("triggerCount")));
+							dayFailCount = dayAllCount - daySucCount;
+						}
+					}
+				}
+
+				triggerDayList.add(day);
+				triggerDayCountSucList.add(daySucCount);
+				triggerDayCountFailList.add(dayFailCount);
+				triggerCountSucTotal += daySucCount;
+				triggerCountFailTotal += dayFailCount;
+			}
+		} else {
+			return new ReturnT<Map<String, Object>>(ReturnT.FAIL_CODE, null);
+		}
+
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("triggerDayList", triggerDayList);
+		result.put("triggerDayCountSucList", triggerDayCountSucList);
+		result.put("triggerDayCountFailList", triggerDayCountFailList);
+		result.put("triggerCountSucTotal", triggerCountSucTotal);
+		result.put("triggerCountFailTotal", triggerCountFailTotal);
+		return new ReturnT<Map<String, Object>>(result);
 	}
 
 }

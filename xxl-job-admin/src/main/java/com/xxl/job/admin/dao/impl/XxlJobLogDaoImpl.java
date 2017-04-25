@@ -84,11 +84,12 @@ public class XxlJobLogDaoImpl implements IXxlJobLogDao {
 	}
 
 	@Override
-	public Map<String, Integer> triggerCountByDay(Date from, Date to) {
+	public List<Map<String, Object>> triggerCountByDay(Date from, Date to, int handleCode) {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("from", from);
 		params.put("to", to);
-		return sqlSessionTemplate.selectOne("XxlJobLogMapper.triggerCountByDay", params);
+		params.put("handleCode", handleCode);
+		return sqlSessionTemplate.selectList("XxlJobLogMapper.triggerCountByDay", params);
 	}
 
 }

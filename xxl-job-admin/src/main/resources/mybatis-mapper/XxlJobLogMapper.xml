@@ -128,8 +128,7 @@
 		SELECT count(1)
 		FROM XXL_JOB_QRTZ_TRIGGER_LOG AS t
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
-			<if test="_parameter
-			 gt 0">
+			<if test="_parameter gt 0">
 				AND t.handle_code = #{handleCode}
 			</if>
 		</trim>
@@ -138,6 +137,10 @@
     <select id="triggerCountByDay" parameterType="java.util.Map" resultType="java.util.Map" >
         SELECT DATE_FORMAT(trigger_time,'%Y-%m-%d') triggerDay, COUNT(id) triggerCount
         FROM XXL_JOB_QRTZ_TRIGGER_LOG
+        WHERE trigger_time BETWEEN #{from} and #{to}
+		<if test="handleCode gt 0">
+			AND handle_code = #{handleCode}
+		</if>
         GROUP BY triggerDay;
     </select>
 	

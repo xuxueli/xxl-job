@@ -49,7 +49,7 @@
                 </div>
 
                 <#-- 调度信息 -->
-                <div class="col-md-4 col-sm-6 col-xs-12" style="display: none;">
+                <div class="col-md-4 col-sm-6 col-xs-12" >
                     <div class="info-box bg-yellow">
                         <span class="info-box-icon"><i class="fa fa-calendar"></i></span>
 
@@ -91,7 +91,7 @@
                 <div class="col-md-12">
                     <div class="box">
                         <div class="box-header with-border">
-                            <h3 class="box-title">调度报表</h3>
+                            <h3 class="box-title">调度报表（一月之内）</h3>
                             <#--<input type="text" class="form-control" id="filterTime" readonly >-->
                         </div>
                         <div class="box-body">
