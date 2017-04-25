@@ -3,6 +3,7 @@ package com.xxl.job.admin.core.route.strategy;
 import com.xxl.job.admin.core.route.ExecutorRouter;
 
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -21,7 +22,7 @@ public class ExecutorRouteRound extends ExecutorRouter {
 
         // count++
         Integer count = routeCountEachJob.get(jobId);
-        count = (count==null)?0:++count;
+        count = (count==null || count>1000000)?(new Random().nextInt(100)):++count;  // 初始化时主动Random一次，缓解首次压力
         routeCountEachJob.put(jobId, count);
         return count;
     }

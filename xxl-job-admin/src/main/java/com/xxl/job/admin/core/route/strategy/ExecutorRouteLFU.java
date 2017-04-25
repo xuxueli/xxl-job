@@ -33,8 +33,8 @@ public class ExecutorRouteLFU extends ExecutorRouter {
             jobLfuMap.put(jobId, lfuItemMap);
         }
         for (String address: addressList) {
-            if (!lfuItemMap.containsKey(address)) {
-                lfuItemMap.put(address, 0);
+            if (!lfuItemMap.containsKey(address) || lfuItemMap.get(address) >1000000 ) {
+                lfuItemMap.put(address, new Random().nextInt(addressList.size()));  // 初始化时主动Random一次，缓解首次压力
             }
         }
 
