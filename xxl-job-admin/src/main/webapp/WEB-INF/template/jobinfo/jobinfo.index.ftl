@@ -169,7 +169,8 @@
 					</div>
 
 <input type="hidden" name="glueRemark" value="GLUE代码初始化" >
-<textarea name="glueSource" style="display:none;" >
+<textarea name="glueSource" style="display:none;" ></textarea>
+<textarea class="glueSource_java" style="display:none;" >
 package com.xxl.job.service.handler;
 
 import org.slf4j.Logger;
@@ -189,7 +190,7 @@ public class DemoGlueJobHandler extends IJobHandler {
 
 }
 </textarea>
-<textarea name="glueSource_shell" style="display:none;" >
+<textarea class="glueSource_shell" style="display:none;" >
 #!/bin/bash
 
 echo hello shell
@@ -204,7 +205,7 @@ echo1 111
 printf 666
 echo2 222
 </textarea>
-<textarea name="glueSource_python" style="display:none;" >
+<textarea class="glueSource_python" style="display:none;" >
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 

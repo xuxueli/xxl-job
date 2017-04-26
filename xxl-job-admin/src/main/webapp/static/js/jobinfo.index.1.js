@@ -297,9 +297,9 @@ $(function() {
 
     // GLUE模式开启
     $(".glueType").change(function(){
+		// executorHandler
         var $executorHandler = $(this).parents("form").find("input[name='executorHandler']");
         var glueType = $(this).val();
-        console.log(glueType);
         if ('BEAN' != glueType) {
             $executorHandler.val("");
             $executorHandler.attr("readonly","readonly");
@@ -307,6 +307,18 @@ $(function() {
             $executorHandler.removeAttr("readonly");
         }
     });
+
+	$("#addModal .glueType").change(function(){
+		// glueSource
+		var glueType = $(this).val();
+		if ('GLUE_GROOVY'==glueType){
+			$("#addModal .form textarea[name='glueSource']").val( $("#addModal .form .glueSource_java").val() );
+		} else if ('GLUE_SHELL'==glueType){
+			$("#addModal .form textarea[name='glueSource']").val( $("#addModal .form .glueSource_shell").val() );
+		} else if ('GLUE_PYTHON'==glueType){
+			$("#addModal .form textarea[name='glueSource']").val( $("#addModal .form .glueSource_python").val() );
+		}
+	});
 
 	// 更新
 	$("#job_list").on('click', '.update',function() {
