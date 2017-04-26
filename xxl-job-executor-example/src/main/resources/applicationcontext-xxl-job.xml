@@ -38,14 +38,9 @@
         </property>
 	</bean>
 
-    <!-- ********************************* "GlueFactory" 配置, 仅在启动 "GLUE模式任务" 时才需要, 否则可删除 ********************************* -->
-
-	<!-- 配置03、GlueFactory -->
-	<bean id="glueFactory" class="com.xxl.job.core.glue.GlueFactory" />
-
     <!-- ********************************* "XXL-JOB公共数据源" 配置, 仅在启动 "DbRegistHelper" 时才需要, 否则可删除 ********************************* -->
 
-	<!-- 配置04、XXL-JOB公共数据源 -->
+	<!-- 配置03、XXL-JOB公共数据源 -->
 	<bean id="xxlJobDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
 		<property name="driverClass" value="${xxl.job.db.driverClass}" />
 		<property name="jdbcUrl" value="${xxl.job.db.url}" />

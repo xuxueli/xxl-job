@@ -1,14 +1,12 @@
 package com.xxl.job.core.glue;
 
+import com.xxl.job.core.executor.XxlJobExecutor;
 import com.xxl.job.core.handler.IJobHandler;
 import groovy.lang.GroovyClassLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.annotation.AnnotationUtils;
 
 import javax.annotation.Resource;
@@ -19,7 +17,7 @@ import java.lang.reflect.Modifier;
  * glue factory, product class/object by name
  * @author xuxueli 2016-1-2 20:02:27
  */
-public class GlueFactory implements ApplicationContextAware {
+public class GlueFactory {
 	private static Logger logger = LoggerFactory.getLogger(GlueFactory.class);
 	
 	/**
@@ -28,18 +26,11 @@ public class GlueFactory implements ApplicationContextAware {
 	private GroovyClassLoader groovyClassLoader = new GroovyClassLoader();
 
 	// ----------------------------- spring support -----------------------------
-	private static ApplicationContext applicationContext;
-	private static GlueFactory glueFactory;
+	private static GlueFactory glueFactory = new GlueFactory();
 	public static GlueFactory getInstance(){
 		return glueFactory;
 	}
-	
-	@Override
-	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-		GlueFactory.applicationContext = applicationContext;
-		GlueFactory.glueFactory = (GlueFactory) applicationContext.getBean("glueFactory");
-	}
-	
+
 	/**
 	 * inject action of spring
 	 * @param instance
@@ -61,21 +52,21 @@ public class GlueFactory implements ApplicationContextAware {
 				try {
 					Resource resource = AnnotationUtils.getAnnotation(field, Resource.class);
 					if (resource.name()!=null && resource.name().length()>0){
-						fieldBean = applicationContext.getBean(resource.name());
+						fieldBean = XxlJobExecutor.applicationContext.getBean(resource.name());
 					} else {
-						fieldBean = applicationContext.getBean(field.getName());
+						fieldBean = XxlJobExecutor.applicationContext.getBean(field.getName());
 					}
 				} catch (Exception e) {
 				}
 				if (fieldBean==null ) {
-					fieldBean = applicationContext.getBean(field.getType());
+					fieldBean = XxlJobExecutor.applicationContext.getBean(field.getType());
 				}
 			} else if (AnnotationUtils.getAnnotation(field, Autowired.class) != null) {
 				Qualifier qualifier = AnnotationUtils.getAnnotation(field, Qualifier.class);
 				if (qualifier!=null && qualifier.value()!=null && qualifier.value().length()>0) {
-					fieldBean = applicationContext.getBean(qualifier.value());
+					fieldBean = XxlJobExecutor.applicationContext.getBean(qualifier.value());
 				} else {
-					fieldBean = applicationContext.getBean(field.getType());
+					fieldBean = XxlJobExecutor.applicationContext.getBean(field.getType());
 				}
 			}
 			

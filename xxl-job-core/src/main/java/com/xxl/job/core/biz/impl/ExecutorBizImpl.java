@@ -11,9 +11,13 @@ import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.handler.impl.GlueJobHandler;
 import com.xxl.job.core.log.XxlJobFileAppender;
 import com.xxl.job.core.thread.JobThread;
+import com.xxl.job.core.util.ScriptUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Date;
 
 /**
@@ -103,7 +107,63 @@ public class ExecutorBizImpl implements ExecutorBiz {
                 }
                 jobThread = XxlJobExecutor.registJobThread(triggerParam.getJobId(), new GlueJobHandler(jobHandler, triggerParam.getGlueUpdatetime()));
             }
+        } else if (GlueTypeEnum.GLUE_SHELL==GlueTypeEnum.match(triggerParam.getGlueType())) {
 
+            // make path
+            String scriptPath = XxlJobFileAppender.filePath + "gluesource/";
+            String scriptFileName = triggerParam.getJobId() + "_" + triggerParam.getGlueUpdatetime() + ".sh";
+
+            // valid file
+            File scriptFile = new File(scriptPath, scriptFileName);
+            if (!scriptFile.exists()) {
+                // valid glue source
+                if (triggerParam.getGlueSource()==null) {
+                    return new ReturnT<String>(ReturnT.FAIL_CODE, "glueSource is null.");
+                }
+
+                // .../gluesource/
+                File scriptPathDir = new File(scriptPath);
+                if (!scriptPathDir.exists()) {
+                    scriptPathDir.mkdirs();
+                }
+
+                // .../gluesource/666-156465656.sh
+                scriptFile = new File(scriptPath, scriptFileName);
+                FileOutputStream fos = null;
+                try {
+                    scriptFile.createNewFile();
+
+                    fos = new FileOutputStream(scriptFile, true);
+                    fos.write(triggerParam.getGlueSource().getBytes("utf-8"));
+                    fos.flush();
+                } catch (IOException e) {
+                    logger.error(e.getMessage(), e);
+                    return new ReturnT<String>(ReturnT.FAIL_CODE, e.getMessage());
+                } finally {
+                    if (fos != null) {
+                        try {
+                            fos.close();
+                        } catch (IOException e) {
+                            logger.error(e.getMessage(), e);
+                        }
+                    }
+                }
+
+            }
+
+            // log File
+            String logFileName = XxlJobFileAppender.makeLogFileName(new Date(triggerParam.getLogDateTim()), triggerParam.getLogId());
+
+            // run script
+            ScriptUtil.execToFile("python", scriptFile.getName(), (XxlJobFileAppender.filePath + logFileName) );
+
+            return ReturnT.FAIL;
+        } else if (GlueTypeEnum.GLUE_PYTHON==GlueTypeEnum.match(triggerParam.getGlueType())) {
+            String scriptFilePath = XxlJobFileAppender.filePath + "gluesource/" + triggerParam.getJobId() + "_" + triggerParam.getGlueUpdatetime() + ".py";
+
+
+        } else {
+            return new ReturnT<String>(ReturnT.FAIL_CODE, "glueType[" + triggerParam.getGlueType() + "] is not valid.");
         }
 
         // push data to queue

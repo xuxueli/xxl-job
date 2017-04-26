@@ -78,8 +78,10 @@ public class XxlJobExecutor implements ApplicationContextAware, ApplicationListe
     }
 
     // ---------------------------------- init job handler ------------------------------------
+    public static ApplicationContext applicationContext;
 	@Override
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        XxlJobExecutor.applicationContext = applicationContext;
 
         // init job handler action
         Map<String, Object> serviceBeanMap = applicationContext.getBeansWithAnnotation(JobHander.class);
