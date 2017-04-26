@@ -6,6 +6,7 @@
 	<resultMap id="XxlJobLogGlue" type="com.xxl.job.admin.core.model.XxlJobLogGlue" >
 		<result column="id" property="id" />
 	    <result column="job_id" property="jobId" />
+		<result column="glue_type" property="glueType" />
 	    <result column="glue_source" property="glueSource" />
 	    <result column="glue_remark" property="glueRemark" />
 	    <result column="add_time" property="addTime" />
@@ -15,6 +16,7 @@
 	<sql id="Base_Column_List">
 		t.id,
 		t.job_id,
+		t.glue_type,
 		t.glue_source,
 		t.glue_remark,
 		t.add_time,
@@ -24,12 +26,14 @@
 	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobLogGlue" useGeneratedKeys="true" keyProperty="id" >
 		INSERT INTO XXL_JOB_QRTZ_TRIGGER_LOGGLUE (
 			`job_id`,
+			`glue_type`,
 			`glue_source`,
 			`glue_remark`,
 			`add_time`, 
 			`update_time`
 		) VALUES (
 			#{jobId},
+			#{glueType},
 			#{glueSource},
 			#{glueRemark},
 			now(),

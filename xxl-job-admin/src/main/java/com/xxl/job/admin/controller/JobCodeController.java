@@ -59,6 +59,7 @@ public class JobCodeController {
 		// log old code
 		XxlJobLogGlue xxlJobLogGlue = new XxlJobLogGlue();
 		xxlJobLogGlue.setJobId(exists_jobInfo.getId());
+		xxlJobLogGlue.setGlueType(exists_jobInfo.getGlueType());
 		xxlJobLogGlue.setGlueSource(exists_jobInfo.getGlueSource());
 		xxlJobLogGlue.setGlueRemark(exists_jobInfo.getGlueRemark());
 		xxlJobLogGlueDao.save(xxlJobLogGlue);

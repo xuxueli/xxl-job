@@ -8,6 +8,7 @@ public class XxlJobLogGlue {
 	
 	private int id;
 	private int jobId;				// 任务主键ID
+	private String glueType;		// GLUE类型	#com.xxl.job.core.glue.GlueTypeEnum
 	private String glueSource;
 	private String glueRemark;
 	private String addTime;
@@ -27,6 +28,14 @@ public class XxlJobLogGlue {
 
 	public void setJobId(int jobId) {
 		this.jobId = jobId;
+	}
+
+	public String getGlueType() {
+		return glueType;
+	}
+
+	public void setGlueType(String glueType) {
+		this.glueType = glueType;
 	}
 
 	public String getGlueSource() {
@@ -61,15 +70,4 @@ public class XxlJobLogGlue {
 		this.updateTime = updateTime;
 	}
 
-	@Override
-	public String toString() {
-		return "XxlJobLogGlue{" +
-				"id=" + id +
-				", jobId=" + jobId +
-				", glueSource='" + glueSource + '\'' +
-				", glueRemark='" + glueRemark + '\'' +
-				", addTime='" + addTime + '\'' +
-				", updateTime='" + updateTime + '\'' +
-				'}';
-	}
 }

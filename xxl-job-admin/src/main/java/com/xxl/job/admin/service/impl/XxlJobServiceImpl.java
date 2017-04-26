@@ -8,6 +8,7 @@ import com.xxl.job.admin.core.thread.JobRegistryHelper;
 import com.xxl.job.admin.dao.*;
 import com.xxl.job.admin.service.IXxlJobService;
 import com.xxl.job.core.biz.model.ReturnT;
+import com.xxl.job.core.glue.GlueTypeEnum;
 import com.xxl.job.core.registry.RegistHelper;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -84,7 +85,10 @@ public class XxlJobServiceImpl implements IXxlJobService {
 		if (ExecutorRouteStrategyEnum.match(jobInfo.getExecutorRouteStrategy(), null) == null) {
 			return new ReturnT<String>(500, "路由策略非法");
 		}
-		if (jobInfo.getGlueSwitch()==0 && StringUtils.isBlank(jobInfo.getExecutorHandler())) {
+		if (GlueTypeEnum.match(jobInfo.getGlueType()) == null) {
+			return new ReturnT<String>(500, "运行模式非法非法");
+		}
+		if (GlueTypeEnum.BEAN==GlueTypeEnum.match(jobInfo.getGlueType()) && StringUtils.isBlank(jobInfo.getExecutorHandler())) {
 			return new ReturnT<String>(500, "请输入“JobHandler”");
 		}
 
@@ -147,7 +151,11 @@ public class XxlJobServiceImpl implements IXxlJobService {
 		if (ExecutorRouteStrategyEnum.match(jobInfo.getExecutorRouteStrategy(), null) == null) {
 			return new ReturnT<String>(500, "路由策略非法");
 		}
-		if (jobInfo.getGlueSwitch()==0 && StringUtils.isBlank(jobInfo.getExecutorHandler())) {
+
+		if (GlueTypeEnum.match(jobInfo.getGlueType()) == null) {
+			return new ReturnT<String>(500, "运行模式非法非法");
+		}
+		if (GlueTypeEnum.BEAN==GlueTypeEnum.match(jobInfo.getGlueType()) && StringUtils.isBlank(jobInfo.getExecutorHandler())) {
 			return new ReturnT<String>(500, "请输入“JobHandler”");
 		}
 
@@ -180,7 +188,7 @@ public class XxlJobServiceImpl implements IXxlJobService {
 		exists_jobInfo.setExecutorRouteStrategy(jobInfo.getExecutorRouteStrategy());
 		exists_jobInfo.setExecutorHandler(jobInfo.getExecutorHandler());
 		exists_jobInfo.setExecutorParam(jobInfo.getExecutorParam());
-		exists_jobInfo.setGlueSwitch(jobInfo.getGlueSwitch());
+		exists_jobInfo.setGlueType(jobInfo.getGlueType());
 		exists_jobInfo.setChildJobKey(jobInfo.getChildJobKey());
         xxlJobInfoDao.update(exists_jobInfo);
 

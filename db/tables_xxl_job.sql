@@ -157,7 +157,7 @@ CREATE TABLE `XXL_JOB_QRTZ_TRIGGER_INFO` (
   `executor_route_strategy` varchar(50) DEFAULT NULL COMMENT '执行器路由策略',
   `executor_handler` varchar(255) DEFAULT NULL COMMENT '执行器任务handler',
   `executor_param` varchar(255) DEFAULT NULL COMMENT '执行器任务参数',
-  `glue_switch` int(11) DEFAULT '0' COMMENT 'GLUE模式开关：0-否，1-是',
+  `glue_type` varchar(50) NOT NULL COMMENT 'GLUE类型',
   `glue_source` text COMMENT 'GLUE源代码',
   `glue_remark` varchar(128) DEFAULT NULL COMMENT 'GLUE备注',
   `glue_updatetime` datetime DEFAULT NULL COMMENT 'GLUE更新时间',
@@ -184,8 +184,9 @@ CREATE TABLE `XXL_JOB_QRTZ_TRIGGER_LOG` (
 CREATE TABLE `XXL_JOB_QRTZ_TRIGGER_LOGGLUE` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `job_id` int(11) NOT NULL COMMENT '任务，主键ID',
-  `glue_source` text,
-  `glue_remark` varchar(128) NOT NULL,
+  `glue_type` varchar(50) DEFAULT NULL COMMENT 'GLUE类型',
+  `glue_source` text COMMENT 'GLUE源代码',
+  `glue_remark` varchar(128) NOT NULL COMMENT 'GLUE备注',
   `add_time` timestamp NULL DEFAULT NULL,
   `update_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)

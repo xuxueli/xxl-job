@@ -6,6 +6,7 @@ import com.xxl.job.admin.core.route.ExecutorRouteStrategyEnum;
 import com.xxl.job.admin.dao.IXxlJobGroupDao;
 import com.xxl.job.admin.service.IXxlJobService;
 import com.xxl.job.core.biz.model.ReturnT;
+import com.xxl.job.core.glue.GlueTypeEnum;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,6 +35,9 @@ public class JobInfoController {
 
 		// 路由策略-列表
 		model.addAttribute("ExecutorRouteStrategyEnum", ExecutorRouteStrategyEnum.values());
+
+		// Glue类型-字典
+		model.addAttribute("GlueTypeEnum", GlueTypeEnum.values());
 
 		// 任务组
 		List<XxlJobGroup> jobGroupList =  xxlJobGroupDao.findAll();

@@ -10,6 +10,7 @@ import com.xxl.job.admin.core.thread.JobRegistryHelper;
 import com.xxl.job.core.biz.ExecutorBiz;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.biz.model.TriggerParam;
+import com.xxl.job.core.glue.GlueTypeEnum;
 import com.xxl.job.core.registry.RegistHelper;
 import com.xxl.job.core.rpc.netcom.NetComClientProxy;
 import org.apache.commons.collections.CollectionUtils;
@@ -59,7 +60,7 @@ public class RemoteHttpJobBean extends QuartzJobBean {
 		triggerParam.setJobId(jobInfo.getId());
 		triggerParam.setExecutorHandler(jobInfo.getExecutorHandler());
 		triggerParam.setExecutorParams(jobInfo.getExecutorParam());
-		triggerParam.setGlueSwitch((jobInfo.getGlueSwitch()==0)?false:true);
+		triggerParam.setGlueType(jobInfo.getGlueType());
 		triggerParam.setGlueUpdatetime(jobInfo.getGlueUpdatetime().getTime());
 		triggerParam.setLogId(jobLog.getId());
 		triggerParam.setLogDateTim(jobLog.getTriggerTime().getTime());

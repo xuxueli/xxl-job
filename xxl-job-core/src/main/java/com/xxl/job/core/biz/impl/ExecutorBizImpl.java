@@ -6,6 +6,7 @@ import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.biz.model.TriggerParam;
 import com.xxl.job.core.executor.XxlJobExecutor;
 import com.xxl.job.core.glue.GlueFactory;
+import com.xxl.job.core.glue.GlueTypeEnum;
 import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.handler.impl.GlueJobHandler;
 import com.xxl.job.core.log.XxlJobFileAppender;
@@ -56,7 +57,7 @@ public class ExecutorBizImpl implements ExecutorBiz {
         // load old thread
         JobThread jobThread = XxlJobExecutor.loadJobThread(triggerParam.getJobId());
 
-        if (!triggerParam.isGlueSwitch()) {
+        if (GlueTypeEnum.BEAN==GlueTypeEnum.match(triggerParam.getGlueType())) {
             // bean model
 
             // valid handler

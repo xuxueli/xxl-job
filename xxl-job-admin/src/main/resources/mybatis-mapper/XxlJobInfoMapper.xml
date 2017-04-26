@@ -20,7 +20,7 @@
 		<result column="executor_handler" property="executorHandler" />
 	    <result column="executor_param" property="executorParam" />
 	    
-	    <result column="glue_switch" property="glueSwitch" />
+	    <result column="glue_type" property="glueType" />
 	    <result column="glue_source" property="glueSource" />
 	    <result column="glue_remark" property="glueRemark" />
 		<result column="glue_updatetime" property="glueUpdatetime" />
@@ -40,7 +40,7 @@
 		t.executor_route_strategy,
 		t.executor_handler,
 		t.executor_param,
-		t.glue_switch,
+		t.glue_type,
 		t.glue_source,
 		t.glue_remark,
 		t.glue_updatetime,
@@ -87,7 +87,7 @@
             executor_route_strategy,
 			executor_handler,
 			executor_param,
-			glue_switch,
+		glue_type,
 			glue_source,
 			glue_remark,
 			glue_updatetime,
@@ -103,7 +103,7 @@
 			#{executorRouteStrategy},
 			#{executorHandler},
 			#{executorParam},
-			#{glueSwitch},
+			#{glueType},
 			#{glueSource},
 			#{glueRemark},
 			NOW(),
@@ -132,7 +132,7 @@
 			executor_route_strategy = #{executorRouteStrategy},
 			executor_handler = #{executorHandler},
 			executor_param = #{executorParam},
-			glue_switch = #{glueSwitch},
+			glue_type = #{glueType},
 			glue_source = #{glueSource},
 			glue_remark = #{glueRemark},
 			glue_updatetime = #{glueUpdatetime},

@@ -70,7 +70,7 @@ $(function() {
 	                },
 	                { "data": 'author', "visible" : true, "width":'10%'},
 	                { "data": 'alarmEmail', "visible" : false},
-	                { "data": 'glueSwitch', "visible" : false},
+	                { "data": 'glueType', "visible" : false},
 	                { 
 	                	"data": 'jobStatus',
 						"width":'10%',
@@ -103,7 +103,7 @@ $(function() {
 	                			
 	                			// log url
 	                			var codeBtn = "";
-	                			if(row.glueSwitch > 0){
+                                if ('BEAN' != row.glueType) {
 									var codeUrl = base_url +'/jobcode?jobId='+ row.id;
 									codeBtn = '<button class="btn btn-warning btn-xs" type="button" onclick="javascript:window.open(\'' + codeUrl + '\')" >GLUE</button>  '
 								}
@@ -118,7 +118,7 @@ $(function() {
 									' executorRouteStrategy="'+row.executorRouteStrategy +'" '+
 									' executorHandler="'+row.executorHandler +'" '+
 									' executorParam="'+ row.executorParam +'" '+
-									' glueSwitch="'+ row.glueSwitch +'" '+
+									' glueType="'+ row.glueType +'" '+
                                     ' childJobKey="'+ row.childJobKey +'" '+
 									'>'+
 									'<button class="btn btn-primary btn-xs job_operate" type="job_trigger" type="button">执行</button>  '+
@@ -240,9 +240,6 @@ $(function() {
             jobCron : {
             	required : true
             },
-			executorHandler : {
-				required : false
-			},
             alarmEmail : {
             	required : true
             },
@@ -257,9 +254,6 @@ $(function() {
             jobCron : {
             	required :"请输入“Cron”."
             },
-			executorHandler : {
-				required : "请输入“jobHandler”."
-			},
             alarmEmail : {
             	required : "请输入“报警邮件”."
             },
@@ -306,21 +300,20 @@ $(function() {
 		$("#addModal .form input[name='executorHandler']").removeAttr("readonly");
 	});
 
-	// GLUE模式开启
-	$(".ifGLUE").click(function(){
-		var ifGLUE = $(this).is(':checked');
-		var $executorHandler = $(this).parents("form").find("input[name='executorHandler']");
-		var $glueSwitch = $(this).parents("form").find("input[name='glueSwitch']");
-		if (ifGLUE) {
-			$executorHandler.val("");
-			$executorHandler.attr("readonly","readonly");
-			$glueSwitch.val(1);
-		} else {
-			$executorHandler.removeAttr("readonly");
-			$glueSwitch.val(0);
-		}
-	});
-	
+
+    // GLUE模式开启
+    $(".glueType").change(function(){
+        var $executorHandler = $(this).parents("form").find("input[name='executorHandler']");
+        var glueType = $(this).val();
+        console.log(glueType);
+        if ('BEAN' != glueType) {
+            $executorHandler.val("");
+            $executorHandler.attr("readonly","readonly");
+        } else {
+            $executorHandler.removeAttr("readonly");
+        }
+    });
+
 	// 更新
 	$("#job_list").on('click', '.update',function() {
 
@@ -335,20 +328,10 @@ $(function() {
 		$("#updateModal .form input[name='executorHandler']").val($(this).parent('p').attr("executorHandler"));
 		$("#updateModal .form input[name='executorParam']").val($(this).parent('p').attr("executorParam"));
         $("#updateModal .form input[name='childJobKey']").val($(this).parent('p').attr("childJobKey"));
+		$('#updateModal .form select[name=glueType] option[value='+ $(this).parent('p').attr("glueType") +']').prop('selected', true);
 
-        // glueSwitch
-		var glueSwitch = $(this).parent('p').attr("glueSwitch");
-		$("#updateModal .form input[name='glueSwitch']").val(glueSwitch);
-		var $ifGLUE = $("#updateModal .form .ifGLUE");
-		var $executorHandler = $("#updateModal .form input[name='executorHandler']");
-		if (glueSwitch == 1) {
-			$ifGLUE.attr("checked", true);
-			$executorHandler.val("");
-			$executorHandler.attr("readonly","readonly");
-		} else {
-			$ifGLUE.attr("checked", false);
-			$executorHandler.removeAttr("readonly");
-		}
+
+        $("#updateModal .form select[name=glueType]").change();
 
 		// show
 		$('#updateModal').modal({backdrop: false, keyboard: false}).modal('show');
@@ -366,9 +349,6 @@ $(function() {
 			jobCron : {
 				required : true
 			},
-			executorHandler : {
-				required : false
-			},
 			alarmEmail : {
 				required : true
 			},
@@ -382,9 +362,6 @@ $(function() {
 			},
 			jobCron : {
 				required :"请输入“Cron”."
-			},
-			executorHandler : {
-				required : "请输入“jobHandler”."
 			},
 			alarmEmail : {
 				required : "请输入“报警邮件”."
@@ -427,22 +404,5 @@ $(function() {
 	$("#updateModal").on('hide.bs.modal', function () {
 		$("#updateModal .form")[0].reset()
 	});
-
-
-	/*
-	// 新增-添加参数
-	$("#addModal .addParam").on('click', function () {
-		var html = '<div class="form-group newParam">'+
-				'<label for="lastname" class="col-sm-2 control-label">参数&nbsp;<button class="btn btn-danger btn-xs removeParam" type="button">移除</button></label>'+
-				'<div class="col-sm-4"><input type="text" class="form-control" name="key" placeholder="请输入参数key[将会强转为String]" maxlength="200" /></div>'+
-				'<div class="col-sm-6"><input type="text" class="form-control" name="value" placeholder="请输入参数value[将会强转为String]" maxlength="200" /></div>'+
-			'</div>';
-		$(this).parents('.form-group').parent().append(html);
-		
-		$("#addModal .removeParam").on('click', function () {
-			$(this).parents('.form-group').remove();
-		});
-	});
-	*/
 
 });
