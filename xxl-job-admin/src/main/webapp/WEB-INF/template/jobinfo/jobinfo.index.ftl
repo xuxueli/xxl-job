@@ -154,10 +154,10 @@
                         <div class="col-sm-4"><input type="text" class="form-control" name="childJobKey" placeholder="请输入子任务的任务Key,如存在多个逗号分隔" maxlength="100" ></div>
                     </div>
 					<div class="form-group">
-						<label for="lastname" class="col-sm-2 control-label">报警邮件<font color="red">*</font></label>
-						<div class="col-sm-4"><input type="text" class="form-control" name="alarmEmail" placeholder="请输入“报警邮件”，多个邮件地址逗号分隔" maxlength="100" ></div>
                         <label for="lastname" class="col-sm-2 control-label">负责人<font color="red">*</font></label>
                         <div class="col-sm-4"><input type="text" class="form-control" name="author" placeholder="请输入“负责人”" maxlength="50" ></div>
+						<label for="lastname" class="col-sm-2 control-label">报警邮件<font color="black">*</font></label>
+						<div class="col-sm-4"><input type="text" class="form-control" name="alarmEmail" placeholder="请输入“报警邮件”，多个邮件地址逗号分隔" maxlength="100" ></div>
 					</div>
 
                     <hr>
@@ -188,6 +188,38 @@ public class DemoGlueJobHandler extends IJobHandler {
 	}
 
 }
+</textarea>
+<textarea name="glueSource_shell" style="display:none;" >
+#!/bin/bash
+
+echo hello shell
+
+for x in 1 2 3 4
+do
+echo number=$x
+sleep 1s
+done
+
+echo1 111
+printf 666
+echo2 222
+</textarea>
+<textarea name="glueSource_python" style="display:none;" >
+#!/usr/bin/python
+# -*- coding: UTF-8 -*-
+
+import logging
+import time
+
+logging.basicConfig(level=logging.DEBUG)
+
+logging.info('hello python')
+
+for num in range(0, 3):
+	time.sleep(1)
+	logging.info('当前序号 :' + str(num) )
+
+logging.info('Good bye!')
 </textarea>
 					
 				</form>
@@ -248,10 +280,10 @@ public class DemoGlueJobHandler extends IJobHandler {
                         <div class="col-sm-4"><input type="text" class="form-control" name="childJobKey" placeholder="请输入子任务的任务Key,如存在多个逗号分隔" maxlength="100" ></div>
                     </div>
                     <div class="form-group">
-                        <label for="lastname" class="col-sm-2 control-label">报警邮件<font color="red">*</font></label>
-                        <div class="col-sm-4"><input type="text" class="form-control" name="alarmEmail" placeholder="请输入“报警邮件”，多个邮件地址逗号分隔" maxlength="100" ></div>
                         <label for="lastname" class="col-sm-2 control-label">负责人<font color="red">*</font></label>
                         <div class="col-sm-4"><input type="text" class="form-control" name="author" placeholder="请输入“负责人”" maxlength="50" ></div>
+                        <label for="lastname" class="col-sm-2 control-label">报警邮件<font color="black">*</font></label>
+                        <div class="col-sm-4"><input type="text" class="form-control" name="alarmEmail" placeholder="请输入“报警邮件”，多个邮件地址逗号分隔" maxlength="100" ></div>
                     </div>
 
 					<hr>

@@ -87,6 +87,9 @@ public class JobThread extends Thread{
 							executeResult = ReturnT.FAIL;
 						}
 					} catch (Exception e) {
+						if (toStop) {
+							logger.error("----------- xxl-job toStop, stopReason:{}", stopReason);
+						}
 						logger.error("JobThread Exception:", e);
 						StringWriter out = new StringWriter();
 						e.printStackTrace(new PrintWriter(out));

@@ -6,18 +6,36 @@ $(function() {
 		lineNumbers : true,
 		matchBrackets : true
 	});*/
-	var codeEditor = CodeMirror(document.getElementById("ideWindow"), {
-		mode : "text/x-java",
-		lineNumbers : true,
-		matchBrackets : true,
-		value: $("#version_now").val()
-	});
+
+	var codeEditor;
+	function initIde(glueType, glueSource) {
+		var ideMode = "text/x-java";
+		if ('GLUE_GROOVY'==glueType){
+			ideMode = "text/x-java";
+		} else if ('GLUE_SHELL'==glueType){
+			ideMode = "text/x-sh";
+		} else if ('GLUE_PYTHON'==glueType){
+			ideMode = "text/x-python";
+		}
+
+		codeEditor = CodeMirror(document.getElementById("ideWindow"), {
+			mode : ideMode,
+			lineNumbers : true,
+			matchBrackets : true,
+			value: glueSource
+		});
+	}
+
+	initIde(glueType, $("#version_now").val());
 
 	// code change
 	$(".source_version").click(function(){
+		var glueType = $(this).attr('glueType');
 		var sourceId = $(this).attr('version');
 		var temp = $( "#" + sourceId ).val();
-		codeEditor.setValue( temp );
+
+		codeEditor.setValue('');
+		initIde(glueType, temp);
 	});
 
 	// code source save
@@ -34,8 +52,8 @@ $(function() {
 			ComAlert.show(2, "请输入备注");
 			return;
 		}
-		if (glueRemark.length < 6|| glueRemark.length > 100) {
-			ComAlert.show(2, "备注长度应该在6至100之间");
+		if (glueRemark.length <4 || glueRemark.length > 100) {
+			ComAlert.show(2, "备注长度应该在4至100之间");
 			return;
 		}
 		

@@ -14,7 +14,7 @@
             <div class="container">
             <#-- icon -->
                 <div class="navbar-header">
-                    <a href="../../index2.html" class="navbar-brand"><b>执行日志</b>Console</a>
+                    <a class="navbar-brand"><b>执行日志</b>Console</a>
                     <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
                         <i class="fa fa-bars"></i>
                     </button>

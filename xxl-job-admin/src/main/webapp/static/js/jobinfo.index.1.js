@@ -240,9 +240,6 @@ $(function() {
             jobCron : {
             	required : true
             },
-            alarmEmail : {
-            	required : true
-            },
 			author : {
 				required : true
 			}
@@ -253,9 +250,6 @@ $(function() {
             },
             jobCron : {
             	required :"请输入“Cron”."
-            },
-            alarmEmail : {
-            	required : "请输入“报警邮件”."
             },
             author : {
             	required : "请输入“负责人”."
@@ -349,9 +343,6 @@ $(function() {
 			jobCron : {
 				required : true
 			},
-			alarmEmail : {
-				required : true
-			},
 			author : {
 				required : true
 			}
@@ -362,9 +353,6 @@ $(function() {
 			},
 			jobCron : {
 				required :"请输入“Cron”."
-			},
-			alarmEmail : {
-				required : "请输入“报警邮件”."
 			},
 			author : {
 				required : "请输入“负责人”."

@@ -26,7 +26,7 @@
                 <div class="container">
 					<#-- icon -->
                     <div class="navbar-header">
-                        <a href="../../index2.html" class="navbar-brand"><b>Web</b>IDE</a>
+                        <a class="navbar-brand"><b>Web</b>IDE</a>
                         <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
                             <i class="fa fa-bars"></i>
                         </button>
@@ -35,7 +35,7 @@
                     <#-- left nav -->
                     <div class="collapse navbar-collapse pull-left" id="navbar-collapse">
                         <ul class="nav navbar-nav">
-                            <li class="active" ><a href="javascript:;">任务：${jobInfo.jobDesc}<span class="sr-only">(current)</span></a></li>
+                            <li class="active" ><a href="javascript:;"><#list GlueTypeEnum as item><#if item == jobInfo.glueType>${item.desc}</#if></#list> 任务：${jobInfo.jobDesc}<span class="sr-only">(current)</span></a></li>
                         </ul>
                     </div>
 
@@ -45,11 +45,19 @@
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">版本回溯 <span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu">
-                                    <li><a href="javascript:;" class="source_version" version="version_now" >${jobInfo.glueRemark}【OnLine】</a></li>
+                                    <li <#if jobLogGlues?exists && jobLogGlues?size gt 0 >style="display: none;"</#if> >
+                                        <a href="javascript:;" class="source_version" version="version_now" glueType="${jobInfo.glueType}" >
+                                            <#list GlueTypeEnum as item><#if item == jobInfo.glueType>${item.desc}</#if></#list>： ${jobInfo.glueRemark}
+                                        </a>
+                                    </li>
                                     <textarea id="version_now" style="display:none;" >${jobInfo.glueSource}</textarea>
 									<#if jobLogGlues?exists && jobLogGlues?size gt 0 >
 										<#list jobLogGlues as glue>
-                                            <li><a href="javascript:;" class="source_version" version="version_${glue.id}" >${glue.glueRemark}</a></li>
+                                            <li>
+                                                <a href="javascript:;" class="source_version" version="version_${glue.id}" glueType="${glue.glueType}" >
+                                                    <#list GlueTypeEnum as item><#if item == glue.glueType>${item.desc}</#if></#list>： ${glue.glueRemark}
+                                                </a>
+                                            </li>
                                             <textarea id="version_${glue.id}" style="display:none;" >${glue.glueSource}</textarea>
 										</#list>
 									</#if>
@@ -103,10 +111,13 @@
 <@netCommon.commonScript />
 <script src="${request.contextPath}/static/plugins/codemirror/lib/codemirror.js"></script>
 <script src="${request.contextPath}/static/plugins/codemirror/mode/clike/clike.js"></script>
+<script src="${request.contextPath}/static/plugins/codemirror/mode/shell/shell.js"></script>
+<script src="${request.contextPath}/static/plugins/codemirror/mode/python/python.js"></script>
 <script src="${request.contextPath}/static/plugins/codemirror/addon/hint/show-hint.js"></script>
 <script src="${request.contextPath}/static/plugins/codemirror/addon/hint/anyword-hint.js"></script>
 <script>
 var id = '${jobInfo.id}';
+var glueType = '${jobInfo.glueType}';
 </script>
 <script src="${request.contextPath}/static/js/jobcode.index.1.js"></script>
 

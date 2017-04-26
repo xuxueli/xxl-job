@@ -79,9 +79,6 @@ public class XxlJobServiceImpl implements IXxlJobService {
 		if (StringUtils.isBlank(jobInfo.getAuthor())) {
 			return new ReturnT<String>(500, "请输入“负责人”");
 		}
-		if (StringUtils.isBlank(jobInfo.getAlarmEmail())) {
-			return new ReturnT<String>(500, "请输入“报警邮件”");
-		}
 		if (ExecutorRouteStrategyEnum.match(jobInfo.getExecutorRouteStrategy(), null) == null) {
 			return new ReturnT<String>(500, "路由策略非法");
 		}
@@ -144,9 +141,6 @@ public class XxlJobServiceImpl implements IXxlJobService {
 		}
 		if (StringUtils.isBlank(jobInfo.getAuthor())) {
 			return new ReturnT<String>(500, "请输入“负责人”");
-		}
-		if (StringUtils.isBlank(jobInfo.getAlarmEmail())) {
-			return new ReturnT<String>(500, "请输入“报警邮件”");
 		}
 		if (ExecutorRouteStrategyEnum.match(jobInfo.getExecutorRouteStrategy(), null) == null) {
 			return new ReturnT<String>(500, "路由策略非法");
