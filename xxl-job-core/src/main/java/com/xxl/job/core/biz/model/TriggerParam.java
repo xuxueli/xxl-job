@@ -15,6 +15,7 @@ public class TriggerParam implements Serializable{
     private String executorParams;
 
     private String glueType;
+    private String glueSource;
     private long glueUpdatetime;
 
     private int logId;
@@ -52,6 +53,14 @@ public class TriggerParam implements Serializable{
 
     public void setGlueType(String glueType) {
         this.glueType = glueType;
+    }
+
+    public String getGlueSource() {
+        return glueSource;
+    }
+
+    public void setGlueSource(String glueSource) {
+        this.glueSource = glueSource;
     }
 
     public long getGlueUpdatetime() {

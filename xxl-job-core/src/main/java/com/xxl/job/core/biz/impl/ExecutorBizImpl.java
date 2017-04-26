@@ -58,7 +58,6 @@ public class ExecutorBizImpl implements ExecutorBiz {
         JobThread jobThread = XxlJobExecutor.loadJobThread(triggerParam.getJobId());
 
         if (GlueTypeEnum.BEAN==GlueTypeEnum.match(triggerParam.getGlueType())) {
-            // bean model
 
             // valid handler
             IJobHandler jobHandler = XxlJobExecutor.loadJobHandler(triggerParam.getExecutorHandler());
@@ -80,13 +79,7 @@ public class ExecutorBizImpl implements ExecutorBiz {
                 jobThread = XxlJobExecutor.registJobThread(triggerParam.getJobId(), jobHandler);
             }
 
-        } else {
-            // glue model
-
-            // valid glueloader
-            if (!GlueFactory.isActive()) {
-                return new ReturnT<String>(ReturnT.FAIL_CODE, "glueLoader for JobId=[" + triggerParam.getJobId() + "] not found.");
-            }
+        } else if (GlueTypeEnum.GLUE_GROOVY==GlueTypeEnum.match(triggerParam.getGlueType())) {
 
             // valid exists job thread：change handler or glue timeout, need kill old thread
             if (jobThread != null &&
@@ -103,7 +96,7 @@ public class ExecutorBizImpl implements ExecutorBiz {
             if (jobThread == null) {
                 IJobHandler jobHandler = null;
                 try {
-                    jobHandler = GlueFactory.getInstance().loadNewInstance(triggerParam.getJobId());
+                    jobHandler = GlueFactory.getInstance().loadNewInstance(triggerParam.getGlueSource());
                 } catch (Exception e) {
                     logger.error("", e);
                     return new ReturnT<String>(ReturnT.FAIL_CODE, e.getMessage());

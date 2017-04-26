@@ -1,6 +1,5 @@
 package com.xxl.job.core.glue;
 
-import com.xxl.job.core.glue.loader.GlueLoader;
 import com.xxl.job.core.handler.IJobHandler;
 import groovy.lang.GroovyClassLoader;
 import org.slf4j.Logger;
@@ -27,17 +26,6 @@ public class GlueFactory implements ApplicationContextAware {
 	 * groovy class loader
 	 */
 	private GroovyClassLoader groovyClassLoader = new GroovyClassLoader();
-	
-	/**
-	 * code source loader
-	 */
-	private GlueLoader glueLoader;
-	public void setGlueLoader(GlueLoader glueLoader) {
-		this.glueLoader = glueLoader;
-	}
-	public static boolean isActive() {
-		return GlueFactory.glueFactory.glueLoader!=null;
-	}
 
 	// ----------------------------- spring support -----------------------------
 	private static ApplicationContext applicationContext;
@@ -56,7 +44,7 @@ public class GlueFactory implements ApplicationContextAware {
 	 * inject action of spring
 	 * @param instance
 	 */
-	public void injectService(Object instance){
+	private void injectService(Object instance){
 		if (instance==null) {
 			return;
 		}
@@ -106,11 +94,7 @@ public class GlueFactory implements ApplicationContextAware {
 	
 	// ----------------------------- load instance -----------------------------
 	// load new instance, prototype
-	public IJobHandler loadNewInstance(int jobId) throws Exception{
-		if (jobId==0) {
-			return null;
-		}
-		String codeSource = glueLoader.load(jobId);
+	public IJobHandler loadNewInstance(String codeSource) throws Exception{
 		if (codeSource!=null && codeSource.trim().length()>0) {
 			Class<?> clazz = groovyClassLoader.parseClass(codeSource);
 			if (clazz != null) {
