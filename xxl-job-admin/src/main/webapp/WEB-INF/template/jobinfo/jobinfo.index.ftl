@@ -192,12 +192,13 @@ public class DemoGlueJobHandler extends IJobHandler {
 </textarea>
 <textarea class="glueSource_shell" style="display:none;" >
 #!/bin/bash
+
 echo "xxl-job: hello shell"
 
 for item in 1 2 3
 do
-echo "shell : $item"
-sleep 1s
+    echo "shell : $item"
+    sleep 1s
 done
 
 echo "Good bye!"
@@ -216,6 +217,7 @@ logging.info('xxl-job: hello python')
 for num in range(1, 3):
 	time.sleep(1)
 	logging.info('python :' + str(num) )
+
 logging.info('Good bye!')
 </textarea>
 					
