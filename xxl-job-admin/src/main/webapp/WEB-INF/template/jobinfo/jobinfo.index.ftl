@@ -193,17 +193,15 @@ public class DemoGlueJobHandler extends IJobHandler {
 <textarea class="glueSource_shell" style="display:none;" >
 #!/bin/bash
 
-echo hello shell
+echo "xxl-job: hello shell"
 
-for x in 1 2 3 4
+for item in 1 2 3
 do
-echo number=$x
+echo "shell : $item"
 sleep 1s
 done
 
-echo1 111
-printf 666
-echo2 222
+echo "Good bye!"
 </textarea>
 <textarea class="glueSource_python" style="display:none;" >
 #!/usr/bin/python
@@ -214,11 +212,11 @@ import time
 
 logging.basicConfig(level=logging.DEBUG)
 
-logging.info('hello python')
+logging.info('xxl-job: hello python')
 
-for num in range(0, 3):
+for num in range(1, 3):
 	time.sleep(1)
-	logging.info('当前序号 :' + str(num) )
+	logging.info('python :' + str(num) )
 
 logging.info('Good bye!')
 </textarea>
