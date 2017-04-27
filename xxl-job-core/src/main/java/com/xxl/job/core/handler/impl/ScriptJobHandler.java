@@ -48,8 +48,9 @@ public class ScriptJobHandler extends IJobHandler {
         String logFileName = XxlJobFileAppender.filePath.concat(XxlJobFileAppender.contextHolder.get());
 
         // invoke
-        ScriptUtil.execToFile(cmd, scriptFileName, logFileName);
-        return ReturnT.SUCCESS;
+        int exitValue = ScriptUtil.execToFile(cmd, scriptFileName, logFileName, params);
+        ReturnT<String> result = (exitValue==0)?ReturnT.SUCCESS:new ReturnT<String>(ReturnT.FAIL_CODE, "script exit value("+exitValue+") is failed");
+        return result;
     }
 
 }

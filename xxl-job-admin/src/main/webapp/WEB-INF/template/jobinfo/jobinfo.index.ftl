@@ -192,16 +192,18 @@ public class DemoGlueJobHandler extends IJobHandler {
 </textarea>
 <textarea class="glueSource_shell" style="display:none;" >
 #!/bin/bash
-
 echo "xxl-job: hello shell"
 
-for item in 1 2 3
+echo "脚本位置：$0"
+echo "参数数量：$#"
+for param in $*
 do
-    echo "shell : $item"
+    echo "参数 : $param"
     sleep 1s
 done
 
 echo "Good bye!"
+exit 0
 </textarea>
 <textarea class="glueSource_python" style="display:none;" >
 #!/usr/bin/python

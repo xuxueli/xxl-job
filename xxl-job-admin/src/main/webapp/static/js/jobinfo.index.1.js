@@ -304,7 +304,7 @@ $(function() {
 	});
 
 
-    // GLUE模式开启
+    // 运行模式
     $(".glueType").change(function(){
 		// executorHandler
         var $executorHandler = $(this).parents("form").find("input[name='executorHandler']");
