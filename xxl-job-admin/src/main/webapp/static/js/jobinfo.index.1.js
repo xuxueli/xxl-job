@@ -56,7 +56,7 @@ $(function() {
 							} else if ('GLUE_PYTHON'==row.glueType) {
 								return "GLUE模式(Python)";
 							} else if ('BEAN'==row.glueType) {
-								return row.executorHandler;
+								return "BEAN模式：" + row.executorHandler;
 							}
 							return row.executorHandler;
 						}

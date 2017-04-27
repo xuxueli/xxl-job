@@ -28,9 +28,9 @@
 		<!-- 执行器端口号 -->
 		<property name="port" value="${xxl.job.executor.port}" />
         <property name="appName" value="${xxl.job.executor.appname}" />
-        <!-- 执行器注册器，默认使用系统提供的 "DbRegistHelper", 推荐将其改为公共的RPC服务 -->
+        <!-- 执行器注册器 -->
         <property name="registHelper" >
-            <!-- DbRegistHelper, 依赖 "XXL-JOB公共数据源" -->
+            <!-- 执行器 "DbRegistHelper" 依赖 "XXL-JOB公共数据源" ；推荐将其抽象为RPC远程服务, 可取消对JDBC的依赖；如不启用执行自动注册功能，也可忽略JDBC配置;  -->
             <bean class="com.xxl.job.core.registry.impl.DbRegistHelper" >
                 <!-- XXL-JOB公共数据源 -->
                 <property name="dataSource" ref="xxlJobDataSource" />

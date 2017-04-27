@@ -24,7 +24,7 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 - 17、路由策略：执行器集群部署时提供丰富的路由策略，包括：第一个、最后一个、轮询、随机、一致性HASH、最不经常使用、最近最久未使用、故障转移；
 - 18、Rolling日志：支持以Rolling方式实时查看执行器输出的日志信息，实时监控任务进度；
 - 19、运行报表：支持实时查看运行数据，如任务数量、调度次数、执行器数量等；以及调度报表，如调度日期分布图，调度成功分布图等；
-- 20、脚本任务：支持开发脚本任务，如Shell、Python和Groovy等脚本;
+- 20、脚本任务：支持以GLUE模式开发和运行脚本任务，包括Shell、Python等类型脚本;
 
 #### 1.3 发展
 于2015年中，我在github上创建XXL-JOB项目仓库并提交第一个commit，随之进行系统结构设计，UI选型，交互设计……
@@ -57,6 +57,10 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 	- 16、深圳麦亚信科技股份有限公司
 	- 17、上海博莹科技信息技术有限公司
 	- 18、中国平安科技有限公司
+	- 19、杭州知时信息科技有限公司
+	- 20、博莹科技（上海）有限公司
+	- 21、成都依能股份有限责任公司
+	- 22、湖南高阳通联信息技术有限公司
 	- ……
 
 欢迎大家的关注和使用，XXL-JOB也将拥抱变化，持续发展。
@@ -167,7 +171,7 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 
 ![输入图片说明](https://static.oschina.net/uploads/img/201703/13150738_Fv8v.png "在这里输入图片标题")
 
-    ### 执行器JDBC链接：请保持和调度中心JDBC连接配置一致；(执行器 "DbRegistHelper" 和 "DbGlueLoader" 依赖JDBC配置; 推荐将其抽象为RPC远程服务, 可取消对JDBC的依赖)
+    ### 执行器JDBC链接：请保持和调度中心JDBC连接配置一致；(执行器 "DbRegistHelper" 依赖JDBC配置；推荐将其抽象为RPC远程服务, 可取消对JDBC的依赖；如不启用执行自动注册功能，也可忽略JDBC配置; )
     xxl.job.db.driverClass=com.mysql.jdbc.Driver
     xxl.job.db.url=jdbc:mysql://localhost:3306/xxl-job?useUnicode=true&amp;characterEncoding=UTF-8
     xxl.job.db.user=root
@@ -181,51 +185,48 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 
 **组件配置**：配置内容如下图所示。
 
-![输入图片说明](https://static.oschina.net/uploads/img/201703/13151030_Afad.png "在这里输入图片标题")
+![输入图片说明](https://static.oschina.net/uploads/img/201704/27204724_WW5m.png "在这里输入图片标题")
 
     1、JobHandler 扫描路径：自动扫描容器中JobHandler；
-    3、执行器注册器(XxlJobExecutor.registHelper): 默认使用系统提供的 "DbRegistHelper"(依赖JDBC), 推荐将其改为公共的RPC服务
-    3、GLUE源码加载器(GlueFactory.glueLoader): 默认使用系统提供的 "DbGlueLoader"(依赖JDBC), 推荐将其改为公共的RPC服务
-    4、XXL-JOB公共数据源 "xxlJobDataSource": 仅在启动 "DbRegistHelper" 或 "DbGlueLoader" 时才需要, 否则可删除
+    2、执行器注册器(XxlJobExecutor.registHelper): 默认使用系统提供的 "DbRegistHelper"(依赖JDBC), 推荐将其抽象为RPC远程服务, 可取消对JDBC的依赖；如不启用执行自动注册功能，也可忽略JDBC配置; )
+    3、XXL-JOB公共数据源 "xxlJobDataSource": 仅在启动 "DbRegistHelper" 或 "DbGlueLoader" 时才需要, 否则可删除
 
 **部署项目**：       
 至此“执行器”项目已经部署结束。
 
 #### 2.5 开发第一个任务“Hello World”       
-本示例为新建一个“GLUE模式任务”（“GLUE模式任务”的执行代码支持托管到调度中心在线维护，相比“Bean模式任务”需要在执行器项目开发部署上线，更加简便轻量）。更多有关任务的详细配置，请查看“章节三：任务详解”。
+本示例以新建一个 “GLUE模式(Java)” 运行模式的任务为例。更多有关任务的详细配置，请查看“章节三：任务详解”。
+（ “GLUE模式(Java)”的执行代码托管到调度中心在线维护，相比“Bean模式任务”需要在执行器项目开发部署上线，更加简便轻量）
 
 **前提：请确认“调度中心”和“执行器”项目已经成功部署并启动；**
 
-- **步骤一（新建任务）**：        
+- **步骤一：新建任务**：
 登陆调度中心，点击下图所示“新建任务”按钮，新建示例任务。然后，参考下面截图中任务的参数配置，点击保存。
 
-![输入图片说明](https://static.oschina.net/uploads/img/201703/12220807_amrb.png "在这里输入图片标题")
+![输入图片说明](https://static.oschina.net/uploads/img/201704/27205910_o8HQ.png "在这里输入图片标题")
 
-![输入图片说明](https://static.oschina.net/uploads/img/201703/12220856_rd3R.png "在这里输入图片标题")
+![输入图片说明](https://static.oschina.net/uploads/img/201704/27210202_SE2u.png "在这里输入图片标题")
 
-- **步骤二（GLUE任务开发）**：        
-请点击下图中所示“GLUE入口按钮”，进入“GLUE编辑器开发界面”，见下图。GLUE任务默认已经初始化了示例任务代码，即打印Hello World。
-（GLUE实际上是一段继承自IJobHandler的Java类代码，它在执行器项目中运行，可使用@Resource/@Autowire注入执行器里中的其他服务，详细介绍请查看第三章节）
+- **步骤二：“GLUE模式(Java)” 任务开发**：
+请点击任务右侧 “GLUE” 按钮，进入 “GLUE编辑器开发界面” ，见下图。“GLUE模式(Java)” 运行模式的任务默认已经初始化了示例任务代码，即打印Hello World。
+（ “GLUE模式(Java)” 运行模式的任务实际上是一段继承自IJobHandler的Java类代码，它在执行器项目中运行，可使用@Resource/@Autowire注入执行器里中的其他服务，详细介绍请查看第三章节）
 
-![输入图片说明](https://static.oschina.net/uploads/img/201610/03200312_EhFJ.png "在这里输入图片标题")
+![输入图片说明](https://static.oschina.net/uploads/img/201704/27210307_Fgql.png "在这里输入图片标题")
 
-![输入图片说明](https://static.oschina.net/uploads/img/201703/25124117_hYaV.png "在这里输入图片标题")
+![输入图片说明](https://static.oschina.net/uploads/img/201704/27210314_dNUJ.png "在这里输入图片标题")
 
-- **步骤三（触发执行）**：    
-点击下图所示“执行”按钮，可手动触发一次任务执行（通常情况下，通过配置Cron表达式进行任务调度出发）。
+- **步骤三：触发执行**：
+请点击任务右侧 “执行” 按钮，可手动触发一次任务执行（通常情况下，通过配置Cron表达式进行任务调度出发）。
 
-![输入图片说明](https://static.oschina.net/uploads/img/201703/12221021_uD5l.png "在这里输入图片标题")
-
-- **步骤四（查看日志）**：   
-
-点击任务右侧“日志”按钮，可前往任务日志界面查看任务日志。
-![输入图片说明](https://static.oschina.net/uploads/img/201703/12221130_jYQi.png "在这里输入图片标题")
-
+- **步骤四：查看日志**： 
+请点击任务右侧 “日志” 按钮，可前往任务日志界面查看任务日志。
 在任务日志界面中，可查看该任务的历史调度记录以及每一次调度的任务调度信息、执行参数和执行信息。运行中的任务点击右侧的“执行日志”按钮，可进入日志控制台查看实时执行日志。
-![输入图片说明](https://static.oschina.net/uploads/img/201703/12221436_c8Ru.png "在这里输入图片标题")
+
+![输入图片说明](https://static.oschina.net/uploads/img/201704/27211624_E26X.png "在这里输入图片标题")
 
 在日志控制台，可以Rolling方式实时查看任务在执行器一侧运行输出的日志信息，实时监控任务进度；
-![输入图片说明](https://static.oschina.net/uploads/img/201703/25124816_tvGI.png "在这里输入图片标题")
+
+![输入图片说明](https://static.oschina.net/uploads/img/201704/27211631_eYrv.png "在这里输入图片标题")
 
 ## 三、任务详解
 
@@ -785,7 +786,7 @@ Tips: 历史版本(V1.3.x)目前已经Release至稳定版本, 进入维护阶段
 - 4、路由策越优化：循环和LFU路由策略计数器自增无上限问题和首次路由压力集中在首台机器的问题修复；
 
 #### 6.14 版本 V1.7.0 特性 (Coding)
-- 1、支持脚本JOB(源码或指定路径), 即shell/python/php等, 日志实时输出并支持在线监控；定制JobHandler实现;
+- 1、脚本任务：支持以GLUE模式开发和运行脚本任务，包括Shell、Python等类型脚本;
 
 
 #### TODO LIST

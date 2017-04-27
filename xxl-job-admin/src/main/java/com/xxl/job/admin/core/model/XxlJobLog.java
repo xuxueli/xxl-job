@@ -14,6 +14,9 @@ public class XxlJobLog {
 	private int jobGroup;
 	private int jobId;
 
+	// glueType
+	private String glueType;
+
 	// execute info
 	private String executorAddress;
 	private String executorHandler;
@@ -51,6 +54,14 @@ public class XxlJobLog {
 
 	public void setJobId(int jobId) {
 		this.jobId = jobId;
+	}
+
+	public String getGlueType() {
+		return glueType;
+	}
+
+	public void setGlueType(String glueType) {
+		this.glueType = glueType;
 	}
 
 	public String getExecutorAddress() {

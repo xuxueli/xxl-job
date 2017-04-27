@@ -108,10 +108,19 @@ $(function() {
 					},
 	                { "data": 'executorAddress', "visible" : true},
 					{
-						"data": 'executorHandler',
+						"data": 'glueType',
 						"visible" : true,
 						"render": function ( data, type, row ) {
-							return (row.executorHandler)?row.executorHandler:"GLUE模式";
+							if ('GLUE_GROOVY'==row.glueType) {
+								return "GLUE模式(Java)";
+							} else if ('GLUE_SHELL'==row.glueType) {
+								return "GLUE模式(Shell)";
+							} else if ('GLUE_PYTHON'==row.glueType) {
+								return "GLUE模式(Python)";
+							} else if ('BEAN'==row.glueType) {
+								return "BEAN模式：" + row.executorHandler;
+							}
+							return row.executorHandler;
 						}
 					},
 	                { "data": 'executorParam', "visible" : true},

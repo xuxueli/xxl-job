@@ -50,6 +50,7 @@ public class RemoteHttpJobBean extends QuartzJobBean {
 
 		// log part-2 param
 		//jobLog.setExecutorAddress(executorAddress);
+		jobLog.setGlueType(jobInfo.getGlueType());
 		jobLog.setExecutorHandler(jobInfo.getExecutorHandler());
 		jobLog.setExecutorParam(jobInfo.getExecutorParam());
 		jobLog.setTriggerTime(new Date());

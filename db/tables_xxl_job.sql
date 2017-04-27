@@ -169,6 +169,7 @@ CREATE TABLE `XXL_JOB_QRTZ_TRIGGER_LOG` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `job_group` int(11) NOT NULL COMMENT '执行器主键ID',
   `job_id` int(11) NOT NULL COMMENT '任务，主键ID',
+  `glue_type` varchar(50) DEFAULT NULL COMMENT 'GLUE类型',
   `executor_address` varchar(255) DEFAULT NULL COMMENT '执行器地址，本次执行的地址',
   `executor_handler` varchar(255) DEFAULT NULL COMMENT '执行器任务handler',
   `executor_param` varchar(255) DEFAULT NULL COMMENT 'executor_param',
