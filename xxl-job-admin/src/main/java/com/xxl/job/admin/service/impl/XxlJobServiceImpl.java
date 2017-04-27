@@ -89,6 +89,11 @@ public class XxlJobServiceImpl implements IXxlJobService {
 			return new ReturnT<String>(500, "请输入“JobHandler”");
 		}
 
+		// fix "\r" in shell
+		if (GlueTypeEnum.GLUE_SHELL==GlueTypeEnum.match(jobInfo.getGlueType()) && jobInfo.getGlueSource()!=null) {
+			jobInfo.setGlueSource(jobInfo.getGlueSource().replaceAll("\r", ""));
+		}
+
 		// childJobKey valid
 		if (StringUtils.isNotBlank(jobInfo.getChildJobKey())) {
 			String[] childJobKeys = jobInfo.getChildJobKey().split(",");

@@ -88,7 +88,7 @@ public class JobThread extends Thread{
 						}
 					} catch (Exception e) {
 						if (toStop) {
-							logger.error("----------- xxl-job toStop, stopReason:{}", stopReason);
+							logger.error("<br>----------- xxl-job toStop, stopReason:{}", stopReason);
 						}
 						logger.error("JobThread Exception:", e);
 						StringWriter out = new StringWriter();
@@ -111,7 +111,7 @@ public class JobThread extends Thread{
 				}
 			} catch (Exception e) {
 				if (toStop) {
-					logger.error("----------- xxl-job toStop, stopReason:{}", stopReason);
+					logger.error("<br>----------- xxl-job toStop, stopReason:{}", stopReason);
 				}
 				logger.error("----------- xxl-job JobThread Exception:", e);
 			}

@@ -208,19 +208,21 @@ exit 0
 <textarea class="glueSource_python" style="display:none;" >
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
-
-import logging
 import time
+import sys
 
-logging.basicConfig(level=logging.DEBUG)
-
-logging.info('xxl-job: hello python')
-
-for num in range(1, 3):
+print "xxl-job: hello python"
+print "脚本文件：", sys.argv[0]
+for i in range(1, len(sys.argv)):
 	time.sleep(1)
-	logging.info('python :' + str(num) )
+	print "参数", i, sys.argv[i]
 
-logging.info('Good bye!')
+print "Good bye!"
+exit(0)<#--
+import logging
+logging.basicConfig(level=logging.DEBUG)
+logging.info("脚本文件：" + sys.argv[0])
+-->
 </textarea>
 					
 				</form>

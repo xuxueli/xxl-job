@@ -87,7 +87,7 @@ public class ScriptUtil {
         DefaultExecutor exec = new DefaultExecutor();
         exec.setExitValues(null);
         exec.setStreamHandler(streamHandler);
-        int exitValue = exec.execute(commandline);  // exit code: 0=success, 1/-1=fail
+        int exitValue = exec.execute(commandline);  // exit code: 0=success, 1=error
         return exitValue;
     }
 
