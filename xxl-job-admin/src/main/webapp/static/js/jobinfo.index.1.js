@@ -45,11 +45,20 @@ $(function() {
 					},
 	                { "data": 'jobDesc', "visible" : true,"width":'20%'},
 					{
-						"data": 'executorHandler',
+						"data": 'glueType',
 						"width":'20%',
 						"visible" : true,
 						"render": function ( data, type, row ) {
-							return (row.glueSwitch > 0)? "GLUE模式" : data;
+							if ('GLUE_GROOVY'==row.glueType) {
+								return "GLUE模式(Java)";
+							} else if ('GLUE_SHELL'==row.glueType) {
+								return "GLUE模式(Shell)";
+							} else if ('GLUE_PYTHON'==row.glueType) {
+								return "GLUE模式(Python)";
+							} else if ('BEAN'==row.glueType) {
+								return row.executorHandler;
+							}
+							return row.executorHandler;
 						}
 					},
 	                { "data": 'executorParam', "visible" : false},

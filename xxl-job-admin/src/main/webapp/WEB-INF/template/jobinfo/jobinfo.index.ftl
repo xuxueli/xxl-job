@@ -76,7 +76,7 @@
 					                	<th name="jobGroup" >jobGroup</th>
                                         <th name="childJobKey" >JobKey</th>
 					                  	<th name="jobDesc" >描述</th>
-                                        <th name="executorHandler" >JobHandler</th>
+                                        <th name="glueType" >运行模式</th>
 					                  	<th name="executorParam" >任务参数</th>
                                         <th name="jobCron" >Cron</th>
 					                  	<th name="addTime" >新增时间</th>
@@ -192,7 +192,6 @@ public class DemoGlueJobHandler extends IJobHandler {
 </textarea>
 <textarea class="glueSource_shell" style="display:none;" >
 #!/bin/bash
-
 echo "xxl-job: hello shell"
 
 for item in 1 2 3
@@ -217,7 +216,6 @@ logging.info('xxl-job: hello python')
 for num in range(1, 3):
 	time.sleep(1)
 	logging.info('python :' + str(num) )
-
 logging.info('Good bye!')
 </textarea>
 					
