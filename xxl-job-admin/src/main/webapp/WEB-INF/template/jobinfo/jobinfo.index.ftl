@@ -173,9 +173,7 @@
 <textarea class="glueSource_java" style="display:none;" >
 package com.xxl.job.service.handler;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import com.xxl.job.core.log.XxlJobLogger;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.handler.IJobHandler;
 
@@ -184,7 +182,7 @@ public class DemoGlueJobHandler extends IJobHandler {
 
 	@Override
 	public ReturnT<String> execute(String... params) throws Exception {
-		logger.info("XXL-JOB, Hello World.");
+		XxlJobLogger.log("XXL-JOB, Hello World.");
 		return ReturnT.SUCCESS;
 	}
 

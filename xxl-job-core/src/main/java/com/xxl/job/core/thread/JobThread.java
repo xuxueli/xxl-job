@@ -5,6 +5,7 @@ import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.biz.model.TriggerParam;
 import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.log.XxlJobFileAppender;
+import com.xxl.job.core.log.XxlJobLogger;
 import org.eclipse.jetty.util.ConcurrentHashSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -80,7 +81,7 @@ public class JobThread extends Thread{
 						String logFileName = XxlJobFileAppender.makeLogFileName(new Date(triggerParam.getLogDateTim()), triggerParam.getLogId());
 
 						XxlJobFileAppender.contextHolder.set(logFileName);
-						logger.info("----------- xxl-job job execute start -----------");
+						XxlJobLogger.log("----------- xxl-job job execute start -----------");
 
 						executeResult = handler.execute(handlerParams);
 						if (executeResult == null) {
@@ -88,7 +89,7 @@ public class JobThread extends Thread{
 						}
 					} catch (Exception e) {
 						if (toStop) {
-							logger.error("<br>----------- xxl-job toStop, stopReason:{}", stopReason);
+							XxlJobLogger.log("<br>----------- xxl-job toStop, stopReason:" + stopReason);
 						}
 						logger.error("JobThread Exception:", e);
 						StringWriter out = new StringWriter();
@@ -96,8 +97,9 @@ public class JobThread extends Thread{
 
 						executeResult = new ReturnT<String>(ReturnT.FAIL_CODE, out.toString());
 					}
-					logger.info("----------- xxl-job job execute end ----------- <br> Look : ExecutorParams:{}, Code:{}, Msg:{}",
-							new Object[]{handlerParams, executeResult.getCode(), executeResult.getMsg()});
+
+					XxlJobLogger.log("----------- xxl-job job execute end ----------- <br> " +
+									"Look : ExecutorParams:"+ handlerParams +", Code:"+ executeResult.getCode() +", Msg:" + executeResult.getMsg());
 					
 					// callback handler info
 					if (!toStop) {
@@ -111,9 +113,16 @@ public class JobThread extends Thread{
 				}
 			} catch (Exception e) {
 				if (toStop) {
-					logger.error("<br>----------- xxl-job toStop, stopReason:{}", stopReason);
+					XxlJobLogger.log("<br>----------- xxl-job toStop, stopReason:" + stopReason);
 				}
-				logger.error("----------- xxl-job JobThread Exception:", e);
+
+				StringWriter stringWriter = new StringWriter();
+				PrintWriter printWriter = new PrintWriter(stringWriter, true);
+				e.printStackTrace(printWriter);
+				printWriter.flush();
+				stringWriter.flush();
+				String errorMsg = stringWriter.toString();
+				XxlJobLogger.log("----------- xxl-job JobThread Exception:" + errorMsg);
 			}
 		}
 		
