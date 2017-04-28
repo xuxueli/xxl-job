@@ -5,8 +5,8 @@ import com.xxl.job.core.thread.ExecutorRegistryThread;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.handler.HandlerCollection;
-import org.eclipse.jetty.server.nio.SelectChannelConnector;
 import org.eclipse.jetty.util.thread.ExecutorThreadPool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,21 +24,22 @@ public class JettyServer {
 		thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
-				server = new Server();
-				server.setThreadPool(new ExecutorThreadPool(200, 200, 30000));	// 非阻塞
-				
-				// connector
-				SelectChannelConnector connector = new SelectChannelConnector();
+
+				// The Server
+				server = new Server(new ExecutorThreadPool());  // 非阻塞
+
+				// HTTP connector
+				ServerConnector connector = new ServerConnector(server);
 				connector.setPort(port);
-				connector.setMaxIdleTime(30000);
-				server.setConnectors(new Connector[] { connector });
-				
-				// handler
-				HandlerCollection handlerc =new HandlerCollection();  
+				server.setConnectors(new Connector[]{connector});
+
+				// Set a handler
+				HandlerCollection handlerc =new HandlerCollection();
 				handlerc.setHandlers(new Handler[]{new JettyServerHandler()});
 				server.setHandler(handlerc);
 
 				try {
+					// Start the server
 					server.start();
 					logger.info(">>>>>>>>>>>> xxl-job jetty server start success at port:{}.", port);
 					ExecutorRegistryThread.getInstance().start(port, ip, appName, registHelper);

@@ -99,9 +99,9 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 ![输入图片说明](https://static.oschina.net/uploads/img/201704/25151032_nrJN.png "在这里输入图片标题")
 
 ### 1.5 环境
-- Servlet/JSP Spec：3.0/2.2
+- Servlet/JSP Spec：3.1/2.3
 - JDK：1.7+
-- Tomcat：7+/Jetty8+
+- Tomcat：8.5.x+/Jetty9.2+
 - Mysql：5.6+
 - Maven：3+
 
@@ -813,6 +813,8 @@ Tips: 历史版本(V1.3.x)目前已经Release至稳定版本, 进入维护阶段
 
 #### 6.14 版本 V1.7.0 特性 (Coding)
 - 1、脚本任务：支持以GLUE模式开发和运行脚本任务，包括Shell、Python等类型脚本;
+- 2、新增spring-boot类型执行器example项目；
+- 3、升级jetty版本至9.2；
 - 2、执行器移除GlueLoader依赖改为推送方式，GLUE源码加载不再依赖JDBC；
 - 3、登陆拦截Redirect时获取项目名，解决非根据目录发布时跳转404问题；
 
