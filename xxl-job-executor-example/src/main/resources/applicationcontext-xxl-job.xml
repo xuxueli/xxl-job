@@ -36,6 +36,7 @@
                 <property name="dataSource" ref="xxlJobDataSource" />
             </bean>
         </property>
+		<property name="logPath" value="${xxl.job.executor.logpath}" />
 	</bean>
 
     <!-- ********************************* "XXL-JOB公共数据源" 配置, 仅在启动 "DbRegistHelper" 时才需要, 否则可删除 ********************************* -->

@@ -31,6 +31,7 @@ public class XxlJobExecutor implements ApplicationContextAware, ApplicationListe
     private int port = 9999;
     private String appName;
     private RegistHelper registHelper;
+    public static String logPath;
 
     public void setIp(String ip) {
         this.ip = ip;
@@ -43,6 +44,9 @@ public class XxlJobExecutor implements ApplicationContextAware, ApplicationListe
     }
     public void setRegistHelper(RegistHelper registHelper) {
         this.registHelper = registHelper;
+    }
+    public void setLogPath(String logPath) {
+        this.logPath = logPath;
     }
 
     // ---------------------------------- job server ------------------------------------

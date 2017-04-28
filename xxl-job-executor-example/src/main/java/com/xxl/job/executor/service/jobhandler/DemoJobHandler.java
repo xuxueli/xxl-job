@@ -24,13 +24,13 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class DemoJobHandler extends IJobHandler {
 	private static transient Logger logger = LoggerFactory.getLogger(DemoJobHandler.class);
-	
+
 	@Override
 	public ReturnT<String> execute(String... params) throws Exception {
-		logger.info("XXL-JOB, Hello World.");
+		super.log("XXL-JOB, Hello World.");
 		
 		for (int i = 0; i < 5; i++) {
-			logger.info("beat at:{}", i);
+			super.log("beat at:" + i);
 			TimeUnit.SECONDS.sleep(2);
 		}
 		return ReturnT.SUCCESS;
