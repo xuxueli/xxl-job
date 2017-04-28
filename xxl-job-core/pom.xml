@@ -34,14 +34,14 @@
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-server</artifactId>
-			<version>8.2.0.v20160908</version>
+			<version>9.2.19.v20160908</version>
 		</dependency>
 
 		<!-- slf4j -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
-			<version>1.7.5</version>
+			<version>1.7.21</version>
 		</dependency>
 
 		<!-- hessian -->
