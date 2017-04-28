@@ -24,4 +24,10 @@
         <appender-ref ref="FILE" />
     </root>
 
+    <!--<logger name="com.xxl.job.executor.service.jobhandler" additivity="false">
+        <level value="INFO" />
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="FILE" />
+    </logger>-->
+
 </log4j:configuration>
