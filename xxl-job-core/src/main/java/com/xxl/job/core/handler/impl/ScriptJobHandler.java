@@ -5,6 +5,7 @@ import com.xxl.job.core.executor.XxlJobExecutor;
 import com.xxl.job.core.glue.GlueTypeEnum;
 import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.log.XxlJobFileAppender;
+import com.xxl.job.core.log.XxlJobLogger;
 import com.xxl.job.core.util.ScriptUtil;
 
 /**
@@ -49,6 +50,7 @@ public class ScriptJobHandler extends IJobHandler {
         String logFileName = XxlJobExecutor.logPath.concat(XxlJobFileAppender.contextHolder.get());
 
         // invoke
+        XxlJobLogger.log("----------- script file:"+ scriptFileName +" -----------");
         int exitValue = ScriptUtil.execToFile(cmd, scriptFileName, logFileName, params);
         ReturnT<String> result = (exitValue==0)?ReturnT.SUCCESS:new ReturnT<String>(ReturnT.FAIL_CODE, "script exit value("+exitValue+") is failed");
         return result;

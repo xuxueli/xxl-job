@@ -22,7 +22,7 @@ public class GlueJobHandler extends IJobHandler {
 
 	@Override
 	public ReturnT<String> execute(String... params) throws Exception {
-		XxlJobLogger.log("----------- glue.version:{} -----------" + glueUpdatetime);
+		XxlJobLogger.log("----------- glue.version:"+ glueUpdatetime +" -----------");
 		return jobHandler.execute(params);
 	}
 

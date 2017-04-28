@@ -91,11 +91,13 @@ public class JobThread extends Thread{
 						if (toStop) {
 							XxlJobLogger.log("<br>----------- xxl-job toStop, stopReason:" + stopReason);
 						}
-						logger.error("JobThread Exception:", e);
-						StringWriter out = new StringWriter();
-						e.printStackTrace(new PrintWriter(out));
 
-						executeResult = new ReturnT<String>(ReturnT.FAIL_CODE, out.toString());
+						StringWriter stringWriter = new StringWriter();
+						e.printStackTrace(new PrintWriter(stringWriter));
+						String errorMsg = stringWriter.toString();
+						XxlJobLogger.log("JobThread Exception:" + errorMsg);
+
+						executeResult = new ReturnT<String>(ReturnT.FAIL_CODE, stringWriter.toString());
 					}
 
 					XxlJobLogger.log("----------- xxl-job job execute end ----------- <br> " +
@@ -117,10 +119,7 @@ public class JobThread extends Thread{
 				}
 
 				StringWriter stringWriter = new StringWriter();
-				PrintWriter printWriter = new PrintWriter(stringWriter, true);
-				e.printStackTrace(printWriter);
-				printWriter.flush();
-				stringWriter.flush();
+				e.printStackTrace(new PrintWriter(stringWriter));
 				String errorMsg = stringWriter.toString();
 				XxlJobLogger.log("----------- xxl-job JobThread Exception:" + errorMsg);
 			}

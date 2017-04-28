@@ -178,7 +178,6 @@ import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.handler.IJobHandler;
 
 public class DemoGlueJobHandler extends IJobHandler {
-	private static transient Logger logger = LoggerFactory.getLogger(DemoGlueJobHandler.class);
 
 	@Override
 	public ReturnT<String> execute(String... params) throws Exception {
