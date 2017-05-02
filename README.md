@@ -153,13 +153,13 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
     xxl.job.mail.sendFrom=ovono802302@163.com
     xxl.job.mail.sendNick=《任务调度平台XXL-JOB》
     
-    # 登陆账号
+    # 登录账号
     xxl.job.login.username=admin
     xxl.job.login.password=123456
 
 #### 部署项目：
 如果已经正确进行上述配置，可将项目编译打war包并部署到tomcat中。
-访问链接：http://localhost:8080/xxl-job-admin/ ，登陆后运行界面如下图所示
+访问链接：http://localhost:8080/xxl-job-admin/ ，登录后运行界面如下图所示
 
 ![输入图片说明](https://static.oschina.net/uploads/img/201704/25145242_KIKQ.png "在这里输入图片标题")
 
@@ -206,7 +206,7 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 #### 前提：请确认“调度中心”和“执行器”项目已经成功部署并启动；
 
 #### 步骤一：新建任务：
-登陆调度中心，点击下图所示“新建任务”按钮，新建示例任务。然后，参考下面截图中任务的参数配置，点击保存。
+登录调度中心，点击下图所示“新建任务”按钮，新建示例任务。然后，参考下面截图中任务的参数配置，点击保存。
 
 ![输入图片说明](https://static.oschina.net/uploads/img/201704/27205910_o8HQ.png "在这里输入图片标题")
 
@@ -817,7 +817,7 @@ Tips: 历史版本(V1.3.x)目前已经Release至稳定版本, 进入维护阶段
 - 2、新增spring-boot类型执行器example项目；
 - 3、升级jetty版本至9.2；
 - 2、执行器移除GlueLoader依赖改为推送方式，GLUE源码加载不再依赖JDBC；
-- 3、登陆拦截Redirect时获取项目名，解决非根据目录发布时跳转404问题；
+- 3、登录拦截Redirect时获取项目名，解决非根据目录发布时跳转404问题；
 
 #### TODO LIST
 - 1、任务并行触发处理规则：串行调度队列（默认）、并行、忽略、覆盖；

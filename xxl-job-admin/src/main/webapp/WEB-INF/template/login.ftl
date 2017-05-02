@@ -15,11 +15,11 @@
 			<div class="login-box-body">
 				<p class="login-box-msg">任务调度中心</p>
 				<div class="form-group has-feedback">
-	            	<input type="text" name="userName" class="form-control" placeholder="请输入登陆账号" value="admin" >
+	            	<input type="text" name="userName" class="form-control" placeholder="请输入登录账号" value="admin" >
 	            	<span class="glyphicon glyphicon-envelope form-control-feedback"></span>
 				</div>
 	          	<div class="form-group has-feedback">
-	            	<input type="password" name="password" class="form-control" placeholder="请输入登陆密码" value="123456" >
+	            	<input type="password" name="password" class="form-control" placeholder="请输入登录密码" value="123456" >
 	            	<span class="glyphicon glyphicon-lock form-control-feedback"></span>
 	          	</div>
 				<div class="row">
@@ -31,7 +31,7 @@
 						</div>
 		            </div><!-- /.col -->
 		            <div class="col-xs-4">
-						<button type="submit" class="btn btn-primary btn-block btn-flat">登陆</button>
+						<button type="submit" class="btn btn-primary btn-block btn-flat">登录</button>
 					</div>
 				</div>
 			</div>
