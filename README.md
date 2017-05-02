@@ -173,18 +173,22 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 #### 执行器配置：
 配置文件以及配置属性如下图所示。
 
-![输入图片说明](https://static.oschina.net/uploads/img/201703/13150738_Fv8v.png "在这里输入图片标题")
+![输入图片说明](https://static.oschina.net/uploads/img/201705/02182818_WeyS.png "在这里输入图片标题")
 
-    ### 执行器JDBC链接：请保持和调度中心JDBC连接配置一致；(执行器 "DbRegistHelper" 依赖JDBC配置；推荐将其抽象为RPC远程服务, 可取消对JDBC的依赖；如不启用执行自动注册功能，也可忽略JDBC配置; )
+
+    ### xxl-job db：执行器JDBC链接：请保持和调度中心JDBC连接配置一致；(执行器 "DbRegistHelper" 依赖JDBC配置；推荐将其抽象为RPC远程服务, 可取消对JDBC的依赖；如不启用执行自动注册功能，也可忽略JDBC配置; )
     xxl.job.db.driverClass=com.mysql.jdbc.Driver
-    xxl.job.db.url=jdbc:mysql://localhost:3306/xxl-job?useUnicode=true&amp;characterEncoding=UTF-8
+    xxl.job.db.url=jdbc:mysql://localhost:3306/xxl-job?useUnicode=true&characterEncoding=UTF-8
     xxl.job.db.user=root
     xxl.job.db.password=root_pwd
     
-    ### 执行器"AppName"和地址信息配置：AppName为执行器分组依据。“调度中心”将会请求该地址触发任务，改地址将会用于执行器注册。执行器默认端口为9999，执行器IP默认为空表示自动获取IP，多网卡时可手动设置指定IP；
+    ### xxl-job executor address：执行器"AppName"和地址信息配置：AppName为执行器分组依据。“调度中心”将会请求该地址触发任务，改地址将会用于执行器注册。执行器默认端口为9999，执行器IP默认为空表示自动获取IP，多网卡时可手动设置指定IP；
     xxl.job.executor.appname=xxl-job-executor-example
     xxl.job.executor.ip=
     xxl.job.executor.port=9999
+    
+    ### xxl-job log path：执行器运行日志文件存储的磁盘位置
+    xxl.job.executor.logpath=/data/applogs/xxl-job/jobhandler/
 
 
 #### 组件配置：
