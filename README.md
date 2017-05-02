@@ -588,32 +588,11 @@ CronTrigger cronTrigger = TriggerBuilder.newTrigger().withIdentity(triggerKey).w
 “执行器”接收到“调度中心”的调度请求时，如果任务类型为“Bean模式”，将会匹配Spring容器中的“Bean模式任务”，然后调用其execute方法，执行任务逻辑。如果任务类型为“GLUE模式”，将会加载GLue代码，实例化Java对象，注入依赖的Spring服务（注意：Glue代码中注入的Spring服务，必须存在与该“执行器”项目的Spring容器中），然后调用execute方法，执行任务逻辑。
 
 ##### 5.5.4 任务日志
-XXL-JOB会为每次调度请求生成一个单独的日志文件，通过重写LOG4J的Appender实现，“调度中心”查看执行日志时将会加载对应的日志文件。
+XXL-JOB会为每次调度请求生成一个单独的日志文件，需要通过 "XxlJobLogger.log" 打印执行日志，“调度中心”查看执行日志时将会加载对应的日志文件。
 
-需要注意的是，“执行器”中日志Appender上配置的包名，需要覆盖到所有任务（Bean模式 + GLUE模式）的包名，否则覆盖不到的任务将不会生成日志文件。
+(历史版本通过重写LOG4J的Appender实现，存在依赖限制，该方式在新版本已经被抛弃)
 
-```
-// 以下代码见/xxl-job/xxl-job-executor-example/src/main/resources/log4j.xml文件
-<appender name="xxl-job" class="com.xxl.job.core.log.XxlJobFileAppender">
-    <param name="filePath" value="/data/applogs/xxl-job/jobhandler/"/>
-    <param name="append" value="true"/>
-    <param name="encoding" value="UTF-8"/>
-    <layout class="org.apache.log4j.PatternLayout">
-        <param name="ConversionPattern" value="%-d{yyyy-MM-dd HH:mm:ss} [%c]-[%t]-[%M]-[%L]-[%p] %m%n"/>
-    </layout>
-</appender>
-...
-<logger name="com.xxl.job.executor.service.jobhandler" additivity="false">
-    <level value="INFO" />
-    <appender-ref ref="CONSOLE" />
-    <appender-ref ref="FILE" />
-    <appender-ref ref="xxl-job"/>
-</logger>
-```
-
-单独日志文件存放的位置可在“执行器”的log.xml文件进行自定义，默认位置为项目磁盘根目录下“/data/applogs/xxl-job/jobhandler/”；
-
-目录格式为：/data/applogs/xxl-job/jobhandler/“格式化日期”/“数据库调度日志记录的主键ID.log”。
+日志文件存放的位置可在“执行器”配置文件进行自定义，默认目录格式为：/data/applogs/xxl-job/jobhandler/“格式化日期”/“数据库调度日志记录的主键ID.log”。
 
 #### 5.6 通讯模块剖析
 
