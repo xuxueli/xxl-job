@@ -121,7 +121,8 @@ public class XxlJobFileAppender {
 		int toLineNum = 0;
 		LineNumberReader reader = null;
 		try {
-			reader = new LineNumberReader(new FileReader(logFile));
+			//reader = new LineNumberReader(new FileReader(logFile));
+			reader = new LineNumberReader(new InputStreamReader(new FileInputStream(logFile), "utf-8"));
 			String line = null;
 
 			while ((line = reader.readLine())!=null) {
