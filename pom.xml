@@ -14,7 +14,7 @@
 		<module>xxl-job-core</module>
 		<module>xxl-job-admin</module>
 		<module>xxl-job-executor-example</module>
-		<module>xxl-job-executor-example-boot</module>
+		<module>xxl-job-executor-springboot-example</module>
 	</modules>
 
 	<build>

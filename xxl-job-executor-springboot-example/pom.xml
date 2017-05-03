@@ -7,10 +7,10 @@
 		<artifactId>xxl-job</artifactId>
 		<version>1.6.2.1</version>
 	</parent>
-	<artifactId>xxl-job-executor-example-boot</artifactId>
+	<artifactId>xxl-job-executor-springboot-example</artifactId>
 	<packaging>jar</packaging>
 
-	<name>xxl-job-executor-example-boot</name>
+	<name>xxl-job-executor-springboot-example</name>
 	<description>Demo project for Spring Boot</description>
 	
 	<dependencyManagement>
