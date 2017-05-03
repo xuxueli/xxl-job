@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.xuxueli</groupId>
 	<artifactId>xxl-job</artifactId>
-	<version>1.7.0-SNAPSHOT</version>
+	<version>1.7.0</version>
 	<packaging>pom</packaging>
 
 	<name>xxl-job</name>
@@ -14,7 +14,8 @@
 		<module>xxl-job-core</module>
 		<module>xxl-job-admin</module>
 		<module>xxl-job-executor-example</module>
-	</modules>
+        <module>xxl-job-executor-springboot-example</module>
+    </modules>
 
 	<build>
 		<plugins>

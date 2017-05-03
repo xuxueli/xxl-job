@@ -41,7 +41,7 @@ public class MailUtil {
 	<bean id="javaMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl"  scope="singleton" >
 		<property name="host" value="${mail.host}" />			<!-- SMTP发送邮件的服务器的IP和端口 -->
 		<property name="port" value="${mail.port}" />
-		<property name="username" value="${mail.username}" />	<!-- 登陆SMTP邮件发送服务器的用户名和密码 -->
+		<property name="username" value="${mail.username}" />	<!-- 登录SMTP邮件发送服务器的用户名和密码 -->
 		<property name="password" value="${mail.password}" />
 		<property name="javaMailProperties">					<!-- 获得邮件会话属性,验证登录邮件服务器是否成功 -->
 			<props>
@@ -118,7 +118,7 @@ public class MailUtil {
         	mailSender.setPassword(password); 	// 发送者邮箱的密码    
         	
 			//配置文件，用于实例化java.mail.session    
-			Properties pro = System.getProperties();
+			Properties pro = new Properties();
 			pro.put("mail.smtp.auth", "true");		// 登录SMTP服务器,需要获得授权 (网易163邮箱新近注册的邮箱均不能授权,测试 sohu 的邮箱可以获得授权)
 			pro.put("mail.smtp.socketFactory.port", port);
 			pro.put("mail.smtp.socketFactory.fallback", "false");

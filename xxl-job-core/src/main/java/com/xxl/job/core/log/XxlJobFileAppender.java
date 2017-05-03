@@ -1,9 +1,9 @@
 package com.xxl.job.core.log;
 
 import com.xxl.job.core.biz.model.LogResult;
-import org.apache.log4j.AppenderSkeleton;
-import org.apache.log4j.Layout;
-import org.apache.log4j.spi.LoggingEvent;
+import com.xxl.job.core.executor.XxlJobExecutor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
@@ -13,18 +13,13 @@ import java.util.Date;
  * store trigger log in each log-file
  * @author xuxueli 2016-3-12 19:25:12
  */
-public class XxlJobFileAppender extends AppenderSkeleton {
+public class XxlJobFileAppender {
+	private static Logger logger = LoggerFactory.getLogger(XxlJobFileAppender.class);
 	
 	// for JobThread
 	public static ThreadLocal<String> contextHolder = new ThreadLocal<String>();
 	public static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	
-	// trogger log file path
-	public static volatile String filePath;
-	public void setFilePath(String filePath) {
-		XxlJobFileAppender.filePath = filePath;
-	}
-
 	/**
 	 * log filename: yyyy-MM-dd/9999.log
 	 *
@@ -35,7 +30,7 @@ public class XxlJobFileAppender extends AppenderSkeleton {
 	public static String makeLogFileName(Date triggerDate, int logId) {
 
         // filePath/
-        File filePathDir = new File(filePath);
+        File filePathDir = new File(XxlJobExecutor.logPath);
         if (!filePathDir.exists()) {
             filePathDir.mkdirs();
         }
@@ -52,20 +47,31 @@ public class XxlJobFileAppender extends AppenderSkeleton {
 		return logFileName;
 	}
 
-	@Override
-	protected void append(LoggingEvent event) {
+	/**
+	 * append log
+	 *
+	 * @param logFileName
+	 * @param appendLog
+	 */
+	public static void appendLog(String logFileName, String appendLog) {
 
-		String logFileName = contextHolder.get();
+		// log
+		if (appendLog == null) {
+			appendLog = "";
+		}
+		appendLog += "\r\n";
+
+		// log file
 		if (logFileName==null || logFileName.trim().length()==0) {
 			return;
 		}
-		File logFile = new File(filePath, logFileName);
+		File logFile = new File(XxlJobExecutor.logPath, logFileName);
 
 		if (!logFile.exists()) {
 			try {
 				logFile.createNewFile();
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 				return;
 			}
 		}
@@ -75,46 +81,26 @@ public class XxlJobFileAppender extends AppenderSkeleton {
 			FileOutputStream fos = null;
 			try {
 				fos = new FileOutputStream(logFile, true);
-				fos.write(layout.format(event).getBytes("utf-8"));
-				if (layout.ignoresThrowable()) {
-					String[] throwableInfo = event.getThrowableStrRep();
-					if (throwableInfo != null) {
-						for (int i = 0; i < throwableInfo.length; i++) {
-							fos.write(throwableInfo[i].getBytes("utf-8"));
-							fos.write(Layout.LINE_SEP.getBytes("utf-8"));
-						}
-					}
-				}
+				fos.write(appendLog.getBytes("utf-8"));
 				fos.flush();
 			} finally {
 				if (fos != null) {
 					try {
 						fos.close();
 					} catch (IOException e) {
-						e.printStackTrace();
+						logger.error(e.getMessage(), e);
 					}
 				}
 			} 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 	}
 
-	@Override
-	public void close() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public boolean requiresLayout() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-	
 	/**
 	 * support read log-file
+	 *
 	 * @param logFileName
 	 * @return log content
 	 */
@@ -124,7 +110,7 @@ public class XxlJobFileAppender extends AppenderSkeleton {
 		if (logFileName==null || logFileName.trim().length()==0) {
             return new LogResult(fromLineNum, 0, "readLog fail, logFile not found", true);
 		}
-		File logFile = new File(filePath, logFileName);
+		File logFile = new File(XxlJobExecutor.logPath, logFileName);
 
 		if (!logFile.exists()) {
             return new LogResult(fromLineNum, 0, "readLog fail, logFile not exists", true);
@@ -145,13 +131,13 @@ public class XxlJobFileAppender extends AppenderSkeleton {
 				}
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (reader != null) {
 				try {
 					reader.close();
 				} catch (IOException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(), e);
 				}
 			}
 		}
@@ -195,7 +181,7 @@ public class XxlJobFileAppender extends AppenderSkeleton {
 					e.printStackTrace();
 				}
 			}
-		} 
+		}
 		return null;
 	}
 

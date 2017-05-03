@@ -15,7 +15,7 @@ import java.lang.annotation.Target;
 public @interface PermessionLimit {
 	
 	/**
-	 * 登陆拦截 (默认拦截)
+	 * 登录拦截 (默认拦截)
 	 */
 	boolean limit() default true;
 

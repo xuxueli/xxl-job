@@ -6,7 +6,7 @@ $(function(){
       increaseArea: '20%' // optional
     });
     
-	// 登陆.规则校验
+	// 登录.规则校验
 	var loginFormValid = $("#loginForm").validate({
 		errorElement : 'span',  
         errorClass : 'help-block',
@@ -25,14 +25,14 @@ $(function(){
         }, 
         messages : {  
         	userName : {  
-                required :"请输入登陆账号."  ,
-                minlength:"登陆账号不应低于5位",
-                maxlength:"登陆账号不应超过18位"
+                required :"请输入登录账号."  ,
+                minlength:"登录账号不应低于5位",
+                maxlength:"登录账号不应超过18位"
             },  
             password : {
-            	required :"请输入登陆密码."  ,
-                minlength:"登陆密码不应低于5位",
-                maxlength:"登陆密码不应超过18位"
+            	required :"请输入登录密码."  ,
+                minlength:"登录密码不应低于5位",
+                maxlength:"登录密码不应超过18位"
             }
         }, 
 		highlight : function(element) {  
@@ -48,7 +48,7 @@ $(function(){
         submitHandler : function(form) {
 			$.post(base_url + "/login", $("#loginForm").serialize(), function(data, status) {
 				if (data.code == "200") {
-					ComAlert.show(1, "登陆成功", function(){
+					ComAlert.show(1, "登录成功", function(){
 						window.location.href = base_url;
 					});
 				} else {
