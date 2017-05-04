@@ -63,7 +63,7 @@ public class ExecutorBizImpl implements ExecutorBiz {
             // valid handler
             IJobHandler jobHandler = XxlJobExecutor.loadJobHandler(triggerParam.getExecutorHandler());
             if (jobHandler==null) {
-                return new ReturnT<String>(ReturnT.FAIL_CODE, "job handler for JobId=[" + triggerParam.getJobId() + "] not found.");
+                return new ReturnT<String>(ReturnT.FAIL_CODE, "job handler [" + triggerParam.getExecutorHandler() + "] not found.");
             }
 
             // valid exists job thread：change handler, need kill old thread
