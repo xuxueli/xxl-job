@@ -2,6 +2,7 @@ package com.xxl.job.core.util;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.ContentType;
@@ -39,6 +40,12 @@ public class HttpClientUtil {
 				}
 				httpPost.setEntity(new UrlEncodedFormEntity(formParams, "UTF-8"));
 			}*/
+
+			// timeout
+			RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(10000).setConnectTimeout(10000).build();
+			httpPost.setConfig(requestConfig);
+
+			// data
 			if (date != null) {
 				httpPost.setEntity(new ByteArrayEntity(date, ContentType.DEFAULT_BINARY));
 			}
