@@ -103,9 +103,9 @@ $(function() {
 	                			// status
 	                			var pause_resume = "";
 	                			if ('NORMAL' == row.jobStatus) {
-	                				pause_resume = '<button class="btn btn-primary btn-xs job_operate" type="job_pause" type="button">暂停</button>  ';
+	                				pause_resume = '<button class="btn btn-primary btn-xs job_operate" _type="job_pause" type="button">暂停</button>  ';
 								} else if ('PAUSED' == row.jobStatus){
-									pause_resume = '<button class="btn btn-primary btn-xs job_operate" type="job_resume" type="button">恢复</button>  ';
+									pause_resume = '<button class="btn btn-primary btn-xs job_operate" _type="job_resume" type="button">恢复</button>  ';
 								}
 	                			// log url
 	                			var logUrl = base_url +'/joblog?jobId='+ row.id;
@@ -130,12 +130,12 @@ $(function() {
 									' glueType="'+ row.glueType +'" '+
                                     ' childJobKey="'+ row.childJobKey +'" '+
 									'>'+
-									'<button class="btn btn-primary btn-xs job_operate" type="job_trigger" type="button">执行</button>  '+
+									'<button class="btn btn-primary btn-xs job_operate" _type="job_trigger" type="button">执行</button>  '+
 									pause_resume +
 									'<button class="btn btn-primary btn-xs" type="job_del" type="button" onclick="javascript:window.open(\'' + logUrl + '\')" >日志</button><br>  '+
 									'<button class="btn btn-warning btn-xs update" type="button">编辑</button>  '+
 									codeBtn +
-									'<button class="btn btn-danger btn-xs job_operate" type="job_del" type="button">删除</button>  '+
+									'<button class="btn btn-danger btn-xs job_operate" _type="job_del" type="button">删除</button>  '+
 									'</p>';
 
 	                			return html;
@@ -180,7 +180,7 @@ $(function() {
 		var url;
 		var needFresh = false;
 
-		var type = $(this).attr("type");
+		var type = $(this).attr("_type");
 		if ("job_pause" == type) {
 			typeName = "暂停";
 			url = base_url + "/jobinfo/pause";
