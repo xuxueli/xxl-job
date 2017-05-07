@@ -44,7 +44,7 @@ public class JettyServer {
 					logger.info(">>>>>>>>>>>> xxl-job jetty server start success at port:{}.", port);
 					ExecutorRegistryThread.getInstance().start(port, ip, appName, registHelper);
 					server.join();	// block until thread stopped
-					logger.info(">>>>>>>>>>> xxl-rpc server start success, netcon={}, port={}", JettyServer.class.getName(), port);
+					logger.info(">>>>>>>>>>> xxl-rpc server join success, netcon={}, port={}", JettyServer.class.getName(), port);
 				} catch (Exception e) {
 					logger.error("", e);
 				} finally {
@@ -59,6 +59,7 @@ public class JettyServer {
 	public void destroy() {
 		if (server != null) {
 			try {
+				server.stop();
 				server.destroy();
 			} catch (Exception e) {
 				logger.error("", e);
