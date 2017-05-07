@@ -143,7 +143,10 @@ $(function() {
 	                		return data?'<a class="logTips" href="javascript:;" >查看<span style="display:none;">'+ data +'</span></a>':"无";
 	                	}
 	                },
-	                { "data": 'handleMsg' , "bSortable": false,
+	                {
+						"data": 'handleMsg' ,
+						"bSortable": false,
+						"width": "8%" ,
 	                	"render": function ( data, type, row ) {
 	                		// better support expression or string, not function
 	                		return function () {
