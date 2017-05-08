@@ -147,5 +147,37 @@
 		</if>
         GROUP BY triggerDay;
     </select>
+
+	<delete id="clearLog" parameterType="java.util.Map" >
+		delete from XXL_JOB_QRTZ_TRIGGER_LOG
+		<trim prefix="WHERE" prefixOverrides="AND | OR" >
+			<if test="jobGroup gt 0">
+				AND job_group = #{jobGroup}
+			</if>
+			<if test="jobId gt 0">
+				AND job_id = #{jobId}
+			</if>
+			<if test="clearBeforeTime != null">
+				AND trigger_time <![CDATA[ <= ]]> #{clearBeforeTime}
+			</if>
+			<if test="clearBeforeNum gt 0">
+				AND id NOT in(
+					SELECT id FROM(
+						SELECT id FROM XXL_JOB_QRTZ_TRIGGER_LOG AS t
+						<trim prefix="WHERE" prefixOverrides="AND | OR" >
+							<if test="jobGroup gt 0">
+								AND t.job_group = #{jobGroup}
+							</if>
+							<if test="jobId gt 0">
+								AND t.job_id = #{jobId}
+							</if>
+						</trim>
+						ORDER BY t.trigger_time desc
+						LIMIT 0, #{clearBeforeNum}
+					) t1
+				)
+			</if>
+		</trim>
+	</delete>
 	
 </mapper>

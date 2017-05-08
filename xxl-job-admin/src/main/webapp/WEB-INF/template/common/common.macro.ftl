@@ -45,6 +45,9 @@
     <#-- jquery cookie -->
 	<script src="${request.contextPath}/static/plugins/jquery/jquery.cookie.js"></script>
 
+	<#-- layer -->
+	<script src="${request.contextPath}/static/plugins/layer/layer.js"></script>
+
 	<#-- common -->
     <script src="${request.contextPath}/static/js/xxl.alert.1.js"></script>
     <script src="${request.contextPath}/static/js/common.1.js"></script>
