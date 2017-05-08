@@ -60,10 +60,13 @@ public class XxlJobExecutor implements ApplicationContextAware, ApplicationListe
         TriggerCallbackThread.getInstance().start();
     }
     public void destroy(){
-        // executor stop
+        // 1、executor registry thread stop
+        ExecutorRegistryThread.getInstance().toStop();
+
+        // 2、executor stop
         serverFactory.destroy();
 
-        // job thread repository destory
+        // 3、job thread repository destory
         if (JobThreadRepository.size() > 0) {
             for (Map.Entry<Integer, JobThread> item: JobThreadRepository.entrySet()) {
                 JobThread jobThread = item.getValue();
@@ -74,11 +77,8 @@ public class XxlJobExecutor implements ApplicationContextAware, ApplicationListe
             JobThreadRepository.clear();
         }
 
-        // trigger callback thread stop
+        // 4、trigger callback thread stop
         TriggerCallbackThread.getInstance().toStop();
-
-        // executor registry thread stop
-        ExecutorRegistryThread.getInstance().toStop();
     }
 
     // ---------------------------------- init job handler ------------------------------------
