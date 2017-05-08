@@ -48,11 +48,20 @@ $(function(){
         submitHandler : function(form) {
 			$.post(base_url + "/login", $("#loginForm").serialize(), function(data, status) {
 				if (data.code == "200") {
-					ComAlert.show(1, "登录成功", function(){
-						window.location.href = base_url;
-					});
+                    layer.open({
+                        title: '系统提示',
+                        content: '登录成功',
+                        icon: '1',
+                        end: function(layero, index){
+                            window.location.href = base_url;
+                        }
+                    });
 				} else {
-					ComAlert.show(2, data.msg);
+                    layer.open({
+                        title: '系统提示',
+                        content: (data.msg || "登录失败"),
+                        icon: '2'
+                    });
 				}
 			});
 		}

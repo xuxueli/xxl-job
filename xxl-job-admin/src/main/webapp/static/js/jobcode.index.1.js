@@ -49,14 +49,21 @@ $(function() {
 		var glueRemark = $("#glueRemark").val();
 		
 		if (!glueRemark) {
-			ComAlert.show(2, "请输入备注");
+			layer.open({
+				title: '系统提示',
+				content: '请输入备注',
+				icon: '2'
+			});
 			return;
 		}
 		if (glueRemark.length <4 || glueRemark.length > 100) {
-			ComAlert.show(2, "备注长度应该在4至100之间");
+			layer.open({
+				title: '系统提示',
+				content: '备注长度应该在4至100之间',
+				icon: '2'
+			});
 			return;
 		}
-		
 
 		$.ajax({
 			type : 'POST',
@@ -69,12 +76,21 @@ $(function() {
 			dataType : "json",
 			success : function(data){
 				if (data.code == 200) {
-					ComAlert.show(1, '保存成功', function(){
-						//$(window).unbind('beforeunload');
-						window.location.reload();
+					layer.open({
+						title: '系统提示',
+						content: '保存成功',
+						icon: '1',
+						end: function(layero, index){
+							//$(window).unbind('beforeunload');
+							window.location.reload();
+						}
 					});
 				} else {
-					ComAlert.show(2, data.msg);
+					layer.open({
+						title: '系统提示',
+						content: (data.msg || "保存失败"),
+						icon: '2'
+					});
 				}
 			}
 		});

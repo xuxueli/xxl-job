@@ -201,8 +201,10 @@ $(function() {
 		}
 		
 		var id = $(this).parent('p').attr("id");
-		
-		ComConfirm.show("确认" + typeName + "?", function(){
+
+		layer.confirm('确认' + typeName + '?', {icon: 3, title:'系统提示'}, function(index){
+			layer.close(index);
+
 			$.ajax({
 				type : 'POST',
 				url : url,
@@ -212,14 +214,24 @@ $(function() {
 				dataType : "json",
 				success : function(data){
 					if (data.code == 200) {
-						ComAlert.show(1, typeName + "成功", function(){
-							if (needFresh) {
-								//window.location.reload();
-								jobTable.fnDraw();
+
+						layer.open({
+							title: '系统提示',
+							content: typeName + "成功",
+							icon: '1',
+							end: function(layero, index){
+								if (needFresh) {
+									//window.location.reload();
+									jobTable.fnDraw();
+								}
 							}
 						});
 					} else {
-						ComAlert.show(1, typeName + "失败");
+						layer.open({
+							title: '系统提示',
+							content: (data.msg || typeName + "失败"),
+							icon: '2'
+						});
 					}
 				},
 			});
@@ -278,18 +290,21 @@ $(function() {
         	$.post(base_url + "/jobinfo/add",  $("#addModal .form").serialize(), function(data, status) {
     			if (data.code == "200") {
 					$('#addModal').modal('hide');
-					setTimeout(function () {
-						ComAlert.show(1, "新增任务成功", function(){
+					layer.open({
+						title: '系统提示',
+						content: '新增任务成功',
+						icon: '1',
+						end: function(layero, index){
 							jobTable.fnDraw();
 							//window.location.reload();
-						});
-					}, 315);
+						}
+					});
     			} else {
-    				if (data.msg) {
-    					ComAlert.show(2, data.msg);
-    				} else {
-    					ComAlert.show(2, "新增失败");
-    				}
+					layer.open({
+						title: '系统提示',
+						content: (data.msg || "新增失败"),
+						icon: '2'
+					});
     			}
     		});
 		}
@@ -394,18 +409,21 @@ $(function() {
     		$.post(base_url + "/jobinfo/reschedule", $("#updateModal .form").serialize(), function(data, status) {
     			if (data.code == "200") {
 					$('#updateModal').modal('hide');
-					setTimeout(function () {
-						ComAlert.show(1, "更新成功", function(){
+					layer.open({
+						title: '系统提示',
+						content: '更新成功',
+						icon: '1',
+						end: function(layero, index){
 							//window.location.reload();
 							jobTable.fnDraw();
-						});
-					}, 315);
+						}
+					});
     			} else {
-    				if (data.msg) {
-    					ComAlert.show(2, data.msg);
-					} else {
-						ComAlert.show(2, "更新失败");
-					}
+					layer.open({
+						title: '系统提示',
+						content: (data.msg || "更新失败"),
+						icon: '2'
+					});
     			}
     		});
 		}
