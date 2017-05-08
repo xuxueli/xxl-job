@@ -151,13 +151,6 @@ public class XxlJobServiceImpl implements IXxlJobService {
 			return new ReturnT<String>(500, "路由策略非法");
 		}
 
-		if (GlueTypeEnum.match(jobInfo.getGlueType()) == null) {
-			return new ReturnT<String>(500, "运行模式非法非法");
-		}
-		if (GlueTypeEnum.BEAN==GlueTypeEnum.match(jobInfo.getGlueType()) && StringUtils.isBlank(jobInfo.getExecutorHandler())) {
-			return new ReturnT<String>(500, "请输入“JobHandler”");
-		}
-
 		// childJobKey valid
 		if (StringUtils.isNotBlank(jobInfo.getChildJobKey())) {
 			String[] childJobKeys = jobInfo.getChildJobKey().split(",");
@@ -187,13 +180,14 @@ public class XxlJobServiceImpl implements IXxlJobService {
 		exists_jobInfo.setExecutorRouteStrategy(jobInfo.getExecutorRouteStrategy());
 		exists_jobInfo.setExecutorHandler(jobInfo.getExecutorHandler());
 		exists_jobInfo.setExecutorParam(jobInfo.getExecutorParam());
-		exists_jobInfo.setGlueType(jobInfo.getGlueType());
 		exists_jobInfo.setChildJobKey(jobInfo.getChildJobKey());
         xxlJobInfoDao.update(exists_jobInfo);
 
+		// fresh quartz
+		String qz_group = String.valueOf(exists_jobInfo.getJobGroup());
+		String qz_name = String.valueOf(exists_jobInfo.getId());
         try {
-            // fresh quartz
-            boolean ret = XxlJobDynamicScheduler.rescheduleJob(String.valueOf(exists_jobInfo.getJobGroup()), String.valueOf(exists_jobInfo.getId()), exists_jobInfo.getJobCron());
+            boolean ret = XxlJobDynamicScheduler.rescheduleJob(qz_group, qz_name, exists_jobInfo.getJobCron());
             return ret?ReturnT.SUCCESS:ReturnT.FAIL;
         } catch (SchedulerException e) {
             logger.error("", e);

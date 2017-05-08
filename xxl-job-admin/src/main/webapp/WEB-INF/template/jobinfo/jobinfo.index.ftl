@@ -264,7 +264,7 @@ logging.info("脚本文件：" + sys.argv[0])
                     <div class="form-group">
                         <label for="firstname" class="col-sm-2 control-label">运行模式<font color="red">*</font></label>
                         <div class="col-sm-4">
-                            <select class="form-control glueType" name="glueType" >
+                            <select class="form-control glueType" name="glueType" disabled >
 							<#list GlueTypeEnum as item>
                                 <option value="${item}" >${item.desc}</option>
 							</#list>
