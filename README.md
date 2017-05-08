@@ -96,7 +96,7 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 
 #### Download: 历史Release版本下载位置如下图所示,请自行前往进行选择和下载。
 
-![输入图片说明](https://static.oschina.net/uploads/img/201705/02183946_nNk2.png "在这里输入图片标题")
+![输入图片说明](https://static.oschina.net/uploads/img/201705/08194456_PQTn.png "在这里输入图片标题")
 
 ### 1.5 环境
 - JDK：1.7+
@@ -161,7 +161,7 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 如果已经正确进行上述配置，可将项目编译打war包并部署到tomcat中。
 访问链接：http://localhost:8080/xxl-job-admin/ ，登录后运行界面如下图所示
 
-![输入图片说明](https://static.oschina.net/uploads/img/201704/25145242_KIKQ.png "在这里输入图片标题")
+![输入图片说明](https://static.oschina.net/uploads/img/201705/08194505_6yC0.png "在这里输入图片标题")
 
 至此“调度中心”项目已经部署成功。
 
