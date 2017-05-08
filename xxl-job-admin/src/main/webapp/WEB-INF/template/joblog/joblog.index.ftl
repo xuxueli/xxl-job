@@ -150,7 +150,7 @@
                     <hr>
                     <div class="form-group">
                         <div class="col-sm-offset-3 col-sm-6">
-                            <button type="button" class="btn btn-primary ok" >保存</button>
+                            <button type="button" class="btn btn-primary ok" >确定</button>
                             <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
                         </div>
                     </div>

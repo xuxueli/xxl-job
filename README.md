@@ -411,7 +411,14 @@ try{
 
 而且，在JobHandler中开启子线程时，子线程也不可catch处理"InterruptedException"，应该主动向上抛出。
 
-#### 4.9 删除任务
+
+#### 4.9 删除执行日志
+在任务日志界面，选中执行器和任务之后，点击右侧的"删除"按钮将会出现"日志清理"弹框，弹框中支持选择不同类型的日志清理策略，选中后点击"确定"按钮即可进行日志清理操作；
+![输入图片说明](https://static.oschina.net/uploads/img/201705/08210711_Ypik.png "在这里输入图片标题")
+
+![输入图片说明](https://static.oschina.net/uploads/img/201705/08211152_EB65.png "在这里输入图片标题")
+
+#### 4.10 删除任务
 点击删除按钮，可以删除对应任务。
 
 ![输入图片说明](https://static.oschina.net/uploads/img/201607/24140641_Z9Qr.png "在这里输入图片标题")
