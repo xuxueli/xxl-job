@@ -19,6 +19,8 @@
 		<result column="executor_route_strategy" property="executorRouteStrategy" />
 		<result column="executor_handler" property="executorHandler" />
 	    <result column="executor_param" property="executorParam" />
+		<result column="executor_block_strategy" property="executorBlockStrategy" />
+		<result column="executor_fail_strategy" property="executorFailStrategy" />
 	    
 	    <result column="glue_type" property="glueType" />
 	    <result column="glue_source" property="glueSource" />
@@ -40,6 +42,8 @@
 		t.executor_route_strategy,
 		t.executor_handler,
 		t.executor_param,
+		t.executor_block_strategy,
+		t.executor_fail_strategy,
 		t.glue_type,
 		t.glue_source,
 		t.glue_remark,
@@ -87,7 +91,9 @@
             executor_route_strategy,
 			executor_handler,
 			executor_param,
-		glue_type,
+			executor_block_strategy,
+			executor_fail_strategy,
+			glue_type,
 			glue_source,
 			glue_remark,
 			glue_updatetime,
@@ -103,6 +109,8 @@
 			#{executorRouteStrategy},
 			#{executorHandler},
 			#{executorParam},
+			#{executorBlockStrategy},
+			#{executorFailStrategy},
 			#{glueType},
 			#{glueSource},
 			#{glueRemark},
@@ -132,6 +140,8 @@
 			executor_route_strategy = #{executorRouteStrategy},
 			executor_handler = #{executorHandler},
 			executor_param = #{executorParam},
+			executor_block_strategy = #{executorBlockStrategy},
+			executor_fail_strategy = #{executorFailStrategy},
 			glue_type = #{glueType},
 			glue_source = #{glueSource},
 			glue_remark = #{glueRemark},

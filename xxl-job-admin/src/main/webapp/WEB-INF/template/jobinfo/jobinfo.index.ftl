@@ -153,6 +153,24 @@
                         <label for="lastname" class="col-sm-2 control-label">子任务Key<font color="black">*</font></label>
                         <div class="col-sm-4"><input type="text" class="form-control" name="childJobKey" placeholder="请输入子任务的任务Key,如存在多个逗号分隔" maxlength="100" ></div>
                     </div>
+                    <div class="form-group">
+                        <label for="firstname" class="col-sm-2 control-label">阻塞处理策略<font color="red">*</font></label>
+                        <div class="col-sm-4">
+                            <select class="form-control" name="executorBlockStrategy" >
+								<#list ExecutorBlockStrategyEnum as item>
+									<option value="${item}" >${item.title}</option>
+								</#list>
+                            </select>
+						</div>
+                        <label for="lastname" class="col-sm-2 control-label">失败处理策略<font color="red">*</font></label>
+                        <div class="col-sm-4">
+                            <select class="form-control" name="executorFailStrategy" >
+								<#list ExecutorFailStrategyEnum as item>
+									<option value="${item}" >${item.title}</option>
+								</#list>
+                            </select>
+						</div>
+                    </div>
 					<div class="form-group">
                         <label for="lastname" class="col-sm-2 control-label">负责人<font color="red">*</font></label>
                         <div class="col-sm-4"><input type="text" class="form-control" name="author" placeholder="请输入“负责人”" maxlength="50" ></div>
@@ -278,6 +296,24 @@ logging.info("脚本文件：" + sys.argv[0])
                         <div class="col-sm-4"><input type="text" class="form-control" name="executorParam" placeholder="请输入“执行参数”" maxlength="100" ></div>
                         <label for="lastname" class="col-sm-2 control-label">子任务Key<font color="black">*</font></label>
                         <div class="col-sm-4"><input type="text" class="form-control" name="childJobKey" placeholder="请输入子任务的任务Key,如存在多个逗号分隔" maxlength="100" ></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="firstname" class="col-sm-2 control-label">阻塞处理策略<font color="red">*</font></label>
+                        <div class="col-sm-4">
+                            <select class="form-control" name="executorBlockStrategy" >
+							<#list ExecutorBlockStrategyEnum as item>
+                                <option value="${item}" >${item.title}</option>
+							</#list>
+                            </select>
+                        </div>
+                        <label for="lastname" class="col-sm-2 control-label">失败处理策略<font color="red">*</font></label>
+                        <div class="col-sm-4">
+                            <select class="form-control" name="executorFailStrategy" >
+							<#list ExecutorFailStrategyEnum as item>
+                                <option value="${item}" >${item.title}</option>
+							</#list>
+                            </select>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="lastname" class="col-sm-2 control-label">负责人<font color="red">*</font></label>

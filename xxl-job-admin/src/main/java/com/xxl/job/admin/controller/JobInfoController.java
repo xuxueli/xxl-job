@@ -1,11 +1,13 @@
 package com.xxl.job.admin.controller;
 
+import com.xxl.job.admin.core.enums.ExecutorFailStrategyEnum;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.route.ExecutorRouteStrategyEnum;
 import com.xxl.job.admin.dao.IXxlJobGroupDao;
 import com.xxl.job.admin.service.IXxlJobService;
 import com.xxl.job.core.biz.model.ReturnT;
+import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
 import com.xxl.job.core.glue.GlueTypeEnum;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,11 +35,11 @@ public class JobInfoController {
 	@RequestMapping
 	public String index(Model model) {
 
-		// 路由策略-列表
-		model.addAttribute("ExecutorRouteStrategyEnum", ExecutorRouteStrategyEnum.values());
-
-		// Glue类型-字典
-		model.addAttribute("GlueTypeEnum", GlueTypeEnum.values());
+		// 枚举-字典
+		model.addAttribute("ExecutorRouteStrategyEnum", ExecutorRouteStrategyEnum.values());	// 路由策略-列表
+		model.addAttribute("GlueTypeEnum", GlueTypeEnum.values());								// Glue类型-字典
+		model.addAttribute("ExecutorBlockStrategyEnum", ExecutorBlockStrategyEnum.values());	// 阻塞处理策略-字典
+		model.addAttribute("ExecutorFailStrategyEnum", ExecutorFailStrategyEnum.values());		// 失败处理策略-字典
 
 		// 任务组
 		List<XxlJobGroup> jobGroupList =  xxlJobGroupDao.findAll();
