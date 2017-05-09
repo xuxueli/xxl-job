@@ -7,12 +7,6 @@
 	<!-- DataTables -->
   	<link rel="stylesheet" href="${request.contextPath}/static/adminlte/plugins/datatables/dataTables.bootstrap.css">
 
-	<#-- select2
-    <link rel="stylesheet" href="${request.contextPath}/static/adminlte/plugins/select2/select2.min.css">
-    <script src="${request.contextPath}/static/adminlte/plugins/select2/select2.min.js"></script>
-    //$(".select2").select2();
-    -->
-
 </head>
 <body class="hold-transition skin-blue sidebar-mini <#if cookieMap?exists && "off" == cookieMap["adminlte_settings"].value >sidebar-collapse</#if>">
 <div class="wrapper">
