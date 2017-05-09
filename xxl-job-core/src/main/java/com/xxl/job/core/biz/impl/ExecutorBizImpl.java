@@ -4,6 +4,7 @@ import com.xxl.job.core.biz.ExecutorBiz;
 import com.xxl.job.core.biz.model.LogResult;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.biz.model.TriggerParam;
+import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
 import com.xxl.job.core.executor.XxlJobExecutor;
 import com.xxl.job.core.glue.GlueFactory;
 import com.xxl.job.core.glue.GlueTypeEnum;
@@ -128,8 +129,9 @@ public class ExecutorBizImpl implements ExecutorBiz {
         }
 
         // push data to queue
-        jobThread.pushTriggerQueue(triggerParam);
-        return ReturnT.SUCCESS;
+        ExecutorBlockStrategyEnum blockStrategy = ExecutorBlockStrategyEnum.match(triggerParam.getExecutorBlockStrategy(), null);
+        ReturnT<String> pushResult = jobThread.pushTriggerQueue(triggerParam, blockStrategy);
+        return pushResult;
     }
 
 }

@@ -13,6 +13,7 @@ public class TriggerParam implements Serializable{
 
     private String executorHandler;
     private String executorParams;
+    private String executorBlockStrategy;
 
     private String glueType;
     private String glueSource;
@@ -45,6 +46,14 @@ public class TriggerParam implements Serializable{
 
     public void setExecutorParams(String executorParams) {
         this.executorParams = executorParams;
+    }
+
+    public String getExecutorBlockStrategy() {
+        return executorBlockStrategy;
+    }
+
+    public void setExecutorBlockStrategy(String executorBlockStrategy) {
+        this.executorBlockStrategy = executorBlockStrategy;
     }
 
     public String getGlueType() {
