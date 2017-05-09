@@ -11,6 +11,7 @@ import com.xxl.job.admin.core.thread.JobRegistryHelper;
 import com.xxl.job.core.biz.ExecutorBiz;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.biz.model.TriggerParam;
+import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
 import com.xxl.job.core.registry.RegistHelper;
 import com.xxl.job.core.rpc.netcom.NetComClientProxy;
 import org.apache.commons.collections.CollectionUtils;
@@ -106,6 +107,8 @@ public class RemoteHttpJobBean extends QuartzJobBean {
 				addressList = new ArrayList<String>(Arrays.asList(group.getAddressList().split(",")));
 			}
 		}
+		triggerSb.append("<br>阻塞处理策略：").append(ExecutorBlockStrategyEnum.match(jobInfo.getExecutorBlockStrategy(), ExecutorBlockStrategyEnum.SERIAL_EXECUTION).getTitle());
+        triggerSb.append("<br>失败处理策略：").append(ExecutorFailStrategyEnum.match(jobInfo.getExecutorBlockStrategy(), ExecutorFailStrategyEnum.FAIL_ALARM).getTitle());
 		triggerSb.append("<br>地址列表：").append(addressList!=null?addressList.toString():"");
 		if (CollectionUtils.isEmpty(addressList)) {
 			triggerSb.append("<br>----------------------<br>").append("调度失败：").append("执行器地址为空");
