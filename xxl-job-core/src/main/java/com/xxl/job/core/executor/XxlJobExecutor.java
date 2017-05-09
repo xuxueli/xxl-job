@@ -121,19 +121,29 @@ public class XxlJobExecutor implements ApplicationContextAware, ApplicationListe
 
     // ---------------------------------- job thread repository
     private static ConcurrentHashMap<Integer, JobThread> JobThreadRepository = new ConcurrentHashMap<Integer, JobThread>();
-    public static JobThread registJobThread(int jobId, IJobHandler handler){
-        JobThread jobThread = new JobThread(handler);
-        jobThread.start();
+    public static JobThread registJobThread(int jobId, IJobHandler handler, String removeOldReason){
+        JobThread newJobThread = new JobThread(handler);
+        newJobThread.start();
         logger.info(">>>>>>>>>>> xxl-job regist JobThread success, jobId:{}, handler:{}", new Object[]{jobId, handler});
-        JobThreadRepository.put(jobId, jobThread);	// putIfAbsent | oh my god, map's put method return the old value!!!
-        return jobThread;
+
+        JobThread oldJobThread = JobThreadRepository.put(jobId, newJobThread);	// putIfAbsent | oh my god, map's put method return the old value!!!
+        if (oldJobThread != null) {
+            oldJobThread.toStop(removeOldReason);
+            oldJobThread.interrupt();
+        }
+
+        return newJobThread;
+    }
+    public static void removeJobThread(int jobId, String removeOldReason){
+        JobThread oldJobThread = JobThreadRepository.remove(jobId);
+        if (oldJobThread != null) {
+            oldJobThread.toStop(removeOldReason);
+            oldJobThread.interrupt();
+        }
     }
     public static JobThread loadJobThread(int jobId){
         JobThread jobThread = JobThreadRepository.get(jobId);
         return jobThread;
-    }
-    public static void removeJobThread(int jobId){
-        JobThreadRepository.remove(jobId);
     }
 
 }

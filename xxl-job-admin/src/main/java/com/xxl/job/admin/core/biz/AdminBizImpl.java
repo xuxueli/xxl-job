@@ -69,7 +69,7 @@ public class AdminBizImpl implements AdminBiz {
             handleMsg.append(log.getHandleMsg()).append("<br>");
         }
         if (handleCallbackParam.getExecuteResult().getMsg() != null) {
-            handleMsg.append("执行备注：").append(handleCallbackParam.getExecuteResult().getMsg());
+            handleMsg.append(handleCallbackParam.getExecuteResult().getMsg());
         }
         if (childTriggerMsg !=null) {
             handleMsg.append("<br>子任务触发备注：").append(childTriggerMsg);

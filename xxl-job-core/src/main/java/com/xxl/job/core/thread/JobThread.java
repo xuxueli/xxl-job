@@ -3,7 +3,6 @@ package com.xxl.job.core.thread;
 import com.xxl.job.core.biz.model.HandleCallbackParam;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.biz.model.TriggerParam;
-import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
 import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.log.XxlJobFileAppender;
 import com.xxl.job.core.log.XxlJobLogger;
@@ -32,7 +31,7 @@ public class JobThread extends Thread{
 	private boolean toStop = false;
 	private String stopReason;
 
-    private boolean running = false;
+    private boolean running = false;    // if running job
 
 
 	public JobThread(IJobHandler handler) {
@@ -44,28 +43,17 @@ public class JobThread extends Thread{
 		return handler;
 	}
 
-	public ReturnT<String> pushTriggerQueue(TriggerParam triggerParam, ExecutorBlockStrategyEnum blockStrategy) {
+    /**
+     * new trigger to queue
+     *
+     * @param triggerParam
+     * @return
+     */
+	public ReturnT<String> pushTriggerQueue(TriggerParam triggerParam) {
 		// avoid repeat
 		if (triggerLogIdSet.contains(triggerParam.getLogId())) {
 			logger.debug("repeate trigger job, logId:{}", triggerParam.getLogId());
 			return new ReturnT<String>(ReturnT.FAIL_CODE, "repeate trigger job, logId:" + triggerParam.getLogId());
-		}
-
-		// block strategy
-		if (ExecutorBlockStrategyEnum.DISCARD_LATER == blockStrategy) {
-            // discard when running
-            if (running) {
-                return new ReturnT<String>(ReturnT.FAIL_CODE, "任务阻塞："+ExecutorBlockStrategyEnum.DISCARD_LATER.getTitle());
-            }
-		} else if (ExecutorBlockStrategyEnum.COVER_EARLY == blockStrategy) {
-            // kill running old and clear queue
-            if (running) {
-                this.interrupt();
-            }
-            triggerQueue.clear();
-            triggerLogIdSet.clear();
-		} else {
-            // just add to queue
 		}
 
 		triggerLogIdSet.add(triggerParam.getLogId());
@@ -73,6 +61,11 @@ public class JobThread extends Thread{
         return ReturnT.SUCCESS;
 	}
 
+    /**
+     * kill job thread
+     *
+     * @param stopReason
+     */
 	public void toStop(String stopReason) {
 		/**
 		 * Thread.interrupt只支持终止线程的阻塞状态(wait、join、sleep)，
@@ -83,8 +76,15 @@ public class JobThread extends Thread{
 		this.stopReason = stopReason;
 	}
 
+    /**
+     * is running job
+     * @return
+     */
+    public boolean isRunningOrHasQueue() {
+        return running || triggerQueue.size()>0;
+    }
 
-	@Override
+    @Override
 	public void run() {
 		while(!toStop){
 			running = false;
