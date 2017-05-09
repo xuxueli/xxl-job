@@ -1,5 +1,6 @@
 package com.xxl.job.admin.core.jobbean;
 
+import com.xxl.job.admin.core.enums.ExecutorFailStrategyEnum;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
@@ -70,6 +71,15 @@ public class RemoteHttpJobBean extends QuartzJobBean {
 		// do trigger
 		ReturnT<String> triggerResult = doTrigger(triggerParam, jobInfo, jobLog);
 
+		// fail retry
+		if (triggerResult.getCode()==ReturnT.FAIL_CODE &&
+				ExecutorFailStrategyEnum.match(jobInfo.getExecutorFailStrategy(), null) == ExecutorFailStrategyEnum.FAIL_RETRY) {
+			ReturnT<String> retryTriggerResult = doTrigger(triggerParam, jobInfo, jobLog);
+
+			triggerResult.setCode(retryTriggerResult.getCode());
+			triggerResult.setMsg(triggerResult.getMsg() + "<br><br><span style=\"color:#F39C12;\" > >>>>>>>>>>>失败重试<<<<<<<<<<< </span><br><br>" +retryTriggerResult.getMsg());
+		}
+
 		// log part-2
 		jobLog.setTriggerCode(triggerResult.getCode());
 		jobLog.setTriggerMsg(triggerResult.getMsg());
@@ -97,7 +107,7 @@ public class RemoteHttpJobBean extends QuartzJobBean {
 		}
 		triggerSb.append("<br>地址列表：").append(addressList!=null?addressList.toString():"");
 		if (CollectionUtils.isEmpty(addressList)) {
-			triggerSb.append("<hr>调度失败：").append("执行器地址为空");
+			triggerSb.append("<br>----------------------<br>").append("调度失败：").append("执行器地址为空");
 			return new ReturnT<String>(ReturnT.FAIL_CODE, triggerSb.toString());
 		}
 
@@ -107,7 +117,7 @@ public class RemoteHttpJobBean extends QuartzJobBean {
 			jobLog.setExecutorAddress(address);
 
 			ReturnT<String> runResult = runExecutor(triggerParam, address);
-			triggerSb.append("<hr>").append(runResult.getMsg());
+			triggerSb.append("<br>----------------------<br>").append(runResult.getMsg());
 
 			return new ReturnT<String>(runResult.getCode(), triggerSb.toString());
 		} else {
@@ -115,7 +125,7 @@ public class RemoteHttpJobBean extends QuartzJobBean {
 			ExecutorRouteStrategyEnum executorRouteStrategyEnum = ExecutorRouteStrategyEnum.match(jobInfo.getExecutorRouteStrategy(), null);
 			triggerSb.append("<br>路由策略：").append(executorRouteStrategyEnum!=null?(executorRouteStrategyEnum.name() + "-" + executorRouteStrategyEnum.getTitle()):null);
 			if (executorRouteStrategyEnum == null) {
-				triggerSb.append("<hr>调度失败：").append("执行器路由策略为空");
+				triggerSb.append("<br>----------------------<br>").append("调度失败：").append("执行器路由策略为空");
 				return new ReturnT<String>(ReturnT.FAIL_CODE, triggerSb.toString());
 			}
 
@@ -126,20 +136,20 @@ public class RemoteHttpJobBean extends QuartzJobBean {
 
 				// run
 				ReturnT<String> runResult = runExecutor(triggerParam, address);
-				triggerSb.append("<hr>").append(runResult.getMsg());
+				triggerSb.append("<br>----------------------<br>").append(runResult.getMsg());
 
 				return new ReturnT<String>(runResult.getCode(), triggerSb.toString());
 			} else {
 				for (String address : addressList) {
 					// beat
 					ReturnT<String> beatResult = beatExecutor(address);
-					triggerSb.append("<hr>").append(beatResult.getMsg());
+					triggerSb.append("<br>----------------------<br>").append(beatResult.getMsg());
 
 					if (beatResult.getCode() == ReturnT.SUCCESS_CODE) {
 						jobLog.setExecutorAddress(address);
 
 						ReturnT<String> runResult = runExecutor(triggerParam, address);
-						triggerSb.append("<hr>").append(runResult.getMsg());
+						triggerSb.append("<br>----------------------<br>").append(runResult.getMsg());
 
 						return new ReturnT<String>(runResult.getCode(), triggerSb.toString());
 					}
