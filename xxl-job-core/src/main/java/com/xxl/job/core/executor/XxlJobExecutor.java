@@ -4,7 +4,6 @@ import com.xxl.job.core.biz.ExecutorBiz;
 import com.xxl.job.core.biz.impl.ExecutorBizImpl;
 import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.handler.annotation.JobHander;
-import com.xxl.job.core.registry.RegistHelper;
 import com.xxl.job.core.rpc.netcom.NetComServerFactory;
 import com.xxl.job.core.thread.ExecutorRegistryThread;
 import com.xxl.job.core.thread.JobThread;
@@ -30,7 +29,7 @@ public class XxlJobExecutor implements ApplicationContextAware, ApplicationListe
     private String ip;
     private int port = 9999;
     private String appName;
-    private RegistHelper registHelper;
+    public static String adminAddresses;
     public static String logPath;
 
     public void setIp(String ip) {
@@ -42,8 +41,8 @@ public class XxlJobExecutor implements ApplicationContextAware, ApplicationListe
     public void setAppName(String appName) {
         this.appName = appName;
     }
-    public void setRegistHelper(RegistHelper registHelper) {
-        this.registHelper = registHelper;
+    public void setAdminAddresses(String adminAddresses) {
+        this.adminAddresses = adminAddresses;
     }
     public void setLogPath(String logPath) {
         this.logPath = logPath;
@@ -54,7 +53,7 @@ public class XxlJobExecutor implements ApplicationContextAware, ApplicationListe
     public void start() throws Exception {
         // executor start
         NetComServerFactory.putService(ExecutorBiz.class, new ExecutorBizImpl());
-        serverFactory.start(port, ip, appName, registHelper);
+        serverFactory.start(port, ip, appName);
 
         // trigger callback thread start
         TriggerCallbackThread.getInstance().start();

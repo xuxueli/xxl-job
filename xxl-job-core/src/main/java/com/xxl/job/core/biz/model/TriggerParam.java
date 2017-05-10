@@ -1,7 +1,6 @@
 package com.xxl.job.core.biz.model;
 
 import java.io.Serializable;
-import java.util.Set;
 
 /**
  * Created by xuxueli on 16/7/22.
@@ -21,8 +20,6 @@ public class TriggerParam implements Serializable{
 
     private int logId;
     private long logDateTim;
-
-    private Set<String> logAddress;
 
     public int getJobId() {
         return jobId;
@@ -96,11 +93,18 @@ public class TriggerParam implements Serializable{
         this.logDateTim = logDateTim;
     }
 
-    public Set<String> getLogAddress() {
-        return logAddress;
-    }
-
-    public void setLogAddress(Set<String> logAddress) {
-        this.logAddress = logAddress;
+    @Override
+    public String toString() {
+        return "TriggerParam{" +
+                "jobId=" + jobId +
+                ", executorHandler='" + executorHandler + '\'' +
+                ", executorParams='" + executorParams + '\'' +
+                ", executorBlockStrategy='" + executorBlockStrategy + '\'' +
+                ", glueType='" + glueType + '\'' +
+                ", glueSource='" + glueSource + '\'' +
+                ", glueUpdatetime=" + glueUpdatetime +
+                ", logId=" + logId +
+                ", logDateTim=" + logDateTim +
+                '}';
     }
 }

@@ -1,30 +1,53 @@
-package com.xxl.job.admin.core.biz;
+package com.xxl.job.admin.controller;
 
+import com.xxl.job.admin.controller.annotation.PermessionLimit;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.admin.core.schedule.XxlJobDynamicScheduler;
-import com.xxl.job.core.biz.AdminBiz;
+import com.xxl.job.admin.dao.IXxlJobInfoDao;
+import com.xxl.job.admin.dao.IXxlJobLogDao;
+import com.xxl.job.admin.dao.IXxlJobRegistryDao;
 import com.xxl.job.core.biz.model.HandleCallbackParam;
+import com.xxl.job.core.biz.model.RegistryParam;
 import com.xxl.job.core.biz.model.ReturnT;
+import com.xxl.job.core.util.AdminApiUtil;
 import org.apache.commons.lang.StringUtils;
 import org.quartz.SchedulerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.annotation.Resource;
 import java.text.MessageFormat;
 import java.util.Date;
 
 /**
- * Created by xuxueli on 17/3/1.
+ * Created by xuxueli on 17/5/10.
  */
-public class AdminBizImpl implements AdminBiz {
-    private static Logger logger = LoggerFactory.getLogger(AdminBizImpl.class);
+@Controller
+public class JobApiController {
+    private static Logger logger = LoggerFactory.getLogger(JobApiController.class);
 
-    @Override
-    public ReturnT<String> callback(HandleCallbackParam handleCallbackParam) {
+    @Resource
+    public IXxlJobLogDao xxlJobLogDao;
+    @Resource
+    private IXxlJobInfoDao xxlJobInfoDao;
+    @Resource
+    private IXxlJobRegistryDao xxlJobRegistryDao;
+
+
+    @RequestMapping(value= AdminApiUtil.CALLBACK, method = RequestMethod.POST, consumes = "application/json")
+    @ResponseBody
+    @PermessionLimit(limit=false)
+    public ReturnT<String> callback(@RequestBody HandleCallbackParam handleCallbackParam){
+
 
         // valid log item
-        XxlJobLog log = XxlJobDynamicScheduler.xxlJobLogDao.load(handleCallbackParam.getLogId());
+        XxlJobLog log = xxlJobLogDao.load(handleCallbackParam.getLogId());
         if (log == null) {
             return new ReturnT<String>(ReturnT.FAIL_CODE, "log item not found.");
         }
@@ -32,14 +55,14 @@ public class AdminBizImpl implements AdminBiz {
         // trigger success, to trigger child job, and avoid repeat trigger child job
         String childTriggerMsg = null;
         if (ReturnT.SUCCESS_CODE==handleCallbackParam.getExecuteResult().getCode() && ReturnT.SUCCESS_CODE!=log.getHandleCode()) {
-            XxlJobInfo xxlJobInfo = XxlJobDynamicScheduler.xxlJobInfoDao.loadById(log.getJobId());
+            XxlJobInfo xxlJobInfo = xxlJobInfoDao.loadById(log.getJobId());
             if (xxlJobInfo!=null && StringUtils.isNotBlank(xxlJobInfo.getChildJobKey())) {
                 childTriggerMsg = "<hr>";
                 String[] childJobKeys = xxlJobInfo.getChildJobKey().split(",");
                 for (int i = 0; i < childJobKeys.length; i++) {
                     String[] jobKeyArr = childJobKeys[i].split("_");
                     if (jobKeyArr!=null && jobKeyArr.length==2) {
-                        XxlJobInfo childJobInfo = XxlJobDynamicScheduler.xxlJobInfoDao.loadById(Integer.valueOf(jobKeyArr[1]));
+                        XxlJobInfo childJobInfo = xxlJobInfoDao.loadById(Integer.valueOf(jobKeyArr[1]));
                         if (childJobInfo!=null) {
                             try {
                                 boolean ret = XxlJobDynamicScheduler.triggerJob(String.valueOf(childJobInfo.getId()), String.valueOf(childJobInfo.getJobGroup()));
@@ -79,9 +102,21 @@ public class AdminBizImpl implements AdminBiz {
         log.setHandleTime(new Date());
         log.setHandleCode(handleCallbackParam.getExecuteResult().getCode());
         log.setHandleMsg(handleMsg.toString());
-        XxlJobDynamicScheduler.xxlJobLogDao.updateHandleInfo(log);
+        xxlJobLogDao.updateHandleInfo(log);
 
-        return new ReturnT<String>(ReturnT.SUCCESS_CODE, null);
+        return ReturnT.SUCCESS;
+    }
+
+
+    @RequestMapping(value=AdminApiUtil.REGISTRY, method = RequestMethod.POST, consumes = "application/json")
+    @ResponseBody
+    @PermessionLimit(limit=false)
+    public ReturnT<String> registry(@RequestBody RegistryParam registryParam){
+        int ret = xxlJobRegistryDao.registryUpdate(registryParam.getRegistGroup(), registryParam.getRegistryKey(), registryParam.getRegistryValue());
+        if (ret < 1) {
+            xxlJobRegistryDao.registrySave(registryParam.getRegistGroup(), registryParam.getRegistryKey(), registryParam.getRegistryValue());
+        }
+        return ReturnT.SUCCESS;
     }
 
 }

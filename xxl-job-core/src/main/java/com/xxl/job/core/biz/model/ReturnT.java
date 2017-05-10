@@ -18,7 +18,8 @@ public class ReturnT<T> implements Serializable {
 	private int code;
 	private String msg;
 	private T content;
-	
+
+	public ReturnT(){}
 	public ReturnT(int code, String msg) {
 		this.code = code;
 		this.msg = msg;

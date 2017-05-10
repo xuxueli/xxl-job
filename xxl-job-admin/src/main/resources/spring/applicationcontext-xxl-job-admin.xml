@@ -84,10 +84,6 @@
 	<bean id="xxlJobDynamicScheduler" class="com.xxl.job.admin.core.schedule.XxlJobDynamicScheduler" init-method="init" destroy-method="destroy" >
 		<!-- (轻易不要变更“调度器名称”, 任务创建时会绑定该“调度器名称”) -->
 		<property name="scheduler" ref="quartzScheduler"/>
-		<!-- 调度中心回调IP[选填]，为空则自动获取 -->
-		<property name="callBackIp" value="${xxl.job.callBackIp}"/>
-		<!-- 调度中心回调端口号 -->
-		<property name="callBackPort" value="${xxl.job.callBackPort}"/>
 	</bean>
 	
 </beans>

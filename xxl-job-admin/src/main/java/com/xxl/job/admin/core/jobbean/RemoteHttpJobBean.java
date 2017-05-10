@@ -7,12 +7,12 @@ import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.admin.core.route.ExecutorRouteStrategyEnum;
 import com.xxl.job.admin.core.schedule.XxlJobDynamicScheduler;
 import com.xxl.job.admin.core.thread.JobMonitorHelper;
-import com.xxl.job.admin.core.thread.JobRegistryHelper;
+import com.xxl.job.admin.core.thread.JobRegistryMonitorHelper;
 import com.xxl.job.core.biz.ExecutorBiz;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.biz.model.TriggerParam;
 import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
-import com.xxl.job.core.registry.RegistHelper;
+import com.xxl.job.core.enums.RegistryConfig;
 import com.xxl.job.core.rpc.netcom.NetComClientProxy;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -68,7 +68,6 @@ public class RemoteHttpJobBean extends QuartzJobBean {
 		triggerParam.setGlueUpdatetime(jobInfo.getGlueUpdatetime().getTime());
 		triggerParam.setLogId(jobLog.getId());
 		triggerParam.setLogDateTim(jobLog.getTriggerTime().getTime());
-		triggerParam.setLogAddress(findCallbackAddressList());		// callback address list
 
 		// do trigger
 		ReturnT<String> triggerResult = doTrigger(triggerParam, jobInfo, jobLog);
@@ -100,7 +99,7 @@ public class RemoteHttpJobBean extends QuartzJobBean {
 		XxlJobGroup group = XxlJobDynamicScheduler.xxlJobGroupDao.load(jobInfo.getJobGroup());
 		if (group.getAddressType() == 0) {
 			triggerSb.append("注册方式：自动注册");
-			addressList = (ArrayList<String>) JobRegistryHelper.discover(RegistHelper.RegistType.EXECUTOR.name(), group.getAppName());
+			addressList = (ArrayList<String>) JobRegistryMonitorHelper.discover(RegistryConfig.RegistType.EXECUTOR.name(), group.getAppName());
 		} else {
 			triggerSb.append("注册方式：手动录入");
 			if (StringUtils.isNotBlank(group.getAddressList())) {
@@ -210,21 +209,6 @@ public class RemoteHttpJobBean extends QuartzJobBean {
 		runResult.setMsg(sb.toString());
 
 		return runResult;
-	}
-
-	/**
-	 * find callback address list
-	 * @return
-	 */
-	public Set<String> findCallbackAddressList(){
-		Set<String> adminAddressSet = new HashSet<String>();
-		adminAddressSet.add(XxlJobDynamicScheduler.getCallbackAddress());
-
-		List<String> adminAddressList = JobRegistryHelper.discover(RegistHelper.RegistType.ADMIN.name(), RegistHelper.RegistType.ADMIN.name());
-		if (adminAddressList!=null) {
-			adminAddressSet.addAll(adminAddressList);
-		}
-		return adminAddressSet;
 	}
 
 }

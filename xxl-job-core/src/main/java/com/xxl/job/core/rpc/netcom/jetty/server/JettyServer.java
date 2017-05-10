@@ -1,6 +1,5 @@
 package com.xxl.job.core.rpc.netcom.jetty.server;
 
-import com.xxl.job.core.registry.RegistHelper;
 import com.xxl.job.core.thread.ExecutorRegistryThread;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Handler;
@@ -20,7 +19,7 @@ public class JettyServer {
 
 	private Server server;
 	private Thread thread;
-	public void start(final int port, final String ip, final String appName, final RegistHelper registHelper) throws Exception {
+	public void start(final int port, final String ip, final String appName) throws Exception {
 		thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -42,7 +41,7 @@ public class JettyServer {
 					// Start the server
 					server.start();
 					logger.info(">>>>>>>>>>>> xxl-job jetty server start success at port:{}.", port);
-					ExecutorRegistryThread.getInstance().start(port, ip, appName, registHelper);
+					ExecutorRegistryThread.getInstance().start(port, ip, appName);
 					server.join();	// block until thread stopped
 					logger.info(">>>>>>>>>>> xxl-rpc server join success, netcon={}, port={}", JettyServer.class.getName(), port);
 				} catch (Exception e) {
