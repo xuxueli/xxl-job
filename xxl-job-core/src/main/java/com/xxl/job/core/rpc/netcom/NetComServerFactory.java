@@ -49,7 +49,7 @@ public class NetComServerFactory  {
 
 		RpcResponse response = new RpcResponse();
 
-		if (System.currentTimeMillis() - request.getCreateMillisTime() > 60000) {
+		if (System.currentTimeMillis() - request.getCreateMillisTime() > 180000) {
 			response.setResult(new ReturnT<String>(ReturnT.FAIL_CODE, "Timestamp Timeout."));
 			return response;
 		}
