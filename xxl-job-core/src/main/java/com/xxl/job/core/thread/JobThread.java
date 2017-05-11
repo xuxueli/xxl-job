@@ -106,7 +106,7 @@ public class JobThread extends Thread{
 						String logFileName = XxlJobFileAppender.makeLogFileName(new Date(triggerParam.getLogDateTim()), triggerParam.getLogId());
 
 						XxlJobFileAppender.contextHolder.set(logFileName);
-						XxlJobLogger.log("<br>----------- xxl-job job execute start -----------<br>----------- Params:" + handlerParams);
+						XxlJobLogger.log("<br>----------- xxl-job job execute start -----------<br>----------- Params:" + Arrays.toString(handlerParams));
 
 						executeResult = handler.execute(handlerParams);
 						if (executeResult == null) {
