@@ -64,6 +64,7 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 	- 20、博莹科技（上海）有限公司
 	- 21、成都依能股份有限责任公司
 	- 22、湖南高阳通联信息技术有限公司
+	- 23、深圳市邦德文化发展有限公司
 	- ……
 
 欢迎大家的关注和使用，XXL-JOB也将拥抱变化，持续发展。
@@ -98,7 +99,7 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 
 #### Download: 历史Release版本下载位置如下图所示,请自行前往进行选择和下载。
 
-![输入图片说明](https://static.oschina.net/uploads/img/201705/08194456_PQTn.png "在这里输入图片标题")
+![输入图片说明](https://static.oschina.net/uploads/img/201705/11214119_80Ma.png "在这里输入图片标题")
 
 ### 1.5 环境
 - JDK：1.7+
@@ -112,20 +113,21 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 ## 二、快速入门
 
 ### 2.1 初始化“调度数据库”
-请下载项目源码并解压，获取 "调度数据库初始化SQL脚本"(脚本文件为: 源码解压根目录\xxl-job\db\tables_xxl_job.sql) 并执行即可。正常情况下,应该生成如下图所示16张表;
+请下载项目源码并解压，获取 "调度数据库初始化SQL脚本"(脚本文件为: 源码解压根目录\xxl-job\db\tables_xxl_job.sql) 并执行即可。正常情况下,应该生成16张表;
 
-![输入图片说明](https://static.oschina.net/uploads/img/201703/10181507_8psZ.png "在这里输入图片标题")
+调度中心支持集群部署，集群情况下各节点务必连接同一个mysql实例;
 
-调度中心集群情况下,集群节点务必连接同一个mysql实例;如果mysql做主从,调度中心集群节点务必强制走主库;
+如果mysql做主从,调度中心集群节点务必强制走主库;
 
 ### 2.2 编译源码
 解压源码,按照maven格式将源码导入IDE, 使用maven进行编译即可，源码结构如下图所示：
 
-![输入图片说明](https://static.oschina.net/uploads/img/201607/23222522_JGCc.png "在这里输入图片标题")
+![输入图片说明](https://static.oschina.net/uploads/img/201705/11214348_aGgr.png "在这里输入图片标题")
 
-    - xxl-job-admin：调度中心
-    - xxl-job-core：公共依赖
-    - xxl-job-executor-example：执行器（可直接使用该执行器，也可以将现有项目改造成执行器使用）
+    xxl-job-admin：调度中心
+    xxl-job-core：公共依赖
+    xxl-job-executor-example：执行器Example（可直接使用执行器Example，也可以将现有项目改造成执行器使用）
+    xxl-job-executor-springboot-example：执行器Example，springboot版本
 
 ### 2.3 配置部署“调度中心”
 
@@ -135,17 +137,14 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 #### 调度中心配置：
 配置文件以及配置属性如下图所示。
 
-![输入图片说明](https://static.oschina.net/uploads/img/201703/10172754_5DUl.png "在这里输入图片标题")
-    
+![输入图片说明](https://static.oschina.net/uploads/img/201705/11214752_Ifvp.png "在这里输入图片标题")
+
+
     ### 调度中心JDBC链接：链接地址请保持和 2.1章节 所创建的调度数据库的地址一致
     xxl.job.db.driverClass=com.mysql.jdbc.Driver
     xxl.job.db.url=jdbc:mysql://localhost:3306/xxl-job?useUnicode=true&amp;characterEncoding=UTF-8
     xxl.job.db.user=root
     xxl.job.db.password=root_pwd
-    
-    ### “调度中心”任务回调服务地址：“执行器”将会回调该地址通知任务执行结果，改地址将会用于回调服务注册。回调服务默认端口为8888，回调IP默认为空表示自动获取IP，多网卡时可手动设置指定IP；
-    xxl.job.callBackIp=
-    xxl.job.callBackPort=8888
     
     ### 报警邮箱
     xxl.job.mail.host=smtp.163.com
@@ -175,16 +174,13 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 #### 执行器配置：
 配置文件以及配置属性如下图所示。
 
-![输入图片说明](https://static.oschina.net/uploads/img/201705/02182818_WeyS.png "在这里输入图片标题")
+![输入图片说明](https://static.oschina.net/uploads/img/201705/11214800_7G3o.png "在这里输入图片标题")
 
 
-    ### xxl-job db：执行器JDBC链接：请保持和调度中心JDBC连接配置一致；(执行器 "DbRegistHelper" 依赖JDBC配置；推荐将其抽象为RPC远程服务, 可取消对JDBC的依赖；如不启用执行自动注册功能，也可忽略JDBC配置; )
-    xxl.job.db.driverClass=com.mysql.jdbc.Driver
-    xxl.job.db.url=jdbc:mysql://localhost:3306/xxl-job?useUnicode=true&characterEncoding=UTF-8
-    xxl.job.db.user=root
-    xxl.job.db.password=root_pwd
+    ### xxl-job admin address list：调度中心部署跟地址：如调度中心集群部署存在多个地址则用逗号分隔。执行器将会使用该地址进行"执行器心跳注册"和"任务结果回调"。
+    xxl.job.admin.addresses=http://127.0.0.1:8080/xxl-job-admin
     
-    ### xxl-job executor address：执行器"AppName"和地址信息配置：AppName为执行器分组依据。“调度中心”将会请求该地址触发任务，改地址将会用于执行器注册。执行器默认端口为9999，执行器IP默认为空表示自动获取IP，多网卡时可手动设置指定IP；
+    ### xxl-job executor address：执行器"AppName"和地址信息配置：AppName执行器心跳注册分组依据；地址信息用于"调度中心请求并触发任务"和"执行器注册"。执行器默认端口为9999，执行器IP默认为空表示自动获取IP，多网卡时可手动设置指定IP；
     xxl.job.executor.appname=xxl-job-executor-example
     xxl.job.executor.ip=
     xxl.job.executor.port=9999
@@ -196,11 +192,10 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 #### 组件配置：
 配置内容如下图所示。
 
-![输入图片说明](https://static.oschina.net/uploads/img/201704/27204724_WW5m.png "在这里输入图片标题")
+![输入图片说明](https://static.oschina.net/uploads/img/201705/11220120_vZXB.png "在这里输入图片标题")
 
     1、JobHandler 扫描路径：自动扫描容器中JobHandler；
-    2、执行器注册器(XxlJobExecutor.registHelper): 默认使用系统提供的 "DbRegistHelper"(依赖JDBC), 推荐将其抽象为RPC远程服务, 可取消对JDBC的依赖；如不启用执行自动注册功能，也可忽略JDBC配置; )
-    3、XXL-JOB公共数据源 "xxlJobDataSource": 仅在启动 "DbRegistHelper" 或 "DbGlueLoader" 时才需要, 否则可删除
+    2、执行器注册器：执行器核心配置；
 
 #### 部署项目：
 至此“执行器”项目已经部署结束。
@@ -541,17 +536,20 @@ CronTrigger cronTrigger = TriggerBuilder.newTrigger().withIdentity(triggerKey).w
 ```
 
 ##### 5.4.7 日志回调服务
-调度模块的“调度中心”作为Web服务单独部署，除此之外，内部嵌入jetty服务器提供日志回调服务。
+调度模块的“调度中心”作为Web服务部署时，一方面承担调度中心功能，另一方面页为执行器提供API服务。
 
-“执行器”在接收到任务执行请求后，执行任务，在执行结束之后会将执行结果回调通知“调度中心”，回调端口如下图所示（参数：xxl.job.callBackPort）。
+调度中心提供的"日志回调服务API服务"代码位置如下：
+```
+xxl-job-admin#com.xxl.job.admin.controller.JobApiController.callback
+```
 
-![输入图片说明](https://static.oschina.net/uploads/img/201703/10172754_5DUl.png "在这里输入图片标题")
+“执行器”在接收到任务执行请求后，执行任务，在执行结束之后会将执行结果回调通知“调度中心”，代码位置为：
 
 ##### 5.4.8 任务HA（Failover）
 执行器如若集群部署，调度中心将会感知到在线的所有执行器，如“127.0.0.1:9997, 127.0.0.1:9998, 127.0.0.1:9999”。
 
 当任务"路由策略"选择"故障转移(FAILOVER)"时，当调度中心每次发起调度请求时，会按照顺序对执行器发出心跳检测请求，第一个检测为存活状态的执行器将会被选定并发送调度请求。
-![输入图片说明](https://static.oschina.net/uploads/img/201703/12230049_EBkr.png "在这里输入图片标题")
+![输入图片说明](https://static.oschina.net/uploads/img/201705/11221144_P128.png "在这里输入图片标题")
 
 调度成功后，可在日志监控界面查看“调度备注”，如下；
 ![输入图片说明](https://static.oschina.net/uploads/img/201703/12230733_jrdI.png "在这里输入图片标题")
@@ -591,16 +589,26 @@ CronTrigger cronTrigger = TriggerBuilder.newTrigger().withIdentity(triggerKey).w
 
 ![输入图片说明](https://static.oschina.net/uploads/img/201607/24194212_jOAU.png "在这里输入图片标题")
 
-#### 5.5 执行模块剖析
-##### 5.5.1 Bean模式任务
-开发步骤：见章节三；
+#### 5.5 任务 "运行模式" 剖析
+##### 5.5.1 "Bean模式" 任务
+开发步骤：可参考 "章节三" ；
 原理：每个Bean模式任务都是一个Spring的Bean类实例，它被维护在“执行器”项目的Spring容器中。任务类需要加“@JobHander(value="名称")”注解，因为“执行器”会根据该注解识别Spring容器中的任务。任务类需要继承统一接口“IJobHandler”，任务逻辑在execute方法中开发，因为“执行器”在接收到调度中心的调度请求时，将会调用“IJobHandler”的execute方法，执行任务逻辑。
 
-##### 5.5.2 GLUE模式任务
-开发步骤：见章节三；
-原理：每个Glue任务的代码，实际上是“一个继承自“IJobHandler”的实现类的类代码”，“执行器”接收到“调度中心”的调度请求时，会通过Groovy类加载器加载此代码，实例化成Java对象，同时注入此代码中声明的Spring服务（请确保Glue代码中的服务和类引用在“执行器”项目中存在），然后调用该对象的execute方法，执行任务逻辑。
+##### 5.5.2 "GLUE模式(Java)" 任务
+开发步骤：可参考 "章节三" ；
+原理：每个 "GLUE模式(Java)" 任务的代码，实际上是“一个继承自“IJobHandler”的实现类的类代码”，“执行器”接收到“调度中心”的调度请求时，会通过Groovy类加载器加载此代码，实例化成Java对象，同时注入此代码中声明的Spring服务（请确保Glue代码中的服务和类引用在“执行器”项目中存在），然后调用该对象的execute方法，执行任务逻辑。
 
-##### 5.5.3 执行器
+#### 5.5.3 GLUE模式(Shell) + GLUE模式(Python)
+开发步骤：可参考 "章节三" ；
+原理：脚本任务的源码托管在调度中心，脚本逻辑在执行器运行。当触发脚本任务时，执行器会加载脚本源码在执行器机器上生成一份脚本文件，然后通过Java代码调用该脚本；并且实时将脚本输出日志写到任务日志文件中，从而在调度中心可以实时监控脚本运行情况；脚本返回码为0时表示执行成功，其他标示执行失败。
+
+目前支持的脚本类型如下：
+
+    - shell脚本：任务运行模式选择为 "GLUE模式(Shell)"时支持 "shell" 脚本任务；
+    - python脚本：任务运行模式选择为 "GLUE模式(Python)"时支持 "python" 脚本任务；
+    
+
+##### 5.5.4 执行器
 执行器实际上是一个内嵌的Jetty服务器，默认端口9999，如下图配置文件所示（参数：xxl.job.executor.port）。
 
 ![输入图片说明](https://static.oschina.net/uploads/img/201703/10174923_TgNO.png "在这里输入图片标题")
@@ -609,7 +617,7 @@ CronTrigger cronTrigger = TriggerBuilder.newTrigger().withIdentity(triggerKey).w
 
 “执行器”接收到“调度中心”的调度请求时，如果任务类型为“Bean模式”，将会匹配Spring容器中的“Bean模式任务”，然后调用其execute方法，执行任务逻辑。如果任务类型为“GLUE模式”，将会加载GLue代码，实例化Java对象，注入依赖的Spring服务（注意：Glue代码中注入的Spring服务，必须存在与该“执行器”项目的Spring容器中），然后调用execute方法，执行任务逻辑。
 
-##### 5.5.4 任务日志
+##### 5.5.5 任务日志
 XXL-JOB会为每次调度请求生成一个单独的日志文件，需要通过 "XxlJobLogger.log" 打印执行日志，“调度中心”查看执行日志时将会加载对应的日志文件。
 
 (历史版本通过重写LOG4J的Appender实现，存在依赖限制，该方式在新版本已经被抛弃)
@@ -623,10 +631,10 @@ XXL-JOB会为每次调度请求生成一个单独的日志文件，需要通过 
 ##### 5.6.1 一次完整的任务调度通讯流程 
     - 1、“调度中心”向“执行器”发送http调度请求: “执行器”中接收请求的服务，实际上是一台内嵌jetty服务器，默认端口9999;
     - 2、“执行器”执行任务逻辑；
-    - 3、“执行器”http回调“调度中心”调度结果: “调度中心”中接收回调的服务，实际上是一台内嵌jetty服务器，默认端口8888;
+    - 3、“执行器”http回调“调度中心”调度结果: “调度中心”中接收回调的服务，是针对执行器开放一套API服务;
 
 ##### 5.6.2 通讯数据加密
-调度中心与执行器之间使用RequestModel和ResponseModel两个对象封装调度请求参数和响应数据, 在进行通讯之前底层会将上述两个对象对象序列化字节数组,最终转化成16进制数据进行数据交互,从而达到数据加密的功能;
+调度中心向执行器发送的调度请求时使用RequestModel和ResponseModel两个对象封装调度请求参数和响应数据, 在进行通讯之前底层会将上述两个对象对象序列化，并进行数据协议以及时间戳检验,从而达到数据加密的功能;
 
 #### 5.7 任务注册, 任务自动发现   
 自v1.5版本之后, 任务取消了"任务执行机器"属性, 改为通过任务注册和自动发现的方式, 动态获取远程执行器地址并执行。
@@ -654,16 +662,6 @@ XXL-JOB会为每次调度请求生成一个单独的日志文件，需要通过 
 当返回值符合 "ReturnT.code == ReturnT.SUCCESS_CODE" 时表示任务执行成功，否则表示任务执行失败，而且可以通过 "ReturnT.msg" 回调错误信息给调度中心；
 从而，在任务逻辑中可以方便的控制任务执行结果；
 
-#### 5.10 脚本任务
-目前支持的脚本类型如下，脚本任务可参考章节 "三、任务详解"：
-
-    - shell脚本：任务运行模式选择为 "GLUE模式(Shell)"时支持 "shell" 脚本任务；
-    - python脚本：任务运行模式选择为 "GLUE模式(Python)"时支持 "python" 脚本任务；
-    
-脚本任务的源码托管在调度中心，脚本逻辑在执行器运行。当触发脚本任务时，执行器会加载脚本源码在执行器机器上生成一份脚本文件，然后通过Java代码调用该脚本；
-并且实时将脚本输出日志写到任务日志文件中，从而在调度中心可以实时监控脚本运行情况；
-
-脚本返回码为0时表示执行成功，其他标示执行失败。
 
 ## 六、版本更新日志
 #### 6.1 版本 V1.1.x，新特性[2015-12-05]
