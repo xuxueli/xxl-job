@@ -28,30 +28,27 @@ public class AdminApiUtil {
 	public static final String REGISTRY = "/api/registry";
 
 	private static List<String> adminAddressList = null;
-	public static boolean allowCallApi = true;
-
 	public static void init(String adminAddresses){
 		// admin assress list
 		if (adminAddresses != null) {
 			Set<String> adminAddressSet = new HashSet<String>();
 			for (String adminAddressItem: adminAddresses.split(",")) {
-				if (adminAddressItem.trim().length()>0 && !adminAddressSet.contains(adminAddressItem)) {
+				if (adminAddressItem.trim().length()>0) {
 					adminAddressSet.add(adminAddressItem);
 				}
 			}
-			if (adminAddressSet==null || adminAddressSet.size()==0) {
-				adminAddressList = new ArrayList<String>(adminAddressSet);
-			}
+            adminAddressList = new ArrayList<String>(adminAddressSet);
 		}
-
-		// parse
-		allowCallApi = (adminAddressList!=null && adminAddressList.size()>0);
 	}
+	public static boolean allowCallApi(){
+        boolean allowCallApi = (adminAddressList!=null && adminAddressList.size()>0);
+        return allowCallApi;
+    }
 
 	public static ReturnT<String> callApiFailover(String subUrl, Object requestObj) throws Exception {
 
-		if (!allowCallApi) {
-			return new ReturnT<String>(ReturnT.FAIL_CODE, "allowCallback fail.");
+		if (!allowCallApi()) {
+			return new ReturnT<String>(ReturnT.FAIL_CODE, "allowCallApi fail.");
 		}
 
 		for (String adminAddress: adminAddressList) {
