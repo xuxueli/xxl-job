@@ -1,7 +1,6 @@
 package com.xxl.job.core.util;
 
 import com.xxl.job.core.biz.model.ReturnT;
-import com.xxl.job.core.executor.XxlJobExecutor;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.config.RequestConfig;
@@ -15,7 +14,9 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author xuxueli 2017-05-10 21:28:15
@@ -26,19 +27,31 @@ public class AdminApiUtil {
 	public static final String CALLBACK = "/api/callback";
 	public static final String REGISTRY = "/api/registry";
 
-	public static ReturnT<String> callApiFailover(String subUrl, Object requestObj) throws Exception {
+	private static List<String> adminAddressList = null;
+	public static boolean allowCallApi = true;
 
+	public static void init(String adminAddresses){
 		// admin assress list
-		List<String> adminAddressList = new ArrayList<String>();
-		if (XxlJobExecutor.adminAddresses != null) {
-			for (String adminAddressItem: XxlJobExecutor.adminAddresses.split(",")) {
-				if (adminAddressItem.trim().length()>0 && !adminAddressList.contains(adminAddressItem)) {
-					adminAddressList.add(adminAddressItem);
+		if (adminAddresses != null) {
+			Set<String> adminAddressSet = new HashSet<String>();
+			for (String adminAddressItem: adminAddresses.split(",")) {
+				if (adminAddressItem.trim().length()>0 && !adminAddressSet.contains(adminAddressItem)) {
+					adminAddressSet.add(adminAddressItem);
 				}
 			}
+			if (adminAddressSet==null || adminAddressSet.size()==0) {
+				adminAddressList = new ArrayList<String>(adminAddressSet);
+			}
 		}
-		if (adminAddressList==null || adminAddressList.size()==0) {
-			return ReturnT.FAIL;
+
+		// parse
+		allowCallApi = (adminAddressList!=null && adminAddressList.size()>0);
+	}
+
+	public static ReturnT<String> callApiFailover(String subUrl, Object requestObj) throws Exception {
+
+		if (!allowCallApi) {
+			return new ReturnT<String>(ReturnT.FAIL_CODE, "allowCallback fail.");
 		}
 
 		for (String adminAddress: adminAddressList) {

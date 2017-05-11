@@ -24,7 +24,9 @@ public class ExecutorRegistryThread extends Thread {
     private Thread registryThread;
     private boolean toStop = false;
     public void start(final int port, final String ip, final String appName){
-        if (appName==null || appName.trim().length()==0) {
+
+        // valid
+        if (AdminApiUtil.allowCallApi && (appName!=null && appName.trim().length()>0) ) {
             logger.warn(">>>>>>>>>>>> xxl-job, executor registry config fail");
             return;
         }
