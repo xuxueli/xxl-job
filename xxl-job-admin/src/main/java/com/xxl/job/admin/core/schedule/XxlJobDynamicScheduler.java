@@ -2,7 +2,7 @@ package com.xxl.job.admin.core.schedule;
 
 import com.xxl.job.admin.core.jobbean.RemoteHttpJobBean;
 import com.xxl.job.admin.core.model.XxlJobInfo;
-import com.xxl.job.admin.core.thread.JobMonitorHelper;
+import com.xxl.job.admin.core.thread.JobFailMonitorHelper;
 import com.xxl.job.admin.core.thread.JobRegistryMonitorHelper;
 import com.xxl.job.admin.dao.IXxlJobGroupDao;
 import com.xxl.job.admin.dao.IXxlJobInfoDao;
@@ -43,7 +43,7 @@ public final class XxlJobDynamicScheduler implements ApplicationContextAware, In
         JobRegistryMonitorHelper.getInstance().start();
 
         // admin monitor run
-        JobMonitorHelper.getInstance().start();
+        JobFailMonitorHelper.getInstance().start();
     }
     
     // destroy
@@ -52,7 +52,7 @@ public final class XxlJobDynamicScheduler implements ApplicationContextAware, In
         JobRegistryMonitorHelper.getInstance().toStop();
 
         // admin monitor stop
-        JobMonitorHelper.getInstance().toStop();
+        JobFailMonitorHelper.getInstance().toStop();
 
         serverFactory.destroy();
     }

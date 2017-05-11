@@ -20,7 +20,7 @@ package com.xxl.job.admin.core.jobbean;
 //import com.xxl.job.client.util.JacksonUtil;
 //import com.xxl.job.core.model.XxlJobInfo;
 //import com.xxl.job.core.model.XxlJobLog;
-//import com.xxl.job.core.thread.JobMonitorHelper;
+//import com.xxl.job.core.thread.JobFailMonitorHelper;
 //import com.xxl.job.core.util.DynamicSchedulerUtil;
 //
 ///**
@@ -84,7 +84,7 @@ package com.xxl.job.admin.core.jobbean;
 //		// update trigger info
 //		DynamicSchedulerUtil.xxlJobLogDao.updateTriggerInfo(jobLog);
 //		DynamicSchedulerUtil.xxlJobLogDao.updateHandleInfo(jobLog);
-//		JobMonitorHelper.monitor(jobLog.getId());
+//		JobFailMonitorHelper.monitor(jobLog.getId());
 //		logger.info(">>>>>>>>>>> xxl-job trigger end, jobLog.id:{}, jobLog:{}", jobLog.getId(), jobLog);
 //		
 //    }

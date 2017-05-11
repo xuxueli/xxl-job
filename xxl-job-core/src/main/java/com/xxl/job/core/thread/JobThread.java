@@ -106,27 +106,29 @@ public class JobThread extends Thread{
 						String logFileName = XxlJobFileAppender.makeLogFileName(new Date(triggerParam.getLogDateTim()), triggerParam.getLogId());
 
 						XxlJobFileAppender.contextHolder.set(logFileName);
-						XxlJobLogger.log("----------- xxl-job job execute start -----------");
+						XxlJobLogger.log("<br>----------- xxl-job job execute start -----------<br>----------- Params:" + handlerParams);
 
 						executeResult = handler.execute(handlerParams);
 						if (executeResult == null) {
 							executeResult = ReturnT.FAIL;
 						}
+
+						XxlJobLogger.log("<br>----------- xxl-job job execute end(finish) -----------<br>----------- ReturnT:" + executeResult);
 					} catch (Exception e) {
 						if (toStop) {
-							XxlJobLogger.log("<br>----------- xxl-job toStop, stopReason:" + stopReason);
+							XxlJobLogger.log("<br>----------- JobThread toStop, stopReason:" + stopReason);
 						}
 
 						StringWriter stringWriter = new StringWriter();
 						e.printStackTrace(new PrintWriter(stringWriter));
 						String errorMsg = stringWriter.toString();
-						XxlJobLogger.log("JobThread Exception:" + errorMsg);
+						executeResult = new ReturnT<String>(ReturnT.FAIL_CODE, errorMsg);
 
-						executeResult = new ReturnT<String>(ReturnT.FAIL_CODE, stringWriter.toString());
+						XxlJobLogger.log("<br>----------- JobThread Exception:" + errorMsg + "<br>----------- xxl-job job execute end(error) -----------");
 					}
 
-					XxlJobLogger.log("----------- xxl-job job execute end ----------- <br> " +
-									"Look : ExecutorParams:"+ handlerParams +", Code:"+ executeResult.getCode() +", Msg:" + executeResult.getMsg());
+
+
 					
 					// callback handler info
 					if (!toStop) {
