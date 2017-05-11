@@ -131,7 +131,7 @@ public class XxlJobServiceImpl implements IXxlJobService {
         String qz_name = String.valueOf(jobInfo.getId());
         try {
             XxlJobDynamicScheduler.addJob(qz_name, qz_group, jobInfo.getJobCron());
-            XxlJobDynamicScheduler.pauseJob(qz_name, qz_group);
+            //XxlJobDynamicScheduler.pauseJob(qz_name, qz_group);
             return ReturnT.SUCCESS;
         } catch (SchedulerException e) {
             logger.error("", e);
