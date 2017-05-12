@@ -92,4 +92,14 @@ public class XxlJobLogDaoImpl implements IXxlJobLogDao {
 		return sqlSessionTemplate.selectList("XxlJobLogMapper.triggerCountByDay", params);
 	}
 
+	@Override
+	public int clearLog(int jobGroup, int jobId, Date clearBeforeTime, int clearBeforeNum) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("jobGroup", jobGroup);
+		params.put("jobId", jobId);
+		params.put("clearBeforeTime", clearBeforeTime);
+		params.put("clearBeforeNum", clearBeforeNum);
+		return sqlSessionTemplate.delete("XxlJobLogMapper.clearLog", params);
+	}
+
 }

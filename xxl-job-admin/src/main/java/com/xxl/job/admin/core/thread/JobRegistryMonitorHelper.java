@@ -2,7 +2,7 @@ package com.xxl.job.admin.core.thread;
 
 import com.xxl.job.admin.core.model.XxlJobRegistry;
 import com.xxl.job.admin.core.schedule.XxlJobDynamicScheduler;
-import com.xxl.job.core.registry.RegistHelper;
+import com.xxl.job.core.enums.RegistryConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,11 +15,11 @@ import java.util.concurrent.TimeUnit;
  * job registry instance
  * @author xuxueli 2016-10-02 19:10:24
  */
-public class JobRegistryHelper {
-	private static Logger logger = LoggerFactory.getLogger(JobRegistryHelper.class);
+public class JobRegistryMonitorHelper {
+	private static Logger logger = LoggerFactory.getLogger(JobRegistryMonitorHelper.class);
 
-	private static JobRegistryHelper instance = new JobRegistryHelper();
-	public static JobRegistryHelper getInstance(){
+	private static JobRegistryMonitorHelper instance = new JobRegistryMonitorHelper();
+	public static JobRegistryMonitorHelper getInstance(){
 		return instance;
 	}
 
@@ -33,18 +33,12 @@ public class JobRegistryHelper {
 			public void run() {
 				while (!toStop) {
 					try {
-                        // registry admin
-                        int ret = XxlJobDynamicScheduler.xxlJobRegistryDao.registryUpdate(RegistHelper.RegistType.ADMIN.name(), RegistHelper.RegistType.ADMIN.name(), XxlJobDynamicScheduler.getCallbackAddress());
-                        if (ret < 1) {
-                            XxlJobDynamicScheduler.xxlJobRegistryDao.registrySave(RegistHelper.RegistType.ADMIN.name(), RegistHelper.RegistType.ADMIN.name(), XxlJobDynamicScheduler.getCallbackAddress());
-                        }
-
                         // remove dead admin/executor
-						XxlJobDynamicScheduler.xxlJobRegistryDao.removeDead(RegistHelper.TIMEOUT*2);
+						XxlJobDynamicScheduler.xxlJobRegistryDao.removeDead(RegistryConfig.DEAD_TIMEOUT);
 
                         // fresh registry map
 						ConcurrentHashMap<String, List<String>> temp = new ConcurrentHashMap<String, List<String>>();
-						List<XxlJobRegistry> list = XxlJobDynamicScheduler.xxlJobRegistryDao.findAll(RegistHelper.TIMEOUT*2);
+						List<XxlJobRegistry> list = XxlJobDynamicScheduler.xxlJobRegistryDao.findAll(RegistryConfig.DEAD_TIMEOUT);
 						if (list != null) {
 							for (XxlJobRegistry item: list) {
 								String groupKey = makeGroupKey(item.getRegistryGroup(), item.getRegistryKey());
@@ -61,7 +55,7 @@ public class JobRegistryHelper {
 						logger.error("job registry instance error:{}", e);
 					}
 					try {
-						TimeUnit.SECONDS.sleep(RegistHelper.TIMEOUT);
+						TimeUnit.SECONDS.sleep(RegistryConfig.BEAT_TIMEOUT);
 					} catch (InterruptedException e) {
 						logger.error("job registry instance error:{}", e);
 					}

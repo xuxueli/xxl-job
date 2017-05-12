@@ -118,18 +118,8 @@ $(function() {
 								}
 
 								// html
-								var html = '<p id="'+ row.id +'" '+
-									' jobGroup="'+ row.jobGroup +'" '+
-									' jobCron="'+ row.jobCron +'" '+
-									' jobDesc="'+ row.jobDesc +'" '+
-									' author="'+ row.author +'" '+
-									' alarmEmail="'+ row.alarmEmail +'" '+
-									' executorRouteStrategy="'+row.executorRouteStrategy +'" '+
-									' executorHandler="'+row.executorHandler +'" '+
-									' executorParam="'+ row.executorParam +'" '+
-									' glueType="'+ row.glueType +'" '+
-                                    ' childJobKey="'+ row.childJobKey +'" '+
-									'>'+
+                                tableData['key'+row.id] = row;
+								var html = '<p id="'+ row.id +'" >'+
 									'<button class="btn btn-primary btn-xs job_operate" _type="job_trigger" type="button">执行</button>  '+
 									pause_resume +
 									'<button class="btn btn-primary btn-xs" type="job_del" type="button" onclick="javascript:window.open(\'' + logUrl + '\')" >日志</button><br>  '+
@@ -168,7 +158,10 @@ $(function() {
 			}
 		}
 	});
-	
+
+    // table data
+    var tableData = {};
+
 	// 搜索按钮
 	$('#searchBtn').on('click', function(){
 		jobTable.fnDraw();
@@ -201,8 +194,10 @@ $(function() {
 		}
 		
 		var id = $(this).parent('p').attr("id");
-		
-		ComConfirm.show("确认" + typeName + "?", function(){
+
+		layer.confirm('确认' + typeName + '?', {icon: 3, title:'系统提示'}, function(index){
+			layer.close(index);
+
 			$.ajax({
 				type : 'POST',
 				url : url,
@@ -212,14 +207,24 @@ $(function() {
 				dataType : "json",
 				success : function(data){
 					if (data.code == 200) {
-						ComAlert.show(1, typeName + "成功", function(){
-							if (needFresh) {
-								//window.location.reload();
-								jobTable.fnDraw();
+
+						layer.open({
+							title: '系统提示',
+							content: typeName + "成功",
+							icon: '1',
+							end: function(layero, index){
+								if (needFresh) {
+									//window.location.reload();
+									jobTable.fnDraw();
+								}
 							}
 						});
 					} else {
-						ComAlert.show(1, typeName + "失败");
+						layer.open({
+							title: '系统提示',
+							content: (data.msg || typeName + "失败"),
+							icon: '2'
+						});
 					}
 				},
 			});
@@ -278,18 +283,21 @@ $(function() {
         	$.post(base_url + "/jobinfo/add",  $("#addModal .form").serialize(), function(data, status) {
     			if (data.code == "200") {
 					$('#addModal').modal('hide');
-					setTimeout(function () {
-						ComAlert.show(1, "新增任务成功", function(){
+					layer.open({
+						title: '系统提示',
+						content: '新增任务成功',
+						icon: '1',
+						end: function(layero, index){
 							jobTable.fnDraw();
 							//window.location.reload();
-						});
-					}, 315);
+						}
+					});
     			} else {
-    				if (data.msg) {
-    					ComAlert.show(2, data.msg);
-    				} else {
-    					ComAlert.show(2, "新增失败");
-    				}
+					layer.open({
+						title: '系统提示',
+						content: (data.msg || "新增失败"),
+						icon: '2'
+					});
     			}
     		});
 		}
@@ -332,19 +340,31 @@ $(function() {
 	// 更新
 	$("#job_list").on('click', '.update',function() {
 
-		// base data
-		$("#updateModal .form input[name='id']").val($(this).parent('p').attr("id"));
-		$('#updateModal .form select[name=jobGroup] option[value='+ $(this).parent('p').attr("jobGroup") +']').prop('selected', true);
-		$("#updateModal .form input[name='jobDesc']").val($(this).parent('p').attr("jobDesc"));
-		$("#updateModal .form input[name='jobCron']").val($(this).parent('p').attr("jobCron"));
-		$("#updateModal .form input[name='author']").val($(this).parent('p').attr("author"));
-		$("#updateModal .form input[name='alarmEmail']").val($(this).parent('p').attr("alarmEmail"));
-		$('#updateModal .form select[name=executorRouteStrategy] option[value='+ $(this).parent('p').attr("executorRouteStrategy") +']').prop('selected', true);
-		$("#updateModal .form input[name='executorHandler']").val($(this).parent('p').attr("executorHandler"));
-		$("#updateModal .form input[name='executorParam']").val($(this).parent('p').attr("executorParam"));
-        $("#updateModal .form input[name='childJobKey']").val($(this).parent('p').attr("childJobKey"));
-		$('#updateModal .form select[name=glueType] option[value='+ $(this).parent('p').attr("glueType") +']').prop('selected', true);
+        var id = $(this).parent('p').attr("id");
+        var row = tableData['key'+id];
+        if (!row) {
+            layer.open({
+                title: '系统提示',
+                content: ("任务信息加载失败，请刷新页面"),
+                icon: '2'
+            });
+            return;
+        }
 
+		// base data
+		$("#updateModal .form input[name='id']").val( row.id );
+		$('#updateModal .form select[name=jobGroup] option[value='+ row.jobGroup +']').prop('selected', true);
+		$("#updateModal .form input[name='jobDesc']").val( row.jobDesc );
+		$("#updateModal .form input[name='jobCron']").val( row.jobCron );
+		$("#updateModal .form input[name='author']").val( row.author );
+		$("#updateModal .form input[name='alarmEmail']").val( row.alarmEmail );
+		$('#updateModal .form select[name=executorRouteStrategy] option[value='+ row.executorRouteStrategy +']').prop('selected', true);
+		$("#updateModal .form input[name='executorHandler']").val( row.executorHandler );
+		$("#updateModal .form input[name='executorParam']").val( row.executorParam );
+        $("#updateModal .form input[name='childJobKey']").val( row.childJobKey );
+		$('#updateModal .form select[name=executorBlockStrategy] option[value='+ row.executorBlockStrategy +']').prop('selected', true);
+		$('#updateModal .form select[name=executorFailStrategy] option[value='+ row.executorFailStrategy +']').prop('selected', true);
+		$('#updateModal .form select[name=glueType] option[value='+ row.glueType +']').prop('selected', true);
 
         $("#updateModal .form select[name=glueType]").change();
 
@@ -394,18 +414,21 @@ $(function() {
     		$.post(base_url + "/jobinfo/reschedule", $("#updateModal .form").serialize(), function(data, status) {
     			if (data.code == "200") {
 					$('#updateModal').modal('hide');
-					setTimeout(function () {
-						ComAlert.show(1, "更新成功", function(){
+					layer.open({
+						title: '系统提示',
+						content: '更新成功',
+						icon: '1',
+						end: function(layero, index){
 							//window.location.reload();
 							jobTable.fnDraw();
-						});
-					}, 315);
+						}
+					});
     			} else {
-    				if (data.msg) {
-    					ComAlert.show(2, data.msg);
-					} else {
-						ComAlert.show(2, "更新失败");
-					}
+					layer.open({
+						title: '系统提示',
+						content: (data.msg || "更新失败"),
+						icon: '2'
+					});
     			}
     		});
 		}

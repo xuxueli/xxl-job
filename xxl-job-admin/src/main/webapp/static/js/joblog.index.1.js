@@ -11,7 +11,7 @@ $(function() {
 			dataType : "json",
 			success : function(data){
 				if (data.code == 200) {
-					$("#jobId").html('<option value="0" >请选择</option>');
+					$("#jobId").html('<option value="0" >全部</option>');
 					$.each(data.content, function (n, value) {
                         $("#jobId").append('<option value="' + value.id + '" >' + value.jobDesc + '</option>');
                     });
@@ -19,7 +19,11 @@ $(function() {
                         $("#jobId").find("option[value='" + $("#jobId").attr("paramVal") + "']").attr("selected",true);
                     }
 				} else {
-					ComAlertTec.show(data.msg);
+					layer.open({
+						title: '系统提示',
+						content: (data.msg || "接口异常"),
+						icon: '2'
+					});
 				}
 			},
 		});
@@ -143,14 +147,17 @@ $(function() {
 	                		return data?'<a class="logTips" href="javascript:;" >查看<span style="display:none;">'+ data +'</span></a>':"无";
 	                	}
 	                },
-	                { "data": 'handleMsg' , "bSortable": false,
+	                {
+						"data": 'handleMsg' ,
+						"bSortable": false,
+						"width": "8%" ,
 	                	"render": function ( data, type, row ) {
 	                		// better support expression or string, not function
 	                		return function () {
 		                		if (row.triggerCode == 200){
 		                			var temp = '<a href="javascript:;" class="logDetail" _id="'+ row.id +'">执行日志</a>';
 		                			if(row.handleCode == 0){
-		                				temp += '<br><a href="javascript:;" class="logKill" _id="'+ row.id +'">终止任务</a>';
+		                				temp += '<br><a href="javascript:;" class="logKill" _id="'+ row.id +'" style="color: red;" >终止任务</a>';
 		                			}
 		                			return temp;
 		                		}
@@ -185,12 +192,6 @@ $(function() {
 		}
 	});
 	
-	// 任务数据
-	$('#joblog_list').on('click', '.logMsg', function(){
-		var msg = $(this).find('span').html();
-		ComAlert.show(2, msg);
-	});
-	
 	// 日志弹框提示
 	$('#joblog_list').on('click', '.logTips', function(){
 		var msg = $(this).find('span').html();
@@ -208,42 +209,126 @@ $(function() {
 		
 		window.open(base_url + '/joblog/logDetailPage?id=' + _id);
 		return;
-		
-		/*
-		$.ajax({
-			type : 'POST',
-			url : base_url + '/joblog/logDetail',
-			data : {"id":_id},
-			dataType : "json",
-			success : function(data){
-				if (data.code == 200) {
-					ComAlertTec.show('<pre style="color: white;background-color: black;width2:'+ $(window).width()*2/3 +'px;" >'+ data.content +'</pre>');
-				} else {
-					ComAlertTec.show(data.msg);
-				}
-			},
-		});
-		*/
 	});
-	
+
+	/**
+	 * 终止任务
+	 */
 	$('#joblog_list').on('click', '.logKill', function(){
 		var _id = $(this).attr('_id');
-		ComConfirm.show("确认主动终止任务?", function(){
-			$.ajax({
-				type : 'POST',
-				url : base_url + '/joblog/logKill',
-				data : {"id":_id},
-				dataType : "json",
-				success : function(data){
-					if (data.code == 200) {
-						ComAlert.show(1, '操作成功');
+
+        layer.confirm('确认主动终止任务?', {icon: 3, title:'系统提示'}, function(index){
+            layer.close(index);
+
+            $.ajax({
+                type : 'POST',
+                url : base_url + '/joblog/logKill',
+                data : {"id":_id},
+                dataType : "json",
+                success : function(data){
+                    if (data.code == 200) {
+                        layer.open({
+                            title: '系统提示',
+                            content: '操作成功',
+                            icon: '1',
+                            end: function(layero, index){
+                                logTable.fnDraw();
+                            }
+                        });
+                    } else {
+                        layer.open({
+                            title: '系统提示',
+                            content: (data.msg || "操作失败"),
+                            icon: '2'
+                        });
+                    }
+                },
+            });
+        });
+
+	});
+
+	/**
+	 * 清理任务Log
+	 */
+	$('#clearLog').on('click', function(){
+
+		var jobGroup = $('#jobGroup').val();
+		var jobId = $('#jobId').val();
+
+		var jobGroupText = $("#jobGroup").find("option:selected").text();
+		var jobIdText = $("#jobId").find("option:selected").text();
+
+		$('#clearLogModal input[name=jobGroup]').val(jobGroup);
+		$('#clearLogModal input[name=jobId]').val(jobId);
+
+		$('#clearLogModal .jobGroupText').val(jobGroupText);
+		$('#clearLogModal .jobIdText').val(jobIdText);
+
+		$('#clearLogModal').modal('show');
+
+	});
+	$("#clearLogModal .ok").on('click', function(){
+		$.post(base_url + "/joblog/clearLog",  $("#clearLogModal .form").serialize(), function(data, status) {
+			if (data.code == "200") {
+				$('#clearLogModal').modal('hide');
+				layer.open({
+					title: '系统提示',
+					content: '日志清理成功',
+					icon: '1',
+					end: function(layero, index){
 						logTable.fnDraw();
-					} else {
-						ComAlert.show(2, data.msg);
 					}
-				},
-			});
+				});
+			} else {
+				layer.open({
+					title: '系统提示',
+					content: (data.msg || "日志清理失败"),
+					icon: '2'
+				});
+			}
 		});
 	});
-	
+	$("#clearLogModal").on('hide.bs.modal', function () {
+		$("#clearLogModal .form")[0].reset();
+	});
+
 });
+
+
+// 提示-科技主题
+var ComAlertTec = {
+	html:function(){
+		var html =
+			'<div class="modal fade" id="ComAlertTec" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
+			'<div class="modal-dialog">' +
+			'<div class="modal-content-tec">' +
+			'<div class="modal-body"><div class="alert" style="color:#fff;"></div></div>' +
+			'<div class="modal-footer">' +
+			'<div class="text-center" >' +
+			'<button type="button" class="btn btn-info ok" data-dismiss="modal" >确认</button>' +
+			'</div>' +
+			'</div>' +
+			'</div>' +
+			'</div>' +
+			'</div>';
+		return html;
+	},
+	show:function(msg, callback){
+		// dom init
+		if ($('#ComAlertTec').length == 0){
+			$('body').append(ComAlertTec.html());
+		}
+
+		// 弹框初始
+		$('#ComAlertTec .alert').html(msg);
+		$('#ComAlertTec').modal('show');
+
+		$('#ComAlertTec .ok').click(function(){
+			$('#ComAlertTec').modal('hide');
+			if(typeof callback == 'function') {
+				callback();
+			}
+		});
+	}
+};

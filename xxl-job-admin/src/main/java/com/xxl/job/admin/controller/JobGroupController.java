@@ -1,11 +1,11 @@
 package com.xxl.job.admin.controller;
 
 import com.xxl.job.admin.core.model.XxlJobGroup;
-import com.xxl.job.admin.core.thread.JobRegistryHelper;
+import com.xxl.job.admin.core.thread.JobRegistryMonitorHelper;
 import com.xxl.job.admin.dao.IXxlJobGroupDao;
 import com.xxl.job.admin.dao.IXxlJobInfoDao;
 import com.xxl.job.core.biz.model.ReturnT;
-import com.xxl.job.core.registry.RegistHelper;
+import com.xxl.job.core.enums.RegistryConfig;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
@@ -33,9 +33,6 @@ public class JobGroupController {
 	@RequestMapping
 	public String index(Model model) {
 
-		// job admin
-		List<String> adminAddressList = JobRegistryHelper.discover(RegistHelper.RegistType.ADMIN.name(), RegistHelper.RegistType.ADMIN.name());
-
 		// job group (executor)
 		List<XxlJobGroup> list = xxlJobGroupDao.findAll();
 
@@ -43,7 +40,7 @@ public class JobGroupController {
 			for (XxlJobGroup group: list) {
 				List<String> registryList = null;
 				if (group.getAddressType() == 0) {
-					registryList = JobRegistryHelper.discover(RegistHelper.RegistType.EXECUTOR.name(), group.getAppName());
+					registryList = JobRegistryMonitorHelper.discover(RegistryConfig.RegistType.EXECUTOR.name(), group.getAppName());
 				} else {
 					if (StringUtils.isNotBlank(group.getAddressList())) {
 						registryList = Arrays.asList(group.getAddressList().split(","));
@@ -53,7 +50,6 @@ public class JobGroupController {
 			}
 		}
 
-		model.addAttribute("adminAddressList", adminAddressList);
 		model.addAttribute("list", list);
 		return "jobgroup/jobgroup.index";
 	}

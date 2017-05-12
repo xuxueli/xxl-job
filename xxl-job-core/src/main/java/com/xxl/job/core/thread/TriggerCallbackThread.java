@@ -1,9 +1,8 @@
 package com.xxl.job.core.thread;
 
-import com.xxl.job.core.biz.AdminBiz;
 import com.xxl.job.core.biz.model.HandleCallbackParam;
 import com.xxl.job.core.biz.model.ReturnT;
-import com.xxl.job.core.rpc.netcom.NetComClientProxy;
+import com.xxl.job.core.util.AdminApiUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,19 +32,12 @@ public class TriggerCallbackThread {
                     try {
                         HandleCallbackParam callback = getInstance().callBackQueue.take();
                         if (callback != null) {
-                            for (String address : callback.getLogAddress()) {
-                                try {
-                                    // callback
-                                    AdminBiz adminBiz = (AdminBiz) new NetComClientProxy(AdminBiz.class, address).getObject();
-                                    ReturnT<String> callbackResult = adminBiz.callback(callback);
-
-                                    logger.info(">>>>>>>>>>> xxl-job callback , CallbackParam:{}, callbackResult:{}", new Object[]{callback.toString(), callbackResult.toString()});
-                                    if (ReturnT.SUCCESS_CODE == callbackResult.getCode()) {
-                                        break;
-                                    }
-                                } catch (Exception e) {
-                                    logger.error(">>>>>>>>>>> xxl-job TriggerCallbackThread Exception:", e);
-                                }
+                            // callback
+                            try {
+                                ReturnT<String> callbackResult = AdminApiUtil.callApiFailover(AdminApiUtil.CALLBACK, callback);
+                                logger.info(">>>>>>>>>>> xxl-job callback, HandleCallbackParam:{}, callbackResult:{}", new Object[]{callback.toString(), callbackResult.toString()});
+                            } catch (Exception e) {
+                                logger.error(">>>>>>>>>>> xxl-job TriggerCallbackThread Exception:", e);
                             }
                         }
                     } catch (Exception e) {

@@ -23,6 +23,8 @@ public class XxlJobInfo {
 	private String executorRouteStrategy;	// 执行器路由策略
 	private String executorHandler;		    // 执行器，任务Handler名称
 	private String executorParam;		    // 执行器，任务参数
+	private String executorBlockStrategy;	// 阻塞处理策略
+	private String executorFailStrategy;	// 失败处理策略
 	
 	private String glueType;		// GLUE类型	#com.xxl.job.core.glue.GlueTypeEnum
 	private String glueSource;		// GLUE源代码
@@ -120,6 +122,22 @@ public class XxlJobInfo {
 
 	public void setExecutorParam(String executorParam) {
 		this.executorParam = executorParam;
+	}
+
+	public String getExecutorBlockStrategy() {
+		return executorBlockStrategy;
+	}
+
+	public void setExecutorBlockStrategy(String executorBlockStrategy) {
+		this.executorBlockStrategy = executorBlockStrategy;
+	}
+
+	public String getExecutorFailStrategy() {
+		return executorFailStrategy;
+	}
+
+	public void setExecutorFailStrategy(String executorFailStrategy) {
+		this.executorFailStrategy = executorFailStrategy;
 	}
 
 	public String getGlueType() {

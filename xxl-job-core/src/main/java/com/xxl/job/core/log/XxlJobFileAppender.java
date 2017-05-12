@@ -16,8 +16,9 @@ import java.util.Date;
 public class XxlJobFileAppender {
 	private static Logger logger = LoggerFactory.getLogger(XxlJobFileAppender.class);
 	
-	// for JobThread
-	public static ThreadLocal<String> contextHolder = new ThreadLocal<String>();
+	// for JobThread (support log for child thread of job handler)
+	//public static ThreadLocal<String> contextHolder = new ThreadLocal<String>();
+	public static InheritableThreadLocal<String> contextHolder = new InheritableThreadLocal<String>();
 	public static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	
 	/**

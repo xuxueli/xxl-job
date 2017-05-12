@@ -1,7 +1,6 @@
 package com.xxl.job.core.rpc.netcom;
 
 import com.xxl.job.core.biz.model.ReturnT;
-import com.xxl.job.core.registry.RegistHelper;
 import com.xxl.job.core.rpc.codec.RpcRequest;
 import com.xxl.job.core.rpc.codec.RpcResponse;
 import com.xxl.job.core.rpc.netcom.jetty.server.JettyServer;
@@ -22,8 +21,8 @@ public class NetComServerFactory  {
 
 	// ---------------------- server start ----------------------
 	JettyServer server = new JettyServer();
-	public void start(int port, String ip, String appName, RegistHelper registHelper) throws Exception {
-		server.start(port, ip, appName, registHelper);
+	public void start(int port, String ip, String appName) throws Exception {
+		server.start(port, ip, appName);
 	}
 
 	// ---------------------- server destroy ----------------------
@@ -49,7 +48,7 @@ public class NetComServerFactory  {
 
 		RpcResponse response = new RpcResponse();
 
-		if (System.currentTimeMillis() - request.getCreateMillisTime() > 60000) {
+		if (System.currentTimeMillis() - request.getCreateMillisTime() > 180000) {
 			response.setResult(new ReturnT<String>(ReturnT.FAIL_CODE, "Timestamp Timeout."));
 			return response;
 		}

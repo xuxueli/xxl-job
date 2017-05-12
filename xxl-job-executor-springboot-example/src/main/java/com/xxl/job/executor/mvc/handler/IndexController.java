@@ -12,7 +12,7 @@ public class IndexController {
     @RequestMapping("/")
     @ResponseBody
     String index() {
-        return "xxl job running.";
+        return "xxl job is running.";
     }
 
 }

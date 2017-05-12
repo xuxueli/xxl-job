@@ -4,13 +4,13 @@
 	<parent>
 		<groupId>com.xuxueli</groupId>
 		<artifactId>xxl-job</artifactId>
-		<version>1.7.1-SNAPSHOT</version>
+		<version>1.7.2-SNAPSHOT</version>
 	</parent>
 	<artifactId>xxl-job-executor-example</artifactId>
 	<packaging>war</packaging>
 
 	<properties>
-		<xxl-job.version>1.7.1-SNAPSHOT</xxl-job.version>
+		<xxl-job.version>1.7.2-SNAPSHOT</xxl-job.version>
 		<spring.version>3.2.17.RELEASE</spring.version>
 	</properties>
 
@@ -26,7 +26,7 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
-			<version>1.7.5</version>
+			<version>1.7.21</version>
 		</dependency>
 		
 		<!-- c3p0 -->
