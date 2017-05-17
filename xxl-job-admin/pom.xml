@@ -10,7 +10,6 @@
 	<packaging>war</packaging>
 
 	<properties>
-		<xxl-job.version>1.8.0-SNAPSHOT</xxl-job.version>
 		<spring.version>3.2.17.RELEASE</spring.version>
 	</properties>
 
@@ -146,7 +145,7 @@
 		<dependency>
 			<groupId>com.xuxueli</groupId>
 			<artifactId>xxl-job-core</artifactId>
-			<version>${xxl-job.version}</version>
+			<version>${project.parent.version}</version>
 		</dependency>
 
 	</dependencies>

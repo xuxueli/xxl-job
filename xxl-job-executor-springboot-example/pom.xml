@@ -10,11 +10,12 @@
     </parent>
     <artifactId>xxl-job-executor-springboot-example</artifactId>
     <packaging>jar</packaging>
-    <name>xxl-job-executor-springboot-example</name>
-    <description>Example executor project for spring boot</description>
+
+    <name>${project.artifactId}</name>
+    <description>Example executor project for spring boot.</description>
+    <url>http://www.xuxueli.com/</url>
 
     <properties>
-        <xxl-job.version>1.8.0-SNAPSHOT</xxl-job.version>
         <spring-boot.version>1.3.8.RELEASE</spring-boot.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -71,7 +72,7 @@
         <dependency>
             <groupId>com.xuxueli</groupId>
             <artifactId>xxl-job-core</artifactId>
-            <version>${xxl-job.version}</version>
+            <version>${project.parent.version}</version>
         </dependency>
 
     </dependencies>

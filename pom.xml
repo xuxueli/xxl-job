@@ -6,7 +6,7 @@
 	<version>1.8.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
-	<name>xxl-job</name>
+	<name>${project.artifactId}</name>
 	<description>A lightweight distributed task scheduling framework.</description>
 	<url>http://www.xuxueli.com/</url>
 
