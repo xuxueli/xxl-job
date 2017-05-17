@@ -4,13 +4,13 @@
 	<parent>
 		<groupId>com.xuxueli</groupId>
 		<artifactId>xxl-job</artifactId>
-		<version>1.7.2</version>
+		<version>1.8.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>xxl-job-admin</artifactId>
 	<packaging>war</packaging>
 
 	<properties>
-		<xxl-job.version>1.7.2</xxl-job.version>
+		<xxl-job.version>1.8.0-SNAPSHOT</xxl-job.version>
 		<spring.version>3.2.17.RELEASE</spring.version>
 	</properties>
 
