@@ -82,7 +82,7 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 <dependency>
     <groupId>com.xuxueli</groupId>
     <artifactId>xxl-job-core</artifactId>
-    <version>1.7.1</version>
+    <version>1.7.2</version>
 </dependency>
 ```
 
@@ -831,7 +831,7 @@ Tips: 历史版本(V1.3.x)目前已经Release至稳定版本, 进入维护阶段
 - 7、弹框组件统一替换为layer；
 - 8、升级quartz版本至2.3.0；
 
-#### 6.15 版本 V1.7.2 特性（Coding）
+#### 6.15 版本 V1.7.2 特性[2017-05-17]
 - 1、阻塞处理策略：调度过于密集执行器来不及处理时的处理策略，策略包括：单机串行（默认）、丢弃后续调度、覆盖之前调度；
 - 2、失败处理策略；调度失败时的处理策略，策略包括：失败告警（默认）、失败重试；
 - 3、通讯时间戳超时时间调整为180s；
