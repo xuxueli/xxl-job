@@ -15,5 +15,9 @@ public abstract class IJobHandler {
 	 * @throws Exception
 	 */
 	public abstract ReturnT<String> execute(String... params) throws Exception;
-	
+
+	/**
+	 * 服务Shutdown处理方法
+	 */
+	public void shutdown() {}
 }

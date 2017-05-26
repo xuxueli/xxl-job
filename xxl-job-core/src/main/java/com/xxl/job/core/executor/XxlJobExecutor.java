@@ -74,8 +74,6 @@ public class XxlJobExecutor implements ApplicationContextAware, ApplicationListe
             for (Map.Entry<Integer, JobThread> item: JobThreadRepository.entrySet()) {
                 JobThread jobThread = item.getValue();
                 jobThread.toStop("Web容器销毁终止");
-                jobThread.interrupt();
-
             }
             JobThreadRepository.clear();
         }
@@ -132,7 +130,6 @@ public class XxlJobExecutor implements ApplicationContextAware, ApplicationListe
         JobThread oldJobThread = JobThreadRepository.put(jobId, newJobThread);	// putIfAbsent | oh my god, map's put method return the old value!!!
         if (oldJobThread != null) {
             oldJobThread.toStop(removeOldReason);
-            oldJobThread.interrupt();
         }
 
         return newJobThread;
@@ -141,7 +138,6 @@ public class XxlJobExecutor implements ApplicationContextAware, ApplicationListe
         JobThread oldJobThread = JobThreadRepository.remove(jobId);
         if (oldJobThread != null) {
             oldJobThread.toStop(removeOldReason);
-            oldJobThread.interrupt();
         }
     }
     public static JobThread loadJobThread(int jobId){
