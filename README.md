@@ -184,7 +184,7 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
     ### xxl-job admin address list：调度中心部署跟地址：如调度中心集群部署存在多个地址则用逗号分隔。执行器将会使用该地址进行"执行器心跳注册"和"任务结果回调"。
     xxl.job.admin.addresses=http://127.0.0.1:8080/xxl-job-admin
     
-    ### xxl-job executor address：执行器"AppName"和地址信息配置：AppName执行器心跳注册分组依据；地址信息用于"调度中心请求并触发任务"和"执行器注册"。执行器默认端口为9999，执行器IP默认为空表示自动获取IP，多网卡时可手动设置指定IP；
+    ### xxl-job executor address：执行器"AppName"和地址信息配置：AppName执行器心跳注册分组依据；地址信息用于"调度中心请求并触发任务"和"执行器注册"。执行器默认端口为9999，执行器IP默认为空表示自动获取IP，多网卡时可手动设置指定IP。单机部署多个执行器时，注意要配置不同执行器端口；
     xxl.job.executor.appname=xxl-job-executor-example
     xxl.job.executor.ip=
     xxl.job.executor.port=9999
