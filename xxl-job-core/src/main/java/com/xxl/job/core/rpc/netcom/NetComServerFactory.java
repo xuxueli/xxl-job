@@ -49,7 +49,7 @@ public class NetComServerFactory  {
 		RpcResponse response = new RpcResponse();
 
 		if (System.currentTimeMillis() - request.getCreateMillisTime() > 180000) {
-			response.setResult(new ReturnT<String>(ReturnT.FAIL_CODE, "Timestamp Timeout."));
+			response.setResult(new ReturnT<String>(ReturnT.FAIL_CODE, "the timestamp difference between admin and executor exceeds the limit."));
 			return response;
 		}
 
