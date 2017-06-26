@@ -185,7 +185,6 @@ public class XxlJobServiceImpl implements IXxlJobService {
 
 		// stage job info
 		XxlJobInfo exists_jobInfo = xxlJobInfoDao.loadById(jobInfo.getId());
-        String old_cron = exists_jobInfo.getJobCron();
 		if (exists_jobInfo == null) {
 			return new ReturnT<String>(ReturnT.FAIL_CODE, "参数异常");
 		}
