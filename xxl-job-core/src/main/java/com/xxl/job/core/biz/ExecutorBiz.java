@@ -16,6 +16,14 @@ public interface ExecutorBiz {
     public ReturnT<String> beat();
 
     /**
+     * idle beat
+     *
+     * @param jobId
+     * @return
+     */
+    public ReturnT<String> idleBeat(int jobId);
+
+    /**
      * kill
      * @param jobId
      * @return

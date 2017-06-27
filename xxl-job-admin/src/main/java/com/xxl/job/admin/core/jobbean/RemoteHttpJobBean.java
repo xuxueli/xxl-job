@@ -114,76 +114,82 @@ public class RemoteHttpJobBean extends QuartzJobBean {
 			return new ReturnT<String>(ReturnT.FAIL_CODE, triggerSb.toString());
 		}
 
+		// executor route strategy
+		ExecutorRouteStrategyEnum executorRouteStrategyEnum = ExecutorRouteStrategyEnum.match(jobInfo.getExecutorRouteStrategy(), null);
+		if (executorRouteStrategyEnum == null) {
+			triggerSb.append("<br>----------------------<br>").append("调度失败：").append("执行器路由策略为空");
+			return new ReturnT<String>(ReturnT.FAIL_CODE, triggerSb.toString());
+		}
+		triggerSb.append("<br>路由策略：").append(executorRouteStrategyEnum.name() + "-" + executorRouteStrategyEnum.getTitle());
+
 		// trigger remote executor
-		if (addressList.size() == 1) {
-			String address = addressList.get(0);
+		if (executorRouteStrategyEnum == ExecutorRouteStrategyEnum.FAILOVER) {
+			for (String address : addressList) {
+				// beat
+				ReturnT<String> beatResult = null;
+				try {
+					ExecutorBiz executorBiz = (ExecutorBiz) new NetComClientProxy(ExecutorBiz.class, address).getObject();
+					beatResult = executorBiz.beat();
+				} catch (Exception e) {
+					logger.error("", e);
+					beatResult = new ReturnT<String>(ReturnT.FAIL_CODE, ""+e );
+				}
+				triggerSb.append("<br>----------------------<br>")
+						.append("心跳检测：")
+						.append("<br>address：").append(address)
+						.append("<br>code：").append(beatResult.getCode())
+						.append("<br>msg：").append(beatResult.getMsg());
+
+				// beat success
+				if (beatResult.getCode() == ReturnT.SUCCESS_CODE) {
+					jobLog.setExecutorAddress(address);
+
+					ReturnT<String> runResult = runExecutor(triggerParam, address);
+					triggerSb.append("<br>----------------------<br>").append(runResult.getMsg());
+
+					return new ReturnT<String>(runResult.getCode(), triggerSb.toString());
+				}
+			}
+			return new ReturnT<String>(ReturnT.FAIL_CODE, triggerSb.toString());
+		} else if (executorRouteStrategyEnum == ExecutorRouteStrategyEnum.BUSYOVER) {
+			for (String address : addressList) {
+				// beat
+				ReturnT<String> idleBeatResult = null;
+				try {
+					ExecutorBiz executorBiz = (ExecutorBiz) new NetComClientProxy(ExecutorBiz.class, address).getObject();
+					idleBeatResult = executorBiz.idleBeat(triggerParam.getJobId());
+				} catch (Exception e) {
+					logger.error("", e);
+					idleBeatResult = new ReturnT<String>(ReturnT.FAIL_CODE, ""+e );
+				}
+				triggerSb.append("<br>----------------------<br>")
+						.append("空闲检测：")
+						.append("<br>address：").append(address)
+						.append("<br>code：").append(idleBeatResult.getCode())
+						.append("<br>msg：").append(idleBeatResult.getMsg());
+
+				// beat success
+				if (idleBeatResult.getCode() == ReturnT.SUCCESS_CODE) {
+					jobLog.setExecutorAddress(address);
+
+					ReturnT<String> runResult = runExecutor(triggerParam, address);
+					triggerSb.append("<br>----------------------<br>").append(runResult.getMsg());
+
+					return new ReturnT<String>(runResult.getCode(), triggerSb.toString());
+				}
+			}
+			return new ReturnT<String>(ReturnT.FAIL_CODE, triggerSb.toString());
+		} else {
+			// get address
+			String address = executorRouteStrategyEnum.getRouter().route(jobInfo.getId(), addressList);
 			jobLog.setExecutorAddress(address);
 
+			// run
 			ReturnT<String> runResult = runExecutor(triggerParam, address);
 			triggerSb.append("<br>----------------------<br>").append(runResult.getMsg());
 
 			return new ReturnT<String>(runResult.getCode(), triggerSb.toString());
-		} else {
-			// executor route strategy
-			ExecutorRouteStrategyEnum executorRouteStrategyEnum = ExecutorRouteStrategyEnum.match(jobInfo.getExecutorRouteStrategy(), null);
-			triggerSb.append("<br>路由策略：").append(executorRouteStrategyEnum!=null?(executorRouteStrategyEnum.name() + "-" + executorRouteStrategyEnum.getTitle()):null);
-			if (executorRouteStrategyEnum == null) {
-				triggerSb.append("<br>----------------------<br>").append("调度失败：").append("执行器路由策略为空");
-				return new ReturnT<String>(ReturnT.FAIL_CODE, triggerSb.toString());
-			}
-
-			if (executorRouteStrategyEnum != ExecutorRouteStrategyEnum.FAILOVER) {
-				// get address
-				String address = executorRouteStrategyEnum.getRouter().route(jobInfo.getId(), addressList);
-				jobLog.setExecutorAddress(address);
-
-				// run
-				ReturnT<String> runResult = runExecutor(triggerParam, address);
-				triggerSb.append("<br>----------------------<br>").append(runResult.getMsg());
-
-				return new ReturnT<String>(runResult.getCode(), triggerSb.toString());
-			} else {
-				for (String address : addressList) {
-					// beat
-					ReturnT<String> beatResult = beatExecutor(address);
-					triggerSb.append("<br>----------------------<br>").append(beatResult.getMsg());
-
-					if (beatResult.getCode() == ReturnT.SUCCESS_CODE) {
-						jobLog.setExecutorAddress(address);
-
-						ReturnT<String> runResult = runExecutor(triggerParam, address);
-						triggerSb.append("<br>----------------------<br>").append(runResult.getMsg());
-
-						return new ReturnT<String>(runResult.getCode(), triggerSb.toString());
-					}
-				}
-				return new ReturnT<String>(ReturnT.FAIL_CODE, triggerSb.toString());
-			}
 		}
-	}
-
-	/**
-	 * run executor
-	 * @param address
-	 * @return
-	 */
-	public ReturnT<String> beatExecutor(String address){
-		ReturnT<String> beatResult = null;
-		try {
-			ExecutorBiz executorBiz = (ExecutorBiz) new NetComClientProxy(ExecutorBiz.class, address).getObject();
-			beatResult = executorBiz.beat();
-		} catch (Exception e) {
-			logger.error("", e);
-			beatResult = new ReturnT<String>(ReturnT.FAIL_CODE, ""+e );
-		}
-
-		StringBuffer sb = new StringBuffer("心跳检测：");
-		sb.append("<br>address：").append(address);
-		sb.append("<br>code：").append(beatResult.getCode());
-		sb.append("<br>msg：").append(beatResult.getMsg());
-		beatResult.setMsg(sb.toString());
-
-		return beatResult;
 	}
 
 	/**
