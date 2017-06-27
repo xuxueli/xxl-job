@@ -72,17 +72,24 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 	- 26、上海悠游堂投资发展股份有限公司
 	- 27、北京粉笔蓝天科技有限公司
 	- 28、中秀科技(无锡)有限公司
+	- 29、武汉空心科技有限公司
+	- 30、北京蚂蚁风暴科技有限公司
+	- 31、四川互宜达科技有限公司
 	- ……
 
 欢迎大家的关注和使用，XXL-JOB也将拥抱变化，持续发展。
 
 ### 1.4 下载
-#### 源码地址 (将会在两个git仓库同步发布最新代码)
 
-- [github地址](https://github.com/xuxueli/xxl-job)
-- [git.osc地址](http://git.oschina.net/xuxueli0323/xxl-job)
+#### 源码仓库地址 (将会在两个git仓库同步发布最新代码)
 
-#### 中央仓库地址 (最新Release版本)
+源码仓库地址 | Release Download
+-- | --
+[https://github.com/xuxueli/xxl-job](https://github.com/xuxueli/xxl-job) | [Download](https://github.com/xuxueli/xxl-job/releases)  
+[http://git.oschina.net/xuxueli0323/xxl-job](http://git.oschina.net/xuxueli0323/xxl-job) | [Download](http://git.oschina.net/xuxueli0323/xxl-job/releases)
+
+
+#### 中央仓库地址 (最新Release版本：1.7.2)
 
 ```
 <!-- http://repo1.maven.org/maven2/com/xuxueli/xxl-job-core/ -->
@@ -104,10 +111,6 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 - 群3：242151780    （群即将满，请加群4）
 - 群2：438249535    （群即将满，请加群4）
 - 群1：367260654    （群即将满，请加群4）
-
-#### Download: 历史Release版本下载位置如下图所示,请自行前往进行选择和下载。
-
-![输入图片说明](https://static.oschina.net/uploads/img/201705/11214119_80Ma.png "在这里输入图片标题")
 
 ### 1.5 环境
 - JDK：1.7+
