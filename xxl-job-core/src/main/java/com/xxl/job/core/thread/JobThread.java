@@ -143,7 +143,7 @@ public class JobThread extends Thread{
 						TriggerCallbackThread.pushCallBack(new HandleCallbackParam(triggerParam.getLogId(), stopResult));
 					}
 				} else {
-					if (idleTimes > 3) {
+					if (idleTimes > 30) {
 						XxlJobExecutor.removeJobThread(jobId, "excutor idel times over limit.");
 					}
 				}
