@@ -46,7 +46,9 @@ public class JobRegistryMonitorHelper {
 								if (registryList == null) {
 									registryList = new ArrayList<String>();
 								}
-								registryList.add(item.getRegistryValue());
+								if (!registryList.contains(item.getRegistryValue())) {
+									registryList.add(item.getRegistryValue());
+								}
 								temp.put(groupKey, registryList);
 							}
 						}
