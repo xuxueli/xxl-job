@@ -145,7 +145,7 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
     调度中心项目：xxl-job-admin
     作用：统一管理任务调度平台上调度任务，负责触发调度执行。
 
-#### 调度中心配置：
+#### 步骤一：调度中心配置：
 配置文件以及配置属性如下图所示。
 
 ![输入图片说明](https://static.oschina.net/uploads/img/201705/11214752_Ifvp.png "在这里输入图片标题")
@@ -169,7 +169,7 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
     xxl.job.login.username=admin
     xxl.job.login.password=123456
 
-#### 部署项目：
+#### 步骤二：部署项目：
 如果已经正确进行上述配置，可将项目编译打war包并部署到tomcat中。
 访问链接：http://localhost:8080/xxl-job-admin/ ，登录后运行界面如下图所示
 
@@ -182,7 +182,10 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
     “执行器”项目：xxl-job-executor-example
     作用：负责接收“调度中心”的调度并执行；
     
-#### 执行器配置：
+#### 步骤一：maven依赖
+确认pom文件中引入了 "xxl-job-core" 的maven依赖；
+    
+#### 步骤二：执行器配置
 配置文件以及配置属性如下图所示。
 
 ![输入图片说明](https://static.oschina.net/uploads/img/201705/11214800_7G3o.png "在这里输入图片标题")
@@ -200,15 +203,15 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
     xxl.job.executor.logpath=/data/applogs/xxl-job/jobhandler/
 
 
-#### 组件配置：
+#### 步骤三：执行器组件配置
 配置内容如下图所示。
 
 ![输入图片说明](https://static.oschina.net/uploads/img/201705/11220120_vZXB.png "在这里输入图片标题")
 
     1、JobHandler 扫描路径：自动扫描容器中JobHandler；
-    2、执行器注册器：执行器核心配置；
+    2、执行器Excutor配置：执行器核心配置；
 
-#### 部署项目：
+#### 步骤四：部署项目：
 如果已经正确进行上述配置，可将执行器项目编译打部署，系统提供两个执行器example项目，选择其中一个即可，各自的部署方式如下。
 
     xxl-job-executor-example：项目编译打包成WAR包，并部署到tomcat中。
