@@ -1,4 +1,4 @@
-package com.xxl.job.executor.mvc.handler;
+package com.xxl.job.executor.controller;
 
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;

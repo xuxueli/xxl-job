@@ -1,4 +1,4 @@
-package com.xxl.job.executor.service.jobhandler;
+package com.xxl.job.executor.jobHandler;
 
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.handler.IJobHandler;
