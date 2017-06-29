@@ -47,7 +47,7 @@ public class JettyServer {
 				} catch (Exception e) {
 					logger.error("", e);
 				} finally {
-					server.destroy();
+					destroy();
 				}
 			}
 		});

@@ -4,12 +4,12 @@
 	<parent>
 		<groupId>com.xuxueli</groupId>
 		<artifactId>xxl-job</artifactId>
-		<version>1.7.2</version>
+		<version>1.8.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>xxl-job-core</artifactId>
 	<packaging>jar</packaging>
 
-	<name>xxl-job-core</name>
+	<name>${project.artifactId}</name>
 	<description>A lightweight distributed task scheduling framework.</description>
 	<url>http://www.xuxueli.com/</url>
 

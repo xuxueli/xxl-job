@@ -97,7 +97,7 @@ public class AdminApiUtil {
 			if (null != entity) {
 				if (response.getStatusLine().getStatusCode() != 200) {
 					EntityUtils.consume(entity);
-					return ReturnT.FAIL;
+					return new ReturnT<String>(response.getStatusLine().getStatusCode(), "StatusCode Error.");
 				}
 
 				String responseMsg = EntityUtils.toString(entity, "UTF-8");

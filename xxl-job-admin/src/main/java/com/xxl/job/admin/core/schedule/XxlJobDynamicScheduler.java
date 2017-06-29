@@ -193,25 +193,40 @@ public final class XxlJobDynamicScheduler implements ApplicationContextAware, In
         
         // TriggerKey : name + group
         TriggerKey triggerKey = TriggerKey.triggerKey(jobName, jobGroup);
-        JobKey jobKey = new JobKey(jobName, jobGroup);
-        
-        // CronTrigger : TriggerKey + cronExpression
-        CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.cronSchedule(cronExpression).withMisfireHandlingInstructionDoNothing();
-        CronTrigger cronTrigger = TriggerBuilder.newTrigger().withIdentity(triggerKey).withSchedule(cronScheduleBuilder).build();
-        
-        //scheduler.rescheduleJob(triggerKey, cronTrigger);
-        
-        // JobDetail-JobDataMap fresh
-        JobDetail jobDetail = scheduler.getJobDetail(jobKey);
-    	/*JobDataMap jobDataMap = jobDetail.getJobDataMap();
-    	jobDataMap.clear();
-    	jobDataMap.putAll(JacksonUtil.readValue(jobInfo.getJobData(), Map.class));*/
-    	
-    	// Trigger fresh
-    	HashSet<Trigger> triggerSet = new HashSet<Trigger>();
-    	triggerSet.add(cronTrigger);
-        
-        scheduler.scheduleJob(jobDetail, triggerSet, true);
+        CronTrigger oldTrigger = (CronTrigger) scheduler.getTrigger(triggerKey);
+
+        if (oldTrigger != null) {
+            // avoid repeat
+            String oldCron = oldTrigger.getCronExpression();
+            if (oldCron.equals(cronExpression)){
+                return true;
+            }
+
+            // CronTrigger : TriggerKey + cronExpression
+            CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.cronSchedule(cronExpression).withMisfireHandlingInstructionDoNothing();
+            oldTrigger = oldTrigger.getTriggerBuilder().withIdentity(triggerKey).withSchedule(cronScheduleBuilder).build();
+
+            // rescheduleJob
+            scheduler.rescheduleJob(triggerKey, oldTrigger);
+        } else {
+            // CronTrigger : TriggerKey + cronExpression
+            CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.cronSchedule(cronExpression).withMisfireHandlingInstructionDoNothing();
+            CronTrigger cronTrigger = TriggerBuilder.newTrigger().withIdentity(triggerKey).withSchedule(cronScheduleBuilder).build();
+
+            // JobDetail-JobDataMap fresh
+            JobKey jobKey = new JobKey(jobName, jobGroup);
+            JobDetail jobDetail = scheduler.getJobDetail(jobKey);
+            /*JobDataMap jobDataMap = jobDetail.getJobDataMap();
+            jobDataMap.clear();
+            jobDataMap.putAll(JacksonUtil.readValue(jobInfo.getJobData(), Map.class));*/
+
+            // Trigger fresh
+            HashSet<Trigger> triggerSet = new HashSet<Trigger>();
+            triggerSet.add(cronTrigger);
+
+            scheduler.scheduleJob(jobDetail, triggerSet, true);
+        }
+
         logger.info(">>>>>>>>>>> resumeJob success, JobGroup:{}, JobName:{}", jobGroup, jobName);
         return true;
     }

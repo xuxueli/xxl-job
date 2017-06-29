@@ -34,7 +34,7 @@ public class JettyClient {
 			logger.error(e.getMessage(), e);
 
 			RpcResponse rpcResponse = new RpcResponse();
-			rpcResponse.setError("Servet-error:" + e.getMessage());
+			rpcResponse.setError("Client-error:" + e.getMessage());
 			return rpcResponse;
 		}
 	}

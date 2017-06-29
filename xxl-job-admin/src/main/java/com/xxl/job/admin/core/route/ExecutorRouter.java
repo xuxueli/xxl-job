@@ -1,34 +1,53 @@
 package com.xxl.job.admin.core.route;
 
-import org.apache.commons.collections.CollectionUtils;
+import com.xxl.job.admin.core.model.XxlJobLog;
+import com.xxl.job.core.biz.ExecutorBiz;
+import com.xxl.job.core.biz.model.ReturnT;
+import com.xxl.job.core.biz.model.TriggerParam;
+import com.xxl.job.core.rpc.netcom.NetComClientProxy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * Created by xuxueli on 17/3/10.
  */
 public abstract class ExecutorRouter {
+    protected static Logger logger = LoggerFactory.getLogger(ExecutorRouter.class);
 
-    public abstract String route(int jobId, ArrayList<String> addressList);
+    /**
+     * route run
+     *
+     * @param triggerParam
+     * @param addressList
+     * @return
+     */
+    public abstract ReturnT<String> routeRun(TriggerParam triggerParam, ArrayList<String> addressList, XxlJobLog jobLog);
 
-    public static String route(int jobId, ArrayList<String> addressList, String executorRouteStrategy){
-        if (CollectionUtils.isEmpty(addressList)) {
-            return null;
+    /**
+     * run executor
+     * @param triggerParam
+     * @param address
+     * @return
+     */
+    protected static ReturnT<String> runExecutor(TriggerParam triggerParam, String address){
+        ReturnT<String> runResult = null;
+        try {
+            ExecutorBiz executorBiz = (ExecutorBiz) new NetComClientProxy(ExecutorBiz.class, address).getObject();
+            runResult = executorBiz.run(triggerParam);
+        } catch (Exception e) {
+            logger.error("", e);
+            runResult = new ReturnT<String>(ReturnT.FAIL_CODE, ""+e );
         }
-        ExecutorRouteStrategyEnum strategy = ExecutorRouteStrategyEnum.match(executorRouteStrategy, ExecutorRouteStrategyEnum.FIRST);
-        String routeAddress = strategy.getRouter().route(jobId, addressList);
-        return routeAddress;
-    }
 
-    public static void main(String[] args) {
+        StringBuffer runResultSB = new StringBuffer("触发调度：");
+        runResultSB.append("<br>address：").append(address);
+        runResultSB.append("<br>code：").append(runResult.getCode());
+        runResultSB.append("<br>msg：").append(runResult.getMsg());
 
-
-        for (int i = 0; i < 100; i++) {
-            String ret = ExecutorRouter.route(666, new ArrayList<String>(Arrays.asList("127.0.0.1:0000", "127.0.0.1:2222", "127.0.0.1:3333")), ExecutorRouteStrategyEnum.LEAST_FREQUENTLY_USED.name());
-            System.out.println(ret);
-        }
-
+        runResult.setMsg(runResultSB.toString());
+        return runResult;
     }
 
 }

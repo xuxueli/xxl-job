@@ -3,6 +3,7 @@ package com.xxl.job.core.thread;
 import com.xxl.job.core.biz.model.HandleCallbackParam;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.biz.model.TriggerParam;
+import com.xxl.job.core.executor.XxlJobExecutor;
 import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.log.XxlJobFileAppender;
 import com.xxl.job.core.log.XxlJobLogger;
@@ -23,7 +24,8 @@ import java.util.concurrent.TimeUnit;
  */
 public class JobThread extends Thread{
 	private static Logger logger = LoggerFactory.getLogger(JobThread.class);
-	
+
+	private int jobId;
 	private IJobHandler handler;
 	private LinkedBlockingQueue<TriggerParam> triggerQueue;
 	private ConcurrentHashSet<Integer> triggerLogIdSet;		// avoid repeat trigger for the same TRIGGER_LOG_ID
@@ -32,12 +34,14 @@ public class JobThread extends Thread{
 	private String stopReason;
 
     private boolean running = false;    // if running job
+	private int idleTimes = 0;			// idel times
 
 
-	public JobThread(IJobHandler handler) {
+	public JobThread(int jobId, IJobHandler handler) {
+		this.jobId = jobId;
 		this.handler = handler;
-		triggerQueue = new LinkedBlockingQueue<TriggerParam>();
-		triggerLogIdSet = new ConcurrentHashSet<Integer>();
+		this.triggerQueue = new LinkedBlockingQueue<TriggerParam>();
+		this.triggerLogIdSet = new ConcurrentHashSet<Integer>();
 	}
 	public IJobHandler getHandler() {
 		return handler;
@@ -88,11 +92,13 @@ public class JobThread extends Thread{
 	public void run() {
 		while(!toStop){
 			running = false;
+			idleTimes++;
 			try {
 				// to check toStop signal, we need cycle, so wo cannot use queue.take(), instand of poll(timeout)
 				TriggerParam triggerParam = triggerQueue.poll(3L, TimeUnit.SECONDS);
 				if (triggerParam!=null) {
 					running = true;
+					idleTimes = 0;
 					triggerLogIdSet.remove(triggerParam.getLogId());
 					
 					// parse param
@@ -126,9 +132,6 @@ public class JobThread extends Thread{
 
 						XxlJobLogger.log("<br>----------- JobThread Exception:" + errorMsg + "<br>----------- xxl-job job execute end(error) -----------");
 					}
-
-
-
 					
 					// callback handler info
 					if (!toStop) {
@@ -139,8 +142,12 @@ public class JobThread extends Thread{
 						ReturnT<String> stopResult = new ReturnT<String>(ReturnT.FAIL_CODE, stopReason + " [业务运行中，被强制终止]");
 						TriggerCallbackThread.pushCallBack(new HandleCallbackParam(triggerParam.getLogId(), stopResult));
 					}
+				} else {
+					if (idleTimes > 30) {
+						XxlJobExecutor.removeJobThread(jobId, "excutor idel times over limit.");
+					}
 				}
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				if (toStop) {
 					XxlJobLogger.log("<br>----------- xxl-job toStop, stopReason:" + stopReason);
 				}

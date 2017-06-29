@@ -6,6 +6,8 @@ import com.xxl.job.core.util.AdminApiUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
 
 /**
@@ -32,12 +34,19 @@ public class TriggerCallbackThread {
                     try {
                         HandleCallbackParam callback = getInstance().callBackQueue.take();
                         if (callback != null) {
-                            // callback
+
+                            // callback list
+                            List<HandleCallbackParam> callbackParamList = new ArrayList<HandleCallbackParam>();
+                            int drainToNum = getInstance().callBackQueue.drainTo(callbackParamList);
+                            callbackParamList.add(callback);
+
+                            // callback, will retry if error
                             try {
-                                ReturnT<String> callbackResult = AdminApiUtil.callApiFailover(AdminApiUtil.CALLBACK, callback);
-                                logger.info(">>>>>>>>>>> xxl-job callback, HandleCallbackParam:{}, callbackResult:{}", new Object[]{callback.toString(), callbackResult.toString()});
+                                ReturnT<String> callbackResult = AdminApiUtil.callApiFailover(AdminApiUtil.CALLBACK, callbackParamList);
+                                logger.info(">>>>>>>>>>> xxl-job callback, callbackParamList:{}, callbackResult:{}", new Object[]{callbackParamList, callbackResult});
                             } catch (Exception e) {
                                 logger.error(">>>>>>>>>>> xxl-job TriggerCallbackThread Exception:", e);
+                                //getInstance().callBackQueue.addAll(callbackParamList);
                             }
                         }
                     } catch (Exception e) {

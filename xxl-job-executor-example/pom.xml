@@ -4,13 +4,16 @@
 	<parent>
 		<groupId>com.xuxueli</groupId>
 		<artifactId>xxl-job</artifactId>
-		<version>1.7.2</version>
+		<version>1.8.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>xxl-job-executor-example</artifactId>
 	<packaging>war</packaging>
 
+	<name>${project.artifactId}</name>
+	<description>Executor project for spring boot.</description>
+	<url>http://www.xuxueli.com/</url>
+
 	<properties>
-		<xxl-job.version>1.7.2</xxl-job.version>
 		<spring.version>3.2.17.RELEASE</spring.version>
 	</properties>
 
@@ -46,7 +49,7 @@
 		<dependency>
 			<groupId>com.xuxueli</groupId>
 			<artifactId>xxl-job-core</artifactId>
-			<version>${xxl-job.version}</version>
+			<version>${project.parent.version}</version>
 		</dependency>
 		
 	</dependencies>

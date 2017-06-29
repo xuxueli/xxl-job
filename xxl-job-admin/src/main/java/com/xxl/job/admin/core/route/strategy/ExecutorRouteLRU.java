@@ -1,6 +1,9 @@
 package com.xxl.job.admin.core.route.strategy;
 
+import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.admin.core.route.ExecutorRouter;
+import com.xxl.job.core.biz.model.ReturnT;
+import com.xxl.job.core.biz.model.TriggerParam;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -18,7 +21,6 @@ public class ExecutorRouteLRU extends ExecutorRouter {
     private static ConcurrentHashMap<Integer, LinkedHashMap<String, String>> jobLRUMap = new ConcurrentHashMap<Integer, LinkedHashMap<String, String>>();
     private static long CACHE_VALID_TIME = 0;
 
-    @Override
     public String route(int jobId, ArrayList<String> addressList) {
 
         // cache clear
@@ -50,6 +52,21 @@ public class ExecutorRouteLRU extends ExecutorRouter {
         String eldestKey = lruItem.entrySet().iterator().next().getKey();
         String eldestValue = lruItem.get(eldestKey);
         return eldestValue;
+    }
+
+
+    @Override
+    public ReturnT<String> routeRun(TriggerParam triggerParam, ArrayList<String> addressList, XxlJobLog jobLog) {
+
+        // address
+        String address = route(triggerParam.getJobId(), addressList);
+        jobLog.setExecutorAddress(address);
+
+        // run executor
+        ReturnT<String> runResult = runExecutor(triggerParam, address);
+        runResult.setMsg("<br>----------------------<br>" + runResult.getMsg());
+
+        return runResult;
     }
 
 }
