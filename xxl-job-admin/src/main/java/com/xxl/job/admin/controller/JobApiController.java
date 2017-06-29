@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
 import java.text.MessageFormat;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by xuxueli on 17/5/10.
@@ -43,9 +44,18 @@ public class JobApiController {
     @RequestMapping(value= AdminApiUtil.CALLBACK, method = RequestMethod.POST, consumes = "application/json")
     @ResponseBody
     @PermessionLimit(limit=false)
-    public ReturnT<String> callback(@RequestBody HandleCallbackParam handleCallbackParam){
+    public ReturnT<String> callback(@RequestBody List<HandleCallbackParam> callbackParamList){
 
+        for (HandleCallbackParam handleCallbackParam: callbackParamList) {
+            ReturnT<String> callbackResult = callback(handleCallbackParam);
+            logger.info("JobApiController.callback {}, handleCallbackParam={}, callbackResult={}",
+                    (callbackResult.getCode()==ReturnT.SUCCESS_CODE?"success":"fail"), handleCallbackParam, callbackResult);
+        }
 
+        return ReturnT.SUCCESS;
+    }
+
+    private ReturnT<String> callback(HandleCallbackParam handleCallbackParam) {
         // valid log item
         XxlJobLog log = xxlJobLogDao.load(handleCallbackParam.getLogId());
         if (log == null) {
