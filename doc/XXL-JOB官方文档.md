@@ -179,7 +179,7 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 
 ### 2.4 配置部署“执行器项目”
 
-    “执行器”项目：xxl-job-executor-example
+    “执行器”项目：xxl-job-executor-example (如新建执行器项目，可参考该Example执行器项目的配置步骤；)
     作用：负责接收“调度中心”的调度并执行；
     
 #### 步骤一：maven依赖
