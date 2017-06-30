@@ -54,8 +54,8 @@
 			<name>GNU General Public License version 3</name>
 			<url>https://opensource.org/licenses/GPL-3.0</url>
 		</license>
-
 	</licenses>
+
 	<scm>
 		<tag>master</tag>
 		<url>https://github.com/xuxueli/xxl-job.git</url>
