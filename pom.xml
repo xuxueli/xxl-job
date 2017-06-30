@@ -51,9 +51,10 @@
 
 	<licenses>
 		<license>
-			<name>GNU General Public License, version 2</name>
-			<url>http://opensource.org/licenses/GPL-2.0</url>
+			<name>GNU General Public License version 3</name>
+			<url>https://opensource.org/licenses/GPL-3.0</url>
 		</license>
+
 	</licenses>
 	<scm>
 		<tag>master</tag>
