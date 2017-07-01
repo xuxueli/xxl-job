@@ -28,8 +28,8 @@ public class PropertiesUtil {
 		try {
 			URL url = null;
 			ClassLoader loder = Thread.currentThread().getContextClassLoader();
-			url = loder.getResource(propertyFileName); 
-			in = new InputStreamReader(new FileInputStream(url.getPath()), "UTF-8");
+			url = loder.getResource(propertyFileName);
+			in = new InputStreamReader(new FileInputStream(java.net.URLDecoder.decode(url.getPath(), "UTF-8")), "UTF-8");
 			prop.load(in);
 		} catch (IOException e) {
 			logger.error(e.getMessage(), e);
