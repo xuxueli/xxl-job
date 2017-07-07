@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="XxlJobInfoMapper">
+<mapper namespace="com.xxl.job.admin.dao.IXxlJobInfoDao">
 	
 	<resultMap id="XxlJobInfo" type="com.xxl.job.admin.core.model.XxlJobInfo" >
 		<result column="id" property="id" />
@@ -66,7 +66,7 @@
 		LIMIT #{offset}, #{pagesize}
 	</select>
 	
-	<select id="pageListCount" parameterType="java.util.HashMap" resultType="int">
+	<select id="pageListCount" resultType="int">
 		SELECT count(1)
 		FROM XXL_JOB_QRTZ_TRIGGER_INFO AS t
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >

@@ -1,29 +1,40 @@
 package com.xxl.job.admin.dao;
 
 import com.xxl.job.admin.core.model.XxlJobInfo;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
 
 /**
  * job info
+ *
  * @author xuxueli 2016-1-12 18:03:45
  */
+@Mapper
 public interface IXxlJobInfoDao {
 
-	public List<XxlJobInfo> pageList(int offset, int pagesize, int jobGroup, String executorHandler);
-	public int pageListCount(int offset, int pagesize, int jobGroup, String executorHandler);
-	
-	public int save(XxlJobInfo info);
+    public List<XxlJobInfo> pageList(@Param("offset") int offset,
+                                     @Param("pagesize") int pagesize,
+                                     @Param("jobGroup") int jobGroup,
+                                     @Param("executorHandler") String executorHandler);
 
-	public XxlJobInfo loadById(int id);
-	
-	public int update(XxlJobInfo item);
-	
-	public int delete(int id);
+    public int pageListCount(@Param("offset") int offset,
+                             @Param("pagesize") int pagesize,
+                             @Param("jobGroup") int jobGroup,
+                             @Param("executorHandler") String executorHandler);
 
-	public List<XxlJobInfo> getJobsByGroup(String jobGroup);
+    public int save(XxlJobInfo info);
 
-	public int findAllCount();
+    public XxlJobInfo loadById(@Param("id") int id);
+
+    public int update(XxlJobInfo item);
+
+    public int delete(@Param("id") int id);
+
+    public List<XxlJobInfo> getJobsByGroup(@Param("jobGroup") String jobGroup);
+
+    public int findAllCount();
 
 }

@@ -13,22 +13,22 @@ import java.util.Map;
  */
 public interface IXxlJobService {
 	
-	public Map<String, Object> pageList(int start, int length, int jobGroup, String executorHandler, String filterTime);
+	Map<String, Object> pageList(int start, int length, int jobGroup, String executorHandler, String filterTime);
 	
-	public ReturnT<String> add(XxlJobInfo jobInfo);
+	ReturnT<String> add(XxlJobInfo jobInfo);
 	
-	public ReturnT<String> reschedule(XxlJobInfo jobInfo);
+	ReturnT<String> reschedule(XxlJobInfo jobInfo);
 	
-	public ReturnT<String> remove(int id);
+	ReturnT<String> remove(int id);
 	
-	public ReturnT<String> pause(int id);
+	ReturnT<String> pause(int id);
 	
-	public ReturnT<String> resume(int id);
+	ReturnT<String> resume(int id);
 	
-	public ReturnT<String> triggerJob(int id);
+	ReturnT<String> triggerJob(int id);
 
-	public Map<String,Object> dashboardInfo();
+	Map<String,Object> dashboardInfo();
 
-	public ReturnT<Map<String,Object>> triggerChartDate();
+	ReturnT<Map<String,Object>> triggerChartDate();
 
 }

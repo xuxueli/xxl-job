@@ -18,7 +18,8 @@ public class ScriptJobHandler extends IJobHandler {
     private String gluesource;
     private GlueTypeEnum glueType;
 
-    public ScriptJobHandler(int jobId, long glueUpdatetime, String gluesource, GlueTypeEnum glueType){
+
+    public ScriptJobHandler(int jobId, long glueUpdatetime, String gluesource, GlueTypeEnum glueType) {
         this.jobId = jobId;
         this.glueUpdatetime = glueUpdatetime;
         this.gluesource = gluesource;
@@ -37,23 +38,22 @@ public class ScriptJobHandler extends IJobHandler {
         String scriptFileName = null;
         if (GlueTypeEnum.GLUE_SHELL == glueType) {
             cmd = "bash";
-            scriptFileName = XxlJobExecutor.logPath.concat("gluesource/").concat(String.valueOf(jobId)).concat("_").concat(String.valueOf(glueUpdatetime)).concat(".sh");
+            scriptFileName = XxlJobExecutor.getLogPath().concat("gluesource/").concat(String.valueOf(jobId)).concat("_").concat(String.valueOf(glueUpdatetime)).concat(".sh");
         } else if (GlueTypeEnum.GLUE_PYTHON == glueType) {
             cmd = "python";
-            scriptFileName = XxlJobExecutor.logPath.concat("gluesource/").concat(String.valueOf(jobId)).concat("_").concat(String.valueOf(glueUpdatetime)).concat(".py");
+            scriptFileName = XxlJobExecutor.getLogPath().concat("gluesource/").concat(String.valueOf(jobId)).concat("_").concat(String.valueOf(glueUpdatetime)).concat(".py");
         }
 
         // make script file
         ScriptUtil.markScriptFile(scriptFileName, gluesource);
 
         // log file
-        String logFileName = XxlJobExecutor.logPath.concat(XxlJobFileAppender.contextHolder.get());
+        String logFileName = XxlJobExecutor.getLogPath().concat(XxlJobFileAppender.contextHolder.get());
 
         // invoke
-        XxlJobLogger.log("----------- script file:"+ scriptFileName +" -----------");
+        XxlJobLogger.log("----------- script file:" + scriptFileName + " -----------");
         int exitValue = ScriptUtil.execToFile(cmd, scriptFileName, logFileName, params);
-        ReturnT<String> result = (exitValue==0)?ReturnT.SUCCESS:new ReturnT<String>(ReturnT.FAIL_CODE, "script exit value("+exitValue+") is failed");
-        return result;
+        return (exitValue == 0) ? ReturnT.SUCCESS : ReturnT.<String>error("script exit value(" + exitValue + ") is failed");
     }
 
 }

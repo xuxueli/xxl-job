@@ -1,107 +1,74 @@
 package com.xxl.job.core.glue;
 
-import com.xxl.job.core.executor.XxlJobExecutor;
 import com.xxl.job.core.handler.IJobHandler;
+import com.xxl.job.core.handler.annotation.JobHander;
 import groovy.lang.GroovyClassLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.core.annotation.AnnotationUtils;
-
-import javax.annotation.Resource;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 
 /**
  * glue factory, product class/object by name
+ *
  * @author xuxueli 2016-1-2 20:02:27
  */
 public class GlueFactory {
-	private static Logger logger = LoggerFactory.getLogger(GlueFactory.class);
-	
-	/**
-	 * groovy class loader
-	 */
-	private GroovyClassLoader groovyClassLoader = new GroovyClassLoader();
+    private static Logger logger = LoggerFactory.getLogger(GlueFactory.class);
+    private static AutowireCapableBeanFactory factory;
+    private static GlueFactory glueFactory;
+    private static volatile boolean isSpringProject;
+    private static volatile boolean isInit;
 
-	// ----------------------------- spring support -----------------------------
-	private static GlueFactory glueFactory = new GlueFactory();
-	public static GlueFactory getInstance(){
-		return glueFactory;
-	}
+    public static void init(AutowireCapableBeanFactory beanFactory) {
+        if (isInit) {
+            factory = beanFactory;
+            isSpringProject = true;
+            glueFactory = new GlueFactory();
+            isInit = true;
+        }
+    }
 
-	/**
-	 * inject action of spring
-	 * @param instance
-	 */
-	private void injectService(Object instance){
-		if (instance==null) {
-			return;
-		}
-	    
-		Field[] fields = instance.getClass().getDeclaredFields();
-		for (Field field : fields) {
-			if (Modifier.isStatic(field.getModifiers())) {
-				continue;
-			}
-			
-			Object fieldBean = null;
-			// with bean-id, bean could be found by both @Resource and @Autowired, or bean could only be found by @Autowired
-			if (AnnotationUtils.getAnnotation(field, Resource.class) != null) {
-				try {
-					Resource resource = AnnotationUtils.getAnnotation(field, Resource.class);
-					if (resource.name()!=null && resource.name().length()>0){
-						fieldBean = XxlJobExecutor.applicationContext.getBean(resource.name());
-					} else {
-						fieldBean = XxlJobExecutor.applicationContext.getBean(field.getName());
-					}
-				} catch (Exception e) {
-				}
-				if (fieldBean==null ) {
-					fieldBean = XxlJobExecutor.applicationContext.getBean(field.getType());
-				}
-			} else if (AnnotationUtils.getAnnotation(field, Autowired.class) != null) {
-				Qualifier qualifier = AnnotationUtils.getAnnotation(field, Qualifier.class);
-				if (qualifier!=null && qualifier.value()!=null && qualifier.value().length()>0) {
-					fieldBean = XxlJobExecutor.applicationContext.getBean(qualifier.value());
-				} else {
-					fieldBean = XxlJobExecutor.applicationContext.getBean(field.getType());
-				}
-			}
-			
-			if (fieldBean!=null) {
-				field.setAccessible(true);
-				try {
-					field.set(instance, fieldBean);
-				} catch (IllegalArgumentException e) {
-					e.printStackTrace();
-				} catch (IllegalAccessException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-	}
-	
-	// ----------------------------- load instance -----------------------------
-	// load new instance, prototype
-	public IJobHandler loadNewInstance(String codeSource) throws Exception{
-		if (codeSource!=null && codeSource.trim().length()>0) {
-			Class<?> clazz = groovyClassLoader.parseClass(codeSource);
-			if (clazz != null) {
-				Object instance = clazz.newInstance();
-				if (instance!=null) {
-					if (instance instanceof IJobHandler) {
-						this.injectService(instance);
-						return (IJobHandler) instance;
-					} else {
-						throw new IllegalArgumentException(">>>>>>>>>>> xxl-glue, loadNewInstance error, "
-								+ "cannot convert from instance["+ instance.getClass() +"] to IJobHandler");
-					}
-				}
-			}
-		}
-		throw new IllegalArgumentException(">>>>>>>>>>> xxl-glue, loadNewInstance error, instance is null");
-	}
+    public static void init() {
+        if (isInit) {
+            factory = null;
+            isSpringProject = false;
+            glueFactory = new GlueFactory();
+            isInit = true;
+        }
+    }
 
+    public static GlueFactory getInstance() {
+        if (isInit)
+            return glueFactory;
+        throw new NullPointerException();
+    }
+
+    /**
+     * groovy class loader
+     */
+    private GroovyClassLoader groovyClassLoader = new GroovyClassLoader();
+
+    // ----------------------------- load instance -----------------------------
+    // load new instance, prototype
+    public IJobHandler loadNewInstance(String codeSource) throws Exception {
+        if (codeSource != null && codeSource.trim().length() > 0) {
+            Class<?> clazz = groovyClassLoader.parseClass(codeSource);
+            if (clazz != null && clazz.isAnnotationPresent(JobHander.class)) {
+                Object instance = clazz.newInstance();
+                if (instance != null) {
+                    if (instance instanceof IJobHandler) {
+                        IJobHandler handler = (IJobHandler) instance;
+                        if (isSpringProject) {
+                            factory.autowireBean(handler);
+                        }
+                        return handler;
+                    } else {
+                        throw new IllegalArgumentException(">>>>>>>>>>> xxl-glue, loadNewInstance error, "
+                                + "cannot convert from instance[" + instance.getClass() + "] to IJobHandler");
+                    }
+                }
+            }
+        }
+        throw new IllegalArgumentException(">>>>>>>>>>> xxl-glue, loadNewInstance error, instance is null");
+    }
 }

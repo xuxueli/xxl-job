@@ -21,14 +21,13 @@ public class TriggerCallbackThread {
 
     private LinkedBlockingQueue<HandleCallbackParam> callBackQueue = new LinkedBlockingQueue<HandleCallbackParam>();
 
-    private Thread triggerCallbackThread;
     private boolean toStop = false;
     public void start() {
-        triggerCallbackThread = new Thread(new Runnable() {
+        Thread triggerCallbackThread = new Thread(new Runnable() {
 
             @Override
             public void run() {
-                while(!toStop){
+                while (!toStop) {
                     try {
                         HandleCallbackParam callback = getInstance().callBackQueue.take();
                         if (callback != null) {
@@ -53,7 +52,7 @@ public class TriggerCallbackThread {
         toStop = true;
     }
 
-    public static void pushCallBack(HandleCallbackParam callback){
+    static void pushCallBack(HandleCallbackParam callback){
         getInstance().callBackQueue.add(callback);
         logger.debug(">>>>>>>>>>> xxl-job, push callback request, logId:{}", callback.getLogId());
     }

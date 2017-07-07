@@ -18,10 +18,13 @@ public class XxlJobFileAppender {
 	
 	// for JobThread (support log for child thread of job handler)
 	//public static ThreadLocal<String> contextHolder = new ThreadLocal<String>();
-	public static InheritableThreadLocal<String> contextHolder = new InheritableThreadLocal<String>();
-	public static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-	
-	/**
+	public static InheritableThreadLocal<String> contextHolder = new InheritableThreadLocal<>();
+	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+    private XxlJobFileAppender() {
+    }
+
+    /**
 	 * log filename: yyyy-MM-dd/9999.log
 	 *
 	 * @param triggerDate
@@ -31,7 +34,7 @@ public class XxlJobFileAppender {
 	public static String makeLogFileName(Date triggerDate, int logId) {
 
         // filePath/
-        File filePathDir = new File(XxlJobExecutor.logPath);
+        File filePathDir = new File(XxlJobExecutor.getLogPath());
         if (!filePathDir.exists()) {
             filePathDir.mkdirs();
         }
@@ -44,8 +47,7 @@ public class XxlJobFileAppender {
         }
 
         // filePath/yyyy-MM-dd/9999.log
-		String logFileName = XxlJobFileAppender.sdf.format(triggerDate).concat("/").concat(String.valueOf(logId)).concat(".log");
-		return logFileName;
+        return XxlJobFileAppender.sdf.format(triggerDate).concat("/").concat(String.valueOf(logId)).concat(".log");
 	}
 
 	/**
@@ -66,7 +68,7 @@ public class XxlJobFileAppender {
 		if (logFileName==null || logFileName.trim().length()==0) {
 			return;
 		}
-		File logFile = new File(XxlJobExecutor.logPath, logFileName);
+		File logFile = new File(XxlJobExecutor.getLogPath(), logFileName);
 
 		if (!logFile.exists()) {
 			try {
@@ -111,14 +113,14 @@ public class XxlJobFileAppender {
 		if (logFileName==null || logFileName.trim().length()==0) {
             return new LogResult(fromLineNum, 0, "readLog fail, logFile not found", true);
 		}
-		File logFile = new File(XxlJobExecutor.logPath, logFileName);
+		File logFile = new File(XxlJobExecutor.getLogPath(), logFileName);
 
 		if (!logFile.exists()) {
             return new LogResult(fromLineNum, 0, "readLog fail, logFile not exists", true);
 		}
 
 		// read file
-		StringBuffer logContentBuffer = new StringBuffer();
+		StringBuilder logContentBuffer = new StringBuilder();
 		int toLineNum = 0;
 		LineNumberReader reader = null;
 		try {
@@ -145,8 +147,7 @@ public class XxlJobFileAppender {
 		}
 
 		// result
-		LogResult logResult = new LogResult(fromLineNum, toLineNum, logContentBuffer.toString(), false);
-		return logResult;
+        return new LogResult(fromLineNum, toLineNum, logContentBuffer.toString(), false);
 
 		/*
         // it will return the number of characters actually skipped

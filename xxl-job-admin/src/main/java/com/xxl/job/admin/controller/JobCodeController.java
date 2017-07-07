@@ -53,14 +53,14 @@ public class JobCodeController {
 	public ReturnT<String> save(Model model, int id, String glueSource, String glueRemark) {
 		// valid
 		if (glueRemark==null) {
-			return new ReturnT<String>(500, "请输入备注");
+			return ReturnT.error("请输入备注");
 		}
 		if (glueRemark.length()<4 || glueRemark.length()>100) {
-			return new ReturnT<String>(500, "备注长度应该在4至100之间");
+			return ReturnT.error("备注长度应该在4至100之间");
 		}
 		XxlJobInfo exists_jobInfo = xxlJobInfoDao.loadById(id);
 		if (exists_jobInfo == null) {
-			return new ReturnT<String>(500, "参数异常");
+			return ReturnT.error("参数异常");
 		}
 		
 		// update new code

@@ -1,11 +1,14 @@
 package com.xxl.job.admin.core.model;
 
+import lombok.Data;
+
 import java.util.Date;
 
 /**
  * xxl-job info
  * @author xuxueli  2016-1-12 18:25:49
  */
+@Data
 public class XxlJobInfo {
 	
 	private int id;				// 主键ID	    (JobKey.name)
@@ -36,156 +39,17 @@ public class XxlJobInfo {
 	// copy from quartz
 	private String jobStatus;		// 任务状态 【base on quartz】
 
-	public int getId() {
-		return id;
+	public XxlJobInfo merge(XxlJobInfo xxlJobInfo) {
+		this.setJobCron(xxlJobInfo.getJobCron());
+		this.setJobDesc(xxlJobInfo.getJobDesc());
+		this.setAuthor(xxlJobInfo.getAuthor());
+		this.setAlarmEmail(xxlJobInfo.getAlarmEmail());
+		this.setExecutorRouteStrategy(xxlJobInfo.getExecutorRouteStrategy());
+		this.setExecutorHandler(xxlJobInfo.getExecutorHandler());
+		this.setExecutorParam(xxlJobInfo.getExecutorParam());
+		this.setExecutorBlockStrategy(xxlJobInfo.getExecutorBlockStrategy());
+		this.setExecutorFailStrategy(xxlJobInfo.getExecutorFailStrategy());
+		this.setChildJobKey(xxlJobInfo.getChildJobKey());
+		return this;
 	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	public int getJobGroup() {
-		return jobGroup;
-	}
-
-	public void setJobGroup(int jobGroup) {
-		this.jobGroup = jobGroup;
-	}
-
-	public String getJobCron() {
-		return jobCron;
-	}
-
-	public void setJobCron(String jobCron) {
-		this.jobCron = jobCron;
-	}
-
-	public String getJobDesc() {
-		return jobDesc;
-	}
-
-	public void setJobDesc(String jobDesc) {
-		this.jobDesc = jobDesc;
-	}
-
-	public Date getAddTime() {
-		return addTime;
-	}
-
-	public void setAddTime(Date addTime) {
-		this.addTime = addTime;
-	}
-
-	public Date getUpdateTime() {
-		return updateTime;
-	}
-
-	public void setUpdateTime(Date updateTime) {
-		this.updateTime = updateTime;
-	}
-
-	public String getAuthor() {
-		return author;
-	}
-
-	public void setAuthor(String author) {
-		this.author = author;
-	}
-
-	public String getAlarmEmail() {
-		return alarmEmail;
-	}
-
-	public void setAlarmEmail(String alarmEmail) {
-		this.alarmEmail = alarmEmail;
-	}
-
-    public String getExecutorRouteStrategy() {
-        return executorRouteStrategy;
-    }
-
-    public void setExecutorRouteStrategy(String executorRouteStrategy) {
-        this.executorRouteStrategy = executorRouteStrategy;
-    }
-
-    public String getExecutorHandler() {
-		return executorHandler;
-	}
-
-	public void setExecutorHandler(String executorHandler) {
-		this.executorHandler = executorHandler;
-	}
-
-	public String getExecutorParam() {
-		return executorParam;
-	}
-
-	public void setExecutorParam(String executorParam) {
-		this.executorParam = executorParam;
-	}
-
-	public String getExecutorBlockStrategy() {
-		return executorBlockStrategy;
-	}
-
-	public void setExecutorBlockStrategy(String executorBlockStrategy) {
-		this.executorBlockStrategy = executorBlockStrategy;
-	}
-
-	public String getExecutorFailStrategy() {
-		return executorFailStrategy;
-	}
-
-	public void setExecutorFailStrategy(String executorFailStrategy) {
-		this.executorFailStrategy = executorFailStrategy;
-	}
-
-	public String getGlueType() {
-		return glueType;
-	}
-
-	public void setGlueType(String glueType) {
-		this.glueType = glueType;
-	}
-
-	public String getGlueSource() {
-		return glueSource;
-	}
-
-	public void setGlueSource(String glueSource) {
-		this.glueSource = glueSource;
-	}
-
-	public String getGlueRemark() {
-		return glueRemark;
-	}
-
-	public void setGlueRemark(String glueRemark) {
-		this.glueRemark = glueRemark;
-	}
-
-	public Date getGlueUpdatetime() {
-		return glueUpdatetime;
-	}
-
-	public void setGlueUpdatetime(Date glueUpdatetime) {
-		this.glueUpdatetime = glueUpdatetime;
-	}
-
-	public String getChildJobKey() {
-		return childJobKey;
-	}
-
-	public void setChildJobKey(String childJobKey) {
-		this.childJobKey = childJobKey;
-	}
-
-	public String getJobStatus() {
-		return jobStatus;
-	}
-
-	public void setJobStatus(String jobStatus) {
-		this.jobStatus = jobStatus;
-	}
-
 }

@@ -4,6 +4,7 @@ import com.xxl.job.admin.core.util.JacksonUtil;
 import com.xxl.job.core.biz.model.ReturnT;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerExceptionResolver;
@@ -16,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
  * common exception resolver
  * @author xuxueli 2016-1-6 19:22:18
  */
+@Component
 public class WebExceptionResolver implements HandlerExceptionResolver {
 	private static transient Logger logger = LoggerFactory.getLogger(WebExceptionResolver.class);
 

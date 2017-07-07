@@ -1,10 +1,11 @@
 package com.xxl.job.admin.core.route;
 
 import com.xxl.job.admin.core.model.XxlJobLog;
+import com.xxl.job.admin.jetty.NetComClientProxy;
 import com.xxl.job.core.biz.ExecutorBiz;
+import com.xxl.job.core.biz.impl.ExecutorBizImpl;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.biz.model.TriggerParam;
-import com.xxl.job.core.rpc.netcom.NetComClientProxy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,26 +28,25 @@ public abstract class ExecutorRouter {
 
     /**
      * run executor
+     *
      * @param triggerParam
      * @param address
      * @return
      */
-    protected static ReturnT<String> runExecutor(TriggerParam triggerParam, String address){
-        ReturnT<String> runResult = null;
+    protected static ReturnT<String> runExecutor(TriggerParam triggerParam, String address) {
+        ReturnT<String> runResult;
         try {
             ExecutorBiz executorBiz = (ExecutorBiz) new NetComClientProxy(ExecutorBiz.class, address).getObject();
             runResult = executorBiz.run(triggerParam);
         } catch (Exception e) {
             logger.error("", e);
-            runResult = new ReturnT<String>(ReturnT.FAIL_CODE, ""+e );
+            runResult = ReturnT.error(e.getMessage());
         }
 
-        StringBuffer runResultSB = new StringBuffer("触发调度：");
-        runResultSB.append("<br>address：").append(address);
-        runResultSB.append("<br>code：").append(runResult.getCode());
-        runResultSB.append("<br>msg：").append(runResult.getMsg());
-
-        runResult.setMsg(runResultSB.toString());
+        String runResultSB = "触发调度：" + "<br>address：" + address +
+                "<br>code：" + runResult.getCode() +
+                "<br>msg：" + runResult.getMsg();
+        runResult.setMsg(runResultSB);
         return runResult;
     }
 

@@ -6,71 +6,71 @@ import com.xxl.job.core.rpc.codec.RpcResponse;
 import com.xxl.job.core.rpc.netcom.jetty.server.JettyServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.cglib.reflect.FastClass;
-import org.springframework.cglib.reflect.FastMethod;
 
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * netcom init
+ *
  * @author xuxueli 2015-10-31 22:54:27
  */
-public class NetComServerFactory  {
-	private static final Logger logger = LoggerFactory.getLogger(NetComServerFactory.class);
+public class NetComServerFactory {
+    private static final Logger logger = LoggerFactory.getLogger(NetComServerFactory.class);
 
-	// ---------------------- server start ----------------------
-	JettyServer server = new JettyServer();
-	public void start(int port, String ip, String appName) throws Exception {
-		server.start(port, ip, appName);
-	}
 
-	// ---------------------- server destroy ----------------------
-	public void destroy(){
-		server.destroy();
-	}
+    private static JettyServer server;
+    private static Map<String, Object> serviceMap = new HashMap<>();
 
-	// ---------------------- server init ----------------------
-	/**
-	 * init local rpc service map
-	 */
-	private static Map<String, Object> serviceMap = new HashMap<String, Object>();
-	public static void putService(Class<?> iface, Object serviceBean){
-		serviceMap.put(iface.getName(), serviceBean);
-	}
-	public static RpcResponse invokeService(RpcRequest request, Object serviceBean) {
-		if (serviceBean==null) {
-			serviceBean = serviceMap.get(request.getClassName());
-		}
-		if (serviceBean == null) {
-			// TODO
-		}
+    public static void start(int port, String ip, String appName) throws Exception {
+        server = new JettyServer();
+        server.start(port, ip, appName);
+    }
 
-		RpcResponse response = new RpcResponse();
+    // ---------------------- server destroy ----------------------
+    public static void destroy() {
+        server.destroy();
+    }
 
-		if (System.currentTimeMillis() - request.getCreateMillisTime() > 180000) {
-			response.setResult(new ReturnT<String>(ReturnT.FAIL_CODE, "the timestamp difference between admin and executor exceeds the limit."));
-			return response;
-		}
 
-		try {
-			Class<?> serviceClass = serviceBean.getClass();
-			String methodName = request.getMethodName();
-			Class<?>[] parameterTypes = request.getParameterTypes();
-			Object[] parameters = request.getParameters();
+    public static void putService(Class<?> iface, Object serviceBean) {
+        serviceMap.put(iface.getName(), serviceBean);
+    }
 
-			FastClass serviceFastClass = FastClass.create(serviceClass);
-			FastMethod serviceFastMethod = serviceFastClass.getMethod(methodName, parameterTypes);
+    public static RpcResponse invokeService(RpcRequest request, Object serviceBean) {
+        if (serviceBean == null) {
+            serviceBean = serviceMap.get(request.getClassName());
+        }
+        if (serviceBean == null) {
+            // TODO
+        }
 
-			Object result = serviceFastMethod.invoke(serviceBean, parameters);
+        RpcResponse response = new RpcResponse();
 
-			response.setResult(result);
-		} catch (Throwable t) {
-			t.printStackTrace();
-			response.setError(t.getMessage());
-		}
+        if (System.currentTimeMillis() - request.getCreateMillisTime() > 180000) {
+            response.setResult(ReturnT.error("the timestamp difference between admin and executor exceeds the limit."));
+            return response;
+        }
 
-		return response;
-	}
+        try {
+            Class<?> serviceClass = serviceBean.getClass();
+            String methodName = request.getMethodName();
+            Class<?>[] parameterTypes = request.getParameterTypes();
+            Object[] parameters = request.getParameters();
+
+//            FastClass serviceFastClass = FastClass.create(serviceClass);
+            Method serviceFastMethod = serviceClass.getMethod(methodName, parameterTypes);
+
+            Object result = serviceFastMethod.invoke(serviceBean, parameters);
+
+            response.setResult(result);
+        } catch (Throwable t) {
+            t.printStackTrace();
+            response.setError(t.getMessage());
+        }
+
+        return response;
+    }
 
 }

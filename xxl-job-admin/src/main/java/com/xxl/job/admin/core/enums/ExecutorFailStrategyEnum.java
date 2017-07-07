@@ -10,7 +10,7 @@ public enum ExecutorFailStrategyEnum {
     FAIL_RETRY("失败重试");
 
     private final String title;
-    private ExecutorFailStrategyEnum(String title) {
+    ExecutorFailStrategyEnum(String title) {
         this.title = title;
     }
 

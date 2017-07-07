@@ -21,7 +21,7 @@ public interface ExecutorBiz {
      * @param jobId
      * @return
      */
-    public ReturnT<String> idleBeat(int jobId);
+    public ReturnT<String> isRunningOrHasQueue(int jobId);
 
     /**
      * kill

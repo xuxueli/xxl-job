@@ -21,7 +21,6 @@ public class ExecutorRegistryThread extends Thread {
         return instance;
     }
 
-    private Thread registryThread;
     private boolean toStop = false;
     public void start(final int port, final String ip, final String appName){
 
@@ -39,7 +38,7 @@ public class ExecutorRegistryThread extends Thread {
             executorAddress = IpUtil.getIpPort(port);
         }
 
-        registryThread = new Thread(new Runnable() {
+        Thread registryThread = new Thread(new Runnable() {
             @Override
             public void run() {
                 while (!toStop) {
@@ -47,7 +46,7 @@ public class ExecutorRegistryThread extends Thread {
                         RegistryParam registryParam = new RegistryParam(RegistryConfig.RegistType.EXECUTOR.name(), appName, executorAddress);
                         ReturnT<String> registryResult = AdminApiUtil.callApiFailover(AdminApiUtil.REGISTRY, registryParam);
                         logger.info(">>>>>>>>>>> xxl-job Executor registry {}, RegistryParam:{}, registryResult:{}",
-                                new Object[]{(registryResult.getCode()==ReturnT.SUCCESS_CODE?"success":"fail"), registryParam.toString(), registryResult.toString()});
+                                (registryResult.getCode() == ReturnT.SUCCESS_CODE ? "success" : "fail"), registryParam.toString(), registryResult.toString());
                     } catch (Exception e) {
                         logger.error(">>>>>>>>>>> xxl-job ExecutorRegistryThread Exception:", e);
                     }
