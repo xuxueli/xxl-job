@@ -31,7 +31,7 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 ### 1.3 发展
 于2015年中，我在github上创建XXL-JOB项目仓库并提交第一个commit，随之进行系统结构设计，UI选型，交互设计……
 
-于2015-11月，XXL-JOB终于REALEASE了第一个大版本V1.0， 随后我将之发布到OSCHINA，XXL-JOB在OSCHINA上获得了@红薯的热门推荐，同期分别达到了OSCHINA的“热门动弹”排行第一和git.oschina的开源软件月热度排行第一，在此特别感谢红薯，感谢大家的关注和支持。
+于2015-11月，XXL-JOB终于RELEASE了第一个大版本V1.0， 随后我将之发布到OSCHINA，XXL-JOB在OSCHINA上获得了@红薯的热门推荐，同期分别达到了OSCHINA的“热门动弹”排行第一和git.oschina的开源软件月热度排行第一，在此特别感谢红薯，感谢大家的关注和支持。
 
 于2015-12月，我将XXL-JOB发表到我司内部知识库，并且得到内部同事认可。
 
@@ -894,4 +894,5 @@ XXL-JOB托管在Github上，如有问题可在 [ISSUES](https://github.com/xuxue
 ---
 #### 支持的话可以扫一扫，支持 [XXL系列](https://github.com/xuxueli) 的建设：）
 
-![输入图片说明](http://images2015.cnblogs.com/blog/554415/201605/554415-20160513183306234-1939652116.png "在这里输入图片标题")
+微信：![输入图片说明](https://static.oschina.net/uploads/img/201707/07214300_qhxT.png "在这里输入图片标题")
+支付宝：![输入图片说明](http://images2015.cnblogs.com/blog/554415/201605/554415-20160513183306234-1939652116.png "在这里输入图片标题")
