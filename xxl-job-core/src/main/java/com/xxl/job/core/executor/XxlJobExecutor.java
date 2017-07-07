@@ -9,7 +9,9 @@ import com.xxl.job.core.thread.ExecutorRegistryThread;
 import com.xxl.job.core.thread.JobThread;
 import com.xxl.job.core.thread.TriggerCallbackThread;
 import com.xxl.job.core.util.AdminApiUtil;
+import com.xxl.job.core.util.IpUtil;
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,7 +40,9 @@ public class XxlJobExecutor {
     private static ConcurrentHashMap<Integer, JobThread> JobThreadRepository = new ConcurrentHashMap<>();
 
     public XxlJobExecutor(String ip, int port, String appName, String addresses, String logDir) {
-        this.ip = ip;
+        if (StringUtils.isBlank(ip)) {
+            this.ip = IpUtil.getIp();
+        }
         this.port = port;
         this.appName = appName;
         this.addresses = addresses;

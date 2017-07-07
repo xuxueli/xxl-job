@@ -14,7 +14,7 @@ public class XxlJobProperties {
 
     public static final String XXL_SERVER_PREFIX = "xxl.server";
 
-    private String ip;
+    private String ip = "";
     private int port = 9999;
     private String appName;
     private String addresses;

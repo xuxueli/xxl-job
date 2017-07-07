@@ -55,14 +55,6 @@
             <artifactId>commons-beanutils</artifactId>
             <version>1.9.2</version>
         </dependency>
-        <!-- commons-lang -->
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.6</version>
-        </dependency>
-
-
         <!-- c3p0 -->
         <dependency>
             <groupId>com.mchange</groupId>

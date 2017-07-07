@@ -24,6 +24,12 @@
             <artifactId>spring-beans</artifactId>
             <scope>provided</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.6</version>
+        </dependency>
         <!-- jetty -->
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
