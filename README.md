@@ -1,8 +1,14 @@
 
-![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/xxl-logo.jpg "在这里输入图片标题")
-
 # 《分布式任务调度平台XXL-JOB》
->XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是开发迅速、学习简单、轻量级、易扩展。现已开放源代码并接入多家公司线上产品线，开箱即用。
+
+[![Build Status](https://travis-ci.org/xuxueli/xxl-job.svg?branch=master)](https://travis-ci.org/xuxueli/xxl-job)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.xuxueli/xxl-job/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.xuxueli/xxl-job/)
+[![GitHub release](https://img.shields.io/github/release/xuxueli/xxl-job.svg)](https://github.com/xuxueli/xxl-job/releases)
+[![License](https://img.shields.io/badge/license-GPLv3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0.html)
+
+XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是开发迅速、学习简单、轻量级、易扩展。现已开放源代码并接入多家公司线上产品线，开箱即用。
+
+![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/xxl-logo.jpg "在这里输入图片标题")
 
 ### 1、文档
 
