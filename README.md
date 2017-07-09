@@ -11,11 +11,11 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 
 ![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/xxl-logo.jpg "在这里输入图片标题")
 
-### 1、文档
+### 文档
 
 [XXL-JOB官方文档](https://github.com/xuxueli/xxl-job/blob/master/doc/XXL-JOB官方文档.md)
 
-### 2、特性
+### 特性
 - 1、简单：支持通过Web页面对任务进行CRUD操作，操作简单，一分钟上手；
 - 2、动态：支持动态修改任务状态、暂停/恢复任务，以及终止运行中任务，即时生效；
 - 3、调度中心HA（中心式）：调度采用中心式设计，“调度中心”基于集群Quartz实现，可保证调度中心HA；
@@ -39,11 +39,11 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 - 21、阻塞处理策略：调度过于密集执行器来不及处理时的处理策略，策略包括：单机串行（默认）、丢弃后续调度、覆盖之前调度；
 - 22、失败处理策略；调度失败时的处理策略，策略包括：失败告警（默认）、失败重试；
 
-### 3、架构图
+### 架构图
 
 ![输入图片说明](https://static.oschina.net/uploads/img/201705/11225449_rKMi.png "在这里输入图片标题")
 
-### 4、发展
+### 发展
 于2015年中，我在github上创建XXL-JOB项目仓库并提交第一个commit，随之进行系统结构设计，UI选型，交互设计……
 
 于2015-11月，XXL-JOB终于RELEASE了第一个大版本V1.0， 随后我将之发布到OSCHINA，XXL-JOB在OSCHINA上获得了@红薯的热门推荐，同期分别达到了OSCHINA的“热门动弹”排行第一和git.oschina的开源软件月热度排行第一，在此特别感谢红薯，感谢大家的关注和支持。
@@ -90,17 +90,19 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 	- 29、武汉空心科技有限公司
 	- 30、北京蚂蚁风暴科技有限公司
 	- 31、四川互宜达科技有限公司
+    - 32、钱包行云（北京）科技有限公司
+    - 33、重庆欣才集团
 	- ……
 
 欢迎大家的关注和使用，XXL-JOB也将拥抱变化，持续发展。
 
 
-### 5、下载
+### 下载
 
 #### 源码仓库地址 (将会在两个git仓库同步发布最新代码)
 
 源码仓库地址 | Release Download
--- | --
+--- | ---
 [https://github.com/xuxueli/xxl-job](https://github.com/xuxueli/xxl-job) | [Download](https://github.com/xuxueli/xxl-job/releases)  
 [http://git.oschina.net/xuxueli0323/xxl-job](http://git.oschina.net/xuxueli0323/xxl-job) | [Download](http://git.oschina.net/xuxueli0323/xxl-job/releases)
 
@@ -129,15 +131,19 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 - 群1：367260654    （群即将满，请加群4）
 
 
-
-### 6、报告问题
+### 报告问题
 XXL-JOB托管在Github上，如有问题可在 [ISSUES](https://github.com/xuxueli/xxl-job/issues/) 上提问，也可以加入上文技术交流群；
 
-### 7、接入登记（登记仅为了推广，产品开源免费）
+### 接入登记（登记仅为了推广，产品开源免费）
 更多接入公司，欢迎在github [登记](https://github.com/xuxueli/xxl-job/issues/1 )
 
+### 开源协议
+产品开源免费，并且将持续提供免费的社区技术支持。个人或企业内部可自由的接入和使用。
+
+XXL-JOB采用GPLv3协议，目的是为了保证用户的自由使用权利。协议可避免专利申请的特殊危险 "the GPL assures that patents cannot be used to render the program non-free.（摘自GPLv3）"。  
+
 ---
-### 8、支持的话可以扫一扫，支持 [XXL系列](https://github.com/xuxueli) 的建设：）
+### 支持的话可以扫一扫，支持 [XXL系列](https://github.com/xuxueli) 的建设：）
 
 微信：![输入图片说明](https://static.oschina.net/uploads/img/201707/07214300_qhxT.png "在这里输入图片标题")
 支付宝：![输入图片说明](http://images2015.cnblogs.com/blog/554415/201605/554415-20160513183306234-1939652116.png "在这里输入图片标题")

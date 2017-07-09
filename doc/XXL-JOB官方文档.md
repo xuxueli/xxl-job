@@ -1,4 +1,11 @@
 # 《分布式任务调度平台XXL-JOB》
+
+[![Build Status](https://travis-ci.org/xuxueli/xxl-job.svg?branch=master)](https://travis-ci.org/xuxueli/xxl-job)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.xuxueli/xxl-job/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.xuxueli/xxl-job/)
+[![GitHub release](https://img.shields.io/github/release/xuxueli/xxl-job.svg)](https://github.com/xuxueli/xxl-job/releases)
+[![License](https://img.shields.io/badge/license-GPLv3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0.html)
+[![Gitter](https://badges.gitter.im/xuxueli/xxl-job.svg)](https://gitter.im/xuxueli/xxl-job?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+
 ## 一、简介
 
 ### 1.1 概述
@@ -75,6 +82,8 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 	- 29、武汉空心科技有限公司
 	- 30、北京蚂蚁风暴科技有限公司
 	- 31、四川互宜达科技有限公司
+	- 32、钱包行云（北京）科技有限公司
+	- 33、重庆欣才集团
 	- ……
 
 欢迎大家的关注和使用，XXL-JOB也将拥抱变化，持续发展。
@@ -84,7 +93,7 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 #### 源码仓库地址 (将会在两个git仓库同步发布最新代码)
 
 源码仓库地址 | Release Download
--- | --
+--- | ---
 [https://github.com/xuxueli/xxl-job](https://github.com/xuxueli/xxl-job) | [Download](https://github.com/xuxueli/xxl-job/releases)  
 [http://git.oschina.net/xuxueli0323/xxl-job](http://git.oschina.net/xuxueli0323/xxl-job) | [Download](http://git.oschina.net/xuxueli0323/xxl-job/releases)
 
@@ -890,6 +899,11 @@ XXL-JOB托管在Github上，如有问题可在 [ISSUES](https://github.com/xuxue
 
 #### 7.2 接入登记（登记仅为了推广，产品开源免费）
 更多接入公司，欢迎在github [登记](https://github.com/xuxueli/xxl-job/issues/1 )
+
+#### 7.3 开源协议
+产品开源免费，并且将持续提供免费的社区技术支持。个人或企业内部可自由的接入和使用。
+
+XXL-JOB采用GPLv3协议，目的是为了保证用户的自由使用权利。协议可避免专利申请的特殊危险 "the GPL assures that patents cannot be used to render the program non-free.（摘自GPLv3）"。  
 
 ---
 #### 支持的话可以扫一扫，支持 [XXL系列](https://github.com/xuxueli) 的建设：）
