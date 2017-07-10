@@ -13,114 +13,109 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author xuxueli 2017-05-10 21:28:15
  */
 public class AdminApiUtil {
-	private static Logger logger = LoggerFactory.getLogger(AdminApiUtil.class);
+    private static Logger logger = LoggerFactory.getLogger(AdminApiUtil.class);
 
-	public static final String CALLBACK = "/api/callback";
-	public static final String REGISTRY = "/api/registry";
+    public static final String CALLBACK = "/api/callback";
+    public static final String REGISTRY = "/api/registry";
 
-	private static List<String> adminAddressList = null;
-	public static void init(String adminAddresses){
-		// admin assress list
-		if (adminAddresses != null) {
-			Set<String> adminAddressSet = new HashSet<String>();
-			for (String adminAddressItem: adminAddresses.split(",")) {
-				if (adminAddressItem.trim().length()>0) {
-					adminAddressSet.add(adminAddressItem);
-				}
-			}
-            adminAddressList = new ArrayList<String>(adminAddressSet);
-		}
-	}
-	public static boolean allowCallApi(){
-        boolean allowCallApi = (adminAddressList!=null && adminAddressList.size()>0);
-        return allowCallApi;
+    private static List<String> adminAddressList = null;
+
+    public static void init(String adminAddresses) {
+        // admin address list
+        if (adminAddresses != null) {
+            Set<String> adminAddressSet = new HashSet<>();
+            for (String adminAddressItem : adminAddresses.split(",")) {
+                if (adminAddressItem.trim().length() > 0) {
+                    adminAddressSet.add(adminAddressItem);
+                }
+            }
+            adminAddressList = new ArrayList<>(adminAddressSet);
+        }
     }
 
-	public static ReturnT<String> callApiFailover(String subUrl, Object requestObj) throws Exception {
+    public static boolean allowCallApi() {
+        return (adminAddressList != null && adminAddressList.size() > 0);
+    }
 
-		if (!allowCallApi()) {
-			return new ReturnT<String>(ReturnT.FAIL_CODE, "allowCallApi fail.");
-		}
+    public static ReturnT<String> callApiFailover(String subUrl, Object requestObj) throws Exception {
 
-		for (String adminAddress: adminAddressList) {
-			ReturnT<String> registryResult = null;
-			try {
-				String apiUrl = adminAddress.concat(subUrl);
-				registryResult = callApi(apiUrl, requestObj);
-			} catch (Exception e) {
-				logger.error(e.getMessage(), e);
-			}
-			if (registryResult!=null && registryResult.getCode()==ReturnT.SUCCESS_CODE) {
-				return ReturnT.SUCCESS;
-			}
-		}
-		return ReturnT.FAIL;
-	}
+        if (!allowCallApi()) {
+            return ReturnT.error("allowCallApi fail.");
+        }
 
-	public static ReturnT<String> callApi(String finalUrl, Object requestObj) throws Exception {
-		HttpPost httpPost = new HttpPost(finalUrl);
-		CloseableHttpClient httpClient = HttpClients.createDefault();
-		try {
+        for (String adminAddress : adminAddressList) {
+            ReturnT<String> registryResult = null;
+            try {
+                String apiUrl = adminAddress.concat(subUrl);
+                registryResult = callApi(apiUrl, requestObj);
+            } catch (Exception e) {
+                logger.error(e.getMessage(), e);
+            }
+            if (registryResult != null && registryResult.getCode() == ReturnT.SUCCESS_CODE) {
+                return ReturnT.SUCCESS;
+            }
+        }
+        return ReturnT.FAIL;
+    }
 
-			// timeout
-			RequestConfig requestConfig = RequestConfig.custom()
-					.setConnectionRequestTimeout(10000)
-					.setSocketTimeout(10000)
-					.setConnectTimeout(10000)
-					.build();
+    @SuppressWarnings("unchecked")
+    public static ReturnT<String> callApi(String finalUrl, Object requestObj) throws Exception {
+        HttpPost httpPost = new HttpPost(finalUrl);
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        try {
 
-			httpPost.setConfig(requestConfig);
+            // timeout
+            RequestConfig requestConfig = RequestConfig.custom()
+                    .setConnectionRequestTimeout(10000)
+                    .setSocketTimeout(10000)
+                    .setConnectTimeout(10000)
+                    .build();
 
-			// data
-			if (requestObj != null) {
-				String json = JacksonUtil.writeValueAsString(requestObj);
+            httpPost.setConfig(requestConfig);
 
-				StringEntity entity = new StringEntity(json, "utf-8");
-				entity.setContentEncoding("UTF-8");
-				entity.setContentType("application/json");
+            // data
+            if (requestObj != null) {
+                String json = JacksonUtil.writeValueAsString(requestObj);
+                StringEntity entity = new StringEntity(Objects.requireNonNull(json), "utf-8");
+                entity.setContentEncoding("UTF-8");
+                entity.setContentType("application/json");
 
-				httpPost.setEntity(entity);
-			}
+                httpPost.setEntity(entity);
+            }
 
-			// do post
-			HttpResponse response = httpClient.execute(httpPost);
-			HttpEntity entity = response.getEntity();
-			if (null != entity) {
-				if (response.getStatusLine().getStatusCode() != 200) {
-					EntityUtils.consume(entity);
-					return new ReturnT<String>(response.getStatusLine().getStatusCode(), "StatusCode Error.");
-				}
+            // do post
+            HttpResponse response = httpClient.execute(httpPost);
+            HttpEntity entity = response.getEntity();
+            if (null != entity) {
+                if (response.getStatusLine().getStatusCode() != 200) {
+                    EntityUtils.consume(entity);
+                    return new ReturnT<>(response.getStatusLine().getStatusCode(), "StatusCode Error.");
+                }
 
-				String responseMsg = EntityUtils.toString(entity, "UTF-8");
-				EntityUtils.consume(entity);
-				if (responseMsg!=null && responseMsg.startsWith("{")) {
-					ReturnT<String> result = JacksonUtil.readValue(responseMsg, ReturnT.class);
-					return result;
-				}
-			}
-			return ReturnT.FAIL;
-		} catch (Exception e) {
-			logger.error("", e);
-			return new ReturnT<String>(ReturnT.FAIL_CODE, e.getMessage());
-		} finally {
-			if (httpPost!=null) {
-				httpPost.releaseConnection();
-			}
-			try {
-				httpClient.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-	
+                String responseMsg = EntityUtils.toString(entity, "UTF-8");
+                EntityUtils.consume(entity);
+                if (responseMsg != null && responseMsg.startsWith("{")) {
+                    return (ReturnT<String>) JacksonUtil.readValue(responseMsg, ReturnT.class);
+                }
+            }
+            return ReturnT.FAIL;
+        } catch (Exception e) {
+            logger.error("", e);
+            return ReturnT.error(e.getMessage());
+        } finally {
+            httpPost.releaseConnection();
+            try {
+                httpClient.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 }

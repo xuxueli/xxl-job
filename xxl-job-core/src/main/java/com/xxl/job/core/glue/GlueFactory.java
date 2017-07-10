@@ -20,7 +20,7 @@ public class GlueFactory {
     private static volatile boolean isInit;
 
     public static void init(AutowireCapableBeanFactory beanFactory) {
-        if (isInit) {
+        if (!isInit) {
             factory = beanFactory;
             isSpringProject = true;
             glueFactory = new GlueFactory();
@@ -29,7 +29,7 @@ public class GlueFactory {
     }
 
     public static void init() {
-        if (isInit) {
+        if (!isInit) {
             factory = null;
             isSpringProject = false;
             glueFactory = new GlueFactory();

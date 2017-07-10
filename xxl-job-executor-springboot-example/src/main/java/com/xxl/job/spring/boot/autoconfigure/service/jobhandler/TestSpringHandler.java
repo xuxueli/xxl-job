@@ -3,7 +3,6 @@ package com.xxl.job.spring.boot.autoconfigure.service.jobhandler;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.handler.annotation.JobHander;
 import com.xxl.job.core.log.XxlJobLogger;
-import org.springframework.stereotype.Component;
 
 import java.util.concurrent.TimeUnit;
 
@@ -11,7 +10,7 @@ import java.util.concurrent.TimeUnit;
  * Author: Antergone
  * Date: 2017/7/7
  */
-@Component
+//@Component
 @JobHander(value="springjob")
 public class TestSpringHandler extends ISpringJobHandler {
     @Override

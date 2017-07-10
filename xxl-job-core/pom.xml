@@ -13,10 +13,6 @@
     <description>A lightweight distributed task scheduling framework.</description>
     <url>http://www.xuxueli.com/</url>
 
-    <properties>
-        <spring.version>3.2.17.RELEASE</spring.version>
-    </properties>
-
     <dependencies>
 
         <dependency>

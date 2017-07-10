@@ -7,11 +7,7 @@
         <version>1.8.0-SNAPSHOT</version>
     </parent>
     <artifactId>xxl-job-admin</artifactId>
-    <packaging>war</packaging>
-
-    <properties>
-        <spring.version>3.2.17.RELEASE</spring.version>
-    </properties>
+    <packaging>jar</packaging>
 
     <dependencies>
         <!-- aspectjweaver (support spring aop) -->
@@ -108,5 +104,19 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>
