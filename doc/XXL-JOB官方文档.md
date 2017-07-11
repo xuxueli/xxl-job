@@ -566,7 +566,7 @@ CronTrigger cronTrigger = TriggerBuilder.newTrigger().withIdentity(triggerKey).w
 ```
 
 ##### 5.4.7 日志回调服务
-调度模块的“调度中心”作为Web服务部署时，一方面承担调度中心功能，另一方面页为执行器提供API服务。
+调度模块的“调度中心”作为Web服务部署时，一方面承担调度中心功能，另一方面也为执行器提供API服务。
 
 调度中心提供的"日志回调服务API服务"代码位置如下：
 ```
