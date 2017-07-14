@@ -84,7 +84,6 @@
 										<#--<th name="executorAddress" >执行器地址</th>
 										<th name="glueType" >运行模式</th>
                                       	<th name="executorParam" >任务参数</th>-->
-                                        <th name="JobInfo" >任务信息</th>
                                         <th name="triggerTime" >调度时间</th>
                                         <th name="triggerCode" >调度结果</th>
                                         <th name="triggerMsg" >调度备注</th>

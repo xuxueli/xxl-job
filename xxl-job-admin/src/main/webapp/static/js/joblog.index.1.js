@@ -96,7 +96,24 @@ $(function() {
 						"visible" : true,
 						"render": function ( data, type, row ) {
 							var jobKey = row.jobGroup + "_" + row.jobId;
-							return jobKey;
+
+                            var glueTypeTitle = row.glueType;
+                            if ('GLUE_GROOVY'==row.glueType) {
+                                glueTypeTitle = "GLUE模式(Java)";
+                            } else if ('GLUE_SHELL'==row.glueType) {
+                                glueTypeTitle = "GLUE模式(Shell)";
+                            } else if ('GLUE_PYTHON'==row.glueType) {
+                                glueTypeTitle = "GLUE模式(Python)";
+                            } else if ('BEAN'==row.glueType) {
+                                glueTypeTitle = "BEAN模式：" + row.executorHandler;
+                            }
+
+                            var temp = '';
+                            temp += '执行器地址：' + row.executorAddress;
+                            temp += '<br>运行模式：' + glueTypeTitle;
+                            temp += '<br>任务参数：' + row.executorParam;
+
+                            return '<a class="logTips" href="javascript:;" >'+ jobKey +'<span style="display:none;">'+ temp +'</span></a>';
 						}
 					},
 					// { "data": 'executorAddress', "visible" : true},
@@ -117,30 +134,6 @@ $(function() {
 					// 	 }
 					// },
 					// { "data": 'executorParam', "visible" : true},
-					{
-						"data": 'JobInfo',
-						"visible" : true,
-						"render": function ( data, type, row ) {
-
-							var glueTypeTitle = row.glueType;
-							if ('GLUE_GROOVY'==row.glueType) {
-								glueTypeTitle = "GLUE模式(Java)";
-							} else if ('GLUE_SHELL'==row.glueType) {
-								glueTypeTitle = "GLUE模式(Shell)";
-							} else if ('GLUE_PYTHON'==row.glueType) {
-								glueTypeTitle = "GLUE模式(Python)";
-							} else if ('BEAN'==row.glueType) {
-								glueTypeTitle = "BEAN模式：" + row.executorHandler;
-							}
-
-							var temp = '';
-							temp += '执行器地址：' + row.executorAddress;
-							temp += '<br>运行模式：' + glueTypeTitle;
-							temp += '<br>任务参数：' + row.executorParam;
-
-							return temp;
-						}
-					},
 					{
 						"data": 'triggerTime',
 						"render": function ( data, type, row ) {
