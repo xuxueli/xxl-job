@@ -95,12 +95,13 @@ public class AdminApiUtil {
 			HttpResponse response = httpClient.execute(httpPost);
 			HttpEntity entity = response.getEntity();
 			if (null != entity) {
+				String responseMsg = EntityUtils.toString(entity, "UTF-8");
 				if (response.getStatusLine().getStatusCode() != 200) {
 					EntityUtils.consume(entity);
-					return new ReturnT<String>(response.getStatusLine().getStatusCode(), "StatusCode Error.");
+					return new ReturnT<String>(response.getStatusLine().getStatusCode(),
+							"StatusCode（+"+ response.getStatusLine().getStatusCode() +"） Error，response：" + responseMsg);
 				}
 
-				String responseMsg = EntityUtils.toString(entity, "UTF-8");
 				EntityUtils.consume(entity);
 				if (responseMsg!=null && responseMsg.startsWith("{")) {
 					ReturnT<String> result = JacksonUtil.readValue(responseMsg, ReturnT.class);
