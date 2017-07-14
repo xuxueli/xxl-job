@@ -32,7 +32,7 @@
 		<!-- Main content -->
 	    <section class="content">
 	    	<div class="row">
-	    		<div class="col-xs-3">
+	    		<div class="col-xs-2">
  					<div class="input-group">
 	                	<span class="input-group-addon">执行器</span>
                 		<select class="form-control" id="jobGroup"  paramVal="<#if jobInfo?exists>${jobInfo.jobGroup}</#if>" >
@@ -43,7 +43,7 @@
 	                  	</select>
 	              	</div>
 	            </div>
-	            <div class="col-xs-3">
+	            <div class="col-xs-2">
 	              	<div class="input-group">
 	                	<span class="input-group-addon">任务</span>
                         <select class="form-control" id="jobId" paramVal="<#if jobInfo?exists>${jobInfo.id}</#if>" >
@@ -51,6 +51,19 @@
 						</select>
 	              	</div>
 	            </div>
+
+                <div class="col-xs-2">
+                    <div class="input-group">
+                        <span class="input-group-addon">状态</span>
+                        <select class="form-control" id="logStatus" >
+                            <option value="-1" >全部</option>
+                            <option value="1" >成功</option>
+                            <option value="2" >失败</option>
+                            <option value="3" >进行中</option>
+                        </select>
+                    </div>
+                </div>
+
 	            <div class="col-xs-4">
               		<div class="input-group">
                 		<span class="input-group-addon">

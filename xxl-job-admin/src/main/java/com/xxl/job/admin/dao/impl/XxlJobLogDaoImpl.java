@@ -22,7 +22,7 @@ public class XxlJobLogDaoImpl implements IXxlJobLogDao {
 	public SqlSessionTemplate sqlSessionTemplate;
 
 	@Override
-	public List<XxlJobLog> pageList(int offset, int pagesize, int jobGroup, int jobId, Date triggerTimeStart, Date triggerTimeEnd) {
+	public List<XxlJobLog> pageList(int offset, int pagesize, int jobGroup, int jobId, Date triggerTimeStart, Date triggerTimeEnd, int logStatus) {
 		HashMap<String, Object> params = new HashMap<String, Object>();
 		params.put("offset", offset);
 		params.put("pagesize", pagesize);
@@ -30,12 +30,13 @@ public class XxlJobLogDaoImpl implements IXxlJobLogDao {
 		params.put("jobId", jobId);
 		params.put("triggerTimeStart", triggerTimeStart);
 		params.put("triggerTimeEnd", triggerTimeEnd);
+		params.put("logStatus", logStatus);
 		
 		return sqlSessionTemplate.selectList("XxlJobLogMapper.pageList", params);
 	}
 
 	@Override
-	public int pageListCount(int offset, int pagesize, int jobGroup, int jobId, Date triggerTimeStart, Date triggerTimeEnd) {
+	public int pageListCount(int offset, int pagesize, int jobGroup, int jobId, Date triggerTimeStart, Date triggerTimeEnd, int logStatus) {
 		HashMap<String, Object> params = new HashMap<String, Object>();
 		params.put("offset", offset);
 		params.put("pagesize", pagesize);
@@ -43,6 +44,7 @@ public class XxlJobLogDaoImpl implements IXxlJobLogDao {
 		params.put("jobId", jobId);
 		params.put("triggerTimeStart", triggerTimeStart);
 		params.put("triggerTimeEnd", triggerTimeEnd);
+		params.put("logStatus", logStatus);
 		
 		return sqlSessionTemplate.selectOne("XxlJobLogMapper.pageListCount", params);
 	}
