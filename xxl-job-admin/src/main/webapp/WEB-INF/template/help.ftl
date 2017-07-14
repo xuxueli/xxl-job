@@ -37,22 +37,26 @@
 					<a target="_blank" href="http://my.oschina.net/xuxueli/blog/690978">oschina地址</a>
                     <br><br>
 
-                    <a >技术交流群4：464762661</a>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <a target="_blank" href="//shang.qq.com/wpa/qunwpa?idkey=2b7c60319cadc36eedf2655d43b0c98a58b5a3f42128453abdf2710338c30201">
-						<img border="0" src="//pub.idqqimg.com/wpa/images/group.png" alt="《xxl-javaer》（四群）" title="《xxl-javaer》（四群）">
+                    <a >技术交流群5：138274130</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a target="_blank" href="//shang.qq.com/wpa/qunwpa?idkey=a3f3aea7e5943e7a24e9726495747ddc19bccd3592d7a70ecb5a97b616062241">
+						<img border="0" src="//pub.idqqimg.com/wpa/images/group.png" alt="《xxl-javaer》（五群）" title="《xxl-javaer》（五群）">
 					</a>
                     <br><br>
 
+                    <a >技术交流群4：464762661</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                    （群即将满，请加群5）
+                    <br><br>
+
                     <a >技术交流群3：242151780</a>&nbsp;&nbsp;&nbsp;&nbsp;
-                    （群即将满，请加群4）
+                    （群即将满，请加群5）
                     <br><br>
 
                     <a >技术交流群2：438249535</a>&nbsp;&nbsp;&nbsp;&nbsp;
-                    （群即将满，请加群4）
+                    （群即将满，请加群5）
                     <br><br>
 
                     <a >技术交流群1：367260654</a>&nbsp;&nbsp;&nbsp;&nbsp;
-                    （群即将满，请加群4）
+                    （群即将满，请加群5）
 
 				</p>
 				<p></p>
