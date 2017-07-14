@@ -23,6 +23,11 @@ public class XxlJobGroupDaoImpl implements IXxlJobGroupDao {
     }
 
     @Override
+    public List<XxlJobGroup> findByAddressType(int addressType) {
+        return sqlSessionTemplate.selectList("XxlJobGroupMapper.findByAddressType", addressType);
+    }
+
+    @Override
     public int save(XxlJobGroup xxlJobGroup) {
         return sqlSessionTemplate.update("XxlJobGroupMapper.save", xxlJobGroup);
     }

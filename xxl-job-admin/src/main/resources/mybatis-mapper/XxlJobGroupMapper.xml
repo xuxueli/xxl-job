@@ -21,9 +21,16 @@
 		t.address_list
 	</sql>
 
-	<select id="findAll" parameterType="java.lang.Integer" resultMap="XxlJobGroup">
+	<select id="findAll" resultMap="XxlJobGroup">
 		SELECT <include refid="Base_Column_List" />
 		FROM XXL_JOB_QRTZ_TRIGGER_GROUP AS t
+		ORDER BY t.order ASC
+	</select>
+
+	<select id="findByAddressType" parameterType="java.lang.Integer" resultMap="XxlJobGroup">
+		SELECT <include refid="Base_Column_List" />
+		FROM XXL_JOB_QRTZ_TRIGGER_GROUP AS t
+		WHERE t.address_type = #{addressType}
 		ORDER BY t.order ASC
 	</select>
 

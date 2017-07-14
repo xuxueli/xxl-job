@@ -5,7 +5,6 @@ import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.route.ExecutorRouteStrategyEnum;
 import com.xxl.job.admin.core.schedule.XxlJobDynamicScheduler;
-import com.xxl.job.admin.core.thread.JobRegistryMonitorHelper;
 import com.xxl.job.admin.dao.IXxlJobGroupDao;
 import com.xxl.job.admin.dao.IXxlJobInfoDao;
 import com.xxl.job.admin.dao.IXxlJobLogDao;
@@ -13,7 +12,6 @@ import com.xxl.job.admin.dao.IXxlJobLogGlueDao;
 import com.xxl.job.admin.service.IXxlJobService;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
-import com.xxl.job.core.enums.RegistryConfig;
 import com.xxl.job.core.glue.GlueTypeEnum;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -288,21 +286,15 @@ public class XxlJobServiceImpl implements IXxlJobService {
 		// executor count
 		Set<String> executerAddressSet = new HashSet<String>();
 		List<XxlJobGroup> groupList = xxlJobGroupDao.findAll();
+
 		if (CollectionUtils.isNotEmpty(groupList)) {
 			for (XxlJobGroup group: groupList) {
-				List<String> registryList = null;
-				if (group.getAddressType() == 0) {
-					registryList = JobRegistryMonitorHelper.discover(RegistryConfig.RegistType.EXECUTOR.name(), group.getAppName());
-				} else {
-					if (StringUtils.isNotBlank(group.getAddressList())) {
-						registryList = Arrays.asList(group.getAddressList().split(","));
-					}
-				}
-				if (CollectionUtils.isNotEmpty(registryList)) {
-					executerAddressSet.addAll(registryList);
+				if (CollectionUtils.isNotEmpty(group.getRegistryList())) {
+					executerAddressSet.addAll(group.getRegistryList());
 				}
 			}
 		}
+
 		int executorCount = executerAddressSet.size();
 
 		Map<String, Object> dashboardMap = new HashMap<String, Object>();

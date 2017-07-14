@@ -1,14 +1,17 @@
 package com.xxl.job.admin.core.thread;
 
+import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobRegistry;
 import com.xxl.job.admin.core.schedule.XxlJobDynamicScheduler;
 import com.xxl.job.core.enums.RegistryConfig;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -23,8 +26,6 @@ public class JobRegistryMonitorHelper {
 		return instance;
 	}
 
-	private ConcurrentHashMap<String, List<String>> registMap = new ConcurrentHashMap<String, List<String>>();
-
 	private Thread registryThread;
 	private boolean toStop = false;
 	public void start(){
@@ -33,26 +34,42 @@ public class JobRegistryMonitorHelper {
 			public void run() {
 				while (!toStop) {
 					try {
-                        // remove dead admin/executor
-						XxlJobDynamicScheduler.xxlJobRegistryDao.removeDead(RegistryConfig.DEAD_TIMEOUT);
+						// auto registry group
+						List<XxlJobGroup> groupList = XxlJobDynamicScheduler.xxlJobGroupDao.findByAddressType(0);
+						if (CollectionUtils.isNotEmpty(groupList)) {
 
-                        // fresh registry map
-						ConcurrentHashMap<String, List<String>> temp = new ConcurrentHashMap<String, List<String>>();
-						List<XxlJobRegistry> list = XxlJobDynamicScheduler.xxlJobRegistryDao.findAll(RegistryConfig.DEAD_TIMEOUT);
-						if (list != null) {
-							for (XxlJobRegistry item: list) {
-								String groupKey = makeGroupKey(item.getRegistryGroup(), item.getRegistryKey());
-								List<String> registryList = temp.get(groupKey);
-								if (registryList == null) {
-									registryList = new ArrayList<String>();
+							// remove dead address (admin/executor)
+							XxlJobDynamicScheduler.xxlJobRegistryDao.removeDead(RegistryConfig.DEAD_TIMEOUT);
+
+							// fresh online address (admin/executor)
+							HashMap<String, List<String>> appAddressMap = new HashMap<String, List<String>>();
+							List<XxlJobRegistry> list = XxlJobDynamicScheduler.xxlJobRegistryDao.findAll(RegistryConfig.DEAD_TIMEOUT);
+							if (list != null) {
+								for (XxlJobRegistry item: list) {
+									if (RegistryConfig.RegistType.EXECUTOR.name().equals(item.getRegistryGroup())) {
+										String appName = item.getRegistryKey();
+										List<String> registryList = appAddressMap.get(appName);
+										if (registryList == null) {
+											registryList = new ArrayList<String>();
+										}
+
+										if (!registryList.contains(item.getRegistryValue())) {
+											registryList.add(item.getRegistryValue());
+										}
+										appAddressMap.put(appName, registryList);
+									}
 								}
-								if (!registryList.contains(item.getRegistryValue())) {
-									registryList.add(item.getRegistryValue());
-								}
-								temp.put(groupKey, registryList);
+							}
+
+							// fresh group address
+							for (XxlJobGroup group: groupList) {
+								List<String> registryList = appAddressMap.get(group.getAppName());
+								String addressListStr = StringUtils.join(registryList, ",");
+
+								group.setAddressList(addressListStr);
+								XxlJobDynamicScheduler.xxlJobGroupDao.update(group);
 							}
 						}
-						registMap = temp;
 					} catch (Exception e) {
 						logger.error("job registry instance error:{}", e);
 					}
@@ -73,13 +90,4 @@ public class JobRegistryMonitorHelper {
 		//registryThread.interrupt();
 	}
 
-	private static String makeGroupKey(String registryGroup, String registryKey){
-		return registryGroup.concat("_").concat(registryKey);
-	}
-	
-	public static List<String> discover(String registryGroup, String registryKey){
-		String groupKey = makeGroupKey(registryGroup, registryKey);
-		return instance.registMap.get(groupKey);
-	}
-	
 }

@@ -1,12 +1,9 @@
 package com.xxl.job.admin.controller;
 
 import com.xxl.job.admin.core.model.XxlJobGroup;
-import com.xxl.job.admin.core.thread.JobRegistryMonitorHelper;
 import com.xxl.job.admin.dao.IXxlJobGroupDao;
 import com.xxl.job.admin.dao.IXxlJobInfoDao;
 import com.xxl.job.core.biz.model.ReturnT;
-import com.xxl.job.core.enums.RegistryConfig;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -35,20 +31,6 @@ public class JobGroupController {
 
 		// job group (executor)
 		List<XxlJobGroup> list = xxlJobGroupDao.findAll();
-
-		if (CollectionUtils.isNotEmpty(list)) {
-			for (XxlJobGroup group: list) {
-				List<String> registryList = null;
-				if (group.getAddressType() == 0) {
-					registryList = JobRegistryMonitorHelper.discover(RegistryConfig.RegistType.EXECUTOR.name(), group.getAppName());
-				} else {
-					if (StringUtils.isNotBlank(group.getAddressList())) {
-						registryList = Arrays.asList(group.getAddressList().split(","));
-					}
-				}
-				group.setRegistryList(registryList);
-			}
-		}
 
 		model.addAttribute("list", list);
 		return "jobgroup/jobgroup.index";

@@ -7,18 +7,14 @@ import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.admin.core.route.ExecutorRouteStrategyEnum;
 import com.xxl.job.admin.core.schedule.XxlJobDynamicScheduler;
 import com.xxl.job.admin.core.thread.JobFailMonitorHelper;
-import com.xxl.job.admin.core.thread.JobRegistryMonitorHelper;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.biz.model.TriggerParam;
 import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
-import com.xxl.job.core.enums.RegistryConfig;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 
 /**
@@ -90,17 +86,10 @@ public class XxlJobTrigger {
         StringBuffer triggerSb = new StringBuffer();
 
         // exerutor address list
-        ArrayList<String> addressList = null;
         XxlJobGroup group = XxlJobDynamicScheduler.xxlJobGroupDao.load(jobInfo.getJobGroup());
-        if (group.getAddressType() == 0) {
-            triggerSb.append("注册方式：自动注册");
-            addressList = (ArrayList<String>) JobRegistryMonitorHelper.discover(RegistryConfig.RegistType.EXECUTOR.name(), group.getAppName());
-        } else {
-            triggerSb.append("注册方式：手动录入");
-            if (StringUtils.isNotBlank(group.getAddressList())) {
-                addressList = new ArrayList<String>(Arrays.asList(group.getAddressList().split(",")));
-            }
-        }
+        triggerSb.append( (group.getAddressType() == 0)?"注册方式：自动注册":"注册方式：手动录入" );
+        ArrayList<String> addressList = (ArrayList<String>) group.getRegistryList();
+
         triggerSb.append("<br>阻塞处理策略：").append(ExecutorBlockStrategyEnum.match(jobInfo.getExecutorBlockStrategy(), ExecutorBlockStrategyEnum.SERIAL_EXECUTION).getTitle());
         triggerSb.append("<br>失败处理策略：").append(ExecutorFailStrategyEnum.match(jobInfo.getExecutorBlockStrategy(), ExecutorFailStrategyEnum.FAIL_ALARM).getTitle());
         triggerSb.append("<br>地址列表：").append(addressList!=null?addressList.toString():"");
