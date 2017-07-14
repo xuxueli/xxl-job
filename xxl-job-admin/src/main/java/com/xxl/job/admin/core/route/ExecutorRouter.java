@@ -16,7 +16,7 @@ public abstract class ExecutorRouter {
     protected static Logger logger = LoggerFactory.getLogger(ExecutorRouter.class);
 
     /**
-     * route run
+     * route run executor
      *
      * @param triggerParam
      * @param addressList
@@ -30,7 +30,7 @@ public abstract class ExecutorRouter {
      * @param address
      * @return
      */
-    protected static ReturnT<String> runExecutor(TriggerParam triggerParam, String address){
+    public static ReturnT<String> runExecutor(TriggerParam triggerParam, String address){
         ReturnT<String> runResult = null;
         try {
             ExecutorBiz executorBiz = (ExecutorBiz) new NetComClientProxy(ExecutorBiz.class, address).getObject();
