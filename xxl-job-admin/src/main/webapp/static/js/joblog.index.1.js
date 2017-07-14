@@ -110,7 +110,7 @@ $(function() {
                             }
 
                             var temp = '';
-                            temp += '执行器地址：' + row.executorAddress;
+                            temp += '执行器地址：' + (row.executorAddress?row.executorAddress:'');
                             temp += '<br>运行模式：' + glueTypeTitle;
                             temp += '<br>任务参数：' + row.executorParam;
 

@@ -86,17 +86,18 @@ public class XxlJobTrigger {
             triggerParam.setLogDateTim(jobLog.getTriggerTime().getTime());
 
             // 4.2、trigger-run (route run / trigger remote executor)
-            triggerResult = executorRouteStrategyEnum.getRouter().routeRun(triggerParam, addressList, jobLog);
+            triggerResult = executorRouteStrategyEnum.getRouter().routeRun(triggerParam, addressList);
             triggerMsgSb.append("<br><br><span style=\"color:#00c0ef;\" > >>>>>>>>>>>触发调度<<<<<<<<<<< </span><br>").append(triggerResult.getMsg());
 
             // 4.3、trigger (fail retry)
             if (triggerResult.getCode()!=ReturnT.SUCCESS_CODE && failStrategy == ExecutorFailStrategyEnum.FAIL_RETRY) {
-                triggerResult = executorRouteStrategyEnum.getRouter().routeRun(triggerParam, addressList, jobLog);
+                triggerResult = executorRouteStrategyEnum.getRouter().routeRun(triggerParam, addressList);
                 triggerMsgSb.append("<br><br><span style=\"color:#F39C12;\" > >>>>>>>>>>>失败重试<<<<<<<<<<< </span><br>").append(triggerResult.getMsg());
             }
         }
 
         // 5、save trigger-info
+        jobLog.setExecutorAddress(triggerResult.getContent());
         jobLog.setTriggerCode(triggerResult.getCode());
         jobLog.setTriggerMsg(triggerMsgSb.toString());
         XxlJobDynamicScheduler.xxlJobLogDao.updateTriggerInfo(jobLog);

@@ -1,6 +1,5 @@
 package com.xxl.job.admin.core.route.strategy;
 
-import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.admin.core.route.ExecutorRouter;
 import com.xxl.job.core.biz.ExecutorBiz;
 import com.xxl.job.core.biz.model.ReturnT;
@@ -19,7 +18,7 @@ public class ExecutorRouteFailover extends ExecutorRouter {
     }
 
     @Override
-    public ReturnT<String> routeRun(TriggerParam triggerParam, ArrayList<String> addressList, XxlJobLog jobLog) {
+    public ReturnT<String> routeRun(TriggerParam triggerParam, ArrayList<String> addressList) {
 
         StringBuffer beatResultSB = new StringBuffer();
         for (String address : addressList) {
@@ -40,12 +39,14 @@ public class ExecutorRouteFailover extends ExecutorRouter {
 
             // beat success
             if (beatResult.getCode() == ReturnT.SUCCESS_CODE) {
-                jobLog.setExecutorAddress(address);
 
                 ReturnT<String> runResult = runExecutor(triggerParam, address);
                 beatResultSB.append("<br><br>").append(runResult.getMsg());
 
-                return new ReturnT<String>(runResult.getCode(), beatResultSB.toString());
+                // result
+                runResult.setMsg(beatResultSB.toString());
+                runResult.setContent(address);
+                return runResult;
             }
         }
         return new ReturnT<String>(ReturnT.FAIL_CODE, beatResultSB.toString());

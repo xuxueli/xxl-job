@@ -1,6 +1,5 @@
 package com.xxl.job.admin.core.route;
 
-import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.core.biz.ExecutorBiz;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.biz.model.TriggerParam;
@@ -21,9 +20,9 @@ public abstract class ExecutorRouter {
      *
      * @param triggerParam
      * @param addressList
-     * @return
+     * @return  ReturnT.content: final address
      */
-    public abstract ReturnT<String> routeRun(TriggerParam triggerParam, ArrayList<String> addressList, XxlJobLog jobLog);
+    public abstract ReturnT<String> routeRun(TriggerParam triggerParam, ArrayList<String> addressList);
 
     /**
      * run executor
