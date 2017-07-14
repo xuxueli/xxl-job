@@ -28,8 +28,6 @@ public class ExecutorRouteRandom extends ExecutorRouter {
 
         // run executor
         ReturnT<String> runResult = runExecutor(triggerParam, address);
-        runResult.setMsg("<br>----------------------<br>" + runResult.getMsg());
-
         return runResult;
     }
 

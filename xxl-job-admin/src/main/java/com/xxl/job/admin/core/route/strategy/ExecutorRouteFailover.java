@@ -32,7 +32,7 @@ public class ExecutorRouteFailover extends ExecutorRouter {
                 logger.error(e.getMessage(), e);
                 beatResult = new ReturnT<String>(ReturnT.FAIL_CODE, ""+e );
             }
-            beatResultSB.append("<br>----------------------<br>")
+            beatResultSB.append( (beatResultSB.length()>0)?"<br><br>":"")
                     .append("心跳检测：")
                     .append("<br>address：").append(address)
                     .append("<br>code：").append(beatResult.getCode())
@@ -43,7 +43,7 @@ public class ExecutorRouteFailover extends ExecutorRouter {
                 jobLog.setExecutorAddress(address);
 
                 ReturnT<String> runResult = runExecutor(triggerParam, address);
-                beatResultSB.append("<br>----------------------<br>").append(runResult.getMsg());
+                beatResultSB.append("<br><br>").append(runResult.getMsg());
 
                 return new ReturnT<String>(runResult.getCode(), beatResultSB.toString());
             }

@@ -32,7 +32,7 @@ public class ExecutorRouteBusyover extends ExecutorRouter {
                 logger.error(e.getMessage(), e);
                 idleBeatResult = new ReturnT<String>(ReturnT.FAIL_CODE, ""+e );
             }
-            idleBeatResultSB.append("<br>----------------------<br>")
+            idleBeatResultSB.append( (idleBeatResultSB.length()>0)?"<br><br>":"")
                     .append("空闲检测：")
                     .append("<br>address：").append(address)
                     .append("<br>code：").append(idleBeatResult.getCode())
@@ -43,7 +43,7 @@ public class ExecutorRouteBusyover extends ExecutorRouter {
                 jobLog.setExecutorAddress(address);
 
                 ReturnT<String> runResult = runExecutor(triggerParam, address);
-                idleBeatResultSB.append("<br>----------------------<br>").append(runResult.getMsg());
+                idleBeatResultSB.append("<br><br>").append(runResult.getMsg());
 
                 return new ReturnT<String>(runResult.getCode(), idleBeatResultSB.toString());
             }
