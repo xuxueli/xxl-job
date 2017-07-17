@@ -41,7 +41,7 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 
 ### 架构图
 
-![输入图片说明](https://static.oschina.net/uploads/img/201705/11225449_rKMi.png "在这里输入图片标题")
+![输入图片说明](https://static.oschina.net/uploads/img/201707/17190028_aEE2.png "在这里输入图片标题")
 
 ### 发展
 于2015年中，我在github上创建XXL-JOB项目仓库并提交第一个commit，随之进行系统结构设计，UI选型，交互设计……
