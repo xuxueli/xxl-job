@@ -107,14 +107,14 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 [http://git.oschina.net/xuxueli0323/xxl-job](http://git.oschina.net/xuxueli0323/xxl-job) | [Download](http://git.oschina.net/xuxueli0323/xxl-job/releases)
 
 
-#### 中央仓库地址 (最新Release版本：1.7.2)
+#### 中央仓库地址 (最新Release版本：1.8.0)
 
 ```
 <!-- http://repo1.maven.org/maven2/com/xuxueli/xxl-job-core/ -->
 <dependency>
     <groupId>com.xuxueli</groupId>
     <artifactId>xxl-job-core</artifactId>
-    <version>1.7.2</version>
+    <version>1.8.0</version>
 </dependency>
 ```
 

@@ -98,14 +98,14 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 [http://git.oschina.net/xuxueli0323/xxl-job](http://git.oschina.net/xuxueli0323/xxl-job) | [Download](http://git.oschina.net/xuxueli0323/xxl-job/releases)
 
 
-#### 中央仓库地址 (最新Release版本：1.7.2)
+#### 中央仓库地址 (最新Release版本：1.8.0)
 
 ```
 <!-- http://repo1.maven.org/maven2/com/xuxueli/xxl-job-core/ -->
 <dependency>
     <groupId>com.xuxueli</groupId>
     <artifactId>xxl-job-core</artifactId>
-    <version>1.7.2</version>
+    <version>1.8.0</version>
 </dependency>
 ```
 
@@ -894,6 +894,7 @@ Tips: 历史版本(V1.3.x)目前已经Release至稳定版本, 进入维护阶段
 - 7、调度任务优先级；
 - 8、移除quartz依赖，重写调度模块：新增或恢复任务时将下次执行记录插入delayqueue，调度中心集群竞争分布式锁，成功节点批量加载到期delayqueue数据，批量执行。
 - 9、任务执行结果回调失败后重试：待定，防止回调死循环；
+- 10、springboot 和 docker镜像；
 
 ## 七、其他
 
