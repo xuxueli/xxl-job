@@ -134,7 +134,9 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 ## 二、快速入门
 
 ### 2.1 初始化“调度数据库”
-请下载项目源码并解压，获取 "调度数据库初始化SQL脚本"(脚本文件为: 源码解压根目录\xxl-job\db\tables_xxl_job.sql) 并执行即可。正常情况下,应该生成16张表;
+请下载项目源码并解压，获取 "调度数据库初始化SQL脚本" 并执行即可。正常情况下应该生成16张表，脚本文件位置为:
+
+    源码解压根目录\xxl-job\db\tables_xxl_job.sql
 
 调度中心支持集群部署，集群情况下各节点务必连接同一个mysql实例;
 
@@ -575,7 +577,7 @@ CronTrigger cronTrigger = TriggerBuilder.newTrigger().withIdentity(triggerKey).w
 xxl-job-admin#com.xxl.job.admin.controller.JobApiController.callback
 ```
 
-“执行器”在接收到任务执行请求后，执行任务，在执行结束之后会将执行结果回调通知“调度中心”，代码位置为：
+“执行器”在接收到任务执行请求后，执行任务，在执行结束之后会将执行结果回调通知“调度中心”：
 
 ##### 5.4.8 任务HA（Failover）
 执行器如若集群部署，调度中心将会感知到在线的所有执行器，如“127.0.0.1:9997, 127.0.0.1:9998, 127.0.0.1:9999”。
