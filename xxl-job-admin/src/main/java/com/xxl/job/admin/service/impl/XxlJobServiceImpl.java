@@ -72,7 +72,7 @@ public class XxlJobServiceImpl implements IXxlJobService {
     @Override
     public ReturnT<String> add(XxlJobInfo jobInfo) {
 
-        ReturnT<String> checkRet = _checkJobInfo(jobInfo);
+        ReturnT<String> checkRet = _checkJobInfo(jobInfo, false);
         if (checkRet.isSuccess()) {
             // add in db
             xxlJobInfoDao.save(jobInfo);
@@ -105,7 +105,7 @@ public class XxlJobServiceImpl implements IXxlJobService {
     @Override
     public ReturnT<String> reschedule(XxlJobInfo jobInfo) {
 
-        ReturnT<String> checkResult = _checkJobInfo(jobInfo);
+        ReturnT<String> checkResult = _checkJobInfo(jobInfo, true);
         if (checkResult.isSuccess()) {
             // stage job info
             XxlJobInfo exists_jobInfo = xxlJobInfoDao.loadById(jobInfo.getId());
@@ -283,10 +283,10 @@ public class XxlJobServiceImpl implements IXxlJobService {
     }
 
 
-    private ReturnT<String> _checkJobInfo(XxlJobInfo jobInfo) {
+    private ReturnT<String> _checkJobInfo(XxlJobInfo jobInfo, boolean isUpdate) {
 // valid
         XxlJobGroup group = xxlJobGroupDao.load(jobInfo.getJobGroup());
-        if (group == null) {
+        if (!isUpdate && group == null) {
             return ReturnT.error("请选择“执行器”");
         }
         if (!CronExpression.isValidExpression(jobInfo.getJobCron())) {
@@ -307,15 +307,15 @@ public class XxlJobServiceImpl implements IXxlJobService {
         if (ExecutorFailStrategyEnum.match(jobInfo.getExecutorFailStrategy(), null) == null) {
             return ReturnT.error("失败处理策略非法");
         }
-        if (GlueTypeEnum.match(jobInfo.getGlueType()) == null) {
+        if (!isUpdate && GlueTypeEnum.match(jobInfo.getGlueType()) == null) {
             return ReturnT.error("运行模式非法非法");
         }
-        if (GlueTypeEnum.BEAN == GlueTypeEnum.match(jobInfo.getGlueType()) && StringUtils.isBlank(jobInfo.getExecutorHandler())) {
+        if (!isUpdate && GlueTypeEnum.BEAN == GlueTypeEnum.match(jobInfo.getGlueType()) && StringUtils.isBlank(jobInfo.getExecutorHandler())) {
             return ReturnT.error("请输入“JobHandler”");
         }
 
         // fix "\r" in shell
-        if (GlueTypeEnum.GLUE_SHELL == GlueTypeEnum.match(jobInfo.getGlueType()) && jobInfo.getGlueSource() != null) {
+        if (!isUpdate && GlueTypeEnum.GLUE_SHELL == GlueTypeEnum.match(jobInfo.getGlueType()) && jobInfo.getGlueSource() != null) {
             jobInfo.setGlueSource(jobInfo.getGlueSource().replaceAll("\r", ""));
         }
 
