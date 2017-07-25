@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 
 /**
- * 广播分片任务
+ * 分片广播任务
  *
  * @author xuxueli 2017-07-25 20:56:50
  */

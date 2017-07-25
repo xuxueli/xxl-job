@@ -42,7 +42,7 @@ public class XxlJobTrigger {
         ArrayList<String> addressList = (ArrayList<String>) group.getRegistryList();
 
         // broadcast
-        if (ExecutorRouteStrategyEnum.BROADCAST == executorRouteStrategyEnum && CollectionUtils.isNotEmpty(addressList)) {
+        if (ExecutorRouteStrategyEnum.SHARDING_BROADCAST == executorRouteStrategyEnum && CollectionUtils.isNotEmpty(addressList)) {
             for (int i = 0; i < addressList.size(); i++) {
                 String address = addressList.get(i);
 
