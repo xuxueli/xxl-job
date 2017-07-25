@@ -28,7 +28,7 @@ public abstract class ExecutorRouter {
      * run executor
      * @param triggerParam
      * @param address
-     * @return
+     * @return  ReturnT.content: final address
      */
     public static ReturnT<String> runExecutor(TriggerParam triggerParam, String address){
         ReturnT<String> runResult = null;
@@ -46,6 +46,7 @@ public abstract class ExecutorRouter {
         runResultSB.append("<br>msg：").append(runResult.getMsg());
 
         runResult.setMsg(runResultSB.toString());
+        runResult.setContent(address);
         return runResult;
     }
 

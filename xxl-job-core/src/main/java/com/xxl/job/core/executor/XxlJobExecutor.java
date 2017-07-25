@@ -98,6 +98,9 @@ public class XxlJobExecutor implements ApplicationContextAware, ApplicationListe
                 if (serviceBean instanceof IJobHandler){
                     String name = serviceBean.getClass().getAnnotation(JobHander.class).value();
                     IJobHandler handler = (IJobHandler) serviceBean;
+                    if (loadJobHandler(name) != null) {
+                        throw new RuntimeException("xxl-job jobhandler naming conflicts.");
+                    }
                     registJobHandler(name, handler);
                 }
             }

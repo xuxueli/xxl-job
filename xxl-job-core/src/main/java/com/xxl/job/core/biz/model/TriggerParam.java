@@ -14,12 +14,15 @@ public class TriggerParam implements Serializable{
     private String executorParams;
     private String executorBlockStrategy;
 
+    private int logId;
+    private long logDateTim;
+
     private String glueType;
     private String glueSource;
     private long glueUpdatetime;
 
-    private int logId;
-    private long logDateTim;
+    private int broadcastIndex;
+    private int broadcastTotal;
 
     public int getJobId() {
         return jobId;
@@ -53,6 +56,22 @@ public class TriggerParam implements Serializable{
         this.executorBlockStrategy = executorBlockStrategy;
     }
 
+    public int getLogId() {
+        return logId;
+    }
+
+    public void setLogId(int logId) {
+        this.logId = logId;
+    }
+
+    public long getLogDateTim() {
+        return logDateTim;
+    }
+
+    public void setLogDateTim(long logDateTim) {
+        this.logDateTim = logDateTim;
+    }
+
     public String getGlueType() {
         return glueType;
     }
@@ -77,20 +96,20 @@ public class TriggerParam implements Serializable{
         this.glueUpdatetime = glueUpdatetime;
     }
 
-    public int getLogId() {
-        return logId;
+    public int getBroadcastIndex() {
+        return broadcastIndex;
     }
 
-    public void setLogId(int logId) {
-        this.logId = logId;
+    public void setBroadcastIndex(int broadcastIndex) {
+        this.broadcastIndex = broadcastIndex;
     }
 
-    public long getLogDateTim() {
-        return logDateTim;
+    public int getBroadcastTotal() {
+        return broadcastTotal;
     }
 
-    public void setLogDateTim(long logDateTim) {
-        this.logDateTim = logDateTim;
+    public void setBroadcastTotal(int broadcastTotal) {
+        this.broadcastTotal = broadcastTotal;
     }
 
     @Override
@@ -100,11 +119,14 @@ public class TriggerParam implements Serializable{
                 ", executorHandler='" + executorHandler + '\'' +
                 ", executorParams='" + executorParams + '\'' +
                 ", executorBlockStrategy='" + executorBlockStrategy + '\'' +
+                ", logId=" + logId +
+                ", logDateTim=" + logDateTim +
                 ", glueType='" + glueType + '\'' +
                 ", glueSource='" + glueSource + '\'' +
                 ", glueUpdatetime=" + glueUpdatetime +
-                ", logId=" + logId +
-                ", logDateTim=" + logDateTim +
+                ", broadcastIndex=" + broadcastIndex +
+                ", broadcastTotal=" + broadcastTotal +
                 '}';
     }
+
 }

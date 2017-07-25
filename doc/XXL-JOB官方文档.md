@@ -306,7 +306,7 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 
 #### 步骤一：执行器项目中，开发JobHandler：
     - 1、 新建一个继承com.xxl.job.core.handler.IJobHandler的Java类；
-    - 2、 该类被Spring容器扫描为Bean实例，如加“@Service注解”；
+    - 2、 该类被Spring容器扫描为Bean实例，如加“@Component”注解；
     - 3、 添加 “@JobHander(value="自定义jobhandler名称")”注解，注解的value值为自定义的JobHandler名称，该名称对应的是调度中心新建任务的JobHandler属性的值。
     （可参考xxl-job-executor-example项目中的DemoJobHandler，见下图）
 
@@ -889,6 +889,7 @@ Tips: 历史版本(V1.3.x)目前已经Release至稳定版本, 进入维护阶段
 
 #### 6.18 版本 V1.8.1 特性[快照版本]
 - 1、任务分片：一个任务被拆分成N个独立的任务单元，然后由分布式部署的执行器分别执行某一个或几个分片单元；
+- 2、执行器JobHandler禁止命名冲突；
 
 #### TODO LIST
 - 1、任务权限管理：执行器为粒度分配权限，核心操作校验权限；

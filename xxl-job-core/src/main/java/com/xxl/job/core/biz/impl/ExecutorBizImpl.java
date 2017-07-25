@@ -76,10 +76,13 @@ public class ExecutorBizImpl implements ExecutorBiz {
         // valid：jobHandler + jobThread
         if (GlueTypeEnum.BEAN==GlueTypeEnum.match(triggerParam.getGlueType())) {
 
+            // new jobhandler
+            IJobHandler newJobHandler = XxlJobExecutor.loadJobHandler(triggerParam.getExecutorHandler());
+
             // valid old jobThread
-            if (jobThread != null && jobHandler!=null && jobThread.getHandler() != jobHandler) {
+            if (jobThread!=null && jobHandler != newJobHandler) {
                 // change handler, need kill old thread
-                removeOldReason = "更新JobHandler或更换任务模式,终止旧任务线程";
+                removeOldReason = "更换JobHandler或更换任务模式,终止旧任务线程";
 
                 jobThread = null;
                 jobHandler = null;
@@ -87,7 +90,7 @@ public class ExecutorBizImpl implements ExecutorBiz {
 
             // valid handler
             if (jobHandler == null) {
-                jobHandler = XxlJobExecutor.loadJobHandler(triggerParam.getExecutorHandler());
+                jobHandler = newJobHandler;
                 if (jobHandler == null) {
                     return new ReturnT<String>(ReturnT.FAIL_CODE, "job handler [" + triggerParam.getExecutorHandler() + "] not found.");
                 }
