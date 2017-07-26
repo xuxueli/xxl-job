@@ -46,7 +46,7 @@ public class XxlJobRegistryDaoImpl implements IXxlJobRegistryDao {
         params.put("registryKey", registryKey);
         params.put("registryValue", registryValue);
 
-        return sqlSessionTemplate.update("XxlJobRegistryMapper.registrySave", params);
+        return sqlSessionTemplate.insert("XxlJobRegistryMapper.registrySave", params);
     }
 
 }
