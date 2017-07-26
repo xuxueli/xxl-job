@@ -5,7 +5,7 @@
   	<#import "/common/common.macro.ftl" as netCommon>
 	<@netCommon.commonStyle />
 </head>
-<body class="hold-transition skin-blue sidebar-mini <#if cookieMap?exists && "off" == cookieMap["adminlte_settings"].value >sidebar-collapse</#if> ">
+<body class="hold-transition skin-blue sidebar-mini <#if cookieMap?exists && "off" == cookieMap["xxljob_adminlte_settings"].value >sidebar-collapse</#if> ">
 <div class="wrapper">
 	<!-- header -->
 	<@netCommon.commonHeader />

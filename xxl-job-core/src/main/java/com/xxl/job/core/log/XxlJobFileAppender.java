@@ -18,8 +18,8 @@ public class XxlJobFileAppender {
 	
 	// for JobThread (support log for child thread of job handler)
 	//public static ThreadLocal<String> contextHolder = new ThreadLocal<String>();
-	public static InheritableThreadLocal<String> contextHolder = new InheritableThreadLocal<String>();
-	public static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	public static final InheritableThreadLocal<String> contextHolder = new InheritableThreadLocal<String>();
+	public static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	
 	/**
 	 * log filename: yyyy-MM-dd/9999.log
