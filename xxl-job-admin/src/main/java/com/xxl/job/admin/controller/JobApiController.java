@@ -4,9 +4,9 @@ import com.xxl.job.admin.controller.annotation.PermessionLimit;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.admin.core.schedule.XxlJobDynamicScheduler;
-import com.xxl.job.admin.dao.IXxlJobInfoDao;
-import com.xxl.job.admin.dao.IXxlJobLogDao;
-import com.xxl.job.admin.dao.IXxlJobRegistryDao;
+import com.xxl.job.admin.dao.XxlJobInfoDao;
+import com.xxl.job.admin.dao.XxlJobLogDao;
+import com.xxl.job.admin.dao.XxlJobRegistryDao;
 import com.xxl.job.core.biz.model.HandleCallbackParam;
 import com.xxl.job.core.biz.model.RegistryParam;
 import com.xxl.job.core.biz.model.ReturnT;
@@ -34,11 +34,11 @@ public class JobApiController {
     private static Logger logger = LoggerFactory.getLogger(JobApiController.class);
 
     @Resource
-    public IXxlJobLogDao xxlJobLogDao;
+    public XxlJobLogDao xxlJobLogDao;
     @Resource
-    private IXxlJobInfoDao xxlJobInfoDao;
+    private XxlJobInfoDao xxlJobInfoDao;
     @Resource
-    private IXxlJobRegistryDao xxlJobRegistryDao;
+    private XxlJobRegistryDao xxlJobRegistryDao;
 
 
     @RequestMapping(value= AdminApiUtil.CALLBACK, method = RequestMethod.POST, consumes = "application/json")

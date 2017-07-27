@@ -3,9 +3,9 @@ package com.xxl.job.admin.controller;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
-import com.xxl.job.admin.dao.IXxlJobGroupDao;
-import com.xxl.job.admin.dao.IXxlJobInfoDao;
-import com.xxl.job.admin.dao.IXxlJobLogDao;
+import com.xxl.job.admin.dao.XxlJobGroupDao;
+import com.xxl.job.admin.dao.XxlJobInfoDao;
+import com.xxl.job.admin.dao.XxlJobLogDao;
 import com.xxl.job.core.biz.ExecutorBiz;
 import com.xxl.job.core.biz.model.LogResult;
 import com.xxl.job.core.biz.model.ReturnT;
@@ -34,11 +34,11 @@ import java.util.Map;
 public class JobLogController {
 
 	@Resource
-	private IXxlJobGroupDao xxlJobGroupDao;
+	private XxlJobGroupDao xxlJobGroupDao;
 	@Resource
-	public IXxlJobInfoDao xxlJobInfoDao;
+	public XxlJobInfoDao xxlJobInfoDao;
 	@Resource
-	public IXxlJobLogDao xxlJobLogDao;
+	public XxlJobLogDao xxlJobLogDao;
 
 	@RequestMapping
 	public String index(Model model, @RequestParam(required = false, defaultValue = "0") Integer jobId) {
@@ -58,7 +58,7 @@ public class JobLogController {
 
 	@RequestMapping("/getJobsByGroup")
 	@ResponseBody
-	public ReturnT<List<XxlJobInfo>> listJobByGroup(String jobGroup){
+	public ReturnT<List<XxlJobInfo>> getJobsByGroup(int jobGroup){
 		List<XxlJobInfo> list = xxlJobInfoDao.getJobsByGroup(jobGroup);
 		return new ReturnT<List<XxlJobInfo>>(list);
 	}

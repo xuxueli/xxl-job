@@ -4,10 +4,10 @@ import com.xxl.job.admin.core.jobbean.RemoteHttpJobBean;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.thread.JobFailMonitorHelper;
 import com.xxl.job.admin.core.thread.JobRegistryMonitorHelper;
-import com.xxl.job.admin.dao.IXxlJobGroupDao;
-import com.xxl.job.admin.dao.IXxlJobInfoDao;
-import com.xxl.job.admin.dao.IXxlJobLogDao;
-import com.xxl.job.admin.dao.IXxlJobRegistryDao;
+import com.xxl.job.admin.dao.XxlJobGroupDao;
+import com.xxl.job.admin.dao.XxlJobInfoDao;
+import com.xxl.job.admin.dao.XxlJobLogDao;
+import com.xxl.job.admin.dao.XxlJobRegistryDao;
 import com.xxl.job.core.rpc.netcom.NetComServerFactory;
 import org.quartz.*;
 import org.quartz.Trigger.TriggerState;
@@ -58,17 +58,17 @@ public final class XxlJobDynamicScheduler implements ApplicationContextAware, In
     }
     
     // xxlJobLogDao、xxlJobInfoDao
-    public static IXxlJobLogDao xxlJobLogDao;
-    public static IXxlJobInfoDao xxlJobInfoDao;
-    public static IXxlJobRegistryDao xxlJobRegistryDao;
-    public static IXxlJobGroupDao xxlJobGroupDao;
+    public static XxlJobLogDao xxlJobLogDao;
+    public static XxlJobInfoDao xxlJobInfoDao;
+    public static XxlJobRegistryDao xxlJobRegistryDao;
+    public static XxlJobGroupDao xxlJobGroupDao;
 
     @Override
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-		XxlJobDynamicScheduler.xxlJobLogDao = applicationContext.getBean(IXxlJobLogDao.class);
-		XxlJobDynamicScheduler.xxlJobInfoDao = applicationContext.getBean(IXxlJobInfoDao.class);
-        XxlJobDynamicScheduler.xxlJobRegistryDao = applicationContext.getBean(IXxlJobRegistryDao.class);
-        XxlJobDynamicScheduler.xxlJobGroupDao = applicationContext.getBean(IXxlJobGroupDao.class);
+		XxlJobDynamicScheduler.xxlJobLogDao = applicationContext.getBean(XxlJobLogDao.class);
+		XxlJobDynamicScheduler.xxlJobInfoDao = applicationContext.getBean(XxlJobInfoDao.class);
+        XxlJobDynamicScheduler.xxlJobRegistryDao = applicationContext.getBean(XxlJobRegistryDao.class);
+        XxlJobDynamicScheduler.xxlJobGroupDao = applicationContext.getBean(XxlJobGroupDao.class);
 	}
     
 	@Override
