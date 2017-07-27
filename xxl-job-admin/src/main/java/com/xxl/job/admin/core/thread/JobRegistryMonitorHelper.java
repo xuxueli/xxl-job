@@ -16,10 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
@@ -75,8 +72,11 @@ public class JobRegistryMonitorHelper {
                             // fresh group address
                             for (XxlJobGroup group: groupList) {
                                 List<String> registryList = appAddressMap.get(group.getAppName());
-                                String addressListStr = StringUtils.join(registryList, ",");
-
+                                String addressListStr = null;
+                                if (CollectionUtils.isNotEmpty(registryList)) {
+                                    Collections.sort(registryList);
+                                    addressListStr = StringUtils.join(registryList, ",");
+                                }
                                 group.setAddressList(addressListStr);
                                 xxlJobGroupDao.update(group);
                             }

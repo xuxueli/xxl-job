@@ -35,7 +35,7 @@
 	</select>
 
 
-	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobGroup" >
+	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobGroup" useGeneratedKeys="true" keyProperty="id" >
 		INSERT INTO XXL_JOB_QRTZ_TRIGGER_GROUP ( `app_name`, `title`, `order`, `address_type`, `address_list`)
 		values ( #{appName}, #{title}, #{order}, #{addressType}, #{addressList});
 	</insert>

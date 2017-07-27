@@ -39,6 +39,11 @@ public class XxlJobAutoConfiguration {
             for (IJobHandler handler : serviceBeanMap.values()) {
                 if (handler.getClass().isAnnotationPresent(JobHander.class)) {
                     String name = handler.getClass().getAnnotation(JobHander.class).value();
+
+                    if (XxlJobExecutor.loadJobHandler(name) != null) {
+                        throw new RuntimeException("xxl-job job handler naming conflicts.");
+                    }
+
                     if (handler instanceof ISpringJobHandler) {
                         factory.autowireBean(handler);
                     }

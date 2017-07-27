@@ -10,10 +10,9 @@ import com.xxl.job.admin.dao.IXxlJobGroupDao;
 import com.xxl.job.admin.dao.IXxlJobInfoDao;
 import com.xxl.job.admin.dao.IXxlJobLogDao;
 import com.xxl.job.admin.dao.IXxlJobLogGlueDao;
-import com.xxl.job.admin.service.IXxlJobService;
+import com.xxl.job.admin.service.XxlJobService;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
-import com.xxl.job.core.enums.RegistryConfig;
 import com.xxl.job.core.glue.GlueTypeEnum;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections.CollectionUtils;
@@ -37,7 +36,7 @@ import java.util.*;
  */
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class XxlJobServiceImpl implements IXxlJobService {
+public class XxlJobServiceImpl implements XxlJobService {
     private static Logger logger = LoggerFactory.getLogger(XxlJobServiceImpl.class);
 
     private final IXxlJobGroupDao xxlJobGroupDao;

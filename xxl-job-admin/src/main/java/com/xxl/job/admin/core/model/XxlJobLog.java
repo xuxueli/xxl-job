@@ -34,4 +34,20 @@ public class XxlJobLog {
 	private Date handleTime;
 	private int handleCode;
 	private String handleMsg;
+
+	public void setTriggerMsg(String triggerMsg) {
+		// plugin
+		if (triggerMsg!=null && triggerMsg.length()>2000) {
+			triggerMsg = triggerMsg.substring(0, 2000);
+		}
+		this.triggerMsg = triggerMsg;
+	}
+
+	public void setHandleMsg(String handleMsg) {
+		// plugin
+		if (handleMsg!=null && handleMsg.length()>2000) {
+			handleMsg = handleMsg.substring(0, 2000);
+		}
+		this.handleMsg = handleMsg;
+	}
 }

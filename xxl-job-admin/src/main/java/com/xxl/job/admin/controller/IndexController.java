@@ -2,7 +2,7 @@ package com.xxl.job.admin.controller;
 
 import com.xxl.job.admin.config.AppConfig;
 import com.xxl.job.admin.controller.annotation.PermissionLimit;
-import com.xxl.job.admin.service.IXxlJobService;
+import com.xxl.job.admin.service.XxlJobService;
 import com.xxl.job.admin.service.LoginService;
 import com.xxl.job.core.biz.model.ReturnT;
 import org.apache.commons.lang3.StringUtils;
@@ -25,7 +25,7 @@ import java.util.Map;
 public class IndexController {
 
 	@Autowired
-	private IXxlJobService xxlJobService;
+	private XxlJobService xxlJobService;
 
 	@Autowired
 	private AppConfig.LoginConfig loginConfig;
