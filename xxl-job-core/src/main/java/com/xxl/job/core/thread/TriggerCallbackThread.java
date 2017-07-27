@@ -37,40 +37,40 @@ public class TriggerCallbackThread {
                         HandleCallbackParam callback = getInstance().callBackQueue.take();
                         if (callback != null) {
 
-                            // valid
-                            if (XxlJobExecutor.adminAddresses==null || XxlJobExecutor.adminAddresses.trim().length()==0) {
-                                logger.warn(">>>>>>>>>>>> xxl-job callback fail, adminAddresses is null.");
-                                continue;
-                            }
-
                             // callback list param
                             List<HandleCallbackParam> callbackParamList = new ArrayList<HandleCallbackParam>();
                             int drainToNum = getInstance().callBackQueue.drainTo(callbackParamList);
                             callbackParamList.add(callback);
 
+                            // valid
+                            if (XxlJobExecutor.adminAddresses==null || XxlJobExecutor.adminAddresses.trim().length()==0) {
+                                logger.warn(">>>>>>>>>>>> xxl-job callback fail, adminAddresses is null, callbackParamList：{}", callbackParamList);
+                                continue;
+                            }
+
                             // callback, will retry if error
-                            try {
+                            for (String addressUrl: XxlJobExecutor.adminAddresses.split(",")) {
+                                String apiUrl = addressUrl.concat("/api");
 
-                                ReturnT<String> callbackResult = null;
-                                for (String addressUrl: XxlJobExecutor.adminAddresses.split(",")) {
-                                    String apiUrl = addressUrl.concat("/api");
-
+                                try {
                                     AdminBiz adminBiz = (AdminBiz) new NetComClientProxy(AdminBiz.class, apiUrl).getObject();
-                                    callbackResult = adminBiz.callback(callbackParamList);
+                                    ReturnT<String> callbackResult = adminBiz.callback(callbackParamList);
                                     if (callbackResult!=null && ReturnT.SUCCESS_CODE == callbackResult.getCode()) {
                                         callbackResult = ReturnT.SUCCESS;
+                                        logger.info(">>>>>>>>>>> xxl-job callback success, callbackParamList:{}, callbackResult:{}", new Object[]{callbackParamList, callbackResult});
                                         break;
+                                    } else {
+                                        logger.info(">>>>>>>>>>> xxl-job callback fail, callbackParamList:{}, callbackResult:{}", new Object[]{callbackParamList, callbackResult});
                                     }
+                                } catch (Exception e) {
+                                    logger.error(">>>>>>>>>>> xxl-job callback error, callbackParamList：{}", callbackParamList, e);
+                                    //getInstance().callBackQueue.addAll(callbackParamList);
                                 }
-
-                                logger.info(">>>>>>>>>>> xxl-job callback, callbackParamList:{}, callbackResult:{}", new Object[]{callbackParamList, callbackResult});
-                            } catch (Exception e) {
-                                logger.error(">>>>>>>>>>> xxl-job TriggerCallbackThread Exception:", e);
-                                //getInstance().callBackQueue.addAll(callbackParamList);
                             }
+
                         }
                     } catch (Exception e) {
-                        logger.error("", e);
+                        logger.error(e.getMessage(), e);
                     }
                 }
             }

@@ -49,25 +49,31 @@ public class ExecutorRegistryThread extends Thread {
             @Override
             public void run() {
                 while (!toStop) {
+
                     try {
                         RegistryParam registryParam = new RegistryParam(RegistryConfig.RegistType.EXECUTOR.name(), appName, executorAddress);
-                        ReturnT<String> registryResult = null;
 
                         for (String addressUrl: XxlJobExecutor.adminAddresses.split(",")) {
                             String apiUrl = addressUrl.concat("/api");
 
-                            AdminBiz adminBiz = (AdminBiz) new NetComClientProxy(AdminBiz.class, apiUrl).getObject();
-                            registryResult = adminBiz.registry(registryParam);
-                            if (registryResult!=null && ReturnT.SUCCESS_CODE == registryResult.getCode()) {
-                                registryResult = ReturnT.SUCCESS;
-                                break;
+                            try {
+                                AdminBiz adminBiz = (AdminBiz) new NetComClientProxy(AdminBiz.class, apiUrl).getObject();
+                                ReturnT<String> registryResult = adminBiz.registry(registryParam);
+                                if (registryResult!=null && ReturnT.SUCCESS_CODE == registryResult.getCode()) {
+                                    registryResult = ReturnT.SUCCESS;
+                                    logger.info(">>>>>>>>>>> xxl-job registry success, registryParam:{}, registryResult:{}", new Object[]{registryParam, registryResult});
+                                    break;
+                                } else {
+                                    logger.info(">>>>>>>>>>> xxl-job registry fail, registryParam:{}, registryResult:{}", new Object[]{registryParam, registryResult});
+                                }
+                            } catch (Exception e) {
+                                logger.info(">>>>>>>>>>> xxl-job registry error, registryParam:{}", registryParam, e);
                             }
+
                         }
 
-                        logger.info(">>>>>>>>>>> xxl-job Executor registry {}, RegistryParam:{}, registryResult:{}",
-                                new Object[]{(registryResult.getCode()==ReturnT.SUCCESS_CODE?"success":"fail"), registryParam.toString(), registryResult.toString()});
                     } catch (Exception e) {
-                        logger.error(">>>>>>>>>>> xxl-job ExecutorRegistryThread Exception:", e);
+                        logger.error(e.getMessage(), e);
                     }
 
                     try {
