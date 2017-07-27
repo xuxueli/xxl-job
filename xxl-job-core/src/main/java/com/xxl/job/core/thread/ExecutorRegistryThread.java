@@ -1,9 +1,11 @@
 package com.xxl.job.core.thread;
 
+import com.xxl.job.core.biz.AdminBiz;
 import com.xxl.job.core.biz.model.RegistryParam;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.enums.RegistryConfig;
-import com.xxl.job.core.util.AdminApiUtil;
+import com.xxl.job.core.executor.XxlJobExecutor;
+import com.xxl.job.core.rpc.netcom.NetComClientProxy;
 import com.xxl.job.core.util.IpUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,8 +28,12 @@ public class ExecutorRegistryThread extends Thread {
     public void start(final int port, final String ip, final String appName){
 
         // valid
-        if ( !(AdminApiUtil.allowCallApi() && (appName!=null && appName.trim().length()>0)) ) {
-            logger.warn(">>>>>>>>>>>> xxl-job, executor registry config fail");
+        if (appName==null || appName.trim().length()==0) {
+            logger.warn(">>>>>>>>>>>> xxl-job, executor registry config fail, appName is null.");
+            return;
+        }
+        if (XxlJobExecutor.adminAddresses==null || XxlJobExecutor.adminAddresses.trim().length()==0) {
+            logger.warn(">>>>>>>>>>>> xxl-job, executor registry config fail, adminAddresses is null.");
             return;
         }
 
@@ -45,7 +51,19 @@ public class ExecutorRegistryThread extends Thread {
                 while (!toStop) {
                     try {
                         RegistryParam registryParam = new RegistryParam(RegistryConfig.RegistType.EXECUTOR.name(), appName, executorAddress);
-                        ReturnT<String> registryResult = AdminApiUtil.callApiFailover(AdminApiUtil.REGISTRY, registryParam);
+                        ReturnT<String> registryResult = null;
+
+                        for (String addressUrl: XxlJobExecutor.adminAddresses.split(",")) {
+                            String apiUrl = addressUrl.concat("/api");
+
+                            AdminBiz adminBiz = (AdminBiz) new NetComClientProxy(AdminBiz.class, apiUrl).getObject();
+                            registryResult = adminBiz.registry(registryParam);
+                            if (registryResult!=null && ReturnT.SUCCESS_CODE == registryResult.getCode()) {
+                                registryResult = ReturnT.SUCCESS;
+                                break;
+                            }
+                        }
+
                         logger.info(">>>>>>>>>>> xxl-job Executor registry {}, RegistryParam:{}, registryResult:{}",
                                 new Object[]{(registryResult.getCode()==ReturnT.SUCCESS_CODE?"success":"fail"), registryParam.toString(), registryResult.toString()});
                     } catch (Exception e) {

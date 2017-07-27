@@ -1,8 +1,10 @@
 package com.xxl.job.core.thread;
 
+import com.xxl.job.core.biz.AdminBiz;
 import com.xxl.job.core.biz.model.HandleCallbackParam;
 import com.xxl.job.core.biz.model.ReturnT;
-import com.xxl.job.core.util.AdminApiUtil;
+import com.xxl.job.core.executor.XxlJobExecutor;
+import com.xxl.job.core.rpc.netcom.NetComClientProxy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,14 +37,32 @@ public class TriggerCallbackThread {
                         HandleCallbackParam callback = getInstance().callBackQueue.take();
                         if (callback != null) {
 
-                            // callback list
+                            // valid
+                            if (XxlJobExecutor.adminAddresses==null || XxlJobExecutor.adminAddresses.trim().length()==0) {
+                                logger.warn(">>>>>>>>>>>> xxl-job callback fail, adminAddresses is null.");
+                                continue;
+                            }
+
+                            // callback list param
                             List<HandleCallbackParam> callbackParamList = new ArrayList<HandleCallbackParam>();
                             int drainToNum = getInstance().callBackQueue.drainTo(callbackParamList);
                             callbackParamList.add(callback);
 
                             // callback, will retry if error
                             try {
-                                ReturnT<String> callbackResult = AdminApiUtil.callApiFailover(AdminApiUtil.CALLBACK, callbackParamList);
+
+                                ReturnT<String> callbackResult = null;
+                                for (String addressUrl: XxlJobExecutor.adminAddresses.split(",")) {
+                                    String apiUrl = addressUrl.concat("/api");
+
+                                    AdminBiz adminBiz = (AdminBiz) new NetComClientProxy(AdminBiz.class, apiUrl).getObject();
+                                    callbackResult = adminBiz.callback(callbackParamList);
+                                    if (callbackResult!=null && ReturnT.SUCCESS_CODE == callbackResult.getCode()) {
+                                        callbackResult = ReturnT.SUCCESS;
+                                        break;
+                                    }
+                                }
+
                                 logger.info(">>>>>>>>>>> xxl-job callback, callbackParamList:{}, callbackResult:{}", new Object[]{callbackParamList, callbackResult});
                             } catch (Exception e) {
                                 logger.error(">>>>>>>>>>> xxl-job TriggerCallbackThread Exception:", e);

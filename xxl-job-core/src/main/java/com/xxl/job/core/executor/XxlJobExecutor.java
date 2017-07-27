@@ -8,7 +8,6 @@ import com.xxl.job.core.rpc.netcom.NetComServerFactory;
 import com.xxl.job.core.thread.ExecutorRegistryThread;
 import com.xxl.job.core.thread.JobThread;
 import com.xxl.job.core.thread.TriggerCallbackThread;
-import com.xxl.job.core.util.AdminApiUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -30,7 +29,7 @@ public class XxlJobExecutor implements ApplicationContextAware, ApplicationListe
     private String ip;
     private int port = 9999;
     private String appName;
-    private String adminAddresses;
+    public static String adminAddresses;
     public static String logPath;
 
     public void setIp(String ip) {
@@ -52,9 +51,6 @@ public class XxlJobExecutor implements ApplicationContextAware, ApplicationListe
     // ---------------------------------- job server ------------------------------------
     private NetComServerFactory serverFactory = new NetComServerFactory();
     public void start() throws Exception {
-        // admin api util init
-        AdminApiUtil.init(adminAddresses);
-
         // executor start
         NetComServerFactory.putService(ExecutorBiz.class, new ExecutorBizImpl());
         serverFactory.start(port, ip, appName);

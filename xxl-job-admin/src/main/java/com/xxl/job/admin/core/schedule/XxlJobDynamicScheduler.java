@@ -8,6 +8,7 @@ import com.xxl.job.admin.dao.XxlJobGroupDao;
 import com.xxl.job.admin.dao.XxlJobInfoDao;
 import com.xxl.job.admin.dao.XxlJobLogDao;
 import com.xxl.job.admin.dao.XxlJobRegistryDao;
+import com.xxl.job.core.biz.AdminBiz;
 import com.xxl.job.core.rpc.netcom.NetComServerFactory;
 import org.quartz.*;
 import org.quartz.Trigger.TriggerState;
@@ -62,6 +63,7 @@ public final class XxlJobDynamicScheduler implements ApplicationContextAware, In
     public static XxlJobInfoDao xxlJobInfoDao;
     public static XxlJobRegistryDao xxlJobRegistryDao;
     public static XxlJobGroupDao xxlJobGroupDao;
+    public static AdminBiz adminBiz;
 
     @Override
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
@@ -69,6 +71,7 @@ public final class XxlJobDynamicScheduler implements ApplicationContextAware, In
 		XxlJobDynamicScheduler.xxlJobInfoDao = applicationContext.getBean(XxlJobInfoDao.class);
         XxlJobDynamicScheduler.xxlJobRegistryDao = applicationContext.getBean(XxlJobRegistryDao.class);
         XxlJobDynamicScheduler.xxlJobGroupDao = applicationContext.getBean(XxlJobGroupDao.class);
+        XxlJobDynamicScheduler.adminBiz = applicationContext.getBean(AdminBiz.class);
 	}
     
 	@Override
