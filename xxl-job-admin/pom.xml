@@ -4,23 +4,22 @@
     <parent>
         <groupId>com.xuxueli</groupId>
         <artifactId>xxl-job</artifactId>
-        <version>1.8.0-SNAPSHOT</version>
+        <version>1.8.0</version>
     </parent>
     <artifactId>xxl-job-admin</artifactId>
     <packaging>jar</packaging>
 
     <dependencies>
-        <!-- aspectjweaver (support spring aop) -->
+        <!-- web -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <!-- aspectj weaver (support spring aop) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
-        <!-- jackson (support spring json) -->
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-        </dependency>
-
         <!-- slf4j -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

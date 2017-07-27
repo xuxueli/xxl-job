@@ -19,8 +19,8 @@ public abstract class AbstractExecutorOverRouter extends ExecutorRouter {
     }
 
     @Override
-    public ReturnT<String> routeRun(TriggerParam triggerParam, ArrayList<String> addressList, XxlJobLog jobLog) {
-        StringBuffer beatResultSB = new StringBuffer();
+    public ReturnT<String> routeRun(TriggerParam triggerParam, ArrayList<String> addressList) {
+        StringBuilder idleBeatResultSB = new StringBuilder();
         for (String address : addressList) {
             // beat
             ReturnT<String> beatResult = null;
@@ -29,9 +29,10 @@ public abstract class AbstractExecutorOverRouter extends ExecutorRouter {
                 beatResult = executorBiz.beat();
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);
-                beatResult = new ReturnT<String>(ReturnT.FAIL_CODE, ""+e );
+                beatResult = ReturnT.error("" + e);
             }
-            beatResultSB.append("<br>----------------------<br>")
+            idleBeatResultSB.append( (idleBeatResultSB.length()>0)?"<br><br>":"")
+
                     .append("心跳检测：")
                     .append("<br>address：").append(address)
                     .append("<br>code：").append(beatResult.getCode())
@@ -39,14 +40,15 @@ public abstract class AbstractExecutorOverRouter extends ExecutorRouter {
 
             // beat success
             if (beatResult.getCode() == ReturnT.SUCCESS_CODE) {
-                jobLog.setExecutorAddress(address);
 
                 ReturnT<String> runResult = runExecutor(triggerParam, address);
-                beatResultSB.append("<br>----------------------<br>").append(runResult.getMsg());
-
-                return new ReturnT<String>(runResult.getCode(), beatResultSB.toString());
+                idleBeatResultSB.append("<br><br>").append(runResult.getMsg());
+                // result
+                runResult.setMsg(idleBeatResultSB.toString());
+                runResult.setContent(address);
+                return runResult;
             }
         }
-        return new ReturnT<String>(ReturnT.FAIL_CODE, beatResultSB.toString());
+        return ReturnT.error(idleBeatResultSB.toString());
     }
 }

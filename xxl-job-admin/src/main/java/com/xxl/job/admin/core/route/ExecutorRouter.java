@@ -18,13 +18,14 @@ public abstract class ExecutorRouter {
     protected static Logger logger = LoggerFactory.getLogger(ExecutorRouter.class);
 
     /**
-     * route run
+     * route run executor
      *
      * @param triggerParam
      * @param addressList
-     * @return
+     * @return  ReturnT.content: final address
+
      */
-    public abstract ReturnT<String> routeRun(TriggerParam triggerParam, ArrayList<String> addressList, XxlJobLog jobLog);
+    public abstract ReturnT<String> routeRun(TriggerParam triggerParam, ArrayList<String> addressList);
 
     /**
      * run executor
@@ -33,7 +34,7 @@ public abstract class ExecutorRouter {
      * @param address
      * @return
      */
-    protected static ReturnT<String> runExecutor(TriggerParam triggerParam, String address) {
+    public static ReturnT<String> runExecutor(TriggerParam triggerParam, String address) {
         ReturnT<String> runResult;
         try {
             ExecutorBiz executorBiz = (ExecutorBiz) new NetComClientProxy(ExecutorBiz.class, address).getObject();

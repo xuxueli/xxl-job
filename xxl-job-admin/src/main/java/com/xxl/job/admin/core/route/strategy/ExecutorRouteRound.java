@@ -14,7 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class ExecutorRouteRound extends ExecutorRouter {
 
-    private static ConcurrentHashMap<Integer, Integer> routeCountEachJob = new ConcurrentHashMap<Integer, Integer>();
+    private static ConcurrentHashMap<Integer, Integer> routeCountEachJob = new ConcurrentHashMap<>();
     private static long CACHE_VALID_TIME = 0;
     private static int count(int jobId) {
         // cache clear
@@ -36,18 +36,14 @@ public class ExecutorRouteRound extends ExecutorRouter {
 
 
     @Override
-    public ReturnT<String> routeRun(TriggerParam triggerParam, ArrayList<String> addressList, XxlJobLog jobLog) {
+    public ReturnT<String> routeRun(TriggerParam triggerParam, ArrayList<String> addressList) {
 
         // address
         String address = route(triggerParam.getJobId(), addressList);
-        jobLog.setExecutorAddress(address);
 
         // run executor
         ReturnT<String> runResult = runExecutor(triggerParam, address);
-        runResult.setMsg("<br>----------------------<br>" + runResult.getMsg());
-
+        runResult.setContent(address);
         return runResult;
-
-
     }
 }

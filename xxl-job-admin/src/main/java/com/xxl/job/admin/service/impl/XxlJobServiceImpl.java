@@ -110,9 +110,9 @@ public class XxlJobServiceImpl implements IXxlJobService {
             // stage job info
             XxlJobInfo exists_jobInfo = xxlJobInfoDao.loadById(jobInfo.getId());
             if (exists_jobInfo == null) {
-                return new ReturnT<>(ReturnT.FAIL_CODE, "参数异常");
+                return ReturnT.error("参数异常");
             }
-            String old_cron = exists_jobInfo.getJobCron();
+//            String old_cron = exists_jobInfo.getJobCron();
             exists_jobInfo.merge(jobInfo);
             xxlJobInfoDao.update(exists_jobInfo);
 
@@ -206,17 +206,10 @@ public class XxlJobServiceImpl implements IXxlJobService {
         List<XxlJobGroup> groupList = xxlJobGroupDao.findAll();
         if (CollectionUtils.isNotEmpty(groupList)) {
             for (XxlJobGroup group : groupList) {
-                List<String> registryList = null;
-                if (group.getAddressType() == 0) {
-                    registryList = jobRegistryMonitorHelper.discover(RegistryConfig.RegistType.EXECUTOR.name(), group.getAppName());
-                } else {
-                    if (StringUtils.isNotBlank(group.getAddressList())) {
-                        registryList = Arrays.asList(group.getAddressList().split(","));
-                    }
+                if (CollectionUtils.isNotEmpty(group.getRegistryList())) {
+                    executorAddressSet.addAll(group.getRegistryList());
                 }
-                if (CollectionUtils.isNotEmpty(registryList)) {
-                    executorAddressSet.addAll(registryList);
-                }
+
             }
         }
         int executorCount = executorAddressSet.size();
@@ -279,7 +272,7 @@ public class XxlJobServiceImpl implements IXxlJobService {
         result.put("triggerDayCountFailList", triggerDayCountFailList);
         result.put("triggerCountSucTotal", triggerCountSucTotal);
         result.put("triggerCountFailTotal", triggerCountFailTotal);
-        return new ReturnT<>(result);
+        return ReturnT.success(result);
     }
 
 

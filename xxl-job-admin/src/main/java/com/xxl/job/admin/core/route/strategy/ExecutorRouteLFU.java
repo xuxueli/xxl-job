@@ -17,7 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class ExecutorRouteLFU extends ExecutorRouter {
 
-    private static ConcurrentHashMap<Integer, HashMap<String, Integer>> jobLfuMap = new ConcurrentHashMap<Integer, HashMap<String, Integer>>();
+    private static ConcurrentHashMap<Integer, HashMap<String, Integer>> jobLfuMap = new ConcurrentHashMap<>();
     private static long CACHE_VALID_TIME = 0;
 
     public String route(int jobId, ArrayList<String> addressList) {
@@ -31,7 +31,7 @@ public class ExecutorRouteLFU extends ExecutorRouter {
         // lfu item init
         HashMap<String, Integer> lfuItemMap = jobLfuMap.get(jobId);     // Key排序可以用TreeMap+构造入参Compare；Value排序暂时只能通过ArrayList；
         if (lfuItemMap == null) {
-            lfuItemMap = new HashMap<String, Integer>();
+            lfuItemMap = new HashMap<>();
             jobLfuMap.put(jobId, lfuItemMap);
         }
         for (String address: addressList) {
@@ -40,7 +40,7 @@ public class ExecutorRouteLFU extends ExecutorRouter {
             }
         }
 
-        // load least userd count address
+        // load least used count address
         List<Map.Entry<String, Integer>> lfuItemList = new ArrayList<Map.Entry<String, Integer>>(lfuItemMap.entrySet());
         Collections.sort(lfuItemList, new Comparator<Map.Entry<String, Integer>>() {
             @Override
@@ -57,16 +57,14 @@ public class ExecutorRouteLFU extends ExecutorRouter {
     }
 
     @Override
-    public ReturnT<String> routeRun(TriggerParam triggerParam, ArrayList<String> addressList, XxlJobLog jobLog) {
+    public ReturnT<String> routeRun(TriggerParam triggerParam, ArrayList<String> addressList) {
 
         // address
         String address = route(triggerParam.getJobId(), addressList);
-        jobLog.setExecutorAddress(address);
 
         // run executor
         ReturnT<String> runResult = runExecutor(triggerParam, address);
-        runResult.setMsg("<br>----------------------<br>" + runResult.getMsg());
-
+        runResult.setContent(address);
         return runResult;
     }
 

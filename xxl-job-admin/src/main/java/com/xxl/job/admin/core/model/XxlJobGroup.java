@@ -1,7 +1,10 @@
 package com.xxl.job.admin.core.model;
 
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -18,4 +21,12 @@ public class XxlJobGroup {
     private String addressList;    // 执行器地址列表，多地址逗号分隔(手动录入)
     // registry list
     private List<String> registryList;  // 执行器地址列表(系统注册)
+
+    public List<String> getRegistryList() {
+        if (StringUtils.isNotBlank(addressList)) {
+            registryList = new ArrayList<>(Arrays.asList(addressList.split(",")));
+        }
+        return registryList;
+    }
+
 }

@@ -42,6 +42,10 @@ public class ReturnT<T> implements Serializable {
 		return this.code == SUCCESS_CODE;
 	}
 
+	public static <T> ReturnT<T> of(int code, T content) {
+		return new ReturnT<>(code, content);
+	}
+
 	public static <T> ReturnT<T> success(T content) {
 		return new ReturnT<>(SUCCESS_CODE, content);
 	}
@@ -49,6 +53,7 @@ public class ReturnT<T> implements Serializable {
 	public static <T> ReturnT<T> error(String msg) {
 		return new ReturnT<>(FAIL_CODE, msg, null);
 	}
+
 
 	@Override
 	public String toString() {

@@ -47,7 +47,7 @@ public class ExecutorBizImpl implements ExecutorBiz {
         // kill handlerThread, and create new one
         JobThread jobThread = XxlJobExecutor.loadJobThread(jobId);
         if (jobThread != null) {
-            XxlJobExecutor.removeJobThread(jobId);
+            XxlJobExecutor.removeJobThread(jobId, "人工手动终止");
             return ReturnT.SUCCESS;
         }
         return ReturnT.success("job thread already killed.");

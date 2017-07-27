@@ -18,7 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class ExecutorRouteLRU extends ExecutorRouter {
 
-    private static ConcurrentHashMap<Integer, LinkedHashMap<String, String>> jobLRUMap = new ConcurrentHashMap<Integer, LinkedHashMap<String, String>>();
+    private static ConcurrentHashMap<Integer, LinkedHashMap<String, String>> jobLRUMap = new ConcurrentHashMap<>();
     private static long CACHE_VALID_TIME = 0;
 
     public String route(int jobId, ArrayList<String> addressList) {
@@ -32,10 +32,10 @@ public class ExecutorRouteLRU extends ExecutorRouter {
         // init lru
         LinkedHashMap<String, String> lruItem = jobLRUMap.get(jobId);
         if (lruItem == null) {
-            /**
-             * LinkedHashMap
-             *      a、accessOrder：ture=访问顺序排序（get/put时排序）；false=插入顺序排期；
-             *      b、removeEldestEntry：新增元素时将会调用，返回true时会删除最老元素；可封装LinkedHashMap并重写该方法，比如定义最大容量，超出是返回true即可实现固定长度的LRU算法；
+            /*
+              LinkedHashMap
+                   a、accessOrder：true=访问顺序排序（get/put时排序）；false=插入顺序排期；
+                   b、removeEldestEntry：新增元素时将会调用，返回true时会删除最老元素；可封装LinkedHashMap并重写该方法，比如定义最大容量，超出是返回true即可实现固定长度的LRU算法；
              */
             lruItem = new LinkedHashMap<>(16, 0.75f, true);
             jobLRUMap.put(jobId, lruItem);
@@ -50,22 +50,19 @@ public class ExecutorRouteLRU extends ExecutorRouter {
 
         // load
         String eldestKey = lruItem.entrySet().iterator().next().getKey();
-        String eldestValue = lruItem.get(eldestKey);
-        return eldestValue;
+        return lruItem.get(eldestKey);
     }
 
 
     @Override
-    public ReturnT<String> routeRun(TriggerParam triggerParam, ArrayList<String> addressList, XxlJobLog jobLog) {
+    public ReturnT<String> routeRun(TriggerParam triggerParam, ArrayList<String> addressList) {
 
         // address
         String address = route(triggerParam.getJobId(), addressList);
-        jobLog.setExecutorAddress(address);
 
         // run executor
         ReturnT<String> runResult = runExecutor(triggerParam, address);
-        runResult.setMsg("<br>----------------------<br>" + runResult.getMsg());
-
+        runResult.setContent(address);
         return runResult;
     }
 

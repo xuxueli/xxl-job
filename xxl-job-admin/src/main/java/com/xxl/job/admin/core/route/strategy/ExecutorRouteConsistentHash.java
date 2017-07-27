@@ -20,8 +20,6 @@ import java.util.TreeMap;
  */
 public class ExecutorRouteConsistentHash extends ExecutorRouter {
 
-    private static int VIRTUAL_NODE_NUM = 5;
-
     /**
      * get hash code on 2^32 ring (md5散列的方式计算hash值)
      * @param key
@@ -37,7 +35,7 @@ public class ExecutorRouteConsistentHash extends ExecutorRouter {
             throw new RuntimeException("MD5 not supported", e);
         }
         md5.reset();
-        byte[] keyBytes = null;
+        byte[] keyBytes;
         try {
             keyBytes = key.getBytes("UTF-8");
         } catch (UnsupportedEncodingException e) {
@@ -53,16 +51,16 @@ public class ExecutorRouteConsistentHash extends ExecutorRouter {
                 | ((long) (digest[1] & 0xFF) << 8)
                 | (digest[0] & 0xFF);
 
-        long truncateHashCode = hashCode & 0xffffffffL;
-        return truncateHashCode;
+        return hashCode & 0xffffffffL;
     }
 
     public String route(int jobId, ArrayList<String> addressList) {
 
         // ------A1------A2-------A3------
         // -----------J1------------------
-        TreeMap<Long, String> addressRing = new TreeMap<Long, String>();
+        TreeMap<Long, String> addressRing = new TreeMap<>();
         for (String address: addressList) {
+            int VIRTUAL_NODE_NUM = 5;
             for (int i = 0; i < VIRTUAL_NODE_NUM; i++) {
                 long addressHash = hash("SHARD-" + address + "-NODE-" + i);
                 addressRing.put(addressHash, address);
@@ -78,15 +76,13 @@ public class ExecutorRouteConsistentHash extends ExecutorRouter {
     }
 
     @Override
-    public ReturnT<String> routeRun(TriggerParam triggerParam, ArrayList<String> addressList, XxlJobLog jobLog) {
+    public ReturnT<String> routeRun(TriggerParam triggerParam, ArrayList<String> addressList) {
         // address
         String address = route(triggerParam.getJobId(), addressList);
-        jobLog.setExecutorAddress(address);
 
         // run executor
         ReturnT<String> runResult = runExecutor(triggerParam, address);
-        runResult.setMsg("<br>----------------------<br>" + runResult.getMsg());
-
+        runResult.setContent(address);
         return runResult;
     }
 }

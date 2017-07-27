@@ -116,7 +116,7 @@ public class XxlJobExecutor {
 
 
     public static JobThread registJobThread(int jobId, IJobHandler handler, String removeOldReason) {
-        JobThread newJobThread = new JobThread(handler);
+        JobThread newJobThread = new JobThread(jobId, handler);
         newJobThread.start();
         logger.info(">>>>>>>>>>> xxl-job regist JobThread success, jobId:{}, handler:{}", new Object[]{jobId, handler});
 
@@ -129,10 +129,10 @@ public class XxlJobExecutor {
         return newJobThread;
     }
 
-    public static void removeJobThread(int jobId) {
+    public static void removeJobThread(int jobId, String removeOldReason) {
         JobThread oldJobThread = JobThreadRepository.remove(jobId);
         if (oldJobThread != null) {
-            oldJobThread.toStop("人工手动终止");
+            oldJobThread.toStop(removeOldReason);
             oldJobThread.interrupt();
         }
     }

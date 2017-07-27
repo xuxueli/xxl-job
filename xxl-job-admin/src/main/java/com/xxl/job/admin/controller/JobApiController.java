@@ -11,48 +11,52 @@ import com.xxl.job.core.biz.model.HandleCallbackParam;
 import com.xxl.job.core.biz.model.RegistryParam;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.util.AdminApiUtil;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.quartz.SchedulerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import java.text.MessageFormat;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by xuxueli on 17/5/10.
  */
 @Controller
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class JobApiController {
     private static Logger logger = LoggerFactory.getLogger(JobApiController.class);
 
-    @Resource
-    public IXxlJobLogDao xxlJobLogDao;
-    @Resource
-    private IXxlJobInfoDao xxlJobInfoDao;
-    @Resource
-    private IXxlJobRegistryDao xxlJobRegistryDao;
-    @Autowired
-    private XxlJobDynamicScheduler xxlJobDynamicScheduler;
+    private final IXxlJobLogDao xxlJobLogDao;
+    private final IXxlJobInfoDao xxlJobInfoDao;
+    private final IXxlJobRegistryDao xxlJobRegistryDao;
+    private final XxlJobDynamicScheduler xxlJobDynamicScheduler;
 
 
-    @RequestMapping(value= AdminApiUtil.CALLBACK, method = RequestMethod.POST, consumes = "application/json")
+    @PostMapping(value= AdminApiUtil.CALLBACK, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @PermissionLimit(limit=false)
-    public ReturnT<String> callback(@RequestBody HandleCallbackParam handleCallbackParam){
+    public ReturnT<String> callback(@RequestBody List<HandleCallbackParam> callbackParamList){
 
+        for (HandleCallbackParam handleCallbackParam: callbackParamList) {
+            ReturnT<String> callbackResult = callback(handleCallbackParam);
+            logger.info("JobApiController.callback {}, handleCallbackParam={}, callbackResult={}",
+                    (callbackResult.getCode()==ReturnT.SUCCESS_CODE?"success":"fail"), handleCallbackParam, callbackResult);
+        }
+        return ReturnT.SUCCESS;
+    }
 
+    private ReturnT<String> callback(HandleCallbackParam handleCallbackParam) {
         // valid log item
         XxlJobLog log = xxlJobLogDao.load(handleCallbackParam.getLogId());
         if (log == null) {
-            return new ReturnT<String>(ReturnT.FAIL_CODE, "log item not found.");
+            return ReturnT.error("log item not found.");
         }
 
         // trigger success, to trigger child job, and avoid repeat trigger child job
@@ -90,7 +94,7 @@ public class JobApiController {
         }
 
         // handle msg
-        StringBuffer handleMsg = new StringBuffer();
+        StringBuilder handleMsg = new StringBuilder();
         if (log.getHandleMsg()!=null) {
             handleMsg.append(log.getHandleMsg()).append("<br>");
         }
