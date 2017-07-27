@@ -66,7 +66,7 @@ public class AdminApiUtil {
 		return ReturnT.FAIL;
 	}
 
-	public static ReturnT<String> callApi(String finalUrl, Object requestObj) throws Exception {
+	private static ReturnT<String> callApi(String finalUrl, Object requestObj) throws Exception {
 		HttpPost httpPost = new HttpPost(finalUrl);
 		CloseableHttpClient httpClient = HttpClients.createDefault();
 		try {
