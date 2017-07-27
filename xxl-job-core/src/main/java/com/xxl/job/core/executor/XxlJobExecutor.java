@@ -52,7 +52,7 @@ public class XxlJobExecutor implements ApplicationContextAware, ApplicationListe
     private NetComServerFactory serverFactory = new NetComServerFactory();
     public void start() throws Exception {
         // executor start
-        NetComServerFactory.putService(ExecutorBiz.class, new ExecutorBizImpl());
+        NetComServerFactory.putService(ExecutorBiz.class, new ExecutorBizImpl());   // rpc-service, base on jetty
         serverFactory.start(port, ip, appName);
 
         // trigger callback thread start

@@ -1,8 +1,6 @@
 package com.xxl.job.admin.controller;
 
 import com.xxl.job.admin.controller.annotation.PermessionLimit;
-import com.xxl.job.admin.core.schedule.XxlJobDynamicScheduler;
-import com.xxl.job.core.biz.AdminBiz;
 import com.xxl.job.core.rpc.codec.RpcRequest;
 import com.xxl.job.core.rpc.codec.RpcResponse;
 import com.xxl.job.core.rpc.netcom.NetComServerFactory;
@@ -24,10 +22,6 @@ import java.io.OutputStream;
 @Controller
 public class JobApiController {
     private static Logger logger = LoggerFactory.getLogger(JobApiController.class);
-
-    static {
-        NetComServerFactory.putService(AdminBiz.class, XxlJobDynamicScheduler.adminBiz);
-    }
 
     private RpcResponse doInvoke(HttpServletRequest request) {
         try {

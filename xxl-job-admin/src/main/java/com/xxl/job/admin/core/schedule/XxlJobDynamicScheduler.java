@@ -38,13 +38,15 @@ public final class XxlJobDynamicScheduler implements ApplicationContextAware, In
 	}
     
     // init
-    private NetComServerFactory serverFactory = new NetComServerFactory();
     public void init() throws Exception {
 		// admin registry monitor run
         JobRegistryMonitorHelper.getInstance().start();
 
         // admin monitor run
         JobFailMonitorHelper.getInstance().start();
+
+        // rpc-service, base on spring-mvc
+        NetComServerFactory.putService(AdminBiz.class, XxlJobDynamicScheduler.adminBiz);
     }
     
     // destroy
@@ -54,8 +56,6 @@ public final class XxlJobDynamicScheduler implements ApplicationContextAware, In
 
         // admin monitor stop
         JobFailMonitorHelper.getInstance().toStop();
-
-        serverFactory.destroy();
     }
     
     // xxlJobLogDao、xxlJobInfoDao
