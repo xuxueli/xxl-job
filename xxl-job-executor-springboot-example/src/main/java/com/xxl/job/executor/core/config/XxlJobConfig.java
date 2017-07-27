@@ -8,7 +8,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
-
+/**
+ * xxl-job config
+ *
+ * @author xuxueli 2017-04-28
+ */
 @Configuration
 @ComponentScan(basePackages = "com.xxl.job.executor.service.jobhandler")
 public class XxlJobConfig {
