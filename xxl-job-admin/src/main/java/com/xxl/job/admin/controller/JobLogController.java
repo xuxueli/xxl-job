@@ -12,6 +12,8 @@ import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.rpc.netcom.NetComClientProxy;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,6 +34,7 @@ import java.util.Map;
 @Controller
 @RequestMapping("/joblog")
 public class JobLogController {
+	private static Logger logger = LoggerFactory.getLogger(JobLogController.class);
 
 	@Resource
 	private XxlJobGroupDao xxlJobGroupDao;
@@ -129,7 +132,7 @@ public class JobLogController {
 
 			return logResult;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			return new ReturnT<LogResult>(ReturnT.FAIL_CODE, e.getMessage());
 		}
 	}
@@ -148,14 +151,14 @@ public class JobLogController {
 		}
 
 		// request of kill
-		ExecutorBiz executorBiz = null;
+		ReturnT<String> runResult = null;
 		try {
-			executorBiz = (ExecutorBiz) new NetComClientProxy(ExecutorBiz.class, log.getExecutorAddress()).getObject();
+			ExecutorBiz executorBiz = (ExecutorBiz) new NetComClientProxy(ExecutorBiz.class, log.getExecutorAddress()).getObject();
+			runResult = executorBiz.kill(jobInfo.getId());
 		} catch (Exception e) {
-			e.printStackTrace();
-			return new ReturnT<String>(500, e.getMessage());
+			logger.error(e.getMessage(), e);
+			runResult = new ReturnT<String>(500, e.getMessage());
 		}
-		ReturnT<String> runResult = executorBiz.kill(jobInfo.getId());
 
 		if (ReturnT.SUCCESS_CODE == runResult.getCode()) {
 			log.setHandleCode(ReturnT.FAIL_CODE);

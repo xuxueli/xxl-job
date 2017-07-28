@@ -58,7 +58,7 @@ public class XxlJobExecutor implements ApplicationContextAware, ApplicationListe
         if (adminAddresses!=null && adminAddresses.trim().length()>0) {
             for (String address: adminAddresses.trim().split(",")) {
                 if (address!=null && address.trim().length()>0) {
-                    String addressUrl = address.concat("/api");
+                    String addressUrl = address.concat(AdminBiz.MAPPING);
                     AdminBiz adminBiz = (AdminBiz) new NetComClientProxy(AdminBiz.class, addressUrl).getObject();
                     if (adminBizList == null) {
                         adminBizList = new ArrayList<AdminBiz>();

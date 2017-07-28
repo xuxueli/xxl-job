@@ -36,7 +36,7 @@ public abstract class ExecutorRouter {
             ExecutorBiz executorBiz = (ExecutorBiz) new NetComClientProxy(ExecutorBiz.class, address).getObject();
             runResult = executorBiz.run(triggerParam);
         } catch (Exception e) {
-            logger.error("", e);
+            logger.error(e.getMessage(), e);
             runResult = new ReturnT<String>(ReturnT.FAIL_CODE, ""+e );
         }
 
