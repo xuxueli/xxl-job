@@ -34,7 +34,8 @@ public class XxlJobExecutor implements ApplicationContextAware, ApplicationListe
     private int port = 9999;
     private String appName;
     private String adminAddresses;
-    public static String logPath;
+    private String accessToken;
+    public static String logPath = "/data/applogs/xxl-job/jobhandler/";
 
     public void setIp(String ip) {
         this.ip = ip;
@@ -48,18 +49,21 @@ public class XxlJobExecutor implements ApplicationContextAware, ApplicationListe
     public void setAdminAddresses(String adminAddresses) {
         this.adminAddresses = adminAddresses;
     }
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
+    }
     public void setLogPath(String logPath) {
         this.logPath = logPath;
     }
 
     // ---------------------------------- admin-client ------------------------------------
     private static List<AdminBiz> adminBizList;
-    private static void initAdminBizList(String adminAddresses) throws Exception {
+    private static void initAdminBizList(String adminAddresses, String accessToken) throws Exception {
         if (adminAddresses!=null && adminAddresses.trim().length()>0) {
             for (String address: adminAddresses.trim().split(",")) {
                 if (address!=null && address.trim().length()>0) {
                     String addressUrl = address.concat(AdminBiz.MAPPING);
-                    AdminBiz adminBiz = (AdminBiz) new NetComClientProxy(AdminBiz.class, addressUrl).getObject();
+                    AdminBiz adminBiz = (AdminBiz) new NetComClientProxy(AdminBiz.class, addressUrl, accessToken).getObject();
                     if (adminBizList == null) {
                         adminBizList = new ArrayList<AdminBiz>();
                     }
@@ -76,11 +80,13 @@ public class XxlJobExecutor implements ApplicationContextAware, ApplicationListe
     private NetComServerFactory serverFactory = new NetComServerFactory();
     public void start() throws Exception {
         // init admin-client
-        initAdminBizList(adminAddresses);
+        initAdminBizList(adminAddresses, accessToken);
 
         // executor start
         NetComServerFactory.putService(ExecutorBiz.class, new ExecutorBizImpl());   // rpc-service, base on jetty
+        NetComServerFactory.setAccessToken(accessToken);
         serverFactory.start(port, ip, appName);
+
 
         // trigger callback thread start
         TriggerCallbackThread.getInstance().start();

@@ -1,5 +1,6 @@
 package com.xxl.job.admin.core.route;
 
+import com.xxl.job.admin.core.schedule.XxlJobDynamicScheduler;
 import com.xxl.job.core.biz.ExecutorBiz;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.biz.model.TriggerParam;
@@ -33,7 +34,7 @@ public abstract class ExecutorRouter {
     public static ReturnT<String> runExecutor(TriggerParam triggerParam, String address){
         ReturnT<String> runResult = null;
         try {
-            ExecutorBiz executorBiz = (ExecutorBiz) new NetComClientProxy(ExecutorBiz.class, address).getObject();
+            ExecutorBiz executorBiz = (ExecutorBiz) new NetComClientProxy(ExecutorBiz.class, address, XxlJobDynamicScheduler.getAccessToken()).getObject();
             runResult = executorBiz.run(triggerParam);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);

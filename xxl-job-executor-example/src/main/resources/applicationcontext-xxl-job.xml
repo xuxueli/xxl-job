@@ -33,6 +33,8 @@
 		<property name="adminAddresses" value="${xxl.job.admin.addresses}" />
 		<!-- 执行器日志路径[必填] -->
 		<property name="logPath" value="${xxl.job.executor.logpath}" />
+		<!-- 访问令牌，非空则进行匹配校验[选填] -->
+		<property name="accessToken" value="${xxl.job.accessToken}" />
 	</bean>
 
 

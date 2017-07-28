@@ -36,7 +36,16 @@ public final class XxlJobDynamicScheduler implements ApplicationContextAware, In
     public void setScheduler(Scheduler scheduler) {
 		XxlJobDynamicScheduler.scheduler = scheduler;
 	}
-    
+
+	// accessToken
+    private static String accessToken;
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
+    }
+    public static String getAccessToken() {
+        return accessToken;
+    }
+
     // init
     public void init() throws Exception {
 		// admin registry monitor run
@@ -47,6 +56,8 @@ public final class XxlJobDynamicScheduler implements ApplicationContextAware, In
 
         // rpc-service, base on spring-mvc
         NetComServerFactory.putService(AdminBiz.class, XxlJobDynamicScheduler.adminBiz);
+        NetComServerFactory.setAccessToken(accessToken);
+
     }
     
     // destroy
