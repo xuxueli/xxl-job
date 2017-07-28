@@ -4,8 +4,8 @@ import com.xxl.job.admin.core.enums.ExecutorFailStrategyEnum;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.route.ExecutorRouteStrategyEnum;
-import com.xxl.job.admin.dao.IXxlJobGroupDao;
-import com.xxl.job.admin.service.IXxlJobService;
+import com.xxl.job.admin.dao.XxlJobGroupDao;
+import com.xxl.job.admin.service.XxlJobService;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
 import com.xxl.job.core.glue.GlueTypeEnum;
@@ -28,9 +28,9 @@ import java.util.Map;
 public class JobInfoController {
 
 	@Resource
-	private IXxlJobGroupDao xxlJobGroupDao;
+	private XxlJobGroupDao xxlJobGroupDao;
 	@Resource
-	private IXxlJobService xxlJobService;
+	private XxlJobService xxlJobService;
 	
 	@RequestMapping
 	public String index(Model model) {

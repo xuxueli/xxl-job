@@ -19,8 +19,14 @@ public class JettyClient {
 			// serialize request
 			byte[] requestBytes = HessianSerializer.serialize(request);
 
+			// reqURL
+			String reqURL = request.getServerAddress();
+			if (reqURL!=null && reqURL.toLowerCase().indexOf("http://")==-1) {
+				reqURL = "http://" + request.getServerAddress() + "/";
+			}
+
 			// remote invoke
-			byte[] responseBytes = HttpClientUtil.postRequest("http://" + request.getServerAddress() + "/", requestBytes);
+			byte[] responseBytes = HttpClientUtil.postRequest(reqURL, requestBytes);
 			if (responseBytes == null || responseBytes.length==0) {
 				RpcResponse rpcResponse = new RpcResponse();
 				rpcResponse.setError("RpcResponse byte[] is null");

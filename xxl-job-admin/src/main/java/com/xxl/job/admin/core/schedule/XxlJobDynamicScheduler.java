@@ -4,10 +4,11 @@ import com.xxl.job.admin.core.jobbean.RemoteHttpJobBean;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.thread.JobFailMonitorHelper;
 import com.xxl.job.admin.core.thread.JobRegistryMonitorHelper;
-import com.xxl.job.admin.dao.IXxlJobGroupDao;
-import com.xxl.job.admin.dao.IXxlJobInfoDao;
-import com.xxl.job.admin.dao.IXxlJobLogDao;
-import com.xxl.job.admin.dao.IXxlJobRegistryDao;
+import com.xxl.job.admin.dao.XxlJobGroupDao;
+import com.xxl.job.admin.dao.XxlJobInfoDao;
+import com.xxl.job.admin.dao.XxlJobLogDao;
+import com.xxl.job.admin.dao.XxlJobRegistryDao;
+import com.xxl.job.core.biz.AdminBiz;
 import com.xxl.job.core.rpc.netcom.NetComServerFactory;
 import org.quartz.*;
 import org.quartz.Trigger.TriggerState;
@@ -37,13 +38,15 @@ public final class XxlJobDynamicScheduler implements ApplicationContextAware, In
 	}
     
     // init
-    private NetComServerFactory serverFactory = new NetComServerFactory();
     public void init() throws Exception {
 		// admin registry monitor run
         JobRegistryMonitorHelper.getInstance().start();
 
         // admin monitor run
         JobFailMonitorHelper.getInstance().start();
+
+        // rpc-service, base on spring-mvc
+        NetComServerFactory.putService(AdminBiz.class, XxlJobDynamicScheduler.adminBiz);
     }
     
     // destroy
@@ -53,22 +56,22 @@ public final class XxlJobDynamicScheduler implements ApplicationContextAware, In
 
         // admin monitor stop
         JobFailMonitorHelper.getInstance().toStop();
-
-        serverFactory.destroy();
     }
     
     // xxlJobLogDao、xxlJobInfoDao
-    public static IXxlJobLogDao xxlJobLogDao;
-    public static IXxlJobInfoDao xxlJobInfoDao;
-    public static IXxlJobRegistryDao xxlJobRegistryDao;
-    public static IXxlJobGroupDao xxlJobGroupDao;
+    public static XxlJobLogDao xxlJobLogDao;
+    public static XxlJobInfoDao xxlJobInfoDao;
+    public static XxlJobRegistryDao xxlJobRegistryDao;
+    public static XxlJobGroupDao xxlJobGroupDao;
+    public static AdminBiz adminBiz;
 
     @Override
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-		XxlJobDynamicScheduler.xxlJobLogDao = applicationContext.getBean(IXxlJobLogDao.class);
-		XxlJobDynamicScheduler.xxlJobInfoDao = applicationContext.getBean(IXxlJobInfoDao.class);
-        XxlJobDynamicScheduler.xxlJobRegistryDao = applicationContext.getBean(IXxlJobRegistryDao.class);
-        XxlJobDynamicScheduler.xxlJobGroupDao = applicationContext.getBean(IXxlJobGroupDao.class);
+		XxlJobDynamicScheduler.xxlJobLogDao = applicationContext.getBean(XxlJobLogDao.class);
+		XxlJobDynamicScheduler.xxlJobInfoDao = applicationContext.getBean(XxlJobInfoDao.class);
+        XxlJobDynamicScheduler.xxlJobRegistryDao = applicationContext.getBean(XxlJobRegistryDao.class);
+        XxlJobDynamicScheduler.xxlJobGroupDao = applicationContext.getBean(XxlJobGroupDao.class);
+        XxlJobDynamicScheduler.adminBiz = applicationContext.getBean(AdminBiz.class);
 	}
     
 	@Override

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="XxlJobRegistryMapper">
+<mapper namespace="com.xxl.job.admin.dao.XxlJobRegistryDao">
 	
 	<resultMap id="XxlJobRegistry" type="com.xxl.job.admin.core.model.XxlJobRegistry" >
 		<result column="id" property="id" />
@@ -30,7 +30,7 @@
 		WHERE t.update_time <![CDATA[ > ]]> DATE_ADD(NOW(),INTERVAL -#{timeout} SECOND)
 	</select>
 
-    <update id="registryUpdate" parameterType="java.util.Map" >
+    <update id="registryUpdate" >
         UPDATE XXL_JOB_QRTZ_TRIGGER_REGISTRY
         SET `update_time` = NOW()
         WHERE `registry_group` = #{registryGroup}
@@ -38,7 +38,7 @@
           AND `registry_value` = #{registryValue}
     </update>
 
-    <insert id="registrySave" parameterType="java.util.Map" >
+    <insert id="registrySave" >
         INSERT INTO XXL_JOB_QRTZ_TRIGGER_REGISTRY( `registry_group` , `registry_key` , `registry_value`, `update_time`)
         VALUES( #{registryGroup}  , #{registryKey} , #{registryValue}, NOW())
     </insert>
