@@ -1,9 +1,11 @@
 package com.xxl.job.core.executor;
 
+import com.xxl.job.core.biz.AdminBiz;
 import com.xxl.job.core.biz.ExecutorBiz;
 import com.xxl.job.core.biz.impl.ExecutorBizImpl;
 import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.handler.annotation.JobHander;
+import com.xxl.job.core.rpc.netcom.NetComClientProxy;
 import com.xxl.job.core.rpc.netcom.NetComServerFactory;
 import com.xxl.job.core.thread.ExecutorRegistryThread;
 import com.xxl.job.core.thread.JobThread;
@@ -17,6 +19,8 @@ import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextClosedEvent;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -29,7 +33,7 @@ public class XxlJobExecutor implements ApplicationContextAware, ApplicationListe
     private String ip;
     private int port = 9999;
     private String appName;
-    public static String adminAddresses;
+    private String adminAddresses;
     public static String logPath;
 
     public void setIp(String ip) {
@@ -48,9 +52,32 @@ public class XxlJobExecutor implements ApplicationContextAware, ApplicationListe
         this.logPath = logPath;
     }
 
+    // ---------------------------------- admin-client ------------------------------------
+    private static List<AdminBiz> adminBizList;
+    private static void initAdminBizList(String adminAddresses) throws Exception {
+        if (adminAddresses!=null && adminAddresses.trim().length()>0) {
+            for (String address: adminAddresses.trim().split(",")) {
+                if (address!=null && address.trim().length()>0) {
+                    String addressUrl = address.concat("/api");
+                    AdminBiz adminBiz = (AdminBiz) new NetComClientProxy(AdminBiz.class, addressUrl).getObject();
+                    if (adminBizList == null) {
+                        adminBizList = new ArrayList<AdminBiz>();
+                    }
+                    adminBizList.add(adminBiz);
+                }
+            }
+        }
+    }
+    public static List<AdminBiz> getAdminBizList(){
+        return adminBizList;
+    }
+
     // ---------------------------------- job server ------------------------------------
     private NetComServerFactory serverFactory = new NetComServerFactory();
     public void start() throws Exception {
+        // init admin-client
+        initAdminBizList(adminAddresses);
+
         // executor start
         NetComServerFactory.putService(ExecutorBiz.class, new ExecutorBizImpl());   // rpc-service, base on jetty
         serverFactory.start(port, ip, appName);
