@@ -79,6 +79,15 @@ public class JobThread extends Thread{
 		 */
 		this.toStop = true;
 		this.stopReason = stopReason;
+		// 调用自定义Shutdown方法，保证Job正常退出
+		this.getHandler().shutdown();
+		// 等待线程执行完毕
+		this.interrupt();
+		try {
+			this.join();
+		} catch (InterruptedException e) {
+			logger.error(e.getMessage(), e);
+		}
 	}
 
     /**

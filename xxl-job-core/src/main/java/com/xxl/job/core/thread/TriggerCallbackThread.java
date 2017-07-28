@@ -65,6 +65,8 @@ public class TriggerCallbackThread {
                             }
 
                         }
+                    } catch (InterruptedException e) {
+                        // Ignore
                     } catch (Exception e) {
                         logger.error(e.getMessage(), e);
                     }
@@ -76,6 +78,13 @@ public class TriggerCallbackThread {
     }
     public void toStop(){
         toStop = true;
+        // 等待线程执行完毕
+        triggerCallbackThread.interrupt();
+        try {
+            triggerCallbackThread.join();
+        } catch (InterruptedException e) {
+            logger.error(e.getMessage(), e);
+        }
     }
 
     public static void pushCallBack(HandleCallbackParam callback){
