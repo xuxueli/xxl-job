@@ -1,10 +1,7 @@
 package com.xxl.job.admin.core.route;
 
-import com.xxl.job.admin.core.schedule.XxlJobDynamicScheduler;
-import com.xxl.job.core.biz.ExecutorBiz;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.biz.model.TriggerParam;
-import com.xxl.job.core.rpc.netcom.NetComClientProxy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,31 +21,5 @@ public abstract class ExecutorRouter {
      * @return  ReturnT.content: final address
      */
     public abstract ReturnT<String> routeRun(TriggerParam triggerParam, ArrayList<String> addressList);
-
-    /**
-     * run executor
-     * @param triggerParam
-     * @param address
-     * @return  ReturnT.content: final address
-     */
-    public static ReturnT<String> runExecutor(TriggerParam triggerParam, String address){
-        ReturnT<String> runResult = null;
-        try {
-            ExecutorBiz executorBiz = (ExecutorBiz) new NetComClientProxy(ExecutorBiz.class, address, XxlJobDynamicScheduler.getAccessToken()).getObject();
-            runResult = executorBiz.run(triggerParam);
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-            runResult = new ReturnT<String>(ReturnT.FAIL_CODE, ""+e );
-        }
-
-        StringBuffer runResultSB = new StringBuffer("触发调度：");
-        runResultSB.append("<br>address：").append(address);
-        runResultSB.append("<br>code：").append(runResult.getCode());
-        runResultSB.append("<br>msg：").append(runResult.getMsg());
-
-        runResult.setMsg(runResultSB.toString());
-        runResult.setContent(address);
-        return runResult;
-    }
 
 }

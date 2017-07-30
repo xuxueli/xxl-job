@@ -26,7 +26,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class XxlJobExecutor implements ApplicationContextAware {
     private static final Logger logger = LoggerFactory.getLogger(XxlJobExecutor.class);
 
-    // ---------------------------------- param ------------------------------------
+    // ---------------------- param ----------------------
     private String ip;
     private int port = 9999;
     private String appName;
@@ -54,7 +54,7 @@ public class XxlJobExecutor implements ApplicationContextAware {
     }
 
 
-    // ---------------------------------- applicationContext ------------------------------------
+    // ---------------------- applicationContext ----------------------
     private static ApplicationContext applicationContext;
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
@@ -65,7 +65,7 @@ public class XxlJobExecutor implements ApplicationContextAware {
     }
 
 
-    // ---------------------------------- start + stop ------------------------------------
+    // ---------------------- start + stop ----------------------
     public void start() throws Exception {
         // init admin-client
         initAdminBizList(adminAddresses, accessToken);
@@ -95,7 +95,7 @@ public class XxlJobExecutor implements ApplicationContextAware {
     }
 
 
-    // ---------------------------------- admin-client ------------------------------------
+    // ---------------------- admin-client ----------------------
     private static List<AdminBiz> adminBizList;
     private static void initAdminBizList(String adminAddresses, String accessToken) throws Exception {
         if (adminAddresses!=null && adminAddresses.trim().length()>0) {
@@ -116,7 +116,7 @@ public class XxlJobExecutor implements ApplicationContextAware {
     }
 
 
-    // ---------------------------------- executor-server ------------------------------------
+    // ---------------------- executor-server(jetty) ----------------------
     private NetComServerFactory serverFactory = new NetComServerFactory();
     private void initExecutorServer(int port, String ip, String appName, String accessToken) throws Exception {
         NetComServerFactory.putService(ExecutorBiz.class, new ExecutorBizImpl());   // rpc-service, base on jetty
@@ -128,7 +128,7 @@ public class XxlJobExecutor implements ApplicationContextAware {
     }
 
 
-    // ---------------------------------- job handler repository ------------------------------------
+    // ---------------------- job handler repository ----------------------
     private static ConcurrentHashMap<String, IJobHandler> jobHandlerRepository = new ConcurrentHashMap<String, IJobHandler>();
     public static IJobHandler registJobHandler(String name, IJobHandler jobHandler){
         logger.info("xxl-job register jobhandler success, name:{}, jobHandler:{}", name, jobHandler);
@@ -156,7 +156,7 @@ public class XxlJobExecutor implements ApplicationContextAware {
     }
 
 
-    // ---------------------------------- job thread repository ------------------------------------
+    // ---------------------- job thread repository ----------------------
     private static ConcurrentHashMap<Integer, JobThread> JobThreadRepository = new ConcurrentHashMap<Integer, JobThread>();
     public static JobThread registJobThread(int jobId, IJobHandler handler, String removeOldReason){
         JobThread newJobThread = new JobThread(jobId, handler);
