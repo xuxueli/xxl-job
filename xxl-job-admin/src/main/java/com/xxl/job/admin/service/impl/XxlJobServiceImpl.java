@@ -5,15 +5,13 @@ import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.route.ExecutorRouteStrategyEnum;
 import com.xxl.job.admin.core.schedule.XxlJobDynamicScheduler;
-import com.xxl.job.admin.core.thread.JobRegistryMonitorHelper;
-import com.xxl.job.admin.dao.IXxlJobGroupDao;
-import com.xxl.job.admin.dao.IXxlJobInfoDao;
-import com.xxl.job.admin.dao.IXxlJobLogDao;
-import com.xxl.job.admin.dao.IXxlJobLogGlueDao;
-import com.xxl.job.admin.service.IXxlJobService;
+import com.xxl.job.admin.dao.XxlJobGroupDao;
+import com.xxl.job.admin.dao.XxlJobInfoDao;
+import com.xxl.job.admin.dao.XxlJobLogDao;
+import com.xxl.job.admin.dao.XxlJobLogGlueDao;
+import com.xxl.job.admin.service.XxlJobService;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
-import com.xxl.job.core.enums.RegistryConfig;
 import com.xxl.job.core.glue.GlueTypeEnum;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -34,17 +32,17 @@ import java.util.*;
  * @author xuxueli 2016-5-28 15:30:33
  */
 @Service
-public class XxlJobServiceImpl implements IXxlJobService {
+public class XxlJobServiceImpl implements XxlJobService {
 	private static Logger logger = LoggerFactory.getLogger(XxlJobServiceImpl.class);
 
 	@Resource
-	private IXxlJobGroupDao xxlJobGroupDao;
+	private XxlJobGroupDao xxlJobGroupDao;
 	@Resource
-	private IXxlJobInfoDao xxlJobInfoDao;
+	private XxlJobInfoDao xxlJobInfoDao;
 	@Resource
-	public IXxlJobLogDao xxlJobLogDao;
+	public XxlJobLogDao xxlJobLogDao;
 	@Resource
-	private IXxlJobLogGlueDao xxlJobLogGlueDao;
+	private XxlJobLogGlueDao xxlJobLogGlueDao;
 	
 	@Override
 	public Map<String, Object> pageList(int start, int length, int jobGroup, String executorHandler, String filterTime) {
@@ -185,10 +183,10 @@ public class XxlJobServiceImpl implements IXxlJobService {
 
 		// stage job info
 		XxlJobInfo exists_jobInfo = xxlJobInfoDao.loadById(jobInfo.getId());
-        String old_cron = exists_jobInfo.getJobCron();
 		if (exists_jobInfo == null) {
 			return new ReturnT<String>(ReturnT.FAIL_CODE, "参数异常");
 		}
+		//String old_cron = exists_jobInfo.getJobCron();
 
 		exists_jobInfo.setJobCron(jobInfo.getJobCron());
 		exists_jobInfo.setJobDesc(jobInfo.getJobDesc());
@@ -288,21 +286,15 @@ public class XxlJobServiceImpl implements IXxlJobService {
 		// executor count
 		Set<String> executerAddressSet = new HashSet<String>();
 		List<XxlJobGroup> groupList = xxlJobGroupDao.findAll();
+
 		if (CollectionUtils.isNotEmpty(groupList)) {
 			for (XxlJobGroup group: groupList) {
-				List<String> registryList = null;
-				if (group.getAddressType() == 0) {
-					registryList = JobRegistryMonitorHelper.discover(RegistryConfig.RegistType.EXECUTOR.name(), group.getAppName());
-				} else {
-					if (StringUtils.isNotBlank(group.getAddressList())) {
-						registryList = Arrays.asList(group.getAddressList().split(","));
-					}
-				}
-				if (CollectionUtils.isNotEmpty(registryList)) {
-					executerAddressSet.addAll(registryList);
+				if (CollectionUtils.isNotEmpty(group.getRegistryList())) {
+					executerAddressSet.addAll(group.getRegistryList());
 				}
 			}
 		}
+
 		int executorCount = executerAddressSet.size();
 
 		Map<String, Object> dashboardMap = new HashMap<String, Object>();

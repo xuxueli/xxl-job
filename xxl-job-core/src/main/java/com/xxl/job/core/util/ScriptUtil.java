@@ -1,6 +1,6 @@
 package com.xxl.job.core.util;
 
-import com.xxl.job.core.executor.XxlJobExecutor;
+import com.xxl.job.core.log.XxlJobFileAppender;
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
 import org.apache.commons.exec.PumpStreamHandler;
@@ -28,7 +28,7 @@ public class ScriptUtil {
      */
     public static void markScriptFile(String scriptFileName, String content) throws IOException {
         // filePath/
-        File filePathDir = new File(XxlJobExecutor.logPath);
+        File filePathDir = new File(XxlJobFileAppender.logPath);
         if (!filePathDir.exists()) {
             filePathDir.mkdirs();
         }

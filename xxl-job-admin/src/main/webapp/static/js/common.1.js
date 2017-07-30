@@ -71,18 +71,18 @@ $(function(){
 
 	// 左侧菜单状态，js + 后端 + cookie方式（新）
 	$('.sidebar-toggle').click(function(){
-		var adminlte_settings = $.cookie('adminlte_settings');	// 左侧菜单展开状态[adminlte_settings]：on=展开，off=折叠
-		if ('off' == adminlte_settings) {
-			adminlte_settings = 'on';
+		var xxljob_adminlte_settings = $.cookie('xxljob_adminlte_settings');	// 左侧菜单展开状态[xxljob_adminlte_settings]：on=展开，off=折叠
+		if ('off' == xxljob_adminlte_settings) {
+            xxljob_adminlte_settings = 'on';
 		} else {
-			adminlte_settings = 'off';
+            xxljob_adminlte_settings = 'off';
 		}
-		$.cookie('adminlte_settings', adminlte_settings, { expires: 7 });	//$.cookie('the_cookie', '', { expires: -1 });
+		$.cookie('xxljob_adminlte_settings', xxljob_adminlte_settings, { expires: 7 });	//$.cookie('the_cookie', '', { expires: -1 });
 	});
 	// 左侧菜单状态，js + cookie方式（遗弃）
 	/*
-	 var adminlte_settings = $.cookie('adminlte_settings');
-	 if (adminlte_settings == 'off') {
+	 var xxljob_adminlte_settings = $.cookie('xxljob_adminlte_settings');
+	 if (xxljob_adminlte_settings == 'off') {
 	 $('body').addClass('sidebar-collapse');
 	 }
 	 */

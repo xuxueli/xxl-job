@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="XxlJobLogGlueMapper">
+<mapper namespace="com.xxl.job.admin.dao.XxlJobLogGlueDao">
 	
 	<resultMap id="XxlJobLogGlue" type="com.xxl.job.admin.core.model.XxlJobLogGlue" >
 		<result column="id" property="id" />
@@ -39,9 +39,9 @@
 			now(),
 			now()
 		);
-		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id"> 
+		<!--<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
 			SELECT LAST_INSERT_ID() 
-		</selectKey> 
+		</selectKey>-->
 	</insert>
 	
 	<select id="findByJobId" parameterType="java.lang.Integer" resultMap="XxlJobLogGlue">
@@ -51,7 +51,7 @@
 		ORDER BY id DESC
 	</select>
 	
-	<delete id="removeOld" parameterType="java.util.HashMap" >
+	<delete id="removeOld" >
 		DELETE FROM XXL_JOB_QRTZ_TRIGGER_LOGGLUE
 		WHERE id NOT in(
 			SELECT id FROM(

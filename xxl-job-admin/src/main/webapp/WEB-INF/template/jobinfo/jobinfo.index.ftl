@@ -8,7 +8,7 @@
   	<link rel="stylesheet" href="${request.contextPath}/static/adminlte/plugins/datatables/dataTables.bootstrap.css">
 
 </head>
-<body class="hold-transition skin-blue sidebar-mini <#if cookieMap?exists && "off" == cookieMap["adminlte_settings"].value >sidebar-collapse</#if>">
+<body class="hold-transition skin-blue sidebar-mini <#if cookieMap?exists && "off" == cookieMap["xxljob_adminlte_settings"].value >sidebar-collapse</#if>">
 <div class="wrapper">
 	<!-- header -->
 	<@netCommon.commonHeader />
@@ -37,7 +37,7 @@
 	                	<span class="input-group-addon">执行器</span>
                 		<select class="form-control" id="jobGroup" >
                 			<#list JobGroupList as group>
-                				<option value="${group.id}" >${group.title}</option>
+                				<option value="${group.id}" <#if jobGroup==group.id>selected</#if> >${group.title}</option>
                 			</#list>
 	                  	</select>
 	              	</div>
@@ -59,7 +59,7 @@
 			<div class="row">
 				<div class="col-xs-12">
 					<div class="box">
-			            <div class="box-header">
+			            <div class="box-header hide">
 			            	<h3 class="box-title">调度列表</h3>
 			            </div>
 			            <div class="box-body" >
@@ -110,7 +110,7 @@
 						<div class="col-sm-4">
 							<select class="form-control" name="jobGroup" >
 		            			<#list JobGroupList as group>
-		            				<option value="${group.id}" >${group.title}</option>
+		            				<option value="${group.id}" <#if jobGroup==group.id>selected</#if> >${group.title}</option>
 		            			</#list>
 		                  	</select>
 						</div>

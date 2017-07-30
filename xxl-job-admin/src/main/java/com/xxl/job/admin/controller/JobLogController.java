@@ -3,15 +3,18 @@ package com.xxl.job.admin.controller;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
-import com.xxl.job.admin.dao.IXxlJobGroupDao;
-import com.xxl.job.admin.dao.IXxlJobInfoDao;
-import com.xxl.job.admin.dao.IXxlJobLogDao;
+import com.xxl.job.admin.core.schedule.XxlJobDynamicScheduler;
+import com.xxl.job.admin.dao.XxlJobGroupDao;
+import com.xxl.job.admin.dao.XxlJobInfoDao;
+import com.xxl.job.admin.dao.XxlJobLogDao;
 import com.xxl.job.core.biz.ExecutorBiz;
 import com.xxl.job.core.biz.model.LogResult;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.rpc.netcom.NetComClientProxy;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,13 +35,14 @@ import java.util.Map;
 @Controller
 @RequestMapping("/joblog")
 public class JobLogController {
+	private static Logger logger = LoggerFactory.getLogger(JobLogController.class);
 
 	@Resource
-	private IXxlJobGroupDao xxlJobGroupDao;
+	private XxlJobGroupDao xxlJobGroupDao;
 	@Resource
-	public IXxlJobInfoDao xxlJobInfoDao;
+	public XxlJobInfoDao xxlJobInfoDao;
 	@Resource
-	public IXxlJobLogDao xxlJobLogDao;
+	public XxlJobLogDao xxlJobLogDao;
 
 	@RequestMapping
 	public String index(Model model, @RequestParam(required = false, defaultValue = "0") Integer jobId) {
@@ -58,7 +62,7 @@ public class JobLogController {
 
 	@RequestMapping("/getJobsByGroup")
 	@ResponseBody
-	public ReturnT<List<XxlJobInfo>> listJobByGroup(String jobGroup){
+	public ReturnT<List<XxlJobInfo>> getJobsByGroup(int jobGroup){
 		List<XxlJobInfo> list = xxlJobInfoDao.getJobsByGroup(jobGroup);
 		return new ReturnT<List<XxlJobInfo>>(list);
 	}
@@ -67,7 +71,7 @@ public class JobLogController {
 	@ResponseBody
 	public Map<String, Object> pageList(@RequestParam(required = false, defaultValue = "0") int start,  
 			@RequestParam(required = false, defaultValue = "10") int length,
-			int jobGroup, int jobId, String filterTime) {
+			int jobGroup, int jobId, int logStatus, String filterTime) {
 		
 		// parse param
 		Date triggerTimeStart = null;
@@ -83,8 +87,8 @@ public class JobLogController {
 		}
 		
 		// page query
-		List<XxlJobLog> list = xxlJobLogDao.pageList(start, length, jobGroup, jobId, triggerTimeStart, triggerTimeEnd);
-		int list_count = xxlJobLogDao.pageListCount(start, length, jobGroup, jobId, triggerTimeStart, triggerTimeEnd);
+		List<XxlJobLog> list = xxlJobLogDao.pageList(start, length, jobGroup, jobId, triggerTimeStart, triggerTimeEnd, logStatus);
+		int list_count = xxlJobLogDao.pageListCount(start, length, jobGroup, jobId, triggerTimeStart, triggerTimeEnd, logStatus);
 		
 		// package result
 		Map<String, Object> maps = new HashMap<String, Object>();
@@ -116,7 +120,7 @@ public class JobLogController {
 	@ResponseBody
 	public ReturnT<LogResult> logDetailCat(String executorAddress, long triggerTime, int logId, int fromLineNum){
 		try {
-			ExecutorBiz executorBiz = (ExecutorBiz) new NetComClientProxy(ExecutorBiz.class, executorAddress).getObject();
+			ExecutorBiz executorBiz = XxlJobDynamicScheduler.getExecutorBiz(executorAddress);
 			ReturnT<LogResult> logResult = executorBiz.log(triggerTime, logId, fromLineNum);
 
 			// is end
@@ -129,7 +133,7 @@ public class JobLogController {
 
 			return logResult;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			return new ReturnT<LogResult>(ReturnT.FAIL_CODE, e.getMessage());
 		}
 	}
@@ -148,14 +152,14 @@ public class JobLogController {
 		}
 
 		// request of kill
-		ExecutorBiz executorBiz = null;
+		ReturnT<String> runResult = null;
 		try {
-			executorBiz = (ExecutorBiz) new NetComClientProxy(ExecutorBiz.class, log.getExecutorAddress()).getObject();
+			ExecutorBiz executorBiz = XxlJobDynamicScheduler.getExecutorBiz(log.getExecutorAddress());
+			runResult = executorBiz.kill(jobInfo.getId());
 		} catch (Exception e) {
-			e.printStackTrace();
-			return new ReturnT<String>(500, e.getMessage());
+			logger.error(e.getMessage(), e);
+			runResult = new ReturnT<String>(500, e.getMessage());
 		}
-		ReturnT<String> runResult = executorBiz.kill(jobInfo.getId());
 
 		if (ReturnT.SUCCESS_CODE == runResult.getCode()) {
 			log.setHandleCode(ReturnT.FAIL_CODE);

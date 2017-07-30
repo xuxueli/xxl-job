@@ -3,7 +3,7 @@ package com.xxl.job.admin.controller;
 import com.xxl.job.admin.controller.annotation.PermessionLimit;
 import com.xxl.job.admin.controller.interceptor.PermissionInterceptor;
 import com.xxl.job.admin.core.util.PropertiesUtil;
-import com.xxl.job.admin.service.IXxlJobService;
+import com.xxl.job.admin.service.XxlJobService;
 import com.xxl.job.core.biz.model.ReturnT;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
@@ -25,7 +25,7 @@ import java.util.Map;
 public class IndexController {
 
 	@Resource
-	private IXxlJobService xxlJobService;
+	private XxlJobService xxlJobService;
 
 	@RequestMapping("/")
 	public String index(Model model) {

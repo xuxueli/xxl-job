@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="XxlJobGroupMapper">
+<mapper namespace="com.xxl.job.admin.dao.XxlJobGroupDao">
 	
 	<resultMap id="XxlJobGroup" type="com.xxl.job.admin.core.model.XxlJobGroup" >
 		<result column="id" property="id" />
@@ -21,13 +21,20 @@
 		t.address_list
 	</sql>
 
-	<select id="findAll" parameterType="java.lang.Integer" resultMap="XxlJobGroup">
+	<select id="findAll" resultMap="XxlJobGroup">
 		SELECT <include refid="Base_Column_List" />
 		FROM XXL_JOB_QRTZ_TRIGGER_GROUP AS t
 		ORDER BY t.order ASC
 	</select>
 
-	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobGroup" >
+	<select id="findByAddressType" parameterType="java.lang.Integer" resultMap="XxlJobGroup">
+		SELECT <include refid="Base_Column_List" />
+		FROM XXL_JOB_QRTZ_TRIGGER_GROUP AS t
+		WHERE t.address_type = #{addressType}
+		ORDER BY t.order ASC
+	</select>
+
+	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobGroup" useGeneratedKeys="true" keyProperty="id" >
 		INSERT INTO XXL_JOB_QRTZ_TRIGGER_GROUP ( `app_name`, `title`, `order`, `address_type`, `address_list`)
 		values ( #{appName}, #{title}, #{order}, #{addressType}, #{addressList});
 	</insert>

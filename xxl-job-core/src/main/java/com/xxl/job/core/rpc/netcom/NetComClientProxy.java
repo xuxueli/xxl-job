@@ -20,11 +20,13 @@ public class NetComClientProxy implements FactoryBean<Object> {
 
 	// ---------------------- config ----------------------
 	private Class<?> iface;
-	String serverAddress;
-	JettyClient client = new JettyClient();
-	public NetComClientProxy(Class<?> iface, String serverAddress) {
+	private String serverAddress;
+	private String accessToken;
+	private JettyClient client = new JettyClient();
+	public NetComClientProxy(Class<?> iface, String serverAddress, String accessToken) {
 		this.iface = iface;
 		this.serverAddress = serverAddress;
+		this.accessToken = accessToken;
 	}
 
 	@Override
@@ -39,6 +41,7 @@ public class NetComClientProxy implements FactoryBean<Object> {
 						RpcRequest request = new RpcRequest();
 	                    request.setServerAddress(serverAddress);
 	                    request.setCreateMillisTime(System.currentTimeMillis());
+	                    request.setAccessToken(accessToken);
 	                    request.setClassName(method.getDeclaringClass().getName());
 	                    request.setMethodName(method.getName());
 	                    request.setParameterTypes(method.getParameterTypes());

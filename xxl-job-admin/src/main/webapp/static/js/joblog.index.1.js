@@ -78,6 +78,7 @@ $(function() {
 	        	var obj = {};
 	        	obj.jobGroup = $('#jobGroup').val();
 	        	obj.jobId = $('#jobId').val();
+                obj.logStatus = $('#logStatus').val();
 				obj.filterTime = $('#filterTime').val();
 	        	obj.start = d.start;
 	        	obj.length = d.length;
@@ -91,6 +92,49 @@ $(function() {
 	                { "data": 'id', "bSortable": false, "visible" : false},
 					{ "data": 'jobGroup', "visible" : false},
 	                { "data": 'jobId', "visible" : false},
+					{
+						"data": 'JobKey',
+						"visible" : true,
+						"render": function ( data, type, row ) {
+							var jobKey = row.jobGroup + "_" + row.jobId;
+
+                            var glueTypeTitle = row.glueType;
+                            if ('GLUE_GROOVY'==row.glueType) {
+                                glueTypeTitle = "GLUE模式(Java)";
+                            } else if ('GLUE_SHELL'==row.glueType) {
+                                glueTypeTitle = "GLUE模式(Shell)";
+                            } else if ('GLUE_PYTHON'==row.glueType) {
+                                glueTypeTitle = "GLUE模式(Python)";
+                            } else if ('BEAN'==row.glueType) {
+                                glueTypeTitle = "BEAN模式：" + row.executorHandler;
+                            }
+
+                            var temp = '';
+                            temp += '执行器地址：' + (row.executorAddress?row.executorAddress:'');
+                            temp += '<br>运行模式：' + glueTypeTitle;
+                            temp += '<br>任务参数：' + row.executorParam;
+
+                            return '<a class="logTips" href="javascript:;" >'+ jobKey +'<span style="display:none;">'+ temp +'</span></a>';
+						}
+					},
+					// { "data": 'executorAddress', "visible" : true},
+					// {
+					// 	"data": 'glueType',
+					//  	"visible" : true,
+					// 	"render": function ( data, type, row ) {
+					// 		if ('GLUE_GROOVY'==row.glueType) {
+					// 			return "GLUE模式(Java)";
+					// 		} else if ('GLUE_SHELL'==row.glueType) {
+					// 		 	return "GLUE模式(Shell)";
+					// 		} else if ('GLUE_PYTHON'==row.glueType) {
+					// 			return "GLUE模式(Python)";
+					// 		} else if ('BEAN'==row.glueType) {
+					// 		 	return "BEAN模式：" + row.executorHandler;
+					// 		}
+					// 		return row.executorHandler;
+					// 	 }
+					// },
+					// { "data": 'executorParam', "visible" : true},
 					{
 						"data": 'triggerTime',
 						"render": function ( data, type, row ) {
@@ -110,25 +154,6 @@ $(function() {
 							return data?'<a class="logTips" href="javascript:;" >查看<span style="display:none;">'+ data +'</span></a>':"无";
 						}
 					},
-	                { "data": 'executorAddress', "visible" : true},
-					{
-						"data": 'glueType',
-						"visible" : true,
-						"render": function ( data, type, row ) {
-							if ('GLUE_GROOVY'==row.glueType) {
-								return "GLUE模式(Java)";
-							} else if ('GLUE_SHELL'==row.glueType) {
-								return "GLUE模式(Shell)";
-							} else if ('GLUE_PYTHON'==row.glueType) {
-								return "GLUE模式(Python)";
-							} else if ('BEAN'==row.glueType) {
-								return "BEAN模式：" + row.executorHandler;
-							}
-							return row.executorHandler;
-						}
-					},
-	                { "data": 'executorParam', "visible" : true},
-
 	                { 
 	                	"data": 'handleTime',
 	                	"render": function ( data, type, row ) {

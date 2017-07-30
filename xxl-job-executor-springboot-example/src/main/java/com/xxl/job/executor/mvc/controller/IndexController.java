@@ -1,4 +1,4 @@
-package com.xxl.job.executor.mvc.handler;
+package com.xxl.job.executor.mvc.controller;
 
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
@@ -12,7 +12,7 @@ public class IndexController {
     @RequestMapping("/")
     @ResponseBody
     String index() {
-        return "xxl job is running.";
+        return "xxl job executor running.";
     }
 
 }

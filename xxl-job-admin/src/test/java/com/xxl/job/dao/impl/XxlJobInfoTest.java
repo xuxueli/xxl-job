@@ -1,13 +1,14 @@
 package com.xxl.job.dao.impl;
 
 import com.xxl.job.admin.core.model.XxlJobInfo;
-import com.xxl.job.admin.dao.IXxlJobInfoDao;
+import com.xxl.job.admin.dao.XxlJobInfoDao;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -15,7 +16,7 @@ import java.util.List;
 public class XxlJobInfoTest {
 	
 	@Resource
-	private IXxlJobInfoDao xxlJobInfoDao;
+	private XxlJobInfoDao xxlJobInfoDao;
 	
 	@Test
 	public void pageList(){
@@ -24,6 +25,8 @@ public class XxlJobInfoTest {
 		
 		System.out.println(list);
 		System.out.println(list_count);
+
+		List<XxlJobInfo> list2 = xxlJobInfoDao.getJobsByGroup(1);
 	}
 	
 	@Test
@@ -31,20 +34,45 @@ public class XxlJobInfoTest {
 		XxlJobInfo info = new XxlJobInfo();
 		info.setJobGroup(1);
 		info.setJobCron("jobCron");
-		int count = xxlJobInfoDao.save(info);
-		System.out.println(count);
-		System.out.println(info.getId());
+		info.setJobDesc("desc");
+		info.setAuthor("setAuthor");
+		info.setAlarmEmail("setAlarmEmail");
+		info.setExecutorRouteStrategy("setExecutorRouteStrategy");
+		info.setExecutorHandler("setExecutorHandler");
+		info.setExecutorParam("setExecutorParam");
+		info.setExecutorBlockStrategy("setExecutorBlockStrategy");
+		info.setExecutorFailStrategy("setExecutorFailStrategy");
+		info.setGlueType("setGlueType");
+		info.setGlueSource("setGlueSource");
+		info.setGlueRemark("setGlueRemark");
+		info.setChildJobKey("setChildJobKey");
 
-		XxlJobInfo item = xxlJobInfoDao.loadById(2);
-		System.out.println(item);
+		int count = xxlJobInfoDao.save(info);
+
+		XxlJobInfo info2 = xxlJobInfoDao.loadById(info.getId());
+		info2.setJobCron("jobCron2");
+		info2.setJobDesc("desc2");
+		info2.setAuthor("setAuthor2");
+		info2.setAlarmEmail("setAlarmEmail2");
+		info2.setExecutorRouteStrategy("setExecutorRouteStrategy2");
+		info2.setExecutorHandler("setExecutorHandler2");
+		info2.setExecutorParam("setExecutorParam2");
+		info2.setExecutorBlockStrategy("setExecutorBlockStrategy2");
+		info2.setExecutorFailStrategy("setExecutorFailStrategy2");
+		info2.setGlueType("setGlueType2");
+		info2.setGlueSource("setGlueSource2");
+		info2.setGlueRemark("setGlueRemark2");
+		info2.setGlueUpdatetime(new Date());
+		info2.setChildJobKey("setChildJobKey2");
+
+		int item2 = xxlJobInfoDao.update(info2);
+
+		xxlJobInfoDao.delete(info2.getId());
+
+		List<XxlJobInfo> list2 = xxlJobInfoDao.getJobsByGroup(1);
+
+		int ret3 = xxlJobInfoDao.findAllCount();
+
 	}
-	
-	@Test
-	public void update(){
-		XxlJobInfo item = xxlJobInfoDao.loadById(2);
-		
-		item.setJobCron("jobCron2");
-		xxlJobInfoDao.update(item);
-	}
-	
+
 }

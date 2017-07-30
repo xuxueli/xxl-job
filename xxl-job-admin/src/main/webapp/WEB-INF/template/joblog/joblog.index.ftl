@@ -9,7 +9,7 @@
   	<!-- daterangepicker -->
   	<link rel="stylesheet" href="${request.contextPath}/static/adminlte/plugins/daterangepicker/daterangepicker.css">
 </head>
-<body class="hold-transition skin-blue sidebar-mini <#if cookieMap?exists && "off" == cookieMap["adminlte_settings"].value >sidebar-collapse</#if> ">
+<body class="hold-transition skin-blue sidebar-mini <#if cookieMap?exists && "off" == cookieMap["xxljob_adminlte_settings"].value >sidebar-collapse</#if> ">
 <div class="wrapper">
 	<!-- header -->
 	<@netCommon.commonHeader />
@@ -32,7 +32,7 @@
 		<!-- Main content -->
 	    <section class="content">
 	    	<div class="row">
-	    		<div class="col-xs-3">
+	    		<div class="col-xs-2">
  					<div class="input-group">
 	                	<span class="input-group-addon">执行器</span>
                 		<select class="form-control" id="jobGroup"  paramVal="<#if jobInfo?exists>${jobInfo.jobGroup}</#if>" >
@@ -43,7 +43,7 @@
 	                  	</select>
 	              	</div>
 	            </div>
-	            <div class="col-xs-3">
+	            <div class="col-xs-2">
 	              	<div class="input-group">
 	                	<span class="input-group-addon">任务</span>
                         <select class="form-control" id="jobId" paramVal="<#if jobInfo?exists>${jobInfo.id}</#if>" >
@@ -51,6 +51,19 @@
 						</select>
 	              	</div>
 	            </div>
+
+                <div class="col-xs-2">
+                    <div class="input-group">
+                        <span class="input-group-addon">状态</span>
+                        <select class="form-control" id="logStatus" >
+                            <option value="-1" >全部</option>
+                            <option value="1" >成功</option>
+                            <option value="2" >失败</option>
+                            <option value="3" >进行中</option>
+                        </select>
+                    </div>
+                </div>
+
 	            <div class="col-xs-4">
               		<div class="input-group">
                 		<span class="input-group-addon">
@@ -80,12 +93,13 @@
 					                	<th name="id" >id</th>
                                         <th name="jobGroup" >执行器ID</th>
 					                	<th name="jobId" >任务ID</th>
+                                        <th name="JobKey" >JobKey</th>
+										<#--<th name="executorAddress" >执行器地址</th>
+										<th name="glueType" >运行模式</th>
+                                      	<th name="executorParam" >任务参数</th>-->
                                         <th name="triggerTime" >调度时间</th>
                                         <th name="triggerCode" >调度结果</th>
                                         <th name="triggerMsg" >调度备注</th>
-					                  	<th name="executorAddress" >执行器地址</th>
-                                        <th name="glueType" >运行模式</th>
-					                  	<th name="executorParam" >任务参数</th>
 					                  	<th name="handleTime" >执行时间</th>
 					                  	<th name="handleCode" >执行结果</th>
 					                  	<th name="handleMsg" >执行备注</th>

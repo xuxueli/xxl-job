@@ -1,11 +1,14 @@
 package com.xxl.job.core.thread;
 
+import com.xxl.job.core.biz.AdminBiz;
 import com.xxl.job.core.biz.model.HandleCallbackParam;
 import com.xxl.job.core.biz.model.ReturnT;
-import com.xxl.job.core.util.AdminApiUtil;
+import com.xxl.job.core.executor.XxlJobExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
 
 /**
@@ -32,16 +35,38 @@ public class TriggerCallbackThread {
                     try {
                         HandleCallbackParam callback = getInstance().callBackQueue.take();
                         if (callback != null) {
-                            // callback
-                            try {
-                                ReturnT<String> callbackResult = AdminApiUtil.callApiFailover(AdminApiUtil.CALLBACK, callback);
-                                logger.info(">>>>>>>>>>> xxl-job callback, HandleCallbackParam:{}, callbackResult:{}", new Object[]{callback.toString(), callbackResult.toString()});
-                            } catch (Exception e) {
-                                logger.error(">>>>>>>>>>> xxl-job TriggerCallbackThread Exception:", e);
+
+                            // callback list param
+                            List<HandleCallbackParam> callbackParamList = new ArrayList<HandleCallbackParam>();
+                            int drainToNum = getInstance().callBackQueue.drainTo(callbackParamList);
+                            callbackParamList.add(callback);
+
+                            // valid
+                            if (XxlJobExecutor.getAdminBizList()==null) {
+                                logger.warn(">>>>>>>>>>>> xxl-job callback fail, adminAddresses is null, callbackParamList：{}", callbackParamList);
+                                continue;
                             }
+
+                            // callback, will retry if error
+                            for (AdminBiz adminBiz: XxlJobExecutor.getAdminBizList()) {
+                                try {
+                                    ReturnT<String> callbackResult = adminBiz.callback(callbackParamList);
+                                    if (callbackResult!=null && ReturnT.SUCCESS_CODE == callbackResult.getCode()) {
+                                        callbackResult = ReturnT.SUCCESS;
+                                        logger.info(">>>>>>>>>>> xxl-job callback success, callbackParamList:{}, callbackResult:{}", new Object[]{callbackParamList, callbackResult});
+                                        break;
+                                    } else {
+                                        logger.info(">>>>>>>>>>> xxl-job callback fail, callbackParamList:{}, callbackResult:{}", new Object[]{callbackParamList, callbackResult});
+                                    }
+                                } catch (Exception e) {
+                                    logger.error(">>>>>>>>>>> xxl-job callback error, callbackParamList：{}", callbackParamList, e);
+                                    //getInstance().callBackQueue.addAll(callbackParamList);
+                                }
+                            }
+
                         }
                     } catch (Exception e) {
-                        logger.error("", e);
+                        logger.error(e.getMessage(), e);
                     }
                 }
             }

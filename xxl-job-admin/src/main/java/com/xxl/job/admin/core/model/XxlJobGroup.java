@@ -1,5 +1,9 @@
 package com.xxl.job.admin.core.model;
 
+import org.apache.commons.lang.StringUtils;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -16,6 +20,12 @@ public class XxlJobGroup {
 
     // registry list
     private List<String> registryList;  // 执行器地址列表(系统注册)
+    public List<String> getRegistryList() {
+        if (StringUtils.isNotBlank(addressList)) {
+            registryList = new ArrayList<String>(Arrays.asList(addressList.split(",")));
+        }
+        return registryList;
+    }
 
     public int getId() {
         return id;
@@ -49,14 +59,6 @@ public class XxlJobGroup {
         this.order = order;
     }
 
-    public List<String> getRegistryList() {
-        return registryList;
-    }
-
-    public void setRegistryList(List<String> registryList) {
-        this.registryList = registryList;
-    }
-
     public int getAddressType() {
         return addressType;
     }
@@ -72,4 +74,5 @@ public class XxlJobGroup {
     public void setAddressList(String addressList) {
         this.addressList = addressList;
     }
+
 }
