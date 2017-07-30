@@ -100,14 +100,14 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 [http://git.oschina.net/xuxueli0323/xxl-job](http://git.oschina.net/xuxueli0323/xxl-job) | [Download](http://git.oschina.net/xuxueli0323/xxl-job/releases)
 
 
-#### 中央仓库地址 (最新Release版本：1.8.0)
+#### 中央仓库地址 (最新Release版本：1.8.1)
 
 ```
 <!-- http://repo1.maven.org/maven2/com/xuxueli/xxl-job-core/ -->
 <dependency>
     <groupId>com.xuxueli</groupId>
     <artifactId>xxl-job-core</artifactId>
-    <version>1.8.0</version>
+    <version>1.8.1</version>
 </dependency>
 ```
 
@@ -127,8 +127,8 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 ### 1.5 环境
 - JDK：1.7+
 - Servlet/JSP Spec：3.1/2.3
-- Tomcat：8.5.x/Jetty9.2
-- Spring-boot：1.3.8/Spring4.x
+- Tomcat：8.5.x/Jetty9.2.x
+- Spring-boot：1.5.x/Spring4.x
 - Mysql：5.6+
 - Maven：3+
 
@@ -136,18 +136,18 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 ## 二、快速入门
 
 ### 2.1 初始化“调度数据库”
-请下载项目源码并解压，获取 "调度数据库初始化SQL脚本" 并执行即可。正常情况下应该生成16张表，脚本文件位置为:
+请下载项目源码并解压，获取 "调度数据库初始化SQL脚本" 并执行即可，正常情况下应该生成16张表。
 
-    源码解压根目录\xxl-job\db\tables_xxl_job.sql
+"调度数据库初始化SQL脚本" 位置为:
+
+    /xxl-job/db/tables_xxl_job.sql
 
 调度中心支持集群部署，集群情况下各节点务必连接同一个mysql实例;
 
 如果mysql做主从,调度中心集群节点务必强制走主库;
 
 ### 2.2 编译源码
-解压源码,按照maven格式将源码导入IDE, 使用maven进行编译即可，源码结构如下图所示：
-
-![输入图片说明](https://static.oschina.net/uploads/img/201705/11214348_aGgr.png "在这里输入图片标题")
+解压源码,按照maven格式将源码导入IDE, 使用maven进行编译即可，源码结构如下：
 
     xxl-job-admin：调度中心
     xxl-job-core：公共依赖
@@ -160,14 +160,16 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
     作用：统一管理任务调度平台上调度任务，负责触发调度执行。
 
 #### 步骤一：调度中心配置：
-配置文件以及配置属性如下图所示。
+调度中心配置文件地址：
 
-![输入图片说明](https://static.oschina.net/uploads/img/201705/11214752_Ifvp.png "在这里输入图片标题")
+    /xxl-job/xxl-job-admin/src/main/resources/xxl-job-admin.properties
 
+
+调度中心配置内容说明：
 
     ### 调度中心JDBC链接：链接地址请保持和 2.1章节 所创建的调度数据库的地址一致
     xxl.job.db.driverClass=com.mysql.jdbc.Driver
-    xxl.job.db.url=jdbc:mysql://localhost:3306/xxl-job?useUnicode=true&amp;characterEncoding=UTF-8
+    xxl.job.db.url=jdbc:mysql://localhost:3306/xxl-job?useUnicode=true&characterEncoding=UTF-8
     xxl.job.db.user=root
     xxl.job.db.password=root_pwd
     
@@ -179,9 +181,12 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
     xxl.job.mail.sendFrom=ovono802302@163.com
     xxl.job.mail.sendNick=《任务调度平台XXL-JOB》
     
-    # 登录账号
+    ### 登录账号
     xxl.job.login.username=admin
     xxl.job.login.password=123456
+    
+    ### 调度中心通讯TOKEN，非空时启用
+    xxl.job.accessToken=
 
 #### 步骤二：部署项目：
 如果已经正确进行上述配置，可将项目编译打war包并部署到tomcat中。
@@ -190,6 +195,13 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 ![输入图片说明](https://static.oschina.net/uploads/img/201705/08194505_6yC0.png "在这里输入图片标题")
 
 至此“调度中心”项目已经部署成功。
+
+#### 步骤三：调度中心集群（可选）：
+调度中心支持集群部署，提升调度系统可用性。
+
+集群部署唯一要求为：保证每个集群节点配置（db和登陆账号等）保持一致。调度中心通过db配置区分不同集群。
+
+调度中心在集群部署时可通过nginx负载均衡，此时可以为集群分配一个域名。该域名一方面可以用于访问，另一方面也可以用于配置执行器回调地址。
 
 ### 2.4 配置部署“执行器项目”
 
@@ -200,10 +212,11 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 确认pom文件中引入了 "xxl-job-core" 的maven依赖；
     
 #### 步骤二：执行器配置
-配置文件以及配置属性如下图所示。
+执行器配置配置文件地址：
 
-![输入图片说明](https://static.oschina.net/uploads/img/201705/11214800_7G3o.png "在这里输入图片标题")
+    /xxl-job/xxl-job-executor-example/src/main/resources/xxl-job-executor.properties
 
+执行器配置配置内容说明：
 
     ### xxl-job admin address list：调度中心部署跟地址：如调度中心集群部署存在多个地址则用逗号分隔。执行器将会使用该地址进行"执行器心跳注册"和"任务结果回调"。
     xxl.job.admin.addresses=http://127.0.0.1:8080/xxl-job-admin
@@ -215,6 +228,9 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
     
     ### xxl-job log path：执行器运行日志文件存储的磁盘位置
     xxl.job.executor.logpath=/data/applogs/xxl-job/jobhandler/
+    
+    ### xxl-job, access token：执行器通讯TOKEN，非空时启用
+    xxl.job.accessToken=
 
 
 #### 步骤三：执行器组件配置
@@ -225,13 +241,18 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
     1、JobHandler 扫描路径：自动扫描容器中JobHandler；
     2、执行器Excutor配置：执行器核心配置；
 
-#### 步骤四：部署项目：
+#### 步骤四：部署执行器项目：
 如果已经正确进行上述配置，可将执行器项目编译打部署，系统提供两个执行器example项目，选择其中一个即可，各自的部署方式如下。
 
     xxl-job-executor-example：项目编译打包成WAR包，并部署到tomcat中。
     xxl-job-executor-springboot-example：项目编译打包成springboot类型的可执行JAR包，命令启动即可；
 
 至此“执行器”项目已经部署结束。
+
+#### 步骤五：执行器集群（可选）：
+执行器支持集群部署，提升调度系统可用性，同时提升任务处理能力。
+
+集群部署唯一要求为：保证集群中每个执行器的配置项 "xxl.job.admin.addresses/调度中心地址" 保持一致，执行器根据该配置进行执行器自动注册等操作。 
 
 
 ### 2.5 开发第一个任务“Hello World”       
@@ -896,7 +917,7 @@ Tips: 历史版本(V1.3.x)目前已经Release至稳定版本, 进入维护阶段
 - 10、执行日志，支持根据运行 "状态" 筛选日志；
 - 11、调度中心任务注册检测逻辑优化；
 
-#### 6.18 版本 V1.8.1 特性[快照版本]
+#### 6.18 版本 V1.8.1 特性[2017-07-30]
 - 1、分片广播任务：执行器集群部署时，任务路由策略选择"分片广播"情况下，一次任务调度将会广播触发集群中所有执行器执行一次任务，可根据分片参数处理分片任务；
 - 2、动态分片：分片广播任务以执行器为维度进行分片，支持动态扩容执行器集群从而动态增加分片数量，协同进行业务处理；在进行大数据量业务操作时可显著提升任务处理能力和速度。
 - 3、执行器JobHandler禁止命名冲突；
