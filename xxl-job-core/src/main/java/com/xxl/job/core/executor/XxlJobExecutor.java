@@ -5,19 +5,15 @@ import com.xxl.job.core.biz.ExecutorBiz;
 import com.xxl.job.core.biz.impl.ExecutorBizImpl;
 import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.handler.annotation.JobHander;
+import com.xxl.job.core.log.XxlJobFileAppender;
 import com.xxl.job.core.rpc.netcom.NetComClientProxy;
 import com.xxl.job.core.rpc.netcom.NetComServerFactory;
-import com.xxl.job.core.thread.ExecutorRegistryThread;
 import com.xxl.job.core.thread.JobThread;
-import com.xxl.job.core.thread.TriggerCallbackThread;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.context.ApplicationEvent;
-import org.springframework.context.ApplicationListener;
-import org.springframework.context.event.ContextClosedEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,15 +23,16 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Created by xuxueli on 2016/3/2 21:14.
  */
-public class XxlJobExecutor implements ApplicationContextAware, ApplicationListener {
+public class XxlJobExecutor implements ApplicationContextAware {
     private static final Logger logger = LoggerFactory.getLogger(XxlJobExecutor.class);
 
+    // ---------------------------------- param ------------------------------------
     private String ip;
     private int port = 9999;
     private String appName;
     private String adminAddresses;
     private String accessToken;
-    public static String logPath = "/data/applogs/xxl-job/jobhandler/";
+    private String logPath;
 
     public void setIp(String ip) {
         this.ip = ip;
@@ -55,6 +52,48 @@ public class XxlJobExecutor implements ApplicationContextAware, ApplicationListe
     public void setLogPath(String logPath) {
         this.logPath = logPath;
     }
+
+
+    // ---------------------------------- applicationContext ------------------------------------
+    private static ApplicationContext applicationContext;
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
+    }
+    public static ApplicationContext getApplicationContext() {
+        return applicationContext;
+    }
+
+
+    // ---------------------------------- start + stop ------------------------------------
+    public void start() throws Exception {
+        // init admin-client
+        initAdminBizList(adminAddresses, accessToken);
+
+        // init executor-jobHandlerRepository
+        initJobHandlerRepository(applicationContext);
+
+        // init logpath
+        if (logPath!=null && logPath.trim().length()>0) {
+            XxlJobFileAppender.logPath = logPath;
+        }
+
+        // init executor-server
+        initExecutorServer();
+    }
+    public void destroy(){
+        // destory JobThreadRepository
+        if (JobThreadRepository.size() > 0) {
+            for (Map.Entry<Integer, JobThread> item: JobThreadRepository.entrySet()) {
+                removeJobThread(item.getKey(), "Web容器销毁终止");
+            }
+            JobThreadRepository.clear();
+        }
+
+        // destory executor-server
+        stopExecutorServer();
+    }
+
 
     // ---------------------------------- admin-client ------------------------------------
     private static List<AdminBiz> adminBizList;
@@ -76,49 +115,29 @@ public class XxlJobExecutor implements ApplicationContextAware, ApplicationListe
         return adminBizList;
     }
 
-    // ---------------------------------- job server ------------------------------------
-    private NetComServerFactory serverFactory = new NetComServerFactory();
-    public void start() throws Exception {
-        // init admin-client
-        initAdminBizList(adminAddresses, accessToken);
 
-        // executor start
+    // ---------------------------------- executor-server ------------------------------------
+    private NetComServerFactory serverFactory = new NetComServerFactory();
+    private void initExecutorServer() throws Exception {
         NetComServerFactory.putService(ExecutorBiz.class, new ExecutorBizImpl());   // rpc-service, base on jetty
         NetComServerFactory.setAccessToken(accessToken);
-        serverFactory.start(port, ip, appName);
-
-
-        // trigger callback thread start
-        TriggerCallbackThread.getInstance().start();
+        serverFactory.start(port, ip, appName); // jetty + registry
     }
-    public void destroy(){
-        // 1、executor registry thread stop
-        ExecutorRegistryThread.getInstance().toStop();
-
-        // 2、executor stop
-        serverFactory.destroy();
-
-        // 3、job thread repository destory
-        if (JobThreadRepository.size() > 0) {
-            for (Map.Entry<Integer, JobThread> item: JobThreadRepository.entrySet()) {
-                JobThread jobThread = item.getValue();
-                jobThread.toStop("Web容器销毁终止");
-                jobThread.interrupt();
-
-            }
-            JobThreadRepository.clear();
-        }
-
-        // 4、trigger callback thread stop
-        TriggerCallbackThread.getInstance().toStop();
+    private void stopExecutorServer() {
+        serverFactory.destroy();    // jetty + registry + callback
     }
 
-    // ---------------------------------- init job handler ------------------------------------
-    public static ApplicationContext applicationContext;
-	@Override
-	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        XxlJobExecutor.applicationContext = applicationContext;
 
+    // ---------------------------------- job handler repository ------------------------------------
+    private static ConcurrentHashMap<String, IJobHandler> jobHandlerRepository = new ConcurrentHashMap<String, IJobHandler>();
+    public static IJobHandler registJobHandler(String name, IJobHandler jobHandler){
+        logger.info("xxl-job register jobhandler success, name:{}, jobHandler:{}", name, jobHandler);
+        return jobHandlerRepository.put(name, jobHandler);
+    }
+    public static IJobHandler loadJobHandler(String name){
+        return jobHandlerRepository.get(name);
+    }
+    private static void initJobHandlerRepository(ApplicationContext applicationContext){
         // init job handler action
         Map<String, Object> serviceBeanMap = applicationContext.getBeansWithAnnotation(JobHander.class);
 
@@ -134,27 +153,10 @@ public class XxlJobExecutor implements ApplicationContextAware, ApplicationListe
                 }
             }
         }
-	}
-
-    // ---------------------------------- destory job executor ------------------------------------
-    @Override
-    public void onApplicationEvent(ApplicationEvent applicationEvent) {
-        if(applicationEvent instanceof ContextClosedEvent){
-            // TODO
-        }
     }
 
-    // ---------------------------------- job handler repository
-    private static ConcurrentHashMap<String, IJobHandler> jobHandlerRepository = new ConcurrentHashMap<String, IJobHandler>();
-    public static IJobHandler registJobHandler(String name, IJobHandler jobHandler){
-        logger.info("xxl-job register jobhandler success, name:{}, jobHandler:{}", name, jobHandler);
-        return jobHandlerRepository.put(name, jobHandler);
-    }
-    public static IJobHandler loadJobHandler(String name){
-        return jobHandlerRepository.get(name);
-    }
 
-    // ---------------------------------- job thread repository
+    // ---------------------------------- job thread repository ------------------------------------
     private static ConcurrentHashMap<Integer, JobThread> JobThreadRepository = new ConcurrentHashMap<Integer, JobThread>();
     public static JobThread registJobThread(int jobId, IJobHandler handler, String removeOldReason){
         JobThread newJobThread = new JobThread(jobId, handler);
