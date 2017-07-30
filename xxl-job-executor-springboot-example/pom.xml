@@ -16,13 +16,9 @@
     <url>http://www.xuxueli.com/</url>
 
     <properties>
-        <spring-boot.version>1.5.6.RELEASE</spring-boot.version>
-
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.7</java.version>
-
-        <jetty.version>9.2.22.v20170606</jetty.version>
     </properties>
 
     <dependencyManagement>
@@ -40,22 +36,22 @@
             <dependency>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-server</artifactId>
-                <version>${jetty.version}</version>
+                <version>${jetty-server.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-util</artifactId>
-                <version>${jetty.version}</version>
+                <version>${jetty-server.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-http</artifactId>
-                <version>${jetty.version}</version>
+                <version>${jetty-server.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-io</artifactId>
-                <version>${jetty.version}</version>
+                <version>${jetty-server.version}</version>
             </dependency>
 
         </dependencies>

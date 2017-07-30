@@ -13,12 +13,7 @@
 	<description>Executor project for spring boot.</description>
 	<url>http://www.xuxueli.com/</url>
 
-	<properties>
-		<spring.version>3.2.18.RELEASE</spring.version>
-	</properties>
-
 	<dependencies>
-
 		<!-- spring-webmvc -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -30,7 +25,7 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
-			<version>1.7.25</version>
+			<version>${slf4j-api.version}</version>
 		</dependency>
 		
 		<!-- xxl-job-core -->
@@ -39,7 +34,6 @@
 			<artifactId>xxl-job-core</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
-		
 	</dependencies>
 
 </project>
