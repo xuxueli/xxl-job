@@ -14,7 +14,7 @@
 	<url>http://www.xuxueli.com/</url>
 
 	<properties>
-		<spring.version>3.2.17.RELEASE</spring.version>
+		<spring.version>3.2.18.RELEASE</spring.version>
 	</properties>
 
 	<dependencies>
@@ -34,14 +34,14 @@
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-server</artifactId>
-			<version>9.2.21.v20170120</version>
+			<version>9.2.22.v20170606</version>
 		</dependency>
 
 		<!-- slf4j -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
-			<version>1.7.21</version>
+			<version>1.7.25</version>
 		</dependency>
 
 		<!-- hessian -->
