@@ -79,7 +79,7 @@ public class XxlJobExecutor implements ApplicationContextAware {
         }
 
         // init executor-server
-        initExecutorServer();
+        initExecutorServer(port, ip, appName, accessToken);
     }
     public void destroy(){
         // destory JobThreadRepository
@@ -118,7 +118,7 @@ public class XxlJobExecutor implements ApplicationContextAware {
 
     // ---------------------------------- executor-server ------------------------------------
     private NetComServerFactory serverFactory = new NetComServerFactory();
-    private void initExecutorServer() throws Exception {
+    private void initExecutorServer(int port, String ip, String appName, String accessToken) throws Exception {
         NetComServerFactory.putService(ExecutorBiz.class, new ExecutorBizImpl());   // rpc-service, base on jetty
         NetComServerFactory.setAccessToken(accessToken);
         serverFactory.start(port, ip, appName); // jetty + registry
