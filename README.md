@@ -1,6 +1,8 @@
 
 # 分布式任务调度平台XXL-JOB
 
+[![Join the chat at https://gitter.im/xxl-job/Lobby](https://badges.gitter.im/xxl-job/Lobby.svg)](https://gitter.im/xxl-job/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![Build Status](https://travis-ci.org/xuxueli/xxl-job.svg?branch=master)](https://travis-ci.org/xuxueli/xxl-job)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.xuxueli/xxl-job/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.xuxueli/xxl-job/)
 [![GitHub release](https://img.shields.io/github/release/xuxueli/xxl-job.svg)](https://github.com/xuxueli/xxl-job/releases)
