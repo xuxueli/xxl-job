@@ -95,7 +95,7 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 
 ### 1.4 下载
 
-#### 源码仓库地址 (将会在两个git仓库同步发布最新代码)
+#### 源码仓库地址
 
 源码仓库地址 | Release Download
 --- | ---
@@ -103,7 +103,7 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 [http://git.oschina.net/xuxueli0323/xxl-job](http://git.oschina.net/xuxueli0323/xxl-job) | [Download](http://git.oschina.net/xuxueli0323/xxl-job/releases)
 
 
-#### 中央仓库地址 (最新Release版本：1.8.1)
+#### 中央仓库地址
 
 ```
 <!-- http://repo1.maven.org/maven2/com/xuxueli/xxl-job-core/ -->
@@ -114,12 +114,12 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 </dependency>
 ```
 
-#### 博客地址 (将会在两个博客同步更新文档)
+#### 博客地址
 
 - [oschina地址](http://my.oschina.net/xuxueli/blog/690978)
 - [cnblogs地址](http://www.cnblogs.com/xuxueli/p/5021979.html)
 
-#### 技术交流群 (仅作技术交流)
+#### 技术交流
 
 - 群5：138274130      [![image](http://pub.idqqimg.com/wpa/images/group.png)](http://shang.qq.com/wpa/qunwpa?idkey=a3f3aea7e5943e7a24e9726495747ddc19bccd3592d7a70ecb5a97b616062241 )
 - 群4：464762661    （群即将满，请加群5）
@@ -960,16 +960,19 @@ Tips: 历史版本(V1.3.x)目前已经Release至稳定版本, 进入维护阶段
 #### 7.1 报告问题
 XXL-JOB托管在Github上，如有问题可在 [ISSUES](https://github.com/xuxueli/xxl-job/issues/) 上提问，也可以加入上文技术交流群；
 
-#### 7.2 接入登记（登记仅为了推广，产品开源免费）
-更多接入公司，欢迎在github [登记](https://github.com/xuxueli/xxl-job/issues/1 )
+#### 7.2 用户接入登记
+登记仅为了产品推广，产品开源免费。   
+请接入使用的公司或个人进行用户登记 [登记地址](https://github.com/xuxueli/xxl-job/issues/1 ) 。
 
-#### 7.3 开源协议
+#### 7.3 开源协议和版权
 产品开源免费，并且将持续提供免费的社区技术支持。个人或企业内部可自由的接入和使用。
 
 XXL-JOB采用GPLv3协议，目的是为了保证用户的自由使用权利。协议可避免专利申请的特殊危险 "the GPL assures that patents cannot be used to render the program non-free.（摘自GPLv3）"。  
+Copyright (c) 2015-present, xuxueli.
 
 ---
-#### 支持的话可以扫一扫，支持 [XXL系列](https://github.com/xuxueli) 的建设：）
+#### 捐赠
+支持的话可以扫一扫，请作者喝杯咖啡吧：）
 
 微信：![输入图片说明](https://static.oschina.net/uploads/img/201707/07214300_qhxT.png "在这里输入图片标题")
 支付宝：![输入图片说明](http://images2015.cnblogs.com/blog/554415/201605/554415-20160513183306234-1939652116.png "在这里输入图片标题")

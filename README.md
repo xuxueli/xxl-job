@@ -141,14 +141,15 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 
 
 ## User Registration
-请接入使用的公司或个人进行用户登记 [登记地址](https://github.com/xuxueli/xxl-job/issues/1 ) 。登记仅为了产品推广，产品开源免费。
+登记仅为了产品推广，产品开源免费。   
+请接入使用的公司或个人进行用户登记 [登记地址](https://github.com/xuxueli/xxl-job/issues/1 ) 。
 
 
 ## Copyright and license
 产品开源免费，并且将持续提供免费的社区技术支持。个人或企业内部可自由的接入和使用。
 
 XXL-JOB采用GPLv3协议，目的是为了保证用户的自由使用权利。协议可避免专利申请的特殊危险 "the GPL assures that patents cannot be used to render the program non-free.（摘自GPLv3）"。  
-
+Copyright (c) 2015-present, xuxueli.
 
 ---
 ## Donate
