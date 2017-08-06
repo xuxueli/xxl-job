@@ -27,6 +27,7 @@
     </p>    
 </p>
 
+
 ## Intro
 XXL-JOB is a lightweight distributed task scheduling framework. 
 It's core design goal is to develop quickly and learn simple, lightweight, and easy to expand. 
@@ -34,10 +35,12 @@ Now, it's already open source, and many companies use it in production environme
 
 XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是开发迅速、学习简单、轻量级、易扩展。现已开放源代码并接入多家公司线上产品线，开箱即用。
 
+
 ## Documentation
 
 - [中文文档](https://github.com/xuxueli/xxl-job/blob/master/doc/XXL-JOB官方文档.md)
 - [Englis Documentation](https://github.com/xuxueli/xxl-job/blob/master/doc/XXL-JOB-Englis-Documentation.md)
+
 
 ## Features
 - 1、简单：支持通过Web页面对任务进行CRUD操作，操作简单，一分钟上手；
@@ -64,6 +67,7 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 - 22、失败处理策略；调度失败时的处理策略，策略包括：失败告警（默认）、失败重试；
 - 23、分片广播任务：执行器集群部署时，任务路由策略选择"分片广播"情况下，一次任务调度将会广播触发对应集群中所有执行器执行一次任务，同时传递分片参数；可根据分片参数开发分片任务；
 - 24、动态分片：分片广播任务以执行器为维度进行分片，支持动态扩容执行器集群从而动态增加分片数量，协同进行业务处理；在进行大数据量业务操作时可显著提升任务处理能力和速度。
+
 
 ## Development
 于2015年中，我在github上创建XXL-JOB项目仓库并提交第一个commit，随之进行系统结构设计，UI选型，交互设计……
@@ -114,42 +118,22 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 	- 31、四川互宜达科技有限公司
     - 32、钱包行云（北京）科技有限公司
     - 33、重庆欣才集团
+    - 34、咪咕互动娱乐有限公司（中国移动）
+    - 35、北京诺亦腾科技有限公司
+    - 36、增长引擎(北京)信息技术有限公司
 	- ……
 
 欢迎大家的关注和使用，XXL-JOB也将拥抱变化，持续发展。
 
 
-## Source and Download
-
-Source | Release Download
---- | ---
-[https://github.com/xuxueli/xxl-job](https://github.com/xuxueli/xxl-job) | [Download](https://github.com/xuxueli/xxl-job/releases)  
-[http://git.oschina.net/xuxueli0323/xxl-job](http://git.oschina.net/xuxueli0323/xxl-job) | [Download](http://git.oschina.net/xuxueli0323/xxl-job/releases)
-
-
-## Maven
-
-```
-<!-- http://repo1.maven.org/maven2/com/xuxueli/xxl-job-core/ -->
-<dependency>
-    <groupId>com.xuxueli</groupId>
-    <artifactId>xxl-job-core</artifactId>
-    <version>1.8.1</version>
-</dependency>
-```
-
-#### Blog
-
-- [oschina地址](http://my.oschina.net/xuxueli/blog/690978)
-- [cnblogs地址](http://www.cnblogs.com/xuxueli/p/5021979.html)
-
-## Communication group
+## Communication
 
 - 腾讯QQ群（5）：138274130      [![image](http://pub.idqqimg.com/wpa/images/group.png)](http://shang.qq.com/wpa/qunwpa?idkey=a3f3aea7e5943e7a24e9726495747ddc19bccd3592d7a70ecb5a97b616062241 )
 - 腾讯QQ群（4）：464762661    （群即将满，请加群5）
 - 腾讯QQ群（3）：242151780    （群即将满，请加群5）
 - 腾讯QQ群（2）：438249535    （群即将满，请加群5）
 - 腾讯QQ群（1）：367260654    （群即将满，请加群5）
+- [Gitter](https://gitter.im/xuxueli/xxl-job)
 
 
 ## Issue
@@ -164,6 +148,7 @@ Source | Release Download
 产品开源免费，并且将持续提供免费的社区技术支持。个人或企业内部可自由的接入和使用。
 
 XXL-JOB采用GPLv3协议，目的是为了保证用户的自由使用权利。协议可避免专利申请的特殊危险 "the GPL assures that patents cannot be used to render the program non-free.（摘自GPLv3）"。  
+
 
 ---
 ## Donate
