@@ -1,24 +1,31 @@
-<center>
-
-<a href="http://www.xuxueli.com/">
-    <img src="https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/xxl-logo.jpg" width="150">
-</a>
-
-<h3 align="center">XXL-JOB</h3>
-
-XXL-JOB, a lightweight distributed task scheduling framework.
-<br>
-<a href="http://www.xuxueli.com/"><strong>-- Browse xuxueli's website. --</strong></a>
-<br>
-<br>
-
-[![Build Status](https://travis-ci.org/xuxueli/xxl-job.svg?branch=master)](https://travis-ci.org/xuxueli/xxl-job)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.xuxueli/xxl-job/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.xuxueli/xxl-job/)
-[![GitHub release](https://img.shields.io/github/release/xuxueli/xxl-job.svg)](https://github.com/xuxueli/xxl-job/releases)
-[![License](https://img.shields.io/badge/license-GPLv3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0.html)
-[![Gitter](https://badges.gitter.im/xuxueli/xxl-job.svg)](https://gitter.im/xuxueli/xxl-job?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
-    
-</center>
+<p align="center">
+    <a href="http://www.xuxueli.com/">
+        <img src="https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/xxl-logo.jpg" width="150">
+    </a>
+    <h3 align="center">XXL-JOB</h3>
+    <p align="center">
+        XXL-JOB, a lightweight distributed task scheduling framework.
+        <br>
+        <a href="http://www.xuxueli.com/"><strong>-- Browse xuxueli's website. --</strong></a>
+        <br>
+        <br>
+        <a href="https://travis-ci.org/xuxueli/xxl-job">
+            <img src="https://travis-ci.org/xuxueli/xxl-job.svg?branch=master" >
+        </a>
+        <a href="https://maven-badges.herokuapp.com/maven-central/com.xuxueli/xxl-job/">
+            <img src="https://maven-badges.herokuapp.com/maven-central/com.xuxueli/xxl-job/badge.svg" >
+        </a>
+         <a href="https://github.com/xuxueli/xxl-job/releases">
+             <img src="https://img.shields.io/github/release/xuxueli/xxl-job.svg" >
+         </a>
+         <a href="http://www.gnu.org/licenses/gpl-3.0.html">
+             <img src="https://img.shields.io/badge/license-GPLv3-blue.svg" >
+         </a>
+         <a href="https://gitter.im/xuxueli/xxl-job?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge">
+              <img src="https://badges.gitter.im/xuxueli/xxl-job.svg" >
+          </a>
+    </p>    
+</p>
 
 ## Intro
 
