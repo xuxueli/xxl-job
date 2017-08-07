@@ -178,8 +178,9 @@
         Powered by <b>XXL-JOB</b> 1.8.2（快照版本）
 		<div class="pull-right hidden-xs">
             <strong>Copyright &copy; 2015-${.now?string('yyyy')} &nbsp;
-                <a href="https://github.com/xuxueli/xxl-job" target="_blank" >github</a>&nbsp;
-                <a href="http://my.oschina.net/xuxueli/blog/690978" target="_blank" >oschina</a>
+                <a href="http://www.xuxueli.com/" target="_blank" >xuxueli</a>
+				&nbsp;
+                <a href="https://github.com/xuxueli/xxl-job" target="_blank" >github</a>
             </strong><!-- All rights reserved. -->
 		</div>
 	</footer>
