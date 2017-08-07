@@ -36,12 +36,8 @@
 					<a target="_blank" href="https://github.com/xuxueli/xxl-job">github</a>&nbsp;&nbsp;&nbsp;&nbsp;
 					<iframe src="https://ghbtns.com/github-btn.html?user=xuxueli&repo=xxl-job&type=star&count=true" frameborder="0" scrolling="0" width="170px" height="20px" style="margin-bottom:-5px;"></iframe> 
 					<br><br>
-                    <a target="_blank" href="http://my.oschina.net/xuxueli/blog/690978">oschina</a>
+                    <a target="_blank" href="http://my.oschina.net/xuxueli/blog/690978">oschina（文档中有交流群）</a>
                     <br><br>
-
-                    <a>腾讯QQ群（6）：399758605</a>
-                    <br>
-                    <a>腾讯QQ群（5）：138274130    （群即将满，请加群6）</a>
 
 				</p>
 				<p></p>
