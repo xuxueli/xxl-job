@@ -5,7 +5,6 @@ import com.xxl.job.core.biz.model.RegistryParam;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.enums.RegistryConfig;
 import com.xxl.job.core.executor.XxlJobExecutor;
-import com.xxl.job.core.rpc.netcom.NetComClientProxy;
 import com.xxl.job.core.util.IpUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +31,7 @@ public class ExecutorRegistryThread extends Thread {
             logger.warn(">>>>>>>>>>>> xxl-job, executor registry config fail, appName is null.");
             return;
         }
-        if (XxlJobExecutor.adminAddresses==null || XxlJobExecutor.adminAddresses.trim().length()==0) {
+        if (XxlJobExecutor.getAdminBizList() == null) {
             logger.warn(">>>>>>>>>>>> xxl-job, executor registry config fail, adminAddresses is null.");
             return;
         }
@@ -49,15 +48,10 @@ public class ExecutorRegistryThread extends Thread {
             @Override
             public void run() {
                 while (!toStop) {
-
                     try {
                         RegistryParam registryParam = new RegistryParam(RegistryConfig.RegistType.EXECUTOR.name(), appName, executorAddress);
-
-                        for (String addressUrl: XxlJobExecutor.adminAddresses.split(",")) {
-                            String apiUrl = addressUrl.concat("/api");
-
+                        for (AdminBiz adminBiz: XxlJobExecutor.getAdminBizList()) {
                             try {
-                                AdminBiz adminBiz = (AdminBiz) new NetComClientProxy(AdminBiz.class, apiUrl).getObject();
                                 ReturnT<String> registryResult = adminBiz.registry(registryParam);
                                 if (registryResult!=null && ReturnT.SUCCESS_CODE == registryResult.getCode()) {
                                     registryResult = ReturnT.SUCCESS;
@@ -71,7 +65,6 @@ public class ExecutorRegistryThread extends Thread {
                             }
 
                         }
-
                     } catch (Exception e) {
                         logger.error(e.getMessage(), e);
                     }

@@ -1,6 +1,7 @@
 package com.xxl.job.admin.controller;
 
 import com.xxl.job.admin.controller.annotation.PermessionLimit;
+import com.xxl.job.core.biz.AdminBiz;
 import com.xxl.job.core.rpc.codec.RpcRequest;
 import com.xxl.job.core.rpc.codec.RpcResponse;
 import com.xxl.job.core.rpc.netcom.NetComServerFactory;
@@ -46,7 +47,7 @@ public class JobApiController {
         }
     }
 
-    @RequestMapping("/api")
+    @RequestMapping(AdminBiz.MAPPING)
     @PermessionLimit(limit=false)
     public void api(HttpServletRequest request, HttpServletResponse response) throws IOException {
 

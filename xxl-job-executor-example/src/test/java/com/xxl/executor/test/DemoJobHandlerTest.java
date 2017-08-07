@@ -8,6 +8,8 @@ import com.xxl.job.core.glue.GlueTypeEnum;
 import com.xxl.job.core.rpc.netcom.NetComClientProxy;
 
 /**
+ * executor-api client, test
+ *
  * Created by xuxueli on 17/5/12.
  */
 public class DemoJobHandlerTest {
@@ -31,7 +33,8 @@ public class DemoJobHandlerTest {
         triggerParam.setLogDateTim(System.currentTimeMillis());
 
         // do remote trigger
-        ExecutorBiz executorBiz = (ExecutorBiz) new NetComClientProxy(ExecutorBiz.class, "127.0.0.1:9999").getObject();
+        String accessToken = null;
+        ExecutorBiz executorBiz = (ExecutorBiz) new NetComClientProxy(ExecutorBiz.class, "127.0.0.1:9999", null).getObject();
         ReturnT<String> runResult = executorBiz.run(triggerParam);
     }
 

@@ -34,6 +34,8 @@ public class XxlJobConfig {
     @Value("${xxl.job.executor.logpath}")
     private String logpath;
 
+    @Value("${xxl.job.accessToken}")
+    private String accessToken;
 
     @Bean(initMethod = "start", destroyMethod = "destroy")
     public XxlJobExecutor xxlJobExecutor() {
@@ -44,6 +46,7 @@ public class XxlJobConfig {
         xxlJobExecutor.setAppName(appname);
         xxlJobExecutor.setAdminAddresses(addresses);
         xxlJobExecutor.setLogPath(logpath);
+        xxlJobExecutor.setAccessToken(accessToken);
         return xxlJobExecutor;
     }
 

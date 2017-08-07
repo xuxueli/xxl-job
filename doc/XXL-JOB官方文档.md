@@ -86,13 +86,16 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 	- 31、四川互宜达科技有限公司
 	- 32、钱包行云（北京）科技有限公司
 	- 33、重庆欣才集团
+    - 34、咪咕互动娱乐有限公司（中国移动）
+    - 35、北京诺亦腾科技有限公司
+    - 36、增长引擎(北京)信息技术有限公司
 	- ……
 
 欢迎大家的关注和使用，XXL-JOB也将拥抱变化，持续发展。
 
 ### 1.4 下载
 
-#### 源码仓库地址 (将会在两个git仓库同步发布最新代码)
+#### 源码仓库地址
 
 源码仓库地址 | Release Download
 --- | ---
@@ -100,23 +103,23 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 [http://git.oschina.net/xuxueli0323/xxl-job](http://git.oschina.net/xuxueli0323/xxl-job) | [Download](http://git.oschina.net/xuxueli0323/xxl-job/releases)
 
 
-#### 中央仓库地址 (最新Release版本：1.8.0)
+#### 中央仓库地址
 
 ```
 <!-- http://repo1.maven.org/maven2/com/xuxueli/xxl-job-core/ -->
 <dependency>
     <groupId>com.xuxueli</groupId>
     <artifactId>xxl-job-core</artifactId>
-    <version>1.8.0</version>
+    <version>1.8.1</version>
 </dependency>
 ```
 
-#### 博客地址 (将会在两个博客同步更新文档)
+#### 博客地址
 
 - [oschina地址](http://my.oschina.net/xuxueli/blog/690978)
 - [cnblogs地址](http://www.cnblogs.com/xuxueli/p/5021979.html)
 
-#### 技术交流群 (仅作技术交流)
+#### 技术交流
 
 - 群5：138274130      [![image](http://pub.idqqimg.com/wpa/images/group.png)](http://shang.qq.com/wpa/qunwpa?idkey=a3f3aea7e5943e7a24e9726495747ddc19bccd3592d7a70ecb5a97b616062241 )
 - 群4：464762661    （群即将满，请加群5）
@@ -127,8 +130,8 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 ### 1.5 环境
 - JDK：1.7+
 - Servlet/JSP Spec：3.1/2.3
-- Tomcat：8.5.x/Jetty9.2
-- Spring-boot：1.3.8/Spring4.x
+- Tomcat：8.5.x/Jetty9.2.x
+- Spring-boot：1.5.x/Spring4.x
 - Mysql：5.6+
 - Maven：3+
 
@@ -136,18 +139,18 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 ## 二、快速入门
 
 ### 2.1 初始化“调度数据库”
-请下载项目源码并解压，获取 "调度数据库初始化SQL脚本" 并执行即可。正常情况下应该生成16张表，脚本文件位置为:
+请下载项目源码并解压，获取 "调度数据库初始化SQL脚本" 并执行即可，正常情况下应该生成16张表。
 
-    源码解压根目录\xxl-job\db\tables_xxl_job.sql
+"调度数据库初始化SQL脚本" 位置为:
+
+    /xxl-job/db/tables_xxl_job.sql
 
 调度中心支持集群部署，集群情况下各节点务必连接同一个mysql实例;
 
 如果mysql做主从,调度中心集群节点务必强制走主库;
 
 ### 2.2 编译源码
-解压源码,按照maven格式将源码导入IDE, 使用maven进行编译即可，源码结构如下图所示：
-
-![输入图片说明](https://static.oschina.net/uploads/img/201705/11214348_aGgr.png "在这里输入图片标题")
+解压源码,按照maven格式将源码导入IDE, 使用maven进行编译即可，源码结构如下：
 
     xxl-job-admin：调度中心
     xxl-job-core：公共依赖
@@ -160,14 +163,16 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
     作用：统一管理任务调度平台上调度任务，负责触发调度执行。
 
 #### 步骤一：调度中心配置：
-配置文件以及配置属性如下图所示。
+调度中心配置文件地址：
 
-![输入图片说明](https://static.oschina.net/uploads/img/201705/11214752_Ifvp.png "在这里输入图片标题")
+    /xxl-job/xxl-job-admin/src/main/resources/xxl-job-admin.properties
 
+
+调度中心配置内容说明：
 
     ### 调度中心JDBC链接：链接地址请保持和 2.1章节 所创建的调度数据库的地址一致
     xxl.job.db.driverClass=com.mysql.jdbc.Driver
-    xxl.job.db.url=jdbc:mysql://localhost:3306/xxl-job?useUnicode=true&amp;characterEncoding=UTF-8
+    xxl.job.db.url=jdbc:mysql://localhost:3306/xxl-job?useUnicode=true&characterEncoding=UTF-8
     xxl.job.db.user=root
     xxl.job.db.password=root_pwd
     
@@ -179,9 +184,12 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
     xxl.job.mail.sendFrom=ovono802302@163.com
     xxl.job.mail.sendNick=《任务调度平台XXL-JOB》
     
-    # 登录账号
+    ### 登录账号
     xxl.job.login.username=admin
     xxl.job.login.password=123456
+    
+    ### 调度中心通讯TOKEN，非空时启用
+    xxl.job.accessToken=
 
 #### 步骤二：部署项目：
 如果已经正确进行上述配置，可将项目编译打war包并部署到tomcat中。
@@ -190,6 +198,13 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 ![输入图片说明](https://static.oschina.net/uploads/img/201705/08194505_6yC0.png "在这里输入图片标题")
 
 至此“调度中心”项目已经部署成功。
+
+#### 步骤三：调度中心集群（可选）：
+调度中心支持集群部署，提升调度系统可用性。
+
+集群部署唯一要求为：保证每个集群节点配置（db和登陆账号等）保持一致。调度中心通过db配置区分不同集群。
+
+调度中心在集群部署时可通过nginx负载均衡，此时可以为集群分配一个域名。该域名一方面可以用于访问，另一方面也可以用于配置执行器回调地址。
 
 ### 2.4 配置部署“执行器项目”
 
@@ -200,10 +215,11 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 确认pom文件中引入了 "xxl-job-core" 的maven依赖；
     
 #### 步骤二：执行器配置
-配置文件以及配置属性如下图所示。
+执行器配置配置文件地址：
 
-![输入图片说明](https://static.oschina.net/uploads/img/201705/11214800_7G3o.png "在这里输入图片标题")
+    /xxl-job/xxl-job-executor-example/src/main/resources/xxl-job-executor.properties
 
+执行器配置配置内容说明：
 
     ### xxl-job admin address list：调度中心部署跟地址：如调度中心集群部署存在多个地址则用逗号分隔。执行器将会使用该地址进行"执行器心跳注册"和"任务结果回调"。
     xxl.job.admin.addresses=http://127.0.0.1:8080/xxl-job-admin
@@ -215,6 +231,9 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
     
     ### xxl-job log path：执行器运行日志文件存储的磁盘位置
     xxl.job.executor.logpath=/data/applogs/xxl-job/jobhandler/
+    
+    ### xxl-job, access token：执行器通讯TOKEN，非空时启用
+    xxl.job.accessToken=
 
 
 #### 步骤三：执行器组件配置
@@ -225,13 +244,18 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
     1、JobHandler 扫描路径：自动扫描容器中JobHandler；
     2、执行器Excutor配置：执行器核心配置；
 
-#### 步骤四：部署项目：
+#### 步骤四：部署执行器项目：
 如果已经正确进行上述配置，可将执行器项目编译打部署，系统提供两个执行器example项目，选择其中一个即可，各自的部署方式如下。
 
     xxl-job-executor-example：项目编译打包成WAR包，并部署到tomcat中。
     xxl-job-executor-springboot-example：项目编译打包成springboot类型的可执行JAR包，命令启动即可；
 
 至此“执行器”项目已经部署结束。
+
+#### 步骤五：执行器集群（可选）：
+执行器支持集群部署，提升调度系统可用性，同时提升任务处理能力。
+
+集群部署唯一要求为：保证集群中每个执行器的配置项 "xxl.job.admin.addresses/调度中心地址" 保持一致，执行器根据该配置进行执行器自动注册等操作。 
 
 
 ### 2.5 开发第一个任务“Hello World”       
@@ -706,6 +730,16 @@ XXL-JOB会为每次调度请求生成一个单独的日志文件，需要通过 
 - 1、分片任务场景：10个执行器的集群来处理10w条数据，每台机器只需要处理1w条数据，耗时降低10倍；
 - 2、广播任务场景：广播执行器机器运行shell脚本、广播集群节点进行缓存更新等
 
+#### 5、10 访问令牌（AccessToken）
+为提升系统安全性，调度中心和执行器进行安全性校验，双方AccessToken匹配才允许通讯；
+
+调度中心和执行器，可通过配置项 "xxl.job.accessToken" 进行AccessToken的设置。
+
+调度中心和执行器，如果需要正常通讯，只有两种设置；
+
+- 设置一：调度中心和执行器，均不设置AccessToken；关闭安全性校验；
+- 设置二：调度中心和执行器，设置了相同的AccessToken；
+
 
 ## 六、版本更新日志
 #### 6.1 版本 V1.1.x，新特性[2015-12-05]
@@ -896,41 +930,49 @@ Tips: 历史版本(V1.3.x)目前已经Release至稳定版本, 进入维护阶段
 - 10、执行日志，支持根据运行 "状态" 筛选日志；
 - 11、调度中心任务注册检测逻辑优化；
 
-#### 6.18 版本 V1.8.1 特性[快照版本]
+#### 6.18 版本 V1.8.1 特性[2017-07-30]
 - 1、分片广播任务：执行器集群部署时，任务路由策略选择"分片广播"情况下，一次任务调度将会广播触发集群中所有执行器执行一次任务，可根据分片参数处理分片任务；
 - 2、动态分片：分片广播任务以执行器为维度进行分片，支持动态扩容执行器集群从而动态增加分片数量，协同进行业务处理；在进行大数据量业务操作时可显著提升任务处理能力和速度。
 - 3、执行器JobHandler禁止命名冲突；
 - 4、执行器集群地址列表进行自然排序；
 - 5、调度中心，DAO层代码精简优化并且新增测试用例覆盖；
 - 6、调度中心API服务改为自研RPC形式，统一底层通讯模型；
+- 7、新增调度中心API服务测试Demo，方便在调度中心API扩展和测试；
+- 8、任务列表页交互优化，更换执行器分组时自动刷新任务列表，新建任务时默认定位在当前执行器位置；
+- 9、访问令牌（accessToken）：为提升系统安全性，调度中心和执行器进行安全性校验，双方AccessToken匹配才允许通讯；
+- 10、springboot版本执行器，升级至1.5.6.RELEASE版本；
+- 11、统一maven依赖版本管理；
 
 #### TODO LIST
 - 1、任务权限管理：执行器为粒度分配权限，核心操作校验权限；
-- 2、任务分片路由：分片采用一致性Hash算法计算出尽量稳定的分片顺序，即使注册机器存在波动也不会引起分批分片顺序大的波动；
-- 3、失败重试优化：目前失败重试逻辑为，在本次调度请求失败后重新执行一次请求逻辑。优化点为针对调度和执行失败时均做失败重试，重试时重新触发一次完整调度，这将可能导致失败是调度死循环，考虑中。
+- 2、任务分片路由：分片采用一致性Hash算法计算出尽量稳定的分片顺序，即使注册机器存在波动也不会引起分批分片顺序大的波动；目前采用IP自然排序，可以满足需求，待定；
+- 3、失败重试优化：目前失败重试逻辑为，在本次调度请求失败后重新执行一次请求逻辑。优化点为针对调度和执行失败时均做失败重试，重试时重新触发一次完整调度，这将可能导致失败是调度死循环，待定。
 - 4、回调失败写文件，查看日志时读文件确认，重启后回调确认；
 - 5、任务依赖，流程图，子任务+会签任务，各节点日志；
 - 6、调度任务优先级；
 - 7、移除quartz依赖，重写调度模块：新增或恢复任务时将下次执行记录插入delayqueue，调度中心集群竞争分布式锁，成功节点批量加载到期delayqueue数据，批量执行。
-- 8、任务执行结果回调失败后重试：待定，防止回调死循环；
-- 9、springboot 和 docker镜像，并且推送docker镜像到中央仓库，更进一步实现产品开箱即用；
-- 10、安全校验：调度中心和执行器约定公共密匙，只有密匙一致才允许相互通讯；
+- 8、springboot 和 docker镜像，并且推送docker镜像到中央仓库，更进一步实现产品开箱即用；
+- 9、国际化：调度中心界面 + 官方文档，新增英文版本。
+- 10、执行器摘除：执行器销毁时，主动通知调度中心并摘除对应执行器节点，提高执行器状态感知的时效性。
 
 ## 七、其他
 
 #### 7.1 报告问题
 XXL-JOB托管在Github上，如有问题可在 [ISSUES](https://github.com/xuxueli/xxl-job/issues/) 上提问，也可以加入上文技术交流群；
 
-#### 7.2 接入登记（登记仅为了推广，产品开源免费）
-更多接入公司，欢迎在github [登记](https://github.com/xuxueli/xxl-job/issues/1 )
+#### 7.2 用户接入登记
+登记仅为了产品推广，产品开源免费。   
+请接入使用的公司或个人进行用户登记 [登记地址](https://github.com/xuxueli/xxl-job/issues/1 ) 。
 
-#### 7.3 开源协议
+#### 7.3 开源协议和版权
 产品开源免费，并且将持续提供免费的社区技术支持。个人或企业内部可自由的接入和使用。
 
 XXL-JOB采用GPLv3协议，目的是为了保证用户的自由使用权利。协议可避免专利申请的特殊危险 "the GPL assures that patents cannot be used to render the program non-free.（摘自GPLv3）"。  
+Copyright (c) 2015-present, xuxueli.
 
 ---
-#### 支持的话可以扫一扫，支持 [XXL系列](https://github.com/xuxueli) 的建设：）
+#### 捐赠
+支持的话可以扫一扫，请作者喝杯咖啡吧：）
 
 微信：![输入图片说明](https://static.oschina.net/uploads/img/201707/07214300_qhxT.png "在这里输入图片标题")
 支付宝：![输入图片说明](http://images2015.cnblogs.com/blog/554415/201605/554415-20160513183306234-1939652116.png "在这里输入图片标题")
