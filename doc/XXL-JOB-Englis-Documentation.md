@@ -11,36 +11,36 @@
 ### 1.1 Overview
 XXL-JOB is a lightweight distributed task scheduling framework, the core design goal is to develop quickly, learning simple, lightweight, easy to expand. Is now open source and access to a number of companies online product line, download and use it now.
 ### 1.2 Features
-- 1. Simple: support through the Web page on the task CRUD operation, simple operation, a minute to get started;
-- 2. Dynamic: support dynamic modification of task status, pause / resume tasks, and termination of running tasks,immediate effect;
-- 3. Dispatch center HA (center type): Dispatch with central design, "dispatch center" based on the cluster of Quartz implementation, can guarantee the scheduling - center HA;
-- 4. Executer HA (Distributed): Task Distributed Execution, Task " Executer " supports cluster deployment to ensure that tasks perform HA;
-- 5. Task Failover: Deploy the Excuter cluster,tasks will be smooth to switch excuter when the strategy of the router choose ‘failover’;
-- 6. Consistency: "Dispatch Center" through the DB lock to ensure the consistency of cluster distributed scheduling,one task excuted for once;
-- 7. Custom task parameters: support online configuration scheduling tasks into the parameters, immediate effect;
-- 8. Scheduling thread pool: scheduling system multi-threaded trigger scheduling operation, to ensure accurate scheduling, not blocked;
-- 9. Elastic expansion capacity: once the new executor machine on the line or off the assembly line, the next time scheduling will be re-assigned tasks;
-- 10. Mail alarm: the task fails to support e-mail alarm, support configuring multiple email addresses to send bulk alert messages;
-- 11. Status monitoring: support real-time monitoring of the progress of the task;
-- 12. Rolling execution log: support online view scheduling results, and support Rolling real-time view of the executer output of the complete implementation of the log;
-- 13. GLUE: provide Web IDE, support online development task logic code, dynamic release, real-time compiler effective, omit the deployment of the on-line process. Supports historical versions of 30 versions back;
-- 14. Data Encryption: The communication between the dispatching center and the executor is used for data encryption, Enhancing the security of dispatching information;
-- 15. Task Dependency: Support configuration subtask dependencies, When the parent task executed end and after the success of the implementation will take the initiative to trigger a second task execution, multiple sub tasks are separated by commas;
-- 16. Push the Maven central warehouse: The latest stable version will be sent to the Maven central warehouse to facilitate user access and use;
-- 17. Task registration: The executor automatically registers tasks periodically, and the dispatch center automatically finds the registered tasks and triggers execution. It also supports manual input of executor address;
+- 1.Simple: support through the Web page on the task CRUD operation, simple operation, a minute to get started;
+- 2.Dynamic: support dynamic modification of task status, pause / resume tasks, and termination of running tasks,immediate effect;
+- 3.Dispatch center HA (center type): Dispatch with central design, "dispatch center" based on the cluster of Quartz implementation, can guarantee the scheduling - center HA;
+- 4.Executer HA (Distributed): Task Distributed Execution, Task " Executer " supports cluster deployment to ensure that tasks perform HA;
+- 5.Task Failover: Deploy the Excuter cluster,tasks will be smooth to switch excuter when the strategy of the router choose ‘failover’;
+- 6.Consistency: "Dispatch Center" through the DB lock to ensure the consistency of cluster distributed scheduling,one task excuted for once;
+- 7.Custom task parameters: support online configuration scheduling tasks into the parameters, immediate effect;
+- 8.Scheduling thread pool: scheduling system multi-threaded trigger scheduling operation, to ensure accurate scheduling, not blocked;
+- 9.Elastic expansion capacity: once the new executor machine on the line or off the assembly line, the next time scheduling will be re-assigned tasks;
+- 10.Mail alarm: the task fails to support e-mail alarm, support configuring multiple email addresses to send bulk alert messages;
+- 11.Status monitoring: support real-time monitoring of the progress of the task;
+- 12.Rolling execution log: support online view scheduling results, and support Rolling real-time view of the executer output of the complete implementation of the log;
+- 13.GLUE: provide Web IDE, support online development task logic code, dynamic release, real-time compiler effective, omit the deployment of the on-line process. Supports historical versions of 30 versions back;
+- 14.Data Encryption: The communication between the dispatching center and the executor is used for data encryption, Enhancing the security of dispatching information;
+- 15.Task Dependency: Support configuration subtask dependencies, When the parent task executed end and after the success of the implementation will take the initiative to trigger a second task execution, multiple sub tasks are separated by commas;
+- 16.Push the Maven central warehouse: The latest stable version will be sent to the Maven central warehouse to facilitate user access and use;
+- 17.Task registration: The executor automatically registers tasks periodically, and the dispatch center automatically finds the registered tasks and triggers execution. It also supports manual input of executor address;
 - 18.Router strategy: A rich routing strategy is provided when the executor cluster is deployed, these include: first, last, poll, random, consistent HASH, least frequently used, least recently used, failover, busy over, sharding broadcast,etc.;
-- 19. Report monitor: Support real-time view of running data, such as the number of tasks, the number of dispatch, the number of executors, etc .; and scheduling reports, such as scheduling date distribution, scheduling success map;
-- 20. Script task: Support the development and operation of script tasks in GLUE mode, including shell, Python and other types of script;
-- 21. Blocking handling strategy: The scheduling is too dense and the executor is too late to handle. The strategy includes: single machine serial (default), discarding the following scheduling, and Override the previous scheduling;
-- 22. Failure handling strategy:Handling strategy when scheduling fails, the strategy includes: failure alarm (default), failure retry;
+- 19.Report monitor: Support real-time view of running data, such as the number of tasks, the number of dispatch, the number of executors, etc .; and scheduling reports, such as scheduling date distribution, scheduling success map;
+- 20.Script task: Support the development and operation of script tasks in GLUE mode, including shell, Python and other types of script;
+- 21.Blocking handling strategy: The scheduling is too dense and the executor is too late to handle. The strategy includes: single machine serial (default), discarding the following scheduling, and Override the previous scheduling;
+- 22.Failure handling strategy:Handling strategy when scheduling fails, the strategy includes: failure alarm (default), failure retry;
 - 23.Sharding broadcast task: When an executor cluster is deployed, task routing strategy select "sharding broadcast", a task schedule will broadcast all the actuators in the cluster to perform it once, you can develop sharding tasks based on sharding parameters;
-- 24. Dynamic sharding: The sharding broadcast task is sharded by the executors to support the dynamic expansion of the executor cluster to dynamically increase the number of shardings and cooperate with the business handle; In the large amount of data operations can significantly improve the task processing capacity and speed.
+- 24.Dynamic sharding: The sharding broadcast task is sharded by the executors to support the dynamic expansion of the executor cluster to dynamically increase the number of shardings and cooperate with the business handle; In the large amount of data operations can significantly improve the task processing capacity and speed.
 ###  1.3 Development
 In 2015, I created the XXL-JOB project repository on github and submitted the first commit, followed by the system structure design, UI selection, interactive design ...
 In 2015 - November, XXL-JOB finally RELEASE the first big version of V1.0, then I will be released to OSCHINA, XXL-JOB OSCHINA won the popular recommendation of @红薯, the same period reached OSCHINA's " Popular move "ranked first and git.oschina open source software monthly heat ranked first, especially thanks for @红薯, thank you for the attention and support.
 In 2015 - December, I will XXL-JOB published to our internal knowledge base, and get internal colleagues recognized.
 In 2016 - 01 months, my company started XXL-JOB internal access and custom work, in this thank Yuan and Yin two colleagues contribution, but also to thank the internal other attention and support colleagues.
-In 2017-05-13, the link of "let the code run" in "the 62nd source of open source China Genesis(https://www.oschina.net/event/2236961)" held in Shanghai,, I stepped on and made a speech about the XXL-JOB, five hundred spectators in the audience reacted enthusiastically (pictorial review(https://www.oschina.net/question/2686220_2242120)).
+In 2017-05-13, the link of "let the code run" in "[the 62nd source of open source China Genesis](https://www.oschina.net/event/2236961)" held in Shanghai,, I stepped on and made a speech about the XXL-JOB, five hundred spectators in the audience reacted enthusiastically ([pictorial review](https://www.oschina.net/question/2686220_2242120)).
 #### My company have access to XXL-JOB, internal alias "Ferrari" (Ferrari based on XXL-JOB V1.1 version customization, new access application recommended to upgrade the latest version).
 According to the latest statistics, from 2016-01-21 to 2017-07-07 period, the system has been scheduled about 600,000 times, outstanding performance. New access applications recommend the latest version, because after several major updates, the system's task model, UI interaction model and the underlying scheduling communication model has a greater optimization and upgrading, the core function more stable and efficient.
 So far, XXL-JOB has access to a number of companies online product line, access to scenes such as electronic commerce, O2O business and large data operations, as of 2016-07-19, XXL-JOB has access to the company But not limited to:
