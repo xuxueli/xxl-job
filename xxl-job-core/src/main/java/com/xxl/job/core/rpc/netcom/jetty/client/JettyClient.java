@@ -21,8 +21,8 @@ public class JettyClient {
 
 			// reqURL
 			String reqURL = request.getServerAddress();
-			if (reqURL!=null && reqURL.toLowerCase().indexOf("http://")==-1) {
-				reqURL = "http://" + request.getServerAddress() + "/";
+			if (reqURL!=null && reqURL.toLowerCase().indexOf("http")==-1) {
+				reqURL = "http://" + request.getServerAddress() + "/";	// IP:PORT, need parse to url
 			}
 
 			// remote invoke

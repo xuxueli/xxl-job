@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>com.xuxueli</groupId>
 		<artifactId>xxl-job</artifactId>
-		<version>1.8.1-SNAPSHOT</version>
+		<version>1.8.2-SNAPSHOT</version>
 	</parent>
 	<artifactId>xxl-job-executor-example</artifactId>
 	<packaging>war</packaging>
@@ -13,12 +13,8 @@
 	<description>Executor project for spring boot.</description>
 	<url>http://www.xuxueli.com/</url>
 
-	<properties>
-		<spring.version>3.2.17.RELEASE</spring.version>
-	</properties>
-
 	<dependencies>
-		<!-- springframe start -->
+		<!-- spring-webmvc -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
@@ -29,20 +25,7 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
-			<version>1.7.21</version>
-		</dependency>
-		
-		<!-- c3p0 -->
-		<dependency>
-			<groupId>com.mchange</groupId>
-			<artifactId>c3p0</artifactId>
-			<version>0.9.5.2</version>
-		</dependency>
-		<!-- mysql-connector -->
-		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<version>5.1.29</version>
+			<version>${slf4j-api.version}</version>
 		</dependency>
 		
 		<!-- xxl-job-core -->
@@ -51,7 +34,6 @@
 			<artifactId>xxl-job-core</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
-		
 	</dependencies>
 
 </project>

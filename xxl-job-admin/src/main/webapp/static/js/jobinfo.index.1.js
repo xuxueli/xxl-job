@@ -167,6 +167,13 @@ $(function() {
 		jobTable.fnDraw();
 	});
 	
+	// jobGroup change
+	$('#jobGroup').on('change', function(){
+        //reload
+        var jobGroup = $('#jobGroup').val();
+        window.location.href = base_url + "/jobinfo?jobGroup=" + jobGroup;
+    });
+	
 	// job operate
 	$("#job_list").on('click', '.job_operate',function() {
 		var typeName;

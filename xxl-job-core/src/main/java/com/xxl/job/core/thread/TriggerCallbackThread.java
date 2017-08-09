@@ -4,7 +4,6 @@ import com.xxl.job.core.biz.AdminBiz;
 import com.xxl.job.core.biz.model.HandleCallbackParam;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.executor.XxlJobExecutor;
-import com.xxl.job.core.rpc.netcom.NetComClientProxy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,17 +42,14 @@ public class TriggerCallbackThread {
                             callbackParamList.add(callback);
 
                             // valid
-                            if (XxlJobExecutor.adminAddresses==null || XxlJobExecutor.adminAddresses.trim().length()==0) {
+                            if (XxlJobExecutor.getAdminBizList()==null) {
                                 logger.warn(">>>>>>>>>>>> xxl-job callback fail, adminAddresses is null, callbackParamList：{}", callbackParamList);
                                 continue;
                             }
 
                             // callback, will retry if error
-                            for (String addressUrl: XxlJobExecutor.adminAddresses.split(",")) {
-                                String apiUrl = addressUrl.concat("/api");
-
+                            for (AdminBiz adminBiz: XxlJobExecutor.getAdminBizList()) {
                                 try {
-                                    AdminBiz adminBiz = (AdminBiz) new NetComClientProxy(AdminBiz.class, apiUrl).getObject();
                                     ReturnT<String> callbackResult = adminBiz.callback(callbackParamList);
                                     if (callbackResult!=null && ReturnT.SUCCESS_CODE == callbackResult.getCode()) {
                                         callbackResult = ReturnT.SUCCESS;

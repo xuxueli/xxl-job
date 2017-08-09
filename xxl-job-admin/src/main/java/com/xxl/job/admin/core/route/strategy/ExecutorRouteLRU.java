@@ -1,6 +1,7 @@
 package com.xxl.job.admin.core.route.strategy;
 
 import com.xxl.job.admin.core.route.ExecutorRouter;
+import com.xxl.job.admin.core.trigger.XxlJobTrigger;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.biz.model.TriggerParam;
 
@@ -61,7 +62,7 @@ public class ExecutorRouteLRU extends ExecutorRouter {
         String address = route(triggerParam.getJobId(), addressList);
 
         // run executor
-        ReturnT<String> runResult = runExecutor(triggerParam, address);
+        ReturnT<String> runResult = XxlJobTrigger.runExecutor(triggerParam, address);
         runResult.setContent(address);
         return runResult;
     }

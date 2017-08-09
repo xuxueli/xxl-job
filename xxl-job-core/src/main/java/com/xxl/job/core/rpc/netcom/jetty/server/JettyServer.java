@@ -1,6 +1,7 @@
 package com.xxl.job.core.rpc.netcom.jetty.server;
 
 import com.xxl.job.core.thread.ExecutorRegistryThread;
+import com.xxl.job.core.thread.TriggerCallbackThread;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
@@ -38,10 +39,16 @@ public class JettyServer {
 				server.setHandler(handlerc);
 
 				try {
-					// Start the server
+					// Start server
 					server.start();
 					logger.info(">>>>>>>>>>>> xxl-job jetty server start success at port:{}.", port);
+
+					// Start Registry-Server
 					ExecutorRegistryThread.getInstance().start(port, ip, appName);
+
+					// Start Callback-Server
+					TriggerCallbackThread.getInstance().start();
+
 					server.join();	// block until thread stopped
 					logger.info(">>>>>>>>>>> xxl-rpc server join success, netcon={}, port={}", JettyServer.class.getName(), port);
 				} catch (Exception e) {
@@ -56,6 +63,8 @@ public class JettyServer {
 	}
 
 	public void destroy() {
+
+		// destroy server
 		if (server != null) {
 			try {
 				server.stop();
@@ -67,6 +76,13 @@ public class JettyServer {
 		if (thread.isAlive()) {
 			thread.interrupt();
 		}
+
+		// destroy Registry-Server
+		ExecutorRegistryThread.getInstance().toStop();
+
+		// destroy Callback-Server
+		TriggerCallbackThread.getInstance().toStop();
+
 		logger.info(">>>>>>>>>>> xxl-rpc server destroy success, netcon={}", JettyServer.class.getName());
 	}
 

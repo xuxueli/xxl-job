@@ -30,7 +30,7 @@ public class JobFailMonitorHelper {
 	private LinkedBlockingQueue<Integer> queue = new LinkedBlockingQueue<Integer>(0xfff8);
 
 	private Thread monitorThread;
-	private boolean toStop = false;
+	private volatile boolean toStop = false;
 	public void start(){
 		monitorThread = new Thread(new Runnable() {
 

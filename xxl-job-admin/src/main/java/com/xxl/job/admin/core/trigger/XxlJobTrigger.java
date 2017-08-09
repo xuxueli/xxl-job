@@ -5,9 +5,9 @@ import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.admin.core.route.ExecutorRouteStrategyEnum;
-import com.xxl.job.admin.core.route.ExecutorRouter;
 import com.xxl.job.admin.core.schedule.XxlJobDynamicScheduler;
 import com.xxl.job.admin.core.thread.JobFailMonitorHelper;
+import com.xxl.job.core.biz.ExecutorBiz;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.biz.model.TriggerParam;
 import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
@@ -90,12 +90,12 @@ public class XxlJobTrigger {
                     triggerParam.setBroadcastTotal(addressList.size()); // update02
 
                     // 4.2、trigger-run (route run / trigger remote executor)
-                    triggerResult = ExecutorRouter.runExecutor(triggerParam, address);     // update03
+                    triggerResult = runExecutor(triggerParam, address);     // update03
                     triggerMsgSb.append("<br><br><span style=\"color:#00c0ef;\" > >>>>>>>>>>>触发调度<<<<<<<<<<< </span><br>").append(triggerResult.getMsg());
 
                     // 4.3、trigger (fail retry)
                     if (triggerResult.getCode()!=ReturnT.SUCCESS_CODE && failStrategy == ExecutorFailStrategyEnum.FAIL_RETRY) {
-                        triggerResult = ExecutorRouter.runExecutor(triggerParam, address);  // update04
+                        triggerResult = runExecutor(triggerParam, address);  // update04
                         triggerMsgSb.append("<br><br><span style=\"color:#F39C12;\" > >>>>>>>>>>>失败重试<<<<<<<<<<< </span><br>").append(triggerResult.getMsg());
                     }
                 }
@@ -177,6 +177,32 @@ public class XxlJobTrigger {
         // 6、monitor triger
         JobFailMonitorHelper.monitor(jobLog.getId());
         logger.debug(">>>>>>>>>>> xxl-job trigger end, jobId:{}", jobLog.getId());
+    }
+
+    /**
+     * run executor
+     * @param triggerParam
+     * @param address
+     * @return  ReturnT.content: final address
+     */
+    public static ReturnT<String> runExecutor(TriggerParam triggerParam, String address){
+        ReturnT<String> runResult = null;
+        try {
+            ExecutorBiz executorBiz = XxlJobDynamicScheduler.getExecutorBiz(address);
+            runResult = executorBiz.run(triggerParam);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            runResult = new ReturnT<String>(ReturnT.FAIL_CODE, ""+e );
+        }
+
+        StringBuffer runResultSB = new StringBuffer("触发调度：");
+        runResultSB.append("<br>address：").append(address);
+        runResultSB.append("<br>code：").append(runResult.getCode());
+        runResultSB.append("<br>msg：").append(runResult.getMsg());
+
+        runResult.setMsg(runResultSB.toString());
+        runResult.setContent(address);
+        return runResult;
     }
 
 }

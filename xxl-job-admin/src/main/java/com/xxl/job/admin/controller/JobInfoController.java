@@ -33,7 +33,7 @@ public class JobInfoController {
 	private XxlJobService xxlJobService;
 	
 	@RequestMapping
-	public String index(Model model) {
+	public String index(Model model, @RequestParam(required = false, defaultValue = "-1") int jobGroup) {
 
 		// 枚举-字典
 		model.addAttribute("ExecutorRouteStrategyEnum", ExecutorRouteStrategyEnum.values());	// 路由策略-列表
@@ -44,6 +44,8 @@ public class JobInfoController {
 		// 任务组
 		List<XxlJobGroup> jobGroupList =  xxlJobGroupDao.findAll();
 		model.addAttribute("JobGroupList", jobGroupList);
+		model.addAttribute("jobGroup", jobGroup);
+
 		return "jobinfo/jobinfo.index";
 	}
 	

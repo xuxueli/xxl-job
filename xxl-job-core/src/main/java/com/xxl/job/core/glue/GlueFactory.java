@@ -52,21 +52,21 @@ public class GlueFactory {
 				try {
 					Resource resource = AnnotationUtils.getAnnotation(field, Resource.class);
 					if (resource.name()!=null && resource.name().length()>0){
-						fieldBean = XxlJobExecutor.applicationContext.getBean(resource.name());
+						fieldBean = XxlJobExecutor.getApplicationContext().getBean(resource.name());
 					} else {
-						fieldBean = XxlJobExecutor.applicationContext.getBean(field.getName());
+						fieldBean = XxlJobExecutor.getApplicationContext().getBean(field.getName());
 					}
 				} catch (Exception e) {
 				}
 				if (fieldBean==null ) {
-					fieldBean = XxlJobExecutor.applicationContext.getBean(field.getType());
+					fieldBean = XxlJobExecutor.getApplicationContext().getBean(field.getType());
 				}
 			} else if (AnnotationUtils.getAnnotation(field, Autowired.class) != null) {
 				Qualifier qualifier = AnnotationUtils.getAnnotation(field, Qualifier.class);
 				if (qualifier!=null && qualifier.value()!=null && qualifier.value().length()>0) {
-					fieldBean = XxlJobExecutor.applicationContext.getBean(qualifier.value());
+					fieldBean = XxlJobExecutor.getApplicationContext().getBean(qualifier.value());
 				} else {
-					fieldBean = XxlJobExecutor.applicationContext.getBean(field.getType());
+					fieldBean = XxlJobExecutor.getApplicationContext().getBean(field.getType());
 				}
 			}
 			

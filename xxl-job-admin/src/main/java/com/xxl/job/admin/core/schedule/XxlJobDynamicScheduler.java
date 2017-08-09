@@ -9,62 +9,52 @@ import com.xxl.job.admin.dao.XxlJobInfoDao;
 import com.xxl.job.admin.dao.XxlJobLogDao;
 import com.xxl.job.admin.dao.XxlJobRegistryDao;
 import com.xxl.job.core.biz.AdminBiz;
+import com.xxl.job.core.biz.ExecutorBiz;
+import com.xxl.job.core.rpc.netcom.NetComClientProxy;
 import com.xxl.job.core.rpc.netcom.NetComServerFactory;
 import org.quartz.*;
 import org.quartz.Trigger.TriggerState;
-import org.quartz.impl.matchers.GroupMatcher;
 import org.quartz.impl.triggers.CronTriggerImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.util.Assert;
 
-import java.util.*;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * base quartz scheduler util
  * @author xuxueli 2015-12-19 16:13:53
  */
-public final class XxlJobDynamicScheduler implements ApplicationContextAware, InitializingBean {
+public final class XxlJobDynamicScheduler implements ApplicationContextAware {
     private static final Logger logger = LoggerFactory.getLogger(XxlJobDynamicScheduler.class);
-    
-    // Scheduler
+
+    // ---------------------- param ----------------------
+
+    // scheduler
     private static Scheduler scheduler;
     public void setScheduler(Scheduler scheduler) {
 		XxlJobDynamicScheduler.scheduler = scheduler;
 	}
-    
-    // init
-    public void init() throws Exception {
-		// admin registry monitor run
-        JobRegistryMonitorHelper.getInstance().start();
 
-        // admin monitor run
-        JobFailMonitorHelper.getInstance().start();
-
-        // rpc-service, base on spring-mvc
-        NetComServerFactory.putService(AdminBiz.class, XxlJobDynamicScheduler.adminBiz);
+	// accessToken
+    private static String accessToken;
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
     }
-    
-    // destroy
-    public void destroy(){
-        // admin registry stop
-        JobRegistryMonitorHelper.getInstance().toStop();
 
-        // admin monitor stop
-        JobFailMonitorHelper.getInstance().toStop();
-    }
-    
-    // xxlJobLogDao、xxlJobInfoDao
+    // dao
     public static XxlJobLogDao xxlJobLogDao;
     public static XxlJobInfoDao xxlJobInfoDao;
     public static XxlJobRegistryDao xxlJobRegistryDao;
     public static XxlJobGroupDao xxlJobGroupDao;
     public static AdminBiz adminBiz;
 
+    // ---------------------- applicationContext ----------------------
     @Override
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 		XxlJobDynamicScheduler.xxlJobLogDao = applicationContext.getBean(XxlJobLogDao.class);
@@ -73,48 +63,60 @@ public final class XxlJobDynamicScheduler implements ApplicationContextAware, In
         XxlJobDynamicScheduler.xxlJobGroupDao = applicationContext.getBean(XxlJobGroupDao.class);
         XxlJobDynamicScheduler.adminBiz = applicationContext.getBean(AdminBiz.class);
 	}
-    
-	@Override
-    public void afterPropertiesSet() throws Exception {
+
+    // ---------------------- init + destroy ----------------------
+    public void init() throws Exception {
+        // admin registry monitor run
+        JobRegistryMonitorHelper.getInstance().start();
+
+        // admin monitor run
+        JobFailMonitorHelper.getInstance().start();
+
+        // admin-server(spring-mvc)
+        NetComServerFactory.putService(AdminBiz.class, XxlJobDynamicScheduler.adminBiz);
+        NetComServerFactory.setAccessToken(accessToken);
+
+        // valid
         Assert.notNull(scheduler, "quartz scheduler is null");
         logger.info(">>>>>>>>> init quartz scheduler success.[{}]", scheduler);
-       
     }
-	
-	// getJobKeys
-	@Deprecated
-	public static List<Map<String, Object>> getJobList(){
-		List<Map<String, Object>> jobList = new ArrayList<Map<String,Object>>();
-		
-		try {
-			if (scheduler.getJobGroupNames()==null || scheduler.getJobGroupNames().size()==0) {
-				return null;
-			}
-			String groupName = scheduler.getJobGroupNames().get(0);
-			Set<JobKey> jobKeys = scheduler.getJobKeys(GroupMatcher.jobGroupEquals(groupName));
-			if (jobKeys!=null && jobKeys.size()>0) {
-				for (JobKey jobKey : jobKeys) {
-			        TriggerKey triggerKey = TriggerKey.triggerKey(jobKey.getName(), Scheduler.DEFAULT_GROUP);
-			        Trigger trigger = scheduler.getTrigger(triggerKey);
-			        JobDetail jobDetail = scheduler.getJobDetail(jobKey);
-			        TriggerState triggerState = scheduler.getTriggerState(triggerKey);
-			        Map<String, Object> jobMap = new HashMap<String, Object>();
-			        jobMap.put("TriggerKey", triggerKey);
-			        jobMap.put("Trigger", trigger);
-			        jobMap.put("JobDetail", jobDetail);
-			        jobMap.put("TriggerState", triggerState);
-			        jobList.add(jobMap);
-				}
-			}
-			
-		} catch (SchedulerException e) {
-			e.printStackTrace();
-			return null;
-		}
-		return jobList;
-	}
-	
-	// fill job info
+
+    public void destroy(){
+        // admin registry stop
+        JobRegistryMonitorHelper.getInstance().toStop();
+
+        // admin monitor stop
+        JobFailMonitorHelper.getInstance().toStop();
+    }
+
+    // ---------------------- executor-client ----------------------
+    private static ConcurrentHashMap<String, ExecutorBiz> executorBizRepository = new ConcurrentHashMap<String, ExecutorBiz>();
+    public static ExecutorBiz getExecutorBiz(String address) throws Exception {
+        // valid
+        if (address==null || address.trim().length()==0) {
+            return null;
+        }
+
+        // load-cache
+        address = address.trim();
+        ExecutorBiz executorBiz = executorBizRepository.get(address);
+        if (executorBiz != null) {
+            return executorBiz;
+        }
+
+        // set-cache
+        executorBiz = (ExecutorBiz) new NetComClientProxy(ExecutorBiz.class, address, accessToken).getObject();
+        executorBizRepository.put(address, executorBiz);
+        return executorBiz;
+    }
+
+    // ---------------------- schedule util ----------------------
+
+    /**
+     * fill job info
+     *
+     * @param jobInfo
+     */
 	public static void fillJobInfo(XxlJobInfo jobInfo) {
 		// TriggerKey : name + group
         String group = String.valueOf(jobInfo.getJobGroup());
@@ -145,14 +147,28 @@ public final class XxlJobDynamicScheduler implements ApplicationContextAware, In
 		}
 	}
 	
-	// check if exists
+    /**
+     * check if exists
+     *
+     * @param jobName
+     * @param jobGroup
+     * @return
+     * @throws SchedulerException
+     */
 	public static boolean checkExists(String jobName, String jobGroup) throws SchedulerException{
 		TriggerKey triggerKey = TriggerKey.triggerKey(jobName, jobGroup);
 		return scheduler.checkExists(triggerKey);
 	}
 
-	// addJob 新增
-	@SuppressWarnings("unchecked")
+    /**
+     * addJob
+     *
+     * @param jobName
+     * @param jobGroup
+     * @param cronExpression
+     * @return
+     * @throws SchedulerException
+     */
 	public static boolean addJob(String jobName, String jobGroup, String cronExpression) throws SchedulerException {
     	// TriggerKey : name + group
         TriggerKey triggerKey = TriggerKey.triggerKey(jobName, jobGroup);
@@ -185,7 +201,15 @@ public final class XxlJobDynamicScheduler implements ApplicationContextAware, In
         return true;
     }
     
-    // reschedule
+    /**
+     * rescheduleJob
+     *
+     * @param jobGroup
+     * @param jobName
+     * @param cronExpression
+     * @return
+     * @throws SchedulerException
+     */
 	public static boolean rescheduleJob(String jobGroup, String jobName, String cronExpression) throws SchedulerException {
     	
     	// TriggerKey valid if_exists
@@ -234,7 +258,14 @@ public final class XxlJobDynamicScheduler implements ApplicationContextAware, In
         return true;
     }
     
-    // unscheduleJob
+    /**
+     * unscheduleJob
+     *
+     * @param jobName
+     * @param jobGroup
+     * @return
+     * @throws SchedulerException
+     */
     public static boolean removeJob(String jobName, String jobGroup) throws SchedulerException {
     	// TriggerKey : name + group
         TriggerKey triggerKey = TriggerKey.triggerKey(jobName, jobGroup);
@@ -246,7 +277,14 @@ public final class XxlJobDynamicScheduler implements ApplicationContextAware, In
         return true;
     }
 
-    // Pause
+    /**
+     * pause
+     *
+     * @param jobName
+     * @param jobGroup
+     * @return
+     * @throws SchedulerException
+     */
     public static boolean pauseJob(String jobName, String jobGroup) throws SchedulerException {
     	// TriggerKey : name + group
     	TriggerKey triggerKey = TriggerKey.triggerKey(jobName, jobGroup);
@@ -262,7 +300,14 @@ public final class XxlJobDynamicScheduler implements ApplicationContextAware, In
         return result;
     }
     
-    // resume
+    /**
+     * resume
+     *
+     * @param jobName
+     * @param jobGroup
+     * @return
+     * @throws SchedulerException
+     */
     public static boolean resumeJob(String jobName, String jobGroup) throws SchedulerException {
     	// TriggerKey : name + group
     	TriggerKey triggerKey = TriggerKey.triggerKey(jobName, jobGroup);
@@ -278,7 +323,14 @@ public final class XxlJobDynamicScheduler implements ApplicationContextAware, In
         return result;
     }
     
-    // run
+    /**
+     * run
+     *
+     * @param jobName
+     * @param jobGroup
+     * @return
+     * @throws SchedulerException
+     */
     public static boolean triggerJob(String jobName, String jobGroup) throws SchedulerException {
     	// TriggerKey : name + group
     	JobKey jobKey = new JobKey(jobName, jobGroup);
@@ -294,5 +346,41 @@ public final class XxlJobDynamicScheduler implements ApplicationContextAware, In
         return result;
     }
 
+    /**
+     * finaAllJobList
+     *
+     * @return
+     *//*
+    @Deprecated
+    public static List<Map<String, Object>> finaAllJobList(){
+        List<Map<String, Object>> jobList = new ArrayList<Map<String,Object>>();
+
+        try {
+            if (scheduler.getJobGroupNames()==null || scheduler.getJobGroupNames().size()==0) {
+                return null;
+            }
+            String groupName = scheduler.getJobGroupNames().get(0);
+            Set<JobKey> jobKeys = scheduler.getJobKeys(GroupMatcher.jobGroupEquals(groupName));
+            if (jobKeys!=null && jobKeys.size()>0) {
+                for (JobKey jobKey : jobKeys) {
+                    TriggerKey triggerKey = TriggerKey.triggerKey(jobKey.getName(), Scheduler.DEFAULT_GROUP);
+                    Trigger trigger = scheduler.getTrigger(triggerKey);
+                    JobDetail jobDetail = scheduler.getJobDetail(jobKey);
+                    TriggerState triggerState = scheduler.getTriggerState(triggerKey);
+                    Map<String, Object> jobMap = new HashMap<String, Object>();
+                    jobMap.put("TriggerKey", triggerKey);
+                    jobMap.put("Trigger", trigger);
+                    jobMap.put("JobDetail", jobDetail);
+                    jobMap.put("TriggerState", triggerState);
+                    jobList.add(jobMap);
+                }
+            }
+
+        } catch (SchedulerException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return jobList;
+    }*/
 
 }
