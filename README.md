@@ -125,6 +125,8 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 
 欢迎大家的关注和使用，XXL-JOB也将拥抱变化，持续发展。
 
+**更多接入的公司，欢迎在 [登记地址](https://github.com/xuxueli/xxl-job/issues/1 ) 登记，登记仅仅为了产品推广。**
+
 
 ## Communication
 
@@ -141,15 +143,6 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 Contributions are welcome! Open a pull request to fix a bug, or open an [Issue](https://github.com/xuxueli/xxl-job/issues/) to discuss a new feature or change.
 
 欢迎参与项目贡献！比如提交PR修复一个bug，或者新建 [Issue](https://github.com/xuxueli/xxl-job/issues/) 讨论新特性或者变更。
-
-## User Registration
-Registration（[Registration Address](https://github.com/xuxueli/xxl-job/issues/1 )） is only for product promotion.
-
-This product is open source and free, and will continue to provide free community technical support. Individual or enterprise users are free to access and use.
-
-登记（[登记地址](https://github.com/xuxueli/xxl-job/issues/1 ) ）仅仅为了产品推广。
-
-产品开源免费，并且将持续提供免费的社区技术支持。个人或企业内部可自由的接入和使用。
 
 
 ## Copyright and License
