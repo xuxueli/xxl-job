@@ -28,7 +28,7 @@
 </p>
 
 
-## Intro
+## Introduction
 XXL-JOB is a lightweight distributed task scheduling framework. 
 It's core design goal is to develop quickly and learn simple, lightweight, and easy to expand. 
 Now, it's already open source, and many companies use it in production environments, real "out-of-the-box".
@@ -37,9 +37,8 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 
 
 ## Documentation
-
 - [中文文档](https://github.com/xuxueli/xxl-job/blob/master/doc/XXL-JOB官方文档.md)
-- [Englis Documentation](https://github.com/xuxueli/xxl-job/blob/master/doc/XXL-JOB-Englis-Documentation.md)
+- [English Documentation](https://github.com/xuxueli/xxl-job/blob/master/doc/XXL-JOB-English-Documentation.md)
 
 
 ## Features
@@ -80,7 +79,7 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 
 于2017-05-13，在上海举办的 "[第62期开源中国源创会](https://www.oschina.net/event/2236961)" 的 "放码过来" 环节，我登台对XXL-JOB做了演讲，台下五百位在场观众反响热烈（[图文回顾](https://www.oschina.net/question/2686220_2242120) ）。
 
-** 我司大众点评目前已接入XXL-JOB，内部别名《Ferrari》（Ferrari基于XXL-JOB的V1.1版本定制而成，新接入应用推荐升级最新版本）。**
+**我司大众点评目前已接入XXL-JOB，内部别名《Ferrari》（Ferrari基于XXL-JOB的V1.1版本定制而成，新接入应用推荐升级最新版本）。**
 据最新统计, 自2016-01-21接入至2017-07-07期间，该系统已调度约60万余次，表现优异。新接入应用推荐使用最新版本，因为经过数个大版本的更新，系统的任务模型、UI交互模型以及底层调度通讯模型都有了较大的优化和提升，核心功能更加稳定高效。
 
 至今，XXL-JOB已接入多家公司的线上产品线，接入场景如电商业务，O2O业务和大数据作业等，截止2016-07-19为止，XXL-JOB已接入的公司包括不限于：
@@ -121,40 +120,44 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
     - 34、咪咕互动娱乐有限公司（中国移动）
     - 35、北京诺亦腾科技有限公司
     - 36、增长引擎(北京)信息技术有限公司
+    - 37、北京英贝思科技有限公司-
 	- ……
 
 欢迎大家的关注和使用，XXL-JOB也将拥抱变化，持续发展。
+
+**更多接入的公司，欢迎在 [登记地址](https://github.com/xuxueli/xxl-job/issues/1 ) 登记，登记仅仅为了产品推广。**
 
 
 ## Communication
 
 - 腾讯QQ群（6）：399758605
-- 腾讯QQ群（5）：138274130    （群即将满，请加群6）
-- 腾讯QQ群（4）：464762661    （群即将满，请加群6）
-- 腾讯QQ群（3）：242151780    （群即将满，请加群6）
-- 腾讯QQ群（2）：438249535    （群即将满，请加群6）
-- 腾讯QQ群（1）：367260654    （群即将满，请加群6）
+- 腾讯QQ群（5）：138274130
+- 腾讯QQ群（4）：464762661
+- 腾讯QQ群（3）：242151780
+- 腾讯QQ群（2）：438249535
+- 腾讯QQ群（1）：367260654
 - [Gitter](https://gitter.im/xuxueli/xxl-job)
 
 
-## Issue
-如有问题可在 [Github Issues](https://github.com/xuxueli/xxl-job/issues/) 上提问，也可以加入上文技术交流群；
+## Contributing
+Contributions are welcome! Open a pull request to fix a bug, or open an [Issue](https://github.com/xuxueli/xxl-job/issues/) to discuss a new feature or change.
+
+欢迎参与项目贡献！比如提交PR修复一个bug，或者新建 [Issue](https://github.com/xuxueli/xxl-job/issues/) 讨论新特性或者变更。
 
 
-## User Registration
-登记仅为了产品推广，产品开源免费。   
-请接入使用的公司或个人进行用户登记 [登记地址](https://github.com/xuxueli/xxl-job/issues/1 ) 。
+## Copyright and License
+This product is open source and free, and will continue to provide free community technical support. Individual or enterprise users are free to access and use.
 
+- Licensed under the GNU General Public License (GPL) v3.
+- Copyright (c) 2015-present, xuxueli.
 
-## Copyright and license
 产品开源免费，并且将持续提供免费的社区技术支持。个人或企业内部可自由的接入和使用。
 
-XXL-JOB采用GPLv3协议，目的是为了保证用户的自由使用权利。协议可避免专利申请的特殊危险 "the GPL assures that patents cannot be used to render the program non-free.（摘自GPLv3）"。  
-Copyright (c) 2015-present, xuxueli.
 
----
 ## Donate
-支持的话可以扫一扫，请作者喝杯咖啡吧：）
+To support the author, donate the author to buy a cup of coffee：）
+
+支持作者的话，捐赠作者请作者喝杯咖啡吧：）
 
 微信：![输入图片说明](https://static.oschina.net/uploads/img/201707/07214300_qhxT.png "在这里输入图片标题")
 支付宝：![输入图片说明](http://images2015.cnblogs.com/blog/554415/201605/554415-20160513183306234-1939652116.png "在这里输入图片标题")
