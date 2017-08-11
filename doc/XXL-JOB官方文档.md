@@ -155,9 +155,11 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 
     xxl-job-admin：调度中心
     xxl-job-core：公共依赖
-    xxl-job-executor：执行器Example项目
-        ：xxl-job-executor-sample-spring：执行器Example，Spring版本（可直接使用执行器Example，也可以将现有项目改造成执行器使用）
-        ：xxl-job-executor-sample-springboot：执行器Example，Springboot版本
+    xxl-job-executor：执行器Sample项目，可参考并快速搭建执行器项目
+        ：xxl-job-executor-sample-spring：执行器Sample示例，Spring版本（可直接使用执行器Sample，也可以将现有项目改造成执行器使用）
+        ：xxl-job-executor-sample-springboot：执行器Sample示例，Springboot版本
+        ：xxl-job-executor-sample-jfinal：执行器Sample示例，JFinal版本
+        
 
 ### 2.3 配置部署“调度中心”
 
@@ -210,7 +212,7 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 
 ### 2.4 配置部署“执行器项目”
 
-    “执行器”项目：xxl-job-executor-sample-spring (如新建执行器项目，可参考该Example执行器项目的配置步骤；)
+    “执行器”项目：xxl-job-executor-sample-spring (如新建执行器项目，可参考该Sample示例执行器项目的配置步骤；)
     作用：负责接收“调度中心”的调度并执行；
     
 #### 步骤一：maven依赖
@@ -247,10 +249,11 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
     2、执行器Excutor配置：执行器核心配置；
 
 #### 步骤四：部署执行器项目：
-如果已经正确进行上述配置，可将执行器项目编译打部署，系统提供两个执行器example项目，选择其中一个即可，各自的部署方式如下。
+如果已经正确进行上述配置，可将执行器项目编译打部署，系统提供三个执行器Sample示例项目，选择其中一个即可，各自的部署方式如下。
 
     xxl-job-executor-sample-spring：项目编译打包成WAR包，并部署到tomcat中。
     xxl-job-executor-sample-springboot：项目编译打包成springboot类型的可执行JAR包，命令启动即可；
+    xxl-job-executor-sample-jfinal：项目编译打包成WAR包
 
 至此“执行器”项目已经部署结束。
 
@@ -338,7 +341,7 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
     - 1、 新建一个继承com.xxl.job.core.handler.IJobHandler的Java类；
     - 2、 该类被Spring容器扫描为Bean实例，如加“@Component”注解；
     - 3、 添加 “@JobHander(value="自定义jobhandler名称")”注解，注解的value值为自定义的JobHandler名称，该名称对应的是调度中心新建任务的JobHandler属性的值。
-    （可参考Example执行器中的DemoJobHandler，见下图）
+    （可参考Sample示例执行器中的DemoJobHandler，见下图）
 
 ![输入图片说明](https://static.oschina.net/uploads/img/201607/23232347_oLlM.png "在这里输入图片标题")
 
@@ -496,7 +499,7 @@ try{
     - /db :“调度数据库”建表脚本
     - /xxl-job-admin :调度中心，项目源码
     - /xxl-job-core :公共Jar依赖
-    - /xxl-job-executor-samples :执行器，Example项目（大家可以在该项目上进行开发，也可以将现有项目改造生成执行器项目）
+    - /xxl-job-executor-samples :执行器，Sample示例项目（大家可以在该项目上进行开发，也可以将现有项目改造生成执行器项目）
 
 #### 5.2 “调度数据库”配置
 XXL-JOB调度模块基于Quartz集群实现，其“调度数据库”是在Quartz的11张集群mysql表基础上扩展而成。
@@ -719,7 +722,7 @@ XXL-JOB会为每次调度请求生成一个单独的日志文件，需要通过 
 
 "分片广播" 以执行器为维度进行分片，支持动态扩容执行器集群从而动态增加分片数量，协同进行业务处理；在进行大数据量业务操作时可显著提升任务处理能力和速度。
 
-"分片广播" 和普通任务开发流程一致，不同之处在于可以可以获取分片参数，获取分片参数对象的代码如下（可参考example执行器中的示例任务"ShardingJobHandler" ）：
+"分片广播" 和普通任务开发流程一致，不同之处在于可以可以获取分片参数，获取分片参数对象的代码如下（可参考Sample示例执行器中的示例任务"ShardingJobHandler" ）：
 
     ShardingUtil.ShardingVO shardingVO = ShardingUtil.getShardingVo();
     
@@ -948,6 +951,7 @@ Tips: 历史版本(V1.3.x)目前已经Release至稳定版本, 进入维护阶段
 #### 6.18 版本 V1.8.2 特性[Coding]
 - 1、解决执行器回调URL不支持配置HTTPS时问题；
 - 2、规范项目目录，方便扩展多执行器；
+- 3、新增JFinal类型执行器sample示例项目；
 
 #### TODO LIST
 - 1、任务权限管理：执行器为粒度分配权限，核心操作校验权限；
