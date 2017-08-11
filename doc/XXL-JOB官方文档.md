@@ -122,11 +122,11 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 #### 技术交流
 
 - 腾讯QQ群（6）：399758605
-- 腾讯QQ群（5）：138274130    （群即将满，请加群6）
-- 腾讯QQ群（4）：464762661    （群即将满，请加群6）
-- 腾讯QQ群（3）：242151780    （群即将满，请加群6）
-- 腾讯QQ群（2）：438249535    （群即将满，请加群6）
-- 腾讯QQ群（1）：367260654    （群即将满，请加群6）
+- 腾讯QQ群（5）：138274130
+- 腾讯QQ群（4）：464762661
+- 腾讯QQ群（3）：242151780
+- 腾讯QQ群（2）：438249535
+- 腾讯QQ群（1）：367260654
 
 ### 1.5 环境
 - JDK：1.7+
@@ -144,7 +144,7 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 
 "调度数据库初始化SQL脚本" 位置为:
 
-    /xxl-job/db/tables_xxl_job.sql
+    /xxl-job/doc/db/tables_xxl_job.sql
 
 调度中心支持集群部署，集群情况下各节点务必连接同一个mysql实例;
 
@@ -155,8 +155,9 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 
     xxl-job-admin：调度中心
     xxl-job-core：公共依赖
-    xxl-job-executor-example：执行器Example（可直接使用执行器Example，也可以将现有项目改造成执行器使用）
-    xxl-job-executor-springboot-example：执行器Example，springboot版本
+    xxl-job-executor：执行器Example项目
+        ：xxl-job-executor-sample-spring：执行器Example，Spring版本（可直接使用执行器Example，也可以将现有项目改造成执行器使用）
+        ：xxl-job-executor-sample-springboot：执行器Example，Springboot版本
 
 ### 2.3 配置部署“调度中心”
 
@@ -209,7 +210,7 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 
 ### 2.4 配置部署“执行器项目”
 
-    “执行器”项目：xxl-job-executor-example (如新建执行器项目，可参考该Example执行器项目的配置步骤；)
+    “执行器”项目：xxl-job-executor-sample-spring (如新建执行器项目，可参考该Example执行器项目的配置步骤；)
     作用：负责接收“调度中心”的调度并执行；
     
 #### 步骤一：maven依赖
@@ -218,7 +219,7 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 #### 步骤二：执行器配置
 执行器配置配置文件地址：
 
-    /xxl-job/xxl-job-executor-example/src/main/resources/xxl-job-executor.properties
+    /xxl-job/xxl-job-executor-samples/xxl-job-executor-sample-spring/src/main/resources/xxl-job-executor.properties
 
 执行器配置配置内容说明：
 
@@ -226,7 +227,7 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
     xxl.job.admin.addresses=http://127.0.0.1:8080/xxl-job-admin
     
     ### xxl-job executor address：执行器"AppName"和地址信息配置：AppName执行器心跳注册分组依据；地址信息用于"调度中心请求并触发任务"和"执行器注册"。执行器默认端口为9999，执行器IP默认为空表示自动获取IP，多网卡时可手动设置指定IP。单机部署多个执行器时，注意要配置不同执行器端口；
-    xxl.job.executor.appname=xxl-job-executor-example
+    xxl.job.executor.appname=xxl-job-executor-sample
     xxl.job.executor.ip=
     xxl.job.executor.port=9999
     
@@ -248,8 +249,8 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 #### 步骤四：部署执行器项目：
 如果已经正确进行上述配置，可将执行器项目编译打部署，系统提供两个执行器example项目，选择其中一个即可，各自的部署方式如下。
 
-    xxl-job-executor-example：项目编译打包成WAR包，并部署到tomcat中。
-    xxl-job-executor-springboot-example：项目编译打包成springboot类型的可执行JAR包，命令启动即可；
+    xxl-job-executor-sample-spring：项目编译打包成WAR包，并部署到tomcat中。
+    xxl-job-executor-sample-springboot：项目编译打包成springboot类型的可执行JAR包，命令启动即可；
 
 至此“执行器”项目已经部署结束。
 
@@ -326,7 +327,7 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
     - 失败处理策略；调度失败时的处理策略；
         失败告警（默认）：调度失败时，将会触发失败报警，如发送报警邮件；
         失败重试：调度失败时，将会主动进行一次失败重试调度，重试调度后仍然失败将会触发一失败告警。注意当任务以failover方式路由时，每次失败重试将会触发新一轮路由。
-    - 执行参数：任务执行所需的参数，多个参数时用逗号分隔，任务执行时将会把多个参数抓换成数组传入；
+    - 执行参数：任务执行所需的参数，多个参数时用逗号分隔，任务执行时将会把多个参数转换成数组传入；
     - 报警邮件：任务调度失败时邮件通知的邮箱地址，支持配置多邮箱地址，配置多个邮箱地址时用逗号分隔；
     - 负责人：任务的负责人；
     
@@ -337,7 +338,7 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
     - 1、 新建一个继承com.xxl.job.core.handler.IJobHandler的Java类；
     - 2、 该类被Spring容器扫描为Bean实例，如加“@Component”注解；
     - 3、 添加 “@JobHander(value="自定义jobhandler名称")”注解，注解的value值为自定义的JobHandler名称，该名称对应的是调度中心新建任务的JobHandler属性的值。
-    （可参考xxl-job-executor-example项目中的DemoJobHandler，见下图）
+    （可参考Example执行器中的DemoJobHandler，见下图）
 
 ![输入图片说明](https://static.oschina.net/uploads/img/201607/23232347_oLlM.png "在这里输入图片标题")
 
@@ -495,7 +496,7 @@ try{
     - /db :“调度数据库”建表脚本
     - /xxl-job-admin :调度中心，项目源码
     - /xxl-job-core :公共Jar依赖
-    - /xxl-job-executor-example :执行器，Demo项目源码（大家可以在该项目上进行开发，也可以将现有项目改造生成执行器项目）
+    - /xxl-job-executor-samples :执行器，Example项目（大家可以在该项目上进行开发，也可以将现有项目改造生成执行器项目）
 
 #### 5.2 “调度数据库”配置
 XXL-JOB调度模块基于Quartz集群实现，其“调度数据库”是在Quartz的11张集群mysql表基础上扩展而成。
@@ -943,6 +944,10 @@ Tips: 历史版本(V1.3.x)目前已经Release至稳定版本, 进入维护阶段
 - 9、访问令牌（accessToken）：为提升系统安全性，调度中心和执行器进行安全性校验，双方AccessToken匹配才允许通讯；
 - 10、springboot版本执行器，升级至1.5.6.RELEASE版本；
 - 11、统一maven依赖版本管理；
+
+#### 6.18 版本 V1.8.2 特性[Coding]
+- 1、解决执行器回调URL不支持配置HTTPS时问题；
+- 2、规范项目目录，方便扩展多执行器；
 
 #### TODO LIST
 - 1、任务权限管理：执行器为粒度分配权限，核心操作校验权限；

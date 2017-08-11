@@ -71,7 +71,9 @@ public class XxlJobExecutor implements ApplicationContextAware {
         initAdminBizList(adminAddresses, accessToken);
 
         // init executor-jobHandlerRepository
-        initJobHandlerRepository(applicationContext);
+        if (applicationContext != null) {
+            initJobHandlerRepository(applicationContext);
+        }
 
         // init logpath
         if (logPath!=null && logPath.trim().length()>0) {

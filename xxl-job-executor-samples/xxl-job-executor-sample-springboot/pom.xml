@@ -5,10 +5,10 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.xuxueli</groupId>
-        <artifactId>xxl-job</artifactId>
+        <artifactId>xxl-job-executor-samples</artifactId>
         <version>1.8.2-SNAPSHOT</version>
     </parent>
-    <artifactId>xxl-job-executor-springboot-example</artifactId>
+    <artifactId>xxl-job-executor-sample-springboot</artifactId>
     <packaging>jar</packaging>
 
     <name>${project.artifactId}</name>
