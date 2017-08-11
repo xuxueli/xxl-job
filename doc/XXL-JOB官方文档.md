@@ -155,10 +155,10 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 
     xxl-job-admin：调度中心
     xxl-job-core：公共依赖
-    xxl-job-executor：执行器Sample项目，可参考并快速搭建执行器项目
-        ：xxl-job-executor-sample-spring：执行器Sample示例，Spring版本（可直接使用执行器Sample，也可以将现有项目改造成执行器使用）
-        ：xxl-job-executor-sample-springboot：执行器Sample示例，Springboot版本
-        ：xxl-job-executor-sample-jfinal：执行器Sample示例，JFinal版本
+    xxl-job-executor：执行器Sample示例（选择合适的版本执行器，可直接使用，也可以参考其并将现有项目改造成执行器）
+        ：xxl-job-executor-sample-spring：Spring版本，通过Spring容器管理执行器，比较通用，推荐这种方式；
+        ：xxl-job-executor-sample-springboot：Springboot版本，通过Springboot管理执行器；
+        ：xxl-job-executor-sample-jfinal：JFinal版本，通过JFinal管理执行器；
         
 
 ### 2.3 配置部署“调度中心”
@@ -197,7 +197,7 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 
 #### 步骤二：部署项目：
 如果已经正确进行上述配置，可将项目编译打war包并部署到tomcat中。
-访问链接：http://localhost:8080/xxl-job-admin/ ，登录后运行界面如下图所示
+调度中心访问地址：http://localhost:8080/xxl-job-admin (该地址执行器将会使用到，作为回调地址)，登录后运行界面如下图所示
 
 ![输入图片说明](https://static.oschina.net/uploads/img/201705/08194505_6yC0.png "在这里输入图片标题")
 
@@ -219,11 +219,11 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 确认pom文件中引入了 "xxl-job-core" 的maven依赖；
     
 #### 步骤二：执行器配置
-执行器配置配置文件地址：
+执行器配置，配置文件地址：
 
     /xxl-job/xxl-job-executor-samples/xxl-job-executor-sample-spring/src/main/resources/xxl-job-executor.properties
 
-执行器配置配置内容说明：
+执行器配置，配置内容说明：
 
     ### xxl-job admin address list：调度中心部署跟地址：如调度中心集群部署存在多个地址则用逗号分隔。执行器将会使用该地址进行"执行器心跳注册"和"任务结果回调"。
     xxl.job.admin.addresses=http://127.0.0.1:8080/xxl-job-admin
@@ -241,19 +241,39 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 
 
 #### 步骤三：执行器组件配置
-配置内容如下图所示。
 
-![输入图片说明](https://static.oschina.net/uploads/img/201705/11220120_vZXB.png "在这里输入图片标题")
+执行器组件，配置文件地址：
 
-    1、JobHandler 扫描路径：自动扫描容器中JobHandler；
-    2、执行器Excutor配置：执行器核心配置；
+    /xxl-job/xxl-job-executor-samples/xxl-job-executor-sample-spring/src/main/resources/applicationcontext-xxl-job.xml
+
+执行器组件，配置内容说明：
+
+```
+<!-- 配置01、JobHandler 扫描路径：自动扫描容器中JobHandler -->
+<context:component-scan base-package="com.xxl.job.executor.service.jobhandler" />
+
+<!-- 配置02、执行器Excutor配置：执行器核心配置 -->
+<bean id="xxlJobExecutor" class="com.xxl.job.core.executor.XxlJobExecutor" init-method="start" destroy-method="destroy" >
+    <!-- 执行器IP[选填]，为空则自动获取 -->
+    <property name="ip" value="${xxl.job.executor.ip}" />
+    <!-- 执行器端口号[必须] -->
+    <property name="port" value="${xxl.job.executor.port}" />
+    <!-- 执行器AppName[选填]，为空则关闭自动注册 -->
+    <property name="appName" value="${xxl.job.executor.appname}" />
+    <!-- 执行器注册中心地址[选填]，为空则关闭自动注册 -->
+    <property name="adminAddresses" value="${xxl.job.admin.addresses}" />
+    <!-- 执行器日志路径[必填] -->
+    <property name="logPath" value="${xxl.job.executor.logpath}" />
+    <!-- 访问令牌，非空则进行匹配校验[选填] -->
+    <property name="accessToken" value="${xxl.job.accessToken}" />
+</bean>
+```
 
 #### 步骤四：部署执行器项目：
 如果已经正确进行上述配置，可将执行器项目编译打部署，系统提供三个执行器Sample示例项目，选择其中一个即可，各自的部署方式如下。
 
     xxl-job-executor-sample-spring：项目编译打包成WAR包，并部署到tomcat中。
     xxl-job-executor-sample-springboot：项目编译打包成springboot类型的可执行JAR包，命令启动即可；
-    xxl-job-executor-sample-jfinal：项目编译打包成WAR包
 
 至此“执行器”项目已经部署结束。
 
