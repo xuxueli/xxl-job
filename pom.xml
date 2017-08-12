@@ -14,13 +14,12 @@
 		<module>xxl-job-core</module>
 		<module>xxl-job-admin</module>
 		<module>xxl-job-executor-samples</module>
-    </modules>
-
+	</modules>
 	<properties>
 		<javax.servlet-api.version>3.0.1</javax.servlet-api.version>
 		<jsp-api.version>2.2</jsp-api.version>
-
-		<spring.version>3.2.18.RELEASE</spring.version>
+		<springboot.version>1.5.6.RELEASE</springboot.version>
+		<mybatis-starter.version>1.3.0</mybatis-starter.version>
 		<jackson-mapper-asl.version>1.9.13</jackson-mapper-asl.version>
 		<aspectjweaver.version>1.8.7</aspectjweaver.version>
 		<slf4j-api.version>1.7.25</slf4j-api.version>
@@ -34,19 +33,23 @@
 		<commons-exec.version>1.3</commons-exec.version>
 		<commons-beanutils.version>1.9.2</commons-beanutils.version>
 		<commons-lang.version>2.6</commons-lang.version>
-
-		<c3p0.version>0.9.5.2</c3p0.version>
-		<mysql-connector-java.version>5.1.29</mysql-connector-java.version>
-		<mybatis-spring.version>1.2.2</mybatis-spring.version>
-		<mybatis.version>3.2.8</mybatis.version>
-
+		
 		<groovy-all.version>2.4.5</groovy-all.version>
 		<mail.version>1.4.6</mail.version>
 		<quartz.version>2.3.0</quartz.version>
 
-		<spring-boot.version>1.5.6.RELEASE</spring-boot.version>
 	</properties>
-
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-starter-parent</artifactId>
+				<version>${springboot.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 	<build>
 		<plugins>
 			<plugin>
@@ -54,8 +57,8 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.1</version>
 				<configuration>
-					<source>1.7</source>
-					<target>1.7</target>
+					<source>1.8</source>
+					<target>1.8</target>
 					<encoding>UTF8</encoding>
 				</configuration>
 			</plugin>
@@ -136,22 +139,22 @@
 						</executions>
 					</plugin>
 					<!-- GPG -->
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-gpg-plugin</artifactId>
-                        <version>1.6</version>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<version>1.6</version>
 						<configuration>
 							<useAgent>false</useAgent>
 						</configuration>
-                        <executions>
-                            <execution>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>sign</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
+						<executions>
+							<execution>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
 				</plugins>
 			</build>
 			<distributionManagement>
