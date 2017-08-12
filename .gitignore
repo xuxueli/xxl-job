@@ -1,7 +1,13 @@
 # for eclipse
 /.settings/
 /.project
-
+/*/.settings/
+/*/.project
+/*/.classpath
+/*/*/.settings/
+/*/*/target/
+/*/*/.project
+/*/*/.classpath
 # for idea
 *.iml
 /.idea

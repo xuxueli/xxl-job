@@ -1,0 +1,22 @@
+name: job-admin
+server:
+  port: 10010
+spring:
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/xxl-job?useUnicode=true&characterEncoding=UTF-8
+    username: root
+    password: 123456
+    connectionTestQuery: SELECT 1
+    connectionTimeout: 30000
+    idleTimeout: 600000
+    maxLifetime: 1800000
+    maximumPoolSize: 5
+    minimumIdle: 1
+endpoints:
+ shutdown:
+  enabled: true 
+mybatis:
+  mapperLocations: classpath:mybatis-mapper/*.xml
+xxl.job.accessToken: 
