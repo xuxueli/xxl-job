@@ -13,8 +13,8 @@ import java.util.List;
 /**
  * 托管QuartzJobFactoryBean到Context
  *
- * @author: lvhao
- * @since: 2016-6-23 15:21
+ * @author: joni
+ * @since: 2017-8-12 15:21
  */
 @Component
 public class AutowiringQuartzJobFactory extends SpringBeanJobFactory implements ApplicationContextAware {

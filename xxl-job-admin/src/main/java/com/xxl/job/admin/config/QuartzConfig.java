@@ -24,8 +24,8 @@ import com.xxl.job.admin.core.schedule.XxlJobDynamicScheduler;
 /**
  * Quartz配置类
  *
- * @author: lvhao
- * @since: 2016-6-2 20:09
+ * @author: joni
+ * @since: 2017-8-12 15:21
  */
 @Configuration
 @Log4j2
