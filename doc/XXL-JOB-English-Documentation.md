@@ -125,3 +125,71 @@ Source repository address | Release Download
 - Spring-boot：1.5.x/Spring4.x
 - Mysql：5.6+
 - Maven：3+
+
+
+## 2. Quick Start
+
+### 2.1 Init database
+Please download project source code，get db scripts and execute, it will generate 16 tables if succeed.
+
+The relative path of db scripts is as follows:
+
+    /xxl-job/doc/db/tables_xxl_job.sql
+
+The xxl-job-admin can be deployed as a cluster,all nodes of the cluster must connect to the same mysql instance.
+
+If mysql instances is deployed in master-slave mode,all nodes of the cluster must connect to master instace.
+
+### 2.2 Compile
+Source code is organized by maven,unzip it and structure is as follows:
+
+    xxl-job-admin：schedule admin center
+    xxl-job-core：public common dependent library
+    xxl-job-executor：executor Sample(Select appropriate version of executor,Can be used directly,You can also refer to it and transform existing projects into executors）
+        ：xxl-job-executor-sample-spring：Spring version，executors managed by Spring，general and recommend;
+        ：xxl-job-executor-sample-springboot：Springboot version，executors managed by Springboot;
+        ：xxl-job-executor-sample-jfinal：JFinal version，executors managed by JFinal;
+	
+### 2.3 Configure and delploy "Schedule Center"	
+
+    schedule center project:xxl-job-admin
+    target:Centralized management、Schedule and trigger task
+
+#### Step 1:Configure Schedule Center
+Configure file’s path of schedule center is as follows:
+
+    /xxl-job/xxl-job-admin/src/main/resources/xxl-job-admin.properties
+
+
+The concrete contet describe as follows:
+
+    ### JDBC connection info of schedule center：keep Consistent with chapter 2.1
+    xxl.job.db.driverClass=com.mysql.jdbc.Driver
+    xxl.job.db.url=jdbc:mysql://localhost:3306/xxl-job?useUnicode=true&characterEncoding=UTF-8
+    xxl.job.db.user=root
+    xxl.job.db.password=root_pwd
+    
+    ### Alarm mailbox
+    xxl.job.mail.host=smtp.163.com
+    xxl.job.mail.port=25
+    xxl.job.mail.username=ovono802302@163.com
+    xxl.job.mail.password=asdfzxcv
+    xxl.job.mail.sendFrom=ovono802302@163.com
+    xxl.job.mail.sendNick=《任务调度平台XXL-JOB》
+    
+    ### Login account
+    xxl.job.login.username=admin
+    xxl.job.login.password=123456
+    
+    ### TOKEN used for communication between the executor and schedule center, enabled if it’s not null
+    xxl.job.accessToken=
+
+#### Step 2:Deploy:
+If you has finished step 1,then you can compile the project in maven and deploy the war package to tomcat.
+the url to visit is :http://localhost:8080/xxl-job-admin (this address will be used by executor and use it as callback url),the index page after login in is as follow
+
+![index page after login in](https://static.oschina.net/uploads/img/201705/08194505_6yC0.png "index page after login in")
+
+Now,the “xxl-job-admin” project is deployed success.
+
+#### Step3:schedule center Cluster(Option):
