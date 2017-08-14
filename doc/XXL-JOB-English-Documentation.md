@@ -514,11 +514,239 @@ XXL-JOB custom Quartz table structure prefix(XXL_JOB_QRTZ_).
 
 ![输入图片说明](https://static.oschina.net/uploads/img/201607/24143957_bNwm.png "在这里输入图片标题")
 
-然后，在此基础上新增了几张张扩展表，如下：
-    - XXL_JOB_QRTZ_TRIGGER_GROUP：执行器信息表，维护任务执行器信息；
-    - XXL_JOB_QRTZ_TRIGGER_REGISTRY：执行器注册表，维护在线的执行器和调度中心机器地址信息；
-    - XXL_JOB_QRTZ_TRIGGER_INFO：调度扩展信息表： 用于保存XXL-JOB调度任务的扩展信息，如任务分组、任务名、机器地址、执行器、执行入参和报警邮件等等；
-    - XXL_JOB_QRTZ_TRIGGER_LOG：调度日志表： 用于保存XXL-JOB任务调度的历史信息，如调度结果、执行结果、调度入参、调度机器和执行器等等；
-    - XXL_JOB_QRTZ_TRIGGER_LOGGLUE：任务GLUE日志：用于保存GLUE更新历史，用于支持GLUE的版本回溯功能；
+The added tables as shown below:
+    - XXL_JOB_QRTZ_TRIGGER_GROUP：executor basic table, maintain the info about the executor;
+    - XXL_JOB_QRTZ_TRIGGER_REGISTRY：executor register table, maintain addressed of online executors and schedule center machines.
+    - XXL_JOB_QRTZ_TRIGGER_INFO：schedule extend table,it is used to save XXL-JOB schedule extended info,such as task group,task name,machine address,executor,input params of task and alarm email and so on.
+    - XXL_JOB_QRTZ_TRIGGER_LOG：schedule log table,it is used to save XXL-JOB task’s histry schedule info,such as :schedule result,execution result,input param of scheduled task,scheduled machine and executor and so on.
+    - XXL_JOB_QRTZ_TRIGGER_LOGGLUE：schedule log table,it is used to save XXL-JOB task’s histry schedule info,such as :schedule result,execution result,input param of scheduled task,scheduled machine and executor and so on.
 
-因此，XXL-JOB调度数据库共计用于16张数据库表。
+So XXL-JOB database total has 16 tables.
+
+#### 5.3 Architecture design
+##### 5.3.1 Design target
+All schedule behavior has been abstracted into “schedule center” common platform , it dosen’t include business logic and just responsible for starting schedule requests.
+
+All tasks was abstracted into separate JobHandler and was managed by executors, executor is responsible for receiving schedule request and execute the relative JobHandler business.
+
+So schedule and task can be decoupled from each other, by the way it can improve the overall stability and scalability of the system.
+
+##### 5.3.2 System composition
+- **Schedule module（schedule center）**：
+    it is responsible for manage schedule info,send schedule request accord task configuration and it is not include an business code.schedule system decouple with the task, improve the overall stability and scalability of the system, at the same time schedule system performance is no longer limited to task modules. 
+    Support visualization, simple and dynamic management schedule information, include create,update,delete, GLUE develop and task alarm and so on, All of the above operations will take effect in real time，support monitor schedule result and execution log and executor failover.
+- **Executor module（Executor）**：
+    it is responsible for receive schedule request and execute task logic,task module focuses on the execution of the task, Development and maintenance is simpler and more efficient.
+    Receive execution request, end request and log request from schedule center.
+
+##### 5.3.3 Architecture diagram
+
+![输入图片说明](https://static.oschina.net/uploads/img/201707/17190028_aEE2.png "在这里输入图片标题")
+
+#### 5.4 Schedule module analysis
+##### 5.4.1 Disadvantage of quartz
+Quartz is a good open source project and was often as the first choice for job schedule.Tasks was managed by api in quartz cluster so it can avoid some  disadvantages of single quartz instance,but it also has some disadvantage as shown below:
+    - problem 1:it is not humane while operate task by call apill.
+    - problem 2:it is need to store business QuartzJobBean into database, System Invasion is quite serious.
+    - problem 3：schedule logic and couple with QuartzJobBean in the same project,it will lead a problem in case that if schedule tasks gradually increased and task logic gradually increased,under this situation the performance of the schedule system will be greatly limited by business.
+XXL-JOB solve above problems of quartz.
+
+##### 5.4.2 RemoteHttpJobBean
+Under Quartz develop,task logic often was maintained by QuartzJobBean, couple is very serious.in XXL-JOB"Schedule module" and "task module" are completely decoupled,all scheduled tasks in schedule module use the same QuartzJobBean called RemoteHttpJobBean.the params of the tasks was maintained in the extended tables,when trigger RemoteHttpJobBean,it will parse different params and start remote cal l and it wil call relative remote executor.
+
+This call module is like RPC,RemoteHttpJobBean provide call proxy functionality,the executor is provided as remote service.
+
+##### 5.4.3 Schedule Center HA（Cluster）
+It is based on Quartz cluster，databse use Mysql；while QUARTZ task schedule is used in Clustered Distributed Concurrent Environment,all nodes will report task info and store into database.it will fetch trigger from database while execute task,if trigger name and execute time is the same only one node will execute the task.
+
+```
+# for cluster
+org.quartz.jobStore.tablePrefix = XXL_JOB_QRTZ_
+org.quartz.scheduler.instanceId: AUTO
+org.quartz.jobStore.class: org.quartz.impl.jdbcjobstore.JobStoreTX
+org.quartz.jobStore.isClustered: true
+org.quartz.jobStore.clusterCheckinInterval: 1000
+```
+
+##### 5.4.4 Schedule threadpool
+Default threads in the threadpool is 10 so it can avoid task schedule delay because of single thread block.
+
+```
+org.quartz.threadPool.class: org.quartz.simpl.SimpleThreadPool
+org.quartz.threadPool.threadCount: 10
+org.quartz.threadPool.threadPriority: 5
+org.quartz.threadPool.threadsInheritContextClassLoaderOfInitializingThread: true
+```
+
+business logic was executed on remote executor in XXL-JOB,schedule center just start one schedule request at every schedule time,executor will inqueue the request and response schedule center immediately. There is a huge difference from run business logic in quartz’s  QuartzJobBean directly，just as Elephants and feathers；
+
+the logic of task in XXL-JOB schedule center is very light and single job average run time alaways under 100ms,（most  is network time consume）.so it can use limited threads to support a large mount of job run concurrently, 10 threads configured above can support at least 100 JOB normal execution.
+
+##### 5.4.5 @DisallowConcurrentExecution
+This annotation is not used default by the schedule center of XXL-JOB schedule module, it use concurrent policy default,because RemoteHttpJobBean is common QuartzJobBean,so it greatly improve the capacity of schedule system and decrease the blocked chance of schedule module in the case of multi-threaded schedule.
+
+Every schedule module was scheduled and executed parallel in XXL-JOB,but tasks in executor is executed serially and support stop task.
+
+##### 5.4.6 misfire
+The handle policy when miss the job’s trigger time.
+he reason may be:restart service,schedule thread was blocked by QuartzJobBean, threads was exhausted,some task enable @DisallowConcurrentExecution，the last schedule  was blocked and next schedule was missed.
+
+The default value of misfire in quartz.properties as shown below, unit in milliseconds:
+```
+org.quartz.jobStore.misfireThreshold: 60000
+```
+
+Misfire rule：
+    withMisfireHandlingInstructionDoNothing：does not trigger execute immediately and wait for next time schedule. 
+    withMisfireHandlingInstructionIgnoreMisfires：execute immediately at the first frequency of the missed time.
+    withMisfireHandlingInstructionFireAndProceed：trigger task execution immediately at the frequency of the current time.
+
+XXL-JOB’s default misfire rule：withMisfireHandlingInstructionDoNothing
+
+```
+CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.cronSchedule(jobInfo.getJobCron()).withMisfireHandlingInstructionDoNothing();
+CronTrigger cronTrigger = TriggerBuilder.newTrigger().withIdentity(triggerKey).withSchedule(cronScheduleBuilder).build();
+```
+
+##### 5.4.7 log callback service
+When schedule center of the schedule module was deployed as web service, on one side it play as schedule center, on the other side it also provide api service for executor. 
+
+The source code location of schedule center’s “log callback api service” as shown below：
+```
+xxl-job-admin#com.xxl.job.admin.controller.JobApiController.callback
+```
+
+Executor will execute task when it receive task execute request.it will notify the task execute result to schedule center when the task is done. 
+
+##### 5.4.8 task HA（Failover）
+If executor project was deployed as cluster schedule center will known all online executor nodes,such as:“127.0.0.1:9997, 127.0.0.1:9998, 127.0.0.1:9999”.
+
+When "路由策略" select "故障转移(FAILOVER)",it will send heart beat check request in order while schedule center start schedule request.  The first alive checked executor node will be selected and send schedule request to it.
+![输入图片说明](https://static.oschina.net/uploads/img/201705/11221144_P128.png "在这里输入图片标题")
+
+“调度备注” can be viewed on the monitor page when schedule success. As shown below: 
+![输入图片说明](https://static.oschina.net/uploads/img/201703/12230733_jrdI.png "在这里输入图片标题")
+
+“调度备注” will display local schedule route path、executor’s "注册方式"、"地址列表" and task’s "路由策略"。Under "故障转移(FAILOVER)" policy, schedule center take first address to do heartbeat detection, heat beat fail will automatically skip, the second address heart beat fail…… until the third address “127.0.0.1:9999” heart beat success, it was selected as target executor, then send schedule request to target executor, now the schedule process is end wait for the executor’s callback execution result.
+
+##### 5.4.9 schedule log
+Every time when task was scheduled in the schedule center it will record a task log, the task log include three part as shown below:
+
+- 任务信息：include executor address、JobHandler and executor params，accord these parameters it can locate specific machine and task code that the task will be executed.
+- 调度信息：include schedule time、schedule result and  schedule log  and so on，accord these parameters you can understand some task schedule info of schedule center.
+- 执行信息：include execute time、execute result and execute log and so on, accord these parameters you can understand the task execution info in the executor.
+
+![输入图片说明](https://static.oschina.net/uploads/img/201703/12221436_c8Ru.png "在这里输入图片标题")
+
+Schedule log stands fo single task schedule, attribute description is as follows：
+- 执行器地址：machine addresses on which task will be executed.
+- JobHandler：JobHandler name of task under Bean module.
+- 任务参数：the input parameters of task
+- 调度时间：the schedule time started by schedule center.
+- 调度结果：schedule result of schedule center,SUCCESS or FAIL.
+- 调度备注：remark info of task scheduled by schedule center, such as address heart beat log.
+- 执行时间：the callback time when the task is done in the executor.
+- 执行结果：task execute result in the executor,SUCCESS or FAIL.
+- 执行备注：task execute remark info in the executor,such as exception log.
+- 执行日志：full execution log of the business code during execution of the task,go and see “4.7 view execution log”.
+
+##### 5.4.10 Task dependency
+principle：every task has a task key in XXL-JOB, every task can configure property “child task Key”,it can match task dependency relationship through task key.
+
+When parent task end execute and success, it will match child task dependency accord child task key, it will trigger child task execute once if it matched child task.
+
+On the task log page ,you can see matched child task and triggered child task’s log info when you “查看”button of “执行备注”,otherwise the child task didin’t execute, as shown beleow:
+
+![输入图片说明](https://static.oschina.net/uploads/img/201607/24194134_Wb2o.png "在这里输入图片标题")
+
+![输入图片说明](https://static.oschina.net/uploads/img/201607/24194212_jOAU.png "在这里输入图片标题")
+
+#### 5.5 Task "run mode" analysis
+##### 5.5.1 "Bean模式" task
+Development steps：go and see "chapter 3" . 
+principle： every Bean mode task is a Spring Bean instance and it is maintained in executor project’s Spring container. task class nedd to add “@JobHander(value="name")” annotation, because executor identify task bean instance in spring container through annotation. Task class nedd to implements interface IJobHandler, task logic code in method execute(), the task logic in execute() method will be executed when executor received a schedule request from schedule center.
+
+##### 5.5.2 "GLUE模式(Java)" task
+Development steps：go and see "chapter 3" .
+Principle : every "GLUE模式(Java)" task code is a class implemets interface IJobHandler, when executor received schedule request from schedule center these code will be loaded by Groovy classloader and instantiate into a Java object and inject spring bean service declared in this code at the same time（please confirm service and class reference in Glue code exist in executor project）, then call the object’s execute() method and execute task logic.
+
+#### 5.5.3 GLUE模式(Shell) + GLUE模式(Python)
+Development steps：go and see "chapter 3" .
+principle：the source code of script task is maintained in schedule center and script logic will be executed in executor. when script task was triggered, executor will load script source code and generate a script file on the machine where executor was deployed, the script will be called by java code, the script output log will be written to the task log file in real time so that we can monitor script execution in real time through schedule center, the return code 0 stands for success other for fail.
+
+All supported types of scripts as shown beloes:
+
+    - shell script：shell script task will be enabled when select "GLUE模式(Shell)"as task run mode.
+    - python script: python script task will be enabled when select " GLUE模式(Python)"as task run mode.
+    
+
+##### 5.5.4 executor
+Executor is actually an embedded Jetty server with default port 9999, as shown below（parameter：xxl.job.executor.port）.
+
+![输入图片说明](https://static.oschina.net/uploads/img/201703/10174923_TgNO.png "在这里输入图片标题")
+
+Executor will identify Bean mode task in spring container through @JobHander When project start, it will be managed use the value of annotation as key. 
+
+When executor received schedule request from schedule center, if task type is “Bean模式” it will match bean mode task in Spring container and call it’s execute() method and execute task logic. if task type is “GLUE模式”, it will load Glue code, instantiate a Java object and inject other spring service（notice: the spring service injected in Glue code must exist in the same executor project）, then call execute() method and execute task logic. 
+
+##### 5.5.5 task log
+XXL-JOB will generate a log file for every schedule request, the log info will be recorded by XxlJobLogger.log() method, the log file will be loaded when view log info through schedule center.
+
+(history version is implemented by overriding LOG4J’s Appender so it exists dependency restrictions, The way has been discraded in the new version)
+
+The location of log file can be specified in executor configuration file, default pattern is : /data/applogs/xxl-job/jobhandler/formatted date/primary key for database scheduling log records.log”.
+
+When start child thread in JobHandler, child thread will print log in parent JobHandler thread’s execute log in order to trace execute log.
+
+#### 5.6 Communication module analysis
+
+##### 5.6.1 A complete task schedule communication process
+    - 1,schedule center send http request to executor, and the service in executor in fact is a jetty server with default port 9999.
+    - 2,executor execute task logic.
+    - 3,executor http callback with schedule center for schedule result, the service in schedule center used to receive callback request from executor is a set of api opended to executor.
+
+##### 5.6.2 Encrypt Communication data
+When scheduler center send request to executor, it will use RequestModel and ResponseModel object to encapsulate schedule request parameters and response data, these two object will be serialized before communication, data protocol and time stamp will be checked so that achieve data encryption target.
+
+#### 5.7 task register and task auto discover  
+Task executor machine property has been canceled from v1.5, instead of task register and auto discovery, get remote machine address dynamic.
+
+    AppName: unique identify of executor cluster,  executor is minimal unite of task register, every task recognize machine addresses under the executor on which it was binded.
+    Beat: heartbeat cycle of task register, default is 15s, and the time executor usedto register is twice the time, the time used to auto task discover is twice the beat time, the invalid time of register is twice the Beat time.
+    registry table: see XXL_JOB_QRTZ_TRIGGER_REGISTRY table, it will maintain a register record periodically while task register, such as the bind relationship between machine address and AppName, so that schedule center can recognize machine list by AppName dynamicly.
+
+To ensure system lightweight and reduce learning costs, it did not use Zookeeper as register center, Use DB as register center to do task registration.
+
+#### 5.8 task execute result
+Since v1.6.2, the task execute result is recognized through ReturnT of IJobHandler, it executes success when return value meets the condition "ReturnT.code == ReturnT.SUCCESS_CODE" , or it executes fail, and it can callback error message info to schedule center through ReturnT.msg, so it can control task execute results in the task logic.
+
+#### 5.9 slice broadcat & dynamic slice   
+When “分片广播” is selected as route policy in executor cluster, one task schedule will broadcast all executor node in cluster to trigger task execute in every executor, pass slice parameter at the same time, so we can develop slice task by slice parameters. 
+
+"分片广播"  break the task by the dimensions of executor, support dynamic extend executor cluster so that it can add slice number dynamically to do business process, In case of large amount of data process can significantly improve task processing capacity and speed.
+
+The develop process of "分片广播" is the same as general task, The difference is that you can get slice parameters，code as shown below（go and see ShardingJobHandler in execuotr example ):
+
+    ShardingUtil.ShardingVO shardingVO = ShardingUtil.getShardingVo();
+    
+This slice parameter object has two properties:
+
+    index：the current slice number(start with 0)，stands for the number of current executor in the executor cluster.
+    total：total slice number,stands for total slices in the executor cluster.
+
+This feature applies to scenes as shown below:
+- 1、slice task scene：when 10 executor to handle 10w records,  1w records need to be handled per machine, time-consuming 10 times lower；
+- 2、Broadcast task scene：broadcast all cluster nodes to execute shell script、broadcast all cluster nodes to update cache.
+
+#### 5.10 AccessToken
+To improve system security it is need to check security between schedule center and executor, just allow communication between them when AccessToken of each other matched.
+
+The AccessToken of scheduler center and executor can be configured by xxl.job.accessToken.
+
+There are only two settings when communication between scheduler center and executor just:
+
+- one：do not configure AccessToken on both, close security check.
+- two：configure the same AccessToken on both;
+
+
+## 6 Version update log
