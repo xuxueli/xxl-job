@@ -304,3 +304,98 @@ Click “日志” button on the right side of the task you will go to the task 
 On the log console,you can view task execution log on the executor immediately after it dump to log file,so you can monitor the task execution process by Rolling way.
 
 ![输入图片说明](https://static.oschina.net/uploads/img/201704/27211631_eYrv.png "在这里输入图片标题")
+
+## 3. Task details
+
+### Description of configuration item:
+
+    - 执行器：the container where job executed in,it will be discovered automaticly if it has registered success when job was scheduled,and the job will be executed automaticly through this way.On the other side all tasks was grouped by this way.Tasks must be binded to a executor and it can be configured on "执行器管理"  page;
+    - 描述：the decription of task
+    - 路由策略：when executors deployed as a cluster,it can configure multi route policys,include:
+        FIRST（第一个）：default select the first executor;
+        LAST（最后一个）：default select the last executor;
+        ROUND（轮询）：round select the executor;；
+        RANDOM（随机）：random select the executor;
+        CONSISTENT_HASH（一致性HASH）：all jobs was evenly scheduled on different machines,make sure load balance of executors under the same group and the same job will be scheduled to the same machine.
+        LEAST_FREQUENTLY_USED（最不经常使用）：default select the least often used executor.
+        LEAST_RECENTLY_USED（最近最久未使用）：defalut select the longest not used executor.
+        FAILOVER（故障转移）：beat with the executor in order and select the first beat success executor as target executor.
+        BUSYOVER（忙碌转移）：check the executor busy or not in order,the first executor checked not busy is to be select as the target scheduled executor.
+        SHARDING_BROADCAST(分片广播)：broadcast all executor nodes under the same executor group execute the job, slice number will be transferred at the same time,shard task will be executed accordate with the shard number.
+        
+    - Cron：Cron expression used to trigger job execution;
+    - 运行模式：
+        BEAN模式：job was maintained on the side of executor by  as JobHandler instance,it will be executed accordate with "JobHandler" properties.
+        GLUE模式(Java)：task source code is maintened in the schedule center,it must implement IJobHandler and explain by "groovy" in the executor instance,inject other bean instace by annotation @Resource/@Autowire.
+        GLUE模式(Shell)：it’s source code is a shell script and maintained in the schedule center.
+        GLUE模式(Python)：it’s source code is a python script and maintained in the schedule center.
+    - JobHandler：it’s used in  "BEAN模式",it’s instance is defined by annotation @JobHander on the JobHandler class name.
+    - 子任务Key：every task has a unique key (task Key can acquire from task list)，when main task is done successfully it’s child task stand for by this key will be scheduled.
+    - 阻塞处理策略：the stategy handle the task when this task is scheduled too frequently and the task is block to wait for cpu time.
+        单机串行（默认）：task schedule request go into the FIFO queue and execute serially.
+        丢弃后续调度：the schedule request will be discarded and marked as fail when the same task’s  instance scheduled befor is running in the target executor.
+        覆盖之前调度：the schedule request will be executed and clear before task queue when the same task’s  instance scheduled befor is running in the target executor.
+    - 失败处理策略:handle policy for schedule fail
+        失败告警（默认）：it will trigger alarm such as send alarm mail when it’s scheduled fail.
+        失败重试：it will try another time when it’s scheduled fai,if try fail it will trigger alarm for fail.every time it will trigger a new schedule request.
+    - 执行参数：the params needed in the run time of the task, multiple values are separated by commas,it will be passed to task instace as an array when task is scheduled. 
+    - 报警邮件：the email used to receive the alarm mail when task is scheduled fail or execute fail, multiple values are separated by commas.
+    - 负责人：The person name response for the task.
+    
+### 3.1 BEAN模式
+The task logic exist in the executor project as JobHandler,the develop steps as shown below:
+
+#### Step 1:develp obHandler in the executor project
+    - 1, create new java class implent com.xxl.job.core.handler.IJobHandler;
+    - 2, if you add @Component annotation on the top of the class name it’s will be managed as a bean instance by spring container;
+    - 3, add  “@JobHander(value=" customize jobhandler name")” annotation，the value stand for JobHandler name,it will be used as JobHandler property when create a new task in the schedule center.
+    （go and see DemoJobHandler in the xxl-job-executor-example project, as shown below）
+
+![输入图片说明](https://static.oschina.net/uploads/img/201607/23232347_oLlM.png "在这里输入图片标题")
+
+#### Step 2:create task in schedule center
+If you want learn more about configure item please go and sedd “Description of configuration item”，select  "BEAN模式" as run mode，property JobHandler please fill in the value defined by @JobHande.
+
+![输入图片说明](https://static.oschina.net/uploads/img/201704/27225124_yrcO.png "在这里输入图片标题")
+
+### 3.2 GLUE模式(Java)
+Task source code is maintained in the schedule center and can be updated by Web IDE online, it will be compiled and effective real-time,didn’t need to assign JobHandler,develop flow shown as below:
+
+#### Step 1:create task in schedule center
+If you want learn more about configure item please go and sedd “Description of configuration item”，select "GLUE模式(Java)" as run mode.
+
+![输入图片说明](https://static.oschina.net/uploads/img/201704/27210202_SE2u.png "在这里输入图片标题")
+
+#### Step 2:develop task source code
+Select the task record and click “GLUE” button on the righe of it,it will go to GLUE task’s WEB IDE page,on this page yo can edit you task code(also can edit in other IDE tools,copy and paste into this page).
+
+Version backtrack（support 30 versions while backtrack）：on the WEB IDE page of GLUE task,on upper right corner drop down box please select “版本回溯”,it will display GLUE updated history,select the version you want it will display the source code of this version,it will backtrace the version while click save button. 
+
+![输入图片说明](https://static.oschina.net/uploads/img/201704/27210314_dNUJ.png "在这里输入图片标题")
+
+### 3.3 GLUE模式(Shell)
+
+#### Step 1:create new task in schedule center  
+If you want learn more about configure item please go and sedd “Description of configuration item”，select "GLUE模式(Shell)"as run mode.
+
+#### Step 2:develop task source code
+Select the task record and click “GLUE” button on the righe of it,it will go to GLUE task’s WEB IDE page,on this page yo can edit you task code(also can edit in other IDE tools,copy and paste into this page).
+
+Actually it is a shell script fragment.
+
+![输入图片说明](https://static.oschina.net/uploads/img/201704/27232259_iUw0.png "在这里输入图片标题")
+
+### 3.4 GLUE模式(Python)
+
+#### Step 1:create new task in schedule center  
+If you want learn more about configure item please go and sedd “Description of configuration item”，select "GLUE模式(Python)"as run mode.
+
+#### Step 2:develop task source code
+Select the task record and click “GLUE” button on the righe of it,it will go to GLUE task’s WEB IDE page,on this page yo can edit you task code(also can edit in other IDE tools,copy and paste into this page).
+
+Actually it is a python script fragment.
+
+![输入图片说明](https://static.oschina.net/uploads/img/201704/27232305_BPLG.png "在这里输入图片标题")
+
+
+## 4. Task Management
