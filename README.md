@@ -6,7 +6,7 @@
     <p align="center">
         XXL-JOB, a lightweight distributed task scheduling framework.
         <br>
-        <a href="http://www.xuxueli.com/"><strong>-- Browse xuxueli's website. --</strong></a>
+        <a href="http://www.xuxueli.com/"><strong>-- Browse website. --</strong></a>
         <br>
         <br>
         <a href="https://travis-ci.org/xuxueli/xxl-job">
@@ -120,7 +120,8 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
     - 34、咪咕互动娱乐有限公司（中国移动）
     - 35、北京诺亦腾科技有限公司
     - 36、增长引擎(北京)信息技术有限公司
-    - 37、北京英贝思科技有限公司-
+    - 37、北京英贝思科技有限公司
+    - 38、刚泰集团
 	- ……
 
 欢迎大家的关注和使用，XXL-JOB也将拥抱变化，持续发展。
