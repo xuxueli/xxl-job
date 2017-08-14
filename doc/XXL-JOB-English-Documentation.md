@@ -399,3 +399,126 @@ Actually it is a python script fragment.
 
 
 ## 4. Task Management
+#### 4.0 configure executor
+click"执行器管理" on the left menu,it will go to the page as shown below:
+![输入图片说明](https://static.oschina.net/uploads/img/201703/12223509_Hr2T.png "在这里输入图片标题")
+
+    1,"调度中心OnLine”:display schedule center machine list,when task is scheduled it will callback schedule center for notify the execution result in failover mode, so that it can avoid a single point scheduler;
+    2,"执行器列表" :display all nodes under this executor group.
+
+If you want to create a new executor,please click "+新增执行器" button: 
+![输入图片说明](https://static.oschina.net/uploads/img/201703/12223617_g3Im.png "在这里输入图片标题")
+
+#### Description of executor attributes
+
+    AppName: the unique identity of the executor cluster,executor will registe automatically and periodically by appName so that it can be scheduled.
+    名称: the name of ther executor,it is used to describe the executor.
+    排序: the order of executor,it will be used in the place where need to select executor.
+    注册方式：which way the schedule center used to acquire executor address through;
+        自动注册：executor will register automatically,through this schedule center can discover executor dynamically.
+        手动录入：fill in executor address manually and it will be used by schedule center, multiple address separated by commas. 
+    机器地址：only effective when "注册方式" is "手动录入",support fill in executor address manually.
+
+#### 4.1 create new task
+Go to task management list page,click “新增任务” button on the upper right corner，on the pop-up window“新增任务”page configure task property and save.learn more info please go and see "3,task details".
+
+#### 4.2 edit task
+Go to task management list page and choose the task you want to edit ,click”编辑”button on the right side of the task,on the pop-up window “编辑任务”page edit task property and save.
+
+#### 4.3 edit GLUE source code
+
+Only fit to GLUE task.
+
+choose the task you want to edit and click” GLUE”button on the right side of the task, it will go to the Web IDE page of GLUE task,then you can edit task source code on this page.you can read "3.2 GLUE模式(Java)" for more info.
+
+#### 4.4 pause/recover task
+You can pause or recover task but it just fit to follow up schedule trigger and won’t affect scheduled tasks,if you want to stop tasks which has been triggered,please go and see “4.8 stop the running task”
+
+![输入图片说明](https://static.oschina.net/uploads/img/201607/24130337_ZAhX.png "在这里输入图片标题")
+
+#### 4.5 manually trigger
+You can trigger a task manually by Click “执行”button,it won’t affect original scheduling rules.
+
+![输入图片说明](https://static.oschina.net/uploads/img/201607/24133348_Z5wp.png "在这里输入图片标题")
+
+#### 4.6 view schedule log
+You can view task’s history schedule log by click “日志” button,on the history schedule log list page you can view every time of task’s schedule result,execution result and so on,click “执行日志” button can view the task’s full execute log.
+
+![输入图片说明](https://static.oschina.net/uploads/img/201607/24133500_9235.png "在这里输入图片标题")
+
+![输入图片说明](https://static.oschina.net/uploads/img/201704/27232850_inc8.png "在这里输入图片标题")
+
+    调度时间：schedule center trigger time when schedule and send execution signal to executor;
+    调度结果：schedule center trigger task’s result, 200 represent success,500 or other number stands for fail;
+    调度备注：schedule center trigger task’s remark info;
+    执行器地址：the machine address where the task was executed;
+    运行模式：run mode of triggered task,go and see  "3,Task Details" for more info;
+    任务参数：the input params of the executed task;
+    执行时间：the callback time task was done in the executor;
+    执行结果：task’s execute result in the executor, 200 represent success,500 or other number stands for fail;
+    执行备注：task’s execute remark info in the executor;
+    操作：
+        "执行日志"button：click this button you can view task’s execution detail log,go and see chapter 4.7 “view execution log” for more info;
+        "终止任务"button：click this button you can stop the task’s execution thread on this executor,include bloked task instance which didn’t has started;
+
+#### 4.7 view execution log
+Click the “执行日志” button on the right side of the record,you can go to the execution log page,you can view the full execution log of the logic business code, shown as below:
+
+![输入图片说明](https://static.oschina.net/uploads/img/201703/25124816_tvGI.png "在这里输入图片标题")
+
+#### 4.8 stop running tasks
+Just fit to running tasks,on the task log list page,click “终止任务” button on the right side of the record, it will send stop command to the executor where the task was executed,finally the task was killed and the task instance execute queue of this task will be clear.
+
+![输入图片说明](https://static.oschina.net/uploads/img/201607/24140048_hIci.png "在这里输入图片标题")
+
+It is implemented by interrupt execute thread, it will trigger InterruptedException.so if JobHandler catch this execuption and handle this exception this function is unavailable.
+
+So if you want stop the running task ,the JobHandler need to handle InterruptedException separately by throw this exception.the right logic is as shown below:
+```
+try{
+    // TODO
+} catch (Exception e) {
+    if (e instanceof InterruptedException) {
+        throw e;
+    }
+    logger.warn("{}", e);
+}
+```
+
+If JobHandler start child thread,child thread also must not catch InterruptedException,and it should throw exception.
+
+
+#### 4.9 delete execution log
+On the task log list page, after you select executor and task, you can click"删除" button on the right side and it will pop-up "日志清理" window,on the pop-up window you can choose different log delete policy,choose the policy you want to execute and click "确定" button it will delele relative logs:
+![输入图片说明](https://static.oschina.net/uploads/img/201705/08210711_Ypik.png "在这里输入图片标题")
+
+![输入图片说明](https://static.oschina.net/uploads/img/201705/08211152_EB65.png "在这里输入图片标题")
+
+#### 4.10 delete task
+Click the delete button on the right side of the task,the task will be deteted.
+
+![输入图片说明](https://static.oschina.net/uploads/img/201607/24140641_Z9Qr.png "在这里输入图片标题")
+
+## 5. Overall design
+#### 5.1 Source directory introduction
+    - /doc :documentation and material
+    - /db :db scripts
+    - /xxl-job-admin :schedule and admin center
+    - /xxl-job-core :common core Jar
+    - /xxl-job-executor-samples :executor，Demo project（you can develop on this demo project or adjust your own exist project to executor project)
+
+#### 5.2 configure database
+XXL-JOB schedule module is implemented based on Quartz cluster,it’s “database” is extended based on Quartz’s 11 mysql tables.
+
+XXL-JOB custom Quartz table structure prefix(XXL_JOB_QRTZ_).
+
+![输入图片说明](https://static.oschina.net/uploads/img/201607/24143957_bNwm.png "在这里输入图片标题")
+
+然后，在此基础上新增了几张张扩展表，如下：
+    - XXL_JOB_QRTZ_TRIGGER_GROUP：执行器信息表，维护任务执行器信息；
+    - XXL_JOB_QRTZ_TRIGGER_REGISTRY：执行器注册表，维护在线的执行器和调度中心机器地址信息；
+    - XXL_JOB_QRTZ_TRIGGER_INFO：调度扩展信息表： 用于保存XXL-JOB调度任务的扩展信息，如任务分组、任务名、机器地址、执行器、执行入参和报警邮件等等；
+    - XXL_JOB_QRTZ_TRIGGER_LOG：调度日志表： 用于保存XXL-JOB任务调度的历史信息，如调度结果、执行结果、调度入参、调度机器和执行器等等；
+    - XXL_JOB_QRTZ_TRIGGER_LOGGLUE：任务GLUE日志：用于保存GLUE更新历史，用于支持GLUE的版本回溯功能；
+
+因此，XXL-JOB调度数据库共计用于16张数据库表。
