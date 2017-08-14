@@ -193,3 +193,114 @@ the url to visit is :http://localhost:8080/xxl-job-admin (this address will be u
 Now,the “xxl-job-admin” project is deployed success.
 
 #### Step3:schedule center Cluster(Option):
+xxl-job-admin can be deployed as a cluster to improve system availability.
+
+Prerequisites for cluster is to keep all node configuration(db and login account info) consistent with each other. Different xxl-job-admin cluster distinguish with each other by db configuration.
+
+xxl-job-admin can be visited through nginx proxy and configure a domain for nginx,and the domain url can be configured as the executor’s callback url.
+
+### 2.4 Configur and Deploy "xxl-job-executor-example"
+
+    Executor Project:xxl-job-executor-example (if you want to create new executor project you can refer this demo);
+    Target:receive xxl-job-admin’s schedule command and execute it;
+    
+#### Step 1:import maven dependence
+Pleast confirm import xxl-job-core jar in pom.xml;
+    
+#### Step 2:Executor Configuration
+Relative path of the executor configuration file is as follows:
+
+    /xxl-job/xxl-job-executor-samples/xxl-job-executor-sample-spring/src/main/resources/xxl-job-executor.properties
+
+The concret content of configuration file as follows:
+
+    ### xxl-job admin address list：xxl-job-admin address list: Multiple addresses are separated by commas,this address is used for "heart beat and register" and "task execution result callback" between the executor and xxl-job-admin.
+    xxl.job.admin.addresses=http://127.0.0.1:8080/xxl-job-admin
+    
+    ### xxl.job.executor.appname is used to group by executors
+    xxl.job.executor.appname=xxl-job-executor-sample
+    ### xxl.job.executor.ip :1,used to register with xxl-job-admin;2,xxl-job-admin dispatch task to executor through it;3,if it is blank executor will get ip automatically, multi network card need to be configured.
+    xxl.job.executor.ip=
+    ### xxl.job.executor.port :the port of the executor runned by,if multiple executor instance run on the same computer the port must different with each other
+    xxl.job.executor.port=9999
+    
+    ### xxl-job log path：runtime log path of the job instance
+    xxl.job.executor.logpath=/data/applogs/xxl-job/jobhandler/
+    
+    ### xxl-job, access token：xxl-job access token,enabled if it not blank
+    xxl.job.accessToken=
+
+
+#### Step 3:executor configuration
+
+configure file path of executor:
+
+    /xxl-job/xxl-job-executor-samples/xxl-job-executor-sample-spring/src/main/resources/applicationcontext-xxl-job.xml
+
+Concrete contet describe as follows：
+
+```
+<!-- configure 01、JobHandler scan path：auto scan JobHandler bean managed by container -->
+<context:component-scan base-package="com.xxl.job.executor.service.jobhandler" />
+
+<!-- configure 02、Excutor：executer core configure -->
+<bean id="xxlJobExecutor" class="com.xxl.job.core.executor.XxlJobExecutor" init-method="start" destroy-method="destroy" >
+    <!-- executor IP[required]，auto get if it blank -->
+    <property name="ip" value="${xxl.job.executor.ip}" />
+    <!-- executor port[required] -->
+    <property name="port" value="${xxl.job.executor.port}" />
+    <!-- executor AppName[required]，auto register will be closed if it blank -->
+    <property name="appName" value="${xxl.job.executor.appname}" />
+    <!-- register center address of executor [required]，auto register will be closed if it blank -->
+    <property name="adminAddresses" value="${xxl.job.admin.addresses}" />
+    <!-- log path of executor[required] -->
+    <property name="logPath" value="${xxl.job.executor.logpath}" />
+    <!-- access token, match check enabled if it not blank[required] -->
+    <property name="accessToken" value="${xxl.job.accessToken}" />
+</bean>
+```
+
+#### Step 4:deploy executor project
+You can compile and package the project If have done all the steps above successfully,the project supply two executor demo projects,you can choose any one to deploy:
+
+    xxl-job-executor-sample-spring:compile and package in WAR,can be deployed to tomcat;
+    xxl-job-executor-sample-springboot:compile and package in JAR,and run in springboot mode;
+
+Now you have deployed the executor project.
+
+#### Step 5:executor cluster(optional)
+In order to improve system availability and job process capacity,executor project can be deployed as cluster.
+
+Prerequisites:keep all node’s configuration item "xxl.job.admin.addresses" exactly the same with each other,all executors can be register automatically. 
+
+
+### 2.5 Start first job "Hello World"      
+Now let’s create a "GLUE模式(Java)" job,if you want to learn more about it , please see “chapter 3：Task details”。( "GLUE模式(Java)"'s code is maintained online through xxl-job-admin,compare with "Bean模式任务" it’s not need to develop, deploy the code on the executor and it’s not need to restart the executor, so it’s lightweight）
+
+#### Prerequisites:please confirm xxl-job-admin and executor project has been deployed successfully.
+
+#### Step 1:Create new job
+Login in xxl-job-admin,click on the"新建任务" button, configure the job params as follows and click "保存" button to save the job info.
+
+![task management](https://static.oschina.net/uploads/img/201704/27205910_o8HQ.png "task management")
+
+![create task](https://static.oschina.net/uploads/img/201704/27210202_SE2u.png "create task")
+
+#### Step 2：develop “GLUE模式(Java)” job
+Click “GLUE” button on the right of the job to go to GLUE editor view as shown below。“GLUE模式(Java)” mode task has been inited with default task code for printing Hello World。 （ “GLUE模式(Java)” mode task is a java code fragment implements IJobHandler interface,it will be executed in executor,you can use @Resource/@Autowire to inject other java bean instance,if you want to see more info please go to chapter 3）
+
+![输入图片说明](https://static.oschina.net/uploads/img/201704/27210307_Fgql.png "在这里输入图片标题")
+
+![输入图片说明](https://static.oschina.net/uploads/img/201704/27210314_dNUJ.png "在这里输入图片标题")
+
+#### Step 3:trigger task
+If you want to run the job manually please click "执行" button on the right of the job(usually we trigger job by Cron expression)
+
+#### Step 4:view log 
+Click “日志” button on the right side of the task you will go to the task log list ,you will see the schedule history records of the task and the schedule detail info,execution info and execution params.If you click the “执行日志” button on the right side of the task log record,you will go to log console and view the execute log in the course of task execution.
+
+![输入图片说明](https://static.oschina.net/uploads/img/201704/27232850_inc8.png "在这里输入图片标题")
+
+On the log console,you can view task execution log on the executor immediately after it dump to log file,so you can monitor the task execution process by Rolling way.
+
+![输入图片说明](https://static.oschina.net/uploads/img/201704/27211631_eYrv.png "在这里输入图片标题")
