@@ -1,4 +1,4 @@
-# 《Distributed task scheduling framework XXL-JOB》
+## 《Distributed task scheduling framework XXL-JOB》
 
 [![Build Status](https://travis-ci.org/xuxueli/xxl-job.svg?branch=master)](https://travis-ci.org/xuxueli/xxl-job)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.xuxueli/xxl-job/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.xuxueli/xxl-job/)
