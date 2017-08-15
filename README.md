@@ -1,12 +1,12 @@
 <p align="center">
-    <a href="http://www.xuxueli.com/">
+    <a href="http://www.xuxueli.com/xxl-job/">
         <img src="https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/xxl-logo.jpg" width="150">
     </a>
     <h3 align="center">XXL-JOB</h3>
     <p align="center">
         XXL-JOB, a lightweight distributed task scheduling framework.
         <br>
-        <a href="http://www.xuxueli.com/"><strong>-- Browse website. --</strong></a>
+        <a href="http://www.xuxueli.com/xxl-job/"><strong>-- Browse website. --</strong></a>
         <br>
         <br>
         <a href="https://travis-ci.org/xuxueli/xxl-job">
