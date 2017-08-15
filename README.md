@@ -160,5 +160,5 @@ To support the author, donate the author to buy a cup of coffee：）
 
 支持作者的话，捐赠作者请作者喝杯咖啡吧：）
 
-微信：<img src="https://github.com/xuxueli/xxl-job/blob/master/doc/images/donate-wechat.png" width="200">
-支付宝：<img src="https://github.com/xuxueli/xxl-job/blob/master/doc/images/donate-alipay.jpg" width="200">
+微信：<img src="https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/donate-wechat.png" width="200">
+支付宝：<img src="https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/donate-alipay.jpg" width="200">
