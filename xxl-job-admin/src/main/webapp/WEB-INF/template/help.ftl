@@ -36,7 +36,7 @@
 					<a target="_blank" href="https://github.com/xuxueli/xxl-job">github</a>&nbsp;&nbsp;&nbsp;&nbsp;
 					<iframe src="https://ghbtns.com/github-btn.html?user=xuxueli&repo=xxl-job&type=star&count=true" frameborder="0" scrolling="0" width="170px" height="20px" style="margin-bottom:-5px;"></iframe> 
 					<br><br>
-                    <a target="_blank" href="http://my.oschina.net/xuxueli/blog/690978">oschina（文档中有交流群）</a>
+                    <a target="_blank" href="http://www.xuxueli.com/xxl-job/">文档地址</a>
                     <br><br>
 
 				</p>

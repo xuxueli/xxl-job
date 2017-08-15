@@ -1,4 +1,4 @@
-# 《A lightweight distributed task scheduling framework. "XXL-JOB"》
+# 《Distributed task scheduling framework XXL-JOB》
 
 [![Build Status](https://travis-ci.org/xuxueli/xxl-job.svg?branch=master)](https://travis-ci.org/xuxueli/xxl-job)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.xuxueli/xxl-job/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.xuxueli/xxl-job/)
@@ -41,8 +41,9 @@ In 2015 - November, XXL-JOB finally RELEASE the first big version of V1.0, then 
 In 2015 - December, I will XXL-JOB published to our internal knowledge base, and get internal colleagues recognized.
 In 2016 - 01 months, my company started XXL-JOB internal access and custom work, in this thank Yuan and Yin two colleagues contribution, but also to thank the internal other attention and support colleagues.
 In 2017-05-13, the link of "let the code run" in "[the 62nd source of open source China Genesis](https://www.oschina.net/event/2236961)" held in Shanghai,, I stepped on and made a speech about the XXL-JOB, five hundred spectators in the audience reacted enthusiastically ([pictorial review](https://www.oschina.net/question/2686220_2242120)).
-#### My company have access to XXL-JOB, internal alias "Ferrari" (Ferrari based on XXL-JOB V1.1 version customization, new access application recommended to upgrade the latest version).
+> Our company have access to XXL-JOB, internal alias "Ferrari" (Ferrari based on XXL-JOB V1.1 version customization, new access application recommended to upgrade the latest version).
 According to the latest statistics, from 2016-01-21 to 2017-07-07 period, the system has been scheduled about 600,000 times, outstanding performance. New access applications recommend the latest version, because after several major updates, the system's task model, UI interaction model and the underlying scheduling communication model has a greater optimization and upgrading, the core function more stable and efficient.
+
 So far, XXL-JOB has access to a number of companies online product line, access to scenes such as electronic commerce, O2O business and large data operations, as of 2016-07-19, XXL-JOB has access to the company But not limited to:
 
 	- 1、大众点评；
@@ -82,10 +83,16 @@ So far, XXL-JOB has access to a number of companies online product line, access 
     - 35、北京诺亦腾科技有限公司
     - 36、增长引擎(北京)信息技术有限公司
 	- ……
-	
+
+> The company that access and use this product is welcome to register at the [address](https://github.com/xuxueli/xxl-job/issues/1 ), only for product promotion. 
+
 Welcome everyone's attention and use, XXL-JOB will also embrace changes, sustainable development.
 
 ### 1.4 Download
+
+#### Documentation
+- [中文文档](http://www.xuxueli.com/xxl-job/)
+- [English Documentation](http://www.xuxueli.com/xxl-job/en/)
 
 #### Source repository address (The latest code will be released in the two git warehouse in the same time)
 
@@ -104,19 +111,15 @@ Source repository address | Release Download
 </dependency>
 ```
 
-#### Blog address
-
-- [oschina address](http://my.oschina.net/xuxueli/blog/690978)
-- [cnblogs address](http://www.cnblogs.com/xuxueli/p/5021979.html)
-
 #### Technical exchange group (technical exchange only)
 
-- Group 6：399758605
-- Group 5：138274130    （Group is full, please add group 6）
-- Group 4：464762661    （Group is full, please add group 6）
-- Group 3：242151780    （Group is full, please add group 6）
-- Group 2：438249535    （Group is full, please add group 6）
-- Group 1：367260654    （Group is full, please add group 6）
+- Tecent QQ Group 6：399758605
+- Tecent QQ Group 5：138274130
+- Tecent QQ Group 4：464762661
+- Tecent QQ Group 3：242151780
+- Tecent QQ Group 2：438249535
+- Tecent QQ Group 1：367260654
+- [Gitter](https://gitter.im/xuxueli/xxl-job)
 
 ### 1.5 Environment
 - JDK：1.7+
@@ -399,7 +402,7 @@ Actually it is a python script fragment.
 
 
 ## 4. Task Management
-#### 4.0 configure executor
+### 4.0 configure executor
 click"执行器管理" on the left menu,it will go to the page as shown below:
 ![输入图片说明](https://static.oschina.net/uploads/img/201703/12223509_Hr2T.png "在这里输入图片标题")
 
@@ -409,7 +412,7 @@ click"执行器管理" on the left menu,it will go to the page as shown below:
 If you want to create a new executor,please click "+新增执行器" button: 
 ![输入图片说明](https://static.oschina.net/uploads/img/201703/12223617_g3Im.png "在这里输入图片标题")
 
-#### Description of executor attributes
+### Description of executor attributes
 
     AppName: the unique identity of the executor cluster,executor will registe automatically and periodically by appName so that it can be scheduled.
     名称: the name of ther executor,it is used to describe the executor.
@@ -419,29 +422,29 @@ If you want to create a new executor,please click "+新增执行器" button:
         手动录入:fill in executor address manually and it will be used by schedule center, multiple address separated by commas. 
     机器地址:only effective when "注册方式" is "手动录入",support fill in executor address manually.
 
-#### 4.1 create new task
+### 4.1 create new task
 Go to task management list page,click “新增任务” button on the upper right corner，on the pop-up window“新增任务”page configure task property and save.learn more info please go and see "3,task details".
 
-#### 4.2 edit task
+### 4.2 edit task
 Go to task management list page and choose the task you want to edit ,click”编辑”button on the right side of the task,on the pop-up window “编辑任务”page edit task property and save.
 
-#### 4.3 edit GLUE source code
+### 4.3 edit GLUE source code
 
 Only fit to GLUE task.
 
 choose the task you want to edit and click” GLUE”button on the right side of the task, it will go to the Web IDE page of GLUE task,then you can edit task source code on this page.you can read "3.2 GLUE模式(Java)" for more info.
 
-#### 4.4 pause/recover task
+### 4.4 pause/recover task
 You can pause or recover task but it just fit to follow up schedule trigger and won’t affect scheduled tasks,if you want to stop tasks which has been triggered,please go and see “4.8 stop the running task”
 
 ![输入图片说明](https://static.oschina.net/uploads/img/201607/24130337_ZAhX.png "在这里输入图片标题")
 
-#### 4.5 manually trigger
+### 4.5 manually trigger
 You can trigger a task manually by Click “执行”button,it won’t affect original scheduling rules.
 
 ![输入图片说明](https://static.oschina.net/uploads/img/201607/24133348_Z5wp.png "在这里输入图片标题")
 
-#### 4.6 view schedule log
+### 4.6 view schedule log
 You can view task’s history schedule log by click “日志” button,on the history schedule log list page you can view every time of task’s schedule result,execution result and so on,click “执行日志” button can view the task’s full execute log.
 
 ![输入图片说明](https://static.oschina.net/uploads/img/201607/24133500_9235.png "在这里输入图片标题")
@@ -461,12 +464,12 @@ You can view task’s history schedule log by click “日志” button,on the h
         "执行日志"button:click this button you can view task’s execution detail log,go and see chapter 4.7 “view execution log” for more info;
         "终止任务"button:click this button you can stop the task’s execution thread on this executor,include bloked task instance which didn’t has started;
 
-#### 4.7 view execution log
+### 4.7 view execution log
 Click the “执行日志” button on the right side of the record,you can go to the execution log page,you can view the full execution log of the logic business code, shown as below:
 
 ![输入图片说明](https://static.oschina.net/uploads/img/201703/25124816_tvGI.png "在这里输入图片标题")
 
-#### 4.8 stop running tasks
+### 4.8 stop running tasks
 Just fit to running tasks,on the task log list page,click “终止任务” button on the right side of the record, it will send stop command to the executor where the task was executed,finally the task was killed and the task instance execute queue of this task will be clear.
 
 ![输入图片说明](https://static.oschina.net/uploads/img/201607/24140048_hIci.png "在这里输入图片标题")
@@ -488,26 +491,26 @@ try{
 If JobHandler start child thread,child thread also must not catch InterruptedException,and it should throw exception.
 
 
-#### 4.9 delete execution log
+### 4.9 delete execution log
 On the task log list page, after you select executor and task, you can click"删除" button on the right side and it will pop-up "日志清理" window,on the pop-up window you can choose different log delete policy,choose the policy you want to execute and click "确定" button it will delele relative logs:
 ![输入图片说明](https://static.oschina.net/uploads/img/201705/08210711_Ypik.png "在这里输入图片标题")
 
 ![输入图片说明](https://static.oschina.net/uploads/img/201705/08211152_EB65.png "在这里输入图片标题")
 
-#### 4.10 delete task
+### 4.10 delete task
 Click the delete button on the right side of the task,the task will be deteted.
 
 ![输入图片说明](https://static.oschina.net/uploads/img/201607/24140641_Z9Qr.png "在这里输入图片标题")
 
 ## 5. Overall design
-#### 5.1 Source directory introduction
+### 5.1 Source directory introduction
     - /doc :documentation and material
     - /db :db scripts
     - /xxl-job-admin :schedule and admin center
     - /xxl-job-core :common core Jar
     - /xxl-job-executor-samples :executor，Demo project（you can develop on this demo project or adjust your own exist project to executor project)
 
-#### 5.2 configure database
+### 5.2 configure database
 XXL-JOB schedule module is implemented based on Quartz cluster,it’s “database” is extended based on Quartz’s 11 mysql tables.
 
 XXL-JOB custom Quartz table structure prefix(XXL_JOB_QRTZ_).
@@ -523,15 +526,15 @@ The added tables as shown below:
 
 So XXL-JOB database total has 16 tables.
 
-#### 5.3 Architecture design
-##### 5.3.1 Design target
+### 5.3 Architecture design
+#### 5.3.1 Design target
 All schedule behavior has been abstracted into “schedule center” common platform , it dosen’t include business logic and just responsible for starting schedule requests.
 
 All tasks was abstracted into separate JobHandler and was managed by executors, executor is responsible for receiving schedule request and execute the relative JobHandler business.
 
 So schedule and task can be decoupled from each other, by the way it can improve the overall stability and scalability of the system.
 
-##### 5.3.2 System composition
+#### 5.3.2 System composition
 - **Schedule module（schedule center）**:
     it is responsible for manage schedule info,send schedule request accord task configuration and it is not include an business code.schedule system decouple with the task, improve the overall stability and scalability of the system, at the same time schedule system performance is no longer limited to task modules. 
     Support visualization, simple and dynamic management schedule information, include create,update,delete, GLUE develop and task alarm and so on, All of the above operations will take effect in real time，support monitor schedule result and execution log and executor failover.
@@ -539,24 +542,24 @@ So schedule and task can be decoupled from each other, by the way it can improve
     it is responsible for receive schedule request and execute task logic,task module focuses on the execution of the task, Development and maintenance is simpler and more efficient.
     Receive execution request, end request and log request from schedule center.
 
-##### 5.3.3 Architecture diagram
+#### 5.3.3 Architecture diagram
 
 ![输入图片说明](https://static.oschina.net/uploads/img/201707/17190028_aEE2.png "在这里输入图片标题")
 
-#### 5.4 Schedule module analysis
-##### 5.4.1 Disadvantage of quartz
+### 5.4 Schedule module analysis
+#### 5.4.1 Disadvantage of quartz
 Quartz is a good open source project and was often as the first choice for job schedule.Tasks was managed by api in quartz cluster so it can avoid some  disadvantages of single quartz instance,but it also has some disadvantage as shown below:
     - problem 1:it is not humane while operate task by call apill.
     - problem 2:it is need to store business QuartzJobBean into database, System Invasion is quite serious.
     - problem 3:schedule logic and couple with QuartzJobBean in the same project,it will lead a problem in case that if schedule tasks gradually increased and task logic gradually increased,under this situation the performance of the schedule system will be greatly limited by business.
 XXL-JOB solve above problems of quartz.
 
-##### 5.4.2 RemoteHttpJobBean
+#### 5.4.2 RemoteHttpJobBean
 Under Quartz develop,task logic often was maintained by QuartzJobBean, couple is very serious.in XXL-JOB"Schedule module" and "task module" are completely decoupled,all scheduled tasks in schedule module use the same QuartzJobBean called RemoteHttpJobBean.the params of the tasks was maintained in the extended tables,when trigger RemoteHttpJobBean,it will parse different params and start remote cal l and it wil call relative remote executor.
 
 This call module is like RPC,RemoteHttpJobBean provide call proxy functionality,the executor is provided as remote service.
 
-##### 5.4.3 Schedule Center HA（Cluster）
+#### 5.4.3 Schedule Center HA（Cluster）
 It is based on Quartz cluster，databse use Mysql；while QUARTZ task schedule is used in Clustered Distributed Concurrent Environment,all nodes will report task info and store into database.it will fetch trigger from database while execute task,if trigger name and execute time is the same only one node will execute the task.
 
 ```
@@ -568,7 +571,7 @@ org.quartz.jobStore.isClustered: true
 org.quartz.jobStore.clusterCheckinInterval: 1000
 ```
 
-##### 5.4.4 Schedule threadpool
+#### 5.4.4 Schedule threadpool
 Default threads in the threadpool is 10 so it can avoid task schedule delay because of single thread block.
 
 ```
@@ -582,12 +585,12 @@ business logic was executed on remote executor in XXL-JOB,schedule center just s
 
 the logic of task in XXL-JOB schedule center is very light and single job average run time alaways under 100ms,（most  is network time consume）.so it can use limited threads to support a large mount of job run concurrently, 10 threads configured above can support at least 100 JOB normal execution.
 
-##### 5.4.5 @DisallowConcurrentExecution
+#### 5.4.5 @DisallowConcurrentExecution
 This annotation is not used default by the schedule center of XXL-JOB schedule module, it use concurrent policy default,because RemoteHttpJobBean is common QuartzJobBean,so it greatly improve the capacity of schedule system and decrease the blocked chance of schedule module in the case of multi-threaded schedule.
 
 Every schedule module was scheduled and executed parallel in XXL-JOB,but tasks in executor is executed serially and support stop task.
 
-##### 5.4.6 misfire
+#### 5.4.6 misfire
 The handle policy when miss the job’s trigger time.
 he reason may be:restart service,schedule thread was blocked by QuartzJobBean, threads was exhausted,some task enable @DisallowConcurrentExecution，the last schedule  was blocked and next schedule was missed.
 
@@ -608,7 +611,7 @@ CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.cronSchedule(jobIn
 CronTrigger cronTrigger = TriggerBuilder.newTrigger().withIdentity(triggerKey).withSchedule(cronScheduleBuilder).build();
 ```
 
-##### 5.4.7 log callback service
+#### 5.4.7 log callback service
 When schedule center of the schedule module was deployed as web service, on one side it play as schedule center, on the other side it also provide api service for executor. 
 
 The source code location of schedule center’s “log callback api service” as shown below:
@@ -618,7 +621,7 @@ xxl-job-admin#com.xxl.job.admin.controller.JobApiController.callback
 
 Executor will execute task when it receive task execute request.it will notify the task execute result to schedule center when the task is done. 
 
-##### 5.4.8 task HA（Failover）
+#### 5.4.8 task HA（Failover）
 If executor project was deployed as cluster schedule center will known all online executor nodes,such as:“127.0.0.1:9997, 127.0.0.1:9998, 127.0.0.1:9999”.
 
 When "路由策略" select "故障转移(FAILOVER)",it will send heart beat check request in order while schedule center start schedule request.  The first alive checked executor node will be selected and send schedule request to it.
@@ -629,7 +632,7 @@ When "路由策略" select "故障转移(FAILOVER)",it will send heart beat chec
 
 “调度备注” will display local schedule route path、executor’s "注册方式"、"地址列表" and task’s "路由策略"。Under "故障转移(FAILOVER)" policy, schedule center take first address to do heartbeat detection, heat beat fail will automatically skip, the second address heart beat fail…… until the third address “127.0.0.1:9999” heart beat success, it was selected as target executor, then send schedule request to target executor, now the schedule process is end wait for the executor’s callback execution result.
 
-##### 5.4.9 schedule log
+#### 5.4.9 schedule log
 Every time when task was scheduled in the schedule center it will record a task log, the task log include three part as shown below:
 
 - 任务信息:include executor address、JobHandler and executor params，accord these parameters it can locate specific machine and task code that the task will be executed.
@@ -650,7 +653,7 @@ Schedule log stands fo single task schedule, attribute description is as follows
 - 执行备注:task execute remark info in the executor,such as exception log.
 - 执行日志:full execution log of the business code during execution of the task,go and see “4.7 view execution log”.
 
-##### 5.4.10 Task dependency
+#### 5.4.10 Task dependency
 principle:every task has a task key in XXL-JOB, every task can configure property “child task Key”,it can match task dependency relationship through task key.
 
 When parent task end execute and success, it will match child task dependency accord child task key, it will trigger child task execute once if it matched child task.
@@ -661,12 +664,12 @@ On the task log page ,you can see matched child task and triggered child task’
 
 ![输入图片说明](https://static.oschina.net/uploads/img/201607/24194212_jOAU.png "在这里输入图片标题")
 
-#### 5.5 Task "run mode" analysis
-##### 5.5.1 "Bean模式" task
+### 5.5 Task "run mode" analysis
+#### 5.5.1 "Bean模式" task
 Development steps:go and see "chapter 3" . 
 principle: every Bean mode task is a Spring Bean instance and it is maintained in executor project’s Spring container. task class nedd to add “@JobHander(value="name")” annotation, because executor identify task bean instance in spring container through annotation. Task class nedd to implements interface IJobHandler, task logic code in method execute(), the task logic in execute() method will be executed when executor received a schedule request from schedule center.
 
-##### 5.5.2 "GLUE模式(Java)" task
+#### 5.5.2 "GLUE模式(Java)" task
 Development steps:go and see "chapter 3" .
 Principle : every "GLUE模式(Java)" task code is a class implemets interface IJobHandler, when executor received schedule request from schedule center these code will be loaded by Groovy classloader and instantiate into a Java object and inject spring bean service declared in this code at the same time（please confirm service and class reference in Glue code exist in executor project）, then call the object’s execute() method and execute task logic.
 
@@ -680,7 +683,7 @@ All supported types of scripts as shown beloes:
     - python script: python script task will be enabled when select " GLUE模式(Python)"as task run mode.
     
 
-##### 5.5.4 executor
+#### 5.5.4 executor
 Executor is actually an embedded Jetty server with default port 9999, as shown below（parameter:xxl.job.executor.port）.
 
 ![输入图片说明](https://static.oschina.net/uploads/img/201703/10174923_TgNO.png "在这里输入图片标题")
@@ -689,7 +692,7 @@ Executor will identify Bean mode task in spring container through @JobHander Whe
 
 When executor received schedule request from schedule center, if task type is “Bean模式” it will match bean mode task in Spring container and call it’s execute() method and execute task logic. if task type is “GLUE模式”, it will load Glue code, instantiate a Java object and inject other spring service（notice: the spring service injected in Glue code must exist in the same executor project）, then call execute() method and execute task logic. 
 
-##### 5.5.5 task log
+#### 5.5.5 task log
 XXL-JOB will generate a log file for every schedule request, the log info will be recorded by XxlJobLogger.log() method, the log file will be loaded when view log info through schedule center.
 
 (history version is implemented by overriding LOG4J’s Appender so it exists dependency restrictions, The way has been discraded in the new version)
@@ -698,17 +701,17 @@ The location of log file can be specified in executor configuration file, defaul
 
 When start child thread in JobHandler, child thread will print log in parent JobHandler thread’s execute log in order to trace execute log.
 
-#### 5.6 Communication module analysis
+### 5.6 Communication module analysis
 
-##### 5.6.1 A complete task schedule communication process
+#### 5.6.1 A complete task schedule communication process
     - 1,schedule center send http request to executor, and the service in executor in fact is a jetty server with default port 9999.
     - 2,executor execute task logic.
     - 3,executor http callback with schedule center for schedule result, the service in schedule center used to receive callback request from executor is a set of api opended to executor.
 
-##### 5.6.2 Encrypt Communication data
+#### 5.6.2 Encrypt Communication data
 When scheduler center send request to executor, it will use RequestModel and ResponseModel object to encapsulate schedule request parameters and response data, these two object will be serialized before communication, data protocol and time stamp will be checked so that achieve data encryption target.
 
-#### 5.7 task register and task auto discover  
+### 5.7 task register and task auto discover  
 Task executor machine property has been canceled from v1.5, instead of task register and auto discovery, get remote machine address dynamic.
 
     AppName: unique identify of executor cluster,  executor is minimal unite of task register, every task recognize machine addresses under the executor on which it was binded.
@@ -717,10 +720,10 @@ Task executor machine property has been canceled from v1.5, instead of task regi
 
 To ensure system lightweight and reduce learning costs, it did not use Zookeeper as register center, Use DB as register center to do task registration.
 
-#### 5.8 task execute result
+### 5.8 task execute result
 Since v1.6.2, the task execute result is recognized through ReturnT of IJobHandler, it executes success when return value meets the condition "ReturnT.code == ReturnT.SUCCESS_CODE" , or it executes fail, and it can callback error message info to schedule center through ReturnT.msg, so it can control task execute results in the task logic.
 
-#### 5.9 slice broadcat & dynamic slice   
+### 5.9 slice broadcat & dynamic slice   
 When “分片广播” is selected as route policy in executor cluster, one task schedule will broadcast all executor node in cluster to trigger task execute in every executor, pass slice parameter at the same time, so we can develop slice task by slice parameters. 
 
 "分片广播"  break the task by the dimensions of executor, support dynamic extend executor cluster so that it can add slice number dynamically to do business process, In case of large amount of data process can significantly improve task processing capacity and speed.
@@ -738,7 +741,7 @@ This feature applies to scenes as shown below:
 - 1、slice task scene:when 10 executor to handle 10w records,  1w records need to be handled per machine, time-consuming 10 times lower；
 - 2、Broadcast task scene:broadcast all cluster nodes to execute shell script、broadcast all cluster nodes to update cache.
 
-#### 5.10 AccessToken
+### 5.10 AccessToken
 To improve system security it is need to check security between schedule center and executor, just allow communication between them when AccessToken of each other matched.
 
 The AccessToken of scheduler center and executor can be configured by xxl.job.accessToken.
@@ -750,7 +753,7 @@ There are only two settings when communication between scheduler center and exec
 
 
 ## 6 Version update log
-#### 6.1 version V1.1.x，New features [2015-12-05]
+### 6.1 version V1.1.x，New features [2015-12-05]
 **【since V1.1.x，XXL-JOB was used by company hiring me，alias Ferrari inner company，the latest version is recommended for new project】**
 - 1、simple:support CRUD operation through Web page, simple and one minute to get started;
 - 2、dynamic:support dynamic update task status,pause/recover task and effective in real time;
@@ -761,7 +764,7 @@ There are only two settings when communication between scheduler center and exec
 - 7、support for custom parameters;
 - 8、Support pause task execution remotely .
 
-#### 6.2 version V1.2.x，New features [2016-01-17]
+### 6.2 version V1.2.x，New features [2016-01-17]
 - 1、support task group;
 - 2、suport local task, remote task;
 - 3、support two types underlying communication ,Servlet or JETTY;
@@ -779,7 +782,7 @@ There are only two settings when communication between scheduler center and exec
 		- High scalability;
 		- stability;
 
-#### 6.3 version V1.3.0，New features [2016-05-19]
+### 6.3 version V1.3.0，New features [2016-05-19]
 - 1、discard local task module, remote task was recommended, easy to decouple system, the JobHander of task was called executor.
 - 2、dicard underlying communication type servlet, JETTY was recommended, schedule and callback bidirectional communication, rebuild the communication logic;
 - 3、UI interactive optimization:optimize left menu expansion and menu item selected status , task list opens the table with compression optimization;
@@ -789,7 +792,7 @@ There are only two settings when communication between scheduler center and exec
 		- BEAN mode executor:every executor is a Spring Bean instance，it was recognized and scheduled by XXL-JOB through @JobHander annotation;
 		 -GLUE mode executor:every executor corresponds to a piece of code，edited and maintained online by Web, Dynamic compile and takes effect in real time, executor is responsible for loading GLUE code and executing;
 
-#### 6.4 version V1.3.1，New features [2016-05-23]
+### 6.4 version V1.3.1，New features [2016-05-23]
 - 1、Update project directory structure:
 	- /xxl-job-admin -------------------- 【schedule center】:Responsible for managing schedule information，send schedule request according to schedule configuration;
 	- /xxl-job-core -----------------------  Public core dependence
@@ -799,12 +802,12 @@ There are only two settings when communication between scheduler center and exec
 - 2、Upgrade the user manual under the new directory structure;
 - 3、Optimize some interactions and UI;
 
-#### 6.5 version V1.3.2，New features [2016-05-28]
+### 6.5 version V1.3.2，New features [2016-05-28]
 - 1、Schedule logic for transactional handle;
 - 2、executor asynchronous callback execution log;
 - 3、【important】based on HA support of schedule center，extend executor’s Failover support，Support configure multiple execution addresses;
 
-#### 6.6 version V1.4.0 New features [2016-07-24]
+### 6.6 version V1.4.0 New features [2016-07-24]
 - 1、Task dependency: it is implemented by trigger event, it will automatically trigger a child task schedule after Task execute success and callback, multiple child tasks are separated by commas;
 - 2、executor source code has been reconstructed, optimize underlying db script;
 - 3、optimize task thread group logic of executor, before it is group by executor’s JobHandler so when multiple task reuse Jobhanlder will cause block with each other. Now it is grouped by task of schedule center so tasks are isolated from task execution.
@@ -823,7 +826,7 @@ There are only two settings when communication between scheduler center and exec
 
 Tips: V1.3.x release has been published , enter the maintenance phase, branch  address is [V1.3](https://github.com/xuxueli/xxl-job/tree/v1.3) .New features will be updated continuously in the master branch.
 
-#### 6.7 version V1.4.1 New features [2016-09-06]
+### 6.7 version V1.4.1 New features [2016-09-06]
 - 1、project successfully pushed to maven central warehouse, Central warehouse address and dependency  as shown below:
     ```
     <!-- http://repo1.maven.org/maven2/com/xuxueli/xxl-job-core/ -->
@@ -841,14 +844,14 @@ Tips: V1.3.x release has been published , enter the maintenance phase, branch  a
 - 7、optimize table structure and the table name now is upper case;
 - 8、modify ContentType of JSON response from exception handler of schedule center to fix the bug that it is could not recognized by browser.
 
-#### 6.8 version V1.4.2 New features [2016-09-29]
+### 6.8 version V1.4.2 New features [2016-09-29]
 - 1、push V1.4.2 to maven central warehouse, main version V1.4 enter maintenance phase;
 - 2、fix problem task list offset when add task;
 - 3、fix a style disorder problem that caused by bootstrap does not support the modal frame overlap , the problem occurs when the task is edited;
 - 4、optimize schedule status when schedule timeout and Handler could not matched;
 - 5、the task could not stop problem caused by catch exception has given solution;
 
-#### 6.9 version V1.5.0 New features [2016-11-13]
+### 6.9 version V1.5.0 New features [2016-11-13]
 - 1、task register: executor registers the task automatically, schedule center will automatically discover the registered task and trigger execution.
 - 2、add parameter AppName for executor: AppName is the unique identifier of each executor cluster, register periodically and automatically with AppName.
 - 3、add column executor management in schedule center : manage online executors, automatically discover registered executors via the property AppName。Only managed executors are allowed to be used;
@@ -858,14 +861,14 @@ Tips: V1.3.x release has been published , enter the maintenance phase, branch  a
 - 7、adjust table structure, reconstruct the project;
 - 8、schedule center automatically registered and found, failover: schedule center periodically registered automatically, task callback can recognize all online schedule center addresses, task callback support failover so that it can avoid single point of risk.
 
-#### 6.10 version V1.5.1 New features [2016-11-13]
+### 6.10 version V1.5.1 New features [2016-11-13]
 - 1、Reconstruct the underlying code and optimize logic, clean POM and Clean Code;
 - 2、Servlet/JSP Spec selected 3.0/2.2;
 - 3、Spring updated to 3.2.17.RELEASE version;
 - 4、Jetty updated to version 8.2.0.v20160908;
 - 5、has push V1.5.0 and V1.5.1 to maven central warehouse;
 
-#### 6.10 version V1.5.2 New features [2017-02-28]
+### 6.10 version V1.5.2 New features [2017-02-28]
 - 1、optimize IP tools class which used to gets IP address，IP static cache;
 - 2、both executor and schedule center support customize registered IP address;Solve problem when machine has multiple network card and get the wrong card;
 - 3、solve the problem that it will generate multiple log files when executed across days;
@@ -875,7 +878,7 @@ Tips: V1.3.x release has been published , enter the maintenance phase, branch  a
 - 7、reconstruct underlying code and optimize logic and Clean Code;
 - 8、optimize Dependency Injection Logic of GLUE, support injected as alias;
 
-#### 6.11 version V1.6.0 New features [2017-03-13]
+### 6.11 version V1.6.0 New features [2017-03-13]
 - 1、upgrade communication scheme，the HEX communication model is adjusted to the B-RPC model based on HTTP;
 - 2、executor supports set execution address list manually，provide switch to use automatically registered address or manually set address;
 - 3、executor route rules:第一个、最后一个、轮询、随机、一致性HASH、最不经常使用、最近最久未使用、故障转移;
@@ -886,20 +889,20 @@ Tips: V1.3.x release has been published , enter the maintenance phase, branch  a
 - 8、new created task defaults to a non-running state;
 - 9、optimize update logic of GLUE mode task instance , The original update is based on the timeout value and now is updated according to the version number，version number plus one while source changed;
 
-#### 6.12 version V1.6.1 New features [2017-03-25]
+### 6.12 version V1.6.1 New features [2017-03-25]
 - 1、Rolling log;
 - 2、reconstruct WebIDE interactive;
 - 3、enhanced communication check，filter unnormal requests effectively;
 - 4、enhanced permission check，Using dynamic login TOKEN（recommend instead of internal SSO）;
 - 5、optimize database configuration，solve garbled problem;
 
-#### 6.13 version V1.6.2 New features [2017-04-25]
+### 6.13 version V1.6.2 New features [2017-04-25]
 - 1、execution report:support view run time data in real time, such as task number, total schedule number, executor number etc., include schedule report , such as scheduled distribution graph on date, scheduled success distribution graph etc;
 - 2、JobHandler support set return value for tasks, it is easy to control task execute result in task logic;
 - 3、the problem could not view exception info when resource path include space or chinese word casused resource file could not be loaded;
 - 4、optimize route policy:fix problems that Loop and LFU routing policy counters are no limit and first route is focused on the first machine;
 
-#### 6.14 version V1.7.0 New features [2017-05-02]
+### 6.14 version V1.7.0 New features [2017-05-02]
 - 1、script task:support develop and run script task by GLUE, include script type such as Shell、Python and Groovy;
 - 2、add spring-boot type executor example project;
 - 3、upgrade jetty to version 9.2;
@@ -907,7 +910,7 @@ Tips: V1.3.x release has been published , enter the maintenance phase, branch  a
 - 5、executor remove GlueLoader dependency，instead of push mode，thus GLUE source code load no longer rely on JDBC;
 - 6、get the project name when login and redirect, solve 404 problem when it is not deployed by the directory;
 
-#### 6.15 version V1.7.1 New features [2017-05-08]
+### 6.15 version V1.7.1 New features [2017-05-08]
 - 1、unified write and read code of execute log as UTF-8，solve log garbled problem under windows environment;
 - 2、communication timeout period is limited to 10s，To avoid schedule thread is occupied under abnormal situation;
 - 3、adjust executor , server stat, destroy and register logic;
@@ -917,7 +920,7 @@ Tips: V1.3.x release has been published , enter the maintenance phase, branch  a
 - 7、pop-up component is replaced by layer;
 - 8、upgrade quartz to version 2.3.0;
 
-#### 6.16 version V1.7.2 New features [2017-05-17]
+### 6.16 version V1.7.2 New features [2017-05-17]
 - 1、block handle policy:the policy when schedule is too frequently and the executor it too late to handle, include multiple strategies:single machine serially execute（default）、discard subsequent schedule、override before schedule;
 - 2、fail handle policy:handle policy when scheduled fail, include :failure alarm（default）、failed to retry;
 - 3、The communication timeout is adjusted to 180s;
@@ -925,7 +928,7 @@ Tips: V1.3.x release has been published , enter the maintenance phase, branch  a
 - 5、fix executor parameters lost bug when edit;
 - 6、add task test Demo to make task logic test easier;
 
-#### 6.17 version V1.8.0 New features [2017-07-17]
+### 6.17 version V1.8.0 New features [2017-07-17]
 - 1、optimize update logic of task Cron，instead of rescheduleJob，at the same time preventing set cron repeatedly;
 - 2、optimize API callback service failed status code，facilitate troubleshooting;
 - 3、XxlJobLogger support multi-parameter;
@@ -938,7 +941,7 @@ Tips: V1.3.x release has been published , enter the maintenance phase, branch  a
 - 10、supports filter execute log based on running status;
 - 11、optimize scheduling Center Task Registration Detection Logic;
 
-#### 6.18 version V1.8.1 New features [2017-07-30]
+### 6.18 version V1.8.1 New features [2017-07-30]
 - 1、slice broadcast task:When slice broadcast is selected as route policy in executor cluster, one task schedule will broadcast all executor node in cluster to trigger task execute in every executor, pass slice parameter at the same time, so we can develop slice task by slice parameters;
 - 2、dynamic slice: break the task by the dimensions of executor, support dynamic extend executor cluster so that it can add slice number dynamically to do business process, In case of large amount of data process can significantly improve task processing capacity and speed;
 - 3、executor JobHandler disables name conflicts;
@@ -951,12 +954,12 @@ Tips: V1.3.x release has been published , enter the maintenance phase, branch  a
 - 10、upgrade springboot version to 1.5.6.RELEASE of executor;
 - 11、unify maven version dependency management;
 
-#### 6.19 version V1.8.2 New features[Coding]
+### 6.19 version V1.8.2 New features[Coding]
 - 1,support configuring the HTTPS for executor callback URL;
 - 2,Standardize project directory for extend multi executors;
 - 3,add JFinal type executor sample project;
 
-#### TODO LIST
+### TODO LIST
 - 1,Task privilege management:control privilege on executor, check privilege on core operations;
 - 2,Task slice routing:using consistent Hash algorithm to calculate slice order as stable as possible, even if there is fluctuation in the registration machine will not cause large fluctuations in the order of slice. Currently using IP natural sorting can meet the demand，to be determined;
 - 3,Failure retry optimization:The current failure to retry logic is execute the request logic once again after the scheduled request fails。The optimization point is retry for both scheduling and execution failures, retry a full schedule when retrying，This may lead schedule failure to an infinite loop，to be determined;
@@ -970,22 +973,22 @@ Tips: V1.3.x release has been published , enter the maintenance phase, branch  a
 
 ## 7. Other
 
-#### 7.1 report problem
-XXL-JOB project is on Github，If you have any questions, you can ask questions at [ISSUES](https://github.com/xuxueli/xxl-job/issues/) You can also join the above technical exchange group;
+### 7.1 Contributing
+Contributions are welcome! Open a pull request to fix a bug, or open an [Issue](https://github.com/xuxueli/xxl-job/issues/) to discuss a new feature or change.
 
-#### 7.2 used records（record just for spread，Product is open source and free of charge）
+### 7.2 used records（record just for spread，Product is open source and free of charge）
 Record for spread product and product is free and open source. 
 Welcome to [check in](https://github.com/xuxueli/xxl-job/issues/1 )on github.
 
-#### 7.3 Open source protocol and version
-Product is open source and free of charge，will provide free community technical support continuously,Personal or company internal free access and use.
+### 7.3 Copyright and License
+This product is open source and free, and will continue to provide free community technical support. Individual or enterprise users are free to access and use.
 
-XXL-JOB uses GPLv3 protocol to ensure the user's right of free use. The agreement avoids special risk of patent applications "the GPL assures that patents cannot be used to render the program non-free.（From GPLv3）".
-Copyright (c) 2015-present, xuxueli.
+- Licensed under the GNU General Public License (GPL) v3.
+- Copyright (c) 2015-present, xuxueli.
 
 ---
-#### donation
-scan it if want to support project，reward a cup of coffee to author:）
+### Donate
+To support the author, donate the author to buy a cup of coffee：）
 
 webchat:![输入图片说明](https://static.oschina.net/uploads/img/201707/07214300_qhxT.png "在这里输入图片标题")
 Alipay:![输入图片说明](http://images2015.cnblogs.com/blog/554415/201605/554415-20160513183306234-1939652116.png "在这里输入图片标题")
