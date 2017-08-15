@@ -990,6 +990,5 @@ This product is open source and free, and will continue to provide free communit
 ### Donate
 To support the author, donate the author to buy a cup of coffee：）
 
-Webchat：![输入图片说明](https://github.com/xuxueli/xxl-job/blob/master/doc/images/donate-wechat.png "在这里输入图片标题")
-Alipay：![输入图片说明](https://github.com/xuxueli/xxl-job/blob/master/doc/images/donate-alipay.jpg "在这里输入图片标题")
-
+Webchat：<img src="https://github.com/xuxueli/xxl-job/blob/master/doc/images/donate-wechat.png" width="200">
+Alipay：<img src="https://github.com/xuxueli/xxl-job/blob/master/doc/images/donate-alipay.jpg" width="200">

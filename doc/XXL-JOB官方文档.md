@@ -1008,5 +1008,5 @@ Tips: 历史版本(V1.3.x)目前已经Release至稳定版本, 进入维护阶段
 ### 捐赠
 支持的话可以扫一扫，请作者喝杯咖啡吧：）
 
-微信：![输入图片说明](https://github.com/xuxueli/xxl-job/blob/master/doc/images/donate-wechat.png "在这里输入图片标题")
-支付宝：![输入图片说明](https://github.com/xuxueli/xxl-job/blob/master/doc/images/donate-alipay.jpg "在这里输入图片标题")
+微信：<img src="https://github.com/xuxueli/xxl-job/blob/master/doc/images/donate-wechat.png" width="200">
+支付宝：<img src="https://github.com/xuxueli/xxl-job/blob/master/doc/images/donate-alipay.jpg" width="200">
