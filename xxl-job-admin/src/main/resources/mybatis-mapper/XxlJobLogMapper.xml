@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="XxlJobLogMapper">
+<mapper namespace="com.xxl.job.admin.dao.XxlJobLogDao">
 	
 	<resultMap id="XxlJobLog" type="com.xxl.job.admin.core.model.XxlJobLog" >
 		<result column="id" property="id" />
@@ -41,7 +41,7 @@
 		t.handle_msg
 	</sql>
 	
-	<select id="pageList" parameterType="java.util.HashMap" resultMap="XxlJobLog">
+	<select id="pageList" resultMap="XxlJobLog">
 		SELECT <include refid="Base_Column_List" />
 		FROM XXL_JOB_QRTZ_TRIGGER_LOG AS t
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
@@ -74,7 +74,7 @@
 		LIMIT #{offset}, #{pagesize}
 	</select>
 	
-	<select id="pageListCount" parameterType="java.util.HashMap" resultType="int">
+	<select id="pageListCount" resultType="int">
 		SELECT count(1)
 		FROM XXL_JOB_QRTZ_TRIGGER_LOG AS t
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
@@ -120,12 +120,12 @@
 			#{jobGroup},
 			#{jobId}
 		);
-		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id"> 
+		<!--<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
 			SELECT LAST_INSERT_ID() 
-		</selectKey> 
+		</selectKey>-->
 	</insert>
 
-	<update id="updateTriggerInfo">
+	<update id="updateTriggerInfo" >
 		UPDATE XXL_JOB_QRTZ_TRIGGER_LOG
 		SET
 		    `glue_type`= #{glueType},
@@ -147,22 +147,22 @@
 		WHERE `id`= #{id}
 	</update>
 	
-	<delete id="delete">
+	<delete id="delete" >
 		delete from XXL_JOB_QRTZ_TRIGGER_LOG
 		WHERE job_id = #{jobId}
 	</delete>
 
-	<select id="triggerCountByHandleCode" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+	<select id="triggerCountByHandleCode" resultType="int" >
 		SELECT count(1)
 		FROM XXL_JOB_QRTZ_TRIGGER_LOG AS t
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
-			<if test="_parameter gt 0">
+			<if test="handleCode gt 0">
 				AND t.handle_code = #{handleCode}
 			</if>
 		</trim>
 	</select>
 
-    <select id="triggerCountByDay" parameterType="java.util.Map" resultType="java.util.Map" >
+    <select id="triggerCountByDay" resultType="java.util.Map" >
         SELECT DATE_FORMAT(trigger_time,'%Y-%m-%d') triggerDay, COUNT(id) triggerCount
         FROM XXL_JOB_QRTZ_TRIGGER_LOG
         WHERE trigger_time BETWEEN #{from} and #{to}
@@ -172,7 +172,7 @@
         GROUP BY triggerDay;
     </select>
 
-	<delete id="clearLog" parameterType="java.util.Map" >
+	<delete id="clearLog" >
 		delete from XXL_JOB_QRTZ_TRIGGER_LOG
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
 			<if test="jobGroup gt 0">

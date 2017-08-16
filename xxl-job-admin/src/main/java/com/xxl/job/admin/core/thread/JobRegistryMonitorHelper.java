@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -27,7 +28,7 @@ public class JobRegistryMonitorHelper {
 	}
 
 	private Thread registryThread;
-	private boolean toStop = false;
+	private volatile boolean toStop = false;
 	public void start(){
 		registryThread = new Thread(new Runnable() {
 			@Override
@@ -64,8 +65,11 @@ public class JobRegistryMonitorHelper {
 							// fresh group address
 							for (XxlJobGroup group: groupList) {
 								List<String> registryList = appAddressMap.get(group.getAppName());
-								String addressListStr = StringUtils.join(registryList, ",");
-
+								String addressListStr = null;
+								if (CollectionUtils.isNotEmpty(registryList)) {
+									Collections.sort(registryList);
+									addressListStr = StringUtils.join(registryList, ",");
+								}
 								group.setAddressList(addressListStr);
 								XxlJobDynamicScheduler.xxlJobGroupDao.update(group);
 							}

@@ -1,7 +1,6 @@
 package com.xxl.job.core.log;
 
 import com.xxl.job.core.biz.model.LogResult;
-import com.xxl.job.core.executor.XxlJobExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,8 +18,9 @@ public class XxlJobFileAppender {
 	// for JobThread (support log for child thread of job handler)
 	//public static ThreadLocal<String> contextHolder = new ThreadLocal<String>();
 	public static final InheritableThreadLocal<String> contextHolder = new InheritableThreadLocal<String>();
-	public static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-	
+	public static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");	// TODO, concurrent issues
+	public static String logPath = "/data/applogs/xxl-job/jobhandler/";
+
 	/**
 	 * log filename: yyyy-MM-dd/9999.log
 	 *
@@ -31,7 +31,7 @@ public class XxlJobFileAppender {
 	public static String makeLogFileName(Date triggerDate, int logId) {
 
         // filePath/
-        File filePathDir = new File(XxlJobExecutor.logPath);
+        File filePathDir = new File(logPath);
         if (!filePathDir.exists()) {
             filePathDir.mkdirs();
         }
@@ -66,7 +66,7 @@ public class XxlJobFileAppender {
 		if (logFileName==null || logFileName.trim().length()==0) {
 			return;
 		}
-		File logFile = new File(XxlJobExecutor.logPath, logFileName);
+		File logFile = new File(logPath, logFileName);
 
 		if (!logFile.exists()) {
 			try {
@@ -111,7 +111,7 @@ public class XxlJobFileAppender {
 		if (logFileName==null || logFileName.trim().length()==0) {
             return new LogResult(fromLineNum, 0, "readLog fail, logFile not found", true);
 		}
-		File logFile = new File(XxlJobExecutor.logPath, logFileName);
+		File logFile = new File(logPath, logFileName);
 
 		if (!logFile.exists()) {
             return new LogResult(fromLineNum, 0, "readLog fail, logFile not exists", true);

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="fileEncoding" value="utf-8" />
+		<property name="locations">
+			<list>
+				<value>classpath*:xxl-job-executor.properties</value>
+			</list>
+		</property>
+	</bean>
+
+    <!-- ********************************* 基础配置 ********************************* -->
+
+	<!-- 配置01、JobHandler 扫描路径 -->
+	<context:component-scan base-package="com.xxl.job.executor.service.jobhandler" />
+
+	<!-- 配置02、执行器 -->
+	<bean id="xxlJobExecutor" class="com.xxl.job.core.executor.XxlJobExecutor" init-method="start" destroy-method="destroy" >
+		<!-- 执行器IP[选填]，为空则自动获取 -->
+		<property name="ip" value="${xxl.job.executor.ip}" />
+		<!-- 执行器端口号[必须] -->
+		<property name="port" value="${xxl.job.executor.port}" />
+		<!-- 执行器AppName[选填]，为空则关闭自动注册 -->
+        <property name="appName" value="${xxl.job.executor.appname}" />
+        <!-- 执行器注册中心地址[选填]，为空则关闭自动注册 -->
+		<property name="adminAddresses" value="${xxl.job.admin.addresses}" />
+		<!-- 执行器日志路径[必填] -->
+		<property name="logPath" value="${xxl.job.executor.logpath}" />
+		<!-- 访问令牌，非空则进行匹配校验[选填] -->
+		<property name="accessToken" value="${xxl.job.accessToken}" />
+	</bean>
+
+
+</beans>

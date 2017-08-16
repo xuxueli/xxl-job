@@ -1,21 +1,47 @@
+<p align="center">
+    <a href="http://www.xuxueli.com/xxl-job/">
+        <img src="https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/xxl-logo.jpg" width="150">
+    </a>
+    <h3 align="center">XXL-JOB</h3>
+    <p align="center">
+        XXL-JOB, a lightweight distributed task scheduling framework.
+        <br>
+        <a href="http://www.xuxueli.com/xxl-job/"><strong>-- Browse website. --</strong></a>
+        <br>
+        <br>
+        <a href="https://travis-ci.org/xuxueli/xxl-job">
+            <img src="https://travis-ci.org/xuxueli/xxl-job.svg?branch=master" >
+        </a>
+        <a href="https://maven-badges.herokuapp.com/maven-central/com.xuxueli/xxl-job/">
+            <img src="https://maven-badges.herokuapp.com/maven-central/com.xuxueli/xxl-job/badge.svg" >
+        </a>
+         <a href="https://github.com/xuxueli/xxl-job/releases">
+             <img src="https://img.shields.io/github/release/xuxueli/xxl-job.svg" >
+         </a>
+         <a href="http://www.gnu.org/licenses/gpl-3.0.html">
+             <img src="https://img.shields.io/badge/license-GPLv3-blue.svg" >
+         </a>
+         <a href="https://gitter.im/xuxueli/xxl-job?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge">
+              <img src="https://badges.gitter.im/xuxueli/xxl-job.svg" >
+          </a>
+    </p>    
+</p>
 
-# 分布式任务调度平台XXL-JOB
 
-[![Build Status](https://travis-ci.org/xuxueli/xxl-job.svg?branch=master)](https://travis-ci.org/xuxueli/xxl-job)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.xuxueli/xxl-job/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.xuxueli/xxl-job/)
-[![GitHub release](https://img.shields.io/github/release/xuxueli/xxl-job.svg)](https://github.com/xuxueli/xxl-job/releases)
-[![License](https://img.shields.io/badge/license-GPLv3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0.html)
-[![Gitter](https://badges.gitter.im/xuxueli/xxl-job.svg)](https://gitter.im/xuxueli/xxl-job?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+## Introduction
+XXL-JOB is a lightweight distributed task scheduling framework. 
+It's core design goal is to develop quickly and learn simple, lightweight, and easy to expand. 
+Now, it's already open source, and many companies use it in production environments, real "out-of-the-box".
 
 XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是开发迅速、学习简单、轻量级、易扩展。现已开放源代码并接入多家公司线上产品线，开箱即用。
 
-![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/xxl-logo.jpg "在这里输入图片标题")
 
-### 文档
+## Documentation
+- [中文文档](http://www.xuxueli.com/xxl-job/)
+- [English Documentation](http://www.xuxueli.com/xxl-job/en/)
 
-- 官方文档：[XXL-JOB官方文档](https://github.com/xuxueli/xxl-job/blob/master/doc/XXL-JOB官方文档.md)
 
-### 特性
+## Features
 - 1、简单：支持通过Web页面对任务进行CRUD操作，操作简单，一分钟上手；
 - 2、动态：支持动态修改任务状态、暂停/恢复任务，以及终止运行中任务，即时生效；
 - 3、调度中心HA（中心式）：调度采用中心式设计，“调度中心”基于集群Quartz实现，可保证调度中心HA；
@@ -39,12 +65,10 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 - 21、阻塞处理策略：调度过于密集执行器来不及处理时的处理策略，策略包括：单机串行（默认）、丢弃后续调度、覆盖之前调度；
 - 22、失败处理策略；调度失败时的处理策略，策略包括：失败告警（默认）、失败重试；
 - 23、分片广播任务：执行器集群部署时，任务路由策略选择"分片广播"情况下，一次任务调度将会广播触发对应集群中所有执行器执行一次任务，同时传递分片参数；可根据分片参数开发分片任务；
+- 24、动态分片：分片广播任务以执行器为维度进行分片，支持动态扩容执行器集群从而动态增加分片数量，协同进行业务处理；在进行大数据量业务操作时可显著提升任务处理能力和速度。
 
-### 架构图
 
-![输入图片说明](https://static.oschina.net/uploads/img/201707/17190028_aEE2.png "在这里输入图片标题")
-
-### 发展
+## Development
 于2015年中，我在github上创建XXL-JOB项目仓库并提交第一个commit，随之进行系统结构设计，UI选型，交互设计……
 
 于2015-11月，XXL-JOB终于RELEASE了第一个大版本V1.0， 随后我将之发布到OSCHINA，XXL-JOB在OSCHINA上获得了@红薯的热门推荐，同期分别达到了OSCHINA的“热门动弹”排行第一和git.oschina的开源软件月热度排行第一，在此特别感谢红薯，感谢大家的关注和支持。
@@ -55,7 +79,7 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 
 于2017-05-13，在上海举办的 "[第62期开源中国源创会](https://www.oschina.net/event/2236961)" 的 "放码过来" 环节，我登台对XXL-JOB做了演讲，台下五百位在场观众反响热烈（[图文回顾](https://www.oschina.net/question/2686220_2242120) ）。
 
-#### 我司大众点评目前已接入XXL-JOB，内部别名《Ferrari》（Ferrari基于XXL-JOB的V1.1版本定制而成，新接入应用推荐升级最新版本）。
+> 我司大众点评目前已接入XXL-JOB，内部别名《Ferrari》（Ferrari基于XXL-JOB的V1.1版本定制而成，新接入应用推荐升级最新版本）。**
 据最新统计, 自2016-01-21接入至2017-07-07期间，该系统已调度约60万余次，表现优异。新接入应用推荐使用最新版本，因为经过数个大版本的更新，系统的任务模型、UI交互模型以及底层调度通讯模型都有了较大的优化和提升，核心功能更加稳定高效。
 
 至今，XXL-JOB已接入多家公司的线上产品线，接入场景如电商业务，O2O业务和大数据作业等，截止2016-07-19为止，XXL-JOB已接入的公司包括不限于：
@@ -93,60 +117,49 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 	- 31、四川互宜达科技有限公司
     - 32、钱包行云（北京）科技有限公司
     - 33、重庆欣才集团
+    - 34、咪咕互动娱乐有限公司（中国移动）
+    - 35、北京诺亦腾科技有限公司
+    - 36、增长引擎(北京)信息技术有限公司
+    - 37、北京英贝思科技有限公司
+    - 38、刚泰集团
+    - 39、深圳泰久信息系统股份有限公司
 	- ……
+
+> 更多接入的公司，欢迎在 [登记地址](https://github.com/xuxueli/xxl-job/issues/1 ) 登记，登记仅仅为了产品推广。
 
 欢迎大家的关注和使用，XXL-JOB也将拥抱变化，持续发展。
 
 
-### 下载
+## Communication
 
-#### 源码仓库地址 (将会在两个git仓库同步发布最新代码)
-
-源码仓库地址 | Release Download
---- | ---
-[https://github.com/xuxueli/xxl-job](https://github.com/xuxueli/xxl-job) | [Download](https://github.com/xuxueli/xxl-job/releases)  
-[http://git.oschina.net/xuxueli0323/xxl-job](http://git.oschina.net/xuxueli0323/xxl-job) | [Download](http://git.oschina.net/xuxueli0323/xxl-job/releases)
-
-
-#### 中央仓库地址 (最新Release版本：1.8.0)
-
-```
-<!-- http://repo1.maven.org/maven2/com/xuxueli/xxl-job-core/ -->
-<dependency>
-    <groupId>com.xuxueli</groupId>
-    <artifactId>xxl-job-core</artifactId>
-    <version>1.8.0</version>
-</dependency>
-```
-
-#### 博客地址 (将会在两个博客同步更新文档)
-
-- [oschina地址](http://my.oschina.net/xuxueli/blog/690978)
-- [cnblogs地址](http://www.cnblogs.com/xuxueli/p/5021979.html)
-
-#### 技术交流群 (仅作技术交流)
+- 腾讯QQ群（6）：399758605
+- 腾讯QQ群（5）：138274130
+- 腾讯QQ群（4）：464762661
+- 腾讯QQ群（3）：242151780
+- 腾讯QQ群（2）：438249535
+- 腾讯QQ群（1）：367260654
+- [Gitter](https://gitter.im/xuxueli/xxl-job)
 
 
-- 群5：138274130      [![image](http://pub.idqqimg.com/wpa/images/group.png)](http://shang.qq.com/wpa/qunwpa?idkey=a3f3aea7e5943e7a24e9726495747ddc19bccd3592d7a70ecb5a97b616062241 )
-- 群4：464762661    （群即将满，请加群5）
-- 群3：242151780    （群即将满，请加群5）
-- 群2：438249535    （群即将满，请加群5）
-- 群1：367260654    （群即将满，请加群5）
+## Contributing
+Contributions are welcome! Open a pull request to fix a bug, or open an [Issue](https://github.com/xuxueli/xxl-job/issues/) to discuss a new feature or change.
+
+欢迎参与项目贡献！比如提交PR修复一个bug，或者新建 [Issue](https://github.com/xuxueli/xxl-job/issues/) 讨论新特性或者变更。
 
 
-### 报告问题
-XXL-JOB托管在Github上，如有问题可在 [ISSUES](https://github.com/xuxueli/xxl-job/issues/) 上提问，也可以加入上文技术交流群；
+## Copyright and License
+This product is open source and free, and will continue to provide free community technical support. Individual or enterprise users are free to access and use.
 
-### 接入登记（登记仅为了推广，产品开源免费）
-更多接入公司，欢迎在github [登记](https://github.com/xuxueli/xxl-job/issues/1 )
+- Licensed under the GNU General Public License (GPL) v3.
+- Copyright (c) 2015-present, xuxueli.
 
-### 开源协议
 产品开源免费，并且将持续提供免费的社区技术支持。个人或企业内部可自由的接入和使用。
 
-XXL-JOB采用GPLv3协议，目的是为了保证用户的自由使用权利。协议可避免专利申请的特殊危险 "the GPL assures that patents cannot be used to render the program non-free.（摘自GPLv3）"。  
 
----
-### 支持的话可以扫一扫，支持 [XXL系列](https://github.com/xuxueli) 的建设：）
+## Donate
+No matter how much the amount is enough to express your thought, thank you very much ：）
 
-微信：![输入图片说明](https://static.oschina.net/uploads/img/201707/07214300_qhxT.png "在这里输入图片标题")
-支付宝：![输入图片说明](http://images2015.cnblogs.com/blog/554415/201605/554415-20160513183306234-1939652116.png "在这里输入图片标题")
+无论金额多少都足够表达您这份心意，非常感谢 ：）
+
+微信：<img src="https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/donate-wechat.png" width="200">
+支付宝：<img src="https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/donate-alipay.jpg" width="200">
