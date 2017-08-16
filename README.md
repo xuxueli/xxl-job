@@ -157,9 +157,9 @@ This product is open source and free, and will continue to provide free communit
 
 
 ## Donate
-To support the author, donate the author to buy a cup of coffee：）
+No matter how much the amount is enough to express your thought, thank you very much ：）
 
-支持作者的话，捐赠作者请作者喝杯咖啡吧：）
+无论金额多少都足够表达您这份心意，非常感谢 ：）
 
 微信：<img src="https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/donate-wechat.png" width="200">
 支付宝：<img src="https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/donate-alipay.jpg" width="200">
