@@ -82,6 +82,9 @@ So far, XXL-JOB has access to a number of companies online product line, access 
     - 34、咪咕互动娱乐有限公司（中国移动）
     - 35、北京诺亦腾科技有限公司
     - 36、增长引擎(北京)信息技术有限公司
+    - 37、北京英贝思科技有限公司
+    - 38、刚泰集团
+    - 39、深圳泰久信息系统股份有限公司
 	- ……
 
 > The company that access and use this product is welcome to register at the [address](https://github.com/xuxueli/xxl-job/issues/1 ), only for product promotion. 
