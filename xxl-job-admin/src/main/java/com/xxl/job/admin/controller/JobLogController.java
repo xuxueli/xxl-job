@@ -195,7 +195,7 @@ public class JobLogController {
 		} else if (type == 8) {
 			clearBeforeNum = 100000;	// 清理十万条以前日志数据
 		} else if (type == 9) {
-			clearBeforeNum = 0;			// 清理所用日志数据
+			clearBeforeNum = 0;			// 清理所有日志数据
 		} else {
 			return new ReturnT<String>(ReturnT.FAIL_CODE, "清理类型参数异常");
 		}

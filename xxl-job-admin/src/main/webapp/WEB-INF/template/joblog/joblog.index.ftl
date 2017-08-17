@@ -156,7 +156,7 @@
                                 <option value="6" >清理一万条以前日志数据</option>
                                 <option value="7" >清理三万条以前日志数据</option>
                                 <option value="8" >清理十万条以前日志数据</option>
-                                <option value="9" >清理所用日志数据</option>
+                                <option value="9" >清理所有日志数据</option>
                             </select>
                         </div>
                     </div>

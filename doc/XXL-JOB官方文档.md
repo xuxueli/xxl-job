@@ -239,7 +239,7 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
     xxl.job.executor.ip=
     xxl.job.executor.port=9999
     
-    ### xxl-job log path：执行器运行日志文件存储的磁盘位置
+    ### xxl-job log path：执行器运行日志文件存储的磁盘位置，需要对该路径拥有读写权限
     xxl.job.executor.logpath=/data/applogs/xxl-job/jobhandler/
     
     ### xxl-job, access token：执行器通讯TOKEN，非空时启用
