@@ -85,6 +85,10 @@ So far, XXL-JOB has access to a number of companies online product line, access 
     - 37、北京英贝思科技有限公司
     - 38、刚泰集团
     - 39、深圳泰久信息系统股份有限公司
+    - 40、随行付支付有限公司
+    - 41、广州瀚农网络科技有限公司
+    - 42、享点科技有限公司
+    - 43、杭州比智科技有限公司
 	- ……
 
 > The company that access and use this product is welcome to register at the [address](https://github.com/xuxueli/xxl-job/issues/1 ), only for product promotion. 
