@@ -30,7 +30,9 @@ public class HttpClientUtil {
 		byte[] responseBytes = null;
 		
 		HttpPost httpPost = new HttpPost(reqURL);
-		CloseableHttpClient httpClient = HttpClients.createDefault();
+		//CloseableHttpClient httpClient = HttpClients.createDefault();
+		CloseableHttpClient httpClient = HttpClients.custom().disableAutomaticRetries().build();	// disable retry
+
 		try {
 			// init post
 			/*if (params != null && !params.isEmpty()) {
@@ -62,7 +64,7 @@ public class HttpClientUtil {
 				EntityUtils.consume(entity);
 			}
 		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
+			logger.error("", e);
 			throw e;
 		} finally {
 			httpPost.releaseConnection();
