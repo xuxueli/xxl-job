@@ -23,7 +23,7 @@ public class ExecutorRegistryThread extends Thread {
     }
 
     private Thread registryThread;
-    private boolean toStop = false;
+    private volatile boolean toStop = false;
     public void start(final int port, final String ip, final String appName){
 
         // valid
@@ -75,6 +75,10 @@ public class ExecutorRegistryThread extends Thread {
                         logger.error(e.getMessage(), e);
                     }
                 }
+
+                // registry remove
+
+
             }
         });
         registryThread.setDaemon(true);
