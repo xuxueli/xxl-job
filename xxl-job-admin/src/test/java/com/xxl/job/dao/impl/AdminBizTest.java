@@ -27,6 +27,13 @@ public class AdminBizTest {
         ReturnT<String> returnT = adminBiz.registry(registryParam);
         Assert.assertTrue(returnT.getCode() == ReturnT.SUCCESS_CODE);
 
+
+
+        // test executor registry remove
+        registryParam = new RegistryParam(RegistryConfig.RegistType.EXECUTOR.name(), "xxl-job-executor-example", "127.0.0.1:9999");
+        returnT = adminBiz.registryRemove(registryParam);
+        Assert.assertTrue(returnT.getCode() == ReturnT.SUCCESS_CODE);
+
     }
 
 }

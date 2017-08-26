@@ -29,4 +29,12 @@ public interface AdminBiz {
      */
     public ReturnT<String> registry(RegistryParam registryParam);
 
+    /**
+     * registry remove
+     *
+     * @param registryParam
+     * @return
+     */
+    public ReturnT<String> registryRemove(RegistryParam registryParam);
+
 }

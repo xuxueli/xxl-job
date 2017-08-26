@@ -118,4 +118,10 @@ public class AdminBizImpl implements AdminBiz {
         return ReturnT.SUCCESS;
     }
 
+    @Override
+    public ReturnT<String> registryRemove(RegistryParam registryParam) {
+        xxlJobRegistryDao.registryDelete(registryParam.getRegistGroup(), registryParam.getRegistryKey(), registryParam.getRegistryValue());
+        return ReturnT.SUCCESS;
+    }
+
 }

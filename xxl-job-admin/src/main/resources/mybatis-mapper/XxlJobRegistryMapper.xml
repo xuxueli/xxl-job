@@ -43,4 +43,11 @@
         VALUES( #{registryGroup}  , #{registryKey} , #{registryValue}, NOW())
     </insert>
 
+	<delete id="registryDelete" >
+		DELETE FROM XXL_JOB_QRTZ_TRIGGER_REGISTRY
+		WHERE registry_group = #{registryGroup}
+			AND registry_key = #{registryKey}
+			AND registry_value = #{registryValue}
+	</delete>
+
 </mapper>

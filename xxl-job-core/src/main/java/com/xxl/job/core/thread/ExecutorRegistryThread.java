@@ -47,6 +47,8 @@ public class ExecutorRegistryThread extends Thread {
         registryThread = new Thread(new Runnable() {
             @Override
             public void run() {
+
+                // registry
                 while (!toStop) {
                     try {
                         RegistryParam registryParam = new RegistryParam(RegistryConfig.RegistType.EXECUTOR.name(), appName, executorAddress);
@@ -77,7 +79,26 @@ public class ExecutorRegistryThread extends Thread {
                 }
 
                 // registry remove
+                try {
+                    RegistryParam registryParam = new RegistryParam(RegistryConfig.RegistType.EXECUTOR.name(), appName, executorAddress);
+                    for (AdminBiz adminBiz: XxlJobExecutor.getAdminBizList()) {
+                        try {
+                            ReturnT<String> registryResult = adminBiz.registryRemove(registryParam);
+                            if (registryResult!=null && ReturnT.SUCCESS_CODE == registryResult.getCode()) {
+                                registryResult = ReturnT.SUCCESS;
+                                logger.info(">>>>>>>>>>> xxl-job registry-remove success, registryParam:{}, registryResult:{}", new Object[]{registryParam, registryResult});
+                                break;
+                            } else {
+                                logger.info(">>>>>>>>>>> xxl-job registry-remove fail, registryParam:{}, registryResult:{}", new Object[]{registryParam, registryResult});
+                            }
+                        } catch (Exception e) {
+                            logger.info(">>>>>>>>>>> xxl-job registry-remove error, registryParam:{}", registryParam, e);
+                        }
 
+                    }
+                } catch (Exception e) {
+                    logger.error(e.getMessage(), e);
+                }
 
             }
         });
