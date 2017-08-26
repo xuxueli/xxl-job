@@ -55,9 +55,9 @@ public class JettyServer {
 					server.join();	// block until thread stopped
 					logger.info(">>>>>>>>>>> xxl-rpc server join success, netcon={}, port={}", JettyServer.class.getName(), port);
 				} catch (Exception e) {
-					logger.error("", e);
+					logger.error(e.getMessage(), e);
 				} finally {
-					destroy();
+					//destroy();
 				}
 			}
 		});
@@ -67,24 +67,24 @@ public class JettyServer {
 
 	public void destroy() {
 
+		// destroy Registry-Server
+		ExecutorRegistryThread.getInstance().toStop();
+
+		// destroy Callback-Server
+		TriggerCallbackThread.getInstance().toStop();
+
 		// destroy server
 		if (server != null) {
 			try {
 				server.stop();
 				server.destroy();
 			} catch (Exception e) {
-				logger.error("", e);
+				logger.error(e.getMessage(), e);
 			}
 		}
 		if (thread.isAlive()) {
 			thread.interrupt();
 		}
-
-		// destroy Registry-Server
-		ExecutorRegistryThread.getInstance().toStop();
-
-		// destroy Callback-Server
-		TriggerCallbackThread.getInstance().toStop();
 
 		logger.info(">>>>>>>>>>> xxl-rpc server destroy success, netcon={}", JettyServer.class.getName());
 	}

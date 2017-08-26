@@ -73,7 +73,7 @@ public class AdminBizImpl implements AdminBiz {
                                 childTriggerMsg += MessageFormat.format("<br> {0}/{1} 触发子任务成功, 子任务Key: {2}, status: {3}, 子任务描述: {4}",
                                         (i+1), childJobKeys.length, childJobKeys[i], ret, childJobInfo.getJobDesc());
                             } catch (SchedulerException e) {
-                                logger.error("", e);
+                                logger.error(e.getMessage(), e);
                             }
                         } else {
                             childTriggerMsg += MessageFormat.format("<br> {0}/{1} 触发子任务失败, 子任务xxlJobInfo不存在, 子任务Key: {2}",

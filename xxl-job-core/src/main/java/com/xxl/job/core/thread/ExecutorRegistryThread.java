@@ -99,6 +99,7 @@ public class ExecutorRegistryThread extends Thread {
                 } catch (Exception e) {
                     logger.error(e.getMessage(), e);
                 }
+                logger.warn(">>>>>>>>>>>> xxl-job, executor registry thread destory.");
 
             }
         });
@@ -108,6 +109,13 @@ public class ExecutorRegistryThread extends Thread {
 
     public void toStop() {
         toStop = true;
+        // interrupt and wait
+        registryThread.interrupt();
+        try {
+            registryThread.join();
+        } catch (InterruptedException e) {
+            logger.error(e.getMessage(), e);
+        }
     }
 
 }

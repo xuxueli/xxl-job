@@ -132,12 +132,12 @@ public class XxlJobServiceImpl implements XxlJobService {
             //XxlJobDynamicScheduler.pauseJob(qz_name, qz_group);
             return ReturnT.SUCCESS;
         } catch (SchedulerException e) {
-            logger.error("", e);
+            logger.error(e.getMessage(), e);
             try {
                 xxlJobInfoDao.delete(jobInfo.getId());
                 XxlJobDynamicScheduler.removeJob(qz_name, qz_group);
             } catch (SchedulerException e1) {
-                logger.error("", e1);
+                logger.error(e.getMessage(), e1);
             }
             return new ReturnT<String>(ReturnT.FAIL_CODE, "新增任务失败:" + e.getMessage());
         }
@@ -207,7 +207,7 @@ public class XxlJobServiceImpl implements XxlJobService {
             boolean ret = XxlJobDynamicScheduler.rescheduleJob(qz_group, qz_name, exists_jobInfo.getJobCron());
             return ret?ReturnT.SUCCESS:ReturnT.FAIL;
         } catch (SchedulerException e) {
-            logger.error("", e);
+            logger.error(e.getMessage(), e);
         }
 
 		return ReturnT.FAIL;

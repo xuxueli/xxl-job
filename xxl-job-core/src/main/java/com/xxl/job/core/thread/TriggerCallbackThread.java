@@ -80,6 +80,7 @@ public class TriggerCallbackThread {
                 } catch (Exception e) {
                     logger.error(e.getMessage(), e);
                 }
+                logger.warn(">>>>>>>>>>>> xxl-job, executor callback thread destory.");
 
             }
         });
@@ -88,6 +89,13 @@ public class TriggerCallbackThread {
     }
     public void toStop(){
         toStop = true;
+        // interrupt and wait
+        triggerCallbackThread.interrupt();
+        try {
+            triggerCallbackThread.join();
+        } catch (InterruptedException e) {
+            logger.error(e.getMessage(), e);
+        }
     }
 
     /**
