@@ -39,7 +39,7 @@ public class XxlJobConfig {
 
     @Bean(initMethod = "start", destroyMethod = "destroy")
     public XxlJobExecutor xxlJobExecutor() {
-        logger.error("------------ xxlJobExecutor -----------");
+        logger.info(">>>>>>>>>>> xxl-job config init.");
         XxlJobExecutor xxlJobExecutor = new XxlJobExecutor();
         xxlJobExecutor.setIp(ip);
         xxlJobExecutor.setPort(port);

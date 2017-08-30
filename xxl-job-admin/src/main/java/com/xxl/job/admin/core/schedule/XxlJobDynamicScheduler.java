@@ -78,7 +78,7 @@ public final class XxlJobDynamicScheduler implements ApplicationContextAware {
 
         // valid
         Assert.notNull(scheduler, "quartz scheduler is null");
-        logger.info(">>>>>>>>> init quartz scheduler success.[{}]", scheduler);
+        logger.info(">>>>>>>>> init xxl-job admin success.");
     }
 
     public void destroy(){
