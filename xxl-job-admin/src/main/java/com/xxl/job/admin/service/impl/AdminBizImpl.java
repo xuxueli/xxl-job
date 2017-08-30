@@ -8,6 +8,7 @@ import com.xxl.job.admin.core.trigger.XxlJobTrigger;
 import com.xxl.job.admin.dao.XxlJobInfoDao;
 import com.xxl.job.admin.dao.XxlJobLogDao;
 import com.xxl.job.admin.dao.XxlJobRegistryDao;
+import com.xxl.job.admin.service.XxlJobService;
 import com.xxl.job.core.biz.AdminBiz;
 import com.xxl.job.core.biz.model.HandleCallbackParam;
 import com.xxl.job.core.biz.model.RegistryParam;
@@ -36,6 +37,9 @@ public class AdminBizImpl implements AdminBiz {
     private XxlJobInfoDao xxlJobInfoDao;
     @Resource
     private XxlJobRegistryDao xxlJobRegistryDao;
+    @Resource
+    private XxlJobService xxlJobService;
+
 
     @Override
     public ReturnT<String> callback(List<HandleCallbackParam> callbackParamList) {
@@ -127,9 +131,7 @@ public class AdminBizImpl implements AdminBiz {
 
     @Override
     public ReturnT<String> triggerJob(int jobId) {
-        // TODO (thread queue trigger)
-
-        return ReturnT.SUCCESS;
+        return xxlJobService.triggerJob(jobId);
     }
 
 }
