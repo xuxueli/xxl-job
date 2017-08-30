@@ -14,26 +14,37 @@ import org.junit.Test;
  */
 public class AdminBizTest {
 
+    // admin-client
+    private static String addressUrl = "http://127.0.0.1:8080/xxl-job-admin".concat(AdminBiz.MAPPING);
+    private static String accessToken = null;
+
     @Test
     public void registryTest() throws Exception {
-
-        // admin-client
-        String addressUrl = "http://127.0.0.1:8080/xxl-job-admin".concat(AdminBiz.MAPPING);
-        String accessToken = null;
         AdminBiz adminBiz = (AdminBiz) new NetComClientProxy(AdminBiz.class, addressUrl, accessToken).getObject();
 
         // test executor registry
         RegistryParam registryParam = new RegistryParam(RegistryConfig.RegistType.EXECUTOR.name(), "xxl-job-executor-example", "127.0.0.1:9999");
         ReturnT<String> returnT = adminBiz.registry(registryParam);
         Assert.assertTrue(returnT.getCode() == ReturnT.SUCCESS_CODE);
+    }
 
-
+    @Test
+    public void registryRemove() throws Exception {
+        AdminBiz adminBiz = (AdminBiz) new NetComClientProxy(AdminBiz.class, addressUrl, accessToken).getObject();
 
         // test executor registry remove
-        registryParam = new RegistryParam(RegistryConfig.RegistType.EXECUTOR.name(), "xxl-job-executor-example", "127.0.0.1:9999");
-        returnT = adminBiz.registryRemove(registryParam);
+        RegistryParam registryParam = new RegistryParam(RegistryConfig.RegistType.EXECUTOR.name(), "xxl-job-executor-example", "127.0.0.1:9999");
+        ReturnT<String> returnT = adminBiz.registryRemove(registryParam);
         Assert.assertTrue(returnT.getCode() == ReturnT.SUCCESS_CODE);
+    }
 
+    @Test
+    public void triggerJob() throws Exception {
+        AdminBiz adminBiz = (AdminBiz) new NetComClientProxy(AdminBiz.class, addressUrl, accessToken).getObject();
+
+        int jobId = 1;
+        ReturnT<String> returnT = adminBiz.triggerJob(1);
+        Assert.assertTrue(returnT.getCode() == ReturnT.SUCCESS_CODE);
     }
 
 }

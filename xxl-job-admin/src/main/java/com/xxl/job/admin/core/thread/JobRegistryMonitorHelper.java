@@ -91,7 +91,13 @@ public class JobRegistryMonitorHelper {
 
 	public void toStop(){
 		toStop = true;
-		//registryThread.interrupt();
+		// interrupt and wait
+		registryThread.interrupt();
+		try {
+			registryThread.join();
+		} catch (InterruptedException e) {
+			logger.error(e.getMessage(), e);
+		}
 	}
 
 }

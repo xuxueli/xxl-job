@@ -4,6 +4,7 @@ import com.xxl.job.admin.controller.JobApiController;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.admin.core.schedule.XxlJobDynamicScheduler;
+import com.xxl.job.admin.core.trigger.XxlJobTrigger;
 import com.xxl.job.admin.dao.XxlJobInfoDao;
 import com.xxl.job.admin.dao.XxlJobLogDao;
 import com.xxl.job.admin.dao.XxlJobRegistryDao;
@@ -121,6 +122,13 @@ public class AdminBizImpl implements AdminBiz {
     @Override
     public ReturnT<String> registryRemove(RegistryParam registryParam) {
         xxlJobRegistryDao.registryDelete(registryParam.getRegistGroup(), registryParam.getRegistryKey(), registryParam.getRegistryValue());
+        return ReturnT.SUCCESS;
+    }
+
+    @Override
+    public ReturnT<String> triggerJob(int jobId) {
+        // TODO (thread queue trigger)
+
         return ReturnT.SUCCESS;
     }
 
