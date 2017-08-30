@@ -264,6 +264,10 @@ public class XxlJobServiceImpl implements XxlJobService {
 	@Override
 	public ReturnT<String> triggerJob(int id) {
         XxlJobInfo xxlJobInfo = xxlJobInfoDao.loadById(id);
+        if (xxlJobInfo == null) {
+        	return new ReturnT<String>(ReturnT.FAIL_CODE, "任务ID非法");
+		}
+
         String group = String.valueOf(xxlJobInfo.getJobGroup());
         String name = String.valueOf(xxlJobInfo.getId());
 
@@ -272,7 +276,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 			return ReturnT.SUCCESS;
 		} catch (SchedulerException e) {
 			logger.error(e.getMessage(), e);
-			return ReturnT.FAIL;
+			return new ReturnT<String>(ReturnT.FAIL_CODE, e.getMessage());
 		}
 	}
 

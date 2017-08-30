@@ -34,6 +34,10 @@ public class XxlJobTrigger {
 
         // load data
         XxlJobInfo jobInfo = XxlJobDynamicScheduler.xxlJobInfoDao.loadById(jobId);              // job info
+        if (jobInfo == null) {
+            logger.warn(">>>>>>>>>>>> xxl-job trigger fail, jobId invalid，jobId={}", jobId);
+            return;
+        }
         XxlJobGroup group = XxlJobDynamicScheduler.xxlJobGroupDao.load(jobInfo.getJobGroup());  // group info
 
         ExecutorBlockStrategyEnum blockStrategy = ExecutorBlockStrategyEnum.match(jobInfo.getExecutorBlockStrategy(), ExecutorBlockStrategyEnum.SERIAL_EXECUTION);  // block strategy

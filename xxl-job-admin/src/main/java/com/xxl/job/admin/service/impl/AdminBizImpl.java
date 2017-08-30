@@ -69,21 +69,10 @@ public class AdminBizImpl implements AdminBiz {
                 for (int i = 0; i < childJobKeys.length; i++) {
                     String[] jobKeyArr = childJobKeys[i].split("_");
                     if (jobKeyArr!=null && jobKeyArr.length==2) {
-                        XxlJobInfo childJobInfo = xxlJobInfoDao.loadById(Integer.valueOf(jobKeyArr[1]));
-                        if (childJobInfo!=null) {
-                            try {
-                                boolean ret = XxlJobDynamicScheduler.triggerJob(String.valueOf(childJobInfo.getId()), String.valueOf(childJobInfo.getJobGroup()));
-
-                                // add msg
-                                childTriggerMsg += MessageFormat.format("<br> {0}/{1} 触发子任务成功, 子任务Key: {2}, status: {3}, 子任务描述: {4}",
-                                        (i+1), childJobKeys.length, childJobKeys[i], ret, childJobInfo.getJobDesc());
-                            } catch (SchedulerException e) {
-                                logger.error(e.getMessage(), e);
-                            }
-                        } else {
-                            childTriggerMsg += MessageFormat.format("<br> {0}/{1} 触发子任务失败, 子任务xxlJobInfo不存在, 子任务Key: {2}",
-                                    (i+1), childJobKeys.length, childJobKeys[i]);
-                        }
+                        ReturnT<String> triggerChildResult = xxlJobService.triggerJob(Integer.valueOf(jobKeyArr[1]));
+                        // add msg
+                        childTriggerMsg += MessageFormat.format("<br> {0}/{1} 触发子任务{2}, 子任务Key: {3}, 子任务触发备注: {4}",
+                                (i+1), childJobKeys.length, (triggerChildResult.getCode()==ReturnT.SUCCESS_CODE?"成功":"失败"), childJobKeys[i], triggerChildResult.getMsg());
                     } else {
                         childTriggerMsg += MessageFormat.format("<br> {0}/{1} 触发子任务失败, 子任务Key格式错误, 子任务Key: {2}",
                                 (i+1), childJobKeys.length, childJobKeys[i]);

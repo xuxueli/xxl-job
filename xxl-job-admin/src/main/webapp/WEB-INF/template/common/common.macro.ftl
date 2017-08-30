@@ -60,8 +60,8 @@
 <#macro commonHeader>
 	<header class="main-header">
 		<a href="${request.contextPath}/" class="logo">
-			<span class="logo-mini"><b>X</b>XL</span>
-			<span class="logo-lg"><b>任务调度</b>中心</span>
+			<span class="logo-mini"><b>XXL</b></span>
+			<span class="logo-lg"><b>任务调度中心</b></span>
 		</a>
 		<nav class="navbar navbar-static-top" role="navigation">
 			<a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button"><span class="sr-only">切换导航</span></a>
