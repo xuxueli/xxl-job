@@ -43,7 +43,7 @@ public class AdminBizTest {
         AdminBiz adminBiz = (AdminBiz) new NetComClientProxy(AdminBiz.class, addressUrl, accessToken).getObject();
 
         int jobId = 1;
-        ReturnT<String> returnT = adminBiz.triggerJob(1);
+        ReturnT<String> returnT = adminBiz.triggerJob(jobId);
         Assert.assertTrue(returnT.getCode() == ReturnT.SUCCESS_CODE);
     }
 

@@ -226,7 +226,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 			xxlJobLogGlueDao.deleteByJobId(id);
 			return ReturnT.SUCCESS;
 		} catch (SchedulerException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		return ReturnT.FAIL;
 	}
@@ -241,7 +241,7 @@ public class XxlJobServiceImpl implements XxlJobService {
             boolean ret = XxlJobDynamicScheduler.pauseJob(name, group);	// jobStatus do not store
             return ret?ReturnT.SUCCESS:ReturnT.FAIL;
 		} catch (SchedulerException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			return ReturnT.FAIL;
 		}
 	}
@@ -256,7 +256,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 			boolean ret = XxlJobDynamicScheduler.resumeJob(name, group);
 			return ret?ReturnT.SUCCESS:ReturnT.FAIL;
 		} catch (SchedulerException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			return ReturnT.FAIL;
 		}
 	}
@@ -271,7 +271,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 			XxlJobDynamicScheduler.triggerJob(name, group);
 			return ReturnT.SUCCESS;
 		} catch (SchedulerException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			return ReturnT.FAIL;
 		}
 	}

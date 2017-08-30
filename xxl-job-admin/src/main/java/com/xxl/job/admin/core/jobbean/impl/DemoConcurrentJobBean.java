@@ -21,7 +21,7 @@ package com.xxl.job.admin.core.jobbean.impl;
 //		try {
 //			TimeUnit.SECONDS.sleep(10);
 //		} catch (InterruptedException e) {
-//			e.printStackTrace();
+//			logger.error(e.getMessage(), e);
 //		}
 //		
 //		return false;

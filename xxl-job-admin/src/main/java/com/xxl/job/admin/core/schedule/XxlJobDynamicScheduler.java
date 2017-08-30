@@ -143,7 +143,7 @@ public final class XxlJobDynamicScheduler implements ApplicationContextAware {
 			}
 			
 		} catch (SchedulerException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 	}
 	
@@ -377,7 +377,7 @@ public final class XxlJobDynamicScheduler implements ApplicationContextAware {
             }
 
         } catch (SchedulerException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             return null;
         }
         return jobList;

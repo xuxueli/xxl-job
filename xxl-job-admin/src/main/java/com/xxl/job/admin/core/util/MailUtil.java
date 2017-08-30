@@ -147,7 +147,7 @@ public class MailUtil {
 			mailSender.send(mimeMessage);
 			return true;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		return false;
 	}

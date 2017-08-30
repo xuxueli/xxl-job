@@ -75,9 +75,9 @@ public class GlueFactory {
 				try {
 					field.set(instance, fieldBean);
 				} catch (IllegalArgumentException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(), e);
 				} catch (IllegalAccessException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(), e);
 				}
 			}
 		}
