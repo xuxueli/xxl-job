@@ -1038,22 +1038,7 @@ Tips: 历史版本(V1.3.x)目前已经Release至稳定版本, 进入维护阶段
 
 ---
 ### 捐赠
-无论金额多少都足够表达您这份心意，非常感谢 ：）
+无论金额多少都足够表达您这份心意，非常感谢 ：）    [XXL系列捐赠记录](http://www.xueli.com/page/donate.html )
 
 微信：<img src="https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/donate-wechat.png" width="200">
 支付宝：<img src="https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/donate-alipay.jpg" width="200">
-
-> 自2017-03-29起XXL系列接收用户捐赠，捐赠记录如下, 感谢你们的支持！：
-
-捐赠时间 | 金额 | 名称 | 留言
---- | --- | --- | ---
-2017-08-17 | 10.00￥ | 微信 | 不行，还得感谢一把
-2017-08-17 | 10.00￥ | 微信 | 感谢，好项目，好作者 
-2017-08-16 | 3.00￥ | 微信 | 
-2017-06-30 | 10.00￥ | 石头哥哥* | 支持下xxl开源系列
-2017-06-16 | 10.00￥ | 劳巴* | xxl-job对我的帮助很大，辛苦你们的帮助，辛苦了！
-2017-06-12 | 6.66￥ | 凌浦* |
-2017-06-12 | 10.00￥ | Henry* | 支持XXL
-2017-06-12 | 10.00￥ | loioi* | 感谢您的开源项目！
-2017-05-10 | 10.00￥ | 	阿杜杜不是阿木木* | 感谢您的开源项目！
-
