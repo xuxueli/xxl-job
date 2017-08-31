@@ -15,7 +15,7 @@ import java.lang.reflect.Method;
  * 路由执行指定的任务
  * 第一个参数为beanId+方法名称
  *
- * @author liewenlong    2016-08-22
+ * @author zhongdifeng
  */
 @JobHander(value = "routeJobHander")
 @Service
