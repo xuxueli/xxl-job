@@ -35,6 +35,9 @@ XXL-JOB is a lightweight distributed task scheduling framework, the core design 
 - 22.Failure handling strategy:Handling strategy when scheduling fails, the strategy includes: failure alarm (default), failure retry;
 - 23.Sharding broadcast task: When an executor cluster is deployed, task routing strategy select "sharding broadcast", a task schedule will broadcast all the actuators in the cluster to perform it once, you can develop sharding tasks based on sharding parameters;
 - 24.Dynamic sharding: The sharding broadcast task is sharded by the executors to support the dynamic expansion of the executor cluster to dynamically increase the number of shardings and cooperate with the business handle; In the large amount of data operations can significantly improve the task processing capacity and speed.
+- 25、Event trigger：In addition to "Cron" and "Task Dependency" to trigger tasks, support event-based triggering tasks. The dispatch center provides API service that triggers a single execution of the task, it can be triggered flexibly according to business events. 
+
+
 ###  1.3 Development
 In 2015, I created the XXL-JOB project repository on github and submitted the first commit, followed by the system structure design, UI selection, interactive design ...
 In 2015 - November, XXL-JOB finally RELEASE the first big version of V1.0, then I will be released to OSCHINA, XXL-JOB OSCHINA won the popular recommendation of @红薯, the same period reached OSCHINA's " Popular move "ranked first and git.oschina open source software monthly heat ranked first, especially thanks for @红薯, thank you for the attention and support.
@@ -89,6 +92,8 @@ So far, XXL-JOB has access to a number of companies online product line, access 
     - 41、广州瀚农网络科技有限公司
     - 42、享点科技有限公司
     - 43、杭州比智科技有限公司
+    - 44、圳临界线网络科技有限公司
+    - 45、广州知识圈网络科技有限公司
 	- ……
 
 > The company that access and use this product is welcome to register at the [address](https://github.com/xuxueli/xxl-job/issues/1 ), only for product promotion. 
@@ -757,6 +762,18 @@ There are only two settings when communication between scheduler center and exec
 
 - one:do not configure AccessToken on both, close security check.
 - two:configure the same AccessToken on both;
+
+### 5.11 Dispatching center API services
+The scheduling center provides API services for executors and business parties to choose to use, and the currently available API services are available.
+
+    1. Job result callback service;
+    2. Executor registration service;
+    3. Executor registration remove services;
+    4. Triggers a single execution service, and support the task to be triggered according to the business event;
+
+The scheduling center API service location: com.xxl.job.core.biz.AdminBiz.java
+
+The scheduling center API service requests reference code：com.xxl.job.dao.impl.AdminBizTest.java
 
 
 ## 6 Version update log

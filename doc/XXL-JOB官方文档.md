@@ -97,6 +97,8 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
     - 41、广州瀚农网络科技有限公司
     - 42、享点科技有限公司
     - 43、杭州比智科技有限公司
+    - 44、圳临界线网络科技有限公司
+    - 45、广州知识圈网络科技有限公司
 	- ……
 
 > 更多接入的公司，欢迎在 [登记地址](https://github.com/xuxueli/xxl-job/issues/1 ) 登记，登记仅仅为了产品推广。
@@ -791,19 +793,6 @@ XXL-JOB会为每次调度请求生成一个单独的日志文件，需要通过 
 调度中心API服务位置：com.xxl.job.core.biz.AdminBiz.java
 
 调度中心API服务请求参考代码：com.xxl.job.dao.impl.AdminBizTest.java
-```
-// 该地址为调度中心部署跟地址，如果调度中心部署地址变动需要做相应调整
-String addressUrl = "http://127.0.0.1:8080/xxl-job-admin".concat(AdminBiz.MAPPING);
-String accessToken = null;
-
-AdminBiz adminBiz = (AdminBiz) new NetComClientProxy(AdminBiz.class, addressUrl, accessToken).getObject();
-
-// 任务ID
-int jobId = 1;
-ReturnT<String> returnT = adminBiz.triggerJob(jobId);
-Assert.assertTrue(returnT.getCode() == ReturnT.SUCCESS_CODE);
-    
-```
 
 
 ## 六、版本更新日志
