@@ -27,7 +27,7 @@
 		<freemarker.version>2.3.20</freemarker.version>
 		<junit.version>4.11</junit.version>
 
-		<jetty-server.version>9.2.22.v20170606</jetty-server.version>
+		<jetty-server.version>9.4.6.v20170531</jetty-server.version>
 		<hessian.version>4.0.38</hessian.version>
 		<httpclient.version>4.3.6</httpclient.version>
 
