@@ -8,7 +8,8 @@ public enum GlueTypeEnum {
     BEAN("BEAN模式"),
     GLUE_GROOVY("GLUE模式(Java)"),
     GLUE_SHELL("GLUE模式(Shell)"),
-    GLUE_PYTHON("GLUE模式(Python)");
+    GLUE_PYTHON("GLUE模式(Python)"),
+    GLUE_NODEJS("GLUE模式(Nodejs)");
 
     private String desc;
     private GlueTypeEnum(String desc) {

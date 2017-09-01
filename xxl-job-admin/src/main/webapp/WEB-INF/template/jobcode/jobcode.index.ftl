@@ -113,6 +113,7 @@
 <script src="${request.contextPath}/static/plugins/codemirror/mode/clike/clike.js"></script>
 <script src="${request.contextPath}/static/plugins/codemirror/mode/shell/shell.js"></script>
 <script src="${request.contextPath}/static/plugins/codemirror/mode/python/python.js"></script>
+<script src="${request.contextPath}/static/plugins/codemirror/mode/javascript/javascript.js"></script>
 <script src="${request.contextPath}/static/plugins/codemirror/addon/hint/show-hint.js"></script>
 <script src="${request.contextPath}/static/plugins/codemirror/addon/hint/anyword-hint.js"></script>
 <script>

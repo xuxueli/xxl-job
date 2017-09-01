@@ -16,6 +16,8 @@ $(function() {
 			ideMode = "text/x-sh";
 		} else if ('GLUE_PYTHON'==glueType){
 			ideMode = "text/x-python";
+		} else if ('GLUE_NODEJS'==glueType){
+			ideMode = "text/javascript"
 		}
 
 		codeEditor = CodeMirror(document.getElementById("ideWindow"), {
