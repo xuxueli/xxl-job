@@ -119,7 +119,7 @@ Source repository address | Release Download
 <dependency>
     <groupId>com.xuxueli</groupId>
     <artifactId>xxl-job-core</artifactId>
-    <version>1.8.1</version>
+    <version>1.8.2</version>
 </dependency>
 ```
 

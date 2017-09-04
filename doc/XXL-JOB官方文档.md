@@ -128,7 +128,7 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 <dependency>
     <groupId>com.xuxueli</groupId>
     <artifactId>xxl-job-core</artifactId>
-    <version>1.8.1</version>
+    <version>1.8.2</version>
 </dependency>
 ```
 
