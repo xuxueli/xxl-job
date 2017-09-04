@@ -5,7 +5,7 @@
     <parent>
         <artifactId>xxl-job-executor-samples</artifactId>
         <groupId>com.xuxueli</groupId>
-        <version>1.8.2-SNAPSHOT</version>
+        <version>1.8.2</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>xxl-job-executor-sample-jfinal</artifactId>
@@ -19,6 +19,13 @@
             <version>2.0</version>
         </dependency>
 
+        <!-- slf4j -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>${slf4j-api.version}</version>
+        </dependency>
+
         <!-- xxl-job -->
         <dependency>
             <groupId>com.xuxueli</groupId>
@@ -26,11 +33,6 @@
             <version>${project.parent.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <version>${slf4j-api.version}</version>
-        </dependency>
     </dependencies>
 
 </project>
