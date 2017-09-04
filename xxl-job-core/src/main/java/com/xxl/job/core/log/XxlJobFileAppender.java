@@ -18,7 +18,6 @@ public class XxlJobFileAppender {
 	// for JobThread (support log for child thread of job handler)
 	//public static ThreadLocal<String> contextHolder = new ThreadLocal<String>();
 	public static final InheritableThreadLocal<String> contextHolder = new InheritableThreadLocal<String>();
-	public static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");	// TODO, concurrent issues
 	public static String logPath = "/data/applogs/xxl-job/jobhandler/";
 
 	/**
@@ -37,6 +36,8 @@ public class XxlJobFileAppender {
         }
 
         // filePath/yyyy-MM-dd/
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");	// avoid concurrent problem, can not be static
+
         String nowFormat = sdf.format(new Date());
         File filePathDateDir = new File(filePathDir, nowFormat);
         if (!filePathDateDir.exists()) {
@@ -44,7 +45,7 @@ public class XxlJobFileAppender {
         }
 
         // filePath/yyyy-MM-dd/9999.log
-		String logFileName = XxlJobFileAppender.sdf.format(triggerDate).concat("/").concat(String.valueOf(logId)).concat(".log");
+		String logFileName = sdf.format(triggerDate).concat("/").concat(String.valueOf(logId)).concat(".log");
 		return logFileName;
 	}
 
