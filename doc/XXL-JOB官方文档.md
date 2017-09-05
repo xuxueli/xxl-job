@@ -702,7 +702,7 @@ xxl-job-admin#com.xxl.job.admin.controller.JobApiController.callback
 开发步骤：可参考 "章节三" ；
 原理：每个 "GLUE模式(Java)" 任务的代码，实际上是“一个继承自“IJobHandler”的实现类的类代码”，“执行器”接收到“调度中心”的调度请求时，会通过Groovy类加载器加载此代码，实例化成Java对象，同时注入此代码中声明的Spring服务（请确保Glue代码中的服务和类引用在“执行器”项目中存在），然后调用该对象的execute方法，执行任务逻辑。
 
-#### 5.5.3 GLUE模式(Shell) + GLUE模式(Python)
+#### 5.5.3 GLUE模式(Shell) + GLUE模式(Python) + GLUE模式(NodeJS)
 开发步骤：可参考 "章节三" ；
 原理：脚本任务的源码托管在调度中心，脚本逻辑在执行器运行。当触发脚本任务时，执行器会加载脚本源码在执行器机器上生成一份脚本文件，然后通过Java代码调用该脚本；并且实时将脚本输出日志写到任务日志文件中，从而在调度中心可以实时监控脚本运行情况；脚本返回码为0时表示执行成功，其他标示执行失败。
 
@@ -710,6 +710,7 @@ xxl-job-admin#com.xxl.job.admin.controller.JobApiController.callback
 
     - shell脚本：任务运行模式选择为 "GLUE模式(Shell)"时支持 "shell" 脚本任务；
     - python脚本：任务运行模式选择为 "GLUE模式(Python)"时支持 "python" 脚本任务；
+    - nodejs脚本：务运行模式选择为 "GLUE模式(NodeJS)"时支持 "nodejs" 脚本任务；
     
 
 #### 5.5.4 执行器
@@ -1012,7 +1013,7 @@ Tips: 历史版本(V1.3.x)目前已经Release至稳定版本, 进入维护阶段
 - 10、任务日志文件路径时间戳格式化时SimpleDateFormat并发问题解决；
 
 ### 6.20 版本 V1.9.0 特性[迭代中]
-- 1、规划中
+- 1、新增任务运行模式 "GLUE模式(NodeJS) "，支持NodeJS脚本任务；
 
 ### TODO LIST
 - 1、任务权限管理：执行器为粒度分配权限，核心操作校验权限；
