@@ -12,7 +12,7 @@ import java.util.Date;
  */
 public class XxlJobLogger {
     private static Logger logger = LoggerFactory.getLogger("xxl-job logger");
-    private static SimpleDateFormat xxlJobLoggerFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private static SimpleDateFormat xxlJobLoggerFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");   // TODO，concurrent issue
 
     /**
      * append log
