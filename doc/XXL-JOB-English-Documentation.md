@@ -125,14 +125,8 @@ Source repository address | Release Download
 </dependency>
 ```
 
-#### Technical exchange group (technical exchange only)
-
-- Tecent QQ Group 6：399758605
-- Tecent QQ Group 5：138274130
-- Tecent QQ Group 4：464762661
-- Tecent QQ Group 3：242151780
-- Tecent QQ Group 2：438249535
-- Tecent QQ Group 1：367260654
+#### Technical exchange group
+- [社区交流](http://www.xuxueli.com/page/community.html)
 - [Gitter](https://gitter.im/xuxueli/xxl-job)
 
 ### 1.5 Environment
