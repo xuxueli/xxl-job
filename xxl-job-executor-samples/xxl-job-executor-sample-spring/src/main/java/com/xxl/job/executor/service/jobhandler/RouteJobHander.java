@@ -24,7 +24,7 @@ public class RouteJobHander extends IJobHandler {
 
     /**
      * 根据参数执行相应的方法
-     * 第一个参数为beanId+方法名称(例：orderyPay.updateMoney)
+     * 第一个参数为beanId+方法名称(例：orderyPay.updateMoney,参数)
      *
      * @param params
      * @return

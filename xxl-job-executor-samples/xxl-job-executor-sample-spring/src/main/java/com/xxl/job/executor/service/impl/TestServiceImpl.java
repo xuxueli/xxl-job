@@ -3,6 +3,7 @@ package com.xxl.job.executor.service.impl;
 import com.xxl.job.executor.service.TestService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -10,14 +11,15 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class TestServiceImpl implements TestService {
+    @Autowired
     private static final Logger logger = LoggerFactory.getLogger(TestServiceImpl.class);
     @Override
     public void helloXXL() {
-        logger.error("hello XXL from Route");
+        logger.info("hello XXL from Route");
     }
 
     @Override
     public void helloXxlParam(String name) {
-        logger.error("my name is " + name + " XXL from Route");
+        logger.info("============= my name is " + name + " XXL from Route =============");
     }
 }
