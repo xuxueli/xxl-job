@@ -8,34 +8,28 @@ $(function() {
 	});*/
 
 	var codeEditor;
-	function initIde(glueType, glueSource) {
-		var ideMode = "text/x-java";
-		if ('GLUE_GROOVY'==glueType){
-			ideMode = "text/x-java";
-		} else if ('GLUE_SHELL'==glueType){
-			ideMode = "text/x-sh";
-		} else if ('GLUE_PYTHON'==glueType){
-			ideMode = "text/x-python";
+	function initIde(glueSource) {
+		if (codeEditor == null) {
+            codeEditor = CodeMirror(document.getElementById("ideWindow"), {
+                mode : ideMode,
+                lineNumbers : true,
+                matchBrackets : true,
+                value: glueSource
+            });
+		} else {
+            codeEditor.setValue(glueSource);
 		}
-
-		codeEditor = CodeMirror(document.getElementById("ideWindow"), {
-			mode : ideMode,
-			lineNumbers : true,
-			matchBrackets : true,
-			value: glueSource
-		});
 	}
 
-	initIde(glueType, $("#version_now").val());
+	initIde($("#version_now").val());
 
 	// code change
 	$(".source_version").click(function(){
-		var glueType = $(this).attr('glueType');
 		var sourceId = $(this).attr('version');
 		var temp = $( "#" + sourceId ).val();
 
-		codeEditor.setValue('');
-		initIde(glueType, temp);
+		//codeEditor.setValue('');
+		initIde(temp);
 	});
 
 	// code source save
