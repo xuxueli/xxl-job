@@ -233,7 +233,20 @@ logging.basicConfig(level=logging.DEBUG)
 logging.info("脚本文件：" + sys.argv[0])
 -->
 </textarea>
-					
+<textarea class="glueSource_nodejs" style="display:none;" >
+#!/usr/bin/env node
+console.log("xxl-job: hello nodejs")
+
+var arguments = process.argv
+
+console.log("脚本文件: " + arguments[1])
+for (var i = 2; i < arguments.length; i++){
+	console.log("参数 %s = %s", (i-1), arguments[i]);
+}
+
+console.log("Good bye!")
+process.exit(0)
+</textarea>		
 				</form>
          	</div>
 		</div>

@@ -120,7 +120,8 @@ public class ExecutorBizImpl implements ExecutorBiz {
                 }
             }
         } else if (GlueTypeEnum.GLUE_SHELL==GlueTypeEnum.match(triggerParam.getGlueType())
-                || GlueTypeEnum.GLUE_PYTHON==GlueTypeEnum.match(triggerParam.getGlueType()) ) {
+                || GlueTypeEnum.GLUE_PYTHON==GlueTypeEnum.match(triggerParam.getGlueType())
+                || GlueTypeEnum.GLUE_NODEJS==GlueTypeEnum.match(triggerParam.getGlueType())) {
 
             // valid old jobThread
             if (jobThread != null &&

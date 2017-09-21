@@ -40,6 +40,9 @@ public class ScriptJobHandler extends IJobHandler {
         } else if (GlueTypeEnum.GLUE_PYTHON == glueType) {
             cmd = "python";
             scriptFileName = XxlJobFileAppender.logPath.concat("gluesource/").concat(String.valueOf(jobId)).concat("_").concat(String.valueOf(glueUpdatetime)).concat(".py");
+        } else if (GlueTypeEnum.GLUE_NODEJS == glueType) {
+            cmd = "node";
+            scriptFileName = XxlJobFileAppender.logPath.concat("gluesource/").concat(String.valueOf(jobId)).concat("_").concat(String.valueOf(glueUpdatetime)).concat(".js");
         }
 
         // make script file

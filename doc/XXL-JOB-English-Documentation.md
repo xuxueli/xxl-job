@@ -94,6 +94,8 @@ So far, XXL-JOB has access to a number of companies online product line, access 
     - 43、杭州比智科技有限公司
     - 44、圳临界线网络科技有限公司
     - 45、广州知识圈网络科技有限公司
+    - 46、国誉商业上海有限公司
+    - 47、海尔消费金融有限公司，嗨付、够花 (海尔)
 	- ……
 
 > The company that access and use this product is welcome to register at the [address](https://github.com/xuxueli/xxl-job/issues/1 ), only for product promotion. 
@@ -123,14 +125,8 @@ Source repository address | Release Download
 </dependency>
 ```
 
-#### Technical exchange group (technical exchange only)
-
-- Tecent QQ Group 6：399758605
-- Tecent QQ Group 5：138274130
-- Tecent QQ Group 4：464762661
-- Tecent QQ Group 3：242151780
-- Tecent QQ Group 2：438249535
-- Tecent QQ Group 1：367260654
+#### Technical exchange group
+- [社区交流](http://www.xuxueli.com/page/community.html)
 - [Gitter](https://gitter.im/xuxueli/xxl-job)
 
 ### 1.5 Environment
