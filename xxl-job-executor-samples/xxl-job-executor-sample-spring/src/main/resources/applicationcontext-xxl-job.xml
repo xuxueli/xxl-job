@@ -19,7 +19,7 @@
     <!-- ********************************* 基础配置 ********************************* -->
 
 	<!-- 配置01、JobHandler 扫描路径 -->
-	<context:component-scan base-package="com.xxl.job.executor.service.jobhandler" />
+	<context:component-scan base-package="com.xxl.job.executor.service" />
 
 	<!-- 配置02、执行器 -->
 	<bean id="xxlJobExecutor" class="com.xxl.job.core.executor.XxlJobExecutor" init-method="start" destroy-method="destroy" >
