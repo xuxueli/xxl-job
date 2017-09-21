@@ -55,6 +55,8 @@ $(function() {
 								return "GLUE模式(Shell)";
 							} else if ('GLUE_PYTHON'==row.glueType) {
 								return "GLUE模式(Python)";
+							}else if  ('GLUE_NODEJS'==row.glueType){
+								return "GLUE模式(Nodejs)";
 							} else if ('BEAN'==row.glueType) {
 								return "BEAN模式：" + row.executorHandler;
 							}
@@ -341,6 +343,8 @@ $(function() {
 			$("#addModal .form textarea[name='glueSource']").val( $("#addModal .form .glueSource_shell").val() );
 		} else if ('GLUE_PYTHON'==glueType){
 			$("#addModal .form textarea[name='glueSource']").val( $("#addModal .form .glueSource_python").val() );
+		} else if ('GLUE_NODEJS'==glueType){
+			$("#addModal .form textarea[name='glueSource']").val( $("#addModal .form .glueSource_nodejs").val() );			
 		}
 	});
 

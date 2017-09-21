@@ -105,6 +105,8 @@ $(function() {
                                 glueTypeTitle = "GLUE模式(Shell)";
                             } else if ('GLUE_PYTHON'==row.glueType) {
                                 glueTypeTitle = "GLUE模式(Python)";
+                            }else if ('GLUE_NODEJS'==row.glueType) {
+                            	glueTypeTitle = "GLUE模式(Nodejs)";
                             } else if ('BEAN'==row.glueType) {
                                 glueTypeTitle = "BEAN模式：" + row.executorHandler;
                             }
