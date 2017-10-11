@@ -6,6 +6,7 @@ import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.admin.core.schedule.XxlJobDynamicScheduler;
 import com.xxl.job.admin.core.util.MailUtil;
 import com.xxl.job.core.biz.model.ReturnT;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,33 +36,38 @@ public class JobFailMonitorHelper {
 
 			@Override
 			public void run() {
-
 				// monitor
 				while (!toStop) {
 					try {
-						Integer jobLogId = JobFailMonitorHelper.instance.queue.take();
-						if (jobLogId != null && jobLogId > 0) {
-							XxlJobLog log = XxlJobDynamicScheduler.xxlJobLogDao.load(jobLogId);
-							if (log!=null) {
-								if (ReturnT.SUCCESS_CODE==log.getTriggerCode() && log.getHandleCode()==0) {
-									// job running, wait + again monitor
-									TimeUnit.SECONDS.sleep(10);
+						List<Integer> jobLogIdList = new ArrayList<Integer>();
+						int drainToNum = JobFailMonitorHelper.instance.queue.drainTo(jobLogIdList);
 
+						if (CollectionUtils.isNotEmpty(jobLogIdList)) {
+							for (Integer jobLogId : jobLogIdList) {
+								if (jobLogId==null || jobLogId==0) {
+									continue;
+								}
+								XxlJobLog log = XxlJobDynamicScheduler.xxlJobLogDao.load(jobLogId);
+								if (log == null) {
+									continue;
+								}
+								if (ReturnT.SUCCESS_CODE == log.getTriggerCode() && log.getHandleCode() == 0) {
 									JobFailMonitorHelper.monitor(jobLogId);
 									logger.info(">>>>>>>>>>> job monitor, job running, JobLogId:{}", jobLogId);
 								}
-								if (ReturnT.SUCCESS_CODE==log.getTriggerCode() && ReturnT.SUCCESS_CODE==log.getHandleCode()) {
+								if (ReturnT.SUCCESS_CODE == log.getTriggerCode() && ReturnT.SUCCESS_CODE == log.getHandleCode()) {
 									// job success, pass
 									logger.info(">>>>>>>>>>> job monitor, job success, JobLogId:{}", jobLogId);
 								}
-
-								if (ReturnT.FAIL_CODE == log.getTriggerCode()|| ReturnT.FAIL_CODE==log.getHandleCode()) {
+								if (ReturnT.FAIL_CODE == log.getTriggerCode() || ReturnT.FAIL_CODE == log.getHandleCode()) {
 									// job fail,
 									sendMonitorEmail(log);
 									logger.info(">>>>>>>>>>> job monitor, job fail, JobLogId:{}", jobLogId);
 								}
 							}
 						}
+
+						TimeUnit.SECONDS.sleep(10);
 					} catch (Exception e) {
 						logger.error("job monitor error:{}", e);
 					}
