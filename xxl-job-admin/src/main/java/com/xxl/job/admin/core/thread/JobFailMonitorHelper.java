@@ -61,7 +61,7 @@ public class JobFailMonitorHelper {
 								}
 								if (ReturnT.FAIL_CODE == log.getTriggerCode() || ReturnT.FAIL_CODE == log.getHandleCode()) {
 									// job fail,
-									sendMonitorEmail(log);
+									failAlarm(log);
 									logger.info(">>>>>>>>>>> job monitor, job fail, JobLogId:{}", jobLogId);
 								}
 							}
@@ -81,7 +81,7 @@ public class JobFailMonitorHelper {
 						XxlJobLog log = XxlJobDynamicScheduler.xxlJobLogDao.load(jobLogId);
 						if (ReturnT.FAIL_CODE == log.getTriggerCode()|| ReturnT.FAIL_CODE==log.getHandleCode()) {
 							// job fail,
-							sendMonitorEmail(log);
+							failAlarm(log);
 							logger.info(">>>>>>>>>>> job monitor last, job fail, JobLogId:{}", jobLogId);
 						}
 					}
@@ -94,10 +94,13 @@ public class JobFailMonitorHelper {
 	}
 
 	/**
-	 * send monitor email
+	 * fail alarm
+	 *
 	 * @param jobLog
 	 */
-	private void sendMonitorEmail(XxlJobLog jobLog){
+	private void failAlarm(XxlJobLog jobLog){
+
+		// send monitor email
 		XxlJobInfo info = XxlJobDynamicScheduler.xxlJobInfoDao.loadById(jobLog.getJobId());
 		if (info!=null && info.getAlarmEmail()!=null && info.getAlarmEmail().trim().length()>0) {
 
@@ -109,6 +112,9 @@ public class JobFailMonitorHelper {
 				MailUtil.sendMail(email, title, content, false, null);
 			}
 		}
+
+		// TODO, custom alarm strategy, such as sms
+
 	}
 
 	public void toStop(){
