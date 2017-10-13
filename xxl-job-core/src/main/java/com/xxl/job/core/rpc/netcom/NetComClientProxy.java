@@ -36,6 +36,12 @@ public class NetComClientProxy implements FactoryBean<Object> {
 				new InvocationHandler() {
 					@Override
 					public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+
+						// filter method like "Object.toString()"
+						if (Object.class.getName().equals(method.getDeclaringClass().getName())) {
+							logger.error(">>>>>>>>>>> xxl-rpc proxy class-method not support [{}.{}]", method.getDeclaringClass().getName(), method.getName());
+							throw new RuntimeException("xxl-rpc proxy class-method not support");
+						}
 						
 						// request
 						RpcRequest request = new RpcRequest();
@@ -46,7 +52,7 @@ public class NetComClientProxy implements FactoryBean<Object> {
 	                    request.setMethodName(method.getName());
 	                    request.setParameterTypes(method.getParameterTypes());
 	                    request.setParameters(args);
-	                    
+
 	                    // send
 	                    RpcResponse response = client.send(request);
 	                    
