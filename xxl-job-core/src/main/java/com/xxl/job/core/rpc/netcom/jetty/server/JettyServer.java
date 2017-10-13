@@ -21,6 +21,10 @@ public class JettyServer {
 	private Server server;
 	private Thread thread;
 	public void start(final int port, final String ip, final String appName) throws Exception {
+		this.start(port, ip, appName, null);
+	}
+
+	public void start(final int port, final String ip, final String appName, final String registryHost) throws Exception {
 		thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -47,7 +51,7 @@ public class JettyServer {
 					logger.info(">>>>>>>>>>>> xxl-job jetty server start success at port:{}.", port);
 
 					// Start Registry-Server
-					ExecutorRegistryThread.getInstance().start(port, ip, appName);
+					ExecutorRegistryThread.getInstance().start(port, ip, appName, registryHost);
 
 					// Start Callback-Server
 					TriggerCallbackThread.getInstance().start();
