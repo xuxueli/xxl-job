@@ -9,6 +9,36 @@
 	<artifactId>xxl-job-admin</artifactId>
 	<packaging>war</packaging>
 
+	<build>
+		<plugins>
+            <plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+					<execution>
+						<id>copy-root-war</id>
+						<phase>package</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+                            <target>
+								<copy file="${project.build.directory}/${project.build.finalName}.war" tofile="${project.build.directory}/ROOT.war"></copy>
+							</target>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>com.spotify</groupId>
+				<artifactId>dockerfile-maven-plugin</artifactId>
+				<configuration>
+					<tag>${project.version}</tag>
+					<useMavenSettingsForAuth>true</useMavenSettingsForAuth>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
 	<dependencies>
 		<!-- springframe start -->
 		<dependency>
