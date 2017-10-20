@@ -33,8 +33,18 @@
 				<artifactId>dockerfile-maven-plugin</artifactId>
 				<configuration>
 					<repository>xxl-job-admin</repository>
-					<tag>${project.version}</tag>
 				</configuration>
+                <executions>
+					<execution>
+						<id>project-version</id>
+						<goals>
+							<goal>build</goal>
+						</goals>
+						<configuration>
+							<tag>${project.version}</tag>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>

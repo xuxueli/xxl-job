@@ -1,6 +1,6 @@
 package com.xxl.job.admin.core.util;
 
-import org.springframework.core.env.Environment;
+import java.util.Properties;
 
 /**
  * properties util
@@ -10,14 +10,14 @@ import org.springframework.core.env.Environment;
 public class PropertiesUtil {
 
     private static PropertiesUtil instance = new PropertiesUtil();
-    private Environment environment;
+    private Properties properties;
 
     public static String getString(String key) {
-        return instance.environment.getProperty(key);
+        return instance.properties.getProperty(key);
     }
 
-    public void setEnvironment(Environment environment) {
-        this.environment = environment;
+    public void setProperties(Properties properties) {
+        this.properties = properties;
     }
 
     public static PropertiesUtil getInstance() {
