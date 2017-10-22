@@ -1,6 +1,9 @@
+sudo: required
 language: java
 jdk:
   - oraclejdk8
+services:
+  - docker
 install: mvn install -DskipTests=true -Dmaven.javadoc.skip=true
 #script: mvn test
 script: mvn -DskipTests=true clean package
