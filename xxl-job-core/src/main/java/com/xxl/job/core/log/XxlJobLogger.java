@@ -43,7 +43,7 @@ public class XxlJobLogger {
         // appendlog
         XxlJobFileAppender.appendLog(logFileName, formatAppendLog);
 
-        logger.warn("[{}]: {}", logFileName, formatAppendLog);
+        logger.debug(">>>>>>>>>>> [{}]: {}", logFileName, formatAppendLog);
     }
 
     /**

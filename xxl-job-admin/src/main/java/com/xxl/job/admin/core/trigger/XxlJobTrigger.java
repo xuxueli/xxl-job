@@ -35,7 +35,7 @@ public class XxlJobTrigger {
         // load data
         XxlJobInfo jobInfo = XxlJobDynamicScheduler.xxlJobInfoDao.loadById(jobId);              // job info
         if (jobInfo == null) {
-            logger.warn(">>>>>>>>>>>> xxl-job trigger fail, jobId invalid，jobId={}", jobId);
+            logger.warn(">>>>>>>>>>>> trigger fail, jobId invalid，jobId={}", jobId);
             return;
         }
         XxlJobGroup group = XxlJobDynamicScheduler.xxlJobGroupDao.load(jobInfo.getJobGroup());  // group info

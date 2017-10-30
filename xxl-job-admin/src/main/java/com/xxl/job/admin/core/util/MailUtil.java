@@ -93,7 +93,7 @@ public class MailUtil {
 			javaMailSender.send(mimeMessage);
 			return true;
 		} catch (Exception e) {
-			logger.info("{}", e);
+			logger.error(e.getMessage(), e);
 		}
 		return false;
 	}

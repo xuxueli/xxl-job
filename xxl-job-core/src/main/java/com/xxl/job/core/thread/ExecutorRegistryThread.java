@@ -28,11 +28,11 @@ public class ExecutorRegistryThread extends Thread {
 
         // valid
         if (appName==null || appName.trim().length()==0) {
-            logger.warn(">>>>>>>>>>>> xxl-job, executor registry config fail, appName is null.");
+            logger.warn(">>>>>>>>>>> xxl-job, executor registry config fail, appName is null.");
             return;
         }
         if (XxlJobExecutor.getAdminBizList() == null) {
-            logger.warn(">>>>>>>>>>>> xxl-job, executor registry config fail, adminAddresses is null.");
+            logger.warn(">>>>>>>>>>> xxl-job, executor registry config fail, adminAddresses is null.");
             return;
         }
 
@@ -99,7 +99,7 @@ public class ExecutorRegistryThread extends Thread {
                 } catch (Exception e) {
                     logger.error(e.getMessage(), e);
                 }
-                logger.warn(">>>>>>>>>>>> xxl-job, executor registry thread destory.");
+                logger.info(">>>>>>>>>>> xxl-job, executor registry thread destory.");
 
             }
         });

@@ -63,7 +63,7 @@ public class JobFailMonitorHelper {
 									logger.info(">>>>>>>>>>> job monitor, job fail, JobLogId:{}", jobLogId);
 								} else {
 									JobFailMonitorHelper.monitor(jobLogId);
-									logger.info(">>>>>>>>>>> job monitor, job unknown, JobLogId:{}", jobLogId);
+									logger.info(">>>>>>>>>>> job monitor, job status unknown, JobLogId:{}", jobLogId);
 								}
 							}
 						}
