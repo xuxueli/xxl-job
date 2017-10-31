@@ -81,19 +81,19 @@ public class XxlJobServiceImpl implements XxlJobService {
         XxlJobGroup group = xxlJobGroupDao.load(jobInfo.getJobGroup());
 
         if (group == null) {
-            return new ReturnT<String>(ReturnT.FAIL_CODE, "请�?�择“执行器�?");
+            return new ReturnT<String>(ReturnT.FAIL_CODE, "请�?�择“执行器�?");
         }
 
         if (!CronExpression.isValidExpression(jobInfo.getJobCron())) {
-            return new ReturnT<String>(ReturnT.FAIL_CODE, "请输入格式正确的“Cron�?");
+            return new ReturnT<String>(ReturnT.FAIL_CODE, "请输入格式正确的“Cron�?");
         }
 
         if (StringUtils.isBlank(jobInfo.getJobDesc())) {
-            return new ReturnT<String>(ReturnT.FAIL_CODE, "请输入�?�任务描述�??");
+            return new ReturnT<String>(ReturnT.FAIL_CODE, "请输入�?�任务描述�??");
         }
 
         if (StringUtils.isBlank(jobInfo.getAuthor())) {
-            return new ReturnT<String>(ReturnT.FAIL_CODE, "请输入�?�负责人�?");
+            return new ReturnT<String>(ReturnT.FAIL_CODE, "请输入�?�负责人�?");
         }
 
         if (ExecutorRouteStrategyEnum.match(
@@ -117,7 +117,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 
         if ((GlueTypeEnum.BEAN == GlueTypeEnum.match(jobInfo.getGlueType())) &&
                 StringUtils.isBlank(jobInfo.getExecutorHandler())) {
-            return new ReturnT<String>(ReturnT.FAIL_CODE, "请输入�?�JobHandler�?");
+            return new ReturnT<String>(ReturnT.FAIL_CODE, "请输入�?�JobHandler�?");
         }
 
         // fix "\r" in shell
@@ -162,7 +162,6 @@ public class XxlJobServiceImpl implements XxlJobService {
         String qz_name = String.valueOf(jobInfo.getId());
 
         try {
-<<<<<<< HEAD
             XxlJobDynamicScheduler.addJob(qz_name, qz_group,
                 jobInfo.getJobCron());
 
@@ -170,12 +169,6 @@ public class XxlJobServiceImpl implements XxlJobService {
                 XxlJobDynamicScheduler.pauseJob(qz_name, qz_group);
             }
 
-=======
-            XxlJobDynamicScheduler.addJob(qz_name, qz_group, jobInfo.getJobCron());
-            if(jobInfo.getJobType()==1){
-            	XxlJobDynamicScheduler.pauseJob(qz_name, qz_group);
-            }
->>>>>>> 58f7273a5b32d9f12811cee4dec4649921837d33
             return ReturnT.SUCCESS;
         } catch (SchedulerException e) {
             logger.error(e.getMessage(), e);
@@ -190,22 +183,21 @@ public class XxlJobServiceImpl implements XxlJobService {
             return new ReturnT<String>(ReturnT.FAIL_CODE,
                 "新增任务失败:" + e.getMessage());
         }
-<<<<<<< HEAD
     }
 
     @Override
     public ReturnT<String> reschedule(XxlJobInfo jobInfo) {
         // valid
         if (!CronExpression.isValidExpression(jobInfo.getJobCron())) {
-            return new ReturnT<String>(ReturnT.FAIL_CODE, "请输入格式正确的“Cron�?");
+            return new ReturnT<String>(ReturnT.FAIL_CODE, "请输入格式正确的“Cron�?");
         }
 
         if (StringUtils.isBlank(jobInfo.getJobDesc())) {
-            return new ReturnT<String>(ReturnT.FAIL_CODE, "请输入�?�任务描述�??");
+            return new ReturnT<String>(ReturnT.FAIL_CODE, "请输入�?�任务描述�??");
         }
 
         if (StringUtils.isBlank(jobInfo.getAuthor())) {
-            return new ReturnT<String>(ReturnT.FAIL_CODE, "请输入�?�负责人�?");
+            return new ReturnT<String>(ReturnT.FAIL_CODE, "请输入�?�负责人�?");
         }
 
         if (ExecutorRouteStrategyEnum.match(
@@ -265,66 +257,6 @@ public class XxlJobServiceImpl implements XxlJobService {
         exists_jobInfo.setExecutorFailStrategy(jobInfo.getExecutorFailStrategy());
         exists_jobInfo.setChildJobKey(jobInfo.getChildJobKey());
         exists_jobInfo.setJobType(jobInfo.getJobType());
-=======
-	}
-
-	@Override
-	public ReturnT<String> reschedule(XxlJobInfo jobInfo) {
-
-		// valid
-		if (!CronExpression.isValidExpression(jobInfo.getJobCron())) {
-			return new ReturnT<String>(ReturnT.FAIL_CODE, "请输入格式正确的“Cron”");
-		}
-		if (StringUtils.isBlank(jobInfo.getJobDesc())) {
-			return new ReturnT<String>(ReturnT.FAIL_CODE, "请输入“任务描述”");
-		}
-		if (StringUtils.isBlank(jobInfo.getAuthor())) {
-			return new ReturnT<String>(ReturnT.FAIL_CODE, "请输入“负责人”");
-		}
-		if (ExecutorRouteStrategyEnum.match(jobInfo.getExecutorRouteStrategy(), null) == null) {
-			return new ReturnT<String>(ReturnT.FAIL_CODE, "路由策略非法");
-		}
-		if (ExecutorBlockStrategyEnum.match(jobInfo.getExecutorBlockStrategy(), null) == null) {
-			return new ReturnT<String>(ReturnT.FAIL_CODE, "阻塞处理策略非法");
-		}
-		if (ExecutorFailStrategyEnum.match(jobInfo.getExecutorFailStrategy(), null) == null) {
-			return new ReturnT<String>(ReturnT.FAIL_CODE, "失败处理策略非法");
-		}
-
-		// childJobKey valid
-		if (StringUtils.isNotBlank(jobInfo.getChildJobKey())) {
-			String[] childJobKeys = jobInfo.getChildJobKey().split(",");
-			for (String childJobKeyItem: childJobKeys) {
-				String[] childJobKeyArr = childJobKeyItem.split("_");
-				if (childJobKeyArr.length!=2) {
-					return new ReturnT<String>(ReturnT.FAIL_CODE, MessageFormat.format("子任务Key({0})格式错误", childJobKeyItem));
-				}
-                XxlJobInfo childJobInfo = xxlJobInfoDao.loadById(Integer.valueOf(childJobKeyArr[1]));
-				if (childJobInfo==null) {
-					return new ReturnT<String>(ReturnT.FAIL_CODE, MessageFormat.format("子任务Key({0})无效", childJobKeyItem));
-				}
-			}
-		}
-
-		// stage job info
-		XxlJobInfo exists_jobInfo = xxlJobInfoDao.loadById(jobInfo.getId());
-		if (exists_jobInfo == null) {
-			return new ReturnT<String>(ReturnT.FAIL_CODE, "参数异常");
-		}
-		//String old_cron = exists_jobInfo.getJobCron();
-
-		exists_jobInfo.setJobCron(jobInfo.getJobCron());
-		exists_jobInfo.setJobDesc(jobInfo.getJobDesc());
-		exists_jobInfo.setAuthor(jobInfo.getAuthor());
-		exists_jobInfo.setAlarmEmail(jobInfo.getAlarmEmail());
-		exists_jobInfo.setExecutorRouteStrategy(jobInfo.getExecutorRouteStrategy());
-		exists_jobInfo.setExecutorHandler(jobInfo.getExecutorHandler());
-		exists_jobInfo.setExecutorParam(jobInfo.getExecutorParam());
-		exists_jobInfo.setExecutorBlockStrategy(jobInfo.getExecutorBlockStrategy());
-		exists_jobInfo.setExecutorFailStrategy(jobInfo.getExecutorFailStrategy());
-		exists_jobInfo.setChildJobKey(jobInfo.getChildJobKey());
-		exists_jobInfo.setJobType(jobInfo.getJobType());
->>>>>>> 58f7273a5b32d9f12811cee4dec4649921837d33
         xxlJobInfoDao.update(exists_jobInfo);
 
         // fresh quartz
@@ -332,7 +264,6 @@ public class XxlJobServiceImpl implements XxlJobService {
         String qz_name = String.valueOf(exists_jobInfo.getId());
 
         try {
-<<<<<<< HEAD
             boolean ret = true;
 
             if (jobInfo.getJobType() == 1) {
@@ -343,15 +274,6 @@ public class XxlJobServiceImpl implements XxlJobService {
             }
 
             return ret ? ReturnT.SUCCESS : ReturnT.FAIL;
-=======
-        	boolean ret = true;
-        	if(jobInfo.getJobType()==1){
-    			ret = XxlJobDynamicScheduler.pauseJob(qz_name, qz_group);
-            }else{
-            	ret = XxlJobDynamicScheduler.rescheduleJob(qz_group, qz_name, exists_jobInfo.getJobCron());
-            }
-            return ret?ReturnT.SUCCESS:ReturnT.FAIL;
->>>>>>> 58f7273a5b32d9f12811cee4dec4649921837d33
         } catch (SchedulerException e) {
             logger.error(e.getMessage(), e);
         }
