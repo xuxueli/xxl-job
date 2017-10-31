@@ -87,12 +87,16 @@ $(function() {
 						"width":'10%',
 	                	"visible" : true,
 	                	"render": function ( data, type, row ) {
+	                		var status = "<small class='label' style='color:black;'>[<font color='red'>周期</font>]</small>";
+	                		if(row.jobType&&row.jobType==1){
+	                			status = "<small class='label' style='color:black;'>[<font color='red'>单次</font>]</small>";
+	                		}
 	                		if ('NORMAL' == data) {
-	                			return '<small class="label label-success" ><i class="fa fa-clock-o"></i>'+ data +'</small>'; 
+	                			return '<small class="label label-success" ><i class="fa fa-clock-o"></i>'+ data +'</small>'+status; 
 							} else if ('PAUSED' == data){
-								return '<small class="label label-default" title="暂停" ><i class="fa fa-clock-o"></i>'+ data +'</small>'; 
+								return '<small class="label label-default" title="暂停" ><i class="fa fa-clock-o"></i>'+ data +'</small>'+status; 
 							} else if ('BLOCKED' == data){
-								return '<small class="label label-default" title="阻塞[串行]" ><i class="fa fa-clock-o"></i>'+ data +'</small>'; 
+								return '<small class="label label-default" title="阻塞[串行]" ><i class="fa fa-clock-o"></i>'+ data +'</small>'+status;  
 							}
 	                		return data;
 	                	}
@@ -107,7 +111,11 @@ $(function() {
 	                			if ('NORMAL' == row.jobStatus) {
 	                				pause_resume = '<button class="btn btn-primary btn-xs job_operate" _type="job_pause" type="button">暂停</button>  ';
 								} else if ('PAUSED' == row.jobStatus){
-									pause_resume = '<button class="btn btn-primary btn-xs job_operate" _type="job_resume" type="button">恢复</button>  ';
+									if(row.jobType&&row.jobType==1){
+										pause_resume = "";
+									}else{
+										pause_resume = '<button class="btn btn-primary btn-xs job_operate" _type="job_resume" type="button">恢复</button>  ';
+									}
 								}
 	                			// log url
 	                			var logUrl = base_url +'/joblog?jobId='+ row.id;
@@ -367,6 +375,7 @@ $(function() {
 		$('#updateModal .form select[name=jobGroup] option[value='+ row.jobGroup +']').prop('selected', true);
 		$("#updateModal .form input[name='jobDesc']").val( row.jobDesc );
 		$("#updateModal .form input[name='jobCron']").val( row.jobCron );
+		$('#updateModal .form select[name=jobType] option[value='+ row.jobType +']').prop('selected', true);
 		$("#updateModal .form input[name='author']").val( row.author );
 		$("#updateModal .form input[name='alarmEmail']").val( row.alarmEmail );
 		$('#updateModal .form select[name=executorRouteStrategy] option[value='+ row.executorRouteStrategy +']').prop('selected', true);
