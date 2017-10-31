@@ -81,19 +81,19 @@ public class XxlJobServiceImpl implements XxlJobService {
         XxlJobGroup group = xxlJobGroupDao.load(jobInfo.getJobGroup());
 
         if (group == null) {
-            return new ReturnT<String>(ReturnT.FAIL_CODE, "请�?�择“执行器�?");
+            return new ReturnT<String>(ReturnT.FAIL_CODE, "请选择'执行器'");
         }
 
         if (!CronExpression.isValidExpression(jobInfo.getJobCron())) {
-            return new ReturnT<String>(ReturnT.FAIL_CODE, "请输入格式正确的“Cron�?");
+            return new ReturnT<String>(ReturnT.FAIL_CODE, "请输入格式正确的'Cron'");
         }
 
         if (StringUtils.isBlank(jobInfo.getJobDesc())) {
-            return new ReturnT<String>(ReturnT.FAIL_CODE, "请输入�?�任务描述�??");
+            return new ReturnT<String>(ReturnT.FAIL_CODE, "请输入'任务描述'");
         }
 
         if (StringUtils.isBlank(jobInfo.getAuthor())) {
-            return new ReturnT<String>(ReturnT.FAIL_CODE, "请输入�?�负责人�?");
+            return new ReturnT<String>(ReturnT.FAIL_CODE, "请输入'负责人'");
         }
 
         if (ExecutorRouteStrategyEnum.match(
@@ -117,7 +117,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 
         if ((GlueTypeEnum.BEAN == GlueTypeEnum.match(jobInfo.getGlueType())) &&
                 StringUtils.isBlank(jobInfo.getExecutorHandler())) {
-            return new ReturnT<String>(ReturnT.FAIL_CODE, "请输入�?�JobHandler�?");
+            return new ReturnT<String>(ReturnT.FAIL_CODE, "请输入'JobHandler'");
         }
 
         // fix "\r" in shell
@@ -189,15 +189,15 @@ public class XxlJobServiceImpl implements XxlJobService {
     public ReturnT<String> reschedule(XxlJobInfo jobInfo) {
         // valid
         if (!CronExpression.isValidExpression(jobInfo.getJobCron())) {
-            return new ReturnT<String>(ReturnT.FAIL_CODE, "请输入格式正确的“Cron�?");
+            return new ReturnT<String>(ReturnT.FAIL_CODE, "请输入格式正确的'Cron'");
         }
 
         if (StringUtils.isBlank(jobInfo.getJobDesc())) {
-            return new ReturnT<String>(ReturnT.FAIL_CODE, "请输入�?�任务描述�??");
+            return new ReturnT<String>(ReturnT.FAIL_CODE, "请输入'任务描述'");
         }
 
         if (StringUtils.isBlank(jobInfo.getAuthor())) {
-            return new ReturnT<String>(ReturnT.FAIL_CODE, "请输入�?�负责人�?");
+            return new ReturnT<String>(ReturnT.FAIL_CODE, "请输入'负责人'");
         }
 
         if (ExecutorRouteStrategyEnum.match(
