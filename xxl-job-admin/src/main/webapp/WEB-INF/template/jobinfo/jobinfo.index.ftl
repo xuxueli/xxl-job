@@ -127,7 +127,13 @@
                             </select>
                         </div>
                         <label for="lastname" class="col-sm-2 control-label">Cron<font color="red">*</font></label>
-                        <div class="col-sm-4"><input type="text" class="form-control" name="jobCron" placeholder="请输入“Cron”" maxlength="20" ></div>
+                        <div class="col-sm-4">
+                        	<input type="text" class="form-control" name="jobCron" placeholder="请输入“Cron”" maxlength="20" style="width:70%;display:inline;">
+                        	<select class="form-control" name="jobType" style="width:28%;display:inline;color:red;font-size:10px;">
+                                <option value="0" >周期</option>
+                                <option value="1" >单次</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="firstname" class="col-sm-2 control-label">运行模式<font color="red">*</font></label>
@@ -284,7 +290,13 @@ process.exit(0)
                             </select>
                         </div>
                         <label for="lastname" class="col-sm-2 control-label">Cron<font color="red">*</font></label>
-                        <div class="col-sm-4"><input type="text" class="form-control" name="jobCron" placeholder="请输入“Cron”" maxlength="20" ></div>
+                        <div class="col-sm-4">
+                        	<input type="text" class="form-control" name="jobCron" placeholder="请输入“Cron”" maxlength="20" style="width:70%;display:inline;">
+                        	<select class="form-control" name="jobType" style="width:28%;display:inline;color:red;font-size:10px;">
+                                <option value="0" >周期</option>
+                                <option value="1" >单次</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="firstname" class="col-sm-2 control-label">运行模式<font color="red">*</font></label>
