@@ -7,7 +7,6 @@
 		<result column="id" property="id" />
 
 		<result column="job_group" property="jobGroup" />
-<<<<<<< HEAD
 		<result column="job_cron" property="jobCron" />
 		<result column="job_type" property="jobType" />
 		<result column="job_desc" property="jobDesc" />
@@ -17,17 +16,6 @@
 
 		<result column="author" property="author" />
 		<result column="alarm_email" property="alarmEmail" />
-=======
-	    <result column="job_cron" property="jobCron" />
-	    <result column="job_type" property="jobType" />
-	    <result column="job_desc" property="jobDesc" />
-	    
-	    <result column="add_time" property="addTime" />
-	    <result column="update_time" property="updateTime" />
-	    
-	    <result column="author" property="author" />
-	    <result column="alarm_email" property="alarmEmail" />
->>>>>>> 58f7273a5b32d9f12811cee4dec4649921837d33
 
 		<result column="executor_route_strategy" property="executorRouteStrategy" />
 		<result column="executor_handler" property="executorHandler" />
@@ -101,7 +89,6 @@
 	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobInfo"
 		useGeneratedKeys="true" keyProperty="id">
 		INSERT INTO XXL_JOB_QRTZ_TRIGGER_INFO (
-<<<<<<< HEAD
 		job_group,
 		job_cron,
 		job_type,
@@ -139,45 +126,6 @@
 		#{glueRemark},
 		NOW(),
 		#{childJobKey}
-=======
-			job_group,
-			job_cron,
-			job_type,
-			job_desc,
-			add_time,
-			update_time,
-			author,
-			alarm_email,
-            executor_route_strategy,
-			executor_handler,
-			executor_param,
-			executor_block_strategy,
-			executor_fail_strategy,
-			glue_type,
-			glue_source,
-			glue_remark,
-			glue_updatetime,
-			child_jobkey
-		) VALUES (
-			#{jobGroup},
-			#{jobCron}, 
-			#{jobType}, 
-			#{jobDesc},
-			NOW(),
-			NOW(),
-			#{author},
-			#{alarmEmail},
-			#{executorRouteStrategy},
-			#{executorHandler},
-			#{executorParam},
-			#{executorBlockStrategy},
-			#{executorFailStrategy},
-			#{glueType},
-			#{glueSource},
-			#{glueRemark},
-			NOW(),
-			#{childJobKey}
->>>>>>> 58f7273a5b32d9f12811cee4dec4649921837d33
 		);
 		<!--<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id"> 
 			SELECT LAST_INSERT_ID() /*SELECT @@IDENTITY AS id*/ </selectKey> -->
@@ -190,7 +138,6 @@
 		FROM XXL_JOB_QRTZ_TRIGGER_INFO AS t
 		WHERE t.id = #{id}
 	</select>
-<<<<<<< HEAD
 
 	<update id="update" parameterType="com.xxl.job.admin.core.model.XxlJobInfo">
 		UPDATE
@@ -215,28 +162,6 @@
 		glue_remark = #{glueRemark},
 		glue_updatetime = #{glueUpdatetime},
 		child_jobkey = #{childJobKey}
-=======
-	
-	<update id="update" parameterType="com.xxl.job.admin.core.model.XxlJobInfo" >
-		UPDATE XXL_JOB_QRTZ_TRIGGER_INFO
-		SET 
-			job_cron = #{jobCron},
-			job_type = #{jobType},
-			job_desc = #{jobDesc},
-			update_time = NOW(),
-			author = #{author},
-			alarm_email = #{alarmEmail},
-			executor_route_strategy = #{executorRouteStrategy},
-			executor_handler = #{executorHandler},
-			executor_param = #{executorParam},
-			executor_block_strategy = #{executorBlockStrategy},
-			executor_fail_strategy = #{executorFailStrategy},
-			glue_type = #{glueType},
-			glue_source = #{glueSource},
-			glue_remark = #{glueRemark},
-			glue_updatetime = #{glueUpdatetime},
-			child_jobkey = #{childJobKey}
->>>>>>> 58f7273a5b32d9f12811cee4dec4649921837d33
 		WHERE id = #{id}
 	</update>
 
