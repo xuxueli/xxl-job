@@ -803,6 +803,18 @@ XXL-JOB会为每次调度请求生成一个单独的日志文件，需要通过 
 
 调度中心API服务请求参考代码：com.xxl.job.dao.impl.AdminBizTest.java
 
+### 5.12 执行器API服务
+执行器提供了API服务，供调度中心选择使用，目前提供的API服务有：
+
+    1、心跳检测
+    2、忙碌检测
+    3、触发任务执行
+    4、获取Rolling Log
+    5、终止任务
+    
+执行器API服务位置：com.xxl.job.core.biz.ExecutorBiz
+
+执行器API服务请求参考代码：com.xxl.executor.test.DemoJobHandlerTest
 
 ## 六、版本更新日志
 ### 6.1 版本 V1.1.x，新特性[2015-12-05]
