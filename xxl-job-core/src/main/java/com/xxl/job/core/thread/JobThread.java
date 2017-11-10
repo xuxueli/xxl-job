@@ -139,7 +139,7 @@ public class JobThread extends Thread{
 				String errorMsg = stringWriter.toString();
 				executeResult = new ReturnT<String>(ReturnT.FAIL_CODE, errorMsg);
 
-				XxlJobLogger.log("<br>----------- xxl-job job execute end(error) -----------<br>----------- ReturnT:" + executeResult);
+				XxlJobLogger.log("<br>----------- JobThread Exception:" + errorMsg + "<br>----------- xxl-job job execute end(error) -----------");
 			} finally {
                 if(triggerParam != null) {
                     // callback handler info
