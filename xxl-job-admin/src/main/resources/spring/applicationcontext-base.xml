@@ -13,7 +13,7 @@
 		<property name="templateLoaderPath" value="/WEB-INF/template/" />
 		<property name="freemarkerSettings">
 			<bean class="org.springframework.beans.factory.config.PropertiesFactoryBean">
-				<property name="location" value="classpath:freemarker.properties" />
+				<property name="location" value="${xxl.job.freemarker.properties}" />
 			</bean>
 		</property>
 	</bean>
