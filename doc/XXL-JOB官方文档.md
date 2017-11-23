@@ -359,7 +359,7 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
         GLUE模式(Shell)：任务以源码方式维护在调度中心；该模式的任务实际上是一段 "shell" 脚本；
         GLUE模式(Python)：任务以源码方式维护在调度中心；该模式的任务实际上是一段 "python" 脚本；
         GLUE模式(NodeJS)：任务以源码方式维护在调度中心；该模式的任务实际上是一段 "nodejs" 脚本；
-    - JobHandler：运行模式为 "BEAN模式" 时生效，对应执行器中新开发的JobHandler类“@JobHander”注解自定义的value值；
+    - JobHandler：运行模式为 "BEAN模式" 时生效，对应执行器中新开发的JobHandler类“@JobHandler”注解自定义的value值；
     - 子任务Key：每个任务都拥有一个唯一的任务Key(任务Key可以从任务列表获取)，当本任务执行结束并且执行成功时，将会触发子任务Key所对应的任务的一次主动调度。
     - 阻塞处理策略：调度过于密集执行器来不及处理时的处理策略；
         单机串行（默认）：调度请求进入单机执行器后，调度请求进入FIFO队列并以串行方式运行；
@@ -378,13 +378,13 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 #### 步骤一：执行器项目中，开发JobHandler：
     - 1、 新建一个继承com.xxl.job.core.handler.IJobHandler的Java类；
     - 2、 该类被Spring容器扫描为Bean实例，如加“@Component”注解；
-    - 3、 添加 “@JobHander(value="自定义jobhandler名称")”注解，注解的value值为自定义的JobHandler名称，该名称对应的是调度中心新建任务的JobHandler属性的值。
+    - 3、 添加 “@JobHandler(value="自定义jobhandler名称")”注解，注解的value值为自定义的JobHandler名称，该名称对应的是调度中心新建任务的JobHandler属性的值。
     （可参考Sample示例执行器中的DemoJobHandler，见下图）
 
 ![输入图片说明](https://static.oschina.net/uploads/img/201607/23232347_oLlM.png "在这里输入图片标题")
 
 #### 步骤二：调度中心，新建调度任务
-参考上文“配置属性详细说明”对新建的任务进行参数配置，运行模式选中 "BEAN模式"，JobHandler属性填写任务注解@JobHander中定义的值；
+参考上文“配置属性详细说明”对新建的任务进行参数配置，运行模式选中 "BEAN模式"，JobHandler属性填写任务注解“@JobHandler”中定义的值；
 
 ![输入图片说明](https://static.oschina.net/uploads/img/201704/27225124_yrcO.png "在这里输入图片标题")
 
@@ -715,7 +715,7 @@ xxl-job-admin#com.xxl.job.admin.controller.JobApiController.callback
 ### 5.5 任务 "运行模式" 剖析
 #### 5.5.1 "Bean模式" 任务
 开发步骤：可参考 "章节三" ；
-原理：每个Bean模式任务都是一个Spring的Bean类实例，它被维护在“执行器”项目的Spring容器中。任务类需要加“@JobHander(value="名称")”注解，因为“执行器”会根据该注解识别Spring容器中的任务。任务类需要继承统一接口“IJobHandler”，任务逻辑在execute方法中开发，因为“执行器”在接收到调度中心的调度请求时，将会调用“IJobHandler”的execute方法，执行任务逻辑。
+原理：每个Bean模式任务都是一个Spring的Bean类实例，它被维护在“执行器”项目的Spring容器中。任务类需要加“@JobHandler(value="名称")”注解，因为“执行器”会根据该注解识别Spring容器中的任务。任务类需要继承统一接口“IJobHandler”，任务逻辑在execute方法中开发，因为“执行器”在接收到调度中心的调度请求时，将会调用“IJobHandler”的execute方法，执行任务逻辑。
 
 #### 5.5.2 "GLUE模式(Java)" 任务
 开发步骤：可参考 "章节三" ；
@@ -737,7 +737,7 @@ xxl-job-admin#com.xxl.job.admin.controller.JobApiController.callback
 
 ![输入图片说明](https://static.oschina.net/uploads/img/201703/10174923_TgNO.png "在这里输入图片标题")
 
-在项目启动时，执行器会通过“@JobHander”识别Spring容器中“Bean模式任务”，以注解的value属性为key管理起来。
+在项目启动时，执行器会通过“@JobHandler”识别Spring容器中“Bean模式任务”，以注解的value属性为key管理起来。
 
 “执行器”接收到“调度中心”的调度请求时，如果任务类型为“Bean模式”，将会匹配Spring容器中的“Bean模式任务”，然后调用其execute方法，执行任务逻辑。如果任务类型为“GLUE模式”，将会加载GLue代码，实例化Java对象，注入依赖的Spring服务（注意：Glue代码中注入的Spring服务，必须存在与该“执行器”项目的Spring容器中），然后调用execute方法，执行任务逻辑。
 
@@ -860,13 +860,13 @@ XXL-JOB会为每次调度请求生成一个单独的日志文件，需要通过 
 		- 稳定性；
 
 ### 6.3 版本 V1.3.0，新特性[2016-05-19]
-- 1、遗弃“本地任务”模式，推荐使用“远程任务”，易于系统解耦，任务对应的JobHander统称为“执行器”；
+- 1、遗弃“本地任务”模式，推荐使用“远程任务”，易于系统解耦，任务对应的JobHandler统称为“执行器”；
 - 2、遗弃“servlet”方式底层系统通讯，推荐使用JETTY方式，调度+回调双向通讯，重构通讯逻辑；
 - 3、UI交互优化：左侧菜单展开状态优化，菜单项选中状态优化，任务列表打开表格有压缩优化；
 - 4、【重要】“执行器”细分为：BEAN、GLUE两种开发模式，简介见下文：
 	
 	“执行器” 模式简介：
-		- BEAN模式执行器：每个执行器都是Spring的一个Bean实例，XXL-JOB通过注解@JobHander识别和调度执行器；
+		- BEAN模式执行器：每个执行器都是Spring的一个Bean实例，XXL-JOB通过注解@JobHandler识别和调度执行器；
 		 -GLUE模式执行器：每个执行器对应一段代码，在线Web编辑和维护，动态编译生效，执行器负责加载GLUE代码和执行；
 
 ### 6.4 版本 V1.3.1，新特性[2016-05-23]
@@ -1052,6 +1052,7 @@ Tips: 历史版本(V1.3.x)目前已经Release至稳定版本, 进入维护阶段
 - 6、执行器动态代理对象，拦截非业务方法的执行；
 - 7、底层系统日志级别规范调整，清理遗留代码；
 - 8、修改JobThread捕获Error错误不更新JobLog的问题； 
+- 9、任务注解调整为 “@JobHandler”，与任务注解统一；
 
 ### TODO LIST
 - 1、任务权限管理：执行器为粒度分配权限，核心操作校验权限；

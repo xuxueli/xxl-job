@@ -347,7 +347,7 @@ On the log console,you can view task execution log on the executor immediately a
         GLUE模式(Java)：task source code is maintened in the schedule center,it must implement IJobHandler and explain by "groovy" in the executor instance,inject other bean instace by annotation @Resource/@Autowire.
         GLUE模式(Shell)：it’s source code is a shell script and maintained in the schedule center.
         GLUE模式(Python)：it’s source code is a python script and maintained in the schedule center.
-    - JobHandler：it’s used in  "BEAN模式",it’s instance is defined by annotation @JobHander on the JobHandler class name.
+    - JobHandler：it’s used in  "BEAN模式",it’s instance is defined by annotation @JobHandler on the JobHandler class name.
     - 子任务Key：every task has a unique key (task Key can acquire from task list)，when main task is done successfully it’s child task stand for by this key will be scheduled.
     - 阻塞处理策略：the stategy handle the task when this task is scheduled too frequently and the task is block to wait for cpu time.
         单机串行（默认）：task schedule request go into the FIFO queue and execute serially.
@@ -366,7 +366,7 @@ The task logic exist in the executor project as JobHandler,the develop steps as 
 #### Step 1:develp obHandler in the executor project
     - 1, create new java class implent com.xxl.job.core.handler.IJobHandler;
     - 2, if you add @Component annotation on the top of the class name it’s will be managed as a bean instance by spring container;
-    - 3, add  “@JobHander(value=" customize jobhandler name")” annotation，the value stand for JobHandler name,it will be used as JobHandler property when create a new task in the schedule center.
+    - 3, add  “@JobHandler(value=" customize jobhandler name")” annotation，the value stand for JobHandler name,it will be used as JobHandler property when create a new task in the schedule center.
     （go and see DemoJobHandler in the xxl-job-executor-example project, as shown below）
 
 ![输入图片说明](https://static.oschina.net/uploads/img/201607/23232347_oLlM.png "在这里输入图片标题")
@@ -682,7 +682,7 @@ On the task log page ,you can see matched child task and triggered child task’
 ### 5.5 Task "run mode" analysis
 #### 5.5.1 "Bean模式" task
 Development steps:go and see "chapter 3" . 
-principle: every Bean mode task is a Spring Bean instance and it is maintained in executor project’s Spring container. task class nedd to add “@JobHander(value="name")” annotation, because executor identify task bean instance in spring container through annotation. Task class nedd to implements interface IJobHandler, task logic code in method execute(), the task logic in execute() method will be executed when executor received a schedule request from schedule center.
+principle: every Bean mode task is a Spring Bean instance and it is maintained in executor project’s Spring container. task class nedd to add “@JobHandler(value="name")” annotation, because executor identify task bean instance in spring container through annotation. Task class nedd to implements interface IJobHandler, task logic code in method execute(), the task logic in execute() method will be executed when executor received a schedule request from schedule center.
 
 #### 5.5.2 "GLUE模式(Java)" task
 Development steps:go and see "chapter 3" .
@@ -703,7 +703,7 @@ Executor is actually an embedded Jetty server with default port 9999, as shown b
 
 ![输入图片说明](https://static.oschina.net/uploads/img/201703/10174923_TgNO.png "在这里输入图片标题")
 
-Executor will identify Bean mode task in spring container through @JobHander When project start, it will be managed use the value of annotation as key. 
+Executor will identify Bean mode task in spring container through @JobHandler When project start, it will be managed use the value of annotation as key. 
 
 When executor received schedule request from schedule center, if task type is “Bean模式” it will match bean mode task in Spring container and call it’s execute() method and execute task logic. if task type is “GLUE模式”, it will load Glue code, instantiate a Java object and inject other spring service（notice: the spring service injected in Glue code must exist in the same executor project）, then call execute() method and execute task logic. 
 
@@ -810,13 +810,13 @@ The scheduling center API service requests reference code：com.xxl.job.dao.impl
 		- stability;
 
 ### 6.3 version V1.3.0，New features [2016-05-19]
-- 1、discard local task module, remote task was recommended, easy to decouple system, the JobHander of task was called executor.
+- 1、discard local task module, remote task was recommended, easy to decouple system, the JobHandler of task was called executor.
 - 2、dicard underlying communication type servlet, JETTY was recommended, schedule and callback bidirectional communication, rebuild the communication logic;
 - 3、UI interactive optimization:optimize left menu expansion and menu item selected status , task list opens the table with compression optimization;
 - 4、【important】executor is subdivided into two develop mode:BEAN、GLUE:
 	
 	Introduction to the executor mode:
-		- BEAN mode executor:every executor is a Spring Bean instance，it was recognized and scheduled by XXL-JOB through @JobHander annotation;
+		- BEAN mode executor:every executor is a Spring Bean instance，it was recognized and scheduled by XXL-JOB through @JobHandler annotation;
 		 -GLUE mode executor:every executor corresponds to a piece of code，edited and maintained online by Web, Dynamic compile and takes effect in real time, executor is responsible for loading GLUE code and executing;
 
 ### 6.4 version V1.3.1，New features [2016-05-23]
