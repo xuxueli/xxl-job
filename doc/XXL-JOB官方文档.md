@@ -101,6 +101,13 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
     - 45、广州知识圈网络科技有限公司
     - 46、国誉商业上海有限公司
     - 47、海尔消费金融有限公司，嗨付、够花 (海尔)
+    - 48、广州巴图鲁信息科技有限公司
+    - 49、深圳市鹏海运电子数据交换有限公司
+    - 50、深圳市亚飞电子商务有限公司
+    - 51、上海趣医网络有限公司
+    - 52、聚金资本
+    - 53、北京父母邦网络科技有限公司
+    - 54、中山元赫软件科技有限公司
 	- ……
 
 > 更多接入的公司，欢迎在 [登记地址](https://github.com/xuxueli/xxl-job/issues/1 ) 登记，登记仅仅为了产品推广。
@@ -606,18 +613,24 @@ org.quartz.jobStore.clusterCheckinInterval: 1000
 ```
 
 #### 5.4.4 调度线程池
-默认线程池中线程的数量为10个，避免单线程因阻塞而引起任务调度延迟。
+调度采用线程池方式实现，避免单线程因阻塞而引起任务调度延迟。
 
 ```
 org.quartz.threadPool.class: org.quartz.simpl.SimpleThreadPool
-org.quartz.threadPool.threadCount: 10
+org.quartz.threadPool.threadCount: 15
 org.quartz.threadPool.threadPriority: 5
 org.quartz.threadPool.threadsInheritContextClassLoaderOfInitializingThread: true
 ```
 
-XXL-JOB系统中业务逻辑在远程执行器执行，调度中心每次调度仅仅负责一次调度请求，执行器会将请求存入执行队列并且立即响应调度中心；相比直接在quartz的QuartzJobBean中执行业务逻辑，差别就像大象和羽毛；
+XXL-JOB系统中业务逻辑在远程执行器执行，调度中心每次触发调度时仅发送一次调度请求，执行器会将请求存入执行队列并且立即响应调度中心；相比直接在quartz的QuartzJobBean中执行业务逻辑，极大的降低了调度线程占用；
 
-XXL-JOB调度中心中每个JOB逻辑非常 “轻”，单个JOB一次运行平均耗时基本在 "100ms" 之内（基本是网络开销）；因此，可以保证使用有限的线程支撑大量的JOB并发运行；上面配置的10个线程至少可以支撑100个JOB正常运行；
+XXL-JOB调度中心中每个JOB逻辑非常 “轻”，单个JOB一次运行平均耗时基本在 "10ms" 之内（基本为一次请求的网络开销）；因此，可以保证使用有限的线程支撑大量的JOB并发运行；
+
+理论上采用推荐机器配置 "4核4G内存"情况下，单线程可以承担 100（quartz最小时间粒度1000ms/触发一次任务耗时10ms）个密集任务（每秒执行一次）的正常调度触发。因此，默认配置的15个线程理论上可以承担起1500个密集任务的正常运行。
+
+实际场景中，调度请求网络耗时不同、DB读写耗时不同、任务密集或稀疏调度情况不同，会导致任务量上限会上下波动。
+
+如若需要支撑更多的任务量，可以通过 "调大调度线程数" 和 "提升机器配置" 两种方式实现。
 
 #### 5.4.5 @DisallowConcurrentExecution
 XXL-JOB调度模块的“调度中心”默认不使用该注解，即默认开启并行机制，因为RemoteHttpJobBean为公共QuartzJobBean，这样在多线程调度的情况下，调度模块被阻塞的几率很低，大大提高了调度系统的承载量。

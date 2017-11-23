@@ -96,6 +96,13 @@ So far, XXL-JOB has access to a number of companies online product line, access 
     - 45、广州知识圈网络科技有限公司
     - 46、国誉商业上海有限公司
     - 47、海尔消费金融有限公司，嗨付、够花 (海尔)
+    - 48、广州巴图鲁信息科技有限公司
+    - 49、深圳市鹏海运电子数据交换有限公司
+    - 50、深圳市亚飞电子商务有限公司
+    - 51、上海趣医网络有限公司
+    - 52、聚金资本
+    - 53、北京父母邦网络科技有限公司
+    - 54、中山元赫软件科技有限公司
 	- ……
 
 > The company that access and use this product is welcome to register at the [address](https://github.com/xuxueli/xxl-job/issues/1 ), only for product promotion. 
