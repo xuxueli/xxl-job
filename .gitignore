@@ -1,10 +1,7 @@
-# for eclipse
-/.settings/
-/.project
-
-# for idea
+.idea
+.classpath
+.project
 *.iml
-/.idea
-*/target
+target/
 .DS_Store
 .gitattributes
