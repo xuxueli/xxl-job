@@ -9,6 +9,7 @@ import com.xxl.job.core.log.XxlJobFileAppender;
 import com.xxl.job.core.rpc.netcom.NetComClientProxy;
 import com.xxl.job.core.rpc.netcom.NetComServerFactory;
 import com.xxl.job.core.thread.JobThread;
+import com.xxl.job.core.util.NetUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -28,7 +29,7 @@ public class XxlJobExecutor implements ApplicationContextAware {
 
     // ---------------------- param ----------------------
     private String ip;
-    private int port = 9999;
+    private int port;
     private String appName;
     private String adminAddresses;
     private String accessToken;
@@ -121,6 +122,10 @@ public class XxlJobExecutor implements ApplicationContextAware {
     // ---------------------- executor-server(jetty) ----------------------
     private NetComServerFactory serverFactory = new NetComServerFactory();
     private void initExecutorServer(int port, String ip, String appName, String accessToken) throws Exception {
+        // valid param
+        port = port>0?port: NetUtil.findAvailablePort(9999);
+
+        // start server
         NetComServerFactory.putService(ExecutorBiz.class, new ExecutorBizImpl());   // rpc-service, base on jetty
         NetComServerFactory.setAccessToken(accessToken);
         serverFactory.start(port, ip, appName); // jetty + registry
