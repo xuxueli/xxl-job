@@ -23,7 +23,10 @@
          </a>
          <a href="https://gitter.im/xuxueli/xxl-job?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge">
               <img src="https://badges.gitter.im/xuxueli/xxl-job.svg" >
-          </a>
+         </a>
+         <a href="http://www.xuxueli.com/page/donate.html">
+               <img src="https://img.shields.io/badge/%24-donate-ff69b4.svg?style=flat-square" >
+         </a>
     </p>    
 </p>
 
@@ -161,6 +164,6 @@ This product is open source and free, and will continue to provide free communit
 
 
 ## Donate
-No matter how much the amount is enough to express your thought, thank you very much ：）
+No matter how much the amount is enough to express your thought, thank you very much ：）     [To donate](http://www.xuxueli.com/page/donate.html )
 
 无论金额多少都足够表达您这份心意，非常感谢 ：）      [前往捐赠](http://www.xuxueli.com/page/donate.html )
