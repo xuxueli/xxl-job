@@ -310,18 +310,15 @@ public class XxlJobServiceImpl implements XxlJobService {
 	}
 
 	@Override
-	public ReturnT<Map<String, Object>> triggerChartDate() {
-		Date from = DateUtils.addDays(new Date(), -30);
-		Date to = new Date();
-
+	public ReturnT<Map<String, Object>> triggerChartDate(Date startDate, Date endDate) {
 		List<String> triggerDayList = new ArrayList<String>();
 		List<Integer> triggerDayCountSucList = new ArrayList<Integer>();
 		List<Integer> triggerDayCountFailList = new ArrayList<Integer>();
 		int triggerCountSucTotal = 0;
 		int triggerCountFailTotal = 0;
 
-		List<Map<String, Object>> triggerCountMapAll = xxlJobLogDao.triggerCountByDay(from, to, -1);
-		List<Map<String, Object>> triggerCountMapSuc = xxlJobLogDao.triggerCountByDay(from, to, ReturnT.SUCCESS_CODE);
+		List<Map<String, Object>> triggerCountMapAll = xxlJobLogDao.triggerCountByDay(startDate, endDate, -1);
+		List<Map<String, Object>> triggerCountMapSuc = xxlJobLogDao.triggerCountByDay(startDate, endDate, ReturnT.SUCCESS_CODE);
 		if (CollectionUtils.isNotEmpty(triggerCountMapAll)) {
 			for (Map<String, Object> item: triggerCountMapAll) {
 				String day = String.valueOf(item.get("triggerDay"));
