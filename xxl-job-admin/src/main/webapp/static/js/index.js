@@ -6,7 +6,7 @@
 $(function () {
 
     // 过滤时间
-    var _startDate = moment().subtract(1, 'months');
+    var _startDate = moment().subtract(1, 'months');    // 默认，最近一月
     var _endDate = moment();
     $('#filterTime').daterangepicker({
         autoApply:false,
@@ -23,7 +23,7 @@ $(function () {
             '本月': [moment().startOf('month'), moment().endOf('month')],
             '上个月': [moment().subtract(1, 'months').startOf('month'), moment().subtract(1, 'months').endOf('month')],
             '最近1周': [moment().subtract(1, 'weeks'), moment()],
-            '最近1月': [moment().subtract(1, 'months'), moment()]
+            '最近1月': [_startDate, _endDate]
         },
         locale : {
             format: 'YYYY-MM-DD HH:mm:ss',
