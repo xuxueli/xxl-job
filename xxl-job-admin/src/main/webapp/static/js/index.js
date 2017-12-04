@@ -20,10 +20,10 @@ $(function () {
             //'最近1小时': [moment().subtract(1, 'hours'), moment()],
             '今日': [moment().startOf('day'), moment().endOf('day')],
             '昨日': [moment().subtract(1, 'days').startOf('day'), moment().subtract(1, 'days').endOf('day')],
-            '最近7日': [moment().subtract(7, 'days'), moment()],
-            '最近30日': [moment().subtract(1, 'months'), moment()],
             '本月': [moment().startOf('month'), moment().endOf('month')],
-            '上个月': [moment().subtract(1, 'months').startOf('month'), moment().subtract(1, 'months').endOf('month')]
+            '上个月': [moment().subtract(1, 'months').startOf('month'), moment().subtract(1, 'months').endOf('month')],
+            '最近1周': [moment().subtract(1, 'weeks'), moment()],
+            '最近1月': [moment().subtract(1, 'months'), moment()]
         },
         locale : {
             format: 'YYYY-MM-DD HH:mm:ss',

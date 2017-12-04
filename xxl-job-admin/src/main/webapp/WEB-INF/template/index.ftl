@@ -84,7 +84,7 @@
                             <div class="progress">
                                 <div class="progress-bar" style="width: 100%"></div>
                             </div>
-                            <span class="progress-description">调度中心注册发现的执行器机器数量</span>
+                            <span class="progress-description">调度中心在线的执行器机器数量</span>
                         </div>
                     </div>
                 </div>
