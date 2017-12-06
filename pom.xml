@@ -36,7 +36,7 @@
 		<commons-lang.version>2.6</commons-lang.version>
 
 		<c3p0.version>0.9.5.2</c3p0.version>
-		<mysql-connector-java.version>5.1.29</mysql-connector-java.version>
+		<mysql-connector-java.version>5.1.44</mysql-connector-java.version>
 		<mybatis-spring.version>1.2.2</mybatis-spring.version>
 		<mybatis.version>3.2.8</mybatis.version>
 

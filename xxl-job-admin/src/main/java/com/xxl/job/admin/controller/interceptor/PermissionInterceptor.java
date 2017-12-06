@@ -42,8 +42,8 @@ public class PermissionInterceptor extends HandlerInterceptorAdapter {
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-		
-		if (!(handler instanceof HandlerMethod)) {
+		String token = request.getParameter("token");
+		if (!(handler instanceof HandlerMethod)||token!=null) {
 			return super.preHandle(request, response, handler);
 		}
 		
