@@ -27,13 +27,14 @@ public class JobService {
 	@Autowired
 	MongoDBHandle mongodbHandle;
 	private static String TABLE_SQL_TEMPLATE = "table_sql_template.sql";
-	
+	private static Map<String, String> DEFAULT_COLUMNS = null;
 	private String[] reflect(String table,RealTimeJob obj){
-		Map<String, String> columns = jdbcHandle.queryColumns(table);
+		Map<String, String> columns = DEFAULT_COLUMNS==null||DEFAULT_COLUMNS.isEmpty()?jdbcHandle.queryColumns(table):DEFAULT_COLUMNS;
 		if(columns==null||columns.size()<1){
 			createTable(table, true);
 			columns = jdbcHandle.queryColumns(table);
 		}
+		DEFAULT_COLUMNS = columns;
 		String keys = null;
 		String values = null;
 		if(obj!=null){
