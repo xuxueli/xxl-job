@@ -3,6 +3,8 @@ package com.xxl.job.core.log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -49,13 +51,23 @@ public class XxlJobLogger {
     /**
      * append log with pattern
      *
-     * @
-     *
      * @param appendLogPattern  like "aaa {0} bbb {1} ccc"
      * @param appendLogArguments    like "111, true"
      */
     public static void log(String appendLogPattern, Object ... appendLogArguments) {
         String appendLog = MessageFormat.format(appendLogPattern, appendLogArguments);
+        log(appendLog);
+    }
+
+    /**
+     * append exception stack
+     *
+     * @param e
+     */
+    public static void log(Throwable e) {
+        StringWriter stringWriter = new StringWriter();
+        e.printStackTrace(new PrintWriter(stringWriter));
+        String appendLog = stringWriter.toString();
         log(appendLog);
     }
 
