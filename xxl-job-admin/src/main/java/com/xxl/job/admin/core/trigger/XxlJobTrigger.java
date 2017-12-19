@@ -195,7 +195,7 @@ public class XxlJobTrigger {
             ExecutorBiz executorBiz = XxlJobDynamicScheduler.getExecutorBiz(address);
             runResult = executorBiz.run(triggerParam);
         } catch (Exception e) {
-            logger.error(e.getMessage(), e);
+            logger.error(">>>>>>>>>>> xxl-job trigger error, please check if the executor[{}] is running.", address, e);
             runResult = new ReturnT<String>(ReturnT.FAIL_CODE, ""+e );
         }
 
