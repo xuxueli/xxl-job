@@ -19,9 +19,10 @@ public class XxlJobLogger {
     /**
      * append log
      *
+     * @param callInfo
      * @param appendLog
      */
-    public static void log(String appendLog) {
+    private static void logDetail(StackTraceElement callInfo, String appendLog) {
 
         // logFileName
         String logFileName = XxlJobFileAppender.contextHolder.get();
@@ -29,9 +30,9 @@ public class XxlJobLogger {
             return;
         }
 
-        // "yyyy-MM-dd HH:mm:ss [ClassName]-[MethodName]-[LineNumber]-[ThreadName] log";
+        /*// "yyyy-MM-dd HH:mm:ss [ClassName]-[MethodName]-[LineNumber]-[ThreadName] log";
         StackTraceElement[] stackTraceElements = new Throwable().getStackTrace();
-        StackTraceElement callInfo = stackTraceElements[1];
+        StackTraceElement callInfo = stackTraceElements[1];*/
 
         StringBuffer stringBuffer = new StringBuffer();
         stringBuffer.append(xxlJobLoggerFormat.format(new Date())).append(" ")
@@ -55,8 +56,14 @@ public class XxlJobLogger {
      * @param appendLogArguments    like "111, true"
      */
     public static void log(String appendLogPattern, Object ... appendLogArguments) {
-        String appendLog = MessageFormat.format(appendLogPattern, appendLogArguments);
-        log(appendLog);
+
+        String appendLog = appendLogPattern;
+        if (appendLogArguments!=null && appendLogArguments.length>0) {
+            appendLog = MessageFormat.format(appendLogPattern, appendLogArguments);
+        }
+
+        StackTraceElement callInfo = new Throwable().getStackTrace()[1];
+        logDetail(callInfo, appendLog);
     }
 
     /**
@@ -65,10 +72,13 @@ public class XxlJobLogger {
      * @param e
      */
     public static void log(Throwable e) {
+
         StringWriter stringWriter = new StringWriter();
         e.printStackTrace(new PrintWriter(stringWriter));
         String appendLog = stringWriter.toString();
-        log(appendLog);
+
+        StackTraceElement callInfo = new Throwable().getStackTrace()[1];
+        logDetail(callInfo, appendLog);
     }
 
 }
