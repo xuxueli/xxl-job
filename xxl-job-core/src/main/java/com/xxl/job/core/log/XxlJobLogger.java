@@ -24,11 +24,6 @@ public class XxlJobLogger {
      */
     private static void logDetail(StackTraceElement callInfo, String appendLog) {
 
-        // logFileName
-        String logFileName = XxlJobFileAppender.contextHolder.get();
-        if (logFileName==null || logFileName.trim().length()==0) {
-            return;
-        }
 
         /*// "yyyy-MM-dd HH:mm:ss [ClassName]-[MethodName]-[LineNumber]-[ThreadName] log";
         StackTraceElement[] stackTraceElements = new Throwable().getStackTrace();
@@ -44,9 +39,13 @@ public class XxlJobLogger {
         String formatAppendLog = stringBuffer.toString();
 
         // appendlog
-        XxlJobFileAppender.appendLog(logFileName, formatAppendLog);
-
-        logger.debug(">>>>>>>>>>> [{}]: {}", logFileName, formatAppendLog);
+        String logFileName = XxlJobFileAppender.contextHolder.get();
+        if (logFileName==null || logFileName.trim().length()==0) {
+            logger.info(">>>>>>>>>>> [{}]: {}", logFileName, formatAppendLog);
+        } else {
+            XxlJobFileAppender.appendLog(logFileName, formatAppendLog);
+            logger.debug(">>>>>>>>>>> [{}]: {}", logFileName, formatAppendLog);
+        }
     }
 
     /**
