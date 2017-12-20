@@ -18,7 +18,28 @@ public class XxlJobFileAppender {
 	// for JobThread (support log for child thread of job handler)
 	//public static ThreadLocal<String> contextHolder = new ThreadLocal<String>();
 	public static final InheritableThreadLocal<String> contextHolder = new InheritableThreadLocal<String>();
-	public static String logPath = "/data/applogs/xxl-job/jobhandler/";
+
+
+	private static String logPath = "/data/applogs/xxl-job/jobhandler/";
+	public static void initLogPath(String logPath){
+		// init
+		if (logPath!=null && logPath.trim().length()>0) {
+			/*if (!logPath.endsWith("/")) {
+				logPath = logPath.concat("/");
+			}*/
+			XxlJobFileAppender.logPath = logPath;
+		}
+		// mk dir
+		File logPathDir = new File(XxlJobFileAppender.logPath);
+		if (!logPathDir.exists()) {
+			logPathDir.mkdirs();
+		}
+		XxlJobFileAppender.logPath = logPathDir.getPath();
+	}
+	public static String getLogPath() {
+		return logPath;
+	}
+
 
 	/**
 	 * log filename: yyyy-MM-dd/9999.log

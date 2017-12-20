@@ -36,20 +36,20 @@ public class ScriptJobHandler extends IJobHandler {
         String scriptFileName = null;
         if (GlueTypeEnum.GLUE_SHELL == glueType) {
             cmd = "bash";
-            scriptFileName = XxlJobFileAppender.logPath.concat("gluesource/").concat(String.valueOf(jobId)).concat("_").concat(String.valueOf(glueUpdatetime)).concat(".sh");
+            scriptFileName = XxlJobFileAppender.getLogPath().concat("gluesource/").concat(String.valueOf(jobId)).concat("_").concat(String.valueOf(glueUpdatetime)).concat(".sh");
         } else if (GlueTypeEnum.GLUE_PYTHON == glueType) {
             cmd = "python";
-            scriptFileName = XxlJobFileAppender.logPath.concat("gluesource/").concat(String.valueOf(jobId)).concat("_").concat(String.valueOf(glueUpdatetime)).concat(".py");
+            scriptFileName = XxlJobFileAppender.getLogPath().concat("gluesource/").concat(String.valueOf(jobId)).concat("_").concat(String.valueOf(glueUpdatetime)).concat(".py");
         } else if (GlueTypeEnum.GLUE_NODEJS == glueType) {
             cmd = "node";
-            scriptFileName = XxlJobFileAppender.logPath.concat("gluesource/").concat(String.valueOf(jobId)).concat("_").concat(String.valueOf(glueUpdatetime)).concat(".js");
+            scriptFileName = XxlJobFileAppender.getLogPath().concat("gluesource/").concat(String.valueOf(jobId)).concat("_").concat(String.valueOf(glueUpdatetime)).concat(".js");
         }
 
         // make script file
         ScriptUtil.markScriptFile(scriptFileName, gluesource);
 
         // log file
-        String logFileName = XxlJobFileAppender.logPath.concat(XxlJobFileAppender.contextHolder.get());
+        String logFileName = XxlJobFileAppender.getLogPath().concat(XxlJobFileAppender.contextHolder.get());
 
         // invoke
         XxlJobLogger.log("----------- script file:"+ scriptFileName +" -----------");

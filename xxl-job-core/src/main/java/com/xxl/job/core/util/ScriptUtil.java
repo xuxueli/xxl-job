@@ -28,7 +28,7 @@ public class ScriptUtil {
      */
     public static void markScriptFile(String scriptFileName, String content) throws IOException {
         // filePath/
-        File filePathDir = new File(XxlJobFileAppender.logPath);
+        File filePathDir = new File(XxlJobFileAppender.getLogPath());
         if (!filePathDir.exists()) {
             filePathDir.mkdirs();
         }
