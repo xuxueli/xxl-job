@@ -33,7 +33,7 @@ public class ShardingJobHandler extends IJobHandler {
 			}
 		}
 
-		return ReturnT.SUCCESS;
+		return SUCCESS;
 	}
 	
 }

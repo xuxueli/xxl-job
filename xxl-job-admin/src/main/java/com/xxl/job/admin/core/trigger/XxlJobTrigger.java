@@ -171,7 +171,7 @@ public class XxlJobTrigger {
             // 4.3、trigger (fail retry)
             if (triggerResult.getCode()!=ReturnT.SUCCESS_CODE && failStrategy == ExecutorFailStrategyEnum.FAIL_RETRY) {
                 triggerResult = executorRouteStrategyEnum.getRouter().routeRun(triggerParam, addressList);
-                triggerMsgSb.append("<br><br><span style=\"color:#F39C12;\" > >>>>>>>>>>>失败重试<<<<<<<<<<< </span><br>").append(triggerResult.getMsg());
+                triggerMsgSb.append("<br><br><span style=\"color:#F39C12;\" > >>>>>>>>>>>调度失败重试<<<<<<<<<<< </span><br>").append(triggerResult.getMsg());
             }
         }
 

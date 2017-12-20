@@ -6,6 +6,7 @@ import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.admin.core.schedule.XxlJobDynamicScheduler;
 import com.xxl.job.admin.core.util.MailUtil;
 import com.xxl.job.core.biz.model.ReturnT;
+import com.xxl.job.core.handler.IJobHandler;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,13 +52,15 @@ public class JobFailMonitorHelper {
 								if (log == null) {
 									continue;
 								}
-								if (ReturnT.SUCCESS_CODE == log.getTriggerCode() && log.getHandleCode() == 0) {
+								if (IJobHandler.SUCCESS.getCode() == log.getTriggerCode() && log.getHandleCode() == 0) {
 									JobFailMonitorHelper.monitor(jobLogId);
 									logger.info(">>>>>>>>>>> job monitor, job running, JobLogId:{}", jobLogId);
-								} else if (ReturnT.SUCCESS_CODE == log.getTriggerCode() && ReturnT.SUCCESS_CODE == log.getHandleCode()) {
+								} else if (IJobHandler.SUCCESS.getCode() == log.getHandleCode()) {
 									// job success, pass
 									logger.info(">>>>>>>>>>> job monitor, job success, JobLogId:{}", jobLogId);
-								} else if (ReturnT.FAIL_CODE == log.getTriggerCode() || ReturnT.FAIL_CODE == log.getHandleCode()) {
+								} else if (IJobHandler.FAIL.getCode() == log.getTriggerCode()
+										|| IJobHandler.FAIL.getCode() == log.getHandleCode()
+										|| IJobHandler.FAIL_RETRY.getCode() == log.getHandleCode() ) {
 									// job fail,
 									failAlarm(log);
 									logger.info(">>>>>>>>>>> job monitor, job fail, JobLogId:{}", jobLogId);

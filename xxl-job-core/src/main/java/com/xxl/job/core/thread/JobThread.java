@@ -120,7 +120,7 @@ public class JobThread extends Thread{
 					XxlJobLogger.log("<br>----------- xxl-job job execute start -----------<br>----------- Params:" + Arrays.toString(handlerParams));
 					executeResult = handler.execute(handlerParams);
 					if (executeResult == null) {
-						executeResult = ReturnT.FAIL;
+						executeResult = IJobHandler.FAIL;
 					}
 					XxlJobLogger.log("<br>----------- xxl-job job execute end(finish) -----------<br>----------- ReturnT:" + executeResult);
 
