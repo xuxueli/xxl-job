@@ -31,25 +31,24 @@ public class ScriptJobHandler extends IJobHandler {
     @Override
     public ReturnT<String> execute(String... params) throws Exception {
 
-        // cmd + script-file-name
-        String cmd = "bash";
-        String scriptFileName = null;
-        if (GlueTypeEnum.GLUE_SHELL == glueType) {
-            cmd = "bash";
-            scriptFileName = XxlJobFileAppender.getLogPath().concat("gluesource/").concat(String.valueOf(jobId)).concat("_").concat(String.valueOf(glueUpdatetime)).concat(".sh");
-        } else if (GlueTypeEnum.GLUE_PYTHON == glueType) {
-            cmd = "python";
-            scriptFileName = XxlJobFileAppender.getLogPath().concat("gluesource/").concat(String.valueOf(jobId)).concat("_").concat(String.valueOf(glueUpdatetime)).concat(".py");
-        } else if (GlueTypeEnum.GLUE_NODEJS == glueType) {
-            cmd = "node";
-            scriptFileName = XxlJobFileAppender.getLogPath().concat("gluesource/").concat(String.valueOf(jobId)).concat("_").concat(String.valueOf(glueUpdatetime)).concat(".js");
+        if (!glueType.isScript()) {
+            return new ReturnT<String>(IJobHandler.FAIL.getCode(), "glueType["+ glueType +"] invalid.");
         }
 
+        // cmd
+        String cmd = glueType.getCmd();
+
         // make script file
+        String scriptFileName = XxlJobFileAppender.getLogPath()
+                .concat("/gluesource/")
+                .concat(String.valueOf(jobId))
+                .concat("_")
+                .concat(String.valueOf(glueUpdatetime))
+                .concat(glueType.getSuffix());
         ScriptUtil.markScriptFile(scriptFileName, gluesource);
 
         // log file
-        String logFileName = XxlJobFileAppender.getLogPath().concat(XxlJobFileAppender.contextHolder.get());
+        String logFileName = XxlJobFileAppender.contextHolder.get();
 
         // invoke
         XxlJobLogger.log("----------- script file:"+ scriptFileName +" -----------");
