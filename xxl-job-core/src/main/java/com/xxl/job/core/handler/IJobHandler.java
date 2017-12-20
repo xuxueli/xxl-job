@@ -9,6 +9,7 @@ import com.xxl.job.core.biz.model.ReturnT;
  */
 public abstract class IJobHandler {
 
+
 	/** success */
 	public static final ReturnT<String> SUCCESS = new ReturnT<String>(200, null);
 	/** fail */
@@ -18,11 +19,29 @@ public abstract class IJobHandler {
 
 
 	/**
-	 * job handler
+	 * execute handler
+	 *
 	 * @param params
 	 * @return
 	 * @throws Exception
 	 */
 	public abstract ReturnT<String> execute(String... params) throws Exception;
-	
+
+
+	/**
+	 * init handler
+	 */
+	public void init() {
+		// TODO
+	}
+
+
+	/**
+	 * destroy handler
+	 */
+	public void destroy() {
+		// TODO
+	}
+
+
 }
