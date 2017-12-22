@@ -120,7 +120,9 @@
                         </div>
                         <div class="form-group">
                             <label for="lastname" class="col-sm-2 control-label">机器地址<font color="red">*</font></label>
-                            <div class="col-sm-10"><input type="text" class="form-control" name="addressList" placeholder="请输入执行器地址列表，多地址逗号分隔" maxlength="512" readonly="readonly" ></div>
+                            <div class="col-sm-10">
+                                <textarea class="textarea" name="addressList" maxlength="512" placeholder="请输入执行器地址列表，多地址逗号分隔" readonly="readonly" style="background-color:#eee; width: 100%; height: 100px; font-size: 14px; line-height: 10px; border: 1px solid #dddddd; padding: 10px;"></textarea>
+                            </div>
                         </div>
                         <hr>
                         <div class="form-group">
@@ -166,7 +168,9 @@
                         </div>
                         <div class="form-group">
                             <label for="lastname" class="col-sm-2 control-label">机器地址<font color="red">*</font></label>
-                            <div class="col-sm-10"><input type="text" class="form-control" name="addressList" placeholder="请输入执行器地址列表，多地址逗号分隔" maxlength="512" readonly="readonly" ></div>
+                            <div class="col-sm-10">
+                                <textarea class="textarea" name="addressList" maxlength="512" placeholder="请输入执行器地址列表，多地址逗号分隔" readonly="readonly" style="background-color:#eee; width: 100%; height: 100px; font-size: 14px; line-height: 10px; border: 1px solid #dddddd; padding: 10px;"></textarea>
+                            </div>
                         </div>
                         <hr>
                         <div class="form-group">
