@@ -210,7 +210,7 @@ CREATE TABLE `XXL_JOB_QRTZ_TRIGGER_GROUP` (
   `title` varchar(12) NOT NULL COMMENT '执行器名称',
   `order` tinyint(4) NOT NULL DEFAULT '0' COMMENT '排序',
   `address_type` tinyint(4) NOT NULL DEFAULT '0' COMMENT '执行器地址类型：0=自动注册、1=手动录入',
-  `address_list` varchar(200) DEFAULT NULL COMMENT '执行器地址列表，多地址逗号分隔',
+  `address_list` varchar(512) DEFAULT NULL COMMENT '执行器地址列表，多地址逗号分隔',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
