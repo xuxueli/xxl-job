@@ -63,7 +63,7 @@
 			            	<h3 class="box-title">调度列表</h3>
 			            </div>
 			            <div class="box-body" >
-			              	<table id="job_list" class="table table-bordered table-striped">
+			              	<table id="job_list" class="table table-bordered table-striped" width="100%" >
 				                <thead>
 					            	<tr>
 					            		<th name="id" >id</th>

@@ -1080,6 +1080,7 @@ Tips: 历史版本(V1.3.x)目前已经Release至稳定版本, 进入维护阶段
 - 15、Log地址格式兼容，支持非"/"结尾路径配置；
 - 16、JobHandler提供init/destroy方法，支持在JobHandler初始化和销毁时进行附加操作；
 - 17、告警邮件样式优化；邮件组件调整为commons-email简化邮件操作；
+- 18、任务列表界面，左侧菜单合并时样式错乱问题修复；
 
 
 ### TODO LIST
