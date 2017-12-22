@@ -124,11 +124,11 @@
 			<version>${httpclient.version}</version>
 		</dependency>
 
-		<!-- javax.mail -->
+		<!-- commons-email -->
 		<dependency>
-			<groupId>javax.mail</groupId>
-			<artifactId>mail</artifactId>
-			<version>${mail.version}</version>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-email</artifactId>
+			<version>${commons-email.version}</version>
 		</dependency>
 
 		<!-- quartz ：quartz-2.2.3/c3p0-0.9.1.1/slf4j-api-1.6.6 -->
