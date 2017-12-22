@@ -5,6 +5,7 @@ import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.route.ExecutorRouteStrategyEnum;
 import com.xxl.job.admin.core.schedule.XxlJobDynamicScheduler;
+import com.xxl.job.admin.core.util.JobKeyUtil;
 import com.xxl.job.admin.dao.XxlJobGroupDao;
 import com.xxl.job.admin.dao.XxlJobInfoDao;
 import com.xxl.job.admin.dao.XxlJobLogDao;
@@ -107,11 +108,11 @@ public class XxlJobServiceImpl implements XxlJobService {
 		if (StringUtils.isNotBlank(jobInfo.getChildJobKey())) {
 			String[] childJobKeys = jobInfo.getChildJobKey().split(",");
 			for (String childJobKeyItem: childJobKeys) {
-				String[] childJobKeyArr = childJobKeyItem.split("_");
-				if (childJobKeyArr.length!=2) {
+				int childJobId = JobKeyUtil.parseJobId(childJobKeyItem);
+				if (childJobId <= 0) {
 					return new ReturnT<String>(ReturnT.FAIL_CODE, MessageFormat.format("子任务Key({0})格式错误", childJobKeyItem));
 				}
-				XxlJobInfo childJobInfo = xxlJobInfoDao.loadById(Integer.valueOf(childJobKeyArr[1]));
+				XxlJobInfo childJobInfo = xxlJobInfoDao.loadById(childJobId);
 				if (childJobInfo==null) {
 					return new ReturnT<String>(ReturnT.FAIL_CODE, MessageFormat.format("子任务Key({0})无效", childJobKeyItem));
 				}
@@ -170,11 +171,11 @@ public class XxlJobServiceImpl implements XxlJobService {
 		if (StringUtils.isNotBlank(jobInfo.getChildJobKey())) {
 			String[] childJobKeys = jobInfo.getChildJobKey().split(",");
 			for (String childJobKeyItem: childJobKeys) {
-				String[] childJobKeyArr = childJobKeyItem.split("_");
-				if (childJobKeyArr.length!=2) {
+				int childJobId = JobKeyUtil.parseJobId(childJobKeyItem);
+				if (childJobId <= 0) {
 					return new ReturnT<String>(ReturnT.FAIL_CODE, MessageFormat.format("子任务Key({0})格式错误", childJobKeyItem));
 				}
-                XxlJobInfo childJobInfo = xxlJobInfoDao.loadById(Integer.valueOf(childJobKeyArr[1]));
+                XxlJobInfo childJobInfo = xxlJobInfoDao.loadById(childJobId);
 				if (childJobInfo==null) {
 					return new ReturnT<String>(ReturnT.FAIL_CODE, MessageFormat.format("子任务Key({0})无效", childJobKeyItem));
 				}

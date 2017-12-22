@@ -5,6 +5,7 @@ import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.admin.core.schedule.XxlJobDynamicScheduler;
 import com.xxl.job.admin.core.trigger.XxlJobTrigger;
+import com.xxl.job.admin.core.util.JobKeyUtil;
 import com.xxl.job.admin.dao.XxlJobInfoDao;
 import com.xxl.job.admin.dao.XxlJobLogDao;
 import com.xxl.job.admin.dao.XxlJobRegistryDao;
@@ -72,9 +73,9 @@ public class AdminBizImpl implements AdminBiz {
 
                 String[] childJobKeys = xxlJobInfo.getChildJobKey().split(",");
                 for (int i = 0; i < childJobKeys.length; i++) {
-                    String[] jobKeyArr = childJobKeys[i].split("_");
-                    if (jobKeyArr!=null && jobKeyArr.length==2) {
-                        ReturnT<String> triggerChildResult = xxlJobService.triggerJob(Integer.valueOf(jobKeyArr[1]));
+                    int childJobId = JobKeyUtil.parseJobId(childJobKeys[i]);
+                    if (childJobId > 0) {
+                        ReturnT<String> triggerChildResult = xxlJobService.triggerJob(childJobId);
 
                         // add msg
                         callbackMsg += MessageFormat.format("{0}/{1} [JobKey={2}], 触发{3}, 触发备注: {4} <br>",
