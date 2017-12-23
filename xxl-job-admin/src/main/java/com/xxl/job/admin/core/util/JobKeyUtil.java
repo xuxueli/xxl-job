@@ -1,7 +1,7 @@
 package com.xxl.job.admin.core.util;
 
 import com.xxl.job.admin.core.model.XxlJobInfo;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * job key util
