@@ -35,7 +35,7 @@ public class MailUtilTest {
                 "   <tbody>\n" +
                 "</table>";
 
-        mailBodyTemplate = MessageFormat.format(mailBodyTemplate, "1_1", "分组A", "任务A1");
+        mailBodyTemplate = MessageFormat.format(mailBodyTemplate, "执行器A", "1_1", "任务A1");
 
         boolean ret = MailUtil.sendMail("931591021@qq.com", "调度中心监控报警" , mailBodyTemplate);
         System.out.println(ret);
