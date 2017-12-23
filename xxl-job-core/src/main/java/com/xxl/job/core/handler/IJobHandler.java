@@ -21,11 +21,11 @@ public abstract class IJobHandler {
 	/**
 	 * execute handler
 	 *
-	 * @param params
+	 * @param param
 	 * @return
 	 * @throws Exception
 	 */
-	public abstract ReturnT<String> execute(String... params) throws Exception;
+	public abstract ReturnT<String> execute(String param) throws Exception;
 
 
 	/**

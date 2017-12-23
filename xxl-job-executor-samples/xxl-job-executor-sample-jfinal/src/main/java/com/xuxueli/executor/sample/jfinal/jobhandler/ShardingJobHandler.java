@@ -14,7 +14,7 @@ import com.xxl.job.core.util.ShardingUtil;
 public class ShardingJobHandler extends IJobHandler {
 
 	@Override
-	public ReturnT<String> execute(String... params) throws Exception {
+	public ReturnT<String> execute(String param) throws Exception {
 
 		// 分片参数
 		ShardingUtil.ShardingVO shardingVO = ShardingUtil.getShardingVo();

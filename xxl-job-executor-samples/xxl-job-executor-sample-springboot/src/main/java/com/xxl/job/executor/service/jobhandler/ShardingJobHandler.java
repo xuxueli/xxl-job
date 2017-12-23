@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 public class ShardingJobHandler extends IJobHandler {
 
 	@Override
-	public ReturnT<String> execute(String... params) throws Exception {
+	public ReturnT<String> execute(String param) throws Exception {
 
 		// 分片参数
 		ShardingUtil.ShardingVO shardingVO = ShardingUtil.getShardingVo();
