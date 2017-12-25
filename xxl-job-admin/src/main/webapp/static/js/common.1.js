@@ -7,14 +7,18 @@ $(function(){
 
 			$.post(base_url + "/logout", function(data, status) {
 				if (data.code == "200") {
-					layer.open({
+                    layer.msg('注销成功');
+                    setTimeout(function(){
+                        window.location.href = base_url + "/";
+                    }, 500);
+					/*layer.open({
 						title: '系统提示',
 						content: '注销成功',
 						icon: '1',
 						end: function(layero, index){
 							window.location.href = base_url + "/";
 						}
-					});
+					});*/
 				} else {
 					layer.open({
 						title: '系统提示',
