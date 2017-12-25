@@ -1,5 +1,6 @@
 package com.xuxueli.executor.sample.nutz.jobhandler;
 
+import com.xxl.job.core.handler.annotation.JobHandler;
 import org.nutz.ioc.loader.annotation.IocBean;
 
 import com.xxl.job.core.biz.model.ReturnT;
@@ -7,17 +8,17 @@ import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.log.XxlJobLogger;
 import com.xxl.job.core.util.ShardingUtil;
 
-
 /**
  * 分片广播任务
  *
  * @author xuxueli 2017-07-25 20:56:50
  */
+@JobHandler(value="shardingJobHandler")
 @IocBean
 public class ShardingJobHandler extends IJobHandler {
 
 	@Override
-	public ReturnT<String> execute(String... params) throws Exception {
+	public ReturnT<String> execute(String param) throws Exception {
 
 		// 分片参数
 		ShardingUtil.ShardingVO shardingVO = ShardingUtil.getShardingVo();
@@ -32,7 +33,7 @@ public class ShardingJobHandler extends IJobHandler {
 			}
 		}
 
-		return ReturnT.SUCCESS;
+		return SUCCESS;
 	}
-	
+
 }

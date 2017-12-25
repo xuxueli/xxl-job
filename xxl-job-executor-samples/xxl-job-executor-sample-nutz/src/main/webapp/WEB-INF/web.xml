@@ -3,9 +3,16 @@
 	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	id="WebApp_ID" version="2.5">
+
 	<display-name>xxl-job-executor-sample-nutz</display-name>
+	<context-param>
+		<param-name>webAppRootKey</param-name>
+		<param-value>xxl-job-executor-sample-nutz</param-value>
+	</context-param>
+
+	<!-- nutz -->
 	<filter>
-		<filter-name>xxl-job-executor-sample-nutz</filter-name>
+		<filter-name>nutz</filter-name>
 		<filter-class>org.nutz.mvc.NutFilter</filter-class>
 		<init-param>
 			<param-name>modules</param-name>
@@ -13,10 +20,13 @@
 		</init-param>
 	</filter>
 	<filter-mapping>
-		<filter-name>xxl-job-executor-sample-nutz</filter-name>
+		<filter-name>nutz</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
+
+
 	<welcome-file-list>
-		<welcome-file>index</welcome-file>
+		<welcome-file>index.html</welcome-file>
 	</welcome-file-list>
+
 </web-app>

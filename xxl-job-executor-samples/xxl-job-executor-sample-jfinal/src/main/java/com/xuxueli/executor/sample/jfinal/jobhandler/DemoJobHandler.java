@@ -6,14 +6,13 @@ import com.xxl.job.core.log.XxlJobLogger;
 
 import java.util.concurrent.TimeUnit;
 
-
 /**
- * 任务Handler的一个Demo（Bean模式）
+ * 任务Handler示例（Bean模式）
  *
  * 开发步骤：
- * 1、继承 “IJobHandler” ；
- * 2、执行日志：需要通过 "XxlJobLogger.log" 打印执行日志；
- * 3、在 "JFinalCoreConfig" 中注册，执行Jobhandler名称；
+ * 1、继承"IJobHandler"：“com.xxl.job.core.handler.IJobHandler”；
+ * 2、注册到执行器工厂：在 "JFinalCoreConfig.initXxlJobExecutor" 中手动注册，注解key值对应的是调度中心新建任务的JobHandler属性的值。
+ * 3、执行日志：需要通过 "XxlJobLogger.log" 打印执行日志；
  *
  * @author xuxueli 2015-12-19 19:43:36
  */

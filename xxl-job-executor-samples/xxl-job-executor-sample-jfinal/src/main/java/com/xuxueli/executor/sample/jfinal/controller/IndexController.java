@@ -7,4 +7,5 @@ public class IndexController extends Controller {
 	public void index(){
 		renderText("xxl job executor running.");
 	}
+
 }
