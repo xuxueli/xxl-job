@@ -27,7 +27,7 @@
 	    <result column="glue_remark" property="glueRemark" />
 		<result column="glue_updatetime" property="glueUpdatetime" />
 
-		<result column="child_jobkey" property="childJobKey" />
+		<result column="child_jobid" property="childJobId" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -48,7 +48,7 @@
 		t.glue_source,
 		t.glue_remark,
 		t.glue_updatetime,
-		t.child_jobkey
+		t.child_jobid
 	</sql>
 	
 	<select id="pageList" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
@@ -97,7 +97,7 @@
 			glue_source,
 			glue_remark,
 			glue_updatetime,
-			child_jobkey
+			child_jobid
 		) VALUES (
 			#{jobGroup},
 			#{jobCron}, 
@@ -115,7 +115,7 @@
 			#{glueSource},
 			#{glueRemark},
 			NOW(),
-			#{childJobKey}
+			#{childJobId}
 		);
 		<!--<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
 			SELECT LAST_INSERT_ID()
@@ -146,7 +146,7 @@
 			glue_source = #{glueSource},
 			glue_remark = #{glueRemark},
 			glue_updatetime = #{glueUpdatetime},
-			child_jobkey = #{childJobKey}
+			child_jobid = #{childJobId}
 		WHERE id = #{id}
 	</update>
 	

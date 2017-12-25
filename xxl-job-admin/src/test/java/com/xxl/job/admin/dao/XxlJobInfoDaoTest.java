@@ -45,7 +45,7 @@ public class XxlJobInfoDaoTest {
 		info.setGlueType("setGlueType");
 		info.setGlueSource("setGlueSource");
 		info.setGlueRemark("setGlueRemark");
-		info.setChildJobKey("setChildJobKey");
+		info.setChildJobId("1");
 
 		int count = xxlJobInfoDao.save(info);
 
@@ -63,7 +63,7 @@ public class XxlJobInfoDaoTest {
 		info2.setGlueSource("setGlueSource2");
 		info2.setGlueRemark("setGlueRemark2");
 		info2.setGlueUpdatetime(new Date());
-		info2.setChildJobKey("setChildJobKey2");
+		info2.setChildJobId("1");
 
 		int item2 = xxlJobInfoDao.update(info2);
 

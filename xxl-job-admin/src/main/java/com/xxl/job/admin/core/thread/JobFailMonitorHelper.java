@@ -4,7 +4,6 @@ import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.admin.core.schedule.XxlJobDynamicScheduler;
-import com.xxl.job.admin.core.util.JobKeyUtil;
 import com.xxl.job.admin.core.util.MailUtil;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.handler.IJobHandler;
@@ -125,7 +124,7 @@ public class JobFailMonitorHelper {
 			"   <thead style=\"font-weight: bold;color: #ffffff;background-color: #ff8c00;\" >" +
 			"      <tr>\n" +
 			"         <td>执行器</td>\n" +
-			"         <td>JobKey</td>\n" +
+			"         <td>任务ID</td>\n" +
 			"         <td>任务描述</td>\n" +
 			"         <td>告警类型</td>\n" +
 			"      </tr>\n" +
@@ -156,7 +155,7 @@ public class JobFailMonitorHelper {
 				XxlJobGroup group = XxlJobDynamicScheduler.xxlJobGroupDao.load(Integer.valueOf(info.getJobGroup()));
 
 				String title = "调度中心监控报警";
-				String content = MessageFormat.format(mailBodyTemplate, group!=null?group.getTitle():"null", JobKeyUtil.formatJobKey(info), info.getJobDesc());
+				String content = MessageFormat.format(mailBodyTemplate, group!=null?group.getTitle():"null", info.getId(), info.getJobDesc());
 
 				MailUtil.sendMail(email, title, content);
 			}

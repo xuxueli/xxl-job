@@ -5,7 +5,6 @@ import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.route.ExecutorRouteStrategyEnum;
 import com.xxl.job.admin.core.schedule.XxlJobDynamicScheduler;
-import com.xxl.job.admin.core.util.JobKeyUtil;
 import com.xxl.job.admin.dao.XxlJobGroupDao;
 import com.xxl.job.admin.dao.XxlJobInfoDao;
 import com.xxl.job.admin.dao.XxlJobLogDao;
@@ -104,19 +103,20 @@ public class XxlJobServiceImpl implements XxlJobService {
 			jobInfo.setGlueSource(jobInfo.getGlueSource().replaceAll("\r", ""));
 		}
 
-		// childJobKey valid
-		if (StringUtils.isNotBlank(jobInfo.getChildJobKey())) {
-			String[] childJobKeys = jobInfo.getChildJobKey().split(",");
-			for (String childJobKeyItem: childJobKeys) {
-				int childJobId = JobKeyUtil.parseJobId(childJobKeyItem);
-				if (childJobId <= 0) {
-					return new ReturnT<String>(ReturnT.FAIL_CODE, MessageFormat.format("子任务Key({0})格式错误", childJobKeyItem));
-				}
-				XxlJobInfo childJobInfo = xxlJobInfoDao.loadById(childJobId);
-				if (childJobInfo==null) {
-					return new ReturnT<String>(ReturnT.FAIL_CODE, MessageFormat.format("子任务Key({0})无效", childJobKeyItem));
+		// ChildJobId valid
+		if (StringUtils.isNotBlank(jobInfo.getChildJobId())) {
+			String[] childJobIds = StringUtils.split(jobInfo.getChildJobId(), ",");
+			for (String childJobIdItem: childJobIds) {
+				if (StringUtils.isNotBlank(childJobIdItem) && StringUtils.isNumeric(childJobIdItem)) {
+					XxlJobInfo childJobInfo = xxlJobInfoDao.loadById(Integer.valueOf(childJobIdItem));
+					if (childJobInfo==null) {
+						return new ReturnT<String>(ReturnT.FAIL_CODE, MessageFormat.format("子任务ID({0})无效", childJobIdItem));
+					}
+				} else {
+					return new ReturnT<String>(ReturnT.FAIL_CODE, MessageFormat.format("子任务ID({0})格式错误", childJobIdItem));
 				}
 			}
+			jobInfo.setChildJobId(StringUtils.join(childJobIds, ","));
 		}
 
 		// add in db
@@ -167,19 +167,24 @@ public class XxlJobServiceImpl implements XxlJobService {
 			return new ReturnT<String>(ReturnT.FAIL_CODE, "失败处理策略非法");
 		}
 
-		// childJobKey valid
-		if (StringUtils.isNotBlank(jobInfo.getChildJobKey())) {
-			String[] childJobKeys = jobInfo.getChildJobKey().split(",");
-			for (String childJobKeyItem: childJobKeys) {
-				int childJobId = JobKeyUtil.parseJobId(childJobKeyItem);
-				if (childJobId <= 0) {
-					return new ReturnT<String>(ReturnT.FAIL_CODE, MessageFormat.format("子任务Key({0})格式错误", childJobKeyItem));
-				}
-                XxlJobInfo childJobInfo = xxlJobInfoDao.loadById(childJobId);
-				if (childJobInfo==null) {
-					return new ReturnT<String>(ReturnT.FAIL_CODE, MessageFormat.format("子任务Key({0})无效", childJobKeyItem));
+		// ChildJobId valid
+		if (StringUtils.isNotBlank(jobInfo.getChildJobId())) {
+			String[] childJobIds = StringUtils.split(jobInfo.getChildJobId(), ",");
+			for (String childJobIdItem: childJobIds) {
+				if (StringUtils.isNotBlank(childJobIdItem) && StringUtils.isNumeric(childJobIdItem)) {
+					XxlJobInfo childJobInfo = xxlJobInfoDao.loadById(Integer.valueOf(childJobIdItem));
+					if (childJobInfo==null) {
+						return new ReturnT<String>(ReturnT.FAIL_CODE, MessageFormat.format("子任务ID({0})无效", childJobIdItem));
+					}
+					// avoid cycle relate
+					if (childJobInfo.getId() == jobInfo.getId()) {
+						return new ReturnT<String>(ReturnT.FAIL_CODE, MessageFormat.format("子任务ID({0})不可与父任务重复", childJobIdItem));
+					}
+				} else {
+					return new ReturnT<String>(ReturnT.FAIL_CODE, MessageFormat.format("子任务ID({0})格式错误", childJobIdItem));
 				}
 			}
+			jobInfo.setChildJobId(StringUtils.join(childJobIds, ","));
 		}
 
 		// stage job info
@@ -198,7 +203,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 		exists_jobInfo.setExecutorParam(jobInfo.getExecutorParam());
 		exists_jobInfo.setExecutorBlockStrategy(jobInfo.getExecutorBlockStrategy());
 		exists_jobInfo.setExecutorFailStrategy(jobInfo.getExecutorFailStrategy());
-		exists_jobInfo.setChildJobKey(jobInfo.getChildJobKey());
+		exists_jobInfo.setChildJobId(jobInfo.getChildJobId());
         xxlJobInfoDao.update(exists_jobInfo);
 
 		// fresh quartz

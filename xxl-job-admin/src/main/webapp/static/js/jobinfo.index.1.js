@@ -20,7 +20,7 @@ $(function() {
 	    "ordering": false,
 	    //"scrollX": true,	// X轴滚动条，取消自适应
 	    "columns": [
-	                { "data": 'id', "bSortable": false, "visible" : false},
+	                { "data": 'id', "bSortable": false, "visible" : true},
 	                { 
 	                	"data": 'jobGroup', 
 	                	"visible" : false,
@@ -34,15 +34,6 @@ $(function() {
 	            			return data;
 	            		}
             		},
-					{
-						"data": 'childJobKey',
-						"width":'10%',
-						"visible" : true,
-						"render": function ( data, type, row ) {
-							var jobKey = row.jobGroup + "_" + row.id;
-							return jobKey;
-						}
-					},
 	                { "data": 'jobDesc', "visible" : true,"width":'20%'},
 					{
 						"data": 'glueType',
@@ -372,7 +363,7 @@ $(function() {
 		$('#updateModal .form select[name=executorRouteStrategy] option[value='+ row.executorRouteStrategy +']').prop('selected', true);
 		$("#updateModal .form input[name='executorHandler']").val( row.executorHandler );
 		$("#updateModal .form input[name='executorParam']").val( row.executorParam );
-        $("#updateModal .form input[name='childJobKey']").val( row.childJobKey );
+        $("#updateModal .form input[name='childJobId']").val( row.childJobId );
 		$('#updateModal .form select[name=executorBlockStrategy] option[value='+ row.executorBlockStrategy +']').prop('selected', true);
 		$('#updateModal .form select[name=executorFailStrategy] option[value='+ row.executorFailStrategy +']').prop('selected', true);
 		$('#updateModal .form select[name=glueType] option[value='+ row.glueType +']').prop('selected', true);

@@ -89,54 +89,32 @@ $(function() {
 	    "ordering": false,
 	    //"scrollX": false,
 	    "columns": [
-	                { "data": 'id', "bSortable": false, "visible" : false},
-					{ "data": 'jobGroup', "visible" : false},
-	                { "data": 'jobId', "visible" : false},
 					{
-						"data": 'JobKey',
+						"data": 'jobId',
 						"visible" : true,
 						"render": function ( data, type, row ) {
-							var jobKey = row.jobGroup + "_" + row.jobId;
+							var glueTypeTitle = row.glueType;
+							if ('GLUE_GROOVY'==row.glueType) {
+								glueTypeTitle = "GLUE模式(Java)";
+							} else if ('GLUE_SHELL'==row.glueType) {
+								glueTypeTitle = "GLUE模式(Shell)";
+							} else if ('GLUE_PYTHON'==row.glueType) {
+								glueTypeTitle = "GLUE模式(Python)";
+							}else if ('GLUE_NODEJS'==row.glueType) {
+								glueTypeTitle = "GLUE模式(Nodejs)";
+							} else if ('BEAN'==row.glueType) {
+								glueTypeTitle = "BEAN模式：" + row.executorHandler;
+							}
 
-                            var glueTypeTitle = row.glueType;
-                            if ('GLUE_GROOVY'==row.glueType) {
-                                glueTypeTitle = "GLUE模式(Java)";
-                            } else if ('GLUE_SHELL'==row.glueType) {
-                                glueTypeTitle = "GLUE模式(Shell)";
-                            } else if ('GLUE_PYTHON'==row.glueType) {
-                                glueTypeTitle = "GLUE模式(Python)";
-                            }else if ('GLUE_NODEJS'==row.glueType) {
-                            	glueTypeTitle = "GLUE模式(Nodejs)";
-                            } else if ('BEAN'==row.glueType) {
-                                glueTypeTitle = "BEAN模式：" + row.executorHandler;
-                            }
+							var temp = '';
+							temp += '执行器地址：' + (row.executorAddress?row.executorAddress:'');
+							temp += '<br>运行模式：' + glueTypeTitle;
+							temp += '<br>任务参数：' + row.executorParam;
 
-                            var temp = '';
-                            temp += '执行器地址：' + (row.executorAddress?row.executorAddress:'');
-                            temp += '<br>运行模式：' + glueTypeTitle;
-                            temp += '<br>任务参数：' + row.executorParam;
-
-                            return '<a class="logTips" href="javascript:;" >'+ jobKey +'<span style="display:none;">'+ temp +'</span></a>';
+							return '<a class="logTips" href="javascript:;" >'+ row.jobId +'<span style="display:none;">'+ temp +'</span></a>';
 						}
 					},
-					// { "data": 'executorAddress', "visible" : true},
-					// {
-					// 	"data": 'glueType',
-					//  	"visible" : true,
-					// 	"render": function ( data, type, row ) {
-					// 		if ('GLUE_GROOVY'==row.glueType) {
-					// 			return "GLUE模式(Java)";
-					// 		} else if ('GLUE_SHELL'==row.glueType) {
-					// 		 	return "GLUE模式(Shell)";
-					// 		} else if ('GLUE_PYTHON'==row.glueType) {
-					// 			return "GLUE模式(Python)";
-					// 		} else if ('BEAN'==row.glueType) {
-					// 		 	return "BEAN模式：" + row.executorHandler;
-					// 		}
-					// 		return row.executorHandler;
-					// 	 }
-					// },
-					// { "data": 'executorParam', "visible" : true},
+					{ "data": 'jobGroup', "visible" : false},
 					{
 						"data": 'triggerTime',
 						"render": function ( data, type, row ) {

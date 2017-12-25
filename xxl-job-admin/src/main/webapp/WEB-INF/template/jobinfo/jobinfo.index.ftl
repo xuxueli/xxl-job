@@ -66,9 +66,8 @@
 			              	<table id="job_list" class="table table-bordered table-striped" width="100%" >
 				                <thead>
 					            	<tr>
-					            		<th name="id" >id</th>
+					            		<th name="id" >任务ID</th>
 					                	<th name="jobGroup" >jobGroup</th>
-                                        <th name="childJobKey" >JobKey</th>
 					                  	<th name="jobDesc" >描述</th>
                                         <th name="glueType" >运行模式</th>
 					                  	<th name="executorParam" >任务参数</th>
@@ -144,8 +143,8 @@
                     <div class="form-group">
                         <label for="firstname" class="col-sm-2 control-label">执行参数<font color="black">*</font></label>
                         <div class="col-sm-4"><input type="text" class="form-control" name="executorParam" placeholder="请输入“执行参数”" maxlength="512" ></div>
-                        <label for="lastname" class="col-sm-2 control-label">子任务Key<font color="black">*</font></label>
-                        <div class="col-sm-4"><input type="text" class="form-control" name="childJobKey" placeholder="请输入子任务的任务Key,如存在多个逗号分隔" maxlength="100" ></div>
+                        <label for="lastname" class="col-sm-2 control-label">子任务ID<font color="black">*</font></label>
+                        <div class="col-sm-4"><input type="text" class="form-control" name="childJobId" placeholder="请输入子任务的任务ID,如存在多个逗号分隔" maxlength="100" ></div>
                     </div>
                     <div class="form-group">
                         <label for="firstname" class="col-sm-2 control-label">阻塞处理策略<font color="red">*</font></label>
@@ -312,8 +311,8 @@ process.exit(0)
                     <div class="form-group">
                         <label for="firstname" class="col-sm-2 control-label">执行参数<font color="black">*</font></label>
                         <div class="col-sm-4"><input type="text" class="form-control" name="executorParam" placeholder="请输入“执行参数”" maxlength="512" ></div>
-                        <label for="lastname" class="col-sm-2 control-label">子任务Key<font color="black">*</font></label>
-                        <div class="col-sm-4"><input type="text" class="form-control" name="childJobKey" placeholder="请输入子任务的任务Key,如存在多个逗号分隔" maxlength="100" ></div>
+                        <label for="lastname" class="col-sm-2 control-label">子任务ID<font color="black">*</font></label>
+                        <div class="col-sm-4"><input type="text" class="form-control" name="childJobId" placeholder="请输入子任务的任务ID,如存在多个逗号分隔" maxlength="100" ></div>
                     </div>
                     <div class="form-group">
                         <label for="firstname" class="col-sm-2 control-label">阻塞处理策略<font color="red">*</font></label>

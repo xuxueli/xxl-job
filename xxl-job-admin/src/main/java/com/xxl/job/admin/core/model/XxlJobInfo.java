@@ -31,7 +31,7 @@ public class XxlJobInfo {
 	private String glueRemark;		// GLUE备注
 	private Date glueUpdatetime;	// GLUE更新时间
 
-	private String childJobKey;		// 子任务Key
+	private String childJobId;		// 子任务ID，多个逗号分隔
 	
 	// copy from quartz
 	private String jobStatus;		// 任务状态 【base on quartz】
@@ -172,12 +172,12 @@ public class XxlJobInfo {
 		this.glueUpdatetime = glueUpdatetime;
 	}
 
-	public String getChildJobKey() {
-		return childJobKey;
+	public String getChildJobId() {
+		return childJobId;
 	}
 
-	public void setChildJobKey(String childJobKey) {
-		this.childJobKey = childJobKey;
+	public void setChildJobId(String childJobId) {
+		this.childJobId = childJobId;
 	}
 
 	public String getJobStatus() {
