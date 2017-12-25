@@ -1095,6 +1095,7 @@ Tips: 历史版本(V1.3.x)目前已经Release至稳定版本, 进入维护阶段
 - 20、项目依赖升级，如spring、jackson等；
 - 21、任务参数“IJobHandler.execute”入参改为“String params”，增强入参通用性。
 - 22、脚本任务Shell、Python和Nodejs等支持获取分片参数；
+- 23、交互优化，如登陆注销；
 
 ### TODO LIST
 - 1、任务权限管理：执行器为粒度分配权限，核心操作校验权限；
