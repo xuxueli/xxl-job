@@ -321,7 +321,8 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 
 ![输入图片说明](https://static.oschina.net/uploads/img/201704/27205910_o8HQ.png "在这里输入图片标题")
 
-![输入图片说明](https://static.oschina.net/uploads/img/201704/27210202_SE2u.png "在这里输入图片标题")
+![输入图片说明](https://static.oschina.net/uploads/img/201712/25183654_ZAsz.png "在这里输入图片标题")
+
 
 #### 步骤二：“GLUE模式(Java)” 任务开发：
 请点击任务右侧 “GLUE” 按钮，进入 “GLUE编辑器开发界面” ，见下图。“GLUE模式(Java)” 运行模式的任务默认已经初始化了示例任务代码，即打印Hello World。
@@ -398,7 +399,7 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 #### 步骤二：调度中心，新建调度任务
 参考上文“配置属性详细说明”对新建的任务进行参数配置，运行模式选中 "BEAN模式"，JobHandler属性填写任务注解“@JobHandler”中定义的值；
 
-![输入图片说明](https://static.oschina.net/uploads/img/201704/27225124_yrcO.png "在这里输入图片标题")
+![输入图片说明](https://static.oschina.net/uploads/img/201712/25183654_ZAsz.png "在这里输入图片标题")
 
 ### 3.2 GLUE模式(Java)
 任务以源码方式维护在调度中心，支持通过Web IDE在线更新，实时编译和生效，因此不需要指定JobHandler。开发流程如下：
@@ -406,7 +407,7 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 #### 步骤一：调度中心，新建调度任务：
 参考上文“配置属性详细说明”对新建的任务进行参数配置，运行模式选中 "GLUE模式(Java)"；
 
-![输入图片说明](https://static.oschina.net/uploads/img/201704/27210202_SE2u.png "在这里输入图片标题")
+![输入图片说明](https://static.oschina.net/uploads/img/201712/25183837_tJOq.png "在这里输入图片标题")
 
 #### 步骤二：开发任务代码：
 选中指定任务，点击该任务右侧“GLUE”按钮，将会前往GLUE任务的Web IDE界面，在该界面支持对任务代码进行开发（也可以在IDE中开发完成后，复制粘贴到编辑中）。
@@ -460,7 +461,8 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
     2、"执行器列表" 中显示在线的执行器列表, 可通过"OnLine 机器"查看对应执行器的集群机器。
 
 点击按钮 "+新增执行器" 弹框如下图, 可新增执行器配置:
-![输入图片说明](https://static.oschina.net/uploads/img/201703/12223617_g3Im.png "在这里输入图片标题")
+
+![输入图片说明](https://static.oschina.net/uploads/img/201712/25183958_V3vF.png "在这里输入图片标题")
 
 ### 执行器属性说明
 
@@ -500,7 +502,7 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 
 ![输入图片说明](https://static.oschina.net/uploads/img/201607/24133500_9235.png "在这里输入图片标题")
 
-![输入图片说明](https://static.oschina.net/uploads/img/201704/27232850_inc8.png "在这里输入图片标题")
+![输入图片说明](https://static.oschina.net/uploads/img/201712/25184206_UDSo.png "在这里输入图片标题")
 
     调度时间："调度中心"触发本次调度并向"执行器"发送任务执行信号的时间；
     调度结果："调度中心"触发本次调度的结果，200表示成功，500或其他表示失败；
@@ -684,7 +686,6 @@ xxl-job-admin#com.xxl.job.admin.controller.JobApiController.callback
 执行器如若集群部署，调度中心将会感知到在线的所有执行器，如“127.0.0.1:9997, 127.0.0.1:9998, 127.0.0.1:9999”。
 
 当任务"路由策略"选择"故障转移(FAILOVER)"时，当调度中心每次发起调度请求时，会按照顺序对执行器发出心跳检测请求，第一个检测为存活状态的执行器将会被选定并发送调度请求。
-![输入图片说明](https://static.oschina.net/uploads/img/201705/11221144_P128.png "在这里输入图片标题")
 
 调度成功后，可在日志监控界面查看“调度备注”，如下；
 ![输入图片说明](https://static.oschina.net/uploads/img/201703/12230733_jrdI.png "在这里输入图片标题")
@@ -695,11 +696,9 @@ xxl-job-admin#com.xxl.job.admin.controller.JobApiController.callback
 #### 5.4.9 调度日志
 调度中心每次进行任务调度，都会记录一条任务日志，任务日志主要包括以下三部分内容：
 
-- 任务信息：包括“执行器地址”、“JobHandler”和“执行参数”等属性，根据这些参数，可以精确的定位任务执行的具体机器和任务代码；
+- 任务信息：包括“执行器地址”、“JobHandler”和“执行参数”等属性，点击JobKey可查看，根据这些参数，可以精确的定位任务执行的具体机器和任务代码；
 - 调度信息：包括“调度时间”、“调度结果”和“调度日志”等，根据这些参数，可以了解“调度中心”发起调度请求时具体情况。
 - 执行信息：包括“执行时间”、“执行结果”和“执行日志”等，根据这些参数，可以了解在“执行器”端任务执行的具体情况；
-
-![输入图片说明](https://static.oschina.net/uploads/img/201703/12221436_c8Ru.png "在这里输入图片标题")
 
 调度日志，针对单次调度，属性说明如下：
 - 执行器地址：任务执行的机器地址；
@@ -745,9 +744,7 @@ xxl-job-admin#com.xxl.job.admin.controller.JobApiController.callback
     
 
 #### 5.5.4 执行器
-执行器实际上是一个内嵌的Jetty服务器，默认端口9999，如下图配置文件所示（参数：xxl.job.executor.port）。
-
-![输入图片说明](https://static.oschina.net/uploads/img/201703/10174923_TgNO.png "在这里输入图片标题")
+执行器实际上是一个内嵌的Jetty服务器，默认端口9999（配置项：xxl.job.executor.port）。
 
 在项目启动时，执行器会通过“@JobHandler”识别Spring容器中“Bean模式任务”，以注解的value属性为key管理起来。
 
