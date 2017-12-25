@@ -1,6 +1,8 @@
 CREATE database if NOT EXISTS `xxl-job` default character set utf8 collate utf8_general_ci;
 use `xxl-job`;
 
+
+
 CREATE TABLE XXL_JOB_QRTZ_JOB_DETAILS
   (
     SCHED_NAME VARCHAR(120) NOT NULL,
