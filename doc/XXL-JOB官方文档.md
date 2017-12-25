@@ -834,7 +834,7 @@ echo "分片总数 total = $3"
     
 调度中心API服务位置：com.xxl.job.core.biz.AdminBiz.java
 
-调度中心API服务请求参考代码：com.xxl.job.dao.impl.AdminBizTest.java
+调度中心API服务请求参考代码：com.xxl.job.adminbiz.AdminBizTest.java
 
 ### 5.12 执行器API服务
 执行器提供了API服务，供调度中心选择使用，目前提供的API服务有：
@@ -1097,6 +1097,7 @@ Tips: 历史版本(V1.3.x)目前已经Release至稳定版本, 进入维护阶段
 - 22、调度中心项目日志配置改为xml文件格式；
 - 23、Log地址格式兼容，支持非"/"结尾路径配置；
 - 24、底层系统日志级别规范调整，清理遗留代码；
+- 25、建表SQL优化，支持同步创建制定编码的库和表；
 
 
 ### TODO LIST

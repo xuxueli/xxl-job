@@ -14,6 +14,7 @@ import org.springframework.web.context.WebApplicationContext;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath*:spring/*.xml"})
 public class AbstractSpringMvcTest {
+
   @Autowired
   private WebApplicationContext applicationContext;
   protected MockMvc mockMvc;
@@ -22,4 +23,5 @@ public class AbstractSpringMvcTest {
   public void setup() {
     this.mockMvc = MockMvcBuilders.webAppContextSetup(this.applicationContext).build();
   }
+
 }

@@ -1,4 +1,4 @@
-package com.xxl.job.dao.impl;
+package com.xxl.job.adminbiz;
 
 import com.xxl.job.core.biz.AdminBiz;
 import com.xxl.job.core.biz.model.RegistryParam;

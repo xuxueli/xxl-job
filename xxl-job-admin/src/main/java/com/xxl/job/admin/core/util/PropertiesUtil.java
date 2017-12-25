@@ -12,6 +12,7 @@ import java.util.Properties;
 
 /**
  * properties util
+ *
  * @author xuxueli 2015-8-28 10:35:53
  */
 public class PropertiesUtil {
@@ -32,10 +33,6 @@ public class PropertiesUtil {
 			return prop.getProperty(key);
 		}
 		return null;
-	}
-	
-	public static void main(String[] args) {
-		System.out.println(getString("xxl.job.login.username"));
 	}
 
 }

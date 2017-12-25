@@ -1,4 +1,4 @@
-package com.xxl.job.dao.impl;
+package com.xxl.job.admin.util;
 
 import com.xxl.job.admin.core.util.MailUtil;
 import org.junit.Test;
