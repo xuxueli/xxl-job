@@ -3,6 +3,7 @@ package com.xxl.job.admin.controller.interceptor;
 import com.xxl.job.admin.controller.annotation.PermessionLimit;
 import com.xxl.job.admin.core.util.CookieUtil;
 import com.xxl.job.admin.core.util.PropertiesUtil;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
@@ -22,11 +23,25 @@ public class PermissionInterceptor extends HandlerInterceptorAdapter {
     static {
         String username = PropertiesUtil.getString("xxl.job.login.username");
         String password = PropertiesUtil.getString("xxl.job.login.password");
-        String temp = username + "_" + password;
-        LOGIN_IDENTITY_TOKEN = new BigInteger(1, temp.getBytes()).toString(16);
+
+        // login token
+        String tokenTmp = DigestUtils.md5Hex(username + "_" + password);
+		tokenTmp = new BigInteger(1, tokenTmp.getBytes()).toString(16);
+
+		LOGIN_IDENTITY_TOKEN = tokenTmp;
     }
 	
-	public static boolean login(HttpServletResponse response, boolean ifRemember){
+	public static boolean login(HttpServletResponse response, String username, String password, boolean ifRemember){
+
+    	// login token
+		String tokenTmp = DigestUtils.md5Hex(username + "_" + password);
+		tokenTmp = new BigInteger(1, tokenTmp.getBytes()).toString(16);
+
+		if (!LOGIN_IDENTITY_TOKEN.equals(tokenTmp)){
+			return false;
+		}
+
+		// do login
 		CookieUtil.set(response, LOGIN_IDENTITY_KEY, LOGIN_IDENTITY_TOKEN, ifRemember);
 		return true;
 	}

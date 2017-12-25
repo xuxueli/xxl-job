@@ -87,7 +87,6 @@ public class CookieUtil {
 	 * @param request
 	 * @param response
 	 * @param key
-	 * @param domainName
 	 */
 	public static void remove(HttpServletRequest request, HttpServletResponse response, String key) {
 		Cookie cookie = get(request, key);
