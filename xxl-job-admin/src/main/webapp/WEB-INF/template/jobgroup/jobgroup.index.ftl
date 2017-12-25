@@ -53,7 +53,20 @@
                                         <td>${group.appName}</td>
                                         <td>${group.title}</td>
                                         <td><#if group.addressType==0>自动注册<#else>手动录入</#if></td>
-                                        <td><#if group.registryList?exists><#list group.registryList as item><span class="badge bg-green">${item}</span><br></#list></#if></td>
+                                        <td>
+                                            <#if group.registryList?exists>
+                                                <#list group.registryList as item>
+                                                    <span class="badge bg-green" title="${item}" >
+                                                        <#if item?length gt 35>
+                                                            ${item?substring(0, 35)}...
+                                                        <#else>
+                                                            ${item}
+                                                        </#if>
+                                                    </span>
+                                                    <br>
+                                                </#list>
+                                            </#if>
+                                        </td>
 										<td>
                                             <button class="btn btn-warning btn-xs update"
                                                     id="${group.id}"
@@ -107,7 +120,9 @@
                         </div>
                         <div class="form-group">
                             <label for="lastname" class="col-sm-2 control-label">机器地址<font color="red">*</font></label>
-                            <div class="col-sm-10"><input type="text" class="form-control" name="addressList" placeholder="请输入执行器地址列表，多地址逗号分隔" maxlength="200" readonly="readonly" ></div>
+                            <div class="col-sm-10">
+                                <textarea class="textarea" name="addressList" maxlength="512" placeholder="请输入执行器地址列表，多地址逗号分隔" readonly="readonly" style="background-color:#eee; width: 100%; height: 100px; font-size: 14px; line-height: 10px; border: 1px solid #dddddd; padding: 10px;"></textarea>
+                            </div>
                         </div>
                         <hr>
                         <div class="form-group">
@@ -153,7 +168,9 @@
                         </div>
                         <div class="form-group">
                             <label for="lastname" class="col-sm-2 control-label">机器地址<font color="red">*</font></label>
-                            <div class="col-sm-10"><input type="text" class="form-control" name="addressList" placeholder="请输入执行器地址列表，多地址逗号分隔" maxlength="200" readonly="readonly" ></div>
+                            <div class="col-sm-10">
+                                <textarea class="textarea" name="addressList" maxlength="512" placeholder="请输入执行器地址列表，多地址逗号分隔" readonly="readonly" style="background-color:#eee; width: 100%; height: 100px; font-size: 14px; line-height: 10px; border: 1px solid #dddddd; padding: 10px;"></textarea>
+                            </div>
                         </div>
                         <hr>
                         <div class="form-group">

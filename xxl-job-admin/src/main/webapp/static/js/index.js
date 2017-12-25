@@ -5,29 +5,74 @@
 
 $(function () {
 
-    /**
-     *
-     */
-    $.ajax({
-        type : 'POST',
-        url : base_url + '/triggerChartDate',
-        data : {        },
-        dataType : "json",
-        success : function(data){
-            if (data.code == 200) {
-                lineChartInit(data)
-                pieChartInit(data);
-            } else {
-                layer.open({
-                    title: '系统提示',
-                    content: (data.msg || '调度报表数据加载异常'),
-                    icon: '2'
-                });
-            }
-        }
+    // 过滤时间
+    var _startDate = moment().subtract(1, 'months');    // 默认，最近一月
+    var _endDate = moment();
+    $('#filterTime').daterangepicker({
+        autoApply:false,
+        singleDatePicker:false,
+        showDropdowns:false,        // 是否显示年月选择条件
+        timePicker: true, 			// 是否显示小时和分钟选择条件
+        timePickerIncrement: 10, 	// 时间的增量，单位为分钟
+        timePicker24Hour : true,
+        opens : 'left', //日期选择框的弹出位置
+        ranges: {
+            //'最近1小时': [moment().subtract(1, 'hours'), moment()],
+            '今日': [moment().startOf('day'), moment().endOf('day')],
+            '昨日': [moment().subtract(1, 'days').startOf('day'), moment().subtract(1, 'days').endOf('day')],
+            '本月': [moment().startOf('month'), moment().endOf('month')],
+            '上个月': [moment().subtract(1, 'months').startOf('month'), moment().subtract(1, 'months').endOf('month')],
+            '最近1周': [moment().subtract(1, 'weeks'), moment()],
+            '最近1月': [_startDate, _endDate]
+        },
+        locale : {
+            format: 'YYYY-MM-DD HH:mm:ss',
+            separator : ' - ',
+            customRangeLabel : '自定义',
+            applyLabel : '确定',
+            cancelLabel : '取消',
+            fromLabel : '起始时间',
+            toLabel : '结束时间',
+            daysOfWeek : [ '日', '一', '二', '三', '四', '五', '六' ],
+            monthNames : [ '一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月' ],
+            firstDay : 1
+        },
+        startDate:_startDate,
+        endDate: _endDate
+    }, function (start, end, label) {
+        freshChartDate(start, end);
     });
+    freshChartDate(_startDate, _endDate);
 
-
+    /**
+     * 刷新报表
+     *
+     * @param startDate
+     * @param endDate
+     */
+    function freshChartDate(startDate, endDate) {
+        $.ajax({
+            type : 'POST',
+            url : base_url + '/triggerChartDate',
+            data : {
+                'startDate':startDate.format('YYYY-MM-DD HH:mm:ss'),
+                'endDate':endDate.format('YYYY-MM-DD HH:mm:ss')
+            },
+            dataType : "json",
+            success : function(data){
+                if (data.code == 200) {
+                    lineChartInit(data)
+                    pieChartInit(data);
+                } else {
+                    layer.open({
+                        title: '系统提示',
+                        content: (data.msg || '调度报表数据加载异常'),
+                        icon: '2'
+                    });
+                }
+            }
+        });
+    }
 
     /**
      * 折线图
@@ -150,39 +195,5 @@ $(function () {
         var pieChart = echarts.init(document.getElementById('pieChart'));
         pieChart.setOption(option);
     }
-
-    // 过滤时间
-    /*$('#filterTime').daterangepicker({
-        autoApply:false,
-        singleDatePicker:false,
-        showDropdowns:false,        // 是否显示年月选择条件
-        timePicker: true, 			// 是否显示小时和分钟选择条件
-        timePickerIncrement: 10, 	// 时间的增量，单位为分钟
-        timePicker24Hour : true,
-        opens : 'left', //日期选择框的弹出位置
-        ranges: {
-            '最近1小时': [moment().subtract(1, 'hours'), moment()],
-            '今日': [moment().startOf('day'), moment().endOf('day')],
-            '昨日': [moment().subtract(1, 'days').startOf('day'), moment().subtract(1, 'days').endOf('day')],
-            '最近7日': [moment().subtract(6, 'days'), moment()],
-            '最近30日': [moment().subtract(29, 'days'), moment()],
-            '本月': [moment().startOf('month'), moment().endOf('month')],
-            '上个月': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-        },
-        locale : {
-            format: 'YYYY-MM-DD HH:mm:ss',
-            separator : ' - ',
-            customRangeLabel : '自定义',
-            applyLabel : '确定',
-            cancelLabel : '取消',
-            fromLabel : '起始时间',
-            toLabel : '结束时间',
-            daysOfWeek : [ '日', '一', '二', '三', '四', '五', '六' ],
-            monthNames : [ '一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月' ],
-            firstDay : 1,
-            startDate: moment().startOf('day'),
-            endDate: moment().endOf('day')
-        }
-    });*/
 
 });

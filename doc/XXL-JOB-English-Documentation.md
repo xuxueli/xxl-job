@@ -5,6 +5,8 @@
 [![GitHub release](https://img.shields.io/github/release/xuxueli/xxl-job.svg)](https://github.com/xuxueli/xxl-job/releases)
 [![License](https://img.shields.io/badge/license-GPLv3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0.html)
 [![Gitter](https://badges.gitter.im/xuxueli/xxl-job.svg)](https://gitter.im/xuxueli/xxl-job?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+[![donate](https://img.shields.io/badge/%24-donate-ff69b4.svg?style=flat-square)](http://www.xuxueli.com/page/donate.html)
+
 
 ## 1. Brief introduction
 
@@ -35,6 +37,9 @@ XXL-JOB is a lightweight distributed task scheduling framework, the core design 
 - 22.Failure handling strategy:Handling strategy when scheduling fails, the strategy includes: failure alarm (default), failure retry;
 - 23.Sharding broadcast task: When an executor cluster is deployed, task routing strategy select "sharding broadcast", a task schedule will broadcast all the actuators in the cluster to perform it once, you can develop sharding tasks based on sharding parameters;
 - 24.Dynamic sharding: The sharding broadcast task is sharded by the executors to support the dynamic expansion of the executor cluster to dynamically increase the number of shardings and cooperate with the business handle; In the large amount of data operations can significantly improve the task processing capacity and speed.
+- 25、Event trigger：In addition to "Cron" and "Task Dependency" to trigger tasks, support event-based triggering tasks. The dispatch center provides API service that triggers a single execution of the task, it can be triggered flexibly according to business events. 
+
+
 ###  1.3 Development
 In 2015, I created the XXL-JOB project repository on github and submitted the first commit, followed by the system structure design, UI selection, interactive design ...
 In 2015 - November, XXL-JOB finally RELEASE the first big version of V1.0, then I will be released to OSCHINA, XXL-JOB OSCHINA won the popular recommendation of @红薯, the same period reached OSCHINA's " Popular move "ranked first and git.oschina open source software monthly heat ranked first, especially thanks for @红薯, thank you for the attention and support.
@@ -89,6 +94,17 @@ So far, XXL-JOB has access to a number of companies online product line, access 
     - 41、广州瀚农网络科技有限公司
     - 42、享点科技有限公司
     - 43、杭州比智科技有限公司
+    - 44、圳临界线网络科技有限公司
+    - 45、广州知识圈网络科技有限公司
+    - 46、国誉商业上海有限公司
+    - 47、海尔消费金融有限公司，嗨付、够花 (海尔)
+    - 48、广州巴图鲁信息科技有限公司
+    - 49、深圳市鹏海运电子数据交换有限公司
+    - 50、深圳市亚飞电子商务有限公司
+    - 51、上海趣医网络有限公司
+    - 52、聚金资本
+    - 53、北京父母邦网络科技有限公司
+    - 54、中山元赫软件科技有限公司
 	- ……
 
 > The company that access and use this product is welcome to register at the [address](https://github.com/xuxueli/xxl-job/issues/1 ), only for product promotion. 
@@ -114,18 +130,12 @@ Source repository address | Release Download
 <dependency>
     <groupId>com.xuxueli</groupId>
     <artifactId>xxl-job-core</artifactId>
-    <version>1.8.1</version>
+    <version>1.8.2</version>
 </dependency>
 ```
 
-#### Technical exchange group (technical exchange only)
-
-- Tecent QQ Group 6：399758605
-- Tecent QQ Group 5：138274130
-- Tecent QQ Group 4：464762661
-- Tecent QQ Group 3：242151780
-- Tecent QQ Group 2：438249535
-- Tecent QQ Group 1：367260654
+#### Technical exchange group
+- [社区交流](http://www.xuxueli.com/page/community.html)
 - [Gitter](https://gitter.im/xuxueli/xxl-job)
 
 ### 1.5 Environment
@@ -339,7 +349,7 @@ On the log console,you can view task execution log on the executor immediately a
         GLUE模式(Java)：task source code is maintened in the schedule center,it must implement IJobHandler and explain by "groovy" in the executor instance,inject other bean instace by annotation @Resource/@Autowire.
         GLUE模式(Shell)：it’s source code is a shell script and maintained in the schedule center.
         GLUE模式(Python)：it’s source code is a python script and maintained in the schedule center.
-    - JobHandler：it’s used in  "BEAN模式",it’s instance is defined by annotation @JobHander on the JobHandler class name.
+    - JobHandler：it’s used in  "BEAN模式",it’s instance is defined by annotation @JobHandler on the JobHandler class name.
     - 子任务Key：every task has a unique key (task Key can acquire from task list)，when main task is done successfully it’s child task stand for by this key will be scheduled.
     - 阻塞处理策略：the stategy handle the task when this task is scheduled too frequently and the task is block to wait for cpu time.
         单机串行（默认）：task schedule request go into the FIFO queue and execute serially.
@@ -358,7 +368,7 @@ The task logic exist in the executor project as JobHandler,the develop steps as 
 #### Step 1:develp obHandler in the executor project
     - 1, create new java class implent com.xxl.job.core.handler.IJobHandler;
     - 2, if you add @Component annotation on the top of the class name it’s will be managed as a bean instance by spring container;
-    - 3, add  “@JobHander(value=" customize jobhandler name")” annotation，the value stand for JobHandler name,it will be used as JobHandler property when create a new task in the schedule center.
+    - 3, add  “@JobHandler(value=" customize jobhandler name")” annotation，the value stand for JobHandler name,it will be used as JobHandler property when create a new task in the schedule center.
     （go and see DemoJobHandler in the xxl-job-executor-example project, as shown below）
 
 ![输入图片说明](https://static.oschina.net/uploads/img/201607/23232347_oLlM.png "在这里输入图片标题")
@@ -674,7 +684,7 @@ On the task log page ,you can see matched child task and triggered child task’
 ### 5.5 Task "run mode" analysis
 #### 5.5.1 "Bean模式" task
 Development steps:go and see "chapter 3" . 
-principle: every Bean mode task is a Spring Bean instance and it is maintained in executor project’s Spring container. task class nedd to add “@JobHander(value="name")” annotation, because executor identify task bean instance in spring container through annotation. Task class nedd to implements interface IJobHandler, task logic code in method execute(), the task logic in execute() method will be executed when executor received a schedule request from schedule center.
+principle: every Bean mode task is a Spring Bean instance and it is maintained in executor project’s Spring container. task class nedd to add “@JobHandler(value="name")” annotation, because executor identify task bean instance in spring container through annotation. Task class nedd to implements interface IJobHandler, task logic code in method execute(), the task logic in execute() method will be executed when executor received a schedule request from schedule center.
 
 #### 5.5.2 "GLUE模式(Java)" task
 Development steps:go and see "chapter 3" .
@@ -695,7 +705,7 @@ Executor is actually an embedded Jetty server with default port 9999, as shown b
 
 ![输入图片说明](https://static.oschina.net/uploads/img/201703/10174923_TgNO.png "在这里输入图片标题")
 
-Executor will identify Bean mode task in spring container through @JobHander When project start, it will be managed use the value of annotation as key. 
+Executor will identify Bean mode task in spring container through @JobHandler When project start, it will be managed use the value of annotation as key. 
 
 When executor received schedule request from schedule center, if task type is “Bean模式” it will match bean mode task in Spring container and call it’s execute() method and execute task logic. if task type is “GLUE模式”, it will load Glue code, instantiate a Java object and inject other spring service（notice: the spring service injected in Glue code must exist in the same executor project）, then call execute() method and execute task logic. 
 
@@ -758,6 +768,18 @@ There are only two settings when communication between scheduler center and exec
 - one:do not configure AccessToken on both, close security check.
 - two:configure the same AccessToken on both;
 
+### 5.11 Dispatching center API services
+The scheduling center provides API services for executors and business parties to choose to use, and the currently available API services are available.
+
+    1. Job result callback service;
+    2. Executor registration service;
+    3. Executor registration remove services;
+    4. Triggers a single execution service, and support the task to be triggered according to the business event;
+
+The scheduling center API service location: com.xxl.job.core.biz.AdminBiz.java
+
+The scheduling center API service requests reference code：com.xxl.job.dao.impl.AdminBizTest.java
+
 
 ## 6 Version update log
 ### 6.1 version V1.1.x，New features [2015-12-05]
@@ -790,13 +812,13 @@ There are only two settings when communication between scheduler center and exec
 		- stability;
 
 ### 6.3 version V1.3.0，New features [2016-05-19]
-- 1、discard local task module, remote task was recommended, easy to decouple system, the JobHander of task was called executor.
+- 1、discard local task module, remote task was recommended, easy to decouple system, the JobHandler of task was called executor.
 - 2、dicard underlying communication type servlet, JETTY was recommended, schedule and callback bidirectional communication, rebuild the communication logic;
 - 3、UI interactive optimization:optimize left menu expansion and menu item selected status , task list opens the table with compression optimization;
 - 4、【important】executor is subdivided into two develop mode:BEAN、GLUE:
 	
 	Introduction to the executor mode:
-		- BEAN mode executor:every executor is a Spring Bean instance，it was recognized and scheduled by XXL-JOB through @JobHander annotation;
+		- BEAN mode executor:every executor is a Spring Bean instance，it was recognized and scheduled by XXL-JOB through @JobHandler annotation;
 		 -GLUE mode executor:every executor corresponds to a piece of code，edited and maintained online by Web, Dynamic compile and takes effect in real time, executor is responsible for loading GLUE code and executing;
 
 ### 6.4 version V1.3.1，New features [2016-05-23]
@@ -995,7 +1017,4 @@ This product is open source and free, and will continue to provide free communit
 
 ---
 ### Donate
-No matter how much the amount is enough to express your thought, thank you very much ：）
-
-Webchat：<img src="https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/donate-wechat.png" width="200">
-Alipay：<img src="https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/donate-alipay.jpg" width="200">
+No matter how much the amount is enough to express your thought, thank you very much ：）     [To donate](http://www.xuxueli.com/page/donate.html )

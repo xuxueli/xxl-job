@@ -1,8 +1,8 @@
-package com.xxl.job.dao.impl;
+package com.xxl.job.admin.dao;
 
 import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.admin.dao.XxlJobLogDao;
-import org.apache.commons.lang.time.DateUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;

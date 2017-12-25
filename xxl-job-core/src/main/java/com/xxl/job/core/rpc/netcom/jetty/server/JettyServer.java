@@ -44,7 +44,7 @@ public class JettyServer {
 				try {
 					// Start server
 					server.start();
-					logger.info(">>>>>>>>>>>> xxl-job jetty server start success at port:{}.", port);
+					logger.info(">>>>>>>>>>> xxl-job jetty server start success at port:{}.", port);
 
 					// Start Registry-Server
 					ExecutorRegistryThread.getInstance().start(port, ip, appName);

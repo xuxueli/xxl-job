@@ -105,6 +105,8 @@ $(function() {
                                 glueTypeTitle = "GLUE模式(Shell)";
                             } else if ('GLUE_PYTHON'==row.glueType) {
                                 glueTypeTitle = "GLUE模式(Python)";
+                            }else if ('GLUE_NODEJS'==row.glueType) {
+                            	glueTypeTitle = "GLUE模式(Nodejs)";
                             } else if ('BEAN'==row.glueType) {
                                 glueTypeTitle = "BEAN模式：" + row.executorHandler;
                             }
@@ -144,9 +146,16 @@ $(function() {
 					{
 						"data": 'triggerCode',
 						"render": function ( data, type, row ) {
-							return (data==200)?'<span style="color: green">成功</span>':(data==500)?'<span style="color: red">失败</span>':(data==0)?'':data;
+							var html = data;
+							if (data == 200) {
+								html = '<span style="color: green">成功</span>';
+							} else if (data == 500) {
+								html = '<span style="color: red">失败</span>';
+							} else if (data == 0) {
+                                html = '';
+							}
+                            return html;
 						}
-
 					},
 					{
 						"data": 'triggerMsg',
@@ -163,7 +172,17 @@ $(function() {
 	                {
 						"data": 'handleCode',
 						"render": function ( data, type, row ) {
-							return (data==200)?'<span style="color: green">成功</span>':(data==500)?'<span style="color: red">失败</span>':(data==0)?'':data;
+                            var html = data;
+                            if (data == 200) {
+                                html = '<span style="color: green">成功</span>';
+                            } else if (data == 500) {
+                                html = '<span style="color: red">失败</span>';
+                            } else if (data == 501) {
+                                html = '<span style="color: red">失败重试</span>';
+                            } else if (data == 0) {
+                                html = '';
+                            }
+                            return html;
 						}
 	                },
 	                { 

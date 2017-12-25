@@ -1,3 +1,7 @@
+CREATE database if NOT EXISTS `xxl-job` default character set utf8 collate utf8_general_ci;
+use `xxl-job`;
+
+
 
 CREATE TABLE XXL_JOB_QRTZ_JOB_DETAILS
   (
@@ -156,7 +160,7 @@ CREATE TABLE `XXL_JOB_QRTZ_TRIGGER_INFO` (
   `alarm_email` varchar(255) DEFAULT NULL COMMENT '报警邮件',
   `executor_route_strategy` varchar(50) DEFAULT NULL COMMENT '执行器路由策略',
   `executor_handler` varchar(255) DEFAULT NULL COMMENT '执行器任务handler',
-  `executor_param` varchar(255) DEFAULT NULL COMMENT '执行器任务参数',
+  `executor_param` varchar(512) DEFAULT NULL COMMENT '执行器任务参数',
   `executor_block_strategy` varchar(50) DEFAULT NULL COMMENT '阻塞处理策略',
   `executor_fail_strategy` varchar(50) DEFAULT NULL COMMENT '失败处理策略',
   `glue_type` varchar(50) NOT NULL COMMENT 'GLUE类型',
@@ -174,7 +178,7 @@ CREATE TABLE `XXL_JOB_QRTZ_TRIGGER_LOG` (
   `glue_type` varchar(50) DEFAULT NULL COMMENT 'GLUE类型',
   `executor_address` varchar(255) DEFAULT NULL COMMENT '执行器地址，本次执行的地址',
   `executor_handler` varchar(255) DEFAULT NULL COMMENT '执行器任务handler',
-  `executor_param` varchar(255) DEFAULT NULL COMMENT 'executor_param',
+  `executor_param` varchar(512) DEFAULT NULL COMMENT '执行器任务参数',
   `trigger_time` datetime DEFAULT NULL COMMENT '调度-时间',
   `trigger_code` varchar(255) NOT NULL DEFAULT '0' COMMENT '调度-结果',
   `trigger_msg` varchar(2048) DEFAULT NULL COMMENT '调度-日志',
@@ -210,7 +214,7 @@ CREATE TABLE `XXL_JOB_QRTZ_TRIGGER_GROUP` (
   `title` varchar(12) NOT NULL COMMENT '执行器名称',
   `order` tinyint(4) NOT NULL DEFAULT '0' COMMENT '排序',
   `address_type` tinyint(4) NOT NULL DEFAULT '0' COMMENT '执行器地址类型：0=自动注册、1=手动录入',
-  `address_list` varchar(200) DEFAULT NULL COMMENT '执行器地址列表，多地址逗号分隔',
+  `address_list` varchar(512) DEFAULT NULL COMMENT '执行器地址列表，多地址逗号分隔',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

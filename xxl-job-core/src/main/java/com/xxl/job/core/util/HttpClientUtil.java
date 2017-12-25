@@ -64,7 +64,7 @@ public class HttpClientUtil {
 				EntityUtils.consume(entity);
 			}
 		} catch (Exception e) {
-			logger.error("", e);
+			logger.error(e.getMessage(), e);
 			throw e;
 		} finally {
 			httpPost.releaseConnection();

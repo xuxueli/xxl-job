@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>com.xuxueli</groupId>
 		<artifactId>xxl-job</artifactId>
-		<version>1.8.2-SNAPSHOT</version>
+		<version>1.9.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>xxl-job-core</artifactId>
 	<packaging>jar</packaging>
@@ -49,11 +49,11 @@
 
 		<!-- jackson -->
 		<dependency>
-			<groupId>org.codehaus.jackson</groupId>
-			<artifactId>jackson-mapper-asl</artifactId>
-			<version>${jackson-mapper-asl.version}</version>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>${jackson.version}</version>
 		</dependency>
-		
+
 		<!-- httpclient -->
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>

@@ -5,9 +5,12 @@ import com.xxl.job.admin.controller.interceptor.PermissionInterceptor;
 import com.xxl.job.admin.core.util.PropertiesUtil;
 import com.xxl.job.admin.service.XxlJobService;
 import com.xxl.job.core.biz.model.ReturnT;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -15,6 +18,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -38,8 +43,8 @@ public class IndexController {
 
     @RequestMapping("/triggerChartDate")
 	@ResponseBody
-	public ReturnT<Map<String, Object>> triggerChartDate() {
-        ReturnT<Map<String, Object>> triggerChartDate = xxlJobService.triggerChartDate();
+	public ReturnT<Map<String, Object>> triggerChartDate(Date startDate, Date endDate) {
+        ReturnT<Map<String, Object>> triggerChartDate = xxlJobService.triggerChartDate(startDate, endDate);
         return triggerChartDate;
     }
 	
@@ -90,6 +95,13 @@ public class IndexController {
 		}*/
 
 		return "help";
+	}
+
+	@InitBinder
+	public void initBinder(WebDataBinder binder) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		dateFormat.setLenient(false);
+		binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
 	}
 	
 }

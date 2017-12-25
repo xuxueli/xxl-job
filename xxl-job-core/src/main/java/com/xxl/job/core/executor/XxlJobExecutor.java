@@ -4,11 +4,12 @@ import com.xxl.job.core.biz.AdminBiz;
 import com.xxl.job.core.biz.ExecutorBiz;
 import com.xxl.job.core.biz.impl.ExecutorBizImpl;
 import com.xxl.job.core.handler.IJobHandler;
-import com.xxl.job.core.handler.annotation.JobHander;
+import com.xxl.job.core.handler.annotation.JobHandler;
 import com.xxl.job.core.log.XxlJobFileAppender;
 import com.xxl.job.core.rpc.netcom.NetComClientProxy;
 import com.xxl.job.core.rpc.netcom.NetComServerFactory;
 import com.xxl.job.core.thread.JobThread;
+import com.xxl.job.core.util.NetUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -28,7 +29,7 @@ public class XxlJobExecutor implements ApplicationContextAware {
 
     // ---------------------- param ----------------------
     private String ip;
-    private int port = 9999;
+    private int port;
     private String appName;
     private String adminAddresses;
     private String accessToken;
@@ -71,14 +72,10 @@ public class XxlJobExecutor implements ApplicationContextAware {
         initAdminBizList(adminAddresses, accessToken);
 
         // init executor-jobHandlerRepository
-        if (applicationContext != null) {
-            initJobHandlerRepository(applicationContext);
-        }
+        initJobHandlerRepository(applicationContext);
 
         // init logpath
-        if (logPath!=null && logPath.trim().length()>0) {
-            XxlJobFileAppender.logPath = logPath;
-        }
+        XxlJobFileAppender.initLogPath(logPath);
 
         // init executor-server
         initExecutorServer(port, ip, appName, accessToken);
@@ -121,6 +118,10 @@ public class XxlJobExecutor implements ApplicationContextAware {
     // ---------------------- executor-server(jetty) ----------------------
     private NetComServerFactory serverFactory = new NetComServerFactory();
     private void initExecutorServer(int port, String ip, String appName, String accessToken) throws Exception {
+        // valid param
+        port = port>0?port: NetUtil.findAvailablePort(9999);
+
+        // start server
         NetComServerFactory.putService(ExecutorBiz.class, new ExecutorBizImpl());   // rpc-service, base on jetty
         NetComServerFactory.setAccessToken(accessToken);
         serverFactory.start(port, ip, appName); // jetty + registry
@@ -140,13 +141,17 @@ public class XxlJobExecutor implements ApplicationContextAware {
         return jobHandlerRepository.get(name);
     }
     private static void initJobHandlerRepository(ApplicationContext applicationContext){
+        if (applicationContext == null) {
+            return;
+        }
+
         // init job handler action
-        Map<String, Object> serviceBeanMap = applicationContext.getBeansWithAnnotation(JobHander.class);
+        Map<String, Object> serviceBeanMap = applicationContext.getBeansWithAnnotation(JobHandler.class);
 
         if (serviceBeanMap!=null && serviceBeanMap.size()>0) {
             for (Object serviceBean : serviceBeanMap.values()) {
                 if (serviceBean instanceof IJobHandler){
-                    String name = serviceBean.getClass().getAnnotation(JobHander.class).value();
+                    String name = serviceBean.getClass().getAnnotation(JobHandler.class).value();
                     IJobHandler handler = (IJobHandler) serviceBean;
                     if (loadJobHandler(name) != null) {
                         throw new RuntimeException("xxl-job jobhandler naming conflicts.");

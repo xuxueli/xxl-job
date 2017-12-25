@@ -122,11 +122,13 @@ $(function() {
 	// 注册方式，切换
 	$("#addModal input[name=addressType], #updateModal input[name=addressType]").click(function(){
 		var addressType = $(this).val();
-		var $addressList = $(this).parents("form").find("input[name=addressList]");
+		var $addressList = $(this).parents("form").find("textarea[name=addressList]");
 		if (addressType == 0) {
+            $addressList.css("background-color", "#eee");	// 自动注册
+            $addressList.attr("readonly","readonly");
 			$addressList.val("");
-			$addressList.attr("readonly","readonly");
 		} else {
+            $addressList.css("background-color", "white");
 			$addressList.removeAttr("readonly");
 		}
 	});
@@ -144,7 +146,7 @@ $(function() {
 		//$("#updateModal .form input[name='addressType'][value='"+ addressType +"']").attr('checked', 'true');
 		$("#updateModal .form input[name='addressType'][value='"+ addressType +"']").click();
 		// 机器地址
-		$("#updateModal .form input[name='addressList']").val($(this).attr("addressList"));
+		$("#updateModal .form textarea[name='addressList']").val($(this).attr("addressList"));
 
 		$('#updateModal').modal({backdrop: false, keyboard: false}).modal('show');
 	});

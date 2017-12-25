@@ -5,6 +5,7 @@ import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.route.ExecutorRouteStrategyEnum;
 import com.xxl.job.admin.core.schedule.XxlJobDynamicScheduler;
+import com.xxl.job.admin.core.util.JobKeyUtil;
 import com.xxl.job.admin.dao.XxlJobGroupDao;
 import com.xxl.job.admin.dao.XxlJobInfoDao;
 import com.xxl.job.admin.dao.XxlJobLogDao;
@@ -13,10 +14,10 @@ import com.xxl.job.admin.service.XxlJobService;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
 import com.xxl.job.core.glue.GlueTypeEnum;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.time.DateUtils;
-import org.apache.commons.lang.time.FastDateFormat;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateUtils;
+import org.apache.commons.lang3.time.FastDateFormat;
 import org.quartz.CronExpression;
 import org.quartz.SchedulerException;
 import org.slf4j.Logger;
@@ -107,11 +108,11 @@ public class XxlJobServiceImpl implements XxlJobService {
 		if (StringUtils.isNotBlank(jobInfo.getChildJobKey())) {
 			String[] childJobKeys = jobInfo.getChildJobKey().split(",");
 			for (String childJobKeyItem: childJobKeys) {
-				String[] childJobKeyArr = childJobKeyItem.split("_");
-				if (childJobKeyArr.length!=2) {
+				int childJobId = JobKeyUtil.parseJobId(childJobKeyItem);
+				if (childJobId <= 0) {
 					return new ReturnT<String>(ReturnT.FAIL_CODE, MessageFormat.format("子任务Key({0})格式错误", childJobKeyItem));
 				}
-				XxlJobInfo childJobInfo = xxlJobInfoDao.loadById(Integer.valueOf(childJobKeyArr[1]));
+				XxlJobInfo childJobInfo = xxlJobInfoDao.loadById(childJobId);
 				if (childJobInfo==null) {
 					return new ReturnT<String>(ReturnT.FAIL_CODE, MessageFormat.format("子任务Key({0})无效", childJobKeyItem));
 				}
@@ -170,11 +171,11 @@ public class XxlJobServiceImpl implements XxlJobService {
 		if (StringUtils.isNotBlank(jobInfo.getChildJobKey())) {
 			String[] childJobKeys = jobInfo.getChildJobKey().split(",");
 			for (String childJobKeyItem: childJobKeys) {
-				String[] childJobKeyArr = childJobKeyItem.split("_");
-				if (childJobKeyArr.length!=2) {
+				int childJobId = JobKeyUtil.parseJobId(childJobKeyItem);
+				if (childJobId <= 0) {
 					return new ReturnT<String>(ReturnT.FAIL_CODE, MessageFormat.format("子任务Key({0})格式错误", childJobKeyItem));
 				}
-                XxlJobInfo childJobInfo = xxlJobInfoDao.loadById(Integer.valueOf(childJobKeyArr[1]));
+                XxlJobInfo childJobInfo = xxlJobInfoDao.loadById(childJobId);
 				if (childJobInfo==null) {
 					return new ReturnT<String>(ReturnT.FAIL_CODE, MessageFormat.format("子任务Key({0})无效", childJobKeyItem));
 				}
@@ -310,18 +311,15 @@ public class XxlJobServiceImpl implements XxlJobService {
 	}
 
 	@Override
-	public ReturnT<Map<String, Object>> triggerChartDate() {
-		Date from = DateUtils.addDays(new Date(), -30);
-		Date to = new Date();
-
+	public ReturnT<Map<String, Object>> triggerChartDate(Date startDate, Date endDate) {
 		List<String> triggerDayList = new ArrayList<String>();
 		List<Integer> triggerDayCountSucList = new ArrayList<Integer>();
 		List<Integer> triggerDayCountFailList = new ArrayList<Integer>();
 		int triggerCountSucTotal = 0;
 		int triggerCountFailTotal = 0;
 
-		List<Map<String, Object>> triggerCountMapAll = xxlJobLogDao.triggerCountByDay(from, to, -1);
-		List<Map<String, Object>> triggerCountMapSuc = xxlJobLogDao.triggerCountByDay(from, to, ReturnT.SUCCESS_CODE);
+		List<Map<String, Object>> triggerCountMapAll = xxlJobLogDao.triggerCountByDay(startDate, endDate, -1);
+		List<Map<String, Object>> triggerCountMapSuc = xxlJobLogDao.triggerCountByDay(startDate, endDate, ReturnT.SUCCESS_CODE);
 		if (CollectionUtils.isNotEmpty(triggerCountMapAll)) {
 			for (Map<String, Object> item: triggerCountMapAll) {
 				String day = String.valueOf(item.get("triggerDay"));

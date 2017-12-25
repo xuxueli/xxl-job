@@ -63,7 +63,7 @@
 			            	<h3 class="box-title">调度列表</h3>
 			            </div>
 			            <div class="box-body" >
-			              	<table id="job_list" class="table table-bordered table-striped">
+			              	<table id="job_list" class="table table-bordered table-striped" width="100%" >
 				                <thead>
 					            	<tr>
 					            		<th name="id" >id</th>
@@ -127,7 +127,7 @@
                             </select>
                         </div>
                         <label for="lastname" class="col-sm-2 control-label">Cron<font color="red">*</font></label>
-                        <div class="col-sm-4"><input type="text" class="form-control" name="jobCron" placeholder="请输入“Cron”" maxlength="20" ></div>
+                        <div class="col-sm-4"><input type="text" class="form-control" name="jobCron" placeholder="请输入“Cron”" maxlength="128" ></div>
                     </div>
                     <div class="form-group">
                         <label for="firstname" class="col-sm-2 control-label">运行模式<font color="red">*</font></label>
@@ -143,7 +143,7 @@
                     </div>
                     <div class="form-group">
                         <label for="firstname" class="col-sm-2 control-label">执行参数<font color="black">*</font></label>
-                        <div class="col-sm-4"><input type="text" class="form-control" name="executorParam" placeholder="请输入“执行参数”" maxlength="100" ></div>
+                        <div class="col-sm-4"><input type="text" class="form-control" name="executorParam" placeholder="请输入“执行参数”" maxlength="512" ></div>
                         <label for="lastname" class="col-sm-2 control-label">子任务Key<font color="black">*</font></label>
                         <div class="col-sm-4"><input type="text" class="form-control" name="childJobKey" placeholder="请输入子任务的任务Key,如存在多个逗号分隔" maxlength="100" ></div>
                     </div>
@@ -192,7 +192,7 @@ import com.xxl.job.core.handler.IJobHandler;
 public class DemoGlueJobHandler extends IJobHandler {
 
 	@Override
-	public ReturnT<String> execute(String... params) throws Exception {
+	public ReturnT<String> execute(String param) throws Exception {
 		XxlJobLogger.log("XXL-JOB, Hello World.");
 		return ReturnT.SUCCESS;
 	}
@@ -204,12 +204,15 @@ public class DemoGlueJobHandler extends IJobHandler {
 echo "xxl-job: hello shell"
 
 echo "脚本位置：$0"
-echo "参数数量：$#"
+echo "任务参数：$1"
+echo "分片序号 = $2"
+echo "分片总数 = $3"
+<#--echo "参数数量：$#"
 for param in $*
 do
     echo "参数 : $param"
     sleep 1s
-done
+done-->
 
 echo "Good bye!"
 exit 0
@@ -221,19 +224,40 @@ import time
 import sys
 
 print "xxl-job: hello python"
+
 print "脚本文件：", sys.argv[0]
-for i in range(1, len(sys.argv)):
+print "任务参数：", sys.argv[1]
+print "分片序号：", sys.argv[2]
+print "分片总数：", sys.argv[3]
+<#--for i in range(1, len(sys.argv)):
 	time.sleep(1)
-	print "参数", i, sys.argv[i]
+	print "参数", i, sys.argv[i]-->
 
 print "Good bye!"
-exit(0)<#--
+exit(0)
+<#--
 import logging
 logging.basicConfig(level=logging.DEBUG)
 logging.info("脚本文件：" + sys.argv[0])
 -->
 </textarea>
-					
+<textarea class="glueSource_nodejs" style="display:none;" >
+#!/usr/bin/env node
+console.log("xxl-job: hello nodejs")
+
+var arguments = process.argv
+
+console.log("脚本文件: " + arguments[1])
+console.log("任务参数: " + arguments[2])
+console.log("分片序号: " + arguments[3])
+console.log("分片总数: " + arguments[4])
+<#--for (var i = 2; i < arguments.length; i++){
+	console.log("参数 %s = %s", (i-1), arguments[i]);
+}-->
+
+console.log("Good bye!")
+process.exit(0)
+</textarea>		
 				</form>
          	</div>
 		</div>
@@ -271,7 +295,7 @@ logging.info("脚本文件：" + sys.argv[0])
                             </select>
                         </div>
                         <label for="lastname" class="col-sm-2 control-label">Cron<font color="red">*</font></label>
-                        <div class="col-sm-4"><input type="text" class="form-control" name="jobCron" placeholder="请输入“Cron”" maxlength="20" ></div>
+                        <div class="col-sm-4"><input type="text" class="form-control" name="jobCron" placeholder="请输入“Cron”" maxlength="128" ></div>
                     </div>
                     <div class="form-group">
                         <label for="firstname" class="col-sm-2 control-label">运行模式<font color="red">*</font></label>
@@ -287,7 +311,7 @@ logging.info("脚本文件：" + sys.argv[0])
                     </div>
                     <div class="form-group">
                         <label for="firstname" class="col-sm-2 control-label">执行参数<font color="black">*</font></label>
-                        <div class="col-sm-4"><input type="text" class="form-control" name="executorParam" placeholder="请输入“执行参数”" maxlength="100" ></div>
+                        <div class="col-sm-4"><input type="text" class="form-control" name="executorParam" placeholder="请输入“执行参数”" maxlength="512" ></div>
                         <label for="lastname" class="col-sm-2 control-label">子任务Key<font color="black">*</font></label>
                         <div class="col-sm-4"><input type="text" class="form-control" name="childJobKey" placeholder="请输入子任务的任务Key,如存在多个逗号分隔" maxlength="100" ></div>
                     </div>

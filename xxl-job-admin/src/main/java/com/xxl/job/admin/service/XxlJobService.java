@@ -4,6 +4,7 @@ package com.xxl.job.admin.service;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.core.biz.model.ReturnT;
 
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -29,6 +30,6 @@ public interface XxlJobService {
 
 	public Map<String,Object> dashboardInfo();
 
-	public ReturnT<Map<String,Object>> triggerChartDate();
+	public ReturnT<Map<String,Object>> triggerChartDate(Date startDate, Date endDate);
 
 }
