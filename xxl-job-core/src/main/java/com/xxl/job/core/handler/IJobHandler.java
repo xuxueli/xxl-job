@@ -19,7 +19,7 @@ public abstract class IJobHandler {
 
 
 	/**
-	 * execute handler
+	 * execute handler, invoked when executor receives a scheduling request
 	 *
 	 * @param param
 	 * @return
@@ -29,7 +29,7 @@ public abstract class IJobHandler {
 
 
 	/**
-	 * init handler
+	 * init handler, invoked when JobThread init
 	 */
 	public void init() {
 		// TODO
@@ -37,7 +37,7 @@ public abstract class IJobHandler {
 
 
 	/**
-	 * destroy handler
+	 * destroy handler, invoked when JobThread destroy
 	 */
 	public void destroy() {
 		// TODO
