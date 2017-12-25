@@ -17,7 +17,8 @@ import java.math.BigInteger;
  * @author xuxueli 2015-12-12 18:09:04
  */
 public class PermissionInterceptor extends HandlerInterceptorAdapter {
-	
+
+
 	public static final String LOGIN_IDENTITY_KEY = "XXL_JOB_LOGIN_IDENTITY";
 	public static final String LOGIN_IDENTITY_TOKEN;
     static {
@@ -30,7 +31,9 @@ public class PermissionInterceptor extends HandlerInterceptorAdapter {
 
 		LOGIN_IDENTITY_TOKEN = tokenTmp;
     }
-	
+
+
+
 	public static boolean login(HttpServletResponse response, String username, String password, boolean ifRemember){
 
     	// login token
@@ -55,6 +58,8 @@ public class PermissionInterceptor extends HandlerInterceptorAdapter {
 		}
 		return true;
 	}
+
+
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
