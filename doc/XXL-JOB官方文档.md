@@ -186,6 +186,7 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
         ：xxl-job-executor-sample-spring：Spring版本，通过Spring容器管理执行器，比较通用，推荐这种方式；
         ：xxl-job-executor-sample-springboot：Springboot版本，通过Springboot管理执行器；
         ：xxl-job-executor-sample-jfinal：JFinal版本，通过JFinal管理执行器；
+        ：xxl-job-executor-sample-nutz：Nutz版本，通过Nutz管理执行器；
         
 
 ### 2.3 配置部署“调度中心”
@@ -231,15 +232,17 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 至此“调度中心”项目已经部署成功。
 
 #### 步骤三：调度中心集群（可选）：
-调度中心支持集群部署，提升调度系统可用性。
+调度中心支持集群部署，提升调度系统容灾和可用性。
 
-集群部署唯一要求为：保证每个集群节点配置（db和登陆账号等）保持一致。调度中心通过db配置区分不同集群。
-
-调度中心在集群部署时可通过nginx负载均衡，此时可以为集群分配一个域名。该域名一方面可以用于访问，另一方面也可以用于配置执行器回调地址。
+调度中心集群部署时，几点要求和建议：
+- DB配置保持一致；
+- 登陆账号配置保持一致；
+- 集群机器时钟保持一致（单机集群忽视）；
+- 建议：推荐通过nginx为调度中心集群做负载均衡，分配域名。调度中心访问、执行器回调配置、调用API服务等操作均通过该域名进行。
 
 ### 2.4 配置部署“执行器项目”
 
-    “执行器”项目：xxl-job-executor-sample-spring (如新建执行器项目，可参考该Sample示例执行器项目的配置步骤；)
+    “执行器”项目：xxl-job-executor-sample-spring (提供多种版本执行器供选择，现以Spring版本为例，可直接使用，也可以参考其并将现有项目改造成执行器)
     作用：负责接收“调度中心”的调度并执行；可直接部署执行器，也可以将执行器集成到现有业务项目中。
     
 #### 步骤一：maven依赖
@@ -283,7 +286,7 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 <bean id="xxlJobExecutor" class="com.xxl.job.core.executor.XxlJobExecutor" init-method="start" destroy-method="destroy" >
     <!-- 执行器IP[选填]，为空则自动获取 -->
     <property name="ip" value="${xxl.job.executor.ip}" />
-    <!-- 执行器端口号[必须] -->
+    <!-- 执行器端口号[选填]，为空则自动获取 -->
     <property name="port" value="${xxl.job.executor.port}" />
     <!-- 执行器AppName[选填]，为空则关闭自动注册 -->
     <property name="appName" value="${xxl.job.executor.appname}" />
