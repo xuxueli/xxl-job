@@ -1,4 +1,4 @@
-package com.xxl.job.dao.impl;
+package com.xxl.job.admin.dao;
 
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.dao.XxlJobGroupDao;

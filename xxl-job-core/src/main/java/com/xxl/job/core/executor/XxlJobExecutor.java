@@ -72,14 +72,10 @@ public class XxlJobExecutor implements ApplicationContextAware {
         initAdminBizList(adminAddresses, accessToken);
 
         // init executor-jobHandlerRepository
-        if (applicationContext != null) {
-            initJobHandlerRepository(applicationContext);
-        }
+        initJobHandlerRepository(applicationContext);
 
         // init logpath
-        if (logPath!=null && logPath.trim().length()>0) {
-            XxlJobFileAppender.logPath = logPath;
-        }
+        XxlJobFileAppender.initLogPath(logPath);
 
         // init executor-server
         initExecutorServer(port, ip, appName, accessToken);
@@ -145,6 +141,10 @@ public class XxlJobExecutor implements ApplicationContextAware {
         return jobHandlerRepository.get(name);
     }
     private static void initJobHandlerRepository(ApplicationContext applicationContext){
+        if (applicationContext == null) {
+            return;
+        }
+
         // init job handler action
         Map<String, Object> serviceBeanMap = applicationContext.getBeansWithAnnotation(JobHandler.class);
 

@@ -90,10 +90,8 @@
 			              	<table id="joblog_list" class="table table-bordered table-striped display" width="100%" >
 				                <thead>
 					            	<tr>
-					                	<th name="id" >id</th>
+                                        <th name="jobId" >任务ID</th>
                                         <th name="jobGroup" >执行器ID</th>
-					                	<th name="jobId" >任务ID</th>
-                                        <th name="JobKey" >JobKey</th>
 										<#--<th name="executorAddress" >执行器地址</th>
 										<th name="glueType" >运行模式</th>
                                       	<th name="executorParam" >任务参数</th>-->

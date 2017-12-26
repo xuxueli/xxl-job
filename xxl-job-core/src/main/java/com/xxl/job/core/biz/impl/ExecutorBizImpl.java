@@ -59,7 +59,7 @@ public class ExecutorBizImpl implements ExecutorBiz {
 
     @Override
     public ReturnT<LogResult> log(long logDateTim, int logId, int fromLineNum) {
-        // log filename: yyyy-MM-dd/9999.log
+        // log filename: logPath/yyyy-MM-dd/9999.log
         String logFileName = XxlJobFileAppender.makeLogFileName(new Date(logDateTim), logId);
 
         LogResult logResult = XxlJobFileAppender.readLog(logFileName, fromLineNum);
@@ -74,7 +74,8 @@ public class ExecutorBizImpl implements ExecutorBiz {
         String removeOldReason = null;
 
         // valid：jobHandler + jobThread
-        if (GlueTypeEnum.BEAN==GlueTypeEnum.match(triggerParam.getGlueType())) {
+        GlueTypeEnum glueTypeEnum = GlueTypeEnum.match(triggerParam.getGlueType());
+        if (GlueTypeEnum.BEAN == glueTypeEnum) {
 
             // new jobhandler
             IJobHandler newJobHandler = XxlJobExecutor.loadJobHandler(triggerParam.getExecutorHandler());
@@ -96,7 +97,7 @@ public class ExecutorBizImpl implements ExecutorBiz {
                 }
             }
 
-        } else if (GlueTypeEnum.GLUE_GROOVY==GlueTypeEnum.match(triggerParam.getGlueType())) {
+        } else if (GlueTypeEnum.GLUE_GROOVY == glueTypeEnum) {
 
             // valid old jobThread
             if (jobThread != null &&
@@ -119,9 +120,7 @@ public class ExecutorBizImpl implements ExecutorBiz {
                     return new ReturnT<String>(ReturnT.FAIL_CODE, e.getMessage());
                 }
             }
-        } else if (GlueTypeEnum.GLUE_SHELL==GlueTypeEnum.match(triggerParam.getGlueType())
-                || GlueTypeEnum.GLUE_PYTHON==GlueTypeEnum.match(triggerParam.getGlueType())
-                || GlueTypeEnum.GLUE_NODEJS==GlueTypeEnum.match(triggerParam.getGlueType())) {
+        } else if (glueTypeEnum!=null && glueTypeEnum.isScript()) {
 
             // valid old jobThread
             if (jobThread != null &&

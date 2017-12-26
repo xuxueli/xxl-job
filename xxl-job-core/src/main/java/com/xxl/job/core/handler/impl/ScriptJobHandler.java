@@ -6,6 +6,7 @@ import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.log.XxlJobFileAppender;
 import com.xxl.job.core.log.XxlJobLogger;
 import com.xxl.job.core.util.ScriptUtil;
+import com.xxl.job.core.util.ShardingUtil;
 
 /**
  * Created by xuxueli on 17/4/27.
@@ -29,32 +30,38 @@ public class ScriptJobHandler extends IJobHandler {
     }
 
     @Override
-    public ReturnT<String> execute(String... params) throws Exception {
+    public ReturnT<String> execute(String param) throws Exception {
 
-        // cmd + script-file-name
-        String cmd = "bash";
-        String scriptFileName = null;
-        if (GlueTypeEnum.GLUE_SHELL == glueType) {
-            cmd = "bash";
-            scriptFileName = XxlJobFileAppender.logPath.concat("gluesource/").concat(String.valueOf(jobId)).concat("_").concat(String.valueOf(glueUpdatetime)).concat(".sh");
-        } else if (GlueTypeEnum.GLUE_PYTHON == glueType) {
-            cmd = "python";
-            scriptFileName = XxlJobFileAppender.logPath.concat("gluesource/").concat(String.valueOf(jobId)).concat("_").concat(String.valueOf(glueUpdatetime)).concat(".py");
-        } else if (GlueTypeEnum.GLUE_NODEJS == glueType) {
-            cmd = "node";
-            scriptFileName = XxlJobFileAppender.logPath.concat("gluesource/").concat(String.valueOf(jobId)).concat("_").concat(String.valueOf(glueUpdatetime)).concat(".js");
+        if (!glueType.isScript()) {
+            return new ReturnT<String>(IJobHandler.FAIL.getCode(), "glueType["+ glueType +"] invalid.");
         }
 
+        // cmd
+        String cmd = glueType.getCmd();
+
         // make script file
+        String scriptFileName = XxlJobFileAppender.getLogPath()
+                .concat("/gluesource/")
+                .concat(String.valueOf(jobId))
+                .concat("_")
+                .concat(String.valueOf(glueUpdatetime))
+                .concat(glueType.getSuffix());
         ScriptUtil.markScriptFile(scriptFileName, gluesource);
 
         // log file
-        String logFileName = XxlJobFileAppender.logPath.concat(XxlJobFileAppender.contextHolder.get());
+        String logFileName = XxlJobFileAppender.contextHolder.get();
+
+        // script params：0=param、1=分片序号、2=分片总数
+        ShardingUtil.ShardingVO shardingVO = ShardingUtil.getShardingVo();
+        String[] scriptParams = new String[3];
+        scriptParams[0] = param;
+        scriptParams[1] = String.valueOf(shardingVO.getIndex());
+        scriptParams[2] = String.valueOf(shardingVO.getTotal());
 
         // invoke
         XxlJobLogger.log("----------- script file:"+ scriptFileName +" -----------");
-        int exitValue = ScriptUtil.execToFile(cmd, scriptFileName, logFileName, params);
-        ReturnT<String> result = (exitValue==0)?ReturnT.SUCCESS:new ReturnT<String>(ReturnT.FAIL_CODE, "script exit value("+exitValue+") is failed");
+        int exitValue = ScriptUtil.execToFile(cmd, scriptFileName, logFileName, scriptParams);
+        ReturnT<String> result = (exitValue==0)?IJobHandler.SUCCESS:new ReturnT<String>(IJobHandler.FAIL.getCode(), "script exit value("+exitValue+") is failed");
         return result;
     }
 

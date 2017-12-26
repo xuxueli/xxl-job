@@ -3,9 +3,9 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+           http://www.springframework.org/schema/beans/spring-beans.xsd
            http://www.springframework.org/schema/context
-           http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+           http://www.springframework.org/schema/context/spring-context.xsd">
 
 	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="fileEncoding" value="utf-8" />
@@ -25,15 +25,15 @@
 	<bean id="xxlJobExecutor" class="com.xxl.job.core.executor.XxlJobExecutor" init-method="start" destroy-method="destroy" >
 		<!-- 执行器IP[选填]，为空则自动获取 -->
 		<property name="ip" value="${xxl.job.executor.ip}" />
-		<!-- 执行器端口号[必须] -->
+		<!-- 执行器端口号[选填]，为空则自动获取 -->
 		<property name="port" value="${xxl.job.executor.port}" />
 		<!-- 执行器AppName[选填]，为空则关闭自动注册 -->
         <property name="appName" value="${xxl.job.executor.appname}" />
         <!-- 执行器注册中心地址[选填]，为空则关闭自动注册 -->
 		<property name="adminAddresses" value="${xxl.job.admin.addresses}" />
-		<!-- 执行器日志路径[必填] -->
+		<!-- 执行器日志路径[选填]，为空则使用默认路径 -->
 		<property name="logPath" value="${xxl.job.executor.logpath}" />
-		<!-- 访问令牌，非空则进行匹配校验[选填] -->
+		<!-- 访问令牌[选填]，非空则进行匹配校验 -->
 		<property name="accessToken" value="${xxl.job.accessToken}" />
 	</bean>
 

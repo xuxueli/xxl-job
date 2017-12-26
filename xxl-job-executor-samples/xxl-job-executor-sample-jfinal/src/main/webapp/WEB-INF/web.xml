@@ -3,6 +3,7 @@
 	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	id="WebApp_ID" version="2.5">
+
 	<display-name>xxl-job-executor-sample-jfinal</display-name>
 	<context-param>
 		<param-name>webAppRootKey</param-name>
@@ -22,5 +23,10 @@
 		<filter-name>jfinal</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
+
+
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+	</welcome-file-list>
 
 </web-app>

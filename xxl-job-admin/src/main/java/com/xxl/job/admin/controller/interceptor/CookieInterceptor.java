@@ -1,17 +1,17 @@
 package com.xxl.job.admin.controller.interceptor;
 
-import java.util.HashMap;
+import org.apache.commons.lang3.ArrayUtils;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang.ArrayUtils;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+import java.util.HashMap;
 
 /**
  * push cookies to model as cookieMap
+ *
  * @author xuxueli 2015-12-12 18:09:04
  */
 public class CookieInterceptor extends HandlerInterceptorAdapter {

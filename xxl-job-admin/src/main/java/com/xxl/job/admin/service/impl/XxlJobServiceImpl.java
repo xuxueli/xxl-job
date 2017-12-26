@@ -13,10 +13,10 @@ import com.xxl.job.admin.service.XxlJobService;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
 import com.xxl.job.core.glue.GlueTypeEnum;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.time.DateUtils;
-import org.apache.commons.lang.time.FastDateFormat;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateUtils;
+import org.apache.commons.lang3.time.FastDateFormat;
 import org.quartz.CronExpression;
 import org.quartz.SchedulerException;
 import org.slf4j.Logger;
@@ -103,19 +103,20 @@ public class XxlJobServiceImpl implements XxlJobService {
 			jobInfo.setGlueSource(jobInfo.getGlueSource().replaceAll("\r", ""));
 		}
 
-		// childJobKey valid
-		if (StringUtils.isNotBlank(jobInfo.getChildJobKey())) {
-			String[] childJobKeys = jobInfo.getChildJobKey().split(",");
-			for (String childJobKeyItem: childJobKeys) {
-				String[] childJobKeyArr = childJobKeyItem.split("_");
-				if (childJobKeyArr.length!=2) {
-					return new ReturnT<String>(ReturnT.FAIL_CODE, MessageFormat.format("子任务Key({0})格式错误", childJobKeyItem));
-				}
-				XxlJobInfo childJobInfo = xxlJobInfoDao.loadById(Integer.valueOf(childJobKeyArr[1]));
-				if (childJobInfo==null) {
-					return new ReturnT<String>(ReturnT.FAIL_CODE, MessageFormat.format("子任务Key({0})无效", childJobKeyItem));
+		// ChildJobId valid
+		if (StringUtils.isNotBlank(jobInfo.getChildJobId())) {
+			String[] childJobIds = StringUtils.split(jobInfo.getChildJobId(), ",");
+			for (String childJobIdItem: childJobIds) {
+				if (StringUtils.isNotBlank(childJobIdItem) && StringUtils.isNumeric(childJobIdItem)) {
+					XxlJobInfo childJobInfo = xxlJobInfoDao.loadById(Integer.valueOf(childJobIdItem));
+					if (childJobInfo==null) {
+						return new ReturnT<String>(ReturnT.FAIL_CODE, MessageFormat.format("子任务ID({0})无效", childJobIdItem));
+					}
+				} else {
+					return new ReturnT<String>(ReturnT.FAIL_CODE, MessageFormat.format("子任务ID({0})格式错误", childJobIdItem));
 				}
 			}
+			jobInfo.setChildJobId(StringUtils.join(childJobIds, ","));
 		}
 
 		// add in db
@@ -166,19 +167,24 @@ public class XxlJobServiceImpl implements XxlJobService {
 			return new ReturnT<String>(ReturnT.FAIL_CODE, "失败处理策略非法");
 		}
 
-		// childJobKey valid
-		if (StringUtils.isNotBlank(jobInfo.getChildJobKey())) {
-			String[] childJobKeys = jobInfo.getChildJobKey().split(",");
-			for (String childJobKeyItem: childJobKeys) {
-				String[] childJobKeyArr = childJobKeyItem.split("_");
-				if (childJobKeyArr.length!=2) {
-					return new ReturnT<String>(ReturnT.FAIL_CODE, MessageFormat.format("子任务Key({0})格式错误", childJobKeyItem));
-				}
-                XxlJobInfo childJobInfo = xxlJobInfoDao.loadById(Integer.valueOf(childJobKeyArr[1]));
-				if (childJobInfo==null) {
-					return new ReturnT<String>(ReturnT.FAIL_CODE, MessageFormat.format("子任务Key({0})无效", childJobKeyItem));
+		// ChildJobId valid
+		if (StringUtils.isNotBlank(jobInfo.getChildJobId())) {
+			String[] childJobIds = StringUtils.split(jobInfo.getChildJobId(), ",");
+			for (String childJobIdItem: childJobIds) {
+				if (StringUtils.isNotBlank(childJobIdItem) && StringUtils.isNumeric(childJobIdItem)) {
+					XxlJobInfo childJobInfo = xxlJobInfoDao.loadById(Integer.valueOf(childJobIdItem));
+					if (childJobInfo==null) {
+						return new ReturnT<String>(ReturnT.FAIL_CODE, MessageFormat.format("子任务ID({0})无效", childJobIdItem));
+					}
+					// avoid cycle relate
+					if (childJobInfo.getId() == jobInfo.getId()) {
+						return new ReturnT<String>(ReturnT.FAIL_CODE, MessageFormat.format("子任务ID({0})不可与父任务重复", childJobIdItem));
+					}
+				} else {
+					return new ReturnT<String>(ReturnT.FAIL_CODE, MessageFormat.format("子任务ID({0})格式错误", childJobIdItem));
 				}
 			}
+			jobInfo.setChildJobId(StringUtils.join(childJobIds, ","));
 		}
 
 		// stage job info
@@ -197,7 +203,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 		exists_jobInfo.setExecutorParam(jobInfo.getExecutorParam());
 		exists_jobInfo.setExecutorBlockStrategy(jobInfo.getExecutorBlockStrategy());
 		exists_jobInfo.setExecutorFailStrategy(jobInfo.getExecutorFailStrategy());
-		exists_jobInfo.setChildJobKey(jobInfo.getChildJobKey());
+		exists_jobInfo.setChildJobId(jobInfo.getChildJobId());
         xxlJobInfoDao.update(exists_jobInfo);
 
 		// fresh quartz

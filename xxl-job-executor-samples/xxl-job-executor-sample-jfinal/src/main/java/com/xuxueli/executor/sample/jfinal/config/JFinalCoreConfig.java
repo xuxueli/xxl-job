@@ -17,8 +17,9 @@ public class JFinalCoreConfig extends JFinalConfig {
 	private Logger logger = LoggerFactory.getLogger(JFinalCoreConfig.class);
 
 	// ---------------------- xxl-job executor ----------------------
-	XxlJobExecutor xxlJobExecutor = null;
+	private XxlJobExecutor xxlJobExecutor = null;
 	private void initXxlJobExecutor() {
+
 		// registry jobhandler
 		XxlJobExecutor.registJobHandler("demoJobHandler", new DemoJobHandler());
 		XxlJobExecutor.registJobHandler("shardingJobHandler", new ShardingJobHandler());
