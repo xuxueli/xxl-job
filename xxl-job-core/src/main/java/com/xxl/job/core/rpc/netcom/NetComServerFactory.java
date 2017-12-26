@@ -25,6 +25,12 @@ public class NetComServerFactory  {
 		server.start(port, ip, appName);
 	}
 
+	public void start(int port, String ip, String appName, String registryHost) throws Exception {
+		server.start(port, ip, appName, registryHost);
+	}
+
+
+
 	// ---------------------- server destroy ----------------------
 	public void destroy(){
 		server.destroy();

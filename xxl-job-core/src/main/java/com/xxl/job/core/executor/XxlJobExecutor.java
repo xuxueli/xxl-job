@@ -34,6 +34,7 @@ public class XxlJobExecutor implements ApplicationContextAware {
     private String adminAddresses;
     private String accessToken;
     private String logPath;
+    private String registryHost;
 
     public void setIp(String ip) {
         this.ip = ip;
@@ -53,6 +54,7 @@ public class XxlJobExecutor implements ApplicationContextAware {
     public void setLogPath(String logPath) {
         this.logPath = logPath;
     }
+    public void setRegistryHost(String registryHost) { this.registryHost = registryHost; }
 
 
     // ---------------------- applicationContext ----------------------
@@ -78,7 +80,11 @@ public class XxlJobExecutor implements ApplicationContextAware {
         XxlJobFileAppender.initLogPath(logPath);
 
         // init executor-server
-        initExecutorServer(port, ip, appName, accessToken);
+        if (registryHost != null && registryHost.length() > 0){
+            initExecutorServer(port, ip, appName, accessToken, registryHost);
+        }else {
+            initExecutorServer(port, ip, appName, accessToken);
+        }
     }
     public void destroy(){
         // destory JobThreadRepository
@@ -126,6 +132,13 @@ public class XxlJobExecutor implements ApplicationContextAware {
         NetComServerFactory.setAccessToken(accessToken);
         serverFactory.start(port, ip, appName); // jetty + registry
     }
+
+    private void initExecutorServer(int port, String ip, String appName, String accessToken, String registryHost) throws Exception {
+        NetComServerFactory.putService(ExecutorBiz.class, new ExecutorBizImpl());   // rpc-service, base on jetty
+        NetComServerFactory.setAccessToken(accessToken);
+        serverFactory.start(port, ip, appName, registryHost); // jetty + registry
+    }
+
     private void stopExecutorServer() {
         serverFactory.destroy();    // jetty + registry + callback
     }
