@@ -92,6 +92,7 @@ $(function() {
 					{
 						"data": 'jobId',
 						"visible" : true,
+                        "width":'10%',
 						"render": function ( data, type, row ) {
 							var glueTypeTitle = row.glueType;
 							if ('GLUE_GROOVY'==row.glueType) {
@@ -117,12 +118,14 @@ $(function() {
 					{ "data": 'jobGroup', "visible" : false},
 					{
 						"data": 'triggerTime',
+                        "width":'16%',
 						"render": function ( data, type, row ) {
 							return data?moment(new Date(data)).format("YYYY-MM-DD HH:mm:ss"):"";
 						}
 					},
 					{
 						"data": 'triggerCode',
+                        "width":'12%',
 						"render": function ( data, type, row ) {
 							var html = data;
 							if (data == 200) {
@@ -137,18 +140,21 @@ $(function() {
 					},
 					{
 						"data": 'triggerMsg',
+                        "width":'12%',
 						"render": function ( data, type, row ) {
 							return data?'<a class="logTips" href="javascript:;" >查看<span style="display:none;">'+ data +'</span></a>':"无";
 						}
 					},
 	                { 
 	                	"data": 'handleTime',
+                        "width":'16%',
 	                	"render": function ( data, type, row ) {
 	                		return data?moment(new Date(data)).format("YYYY-MM-DD HH:mm:ss"):"";
 	                	}
 	                },
 	                {
 						"data": 'handleCode',
+                        "width":'12%',
 						"render": function ( data, type, row ) {
                             var html = data;
                             if (data == 200) {
@@ -165,6 +171,7 @@ $(function() {
 	                },
 	                { 
 	                	"data": 'handleMsg',
+                        "width":'12%',
 	                	"render": function ( data, type, row ) {
 	                		return data?'<a class="logTips" href="javascript:;" >查看<span style="display:none;">'+ data +'</span></a>':"无";
 	                	}
@@ -172,7 +179,7 @@ $(function() {
 	                {
 						"data": 'handleMsg' ,
 						"bSortable": false,
-						"width": "8%" ,
+                        "width":'10%',
 	                	"render": function ( data, type, row ) {
 	                		// better support expression or string, not function
 	                		return function () {

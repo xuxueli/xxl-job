@@ -21,10 +21,16 @@ $(function() {
 	    "ordering": false,
 	    //"scrollX": true,	// X轴滚动条，取消自适应
 	    "columns": [
-	                { "data": 'id', "bSortable": false, "visible" : true},
+	                {
+	                	"data": 'id',
+						"bSortable": false,
+						"visible" : true,
+						"width":'10%'
+					},
 	                { 
 	                	"data": 'jobGroup', 
 	                	"visible" : false,
+						"width":'20%',
 	                	"render": function ( data, type, row ) {
 	            			var groupMenu = $("#jobGroup").find("option");
 	            			for ( var index in $("#jobGroup").find("option")) {
@@ -35,7 +41,11 @@ $(function() {
 	            			return data;
 	            		}
             		},
-	                { "data": 'jobDesc', "visible" : true,"width":'20%'},
+	                {
+	                	"data": 'jobDesc',
+						"visible" : true,
+						"width":'20%'
+					},
 					{
 						"data": 'glueType',
 						"width":'20%',
@@ -56,7 +66,11 @@ $(function() {
 						}
 					},
 	                { "data": 'executorParam', "visible" : false},
-					{ "data": 'jobCron', "visible" : true,"width":'10%'},
+					{
+						"data": 'jobCron',
+						"visible" : true,
+						"width":'10%'
+					},
 	                { 
 	                	"data": 'addTime', 
 	                	"visible" : false, 
