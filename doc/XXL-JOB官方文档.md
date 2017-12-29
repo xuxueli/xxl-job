@@ -264,12 +264,15 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
     xxl.job.executor.ip=
     xxl.job.executor.port=9999
     
+    ### xxl-job, access token：执行器通讯TOKEN，非空时启用
+    xxl.job.accessToken=
+        
     ### xxl-job log path：执行器运行日志文件存储的磁盘位置，需要对该路径拥有读写权限
     xxl.job.executor.logpath=/data/applogs/xxl-job/jobhandler/
     
-    ### xxl-job, access token：执行器通讯TOKEN，非空时启用
-    xxl.job.accessToken=
-
+    ### xxl-job log retention days：执行器Log文件定期清理功能，指定日志保存天数，日志文件过期自动删除。限制至少保持3天，否则功能不生效；
+    xxl.job.executor.logretentiondays=-1
+    
 
 #### 步骤三：执行器组件配置
 
@@ -283,35 +286,42 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 <!-- 配置01、JobHandler 扫描路径：自动扫描容器中JobHandler -->
 <context:component-scan base-package="com.xxl.job.executor.service.jobhandler" />
 
-<!-- 配置02、执行器Excutor配置：执行器核心配置 -->
+<!-- 配置02、执行器 -->
 <bean id="xxlJobExecutor" class="com.xxl.job.core.executor.XxlJobExecutor" init-method="start" destroy-method="destroy" >
+    <!-- 执行器注册中心地址[选填]，为空则关闭自动注册 -->
+    <property name="adminAddresses" value="${xxl.job.admin.addresses}" />
+    <!-- 执行器AppName[选填]，为空则关闭自动注册 -->
+    <property name="appName" value="${xxl.job.executor.appname}" />
     <!-- 执行器IP[选填]，为空则自动获取 -->
     <property name="ip" value="${xxl.job.executor.ip}" />
     <!-- 执行器端口号[选填]，为空则自动获取 -->
     <property name="port" value="${xxl.job.executor.port}" />
-    <!-- 执行器AppName[选填]，为空则关闭自动注册 -->
-    <property name="appName" value="${xxl.job.executor.appname}" />
-    <!-- 执行器注册中心地址[选填]，为空则关闭自动注册 -->
-    <property name="adminAddresses" value="${xxl.job.admin.addresses}" />
-    <!-- 执行器日志路径[选填]，为空则使用默认路径 -->
-    <property name="logPath" value="${xxl.job.executor.logpath}" />
     <!-- 访问令牌[选填]，非空则进行匹配校验 -->
     <property name="accessToken" value="${xxl.job.accessToken}" />
+    <!-- 执行器日志路径[选填]，为空则使用默认路径 -->
+    <property name="logPath" value="${xxl.job.executor.logpath}" />
+    <!-- 日志保存天数[选填]，值大于3时生效 -->
+    <property name="logRetentionDays" value="${xxl.job.executor.logretentiondays}" />
 </bean>
 ```
 
 #### 步骤四：部署执行器项目：
-如果已经正确进行上述配置，可将执行器项目编译打部署，系统提供三个执行器Sample示例项目，选择其中一个即可，各自的部署方式如下。
+如果已经正确进行上述配置，可将执行器项目编译打部署，系统提供多种执行器Sample示例项目，选择其中一个即可，各自的部署方式如下。
 
-    xxl-job-executor-sample-spring：项目编译打包成WAR包，并部署到tomcat中。
     xxl-job-executor-sample-springboot：项目编译打包成springboot类型的可执行JAR包，命令启动即可；
+    xxl-job-executor-sample-spring：项目编译打包成WAR包，并部署到tomcat中。
+    xxl-job-executor-sample-jfinal：同上
+    xxl-job-executor-sample-nutz：同上
+    
 
 至此“执行器”项目已经部署结束。
 
 #### 步骤五：执行器集群（可选）：
 执行器支持集群部署，提升调度系统可用性，同时提升任务处理能力。
 
-集群部署唯一要求为：保证集群中每个执行器的配置项 "xxl.job.admin.addresses/调度中心地址" 保持一致，执行器根据该配置进行执行器自动注册等操作。 
+执行器集群部署时，几点要求和建议：
+- 执行器回调地址（xxl.job.admin.addresses）需要保持一致；执行器根据该配置进行执行器自动注册等操作。 
+- 同一个执行器集群内AppName（xxl.job.executor.appname）需要保持一致；调度中心根据该配置动态发现不同集群的在线执行器列表。
 
 
 ### 2.5 开发第一个任务“Hello World”       
@@ -1113,7 +1123,7 @@ Tips: 历史版本(V1.3.x)目前已经Release至稳定版本, 进入维护阶段
 - 28、新增"任务ID"属性，移除"JobKey"属性，前者承担所有功能，方便后续增强任务依赖功能。
 - 29、任务循环依赖问题修复，避免子任务与父任务重复导致的调度死循环；
 - 30、任务列表新增筛选条件 "任务描述"，快速检索任务；
-- 31、执行器Log文件定期清理功能：执行器新增配置项（"xxl.job.executor.logretentiondays"）日志保存天数，日志文件过期自动删除。限制至少保持3天；
+- 31、执行器Log文件定期清理功能：执行器新增配置项（"xxl.job.executor.logretentiondays"）日志保存天数，日志文件过期自动删除。
 
 ### 6.21 版本 V1.9.1 特性[迭代中]
 
