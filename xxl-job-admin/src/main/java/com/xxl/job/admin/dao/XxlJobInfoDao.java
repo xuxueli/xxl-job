@@ -12,8 +12,16 @@ import java.util.List;
  */
 public interface XxlJobInfoDao {
 
-	public List<XxlJobInfo> pageList(@Param("offset") int offset, @Param("pagesize") int pagesize, @Param("jobGroup") int jobGroup, @Param("executorHandler") String executorHandler);
-	public int pageListCount(@Param("offset") int offset, @Param("pagesize") int pagesize, @Param("jobGroup") int jobGroup, @Param("executorHandler") String executorHandler);
+	public List<XxlJobInfo> pageList(@Param("offset") int offset,
+									 @Param("pagesize") int pagesize,
+									 @Param("jobGroup") int jobGroup,
+									 @Param("jobDesc") String jobDesc,
+									 @Param("executorHandler") String executorHandler);
+	public int pageListCount(@Param("offset") int offset,
+							 @Param("pagesize") int pagesize,
+							 @Param("jobGroup") int jobGroup,
+							 @Param("jobDesc") String jobDesc,
+							 @Param("executorHandler") String executorHandler);
 	
 	public int save(XxlJobInfo info);
 

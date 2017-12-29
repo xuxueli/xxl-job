@@ -14,7 +14,7 @@ import java.util.Map;
  */
 public interface XxlJobService {
 	
-	public Map<String, Object> pageList(int start, int length, int jobGroup, String executorHandler, String filterTime);
+	public Map<String, Object> pageList(int start, int length, int jobGroup, String jobDesc, String executorHandler, String filterTime);
 	
 	public ReturnT<String> add(XxlJobInfo jobInfo);
 	

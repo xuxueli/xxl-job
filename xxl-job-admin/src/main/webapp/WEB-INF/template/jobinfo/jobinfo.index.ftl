@@ -32,7 +32,7 @@
 	    <section class="content">
 	    
 	    	<div class="row">
-	    		<div class="col-xs-4">
+	    		<div class="col-xs-3">
 	              	<div class="input-group">
 	                	<span class="input-group-addon">执行器</span>
                 		<select class="form-control" id="jobGroup" >
@@ -42,13 +42,19 @@
 	                  	</select>
 	              	</div>
 	            </div>
-                <div class="col-xs-4">
+                <div class="col-xs-3">
+                    <div class="input-group">
+                        <span class="input-group-addon">任务描述</span>
+                        <input type="text" class="form-control" id="jobDesc" autocomplete="on" >
+                    </div>
+                </div>
+                <div class="col-xs-3">
                     <div class="input-group">
                         <span class="input-group-addon">JobHandler</span>
                         <input type="text" class="form-control" id="executorHandler" autocomplete="on" >
                     </div>
                 </div>
-	            <div class="col-xs-2">
+	            <div class="col-xs-1">
 	            	<button class="btn btn-block btn-info" id="searchBtn">搜索</button>
 	            </div>
 	            <div class="col-xs-2">
