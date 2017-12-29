@@ -29,25 +29,25 @@ public class XxlJobExecutor implements ApplicationContextAware {
     private static final Logger logger = LoggerFactory.getLogger(XxlJobExecutor.class);
 
     // ---------------------- param ----------------------
+    private String adminAddresses;
+    private String appName;
     private String ip;
     private int port;
-    private String appName;
-    private String adminAddresses;
     private String accessToken;
     private String logPath;
     private int logRetentionDays;
 
+    public void setAdminAddresses(String adminAddresses) {
+        this.adminAddresses = adminAddresses;
+    }
+    public void setAppName(String appName) {
+        this.appName = appName;
+    }
     public void setIp(String ip) {
         this.ip = ip;
     }
     public void setPort(int port) {
         this.port = port;
-    }
-    public void setAppName(String appName) {
-        this.appName = appName;
-    }
-    public void setAdminAddresses(String adminAddresses) {
-        this.adminAddresses = adminAddresses;
     }
     public void setAccessToken(String accessToken) {
         this.accessToken = accessToken;

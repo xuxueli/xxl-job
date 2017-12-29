@@ -39,12 +39,13 @@ public class NutzSetup implements Setup {
 
 		// init executor
 		xxlJobExecutor = new XxlJobExecutor();
+		xxlJobExecutor.setAdminAddresses(xxlJobProp.get("xxl.job.admin.addresses"));
+		xxlJobExecutor.setAppName(xxlJobProp.get("xxl.job.executor.appname"));
 		xxlJobExecutor.setIp(xxlJobProp.get("xxl.job.executor.ip"));
 		xxlJobExecutor.setPort(xxlJobProp.getInt("xxl.job.executor.port"));
-		xxlJobExecutor.setAppName(xxlJobProp.get("xxl.job.executor.appname"));
-		xxlJobExecutor.setAdminAddresses(xxlJobProp.get("xxl.job.admin.addresses"));
-		xxlJobExecutor.setLogPath(xxlJobProp.get("xxl.job.executor.logpath"));
 		xxlJobExecutor.setAccessToken(xxlJobProp.get("xxl.job.accessToken"));
+		xxlJobExecutor.setLogPath(xxlJobProp.get("xxl.job.executor.logpath"));
+		xxlJobExecutor.setLogRetentionDays(xxlJobProp.getInt("xxl.job.executor.logretentiondays"));
 
 		// start executor
 		try {
