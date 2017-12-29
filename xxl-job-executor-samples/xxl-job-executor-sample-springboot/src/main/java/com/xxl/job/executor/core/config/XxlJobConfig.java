@@ -36,7 +36,7 @@ public class XxlJobConfig {
     @Value("${xxl.job.executor.logpath}")
     private String logPath;
 
-    @Value("xxl.job.executor.logretentiondays")
+    @Value("${xxl.job.executor.logretentiondays}")
     private int logRetentionDays;
 
 
