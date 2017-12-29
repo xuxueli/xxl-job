@@ -31,10 +31,12 @@
         <property name="appName" value="${xxl.job.executor.appname}" />
         <!-- 执行器注册中心地址[选填]，为空则关闭自动注册 -->
 		<property name="adminAddresses" value="${xxl.job.admin.addresses}" />
-		<!-- 执行器日志路径[选填]，为空则使用默认路径 -->
-		<property name="logPath" value="${xxl.job.executor.logpath}" />
 		<!-- 访问令牌[选填]，非空则进行匹配校验 -->
 		<property name="accessToken" value="${xxl.job.accessToken}" />
+		<!-- 执行器日志路径[选填]，为空则使用默认路径 -->
+		<property name="logPath" value="${xxl.job.executor.logpath}" />
+		<!-- 日志保存天数[选填]，值大于3时生效 -->
+		<property name="logRetentionDays" value="${xxl.job.executor.logretentiondays}" />
 	</bean>
 
 

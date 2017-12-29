@@ -8,6 +8,7 @@ import com.xxl.job.core.handler.annotation.JobHandler;
 import com.xxl.job.core.log.XxlJobFileAppender;
 import com.xxl.job.core.rpc.netcom.NetComClientProxy;
 import com.xxl.job.core.rpc.netcom.NetComServerFactory;
+import com.xxl.job.core.thread.JobLogFileCleanThread;
 import com.xxl.job.core.thread.JobThread;
 import com.xxl.job.core.util.NetUtil;
 import org.slf4j.Logger;
@@ -34,6 +35,7 @@ public class XxlJobExecutor implements ApplicationContextAware {
     private String adminAddresses;
     private String accessToken;
     private String logPath;
+    private int logRetentionDays;
 
     public void setIp(String ip) {
         this.ip = ip;
@@ -53,7 +55,9 @@ public class XxlJobExecutor implements ApplicationContextAware {
     public void setLogPath(String logPath) {
         this.logPath = logPath;
     }
-
+    public void setLogRetentionDays(int logRetentionDays) {
+        this.logRetentionDays = logRetentionDays;
+    }
 
     // ---------------------- applicationContext ----------------------
     private static ApplicationContext applicationContext;
@@ -79,6 +83,9 @@ public class XxlJobExecutor implements ApplicationContextAware {
 
         // init executor-server
         initExecutorServer(port, ip, appName, accessToken);
+
+        // init JobLogFileCleanThread
+        JobLogFileCleanThread.getInstance().start(logRetentionDays);
     }
     public void destroy(){
         // destory JobThreadRepository
@@ -91,6 +98,9 @@ public class XxlJobExecutor implements ApplicationContextAware {
 
         // destory executor-server
         stopExecutorServer();
+
+        // destory JobLogFileCleanThread
+        JobLogFileCleanThread.getInstance().toStop();
     }
 
 
