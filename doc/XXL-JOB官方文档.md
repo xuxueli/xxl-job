@@ -613,7 +613,7 @@ XXL-JOB首先定制了Quartz原生表结构前缀（XXL_JOB_QRTZ_）。
 
 #### 5.3.3 架构图
 
-![输入图片说明](https://static.oschina.net/uploads/img/201707/17190028_aEE2.png "在这里输入图片标题")
+![输入图片说明](https://static.oschina.net/uploads/img/201801/03103007_Qohm.png "在这里输入图片标题")
 
 ### 5.4 调度模块剖析
 #### 5.4.1 quartz的不足
