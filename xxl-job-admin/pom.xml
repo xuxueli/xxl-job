@@ -142,5 +142,19 @@
 		</dependency>
 
 	</dependencies>
+	
+	<build>
+    	<finalName>xxl-job-admin</finalName>
+        <plugins>
+            <plugin>
+				<groupId>org.apache.maven.plugins</groupId>  
+	          	<artifactId>maven-war-plugin</artifactId>
+	          	<configuration>
+	              <webappDirectory>D:\software\apache-tomcat-7.0.82\webapps\xxl-job-admin</webappDirectory>
+	              <warSourceDirectory>C:\Users\HouBank\git\xxl-job\xxl-job-admin\src\main\webapp</warSourceDirectory>
+	          	</configuration>
+       		</plugin>
+        </plugins>
+    </build>
 
 </project>
