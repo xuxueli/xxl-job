@@ -32,6 +32,7 @@
 
 	<sql id="Base_Column_List">
 		t.id,
+		t.job_name,
 		t.job_group,
 		t.job_cron,
 		t.job_desc,
@@ -87,6 +88,7 @@
 
 	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobInfo" useGeneratedKeys="true" keyProperty="id" >
 		INSERT INTO XXL_JOB_QRTZ_TRIGGER_INFO (
+			job_name,
 			job_group,
 			job_cron,
 			job_desc,
@@ -105,6 +107,7 @@
 			glue_updatetime,
 			child_jobid
 		) VALUES (
+			#{jobName},
 			#{jobGroup},
 			#{jobCron}, 
 			#{jobDesc},
@@ -133,6 +136,12 @@
 		SELECT <include refid="Base_Column_List" />
 		FROM XXL_JOB_QRTZ_TRIGGER_INFO AS t
 		WHERE t.id = #{id}
+	</select>
+
+	<select id="findByName" parameterType="java.lang.String" resultMap="XxlJobInfo">
+		SELECT <include refid="Base_Column_List" />
+		FROM XXL_JOB_QRTZ_TRIGGER_INFO AS t
+		WHERE t.job_name = #{jobName}
 	</select>
 	
 	<update id="update" parameterType="com.xxl.job.admin.core.model.XxlJobInfo" >

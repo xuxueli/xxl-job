@@ -21,4 +21,6 @@ public interface XxlJobGroupDao {
     public int remove(@Param("id") int id);
 
     public XxlJobGroup load(@Param("id") int id);
+
+    XxlJobGroup findByAppName(String appName);
 }
