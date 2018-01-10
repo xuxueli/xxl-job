@@ -125,6 +125,8 @@ public class JobFailMonitorHelper {
 			"      <tr>\n" +
 			"         <td>执行器</td>\n" +
 			"         <td>任务ID</td>\n" +
+			"         <td>任务名称</td>\n" +
+			"         <td>任务Handler</td>\n" +
 			"         <td>任务描述</td>\n" +
 			"         <td>告警类型</td>\n" +
 			"      </tr>\n" +
@@ -134,6 +136,8 @@ public class JobFailMonitorHelper {
 			"         <td>{0}</td>\n" +
 			"         <td>{1}</td>\n" +
 			"         <td>{2}</td>\n" +
+			"         <td>{3}</td>\n" +
+			"         <td>{4}</td>\n" +
 			"         <td>调度失败</td>\n" +
 			"      </tr>\n" +
 			"   <tbody>\n" +
@@ -155,7 +159,8 @@ public class JobFailMonitorHelper {
 				XxlJobGroup group = XxlJobDynamicScheduler.xxlJobGroupDao.load(Integer.valueOf(info.getJobGroup()));
 
 				String title = "调度中心监控报警";
-				String content = MessageFormat.format(mailBodyTemplate, group!=null?group.getTitle():"null", info.getId(), info.getJobDesc());
+				String content = MessageFormat.format(mailBodyTemplate, group!=null?group.getTitle():"null", info.getId(),
+						info.getJobName(), info.getExecutorHandler(), info.getJobDesc());
 
 				MailUtil.sendMail(email, title, content);
 			}
