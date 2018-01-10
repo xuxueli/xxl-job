@@ -6,7 +6,7 @@
     <p align="center">
         XXL-JOB, a lightweight distributed task scheduling framework.
         <br>
-        <a href="http://www.xuxueli.com/xxl-job/"><strong>-- Browse website. --</strong></a>
+        <a href="http://www.xuxueli.com/xxl-job/"><strong>-- Home Page --</strong></a>
         <br>
         <br>
         <a href="https://travis-ci.org/xuxueli/xxl-job">
