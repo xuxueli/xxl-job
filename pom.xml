@@ -45,6 +45,8 @@
 		<quartz.version>2.3.0</quartz.version>
 
 		<spring-boot.version>1.5.9.RELEASE</spring-boot.version>
+
+		<fastjson.version>1.2.23</fastjson.version>
 	</properties>
 
 	<build>
