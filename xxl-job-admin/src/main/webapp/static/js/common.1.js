@@ -68,7 +68,7 @@ $(function(){
 		}
 	});
 	$(slideToTop).click(function () {
-		$("body").animate({
+		$("html,body").animate({		// firefox ie not support body, chrome support body. but found that new version chrome not support body too.
 			scrollTop: 0
 		}, 100);
 	});
