@@ -10,14 +10,20 @@ import org.springframework.core.io.support.PropertiesLoaderUtils;
 import java.io.IOException;
 import java.util.Properties;
 
+/**
+ * i18n util
+ *
+ * @author xuxueli 2018-01-17 20:39:06
+ */
 public class I18nUtil {
     private static Logger logger = LoggerFactory.getLogger(I18nUtil.class);
 
     private static final String i18n_file = "i18n/message.properties";
     private static Properties prop = null;
+    private static boolean prop_cache = false;
 
     public static Properties loadI18nProp(){
-        if (prop == null) {
+        if (prop_cache && prop == null) {
             try {
                 Resource resource = new ClassPathResource(i18n_file);
                 EncodedResource encodedResource = new EncodedResource(resource,"UTF-8");

@@ -53,7 +53,17 @@
 
 	<#-- common -->
     <script src="${request.contextPath}/static/js/common.1.js"></script>
-    <script>var base_url = '${request.contextPath}';</script>
+    <script>
+		var base_url = '${request.contextPath}';
+
+		var system_tips = '${I18nUtil.getString("system_tips")}';
+        var system_ok = '${I18nUtil.getString("system_ok")}';
+        var system_close = '${I18nUtil.getString("system_close")}';
+
+        var logout_confirm = '${I18nUtil.getString("logout_confirm")}';
+        var logout_success = '${I18nUtil.getString("logout_success")}';
+        var logout_fail = '${I18nUtil.getString("logout_fail")}';
+	</script>
 
 </#macro>
 
@@ -61,7 +71,7 @@
 	<header class="main-header">
 		<a href="${request.contextPath}/" class="logo">
 			<span class="logo-mini"><b>XXL</b></span>
-			<span class="logo-lg"><b>任务调度中心</b></span>
+			<span class="logo-lg"><b>${I18nUtil.getString("admin_name")}</b></span>
 		</a>
 		<nav class="navbar navbar-static-top" role="navigation">
 			<a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button"><span class="sr-only">切换导航</span></a>
@@ -69,7 +79,7 @@
 				<ul class="nav navbar-nav">
 					<li class="dropdown user user-menu">
 	                    <a href=";" id="logoutBtn" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                      		<span class="hidden-xs">注销</span>
+                      		<span class="hidden-xs">${I18nUtil.getString("logout_btn")}</span>
 	                    </a>
 					</li>
 				</ul>
@@ -175,7 +185,7 @@
 
 <#macro commonFooter >
 	<footer class="main-footer">
-        Powered by <b>XXL-JOB</b> 1.9.1（快照版本）
+        Powered by <b>XXL-JOB</b> 1.9.1（SNAPSHOT）
 		<div class="pull-right hidden-xs">
             <strong>Copyright &copy; 2015-${.now?string('yyyy')} &nbsp;
                 <a href="http://www.xuxueli.com/" target="_blank" >xuxueli</a>

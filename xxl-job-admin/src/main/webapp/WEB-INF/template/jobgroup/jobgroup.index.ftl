@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  	<title>任务调度中心</title>
+    <title>${I18nUtil.getString("admin_name")}</title>
   	<#import "/common/common.macro.ftl" as netCommon>
 	<@netCommon.commonStyle />
 	<!-- DataTables -->
@@ -18,7 +18,7 @@
 	<div class="content-wrapper">
 		<!-- Content Header (Page header) -->
 		<section class="content-header">
-			<h1>执行器管理<small>任务调度中心</small></h1>
+			<h1>执行器管理</h1>
 		</section>
 
 		<!-- Main content -->

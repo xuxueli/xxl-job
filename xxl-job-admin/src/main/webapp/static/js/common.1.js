@@ -2,12 +2,12 @@ $(function(){
 
 	// logout
 	$("#logoutBtn").click(function(){
-		layer.confirm('确认注销登录?', {icon: 3, title:'系统提示'}, function(index){
+		layer.confirm(logout_confirm, {icon: 3, title:system_tips}, function(index){
 			layer.close(index);
 
 			$.post(base_url + "/logout", function(data, status) {
 				if (data.code == "200") {
-                    layer.msg('注销成功');
+                    layer.msg(logout_success);
                     setTimeout(function(){
                         window.location.href = base_url + "/";
                     }, 500);
@@ -21,8 +21,9 @@ $(function(){
 					});*/
 				} else {
 					layer.open({
-						title: '系统提示',
-						content: (data.msg || "操作失败"),
+						title: system_tips,
+                        btn: [system_ok, system_close],
+						content: (data.msg || logout_fail),
 						icon: '2'
 					});
 				}

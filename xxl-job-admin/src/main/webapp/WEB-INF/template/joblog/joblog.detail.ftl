@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>任务调度中心</title>
+    <title>${I18nUtil.getString("admin_name")}</title>
 <#import "/common/common.macro.ftl" as netCommon>
 <@netCommon.commonStyle />
 </head>

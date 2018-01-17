@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  	<title>任务调度中心</title>
+    <title>${I18nUtil.getString("admin_name")}</title>
   	<#import "/common/common.macro.ftl" as netCommon>
 	<@netCommon.commonStyle />
 	<!-- DataTables -->
@@ -20,7 +20,7 @@
 	<div class="content-wrapper">
 		<!-- Content Header (Page header) -->
 		<section class="content-header">
-			<h1>调度日志<small>任务调度中心</small></h1>
+			<h1>调度日志</h1>
 			<!--
 			<ol class="breadcrumb">
 				<li><a><i class="fa fa-dashboard"></i>调度日志</a></li>
