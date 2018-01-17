@@ -20,7 +20,7 @@
 	<div class="content-wrapper">
 		<!-- Content Header (Page header) -->
 		<section class="content-header">
-			<h1>调度日志</h1>
+			<h1>${I18nUtil.getString("joblog_name")}</h1>
 			<!--
 			<ol class="breadcrumb">
 				<li><a><i class="fa fa-dashboard"></i>调度日志</a></li>
@@ -85,7 +85,7 @@
 			<div class="row">
 				<div class="col-xs-12">
 					<div class="box">
-			            <div class="box-header hide"><h3 class="box-title">调度日志</h3></div>
+			            <#--<div class="box-header hide"><h3 class="box-title">调度日志</h3></div>-->
 			            <div class="box-body">
 			              	<table id="joblog_list" class="table table-bordered table-striped display" width="100%" >
 				                <thead>

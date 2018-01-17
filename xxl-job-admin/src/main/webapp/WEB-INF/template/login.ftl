@@ -39,6 +39,9 @@
 	</div>
 <@netCommon.commonScript />
 <script>
+var system_tips = '${I18nUtil.getString("system_tips")}';
+var system_ok = '${I18nUtil.getString("system_ok")}';
+
 var login_username_empty = '${I18nUtil.getString("login_username_empty")}';
 var login_username_lt_5 = '${I18nUtil.getString("login_username_lt_5")}';
 
@@ -47,8 +50,6 @@ var login_password_lt_5 = '${I18nUtil.getString("login_password_lt_5")}';
 
 var login_success = '${I18nUtil.getString("login_success")}';
 var login_fail = '${I18nUtil.getString("login_fail")}';
-var system_tips = '${I18nUtil.getString("system_tips")}';
-var system_ok = '${I18nUtil.getString("system_ok")}';
 </script>
 <script src="${request.contextPath}/static/plugins/jquery/jquery.validate.min.js"></script>
 <script src="${request.contextPath}/static/adminlte/plugins/iCheck/icheck.min.js"></script>
