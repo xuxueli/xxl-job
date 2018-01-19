@@ -125,9 +125,9 @@ $(function() {
 									'<button class="btn btn-primary btn-xs job_operate" _type="job_trigger" type="button">'+ I18n.jobinfo_opt_run +'</button>  '+
 									pause_resume +
 									'<button class="btn btn-primary btn-xs" type="job_del" type="button" onclick="javascript:window.open(\'' + logUrl + '\')" >'+ I18n.jobinfo_opt_log +'</button><br>  '+
-									'<button class="btn btn-warning btn-xs update" type="button">'+ I18n.jobinfo_opt_edit +'</button>  '+
+									'<button class="btn btn-warning btn-xs update" type="button">'+ I18n.system_opt_edit +'</button>  '+
 									codeBtn +
-									'<button class="btn btn-danger btn-xs job_operate" _type="job_del" type="button">'+ I18n.jobinfo_opt_del +'</button>  '+
+									'<button class="btn btn-danger btn-xs job_operate" _type="job_del" type="button">'+ I18n.system_opt_del +'</button>  '+
 									'</p>';
 
 	                			return html;
@@ -192,7 +192,7 @@ $(function() {
 			url = base_url + "/jobinfo/resume";
 			needFresh = true;
 		} else if ("job_del" == type) {
-			typeName = I18n.jobinfo_opt_del ;
+			typeName = I18n.system_opt_del ;
 			url = base_url + "/jobinfo/remove";
 			needFresh = true;
 		} else if ("job_trigger" == type) {

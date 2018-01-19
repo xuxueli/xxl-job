@@ -4,7 +4,7 @@ $(function() {
 	$('.remove').on('click', function(){
 		var id = $(this).attr('id');
 
-		layer.confirm('确认删除分组?', {icon: 3, title:'系统提示'}, function(index){
+		layer.confirm( (I18n.system_ok + I18n.jobgroup_del + '？') , {icon: 3, title: I18n.system_tips }, function(index){
 			layer.close(index);
 
 			$.ajax({
@@ -15,8 +15,8 @@ $(function() {
 				success : function(data){
 					if (data.code == 200) {
 						layer.open({
-							title: '系统提示',
-							content: '删除成功',
+							title: I18n.system_tips ,
+							content: (I18n.jobgroup_del + I18n.system_success),
 							icon: '1',
 							end: function(layero, index){
 								window.location.reload();
@@ -24,8 +24,8 @@ $(function() {
 						});
 					} else {
 						layer.open({
-							title: '系统提示',
-							content: (data.msg || "删除失败"),
+							title: I18n.system_tips,
+							content: (data.msg || (I18n.jobgroup_del + I18n.system_fail)),
 							icon: '2'
 						});
 					}
@@ -40,7 +40,7 @@ $(function() {
 		var length = value.length;
 		var valid = /^[a-z][a-zA-Z0-9-]*$/;
 		return this.optional(element) || valid.test(value);
-	}, "限制以小写字母开头，由小写字母、数字和中划线组成");
+	}, I18n.jobgroup_field_appName_limit );
 
 	$('.add').on('click', function(){
 		$('#addModal').modal({backdrop: false, keyboard: false}).modal('show');
@@ -67,18 +67,18 @@ $(function() {
 		},
 		messages : {
 			appName : {
-				required :"请输入“AppName”",
-				rangelength:"AppName长度限制为4~64",
-				myValid01: "限制以小写字母开头，由小写字母、数字和中划线组成"
+				required : I18n.system_please_input+"AppName",
+				rangelength: I18n.jobgroup_field_appName_length ,
+				myValid01: I18n.jobgroup_field_appName_limit
 			},
 			title : {
-				required :"请输入“执行器名称”",
-				rangelength:"长度限制为4~12"
+				required : I18n.system_please_input + I18n.jobgroup_field_title ,
+				rangelength: I18n.jobgroup_field_title_length
 			},
 			order : {
-				required :"请输入“排序”",
-				digits: "请输入整数",
-				range: "取值范围为1~1000"
+				required : I18n.system_please_input + I18n.jobgroup_field_order ,
+				digits: I18n.jobgroup_field_order_digits ,
+				range: I18n.jobgroup_field_orderrange
 			}
 		},
 		highlight : function(element) {
@@ -96,8 +96,8 @@ $(function() {
 				if (data.code == "200") {
 					$('#addModal').modal('hide');
 					layer.open({
-						title: '系统提示',
-						content: '新增成功',
+						title: I18n.system_tips ,
+						content: I18n.system_add_suc ,
 						icon: '1',
 						end: function(layero, index){
 							window.location.reload();
@@ -105,8 +105,8 @@ $(function() {
 					});
 				} else {
 					layer.open({
-						title: '系统提示',
-						content: (data.msg || "新增失败"),
+						title: I18n.system_tips,
+						content: (data.msg || I18n.system_add_fail  ),
 						icon: '2'
 					});
 				}
@@ -171,20 +171,20 @@ $(function() {
 			}
 		},
 		messages : {
-			appName : {
-				required :"请输入“AppName”",
-				rangelength:"AppName长度限制为4~64",
-				myValid01: "限制以小写字母开头，由小写字母、数字和中划线组成"
-			},
-			title : {
-				required :"请输入“执行器名称”",
-				rangelength:"长度限制为4~12"
-			},
-			order : {
-				required :"请输入“排序”",
-				digits: "请输入整数",
-				range: "取值范围为1~1000"
-			}
+            appName : {
+                required : I18n.system_please_input+"AppName",
+                rangelength: I18n.jobgroup_field_appName_length ,
+                myValid01: I18n.jobgroup_field_appName_limit
+            },
+            title : {
+                required : I18n.system_please_input + I18n.jobgroup_field_title ,
+                rangelength: I18n.jobgroup_field_title_length
+            },
+            order : {
+                required : I18n.system_please_input + I18n.jobgroup_field_order ,
+                digits: I18n.jobgroup_field_order_digits ,
+                range: I18n.jobgroup_field_orderrange
+            }
 		},
 		highlight : function(element) {
 			$(element).closest('.form-group').addClass('has-error');
@@ -202,8 +202,8 @@ $(function() {
 					$('#addModal').modal('hide');
 
 					layer.open({
-						title: '系统提示',
-						content: '更新成功',
+						title: I18n.system_tips ,
+						content: I18n.system_update_suc ,
 						icon: '1',
 						end: function(layero, index){
 							window.location.reload();
@@ -211,8 +211,8 @@ $(function() {
 					});
 				} else {
 					layer.open({
-						title: '系统提示',
-						content: (data.msg || "更新失败"),
+						title: I18n.system_tips,
+						content: (data.msg || I18n.system_update_fail  ),
 						icon: '2'
 					});
 				}
