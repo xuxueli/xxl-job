@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>${I18nUtil.getString("admin_name")}</title>
-<#import "/common/common.macro.ftl" as netCommon>
-<@netCommon.commonStyle />
+    <#import "/common/common.macro.ftl" as netCommon>
+    <@netCommon.commonStyle />
+    <title>${I18n.admin_name}</title>
 </head>
 <body class="hold-transition skin-blue layout-top-nav">
 

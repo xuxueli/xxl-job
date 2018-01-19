@@ -63,7 +63,7 @@ $(function () {
                     pieChartInit(data);
                 } else {
                     layer.open({
-                        title: system_tips,
+                        title: I18n.system_tips ,
                         content: (data.msg || '调度报表数据加载异常'),
                         icon: '2'
                     });
