@@ -1,12 +1,6 @@
 $(function() {
 
 	// init code editor
-	/*var codeEditor = CodeMirror.fromTextArea(document.getElementById("glueSource"), {
-		mode : "text/x-java",
-		lineNumbers : true,
-		matchBrackets : true
-	});*/
-
 	var codeEditor;
 	function initIde(glueSource) {
 		if (codeEditor == null) {

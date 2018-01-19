@@ -1,4 +1,5 @@
 $(function() {
+
 	// init date tables
 	var jobTable = $("#job_list").dataTable({
 		"deferRender": true,
@@ -19,7 +20,7 @@ $(function() {
 	    },
 	    "searching": false,
 	    "ordering": false,
-	    //"scrollX": true,	// X轴滚动条，取消自适应
+	    //"scrollX": true,	// scroll x，close self-adaption
 	    "columns": [
 	                {
 	                	"data": 'id',
@@ -170,7 +171,7 @@ $(function() {
     // table data
     var tableData = {};
 
-	// 搜索按钮
+	// search btn
 	$('#searchBtn').on('click', function(){
 		jobTable.fnDraw();
 	});
@@ -245,15 +246,8 @@ $(function() {
 			});
 		});
 	});
-	
-	// jquery.validate 自定义校验 “英文字母开头，只含有英文字母、数字和下划线”
-	jQuery.validator.addMethod("myValid01", function(value, element) {
-		var length = value.length;
-		var valid = /^[a-zA-Z][a-zA-Z0-9_]*$/;
-		return this.optional(element) || valid.test(value);
-	}, "只支持英文字母开头，只含有英文字母、数字和下划线");
-	
-	// 新增
+
+	// add
 	$(".add").click(function(){
 		$('#addModal').modal({backdrop: false, keyboard: false}).modal('show');
 	});
@@ -327,7 +321,7 @@ $(function() {
 	});
 
 
-    // 运行模式
+    // glueType change
     $(".glueType").change(function(){
 		// executorHandler
         var $executorHandler = $(this).parents("form").find("input[name='executorHandler']");
@@ -354,7 +348,7 @@ $(function() {
 		}
 	});
 
-	// 更新
+	// update
 	$("#job_list").on('click', '.update',function() {
 
         var id = $(this).parent('p').attr("id");

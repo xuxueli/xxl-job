@@ -35,12 +35,12 @@ $(function() {
 
 	});
 
-	// jquery.validate 自定义校验 “英文字母开头，只含有英文字母、数字和下划线”
+	// jquery.validate “low letters start, limit contants、 letters、numbers and line-through.”
 	jQuery.validator.addMethod("myValid01", function(value, element) {
 		var length = value.length;
 		var valid = /^[a-z][a-zA-Z0-9-]*$/;
 		return this.optional(element) || valid.test(value);
-	}, "限制以小写字母开头，由小写字母、数字和下划线组成");
+	}, "限制以小写字母开头，由小写字母、数字和中划线组成");
 
 	$('.add').on('click', function(){
 		$('#addModal').modal({backdrop: false, keyboard: false}).modal('show');
@@ -119,7 +119,7 @@ $(function() {
 		$("#addModal .form .form-group").removeClass("has-error");
 	});
 
-	// 注册方式，切换
+	// addressType change
 	$("#addModal input[name=addressType], #updateModal input[name=addressType]").click(function(){
 		var addressType = $(this).val();
 		var $addressList = $(this).parents("form").find("textarea[name=addressList]");

@@ -3,7 +3,7 @@
  */
 $(function () {
 
-    // 过滤时间
+    // filter Time
     var _startDate = moment().subtract(1, 'months');    // 默认，最近一月
     var _endDate = moment();
     $('#filterTime').daterangepicker({
@@ -43,7 +43,7 @@ $(function () {
     freshChartDate(_startDate, _endDate);
 
     /**
-     * 刷新报表
+     * fresh Chart Date
      *
      * @param startDate
      * @param endDate
@@ -73,7 +73,7 @@ $(function () {
     }
 
     /**
-     * 折线图
+     * line Chart Init
      */
     function lineChartInit(data) {
         var option = {
@@ -145,7 +145,7 @@ $(function () {
     }
 
     /**
-     * 饼图
+     * pie Chart Init
      */
     function pieChartInit(data) {
         var option = {

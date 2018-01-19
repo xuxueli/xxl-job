@@ -1,6 +1,6 @@
 $(function() {
 
-	// 任务组列表选中, 任务列表初始化和选中
+	// jobGroup change, job list init and select
 	$("#jobGroup").on("change", function () {
 		var jobGroup = $(this).children('option:selected').val();
 		$.ajax({
@@ -33,7 +33,7 @@ $(function() {
         $("#jobGroup").change();
 	}
 
-	// 过滤时间
+	// filter Time
 	$('#filterTime').daterangepicker({
         autoApply:false,
         singleDatePicker:false,
@@ -221,18 +221,18 @@ $(function() {
 		}
 	});
 	
-	// 日志弹框提示
+	// logTips alert
 	$('#joblog_list').on('click', '.logTips', function(){
 		var msg = $(this).find('span').html();
 		ComAlertTec.show(msg);
 	});
 	
-	// 搜索按钮
+	// search Btn
 	$('#searchBtn').on('click', function(){
 		logTable.fnDraw();
 	});
 	
-	// 查看执行器详细执行日志
+	// logDetail look
 	$('#joblog_list').on('click', '.logDetail', function(){
 		var _id = $(this).attr('_id');
 		
@@ -241,7 +241,7 @@ $(function() {
 	});
 
 	/**
-	 * 终止任务
+	 * log Kill
 	 */
 	$('#joblog_list').on('click', '.logKill', function(){
 		var _id = $(this).attr('_id');
@@ -278,7 +278,7 @@ $(function() {
 	});
 
 	/**
-	 * 清理任务Log
+	 * clear Log
 	 */
 	$('#clearLog').on('click', function(){
 
@@ -325,7 +325,7 @@ $(function() {
 });
 
 
-// 提示-科技主题
+// Com Alert by Tec theme
 var ComAlertTec = {
 	html:function(){
 		var html =
@@ -349,7 +349,7 @@ var ComAlertTec = {
 			$('body').append(ComAlertTec.html());
 		}
 
-		// 弹框初始
+		// init com alert
 		$('#ComAlertTec .alert').html(msg);
 		$('#ComAlertTec').modal('show');
 
