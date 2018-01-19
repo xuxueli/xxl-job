@@ -4,8 +4,17 @@
 $(function () {
 
     // filter Time
-    var _startDate = moment().subtract(1, 'months');    // 默认，最近一月
+    var _startDate = moment().subtract(1, 'months');    // default，recent_month
     var _endDate = moment();
+
+    var rangesConf = {};
+    rangesConf[I18n.daterangepicker_ranges_today] = [moment().startOf('day'), moment().endOf('day')];
+    rangesConf[I18n.daterangepicker_ranges_yesterday] = [moment().subtract(1, 'days').startOf('day'), moment().subtract(1, 'days').endOf('day')];
+    rangesConf[I18n.daterangepicker_ranges_this_month] = [moment().startOf('month'), moment().endOf('month')];
+    rangesConf[I18n.daterangepicker_ranges_last_month] = [moment().subtract(1, 'months').startOf('month'), moment().subtract(1, 'months').endOf('month')];
+    rangesConf[I18n.daterangepicker_ranges_recent_week] = [moment().subtract(1, 'weeks'), moment()];
+    rangesConf[I18n.daterangepicker_ranges_recent_month] = [_startDate, _endDate];
+
     $('#filterTime').daterangepicker({
         autoApply:false,
         singleDatePicker:false,
@@ -14,25 +23,17 @@ $(function () {
         timePickerIncrement: 10, 	// 时间的增量，单位为分钟
         timePicker24Hour : true,
         opens : 'left', //日期选择框的弹出位置
-        ranges: {
-            //'最近1小时': [moment().subtract(1, 'hours'), moment()],
-            '今日': [moment().startOf('day'), moment().endOf('day')],
-            '昨日': [moment().subtract(1, 'days').startOf('day'), moment().subtract(1, 'days').endOf('day')],
-            '本月': [moment().startOf('month'), moment().endOf('month')],
-            '上个月': [moment().subtract(1, 'months').startOf('month'), moment().subtract(1, 'months').endOf('month')],
-            '最近1周': [moment().subtract(1, 'weeks'), moment()],
-            '最近1月': [_startDate, _endDate]
-        },
+        ranges: rangesConf,
         locale : {
             format: 'YYYY-MM-DD HH:mm:ss',
             separator : ' - ',
-            customRangeLabel : '自定义',
-            applyLabel : '确定',
-            cancelLabel : '取消',
-            fromLabel : '起始时间',
-            toLabel : '结束时间',
-            daysOfWeek : [ '日', '一', '二', '三', '四', '五', '六' ],
-            monthNames : [ '一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月' ],
+            customRangeLabel : I18n.daterangepicker_custom_name ,
+            applyLabel : I18n.system_ok ,
+            cancelLabel : I18n.system_cancel ,
+            fromLabel : I18n.daterangepicker_custom_starttime ,
+            toLabel : I18n.daterangepicker_custom_endtime ,
+            daysOfWeek : I18n.daterangepicker_custom_daysofweek.split(',') ,        // '日', '一', '二', '三', '四', '五', '六'
+            monthNames : I18n.daterangepicker_custom_monthnames.split(',') ,        // '一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'
             firstDay : 1
         },
         startDate:_startDate,
@@ -64,7 +65,7 @@ $(function () {
                 } else {
                     layer.open({
                         title: I18n.system_tips ,
-                        content: (data.msg || '调度报表数据加载异常'),
+                        content: (data.msg || I18n.job_dashboard_report_loaddata_fail ),
                         icon: '2'
                     });
                 }
@@ -78,7 +79,7 @@ $(function () {
     function lineChartInit(data) {
         var option = {
                title: {
-                   text: '日期分布图'
+                   text: I18n.job_dashboard_date_report
                },
                tooltip : {
                    trigger: 'axis',
@@ -90,7 +91,7 @@ $(function () {
                    }
                },
                legend: {
-                   data:['成功调度次数','失败调度次数']
+                   data:[I18n.job_dashboard_date_report_suc_count, I18n.job_dashboard_date_report_fail_count]
                },
                toolbox: {
                    feature: {
@@ -117,16 +118,16 @@ $(function () {
                ],
                series : [
                    {
-                       name:'成功调度次数',
+                       name:I18n.job_dashboard_date_report_suc_count,
                        type:'line',
-                       stack: '总量',
+                       stack: 'Total',
                        areaStyle: {normal: {}},
                        data: data.content.triggerDayCountSucList
                    },
                    {
-                       name:'失败调度次数',
+                       name:I18n.job_dashboard_date_report_fail_count,
                        type:'line',
-                       stack: '总量',
+                       stack: 'Total',
                        label: {
                            normal: {
                                show: true,
@@ -150,7 +151,7 @@ $(function () {
     function pieChartInit(data) {
         var option = {
             title : {
-                text: '成功比例图',
+                text: I18n.job_dashboard_rate_report ,
                 /*subtext: 'subtext',*/
                 x:'center'
             },
@@ -161,7 +162,7 @@ $(function () {
             legend: {
                 orient: 'vertical',
                 left: 'left',
-                data: ['成功调度次数','失败调度次数']
+                data: [I18n.job_dashboard_rate_report_suc_count, I18n.job_dashboard_rate_report_fail_count ]
             },
             series : [
                 {
@@ -172,11 +173,11 @@ $(function () {
                     data:[
                         {
                             value:data.content.triggerCountSucTotal,
-                            name:'成功调度次数'
+                            name:I18n.job_dashboard_rate_report_suc_count
                         },
                         {
                             value:data.content.triggerCountFailTotal,
-                            name:'失败调度次数'
+                            name:I18n.job_dashboard_rate_report_fail_count
                         }
                     ],
                     itemStyle: {
