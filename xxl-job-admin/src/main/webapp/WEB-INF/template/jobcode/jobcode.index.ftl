@@ -87,19 +87,19 @@
         <div class="modal-dialog ">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title" ><i class="fa fa-fw fa-save"></i>保存</h4>
+                    <h4 class="modal-title" ><i class="fa fa-fw fa-save"></i>${I18n.system_save}</h4>
                 </div>
                 <div class="modal-body">
                     <form class="form-horizontal form" role="form" >
                         <div class="form-group">
-                            <label for="lastname" class="col-sm-2 control-label">源码备注<font color="red">*</font></label>
-                            <div class="col-sm-10"><input type="text" class="form-control" id="glueRemark" placeholder="请输入备注信息" maxlength="64" ></div>
+                            <label for="lastname" class="col-sm-2 control-label">${I18n.jobinfo_glue_remark}<font color="red">*</font></label>
+                            <div class="col-sm-10"><input type="text" class="form-control" id="glueRemark" placeholder="${I18n.system_please_input}${I18n.jobinfo_glue_remark}" maxlength="64" ></div>
                         </div>
                         <hr>
                         <div class="form-group">
                             <div class="col-sm-offset-3 col-sm-6">
-                                <button type="button" class="btn btn-primary ok" >保存</button>
-                                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                                <button type="button" class="btn btn-primary ok" >${I18n.system_save}</button>
+                                <button type="button" class="btn btn-default" data-dismiss="modal">${I18n.system_cancel}</button>
                             </div>
                         </div>
                     </form>
