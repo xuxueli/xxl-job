@@ -38,15 +38,15 @@ $(function() {
 		
 		if (!glueRemark) {
 			layer.open({
-				title: '系统提示',
-				content: '请输入备注',
+				title: I18n.system_tips,
+				content: I18n.system_please_input + I18n.jobinfo_glue_remark ,
 				icon: '2'
 			});
 			return;
 		}
 		if (glueRemark.length <4 || glueRemark.length > 100) {
 			layer.open({
-				title: '系统提示',
+				title: I18n.system_tips ,
 				content: '备注长度应该在4至100之间',
 				icon: '2'
 			});
@@ -65,7 +65,7 @@ $(function() {
 			success : function(data){
 				if (data.code == 200) {
 					layer.open({
-						title: '系统提示',
+						title: I18n.system_tips,
 						content: '保存成功',
 						icon: '1',
 						end: function(layero, index){
@@ -75,7 +75,7 @@ $(function() {
 					});
 				} else {
 					layer.open({
-						title: '系统提示',
+						title: I18n.system_tips,
 						content: (data.msg || "保存失败"),
 						icon: '2'
 					});
