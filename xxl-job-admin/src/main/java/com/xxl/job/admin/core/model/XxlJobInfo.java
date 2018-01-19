@@ -9,8 +9,10 @@ import java.util.Date;
 public class XxlJobInfo {
 	
 	private int id;				// 主键ID	    (JobKey.name)
-	
+
+    private String jobName;     //任务名  全局唯一
 	private int jobGroup;		// 执行器主键ID	(JobKey.group)
+	private String jobGroupAppName;
 	private String jobCron;		// 任务执行CRON表达式 【base on quartz】
 	private String jobDesc;
 	
@@ -35,6 +37,22 @@ public class XxlJobInfo {
 	
 	// copy from quartz
 	private String jobStatus;		// 任务状态 【base on quartz】
+
+    public String getJobName() {
+        return jobName;
+    }
+
+    public void setJobName(String jobName) {
+        this.jobName = jobName;
+    }
+
+    public String getJobGroupAppName() {
+		return jobGroupAppName;
+	}
+
+	public void setJobGroupAppName(String jobGroupAppName) {
+		this.jobGroupAppName = jobGroupAppName;
+	}
 
 	public int getId() {
 		return id;

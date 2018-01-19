@@ -60,4 +60,10 @@
 		WHERE t.id = #{id}
 	</select>
 
+	<select id="findByAppName" parameterType="java.lang.String" resultMap="XxlJobGroup">
+        SELECT <include refid="Base_Column_List" />
+        FROM XXL_JOB_QRTZ_TRIGGER_GROUP AS t
+        WHERE t.app_name = #{appName}
+    </select>
+
 </mapper>

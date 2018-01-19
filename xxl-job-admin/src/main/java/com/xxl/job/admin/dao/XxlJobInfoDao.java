@@ -33,6 +33,8 @@ public interface XxlJobInfoDao {
 
 	public List<XxlJobInfo> getJobsByGroup(@Param("jobGroup") int jobGroup);
 
+	XxlJobInfo findByName(String name);
+
 	public int findAllCount();
 
 }

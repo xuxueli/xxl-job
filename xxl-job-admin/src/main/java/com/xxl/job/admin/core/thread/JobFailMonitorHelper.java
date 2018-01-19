@@ -120,13 +120,17 @@ public class JobFailMonitorHelper {
 
 	// email alarm template
 	private static final String mailBodyTemplate = "<h5>监控告警明细：</span>" +
-			"<table border=\"1\" cellpadding=\"3\" style=\"border-collapse:collapse; width:80%;\" >\n" +
+			"<table border=\"1\" cellpadding=\"3\" style=\"border-collapse:collapse; width:auto; overflow: scroll;\" >\n" +
 			"   <thead style=\"font-weight: bold;color: #ffffff;background-color: #ff8c00;\" >" +
 			"      <tr>\n" +
 			"         <td>执行器</td>\n" +
 			"         <td>任务ID</td>\n" +
+			"         <td>任务名称</td>\n" +
+			"         <td>任务Handler</td>\n" +
 			"         <td>任务描述</td>\n" +
+			"         <td>执行地址</td>\n" +
 			"         <td>告警类型</td>\n" +
+			"         <td>错误信息</td>\n" +
 			"      </tr>\n" +
 			"   <thead/>\n" +
 			"   <tbody>\n" +
@@ -134,7 +138,11 @@ public class JobFailMonitorHelper {
 			"         <td>{0}</td>\n" +
 			"         <td>{1}</td>\n" +
 			"         <td>{2}</td>\n" +
+			"         <td>{3}</td>\n" +
+			"         <td>{4}</td>\n" +
+			"         <td>{5}</td>\n" +
 			"         <td>调度失败</td>\n" +
+			"         <td>{6}</td>\n" +
 			"      </tr>\n" +
 			"   <tbody>\n" +
 			"</table>";
@@ -155,7 +163,8 @@ public class JobFailMonitorHelper {
 				XxlJobGroup group = XxlJobDynamicScheduler.xxlJobGroupDao.load(Integer.valueOf(info.getJobGroup()));
 
 				String title = "调度中心监控报警";
-				String content = MessageFormat.format(mailBodyTemplate, group!=null?group.getTitle():"null", info.getId(), info.getJobDesc());
+				String content = MessageFormat.format(mailBodyTemplate, group!=null?group.getTitle():"null", info.getId(),
+						info.getJobName(), info.getExecutorHandler(), info.getJobDesc(), jobLog.getExecutorAddress(), jobLog.getHandleMsg());
 
 				MailUtil.sendMail(email, title, content);
 			}

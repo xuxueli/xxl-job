@@ -62,6 +62,10 @@ public class JobGroupController {
 			}
 		}
 
+		if (xxlJobGroupDao.findByAppName(xxlJobGroup.getAppName()) != null) {
+            return new ReturnT<String>(500, "AppName已存在!");
+        }
+
 		int ret = xxlJobGroupDao.save(xxlJobGroup);
 		return (ret>0)?ReturnT.SUCCESS:ReturnT.FAIL;
 	}
@@ -90,6 +94,11 @@ public class JobGroupController {
 				}
 			}
 		}
+
+        XxlJobGroup group = xxlJobGroupDao.findByAppName(xxlJobGroup.getAppName());
+        if (group != null && group.getId() != xxlJobGroup.getId()) {
+            return new ReturnT<String>(500, "AppName已存在!");
+        }
 
 		int ret = xxlJobGroupDao.update(xxlJobGroup);
 		return (ret>0)?ReturnT.SUCCESS:ReturnT.FAIL;

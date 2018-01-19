@@ -151,6 +151,7 @@ CREATE TABLE XXL_JOB_QRTZ_LOCKS
 
 CREATE TABLE `XXL_JOB_QRTZ_TRIGGER_INFO` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `job_name` varchar(100) NULL UNIQUE,
   `job_group` int(11) NOT NULL COMMENT '执行器主键ID',
   `job_cron` varchar(128) NOT NULL COMMENT '任务执行CRON',
   `job_desc` varchar(255) NOT NULL,
@@ -210,8 +211,8 @@ CREATE TABLE XXL_JOB_QRTZ_TRIGGER_REGISTRY (
 
 CREATE TABLE `XXL_JOB_QRTZ_TRIGGER_GROUP` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `app_name` varchar(64) NOT NULL COMMENT '执行器AppName',
-  `title` varchar(12) NOT NULL COMMENT '执行器名称',
+  `app_name` varchar(64) NOT NULL UNIQUE COMMENT '执行器AppName' ,
+  `title` varchar(100) NOT NULL COMMENT '执行器名称',
   `order` tinyint(4) NOT NULL DEFAULT '0' COMMENT '排序',
   `address_type` tinyint(4) NOT NULL DEFAULT '0' COMMENT '执行器地址类型：0=自动注册、1=手动录入',
   `address_list` varchar(512) DEFAULT NULL COMMENT '执行器地址列表，多地址逗号分隔',

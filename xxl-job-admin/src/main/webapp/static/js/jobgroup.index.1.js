@@ -38,7 +38,7 @@ $(function() {
 	// jquery.validate 自定义校验 “英文字母开头，只含有英文字母、数字和下划线”
 	jQuery.validator.addMethod("myValid01", function(value, element) {
 		var length = value.length;
-		var valid = /^[a-z][a-zA-Z0-9-]*$/;
+		var valid = /^[a-z][a-zA-Z0-9_]*$/;
 		return this.optional(element) || valid.test(value);
 	}, "限制以小写字母开头，由小写字母、数字和下划线组成");
 
@@ -57,7 +57,7 @@ $(function() {
 			},
 			title : {
 				required : true,
-				rangelength:[4, 12]
+				rangelength:[4, 100]
 			},
 			order : {
 				required : true,
@@ -73,7 +73,7 @@ $(function() {
 			},
 			title : {
 				required :"请输入“执行器名称”",
-				rangelength:"长度限制为4~12"
+				rangelength:"长度限制为4~100"
 			},
 			order : {
 				required :"请输入“排序”",
@@ -162,7 +162,7 @@ $(function() {
 			},
 			title : {
 				required : true,
-				rangelength:[4, 12]
+				rangelength:[4, 100]
 			},
 			order : {
 				required : true,
@@ -178,7 +178,7 @@ $(function() {
 			},
 			title : {
 				required :"请输入“执行器名称”",
-				rangelength:"长度限制为4~12"
+				rangelength:"长度限制为4~100"
 			},
 			order : {
 				required :"请输入“排序”",

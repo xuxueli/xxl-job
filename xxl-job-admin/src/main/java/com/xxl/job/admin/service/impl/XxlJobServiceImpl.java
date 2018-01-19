@@ -22,6 +22,8 @@ import org.quartz.SchedulerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import javax.annotation.Resource;
 import java.text.MessageFormat;
@@ -142,6 +144,60 @@ public class XxlJobServiceImpl implements XxlJobService {
             }
             return new ReturnT<String>(ReturnT.FAIL_CODE, "新增任务失败:" + e.getMessage());
         }
+	}
+
+    private XxlJobGroup createGroup(String appName) {
+        if (StringUtils.isEmpty(appName)) {
+            return null;
+        }
+        XxlJobGroup group = new XxlJobGroup();
+        group.setAppName(appName);
+        group.setTitle("AUTO.".concat(appName));
+        group.setOrder(1);
+        group.setAddressType(0);
+        int i = 0;
+        try {
+            i = xxlJobGroupDao.save(group);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+
+        if (i == 0) {
+            return null;
+        }
+        return group;
+    }
+
+    @Transactional
+	@Override
+	public ReturnT<String> addInternal(XxlJobInfo jobInfo) {
+        if (StringUtils.isEmpty(jobInfo.getJobName())) {
+            return new ReturnT<String>(ReturnT.FAIL_CODE, "jobName不能为空!");
+        } else {
+            XxlJobInfo xxlJobInfo = xxlJobInfoDao.findByName(jobInfo.getJobName());
+            if (xxlJobInfo != null) {
+                jobInfo.setId(-1);
+                return new ReturnT<String>(ReturnT.SUCCESS_CODE, "jobName已存在!");
+            }
+        }
+
+        // valid
+        XxlJobGroup group = xxlJobGroupDao.load(jobInfo.getJobGroup());
+        if (group == null) {// id 不存在 则使用appName
+            group = xxlJobGroupDao.findByAppName(jobInfo.getJobGroupAppName());
+            if (group == null) {
+                group = createGroup(jobInfo.getJobGroupAppName());
+                if (group == null) {
+                    return new ReturnT<String>(ReturnT.FAIL_CODE, "请选择“执行器”");
+                } else {
+                    jobInfo.setJobGroup(group.getId());
+                }
+            } else {
+                jobInfo.setJobGroup(group.getId());
+            }
+        }
+
+		return this.add(jobInfo);
 	}
 
 	@Override

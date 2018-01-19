@@ -152,7 +152,7 @@
                         </div>
                         <div class="form-group">
                             <label for="lastname" class="col-sm-2 control-label">名称<font color="red">*</font></label>
-                            <div class="col-sm-10"><input type="text" class="form-control" name="title" placeholder="请输入“名称”" maxlength="12" ></div>
+                            <div class="col-sm-10"><input type="text" class="form-control" name="title" placeholder="请输入“名称”" maxlength="100" ></div>
                         </div>
                         <div class="form-group">
                             <label for="lastname" class="col-sm-2 control-label">排序<font color="red">*</font></label>
