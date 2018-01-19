@@ -23,14 +23,16 @@ public class I18nUtil {
     private static boolean prop_cache = false;
 
     public static Properties loadI18nProp(){
-        if (prop_cache && prop == null) {
-            try {
-                Resource resource = new ClassPathResource(i18n_file);
-                EncodedResource encodedResource = new EncodedResource(resource,"UTF-8");
-                prop = PropertiesLoaderUtils.loadProperties(encodedResource);
-            } catch (IOException e) {
-                logger.error(e.getMessage(), e);
-            }
+        if (prop_cache && prop != null) {
+            return prop;
+        }
+
+        try {
+            Resource resource = new ClassPathResource(i18n_file);
+            EncodedResource encodedResource = new EncodedResource(resource,"UTF-8");
+            prop = PropertiesLoaderUtils.loadProperties(encodedResource);
+        } catch (IOException e) {
+            logger.error(e.getMessage(), e);
         }
         return prop;
     }
