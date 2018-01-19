@@ -4,16 +4,13 @@
 $(function () {
 
     // filter Time
-    var _startDate = moment().subtract(1, 'months');    // default，recent_month
-    var _endDate = moment();
-
     var rangesConf = {};
     rangesConf[I18n.daterangepicker_ranges_today] = [moment().startOf('day'), moment().endOf('day')];
     rangesConf[I18n.daterangepicker_ranges_yesterday] = [moment().subtract(1, 'days').startOf('day'), moment().subtract(1, 'days').endOf('day')];
     rangesConf[I18n.daterangepicker_ranges_this_month] = [moment().startOf('month'), moment().endOf('month')];
     rangesConf[I18n.daterangepicker_ranges_last_month] = [moment().subtract(1, 'months').startOf('month'), moment().subtract(1, 'months').endOf('month')];
     rangesConf[I18n.daterangepicker_ranges_recent_week] = [moment().subtract(1, 'weeks'), moment()];
-    rangesConf[I18n.daterangepicker_ranges_recent_month] = [_startDate, _endDate];
+    rangesConf[I18n.daterangepicker_ranges_recent_month] = [moment().subtract(1, 'months'), moment()];
 
     $('#filterTime').daterangepicker({
         autoApply:false,
@@ -36,12 +33,12 @@ $(function () {
             monthNames : I18n.daterangepicker_custom_monthnames.split(',') ,        // '一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'
             firstDay : 1
         },
-        startDate:_startDate,
-        endDate: _endDate
+        startDate: rangesConf[I18n.daterangepicker_ranges_recent_month][0] ,
+        endDate: rangesConf[I18n.daterangepicker_ranges_recent_month][1]
     }, function (start, end, label) {
         freshChartDate(start, end);
     });
-    freshChartDate(_startDate, _endDate);
+    freshChartDate(rangesConf[I18n.daterangepicker_ranges_recent_month][0], rangesConf[I18n.daterangepicker_ranges_recent_month][1]);
 
     /**
      * fresh Chart Date

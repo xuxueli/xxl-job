@@ -21,12 +21,6 @@
 		<!-- Content Header (Page header) -->
 		<section class="content-header">
 			<h1>${I18n.joblog_name}</h1>
-			<!--
-			<ol class="breadcrumb">
-				<li><a><i class="fa fa-dashboard"></i>调度日志</a></li>
-				<li class="active">调度管理</li>
-			</ol>
-			-->
 		</section>
 		
 		<!-- Main content -->
@@ -34,9 +28,9 @@
 	    	<div class="row">
 	    		<div class="col-xs-2">
  					<div class="input-group">
-	                	<span class="input-group-addon">执行器</span>
+	                	<span class="input-group-addon">${I18n.jobinfo_field_jobgroup}</span>
                 		<select class="form-control" id="jobGroup"  paramVal="<#if jobInfo?exists>${jobInfo.jobGroup}</#if>" >
-                            <option value="0" >全部</option>
+                            <option value="0" >${I18n.system_all}</option>
                 			<#list JobGroupList as group>
                 				<option value="${group.id}" >${group.title}</option>
                 			</#list>
@@ -45,21 +39,21 @@
 	            </div>
 	            <div class="col-xs-2">
 	              	<div class="input-group">
-	                	<span class="input-group-addon">任务</span>
+	                	<span class="input-group-addon">${I18n.jobinfo_job}</span>
                         <select class="form-control" id="jobId" paramVal="<#if jobInfo?exists>${jobInfo.id}</#if>" >
-                            <option value="0" >全部</option>
+                            <option value="0" >${I18n.system_all}</option>
 						</select>
 	              	</div>
 	            </div>
 
                 <div class="col-xs-2">
                     <div class="input-group">
-                        <span class="input-group-addon">状态</span>
+                        <span class="input-group-addon">${I18n.joblog_status}</span>
                         <select class="form-control" id="logStatus" >
-                            <option value="-1" >全部</option>
-                            <option value="1" >成功</option>
-                            <option value="2" >失败</option>
-                            <option value="3" >进行中</option>
+                            <option value="-1" >${I18n.joblog_status_all}</option>
+                            <option value="1" >${I18n.joblog_status_suc}</option>
+                            <option value="2" >${I18n.joblog_status_fail}</option>
+                            <option value="3" >${I18n.joblog_status_running}</option>
                         </select>
                     </div>
                 </div>
@@ -74,11 +68,11 @@
 	            </div>
 
                 <div class="col-xs-1">
-                    <button class="btn btn-block btn-info" id="searchBtn">搜索</button>
+                    <button class="btn btn-block btn-info" id="searchBtn">${I18n.system_search}</button>
                 </div>
 
 	            <div class="col-xs-1">
-                    <button class="btn btn-block btn-nomal" id="clearLog">清理</button>
+                    <button class="btn btn-block btn-nomal" id="clearLog">${I18n.joblog_clean}</button>
 	            </div>
           	</div>
 			
@@ -90,18 +84,18 @@
 			              	<table id="joblog_list" class="table table-bordered table-striped display" width="100%" >
 				                <thead>
 					            	<tr>
-                                        <th name="jobId" >任务ID</th>
-                                        <th name="jobGroup" >执行器ID</th>
+                                        <th name="jobId" >${I18n.jobinfo_field_id}</th>
+                                        <th name="jobGroup" >jobGroup</th>
 										<#--<th name="executorAddress" >执行器地址</th>
 										<th name="glueType" >运行模式</th>
                                       	<th name="executorParam" >任务参数</th>-->
-                                        <th name="triggerTime" >调度时间</th>
-                                        <th name="triggerCode" >调度结果</th>
-                                        <th name="triggerMsg" >调度备注</th>
-					                  	<th name="handleTime" >执行时间</th>
-					                  	<th name="handleCode" >执行结果</th>
-					                  	<th name="handleMsg" >执行备注</th>
-					                  	<th name="handleMsg" >操作</th>
+                                        <th name="triggerTime" >${I18n.joblog_field_triggerTime}</th>
+                                        <th name="triggerCode" >${I18n.joblog_field_triggerCode}</th>
+                                        <th name="triggerMsg" >${I18n.joblog_field_triggerMsg}</th>
+					                  	<th name="handleTime" >${I18n.joblog_field_handleTime}</th>
+					                  	<th name="handleCode" >${I18n.joblog_field_handleCode}</th>
+					                  	<th name="handleMsg" >${I18n.joblog_field_handleMsg}</th>
+					                  	<th name="handleMsg" >${I18n.system_opt}</th>
 					                </tr>
 				                </thead>
 				                <tbody></tbody>
@@ -122,12 +116,12 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" >日志清理</h4>
+                <h4 class="modal-title" >${I18n.joblog_clean_log}</h4>
             </div>
             <div class="modal-body">
                 <form class="form-horizontal form" role="form" >
                     <div class="form-group">
-                        <label class="col-sm-3 control-label"">执行器：</label>
+                        <label class="col-sm-3 control-label"">${I18n.jobinfo_field_jobgroup}：</label>
                         <div class="col-sm-9">
                             <input type="text" class="form-control jobGroupText" readonly >
 							<input type="hidden" name="jobGroup" >
@@ -135,7 +129,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label class="col-sm-3 control-label"">任务：</label>
+                        <label class="col-sm-3 control-label"">${I18n.jobinfo_job}：</label>
                         <div class="col-sm-9">
                             <input type="text" class="form-control jobIdText" readonly >
                             <input type="hidden" name="jobId" >
@@ -143,18 +137,18 @@
                     </div>
 
                     <div class="form-group">
-                        <label class="col-sm-3 control-label"">清理类型：</label>
+                        <label class="col-sm-3 control-label"">${I18n.joblog_clean_type}：</label>
                         <div class="col-sm-9">
                             <select class="form-control" name="type" >
-                                <option value="1" >清理一个月之前日志数据</option>
-                                <option value="2" >清理三个月之前日志数据</option>
-                                <option value="3" >清理六个月之前日志数据</option>
-                                <option value="4" >清理一年之前日志数据</option>
-                                <option value="5" >清理一千条以前日志数据</option>
-                                <option value="6" >清理一万条以前日志数据</option>
-                                <option value="7" >清理三万条以前日志数据</option>
-                                <option value="8" >清理十万条以前日志数据</option>
-                                <option value="9" >清理所有日志数据</option>
+                                <option value="1" >${I18n.joblog_clean_type_1}</option>
+                                <option value="2" >${I18n.joblog_clean_type_2}</option>
+                                <option value="3" >${I18n.joblog_clean_type_3}</option>
+                                <option value="4" >${I18n.joblog_clean_type_4}</option>
+                                <option value="5" >${I18n.joblog_clean_type_5}</option>
+                                <option value="6" >${I18n.joblog_clean_type_6}</option>
+                                <option value="7" >${I18n.joblog_clean_type_7}</option>
+                                <option value="8" >${I18n.joblog_clean_type_8}</option>
+                                <option value="9" >${I18n.joblog_clean_type_9}</option>
                             </select>
                         </div>
                     </div>
@@ -162,8 +156,8 @@
                     <hr>
                     <div class="form-group">
                         <div class="col-sm-offset-3 col-sm-6">
-                            <button type="button" class="btn btn-primary ok" >确定</button>
-                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                            <button type="button" class="btn btn-primary ok" >${I18n.system_ok}</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">${I18n.system_cancel}</button>
                         </div>
                     </div>
                 </form>
@@ -173,6 +167,12 @@
 </div>
 
 <@netCommon.commonScript />
+<script>
+    var GlueTypeEnum = {};
+    <#list GlueTypeEnum as item>
+    GlueTypeEnum['${item}'] = '${item.desc}';
+    </#list>
+</script>
 <!-- DataTables -->
 <script src="${request.contextPath}/static/adminlte/plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="${request.contextPath}/static/adminlte/plugins/datatables/dataTables.bootstrap.min.js"></script>

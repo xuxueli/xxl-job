@@ -11,7 +11,7 @@ $(function() {
 			dataType : "json",
 			success : function(data){
 				if (data.code == 200) {
-					$("#jobId").html('<option value="0" >全部</option>');
+					$("#jobId").html( '<option value="0" >'+ I18n.system_all +'</option>' );
 					$.each(data.content, function (n, value) {
                         $("#jobId").append('<option value="' + value.id + '" >' + value.jobDesc + '</option>');
                     });
@@ -20,8 +20,8 @@ $(function() {
                     }
 				} else {
 					layer.open({
-						title: '系统提示',
-						content: (data.msg || "接口异常"),
+						title: I18n.system_tips ,
+						content: (data.msg || I18n.system_api_error ),
 						icon: '2'
 					});
 				}
@@ -34,6 +34,15 @@ $(function() {
 	}
 
 	// filter Time
+    var rangesConf = {};
+    rangesConf[I18n.daterangepicker_ranges_recent_hour] = [moment().subtract(1, 'hours'), moment()];
+    rangesConf[I18n.daterangepicker_ranges_today] = [moment().startOf('day'), moment().endOf('day')];
+    rangesConf[I18n.daterangepicker_ranges_yesterday] = [moment().subtract(1, 'days').startOf('day'), moment().subtract(1, 'days').endOf('day')];
+    rangesConf[I18n.daterangepicker_ranges_this_month] = [moment().startOf('month'), moment().endOf('month')];
+    rangesConf[I18n.daterangepicker_ranges_last_month] = [moment().subtract(1, 'months').startOf('month'), moment().subtract(1, 'months').endOf('month')];
+    rangesConf[I18n.daterangepicker_ranges_recent_week] = [moment().subtract(1, 'weeks'), moment()];
+    rangesConf[I18n.daterangepicker_ranges_recent_month] = [moment().subtract(1, 'months'), moment()];
+
 	$('#filterTime').daterangepicker({
         autoApply:false,
         singleDatePicker:false,
@@ -42,29 +51,21 @@ $(function() {
 		timePickerIncrement: 10, 	// 时间的增量，单位为分钟
         timePicker24Hour : true,
         opens : 'left', //日期选择框的弹出位置
-		ranges: {
-			'最近1小时': [moment().subtract(1, 'hours'), moment()],
-			'今日': [moment().startOf('day'), moment().endOf('day')],
-			'昨日': [moment().subtract(1, 'days').startOf('day'), moment().subtract(1, 'days').endOf('day')],
-			'最近7日': [moment().subtract(6, 'days'), moment()],
-			'最近30日': [moment().subtract(29, 'days'), moment()],
-			'本月': [moment().startOf('month'), moment().endOf('month')],
-			'上个月': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-		},
+		ranges: rangesConf,
         locale : {
             format: 'YYYY-MM-DD HH:mm:ss',
             separator : ' - ',
-        	customRangeLabel : '自定义',
-            applyLabel : '确定',
-            cancelLabel : '取消',
-            fromLabel : '起始时间',
-            toLabel : '结束时间',
-            daysOfWeek : [ '日', '一', '二', '三', '四', '五', '六' ],
-            monthNames : [ '一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月' ],
-            firstDay : 1,
-            startDate: moment().startOf('day'),
-            endDate: moment().endOf('day')
-        }
+            customRangeLabel : I18n.daterangepicker_custom_name ,
+            applyLabel : I18n.system_ok ,
+            cancelLabel : I18n.system_cancel ,
+            fromLabel : I18n.daterangepicker_custom_starttime ,
+            toLabel : I18n.daterangepicker_custom_endtime ,
+            daysOfWeek : I18n.daterangepicker_custom_daysofweek.split(',') ,        // '日', '一', '二', '三', '四', '五', '六'
+            monthNames : I18n.daterangepicker_custom_monthnames.split(',') ,        // '一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'
+            firstDay : 1
+        },
+        startDate: rangesConf[I18n.daterangepicker_ranges_today][0],
+        endDate: rangesConf[I18n.daterangepicker_ranges_today][1]
 	});
 
 	// init date tables
@@ -94,23 +95,16 @@ $(function() {
 						"visible" : true,
                         "width":'10%',
 						"render": function ( data, type, row ) {
-							var glueTypeTitle = row.glueType;
-							if ('GLUE_GROOVY'==row.glueType) {
-								glueTypeTitle = "GLUE模式(Java)";
-							} else if ('GLUE_SHELL'==row.glueType) {
-								glueTypeTitle = "GLUE模式(Shell)";
-							} else if ('GLUE_PYTHON'==row.glueType) {
-								glueTypeTitle = "GLUE模式(Python)";
-							}else if ('GLUE_NODEJS'==row.glueType) {
-								glueTypeTitle = "GLUE模式(Nodejs)";
-							} else if ('BEAN'==row.glueType) {
-								glueTypeTitle = "BEAN模式：" + row.executorHandler;
-							}
+
+                            var glueTypeTitle = GlueTypeEnum[row.glueType];
+                            if (row.executorHandler) {
+                                glueTypeTitle = glueTypeTitle +"：" + row.executorHandler;
+                            }
 
 							var temp = '';
-							temp += '执行器地址：' + (row.executorAddress?row.executorAddress:'');
-							temp += '<br>运行模式：' + glueTypeTitle;
-							temp += '<br>任务参数：' + row.executorParam;
+							temp += I18n.joblog_field_executorAddress + '：' + (row.executorAddress?row.executorAddress:'');
+							temp += '<br>'+ I18n.jobinfo_field_gluetype +'：' + glueTypeTitle;
+							temp += '<br>'+ I18n.jobinfo_field_executorparam +'：' + row.executorParam;
 
 							return '<a class="logTips" href="javascript:;" >'+ row.jobId +'<span style="display:none;">'+ temp +'</span></a>';
 						}
@@ -129,9 +123,9 @@ $(function() {
 						"render": function ( data, type, row ) {
 							var html = data;
 							if (data == 200) {
-								html = '<span style="color: green">成功</span>';
+								html = '<span style="color: green">'+ I18n.system_success +'</span>';
 							} else if (data == 500) {
-								html = '<span style="color: red">失败</span>';
+								html = '<span style="color: red">'+ I18n.system_fail +'</span>';
 							} else if (data == 0) {
                                 html = '';
 							}
@@ -142,7 +136,7 @@ $(function() {
 						"data": 'triggerMsg',
                         "width":'12%',
 						"render": function ( data, type, row ) {
-							return data?'<a class="logTips" href="javascript:;" >查看<span style="display:none;">'+ data +'</span></a>':"无";
+							return data?'<a class="logTips" href="javascript:;" >'+ I18n.system_show +'<span style="display:none;">'+ data +'</span></a>':I18n.system_empty;
 						}
 					},
 	                { 
@@ -158,11 +152,11 @@ $(function() {
 						"render": function ( data, type, row ) {
                             var html = data;
                             if (data == 200) {
-                                html = '<span style="color: green">成功</span>';
+                                html = '<span style="color: green">'+ I18n.joblog_handleCode_200 +'</span>';
                             } else if (data == 500) {
-                                html = '<span style="color: red">失败</span>';
+                                html = '<span style="color: red">'+ I18n.joblog_handleCode_500 +'</span>';
                             } else if (data == 501) {
-                                html = '<span style="color: red">失败重试</span>';
+                                html = '<span style="color: red">'+ I18n.joblog_handleCode_501 +'</span>';
                             } else if (data == 0) {
                                 html = '';
                             }
@@ -173,7 +167,7 @@ $(function() {
 	                	"data": 'handleMsg',
                         "width":'12%',
 	                	"render": function ( data, type, row ) {
-	                		return data?'<a class="logTips" href="javascript:;" >查看<span style="display:none;">'+ data +'</span></a>':"无";
+	                		return data?'<a class="logTips" href="javascript:;" >'+ I18n.system_show +'<span style="display:none;">'+ data +'</span></a>':I18n.system_empty;
 	                	}
 	                },
 	                {
@@ -184,9 +178,9 @@ $(function() {
 	                		// better support expression or string, not function
 	                		return function () {
 		                		if (row.triggerCode == 200){
-		                			var temp = '<a href="javascript:;" class="logDetail" _id="'+ row.id +'">执行日志</a>';
+		                			var temp = '<a href="javascript:;" class="logDetail" _id="'+ row.id +'">'+ I18n.joblog_rolling_log +'</a>';
 		                			if(row.handleCode == 0){
-		                				temp += '<br><a href="javascript:;" class="logKill" _id="'+ row.id +'" style="color: red;" >终止任务</a>';
+		                				temp += '<br><a href="javascript:;" class="logKill" _id="'+ row.id +'" style="color: red;" >'+ I18n.joblog_kill_log +'</a>';
 		                			}
 		                			return temp;
 		                		}
@@ -195,30 +189,30 @@ $(function() {
 	                	}
 	                }
 	            ],
-		"language" : {
-			"sProcessing" : "处理中...",
-			"sLengthMenu" : "每页 _MENU_ 条记录",
-			"sZeroRecords" : "没有匹配结果",
-			"sInfo" : "第 _PAGE_ 页 ( 总共 _PAGES_ 页，_TOTAL_ 条记录 )",
-			"sInfoEmpty" : "无记录",
-			"sInfoFiltered" : "(由 _MAX_ 项结果过滤)",
-			"sInfoPostFix" : "",
-			"sSearch" : "搜索:",
-			"sUrl" : "",
-			"sEmptyTable" : "表中数据为空",
-			"sLoadingRecords" : "载入中...",
-			"sInfoThousands" : ",",
-			"oPaginate" : {
-				"sFirst" : "首页",
-				"sPrevious" : "上页",
-				"sNext" : "下页",
-				"sLast" : "末页"
-			},
-			"oAria" : {
-				"sSortAscending" : ": 以升序排列此列",
-				"sSortDescending" : ": 以降序排列此列"
-			}
-		}
+        "language" : {
+            "sProcessing" : I18n.dataTable_sProcessing ,
+            "sLengthMenu" : I18n.dataTable_sLengthMenu ,
+            "sZeroRecords" : I18n.dataTable_sZeroRecords ,
+            "sInfo" : I18n.dataTable_sInfo ,
+            "sInfoEmpty" : I18n.dataTable_sInfoEmpty ,
+            "sInfoFiltered" : I18n.dataTable_sInfoFiltered ,
+            "sInfoPostFix" : "",
+            "sSearch" : I18n.dataTable_sSearch ,
+            "sUrl" : "",
+            "sEmptyTable" : I18n.dataTable_sEmptyTable ,
+            "sLoadingRecords" : I18n.dataTable_sLoadingRecords ,
+            "sInfoThousands" : ",",
+            "oPaginate" : {
+                "sFirst" : I18n.dataTable_sFirst ,
+                "sPrevious" : I18n.dataTable_sPrevious ,
+                "sNext" : I18n.dataTable_sNext ,
+                "sLast" : I18n.dataTable_sLast
+            },
+            "oAria" : {
+                "sSortAscending" : I18n.dataTable_sSortAscending ,
+                "sSortDescending" : I18n.dataTable_sSortDescending
+            }
+        }
 	});
 	
 	// logTips alert
@@ -246,7 +240,7 @@ $(function() {
 	$('#joblog_list').on('click', '.logKill', function(){
 		var _id = $(this).attr('_id');
 
-        layer.confirm('确认主动终止任务?', {icon: 3, title:'系统提示'}, function(index){
+        layer.confirm( (I18n.system_ok + I18n.joblog_kill_log + '?'), {icon: 3, title: I18n.system_tips }, function(index){
             layer.close(index);
 
             $.ajax({
@@ -257,8 +251,8 @@ $(function() {
                 success : function(data){
                     if (data.code == 200) {
                         layer.open({
-                            title: '系统提示',
-                            content: '操作成功',
+                            title: I18n.system_tips,
+                            content: I18n.system_opt_suc ,
                             icon: '1',
                             end: function(layero, index){
                                 logTable.fnDraw();
@@ -266,8 +260,8 @@ $(function() {
                         });
                     } else {
                         layer.open({
-                            title: '系统提示',
-                            content: (data.msg || "操作失败"),
+                            title: I18n.system_tips,
+                            content: (data.msg || I18n.system_opt_fail ),
                             icon: '2'
                         });
                     }
@@ -302,8 +296,8 @@ $(function() {
 			if (data.code == "200") {
 				$('#clearLogModal').modal('hide');
 				layer.open({
-					title: '系统提示',
-					content: '日志清理成功',
+					title: I18n.system_tips ,
+					content: (I18n.joblog_clean_log + I18n.system_success) ,
 					icon: '1',
 					end: function(layero, index){
 						logTable.fnDraw();
@@ -311,8 +305,8 @@ $(function() {
 				});
 			} else {
 				layer.open({
-					title: '系统提示',
-					content: (data.msg || "日志清理失败"),
+					title: I18n.system_tips ,
+					content: (data.msg || (I18n.joblog_clean_log + I18n.system_fail) ),
 					icon: '2'
 				});
 			}
@@ -335,7 +329,7 @@ var ComAlertTec = {
 			'<div class="modal-body"><div class="alert" style="color:#fff;"></div></div>' +
 			'<div class="modal-footer">' +
 			'<div class="text-center" >' +
-			'<button type="button" class="btn btn-info ok" data-dismiss="modal" >确认</button>' +
+			'<button type="button" class="btn btn-info ok" data-dismiss="modal" >'+ I18n.system_ok +'</button>' +
 			'</div>' +
 			'</div>' +
 			'</div>' +
