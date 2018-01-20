@@ -104,7 +104,7 @@ public class XxlJobTrigger {
                     // 4.3、trigger (fail retry)
                     if (triggerResult.getCode()!=ReturnT.SUCCESS_CODE && failStrategy == ExecutorFailStrategyEnum.FAIL_RETRY) {
                         triggerResult = runExecutor(triggerParam, address);  // update04
-                        triggerMsgSb.append("<br><br><span style=\"color:#F39C12;\" > >>>>>>>>>>>"+ I18nUtil.getString("jobconf_fail_retry") +"<<<<<<<<<<< </span><br>").append(triggerResult.getMsg());
+                        triggerMsgSb.append("<br><br><span style=\"color:#F39C12;\" > >>>>>>>>>>>"+ I18nUtil.getString("jobconf_trigger_fail_retry") +"<<<<<<<<<<< </span><br>").append(triggerResult.getMsg());
                     }
                 }
 
@@ -172,7 +172,7 @@ public class XxlJobTrigger {
                 // 4.3、trigger (fail retry)
                 if (triggerResult.getCode()!=ReturnT.SUCCESS_CODE && failStrategy == ExecutorFailStrategyEnum.FAIL_RETRY) {
                     triggerResult = executorRouteStrategyEnum.getRouter().routeRun(triggerParam, addressList);
-                    triggerMsgSb.append("<br><br><span style=\"color:#F39C12;\" > >>>>>>>>>>>"+ I18nUtil.getString("jobconf_fail_retry") +"<<<<<<<<<<< </span><br>").append(triggerResult.getMsg());
+                    triggerMsgSb.append("<br><br><span style=\"color:#F39C12;\" > >>>>>>>>>>>"+ I18nUtil.getString("jobconf_trigger_fail_retry") +"<<<<<<<<<<< </span><br>").append(triggerResult.getMsg());
                 }
             }
 
