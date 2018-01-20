@@ -47,7 +47,7 @@ $(function() {
 		if (glueRemark.length <4 || glueRemark.length > 100) {
 			layer.open({
 				title: I18n.system_tips ,
-				content: '备注长度应该在4至100之间',
+				content: I18n.jobinfo_glue_remark_limit ,
 				icon: '2'
 			});
 			return;
@@ -66,7 +66,7 @@ $(function() {
 				if (data.code == 200) {
 					layer.open({
 						title: I18n.system_tips,
-						content: '保存成功',
+						content: (I18n.system_save + I18n.system_success) ,
 						icon: '1',
 						end: function(layero, index){
 							//$(window).unbind('beforeunload');
@@ -76,7 +76,7 @@ $(function() {
 				} else {
 					layer.open({
 						title: I18n.system_tips,
-						content: (data.msg || "保存失败"),
+						content: (data.msg || (I18n.system_save + I18n.system_fail) ),
 						icon: '2'
 					});
 				}

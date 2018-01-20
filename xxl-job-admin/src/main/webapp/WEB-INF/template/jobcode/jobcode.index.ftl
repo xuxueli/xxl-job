@@ -35,7 +35,11 @@
                     <#-- left nav -->
                     <div class="collapse navbar-collapse pull-left" id="navbar-collapse">
                         <ul class="nav navbar-nav">
-                            <li class="active" ><a href="javascript:;"><#list GlueTypeEnum as item><#if item == jobInfo.glueType>${item.desc}</#if></#list> 任务：${jobInfo.jobDesc}<span class="sr-only">(current)</span></a></li>
+                            <li class="active" ><a href="javascript:;">
+                                <span class="sr-only">(current)</span>
+                                【<#list GlueTypeEnum as item><#if item == jobInfo.glueType>${item.desc}</#if></#list>】
+                                ${jobInfo.jobDesc}
+                            </a></li>
                         </ul>
                     </div>
 
@@ -43,7 +47,7 @@
                     <div class="navbar-custom-menu">
                         <ul class="nav navbar-nav">
                             <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">版本回溯 <span class="caret"></span></a>
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">${I18n.jobinfo_glue_rollback} <span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu">
                                     <li <#if jobLogGlues?exists && jobLogGlues?size gt 0 >style="display: none;"</#if> >
                                         <a href="javascript:;" class="source_version" version="version_now" glueType="${jobInfo.glueType}" >
@@ -66,7 +70,7 @@
                             <li id="save" >
 								<a href="javascript:;" >
 									<i class="fa fa-fw fa-save" ></i>
-                                    保存
+                                    ${I18n.system_save}
 								</a>
 							</li>
                         </ul>
