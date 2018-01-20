@@ -204,7 +204,11 @@ $(function() {
 		
 		var id = $(this).parent('p').attr("id");
 
-		layer.confirm( I18n.system_ok + typeName + '?', {icon: 3, title: I18n.system_tips }, function(index){
+		layer.confirm( I18n.system_ok + typeName + '?', {
+			icon: 3,
+			title: I18n.system_tips ,
+            btn: [ I18n.system_ok, I18n.system_cancel ]
+		}, function(index){
 			layer.close(index);
 
 			$.ajax({
@@ -219,7 +223,7 @@ $(function() {
 
 						layer.open({
 							title: I18n.system_tips,
-                            btn: [ I18n.system_ok , I18n.system_close ],
+                            btn: [ I18n.system_ok ],
 							content: typeName + I18n.system_success ,
 							icon: '1',
 							end: function(layero, index){
@@ -232,7 +236,7 @@ $(function() {
 					} else {
 						layer.open({
 							title: I18n.system_tips,
-                            btn: [ I18n.system_ok , I18n.system_close ],
+                            btn: [ I18n.system_ok ],
 							content: (data.msg || typeName + I18n.system_fail ),
 							icon: '2'
 						});
@@ -289,6 +293,7 @@ $(function() {
 					$('#addModal').modal('hide');
 					layer.open({
 						title: I18n.system_tips ,
+                        btn: [ I18n.system_ok ],
 						content: I18n.system_add_suc ,
 						icon: '1',
 						end: function(layero, index){
@@ -299,6 +304,7 @@ $(function() {
     			} else {
 					layer.open({
 						title: I18n.system_tips ,
+                        btn: [ I18n.system_ok ],
 						content: (data.msg || I18n.system_add_fail),
 						icon: '2'
 					});
@@ -348,14 +354,6 @@ $(function() {
 
         var id = $(this).parent('p').attr("id");
         var row = tableData['key'+id];
-        /*if (!row) {
-            layer.open({
-                title: I18n.system_tips ,
-                content: ("数据加载失败，请刷新页面"),
-                icon: '2'
-            });
-            return;
-        }*/
 
 		// base data
 		$("#updateModal .form input[name='id']").val( row.id );
@@ -422,6 +420,7 @@ $(function() {
 					$('#updateModal').modal('hide');
 					layer.open({
 						title: I18n.system_tips ,
+                        btn: [ I18n.system_ok ],
 						content: I18n.system_update_suc ,
 						icon: '1',
 						end: function(layero, index){
@@ -432,6 +431,7 @@ $(function() {
     			} else {
 					layer.open({
 						title: I18n.system_tips ,
+                        btn: [ I18n.system_ok ],
 						content: (data.msg || I18n.system_update_fail ),
 						icon: '2'
 					});

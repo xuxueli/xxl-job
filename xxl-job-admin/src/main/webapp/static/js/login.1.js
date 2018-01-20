@@ -52,14 +52,6 @@ $(function(){
                     setTimeout(function(){
                         window.location.href = base_url;
                     }, 500);
-                    /*layer.open({
-                        title: I18n.system_tips,
-                        content: I18n.login_success,
-                        icon: '1',
-                        end: function(layero, index){
-                            window.location.href = base_url;
-                        }
-                    });*/
 				} else {
                     layer.open({
                         title: I18n.system_tips,

@@ -39,6 +39,7 @@ $(function() {
 		if (!glueRemark) {
 			layer.open({
 				title: I18n.system_tips,
+                btn: [ I18n.system_ok],
 				content: I18n.system_please_input + I18n.jobinfo_glue_remark ,
 				icon: '2'
 			});
@@ -47,6 +48,7 @@ $(function() {
 		if (glueRemark.length <4 || glueRemark.length > 100) {
 			layer.open({
 				title: I18n.system_tips ,
+                btn: [ I18n.system_ok ],
 				content: I18n.jobinfo_glue_remark_limit ,
 				icon: '2'
 			});
@@ -66,6 +68,7 @@ $(function() {
 				if (data.code == 200) {
 					layer.open({
 						title: I18n.system_tips,
+                        btn: [ I18n.system_ok ],
 						content: (I18n.system_save + I18n.system_success) ,
 						icon: '1',
 						end: function(layero, index){
@@ -76,6 +79,7 @@ $(function() {
 				} else {
 					layer.open({
 						title: I18n.system_tips,
+                        btn: [ I18n.system_ok ],
 						content: (data.msg || (I18n.system_save + I18n.system_fail) ),
 						icon: '2'
 					});

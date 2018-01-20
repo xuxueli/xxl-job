@@ -21,6 +21,7 @@ $(function() {
 				} else {
 					layer.open({
 						title: I18n.system_tips ,
+                        btn: [ I18n.system_ok ],
 						content: (data.msg || I18n.system_api_error ),
 						icon: '2'
 					});
@@ -240,7 +241,11 @@ $(function() {
 	$('#joblog_list').on('click', '.logKill', function(){
 		var _id = $(this).attr('_id');
 
-        layer.confirm( (I18n.system_ok + I18n.joblog_kill_log + '?'), {icon: 3, title: I18n.system_tips }, function(index){
+        layer.confirm( (I18n.system_ok + I18n.joblog_kill_log + '?'), {
+        	icon: 3,
+			title: I18n.system_tips ,
+            btn: [ I18n.system_ok, I18n.system_cancel ]
+		}, function(index){
             layer.close(index);
 
             $.ajax({
@@ -252,6 +257,7 @@ $(function() {
                     if (data.code == 200) {
                         layer.open({
                             title: I18n.system_tips,
+                            btn: [ I18n.system_ok ],
                             content: I18n.system_opt_suc ,
                             icon: '1',
                             end: function(layero, index){
@@ -261,6 +267,7 @@ $(function() {
                     } else {
                         layer.open({
                             title: I18n.system_tips,
+                            btn: [ I18n.system_ok ],
                             content: (data.msg || I18n.system_opt_fail ),
                             icon: '2'
                         });
@@ -297,6 +304,7 @@ $(function() {
 				$('#clearLogModal').modal('hide');
 				layer.open({
 					title: I18n.system_tips ,
+                    btn: [ I18n.system_ok ],
 					content: (I18n.joblog_clean_log + I18n.system_success) ,
 					icon: '1',
 					end: function(layero, index){
@@ -306,6 +314,7 @@ $(function() {
 			} else {
 				layer.open({
 					title: I18n.system_tips ,
+                    btn: [ I18n.system_ok ],
 					content: (data.msg || (I18n.joblog_clean_log + I18n.system_fail) ),
 					icon: '2'
 				});

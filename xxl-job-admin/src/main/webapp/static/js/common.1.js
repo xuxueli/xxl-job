@@ -2,7 +2,11 @@ $(function(){
 
 	// logout
 	$("#logoutBtn").click(function(){
-		layer.confirm( I18n.logout_confirm , {icon: 3, title: I18n.system_tips }, function(index){
+		layer.confirm( I18n.logout_confirm , {
+			icon: 3,
+			title: I18n.system_tips ,
+            btn: [ I18n.system_ok, I18n.system_cancel ]
+		}, function(index){
 			layer.close(index);
 
 			$.post(base_url + "/logout", function(data, status) {
@@ -11,18 +15,10 @@ $(function(){
                     setTimeout(function(){
                         window.location.href = base_url + "/";
                     }, 500);
-					/*layer.open({
-						title: I18n.system_tips ,
-						content: I18n.logout_success ,
-						icon: '1',
-						end: function(layero, index){
-							window.location.href = base_url + "/";
-						}
-					});*/
 				} else {
 					layer.open({
 						title: I18n.system_tips ,
-                        btn: [ I18n.system_ok , I18n.system_close ],
+                        btn: [ I18n.system_ok ],
 						content: (data.msg || I18n.logout_fail),
 						icon: '2'
 					});
