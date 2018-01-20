@@ -11,6 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * common exception resolver
@@ -23,19 +24,34 @@ public class WebExceptionResolver implements HandlerExceptionResolver {
 	public ModelAndView resolveException(HttpServletRequest request,
 			HttpServletResponse response, Object handler, Exception ex) {
 		logger.error("WebExceptionResolver:{}", ex);
-		
-		ModelAndView mv = new ModelAndView();
+
+		// if json
+		boolean isJson = false;
 		HandlerMethod method = (HandlerMethod)handler;
 		ResponseBody responseBody = method.getMethodAnnotation(ResponseBody.class);
 		if (responseBody != null) {
-			response.setContentType("application/json;charset=UTF-8");
-			mv.addObject("result", JacksonUtil.writeValueAsString(new ReturnT<String>(500, ex.toString().replaceAll("\n", "<br/>"))));
-			mv.setViewName("/common/common.result");
-		} else {
-			mv.addObject("exceptionMsg", ex.toString().replaceAll("\n", "<br/>"));	
-			mv.setViewName("/common/common.exception");
+			isJson = true;
 		}
-		return mv;
+
+		// error result
+		ReturnT<String> errorResult = new ReturnT<String>(ReturnT.FAIL_CODE, ex.toString().replaceAll("\n", "<br/>"));
+
+		// response
+		ModelAndView mv = new ModelAndView();
+		if (isJson) {
+			try {
+				response.setContentType("application/json;charset=utf-8");
+				response.getWriter().print(JacksonUtil.writeValueAsString(errorResult));
+			} catch (IOException e) {
+				logger.error(e.getMessage(), e);
+			}
+			return mv;
+		} else {
+
+			mv.addObject("exceptionMsg", errorResult.getMsg());
+			mv.setViewName("/common/common.exception");
+			return mv;
+		}
 	}
 	
 }
