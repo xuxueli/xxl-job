@@ -24,9 +24,11 @@ public class I18nUtil {
     private static Logger logger = LoggerFactory.getLogger(I18nUtil.class);
 
     private static Properties prop = null;
+    private static long lastCacheTim = 0L;
+
     public static Properties loadI18nProp(){
-        if (prop != null) {
-            //return prop;
+        if (prop != null && (System.currentTimeMillis()-lastCacheTim)<3*1000) {
+            return prop;
         }
         try {
             // bild i18n prop
@@ -38,9 +40,11 @@ public class I18nUtil {
             Resource resource = new ClassPathResource(i18nFile);
             EncodedResource encodedResource = new EncodedResource(resource,"UTF-8");
             prop = PropertiesLoaderUtils.loadProperties(encodedResource);
+            lastCacheTim = System.currentTimeMillis();
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
         }
+        logger.warn("---111---");
         return prop;
     }
 
