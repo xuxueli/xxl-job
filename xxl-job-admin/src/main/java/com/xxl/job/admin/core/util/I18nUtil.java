@@ -27,7 +27,7 @@ public class I18nUtil {
     private static long lastCacheTim = 0L;
 
     public static Properties loadI18nProp(){
-        if (prop != null && (System.currentTimeMillis()-lastCacheTim)<3*1000) {
+        if (prop != null && (System.currentTimeMillis()-lastCacheTim)<60*1000) {
             return prop;
         }
         try {
