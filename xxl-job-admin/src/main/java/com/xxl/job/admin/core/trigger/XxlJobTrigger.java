@@ -114,7 +114,7 @@ public class XxlJobTrigger {
                 jobLog.setTriggerMsg(triggerMsgSb.toString());
                 XxlJobDynamicScheduler.xxlJobLogDao.updateTriggerInfo(jobLog);
 
-                // 6、monitor triger
+                // 6、monitor trigger
                 JobFailMonitorHelper.monitor(jobLog.getId());
                 logger.debug(">>>>>>>>>>> xxl-job trigger end, jobId:{}", jobLog.getId());
 
@@ -182,7 +182,7 @@ public class XxlJobTrigger {
             jobLog.setTriggerMsg(triggerMsgSb.toString());
             XxlJobDynamicScheduler.xxlJobLogDao.updateTriggerInfo(jobLog);
 
-            // 6、monitor triger
+            // 6、monitor trigger
             JobFailMonitorHelper.monitor(jobLog.getId());
             logger.debug(">>>>>>>>>>> xxl-job trigger end, jobId:{}", jobLog.getId());
         }

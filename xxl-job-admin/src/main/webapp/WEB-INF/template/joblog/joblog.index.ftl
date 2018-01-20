@@ -61,7 +61,7 @@
 	            <div class="col-xs-4">
               		<div class="input-group">
                 		<span class="input-group-addon">
-	                  		调度时间
+	                  		${I18n.joblog_field_triggerTime}
 	                	</span>
 	                	<input type="text" class="form-control" id="filterTime" readonly >
 	              	</div>
