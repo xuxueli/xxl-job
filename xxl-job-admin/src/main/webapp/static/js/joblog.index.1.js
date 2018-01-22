@@ -41,8 +41,8 @@ $(function() {
     rangesConf[I18n.daterangepicker_ranges_yesterday] = [moment().subtract(1, 'days').startOf('day'), moment().subtract(1, 'days').endOf('day')];
     rangesConf[I18n.daterangepicker_ranges_this_month] = [moment().startOf('month'), moment().endOf('month')];
     rangesConf[I18n.daterangepicker_ranges_last_month] = [moment().subtract(1, 'months').startOf('month'), moment().subtract(1, 'months').endOf('month')];
-    rangesConf[I18n.daterangepicker_ranges_recent_week] = [moment().subtract(1, 'weeks'), moment()];
-    rangesConf[I18n.daterangepicker_ranges_recent_month] = [moment().subtract(1, 'months'), moment()];
+    rangesConf[I18n.daterangepicker_ranges_recent_week] = [moment().subtract(1, 'weeks').startOf('day'), moment().endOf('day')];
+    rangesConf[I18n.daterangepicker_ranges_recent_month] = [moment().subtract(1, 'months').startOf('day'), moment().endOf('day')];
 
 	$('#filterTime').daterangepicker({
         autoApply:false,
