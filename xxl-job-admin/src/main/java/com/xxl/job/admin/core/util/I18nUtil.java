@@ -28,7 +28,7 @@ public class I18nUtil {
 
     public static Properties loadI18nProp(){
         if (prop != null && (System.currentTimeMillis()-lastCacheTim)<60*1000) {
-            return prop;
+            //return prop;
         }
         try {
             // bild i18n prop

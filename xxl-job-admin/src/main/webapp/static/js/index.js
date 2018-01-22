@@ -89,7 +89,7 @@ $(function () {
                    }
                },
                legend: {
-                   data:[I18n.job_dashboard_date_report_suc_count, I18n.job_dashboard_date_report_fail_count]
+                   data:[I18n.joblog_status_suc, I18n.joblog_status_fail, I18n.joblog_status_running]
                },
                toolbox: {
                    feature: {
@@ -116,14 +116,14 @@ $(function () {
                ],
                series : [
                    {
-                       name:I18n.job_dashboard_date_report_suc_count,
+                       name:I18n.joblog_status_suc,
                        type:'line',
                        stack: 'Total',
                        areaStyle: {normal: {}},
                        data: data.content.triggerDayCountSucList
                    },
                    {
-                       name:I18n.job_dashboard_date_report_fail_count,
+                       name:I18n.joblog_status_fail,
                        type:'line',
                        stack: 'Total',
                        label: {
@@ -134,9 +134,16 @@ $(function () {
                        },
                        areaStyle: {normal: {}},
                        data: data.content.triggerDayCountFailList
+                   },
+                   {
+                       name:I18n.joblog_status_running,
+                       type:'line',
+                       stack: 'Total',
+                       areaStyle: {normal: {}},
+                       data: data.content.triggerDayCountRunningList
                    }
                ],
-                color:['#00A65A', '#F39C12']
+                color:['#00A65A', '#c23632', '#F39C12']
         };
 
         var lineChart = echarts.init(document.getElementById('lineChart'));
@@ -155,27 +162,31 @@ $(function () {
             },
             tooltip : {
                 trigger: 'item',
-                formatter: "{a} <br/>{b} : {c} ({d}%)"
+                formatter: "{b} : {c} ({d}%)"
             },
             legend: {
                 orient: 'vertical',
                 left: 'left',
-                data: [I18n.job_dashboard_rate_report_suc_count, I18n.job_dashboard_rate_report_fail_count ]
+                data: [I18n.joblog_status_suc, I18n.joblog_status_fail, I18n.joblog_status_running ]
             },
             series : [
                 {
-                    name: '分布比例',
+                    //name: '分布比例',
                     type: 'pie',
                     radius : '55%',
                     center: ['50%', '60%'],
                     data:[
                         {
-                            value:data.content.triggerCountSucTotal,
-                            name:I18n.job_dashboard_rate_report_suc_count
+                            name:I18n.joblog_status_suc,
+                            value:data.content.triggerCountSucTotal
                         },
                         {
-                            value:data.content.triggerCountFailTotal,
-                            name:I18n.job_dashboard_rate_report_fail_count
+                            name:I18n.joblog_status_fail,
+                            value:data.content.triggerCountFailTotal
+                        },
+                        {
+                            name:I18n.joblog_status_running,
+                            value:data.content.triggerCountRunningTotal
                         }
                     ],
                     itemStyle: {
@@ -187,7 +198,7 @@ $(function () {
                     }
                 }
             ],
-            color:['#00A65A', '#F39C12']
+            color:['#00A65A', '#c23632', '#F39C12']
         };
         var pieChart = echarts.init(document.getElementById('pieChart'));
         pieChart.setOption(option);

@@ -323,35 +323,30 @@ public class XxlJobServiceImpl implements XxlJobService {
 	@Override
 	public ReturnT<Map<String, Object>> triggerChartDate(Date startDate, Date endDate) {
 		List<String> triggerDayList = new ArrayList<String>();
+		List<Integer> triggerDayCountRunningList = new ArrayList<Integer>();
 		List<Integer> triggerDayCountSucList = new ArrayList<Integer>();
 		List<Integer> triggerDayCountFailList = new ArrayList<Integer>();
+		int triggerCountRunningTotal = 0;
 		int triggerCountSucTotal = 0;
 		int triggerCountFailTotal = 0;
 
-		List<Map<String, Object>> triggerCountMapAll = xxlJobLogDao.triggerCountByDay(startDate, endDate, -1);
-		List<Map<String, Object>> triggerCountMapSuc = xxlJobLogDao.triggerCountByDay(startDate, endDate, ReturnT.SUCCESS_CODE);
+		List<Map<String, Object>> triggerCountMapAll = xxlJobLogDao.triggerCountByDay(startDate, endDate);
 		if (CollectionUtils.isNotEmpty(triggerCountMapAll)) {
 			for (Map<String, Object> item: triggerCountMapAll) {
 				String day = String.valueOf(item.get("triggerDay"));
-				int dayAllCount = Integer.valueOf(String.valueOf(item.get("triggerCount")));
-				int daySucCount = 0;
-				int dayFailCount = dayAllCount - daySucCount;
-
-				if (CollectionUtils.isNotEmpty(triggerCountMapSuc)) {
-					for (Map<String, Object> sucItem: triggerCountMapSuc) {
-						String daySuc = String.valueOf(sucItem.get("triggerDay"));
-						if (day.equals(daySuc)) {
-							daySucCount = Integer.valueOf(String.valueOf(sucItem.get("triggerCount")));
-							dayFailCount = dayAllCount - daySucCount;
-						}
-					}
-				}
+				int triggerDayCount = Integer.valueOf(String.valueOf(item.get("triggerDayCount")));
+				int triggerDayCountRunning = Integer.valueOf(String.valueOf(item.get("triggerDayCountRunning")));
+				int triggerDayCountSuc = Integer.valueOf(String.valueOf(item.get("triggerDayCountSuc")));
+				int triggerDayCountFail = triggerDayCount - triggerDayCountRunning - triggerDayCountSuc;
 
 				triggerDayList.add(day);
-				triggerDayCountSucList.add(daySucCount);
-				triggerDayCountFailList.add(dayFailCount);
-				triggerCountSucTotal += daySucCount;
-				triggerCountFailTotal += dayFailCount;
+				triggerDayCountRunningList.add(triggerDayCountRunning);
+				triggerDayCountSucList.add(triggerDayCountSuc);
+				triggerDayCountFailList.add(triggerDayCountFail);
+
+				triggerCountRunningTotal += triggerDayCountRunning;
+				triggerCountSucTotal += triggerDayCountSuc;
+				triggerCountFailTotal += triggerDayCountFail;
 			}
 		} else {
             for (int i = 4; i > -1; i--) {
@@ -363,8 +358,11 @@ public class XxlJobServiceImpl implements XxlJobService {
 
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("triggerDayList", triggerDayList);
+		result.put("triggerDayCountRunningList", triggerDayCountRunningList);
 		result.put("triggerDayCountSucList", triggerDayCountSucList);
 		result.put("triggerDayCountFailList", triggerDayCountFailList);
+
+		result.put("triggerCountRunningTotal", triggerCountRunningTotal);
 		result.put("triggerCountSucTotal", triggerCountSucTotal);
 		result.put("triggerCountFailTotal", triggerCountFailTotal);
 		return new ReturnT<Map<String, Object>>(result);
