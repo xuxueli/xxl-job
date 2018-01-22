@@ -23,12 +23,11 @@ import java.util.Properties;
 public class I18nUtil {
     private static Logger logger = LoggerFactory.getLogger(I18nUtil.class);
 
-    private static Properties prop = null;
-    private static long lastCacheTim = 0L;
-
+    private static final String I18N_PROP_CACHE = "i18n_prop_cache";
     public static Properties loadI18nProp(){
-        if (prop != null && (System.currentTimeMillis()-lastCacheTim)<60*1000) {
-            //return prop;
+        Properties prop = (Properties) LocalCacheUtil.get(I18N_PROP_CACHE);
+        if (prop != null) {
+            return prop;
         }
         try {
             // bild i18n prop
@@ -40,11 +39,10 @@ public class I18nUtil {
             Resource resource = new ClassPathResource(i18nFile);
             EncodedResource encodedResource = new EncodedResource(resource,"UTF-8");
             prop = PropertiesLoaderUtils.loadProperties(encodedResource);
-            lastCacheTim = System.currentTimeMillis();
+            LocalCacheUtil.set(I18N_PROP_CACHE, prop, 60*1000);     // cache 60s
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
         }
-        logger.warn("---111---");
         return prop;
     }
 

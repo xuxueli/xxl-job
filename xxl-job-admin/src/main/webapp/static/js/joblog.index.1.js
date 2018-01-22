@@ -76,6 +76,7 @@ $(function() {
 	    "serverSide": true,
 		"ajax": {
 	        url: base_url + "/joblog/pageList" ,
+            type:"post",
 	        data : function ( d ) {
 	        	var obj = {};
 	        	obj.jobGroup = $('#jobGroup').val();
