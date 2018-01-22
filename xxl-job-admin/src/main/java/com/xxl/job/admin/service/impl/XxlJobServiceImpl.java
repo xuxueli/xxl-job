@@ -325,7 +325,8 @@ public class XxlJobServiceImpl implements XxlJobService {
 	@Override
 	public ReturnT<Map<String, Object>> triggerChartDate(Date startDate, Date endDate) {
 		// get cache
-		Map<String, Object> triggerChartDateCache = (Map<String, Object>) LocalCacheUtil.get(TRIGGER_CHART_DATA_CACHE);
+		String cacheKey = TRIGGER_CHART_DATA_CACHE + "_" + startDate.getTime() + "_" + endDate.getTime();
+		Map<String, Object> triggerChartDateCache = (Map<String, Object>) LocalCacheUtil.get(cacheKey);
 		if (triggerChartDateCache != null) {
 			return new ReturnT<Map<String, Object>>(triggerChartDateCache);
 		}
@@ -376,7 +377,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 		result.put("triggerCountFailTotal", triggerCountFailTotal);
 
 		// set cache
-		LocalCacheUtil.set(TRIGGER_CHART_DATA_CACHE, result, 60*1000);     // cache 60s
+		LocalCacheUtil.set(cacheKey, result, 60*1000);     // cache 60s
 
 		return new ReturnT<Map<String, Object>>(result);
 	}
