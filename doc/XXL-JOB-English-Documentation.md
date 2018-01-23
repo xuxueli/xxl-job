@@ -122,7 +122,7 @@ Welcome everyone's attention and use, XXL-JOB will also embrace changes, sustain
 Source repository address | Release Download
 --- | ---
 [https://github.com/xuxueli/xxl-job](https://github.com/xuxueli/xxl-job) | [Download](https://github.com/xuxueli/xxl-job/releases)  
-[http://git.oschina.net/xuxueli0323/xxl-job](http://git.oschina.net/xuxueli0323/xxl-job) | [Download](http://git.oschina.net/xuxueli0323/xxl-job/releases)
+[http://gitee.com/xuxueli0323/xxl-job](http://gitee.com/xuxueli0323/xxl-job) | [Download](http://gitee.com/xuxueli0323/xxl-job/releases)
 
 #### Center repository address (The latest Release version：1.8.1)
 ```
