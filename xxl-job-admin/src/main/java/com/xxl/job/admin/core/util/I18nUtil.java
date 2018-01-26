@@ -1,5 +1,6 @@
 package com.xxl.job.admin.core.util;
 
+import com.xxl.job.admin.core.conf.XxlJobAdminConfig;
 import com.xxl.job.core.util.JacksonUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -23,23 +24,21 @@ import java.util.Properties;
 public class I18nUtil {
     private static Logger logger = LoggerFactory.getLogger(I18nUtil.class);
 
-    private static final String I18N_PROP_CACHE = "i18n_prop_cache";
+    private static Properties prop = null;
     public static Properties loadI18nProp(){
-        Properties prop = (Properties) LocalCacheUtil.get(I18N_PROP_CACHE);
         if (prop != null) {
             return prop;
         }
         try {
             // bild i18n prop
-            String i18n = PropertiesUtil.getString("xxl.job.i18n");
+            String i18n = XxlJobAdminConfig.getAdminConfig().getI18n();
             i18n = StringUtils.isNotBlank(i18n)?("_"+i18n):i18n;
-            String i18nFile =MessageFormat.format("i18n/message{0}.properties", i18n);
+            String i18nFile = MessageFormat.format("i18n/message{0}.properties", i18n);
 
             // load prop
             Resource resource = new ClassPathResource(i18nFile);
             EncodedResource encodedResource = new EncodedResource(resource,"UTF-8");
             prop = PropertiesLoaderUtils.loadProperties(encodedResource);
-            LocalCacheUtil.set(I18N_PROP_CACHE, prop, 60*1000);     // cache 60s
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
         }
