@@ -1,5 +1,6 @@
 package com.xxl.job.admin.core.util;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.mail.DefaultAuthenticator;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.HtmlEmail;
@@ -18,12 +19,14 @@ public class MailUtil {
 	
 	private static String host;
 	private static String port;
+	private static String encrypType;
 	private static String username;
 	private static String password;
 	private static String sendNick;
 	static{
 		host = PropertiesUtil.getString("xxl.job.mail.host");
 		port = PropertiesUtil.getString("xxl.job.mail.port");
+		encrypType = PropertiesUtil.getString("xxl.job.mail.encrypType");
 		username = PropertiesUtil.getString("xxl.job.mail.username");
 		password = PropertiesUtil.getString("xxl.job.mail.password");
 		sendNick = PropertiesUtil.getString("xxl.job.mail.sendNick");
@@ -43,12 +46,17 @@ public class MailUtil {
 			HtmlEmail email = new HtmlEmail();
 
 			//email.setDebug(true);		// 将会打印一些log
-			//email.setTLS(true);		// 是否TLS校验，，某些邮箱需要TLS安全校验，同理有SSL校验
-			//email.setSSL(true);
 
+			// 是否TLS校验，，某些邮箱需要TLS安全校验，同理有SSL校验
+			if (StringUtils.isNotBlank(encrypType)){
+				if ("TLS".equals(encrypType)){
+					email.setStartTLSEnabled(true);
+				}else if ("SSL".equals(encrypType)){
+					email.setSSLOnConnect(true);
+				}
+			}
 			email.setHostName(host);
 			email.setSmtpPort(Integer.valueOf(port));
-			//email.setSslSmtpPort(port);
 			email.setAuthenticator(new DefaultAuthenticator(username, password));
 			email.setCharset(Charset.defaultCharset().name());
 
