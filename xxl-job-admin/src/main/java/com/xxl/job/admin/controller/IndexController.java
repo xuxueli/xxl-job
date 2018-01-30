@@ -41,11 +41,11 @@ public class IndexController {
 		return "index";
 	}
 
-    @RequestMapping("/triggerChartDate")
+    @RequestMapping("/chartInfo")
 	@ResponseBody
-	public ReturnT<Map<String, Object>> triggerChartDate(Date startDate, Date endDate) {
-        ReturnT<Map<String, Object>> triggerChartDate = xxlJobService.triggerChartDate(startDate, endDate);
-        return triggerChartDate;
+	public ReturnT<Map<String, Object>> chartInfo(Date startDate, Date endDate) {
+        ReturnT<Map<String, Object>> chartInfo = xxlJobService.chartInfo(startDate, endDate);
+        return chartInfo;
     }
 	
 	@RequestMapping("/toLogin")

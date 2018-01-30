@@ -149,7 +149,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 	}
 
 	@Override
-	public ReturnT<String> reschedule(XxlJobInfo jobInfo) {
+	public ReturnT<String> update(XxlJobInfo jobInfo) {
 
 		// valid
 		if (!CronExpression.isValidExpression(jobInfo.getJobCron())) {
@@ -323,12 +323,12 @@ public class XxlJobServiceImpl implements XxlJobService {
 
 	private static final String TRIGGER_CHART_DATA_CACHE = "trigger_chart_data_cache";
 	@Override
-	public ReturnT<Map<String, Object>> triggerChartDate(Date startDate, Date endDate) {
+	public ReturnT<Map<String, Object>> chartInfo(Date startDate, Date endDate) {
 		// get cache
 		String cacheKey = TRIGGER_CHART_DATA_CACHE + "_" + startDate.getTime() + "_" + endDate.getTime();
-		Map<String, Object> triggerChartDateCache = (Map<String, Object>) LocalCacheUtil.get(cacheKey);
-		if (triggerChartDateCache != null) {
-			return new ReturnT<Map<String, Object>>(triggerChartDateCache);
+		Map<String, Object> chartInfo = (Map<String, Object>) LocalCacheUtil.get(cacheKey);
+		if (chartInfo != null) {
+			return new ReturnT<Map<String, Object>>(chartInfo);
 		}
 
 		// process

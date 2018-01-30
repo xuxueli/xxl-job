@@ -64,10 +64,10 @@ public class JobInfoController {
 		return xxlJobService.add(jobInfo);
 	}
 	
-	@RequestMapping("/reschedule")
+	@RequestMapping("/update")
 	@ResponseBody
-	public ReturnT<String> reschedule(XxlJobInfo jobInfo) {
-		return xxlJobService.reschedule(jobInfo);
+	public ReturnT<String> update(XxlJobInfo jobInfo) {
+		return xxlJobService.update(jobInfo);
 	}
 	
 	@RequestMapping("/remove")

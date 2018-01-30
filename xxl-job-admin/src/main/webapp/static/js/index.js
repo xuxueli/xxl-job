@@ -49,7 +49,7 @@ $(function () {
     function freshChartDate(startDate, endDate) {
         $.ajax({
             type : 'POST',
-            url : base_url + '/triggerChartDate',
+            url : base_url + '/chartInfo',
             data : {
                 'startDate':startDate.format('YYYY-MM-DD HH:mm:ss'),
                 'endDate':endDate.format('YYYY-MM-DD HH:mm:ss')

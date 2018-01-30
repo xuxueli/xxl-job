@@ -415,7 +415,7 @@ $(function() {
         },
         submitHandler : function(form) {
 			// post
-    		$.post(base_url + "/jobinfo/reschedule", $("#updateModal .form").serialize(), function(data, status) {
+    		$.post(base_url + "/jobinfo/update", $("#updateModal .form").serialize(), function(data, status) {
     			if (data.code == "200") {
 					$('#updateModal').modal('hide');
 					layer.open({
