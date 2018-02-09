@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xxl.job.admin.dao.XxlJobLogGlueDao">
+	
+	<resultMap id="XxlJobLogGlue" type="com.xxl.job.admin.core.model.XxlJobLogGlue" >
+		<result column="id" property="id" />
+	    <result column="job_id" property="jobId" />
+		<result column="glue_type" property="glueType" />
+	    <result column="glue_source" property="glueSource" />
+	    <result column="glue_remark" property="glueRemark" />
+	    <result column="add_time" property="addTime" />
+	    <result column="update_time" property="updateTime" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		t.id,
+		t.job_id,
+		t.glue_type,
+		t.glue_source,
+		t.glue_remark,
+		t.add_time,
+		t.update_time
+	</sql>
+	
+	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobLogGlue">
+		<selectKey resultType="int" order="BEFORE" keyProperty="id">
+			select SEQ_JOB_COMMON.NEXTVAL from dual  
+		</selectKey>
+		INSERT INTO JOB_QRTZ_TRIGGER_LOGGLUE (
+			id,
+			job_id,
+			glue_type,
+			glue_source,
+			glue_remark,
+			add_time, 
+			update_time
+		) VALUES (
+			#{id},
+			#{jobId},
+			#{glueType},
+			#{glueSource},
+			#{glueRemark},
+			sysdate,
+			sysdate
+		)
+	</insert>
+	
+	<select id="findByJobId" parameterType="java.lang.Integer" resultMap="XxlJobLogGlue">
+		SELECT <include refid="Base_Column_List" />
+		FROM JOB_QRTZ_TRIGGER_LOGGLUE t
+		WHERE t.job_id = #{jobId}
+		ORDER BY id DESC
+	</select>
+	
+	<delete id="removeOld" >
+		DELETE FROM JOB_QRTZ_TRIGGER_LOGGLUE
+		WHERE id NOT in(
+			SELECT id FROM(
+				SELECT rownum rownu,id from 
+					(SELECT id FROM JOB_QRTZ_TRIGGER_LOGGLUE
+					WHERE job_id = #{jobId}
+					ORDER BY update_time desc)
+					where rownum <![CDATA[ <= ]]> #{limit}
+			)
+		) AND job_id = #{jobId}
+	</delete>
+	
+	<delete id="deleteByJobId" parameterType="java.lang.Integer" >
+		DELETE FROM JOB_QRTZ_TRIGGER_LOGGLUE
+		WHERE job_id = #{jobId}
+	</delete>
+	
+</mapper>

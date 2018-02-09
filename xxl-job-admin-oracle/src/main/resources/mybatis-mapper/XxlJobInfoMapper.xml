@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xxl.job.admin.dao.XxlJobInfoDao">
+	
+	<resultMap id="XxlJobInfo" type="com.xxl.job.admin.core.model.XxlJobInfo" >
+		<result column="id" property="id" />
+	
+		<result column="job_group" property="jobGroup" />
+	    <result column="job_cron" property="jobCron" />
+	    <result column="job_desc" property="jobDesc" />
+	    
+	    <result column="add_time" property="addTime" />
+	    <result column="update_time" property="updateTime" />
+	    
+	    <result column="author" property="author" />
+	    <result column="alarm_email" property="alarmEmail" />
+
+		<result column="executor_route_strategy" property="executorRouteStrategy" />
+		<result column="executor_handler" property="executorHandler" />
+	    <result column="executor_param" property="executorParam" />
+		<result column="executor_block_strategy" property="executorBlockStrategy" />
+		<result column="executor_fail_strategy" property="executorFailStrategy" />
+	    
+	    <result column="glue_type" property="glueType" />
+	    <result column="glue_source" property="glueSource" />
+	    <result column="glue_remark" property="glueRemark" />
+		<result column="glue_updatetime" property="glueUpdatetime" />
+
+		<result column="child_jobid" property="childJobId" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		t.id,
+		t.job_group,
+		t.job_cron,
+		t.job_desc,
+		t.add_time,
+		t.update_time,
+		t.author,
+		t.alarm_email,
+		t.executor_route_strategy,
+		t.executor_handler,
+		t.executor_param,
+		t.executor_block_strategy,
+		t.executor_fail_strategy,
+		t.glue_type,
+		t.glue_source,
+		t.glue_remark,
+		t.glue_updatetime,
+		t.child_jobid
+	</sql>
+	
+	<select id="pageList" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
+		SELECT <include refid="Base_Column_List" />
+		FROM(
+		SELECT rownum rownu,t1.* FROM(
+		SELECT * FROM JOB_QRTZ_TRIGGER_INFO
+		<trim prefix="WHERE" prefixOverrides="AND | OR" >
+			<if test="jobGroup gt 0">
+				AND job_group = #{jobGroup}
+			</if>
+			<if test="jobDesc != null and jobDesc != ''">
+				AND job_desc like CONCAT(CONCAT('%', #{jobDesc}), '%')
+			</if>
+			<if test="executorHandler != null and executorHandler != ''">
+				AND executor_handler like CONCAT(CONCAT('%', #{executorHandler}), '%')
+			</if>
+		</trim>
+		ORDER BY id DESC) t1 WHERE rownum <![CDATA[ <= ]]> (#{offset} + #{pagesize}) ) t WHERE rownu <![CDATA[ > ]]> #{offset}
+	</select>
+	
+	<select id="pageListCount" parameterType="java.util.HashMap" resultType="int">
+		SELECT count(1)
+		FROM JOB_QRTZ_TRIGGER_INFO  t
+		<trim prefix="WHERE" prefixOverrides="AND | OR" >
+			<if test="jobGroup gt 0">
+				AND t.job_group = #{jobGroup}
+			</if>
+			<if test="jobDesc != null and jobDesc != ''">
+				AND t.job_desc like CONCAT(CONCAT('%', #{jobDesc}), '%')
+			</if>
+			<if test="executorHandler != null and executorHandler != ''">
+				AND t.executor_handler like CONCAT(CONCAT('%', #{executorHandler}), '%')
+			</if>
+		</trim>
+	</select>
+
+	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobInfo">
+		<selectKey resultType="int" order="BEFORE" keyProperty="id">
+			select SEQ_JOB_COMMON.NEXTVAL from dual  
+		</selectKey>
+		INSERT INTO JOB_QRTZ_TRIGGER_INFO (
+			id,
+			job_group,
+			job_cron,
+			job_desc,
+			add_time,
+			update_time,
+			author,
+			alarm_email,
+            executor_route_strategy,
+			executor_handler,
+			executor_param,
+			executor_block_strategy,
+			executor_fail_strategy,
+			glue_type,
+			glue_source,
+			glue_remark,
+			glue_updatetime,
+			child_jobid
+		) VALUES (
+			#{id},
+			#{jobGroup},
+			#{jobCron}, 
+			#{jobDesc},
+			sysdate,
+			sysdate,
+			#{author,jdbcType=VARCHAR},
+			#{alarmEmail,jdbcType=VARCHAR},
+			#{executorRouteStrategy},
+			#{executorHandler,jdbcType=VARCHAR},
+			#{executorParam,jdbcType=VARCHAR},
+			#{executorBlockStrategy},
+			#{executorFailStrategy},
+			#{glueType},
+			#{glueSource,jdbcType=CLOB},
+			#{glueRemark,jdbcType=VARCHAR},
+			sysdate,
+			#{childJobId,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<select id="loadById" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
+		SELECT <include refid="Base_Column_List" />
+		FROM JOB_QRTZ_TRIGGER_INFO  t
+		WHERE t.id = #{id}
+	</select>
+	
+	<update id="update" parameterType="com.xxl.job.admin.core.model.XxlJobInfo" >
+		UPDATE JOB_QRTZ_TRIGGER_INFO
+		SET 
+			job_cron = #{jobCron},
+			job_desc = #{jobDesc},
+			update_time = sysdate,
+			author = #{author},
+			alarm_email = #{alarmEmail},
+			executor_route_strategy = #{executorRouteStrategy},
+			executor_handler = #{executorHandler,jdbcType=VARCHAR},
+			executor_param = #{executorParam,jdbcType=VARCHAR},
+			executor_block_strategy = #{executorBlockStrategy},
+			executor_fail_strategy = #{executorFailStrategy},
+			glue_type = #{glueType},
+			glue_source = #{glueSource,jdbcType=CLOB},
+			glue_remark = #{glueRemark,jdbcType=VARCHAR},
+			glue_updatetime = #{glueUpdatetime},
+			child_jobid = #{childJobId,jdbcType=VARCHAR}
+		WHERE id = #{id}
+	</update>
+	
+	<delete id="delete" parameterType="java.util.HashMap">
+		DELETE
+		FROM JOB_QRTZ_TRIGGER_INFO
+		WHERE id = #{id}
+	</delete>
+
+	<select id="getJobsByGroup" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
+		SELECT <include refid="Base_Column_List" />
+		FROM JOB_QRTZ_TRIGGER_INFO t
+		WHERE t.job_group = #{jobGroup}
+	</select>
+
+	<select id="findAllCount" resultType="int">
+		SELECT count(1)
+		FROM JOB_QRTZ_TRIGGER_INFO
+	</select>
+
+</mapper>
