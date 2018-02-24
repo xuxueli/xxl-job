@@ -24,6 +24,16 @@ public class TriggerParam implements Serializable{
     private int broadcastIndex;
     private int broadcastTotal;
 
+    private int executeTimeout;
+
+    public int getExecuteTimeout() {
+        return executeTimeout;
+    }
+
+    public void setExecuteTimeout(int executeTimeout) {
+        this.executeTimeout = executeTimeout;
+    }
+
     public int getJobId() {
         return jobId;
     }

@@ -63,6 +63,7 @@ public class JobFailMonitorHelper {
 									logger.info(">>>>>>>>>>> job monitor, job success, JobLogId:{}", jobLogId);
 								} else if (IJobHandler.FAIL.getCode() == log.getTriggerCode()
 										|| IJobHandler.FAIL.getCode() == log.getHandleCode()
+										|| IJobHandler.TIMEOUT.getCode() == log.getHandleCode()
 										|| IJobHandler.FAIL_RETRY.getCode() == log.getHandleCode() ) {
 									// job fail,
 									failAlarm(log);

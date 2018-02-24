@@ -36,6 +36,17 @@ public class XxlJobInfo {
 	// copy from quartz
 	private String jobStatus;		// 任务状态 【base on quartz】
 
+	private int executeTimeout;     // 任务最多执行时间，超时后报警
+
+	public int getExecuteTimeout() {
+		return executeTimeout;
+	}
+
+	public void setExecuteTimeout(int executeTimeout) {
+		this.executeTimeout = executeTimeout;
+	}
+
+
 	public int getId() {
 		return id;
 	}
