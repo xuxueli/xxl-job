@@ -1,12 +1,10 @@
 <p align="center">
-    <a href="http://www.xuxueli.com/xxl-job/">
-        <img src="https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/xxl-logo.jpg" width="150">
-    </a>
+    <img src="https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/xxl-logo.jpg" width="150">
     <h3 align="center">XXL-JOB</h3>
     <p align="center">
         XXL-JOB, a lightweight distributed task scheduling framework.
         <br>
-        <a href="http://www.xuxueli.com/xxl-job/"><strong>-- Browse website. --</strong></a>
+        <a href="http://www.xuxueli.com/xxl-job/"><strong>-- Home Page --</strong></a>
         <br>
         <br>
         <a href="https://travis-ci.org/xuxueli/xxl-job">
@@ -71,7 +69,8 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 - 24、邮件报警：任务失败时支持邮件报警，支持配置多邮件地址群发报警邮件；
 - 25、推送maven中央仓库: 将会把最新稳定版推送到maven中央仓库, 方便用户接入和使用;
 - 26、运行报表：支持实时查看运行数据，如任务数量、调度次数、执行器数量等；以及调度报表，如调度日期分布图，调度成功分布图等；
-
+- 27、全异步：系统底层实现全部异步化，针对密集调度进行流量削峰，理论上支持任意时长任务的运行；
+- 28、国际化：调度中心支持国际化设置，提供中文、英文两种可选语言，默认为中文；
 
 ## Development
 于2015年中，我在github上创建XXL-JOB项目仓库并提交第一个commit，随之进行系统结构设计，UI选型，交互设计……
@@ -150,6 +149,13 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
     - 57、华夏票联（北京）科技有限公司
     - 58、拍拍贷
     - 59、北京尚德机构在线教育有限公司
+    - 60、任子行股份有限公司
+    - 61、北京时态电子商务有限公司
+    - 62、深圳卷皮网络科技有限公司
+    - 63、北京安博通科技股份有限公司
+    - 64、未来无线网
+    - 65、厦门瓷禧网络有限公司
+    - 66、北京递蓝科软件股份有限公司
 	- ……
 
 > 更多接入的公司，欢迎在 [登记地址](https://github.com/xuxueli/xxl-job/issues/1 ) 登记，登记仅仅为了产品推广。
@@ -179,6 +185,6 @@ This product is open source and free, and will continue to provide free communit
 
 
 ## Donate
-No matter how much the amount is enough to express your thought, thank you very much ：）     [To donate](http://www.xuxueli.com/page/donate.html )
+No matter how much the donation amount is enough to express your thought, thank you very much ：）     [To donate](http://www.xuxueli.com/page/donate.html )
 
-无论金额多少都足够表达您这份心意，非常感谢 ：）      [前往捐赠](http://www.xuxueli.com/page/donate.html )
+无论捐赠金额多少都足够表达您这份心意，非常感谢 ：）      [前往捐赠](http://www.xuxueli.com/page/donate.html )

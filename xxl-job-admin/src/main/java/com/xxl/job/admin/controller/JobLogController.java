@@ -4,12 +4,14 @@ import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.admin.core.schedule.XxlJobDynamicScheduler;
+import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.admin.dao.XxlJobGroupDao;
 import com.xxl.job.admin.dao.XxlJobInfoDao;
 import com.xxl.job.admin.dao.XxlJobLogDao;
 import com.xxl.job.core.biz.ExecutorBiz;
 import com.xxl.job.core.biz.model.LogResult;
 import com.xxl.job.core.biz.model.ReturnT;
+import com.xxl.job.core.glue.GlueTypeEnum;
 import com.xxl.job.core.rpc.netcom.NetComClientProxy;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
@@ -50,6 +52,7 @@ public class JobLogController {
 		// 执行器列表
 		List<XxlJobGroup> jobGroupList =  xxlJobGroupDao.findAll();
 		model.addAttribute("JobGroupList", jobGroupList);
+		model.addAttribute("GlueTypeEnum", GlueTypeEnum.values());
 
 		// 任务
 		if (jobId > 0) {
@@ -105,7 +108,7 @@ public class JobLogController {
 		ReturnT<String> logStatue = ReturnT.SUCCESS;
 		XxlJobLog jobLog = xxlJobLogDao.load(id);
 		if (jobLog == null) {
-            throw new RuntimeException("抱歉，日志ID非法.");
+            throw new RuntimeException(I18nUtil.getString("joblog_logid_unvalid"));
 		}
 
         model.addAttribute("triggerCode", jobLog.getTriggerCode());
@@ -145,10 +148,10 @@ public class JobLogController {
 		XxlJobLog log = xxlJobLogDao.load(id);
 		XxlJobInfo jobInfo = xxlJobInfoDao.loadById(log.getJobId());
 		if (jobInfo==null) {
-			return new ReturnT<String>(500, "参数异常");
+			return new ReturnT<String>(500, I18nUtil.getString("jobinfo_glue_jobid_unvalid"));
 		}
 		if (ReturnT.SUCCESS_CODE != log.getTriggerCode()) {
-			return new ReturnT<String>(500, "调度失败，无法终止日志");
+			return new ReturnT<String>(500, I18nUtil.getString("joblog_kill_log_limit"));
 		}
 
 		// request of kill
@@ -163,7 +166,7 @@ public class JobLogController {
 
 		if (ReturnT.SUCCESS_CODE == runResult.getCode()) {
 			log.setHandleCode(ReturnT.FAIL_CODE);
-			log.setHandleMsg("人为操作主动终止:" + (runResult.getMsg()!=null?runResult.getMsg():""));
+			log.setHandleMsg( I18nUtil.getString("joblog_kill_log_byman")+":" + (runResult.getMsg()!=null?runResult.getMsg():""));
 			log.setHandleTime(new Date());
 			xxlJobLogDao.updateHandleInfo(log);
 			return new ReturnT<String>(runResult.getMsg());
@@ -197,7 +200,7 @@ public class JobLogController {
 		} else if (type == 9) {
 			clearBeforeNum = 0;			// 清理所有日志数据
 		} else {
-			return new ReturnT<String>(ReturnT.FAIL_CODE, "清理类型参数异常");
+			return new ReturnT<String>(ReturnT.FAIL_CODE, I18nUtil.getString("joblog_clean_type_unvalid"));
 		}
 
 		xxlJobLogDao.clearLog(jobGroup, jobId, clearBeforeTime, clearBeforeNum);

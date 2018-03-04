@@ -3,7 +3,7 @@ $(function() {
     // trigger fail, end
     if (triggerCode != 200) {
         $('#logConsoleRunning').hide();
-        $('#logConsole').append('<span style="color: red;">任务发起调度失败，无法查看执行日志</span>');
+        $('#logConsole').append('<span style="color: red;">'+ I18n.joblog_rolling_log_triggerfail +'</span>');
         return;
     }
 
@@ -13,7 +13,7 @@ $(function() {
     function pullLog() {
         // pullFailCount, max=20
         if (pullFailCount++ > 20) {
-            logRunStop('<span style="color: red;">终止请求Rolling日志,请求失败次数超上限,可刷新页面重新加载日志</span>');
+            logRunStop('<span style="color: red;">'+ I18n.joblog_rolling_log_failoften +'</span>');
             return;
         }
 

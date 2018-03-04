@@ -4,6 +4,7 @@ import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.admin.core.schedule.XxlJobDynamicScheduler;
+import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.admin.core.util.MailUtil;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.handler.IJobHandler;
@@ -119,14 +120,14 @@ public class JobFailMonitorHelper {
 	// ---------------------- alarm ----------------------
 
 	// email alarm template
-	private static final String mailBodyTemplate = "<h5>监控告警明细：</span>" +
+	private static final String mailBodyTemplate = "<h5>" + I18nUtil.getString("jobconf_monitor_detail") + "：</span>" +
 			"<table border=\"1\" cellpadding=\"3\" style=\"border-collapse:collapse; width:80%;\" >\n" +
 			"   <thead style=\"font-weight: bold;color: #ffffff;background-color: #ff8c00;\" >" +
 			"      <tr>\n" +
-			"         <td>执行器</td>\n" +
-			"         <td>任务ID</td>\n" +
-			"         <td>任务描述</td>\n" +
-			"         <td>告警类型</td>\n" +
+			"         <td>"+ I18nUtil.getString("jobinfo_field_jobgroup") +"</td>\n" +
+			"         <td>"+ I18nUtil.getString("jobinfo_field_id") +"</td>\n" +
+			"         <td>"+ I18nUtil.getString("jobinfo_field_jobdesc") +"</td>\n" +
+			"         <td>"+ I18nUtil.getString("jobconf_monitor_alarm_title") +"</td>\n" +
 			"      </tr>\n" +
 			"   <thead/>\n" +
 			"   <tbody>\n" +
@@ -134,7 +135,7 @@ public class JobFailMonitorHelper {
 			"         <td>{0}</td>\n" +
 			"         <td>{1}</td>\n" +
 			"         <td>{2}</td>\n" +
-			"         <td>调度失败</td>\n" +
+			"         <td>"+ I18nUtil.getString("jobconf_monitor_alarm_type") +"</td>\n" +
 			"      </tr>\n" +
 			"   <tbody>\n" +
 			"</table>";
@@ -154,7 +155,7 @@ public class JobFailMonitorHelper {
 			for (String email: emailSet) {
 				XxlJobGroup group = XxlJobDynamicScheduler.xxlJobGroupDao.load(Integer.valueOf(info.getJobGroup()));
 
-				String title = "调度中心监控报警";
+				String title = I18nUtil.getString("jobconf_monitor");
 				String content = MessageFormat.format(mailBodyTemplate, group!=null?group.getTitle():"null", info.getId(), info.getJobDesc());
 
 				MailUtil.sendMail(email, title, content);

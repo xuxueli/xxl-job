@@ -1,8 +1,8 @@
 package com.xxl.job.admin.controller.interceptor;
 
 import com.xxl.job.admin.controller.annotation.PermessionLimit;
+import com.xxl.job.admin.core.conf.XxlJobAdminConfig;
 import com.xxl.job.admin.core.util.CookieUtil;
-import com.xxl.job.admin.core.util.PropertiesUtil;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -22,8 +22,8 @@ public class PermissionInterceptor extends HandlerInterceptorAdapter {
 	public static final String LOGIN_IDENTITY_KEY = "XXL_JOB_LOGIN_IDENTITY";
 	public static final String LOGIN_IDENTITY_TOKEN;
     static {
-        String username = PropertiesUtil.getString("xxl.job.login.username");
-        String password = PropertiesUtil.getString("xxl.job.login.password");
+        String username = XxlJobAdminConfig.getAdminConfig().getLoginUsername();
+        String password = XxlJobAdminConfig.getAdminConfig().getLoginPassword();
 
         // login token
         String tokenTmp = DigestUtils.md5Hex(username + "_" + password);

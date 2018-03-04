@@ -29,6 +29,10 @@
 
 	<!-- pace -->
 	<link rel="stylesheet" href="${request.contextPath}/static/plugins/pace/themes/pace-theme-flash.css">
+
+	<#-- i18n -->
+	<#global I18n = I18nUtil.getMultString()?eval />
+
 </#macro>
 
 <#macro commonScript>
@@ -53,7 +57,10 @@
 
 	<#-- common -->
     <script src="${request.contextPath}/static/js/common.1.js"></script>
-    <script>var base_url = '${request.contextPath}';</script>
+    <script>
+		var base_url = '${request.contextPath}';
+        var I18n = ${I18nUtil.getMultString()};
+	</script>
 
 </#macro>
 
@@ -61,7 +68,7 @@
 	<header class="main-header">
 		<a href="${request.contextPath}/" class="logo">
 			<span class="logo-mini"><b>XXL</b></span>
-			<span class="logo-lg"><b>任务调度中心</b></span>
+			<span class="logo-lg"><b>${I18n.admin_name}</b></span>
 		</a>
 		<nav class="navbar navbar-static-top" role="navigation">
 			<a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button"><span class="sr-only">切换导航</span></a>
@@ -69,7 +76,7 @@
 				<ul class="nav navbar-nav">
 					<li class="dropdown user user-menu">
 	                    <a href=";" id="logoutBtn" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                      		<span class="hidden-xs">注销</span>
+                      		<span class="hidden-xs">${I18n.logout_btn}</span>
 	                    </a>
 					</li>
 				</ul>
@@ -85,11 +92,11 @@
 		<section class="sidebar">
 			<!-- sidebar menu: : style can be found in sidebar.less -->
 			<ul class="sidebar-menu">
-				<li class="header">常用模块</li>
-				<li class="nav-click <#if pageName == "jobinfo">active</#if>" ><a href="${request.contextPath}/jobinfo"><i class="fa fa-circle-o text-aqua"></i><span>任务管理</span></a></li>
-				<li class="nav-click <#if pageName == "joblog">active</#if>" ><a href="${request.contextPath}/joblog"><i class="fa fa-circle-o text-yellow"></i><span>调度日志</span></a></li>
-                <li class="nav-click <#if pageName == "jobgroup">active</#if>" ><a href="${request.contextPath}/jobgroup"><i class="fa fa-circle-o text-green"></i><span>执行器管理</span></a></li>
-				<li class="nav-click <#if pageName == "help">active</#if>" ><a href="${request.contextPath}/help"><i class="fa fa-circle-o text-gray"></i><span>使用教程</span></a></li>
+                <li class="header">${I18n.system_nav}</li>
+				<li class="nav-click <#if pageName == "jobinfo">active</#if>" ><a href="${request.contextPath}/jobinfo"><i class="fa fa-circle-o text-aqua"></i><span>${I18n.jobinfo_name}</span></a></li>
+				<li class="nav-click <#if pageName == "joblog">active</#if>" ><a href="${request.contextPath}/joblog"><i class="fa fa-circle-o text-yellow"></i><span>${I18n.joblog_name}</span></a></li>
+                <li class="nav-click <#if pageName == "jobgroup">active</#if>" ><a href="${request.contextPath}/jobgroup"><i class="fa fa-circle-o text-green"></i><span>${I18n.jobgroup_name}</span></a></li>
+				<li class="nav-click <#if pageName == "help">active</#if>" ><a href="${request.contextPath}/help"><i class="fa fa-circle-o text-gray"></i><span>${I18n.job_help}</span></a></li>
 			</ul>
 		</section>
 		<!-- /.sidebar -->
@@ -175,7 +182,7 @@
 
 <#macro commonFooter >
 	<footer class="main-footer">
-        Powered by <b>XXL-JOB</b> 1.9.0（快照版本）
+        Powered by <b>XXL-JOB</b> ${I18n.admin_version}
 		<div class="pull-right hidden-xs">
             <strong>Copyright &copy; 2015-${.now?string('yyyy')} &nbsp;
                 <a href="http://www.xuxueli.com/" target="_blank" >xuxueli</a>

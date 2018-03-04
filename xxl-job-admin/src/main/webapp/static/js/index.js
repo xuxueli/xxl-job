@@ -1,13 +1,17 @@
 /**
  * Created by xuxueli on 17/4/24.
  */
-
-
 $(function () {
 
-    // 过滤时间
-    var _startDate = moment().subtract(1, 'months');    // 默认，最近一月
-    var _endDate = moment();
+    // filter Time
+    var rangesConf = {};
+    rangesConf[I18n.daterangepicker_ranges_today] = [moment().startOf('day'), moment().endOf('day')];
+    rangesConf[I18n.daterangepicker_ranges_yesterday] = [moment().subtract(1, 'days').startOf('day'), moment().subtract(1, 'days').endOf('day')];
+    rangesConf[I18n.daterangepicker_ranges_this_month] = [moment().startOf('month'), moment().endOf('month')];
+    rangesConf[I18n.daterangepicker_ranges_last_month] = [moment().subtract(1, 'months').startOf('month'), moment().subtract(1, 'months').endOf('month')];
+    rangesConf[I18n.daterangepicker_ranges_recent_week] = [moment().subtract(1, 'weeks').startOf('day'), moment().endOf('day')];
+    rangesConf[I18n.daterangepicker_ranges_recent_month] = [moment().subtract(1, 'months').startOf('day'), moment().endOf('day')];
+
     $('#filterTime').daterangepicker({
         autoApply:false,
         singleDatePicker:false,
@@ -16,36 +20,28 @@ $(function () {
         timePickerIncrement: 10, 	// 时间的增量，单位为分钟
         timePicker24Hour : true,
         opens : 'left', //日期选择框的弹出位置
-        ranges: {
-            //'最近1小时': [moment().subtract(1, 'hours'), moment()],
-            '今日': [moment().startOf('day'), moment().endOf('day')],
-            '昨日': [moment().subtract(1, 'days').startOf('day'), moment().subtract(1, 'days').endOf('day')],
-            '本月': [moment().startOf('month'), moment().endOf('month')],
-            '上个月': [moment().subtract(1, 'months').startOf('month'), moment().subtract(1, 'months').endOf('month')],
-            '最近1周': [moment().subtract(1, 'weeks'), moment()],
-            '最近1月': [_startDate, _endDate]
-        },
+        ranges: rangesConf,
         locale : {
             format: 'YYYY-MM-DD HH:mm:ss',
             separator : ' - ',
-            customRangeLabel : '自定义',
-            applyLabel : '确定',
-            cancelLabel : '取消',
-            fromLabel : '起始时间',
-            toLabel : '结束时间',
-            daysOfWeek : [ '日', '一', '二', '三', '四', '五', '六' ],
-            monthNames : [ '一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月' ],
+            customRangeLabel : I18n.daterangepicker_custom_name ,
+            applyLabel : I18n.system_ok ,
+            cancelLabel : I18n.system_cancel ,
+            fromLabel : I18n.daterangepicker_custom_starttime ,
+            toLabel : I18n.daterangepicker_custom_endtime ,
+            daysOfWeek : I18n.daterangepicker_custom_daysofweek.split(',') ,        // '日', '一', '二', '三', '四', '五', '六'
+            monthNames : I18n.daterangepicker_custom_monthnames.split(',') ,        // '一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'
             firstDay : 1
         },
-        startDate:_startDate,
-        endDate: _endDate
+        startDate: rangesConf[I18n.daterangepicker_ranges_recent_month][0] ,
+        endDate: rangesConf[I18n.daterangepicker_ranges_recent_month][1]
     }, function (start, end, label) {
         freshChartDate(start, end);
     });
-    freshChartDate(_startDate, _endDate);
+    freshChartDate(rangesConf[I18n.daterangepicker_ranges_recent_month][0], rangesConf[I18n.daterangepicker_ranges_recent_month][1]);
 
     /**
-     * 刷新报表
+     * fresh Chart Date
      *
      * @param startDate
      * @param endDate
@@ -53,7 +49,7 @@ $(function () {
     function freshChartDate(startDate, endDate) {
         $.ajax({
             type : 'POST',
-            url : base_url + '/triggerChartDate',
+            url : base_url + '/chartInfo',
             data : {
                 'startDate':startDate.format('YYYY-MM-DD HH:mm:ss'),
                 'endDate':endDate.format('YYYY-MM-DD HH:mm:ss')
@@ -65,8 +61,9 @@ $(function () {
                     pieChartInit(data);
                 } else {
                     layer.open({
-                        title: '系统提示',
-                        content: (data.msg || '调度报表数据加载异常'),
+                        title: I18n.system_tips ,
+                        btn: [ I18n.system_ok ],
+                        content: (data.msg || I18n.job_dashboard_report_loaddata_fail ),
                         icon: '2'
                     });
                 }
@@ -75,12 +72,12 @@ $(function () {
     }
 
     /**
-     * 折线图
+     * line Chart Init
      */
     function lineChartInit(data) {
         var option = {
                title: {
-                   text: '日期分布图'
+                   text: I18n.job_dashboard_date_report
                },
                tooltip : {
                    trigger: 'axis',
@@ -92,7 +89,7 @@ $(function () {
                    }
                },
                legend: {
-                   data:['成功调度次数','失败调度次数']
+                   data:[I18n.joblog_status_suc, I18n.joblog_status_fail, I18n.joblog_status_running]
                },
                toolbox: {
                    feature: {
@@ -119,16 +116,16 @@ $(function () {
                ],
                series : [
                    {
-                       name:'成功调度次数',
+                       name:I18n.joblog_status_suc,
                        type:'line',
-                       stack: '总量',
+                       stack: 'Total',
                        areaStyle: {normal: {}},
                        data: data.content.triggerDayCountSucList
                    },
                    {
-                       name:'失败调度次数',
+                       name:I18n.joblog_status_fail,
                        type:'line',
-                       stack: '总量',
+                       stack: 'Total',
                        label: {
                            normal: {
                                show: true,
@@ -137,9 +134,16 @@ $(function () {
                        },
                        areaStyle: {normal: {}},
                        data: data.content.triggerDayCountFailList
+                   },
+                   {
+                       name:I18n.joblog_status_running,
+                       type:'line',
+                       stack: 'Total',
+                       areaStyle: {normal: {}},
+                       data: data.content.triggerDayCountRunningList
                    }
                ],
-                color:['#00A65A', '#F39C12']
+                color:['#00A65A', '#c23632', '#F39C12']
         };
 
         var lineChart = echarts.init(document.getElementById('lineChart'));
@@ -147,38 +151,42 @@ $(function () {
     }
 
     /**
-     * 饼图
+     * pie Chart Init
      */
     function pieChartInit(data) {
         var option = {
             title : {
-                text: '成功比例图',
+                text: I18n.job_dashboard_rate_report ,
                 /*subtext: 'subtext',*/
                 x:'center'
             },
             tooltip : {
                 trigger: 'item',
-                formatter: "{a} <br/>{b} : {c} ({d}%)"
+                formatter: "{b} : {c} ({d}%)"
             },
             legend: {
                 orient: 'vertical',
                 left: 'left',
-                data: ['成功调度次数','失败调度次数']
+                data: [I18n.joblog_status_suc, I18n.joblog_status_fail, I18n.joblog_status_running ]
             },
             series : [
                 {
-                    name: '分布比例',
+                    //name: '分布比例',
                     type: 'pie',
                     radius : '55%',
                     center: ['50%', '60%'],
                     data:[
                         {
-                            value:data.content.triggerCountSucTotal,
-                            name:'成功调度次数'
+                            name:I18n.joblog_status_suc,
+                            value:data.content.triggerCountSucTotal
                         },
                         {
-                            value:data.content.triggerCountFailTotal,
-                            name:'失败调度次数'
+                            name:I18n.joblog_status_fail,
+                            value:data.content.triggerCountFailTotal
+                        },
+                        {
+                            name:I18n.joblog_status_running,
+                            value:data.content.triggerCountRunningTotal
                         }
                     ],
                     itemStyle: {
@@ -190,7 +198,7 @@ $(function () {
                     }
                 }
             ],
-            color:['#00A65A', '#F39C12']
+            color:['#00A65A', '#c23632', '#F39C12']
         };
         var pieChart = echarts.init(document.getElementById('pieChart'));
         pieChart.setOption(option);
