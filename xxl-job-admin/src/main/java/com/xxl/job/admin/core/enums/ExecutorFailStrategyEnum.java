@@ -1,13 +1,15 @@
 package com.xxl.job.admin.core.enums;
 
+import com.xxl.job.admin.core.util.I18nUtil;
+
 /**
  * Created by xuxueli on 17/5/9.
  */
 public enum ExecutorFailStrategyEnum {
 
-    FAIL_ALARM("失败告警"),
+    FAIL_ALARM(I18nUtil.getString("jobconf_fail_alarm")),
 
-    FAIL_RETRY("失败重试");
+    FAIL_RETRY(I18nUtil.getString("jobconf_fail_retry"));
 
     private final String title;
     private ExecutorFailStrategyEnum(String title) {

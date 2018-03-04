@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>任务调度中心</title>
-<#import "/common/common.macro.ftl" as netCommon>
-<@netCommon.commonStyle />
+    <#import "/common/common.macro.ftl" as netCommon>
+    <@netCommon.commonStyle />
+    <title>${I18n.admin_name}</title>
 </head>
 <body class="hold-transition skin-blue layout-top-nav">
 
@@ -12,9 +12,9 @@
     <header class="main-header">
         <nav class="navbar navbar-static-top">
             <div class="container">
-            <#-- icon -->
+                <#-- icon -->
                 <div class="navbar-header">
-                    <a class="navbar-brand"><b>执行日志</b>Console</a>
+                    <a class="navbar-brand"><b>${I18n.joblog_rolling_log}</b> Console</a>
                     <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
                         <i class="fa fa-bars"></i>
                     </button>
@@ -33,7 +33,7 @@
                         <li>
                             <a href="javascript:window.location.reload();" >
                                 <i class="fa fa-fw fa-refresh" ></i>
-                                刷新
+                                ${I18n.joblog_rolling_log_refresh}
                             </a>
                         </li>
                     </ul>

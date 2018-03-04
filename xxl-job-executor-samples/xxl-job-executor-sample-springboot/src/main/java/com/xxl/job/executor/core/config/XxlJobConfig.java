@@ -18,12 +18,11 @@ import org.springframework.context.annotation.Configuration;
 public class XxlJobConfig {
     private Logger logger = LoggerFactory.getLogger(XxlJobConfig.class);
 
-
     @Value("${xxl.job.admin.addresses}")
-    private String addresses;
+    private String adminAddresses;
 
     @Value("${xxl.job.executor.appname}")
-    private String appname;
+    private String appName;
 
     @Value("${xxl.job.executor.ip}")
     private String ip;
@@ -31,22 +30,28 @@ public class XxlJobConfig {
     @Value("${xxl.job.executor.port}")
     private int port;
 
-    @Value("${xxl.job.executor.logpath}")
-    private String logpath;
-
     @Value("${xxl.job.accessToken}")
     private String accessToken;
+
+    @Value("${xxl.job.executor.logpath}")
+    private String logPath;
+
+    @Value("${xxl.job.executor.logretentiondays}")
+    private int logRetentionDays;
+
 
     @Bean(initMethod = "start", destroyMethod = "destroy")
     public XxlJobExecutor xxlJobExecutor() {
         logger.info(">>>>>>>>>>> xxl-job config init.");
         XxlJobExecutor xxlJobExecutor = new XxlJobExecutor();
+        xxlJobExecutor.setAdminAddresses(adminAddresses);
+        xxlJobExecutor.setAppName(appName);
         xxlJobExecutor.setIp(ip);
         xxlJobExecutor.setPort(port);
-        xxlJobExecutor.setAppName(appname);
-        xxlJobExecutor.setAdminAddresses(addresses);
-        xxlJobExecutor.setLogPath(logpath);
         xxlJobExecutor.setAccessToken(accessToken);
+        xxlJobExecutor.setLogPath(logPath);
+        xxlJobExecutor.setLogRetentionDays(logRetentionDays);
+
         return xxlJobExecutor;
     }
 

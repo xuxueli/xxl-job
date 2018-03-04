@@ -40,6 +40,8 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 - 24、邮件报警：任务失败时支持邮件报警，支持配置多邮件地址群发报警邮件；
 - 25、推送maven中央仓库: 将会把最新稳定版推送到maven中央仓库, 方便用户接入和使用;
 - 26、运行报表：支持实时查看运行数据，如任务数量、调度次数、执行器数量等；以及调度报表，如调度日期分布图，调度成功分布图等；
+- 27、全异步：系统底层实现全部异步化，针对密集调度进行流量削峰，理论上支持任意时长任务的运行；
+- 28、国际化：调度中心支持国际化设置，提供中文、英文两种可选语言，默认为中文；
 
 ### 1.3 发展
 于2015年中，我在github上创建XXL-JOB项目仓库并提交第一个commit，随之进行系统结构设计，UI选型，交互设计……
@@ -52,12 +54,18 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 
 于2017-05-13，在上海举办的 "[第62期开源中国源创会](https://www.oschina.net/event/2236961)" 的 "放码过来" 环节，我登台对XXL-JOB做了演讲，台下五百位在场观众反响热烈（[图文回顾](https://www.oschina.net/question/2686220_2242120) ）。
 
+于2017-10-22，又拍云 Open Talk 联合 Spring Cloud 中国社区举办的 "[进击的微服务实战派上海站](https://opentalk.upyun.com/303.html)"，我登台对XXL-JOB做了演讲，现场观众反响热烈并在会后与XXL-JOB用户热烈讨论交流
+
 于2017-12-11，XXL-JOB有幸参会《[InfoQ ArchSummit全球架构师峰会](http://bj2017.archsummit.com/)》，并被拍拍贷架构总监"杨波老师"在专题 "[微服务原理、基础架构和开源实践](http://bj2017.archsummit.com/training/2)" 中现场介绍。
+
+于2017-12-18，XXL-JOB参与"[2017年度最受欢迎中国开源软件](http://www.oschina.net/project/top_cn_2017?sort=1)"评比，在当时已录入的约九千个国产开源项目中角逐，最终进入了前30强。
+
+于2018-01-15，XXL-JOB参与"[2017码云最火开源项目](https://www.oschina.net/news/92438/2017-mayun-top-50)"评比，在当时已录入的约六千五百个码云项目中角逐，最终进去了前20强。
 
 > 我司大众点评目前已接入XXL-JOB，内部别名《Ferrari》（Ferrari基于XXL-JOB的V1.1版本定制而成，新接入应用推荐升级最新版本）。
 据最新统计, 自2016-01-21接入至2017-12-01期间，该系统已调度约100万次，表现优异。新接入应用推荐使用最新版本，因为经过数个大版本的更新，系统的任务模型、UI交互模型以及底层调度通讯模型都有了较大的优化和提升，核心功能更加稳定高效。
 
-至今，XXL-JOB已接入多家公司的线上产品线，接入场景如电商业务，O2O业务和大数据作业等，截止2016-07-19为止，XXL-JOB已接入的公司包括不限于：
+至今，XXL-JOB已接入多家公司的线上产品线，接入场景如电商业务，O2O业务和大数据作业等，截止最新统计时间为止，XXL-JOB已接入的公司包括不限于：
     
 	- 1、大众点评；
 	- 2、山东学而网络科技有限公司；
@@ -118,6 +126,14 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
     - 57、华夏票联（北京）科技有限公司
     - 58、拍拍贷
     - 59、北京尚德机构在线教育有限公司
+    - 60、任子行股份有限公司
+    - 61、北京时态电子商务有限公司
+    - 62、深圳卷皮网络科技有限公司
+    - 63、北京安博通科技股份有限公司
+    - 64、未来无线网
+    - 65、厦门瓷禧网络有限公司
+    - 66、北京递蓝科软件股份有限公司
+    - 67、郑州创海软件科技公司
 	- ……
 
 > 更多接入的公司，欢迎在 [登记地址](https://github.com/xuxueli/xxl-job/issues/1 ) 登记，登记仅仅为了产品推广。
@@ -137,7 +153,7 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 源码仓库地址 | Release Download
 --- | ---
 [https://github.com/xuxueli/xxl-job](https://github.com/xuxueli/xxl-job) | [Download](https://github.com/xuxueli/xxl-job/releases)  
-[http://git.oschina.net/xuxueli0323/xxl-job](http://git.oschina.net/xuxueli0323/xxl-job) | [Download](http://git.oschina.net/xuxueli0323/xxl-job/releases)
+[http://gitee.com/xuxueli0323/xxl-job](http://gitee.com/xuxueli0323/xxl-job) | [Download](http://gitee.com/xuxueli0323/xxl-job/releases)
 
 
 #### 中央仓库地址
@@ -147,7 +163,7 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 <dependency>
     <groupId>com.xuxueli</groupId>
     <artifactId>xxl-job-core</artifactId>
-    <version>1.8.2</version>
+    <version>${最新稳定版本}</version>
 </dependency>
 ```
 
@@ -222,6 +238,9 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
     
     ### 调度中心通讯TOKEN，非空时启用
     xxl.job.accessToken=
+    
+    ### 调度中心国际化设置，默认为中文版本，值设置为“en”时切换为英文版本
+    xxl.job.i18n=
 
 #### 步骤二：部署项目：
 如果已经正确进行上述配置，可将项目编译打war包并部署到tomcat中。
@@ -263,12 +282,15 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
     xxl.job.executor.ip=
     xxl.job.executor.port=9999
     
+    ### xxl-job, access token：执行器通讯TOKEN，非空时启用
+    xxl.job.accessToken=
+        
     ### xxl-job log path：执行器运行日志文件存储的磁盘位置，需要对该路径拥有读写权限
     xxl.job.executor.logpath=/data/applogs/xxl-job/jobhandler/
     
-    ### xxl-job, access token：执行器通讯TOKEN，非空时启用
-    xxl.job.accessToken=
-
+    ### xxl-job log retention days：执行器Log文件定期清理功能，指定日志保存天数，日志文件过期自动删除。限制至少保持3天，否则功能不生效；
+    xxl.job.executor.logretentiondays=-1
+    
 
 #### 步骤三：执行器组件配置
 
@@ -282,35 +304,42 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
 <!-- 配置01、JobHandler 扫描路径：自动扫描容器中JobHandler -->
 <context:component-scan base-package="com.xxl.job.executor.service.jobhandler" />
 
-<!-- 配置02、执行器Excutor配置：执行器核心配置 -->
+<!-- 配置02、执行器 -->
 <bean id="xxlJobExecutor" class="com.xxl.job.core.executor.XxlJobExecutor" init-method="start" destroy-method="destroy" >
+    <!-- 执行器注册中心地址[选填]，为空则关闭自动注册 -->
+    <property name="adminAddresses" value="${xxl.job.admin.addresses}" />
+    <!-- 执行器AppName[选填]，为空则关闭自动注册 -->
+    <property name="appName" value="${xxl.job.executor.appname}" />
     <!-- 执行器IP[选填]，为空则自动获取 -->
     <property name="ip" value="${xxl.job.executor.ip}" />
     <!-- 执行器端口号[选填]，为空则自动获取 -->
     <property name="port" value="${xxl.job.executor.port}" />
-    <!-- 执行器AppName[选填]，为空则关闭自动注册 -->
-    <property name="appName" value="${xxl.job.executor.appname}" />
-    <!-- 执行器注册中心地址[选填]，为空则关闭自动注册 -->
-    <property name="adminAddresses" value="${xxl.job.admin.addresses}" />
-    <!-- 执行器日志路径[选填]，为空则使用默认路径 -->
-    <property name="logPath" value="${xxl.job.executor.logpath}" />
     <!-- 访问令牌[选填]，非空则进行匹配校验 -->
     <property name="accessToken" value="${xxl.job.accessToken}" />
+    <!-- 执行器日志路径[选填]，为空则使用默认路径 -->
+    <property name="logPath" value="${xxl.job.executor.logpath}" />
+    <!-- 日志保存天数[选填]，值大于3时生效 -->
+    <property name="logRetentionDays" value="${xxl.job.executor.logretentiondays}" />
 </bean>
 ```
 
 #### 步骤四：部署执行器项目：
-如果已经正确进行上述配置，可将执行器项目编译打部署，系统提供三个执行器Sample示例项目，选择其中一个即可，各自的部署方式如下。
+如果已经正确进行上述配置，可将执行器项目编译打部署，系统提供多种执行器Sample示例项目，选择其中一个即可，各自的部署方式如下。
 
-    xxl-job-executor-sample-spring：项目编译打包成WAR包，并部署到tomcat中。
     xxl-job-executor-sample-springboot：项目编译打包成springboot类型的可执行JAR包，命令启动即可；
+    xxl-job-executor-sample-spring：项目编译打包成WAR包，并部署到tomcat中。
+    xxl-job-executor-sample-jfinal：同上
+    xxl-job-executor-sample-nutz：同上
+    
 
 至此“执行器”项目已经部署结束。
 
 #### 步骤五：执行器集群（可选）：
 执行器支持集群部署，提升调度系统可用性，同时提升任务处理能力。
 
-集群部署唯一要求为：保证集群中每个执行器的配置项 "xxl.job.admin.addresses/调度中心地址" 保持一致，执行器根据该配置进行执行器自动注册等操作。 
+执行器集群部署时，几点要求和建议：
+- 执行器回调地址（xxl.job.admin.addresses）需要保持一致；执行器根据该配置进行执行器自动注册等操作。 
+- 同一个执行器集群内AppName（xxl.job.executor.appname）需要保持一致；调度中心根据该配置动态发现不同集群的在线执行器列表。
 
 
 ### 2.5 开发第一个任务“Hello World”       
@@ -602,7 +631,7 @@ XXL-JOB首先定制了Quartz原生表结构前缀（XXL_JOB_QRTZ_）。
 
 #### 5.3.3 架构图
 
-![输入图片说明](https://static.oschina.net/uploads/img/201707/17190028_aEE2.png "在这里输入图片标题")
+![输入图片说明](https://static.oschina.net/uploads/img/201801/03103007_Qohm.png "在这里输入图片标题")
 
 ### 5.4 调度模块剖析
 #### 5.4.1 quartz的不足
@@ -639,15 +668,22 @@ org.quartz.threadPool.threadPriority: 5
 org.quartz.threadPool.threadsInheritContextClassLoaderOfInitializingThread: true
 ```
 
-XXL-JOB系统中业务逻辑在远程执行器执行，调度中心每次触发调度时仅发送一次调度请求，执行器会将请求存入执行队列并且立即响应调度中心；相比直接在quartz的QuartzJobBean中执行业务逻辑，极大的降低了调度线程占用；
+XXL-JOB系统中业务逻辑在远程执行器执行，全异步化设计，调度中心每次触发调度时仅发送一次调度请求，执行器会将请求存入执行队列并且立即响应调度中心，异步运行；相比直接在quartz的QuartzJobBean中执行业务逻辑，极大的降低了调度线程占用时间；
 
 XXL-JOB调度中心中每个JOB逻辑非常 “轻”，单个JOB一次运行平均耗时基本在 "10ms" 之内（基本为一次请求的网络开销）；因此，可以保证使用有限的线程支撑大量的JOB并发运行；
 
-理论上采用推荐机器配置 "4核4G内存"情况下，单线程可以承担 100（quartz最小时间粒度1000ms/触发一次任务耗时10ms）个密集任务（每秒执行一次）的正常调度触发。因此，默认配置的15个线程理论上可以承担起1500个密集任务的正常运行。
+理论支撑任务量公式如下：
 
-实际场景中，调度请求网络耗时不同、DB读写耗时不同、任务密集或稀疏调度情况不同，会导致任务量上限会上下波动。
+    理论支撑任务量 = 线程数配置 / 平均调度频率（每秒） * 平均触发耗时（单位s）
 
-如若需要支撑更多的任务量，可以通过 "调大调度线程数" 和 "提升机器配置" 两种方式实现。
+理论上采用推荐机器配置 "4核4G内存" + "配置1s运行1次密集任务" + "调度中心与执行器ping延迟10ms（0.01s）" 的情况下，
+
+    - 单线程支撑任务量  ：1 / 1 * 0.01 = 100个任务
+    - 15个线程支撑任务量：15 / 1 * 0.01 = 1500个任务
+
+实际场景中，由于调度中心与执行器ping延迟不同、DB读写耗时不同、任务调度密集程度不同，会导致任务量上限会上下波动。
+
+如若需要支撑更多的任务量，可以通过 "调大调度线程数" 、"降低调度中心与执行器ping延迟" 和 "提升机器配置" 几种方式实现。
 
 #### 5.4.5 @DisallowConcurrentExecution
 XXL-JOB调度模块的“调度中心”默认不使用该注解，即默认开启并行机制，因为RemoteHttpJobBean为公共QuartzJobBean，这样在多线程调度的情况下，调度模块被阻塞的几率很低，大大提高了调度系统的承载量。
@@ -1074,7 +1110,7 @@ Tips: 历史版本(V1.3.x)目前已经Release至稳定版本, 进入维护阶段
 - 9、调度中心任务监控线程销毁时，批量对失败任务告警，防止告警信息丢失；
 - 10、任务日志文件路径时间戳格式化时SimpleDateFormat并发问题解决；
 
-### 6.20 版本 V1.9.0 特性[迭代中]
+### 6.20 版本 V1.9.0 特性[2017-12-29]
 - 1、新增Nutz执行器Sample示例项目；
 - 2、新增任务运行模式 "GLUE模式(NodeJS) "，支持NodeJS脚本任务；
 - 3、脚本任务Shell、Python和Nodejs等支持获取分片参数；
@@ -1084,13 +1120,13 @@ Tips: 历史版本(V1.3.x)目前已经Release至稳定版本, 进入维护阶段
 - 7、调度报表优化，支持时间区间筛选；
 - 8、Log组件支持输出异常栈信息，底层实现优化；
 - 9、告警邮件样式优化，调整为表格形式，邮件组件调整为commons-email简化邮件操作；
-- 10、项目依赖升级，如spring、jackson等；
+- 10、项目依赖全量升级至较新稳定版本，如spring、jackson等等；
 - 11、任务日志，记录发起调度的机器信息；
 - 12、交互优化，如登陆注销；
 - 13、任务Cron长度扩展支持至128位，支持负责类型Cron设置；
 - 14、执行器地址录入交互优化，地址长度扩展支持至512位，支持大规模执行器集群配置；
 - 15、任务参数“IJobHandler.execute”入参改为“String params”，增强入参通用性。
-- 16、JobHandler提供init/destroy方法，支持在JobHandler初始化和销毁时进行附加操作；
+- 16、IJobHandler提供init/destroy方法，支持在相应任务线程初始化和销毁时进行附加操作；
 - 17、任务注解调整为 “@JobHandler”，与任务抽象接口统一；
 - 18、修复任务监控线程被耗时任务阻塞的问题；
 - 19、修复任务监控线程无法监控任务触发和执行状态均未0的问题；
@@ -1104,6 +1140,24 @@ Tips: 历史版本(V1.3.x)目前已经Release至稳定版本, 进入维护阶段
 - 27、系统安全性优化，登陆Token写Cookie时进行MD5加密，同时Cookie启用HttpOnly；
 - 28、新增"任务ID"属性，移除"JobKey"属性，前者承担所有功能，方便后续增强任务依赖功能。
 - 29、任务循环依赖问题修复，避免子任务与父任务重复导致的调度死循环；
+- 30、任务列表新增筛选条件 "任务描述"，快速检索任务；
+- 31、执行器Log文件定期清理功能：执行器新增配置项（"xxl.job.executor.logretentiondays"）日志保存天数，日志文件过期自动删除。
+
+### 6.21 版本 V1.9.1 特性[2018-02-22]
+- 1、国际化：调度中心实现国际化，支持中文、英文两种语言，默认为中文。
+- 2、调度报表新增"运行中"中状态项；
+- 3、调度报表优化，报表SQL调优并且新增LocalCache缓存（缓存时间60s），提高大数据量下报表加载速度；
+- 4、修复打包部署时资源文件乱码问题；
+- 5、修复新版本chrome滚动到顶部失效问题；
+- 6、调度中心配置加载优化，取消对配置文件名的强依赖，支持加载磁盘配置；
+- 7、修复脚本任务Log文件未正常close的问题；
+- 8、项目依赖全量升级至较新稳定版本，如spring、jackson等等；
+
+### 6.22 版本 V1.9.2 特性[迭代中]
+- 1、[迭代中]支持通过API服务操作任务信息；
+- 2、[迭代中]任务告警逻辑调整：任务调度，以及任务回调失败时，均推送监控队列。后期考虑通过任务Log字段控制告警状态；
+- 3、[迭代中]任务超时设置，超时任务主动终止；
+
 
 ### TODO LIST
 - 1、任务权限管理：执行器为粒度分配权限，核心操作校验权限；
@@ -1114,12 +1168,18 @@ Tips: 历史版本(V1.3.x)目前已经Release至稳定版本, 进入维护阶段
 - 6、调度任务优先级；
 - 7、移除quartz依赖，重写调度模块：新增或恢复任务时将下次执行记录插入delayqueue，调度中心集群竞争分布式锁，成功节点批量加载到期delayqueue数据，批量执行。
 - 8、springboot 和 docker镜像，并且推送docker镜像到中央仓库，更进一步实现产品开箱即用；
-- 9、国际化：调度中心界面。
-- 10、任务告警逻辑调整：任务调度，以及任务回调失败时，均推送监控队列。后期考虑通过任务Log字段控制告警状态；
-- 11、执行器Log清理功能：调度中心Log删除时同步删除执行器中的Log文件；
-- 12、Bean模式任务，JobHandler自动从执行器中查询展示为下拉框，选择后自动填充任务名称等属性；
-- 13、API事件触发类型任务（更类似MQ消息）支持"动态传参、延时消费"；该类型任务不走Quartz，单独建立MQ消息表，调度中心竞争触发；
-- 14、任务依赖增强，新增任务类型 "流程任务"，流程节点可挂载普通类型任务，承担任务依赖功能。现有子任务模型取消；需要考虑任务依赖死循环问题；
+- 9、多数据库支持；
+- 10、执行器Log清理功能：调度中心Log删除时同步删除执行器中的Log文件；
+- 11、Bean模式任务，JobHandler自动从执行器中查询展示为下拉框，选择后自动填充任务名称等属性；
+- 12、API事件触发类型任务（更类似MQ消息）支持"动态传参、延时消费"；该类型任务不走Quartz，单独建立MQ消息表，调度中心竞争触发；
+- 13、任务依赖增强，新增任务类型 "流程任务"，流程节点可挂载普通类型任务，承担任务依赖功能。现有子任务模型取消；需要考虑任务依赖死循环问题；
+- 14、分片任务某一分片失败，支持分片转移；
+- 15、调度中心触发任务后，先推送触发队列，异步触发，然后立即返回。降低quartz线程占用时长。
+- 16、新增API服务 "XxlJobService" ，支持通过API服务来维护管理任务信息；
+- 17、新增任务默认运行状态，任务更新时运行状态保持不变；
+- 18、告警邮件中展示失败告警信息；
+- 19、提供多版本执行器：不依赖容器版本、不内嵌Jetty版本（通过配置executoraddress替换jetty通讯）等；
+
 
 
 ## 七、其他
@@ -1138,4 +1198,4 @@ Tips: 历史版本(V1.3.x)目前已经Release至稳定版本, 进入维护阶段
 
 ---
 ### 捐赠
-无论金额多少都足够表达您这份心意，非常感谢 ：）      [前往捐赠](http://www.xuxueli.com/page/donate.html )
+无论捐赠金额多少都足够表达您这份心意，非常感谢 ：）      [前往捐赠](http://www.xuxueli.com/page/donate.html )

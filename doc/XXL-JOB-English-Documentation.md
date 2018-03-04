@@ -12,6 +12,9 @@
 
 ### 1.1 Overview
 XXL-JOB is a lightweight distributed task scheduling framework, the core design goal is to develop quickly, learning simple, lightweight, easy to expand. Is now open source and access to a number of companies online product line, download and use it now.
+
+> English document update slightly delayed, Please check the Chinese version for the latest document.
+
 ### 1.2 Features
 - 1.Simple: support through the Web page on the task CRUD operation, simple operation, a minute to get started;
 - 2.Dynamic: support dynamic modification of task status, pause / resume tasks, and termination of running tasks,immediate effect;
@@ -105,6 +108,19 @@ So far, XXL-JOB has access to a number of companies online product line, access 
     - 52、聚金资本
     - 53、北京父母邦网络科技有限公司
     - 54、中山元赫软件科技有限公司
+    - 55、中商惠民(北京)电子商务有限公司
+    - 56、凯京集团
+    - 57、华夏票联（北京）科技有限公司
+    - 58、拍拍贷
+    - 59、北京尚德机构在线教育有限公司
+    - 60、任子行股份有限公司
+    - 61、北京时态电子商务有限公司
+    - 62、深圳卷皮网络科技有限公司
+    - 63、北京安博通科技股份有限公司
+    - 64、未来无线网
+    - 65、厦门瓷禧网络有限公司
+    - 66、北京递蓝科软件股份有限公司
+    - 67、郑州创海软件科技公司
 	- ……
 
 > The company that access and use this product is welcome to register at the [address](https://github.com/xuxueli/xxl-job/issues/1 ), only for product promotion. 
@@ -122,7 +138,7 @@ Welcome everyone's attention and use, XXL-JOB will also embrace changes, sustain
 Source repository address | Release Download
 --- | ---
 [https://github.com/xuxueli/xxl-job](https://github.com/xuxueli/xxl-job) | [Download](https://github.com/xuxueli/xxl-job/releases)  
-[http://git.oschina.net/xuxueli0323/xxl-job](http://git.oschina.net/xuxueli0323/xxl-job) | [Download](http://git.oschina.net/xuxueli0323/xxl-job/releases)
+[http://gitee.com/xuxueli0323/xxl-job](http://gitee.com/xuxueli0323/xxl-job) | [Download](http://gitee.com/xuxueli0323/xxl-job/releases)
 
 #### Center repository address (The latest Release version：1.8.1)
 ```
@@ -203,6 +219,9 @@ The concrete contet describe as follows:
     
     ### TOKEN used for communication between the executor and schedule center, enabled if it’s not null
     xxl.job.accessToken=
+    
+    ### Internationalized Settings, the default is Chinese version，Switch to English when the value is "en".
+    xxl.job.i18n=en
 
 #### Step 2:Deploy:
 If you has finished step 1,then you can compile the project in maven and deploy the war package to tomcat.

@@ -50,7 +50,7 @@ public class XxlJobLogDaoTest {
         dto = xxlJobLogDao.load(log.getId());
 
 
-        List<Map<String, Object>> list2 = xxlJobLogDao.triggerCountByDay(DateUtils.addDays(new Date(), 30), new Date(), 200);
+        List<Map<String, Object>> list2 = xxlJobLogDao.triggerCountByDay(DateUtils.addDays(new Date(), 30), new Date());
 
         int ret4 = xxlJobLogDao.clearLog(1, 1, new Date(), 100);
 

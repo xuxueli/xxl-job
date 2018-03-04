@@ -40,8 +40,8 @@ public class ScriptJobHandler extends IJobHandler {
         String cmd = glueType.getCmd();
 
         // make script file
-        String scriptFileName = XxlJobFileAppender.getLogPath()
-                .concat("/gluesource/")
+        String scriptFileName = XxlJobFileAppender.getGlueSrcPath()
+                .concat("/")
                 .concat(String.valueOf(jobId))
                 .concat("_")
                 .concat(String.valueOf(glueUpdatetime))

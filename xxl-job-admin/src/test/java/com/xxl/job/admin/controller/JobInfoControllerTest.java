@@ -1,7 +1,7 @@
 package com.xxl.job.admin.controller;
 
 import com.xxl.job.admin.controller.interceptor.PermissionInterceptor;
-import com.xxl.job.admin.core.util.PropertiesUtil;
+import com.xxl.job.admin.core.conf.XxlJobAdminConfig;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.MediaType;
@@ -22,8 +22,8 @@ public class JobInfoControllerTest extends AbstractSpringMvcTest {
     MvcResult ret = mockMvc.perform(
         post("/login")
             .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-            .param("userName", PropertiesUtil.getString("xxl.job.login.username"))
-            .param("password", PropertiesUtil.getString("xxl.job.login.password"))
+            .param("userName", XxlJobAdminConfig.getAdminConfig().getLoginUsername())
+            .param("password", XxlJobAdminConfig.getAdminConfig().getLoginPassword())
     ).andReturn();
     cookie = ret.getResponse().getCookie(PermissionInterceptor.LOGIN_IDENTITY_KEY);
   }

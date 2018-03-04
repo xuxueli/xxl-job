@@ -53,9 +53,9 @@ public class JobInfoController {
 	@ResponseBody
 	public Map<String, Object> pageList(@RequestParam(required = false, defaultValue = "0") int start,  
 			@RequestParam(required = false, defaultValue = "10") int length,
-			int jobGroup, String executorHandler, String filterTime) {
+			int jobGroup, String jobDesc, String executorHandler, String filterTime) {
 		
-		return xxlJobService.pageList(start, length, jobGroup, executorHandler, filterTime);
+		return xxlJobService.pageList(start, length, jobGroup, jobDesc, executorHandler, filterTime);
 	}
 	
 	@RequestMapping("/add")
@@ -64,10 +64,10 @@ public class JobInfoController {
 		return xxlJobService.add(jobInfo);
 	}
 	
-	@RequestMapping("/reschedule")
+	@RequestMapping("/update")
 	@ResponseBody
-	public ReturnT<String> reschedule(XxlJobInfo jobInfo) {
-		return xxlJobService.reschedule(jobInfo);
+	public ReturnT<String> update(XxlJobInfo jobInfo) {
+		return xxlJobService.update(jobInfo);
 	}
 	
 	@RequestMapping("/remove")

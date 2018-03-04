@@ -2,6 +2,7 @@ package com.xxl.job.admin.service.impl;
 
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
+import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.admin.dao.XxlJobInfoDao;
 import com.xxl.job.admin.dao.XxlJobLogDao;
 import com.xxl.job.admin.dao.XxlJobRegistryDao;
@@ -64,7 +65,7 @@ public class AdminBizImpl implements AdminBiz {
         if (IJobHandler.SUCCESS.getCode() == handleCallbackParam.getExecuteResult().getCode()) {
             XxlJobInfo xxlJobInfo = xxlJobInfoDao.loadById(log.getJobId());
             if (xxlJobInfo!=null && StringUtils.isNotBlank(xxlJobInfo.getChildJobId())) {
-                callbackMsg = "<br><br><span style=\"color:#00c0ef;\" > >>>>>>>>>>>触发子任务<<<<<<<<<<< </span><br>";
+                callbackMsg = "<br><br><span style=\"color:#00c0ef;\" > >>>>>>>>>>>"+ I18nUtil.getString("jobconf_trigger_child_run") +"<<<<<<<<<<< </span><br>";
 
                 String[] childJobIds = xxlJobInfo.getChildJobId().split(",");
                 for (int i = 0; i < childJobIds.length; i++) {
@@ -73,21 +74,27 @@ public class AdminBizImpl implements AdminBiz {
                         ReturnT<String> triggerChildResult = xxlJobService.triggerJob(childJobId);
 
                         // add msg
-                        callbackMsg += MessageFormat.format("{0}/{1} [任务ID={2}], 触发{3}, 触发备注: {4} <br>",
-                                (i+1), childJobIds.length, childJobIds[i], (triggerChildResult.getCode()==ReturnT.SUCCESS_CODE?"成功":"失败"), triggerChildResult.getMsg());
+                        callbackMsg += MessageFormat.format(I18nUtil.getString("jobconf_callback_child_msg1"),
+                                (i+1),
+                                childJobIds.length,
+                                childJobIds[i],
+                                (triggerChildResult.getCode()==ReturnT.SUCCESS_CODE?I18nUtil.getString("system_success"):I18nUtil.getString("system_fail")),
+                                triggerChildResult.getMsg());
                     } else {
-                        callbackMsg += MessageFormat.format(" {0}/{1} [任务ID={2}], 触发失败, 触发备注: 任务ID格式错误 <br>",
-                                (i+1), childJobIds.length, childJobIds[i]);
+                        callbackMsg += MessageFormat.format(I18nUtil.getString("jobconf_callback_child_msg2"),
+                                (i+1),
+                                childJobIds.length,
+                                childJobIds[i]);
                     }
                 }
 
             }
         } else if (IJobHandler.FAIL_RETRY.getCode() == handleCallbackParam.getExecuteResult().getCode()){
             ReturnT<String> retryTriggerResult = xxlJobService.triggerJob(log.getJobId());
-            callbackMsg = "<br><br><span style=\"color:#F39C12;\" > >>>>>>>>>>>执行失败重试<<<<<<<<<<< </span><br>";
+            callbackMsg = "<br><br><span style=\"color:#F39C12;\" > >>>>>>>>>>>"+ I18nUtil.getString("jobconf_exe_fail_retry") +"<<<<<<<<<<< </span><br>";
 
-            callbackMsg += MessageFormat.format("触发{0}, 触发备注: {1}",
-                   (retryTriggerResult.getCode()==ReturnT.SUCCESS_CODE?"成功":"失败"), retryTriggerResult.getMsg());
+            callbackMsg += MessageFormat.format(I18nUtil.getString("jobconf_callback_msg1"),
+                   (retryTriggerResult.getCode()==ReturnT.SUCCESS_CODE?I18nUtil.getString("system_success"):I18nUtil.getString("system_fail")), retryTriggerResult.getMsg());
         }
 
         // handle msg

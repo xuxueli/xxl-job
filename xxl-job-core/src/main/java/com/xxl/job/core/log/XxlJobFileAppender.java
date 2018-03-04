@@ -20,8 +20,21 @@ public class XxlJobFileAppender {
 	public static final InheritableThreadLocal<String> contextHolder = new InheritableThreadLocal<String>();
 
 
-	// log base path
+	/**
+	 * log base path
+	 *
+	 * strut like:
+	 * 	---/
+	 * 	---/gluesource/
+	 * 	---/gluesource/10_1514171108000.js
+	 * 	---/gluesource/10_1514171108000.js
+	 * 	---/2017-12-25/
+	 * 	---/2017-12-25/639.log
+	 * 	---/2017-12-25/821.log
+	 *
+	 */
 	private static String logBasePath = "/data/applogs/xxl-job/jobhandler";
+	private static String glueSrcPath = logBasePath.concat("/gluesource");
 	public static void initLogPath(String logPath){
 		// init
 		if (logPath!=null && logPath.trim().length()>0) {
@@ -39,11 +52,14 @@ public class XxlJobFileAppender {
 		if (!glueBaseDir.exists()) {
 			glueBaseDir.mkdirs();
 		}
+		glueSrcPath = glueBaseDir.getPath();
 	}
 	public static String getLogPath() {
 		return logBasePath;
 	}
-
+	public static String getGlueSrcPath() {
+		return glueSrcPath;
+	}
 
 	/**
 	 * log filename, like "logPath/yyyy-MM-dd/9999.log"

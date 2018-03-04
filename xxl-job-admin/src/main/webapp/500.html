@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title>应用程序异常 (500)</title> 
+	<title>Error</title>
     <style type="text/css"> 
         body { background-color: #fff; color: #666; text-align: center; font-family: arial, sans-serif; }
         div.dialog {
@@ -21,8 +21,9 @@
 <body> 
 
 	<div class="dialog"> 
-	    <h1>应用程序异常</h1> 
-	    <p>抱歉！您访问的页面出现异常，请稍后重试或联系管理员。</p> 
+	    <h1>System Error</h1>
+	    <p>Oops! Page not found.</p>
+		<a href="javascript:window.location.href='${request.contextPath}/'">Back</a>
 	</div>
 
 </body>

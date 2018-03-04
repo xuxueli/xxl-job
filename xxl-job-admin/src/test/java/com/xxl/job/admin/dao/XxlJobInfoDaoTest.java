@@ -20,8 +20,8 @@ public class XxlJobInfoDaoTest {
 	
 	@Test
 	public void pageList(){
-		List<XxlJobInfo> list = xxlJobInfoDao.pageList(0, 20, 0, null);
-		int list_count = xxlJobInfoDao.pageListCount(0, 20, 0, null);
+		List<XxlJobInfo> list = xxlJobInfoDao.pageList(0, 20, 0, null, null);
+		int list_count = xxlJobInfoDao.pageListCount(0, 20, 0, null, null);
 		
 		System.out.println(list);
 		System.out.println(list_count);
