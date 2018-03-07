@@ -797,7 +797,7 @@ The scheduling center provides API services for executors and business parties t
 
 The scheduling center API service location: com.xxl.job.core.biz.AdminBiz.java
 
-The scheduling center API service requests reference code：com.xxl.job.dao.impl.AdminBizTest.java
+The scheduling center API service requests reference code：com.xxl.job.adminbiz.AdminBizTest.java
 
 
 ## 6 Version update log

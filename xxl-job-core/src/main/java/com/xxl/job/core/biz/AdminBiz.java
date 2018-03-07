@@ -13,6 +13,9 @@ public interface AdminBiz {
 
     public static final String MAPPING = "/api";
 
+
+    // ---------------------- callback ----------------------
+
     /**
      * callback
      *
@@ -20,6 +23,9 @@ public interface AdminBiz {
      * @return
      */
     public ReturnT<String> callback(List<HandleCallbackParam> callbackParamList);
+
+
+    // ---------------------- registry ----------------------
 
     /**
      * registry
@@ -37,6 +43,8 @@ public interface AdminBiz {
      */
     public ReturnT<String> registryRemove(RegistryParam registryParam);
 
+
+    // ---------------------- job opt ----------------------
 
     /**
      * trigger job for once

@@ -30,7 +30,7 @@ public class I18nUtil {
             return prop;
         }
         try {
-            // bild i18n prop
+            // build i18n prop
             String i18n = XxlJobAdminConfig.getAdminConfig().getI18n();
             i18n = StringUtils.isNotBlank(i18n)?("_"+i18n):i18n;
             String i18nFile = MessageFormat.format("i18n/message{0}.properties", i18n);
