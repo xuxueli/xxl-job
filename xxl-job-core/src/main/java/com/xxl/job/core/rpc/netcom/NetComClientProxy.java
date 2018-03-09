@@ -58,8 +58,7 @@ public class NetComClientProxy implements FactoryBean<Object> {
 	                    
 	                    // valid response
 						if (response == null) {
-							logger.error(">>>>>>>>>>> xxl-rpc netty response not found.");
-							throw new Exception(">>>>>>>>>>> xxl-rpc netty response not found.");
+							throw new Exception("Network request fail, response not found.");
 						}
 	                    if (response.isError()) {
 	                        throw new RuntimeException(response.getError());
