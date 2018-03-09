@@ -115,10 +115,14 @@
 	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobLog" useGeneratedKeys="true" keyProperty="id" >
 		INSERT INTO XXL_JOB_QRTZ_TRIGGER_LOG (
 			`job_group`,
-			`job_id`
+			`job_id`,
+			`trigger_code`,
+			`handle_code`
 		) VALUES (
 			#{jobGroup},
-			#{jobId}
+			#{jobId},
+			#{triggerCode},
+			#{handleCode}
 		);
 		<!--<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
 			SELECT LAST_INSERT_ID() 
