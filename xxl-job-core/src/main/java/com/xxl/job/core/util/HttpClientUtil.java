@@ -26,7 +26,7 @@ public class HttpClientUtil {
 	/**
 	 * post request
 	 */
-	public static byte[] postRequest(String reqURL, byte[] date) throws Exception {
+	public static byte[] postRequest(String reqURL, byte[] data) throws Exception {
 		byte[] responseBytes = null;
 		
 		HttpPost httpPost = new HttpPost(reqURL);
@@ -53,8 +53,8 @@ public class HttpClientUtil {
 			httpPost.setConfig(requestConfig);
 
 			// data
-			if (date != null) {
-				httpPost.setEntity(new ByteArrayEntity(date, ContentType.DEFAULT_BINARY));
+			if (data != null) {
+				httpPost.setEntity(new ByteArrayEntity(data, ContentType.DEFAULT_BINARY));
 			}
 			// do post
 			HttpResponse response = httpClient.execute(httpPost);
