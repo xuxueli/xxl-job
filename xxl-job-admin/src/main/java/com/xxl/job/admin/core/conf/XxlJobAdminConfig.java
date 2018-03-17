@@ -45,6 +45,9 @@ public class XxlJobAdminConfig implements InitializingBean{
     @Value("${xxl.job.i18n}")
     private String i18n;
 
+    @Value("${xxl.expire.time}")
+    private String expireTime;
+
 
     public String getMailHost() {
         return mailHost;
@@ -76,6 +79,10 @@ public class XxlJobAdminConfig implements InitializingBean{
 
     public String getI18n() {
         return i18n;
+    }
+
+    public String getExpireTime() {
+        return expireTime;
     }
 
 }
