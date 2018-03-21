@@ -719,8 +719,6 @@ All supported types of scripts as shown beloes:
 #### 5.5.4 executor
 Executor is actually an embedded Jetty server with default port 9999, as shown below（parameter:xxl.job.executor.port）.
 
-![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_TgNO.png "在这里输入图片标题")
-
 Executor will identify Bean mode task in spring container through @JobHandler When project start, it will be managed use the value of annotation as key. 
 
 When executor received schedule request from schedule center, if task type is “Bean模式” it will match bean mode task in Spring container and call it’s execute() method and execute task logic. if task type is “GLUE模式”, it will load Glue code, instantiate a Java object and inject other spring service（notice: the spring service injected in Glue code must exist in the same executor project）, then call execute() method and execute task logic. 
