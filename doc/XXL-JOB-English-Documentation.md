@@ -323,7 +323,7 @@ Login in xxl-job-admin,click on the"新建任务" button, configure the job para
 
 ![task management](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_o8HQ.png "task management")
 
-![create task](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_SE2u.png "create task")
+![create task](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_ZAsz.png "create task")
 
 #### Step 2：develop “GLUE模式(Java)” job
 Click “GLUE” button on the right of the job to go to GLUE editor view as shown below。“GLUE模式(Java)” mode task has been inited with default task code for printing Hello World。 （ “GLUE模式(Java)” mode task is a java code fragment implements IJobHandler interface,it will be executed in executor,you can use @Resource/@Autowire to inject other java bean instance,if you want to see more info please go to chapter 3）
@@ -395,7 +395,7 @@ The task logic exist in the executor project as JobHandler,the develop steps as 
 #### Step 2:create task in schedule center
 If you want learn more about configure item please go and sedd “Description of configuration item”，select  "BEAN模式" as run mode，property JobHandler please fill in the value defined by @JobHande.
 
-![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_yrcO.png "在这里输入图片标题")
+![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_ZAsz.png "在这里输入图片标题")
 
 ### 3.2 GLUE模式(Java)
 Task source code is maintained in the schedule center and can be updated by Web IDE online, it will be compiled and effective real-time,didn’t need to assign JobHandler,develop flow shown as below:
@@ -403,7 +403,7 @@ Task source code is maintained in the schedule center and can be updated by Web 
 #### Step 1:create task in schedule center
 If you want learn more about configure item please go and sedd “Description of configuration item”，select "GLUE模式(Java)" as run mode.
 
-![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_SE2u.png "在这里输入图片标题")
+![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_tJOq.png "在这里输入图片标题")
 
 #### Step 2:develop task source code
 Select the task record and click “GLUE” button on the righe of it,it will go to GLUE task’s WEB IDE page,on this page yo can edit you task code(also can edit in other IDE tools,copy and paste into this page).
@@ -446,7 +446,7 @@ click"执行器管理" on the left menu,it will go to the page as shown below:
     2,"执行器列表" :display all nodes under this executor group.
 
 If you want to create a new executor,please click "+新增执行器" button: 
-![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_g3Im.png "在这里输入图片标题")
+![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_V3vF.png "在这里输入图片标题")
 
 ### Description of executor attributes
 
@@ -580,7 +580,7 @@ So schedule and task can be decoupled from each other, by the way it can improve
 
 #### 5.3.3 Architecture diagram
 
-![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_aEE2.png "在这里输入图片标题")
+![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_Qohm.png "在这里输入图片标题")
 
 ### 5.4 Schedule module analysis
 #### 5.4.1 Disadvantage of quartz
@@ -661,7 +661,6 @@ Executor will execute task when it receive task execute request.it will notify t
 If executor project was deployed as cluster schedule center will known all online executor nodes,such as:“127.0.0.1:9997, 127.0.0.1:9998, 127.0.0.1:9999”.
 
 When "路由策略" select "故障转移(FAILOVER)",it will send heart beat check request in order while schedule center start schedule request.  The first alive checked executor node will be selected and send schedule request to it.
-![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_P128.png "在这里输入图片标题")
 
 “调度备注” can be viewed on the monitor page when schedule success. As shown below: 
 ![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_jrdI.png "在这里输入图片标题")
@@ -674,8 +673,6 @@ Every time when task was scheduled in the schedule center it will record a task 
 - 任务信息:include executor address、JobHandler and executor params，accord these parameters it can locate specific machine and task code that the task will be executed.
 - 调度信息:include schedule time、schedule result and  schedule log  and so on，accord these parameters you can understand some task schedule info of schedule center.
 - 执行信息:include execute time、execute result and execute log and so on, accord these parameters you can understand the task execution info in the executor.
-
-![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_c8Ru.png "在这里输入图片标题")
 
 Schedule log stands fo single task schedule, attribute description is as follows:
 - 执行器地址:machine addresses on which task will be executed.
