@@ -5,3 +5,11 @@
 target/
 .DS_Store
 .gitattributes
+xxl-job-executor-samples/xxl-job-executor-sample-nutz/.settings/
+xxl-job-executor-samples/xxl-job-executor-sample-jfinal/.settings/
+xxl-job-executor-samples/xxl-job-executor-sample-spring/.settings/
+xxl-job-executor-samples/xxl-job-executor-sample-springboot/.settings/
+xxl-job-admin/.settings/
+xxl-job-core/.settings/
+xxl-job-executor-samples/.settings/
+.settings/

@@ -28,6 +28,8 @@ public class MailUtilTest {
                 "         <td>任务ID</td>\n" +
                 "         <td>任务描述</td>\n" +
                 "         <td>告警类型</td>\n" +
+                "         <td>调度信息</td>\n" +
+                "         <td>失败原因</td>\n" +
                 "      </tr>\n" +
                 "   <thead/>\n" +
                 "   <tbody>\n" +
@@ -36,12 +38,14 @@ public class MailUtilTest {
                 "         <td>{1}</td>\n" +
                 "         <td>{2}</td>\n" +
                 "         <td>调度失败</td>\n" +
+                "         <td>{3}</td>\n" +
+                "         <td>{4}</td>\n" +
                 "      </tr>\n" +
                 "   <tbody>\n" +
                 "</table>";
 
         String title = "调度中心监控报警";
-        String content = MessageFormat.format(mailBodyTemplate, "执行器A", "01", "任务A1");
+        String content = MessageFormat.format(mailBodyTemplate, "示例执行器", "01", "测试");
 
         boolean ret = MailUtil.sendMail("931591021@qq.com", title, content);
         System.out.println(ret);

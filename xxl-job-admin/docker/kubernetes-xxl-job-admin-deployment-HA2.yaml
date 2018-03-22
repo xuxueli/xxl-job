@@ -1,0 +1,69 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: xxl-job-admin-ha2
+  labels:
+    app: xxl-job-admin-ha2
+  namespace: kube-irms
+spec:
+  replicas: 1 #设置副本数
+  selector:
+    matchLabels:
+      app: xxl-job-admin-ha2
+  minReadySeconds: 120 #滚动升级时120s后认为该pod就绪
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: xxl-job-admin-ha2
+    spec:
+      containers:
+      - name: xxl-job-admin-ha2
+        image: 10.200.102.120/candao-irms/xxl-job-admin:0.0.4
+        lifecycle:
+          preStop:
+            exec:
+              command:
+              - sh
+              - /opt/resin4/bin/resin.sh
+              - stop
+        ports:
+        - containerPort: 8011
+        volumeMounts:
+        - mountPath: /data/irms-log/xxl-job/
+          name: logs
+        - mountPath: /etc/localtime
+          name: tz-config
+        - mountPath: /opt/resin4/webapps/ROOT/WEB-INF/classes/
+          name: properties-config
+      volumes:
+      - hostPath:
+          path: /data/irms-log/xxl-job/
+        name: logs
+      - hostPath:
+          path: /usr/share/zoneinfo/Asia/Shanghai
+        name: tz-config
+      - hostPath:
+          path: /home/irms-properties/xxl-job-admin/
+        name: properties-config
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: xxl-job-admin-ha2
+  labels:
+    name: xxl-job-admin-ha2
+  namespace: kube-irms
+spec:
+  type: NodePort
+  ports:
+  - port: 8011
+    targetPort: 8080
+  selector:
+    app: xxl-job-admin-ha2
+  externalIPs: 
+    - 10.200.102.131

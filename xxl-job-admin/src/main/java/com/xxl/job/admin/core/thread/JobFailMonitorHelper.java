@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.MessageFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
@@ -126,8 +127,11 @@ public class JobFailMonitorHelper {
 			"      <tr>\n" +
 			"         <td>"+ I18nUtil.getString("jobinfo_field_jobgroup") +"</td>\n" +
 			"         <td>"+ I18nUtil.getString("jobinfo_field_id") +"</td>\n" +
+			"         <td>"+ I18nUtil.getString("joblog_field_triggerTime") +"</td>\n" +
 			"         <td>"+ I18nUtil.getString("jobinfo_field_jobdesc") +"</td>\n" +
 			"         <td>"+ I18nUtil.getString("jobconf_monitor_alarm_title") +"</td>\n" +
+			"         <td>"+ I18nUtil.getString("jobconf_monitor_msg") +"</td>\n" +
+			"         <td>"+ I18nUtil.getString("jobconf_monitor_fail_msg") +"</td>\n" +
 			"      </tr>\n" +
 			"   <thead/>\n" +
 			"   <tbody>\n" +
@@ -135,7 +139,10 @@ public class JobFailMonitorHelper {
 			"         <td>{0}</td>\n" +
 			"         <td>{1}</td>\n" +
 			"         <td>{2}</td>\n" +
+			"         <td>{3}</td>\n" +
 			"         <td>"+ I18nUtil.getString("jobconf_monitor_alarm_type") +"</td>\n" +
+			"         <td>{4}</td>\n" +
+			"         <td>{5}</td>\n" +
 			"      </tr>\n" +
 			"   <tbody>\n" +
 			"</table>";
@@ -150,13 +157,13 @@ public class JobFailMonitorHelper {
 		// send monitor email
 		XxlJobInfo info = XxlJobDynamicScheduler.xxlJobInfoDao.loadById(jobLog.getJobId());
 		if (info!=null && info.getAlarmEmail()!=null && info.getAlarmEmail().trim().length()>0) {
-
 			Set<String> emailSet = new HashSet<String>(Arrays.asList(info.getAlarmEmail().split(",")));
+			jobLog.getTriggerMsg();
 			for (String email: emailSet) {
 				XxlJobGroup group = XxlJobDynamicScheduler.xxlJobGroupDao.load(Integer.valueOf(info.getJobGroup()));
-
 				String title = I18nUtil.getString("jobconf_monitor");
-				String content = MessageFormat.format(mailBodyTemplate, group!=null?group.getTitle():"null", info.getId(), info.getJobDesc());
+				SimpleDateFormat dateFormat = new SimpleDateFormat("YYYY-MM-DD HH:mm:ss");
+				String content = MessageFormat.format(mailBodyTemplate, group!=null?group.getTitle():"null", info.getId(), dateFormat.format(jobLog.getHandleTime()),info.getJobDesc(),jobLog.getTriggerMsg(),jobLog.getHandleMsg());
 
 				MailUtil.sendMail(email, title, content);
 			}

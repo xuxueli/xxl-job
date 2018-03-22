@@ -31,8 +31,8 @@ public class MailUtil {
 			HtmlEmail email = new HtmlEmail();
 
 			//email.setDebug(true);		// 将会打印一些log
-			//email.setTLS(true);		// 是否TLS校验，，某些邮箱需要TLS安全校验，同理有SSL校验
-			//email.setSSL(true);
+			email.setTLS(true);		// 是否TLS校验，，某些邮箱需要TLS安全校验，同理有SSL校验
+			email.setSSL(true);
 
 			email.setHostName(XxlJobAdminConfig.getAdminConfig().getMailHost());
 			email.setSmtpPort(Integer.valueOf(XxlJobAdminConfig.getAdminConfig().getMailPort()));

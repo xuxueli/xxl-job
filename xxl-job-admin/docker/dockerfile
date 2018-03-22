@@ -1,0 +1,11 @@
+FROM 10.200.102.222/library/resin4-jdk8:0.0.1
+
+#定义维护人信息
+MAINTAINER jeromeLiu "jeromeliu@can-dao.com"
+
+#拷贝文件
+COPY ./ROOT.war /opt/resin4/webapps/
+
+EXPOSE 8010 8011 8012
+
+CMD ["/opt/resin4/bin/resin.sh","console"]
