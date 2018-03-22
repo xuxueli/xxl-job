@@ -190,5 +190,5 @@
                 <a href="https://github.com/xuxueli/xxl-job" target="_blank" >github</a>
             </strong><!-- All rights reserved. -->
 		</div>
-	</footer>-->
+	</footer>
 </#macro>
