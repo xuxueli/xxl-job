@@ -1,5 +1,13 @@
 package com.xxl.job.admin.core.trigger;
 
+import java.util.ArrayList;
+import java.util.Date;
+
+import org.apache.commons.collections4.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.alibaba.fastjson.JSONObject;
 import com.xxl.job.admin.core.enums.ExecutorFailStrategyEnum;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
@@ -13,12 +21,6 @@ import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.biz.model.TriggerParam;
 import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
 import com.xxl.job.core.util.IpUtil;
-import org.apache.commons.collections4.CollectionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * xxl-job trigger
@@ -41,7 +43,6 @@ public class XxlJobTrigger {
             return;
         }
         XxlJobGroup group = XxlJobDynamicScheduler.xxlJobGroupDao.load(jobInfo.getJobGroup());  // group info
-
         ExecutorBlockStrategyEnum blockStrategy = ExecutorBlockStrategyEnum.match(jobInfo.getExecutorBlockStrategy(), ExecutorBlockStrategyEnum.SERIAL_EXECUTION);  // block strategy
         ExecutorFailStrategyEnum failStrategy = ExecutorFailStrategyEnum.match(jobInfo.getExecutorFailStrategy(), ExecutorFailStrategyEnum.FAIL_ALARM);    // fail strategy
         ExecutorRouteStrategyEnum executorRouteStrategyEnum = ExecutorRouteStrategyEnum.match(jobInfo.getExecutorRouteStrategy(), null);    // route strategy
@@ -58,7 +59,17 @@ public class XxlJobTrigger {
                 jobLog.setJobId(jobInfo.getId());
                 XxlJobDynamicScheduler.xxlJobLogDao.save(jobLog);
                 logger.debug(">>>>>>>>>>> xxl-job trigger start, jobId:{}", jobLog.getId());
-
+                
+                // #############################开始构造callback参数####################################//
+                JSONObject json =  JSONObject.parseObject(jobInfo.getExecutorParam());
+                String taskId = String.valueOf(jobLog.getId());
+                String callback = I18nUtil.getString("callback_url").replace("${taskId}", taskId);
+                json.put("callBack", callback);
+                json.put("taskId", taskId);
+                json.put("jobId", jobLog.getJobId());
+                jobInfo.setExecutorParam(json.toJSONString());
+                // #############################结束####################################//
+                
                 // 2、prepare trigger-info
                 //jobLog.setExecutorAddress(executorAddress);
                 jobLog.setGlueType(jobInfo.getGlueType());
@@ -126,6 +137,16 @@ public class XxlJobTrigger {
             jobLog.setJobId(jobInfo.getId());
             XxlJobDynamicScheduler.xxlJobLogDao.save(jobLog);
             logger.debug(">>>>>>>>>>> xxl-job trigger start, jobId:{}", jobLog.getId());
+            
+            // #############################开始构造callback参数####################################//
+            JSONObject json =  JSONObject.parseObject(jobInfo.getExecutorParam());
+            String taskId = String.valueOf(jobLog.getId());
+            String callback = I18nUtil.getString("callback_url").replace("${taskId}", taskId);
+            json.put("callBack", callback);
+            json.put("taskId", taskId);
+            json.put("jobId", jobLog.getJobId());
+            jobInfo.setExecutorParam(json.toJSONString());
+            // #############################结束####################################//
 
             // 2、prepare trigger-info
             //jobLog.setExecutorAddress(executorAddress);

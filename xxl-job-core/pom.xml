@@ -40,6 +40,14 @@
 			<version>${slf4j-api.version}</version>
 		</dependency>
 
+		<!-- fastjson -->
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+			<version>1.2.47</version>
+		</dependency>
+
+
 		<!-- hessian -->
 		<dependency>
 			<groupId>com.caucho</groupId>
@@ -60,14 +68,14 @@
 			<artifactId>httpclient</artifactId>
 			<version>${httpclient.version}</version>
 		</dependency>
-		
+
 		<!-- spring-context -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
-		
+
 		<!-- groovy-all -->
 		<dependency>
 			<groupId>org.codehaus.groovy</groupId>

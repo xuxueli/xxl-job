@@ -47,7 +47,7 @@ public class MailUtilTest {
         String title = "调度中心监控报警";
         String content = MessageFormat.format(mailBodyTemplate, "示例执行器", "01", "测试");
 
-        boolean ret = MailUtil.sendMail("931591021@qq.com", title, content);
+        boolean ret = MailUtil.sendMail("jeromeliu@can-dao.com", title, content);
         System.out.println(ret);
     }
 

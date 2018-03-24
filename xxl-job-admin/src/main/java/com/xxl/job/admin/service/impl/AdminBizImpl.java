@@ -112,7 +112,16 @@ public class AdminBizImpl implements AdminBiz {
         // success, save log
         log.setHandleTime(new Date());
         log.setHandleCode(handleCallbackParam.getExecuteResult().getCode());
-        log.setHandleMsg(handleMsg.toString());
+        
+        StringBuffer handle = new StringBuffer(log.getHandleMsg());
+		if (handle != null && handle.toString() != "") {
+			handle.append("==================以上是历史信息================");
+			handle.append("<div style=\"clear:both;\"></div>");
+		}
+		
+		handle.append(handleMsg);
+        
+        log.setHandleMsg(handle.toString());
         xxlJobLogDao.updateHandleInfo(log);
 
         return ReturnT.SUCCESS;
