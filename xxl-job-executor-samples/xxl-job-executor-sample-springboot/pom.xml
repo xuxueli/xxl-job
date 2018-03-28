@@ -75,25 +75,80 @@
             <artifactId>xxl-job-core</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
+        
+        <dependency>
+			<groupId>com.candao.irms</groupId>
+			<artifactId>irms-framework</artifactId>
+			<version>0.0.1</version>
+		</dependency>
 
     </dependencies>
 
     <build>
-        <plugins>
-            <!-- spring-boot-maven-plugin (提供了直接运行项目的插件：如果是通过parent方式继承spring-boot-starter-parent则不用此插件) -->
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<layout>ZIP</layout>
+					<includes>
+						<include>
+							<groupId>com.candao.irms</groupId>
+							<artifactId>irms-authority-api</artifactId>
+						</include>
+						<include>
+							<groupId>com.candao.irms</groupId>
+							<artifactId>irms-framework</artifactId>
+						</include>
+						<include>
+							<groupId>com.candao.irms</groupId>
+							<artifactId>irms-framework-jpa</artifactId>
+						</include>
+						<include>
+							<groupId>com.candao.irms</groupId>
+							<artifactId>irms-international-util</artifactId>
+						</include>
+						<include>
+							<groupId>com.candao.irms</groupId>
+							<artifactId>irms-international</artifactId>
+						</include>
+						<include>
+							<groupId>com.candao.irms</groupId>
+							<artifactId>irms-log</artifactId>
+						</include>
+						<include>
+							<groupId>com.candao.irms</groupId>
+							<artifactId>irms-notify-api</artifactId>
+						</include>
+						<include>
+							<groupId>com.candao.irms</groupId>
+							<artifactId>irms-oplog-api</artifactId>
+						</include>
+						<include>
+							<groupId>com.candao.irms</groupId>
+							<artifactId>irms-order-api</artifactId>
+						</include>
+						<include>
+							<groupId>com.candao.irms</groupId>
+							<artifactId>irms-report-api</artifactId>
+						</include>
+						<include>
+							<groupId>com.candao.irms</groupId>
+							<artifactId>irms-store-api</artifactId>
+						</include>
+						<include>
+							<groupId>com.candao.irms</groupId>
+							<artifactId>irms-user-api</artifactId>
+						</include>
+						<include>
+							<groupId>com.candao.irms</groupId>
+							<artifactId>irms-uid-server</artifactId>
+						</include>
+					</includes>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 
 
 </project>

@@ -2,16 +2,35 @@
 <configuration debug="false" scan="true" scanPeriod="1 seconds">
 
     <contextName>logback</contextName>
-    <property name="log.path" value="/data/applogs/xxl-job/xxl-job-executor-sample-springboot.log"/>
+    <property name="log.path" value="/data/irms-log/task-demo/task-demo.log"/>
+    <property name="springAppName" value="task-demo" source="spring.application.name" />
+	<property name="file_path" value="/data/irms-log/${springAppName}/" />
 
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
-       <!-- <filter class="ch.qos.logback.classic.filter.ThresholdFilter" >
-            <level>WARN</level>
-        </filter>-->
         <encoder>
             <pattern>%d{HH:mm:ss.SSS} %contextName [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
+    
+    <appender name="consoleFile"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${file_path}console.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<FileNamePattern>${file_path}console.log.%d{yyyyMMdd}-%i
+			</FileNamePattern>
+			<MaxHistory>7</MaxHistory>
+			<TimeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<MaxFileSize>100MB</MaxFileSize>
+			</TimeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+		</encoder>
+	</appender>
+	<logger name="com.candao" level="DEBUG" additivity="true">
+		<appender-ref ref="consoleFile" />
+	</logger>
 
     <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${log.path}</file>
@@ -28,10 +47,5 @@
         <appender-ref ref="console"/>
         <appender-ref ref="file"/>
     </root>
-
-    <!--<logger name="com.xxl.job.executor.service.info" level="WARN" additivity="false">
-        <appender-ref ref="console"/>
-        <appender-ref ref="file"/>
-    </logger>-->
 
 </configuration>

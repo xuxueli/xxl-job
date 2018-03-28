@@ -166,7 +166,7 @@ public class JobLogController {
 
 		if (ReturnT.SUCCESS_CODE == runResult.getCode()) {
 			log.setHandleCode(ReturnT.FAIL_CODE);
-			
+           // log.setHandleMsg( I18nUtil.getString("joblog_kill_log_byman")+":" + (runResult.getMsg()!=null?runResult.getMsg():""));
 			StringBuffer handleMsg = new StringBuffer(log.getHandleMsg());
 			if (handleMsg != null && handleMsg.toString() != "") {
 				handleMsg.append("==================以上是历史信息================");
