@@ -166,15 +166,17 @@ public class JobLogController {
 
 		if (ReturnT.SUCCESS_CODE == runResult.getCode()) {
 			log.setHandleCode(ReturnT.FAIL_CODE);
-           // log.setHandleMsg( I18nUtil.getString("joblog_kill_log_byman")+":" + (runResult.getMsg()!=null?runResult.getMsg():""));
-			StringBuffer handleMsg = new StringBuffer(log.getHandleMsg());
-			if (handleMsg != null && handleMsg.toString() != "") {
+			if (log.getHandleMsg() != null && log.getHandleMsg() != "") {
+				StringBuffer handleMsg = new StringBuffer(log.getHandleMsg());
+				handleMsg.append("<div style=\"clear:both;\"></div>");
 				handleMsg.append("==================以上是历史信息================");
 				handleMsg.append("<div style=\"clear:both;\"></div>");
+				handleMsg.append(I18nUtil.getString("joblog_kill_log_byman")+":" + (runResult.getMsg()!=null?runResult.getMsg():""));
+				log.setHandleMsg(handleMsg.toString());
+			}else{
+				log.setHandleMsg( I18nUtil.getString("joblog_kill_log_byman")+":" + (runResult.getMsg()!=null?runResult.getMsg():""));
 			}
 			
-			handleMsg.append(I18nUtil.getString("joblog_kill_log_byman")+":" + (runResult.getMsg()!=null?runResult.getMsg():""));
-			log.setHandleMsg(handleMsg.toString());
 			log.setHandleTime(new Date());
 			xxlJobLogDao.updateHandleInfo(log);
 			return new ReturnT<String>(runResult.getMsg());

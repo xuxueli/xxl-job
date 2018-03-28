@@ -1,5 +1,7 @@
 package com.xxl.job.admin.controller;
 
+import java.util.Date;
+
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Controller;
@@ -34,6 +36,7 @@ public class IRMSApiController {
 		try {
 			XxlJobLog jobLog = xxlJobLogDao.load(taskId);
 			StringBuffer handleMsg = new StringBuffer(jobLog.getHandleMsg());
+			handleMsg.append("<div style=\"clear:both;\"></div>");
 			handleMsg.append("========================callback 分隔符==========================");
 			handleMsg.append("<div style=\"clear:both;\"></div>");
 			handleMsg.append(bean.getErrorMessage());
@@ -41,6 +44,7 @@ public class IRMSApiController {
 			jobLog.setHandleMsg(handleMsg.toString());
 			Integer code = bean.isSuccess() ? 200 : 500;
 			jobLog.setHandleCode(code);
+			jobLog.setHandleTime(new Date());
 			xxlJobLogDao.updateHandleInfo(jobLog);
 			
 			JobFailMonitorHelper.monitor(jobLog.getId());
