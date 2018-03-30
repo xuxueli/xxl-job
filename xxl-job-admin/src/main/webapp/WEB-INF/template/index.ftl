@@ -152,6 +152,10 @@
                                 <div class="col-md-8">
                                     <div id="analysisChart" style="height: 550px;"></div>
                                 </div>
+                                <#-- 右侧饼图 -->
+                               <div class="col-md-4">
+                                    <div id="pieAnalysisChart" style="height: 450px;"></div>
+                                </div>
                             </div>
                         </div>
                     </div>

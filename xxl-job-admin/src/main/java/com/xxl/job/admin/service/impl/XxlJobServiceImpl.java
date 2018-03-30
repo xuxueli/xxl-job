@@ -406,14 +406,10 @@ public class XxlJobServiceImpl implements XxlJobService {
 		List<Integer> triggerDayCountRunningList = new ArrayList<Integer>();
 		List<Integer> triggerDayCountSucList = new ArrayList<Integer>();
 		List<Integer> triggerDayCountFailList = new ArrayList<Integer>();
-		int triggerCountRunningTotal = 0;
-		int triggerCountSucTotal = 0;
-		int triggerCountFailTotal = 0;
-		
+		List<Map<String, Object>> allJobList = new ArrayList<Map<String, Object>>();
 		List<Map<String, Object>> triggerAnalysisMapAll = xxlJobLogDao.triggerAnalysisByDay(startDate, endDate);
 		if (CollectionUtils.isNotEmpty(triggerAnalysisMapAll)) {
 			for (Map<String, Object> item: triggerAnalysisMapAll) {
-				String jobId = String.valueOf(item.get("jobId"));
 				String jobName = String.valueOf(item.get("jobName"));
 				int triggerDayCount = Integer.valueOf(String.valueOf(item.get("triggerDayCount")));
 				int triggerDayCountRunning = Integer.valueOf(String.valueOf(item.get("triggerDayCountRunning")));
@@ -424,10 +420,13 @@ public class XxlJobServiceImpl implements XxlJobService {
 				triggerDayCountRunningList.add(triggerDayCountRunning);
 				triggerDayCountSucList.add(triggerDayCountSuc);
 				triggerDayCountFailList.add(triggerDayCountFail);
-				
-				triggerCountRunningTotal += triggerDayCountRunning;
-				triggerCountSucTotal += triggerDayCountSuc;
-				triggerCountFailTotal += triggerDayCountFail;
+				Map<String, Object> param = new HashMap<String, Object>();
+				param.put("name", jobName);
+				param.put("successNum", triggerDayCountSuc);
+				param.put("failNum", triggerDayCountFail);
+				param.put("proccesNum", triggerDayCountRunning);
+				param.put("value", 0);
+				allJobList.add(param);
 			}
 		} else {
 			for (int i = 4; i > -1; i--) {
@@ -442,11 +441,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 		result.put("triggerDayCountRunningList", triggerDayCountRunningList);
 		result.put("triggerDayCountSucList", triggerDayCountSucList);
 		result.put("triggerDayCountFailList", triggerDayCountFailList);
-				
-		//result.put("triggerCountRunningTotal", triggerCountRunningTotal);
-		//result.put("triggerCountSucTotal", triggerCountSucTotal);
-		//result.put("triggerCountFailTotal", triggerCountFailTotal);
-		
+		result.put("other", allJobList);
 		// set cache
 		LocalCacheUtil.set(cacheKey, result, 60*1000);     // cache 60s
 			

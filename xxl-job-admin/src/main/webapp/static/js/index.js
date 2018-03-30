@@ -113,6 +113,7 @@ $(function () {
             success : function(data){
                 if (data.code == 200) {
                 	analysisChartInit(data)
+                	pieAnalysisChart(data);
                 } else {
                     layer.open({
                         title: I18n.system_tips ,
@@ -203,6 +204,50 @@ $(function () {
 
         var lineChart = echarts.init(document.getElementById('analysisChart'));
         lineChart.setOption(option);
+    }
+    
+    /**
+     * pie Chart Init
+     */
+    function pieAnalysisChart(data) {
+    	console.info(JSON.stringify(data.content));
+        var option = {
+        	title : {
+                text: "比例分布图" ,
+                x:'center'
+            },
+            tooltip : {
+                trigger: 'item',
+                formatter: function(obj, name){
+                    var cc = obj.data.name + " <br/>成功数："+obj.data.successNum + " <br/>失败数："+obj.data.failNum + " <br/>进行中："+obj.data.proccesNum + " <br/>";
+                    return cc
+                }
+            },
+            /*legend: {
+            	// orient: 'vertical',
+                // top: 'middle',
+                bottom: 40,
+                left: 'center',
+                data: data.content.jobNames
+            },*/
+            series : [
+                {
+                    type: 'pie',
+                    radius : '65%',
+                    center: ['50%', '50%'],
+                    data: data.content.other,
+                    itemStyle: {
+                        emphasis: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    }
+                }
+            ],
+        };
+        var pieChart = echarts.init(document.getElementById('pieAnalysisChart'));
+        pieChart.setOption(option);
     }
     
     
