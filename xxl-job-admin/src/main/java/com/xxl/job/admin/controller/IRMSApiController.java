@@ -1,6 +1,7 @@
 package com.xxl.job.admin.controller;
 
 import java.util.Date;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -16,6 +17,7 @@ import com.xxl.job.admin.core.bean.CallBackBean;
 import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.admin.core.thread.JobFailMonitorHelper;
 import com.xxl.job.admin.dao.XxlJobLogDao;
+import com.xxl.job.admin.service.XxlJobService;
 import com.xxl.job.core.biz.model.ReturnT;
 
 @Controller
@@ -24,6 +26,9 @@ public class IRMSApiController {
 	
 	@Resource
 	public XxlJobLogDao xxlJobLogDao;
+	
+	@Resource
+	public XxlJobService xxlJobService;
 
 	@RequestMapping(value = "/callback/{taskId}",method = RequestMethod.POST)
 	@ResponseBody
@@ -55,6 +60,13 @@ public class IRMSApiController {
 			msg = e.getMessage();
 		}
 		return new ReturnT<String>(ReturnT.FAIL_CODE, msg);
+	}
+	
+	@RequestMapping(value = "/monitor",method = RequestMethod.POST)
+	@ResponseBody
+	@PermessionLimit(limit=false)
+	public ReturnT<String> monitor(@RequestBody Map<String, String> map) {
+		return xxlJobService.monitor(map.get("emails"));
 	}
 	
 }

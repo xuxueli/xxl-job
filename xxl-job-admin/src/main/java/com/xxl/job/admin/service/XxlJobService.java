@@ -91,5 +91,19 @@ public interface XxlJobService {
 	 */
 	public ReturnT<Map<String,Object>> chartInfo(Date startDate, Date endDate);
 
+	/**
+	 * analysis
+	 * 
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
 	public ReturnT<Map<String, Object>> analysis(Date startDate, Date endDate);
+	
+	/**
+	 * monitor
+	 * 
+	 * @return
+	 */
+	public ReturnT<String> monitor(String emails);
 }
