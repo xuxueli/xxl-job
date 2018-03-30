@@ -1,5 +1,26 @@
 package com.xxl.job.admin.service.impl;
 
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.annotation.Resource;
+
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateUtils;
+import org.apache.commons.lang3.time.FastDateFormat;
+import org.quartz.CronExpression;
+import org.quartz.SchedulerException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
 import com.xxl.job.admin.core.enums.ExecutorFailStrategyEnum;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
@@ -15,19 +36,6 @@ import com.xxl.job.admin.service.XxlJobService;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
 import com.xxl.job.core.glue.GlueTypeEnum;
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.DateUtils;
-import org.apache.commons.lang3.time.FastDateFormat;
-import org.quartz.CronExpression;
-import org.quartz.SchedulerException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-
-import javax.annotation.Resource;
-import java.text.MessageFormat;
-import java.util.*;
 
 /**
  * core job action for xxl-job
@@ -379,6 +387,69 @@ public class XxlJobServiceImpl implements XxlJobService {
 		// set cache
 		LocalCacheUtil.set(cacheKey, result, 60*1000);     // cache 60s
 
+		return new ReturnT<Map<String, Object>>(result);
+	}
+
+	private static final String TRIGGER_ANALYSIS_DATA_CACHE = "trigger_analysis_data_cache";
+	
+	@Override
+	public ReturnT<Map<String, Object>> analysis(Date startDate, Date endDate) {
+		// get cache
+		String cacheKey = TRIGGER_ANALYSIS_DATA_CACHE + "_" + startDate.getTime() + "_" + endDate.getTime();
+		Map<String, Object> chartInfo = (Map<String, Object>) LocalCacheUtil.get(cacheKey);
+		if (chartInfo != null) {
+			return new ReturnT<Map<String, Object>>(chartInfo);
+		}
+
+		// process
+		List<String> triggerJobNameList = new ArrayList<String>();
+		List<Integer> triggerDayCountRunningList = new ArrayList<Integer>();
+		List<Integer> triggerDayCountSucList = new ArrayList<Integer>();
+		List<Integer> triggerDayCountFailList = new ArrayList<Integer>();
+		int triggerCountRunningTotal = 0;
+		int triggerCountSucTotal = 0;
+		int triggerCountFailTotal = 0;
+		
+		List<Map<String, Object>> triggerAnalysisMapAll = xxlJobLogDao.triggerAnalysisByDay(startDate, endDate);
+		if (CollectionUtils.isNotEmpty(triggerAnalysisMapAll)) {
+			for (Map<String, Object> item: triggerAnalysisMapAll) {
+				String jobId = String.valueOf(item.get("jobId"));
+				String jobName = String.valueOf(item.get("jobName"));
+				int triggerDayCount = Integer.valueOf(String.valueOf(item.get("triggerDayCount")));
+				int triggerDayCountRunning = Integer.valueOf(String.valueOf(item.get("triggerDayCountRunning")));
+				int triggerDayCountSuc = Integer.valueOf(String.valueOf(item.get("triggerDayCountSuc")));
+				int triggerDayCountFail = triggerDayCount - triggerDayCountRunning - triggerDayCountSuc;
+						
+				triggerJobNameList.add(jobName);
+				triggerDayCountRunningList.add(triggerDayCountRunning);
+				triggerDayCountSucList.add(triggerDayCountSuc);
+				triggerDayCountFailList.add(triggerDayCountFail);
+				
+				triggerCountRunningTotal += triggerDayCountRunning;
+				triggerCountSucTotal += triggerDayCountSuc;
+				triggerCountFailTotal += triggerDayCountFail;
+			}
+		} else {
+			for (int i = 4; i > -1; i--) {
+				triggerJobNameList.add(null);
+				triggerDayCountSucList.add(0);
+				triggerDayCountFailList.add(0);
+			}
+		}
+
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("jobNames", triggerJobNameList);
+		result.put("triggerDayCountRunningList", triggerDayCountRunningList);
+		result.put("triggerDayCountSucList", triggerDayCountSucList);
+		result.put("triggerDayCountFailList", triggerDayCountFailList);
+				
+		//result.put("triggerCountRunningTotal", triggerCountRunningTotal);
+		//result.put("triggerCountSucTotal", triggerCountSucTotal);
+		//result.put("triggerCountFailTotal", triggerCountFailTotal);
+		
+		// set cache
+		LocalCacheUtil.set(cacheKey, result, 60*1000);     // cache 60s
+			
 		return new ReturnT<Map<String, Object>>(result);
 	}
 

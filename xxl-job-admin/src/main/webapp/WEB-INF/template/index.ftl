@@ -127,6 +127,36 @@
                     </div>
                 </div>
             </div>
+            
+            <#-- 调度报表：时间区间筛选，左侧折线图 + 右侧饼图 -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">${I18n.job_analysis_dashboard_report}</h3>
+							<#--<input type="text" class="form-control" id="filterTime" readonly >-->
+
+                            <!-- tools box -->
+                            <div class="pull-right box-tools">
+                                <button type="button" class="btn btn-primary btn-sm daterange pull-right" data-toggle="tooltip" id="analysisTime" >
+                                    <i class="fa fa-calendar"></i>
+                                </button>
+                            </div>
+                            <!-- /. tools -->	
+
+                        </div>
+                        
+                        <div class="box-body">
+                            <div class="row">
+                                <#-- 左侧折线图 -->
+                                <div class="col-md-8">
+                                    <div id="analysisChart" style="height: 550px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
 		</section>
 		<!-- /.content -->

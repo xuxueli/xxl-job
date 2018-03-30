@@ -42,6 +42,9 @@ public interface XxlJobLogDao {
 
 	public List<Map<String, Object>> triggerCountByDay(@Param("from") Date from,
 													   @Param("to") Date to);
+	
+	public List<Map<String, Object>> triggerAnalysisByDay(@Param("from") Date from,
+			   @Param("to") Date to);
 
 	public int clearLog(@Param("jobGroup") int jobGroup,
 						@Param("jobId") int jobId,

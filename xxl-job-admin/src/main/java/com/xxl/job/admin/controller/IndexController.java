@@ -1,10 +1,14 @@
 package com.xxl.job.admin.controller;
 
-import com.xxl.job.admin.controller.annotation.PermessionLimit;
-import com.xxl.job.admin.controller.interceptor.PermissionInterceptor;
-import com.xxl.job.admin.core.util.I18nUtil;
-import com.xxl.job.admin.service.XxlJobService;
-import com.xxl.job.core.biz.model.ReturnT;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -15,12 +19,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Map;
+import com.xxl.job.admin.controller.annotation.PermessionLimit;
+import com.xxl.job.admin.controller.interceptor.PermissionInterceptor;
+import com.xxl.job.admin.core.util.I18nUtil;
+import com.xxl.job.admin.service.XxlJobService;
+import com.xxl.job.core.biz.model.ReturnT;
 
 /**
  * index controller
@@ -46,6 +49,14 @@ public class IndexController {
 	public ReturnT<Map<String, Object>> chartInfo(Date startDate, Date endDate) {
         ReturnT<Map<String, Object>> chartInfo = xxlJobService.chartInfo(startDate, endDate);
         return chartInfo;
+    }
+    
+    @RequestMapping("/analysis")
+	@ResponseBody
+	public ReturnT<Map<String, Object>> analysis(Date startDate, Date endDate) {
+    	
+    	ReturnT<Map<String, Object>> analysis = xxlJobService.analysis(startDate, endDate);
+        return analysis;
     }
 	
 	@RequestMapping("/toLogin")
