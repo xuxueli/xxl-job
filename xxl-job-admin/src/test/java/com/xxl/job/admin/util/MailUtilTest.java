@@ -1,7 +1,6 @@
 package com.xxl.job.admin.util;
 
-import com.xxl.job.admin.core.util.MailUtil;
-import com.xxl.job.admin.service.XxlJobService;
+import java.text.MessageFormat;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -9,8 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.text.MessageFormat;
-import java.util.List;
+import com.xxl.job.admin.core.util.MailUtil;
+import com.xxl.job.admin.service.XxlJobService;
 
 /**
  * email util test
@@ -62,5 +61,4 @@ public class MailUtilTest {
     public void test(){
     	xxlJobService.monitor("jeromeliu@can-dao.com");
     }
-
 }
