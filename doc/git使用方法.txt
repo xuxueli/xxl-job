@@ -9,8 +9,9 @@ git add ./-u/-A 	//变化文件提交到暂存区，.是包括修改文件以及新增文件，不包括删除
 git commit -m '提交备注'	//提交文件 本地   -a参数会把没在暂存区的也提交
 
 	
-git merge devsr       		//将devsr分支提交的修改到当前分支
+git merge devsr    		 //将devsr分支与当前分支合并
+git merge origin/devsr     	 
 
-git status
+git status			//查看文件状态
 
 ssh-keygen -t rsa -C 'rui.849217@outlook.com'    //生成ssh密钥，存到本地文件 .pub文件
