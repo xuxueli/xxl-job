@@ -1,5 +1,6 @@
 package com.xxl.job.core.rpc.netcom.jetty.server;
 
+import com.xxl.job.core.rpc.netcom.IServer;
 import com.xxl.job.core.thread.ExecutorRegistryThread;
 import com.xxl.job.core.thread.TriggerCallbackThread;
 import org.eclipse.jetty.server.Connector;
@@ -15,7 +16,7 @@ import org.slf4j.LoggerFactory;
  * rpc jetty server
  * @author xuxueli 2015-11-19 22:29:03
  */
-public class JettyServer {
+public class JettyServer implements IServer{
 	private static final Logger logger = LoggerFactory.getLogger(JettyServer.class);
 
 	private Server server;

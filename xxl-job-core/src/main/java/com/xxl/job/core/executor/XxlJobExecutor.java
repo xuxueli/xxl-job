@@ -8,6 +8,7 @@ import com.xxl.job.core.handler.annotation.JobHandler;
 import com.xxl.job.core.log.XxlJobFileAppender;
 import com.xxl.job.core.rpc.netcom.NetComClientProxy;
 import com.xxl.job.core.rpc.netcom.NetComServerFactory;
+import com.xxl.job.core.rpc.netcom.ServerType;
 import com.xxl.job.core.thread.JobLogFileCleanThread;
 import com.xxl.job.core.thread.JobThread;
 import com.xxl.job.core.util.NetUtil;
@@ -36,6 +37,7 @@ public class XxlJobExecutor implements ApplicationContextAware {
     private String accessToken;
     private String logPath;
     private int logRetentionDays;
+    private String serverType;
 
     public void setAdminAddresses(String adminAddresses) {
         this.adminAddresses = adminAddresses;
@@ -57,6 +59,10 @@ public class XxlJobExecutor implements ApplicationContextAware {
     }
     public void setLogRetentionDays(int logRetentionDays) {
         this.logRetentionDays = logRetentionDays;
+    }
+
+    public void setServerType(String serverType) {
+        this.serverType = serverType;
     }
 
     // ---------------------- applicationContext ----------------------
@@ -126,10 +132,14 @@ public class XxlJobExecutor implements ApplicationContextAware {
 
 
     // ---------------------- executor-server(jetty) ----------------------
-    private NetComServerFactory serverFactory = new NetComServerFactory();
+    private NetComServerFactory serverFactory;
     private void initExecutorServer(int port, String ip, String appName, String accessToken) throws Exception {
         // valid param
         port = port>0?port: NetUtil.findAvailablePort(9999);
+
+        //server type
+        ServerType serverTypeEnum = ServerType.match(serverType);
+        serverFactory = new NetComServerFactory(serverTypeEnum);
 
         // start server
         NetComServerFactory.putService(ExecutorBiz.class, new ExecutorBizImpl());   // rpc-service, base on jetty

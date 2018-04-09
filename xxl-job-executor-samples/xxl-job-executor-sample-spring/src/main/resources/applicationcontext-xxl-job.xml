@@ -37,6 +37,8 @@
 		<property name="logPath" value="${xxl.job.executor.logpath}" />
 		<!-- 日志保存天数[选填]，值大于3时生效 -->
 		<property name="logRetentionDays" value="${xxl.job.executor.logretentiondays}" />
+		<!-- 执行器服务端网络通信类型[选填]，值域：jetty/netty, 为空则使用默认jetty -->
+		<property name="serverType" value="${xxl.job.executor.serverType}" />
 	</bean>
 
 

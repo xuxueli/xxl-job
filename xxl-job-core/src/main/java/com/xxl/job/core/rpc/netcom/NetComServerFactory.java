@@ -4,6 +4,7 @@ import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.rpc.codec.RpcRequest;
 import com.xxl.job.core.rpc.codec.RpcResponse;
 import com.xxl.job.core.rpc.netcom.jetty.server.JettyServer;
+import com.xxl.job.core.rpc.netcom.netty.server.NettyServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cglib.reflect.FastClass;
@@ -20,7 +21,20 @@ public class NetComServerFactory  {
 	private static final Logger logger = LoggerFactory.getLogger(NetComServerFactory.class);
 
 	// ---------------------- server start ----------------------
-	JettyServer server = new JettyServer();
+	private final IServer server;
+
+	public NetComServerFactory (){
+		this(ServerType.JETTY);
+	}
+
+	public NetComServerFactory (ServerType serverType){
+		if(ServerType.NETTY == serverType){
+			server = new NettyServer();
+		}else{
+			server = new JettyServer();
+		}
+	}
+
 	public void start(int port, String ip, String appName) throws Exception {
 		server.start(port, ip, appName);
 	}
