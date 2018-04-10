@@ -93,6 +93,31 @@
 			<url>https://opensource.org/licenses/GPL-3.0</url>
 		</license>
 	</licenses>
+	
+	<repositories>
+		<repository>
+			<id>internal-repo</id>
+			<name>internal repository</name>
+			<url>http://10.200.102.39/nexus/content/repositories/releases/</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
+
+	<distributionManagement>
+		<repository>
+			<id>releases</id>
+			<url>http://10.200.102.39/nexus/content/repositories/releases/</url>
+		</repository>
+		<snapshotRepository>
+			<id>Snapshots</id>
+			<url>http://10.200.102.39/nexus/content/repositories/snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
 
 	<scm>
 		<tag>master</tag>
