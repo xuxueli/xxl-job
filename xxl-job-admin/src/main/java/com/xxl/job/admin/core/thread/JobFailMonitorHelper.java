@@ -177,12 +177,12 @@ public class JobFailMonitorHelper {
 		
 		Map<String,String> txt = new HashMap<String, String>();
 		StringBuffer data = new StringBuffer();
-		data.append("报表名称："+info.getJobDesc()+" \n");
+		data.append("任务名称："+info.getJobDesc()+" \n");
 		data.append("异常信息：" + jobLog.getHandleMsg() +"\n");
 		
 		txt.put("text", data.toString());
 		txt.put("title", I18nUtil.getString("dingding_title"));
-		txt.put("picUrl", "https://raw.githubusercontent.com/paomedia/small-n-flat/master/png/96/sign-error.png");
+		txt.put("picUrl", "http://www.iconsdb.com/icons/preview/soylent-red/x-mark-3-xxl.png");
 		txt.put("messageUrl", I18nUtil.getString("dingding_link")+jobLog.getId());
 		
 		param.put("link", txt);
