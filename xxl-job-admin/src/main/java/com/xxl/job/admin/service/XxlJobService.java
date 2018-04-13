@@ -76,6 +76,15 @@ public interface XxlJobService {
 	public ReturnT<String> triggerJob(int id);
 
 	/**
+	 * trigger job with param
+	 *
+	 * @param id
+	 * @param param
+	 * @return
+	 */
+	public ReturnT<String> triggerJob(int id,String param);
+
+	/**
 	 * dashboard info
 	 *
 	 * @return
