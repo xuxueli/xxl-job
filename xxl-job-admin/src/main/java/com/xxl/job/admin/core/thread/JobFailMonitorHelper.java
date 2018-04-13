@@ -178,6 +178,7 @@ public class JobFailMonitorHelper {
 		Map<String,String> txt = new HashMap<String, String>();
 		StringBuffer data = new StringBuffer();
 		data.append("任务名称："+info.getJobDesc()+" \n");
+		data.append("负责人："+info.getAuthor()+" \n");
 		data.append("异常信息：" + jobLog.getHandleMsg() +"\n");
 		
 		txt.put("text", data.toString());
