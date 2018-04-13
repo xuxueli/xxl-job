@@ -31,8 +31,9 @@ public class XxlJobTrigger {
      * trigger job
      *
      * @param jobId
+     * @param param
      */
-    public static void trigger(int jobId) {
+    public static void trigger(int jobId,String param) {
 
         // load data
         XxlJobInfo jobInfo = XxlJobDynamicScheduler.xxlJobInfoDao.loadById(jobId);              // job info
@@ -40,6 +41,10 @@ public class XxlJobTrigger {
             logger.warn(">>>>>>>>>>>> trigger fail, jobId invalid，jobId={}", jobId);
             return;
         }
+        
+        if(param != null )
+            jobInfo.setExecutorParam(param);
+
         XxlJobGroup group = XxlJobDynamicScheduler.xxlJobGroupDao.load(jobInfo.getJobGroup());  // group info
 
         ExecutorBlockStrategyEnum blockStrategy = ExecutorBlockStrategyEnum.match(jobInfo.getExecutorBlockStrategy(), ExecutorBlockStrategyEnum.SERIAL_EXECUTION);  // block strategy
