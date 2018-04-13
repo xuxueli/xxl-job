@@ -90,8 +90,8 @@ public class JobInfoController {
 	
 	@RequestMapping("/trigger")
 	@ResponseBody
-	public ReturnT<String> triggerJob(int id) {
-		return xxlJobService.triggerJob(id);
+	public ReturnT<String> triggerJob(int id ,String param) {
+		return xxlJobService.triggerJob(id,param);
 	}
 	
 }

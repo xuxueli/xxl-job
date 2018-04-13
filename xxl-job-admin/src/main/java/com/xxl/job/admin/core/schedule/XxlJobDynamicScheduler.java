@@ -9,6 +9,8 @@ import com.xxl.job.admin.dao.XxlJobGroupDao;
 import com.xxl.job.admin.dao.XxlJobInfoDao;
 import com.xxl.job.admin.dao.XxlJobLogDao;
 import com.xxl.job.admin.dao.XxlJobRegistryDao;
+import org.apache.commons.lang3.StringUtils;
+import com.xxl.job.admin.core.trigger.XxlJobTrigger;
 import com.xxl.job.core.biz.AdminBiz;
 import com.xxl.job.core.biz.ExecutorBiz;
 import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
@@ -339,16 +341,22 @@ public final class XxlJobDynamicScheduler implements ApplicationContextAware {
      *
      * @param jobName
      * @param jobGroup
+     * @param param
      * @return
      * @throws SchedulerException
      */
-    public static boolean triggerJob(String jobName, String jobGroup) throws SchedulerException {
+    public static boolean triggerJob(String jobName, String jobGroup,String param) throws SchedulerException {
     	// TriggerKey : name + group
     	JobKey jobKey = new JobKey(jobName, jobGroup);
         
         boolean result = false;
         if (checkExists(jobName, jobGroup)) {
-            scheduler.triggerJob(jobKey);
+            //scheduler.triggerJob(jobKey);
+            if(StringUtils.isBlank(param))
+                XxlJobTrigger.trigger( Integer.valueOf(jobName),null);
+            else
+                XxlJobTrigger.trigger( Integer.valueOf(jobName),param);
+
             result = true;
             logger.info(">>>>>>>>>>> runJob success, jobKey:{}", jobKey);
         } else {

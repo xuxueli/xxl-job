@@ -1,0 +1,17 @@
+git branch    //查看当前所有的分支以及正在使用的分支
+
+git checkout master     //切换为master分支   -b 参数应该是如果该分支不存则创建
+
+git push -u origin master:master     //将本地master分支提交到gitbug的master分支上 第一次用-u
+
+git add ./-u/-A 	//变化文件提交到暂存区，.是包括修改文件以及新增文件，不包括删除；-u是修改和删除的文件，不包				括新增；-A是所有的
+
+git commit -m '提交备注'	//提交文件 本地   -a参数会把没在暂存区的也提交
+
+	
+git merge devsr    		 //将devsr分支与当前分支合并
+git merge origin/devsr     	 
+
+git status			//查看文件状态
+
+ssh-keygen -t rsa -C 'rui.849217@outlook.com'    //生成ssh密钥，存到本地文件 .pub文件
