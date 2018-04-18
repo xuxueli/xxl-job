@@ -36,6 +36,12 @@ Now, it's already open source, and many companies use it in production environme
 
 XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是开发迅速、学习简单、轻量级、易扩展。现已开放源代码并接入多家公司线上产品线，开箱即用。
 
+## interface
+基于官方版本,加入相关回调闭环操作和任务监控(详见mcd-irms分支)
+- 1、加入所有任务的成功,失败,进行中的监控
+- 2、加入钉钉的任务失败webHook通知
+- 3、加入业务系统执行任务失败的callback调度中心结果和错误信息
+- 4、加入汇总所有调度任务的执行结果情况,发邮件通知
 
 ## Documentation
 - [中文文档](http://www.xuxueli.com/xxl-job/)
