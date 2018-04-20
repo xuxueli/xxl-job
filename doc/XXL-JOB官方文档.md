@@ -233,6 +233,7 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
     ### 报警邮箱
     xxl.job.mail.host=smtp.163.com
     xxl.job.mail.port=25
+    xxl.job.mail.ssl=false
     xxl.job.mail.username=ovono802302@163.com
     xxl.job.mail.password=asdfzxcv
     xxl.job.mail.sendFrom=ovono802302@163.com
@@ -1166,6 +1167,7 @@ Tips: 历史版本(V1.3.x)目前已经Release至稳定版本, 进入维护阶段
 - 4、任务属性枚举 "任务模式、阻塞策略" 国际化优化；
 - 5、任务日志表状态字段类型优化；
 - 6、[迭代中]脚本任务支持失败重试；
+- 7、告警邮箱支持SSL配置；
 
 
 ### TODO LIST
