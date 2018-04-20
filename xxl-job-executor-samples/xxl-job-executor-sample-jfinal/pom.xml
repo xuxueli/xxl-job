@@ -35,4 +35,24 @@
 
     </dependencies>
 
+
+    <build>
+        <finalName>xxl-job-executor-sample-jfinal</finalName>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>2.2</version>
+                <configuration>
+                    <url>http://localhost:8888/manager/text</url>
+                    <server>tomcat</server>
+                    <username>tomcat</username>
+                    <password>tomcat</password>
+                    <path>/xxl-job-executor-sample-jfinal</path>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
 </project>
