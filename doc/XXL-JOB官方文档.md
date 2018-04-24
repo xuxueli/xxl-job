@@ -134,6 +134,12 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
     - 65、厦门瓷禧网络有限公司
     - 66、北京递蓝科软件股份有限公司
     - 67、郑州创海软件科技公司
+    - 68、北京国槐信息科技有限公司
+    - 69、浪潮软件集团
+    - 70、多立恒(北京)信息技术有限公司
+    - 71、广州极迅客信息科技有限公司
+    - 72、赫基（中国）集团股份有限公司
+    - 73、海投汇
 	- ……
 
 > 更多接入的公司，欢迎在 [登记地址](https://github.com/xuxueli/xxl-job/issues/1 ) 登记，登记仅仅为了产品推广。
@@ -227,6 +233,7 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
     ### 报警邮箱
     xxl.job.mail.host=smtp.163.com
     xxl.job.mail.port=25
+    xxl.job.mail.ssl=false
     xxl.job.mail.username=ovono802302@163.com
     xxl.job.mail.password=asdfzxcv
     xxl.job.mail.sendFrom=ovono802302@163.com
@@ -1160,6 +1167,7 @@ Tips: 历史版本(V1.3.x)目前已经Release至稳定版本, 进入维护阶段
 - 4、任务属性枚举 "任务模式、阻塞策略" 国际化优化；
 - 5、任务日志表状态字段类型优化；
 - 6、[迭代中]脚本任务支持失败重试；
+- 7、告警邮箱支持SSL配置；
 
 
 ### TODO LIST

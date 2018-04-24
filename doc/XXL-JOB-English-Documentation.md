@@ -121,6 +121,12 @@ So far, XXL-JOB has access to a number of companies online product line, access 
     - 65、厦门瓷禧网络有限公司
     - 66、北京递蓝科软件股份有限公司
     - 67、郑州创海软件科技公司
+    - 68、北京国槐信息科技有限公司
+    - 69、浪潮软件集团
+    - 70、多立恒(北京)信息技术有限公司
+    - 71、广州极迅客信息科技有限公司
+    - 72、赫基（中国）集团股份有限公司
+    - 73、海投汇
 	- ……
 
 > The company that access and use this product is welcome to register at the [address](https://github.com/xuxueli/xxl-job/issues/1 ), only for product promotion. 
