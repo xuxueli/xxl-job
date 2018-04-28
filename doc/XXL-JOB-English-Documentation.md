@@ -127,6 +127,11 @@ So far, XXL-JOB has access to a number of companies online product line, access 
     - 71、广州极迅客信息科技有限公司
     - 72、赫基（中国）集团股份有限公司
     - 73、海投汇
+    - 74、上海润益创业孵化器管理股份有限公司
+    - 75、汉纳森（厦门）数据股份有限公司
+    - 76、安信信托
+    - 77、岚儒财富
+    - 78、捷道软件
 	- ……
 
 > The company that access and use this product is welcome to register at the [address](https://github.com/xuxueli/xxl-job/issues/1 ), only for product promotion. 
