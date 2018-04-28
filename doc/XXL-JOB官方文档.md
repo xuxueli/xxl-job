@@ -925,7 +925,7 @@ echo "分片总数 total = $3"
 --- | --- | ---
 成功 | IJobHandler.SUCCESS | 0
 失败 | IJobHandler.FAIL | -1（其他）
-失败重试 | IJobHandler.FAIL_RETRY | 501
+失败重试 | IJobHandler.FAIL_RETRY | 101
 
 
 ## 六、版本更新日志

@@ -45,7 +45,7 @@
 		SELECT <include refid="Base_Column_List" />
 		FROM XXL_JOB_QRTZ_TRIGGER_LOG AS t
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
-			<if test="jobGroup != null and jobGroup != ''">
+			<if test="jobGroup gt 0">
 				AND t.job_group = #{jobGroup}
 			</if>
 			<if test="jobId gt 0">
@@ -62,12 +62,13 @@
 			</if>
 			<if test="logStatus == 2" >
 				AND (
-					(t.trigger_code <![CDATA[ > ]]> 0 AND t.trigger_code!=200) ||
-					(t.handle_code <![CDATA[ > ]]> 0 AND t.handle_code!=200)
+					t.trigger_code NOT IN (0, 200) ||
+					t.handle_code NOT IN (0, 200)
 				)
 			</if>
 			<if test="logStatus == 3" >
-				AND (t.trigger_code = 200 AND t.handle_code=0)
+				AND t.trigger_code = 200
+				AND t.handle_code = 0
 			</if>
 		</trim>
 		ORDER BY id DESC
@@ -78,7 +79,7 @@
 		SELECT count(1)
 		FROM XXL_JOB_QRTZ_TRIGGER_LOG AS t
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
-			<if test="jobGroup != null and jobGroup != ''">
+			<if test="jobGroup gt 0">
 				AND t.job_group = #{jobGroup}
 			</if>
 			<if test="jobId gt 0">
@@ -95,12 +96,13 @@
 			</if>
 			<if test="logStatus == 2" >
 				AND (
-				(t.trigger_code <![CDATA[ > ]]> 0 AND t.trigger_code!=200) ||
-				(t.handle_code <![CDATA[ > ]]> 0 AND t.handle_code!=200)
+					t.trigger_code NOT IN (0, 200) ||
+					t.handle_code NOT IN (0, 200)
 				)
 			</if>
 			<if test="logStatus == 3" >
-				AND (t.trigger_code = 200 AND t.handle_code=0)
+				AND t.trigger_code = 200
+				AND t.handle_code = 0
 			</if>
 		</trim>
 	</select>
