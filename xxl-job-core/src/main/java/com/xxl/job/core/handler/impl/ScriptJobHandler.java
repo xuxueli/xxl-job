@@ -63,8 +63,15 @@ public class ScriptJobHandler extends IJobHandler {
         // invoke
         XxlJobLogger.log("----------- script file:"+ scriptFileName +" -----------");
         int exitValue = ScriptUtil.execToFile(cmd, scriptFileName, logFileName, scriptParams);
-        ReturnT<String> result = (exitValue==0)?IJobHandler.SUCCESS:new ReturnT<String>(IJobHandler.FAIL.getCode(), "script exit value("+exitValue+") is failed");
-        return result;
+
+        if (exitValue == 0) {
+            return IJobHandler.SUCCESS;
+        } else if (exitValue == 501) {
+            return IJobHandler.FAIL_RETRY;
+        } else {
+            return new ReturnT<String>(IJobHandler.FAIL.getCode(), "script exit value("+exitValue+") is failed");
+        }
+
     }
 
 }
