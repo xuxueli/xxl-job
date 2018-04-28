@@ -8,6 +8,8 @@ import com.xxl.job.core.log.XxlJobLogger;
 import com.xxl.job.core.util.ScriptUtil;
 import com.xxl.job.core.util.ShardingUtil;
 
+import java.io.File;
+
 /**
  * Created by xuxueli on 17/4/27.
  */
@@ -41,7 +43,7 @@ public class ScriptJobHandler extends IJobHandler {
 
         // make script file
         String scriptFileName = XxlJobFileAppender.getGlueSrcPath()
-                .concat("/")
+                .concat(File.separator)
                 .concat(String.valueOf(jobId))
                 .concat("_")
                 .concat(String.valueOf(glueUpdatetime))

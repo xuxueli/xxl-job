@@ -79,7 +79,7 @@ public class XxlJobFileAppender {
 
 		// filePath/yyyy-MM-dd/9999.log
 		String logFileName = logFilePath.getPath()
-				.concat("/")
+				.concat(File.separator)
 				.concat(String.valueOf(logId))
 				.concat(".log");
 		return logFileName;
