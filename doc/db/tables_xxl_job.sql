@@ -185,7 +185,8 @@ CREATE TABLE `XXL_JOB_QRTZ_TRIGGER_LOG` (
   `handle_time` datetime DEFAULT NULL COMMENT '执行-时间',
   `handle_code` int(11) NOT NULL COMMENT '执行-状态',
   `handle_msg` varchar(2048) DEFAULT NULL COMMENT '执行-日志',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `I_trigger_time` (`trigger_time`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `XXL_JOB_QRTZ_TRIGGER_LOGGLUE` (
