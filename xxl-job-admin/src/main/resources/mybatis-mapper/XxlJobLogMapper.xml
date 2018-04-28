@@ -62,7 +62,7 @@
 			</if>
 			<if test="logStatus == 2" >
 				AND (
-					t.trigger_code NOT IN (0, 200) ||
+					t.trigger_code NOT IN (0, 200) OR
 					t.handle_code NOT IN (0, 200)
 				)
 			</if>
@@ -96,7 +96,7 @@
 			</if>
 			<if test="logStatus == 2" >
 				AND (
-					t.trigger_code NOT IN (0, 200) ||
+					t.trigger_code NOT IN (0, 200) OR
 					t.handle_code NOT IN (0, 200)
 				)
 			</if>
