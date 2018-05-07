@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -139,13 +140,15 @@ public class XxlJobTrigger {
             logger.debug(">>>>>>>>>>> xxl-job trigger start, jobId:{}", jobLog.getId());
             
             // #############################开始构造callback参数####################################//
-            JSONObject json =  JSONObject.parseObject(jobInfo.getExecutorParam());
-            String taskId = String.valueOf(jobLog.getId());
-            String callback = I18nUtil.getString("callback_url").replace("${taskId}", taskId);
-            json.put("callBack", callback);
-            json.put("taskId", taskId);
-            json.put("jobId", jobLog.getJobId());
-            jobInfo.setExecutorParam(json.toJSONString());
+            if (StringUtils.isNotEmpty(jobInfo.getExecutorParam()) && StringUtils.isNotBlank(jobInfo.getExecutorParam())) {
+            	JSONObject json =  JSONObject.parseObject(jobInfo.getExecutorParam());
+                String taskId = String.valueOf(jobLog.getId());
+                String callback = I18nUtil.getString("callback_url").replace("${taskId}", taskId);
+                json.put("callBack", callback);
+                json.put("taskId", taskId);
+                json.put("jobId", jobLog.getJobId());
+                jobInfo.setExecutorParam(json.toJSONString());
+			}
             // #############################结束####################################//
 
             // 2、prepare trigger-info
