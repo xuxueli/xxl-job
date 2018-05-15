@@ -30,7 +30,7 @@ public class JobThread extends Thread{
 	private LinkedBlockingQueue<TriggerParam> triggerQueue;
 	private ConcurrentHashSet<Integer> triggerLogIdSet;		// avoid repeat trigger for the same TRIGGER_LOG_ID
 
-	private boolean toStop = false;
+	private volatile boolean toStop = false;
 	private String stopReason;
 
     private boolean running = false;    // if running job
