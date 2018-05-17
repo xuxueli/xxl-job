@@ -3,9 +3,11 @@ package com.xxl.job.core.executor;
 import com.xxl.job.core.biz.AdminBiz;
 import com.xxl.job.core.biz.ExecutorBiz;
 import com.xxl.job.core.biz.impl.ExecutorBizImpl;
+import com.xxl.job.core.biz.model.XxlJobInfo;
 import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.handler.annotation.JobHandler;
 import com.xxl.job.core.log.XxlJobFileAppender;
+import com.xxl.job.core.log.XxlJobLogger;
 import com.xxl.job.core.rpc.netcom.NetComClientProxy;
 import com.xxl.job.core.rpc.netcom.NetComServerFactory;
 import com.xxl.job.core.thread.JobLogFileCleanThread;
@@ -36,6 +38,12 @@ public class XxlJobExecutor implements ApplicationContextAware {
     private String accessToken;
     private String logPath;
     private int logRetentionDays;
+
+    private static final List<XxlJobInfo> XXLJOBS =new ArrayList<>(0);//todo
+
+    public static List<XxlJobInfo> getXXLJOBS() {
+        return XXLJOBS;
+    }
 
     public void setAdminAddresses(String adminAddresses) {
         this.adminAddresses = adminAddresses;

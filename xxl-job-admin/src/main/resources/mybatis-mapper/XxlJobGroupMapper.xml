@@ -60,4 +60,11 @@
 		WHERE t.id = #{id}
 	</select>
 
+
+
+	<select id="loadIdByName" parameterType="java.lang.String" resultType="java.lang.Integer">
+		select id from xxl_job_qrtz_trigger_group where app_name=#{appName}
+	</select>
+
+
 </mapper>

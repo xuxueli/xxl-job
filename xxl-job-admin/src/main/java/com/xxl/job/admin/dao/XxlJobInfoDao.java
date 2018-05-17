@@ -1,6 +1,6 @@
 package com.xxl.job.admin.dao;
 
-import com.xxl.job.admin.core.model.XxlJobInfo;
+import com.xxl.job.core.biz.model.XxlJobInfo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -26,6 +26,8 @@ public interface XxlJobInfoDao {
 	public int save(XxlJobInfo info);
 
 	public XxlJobInfo loadById(@Param("id") int id);
+
+	public List<XxlJobInfo> loadByGroupName(@Param("groupName") String  groupName);
 	
 	public int update(XxlJobInfo item);
 	
@@ -34,5 +36,7 @@ public interface XxlJobInfoDao {
 	public List<XxlJobInfo> getJobsByGroup(@Param("jobGroup") int jobGroup);
 
 	public int findAllCount();
+
+	int loadIdByAnnotationIdentity(@Param("annotationIdentity") String annotationIdentity);
 
 }

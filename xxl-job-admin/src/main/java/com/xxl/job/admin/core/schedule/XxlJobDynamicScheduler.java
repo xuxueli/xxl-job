@@ -1,7 +1,7 @@
 package com.xxl.job.admin.core.schedule;
 
 import com.xxl.job.admin.core.jobbean.RemoteHttpJobBean;
-import com.xxl.job.admin.core.model.XxlJobInfo;
+import com.xxl.job.core.biz.model.XxlJobInfo;
 import com.xxl.job.admin.core.thread.JobFailMonitorHelper;
 import com.xxl.job.admin.core.thread.JobRegistryMonitorHelper;
 import com.xxl.job.admin.core.util.I18nUtil;
@@ -26,6 +26,7 @@ import org.springframework.util.Assert;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -343,16 +344,33 @@ public final class XxlJobDynamicScheduler implements ApplicationContextAware {
      * @throws SchedulerException
      */
     public static boolean triggerJob(String jobName, String jobGroup) throws SchedulerException {
-    	// TriggerKey : name + group
-    	JobKey jobKey = new JobKey(jobName, jobGroup);
-        
+    	return triggerJob(jobName,jobGroup,null);
+    }
+
+    /**
+     * 触发一次 并传参数
+     * @param jobName
+     * @param jobGroup
+     * @param param
+     * @return
+     * @throws SchedulerException
+     */
+    public static boolean triggerJob(String jobName, String jobGroup, Map<String,Object> param) throws SchedulerException {
+        // TriggerKey : name + group
+        JobKey jobKey = new JobKey(jobName, jobGroup);
+
         boolean result = false;
         if (checkExists(jobName, jobGroup)) {
-            scheduler.triggerJob(jobKey);
+            JobDataMap jobDataMap = new JobDataMap(param);
+            if(param!=null){
+                scheduler.triggerJob(jobKey,jobDataMap);
+            }else{
+                scheduler.triggerJob(jobKey);
+            }
             result = true;
             logger.info(">>>>>>>>>>> runJob success, jobKey:{}", jobKey);
         } else {
-        	logger.info(">>>>>>>>>>> runJob fail, jobKey:{}", jobKey);
+            logger.info(">>>>>>>>>>> runJob fail, jobKey:{}", jobKey);
         }
         return result;
     }

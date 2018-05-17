@@ -2,7 +2,7 @@ package com.xxl.job.admin.service.impl;
 
 import com.xxl.job.admin.core.enums.ExecutorFailStrategyEnum;
 import com.xxl.job.admin.core.model.XxlJobGroup;
-import com.xxl.job.admin.core.model.XxlJobInfo;
+import com.xxl.job.core.biz.model.XxlJobInfo;
 import com.xxl.job.admin.core.route.ExecutorRouteStrategyEnum;
 import com.xxl.job.admin.core.schedule.XxlJobDynamicScheduler;
 import com.xxl.job.admin.core.util.I18nUtil;
@@ -14,6 +14,8 @@ import com.xxl.job.admin.service.XxlJobService;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
 import com.xxl.job.core.glue.GlueTypeEnum;
+import com.xxl.job.core.rpc.serialize.HessianSerializer;
+import com.xxl.job.core.rpc.serialize.JsonSerializer;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
@@ -133,7 +135,9 @@ public class XxlJobServiceImpl implements XxlJobService {
         String qz_name = String.valueOf(jobInfo.getId());
         try {
             XxlJobDynamicScheduler.addJob(qz_name, qz_group, jobInfo.getJobCron());
-            //XxlJobDynamicScheduler.pauseJob(qz_name, qz_group);
+            if(!jobInfo.isOnStart()){
+				XxlJobDynamicScheduler.pauseJob(qz_name, qz_group);
+			}
             return ReturnT.SUCCESS;
         } catch (SchedulerException e) {
             logger.error(e.getMessage(), e);
@@ -274,22 +278,29 @@ public class XxlJobServiceImpl implements XxlJobService {
 
 	@Override
 	public ReturnT<String> triggerJob(int id) {
-        XxlJobInfo xxlJobInfo = xxlJobInfoDao.loadById(id);
-        if (xxlJobInfo == null) {
-        	return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("jobinfo_field_id")+I18nUtil.getString("system_unvalid")) );
+       return triggerJob(id,null);
+	}
+
+	@Override
+	public ReturnT<String> triggerJob(int id,Map<String,Object> param) {
+		XxlJobInfo xxlJobInfo = xxlJobInfoDao.loadById(id);
+		if (xxlJobInfo == null) {
+			return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("jobinfo_field_id")+I18nUtil.getString("system_unvalid")) );
 		}
 
-        String group = String.valueOf(xxlJobInfo.getJobGroup());
-        String name = String.valueOf(xxlJobInfo.getId());
+		String group = String.valueOf(xxlJobInfo.getJobGroup());
+		String name = String.valueOf(xxlJobInfo.getId());
 
 		try {
-			XxlJobDynamicScheduler.triggerJob(name, group);
+			XxlJobDynamicScheduler.triggerJob(name, group,param);
 			return ReturnT.SUCCESS;
 		} catch (SchedulerException e) {
 			logger.error(e.getMessage(), e);
 			return new ReturnT<String>(ReturnT.FAIL_CODE, e.getMessage());
 		}
 	}
+
+
 
 	@Override
 	public Map<String, Object> dashboardInfo() {
@@ -379,6 +390,24 @@ public class XxlJobServiceImpl implements XxlJobService {
 		LocalCacheUtil.set(cacheKey, result, 60*1000);     // cache 60s*/
 
 		return new ReturnT<Map<String, Object>>(result);
+	}
+
+	@Override
+	public List<XxlJobInfo> loadByGroupName(String groupName) {
+		return xxlJobInfoDao.loadByGroupName(groupName);
+	}
+
+	@Override
+	public ReturnT<String> addList(List<XxlJobInfo> jobInfos,int groupId) {
+		Map<XxlJobInfo,String> failJobs = new HashMap<>();
+		for (XxlJobInfo job:jobInfos){
+			job.setJobGroup(groupId);
+			ReturnT<String> ret = add(job);
+			if(!(ret.getCode()==ReturnT.SUCCESS_CODE)){
+				failJobs.put(job,ret.getMsg());
+			}
+		}
+		return new ReturnT<>(JsonSerializer.toString(failJobs));
 	}
 
 }

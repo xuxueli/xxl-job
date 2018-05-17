@@ -1,10 +1,12 @@
 package com.xxl.job.admin.service;
 
 
-import com.xxl.job.admin.core.model.XxlJobInfo;
+import com.xxl.job.core.biz.model.XxlJobInfo;
 import com.xxl.job.core.biz.model.ReturnT;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -75,6 +77,9 @@ public interface XxlJobService {
 	 */
 	public ReturnT<String> triggerJob(int id);
 
+	ReturnT<String> triggerJob(int id,Map<String,Object> param);
+
+
 	/**
 	 * dashboard info
 	 *
@@ -90,5 +95,14 @@ public interface XxlJobService {
 	 * @return
 	 */
 	public ReturnT<Map<String,Object>> chartInfo(Date startDate, Date endDate);
+
+	List<XxlJobInfo> loadByGroupName(String groupName);
+
+
+	ReturnT<String> addList(List<XxlJobInfo> jobInfos,int groupId);
+
+
+
+
 
 }
