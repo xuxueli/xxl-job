@@ -1,6 +1,7 @@
 package com.xxl.job.admin.core.jobbean;
 
 import com.xxl.job.admin.core.trigger.XxlJobTrigger;
+import com.xxl.job.core.annotationtask.model.ExecutorParam;
 import org.quartz.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +27,7 @@ public class RemoteHttpJobBean extends QuartzJobBean {
 		Integer jobId = Integer.valueOf(jobKey.getName());
 		Trigger trigger = context.getTrigger();
 		JobDataMap jobDataMap = trigger.getJobDataMap();
+		jobDataMap.remove(ExecutorParam.ANNOTATION_IDENTITY);
 		// trigger
 		XxlJobTrigger.trigger(jobId,jobDataMap);
 	}

@@ -1,5 +1,6 @@
 package com.xxl.job.core.annotationtask.spring;
 
+import com.xxl.job.core.annotationtask.annotations.DestroyJob;
 import com.xxl.job.core.annotationtask.annotations.Xxl;
 import com.xxl.job.core.annotationtask.annotations.XxlJob;
 import com.xxl.job.core.biz.model.XxlJobInfo;
@@ -59,7 +60,7 @@ public class XxlScanner extends ClassPathBeanDefinitionScanner {
     private void initJobDetails(Class xxl){
         Method[] methods = xxl.getDeclaredMethods();
         for (Method method:methods){
-            if(method.isAnnotationPresent(XxlJob.class)){
+            if(method.isAnnotationPresent(XxlJob.class)&&!method.isAnnotationPresent(DestroyJob.class)){
                 XxlJob xxlJob = method.getAnnotation(XxlJob.class);
                 String identity =  method.getDeclaringClass().getCanonicalName()+"."+method.getName();
                 XxlJobExecutor.getXXLJOBS().add(jobDetail(xxlJob,identity));
@@ -94,6 +95,7 @@ public class XxlScanner extends ClassPathBeanDefinitionScanner {
         xxlJobInfo.setExecutorRouteStrategy(xxlJob.executorRouteStrategy().name());
         xxlJobInfo.setJobCron(xxlJob.jobCron());
         xxlJobInfo.setJobDesc(xxlJob.jobDesc());
+        xxlJobInfo.setOnStart(xxlJob.onStart());
         return xxlJobInfo;
     }
 

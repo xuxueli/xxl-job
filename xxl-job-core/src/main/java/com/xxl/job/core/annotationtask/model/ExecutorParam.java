@@ -30,9 +30,11 @@ public class ExecutorParam implements Serializable{
         this.param = param;
     }
 
-    public static ExecutorParamBuilder builder = new ExecutorParamBuilder();
+    public static ExecutorParamBuilder builder(){
+        return new ExecutorParamBuilder();
+    }
 
-    private static class ExecutorParamBuilder{
+    public static class ExecutorParamBuilder{
         private ExecutorType executorType;
         private Map<String,Object> map;
 

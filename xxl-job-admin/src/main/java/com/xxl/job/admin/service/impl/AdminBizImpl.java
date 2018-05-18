@@ -171,7 +171,7 @@ public class AdminBizImpl implements AdminBiz {
         if(ExecutorType.PAUSE.equals(executorParam.getExecutorType())){//暂停任务
             xxlJobService.pause(id);
         }else if(ExecutorType.TRIGGER_ONCE.equals(executorParam.getExecutorType())){//触发一次
-            return xxlJobService.triggerJob(id);
+            return xxlJobService.triggerJob(id,executorParam.getParam());
         }
         return ReturnT.SUCCESS;
     }

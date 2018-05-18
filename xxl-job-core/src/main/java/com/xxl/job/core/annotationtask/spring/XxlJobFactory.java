@@ -13,7 +13,7 @@ import java.util.List;
 
 public class XxlJobFactory implements InvocationHandler {
 
-    private static XxlJobFactory xxlJobFactory = new XxlJobFactory();
+    private static final XxlJobFactory xxlJobFactory = new XxlJobFactory();
 
     public static <T> T newProxy(Class<T> interfaceType){
         return (T) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(),new Class[]{interfaceType},xxlJobFactory);
@@ -30,7 +30,7 @@ public class XxlJobFactory implements InvocationHandler {
                  executorParam = (ExecutorParam) args[0];
                  executorParam.getParam().put(ExecutorParam.ANNOTATION_IDENTITY,identity);
                  ret = adminBiz.triggerAnnotationJob(executorParam);
-                if(ret.getCode()==ReturnT.SUCCESS_CODE){
+                if(ReturnT.SUCCESS_CODE==ret.getCode()){
                     break;
                 }
             }else{
