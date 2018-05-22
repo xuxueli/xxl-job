@@ -1,3 +1,4 @@
+<#import "/spring.ftl" as spring />
 <!DOCTYPE html>
 <html>
 <head>
@@ -5,7 +6,7 @@
 	<@netCommon.commonStyle />
 	<link rel="stylesheet" href="${request.contextPath}/static/plugins/codemirror/lib/codemirror.css">
 	<link rel="stylesheet" href="${request.contextPath}/static/plugins/codemirror/addon/hint/show-hint.css">
-    <title>${I18n.admin_name}</title>
+    <title><@spring.message code="admin_name" /></title>
 	<style type="text/css">
 		.CodeMirror {
       		font-size:16px;
@@ -47,7 +48,7 @@
                     <div class="navbar-custom-menu">
                         <ul class="nav navbar-nav">
                             <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">${I18n.jobinfo_glue_rollback} <span class="caret"></span></a>
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><@spring.message code="jobinfo_glue_rollback" /> <span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu">
                                     <li <#if jobLogGlues?exists && jobLogGlues?size gt 0 >style="display: none;"</#if> >
                                         <a href="javascript:;" class="source_version" version="version_now" glueType="${jobInfo.glueType}" >
@@ -70,7 +71,7 @@
                             <li id="save" >
 								<a href="javascript:;" >
 									<i class="fa fa-fw fa-save" ></i>
-                                    ${I18n.system_save}
+                                    <@spring.message code="system_save" />
 								</a>
 							</li>
                         </ul>
@@ -91,19 +92,19 @@
         <div class="modal-dialog ">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title" ><i class="fa fa-fw fa-save"></i>${I18n.system_save}</h4>
+                    <h4 class="modal-title" ><i class="fa fa-fw fa-save"></i><@spring.message code="system_save" /></h4>
                 </div>
                 <div class="modal-body">
                     <form class="form-horizontal form" role="form" >
                         <div class="form-group">
-                            <label for="lastname" class="col-sm-2 control-label">${I18n.jobinfo_glue_remark}<font color="red">*</font></label>
-                            <div class="col-sm-10"><input type="text" class="form-control" id="glueRemark" placeholder="${I18n.system_please_input}${I18n.jobinfo_glue_remark}" maxlength="64" ></div>
+                            <label for="lastname" class="col-sm-2 control-label"><@spring.message code="jobinfo_glue_remark" /><font color="red">*</font></label>
+                            <div class="col-sm-10"><input type="text" class="form-control" id="glueRemark" placeholder="<@spring.message code="system_please_input" /><@spring.message code="jobinfo_glue_remark" />" maxlength="64" ></div>
                         </div>
                         <hr>
                         <div class="form-group">
                             <div class="col-sm-offset-3 col-sm-6">
-                                <button type="button" class="btn btn-primary ok" >${I18n.system_save}</button>
-                                <button type="button" class="btn btn-default" data-dismiss="modal">${I18n.system_cancel}</button>
+                                <button type="button" class="btn btn-primary ok" ><@spring.message code="system_save" /></button>
+                                <button type="button" class="btn btn-default" data-dismiss="modal"><@spring.message code="system_cancel" /></button>
                             </div>
                         </div>
                     </form>

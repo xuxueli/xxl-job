@@ -1,3 +1,4 @@
+<#import "/spring.ftl" as spring />
 <!DOCTYPE html>
 <html>
 <head>
@@ -5,7 +6,7 @@
 	<@netCommon.commonStyle />
     <!-- daterangepicker -->
     <link rel="stylesheet" href="${request.contextPath}/static/adminlte/plugins/daterangepicker/daterangepicker.css">
-    <title>${I18n.admin_name}</title>
+    <title><@spring.message code="admin_name" /></title>
 </head>
 <body class="hold-transition skin-blue sidebar-mini <#if cookieMap?exists && "off" == cookieMap["xxljob_adminlte_settings"].value >sidebar-collapse</#if> ">
 <div class="wrapper">
@@ -18,7 +19,7 @@
 	<div class="content-wrapper">
 		<!-- Content Header (Page header) -->
 		<section class="content-header">
-			<h1>${I18n.job_dashboard_name}</h1>
+			<h1><@spring.message code="job_dashboard_name" /></h1>
 			<!--
 			<h1>运行报表<small>任务调度中心</small></h1>
 			<ol class="breadcrumb">
@@ -40,13 +41,13 @@
                         <span class="info-box-icon"><i class="fa fa-flag-o"></i></span>
 
                         <div class="info-box-content">
-                            <span class="info-box-text">${I18n.job_dashboard_job_num}</span>
+                            <span class="info-box-text"><@spring.message code="job_dashboard_job_num" /></span>
                             <span class="info-box-number">${jobInfoCount}</span>
 
                             <div class="progress">
                                 <div class="progress-bar" style="width: 100%"></div>
                             </div>
-                            <span class="progress-description">${I18n.job_dashboard_job_num_tip}</span>
+                            <span class="progress-description"><@spring.message code="job_dashboard_job_num_tip" /></span>
                         </div>
                     </div>
                 </div>
@@ -57,14 +58,14 @@
                         <span class="info-box-icon"><i class="fa fa-calendar"></i></span>
 
                         <div class="info-box-content">
-                            <span class="info-box-text">${I18n.job_dashboard_trigger_num}</span>
+                            <span class="info-box-text"><@spring.message code="job_dashboard_trigger_num" /></span>
                             <span class="info-box-number">${jobLogCount}</span>
 
                             <div class="progress">
                                 <div class="progress-bar" style="width: 100%" ></div>
                             </div>
                             <span class="progress-description">
-                                ${I18n.job_dashboard_trigger_num_tip}
+                                <@spring.message code="job_dashboard_trigger_num_tip" />
                                 <#--<#if jobLogCount gt 0>
                                     调度成功率：${(jobLogSuccessCount*100/jobLogCount)?string("0.00")}<small>%</small>
                                 </#if>-->
@@ -79,13 +80,13 @@
                         <span class="info-box-icon"><i class="fa ion-ios-settings-strong"></i></span>
 
                         <div class="info-box-content">
-                            <span class="info-box-text">${I18n.job_dashboard_jobgroup_num}</span>
+                            <span class="info-box-text"><@spring.message code="job_dashboard_jobgroup_num" /></span>
                             <span class="info-box-number">${executorCount}</span>
 
                             <div class="progress">
                                 <div class="progress-bar" style="width: 100%"></div>
                             </div>
-                            <span class="progress-description">${I18n.job_dashboard_jobgroup_num_tip}</span>
+                            <span class="progress-description"><@spring.message code="job_dashboard_jobgroup_num_tip" /></span>
                         </div>
                     </div>
                 </div>
@@ -97,7 +98,7 @@
                 <div class="col-md-12">
                     <div class="box">
                         <div class="box-header with-border">
-                            <h3 class="box-title">${I18n.job_dashboard_report}</h3>
+                            <h3 class="box-title"><@spring.message code="job_dashboard_report" /></h3>
                             <#--<input type="text" class="form-control" id="filterTime" readonly >-->
 
                             <!-- tools box -->
@@ -142,6 +143,26 @@
 <script src="${request.contextPath}/static/adminlte/plugins/daterangepicker/daterangepicker.js"></script>
 <#-- echarts -->
 <script src="${request.contextPath}/static/plugins/echarts/echarts.common.min.js"></script>
-<script src="${request.contextPath}/static/js/index.js"></script>
+<#--<script src="${request.contextPath}/static/js/index.js"></script>-->
+<script type="text/javascript">
+    $(function(){
+
+        jQuery.i18n.properties({
+            name : 'message', //资源文件名称
+            path : '/static/i18n/', //资源文件路径
+            mode : 'map', //用Map的方式使用资源文件中的值
+            language : 'en',
+            callback : function() {//加载成功后设置显示内容
+                console.log($.i18n.map.job_dashboard_name);
+                I18n = $.i18n.map;
+                // debugger;
+                // alert(jQuery.i18n.prop('job_dashboard_name'));
+                // alert($.i18n.prop('User Name'));
+                // alert($.i18n.prop('Password'));
+            }
+        });
+
+    });
+</script>
 </body>
 </html>

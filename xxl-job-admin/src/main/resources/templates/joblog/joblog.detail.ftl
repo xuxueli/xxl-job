@@ -1,9 +1,10 @@
+<#import "/spring.ftl" as spring />
 <!DOCTYPE html>
 <html>
 <head>
     <#import "/common/common.macro.ftl" as netCommon>
     <@netCommon.commonStyle />
-    <title>${I18n.admin_name}</title>
+    <title><@spring.message code="admin_name" /></title>
 </head>
 <body class="hold-transition skin-blue layout-top-nav">
 
@@ -14,7 +15,7 @@
             <div class="container">
                 <#-- icon -->
                 <div class="navbar-header">
-                    <a class="navbar-brand"><b>${I18n.joblog_rolling_log}</b> Console</a>
+                    <a class="navbar-brand"><b><@spring.message code="joblog_rolling_log" /></b> Console</a>
                     <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
                         <i class="fa fa-bars"></i>
                     </button>
@@ -33,7 +34,7 @@
                         <li>
                             <a href="javascript:window.location.reload();" >
                                 <i class="fa fa-fw fa-refresh" ></i>
-                                ${I18n.joblog_rolling_log_refresh}
+                                <@spring.message code="joblog_rolling_log_refresh" />
                             </a>
                         </li>
                     </ul>
