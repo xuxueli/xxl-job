@@ -68,6 +68,7 @@
     var triggerTime = '${triggerTime}';
     var logId = '${logId}';
 </script>
+<#include "/common/common.i18n.init.ftl" />
 <script src="${request.contextPath}/static/js/joblog.detail.1.js"></script>
 
 </body>

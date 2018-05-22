@@ -143,6 +143,7 @@
 var id = '${jobInfo.id}';
 var ideMode = '${glueTypeIdeMode}';
 </script>
+    <#include "/common/common.i18n.init.ftl" />
 <script src="${request.contextPath}/static/js/jobcode.index.1.js"></script>
 
 </body>

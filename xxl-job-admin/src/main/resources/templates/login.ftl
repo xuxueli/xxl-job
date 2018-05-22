@@ -39,6 +39,7 @@
 		</form>
 	</div>
 <@netCommon.commonScript />
+<#include "/common/common.i18n.init.ftl" />
 <script src="${request.contextPath}/static/plugins/jquery/jquery.validate.min.js"></script>
 <script src="${request.contextPath}/static/adminlte/plugins/iCheck/icheck.min.js"></script>
 <script src="${request.contextPath}/static/js/login.1.js"></script>
