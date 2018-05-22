@@ -12,9 +12,6 @@ spring:
     request-context-attribute: request
     settings:
       template_update_delay: 0
-#    settings:
-#      auto-import: /spring.ftl as spring
-#      I18nUtil: com.xxl.job.admin.core.util.I18nUtil
   messages:
     basename: static/i18n/message
   resources:
@@ -30,3 +27,13 @@ mybatis:
 xxl:
   job:
     mail-host: smtp.163.com
+    mail-port: 25
+    mail-ssl: false
+    mail-username: ovono802302@163.com
+    mail-password: asdfzxcv
+    mail-send-nick: 《任务调度平台XXL-JOB》
+  login:
+    username: admin
+    password: 123456
+  access-token: ""
+  i18n: ""
