@@ -13,16 +13,9 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring-boot.version>1.5.10.RELEASE</spring-boot.version>
-        <spring-boot-start-quartz.version>2.0.0.M2</spring-boot-start-quartz.version>
+        <spring-boot-start-quartz.version>2.0.2.RELEASE</spring-boot-start-quartz.version>
         <mybatis-spring-boot-starter.version>1.3.1</mybatis-spring-boot-starter.version>
     </properties>
-
-    <pluginRepositories>
-        <pluginRepository>
-            <id>spring-plugins</id>
-            <url>http://repo.spring.io/plugins-release/</url>
-        </pluginRepository>
-    </pluginRepositories>
 
     <dependencyManagement>
         <dependencies>
