@@ -115,23 +115,21 @@ public class XxlJobFileAppender {
 		appendLog += "\r\n";
 		
 		// append file content
+		FileOutputStream fos = null;
 		try {
-			FileOutputStream fos = null;
-			try {
-				fos = new FileOutputStream(logFile, true);
-				fos.write(appendLog.getBytes("utf-8"));
-				fos.flush();
-			} finally {
-				if (fos != null) {
-					try {
-						fos.close();
-					} catch (IOException e) {
-						logger.error(e.getMessage(), e);
-					}
-				}
-			} 
+			fos = new FileOutputStream(logFile, true);
+			fos.write(appendLog.getBytes("utf-8"));
+			fos.flush();
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
+		} finally {
+			if (fos != null) {
+				try {
+					fos.close();
+				} catch (IOException e) {
+					logger.error(e.getMessage(), e);
+				}
+			}
 		}
 		
 	}
