@@ -1,0 +1,39 @@
+
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/xxl-job?useUnicode=true&characterEncoding=UTF-8
+    username: root
+    password: root_pwd
+    schema: classpath:tables_xxl_job.sql
+    sql-script-encoding: UTF-8
+  freemarker:
+    request-context-attribute: request
+    settings:
+      template_update_delay: 0
+  messages:
+    basename: static/i18n/message
+  resources:
+    static-locations:
+      - classpath:/static
+  mvc:
+    static-path-pattern: /static/**
+
+mybatis:
+  mapper-locations: classpath*:/mybatis-mapper/*.xml
+
+
+xxl:
+  job:
+    mail-host: smtp.163.com
+    mail-port: 25
+    mail-ssl: false
+    mail-username: ovono802302@163.com
+    mail-password: asdfzxcv
+    mail-send-nick: 《任务调度平台XXL-JOB》
+  login:
+    username: admin
+    password: 123456
+  access-token: ""
+  i18n: ""

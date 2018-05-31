@@ -1,3 +1,4 @@
+<#import "/spring.ftl" as spring />
 <!DOCTYPE html>
 <html>
 <head>
@@ -5,7 +6,7 @@
 	<@netCommon.commonStyle />
 	<!-- DataTables -->
   	<link rel="stylesheet" href="${request.contextPath}/static/adminlte/plugins/datatables/dataTables.bootstrap.css">
-    <title>${I18n.admin_name}</title>
+    <title><@spring.message code="admin_name" /></title>
 </head>
 <body class="hold-transition skin-blue sidebar-mini <#if cookieMap?exists && "off" == cookieMap["xxljob_adminlte_settings"].value >sidebar-collapse</#if>">
 <div class="wrapper">
@@ -18,7 +19,7 @@
 	<div class="content-wrapper">
 		<!-- Content Header (Page header) -->
 		<section class="content-header">
-			<h1>${I18n.jobinfo_name}</h1>
+			<h1><@spring.message code="jobinfo_name" /></h1>
 		</section>
 		
 		<!-- Main content -->
@@ -27,7 +28,7 @@
 	    	<div class="row">
 	    		<div class="col-xs-3">
 	              	<div class="input-group">
-	                	<span class="input-group-addon">${I18n.jobinfo_field_jobgroup}</span>
+	                	<span class="input-group-addon"><@spring.message code="jobinfo_field_jobgroup" /></span>
                 		<select class="form-control" id="jobGroup" >
                 			<#list JobGroupList as group>
                 				<option value="${group.id}" <#if jobGroup==group.id>selected</#if> >${group.title}</option>
@@ -37,7 +38,7 @@
 	            </div>
                 <div class="col-xs-3">
                     <div class="input-group">
-                        <span class="input-group-addon">${I18n.jobinfo_field_jobdesc}</span>
+                        <span class="input-group-addon"><@spring.message code="jobinfo_field_jobdesc" /></span>
                         <input type="text" class="form-control" id="jobDesc" autocomplete="on" >
                     </div>
                 </div>
@@ -48,10 +49,10 @@
                     </div>
                 </div>
 	            <div class="col-xs-1">
-	            	<button class="btn btn-block btn-info" id="searchBtn">${I18n.system_search}</button>
+	            	<button class="btn btn-block btn-info" id="searchBtn"><@spring.message code="system_search" /></button>
 	            </div>
 	            <div class="col-xs-2">
-	            	<button class="btn btn-block btn-success add" type="button">${I18n.jobinfo_field_add}</button>
+	            	<button class="btn btn-block btn-success add" type="button"><@spring.message code="jobinfo_field_add" /></button>
 	            </div>
           	</div>
 	    	
@@ -65,18 +66,18 @@
 			              	<table id="job_list" class="table table-bordered table-striped" width="100%" >
 				                <thead>
 					            	<tr>
-					            		<th name="id" >${I18n.jobinfo_field_id}</th>
-					                	<th name="jobGroup" >${I18n.jobinfo_field_jobgroup}</th>
-					                  	<th name="jobDesc" >${I18n.jobinfo_field_jobdesc}</th>
-                                        <th name="glueType" >${I18n.jobinfo_field_gluetype}</th>
-					                  	<th name="executorParam" >${I18n.jobinfo_field_executorparam}</th>
+					            		<th name="id" ><@spring.message code="jobinfo_field_id" /></th>
+					                	<th name="jobGroup" ><@spring.message code="jobinfo_field_jobgroup" /></th>
+					                  	<th name="jobDesc" ><@spring.message code="jobinfo_field_jobdesc" /></th>
+                                        <th name="glueType" ><@spring.message code="jobinfo_field_gluetype" /></th>
+					                  	<th name="executorParam" ><@spring.message code="jobinfo_field_executorparam" /></th>
                                         <th name="jobCron" >Cron</th>
 					                  	<th name="addTime" >addTime</th>
 					                  	<th name="updateTime" >updateTime</th>
-					                  	<th name="author" >${I18n.jobinfo_field_author}</th>
-					                  	<th name="alarmEmail" >${I18n.jobinfo_field_alarmemail}</th>
-					                  	<th name="jobStatus" >${I18n.system_status}</th>
-					                  	<th>${I18n.system_opt}</th>
+					                  	<th name="author" ><@spring.message code="jobinfo_field_author" /></th>
+					                  	<th name="alarmEmail" ><@spring.message code="jobinfo_field_alarmemail" /></th>
+					                  	<th name="jobStatus" ><@spring.message code="system_status" /></th>
+					                  	<th><@spring.message code="system_opt" /></th>
 					                </tr>
 				                </thead>
 				                <tbody></tbody>
@@ -98,12 +99,12 @@
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">
-            	<h4 class="modal-title" >${I18n.jobinfo_field_add}</h4>
+            	<h4 class="modal-title" ><@spring.message code="jobinfo_field_add" /></h4>
          	</div>
          	<div class="modal-body">
 				<form class="form-horizontal form" role="form" >
 					<div class="form-group">
-						<label for="firstname" class="col-sm-2 control-label">${I18n.jobinfo_field_jobgroup}<font color="red">*</font></label>
+						<label for="firstname" class="col-sm-2 control-label"><@spring.message code="jobinfo_field_jobgroup" /><font color="red">*</font></label>
 						<div class="col-sm-4">
 							<select class="form-control" name="jobGroup" >
 		            			<#list JobGroupList as group>
@@ -111,11 +112,11 @@
 		            			</#list>
 		                  	</select>
 						</div>
-                        <label for="lastname" class="col-sm-2 control-label">${I18n.jobinfo_field_jobdesc}<font color="red">*</font></label>
-                        <div class="col-sm-4"><input type="text" class="form-control" name="jobDesc" placeholder="${I18n.system_please_input}${I18n.jobinfo_field_jobdesc}" maxlength="50" ></div>
+                        <label for="lastname" class="col-sm-2 control-label"><@spring.message code="jobinfo_field_jobdesc" /><font color="red">*</font></label>
+                        <div class="col-sm-4"><input type="text" class="form-control" name="jobDesc" placeholder="<@spring.message code="system_please_input" /><@spring.message code="jobinfo_field_jobdesc" />" maxlength="50" ></div>
 					</div>
                     <div class="form-group">
-                        <label for="firstname" class="col-sm-2 control-label">${I18n.jobinfo_field_executorRouteStrategy}<font color="red">*</font></label>
+                        <label for="firstname" class="col-sm-2 control-label"><@spring.message code="jobinfo_field_executorRouteStrategy" /><font color="red">*</font></label>
                         <div class="col-sm-4">
                             <select class="form-control" name="executorRouteStrategy" >
 							<#list ExecutorRouteStrategyEnum as item>
@@ -124,10 +125,10 @@
                             </select>
                         </div>
                         <label for="lastname" class="col-sm-2 control-label">Cron<font color="red">*</font></label>
-                        <div class="col-sm-4"><input type="text" class="form-control" name="jobCron" placeholder="${I18n.system_please_input}Cron" maxlength="128" ></div>
+                        <div class="col-sm-4"><input type="text" class="form-control" name="jobCron" placeholder="<@spring.message code="system_please_input" />Cron" maxlength="128" ></div>
                     </div>
                     <div class="form-group">
-                        <label for="firstname" class="col-sm-2 control-label">${I18n.jobinfo_field_gluetype}<font color="red">*</font></label>
+                        <label for="firstname" class="col-sm-2 control-label"><@spring.message code="jobinfo_field_gluetype" /><font color="red">*</font></label>
                         <div class="col-sm-4">
                             <select class="form-control glueType" name="glueType" >
 								<#list GlueTypeEnum as item>
@@ -136,16 +137,16 @@
                             </select>
                         </div>
                         <label for="firstname" class="col-sm-2 control-label">JobHandler<font color="black">*</font></label>
-                        <div class="col-sm-4"><input type="text" class="form-control" name="executorHandler" placeholder="${I18n.system_please_input}JobHandler" maxlength="100" ></div>
+                        <div class="col-sm-4"><input type="text" class="form-control" name="executorHandler" placeholder="<@spring.message code="system_please_input" />JobHandler" maxlength="100" ></div>
                     </div>
                     <div class="form-group">
-                        <label for="firstname" class="col-sm-2 control-label">${I18n.jobinfo_field_executorparam}<font color="black">*</font></label>
-                        <div class="col-sm-4"><input type="text" class="form-control" name="executorParam" placeholder="${I18n.system_please_input}${I18n.jobinfo_field_executorparam}" maxlength="512" ></div>
-                        <label for="lastname" class="col-sm-2 control-label">${I18n.jobinfo_field_childJobId}<font color="black">*</font></label>
-                        <div class="col-sm-4"><input type="text" class="form-control" name="childJobId" placeholder="${I18n.jobinfo_field_childJobId_placeholder}" maxlength="100" ></div>
+                        <label for="firstname" class="col-sm-2 control-label"><@spring.message code="jobinfo_field_executorparam" /><font color="black">*</font></label>
+                        <div class="col-sm-4"><input type="text" class="form-control" name="executorParam" placeholder="<@spring.message code="system_please_input" /><@spring.message code="jobinfo_field_executorparam" />" maxlength="512" ></div>
+                        <label for="lastname" class="col-sm-2 control-label"><@spring.message code="jobinfo_field_childJobId" /><font color="black">*</font></label>
+                        <div class="col-sm-4"><input type="text" class="form-control" name="childJobId" placeholder="<@spring.message code="jobinfo_field_childJobId_placeholder" />" maxlength="100" ></div>
                     </div>
                     <div class="form-group">
-                        <label for="firstname" class="col-sm-2 control-label">${I18n.jobinfo_field_executorBlockStrategy}<font color="red">*</font></label>
+                        <label for="firstname" class="col-sm-2 control-label"><@spring.message code="jobinfo_field_executorBlockStrategy" /><font color="red">*</font></label>
                         <div class="col-sm-4">
                             <select class="form-control" name="executorBlockStrategy" >
 								<#list ExecutorBlockStrategyEnum as item>
@@ -153,7 +154,7 @@
 								</#list>
                             </select>
 						</div>
-                        <label for="lastname" class="col-sm-2 control-label">${I18n.jobinfo_field_executorFailStrategy}<font color="red">*</font></label>
+                        <label for="lastname" class="col-sm-2 control-label"><@spring.message code="jobinfo_field_executorFailStrategy" /><font color="red">*</font></label>
                         <div class="col-sm-4">
                             <select class="form-control" name="executorFailStrategy" >
 								<#list ExecutorFailStrategyEnum as item>
@@ -163,17 +164,17 @@
 						</div>
                     </div>
 					<div class="form-group">
-                        <label for="lastname" class="col-sm-2 control-label">${I18n.jobinfo_field_author}<font color="red">*</font></label>
-                        <div class="col-sm-4"><input type="text" class="form-control" name="author" placeholder="${I18n.system_please_input}${I18n.jobinfo_field_author}" maxlength="50" ></div>
-						<label for="lastname" class="col-sm-2 control-label">${I18n.jobinfo_field_alarmemail}<font color="black">*</font></label>
-						<div class="col-sm-4"><input type="text" class="form-control" name="alarmEmail" placeholder="${I18n.jobinfo_field_alarmemail_placeholder}" maxlength="100" ></div>
+                        <label for="lastname" class="col-sm-2 control-label"><@spring.message code="jobinfo_field_author" /><font color="red">*</font></label>
+                        <div class="col-sm-4"><input type="text" class="form-control" name="author" placeholder="<@spring.message code="system_please_input" /><@spring.message code="jobinfo_field_author" />" maxlength="50" ></div>
+						<label for="lastname" class="col-sm-2 control-label"><@spring.message code="jobinfo_field_alarmemail" /><font color="black">*</font></label>
+						<div class="col-sm-4"><input type="text" class="form-control" name="alarmEmail" placeholder="<@spring.message code="jobinfo_field_alarmemail_placeholder" />" maxlength="100" ></div>
 					</div>
 
                     <hr>
 					<div class="form-group">
 						<div class="col-sm-offset-3 col-sm-6">
-							<button type="submit" class="btn btn-primary"  >${I18n.system_save}</button>
-							<button type="button" class="btn btn-default" data-dismiss="modal">${I18n.system_cancel}</button>
+							<button type="submit" class="btn btn-primary"  ><@spring.message code="system_save" /></button>
+							<button type="button" class="btn btn-default" data-dismiss="modal"><@spring.message code="system_cancel" /></button>
 						</div>
 					</div>
 
@@ -200,10 +201,10 @@ public class DemoGlueJobHandler extends IJobHandler {
 #!/bin/bash
 echo "xxl-job: hello shell"
 
-echo "${I18n.jobinfo_script_location}：$0"
-echo "${I18n.jobinfo_field_executorparam}：$1"
-echo "${I18n.jobinfo_shard_index} = $2"
-echo "${I18n.jobinfo_shard_total} = $3"
+echo "<@spring.message code="jobinfo_script_location" />：$0"
+echo "<@spring.message code="jobinfo_field_executorparam" />：$1"
+echo "<@spring.message code="jobinfo_shard_index" /> = $2"
+echo "<@spring.message code="jobinfo_shard_total" /> = $3"
 <#--echo "参数数量：$#"
 for param in $*
 do
@@ -222,10 +223,10 @@ import sys
 
 print "xxl-job: hello python"
 
-print "${I18n.jobinfo_script_location}：", sys.argv[0]
-print "${I18n.jobinfo_field_executorparam}：", sys.argv[1]
-print "${I18n.jobinfo_shard_index}：", sys.argv[2]
-print "${I18n.jobinfo_shard_total}：", sys.argv[3]
+print "<@spring.message code="jobinfo_script_location" />：", sys.argv[0]
+print "<@spring.message code="jobinfo_field_executorparam" />：", sys.argv[1]
+print "<@spring.message code="jobinfo_shard_index" />：", sys.argv[2]
+print "<@spring.message code="jobinfo_shard_total" />：", sys.argv[3]
 <#--for i in range(1, len(sys.argv)):
 	time.sleep(1)
 	print "参数", i, sys.argv[i]-->
@@ -244,10 +245,10 @@ console.log("xxl-job: hello nodejs")
 
 var arguments = process.argv
 
-console.log("${I18n.jobinfo_script_location}: " + arguments[1])
-console.log("${I18n.jobinfo_field_executorparam}: " + arguments[2])
-console.log("${I18n.jobinfo_shard_index}: " + arguments[3])
-console.log("${I18n.jobinfo_shard_total}: " + arguments[4])
+console.log("<@spring.message code="jobinfo_script_location" />: " + arguments[1])
+console.log("<@spring.message code="jobinfo_field_executorparam" />: " + arguments[2])
+console.log("<@spring.message code="jobinfo_shard_index" />: " + arguments[3])
+console.log("<@spring.message code="jobinfo_shard_total" />: " + arguments[4])
 <#--for (var i = 2; i < arguments.length; i++){
 	console.log("参数 %s = %s", (i-1), arguments[i]);
 }-->
@@ -266,12 +267,12 @@ process.exit(0)
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">
-            	<h4 class="modal-title" >${I18n.jobinfo_field_update}</h4>
+            	<h4 class="modal-title" ><@spring.message code="jobinfo_field_update" /></h4>
          	</div>
          	<div class="modal-body">
 				<form class="form-horizontal form" role="form" >
 					<div class="form-group">
-                        <label for="firstname" class="col-sm-2 control-label">${I18n.jobinfo_field_jobgroup}<font color="red">*</font></label>
+                        <label for="firstname" class="col-sm-2 control-label"><@spring.message code="jobinfo_field_jobgroup" /><font color="red">*</font></label>
                         <div class="col-sm-4">
                             <select class="form-control" name="jobGroup" disabled >
 							<#list JobGroupList as group>
@@ -279,11 +280,11 @@ process.exit(0)
 							</#list>
                             </select>
                         </div>
-                        <label for="lastname" class="col-sm-2 control-label">${I18n.jobinfo_field_jobdesc}<font color="red">*</font></label>
-                        <div class="col-sm-4"><input type="text" class="form-control" name="jobDesc" placeholder="${I18n.system_please_input}${I18n.jobinfo_field_jobdesc}" maxlength="50" ></div>
+                        <label for="lastname" class="col-sm-2 control-label"><@spring.message code="jobinfo_field_jobdesc" /><font color="red">*</font></label>
+                        <div class="col-sm-4"><input type="text" class="form-control" name="jobDesc" placeholder="<@spring.message code="system_please_input" /><@spring.message code="jobinfo_field_jobdesc" />" maxlength="50" ></div>
                     </div>
                     <div class="form-group">
-                        <label for="firstname" class="col-sm-2 control-label">${I18n.jobinfo_field_executorRouteStrategy}<font color="red">*</font></label>
+                        <label for="firstname" class="col-sm-2 control-label"><@spring.message code="jobinfo_field_executorRouteStrategy" /><font color="red">*</font></label>
                         <div class="col-sm-4">
                             <select class="form-control" name="executorRouteStrategy" >
 							<#list ExecutorRouteStrategyEnum as item>
@@ -292,10 +293,10 @@ process.exit(0)
                             </select>
                         </div>
                         <label for="lastname" class="col-sm-2 control-label">Cron<font color="red">*</font></label>
-                        <div class="col-sm-4"><input type="text" class="form-control" name="jobCron" placeholder="${I18n.system_please_input}Cron" maxlength="128" ></div>
+                        <div class="col-sm-4"><input type="text" class="form-control" name="jobCron" placeholder="<@spring.message code="system_please_input" />Cron" maxlength="128" ></div>
                     </div>
                     <div class="form-group">
-                        <label for="firstname" class="col-sm-2 control-label">${I18n.jobinfo_field_gluetype}<font color="red">*</font></label>
+                        <label for="firstname" class="col-sm-2 control-label"><@spring.message code="jobinfo_field_gluetype" /><font color="red">*</font></label>
                         <div class="col-sm-4">
                             <select class="form-control glueType" name="glueType" disabled >
 							<#list GlueTypeEnum as item>
@@ -304,16 +305,16 @@ process.exit(0)
                             </select>
                         </div>
                         <label for="firstname" class="col-sm-2 control-label">JobHandler<font color="black">*</font></label>
-                        <div class="col-sm-4"><input type="text" class="form-control" name="executorHandler" placeholder="${I18n.system_please_input}JobHandler" maxlength="100" ></div>
+                        <div class="col-sm-4"><input type="text" class="form-control" name="executorHandler" placeholder="<@spring.message code="system_please_input" />JobHandler" maxlength="100" ></div>
                     </div>
                     <div class="form-group">
-                        <label for="firstname" class="col-sm-2 control-label">${I18n.jobinfo_field_executorparam}<font color="black">*</font></label>
-                        <div class="col-sm-4"><input type="text" class="form-control" name="executorParam" placeholder="${I18n.system_please_input}${I18n.jobinfo_field_executorparam}" maxlength="512" ></div>
-                        <label for="lastname" class="col-sm-2 control-label">${I18n.jobinfo_field_childJobId}<font color="black">*</font></label>
-                        <div class="col-sm-4"><input type="text" class="form-control" name="childJobId" placeholder="${I18n.jobinfo_field_childJobId_placeholder}" maxlength="100" ></div>
+                        <label for="firstname" class="col-sm-2 control-label"><@spring.message code="jobinfo_field_executorparam" /><font color="black">*</font></label>
+                        <div class="col-sm-4"><input type="text" class="form-control" name="executorParam" placeholder="<@spring.message code="system_please_input" /><@spring.message code="jobinfo_field_executorparam" />" maxlength="512" ></div>
+                        <label for="lastname" class="col-sm-2 control-label"><@spring.message code="jobinfo_field_childJobId" /><font color="black">*</font></label>
+                        <div class="col-sm-4"><input type="text" class="form-control" name="childJobId" placeholder="<@spring.message code="jobinfo_field_childJobId_placeholder" />" maxlength="100" ></div>
                     </div>
                     <div class="form-group">
-                        <label for="firstname" class="col-sm-2 control-label">${I18n.jobinfo_field_executorBlockStrategy}<font color="red">*</font></label>
+                        <label for="firstname" class="col-sm-2 control-label"><@spring.message code="jobinfo_field_executorBlockStrategy" /><font color="red">*</font></label>
                         <div class="col-sm-4">
                             <select class="form-control" name="executorBlockStrategy" >
 							<#list ExecutorBlockStrategyEnum as item>
@@ -321,7 +322,7 @@ process.exit(0)
 							</#list>
                             </select>
                         </div>
-                        <label for="lastname" class="col-sm-2 control-label">${I18n.jobinfo_field_executorFailStrategy}<font color="red">*</font></label>
+                        <label for="lastname" class="col-sm-2 control-label"><@spring.message code="jobinfo_field_executorFailStrategy" /><font color="red">*</font></label>
                         <div class="col-sm-4">
                             <select class="form-control" name="executorFailStrategy" >
 							<#list ExecutorFailStrategyEnum as item>
@@ -331,17 +332,17 @@ process.exit(0)
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="lastname" class="col-sm-2 control-label">${I18n.jobinfo_field_author}<font color="red">*</font></label>
-                        <div class="col-sm-4"><input type="text" class="form-control" name="author" placeholder="${I18n.system_please_input}${I18n.jobinfo_field_author}" maxlength="50" ></div>
-                        <label for="lastname" class="col-sm-2 control-label">${I18n.jobinfo_field_alarmemail}<font color="black">*</font></label>
-                        <div class="col-sm-4"><input type="text" class="form-control" name="alarmEmail" placeholder="${I18n.jobinfo_field_alarmemail_placeholder}" maxlength="100" ></div>
+                        <label for="lastname" class="col-sm-2 control-label"><@spring.message code="jobinfo_field_author" /><font color="red">*</font></label>
+                        <div class="col-sm-4"><input type="text" class="form-control" name="author" placeholder="<@spring.message code="system_please_input" /><@spring.message code="jobinfo_field_author" />" maxlength="50" ></div>
+                        <label for="lastname" class="col-sm-2 control-label"><@spring.message code="jobinfo_field_alarmemail" /><font color="black">*</font></label>
+                        <div class="col-sm-4"><input type="text" class="form-control" name="alarmEmail" placeholder="<@spring.message code="jobinfo_field_alarmemail_placeholder" />" maxlength="100" ></div>
                     </div>
 
 					<hr>
 					<div class="form-group">
                         <div class="col-sm-offset-3 col-sm-6">
-							<button type="submit" class="btn btn-primary"  >${I18n.system_save}</button>
-							<button type="button" class="btn btn-default" data-dismiss="modal">${I18n.system_cancel}</button>
+							<button type="submit" class="btn btn-primary"  ><@spring.message code="system_save" /></button>
+							<button type="button" class="btn btn-default" data-dismiss="modal"><@spring.message code="system_cancel" /></button>
                             <input type="hidden" name="id" >
 						</div>
 					</div>
@@ -353,6 +354,7 @@ process.exit(0)
 </div>
 
 <@netCommon.commonScript />
+<#include "/common/common.i18n.init.ftl" />
 <!-- DataTables -->
 <script src="${request.contextPath}/static/adminlte/plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="${request.contextPath}/static/adminlte/plugins/datatables/dataTables.bootstrap.min.js"></script>
