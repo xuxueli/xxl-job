@@ -1,6 +1,7 @@
 package com.xxl.job.core.biz.model;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by xuxueli on 2017-05-10 20:22:42
@@ -11,6 +12,15 @@ public class RegistryParam implements Serializable {
     private String registGroup;
     private String registryKey;
     private String registryValue;
+    private List<XxlJobInfo> xxlJobs;//todo
+
+    public List<XxlJobInfo> getXxlJobs() {
+        return xxlJobs;
+    }
+
+    public void setXxlJobs(List<XxlJobInfo> xxlJobs) {
+        this.xxlJobs = xxlJobs;
+    }
 
     public RegistryParam(){}
     public RegistryParam(String registGroup, String registryKey, String registryValue) {

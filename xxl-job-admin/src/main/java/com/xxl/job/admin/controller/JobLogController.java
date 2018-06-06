@@ -1,7 +1,7 @@
 package com.xxl.job.admin.controller;
 
 import com.xxl.job.admin.core.model.XxlJobGroup;
-import com.xxl.job.admin.core.model.XxlJobInfo;
+import com.xxl.job.core.biz.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.admin.core.schedule.XxlJobDynamicScheduler;
 import com.xxl.job.admin.core.util.I18nUtil;
@@ -12,7 +12,6 @@ import com.xxl.job.core.biz.ExecutorBiz;
 import com.xxl.job.core.biz.model.LogResult;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.glue.GlueTypeEnum;
-import com.xxl.job.core.rpc.netcom.NetComClientProxy;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;

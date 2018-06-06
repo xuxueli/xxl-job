@@ -13,6 +13,7 @@ public interface XxlJobRegistryDao {
     public int removeDead(@Param("timeout") int timeout);
 
     public List<XxlJobRegistry> findAll(@Param("timeout") int timeout);
+    public List<XxlJobRegistry> findByGroupAndRkey(@Param("registryGroup") String registryGroup,@Param("registryKey") String registryKey);
 
     public int registryUpdate(@Param("registryGroup") String registryGroup,
                               @Param("registryKey") String registryKey,

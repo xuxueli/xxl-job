@@ -1,12 +1,13 @@
 package com.xxl.job.admin.core.jobbean;
 
 import com.xxl.job.admin.core.trigger.XxlJobTrigger;
-import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
-import org.quartz.JobKey;
+import com.xxl.job.core.annotationtask.model.ExecutorParam;
+import org.quartz.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.quartz.QuartzJobBean;
+
+import java.util.Map;
 
 /**
  * http job bean
@@ -24,9 +25,11 @@ public class RemoteHttpJobBean extends QuartzJobBean {
 		// load jobId
 		JobKey jobKey = context.getTrigger().getJobKey();
 		Integer jobId = Integer.valueOf(jobKey.getName());
-
+		Trigger trigger = context.getTrigger();
+		JobDataMap jobDataMap = trigger.getJobDataMap();
+		jobDataMap.remove(ExecutorParam.ANNOTATION_IDENTITY);
 		// trigger
-		XxlJobTrigger.trigger(jobId);
+		XxlJobTrigger.trigger(jobId,jobDataMap);
 	}
 
 }

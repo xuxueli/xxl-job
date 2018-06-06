@@ -1,6 +1,6 @@
 package com.xxl.job.admin.controller;
 
-import com.xxl.job.admin.core.model.XxlJobInfo;
+import com.xxl.job.core.biz.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLogGlue;
 import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.admin.dao.XxlJobInfoDao;

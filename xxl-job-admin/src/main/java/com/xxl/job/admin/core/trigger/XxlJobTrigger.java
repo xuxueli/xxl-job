@@ -2,7 +2,8 @@ package com.xxl.job.admin.core.trigger;
 
 import com.xxl.job.admin.core.enums.ExecutorFailStrategyEnum;
 import com.xxl.job.admin.core.model.XxlJobGroup;
-import com.xxl.job.admin.core.model.XxlJobInfo;
+import com.xxl.job.core.annotationtask.model.ExecutorParam;
+import com.xxl.job.core.biz.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.admin.core.route.ExecutorRouteStrategyEnum;
 import com.xxl.job.admin.core.schedule.XxlJobDynamicScheduler;
@@ -12,6 +13,7 @@ import com.xxl.job.core.biz.ExecutorBiz;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.biz.model.TriggerParam;
 import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
+import com.xxl.job.core.rpc.serialize.JsonSerializer;
 import com.xxl.job.core.util.IpUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
@@ -19,6 +21,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Map;
 
 /**
  * xxl-job trigger
@@ -27,13 +30,16 @@ import java.util.Date;
 public class XxlJobTrigger {
     private static Logger logger = LoggerFactory.getLogger(XxlJobTrigger.class);
 
+
+    public static void trigger(int jobId){
+        trigger(jobId,null);
+    }
     /**
      * trigger job
      *
      * @param jobId
      */
-    public static void trigger(int jobId) {
-
+    public static void trigger(int jobId, Map<String,Object> param) {
         // load data
         XxlJobInfo jobInfo = XxlJobDynamicScheduler.xxlJobInfoDao.loadById(jobId);              // job info
         if (jobInfo == null) {
@@ -164,6 +170,11 @@ public class XxlJobTrigger {
                 triggerParam.setGlueUpdatetime(jobInfo.getGlueUpdatetime().getTime());
                 triggerParam.setBroadcastIndex(0);
                 triggerParam.setBroadcastTotal(1);
+                if(param!=null){
+                    param.put(ExecutorParam.DB_EXECUTOR_PARAM,triggerParam.getExecutorParams());
+                    String executorParam = JsonSerializer.toString(param);
+                    triggerParam.setExecutorParams(executorParam);
+                }
 
                 // 4.2、trigger-run (route run / trigger remote executor)
                 triggerResult = executorRouteStrategyEnum.getRouter().routeRun(triggerParam, addressList);

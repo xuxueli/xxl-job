@@ -24,6 +24,9 @@ public class ExecutorRegistryThread extends Thread {
 
     private Thread registryThread;
     private volatile boolean toStop = false;
+    //添加执行器自动启动的时候通过注解来注册任务
+    private volatile boolean finshXxlJobs = false;
+
     public void start(final int port, final String ip, final String appName){
 
         // valid
@@ -52,11 +55,16 @@ public class ExecutorRegistryThread extends Thread {
                 while (!toStop) {
                     try {
                         RegistryParam registryParam = new RegistryParam(RegistryConfig.RegistType.EXECUTOR.name(), appName, executorAddress);
+                        //todo
+                        if(!finshXxlJobs){//如果执行器启动的时候没有完成注解任务的注册就完成注册
+                            registryParam.setXxlJobs(XxlJobExecutor.getXXLJOBS());
+                        }
                         for (AdminBiz adminBiz: XxlJobExecutor.getAdminBizList()) {
                             try {
                                 ReturnT<String> registryResult = adminBiz.registry(registryParam);
                                 if (registryResult!=null && ReturnT.SUCCESS_CODE == registryResult.getCode()) {
                                     registryResult = ReturnT.SUCCESS;
+                                    finshXxlJobs = true;
                                     logger.info(">>>>>>>>>>> xxl-job registry success, registryParam:{}, registryResult:{}", new Object[]{registryParam, registryResult});
                                     break;
                                 } else {
@@ -83,6 +91,10 @@ public class ExecutorRegistryThread extends Thread {
                     RegistryParam registryParam = new RegistryParam(RegistryConfig.RegistType.EXECUTOR.name(), appName, executorAddress);
                     for (AdminBiz adminBiz: XxlJobExecutor.getAdminBizList()) {
                         try {
+                            //todo
+                            if(XxlJobExecutor.getXXLJOBS().size()>0){//如果执行器退出了 就检查下注解任务有没有其他可用的执行器 如果没有 就暂停任务的调度
+                                registryParam.setXxlJobs(XxlJobExecutor.getXXLJOBS());
+                            }
                             ReturnT<String> registryResult = adminBiz.registryRemove(registryParam);
                             if (registryResult!=null && ReturnT.SUCCESS_CODE == registryResult.getCode()) {
                                 registryResult = ReturnT.SUCCESS;

@@ -1,7 +1,6 @@
 package com.xxl.job.admin.dao;
 
-import com.xxl.job.admin.core.model.XxlJobInfo;
-import com.xxl.job.admin.dao.XxlJobInfoDao;
+import com.xxl.job.core.biz.model.XxlJobInfo;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;

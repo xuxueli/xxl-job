@@ -2,7 +2,7 @@ package com.xxl.job.admin.controller;
 
 import com.xxl.job.admin.core.enums.ExecutorFailStrategyEnum;
 import com.xxl.job.admin.core.model.XxlJobGroup;
-import com.xxl.job.admin.core.model.XxlJobInfo;
+import com.xxl.job.core.biz.model.XxlJobInfo;
 import com.xxl.job.admin.core.route.ExecutorRouteStrategyEnum;
 import com.xxl.job.admin.dao.XxlJobGroupDao;
 import com.xxl.job.admin.service.XxlJobService;

@@ -3,7 +3,7 @@
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.xxl.job.admin.dao.XxlJobInfoDao">
 	
-	<resultMap id="XxlJobInfo" type="com.xxl.job.admin.core.model.XxlJobInfo" >
+	<resultMap id="XxlJobInfo" type="com.xxl.job.core.biz.model.XxlJobInfo" >
 		<result column="id" property="id" />
 	
 		<result column="job_group" property="jobGroup" />
@@ -28,6 +28,7 @@
 		<result column="glue_updatetime" property="glueUpdatetime" />
 
 		<result column="child_jobid" property="childJobId" />
+		<result column="annotation_identity" property="annotationIdentity" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -48,7 +49,8 @@
 		t.glue_source,
 		t.glue_remark,
 		t.glue_updatetime,
-		t.child_jobid
+		t.child_jobid,
+		t.annotation_identity
 	</sql>
 	
 	<select id="pageList" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
@@ -85,7 +87,7 @@
 		</trim>
 	</select>
 
-	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobInfo" useGeneratedKeys="true" keyProperty="id" >
+	<insert id="save" parameterType="com.xxl.job.core.biz.model.XxlJobInfo" useGeneratedKeys="true" keyProperty="id" >
 		INSERT INTO XXL_JOB_QRTZ_TRIGGER_INFO (
 			job_group,
 			job_cron,
@@ -103,7 +105,8 @@
 			glue_source,
 			glue_remark,
 			glue_updatetime,
-			child_jobid
+			child_jobid,
+			annotation_identity
 		) VALUES (
 			#{jobGroup},
 			#{jobCron}, 
@@ -121,7 +124,8 @@
 			#{glueSource},
 			#{glueRemark},
 			NOW(),
-			#{childJobId}
+			#{childJobId},
+			#{annotationIdentity}
 		);
 		<!--<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
 			SELECT LAST_INSERT_ID()
@@ -134,8 +138,22 @@
 		FROM XXL_JOB_QRTZ_TRIGGER_INFO AS t
 		WHERE t.id = #{id}
 	</select>
+
+	<select id="loadByGroupName" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
+		select
+		<include refid="Base_Column_List" />
+		from
+		xxl_job_qrtz_trigger_info t ,
+		xxl_job_qrtz_trigger_group g
+		where
+		t.job_group = g.id
+		and
+		g.app_name =#{groupName}
+		and
+		t.annotation_identity is not null
+	</select>
 	
-	<update id="update" parameterType="com.xxl.job.admin.core.model.XxlJobInfo" >
+	<update id="update" parameterType="com.xxl.job.core.biz.model.XxlJobInfo" >
 		UPDATE XXL_JOB_QRTZ_TRIGGER_INFO
 		SET 
 			job_cron = #{jobCron},
@@ -171,6 +189,10 @@
 	<select id="findAllCount" resultType="int">
 		SELECT count(1)
 		FROM XXL_JOB_QRTZ_TRIGGER_INFO
+	</select>
+
+	<select id="loadIdByAnnotationIdentity" parameterType="java.lang.String" resultType="java.lang.Integer">
+		select id from xxl_job_qrtz_trigger_info where annotation_identity = #{annotationIdentity}
 	</select>
 
 </mapper>

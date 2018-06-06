@@ -30,6 +30,17 @@
 		WHERE t.update_time <![CDATA[ > ]]> DATE_ADD(NOW(),INTERVAL -#{timeout} SECOND)
 	</select>
 
+	<select id="findByGroupAndRkey" parameterType="map" resultMap="XxlJobRegistry">
+		SELECT <include refid="Base_Column_List" />
+		FROM XXL_JOB_QRTZ_TRIGGER_REGISTRY AS t
+		WHERE
+		t.registry_group =#{registryGroup}
+		and
+		t.registry_key = #{registryKey}
+		AND
+		t.update_time <![CDATA[ > ]]> DATE_ADD(NOW(),INTERVAL -#{timeout} SECOND)
+	</select>
+
     <update id="registryUpdate" >
         UPDATE XXL_JOB_QRTZ_TRIGGER_REGISTRY
         SET `update_time` = NOW()
