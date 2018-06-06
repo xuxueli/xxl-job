@@ -142,6 +142,10 @@ So far, XXL-JOB has access to a number of companies online product line, access 
     - 86、摩贝（上海）生物科技有限公司
     - 87、广东芯智慧科技有限公司
     - 88、联想集团 (联想)
+    - 89、怪兽充电
+    - 90、行圆汽车
+    - 91、深圳店店通科技邮箱公司
+    - 92、京东 (京东)
 	- ……
 
 > The company that access and use this product is welcome to register at the [address](https://github.com/xuxueli/xxl-job/issues/1 ), only for product promotion. 
