@@ -129,7 +129,7 @@ public class XxlJobExecutor implements ApplicationContextAware {
     private NetComServerFactory serverFactory = new NetComServerFactory();
     private void initExecutorServer(int port, String ip, String appName, String accessToken) throws Exception {
         // valid param
-        port = port>0?port: NetUtil.findAvailablePort(9999);
+        port = port>0?port: NetUtil.findAvailablePort(9999,ip);
 
         // start server
         NetComServerFactory.putService(ExecutorBiz.class, new ExecutorBizImpl());   // rpc-service, base on jetty
