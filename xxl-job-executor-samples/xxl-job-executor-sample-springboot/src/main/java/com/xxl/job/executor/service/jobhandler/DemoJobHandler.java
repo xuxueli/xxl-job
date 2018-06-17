@@ -20,8 +20,8 @@ import java.util.concurrent.TimeUnit;
  *
  * @author xuxueli 2015-12-19 19:43:36
  */
-@JobHandler(value="demoJobHandler")
 @Component
+@JobHandler(value="demoJobHandler")
 public class DemoJobHandler extends IJobHandler {
 
 	@Override
