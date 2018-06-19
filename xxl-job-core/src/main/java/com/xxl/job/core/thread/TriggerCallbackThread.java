@@ -4,10 +4,13 @@ import com.xxl.job.core.biz.AdminBiz;
 import com.xxl.job.core.biz.model.HandleCallbackParam;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.executor.XxlJobExecutor;
+import com.xxl.job.core.log.XxlJobFileAppender;
+import com.xxl.job.core.log.XxlJobLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -108,16 +111,26 @@ public class TriggerCallbackThread {
             try {
                 ReturnT<String> callbackResult = adminBiz.callback(callbackParamList);
                 if (callbackResult!=null && ReturnT.SUCCESS_CODE == callbackResult.getCode()) {
-                    callbackResult = ReturnT.SUCCESS;
-                    logger.info(">>>>>>>>>>> xxl-job callback success, callbackParamList:{}, callbackResult:{}", new Object[]{callbackParamList, callbackResult});
+                    callbackLog(callbackParamList, "<br>----------- xxl-job callback success");
                     break;
                 } else {
-                    logger.info(">>>>>>>>>>> xxl-job callback fail, callbackParamList:{}, callbackResult:{}", new Object[]{callbackParamList, callbackResult});
+                    callbackLog(callbackParamList, "<br>----------- xxl-job callback fail, callbackResult:" + callbackResult);
                 }
             } catch (Exception e) {
-                logger.error(">>>>>>>>>>> xxl-job callback error, callbackParamList：{}", callbackParamList, e);
+                callbackLog(callbackParamList, "<br>----------- xxl-job callback error, errorMsg:" + e.getMessage());
                 //getInstance().callBackQueue.addAll(callbackParamList);
             }
+        }
+    }
+
+    /**
+     * callback log
+     */
+    private void callbackLog(List<HandleCallbackParam> callbackParamList, String logContent){
+        for (HandleCallbackParam callbackParam: callbackParamList) {
+            String logFileName = XxlJobFileAppender.makeLogFileName(new Date(callbackParam.getLogDateTim()), callbackParam.getLogId());
+            XxlJobFileAppender.contextHolder.set(logFileName);
+            XxlJobLogger.log(logContent);
         }
     }
 
