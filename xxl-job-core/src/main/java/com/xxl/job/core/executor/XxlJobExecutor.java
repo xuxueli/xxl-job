@@ -72,6 +72,8 @@ public class XxlJobExecutor implements ApplicationContextAware {
 
     // ---------------------- start + stop ----------------------
     public void start() throws Exception {
+
+        logger.error("ip============================"+ip+",port=============================="+port);
         // init admin-client
         initAdminBizList(adminAddresses, accessToken);
 

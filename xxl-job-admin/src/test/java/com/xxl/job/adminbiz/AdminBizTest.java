@@ -16,7 +16,7 @@ import org.junit.Test;
 public class AdminBizTest {
 
     // admin-client
-    private static String addressUrl = "http://127.0.0.1:8080/xxl-job-admin".concat(AdminBiz.MAPPING);
+    private static String addressUrl = "http://127.0.0.1:8890/xxl-job-admin".concat(AdminBiz.MAPPING);
     private static String accessToken = null;
 
     /**

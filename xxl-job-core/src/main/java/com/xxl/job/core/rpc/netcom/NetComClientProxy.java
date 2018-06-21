@@ -29,46 +29,48 @@ public class NetComClientProxy implements FactoryBean<Object> {
 		this.accessToken = accessToken;
 	}
 
+	private class MyInvocationHandler implements InvocationHandler{
+			@Override
+			public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+
+				// filter method like "Object.toString()"
+				if (Object.class.getName().equals(method.getDeclaringClass().getName())) {
+					logger.error(">>>>>>>>>>> xxl-rpc proxy class-method not support [{}.{}]", method.getDeclaringClass().getName(), method.getName());
+					throw new RuntimeException("xxl-rpc proxy class-method not support");
+				}
+
+				// request
+				RpcRequest request = new RpcRequest();
+				request.setServerAddress(serverAddress);
+				request.setCreateMillisTime(System.currentTimeMillis());
+				request.setAccessToken(accessToken);
+				request.setClassName(method.getDeclaringClass().getName());
+				request.setMethodName(method.getName());
+				request.setParameterTypes(method.getParameterTypes());
+				request.setParameters(args);
+
+				// send
+				RpcResponse response = client.send(request);
+
+				// valid response
+				if (response == null) {
+					logger.error(">>>>>>>>>>> xxl-rpc netty response not found.");
+					throw new Exception(">>>>>>>>>>> xxl-rpc netty response not found.");
+				}
+				if (response.isError()) {
+					throw new RuntimeException(response.getError());
+				} else {
+					return response.getResult();
+				}
+
+			}
+	}
 	@Override
 	public Object getObject() throws Exception {
-		return Proxy.newProxyInstance(Thread.currentThread()
-				.getContextClassLoader(), new Class[] { iface },
-				new InvocationHandler() {
-					@Override
-					public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-
-						// filter method like "Object.toString()"
-						if (Object.class.getName().equals(method.getDeclaringClass().getName())) {
-							logger.error(">>>>>>>>>>> xxl-rpc proxy class-method not support [{}.{}]", method.getDeclaringClass().getName(), method.getName());
-							throw new RuntimeException("xxl-rpc proxy class-method not support");
-						}
-						
-						// request
-						RpcRequest request = new RpcRequest();
-	                    request.setServerAddress(serverAddress);
-	                    request.setCreateMillisTime(System.currentTimeMillis());
-	                    request.setAccessToken(accessToken);
-	                    request.setClassName(method.getDeclaringClass().getName());
-	                    request.setMethodName(method.getName());
-	                    request.setParameterTypes(method.getParameterTypes());
-	                    request.setParameters(args);
-
-	                    // send
-	                    RpcResponse response = client.send(request);
-	                    
-	                    // valid response
-						if (response == null) {
-							logger.error(">>>>>>>>>>> xxl-rpc netty response not found.");
-							throw new Exception(">>>>>>>>>>> xxl-rpc netty response not found.");
-						}
-	                    if (response.isError()) {
-	                        throw new RuntimeException(response.getError());
-	                    } else {
-	                        return response.getResult();
-	                    }
-	                   
-					}
-				});
+		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+		Class[] classes = new Class[]{iface};
+		InvocationHandler invocationHandler = new MyInvocationHandler();
+		return Proxy.newProxyInstance(classLoader, classes,invocationHandler);
 	}
 	@Override
 	public Class<?> getObjectType() {

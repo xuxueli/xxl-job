@@ -121,7 +121,7 @@ public class IpUtil {
 
 	public static void main(String[] args) throws UnknownHostException {
 		System.out.println(getIp());
-		System.out.println(getIpPort(8080));
+		System.out.println(getIpPort(8890));
 	}
 
 }
