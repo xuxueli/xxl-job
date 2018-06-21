@@ -142,5 +142,34 @@
 		</dependency>
 
 	</dependencies>
+	
+	<build>
+    	<finalName>xxl-job-admin</finalName>
+        <!--<plugins>
+            <plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+	          	<artifactId>maven-war-plugin</artifactId>
+	          	<configuration>
+	              <webappDirectory>D:\software\apache-tomcat-7.0.82\webapps\xxl-job-admin</webappDirectory>
+	              <warSourceDirectory>C:\Users\HouBank\git\xxl-job\xxl-job-admin\src\main\webapp</warSourceDirectory>
+	          	</configuration>
+       		</plugin>
+        </plugins>-->
+
+		<plugins>
+			<plugin>
+				<groupId>org.apache.tomcat.maven</groupId>
+				<artifactId>tomcat7-maven-plugin</artifactId>
+				<version>2.2</version>
+				<configuration>
+					<url>http://localhost:8888/manager/text</url>
+					<server>tomcat</server>
+					<username>tomcat</username>
+					<password>tomcat</password>
+					<path>/xxl-job-admin</path>
+				</configuration>
+			</plugin>
+		</plugins>
+    </build>
 
 </project>
