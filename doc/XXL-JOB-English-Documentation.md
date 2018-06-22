@@ -146,6 +146,10 @@ So far, XXL-JOB has access to a number of companies online product line, access 
     - 90、行圆汽车
     - 91、深圳店店通科技邮箱公司
     - 92、京东 (京东)
+    - 93、米庄理财
+    - 94、咖啡易融
+    - 95、梧桐诚选
+    - 96、恒大地产 (恒大)
 	- ……
 
 > The company that access and use this product is welcome to register at the [address](https://github.com/xuxueli/xxl-job/issues/1 ), only for product promotion. 
