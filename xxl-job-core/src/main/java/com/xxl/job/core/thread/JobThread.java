@@ -143,7 +143,7 @@ public class JobThread extends Thread{
 							XxlJobLogger.log("<br>----------- xxl-job job execute timeout");
 							XxlJobLogger.log(e);
 
-							executeResult = new ReturnT<String>(IJobHandler.FAIL_TIMEOUT.getCode(), "job execute timeout " + e.getMessage());
+							executeResult = new ReturnT<String>(IJobHandler.FAIL_TIMEOUT.getCode(), "job execute timeout ");
 						} finally {
 							futureThread.interrupt();
 						}
