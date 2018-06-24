@@ -29,7 +29,7 @@ public class JettyClient {
 			byte[] responseBytes = HttpClientUtil.postRequest(reqURL, requestBytes);
 			if (responseBytes == null || responseBytes.length==0) {
 				RpcResponse rpcResponse = new RpcResponse();
-				rpcResponse.setError("RpcResponse byte[] is null");
+				rpcResponse.setError("Network request fail, RpcResponse byte[] is null");
 				return rpcResponse;
             }
 
@@ -40,7 +40,7 @@ public class JettyClient {
 			logger.error(e.getMessage(), e);
 
 			RpcResponse rpcResponse = new RpcResponse();
-			rpcResponse.setError("Client-error:" + e.getMessage());
+			rpcResponse.setError("Network request error: " + e.getMessage());
 			return rpcResponse;
 		}
 	}

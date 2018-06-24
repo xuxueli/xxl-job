@@ -229,7 +229,7 @@ $(function() {
 							end: function(layero, index){
 								if (needFresh) {
 									//window.location.reload();
-									jobTable.fnDraw();
+									jobTable.fnDraw(false);
 								}
 							}
 						});

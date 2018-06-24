@@ -18,7 +18,7 @@ import java.text.MessageFormat;
 public class MailUtilTest {
 
     @Test
-    public void registryTest() throws Exception {
+    public void mailTest() throws Exception {
 
         String mailBodyTemplate = "<h5>监控告警明细：</span>" +
                 "<table border=\"1\" cellpadding=\"3\" style=\"border-collapse:collapse; width:80%;\" >\n" +

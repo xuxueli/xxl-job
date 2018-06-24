@@ -56,22 +56,22 @@ public class JobFailMonitorHelper {
 									continue;
 								}
 								if (IJobHandler.SUCCESS.getCode() == log.getTriggerCode() && log.getHandleCode() == 0) {
+									// job running
 									JobFailMonitorHelper.monitor(jobLogId);
 									logger.info(">>>>>>>>>>> job monitor, job running, JobLogId:{}", jobLogId);
 								} else if (IJobHandler.SUCCESS.getCode() == log.getHandleCode()) {
 									// job success, pass
 									logger.info(">>>>>>>>>>> job monitor, job success, JobLogId:{}", jobLogId);
-								} else if (IJobHandler.FAIL.getCode() == log.getTriggerCode()
+								} else /*if (IJobHandler.FAIL.getCode() == log.getTriggerCode()
 										|| IJobHandler.FAIL.getCode() == log.getHandleCode()
-										|| IJobHandler.TIMEOUT.getCode() == log.getHandleCode()
-										|| IJobHandler.FAIL_RETRY.getCode() == log.getHandleCode() ) {
+										|| IJobHandler.FAIL_RETRY.getCode() == log.getHandleCode() )*/ {
 									// job fail,
 									failAlarm(log);
 									logger.info(">>>>>>>>>>> job monitor, job fail, JobLogId:{}", jobLogId);
-								} else {
+								}/* else {
 									JobFailMonitorHelper.monitor(jobLogId);
 									logger.info(">>>>>>>>>>> job monitor, job status unknown, JobLogId:{}", jobLogId);
-								}
+								}*/
 							}
 						}
 

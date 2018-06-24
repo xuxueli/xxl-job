@@ -4,12 +4,14 @@ import com.xxl.job.admin.core.jobbean.RemoteHttpJobBean;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.thread.JobFailMonitorHelper;
 import com.xxl.job.admin.core.thread.JobRegistryMonitorHelper;
+import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.admin.dao.XxlJobGroupDao;
 import com.xxl.job.admin.dao.XxlJobInfoDao;
 import com.xxl.job.admin.dao.XxlJobLogDao;
 import com.xxl.job.admin.dao.XxlJobRegistryDao;
 import com.xxl.job.core.biz.AdminBiz;
 import com.xxl.job.core.biz.ExecutorBiz;
+import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
 import com.xxl.job.core.rpc.netcom.NetComClientProxy;
 import com.xxl.job.core.rpc.netcom.NetComServerFactory;
 import org.quartz.*;
@@ -76,9 +78,18 @@ public final class XxlJobDynamicScheduler implements ApplicationContextAware {
         NetComServerFactory.putService(AdminBiz.class, XxlJobDynamicScheduler.adminBiz);
         NetComServerFactory.setAccessToken(accessToken);
 
+        // init i18n
+        initI18n();
+
         // valid
         Assert.notNull(scheduler, "quartz scheduler is null");
         logger.info(">>>>>>>>> init xxl-job admin success.");
+    }
+
+    private void initI18n(){
+        for (ExecutorBlockStrategyEnum item:ExecutorBlockStrategyEnum.values()) {
+            item.setTitle(I18nUtil.getString("jobconf_block_".concat(item.name())));
+        }
     }
 
     public void destroy(){

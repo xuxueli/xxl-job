@@ -8,6 +8,8 @@ import com.xxl.job.core.log.XxlJobLogger;
 import com.xxl.job.core.util.ScriptUtil;
 import com.xxl.job.core.util.ShardingUtil;
 
+import java.io.File;
+
 /**
  * Created by xuxueli on 17/4/27.
  */
@@ -41,7 +43,7 @@ public class ScriptJobHandler extends IJobHandler {
 
         // make script file
         String scriptFileName = XxlJobFileAppender.getGlueSrcPath()
-                .concat("/")
+                .concat(File.separator)
                 .concat(String.valueOf(jobId))
                 .concat("_")
                 .concat(String.valueOf(glueUpdatetime))
@@ -61,8 +63,15 @@ public class ScriptJobHandler extends IJobHandler {
         // invoke
         XxlJobLogger.log("----------- script file:"+ scriptFileName +" -----------");
         int exitValue = ScriptUtil.execToFile(cmd, scriptFileName, logFileName, scriptParams);
-        ReturnT<String> result = (exitValue==0)?IJobHandler.SUCCESS:new ReturnT<String>(IJobHandler.FAIL.getCode(), "script exit value("+exitValue+") is failed");
-        return result;
+
+        if (exitValue == 0) {
+            return IJobHandler.SUCCESS;
+        } else if (exitValue == 101) {
+            return IJobHandler.FAIL_RETRY;
+        } else {
+            return new ReturnT<String>(IJobHandler.FAIL.getCode(), "script exit value("+exitValue+") is failed");
+        }
+
     }
 
 }

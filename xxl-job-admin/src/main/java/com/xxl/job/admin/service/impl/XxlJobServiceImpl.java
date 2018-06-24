@@ -6,7 +6,6 @@ import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.route.ExecutorRouteStrategyEnum;
 import com.xxl.job.admin.core.schedule.XxlJobDynamicScheduler;
 import com.xxl.job.admin.core.util.I18nUtil;
-import com.xxl.job.admin.core.util.LocalCacheUtil;
 import com.xxl.job.admin.dao.XxlJobGroupDao;
 import com.xxl.job.admin.dao.XxlJobInfoDao;
 import com.xxl.job.admin.dao.XxlJobLogDao;
@@ -324,12 +323,12 @@ public class XxlJobServiceImpl implements XxlJobService {
 	private static final String TRIGGER_CHART_DATA_CACHE = "trigger_chart_data_cache";
 	@Override
 	public ReturnT<Map<String, Object>> chartInfo(Date startDate, Date endDate) {
-		// get cache
+		/*// get cache
 		String cacheKey = TRIGGER_CHART_DATA_CACHE + "_" + startDate.getTime() + "_" + endDate.getTime();
 		Map<String, Object> chartInfo = (Map<String, Object>) LocalCacheUtil.get(cacheKey);
 		if (chartInfo != null) {
 			return new ReturnT<Map<String, Object>>(chartInfo);
-		}
+		}*/
 
 		// process
 		List<String> triggerDayList = new ArrayList<String>();
@@ -376,8 +375,8 @@ public class XxlJobServiceImpl implements XxlJobService {
 		result.put("triggerCountSucTotal", triggerCountSucTotal);
 		result.put("triggerCountFailTotal", triggerCountFailTotal);
 
-		// set cache
-		LocalCacheUtil.set(cacheKey, result, 60*1000);     // cache 60s
+		/*// set cache
+		LocalCacheUtil.set(cacheKey, result, 60*1000);     // cache 60s*/
 
 		return new ReturnT<Map<String, Object>>(result);
 	}
