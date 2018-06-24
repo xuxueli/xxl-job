@@ -1,13 +1,14 @@
 package com.xxl.job.core.log;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.helpers.FormattingTuple;
+import org.slf4j.helpers.MessageFormatter;
 
 /**
  * Created by xuxueli on 17/4/28.
@@ -54,12 +55,15 @@ public class XxlJobLogger {
      */
     public static void log(String appendLogPattern, Object ... appendLogArguments) {
 
-        String appendLog = appendLogPattern;
-        if (appendLogArguments!=null && appendLogArguments.length>0) {
-            appendLog = MessageFormat.format(appendLogPattern, appendLogArguments);
-        }
-
+    	FormattingTuple ft = MessageFormatter.format(appendLogPattern, appendLogArguments);
+        
+        String appendLog = ft.getMessage();
         StackTraceElement callInfo = new Throwable().getStackTrace()[1];
+        
+//        appendLog = appendLogPattern;
+//        if (appendLogArguments!=null && appendLogArguments.length>0) {
+//            appendLog = MessageFormat.format(appendLogPattern, appendLogArguments);
+//        }
         logDetail(callInfo, appendLog);
     }
 
