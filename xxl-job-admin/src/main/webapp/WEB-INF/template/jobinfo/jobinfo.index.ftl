@@ -170,8 +170,8 @@
 					</div>
 
 					<div class="form-group">
-						<label for="lastname" class="col-sm-2 control-label">${I18n.jobinfo_field_timeout}<font color="red">*</font></label>
-						<div class="col-sm-4"><input type="text" class="form-control" name="executeTimeout" placeholder="0" maxlength="100" ></div>
+						<label for="lastname" class="col-sm-2 control-label">${I18n.jobinfo_field_timeout}<font color="black">*</font></label>
+						<div class="col-sm-4"><input type="text" class="form-control" name="executorTimeout" placeholder="任务超时时间，单位秒，大于零时生效" maxlength="6" ></div>
 					</div>
 
                     <hr>
@@ -340,6 +340,11 @@ process.exit(0)
                         <div class="col-sm-4"><input type="text" class="form-control" name="author" placeholder="${I18n.system_please_input}${I18n.jobinfo_field_author}" maxlength="50" ></div>
                         <label for="lastname" class="col-sm-2 control-label">${I18n.jobinfo_field_alarmemail}<font color="black">*</font></label>
                         <div class="col-sm-4"><input type="text" class="form-control" name="alarmEmail" placeholder="${I18n.jobinfo_field_alarmemail_placeholder}" maxlength="100" ></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="lastname" class="col-sm-2 control-label">${I18n.jobinfo_field_timeout}<font color="black">*</font></label>
+                        <div class="col-sm-4"><input type="text" class="form-control" name="executorTimeout" placeholder="任务超时时间，单位秒，大于零时生效" maxlength="6" ></div>
                     </div>
 
 					<hr>

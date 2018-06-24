@@ -14,10 +14,10 @@ public abstract class IJobHandler {
 	public static final ReturnT<String> SUCCESS = new ReturnT<String>(200, null);
 	/** fail */
 	public static final ReturnT<String> FAIL = new ReturnT<String>(500, null);
-	/** timeout */
-	public static final ReturnT<String> TIMEOUT = new ReturnT<String>(400, null);
 	/** fail retry */
 	public static final ReturnT<String> FAIL_RETRY = new ReturnT<String>(501, null);
+	/** fail timeout */
+	public static final ReturnT<String> FAIL_TIMEOUT = new ReturnT<String>(502, null);
 
 
 	/**

@@ -75,6 +75,7 @@ public class XxlJobTrigger {
                 triggerMsgSb.append("<br>").append(I18nUtil.getString("jobinfo_field_executorRouteStrategy")).append("：").append(executorRouteStrategyEnum.getTitle()).append("("+i+"/"+addressList.size()+")"); // update01
                 triggerMsgSb.append("<br>").append(I18nUtil.getString("jobinfo_field_executorBlockStrategy")).append("：").append(blockStrategy.getTitle());
                 triggerMsgSb.append("<br>").append(I18nUtil.getString("jobinfo_field_executorFailStrategy")).append("：").append(failStrategy.getTitle());
+                triggerMsgSb.append("<br>").append(I18nUtil.getString("jobinfo_field_timeout")).append("：").append(jobInfo.getExecutorTimeout());
 
                 // 3、trigger-valid
                 if (triggerResult.getCode()==ReturnT.SUCCESS_CODE && CollectionUtils.isEmpty(addressList)) {
@@ -89,6 +90,7 @@ public class XxlJobTrigger {
                     triggerParam.setExecutorHandler(jobInfo.getExecutorHandler());
                     triggerParam.setExecutorParams(jobInfo.getExecutorParam());
                     triggerParam.setExecutorBlockStrategy(jobInfo.getExecutorBlockStrategy());
+                    triggerParam.setExecutorTimeout(jobInfo.getExecutorTimeout());
                     triggerParam.setLogId(jobLog.getId());
                     triggerParam.setLogDateTim(jobLog.getTriggerTime().getTime());
                     triggerParam.setGlueType(jobInfo.getGlueType());
@@ -96,8 +98,6 @@ public class XxlJobTrigger {
                     triggerParam.setGlueUpdatetime(jobInfo.getGlueUpdatetime().getTime());
                     triggerParam.setBroadcastIndex(i);
                     triggerParam.setBroadcastTotal(addressList.size()); // update02
-                    // 执行超时时间
-                    triggerParam.setExecuteTimeout(jobInfo.getExecuteTimeout());
 
                     // 4.2、trigger-run (route run / trigger remote executor)
                     triggerResult = runExecutor(triggerParam, address);     // update03
@@ -145,6 +145,7 @@ public class XxlJobTrigger {
             triggerMsgSb.append("<br>").append(I18nUtil.getString("jobinfo_field_executorRouteStrategy")).append("：").append(executorRouteStrategyEnum.getTitle());
             triggerMsgSb.append("<br>").append(I18nUtil.getString("jobinfo_field_executorBlockStrategy")).append("：").append(blockStrategy.getTitle());
             triggerMsgSb.append("<br>").append(I18nUtil.getString("jobinfo_field_executorFailStrategy")).append("：").append(failStrategy.getTitle());
+            triggerMsgSb.append("<br>").append(I18nUtil.getString("jobinfo_field_timeout")).append("：").append(jobInfo.getExecutorTimeout());
 
             // 3、trigger-valid
             if (triggerResult.getCode()==ReturnT.SUCCESS_CODE && CollectionUtils.isEmpty(addressList)) {
@@ -159,6 +160,7 @@ public class XxlJobTrigger {
                 triggerParam.setExecutorHandler(jobInfo.getExecutorHandler());
                 triggerParam.setExecutorParams(jobInfo.getExecutorParam());
                 triggerParam.setExecutorBlockStrategy(jobInfo.getExecutorBlockStrategy());
+                triggerParam.setExecutorTimeout(jobInfo.getExecutorTimeout());
                 triggerParam.setLogId(jobLog.getId());
                 triggerParam.setLogDateTim(jobLog.getTriggerTime().getTime());
                 triggerParam.setGlueType(jobInfo.getGlueType());
@@ -166,7 +168,6 @@ public class XxlJobTrigger {
                 triggerParam.setGlueUpdatetime(jobInfo.getGlueUpdatetime().getTime());
                 triggerParam.setBroadcastIndex(0);
                 triggerParam.setBroadcastTotal(1);
-                triggerParam.setExecuteTimeout(jobInfo.getExecuteTimeout());
 
                 // 4.2、trigger-run (route run / trigger remote executor)
                 triggerResult = executorRouteStrategyEnum.getRouter().routeRun(triggerParam, addressList);

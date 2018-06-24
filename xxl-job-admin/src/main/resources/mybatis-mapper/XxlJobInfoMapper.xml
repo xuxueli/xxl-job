@@ -21,12 +21,12 @@
 	    <result column="executor_param" property="executorParam" />
 		<result column="executor_block_strategy" property="executorBlockStrategy" />
 		<result column="executor_fail_strategy" property="executorFailStrategy" />
+		<result column="executor_timeout" property="executorTimeout" />
 
 	    <result column="glue_type" property="glueType" />
 	    <result column="glue_source" property="glueSource" />
 	    <result column="glue_remark" property="glueRemark" />
 		<result column="glue_updatetime" property="glueUpdatetime" />
-		<result column="execute_timeout" property="executeTimeout" />
 
 		<result column="child_jobid" property="childJobId" />
 	</resultMap>
@@ -45,11 +45,11 @@
 		t.executor_param,
 		t.executor_block_strategy,
 		t.executor_fail_strategy,
+		t.executor_timeout,
 		t.glue_type,
 		t.glue_source,
 		t.glue_remark,
 		t.glue_updatetime,
-		t.execute_timeout,
 		t.child_jobid
 	</sql>
 
@@ -101,12 +101,12 @@
 			executor_param,
 			executor_block_strategy,
 			executor_fail_strategy,
+			executor_timeout,
 			glue_type,
 			glue_source,
 			glue_remark,
 			glue_updatetime,
-			child_jobid,
-		    execute_timeout
+			child_jobid
 		) VALUES (
 			#{jobGroup},
 			#{jobCron},
@@ -120,12 +120,12 @@
 			#{executorParam},
 			#{executorBlockStrategy},
 			#{executorFailStrategy},
+			#{executorTimeout},
 			#{glueType},
 			#{glueSource},
 			#{glueRemark},
 			NOW(),
-			#{childJobId},
-		    #{executeTimeout}
+			#{childJobId}
 		);
 		<!--<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
 			SELECT LAST_INSERT_ID()
@@ -152,12 +152,12 @@
 			executor_param = #{executorParam},
 			executor_block_strategy = #{executorBlockStrategy},
 			executor_fail_strategy = #{executorFailStrategy},
+			executor_timeout = ${executorTimeout},
 			glue_type = #{glueType},
 			glue_source = #{glueSource},
 			glue_remark = #{glueRemark},
 			glue_updatetime = #{glueUpdatetime},
-			child_jobid = #{childJobId},
-			execute_timeout = ${executeTimeout}
+			child_jobid = #{childJobId}
 		WHERE id = #{id}
 	</update>
 

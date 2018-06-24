@@ -208,6 +208,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 		exists_jobInfo.setExecutorParam(jobInfo.getExecutorParam());
 		exists_jobInfo.setExecutorBlockStrategy(jobInfo.getExecutorBlockStrategy());
 		exists_jobInfo.setExecutorFailStrategy(jobInfo.getExecutorFailStrategy());
+		exists_jobInfo.setExecutorTimeout(jobInfo.getExecutorTimeout());
 		exists_jobInfo.setChildJobId(jobInfo.getChildJobId());
         xxlJobInfoDao.update(exists_jobInfo);
 

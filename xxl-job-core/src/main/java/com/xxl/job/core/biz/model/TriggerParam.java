@@ -13,6 +13,7 @@ public class TriggerParam implements Serializable{
     private String executorHandler;
     private String executorParams;
     private String executorBlockStrategy;
+    private int executorTimeout;
 
     private int logId;
     private long logDateTim;
@@ -24,15 +25,6 @@ public class TriggerParam implements Serializable{
     private int broadcastIndex;
     private int broadcastTotal;
 
-    private int executeTimeout;
-
-    public int getExecuteTimeout() {
-        return executeTimeout;
-    }
-
-    public void setExecuteTimeout(int executeTimeout) {
-        this.executeTimeout = executeTimeout;
-    }
 
     public int getJobId() {
         return jobId;
@@ -64,6 +56,14 @@ public class TriggerParam implements Serializable{
 
     public void setExecutorBlockStrategy(String executorBlockStrategy) {
         this.executorBlockStrategy = executorBlockStrategy;
+    }
+
+    public int getExecutorTimeout() {
+        return executorTimeout;
+    }
+
+    public void setExecutorTimeout(int executorTimeout) {
+        this.executorTimeout = executorTimeout;
     }
 
     public int getLogId() {
@@ -122,6 +122,7 @@ public class TriggerParam implements Serializable{
         this.broadcastTotal = broadcastTotal;
     }
 
+
     @Override
     public String toString() {
         return "TriggerParam{" +
@@ -129,6 +130,7 @@ public class TriggerParam implements Serializable{
                 ", executorHandler='" + executorHandler + '\'' +
                 ", executorParams='" + executorParams + '\'' +
                 ", executorBlockStrategy='" + executorBlockStrategy + '\'' +
+                ", executorTimeout=" + executorTimeout +
                 ", logId=" + logId +
                 ", logDateTim=" + logDateTim +
                 ", glueType='" + glueType + '\'' +
