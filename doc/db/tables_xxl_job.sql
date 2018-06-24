@@ -158,6 +158,7 @@ CREATE TABLE `XXL_JOB_QRTZ_TRIGGER_INFO` (
   `update_time` datetime DEFAULT NULL,
   `author` varchar(64) DEFAULT NULL COMMENT '作者',
   `alarm_email` varchar(255) DEFAULT NULL COMMENT '报警邮件',
+  `execute_timeout` int(11) NOT NULL DEFAULT 0 COMMENT '任务执行超时时间',
   `executor_route_strategy` varchar(50) DEFAULT NULL COMMENT '执行器路由策略',
   `executor_handler` varchar(255) DEFAULT NULL COMMENT '执行器任务handler',
   `executor_param` varchar(512) DEFAULT NULL COMMENT '执行器任务参数',

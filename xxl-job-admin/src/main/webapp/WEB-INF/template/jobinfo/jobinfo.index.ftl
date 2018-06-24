@@ -169,6 +169,11 @@
 						<div class="col-sm-4"><input type="text" class="form-control" name="alarmEmail" placeholder="${I18n.jobinfo_field_alarmemail_placeholder}" maxlength="100" ></div>
 					</div>
 
+					<div class="form-group">
+						<label for="lastname" class="col-sm-2 control-label">${I18n.jobinfo_field_timeout}<font color="red">*</font></label>
+						<div class="col-sm-4"><input type="text" class="form-control" name="executeTimeout" placeholder="0" maxlength="100" ></div>
+					</div>
+
                     <hr>
 					<div class="form-group">
 						<div class="col-sm-offset-3 col-sm-6">

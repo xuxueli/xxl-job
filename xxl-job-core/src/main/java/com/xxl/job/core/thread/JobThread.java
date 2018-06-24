@@ -15,10 +15,14 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Collections;
 import java.util.Date;
+
+import java.util.concurrent.*;
+
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
+
 
 /**
  * handler thread
@@ -107,6 +111,7 @@ public class JobThread extends Thread{
 
             TriggerParam triggerParam = null;
             ReturnT<String> executeResult = null;
+			ExecutorService singleThread = Executors.newSingleThreadExecutor();
             try {
 				// to check toStop signal, we need cycle, so wo cannot use queue.take(), instand of poll(timeout)
 				triggerParam = triggerQueue.poll(3L, TimeUnit.SECONDS);
@@ -122,7 +127,27 @@ public class JobThread extends Thread{
 
 					// execute
 					XxlJobLogger.log("<br>----------- xxl-job job execute start -----------<br>----------- Param:" + triggerParam.getExecutorParams());
-					executeResult = handler.execute(triggerParam.getExecutorParams());
+					int executeTimeout = triggerParam.getExecuteTimeout();
+
+
+					final TriggerParam finalTriggerParam = triggerParam;
+
+					Future<ReturnT<String>> future = singleThread.submit(new Callable<ReturnT<String>>() {
+						@Override
+						public ReturnT<String> call() throws Exception {
+							return handler.execute(finalTriggerParam.getExecutorParams());
+						}
+					});
+
+					try {
+						if (executeTimeout > 0) {
+							executeResult = future.get(executeTimeout, TimeUnit.SECONDS);
+						} else {
+							executeResult = future.get();
+						}
+					} catch (TimeoutException timeoutException) {
+						executeResult = ReturnT.TIMEOUT;
+					}
 					if (executeResult == null) {
 						executeResult = IJobHandler.FAIL;
 					}
@@ -145,6 +170,9 @@ public class JobThread extends Thread{
 
 				XxlJobLogger.log("<br>----------- JobThread Exception:" + errorMsg + "<br>----------- xxl-job job execute end(error) -----------");
 			} finally {
+            	if (singleThread != null) {
+            		singleThread.shutdown();
+				}
                 if(triggerParam != null) {
                     // callback handler info
                     if (!toStop) {

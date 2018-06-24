@@ -96,6 +96,8 @@ public class XxlJobTrigger {
                     triggerParam.setGlueUpdatetime(jobInfo.getGlueUpdatetime().getTime());
                     triggerParam.setBroadcastIndex(i);
                     triggerParam.setBroadcastTotal(addressList.size()); // update02
+                    // 执行超时时间
+                    triggerParam.setExecuteTimeout(jobInfo.getExecuteTimeout());
 
                     // 4.2、trigger-run (route run / trigger remote executor)
                     triggerResult = runExecutor(triggerParam, address);     // update03
@@ -164,6 +166,7 @@ public class XxlJobTrigger {
                 triggerParam.setGlueUpdatetime(jobInfo.getGlueUpdatetime().getTime());
                 triggerParam.setBroadcastIndex(0);
                 triggerParam.setBroadcastTotal(1);
+                triggerParam.setExecuteTimeout(jobInfo.getExecuteTimeout());
 
                 // 4.2、trigger-run (route run / trigger remote executor)
                 triggerResult = executorRouteStrategyEnum.getRouter().routeRun(triggerParam, addressList);
