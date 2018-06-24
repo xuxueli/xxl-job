@@ -7,9 +7,11 @@ import com.xxl.job.admin.core.util.I18nUtil;
  */
 public enum ExecutorFailStrategyEnum {
 
-    FAIL_ALARM(I18nUtil.getString("jobconf_fail_alarm")),
+    NULL(I18nUtil.getString("jobconf_fail_null")),
 
-    FAIL_RETRY(I18nUtil.getString("jobconf_fail_retry"));
+    FAIL_TRIGGER_RETRY(I18nUtil.getString("jobconf_fail_trigger_retry")),
+
+    FAIL_HANDLE_RETRY(I18nUtil.getString("jobconf_fail_handle_retry"));
 
     private final String title;
     private ExecutorFailStrategyEnum(String title) {
