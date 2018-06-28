@@ -34,7 +34,7 @@ XXL-JOB is a lightweight distributed task scheduling framework.
 It's core design goal is to develop quickly and learn simple, lightweight, and easy to expand. 
 Now, it's already open source, and many companies use it in production environments, real "out-of-the-box".
 
-XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是开发迅速、学习简单、轻量级、易扩展。现已开放源代码并接入多家公司线上产品线，开箱即用。
+XXL-JOB是一个轻量级分布式任务调度平台，其核心设计目标是开发迅速、学习简单、轻量级、易扩展。现已开放源代码并接入多家公司线上产品线，开箱即用。
 
 
 ## Documentation
@@ -188,6 +188,9 @@ XXL-JOB是一个轻量级分布式任务调度框架，其核心设计目标是�
     - 94、咖啡易融
     - 95、梧桐诚选
     - 96、恒大地产 (恒大)
+    - 97、昆明龙慧
+    - 98、上海涩瑶软件
+    - 99、易信 (网易)
 	- ……
 
 > 更多接入的公司，欢迎在 [登记地址](https://github.com/xuxueli/xxl-job/issues/1 ) 登记，登记仅仅为了产品推广。

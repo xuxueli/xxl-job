@@ -150,6 +150,9 @@ So far, XXL-JOB has access to a number of companies online product line, access 
     - 94、咖啡易融
     - 95、梧桐诚选
     - 96、恒大地产 (恒大)
+    - 97、昆明龙慧
+    - 98、上海涩瑶软件
+    - 99、易信 (网易)
 	- ……
 
 > The company that access and use this product is welcome to register at the [address](https://github.com/xuxueli/xxl-job/issues/1 ), only for product promotion. 
