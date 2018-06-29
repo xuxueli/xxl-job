@@ -23,6 +23,9 @@ import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.util.Assert;
+import com.xxl.job.admin.core.trigger.XxlJobTrigger;
+import org.apache.commons.lang3.StringUtils;
+
 
 import java.util.Date;
 import java.util.HashSet;
@@ -357,6 +360,35 @@ public final class XxlJobDynamicScheduler implements ApplicationContextAware {
         return result;
     }
 
+    /**
+     * run
+     *update by sr   for add trigger param  //手动执行可以修改参数
+     * @param jobName
+     * @param jobGroup
+     * @param param
+     * @return
+     * @throws SchedulerException
+     */
+    public static boolean triggerJob(String jobName, String jobGroup,String param) throws SchedulerException {
+        // TriggerKey : name + group
+        JobKey jobKey = new JobKey(jobName, jobGroup);
+
+        boolean result = false;
+        if (checkExists(jobName, jobGroup)) {
+            if(StringUtils.isBlank(param))
+                scheduler.triggerJob(jobKey);
+            else{
+                XxlJobTrigger.trigger( Integer.valueOf(jobName),param);
+                logger.info(">>>>>>>>> runJob with param:" + param);
+            }
+
+            result = true;
+            logger.info(">>>>>>>>>>> runJob success, jobKey:{}", jobKey);
+        } else {
+            logger.info(">>>>>>>>>>> runJob fail, jobKey:{}", jobKey);
+        }
+        return result;
+    }
     /**
      * finaAllJobList
      *

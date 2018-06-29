@@ -94,4 +94,10 @@ public class JobInfoController {
 		return xxlJobService.triggerJob(id);
 	}
 	
+	@RequestMapping("/trigger/withParam")
+	@ResponseBody
+	public ReturnT<String> triggerJobWithParam(int id,String param) {
+		return xxlJobService.triggerJob(id,param);
+	}
+	
 }

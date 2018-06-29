@@ -291,7 +291,26 @@ public class XxlJobServiceImpl implements XxlJobService {
 			return new ReturnT<String>(ReturnT.FAIL_CODE, e.getMessage());
 		}
 	}
+	
+	@Override
+	public ReturnT<String> triggerJob(int id,String param) {
+		XxlJobInfo xxlJobInfo = xxlJobInfoDao.loadById(id);
+		if (xxlJobInfo == null) {
+			return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("jobinfo_field_id")+I18nUtil.getString("system_unvalid")) );
+		}
 
+		String group = String.valueOf(xxlJobInfo.getJobGroup());
+		String name = String.valueOf(xxlJobInfo.getId());
+
+		try {
+			XxlJobDynamicScheduler.triggerJob(name, group,param);
+			return ReturnT.SUCCESS;
+		} catch (SchedulerException e) {
+			logger.error(e.getMessage(), e);
+			return new ReturnT<String>(ReturnT.FAIL_CODE, e.getMessage());
+		}
+	}
+	
 	@Override
 	public Map<String, Object> dashboardInfo() {
 
