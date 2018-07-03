@@ -701,7 +701,7 @@ org.quartz.jobStore.clusterCheckinInterval: 1000
 
 ```
 org.quartz.threadPool.class: org.quartz.simpl.SimpleThreadPool
-org.quartz.threadPool.threadCount: 15
+org.quartz.threadPool.threadCount: 50
 org.quartz.threadPool.threadPriority: 5
 org.quartz.threadPool.threadsInheritContextClassLoaderOfInitializingThread: true
 ```
@@ -717,7 +717,7 @@ XXL-JOB调度中心中每个JOB逻辑非常 “轻”，单个JOB一次运行平
 理论上采用推荐机器配置 "4核4G内存" + "配置1s运行1次密集任务" + "调度中心与执行器ping延迟10ms（0.01s）" 的情况下，
 
     - 单线程支撑任务量  ：1 / 1 * 0.01 = 100个任务
-    - 15个线程支撑任务量：15 / 1 * 0.01 = 1500个任务
+    - 50个线程支撑任务量：50 / 1 * 0.01 = 5000个任务
 
 实际场景中，由于调度中心与执行器ping延迟不同、DB读写耗时不同、任务调度密集程度不同，会导致任务量上限会上下波动。
 
@@ -1235,6 +1235,7 @@ Tips: 历史版本(V1.3.x)目前已经Release至稳定版本, 进入维护阶段
 - 16、任务报表成功、失败和进行中统计问题修复；
 - 17、自研Log组件参数占位符改为"{}"，并修复打印有参日志时参数不匹配导致报错的问题；
 - 18、核心依赖Core内部国际化处理；
+- 19、默认Quartz线程数调整为50；
 
 
 ### TODO LIST
