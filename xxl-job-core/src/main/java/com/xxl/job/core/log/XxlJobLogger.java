@@ -15,7 +15,7 @@ import java.util.Date;
  */
 public class XxlJobLogger {
     private static Logger logger = LoggerFactory.getLogger("xxl-job logger");
-    private static SimpleDateFormat xxlJobLoggerFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");   // TODO，concurrent issue
+   // private static SimpleDateFormat xxlJobLoggerFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");   //，concurrent issue
 
     /**
      * append log
@@ -29,7 +29,7 @@ public class XxlJobLogger {
         /*// "yyyy-MM-dd HH:mm:ss [ClassName]-[MethodName]-[LineNumber]-[ThreadName] log";
         StackTraceElement[] stackTraceElements = new Throwable().getStackTrace();
         StackTraceElement callInfo = stackTraceElements[1];*/
-
+        SimpleDateFormat xxlJobLoggerFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         StringBuffer stringBuffer = new StringBuffer();
         stringBuffer.append(xxlJobLoggerFormat.format(new Date())).append(" ")
             .append("["+ callInfo.getClassName() + "#" + callInfo.getMethodName() +"]").append("-")
