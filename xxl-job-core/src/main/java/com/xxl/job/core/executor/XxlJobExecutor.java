@@ -105,16 +105,17 @@ public class XxlJobExecutor implements ApplicationContextAware {
 
 
     // ---------------------- admin-client ----------------------
-    private static List<AdminBiz> adminBizList;
+    private static List<AdminBiz> adminBizList = new ArrayList<AdminBiz>();
     private static void initAdminBizList(String adminAddresses, String accessToken) throws Exception {
         if (adminAddresses!=null && adminAddresses.trim().length()>0) {
             for (String address: adminAddresses.trim().split(",")) {
                 if (address!=null && address.trim().length()>0) {
                     String addressUrl = address.concat(AdminBiz.MAPPING);
                     AdminBiz adminBiz = (AdminBiz) new NetComClientProxy(AdminBiz.class, addressUrl, accessToken).getObject();
-                    if (adminBizList == null) {
-                        adminBizList = new ArrayList<AdminBiz>();
-                    }
+//                  不使用懒加载
+//                    if (adminBizList == null) {
+//                        adminBizList = new ArrayList<AdminBiz>();
+//                    }
                     adminBizList.add(adminBiz);
                 }
             }
