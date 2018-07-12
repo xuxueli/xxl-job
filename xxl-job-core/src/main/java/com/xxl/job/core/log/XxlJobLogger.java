@@ -55,7 +55,7 @@ public class XxlJobLogger {
      */
     public static void log(String appendLogPattern, Object ... appendLogArguments) {
 
-    	FormattingTuple ft = MessageFormatter.format(appendLogPattern, appendLogArguments);
+    	FormattingTuple ft = MessageFormatter.arrayFormat(appendLogPattern, appendLogArguments);
         String appendLog = ft.getMessage();
 
         /*appendLog = appendLogPattern;
