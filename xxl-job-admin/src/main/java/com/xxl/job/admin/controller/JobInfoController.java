@@ -4,11 +4,14 @@ import com.xxl.job.admin.core.enums.ExecutorFailStrategyEnum;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.route.ExecutorRouteStrategyEnum;
+import com.xxl.job.admin.core.schedule.XxlJobDynamicScheduler;
 import com.xxl.job.admin.dao.XxlJobGroupDao;
+import com.xxl.job.admin.dao.XxlJobInfoDao;
 import com.xxl.job.admin.service.XxlJobService;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
 import com.xxl.job.core.glue.GlueTypeEnum;
+import org.quartz.SchedulerException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -93,5 +96,19 @@ public class JobInfoController {
 	public ReturnT<String> triggerJob(int id) {
 		return xxlJobService.triggerJob(id);
 	}
-	
+
+	@Resource
+	private XxlJobInfoDao xxlJobInfoDao;
+
+	@RequestMapping("db2Job")
+	public ReturnT<String> db2Job(String ids) throws SchedulerException {
+		String[] idArr=ids.split(",");
+		for(String id:idArr){
+			XxlJobInfo xxlJobInfo=xxlJobInfoDao.loadById(Integer.parseInt(id));
+			XxlJobGroup xxlJobGroup=xxlJobGroupDao.load(xxlJobInfo.getJobGroup());
+			XxlJobDynamicScheduler.addJob(xxlJobInfo.getId()+"",xxlJobGroup.getId()+"",xxlJobInfo.getJobCron());
+		}
+		return ReturnT.SUCCESS;
+	}
+
 }
