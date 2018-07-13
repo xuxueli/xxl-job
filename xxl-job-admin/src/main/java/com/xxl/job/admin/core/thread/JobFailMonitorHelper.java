@@ -1,18 +1,17 @@
 package com.xxl.job.admin.core.thread;
 
+import com.xxl.job.admin.core.alarm.Alarm;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.admin.core.schedule.XxlJobDynamicScheduler;
-import com.xxl.job.admin.core.util.I18nUtil;
-import com.xxl.job.admin.core.util.MailUtil;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.handler.IJobHandler;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.text.MessageFormat;
 import java.util.*;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
@@ -23,12 +22,19 @@ import java.util.concurrent.TimeUnit;
  */
 public class JobFailMonitorHelper {
 	private static Logger logger = LoggerFactory.getLogger(JobFailMonitorHelper.class);
-	
+
+	private static final Set<Alarm> ALARM_SET = new HashSet<>();
 	private static JobFailMonitorHelper instance = new JobFailMonitorHelper();
 	public static JobFailMonitorHelper getInstance(){
 		return instance;
 	}
-
+	static {
+		ServiceLoader<Alarm> serviceLoader = ServiceLoader.load(Alarm.class);
+		for (Alarm alarm : serviceLoader) {
+			ALARM_SET.add(alarm);
+		}
+		logger.info("load alarm service {}, {}", ALARM_SET.size(), ALARM_SET);
+	}
 	// ---------------------- monitor ----------------------
 
 	private LinkedBlockingQueue<Integer> queue = new LinkedBlockingQueue<Integer>(0xfff8);
@@ -117,67 +123,25 @@ public class JobFailMonitorHelper {
 		getInstance().queue.offer(jobLogId);
 	}
 
-
-	// ---------------------- alarm ----------------------
-
-	// email alarm template
-	private static final String mailBodyTemplate = "<h5>" + I18nUtil.getString("jobconf_monitor_detail") + "：</span>" +
-			"<table border=\"1\" cellpadding=\"3\" style=\"border-collapse:collapse; width:80%;\" >\n" +
-			"   <thead style=\"font-weight: bold;color: #ffffff;background-color: #ff8c00;\" >" +
-			"      <tr>\n" +
-			"         <td width=\"20%\" >"+ I18nUtil.getString("jobinfo_field_jobgroup") +"</td>\n" +
-			"         <td width=\"10%\" >"+ I18nUtil.getString("jobinfo_field_id") +"</td>\n" +
-			"         <td width=\"20%\" >"+ I18nUtil.getString("jobinfo_field_jobdesc") +"</td>\n" +
-			"         <td width=\"10%\" >"+ I18nUtil.getString("jobconf_monitor_alarm_title") +"</td>\n" +
-			"         <td width=\"40%\" >"+ I18nUtil.getString("jobconf_monitor_alarm_content") +"</td>\n" +
-			"      </tr>\n" +
-			"   <thead/>\n" +
-			"   <tbody>\n" +
-			"      <tr>\n" +
-			"         <td>{0}</td>\n" +
-			"         <td>{1}</td>\n" +
-			"         <td>{2}</td>\n" +
-			"         <td>"+ I18nUtil.getString("jobconf_monitor_alarm_type") +"</td>\n" +
-			"         <td>{3}</td>\n" +
-			"      </tr>\n" +
-			"   <tbody>\n" +
-			"</table>";
-
 	/**
 	 * fail alarm
 	 *
-	 * @param jobLog
+	 * @param jobLog {@link XxlJobLog}
 	 */
 	private void failAlarm(XxlJobLog jobLog){
 
-		// send monitor email
 		XxlJobInfo info = XxlJobDynamicScheduler.xxlJobInfoDao.loadById(jobLog.getJobId());
-		if (info!=null && info.getAlarmEmail()!=null && info.getAlarmEmail().trim().length()>0) {
 
-			String alarmContent = "Alarm Job LogId=" + jobLog.getId();
-			if (jobLog.getTriggerCode() != ReturnT.SUCCESS_CODE) {
-				alarmContent += "<br>TriggerMsg=" + jobLog.getTriggerMsg();
-			}
-			if (jobLog.getHandleCode()>0 && jobLog.getHandleCode() != ReturnT.SUCCESS_CODE) {
-				alarmContent += "<br>HandleCode=" + jobLog.getHandleMsg();
-			}
-
-			Set<String> emailSet = new HashSet<String>(Arrays.asList(info.getAlarmEmail().split(",")));
-			for (String email: emailSet) {
-				XxlJobGroup group = XxlJobDynamicScheduler.xxlJobGroupDao.load(Integer.valueOf(info.getJobGroup()));
-
-				String title = I18nUtil.getString("jobconf_monitor");
-				String content = MessageFormat.format(mailBodyTemplate,
-						group!=null?group.getTitle():"null",
-						info.getId(),
-						info.getJobDesc(),
-						alarmContent);
-
-				MailUtil.sendMail(email, title, content);
-			}
+		if (null == info || StringUtils.isBlank(info.getAlarmEmail())) {
+			return;
 		}
 
-		// TODO, custom alarm strategy, such as sms
+		XxlJobGroup group = XxlJobDynamicScheduler.xxlJobGroupDao.load(info.getJobGroup());
+
+		//trigger all the alarm service
+		for (Alarm alarm : ALARM_SET) {
+			alarm.sendAlarm(info, jobLog, group);
+		}
 
 	}
 
