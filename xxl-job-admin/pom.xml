@@ -143,4 +143,13 @@
 
 	</dependencies>
 
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.cargo</groupId>
+				<artifactId>cargo-maven2-plugin</artifactId>
+				<version>1.6.8</version>
+			</plugin>
+		</plugins>
+	</build>
 </project>
