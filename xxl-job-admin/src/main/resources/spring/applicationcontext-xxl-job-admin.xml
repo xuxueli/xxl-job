@@ -12,7 +12,7 @@
 		<property name="fileEncoding" value="utf-8" />
 		<property name="locations">
 			<list>
-				<value>classpath*:xxl-job-admin-beta.properties</value>
+				<value>classpath*:xxl-job-admin.properties</value>
 			</list>
 		</property>
 	</bean>
