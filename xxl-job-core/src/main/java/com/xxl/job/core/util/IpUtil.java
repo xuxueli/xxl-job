@@ -28,8 +28,8 @@ public class IpUtil {
 	 * @return
 	 */
 	private static boolean isValidAddress(InetAddress address) {
-		if (address == null || address.isLoopbackAddress())
-			return false;
+		if (address == null || address.isLoopbackAddress()){
+			return false;}
 		String name = address.getHostAddress();
 		return (name != null
 				&& ! ANYHOST.equals(name)
@@ -87,8 +87,8 @@ public class IpUtil {
 	 * @return
 	 */
 	private static InetAddress getAddress() {
-		if (LOCAL_ADDRESS != null)
-			return LOCAL_ADDRESS;
+		if (LOCAL_ADDRESS != null){
+			return LOCAL_ADDRESS;}
 		InetAddress localAddress = getFirstValidAddress();
 		LOCAL_ADDRESS = localAddress;
 		return localAddress;
