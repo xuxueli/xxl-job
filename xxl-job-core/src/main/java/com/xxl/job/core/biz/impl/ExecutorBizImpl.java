@@ -50,7 +50,7 @@ public class ExecutorBizImpl implements ExecutorBiz {
         // kill handlerThread, and create new one
         JobThread jobThread = XxlJobExecutor.loadJobThread(jobId);
         if (jobThread != null) {
-            XxlJobExecutor.removeJobThread(jobId, "人工手动终止");
+            XxlJobExecutor.removeJobThread(jobId, "scheduling center kill job.");
             return ReturnT.SUCCESS;
         }
 
@@ -83,7 +83,7 @@ public class ExecutorBizImpl implements ExecutorBiz {
             // valid old jobThread
             if (jobThread!=null && jobHandler != newJobHandler) {
                 // change handler, need kill old thread
-                removeOldReason = "更换JobHandler或更换任务模式,终止旧任务线程";
+                removeOldReason = "change jobhandler or glue type, and terminate the old job thread.";
 
                 jobThread = null;
                 jobHandler = null;
@@ -104,7 +104,7 @@ public class ExecutorBizImpl implements ExecutorBiz {
                     !(jobThread.getHandler() instanceof GlueJobHandler
                         && ((GlueJobHandler) jobThread.getHandler()).getGlueUpdatetime()==triggerParam.getGlueUpdatetime() )) {
                 // change handler or gluesource updated, need kill old thread
-                removeOldReason = "更新任务逻辑或更换任务模式,终止旧任务线程";
+                removeOldReason = "change job source or glue type, and terminate the old job thread.";
 
                 jobThread = null;
                 jobHandler = null;
@@ -127,7 +127,7 @@ public class ExecutorBizImpl implements ExecutorBiz {
                     !(jobThread.getHandler() instanceof ScriptJobHandler
                             && ((ScriptJobHandler) jobThread.getHandler()).getGlueUpdatetime()==triggerParam.getGlueUpdatetime() )) {
                 // change script or gluesource updated, need kill old thread
-                removeOldReason = "更新任务逻辑或更换任务模式,终止旧任务线程";
+                removeOldReason = "change job source or glue type, and terminate the old job thread.";
 
                 jobThread = null;
                 jobHandler = null;
@@ -147,12 +147,12 @@ public class ExecutorBizImpl implements ExecutorBiz {
             if (ExecutorBlockStrategyEnum.DISCARD_LATER == blockStrategy) {
                 // discard when running
                 if (jobThread.isRunningOrHasQueue()) {
-                    return new ReturnT<String>(ReturnT.FAIL_CODE, "阻塞处理策略-生效："+ExecutorBlockStrategyEnum.DISCARD_LATER.getTitle());
+                    return new ReturnT<String>(ReturnT.FAIL_CODE, "block strategy effect："+ExecutorBlockStrategyEnum.DISCARD_LATER.getTitle());
                 }
             } else if (ExecutorBlockStrategyEnum.COVER_EARLY == blockStrategy) {
                 // kill running jobThread
                 if (jobThread.isRunningOrHasQueue()) {
-                    removeOldReason = "阻塞处理策略-生效：" + ExecutorBlockStrategyEnum.COVER_EARLY.getTitle();
+                    removeOldReason = "block strategy effect：" + ExecutorBlockStrategyEnum.COVER_EARLY.getTitle();
 
                     jobThread = null;
                 }

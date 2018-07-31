@@ -2,10 +2,11 @@ package com.xxl.job.core.log;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.helpers.FormattingTuple;
+import org.slf4j.helpers.MessageFormatter;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -49,15 +50,18 @@ public class XxlJobLogger {
     /**
      * append log with pattern
      *
-     * @param appendLogPattern  like "aaa {0} bbb {1} ccc"
+     * @param appendLogPattern  like "aaa {} bbb {} ccc"
      * @param appendLogArguments    like "111, true"
      */
     public static void log(String appendLogPattern, Object ... appendLogArguments) {
 
-        String appendLog = appendLogPattern;
+    	FormattingTuple ft = MessageFormatter.arrayFormat(appendLogPattern, appendLogArguments);
+        String appendLog = ft.getMessage();
+
+        /*appendLog = appendLogPattern;
         if (appendLogArguments!=null && appendLogArguments.length>0) {
             appendLog = MessageFormat.format(appendLogPattern, appendLogArguments);
-        }
+        }*/
 
         StackTraceElement callInfo = new Throwable().getStackTrace()[1];
         logDetail(callInfo, appendLog);

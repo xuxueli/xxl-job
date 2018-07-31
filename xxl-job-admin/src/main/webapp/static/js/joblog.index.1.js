@@ -159,6 +159,8 @@ $(function() {
                                 html = '<span style="color: red">'+ I18n.joblog_handleCode_500 +'</span>';
                             } else if (data == 501) {
                                 html = '<span style="color: red">'+ I18n.joblog_handleCode_501 +'</span>';
+                            } else if (data == 502) {
+                                html = '<span style="color: red">'+ I18n.joblog_handleCode_502 +'</span>';
                             } else if (data == 0) {
                                 html = '';
                             }

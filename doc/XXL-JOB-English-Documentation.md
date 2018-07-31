@@ -138,6 +138,21 @@ So far, XXL-JOB has access to a number of companies online product line, access 
     - 82、湖北享七网络科技有限公司
     - 83、钱包行云(北京)科技有限公司
     - 84、360金融 (360)
+    - 85、易企秀
+    - 86、摩贝（上海）生物科技有限公司
+    - 87、广东芯智慧科技有限公司
+    - 88、联想集团 (联想)
+    - 89、怪兽充电
+    - 90、行圆汽车
+    - 91、深圳店店通科技邮箱公司
+    - 92、京东 (京东)
+    - 93、米庄理财
+    - 94、咖啡易融
+    - 95、梧桐诚选
+    - 96、恒大地产 (恒大)
+    - 97、昆明龙慧
+    - 98、上海涩瑶软件
+    - 99、易信 (网易)
 	- ……
 
 > The company that access and use this product is welcome to register at the [address](https://github.com/xuxueli/xxl-job/issues/1 ), only for product promotion. 

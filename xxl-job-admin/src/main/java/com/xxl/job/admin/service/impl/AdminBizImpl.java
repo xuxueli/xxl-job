@@ -1,5 +1,6 @@
 package com.xxl.job.admin.service.impl;
 
+import com.xxl.job.admin.core.enums.ExecutorFailStrategyEnum;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.admin.core.util.I18nUtil;
@@ -89,12 +90,23 @@ public class AdminBizImpl implements AdminBiz {
                 }
 
             }
-        } else if (IJobHandler.FAIL_RETRY.getCode() == handleCallbackParam.getExecuteResult().getCode()){
-            ReturnT<String> retryTriggerResult = xxlJobService.triggerJob(log.getJobId());
-            callbackMsg = "<br><br><span style=\"color:#F39C12;\" > >>>>>>>>>>>"+ I18nUtil.getString("jobconf_exe_fail_retry") +"<<<<<<<<<<< </span><br>";
+        } else {
+            boolean ifHandleRetry = false;
+            if (IJobHandler.FAIL_RETRY.getCode() == handleCallbackParam.getExecuteResult().getCode()) {
+                ifHandleRetry = true;
+            } else {
+                XxlJobInfo xxlJobInfo = xxlJobInfoDao.loadById(log.getJobId());
+                if (ExecutorFailStrategyEnum.FAIL_HANDLE_RETRY.name().equals(xxlJobInfo.getExecutorFailStrategy())) {
+                    ifHandleRetry = true;
+                }
+            }
+            if (ifHandleRetry){
+                ReturnT<String> retryTriggerResult = xxlJobService.triggerJob(log.getJobId());
+                callbackMsg = "<br><br><span style=\"color:#F39C12;\" > >>>>>>>>>>>"+ I18nUtil.getString("jobconf_fail_handle_retry") +"<<<<<<<<<<< </span><br>";
 
-            callbackMsg += MessageFormat.format(I18nUtil.getString("jobconf_callback_msg1"),
-                   (retryTriggerResult.getCode()==ReturnT.SUCCESS_CODE?I18nUtil.getString("system_success"):I18nUtil.getString("system_fail")), retryTriggerResult.getMsg());
+                callbackMsg += MessageFormat.format(I18nUtil.getString("jobconf_callback_msg1"),
+                        (retryTriggerResult.getCode()==ReturnT.SUCCESS_CODE?I18nUtil.getString("system_success"):I18nUtil.getString("system_fail")), retryTriggerResult.getMsg());
+            }
         }
 
         // handle msg

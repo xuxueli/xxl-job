@@ -4,6 +4,7 @@ import com.xxl.job.admin.core.jobbean.RemoteHttpJobBean;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.thread.JobFailMonitorHelper;
 import com.xxl.job.admin.core.thread.JobRegistryMonitorHelper;
+import com.xxl.job.admin.core.thread.JobTriggerPoolHelper;
 import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.admin.dao.XxlJobGroupDao;
 import com.xxl.job.admin.dao.XxlJobInfoDao;
@@ -93,6 +94,10 @@ public final class XxlJobDynamicScheduler implements ApplicationContextAware {
     }
 
     public void destroy(){
+
+        // admin trigger pool stop
+        JobTriggerPoolHelper.toStop();
+
         // admin registry stop
         JobRegistryMonitorHelper.getInstance().toStop();
 

@@ -264,7 +264,10 @@ $(function() {
             },
 			author : {
 				required : true
-			}
+			},
+            executorTimeout : {
+                digits:true
+            }
         }, 
         messages : {  
             jobDesc : {
@@ -288,6 +291,14 @@ $(function() {
             element.parent('div').append(error);  
         },
         submitHandler : function(form) {
+
+			// process
+            var executorTimeout = $("#addModal .form input[name='executorTimeout']").val();
+            if(!/^\d+$/.test(executorTimeout)) {
+                executorTimeout = 0;
+			}
+            $("#addModal .form input[name='executorTimeout']").val(executorTimeout);
+
         	$.post(base_url + "/jobinfo/add",  $("#addModal .form").serialize(), function(data, status) {
     			if (data.code == "200") {
 					$('#addModal').modal('hide');
@@ -362,6 +373,7 @@ $(function() {
 		$("#updateModal .form input[name='jobCron']").val( row.jobCron );
 		$("#updateModal .form input[name='author']").val( row.author );
 		$("#updateModal .form input[name='alarmEmail']").val( row.alarmEmail );
+		$("#updateModal .form input[name='executorTimeout']").val( row.executorTimeout );
 		$('#updateModal .form select[name=executorRouteStrategy] option[value='+ row.executorRouteStrategy +']').prop('selected', true);
 		$("#updateModal .form input[name='executorHandler']").val( row.executorHandler );
 		$("#updateModal .form input[name='executorParam']").val( row.executorParam );
@@ -390,7 +402,10 @@ $(function() {
 			},
 			author : {
 				required : true
-			}
+			},
+            executorTimeout : {
+                digits:true
+            }
 		},
 		messages : {
 			jobDesc : {
@@ -401,7 +416,10 @@ $(function() {
 			},
 			author : {
 				required : I18n.system_please_input + I18n.jobinfo_field_author
-			}
+			},
+            executorTimeout : {
+                digits: I18n.system_please_input + I18n.system_digits
+            }
 		},
 		highlight : function(element) {
             $(element).closest('.form-group').addClass('has-error');  
@@ -414,6 +432,14 @@ $(function() {
             element.parent('div').append(error);  
         },
         submitHandler : function(form) {
+
+            // process
+            var executorTimeout = $("#updateModal .form input[name='executorTimeout']").val();
+            if(!/^\d+$/.test(executorTimeout)) {
+                executorTimeout = 0;
+            }
+            $("#updateModal .form input[name='executorTimeout']").val(executorTimeout);
+
 			// post
     		$.post(base_url + "/jobinfo/update", $("#updateModal .form").serialize(), function(data, status) {
     			if (data.code == "200") {
