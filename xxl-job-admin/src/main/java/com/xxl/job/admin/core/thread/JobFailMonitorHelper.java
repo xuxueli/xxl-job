@@ -44,6 +44,7 @@ public class JobFailMonitorHelper {
 				while (!toStop) {
 					try {
 						List<Integer> jobLogIdList = new ArrayList<Integer>();
+						//一次性从队列中取出所有数据
 						int drainToNum = JobFailMonitorHelper.instance.queue.drainTo(jobLogIdList);
 
 						if (CollectionUtils.isNotEmpty(jobLogIdList)) {
@@ -54,7 +55,7 @@ public class JobFailMonitorHelper {
 								XxlJobLog log = XxlJobDynamicScheduler.xxlJobLogDao.load(jobLogId);
 								if (log == null) {
 									continue;
-								}
+								} //0 还在处理
 								if (IJobHandler.SUCCESS.getCode() == log.getTriggerCode() && log.getHandleCode() == 0) {
 									// job running
 									JobFailMonitorHelper.monitor(jobLogId);

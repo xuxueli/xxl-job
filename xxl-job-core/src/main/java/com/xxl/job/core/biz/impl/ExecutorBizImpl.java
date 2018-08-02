@@ -29,6 +29,12 @@ public class ExecutorBizImpl implements ExecutorBiz {
         return ReturnT.SUCCESS;
     }
 
+
+    /**
+     * 无意义的心跳
+     * @param jobId
+     * @return
+     */
     @Override
     public ReturnT<String> idleBeat(int jobId) {
 

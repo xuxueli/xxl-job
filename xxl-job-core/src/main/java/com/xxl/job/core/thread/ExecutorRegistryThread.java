@@ -52,6 +52,7 @@ public class ExecutorRegistryThread extends Thread {
                 while (!toStop) {
                     try {
                         RegistryParam registryParam = new RegistryParam(RegistryConfig.RegistType.EXECUTOR.name(), appName, executorAddress);
+                          //之前已经获取了所有调度中心的本地代理
                         for (AdminBiz adminBiz: XxlJobExecutor.getAdminBizList()) {
                             try {
                                 ReturnT<String> registryResult = adminBiz.registry(registryParam);

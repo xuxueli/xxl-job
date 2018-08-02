@@ -46,7 +46,7 @@ public class JettyServer {
 					server.start();
 					logger.info(">>>>>>>>>>> xxl-job jetty server start success at port:{}.", port);
 
-					// Start Registry-Server
+					// Start Registry-Server  注册执行器
 					ExecutorRegistryThread.getInstance().start(port, ip, appName);
 
 					// Start Callback-Server

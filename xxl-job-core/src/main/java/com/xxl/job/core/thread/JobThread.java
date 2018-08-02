@@ -102,13 +102,15 @@ public class JobThread extends Thread{
 
 		// execute
 		while(!toStop){
+    		//todo 为什么会认为没有在执行了？
 			running = false;
+			//空闲次数
 			idleTimes++;
-
+            //执行参数
             TriggerParam triggerParam = null;
             ReturnT<String> executeResult = null;
             try {
-				// to check toStop signal, we need cycle, so wo cannot use queue.take(), instand of poll(timeout)
+				// poll 非阻塞    take 阻塞
 				triggerParam = triggerQueue.poll(3L, TimeUnit.SECONDS);
 				if (triggerParam!=null) {
 					running = true;
@@ -158,6 +160,7 @@ public class JobThread extends Thread{
 					XxlJobLogger.log("<br>----------- xxl-job job execute end(finish) -----------<br>----------- ReturnT:" + executeResult);
 
 				} else {
+					  //超过30次没有获取到执行参数
 					if (idleTimes > 30) {
 						XxlJobExecutor.removeJobThread(jobId, "excutor idel times over limit.");
 					}

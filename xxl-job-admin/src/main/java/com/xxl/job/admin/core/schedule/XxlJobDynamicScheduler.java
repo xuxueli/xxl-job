@@ -30,6 +30,7 @@ import java.util.HashSet;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
+ *  调度中心核心类
  * base quartz scheduler util
  * @author xuxueli 2015-12-19 16:13:53
  */
@@ -47,7 +48,7 @@ public final class XxlJobDynamicScheduler implements ApplicationContextAware {
 	// accessToken
     private static String accessToken;
     public void setAccessToken(String accessToken) {
-        this.accessToken = accessToken;
+        XxlJobDynamicScheduler.accessToken = accessToken;
     }
 
     // dao
@@ -69,13 +70,13 @@ public final class XxlJobDynamicScheduler implements ApplicationContextAware {
 
     // ---------------------- init + destroy ----------------------
     public void init() throws Exception {
-        // admin registry monitor run
+        // admin registry monitor run  执行器自动注册
         JobRegistryMonitorHelper.getInstance().start();
 
-        // admin monitor run
+        // admin monitor run  监控执行日志
         JobFailMonitorHelper.getInstance().start();
 
-        // admin-server(spring-mvc)
+        // admin-server(spring-mvc)  调度中心 与  处理地址
         NetComServerFactory.putService(AdminBiz.class, XxlJobDynamicScheduler.adminBiz);
         NetComServerFactory.setAccessToken(accessToken);
 

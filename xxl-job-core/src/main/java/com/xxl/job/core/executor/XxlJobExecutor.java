@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
+ * 执行器的核心实现类
  * Created by xuxueli on 2016/3/2 21:14.
  */
 public class XxlJobExecutor implements ApplicationContextAware {
@@ -63,7 +64,7 @@ public class XxlJobExecutor implements ApplicationContextAware {
     private static ApplicationContext applicationContext;
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
+        XxlJobExecutor.applicationContext = applicationContext;
     }
     public static ApplicationContext getApplicationContext() {
         return applicationContext;
@@ -72,16 +73,16 @@ public class XxlJobExecutor implements ApplicationContextAware {
 
     // ---------------------- start + stop ----------------------
     public void start() throws Exception {
-        // init admin-client
+        // init admin-client  初始化了调度中心，在本地保存了调度中心的代理（好像是有回调功能可能那个时候会用）
         initAdminBizList(adminAddresses, accessToken);
 
-        // init executor-jobHandlerRepository
+        // init executor-jobHandlerRepository  初始化执行仓库（执行器名称 与 实例类）
         initJobHandlerRepository(applicationContext);
 
-        // init logpath
+        // init logpath   日志记录
         XxlJobFileAppender.initLogPath(logPath);
 
-        // init executor-server
+        // init executor-server   初始化执行器的jetty共调度中心调用
         initExecutorServer(port, ip, appName, accessToken);
 
         // init JobLogFileCleanThread
@@ -127,12 +128,14 @@ public class XxlJobExecutor implements ApplicationContextAware {
 
     // ---------------------- executor-server(jetty) ----------------------
     private NetComServerFactory serverFactory = new NetComServerFactory();
+    //初始化jetty
     private void initExecutorServer(int port, String ip, String appName, String accessToken) throws Exception {
         // valid param
-        port = port>0?port: NetUtil.findAvailablePort(9999);
+        port = port>0?port: NetUtil.findAvailablePort(port);
 
         // start server
         NetComServerFactory.putService(ExecutorBiz.class, new ExecutorBizImpl());   // rpc-service, base on jetty
+        //设置调度器的accessToken  执行器要与调度器保持一致
         NetComServerFactory.setAccessToken(accessToken);
         serverFactory.start(port, ip, appName); // jetty + registry
     }
@@ -142,6 +145,7 @@ public class XxlJobExecutor implements ApplicationContextAware {
 
 
     // ---------------------- job handler repository ----------------------
+    // key :@JobHandler(value="shardingJobHandler")  value:IJobHandler的实例对象
     private static ConcurrentHashMap<String, IJobHandler> jobHandlerRepository = new ConcurrentHashMap<String, IJobHandler>();
     public static IJobHandler registJobHandler(String name, IJobHandler jobHandler){
         logger.info(">>>>>>>>>>> xxl-job register jobhandler success, name:{}, jobHandler:{}", name, jobHandler);
@@ -174,6 +178,7 @@ public class XxlJobExecutor implements ApplicationContextAware {
 
 
     // ---------------------- job thread repository ----------------------
+    // key：调度中心传过来的任务id   value:执行该任务的线程
     private static ConcurrentHashMap<Integer, JobThread> JobThreadRepository = new ConcurrentHashMap<Integer, JobThread>();
     public static JobThread registJobThread(int jobId, IJobHandler handler, String removeOldReason){
         JobThread newJobThread = new JobThread(jobId, handler);

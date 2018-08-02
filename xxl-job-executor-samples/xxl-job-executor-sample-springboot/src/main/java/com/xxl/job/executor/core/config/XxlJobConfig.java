@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 
 /**
  * xxl-job config
+ * 这个是核心类 将本执行器注册到了 调度中心
  *
  * @author xuxueli 2017-04-28
  */

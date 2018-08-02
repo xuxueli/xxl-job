@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * 执行器自动注册线程
  * job registry instance
  * @author xuxueli 2016-10-02 19:10:24
  */
@@ -35,11 +36,11 @@ public class JobRegistryMonitorHelper {
 			public void run() {
 				while (!toStop) {
 					try {
-						// auto registry group
+						// auto registry group  自动获取地址的执行器
 						List<XxlJobGroup> groupList = XxlJobDynamicScheduler.xxlJobGroupDao.findByAddressType(0);
 						if (CollectionUtils.isNotEmpty(groupList)) {
 
-							// remove dead address (admin/executor)
+							// remove dead address (admin/executor)  连续三次心跳维护失败就会删除 调度器和执行器
 							XxlJobDynamicScheduler.xxlJobRegistryDao.removeDead(RegistryConfig.DEAD_TIMEOUT);
 
 							// fresh online address (admin/executor)

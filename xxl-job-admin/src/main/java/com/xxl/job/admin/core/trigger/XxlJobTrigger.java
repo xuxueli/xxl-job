@@ -33,8 +33,8 @@ public class XxlJobTrigger {
      * @param jobId
      */
     public static void trigger(int jobId) {
-
-        // load data
+        System.out.println("11111111111111111111");
+        // load data 获取执行器
         XxlJobInfo jobInfo = XxlJobDynamicScheduler.xxlJobInfoDao.loadById(jobId);              // job info
         if (jobInfo == null) {
             logger.warn(">>>>>>>>>>>> trigger fail, jobId invalid，jobId={}", jobId);
@@ -56,6 +56,7 @@ public class XxlJobTrigger {
                 XxlJobLog jobLog = new XxlJobLog();
                 jobLog.setJobGroup(jobInfo.getJobGroup());
                 jobLog.setJobId(jobInfo.getId());
+                //给jobLog分配Id
                 XxlJobDynamicScheduler.xxlJobLogDao.save(jobLog);
                 logger.debug(">>>>>>>>>>> xxl-job trigger start, jobId:{}", jobLog.getId());
 

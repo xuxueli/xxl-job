@@ -4,6 +4,7 @@ import com.xxl.job.admin.core.route.strategy.*;
 import com.xxl.job.admin.core.util.I18nUtil;
 
 /**
+ * 远程执行策略
  * Created by xuxueli on 17/3/10.
  */
 public enum ExecutorRouteStrategyEnum {
