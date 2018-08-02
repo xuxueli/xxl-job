@@ -32,11 +32,12 @@ public class MailUtil {
 
 			//email.setDebug(true);		// 将会打印一些log
 			//email.setTLS(true);		// 是否TLS校验，，某些邮箱需要TLS安全校验，同理有SSL校验
-			//email.setSSL(true);
+            email.setSSLOnConnect(true);
 
 			email.setHostName(XxlJobAdminConfig.getAdminConfig().getMailHost());
-			email.setSmtpPort(Integer.valueOf(XxlJobAdminConfig.getAdminConfig().getMailPort()));
-			//email.setSslSmtpPort(port);
+			int port=Integer.valueOf(XxlJobAdminConfig.getAdminConfig().getMailPort());
+			//email.setSmtpPort();
+			email.setSslSmtpPort(port+"");
 			email.setAuthenticator(new DefaultAuthenticator(XxlJobAdminConfig.getAdminConfig().getMailUsername(), XxlJobAdminConfig.getAdminConfig().getMailPassword()));
 			email.setCharset(Charset.defaultCharset().name());
 
