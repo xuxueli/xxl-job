@@ -44,6 +44,8 @@ public class MailUtil {
 			email.addTo(toAddress);
 			email.setSubject(mailSubject);
 			email.setMsg(mailBody);
+			email.setSocketTimeout(180000);
+			email.setSocketConnectionTimeout(180000);
 
 			//email.attach(attachment);	// add the attachment
 
