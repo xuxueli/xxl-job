@@ -9,6 +9,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
+ * 以一天为频率计算期限
  * 单个JOB对应的每个执行器，使用频率最低的优先被选举
  *      a(*)、LFU(Least Frequently Used)：最不经常使用，频率/次数
  *      b、LRU(Least Recently Used)：最近最久未使用，时间

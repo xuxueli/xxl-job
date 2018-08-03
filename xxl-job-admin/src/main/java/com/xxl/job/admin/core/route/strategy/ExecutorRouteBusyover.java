@@ -11,6 +11,8 @@ import com.xxl.job.core.biz.model.TriggerParam;
 import java.util.ArrayList;
 
 /**
+ * 忙碌转移
+ * 坑：如果执行器都忙碌，则直接把任务设置为调度失败
  * Created by xuxueli on 17/3/10.
  */
 public class ExecutorRouteBusyover extends ExecutorRouter {

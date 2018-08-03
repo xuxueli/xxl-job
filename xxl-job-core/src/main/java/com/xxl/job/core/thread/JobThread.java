@@ -102,7 +102,6 @@ public class JobThread extends Thread{
 
 		// execute
 		while(!toStop){
-    		//todo 为什么会认为没有在执行了？
 			running = false;
 			//空闲次数
 			idleTimes++;
@@ -160,7 +159,7 @@ public class JobThread extends Thread{
 					XxlJobLogger.log("<br>----------- xxl-job job execute end(finish) -----------<br>----------- ReturnT:" + executeResult);
 
 				} else {
-					  //超过30次没有获取到执行参数
+					  //超过30次没有获取到执行参数 就中断线程
 					if (idleTimes > 30) {
 						XxlJobExecutor.removeJobThread(jobId, "excutor idel times over limit.");
 					}
@@ -180,7 +179,7 @@ public class JobThread extends Thread{
                 if(triggerParam != null) {
                     // callback handler info
                     if (!toStop) {
-                        // commonm
+                        // commonm 正常执行完定时任务
                         TriggerCallbackThread.pushCallBack(new HandleCallbackParam(triggerParam.getLogId(), triggerParam.getLogDateTim(), executeResult));
                     } else {
                         // is killed

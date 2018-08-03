@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * 确实有必要通过每30秒注册一次，这样能确定双方都存活
  * Created by xuxueli on 17/3/2.
  */
 public class ExecutorRegistryThread extends Thread {

@@ -10,6 +10,7 @@ import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
+ * 轮询
  * Created by xuxueli on 17/3/10.
  */
 public class ExecutorRouteRound extends ExecutorRouter {

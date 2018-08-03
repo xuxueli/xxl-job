@@ -20,6 +20,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * 任务完成后回调
  * Created by xuxueli on 16/7/22.
  */
 public class TriggerCallbackThread {

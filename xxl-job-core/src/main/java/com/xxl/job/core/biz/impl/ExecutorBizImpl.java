@@ -24,6 +24,10 @@ import java.util.Date;
 public class ExecutorBizImpl implements ExecutorBiz {
     private static Logger logger = LoggerFactory.getLogger(ExecutorBizImpl.class);
 
+    /***
+     * 用于验证执行器是否故障
+     * @return
+     */
     @Override
     public ReturnT<String> beat() {
         return ReturnT.SUCCESS;
@@ -31,7 +35,7 @@ public class ExecutorBizImpl implements ExecutorBiz {
 
 
     /**
-     * 无意义的心跳
+     * 查询某个job 是否有正在执行 或 正在等待执行的任务（繁忙转移）
      * @param jobId
      * @return
      */
@@ -51,6 +55,11 @@ public class ExecutorBizImpl implements ExecutorBiz {
         return ReturnT.SUCCESS;
     }
 
+    /***
+     * 取消掉jobId正在执行或者正在等待执行的任务
+     * @param jobId
+     * @return
+     */
     @Override
     public ReturnT<String> kill(int jobId) {
         // kill handlerThread, and create new one
@@ -63,6 +72,13 @@ public class ExecutorBizImpl implements ExecutorBiz {
         return new ReturnT<String>(ReturnT.SUCCESS_CODE, "job thread aleady killed.");
     }
 
+    /***
+     * 读取日志
+     * @param logDateTim
+     * @param logId
+     * @param fromLineNum
+     * @return
+     */
     @Override
     public ReturnT<LogResult> log(long logDateTim, int logId, int fromLineNum) {
         // log filename: logPath/yyyy-MM-dd/9999.log
@@ -72,6 +88,11 @@ public class ExecutorBizImpl implements ExecutorBiz {
         return new ReturnT<LogResult>(logResult);
     }
 
+    /**
+     * 真正调用执行
+     * @param triggerParam
+     * @return
+     */
     @Override
     public ReturnT<String> run(TriggerParam triggerParam) {
         // load old：jobHandler + jobThread
@@ -147,16 +168,16 @@ public class ExecutorBizImpl implements ExecutorBiz {
             return new ReturnT<String>(ReturnT.FAIL_CODE, "glueType[" + triggerParam.getGlueType() + "] is not valid.");
         }
 
-        // executor block strategy
+        // executor block strategy  阻塞处理策略
         if (jobThread != null) {
             ExecutorBlockStrategyEnum blockStrategy = ExecutorBlockStrategyEnum.match(triggerParam.getExecutorBlockStrategy(), null);
             if (ExecutorBlockStrategyEnum.DISCARD_LATER == blockStrategy) {
-                // discard when running
+                // discard when running  丢弃后续调度
                 if (jobThread.isRunningOrHasQueue()) {
                     return new ReturnT<String>(ReturnT.FAIL_CODE, "block strategy effect："+ExecutorBlockStrategyEnum.DISCARD_LATER.getTitle());
                 }
             } else if (ExecutorBlockStrategyEnum.COVER_EARLY == blockStrategy) {
-                // kill running jobThread
+                // kill running jobThread  覆盖之前策略
                 if (jobThread.isRunningOrHasQueue()) {
                     removeOldReason = "block strategy effect：" + ExecutorBlockStrategyEnum.COVER_EARLY.getTitle();
 
@@ -169,6 +190,7 @@ public class ExecutorBizImpl implements ExecutorBiz {
 
         // replace thread (new or exists invalid)
         if (jobThread == null) {
+            //这个方法会杀死triggerParam.getJobId()之前对应的线程
             jobThread = XxlJobExecutor.registJobThread(triggerParam.getJobId(), jobHandler, removeOldReason);
         }
 

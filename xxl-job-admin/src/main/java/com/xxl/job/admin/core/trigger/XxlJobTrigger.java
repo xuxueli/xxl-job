@@ -33,7 +33,6 @@ public class XxlJobTrigger {
      * @param jobId
      */
     public static void trigger(int jobId) {
-        System.out.println("11111111111111111111");
         // load data 获取执行器
         XxlJobInfo jobInfo = XxlJobDynamicScheduler.xxlJobInfoDao.loadById(jobId);              // job info
         if (jobInfo == null) {
@@ -47,7 +46,7 @@ public class XxlJobTrigger {
         ExecutorRouteStrategyEnum executorRouteStrategyEnum = ExecutorRouteStrategyEnum.match(jobInfo.getExecutorRouteStrategy(), null);    // route strategy
         ArrayList<String> addressList = (ArrayList<String>) group.getRegistryList();
 
-        // broadcast
+        // broadcast 分片广播
         if (ExecutorRouteStrategyEnum.SHARDING_BROADCAST == executorRouteStrategyEnum && CollectionUtils.isNotEmpty(addressList)) {
             for (int i = 0; i < addressList.size(); i++) {
                 String address = addressList.get(i);
@@ -104,7 +103,7 @@ public class XxlJobTrigger {
                     triggerResult = runExecutor(triggerParam, address);     // update03
                     triggerMsgSb.append("<br><br><span style=\"color:#00c0ef;\" > >>>>>>>>>>>"+ I18nUtil.getString("jobconf_trigger_run") +"<<<<<<<<<<< </span><br>").append(triggerResult.getMsg());
 
-                    // 4.3、trigger (fail retry)
+                    // 4.3、trigger (fail retry)  调度失败后重试
                     if (triggerResult.getCode()!=ReturnT.SUCCESS_CODE && failStrategy == ExecutorFailStrategyEnum.FAIL_TRIGGER_RETRY) {
                         triggerResult = runExecutor(triggerParam, address);  // update04
                         triggerMsgSb.append("<br><br><span style=\"color:#F39C12;\" > >>>>>>>>>>>"+ I18nUtil.getString("jobconf_fail_trigger_retry") +"<<<<<<<<<<< </span><br>").append(triggerResult.getMsg());
