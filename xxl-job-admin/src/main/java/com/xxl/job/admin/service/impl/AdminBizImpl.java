@@ -39,7 +39,11 @@ public class AdminBizImpl implements AdminBiz {
     @Resource
     private XxlJobService xxlJobService;
 
-
+    /***
+     * 执行器完成任务后 回调
+     * @param callbackParamList
+     * @return
+     */
     @Override
     public ReturnT<String> callback(List<HandleCallbackParam> callbackParamList) {
         for (HandleCallbackParam handleCallbackParam: callbackParamList) {
@@ -92,6 +96,7 @@ public class AdminBizImpl implements AdminBiz {
             }
         } else {
             boolean ifHandleRetry = false;
+            //ScriptJobHandler 才会有这种情况
             if (IJobHandler.FAIL_RETRY.getCode() == handleCallbackParam.getExecuteResult().getCode()) {
                 ifHandleRetry = true;
             } else {
@@ -101,6 +106,7 @@ public class AdminBizImpl implements AdminBiz {
                 }
             }
             if (ifHandleRetry){
+                //失败后重试
                 ReturnT<String> retryTriggerResult = xxlJobService.triggerJob(log.getJobId());
                 callbackMsg = "<br><br><span style=\"color:#F39C12;\" > >>>>>>>>>>>"+ I18nUtil.getString("jobconf_fail_handle_retry") +"<<<<<<<<<<< </span><br>";
 

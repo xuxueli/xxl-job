@@ -163,11 +163,13 @@ public class TriggerCallbackThread {
             }
         }
         if (!callbackRet) {
+            //回调失败
             appendFailCallbackFile(callbackParamList);
         }
     }
 
     /**
+     * 记录回调日志
      * callback log
      */
     private void callbackLog(List<HandleCallbackParam> callbackParamList, String logContent){
