@@ -179,7 +179,7 @@ public final class XxlJobDynamicScheduler implements ApplicationContextAware {
 
     /**
      * addJob
-     *
+     *  将任务添加到scheduler器中
      * @param jobName
      * @param jobGroup
      * @param cronExpression
@@ -277,7 +277,7 @@ public final class XxlJobDynamicScheduler implements ApplicationContextAware {
     
     /**
      * unscheduleJob
-     *
+     * 移除任务
      * @param jobName
      * @param jobGroup
      * @return
@@ -296,7 +296,7 @@ public final class XxlJobDynamicScheduler implements ApplicationContextAware {
 
     /**
      * pause
-     *
+     * 暂停任务
      * @param jobName
      * @param jobGroup
      * @return
@@ -319,7 +319,7 @@ public final class XxlJobDynamicScheduler implements ApplicationContextAware {
     
     /**
      * resume
-     *
+     * 继续任务
      * @param jobName
      * @param jobGroup
      * @return
@@ -342,7 +342,7 @@ public final class XxlJobDynamicScheduler implements ApplicationContextAware {
     
     /**
      * run
-     *
+     * 调用任务
      * @param jobName
      * @param jobGroup
      * @return
