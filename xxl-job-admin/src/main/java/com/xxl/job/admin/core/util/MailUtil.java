@@ -44,7 +44,7 @@ public class MailUtil {
 			}
 
 			email.setAuthenticator(new DefaultAuthenticator(XxlJobAdminConfig.getAdminConfig().getMailUsername(), XxlJobAdminConfig.getAdminConfig().getMailPassword()));
-			email.setCharset(Charset.defaultCharset().name());
+			email.setCharset("UTF-8");
 
 			email.setFrom(XxlJobAdminConfig.getAdminConfig().getMailUsername(), XxlJobAdminConfig.getAdminConfig().getMailSendNick());
 			email.addTo(toAddress);
