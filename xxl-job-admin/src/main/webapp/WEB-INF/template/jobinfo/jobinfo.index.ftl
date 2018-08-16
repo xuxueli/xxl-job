@@ -245,8 +245,17 @@ logging.info("脚本文件：" + sys.argv[0])
 <#--这里有问题，新建一个运行模式为 php 的任务后，GLUE 中没有下边的 php 代码-->
 <textarea class="glueSource_php" style="display:none;" >
 <?php
-	echo "hello php";
-	echo "\n"
+
+    echo "xxl-job: hello php  \n";
+
+    echo "${I18n.jobinfo_script_location}：$argv[0]  \n";
+    echo "${I18n.jobinfo_field_executorparam}：$argv[1]  \n";
+    echo "${I18n.jobinfo_shard_index} = $argv[2]  \n";
+    echo "${I18n.jobinfo_shard_total} = $argv[3]  \n";
+
+    echo "Good bye!  \n";
+    exit(0);
+
 ?>
 </textarea>
 <textarea class="glueSource_nodejs" style="display:none;" >
