@@ -151,7 +151,7 @@
   };
 
   CodeMirror.defineMode("php", function(config, parserConfig) {
-    var htmlMode = CodeMirror.getMode(config, (parserConfig && parserConfig.htmlMode) || "text/html");
+    var htmlMode = CodeMirror.getMode(config, "text/html");
     var phpMode = CodeMirror.getMode(config, phpConfig);
 
     function dispatch(stream, state) {
