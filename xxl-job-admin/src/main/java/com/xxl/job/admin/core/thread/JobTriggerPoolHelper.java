@@ -20,8 +20,8 @@ public class JobTriggerPoolHelper {
     // ---------------------- trigger pool ----------------------
 
     private ThreadPoolExecutor triggerPool = new ThreadPoolExecutor(
-            50,
-            500,
+            20,
+            200,
             60L,
             TimeUnit.SECONDS,
             new LinkedBlockingQueue<Runnable>(100000),
