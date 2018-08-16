@@ -347,7 +347,7 @@ XXL-JOB是一个轻量级分布式任务调度平台，其核心设计目标是�
     <property name="appName" value="${xxl.job.executor.appname}" />
     <!-- 执行器IP[选填]，为空则自动获取 -->
     <property name="ip" value="${xxl.job.executor.ip}" />
-    <!-- 执行器端口号[选填]，为空则自动获取 -->
+    <!-- 执行器端口号[选填]，小于等于0则自动获取 -->
     <property name="port" value="${xxl.job.executor.port}" />
     <!-- 访问令牌[选填]，非空则进行匹配校验 -->
     <property name="accessToken" value="${xxl.job.accessToken}" />
