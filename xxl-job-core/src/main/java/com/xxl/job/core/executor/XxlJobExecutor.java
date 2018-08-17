@@ -81,8 +81,8 @@ public class XxlJobExecutor implements ApplicationContextAware {
         // init logpath
         XxlJobFileAppender.initLogPath(logPath);
 
-        logger.info("job类加载器:"+Thread.currentThread().getContextClassLoader());
-        logger.info(String.format("classpath:%s",System.getProperty("java.class.path")));
+        //logger.info("job类加载器:"+Thread.currentThread().getContextClassLoader());
+        //logger.info(String.format("classpath:%s",System.getProperty("java.class.path")));
         // init executor-server
         initExecutorServer(port, ip, appName, accessToken);
 
