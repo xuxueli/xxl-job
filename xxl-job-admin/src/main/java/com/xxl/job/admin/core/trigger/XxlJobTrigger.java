@@ -1,12 +1,12 @@
 package com.xxl.job.admin.core.trigger;
 
-import com.xxl.job.admin.core.enums.ExecutorFailStrategyEnum;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.admin.core.route.ExecutorRouteStrategyEnum;
 import com.xxl.job.admin.core.schedule.XxlJobDynamicScheduler;
 import com.xxl.job.admin.core.thread.JobFailMonitorHelper;
+import com.xxl.job.admin.core.thread.JobTriggerPoolHelper;
 import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.core.biz.ExecutorBiz;
 import com.xxl.job.core.biz.model.ReturnT;
@@ -31,8 +31,12 @@ public class XxlJobTrigger {
      * trigger job
      *
      * @param jobId
+     * @param failRetryCount
+     * 			>=0: use this param
+     * 			<0: use param from job info config
+     *
      */
-    public static void trigger(int jobId) {
+    public static void trigger(int jobId, int failRetryCount) {
 
         // load data
         XxlJobInfo jobInfo = XxlJobDynamicScheduler.xxlJobInfoDao.loadById(jobId);              // job info
@@ -40,10 +44,14 @@ public class XxlJobTrigger {
             logger.warn(">>>>>>>>>>>> trigger fail, jobId invalid，jobId={}", jobId);
             return;
         }
+        int finalFailRetryCount = jobInfo.getExecutorFailRetryCount();
+        if (failRetryCount >= 0) {
+            finalFailRetryCount = failRetryCount;
+        }
+
         XxlJobGroup group = XxlJobDynamicScheduler.xxlJobGroupDao.load(jobInfo.getJobGroup());  // group info
 
         ExecutorBlockStrategyEnum blockStrategy = ExecutorBlockStrategyEnum.match(jobInfo.getExecutorBlockStrategy(), ExecutorBlockStrategyEnum.SERIAL_EXECUTION);  // block strategy
-        ExecutorFailStrategyEnum failStrategy = ExecutorFailStrategyEnum.match(jobInfo.getExecutorFailStrategy(), ExecutorFailStrategyEnum.NULL);    // fail strategy
         ExecutorRouteStrategyEnum executorRouteStrategyEnum = ExecutorRouteStrategyEnum.match(jobInfo.getExecutorRouteStrategy(), null);    // route strategy
         ArrayList<String> addressList = (ArrayList<String>) group.getRegistryList();
 
@@ -64,6 +72,7 @@ public class XxlJobTrigger {
                 jobLog.setGlueType(jobInfo.getGlueType());
                 jobLog.setExecutorHandler(jobInfo.getExecutorHandler());
                 jobLog.setExecutorParam(jobInfo.getExecutorParam());
+                jobLog.setExecutorFailRetryCount(finalFailRetryCount);
                 jobLog.setTriggerTime(new Date());
 
                 ReturnT<String> triggerResult = new ReturnT<String>(null);
@@ -74,7 +83,7 @@ public class XxlJobTrigger {
                 triggerMsgSb.append("<br>").append(I18nUtil.getString("jobconf_trigger_exe_regaddress")).append("：").append(group.getRegistryList());
                 triggerMsgSb.append("<br>").append(I18nUtil.getString("jobinfo_field_executorRouteStrategy")).append("：").append(executorRouteStrategyEnum.getTitle()).append("("+i+"/"+addressList.size()+")"); // update01
                 triggerMsgSb.append("<br>").append(I18nUtil.getString("jobinfo_field_executorBlockStrategy")).append("：").append(blockStrategy.getTitle());
-                triggerMsgSb.append("<br>").append(I18nUtil.getString("jobinfo_field_executorFailRetryCount")).append("：").append(jobInfo.getExecutorFailRetryCount());
+                triggerMsgSb.append("<br>").append(I18nUtil.getString("jobinfo_field_executorFailRetryCount")).append("：").append(finalFailRetryCount);
                 triggerMsgSb.append("<br>").append(I18nUtil.getString("jobinfo_field_timeout")).append("：").append(jobInfo.getExecutorTimeout());
 
                 // 3、trigger-valid
@@ -104,9 +113,9 @@ public class XxlJobTrigger {
                     triggerMsgSb.append("<br><br><span style=\"color:#00c0ef;\" > >>>>>>>>>>>"+ I18nUtil.getString("jobconf_trigger_run") +"<<<<<<<<<<< </span><br>").append(triggerResult.getMsg());
 
                     // 4.3、trigger (fail retry)
-                    if (triggerResult.getCode()!=ReturnT.SUCCESS_CODE && failStrategy == ExecutorFailStrategyEnum.FAIL_TRIGGER_RETRY) {
-                        triggerResult = runExecutor(triggerParam, address);  // update04
-                        triggerMsgSb.append("<br><br><span style=\"color:#F39C12;\" > >>>>>>>>>>>"+ I18nUtil.getString("jobconf_fail_trigger_retry") +"<<<<<<<<<<< </span><br>").append(triggerResult.getMsg());
+                    if (triggerResult.getCode()!=ReturnT.SUCCESS_CODE && finalFailRetryCount > 0) {
+                        JobTriggerPoolHelper.trigger(jobId, (finalFailRetryCount-1));
+                        triggerMsgSb.append("<br><br><span style=\"color:#F39C12;\" > >>>>>>>>>>>"+ I18nUtil.getString("jobconf_fail_trigger_retry") +"<<<<<<<<<<< </span><br>");
                     }
                 }
 
@@ -134,6 +143,7 @@ public class XxlJobTrigger {
             jobLog.setGlueType(jobInfo.getGlueType());
             jobLog.setExecutorHandler(jobInfo.getExecutorHandler());
             jobLog.setExecutorParam(jobInfo.getExecutorParam());
+            jobLog.setExecutorFailRetryCount(finalFailRetryCount);
             jobLog.setTriggerTime(new Date());
 
             ReturnT<String> triggerResult = new ReturnT<String>(null);
@@ -144,7 +154,7 @@ public class XxlJobTrigger {
             triggerMsgSb.append("<br>").append(I18nUtil.getString("jobconf_trigger_exe_regaddress")).append("：").append(group.getRegistryList());
             triggerMsgSb.append("<br>").append(I18nUtil.getString("jobinfo_field_executorRouteStrategy")).append("：").append(executorRouteStrategyEnum.getTitle());
             triggerMsgSb.append("<br>").append(I18nUtil.getString("jobinfo_field_executorBlockStrategy")).append("：").append(blockStrategy.getTitle());
-            triggerMsgSb.append("<br>").append(I18nUtil.getString("jobinfo_field_executorFailRetryCount")).append("：").append(jobInfo.getExecutorFailRetryCount());
+            triggerMsgSb.append("<br>").append(I18nUtil.getString("jobinfo_field_executorFailRetryCount")).append("：").append(finalFailRetryCount);
             triggerMsgSb.append("<br>").append(I18nUtil.getString("jobinfo_field_timeout")).append("：").append(jobInfo.getExecutorTimeout());
 
             // 3、trigger-valid
@@ -174,9 +184,9 @@ public class XxlJobTrigger {
                 triggerMsgSb.append("<br><br><span style=\"color:#00c0ef;\" > >>>>>>>>>>>"+ I18nUtil.getString("jobconf_trigger_run") +"<<<<<<<<<<< </span><br>").append(triggerResult.getMsg());
 
                 // 4.3、trigger (fail retry)
-                if (triggerResult.getCode()!=ReturnT.SUCCESS_CODE && failStrategy == ExecutorFailStrategyEnum.FAIL_TRIGGER_RETRY) {
-                    triggerResult = executorRouteStrategyEnum.getRouter().routeRun(triggerParam, addressList);
-                    triggerMsgSb.append("<br><br><span style=\"color:#F39C12;\" > >>>>>>>>>>>"+ I18nUtil.getString("jobconf_fail_trigger_retry") +"<<<<<<<<<<< </span><br>").append(triggerResult.getMsg());
+                if (triggerResult.getCode()!=ReturnT.SUCCESS_CODE && finalFailRetryCount > 0) {
+                    JobTriggerPoolHelper.trigger(jobId, (finalFailRetryCount-1));
+                    triggerMsgSb.append("<br><br><span style=\"color:#F39C12;\" > >>>>>>>>>>>"+ I18nUtil.getString("jobconf_fail_trigger_retry") +"<<<<<<<<<<< </span><br>");
                 }
             }
 

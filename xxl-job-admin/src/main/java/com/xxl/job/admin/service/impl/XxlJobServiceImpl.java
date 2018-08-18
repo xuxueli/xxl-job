@@ -4,7 +4,6 @@ import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.route.ExecutorRouteStrategyEnum;
 import com.xxl.job.admin.core.schedule.XxlJobDynamicScheduler;
-import com.xxl.job.admin.core.thread.JobTriggerPoolHelper;
 import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.admin.dao.XxlJobGroupDao;
 import com.xxl.job.admin.dao.XxlJobInfoDao;
@@ -201,7 +200,6 @@ public class XxlJobServiceImpl implements XxlJobService {
 		exists_jobInfo.setExecutorHandler(jobInfo.getExecutorHandler());
 		exists_jobInfo.setExecutorParam(jobInfo.getExecutorParam());
 		exists_jobInfo.setExecutorBlockStrategy(jobInfo.getExecutorBlockStrategy());
-		exists_jobInfo.setExecutorFailStrategy(jobInfo.getExecutorFailStrategy());
 		exists_jobInfo.setExecutorTimeout(jobInfo.getExecutorTimeout());
 		exists_jobInfo.setExecutorFailRetryCount(jobInfo.getExecutorFailRetryCount());
 		exists_jobInfo.setChildJobId(jobInfo.getChildJobId());
@@ -268,13 +266,13 @@ public class XxlJobServiceImpl implements XxlJobService {
 		}
 	}
 
-	@Override
-	public ReturnT<String> triggerJob(int id) {
+	/*@Override
+    public ReturnT<String> triggerJob(int id, int failRetryCount) {
 
-		JobTriggerPoolHelper.trigger(id);
+		JobTriggerPoolHelper.trigger(id, failRetryCount);
 		return ReturnT.SUCCESS;
 
-        /*XxlJobInfo xxlJobInfo = xxlJobInfoDao.loadById(id);
+        *//*XxlJobInfo xxlJobInfo = xxlJobInfoDao.loadById(id);
         if (xxlJobInfo == null) {
         	return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("jobinfo_field_id")+I18nUtil.getString("system_unvalid")) );
 		}
@@ -288,9 +286,9 @@ public class XxlJobServiceImpl implements XxlJobService {
 		} catch (SchedulerException e) {
 			logger.error(e.getMessage(), e);
 			return new ReturnT<String>(ReturnT.FAIL_CODE, e.getMessage());
-		}*/
+		}*//*
 
-	}
+	}*/
 
 	@Override
 	public Map<String, Object> dashboardInfo() {

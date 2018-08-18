@@ -25,7 +25,6 @@ public class XxlJobInfo {
 	private String executorHandler;		    // 执行器，任务Handler名称
 	private String executorParam;		    // 执行器，任务参数
 	private String executorBlockStrategy;	// 阻塞处理策略
-	private String executorFailStrategy;	// 失败处理策略
 	private int executorTimeout;     		// 任务执行超时时间，单位秒
 	private int executorFailRetryCount;		// 失败重试次数
 	
@@ -134,14 +133,6 @@ public class XxlJobInfo {
 
 	public void setExecutorBlockStrategy(String executorBlockStrategy) {
 		this.executorBlockStrategy = executorBlockStrategy;
-	}
-
-	public String getExecutorFailStrategy() {
-		return executorFailStrategy;
-	}
-
-	public void setExecutorFailStrategy(String executorFailStrategy) {
-		this.executorFailStrategy = executorFailStrategy;
 	}
 
 	public int getExecutorTimeout() {

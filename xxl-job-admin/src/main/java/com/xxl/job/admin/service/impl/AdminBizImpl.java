@@ -1,8 +1,8 @@
 package com.xxl.job.admin.service.impl;
 
-import com.xxl.job.admin.core.enums.ExecutorFailStrategyEnum;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
+import com.xxl.job.admin.core.thread.JobTriggerPoolHelper;
 import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.admin.dao.XxlJobInfoDao;
 import com.xxl.job.admin.dao.XxlJobLogDao;
@@ -72,7 +72,9 @@ public class AdminBizImpl implements AdminBiz {
                 for (int i = 0; i < childJobIds.length; i++) {
                     int childJobId = (StringUtils.isNotBlank(childJobIds[i]) && StringUtils.isNumeric(childJobIds[i]))?Integer.valueOf(childJobIds[i]):-1;
                     if (childJobId > 0) {
-                        ReturnT<String> triggerChildResult = xxlJobService.triggerJob(childJobId);
+
+                        JobTriggerPoolHelper.trigger(childJobId, 0);
+                        ReturnT<String> triggerChildResult = ReturnT.SUCCESS;
 
                         // add msg
                         callbackMsg += MessageFormat.format(I18nUtil.getString("jobconf_callback_child_msg1"),
@@ -91,17 +93,13 @@ public class AdminBizImpl implements AdminBiz {
 
             }
         } else {
-            boolean ifHandleRetry = false;
-            if (IJobHandler.FAIL_RETRY.getCode() == handleCallbackParam.getExecuteResult().getCode()) {
-                ifHandleRetry = true;
-            } else {
-                XxlJobInfo xxlJobInfo = xxlJobInfoDao.loadById(log.getJobId());
-                if (ExecutorFailStrategyEnum.FAIL_HANDLE_RETRY.name().equals(xxlJobInfo.getExecutorFailStrategy())) {
-                    ifHandleRetry = true;
-                }
-            }
-            if (ifHandleRetry){
-                ReturnT<String> retryTriggerResult = xxlJobService.triggerJob(log.getJobId());
+            XxlJobInfo xxlJobInfo = xxlJobInfoDao.loadById(log.getJobId());
+            if (xxlJobInfo.getExecutorFailRetryCount() > 0) {
+                int nextFailRetryCount = xxlJobInfo.getExecutorFailRetryCount()-1;
+
+                JobTriggerPoolHelper.trigger(log.getJobId(), nextFailRetryCount);
+                ReturnT<String> retryTriggerResult = ReturnT.SUCCESS;
+
                 callbackMsg = "<br><br><span style=\"color:#F39C12;\" > >>>>>>>>>>>"+ I18nUtil.getString("jobconf_fail_handle_retry") +"<<<<<<<<<<< </span><br>";
 
                 callbackMsg += MessageFormat.format(I18nUtil.getString("jobconf_callback_msg1"),
@@ -147,7 +145,8 @@ public class AdminBizImpl implements AdminBiz {
 
     @Override
     public ReturnT<String> triggerJob(int jobId) {
-        return xxlJobService.triggerJob(jobId);
+        JobTriggerPoolHelper.trigger(jobId, -1);
+        return ReturnT.SUCCESS;
     }
 
 }

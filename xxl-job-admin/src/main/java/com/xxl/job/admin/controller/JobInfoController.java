@@ -3,6 +3,7 @@ package com.xxl.job.admin.controller;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.route.ExecutorRouteStrategyEnum;
+import com.xxl.job.admin.core.thread.JobTriggerPoolHelper;
 import com.xxl.job.admin.dao.XxlJobGroupDao;
 import com.xxl.job.admin.service.XxlJobService;
 import com.xxl.job.core.biz.model.ReturnT;
@@ -89,7 +90,8 @@ public class JobInfoController {
 	@RequestMapping("/trigger")
 	@ResponseBody
 	public ReturnT<String> triggerJob(int id) {
-		return xxlJobService.triggerJob(id);
+		JobTriggerPoolHelper.trigger(id, -1);
+		return ReturnT.SUCCESS;
 	}
 	
 }

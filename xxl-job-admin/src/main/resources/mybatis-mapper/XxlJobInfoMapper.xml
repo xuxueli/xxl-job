@@ -20,7 +20,6 @@
 		<result column="executor_handler" property="executorHandler" />
 	    <result column="executor_param" property="executorParam" />
 		<result column="executor_block_strategy" property="executorBlockStrategy" />
-		<result column="executor_fail_strategy" property="executorFailStrategy" />
 		<result column="executor_timeout" property="executorTimeout" />
 		<result column="executor_fail_retry_count" property="executorFailRetryCount" />
 
@@ -45,7 +44,6 @@
 		t.executor_handler,
 		t.executor_param,
 		t.executor_block_strategy,
-		t.executor_fail_strategy,
 		t.executor_timeout,
 		t.executor_fail_retry_count,
 		t.glue_type,
@@ -102,7 +100,6 @@
 			executor_handler,
 			executor_param,
 			executor_block_strategy,
-			executor_fail_strategy,
 			executor_timeout,
 			executor_fail_retry_count,
 			glue_type,
@@ -122,7 +119,6 @@
 			#{executorHandler},
 			#{executorParam},
 			#{executorBlockStrategy},
-			#{executorFailStrategy},
 			#{executorTimeout},
 			#{executorFailRetryCount},
 			#{glueType},
@@ -155,7 +151,6 @@
 			executor_handler = #{executorHandler},
 			executor_param = #{executorParam},
 			executor_block_strategy = #{executorBlockStrategy},
-			executor_fail_strategy = #{executorFailStrategy},
 			executor_timeout = ${executorTimeout},
 			executor_fail_retry_count = ${executorFailRetryCount},
 			glue_type = #{glueType},

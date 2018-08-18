@@ -21,6 +21,7 @@ public class XxlJobLog {
 	private String executorAddress;
 	private String executorHandler;
 	private String executorParam;
+	private int executorFailRetryCount;
 	
 	// trigger info
 	private Date triggerTime;
@@ -86,6 +87,14 @@ public class XxlJobLog {
 
 	public void setExecutorParam(String executorParam) {
 		this.executorParam = executorParam;
+	}
+
+	public int getExecutorFailRetryCount() {
+		return executorFailRetryCount;
+	}
+
+	public void setExecutorFailRetryCount(int executorFailRetryCount) {
+		this.executorFailRetryCount = executorFailRetryCount;
 	}
 
 	public Date getTriggerTime() {

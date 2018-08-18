@@ -66,8 +66,6 @@ public class ScriptJobHandler extends IJobHandler {
 
         if (exitValue == 0) {
             return IJobHandler.SUCCESS;
-        } else if (exitValue == 101) {
-            return IJobHandler.FAIL_RETRY;
         } else {
             return new ReturnT<String>(IJobHandler.FAIL.getCode(), "script exit value("+exitValue+") is failed");
         }
