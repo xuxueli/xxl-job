@@ -167,12 +167,6 @@
 </div>
 
 <@netCommon.commonScript />
-<script>
-    var GlueTypeEnum = {};
-    <#list GlueTypeEnum as item>
-    GlueTypeEnum['${item}'] = '${item.desc}';
-    </#list>
-</script>
 <!-- DataTables -->
 <script src="${request.contextPath}/static/adminlte/plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="${request.contextPath}/static/adminlte/plugins/datatables/dataTables.bootstrap.min.js"></script>

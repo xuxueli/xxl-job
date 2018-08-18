@@ -6,7 +6,6 @@ import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.admin.core.route.ExecutorRouteStrategyEnum;
 import com.xxl.job.admin.core.schedule.XxlJobDynamicScheduler;
 import com.xxl.job.admin.core.thread.JobFailMonitorHelper;
-import com.xxl.job.admin.core.thread.JobTriggerPoolHelper;
 import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.core.biz.ExecutorBiz;
 import com.xxl.job.core.biz.model.ReturnT;
@@ -36,7 +35,7 @@ public class XxlJobTrigger {
      * 			<0: use param from job info config
      *
      */
-    public static void trigger(int jobId, int failRetryCount) {
+    public static void trigger(int jobId, int failRetryCount, String type) {
 
         // load data
         XxlJobInfo jobInfo = XxlJobDynamicScheduler.xxlJobInfoDao.loadById(jobId);              // job info
@@ -57,7 +56,6 @@ public class XxlJobTrigger {
 
         // broadcast
         if (ExecutorRouteStrategyEnum.SHARDING_BROADCAST == executorRouteStrategyEnum && CollectionUtils.isNotEmpty(addressList)) {
-            boolean onceFailed = false;
             for (int i = 0; i < addressList.size(); i++) {
                 String address = addressList.get(i);
 
@@ -77,6 +75,7 @@ public class XxlJobTrigger {
 
                 ReturnT<String> triggerResult = new ReturnT<String>(null);
                 StringBuffer triggerMsgSb = new StringBuffer();
+                triggerMsgSb.append(I18nUtil.getString("jobconf_trigger_type")).append("：").append(type);
                 triggerMsgSb.append(I18nUtil.getString("jobconf_trigger_admin_adress")).append("：").append(IpUtil.getIp());
                 triggerMsgSb.append("<br>").append(I18nUtil.getString("jobconf_trigger_exe_regtype")).append("：")
                         .append( (group.getAddressType() == 0)?I18nUtil.getString("jobgroup_field_addressType_0"):I18nUtil.getString("jobgroup_field_addressType_1") );
@@ -106,24 +105,13 @@ public class XxlJobTrigger {
                 triggerResult = runExecutor(triggerParam, address);     // update03
                 triggerMsgSb.append("<br><br><span style=\"color:#00c0ef;\" > >>>>>>>>>>>"+ I18nUtil.getString("jobconf_trigger_run") +"<<<<<<<<<<< </span><br>").append(triggerResult.getMsg());
 
-
-                // 4、fail retry)
-                if (triggerResult.getCode()!=ReturnT.SUCCESS_CODE) {
-                    onceFailed = true;
-                }
-
-                if (addressList.size()==i+1 && onceFailed && finalFailRetryCount > 0) {     // each trigger only retry once
-                    JobTriggerPoolHelper.trigger(jobId, (finalFailRetryCount-1));
-                    triggerMsgSb.append("<br><br><span style=\"color:#F39C12;\" > >>>>>>>>>>>"+ I18nUtil.getString("jobconf_fail_trigger_retry") +"<<<<<<<<<<< </span><br>");
-                }
-
-                // 5、save trigger-info
+                // 4、save trigger-info
                 jobLog.setExecutorAddress(triggerResult.getContent());
                 jobLog.setTriggerCode(triggerResult.getCode());
                 jobLog.setTriggerMsg(triggerMsgSb.toString());
                 XxlJobDynamicScheduler.xxlJobLogDao.updateTriggerInfo(jobLog);
 
-                // 6、monitor trigger
+                // 5、monitor trigger
                 JobFailMonitorHelper.monitor(jobLog.getId());
                 logger.debug(">>>>>>>>>>> xxl-job trigger end, jobId:{}", jobLog.getId());
 
@@ -182,19 +170,13 @@ public class XxlJobTrigger {
 
             }
 
-            // 4、fail retry
-            if (triggerResult.getCode()!=ReturnT.SUCCESS_CODE && finalFailRetryCount > 0) {
-                JobTriggerPoolHelper.trigger(jobId, (finalFailRetryCount-1));
-                triggerMsgSb.append("<br><br><span style=\"color:#F39C12;\" > >>>>>>>>>>>"+ I18nUtil.getString("jobconf_fail_trigger_retry") +"<<<<<<<<<<< </span><br>");
-            }
-
-            // 5、save trigger-info
+            // 4、save trigger-info
             jobLog.setExecutorAddress(triggerResult.getContent());
             jobLog.setTriggerCode(triggerResult.getCode());
             jobLog.setTriggerMsg(triggerMsgSb.toString());
             XxlJobDynamicScheduler.xxlJobLogDao.updateTriggerInfo(jobLog);
 
-            // 6、monitor trigger
+            // 5、monitor trigger
             JobFailMonitorHelper.monitor(jobLog.getId());
             logger.debug(">>>>>>>>>>> xxl-job trigger end, jobId:{}", jobLog.getId());
         }

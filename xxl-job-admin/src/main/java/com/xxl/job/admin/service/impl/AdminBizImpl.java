@@ -7,7 +7,6 @@ import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.admin.dao.XxlJobInfoDao;
 import com.xxl.job.admin.dao.XxlJobLogDao;
 import com.xxl.job.admin.dao.XxlJobRegistryDao;
-import com.xxl.job.admin.service.XxlJobService;
 import com.xxl.job.core.biz.AdminBiz;
 import com.xxl.job.core.biz.model.HandleCallbackParam;
 import com.xxl.job.core.biz.model.RegistryParam;
@@ -36,8 +35,6 @@ public class AdminBizImpl implements AdminBiz {
     private XxlJobInfoDao xxlJobInfoDao;
     @Resource
     private XxlJobRegistryDao xxlJobRegistryDao;
-    @Resource
-    private XxlJobService xxlJobService;
 
 
     @Override
@@ -73,7 +70,7 @@ public class AdminBizImpl implements AdminBiz {
                     int childJobId = (StringUtils.isNotBlank(childJobIds[i]) && StringUtils.isNumeric(childJobIds[i]))?Integer.valueOf(childJobIds[i]):-1;
                     if (childJobId > 0) {
 
-                        JobTriggerPoolHelper.trigger(childJobId, 0);
+                        JobTriggerPoolHelper.trigger(childJobId, 0, I18nUtil.getString("jobconf_trigger_type_parent"));
                         ReturnT<String> triggerChildResult = ReturnT.SUCCESS;
 
                         // add msg
@@ -91,16 +88,6 @@ public class AdminBizImpl implements AdminBiz {
                     }
                 }
 
-            }
-        } else {
-            if (log.getExecutorFailRetryCount() > 0) {
-                int nextFailRetryCount = log.getExecutorFailRetryCount()-1;
-
-                // TODO，广播路由的失败重试，会导致重试暴增，需要优化
-
-                JobTriggerPoolHelper.trigger(log.getJobId(), nextFailRetryCount);
-
-                callbackMsg = "<br><br><span style=\"color:#F39C12;\" > >>>>>>>>>>>"+ I18nUtil.getString("jobconf_fail_handle_retry") +"<<<<<<<<<<< </span><br>";
             }
         }
 
@@ -142,7 +129,7 @@ public class AdminBizImpl implements AdminBiz {
 
     @Override
     public ReturnT<String> triggerJob(int jobId) {
-        JobTriggerPoolHelper.trigger(jobId, -1);
+        JobTriggerPoolHelper.trigger(jobId, -1, I18nUtil.getString("jobconf_trigger_type_api"));
         return ReturnT.SUCCESS;
     }
 

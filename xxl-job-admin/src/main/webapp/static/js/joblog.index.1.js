@@ -98,14 +98,8 @@ $(function() {
                         "width":'10%',
 						"render": function ( data, type, row ) {
 
-                            var glueTypeTitle = GlueTypeEnum[row.glueType];
-                            if (row.executorHandler) {
-                                glueTypeTitle = glueTypeTitle +"：" + row.executorHandler;
-                            }
-
 							var temp = '';
 							temp += I18n.joblog_field_executorAddress + '：' + (row.executorAddress?row.executorAddress:'');
-							temp += '<br>'+ I18n.jobinfo_field_gluetype +'：' + glueTypeTitle;
 							temp += '<br>'+ I18n.jobinfo_field_executorparam +'：' + row.executorParam;
 
 							return '<a class="logTips" href="javascript:;" >'+ row.jobId +'<span style="display:none;">'+ temp +'</span></a>';

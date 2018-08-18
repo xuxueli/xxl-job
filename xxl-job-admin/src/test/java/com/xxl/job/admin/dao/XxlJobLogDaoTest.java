@@ -1,7 +1,6 @@
 package com.xxl.job.admin.dao;
 
 import com.xxl.job.admin.core.model.XxlJobLog;
-import com.xxl.job.admin.dao.XxlJobLogDao;
 import org.apache.commons.lang3.time.DateUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,7 +31,6 @@ public class XxlJobLogDaoTest {
         int ret1 = xxlJobLogDao.save(log);
         XxlJobLog dto = xxlJobLogDao.load(log.getId());
 
-        log.setGlueType("1");
         log.setTriggerTime(new Date());
         log.setTriggerCode(1);
         log.setTriggerMsg("1");
