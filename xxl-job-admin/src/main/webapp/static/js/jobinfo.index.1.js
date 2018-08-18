@@ -307,6 +307,12 @@ $(function() {
                 executorTimeout = 0;
 			}
             $("#addModal .form input[name='executorTimeout']").val(executorTimeout);
+            var executorFailRetryCount = $("#addModal .form input[name='executorFailRetryCount']").val();
+            if(!/^\d+$/.test(executorFailRetryCount)) {
+                executorFailRetryCount = 0;
+            }
+            $("#addModal .form input[name='executorFailRetryCount']").val(executorFailRetryCount);
+
 
         	$.post(base_url + "/jobinfo/add",  $("#addModal .form").serialize(), function(data, status) {
     			if (data.code == "200") {
@@ -456,6 +462,11 @@ $(function() {
                 executorTimeout = 0;
             }
             $("#updateModal .form input[name='executorTimeout']").val(executorTimeout);
+            var executorFailRetryCount = $("#updateModal .form input[name='executorFailRetryCount']").val();
+            if(!/^\d+$/.test(executorFailRetryCount)) {
+                executorFailRetryCount = 0;
+            }
+            $("#updateModal .form input[name='executorFailRetryCount']").val(executorFailRetryCount);
 
 			// post
     		$.post(base_url + "/jobinfo/update", $("#updateModal .form").serialize(), function(data, status) {
