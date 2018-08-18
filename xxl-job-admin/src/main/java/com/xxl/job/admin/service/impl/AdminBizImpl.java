@@ -38,6 +38,15 @@ public class AdminBizImpl implements AdminBiz {
     @Resource
     private XxlJobService xxlJobService;
 
+    /**
+     * 新增任务
+     * @param jobInfo
+     * @return
+     */
+    public ReturnT<String> addJob(XxlJobInfo jobInfo){
+        return xxlJobService.add(jobInfo);
+    }
+
 
     @Override
     public ReturnT<String> callback(List<HandleCallbackParam> callbackParamList) {
