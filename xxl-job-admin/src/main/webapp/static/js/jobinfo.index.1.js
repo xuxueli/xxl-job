@@ -267,6 +267,9 @@ $(function() {
 			},
             executorTimeout : {
                 digits:true
+            },
+            executorFailRetryCount : {
+                digits:true
             }
         }, 
         messages : {  
@@ -278,6 +281,12 @@ $(function() {
             },
             author : {
             	required : I18n.system_please_input + I18n.jobinfo_field_author
+            },
+            executorTimeout : {
+                digits: I18n.system_please_input + I18n.system_digits
+            },
+            executorFailRetryCount : {
+                digits: I18n.system_please_input + I18n.system_digits
             }
         },
 		highlight : function(element) {  
@@ -376,12 +385,12 @@ $(function() {
 		$("#updateModal .form input[name='author']").val( row.author );
 		$("#updateModal .form input[name='alarmEmail']").val( row.alarmEmail );
 		$("#updateModal .form input[name='executorTimeout']").val( row.executorTimeout );
+        $("#updateModal .form input[name='executorFailRetryCount']").val( row.executorFailRetryCount );
 		$('#updateModal .form select[name=executorRouteStrategy] option[value='+ row.executorRouteStrategy +']').prop('selected', true);
 		$("#updateModal .form input[name='executorHandler']").val( row.executorHandler );
 		$("#updateModal .form input[name='executorParam']").val( row.executorParam );
         $("#updateModal .form input[name='childJobId']").val( row.childJobId );
 		$('#updateModal .form select[name=executorBlockStrategy] option[value='+ row.executorBlockStrategy +']').prop('selected', true);
-		$('#updateModal .form select[name=executorFailStrategy] option[value='+ row.executorFailStrategy +']').prop('selected', true);
 		$('#updateModal .form select[name=glueType] option[value='+ row.glueType +']').prop('selected', true);
 
         $("#updateModal .form select[name=glueType]").change();
@@ -407,6 +416,9 @@ $(function() {
 			},
             executorTimeout : {
                 digits:true
+            },
+            executorFailRetryCount : {
+                digits:true
             }
 		},
 		messages : {
@@ -420,6 +432,9 @@ $(function() {
 				required : I18n.system_please_input + I18n.jobinfo_field_author
 			},
             executorTimeout : {
+                digits: I18n.system_please_input + I18n.system_digits
+            },
+            executorFailRetryCount : {
                 digits: I18n.system_please_input + I18n.system_digits
             }
 		},

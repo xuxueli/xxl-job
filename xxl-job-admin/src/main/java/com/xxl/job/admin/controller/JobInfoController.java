@@ -1,6 +1,5 @@
 package com.xxl.job.admin.controller;
 
-import com.xxl.job.admin.core.enums.ExecutorFailStrategyEnum;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.route.ExecutorRouteStrategyEnum;
@@ -39,7 +38,6 @@ public class JobInfoController {
 		model.addAttribute("ExecutorRouteStrategyEnum", ExecutorRouteStrategyEnum.values());	// 路由策略-列表
 		model.addAttribute("GlueTypeEnum", GlueTypeEnum.values());								// Glue类型-字典
 		model.addAttribute("ExecutorBlockStrategyEnum", ExecutorBlockStrategyEnum.values());	// 阻塞处理策略-字典
-		model.addAttribute("ExecutorFailStrategyEnum", ExecutorFailStrategyEnum.values());		// 失败处理策略-字典
 
 		// 任务组
 		List<XxlJobGroup> jobGroupList =  xxlJobGroupDao.findAll();
