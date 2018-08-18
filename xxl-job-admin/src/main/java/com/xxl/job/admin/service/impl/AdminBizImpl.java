@@ -96,6 +96,8 @@ public class AdminBizImpl implements AdminBiz {
             if (log.getExecutorFailRetryCount() > 0) {
                 int nextFailRetryCount = log.getExecutorFailRetryCount()-1;
 
+                // TODO，广播路由的失败重试，会导致重试暴增，需要优化
+
                 JobTriggerPoolHelper.trigger(log.getJobId(), nextFailRetryCount);
 
                 callbackMsg = "<br><br><span style=\"color:#F39C12;\" > >>>>>>>>>>>"+ I18nUtil.getString("jobconf_fail_handle_retry") +"<<<<<<<<<<< </span><br>";

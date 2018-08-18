@@ -9,8 +9,6 @@
 		<result column="job_group" property="jobGroup" />
 		<result column="job_id" property="jobId" />
 
-		<result column="glue_type" property="glueType" />
-
 		<result column="executor_address" property="executorAddress" />
 		<result column="executor_handler" property="executorHandler" />
 	    <result column="executor_param" property="executorParam" />
@@ -30,7 +28,6 @@
 		t.id,
 		t.job_group,
 		t.job_id,
-		t.glue_type,
 		t.executor_address,
 		t.executor_handler,
 		t.executor_param,
@@ -136,7 +133,6 @@
 	<update id="updateTriggerInfo" >
 		UPDATE XXL_JOB_QRTZ_TRIGGER_LOG
 		SET
-		    `glue_type`= #{glueType},
 			`trigger_time`= #{triggerTime},
 			`trigger_code`= #{triggerCode},
 			`trigger_msg`= #{triggerMsg},

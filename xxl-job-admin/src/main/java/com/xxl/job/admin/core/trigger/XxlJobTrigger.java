@@ -70,7 +70,6 @@ public class XxlJobTrigger {
 
                 // 2、prepare trigger-info
                 //jobLog.setExecutorAddress(executorAddress);
-                jobLog.setGlueType(jobInfo.getGlueType());
                 jobLog.setExecutorHandler(jobInfo.getExecutorHandler());
                 jobLog.setExecutorParam(jobInfo.getExecutorParam());
                 jobLog.setExecutorFailRetryCount(finalFailRetryCount);
@@ -108,7 +107,7 @@ public class XxlJobTrigger {
                 triggerMsgSb.append("<br><br><span style=\"color:#00c0ef;\" > >>>>>>>>>>>"+ I18nUtil.getString("jobconf_trigger_run") +"<<<<<<<<<<< </span><br>").append(triggerResult.getMsg());
 
 
-                // 3.3、trigger (fail retry)
+                // 4、fail retry)
                 if (triggerResult.getCode()!=ReturnT.SUCCESS_CODE) {
                     onceFailed = true;
                 }
@@ -118,13 +117,13 @@ public class XxlJobTrigger {
                     triggerMsgSb.append("<br><br><span style=\"color:#F39C12;\" > >>>>>>>>>>>"+ I18nUtil.getString("jobconf_fail_trigger_retry") +"<<<<<<<<<<< </span><br>");
                 }
 
-                // 4、save trigger-info
+                // 5、save trigger-info
                 jobLog.setExecutorAddress(triggerResult.getContent());
                 jobLog.setTriggerCode(triggerResult.getCode());
                 jobLog.setTriggerMsg(triggerMsgSb.toString());
                 XxlJobDynamicScheduler.xxlJobLogDao.updateTriggerInfo(jobLog);
 
-                // 5、monitor trigger
+                // 6、monitor trigger
                 JobFailMonitorHelper.monitor(jobLog.getId());
                 logger.debug(">>>>>>>>>>> xxl-job trigger end, jobId:{}", jobLog.getId());
 
@@ -140,7 +139,6 @@ public class XxlJobTrigger {
 
             // 2、prepare trigger-info
             //jobLog.setExecutorAddress(executorAddress);
-            jobLog.setGlueType(jobInfo.getGlueType());
             jobLog.setExecutorHandler(jobInfo.getExecutorHandler());
             jobLog.setExecutorParam(jobInfo.getExecutorParam());
             jobLog.setExecutorFailRetryCount(finalFailRetryCount);
@@ -181,20 +179,22 @@ public class XxlJobTrigger {
                 triggerResult = executorRouteStrategyEnum.getRouter().routeRun(triggerParam, addressList);
                 triggerMsgSb.append("<br><br><span style=\"color:#00c0ef;\" > >>>>>>>>>>>"+ I18nUtil.getString("jobconf_trigger_run") +"<<<<<<<<<<< </span><br>").append(triggerResult.getMsg());
 
-                // 3.3、trigger (fail retry)
-                if (triggerResult.getCode()!=ReturnT.SUCCESS_CODE && finalFailRetryCount > 0) {
-                    JobTriggerPoolHelper.trigger(jobId, (finalFailRetryCount-1));
-                    triggerMsgSb.append("<br><br><span style=\"color:#F39C12;\" > >>>>>>>>>>>"+ I18nUtil.getString("jobconf_fail_trigger_retry") +"<<<<<<<<<<< </span><br>");
-                }
+
             }
 
-            // 4、save trigger-info
+            // 4、fail retry
+            if (triggerResult.getCode()!=ReturnT.SUCCESS_CODE && finalFailRetryCount > 0) {
+                JobTriggerPoolHelper.trigger(jobId, (finalFailRetryCount-1));
+                triggerMsgSb.append("<br><br><span style=\"color:#F39C12;\" > >>>>>>>>>>>"+ I18nUtil.getString("jobconf_fail_trigger_retry") +"<<<<<<<<<<< </span><br>");
+            }
+
+            // 5、save trigger-info
             jobLog.setExecutorAddress(triggerResult.getContent());
             jobLog.setTriggerCode(triggerResult.getCode());
             jobLog.setTriggerMsg(triggerMsgSb.toString());
             XxlJobDynamicScheduler.xxlJobLogDao.updateTriggerInfo(jobLog);
 
-            // 5、monitor trigger
+            // 6、monitor trigger
             JobFailMonitorHelper.monitor(jobLog.getId());
             logger.debug(">>>>>>>>>>> xxl-job trigger end, jobId:{}", jobLog.getId());
         }
