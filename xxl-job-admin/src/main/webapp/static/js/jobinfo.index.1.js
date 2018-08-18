@@ -26,7 +26,10 @@ $(function() {
 	                	"data": 'id',
 						"bSortable": false,
 						"visible" : true,
-						"width":'10%'
+						"width":'10%',
+                        "render": function ( data, type, row ) {
+	                		return "<a href='jobInfo?parentId="+data+"'>"+data+"</a>"
+                        }
 					},
 	                { 
 	                	"data": 'jobGroup', 
