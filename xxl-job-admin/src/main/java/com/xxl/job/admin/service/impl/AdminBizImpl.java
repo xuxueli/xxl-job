@@ -47,6 +47,10 @@ public class AdminBizImpl implements AdminBiz {
         return xxlJobService.add(jobInfo);
     }
 
+//    public ReturnT<String> updateJob(XxlJobInfo jobInfo){
+//        return xxlJobService.update(jobInfo);
+//    }
+
 
     @Override
     public ReturnT<String> callback(List<HandleCallbackParam> callbackParamList) {
