@@ -114,6 +114,12 @@
                         <label for="lastname" class="col-sm-2 control-label">${I18n.jobinfo_field_jobdesc}<font color="red">*</font></label>
                         <div class="col-sm-4"><input type="text" class="form-control" name="jobDesc" placeholder="${I18n.system_please_input}${I18n.jobinfo_field_jobdesc}" maxlength="50" ></div>
 					</div>
+
+                    <div class="form-group">
+                        <label for="firstname" class="col-sm-2 control-label">父id</label>
+                        <div class="col-sm-4"><input type="text" class="form-control" name="parentId" maxlength="512" ></div>
+					</div>
+
                     <div class="form-group">
                         <label for="firstname" class="col-sm-2 control-label">${I18n.jobinfo_field_executorRouteStrategy}<font color="red">*</font></label>
                         <div class="col-sm-4">

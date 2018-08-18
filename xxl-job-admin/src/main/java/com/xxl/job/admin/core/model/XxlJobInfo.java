@@ -8,7 +8,8 @@ import java.util.Date;
  * @author xuxueli  2016-1-12 18:25:49
  */
 public class XxlJobInfo implements Serializable {
-	
+	private Integer parentId;
+
 	private int id;				// 主键ID	    (JobKey.name)
 	
 	private int jobGroup;		// 执行器主键ID	(JobKey.group)
@@ -36,6 +37,14 @@ public class XxlJobInfo implements Serializable {
 	
 	// copy from quartz
 	private String jobStatus;		// 任务状态 【base on quartz】
+
+	public Integer getParentId() {
+		return parentId;
+	}
+
+	public void setParentId(Integer parentId) {
+		this.parentId = parentId;
+	}
 
 	public int getId() {
 		return id;
