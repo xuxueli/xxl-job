@@ -93,17 +93,12 @@ public class AdminBizImpl implements AdminBiz {
 
             }
         } else {
-            XxlJobInfo xxlJobInfo = xxlJobInfoDao.loadById(log.getJobId());
-            if (xxlJobInfo.getExecutorFailRetryCount() > 0) {
-                int nextFailRetryCount = xxlJobInfo.getExecutorFailRetryCount()-1;
+            if (log.getExecutorFailRetryCount() > 0) {
+                int nextFailRetryCount = log.getExecutorFailRetryCount()-1;
 
                 JobTriggerPoolHelper.trigger(log.getJobId(), nextFailRetryCount);
-                ReturnT<String> retryTriggerResult = ReturnT.SUCCESS;
 
                 callbackMsg = "<br><br><span style=\"color:#F39C12;\" > >>>>>>>>>>>"+ I18nUtil.getString("jobconf_fail_handle_retry") +"<<<<<<<<<<< </span><br>";
-
-                callbackMsg += MessageFormat.format(I18nUtil.getString("jobconf_callback_msg1"),
-                        (retryTriggerResult.getCode()==ReturnT.SUCCESS_CODE?I18nUtil.getString("system_success"):I18nUtil.getString("system_fail")), retryTriggerResult.getMsg());
             }
         }
 
