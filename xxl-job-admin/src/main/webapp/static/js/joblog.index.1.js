@@ -98,8 +98,14 @@ $(function() {
                         "width":'10%',
 						"render": function ( data, type, row ) {
 
+							var jobhandler = '';
+                            if (row.executorHandler) {
+                                jobhandler = "<br>JobHandler：" + row.executorHandler;
+                            }
+
 							var temp = '';
 							temp += I18n.joblog_field_executorAddress + '：' + (row.executorAddress?row.executorAddress:'');
+							temp += jobhandler;
 							temp += '<br>'+ I18n.jobinfo_field_executorparam +'：' + row.executorParam;
 
 							return '<a class="logTips" href="javascript:;" >'+ row.jobId +'<span style="display:none;">'+ temp +'</span></a>';
