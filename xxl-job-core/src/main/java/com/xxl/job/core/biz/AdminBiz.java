@@ -1,6 +1,7 @@
 package com.xxl.job.core.biz;
 
 import com.xxl.job.admin.core.model.XxlJobInfo;
+import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.core.biz.model.HandleCallbackParam;
 import com.xxl.job.core.biz.model.RegistryParam;
 import com.xxl.job.core.biz.model.ReturnT;
@@ -20,6 +21,19 @@ public interface AdminBiz {
      * @return
      */
     public ReturnT<String> addJob(XxlJobInfo jobInfo);
+
+    ReturnT<List<XxlJobInfo>> queryJobs(Integer parentId,String executorHandler,String paramKeyword);
+
+    /**
+     * 批量新增，主要用于新增某个父任务下的子任务
+     * @param jobInfos
+     * @return
+     */
+    public ReturnT<String> addJobs(List<XxlJobInfo> jobInfos);
+
+    void updateChildSummary(XxlJobLog log);
+
+    ReturnT<String> updateJob(XxlJobInfo jobInfo);
 
     /**
      * callback

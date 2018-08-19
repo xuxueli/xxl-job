@@ -34,6 +34,8 @@ public interface XxlJobLogDao {
 
 	public int save(XxlJobLog xxlJobLog);
 
+	public int updateChildSummary(XxlJobLog xxlJobLog);
+
 	public int updateTriggerInfo(XxlJobLog xxlJobLog);
 
 	public int updateHandleInfo(XxlJobLog xxlJobLog);

@@ -8,6 +8,7 @@ import com.xxl.job.admin.core.route.ExecutorRouteStrategyEnum;
 import com.xxl.job.admin.core.schedule.XxlJobDynamicScheduler;
 import com.xxl.job.admin.core.thread.JobFailMonitorHelper;
 import com.xxl.job.admin.core.util.I18nUtil;
+import com.xxl.job.admin.service.impl.AdminBizImpl;
 import com.xxl.job.core.biz.ExecutorBiz;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.biz.model.TriggerParam;
@@ -55,6 +56,9 @@ public class XxlJobTrigger {
                 // 1、save log-id
                 XxlJobLog jobLog = new XxlJobLog();
                 jobLog.setJobGroup(jobInfo.getJobGroup());
+                if(jobInfo.getParentId()!=null && jobInfo.getParentId()!=0){
+                    jobLog.setParentId(AdminBizImpl.getParentId(jobId));
+                }
                 jobInfo.setParentId(jobInfo.getParentId());
                 jobLog.setJobId(jobInfo.getId());
                 XxlJobDynamicScheduler.xxlJobLogDao.save(jobLog);
@@ -125,7 +129,9 @@ public class XxlJobTrigger {
             XxlJobLog jobLog = new XxlJobLog();
             jobLog.setJobGroup(jobInfo.getJobGroup());
             jobLog.setJobId(jobInfo.getId());
-            jobLog.setParentId(jobInfo.getParentId());
+            if(jobInfo.getParentId()!=null && jobInfo.getParentId()!=0){
+                jobLog.setParentId(AdminBizImpl.getParentId(jobId));
+            }
             XxlJobDynamicScheduler.xxlJobLogDao.save(jobLog);
             logger.debug(">>>>>>>>>>> xxl-job trigger start, jobId:{}", jobLog.getId());
 
@@ -176,6 +182,7 @@ public class XxlJobTrigger {
                     triggerResult = executorRouteStrategyEnum.getRouter().routeRun(triggerParam, addressList);
                     triggerMsgSb.append("<br><br><span style=\"color:#F39C12;\" > >>>>>>>>>>>"+ I18nUtil.getString("jobconf_trigger_fail_retry") +"<<<<<<<<<<< </span><br>").append(triggerResult.getMsg());
                 }
+
             }
 
             // 5、save trigger-info
@@ -183,6 +190,9 @@ public class XxlJobTrigger {
             jobLog.setTriggerCode(triggerResult.getCode());
             jobLog.setTriggerMsg(triggerMsgSb.toString());
             XxlJobDynamicScheduler.xxlJobLogDao.updateTriggerInfo(jobLog);
+            if(jobLog.getTriggerCode()!=200){
+                XxlJobDynamicScheduler.adminBiz.updateChildSummary(jobLog);
+            }
 
             // 6、monitor trigger
             JobFailMonitorHelper.monitor(jobLog.getId());

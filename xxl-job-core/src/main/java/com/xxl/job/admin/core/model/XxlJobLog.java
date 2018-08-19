@@ -32,7 +32,20 @@ public class XxlJobLog {
 	private int handleCode;
 	private String handleMsg;
 
+	/**
+	 * 父任务对应的日志id
+	 */
 	private Integer parentId;
+
+	private String childSummary;
+
+	public String getChildSummary() {
+		return childSummary;
+	}
+
+	public void setChildSummary(String childSummary) {
+		this.childSummary = childSummary;
+	}
 
 	public Integer getParentId() {
 		return parentId;

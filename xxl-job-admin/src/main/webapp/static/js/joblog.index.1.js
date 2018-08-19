@@ -1,3 +1,7 @@
+function research(id){
+    $('#parentIdParam').val(id)
+	jobTable.fnDraw();
+}
 $(function() {
 
 	// jobGroup change, job list init and select
@@ -83,6 +87,7 @@ $(function() {
 	        	obj.jobId = $('#jobId').val();
                 obj.logStatus = $('#logStatus').val();
 				obj.filterTime = $('#filterTime').val();
+				obj.parentId=$('#parentIdParam').val()
 	        	obj.start = d.start;
 	        	obj.length = d.length;
                 return obj;
@@ -107,7 +112,7 @@ $(function() {
 							temp += I18n.joblog_field_executorAddress + '：' + (row.executorAddress?row.executorAddress:'');
 							temp += '<br>'+ I18n.jobinfo_field_gluetype +'：' + glueTypeTitle;
 							temp += '<br>'+ I18n.jobinfo_field_executorparam +'：' + row.executorParam;
-
+							childInfo=(true?"&nbsp;<a href='javascript:research("+row.id+")'>子日志</a>":"")
 							return '<a class="logTips" href="javascript:;" >'+ row.jobId +'<span style="display:none;">'+ temp +'</span></a>';
 						}
 					},

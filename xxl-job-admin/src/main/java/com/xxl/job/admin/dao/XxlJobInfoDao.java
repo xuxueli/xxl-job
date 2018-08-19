@@ -1,6 +1,7 @@
 package com.xxl.job.admin.dao;
 
 import com.xxl.job.admin.core.model.XxlJobInfo;
+import com.xxl.job.core.biz.model.ReturnT;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -37,4 +38,6 @@ public interface XxlJobInfoDao {
 
 	public int findAllCount();
 
+	List<XxlJobInfo> query(@Param("parentId") Integer parentId,
+			@Param("executorHandler")String executorHandler,@Param("paramKeyword") String paramKeyword);
 }

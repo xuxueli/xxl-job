@@ -8,6 +8,7 @@ import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.admin.dao.XxlJobGroupDao;
 import com.xxl.job.admin.dao.XxlJobInfoDao;
 import com.xxl.job.admin.dao.XxlJobLogDao;
+import com.xxl.job.admin.service.impl.AdminBizImpl;
 import com.xxl.job.core.biz.ExecutorBiz;
 import com.xxl.job.core.biz.model.LogResult;
 import com.xxl.job.core.biz.model.ReturnT;
@@ -93,7 +94,16 @@ public class JobLogController {
 		// page query
 		List<XxlJobLog> list = xxlJobLogDao.pageList(start, length, jobGroup, jobId, triggerTimeStart, triggerTimeEnd, logStatus,parentId);
 		int list_count = xxlJobLogDao.pageListCount(start, length, jobGroup, jobId, triggerTimeStart, triggerTimeEnd, logStatus,parentId);
-		
+
+		for(XxlJobLog log:list){
+			if(AdminBizImpl.parentIdChildMap.containsKey(log.getId())){
+				int size=AdminBizImpl.parentIdChildMap.get(log.getId()).size();
+				if(size>0){
+					log.setChildSummary(String.format("运行中:%d",size));
+				}
+			}
+		}
+
 		// package result
 		Map<String, Object> maps = new HashMap<String, Object>();
 	    maps.put("recordsTotal", list_count);		// 总记录数

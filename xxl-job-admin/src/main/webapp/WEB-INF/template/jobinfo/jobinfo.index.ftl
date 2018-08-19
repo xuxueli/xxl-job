@@ -406,7 +406,7 @@ process.exit(0)
                     "visible" : true,
                     "width":'10%',
                     "render": function ( data, type, row ) {
-                        return "<a href='javascript:research("+data+")'>"+data+"</a>"
+                        return data+(row.childJobId && row.childJobId.length>0?"&nbsp;<a href='javascript:research("+data+")'>子任务</a>":"")
                     }
                 },
                 {

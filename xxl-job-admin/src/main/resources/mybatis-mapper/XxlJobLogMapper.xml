@@ -22,7 +22,8 @@
 	    <result column="handle_time" property="handleTime" />
 	    <result column="handle_code" property="handleCode" />
 	    <result column="handle_msg" property="handleMsg" />
-	    
+		<result column="parent_id" property="parentId"/>
+	    <result column="child_summary" property="childSummary"/>
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -38,7 +39,9 @@
 		t.trigger_msg,
 		t.handle_time,
 		t.handle_code,
-		t.handle_msg
+		t.handle_msg,
+		t.parent_id,
+		t.child_summary
 	</sql>
 	
 	<select id="pageList" resultMap="XxlJobLog">
@@ -57,7 +60,9 @@
 			<if test="triggerTimeEnd != null">
 				AND t.trigger_time <![CDATA[ <= ]]> #{triggerTimeEnd}
 			</if>
-			and t.trigger_code!=600 <!-- 过滤掉因为正在执行忽略的任务 -->
+			<if test="logStatus==-1">
+				and t.trigger_code!=600 <!-- 过滤掉因为正在执行忽略的任务 -->
+			</if>
 			<if test="logStatus == 1" >
 				AND t.handle_code = 200
 			</if>
@@ -70,7 +75,7 @@
 			<if test="logStatus == 3" >
 				AND (t.trigger_code = 200 AND t.handle_code=0)
 			</if>
-			<if test="parentId!=null">
+			<if test="jobId==0 and parentId!=null">
 				AND t.parent_id=#{parentId}
 			</if>
 		</trim>
@@ -119,14 +124,25 @@
 		WHERE t.id = #{id}
 	</select>
 
+	<update id="updateChildSummary">
+		update XXL_JOB_QRTZ_TRIGGER_LOG set child_summary=#{childSummary}
+		where id=#{id}
+	</update>
+
 	
 	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobLog" useGeneratedKeys="true" keyProperty="id" >
 		INSERT INTO XXL_JOB_QRTZ_TRIGGER_LOG (
 			`job_group`,
 			`job_id`
+		<if test="parentId!=null">
+			,parent_id
+		</if>
 		) VALUES (
 			#{jobGroup},
 			#{jobId}
+		<if test="parentId!=null">
+			,#{parentId}
+		</if>
 		);
 		<!--<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
 			SELECT LAST_INSERT_ID() 

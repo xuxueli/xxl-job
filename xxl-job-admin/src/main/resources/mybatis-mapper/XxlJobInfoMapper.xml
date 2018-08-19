@@ -73,6 +73,23 @@
 		ORDER BY id DESC
 		LIMIT #{offset}, #{pagesize}
 	</select>
+
+	<select id="query" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
+		SELECT <include refid="Base_Column_List" />
+		FROM XXL_JOB_QRTZ_TRIGGER_INFO AS t
+		<trim prefix="WHERE" prefixOverrides="AND | OR" >
+			<if test="paramKeyword != null and paramKeyword != ''">
+				AND t.executor_param like CONCAT(CONCAT('%', #{paramKeyword}), '%')
+			</if>
+			<if test="executorHandler!=null">
+				AND t.executor_handler=#{executorHandler}
+			</if>
+			<if test="parentId!=null">
+				AND t.parent_id=#{parentId}
+			</if>
+		</trim>
+		ORDER BY id DESC
+	</select>
 	
 	<select id="pageListCount" parameterType="java.util.HashMap" resultType="int">
 		SELECT count(1)
