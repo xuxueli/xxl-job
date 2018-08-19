@@ -55,6 +55,7 @@ public class XxlJobTrigger {
                 // 1、save log-id
                 XxlJobLog jobLog = new XxlJobLog();
                 jobLog.setJobGroup(jobInfo.getJobGroup());
+                jobInfo.setParentId(jobInfo.getParentId());
                 jobLog.setJobId(jobInfo.getId());
                 XxlJobDynamicScheduler.xxlJobLogDao.save(jobLog);
                 logger.debug(">>>>>>>>>>> xxl-job trigger start, jobId:{}", jobLog.getId());
@@ -124,6 +125,7 @@ public class XxlJobTrigger {
             XxlJobLog jobLog = new XxlJobLog();
             jobLog.setJobGroup(jobInfo.getJobGroup());
             jobLog.setJobId(jobInfo.getId());
+            jobLog.setParentId(jobInfo.getParentId());
             XxlJobDynamicScheduler.xxlJobLogDao.save(jobLog);
             logger.debug(">>>>>>>>>>> xxl-job trigger start, jobId:{}", jobLog.getId());
 

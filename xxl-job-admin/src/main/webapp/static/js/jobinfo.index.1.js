@@ -1,5 +1,7 @@
 $(function() {
 
+	console.log('test');
+
 	// init date tables
 	var jobTable = $("#job_list").dataTable({
 		"deferRender": true,
@@ -28,7 +30,8 @@ $(function() {
 						"visible" : true,
 						"width":'10%',
                         "render": function ( data, type, row ) {
-	                		return "<a href='jobInfo?parentId="+data+"'>"+data+"</a>"
+                            console.log("<a href='jobInfo?parentId="+data+"'>"+data+"</a>")
+                            return "<a href='jobInfo?parentId="+data+"'>"+data+"</a>"
                         }
 					},
 	                { 

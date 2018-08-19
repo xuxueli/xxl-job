@@ -32,6 +32,16 @@ public class XxlJobLog {
 	private int handleCode;
 	private String handleMsg;
 
+	private Integer parentId;
+
+	public Integer getParentId() {
+		return parentId;
+	}
+
+	public void setParentId(Integer parentId) {
+		this.parentId = parentId;
+	}
+
 	public int getId() {
 		return id;
 	}
