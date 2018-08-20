@@ -112,7 +112,7 @@
 			<if test="logStatus == 3" >
 				AND (t.trigger_code = 200 AND t.handle_code=0)
 			</if>
-			<if test="parentId!=null">
+			<if test="jobId==0 and parentId!=null">
 				AND t.parent_id=#{parentId}
 			</if>
 		</trim>

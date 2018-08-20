@@ -179,12 +179,15 @@ public class AdminBizImpl implements AdminBiz {
                 int callFails=0;
                 int ignores=0;
                 int triggerFails=0;
+                int callSkips=0;
                 for(XxlJobLog l:logs){
                     if(l.getTriggerCode()==200){
-                        if(l.getHandleCode()!=200){
-                            callFails++;
-                        }else{
+                        if(l.getHandleCode()==200){
                             callSuccess++;
+                        }else if(l.getHandleCode()==666){
+                            callSkips++;
+                        }else{
+                            callFails++;
                         }
                     }else if(l.getTriggerCode()==600){
                         ignores++;
@@ -195,7 +198,7 @@ public class AdminBizImpl implements AdminBiz {
 
                 XxlJobLog toUpdate=new XxlJobLog();
                 toUpdate.setId(log.getParentId());
-                toUpdate.setChildSummary(String.format("跳过:%d,调度失败:%d,执行失败:%d,成功:%d",ignores,triggerFails,callFails,callSuccess));
+                toUpdate.setChildSummary(String.format("调度[跳过:%d,失败:%d],执行[失败:%d,成功:%d,跳过:%d]",ignores,triggerFails,callFails,callSuccess,callSkips));
                 xxlJobLogDao.updateChildSummary(toUpdate);
             }
         }
