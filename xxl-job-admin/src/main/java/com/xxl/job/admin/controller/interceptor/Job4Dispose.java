@@ -5,17 +5,22 @@ import com.xxl.job.admin.dao.XxlJobLogDao;
 import com.xxl.job.admin.service.impl.JobUtils;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 public class Job4Dispose implements InitializingBean,DisposableBean {
 
     @Resource
     XxlJobLogDao xxlJobLogDao;
+
+    @Resource
+    RedisTemplate<String, ConcurrentHashMap<Integer,List<Integer>>> redisTemplate;
 
 
     @Override
@@ -67,10 +72,24 @@ public class Job4Dispose implements InitializingBean,DisposableBean {
                 xxlJobLogDao.updateChildSummary(toUpdate);
             }
         }
+        flushToCache();
+    }
+
+    public void flushToCache(){
+        redisTemplate.opsForValue().set("childJobParentIdMap",JobUtils.childJobParentIdMap);
+        redisTemplate.opsForValue().set("parentIdChildMap",JobUtils.parentIdChildMap);
     }
 
     @Override
     public void afterPropertiesSet() throws Exception {
+        ConcurrentHashMap<Integer,List<Integer>> map=redisTemplate.opsForValue().get("parentIdChildMap");
+        if(map!=null){
+            JobUtils.parentIdChildMap.putAll(map);
+        }
 
+        map=redisTemplate.opsForValue().get("childJobParentIdMap");
+        if(map!=null){
+            JobUtils.childJobParentIdMap.putAll(map);
+        }
     }
 }

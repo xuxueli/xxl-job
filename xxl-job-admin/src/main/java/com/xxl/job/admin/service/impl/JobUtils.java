@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * job工具类，目前主要用于父子任务执行日志的维护
+ * 现在关系直接维护在内存中，在启动与关闭时与redis交互
+ */
 public class JobUtils {
     public final static ConcurrentHashMap<Integer,List<Integer>> childJobParentIdMap=new ConcurrentHashMap<>();
     public final static ConcurrentHashMap<Integer,List<Integer>> parentIdChildMap=new ConcurrentHashMap<>();
@@ -45,7 +49,11 @@ public class JobUtils {
         }
         synchronized (childIds){
             childIds.remove(childIds.indexOf(childId));
-            return childIds.size()==0;
+            boolean empty= childIds.size()==0;
+            if(empty){
+                parentIdChildMap.remove(parentId);
+            }
+            return empty;
         }
     }
 
