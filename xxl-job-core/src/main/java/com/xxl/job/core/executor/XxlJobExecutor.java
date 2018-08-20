@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created by xuxueli on 2016/3/2 21:14.
@@ -177,9 +179,12 @@ public class XxlJobExecutor implements ApplicationContextAware {
 
     // ---------------------- job thread repository ----------------------
     private static ConcurrentHashMap<Integer, JobThread> JobThreadRepository = new ConcurrentHashMap<Integer, JobThread>();
+
+    public static ExecutorService executorService= Executors.newFixedThreadPool(30);
     public static JobThread registJobThread(int jobId, IJobHandler handler, String removeOldReason){
         JobThread newJobThread = new JobThread(jobId, handler);
-        newJobThread.start();
+        executorService.submit(newJobThread);
+       // newJobThread.start();
         logger.info(">>>>>>>>>>> xxl-job regist JobThread success, jobId:{}, handler:{}", new Object[]{jobId, handler});
 
         JobThread oldJobThread = JobThreadRepository.put(jobId, newJobThread);	// putIfAbsent | oh my god, map's put method return the old value!!!

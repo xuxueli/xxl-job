@@ -267,10 +267,13 @@
                 data : function ( d ) {
                     var obj = {};
                     obj.jobGroup = $('#jobGroup').val();
+                    obj.parentId=$('#parentIdParam').val()
+                    if(obj.parentId!='0'){
+                        $('#jobId').val("0");
+                    }
                     obj.jobId = $('#jobId').val();
                     obj.logStatus = $('#logStatus').val();
                     obj.filterTime = $('#filterTime').val();
-                    obj.parentId=$('#parentIdParam').val()
                     obj.start = d.start;
                     obj.length = d.length;
                     return obj;
