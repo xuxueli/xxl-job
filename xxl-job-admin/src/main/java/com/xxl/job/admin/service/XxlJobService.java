@@ -59,6 +59,13 @@ public interface XxlJobService {
 	 */
 	public ReturnT<String> pause(int id);
 
+
+	/**
+	 * 更新指定任务的子id列表
+	 * @param id
+	 */
+	public void updateChildIds(Integer id);
+
 	/**
 	 * resume job
 	 *

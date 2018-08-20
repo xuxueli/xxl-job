@@ -3,7 +3,6 @@ package com.xxl.job.admin.service.impl;
 import com.xxl.job.admin.core.enums.ExecutorFailStrategyEnum;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
-import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.admin.core.route.ExecutorRouteStrategyEnum;
 import com.xxl.job.admin.core.schedule.XxlJobDynamicScheduler;
 import com.xxl.job.admin.core.util.I18nUtil;
@@ -29,6 +28,8 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.text.MessageFormat;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * core job action for xxl-job
@@ -226,6 +227,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 		return ReturnT.FAIL;
 	}
 
+
 	@Override
 	public ReturnT<String> remove(int id) {
 		XxlJobInfo xxlJobInfo = xxlJobInfoDao.loadById(id);
@@ -235,6 +237,17 @@ public class XxlJobServiceImpl implements XxlJobService {
 		try {
 			XxlJobDynamicScheduler.removeJob(name, group);
 			xxlJobInfoDao.delete(id);
+			if(xxlJobInfo.getParentId()!=null && xxlJobInfo.getParentId()!=0){
+				XxlJobInfo parentJob=xxlJobInfoDao.loadById(xxlJobInfo.getParentId());
+
+				if(StringUtils.isNotEmpty(parentJob.getChildJobId())){
+					Pattern p=Pattern.compile(String.format(",%s,|,%s$|^%s,|^%s$",xxlJobInfo.getId(),xxlJobInfo.getId(),xxlJobInfo.getId(),xxlJobInfo.getId()));
+					Matcher matcher=p.matcher(parentJob.getChildJobId());
+					if(matcher.find()){
+						updateChildIds(parentJob.getId());
+					}
+				}
+			}
 			xxlJobLogDao.delete(id);
 			xxlJobLogGlueDao.deleteByJobId(id);
 			return ReturnT.SUCCESS;
@@ -242,6 +255,22 @@ public class XxlJobServiceImpl implements XxlJobService {
 			logger.error(e.getMessage(), e);
 		}
 		return ReturnT.FAIL;
+	}
+
+	/**
+	 * 更新指定任务的子id列表
+	 * @param id
+	 */
+	public void updateChildIds(Integer id) {
+		List<XxlJobInfo> children=xxlJobInfoDao.query(id,null,null);
+		StringBuffer sb=new StringBuffer();
+		for(XxlJobInfo job:children){
+			sb.append(",").append(job.getId());
+		}
+
+		XxlJobInfo jobInfo=xxlJobInfoDao.loadById(id);
+		jobInfo.setChildJobId(sb.length()>0?sb.substring(1):"");
+		xxlJobInfoDao.update(jobInfo);//自动更新子任务id
 	}
 
 	@Override

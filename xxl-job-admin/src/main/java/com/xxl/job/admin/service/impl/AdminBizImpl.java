@@ -69,18 +69,12 @@ public class AdminBizImpl implements AdminBiz {
             xxlJobService.add(jobInfo);
         }
         for(Integer id:parentIds){
-            List<XxlJobInfo> children=xxlJobInfoDao.query(id,null,null);
-            StringBuffer sb=new StringBuffer();
-            for(XxlJobInfo job:children){
-                sb.append(",").append(job.getId());
-            }
-
-            XxlJobInfo jobInfo=xxlJobInfoDao.loadById(id);
-            jobInfo.setChildJobId(sb.length()>0?sb.substring(1):"");
-            xxlJobInfoDao.update(jobInfo);//自动更新子任务id
+            xxlJobService.updateChildIds(id);
         }
         return ReturnT.SUCCESS;
     }
+
+
 
 
     public ReturnT<List<XxlJobInfo>> queryJobs(Integer parentId,String executorHandler,String paramKeyword){
