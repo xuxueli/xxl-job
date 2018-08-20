@@ -25,10 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import java.text.ParseException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * index controller
@@ -150,6 +147,17 @@ public class JobLogController {
 			return new ReturnT<LogResult>(ReturnT.FAIL_CODE, e.getMessage());
 		}
 	}
+
+	@RequestMapping("/logKillBatch")
+	@ResponseBody
+	public ReturnT<String> logKill(Integer[] ids){
+		for(Integer id:ids){
+			logKill(id);
+		}
+		return ReturnT.SUCCESS;
+	}
+
+
 
 	@RequestMapping("/logKill")
 	@ResponseBody

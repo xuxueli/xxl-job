@@ -73,6 +73,7 @@
 
 	            <div class="col-xs-1">
                     <button class="btn btn-block btn-nomal" id="clearLog">${I18n.joblog_clean}</button>
+                    <button class="btn btn-block btn-nomal" id="stopBatch">终止执行</button>
 	            </div>
           	</div>
 			
@@ -81,25 +82,27 @@
 					<div class="box">
 			            <#--<div class="box-header hide"><h3 class="box-title">调度日志</h3></div>-->
 			            <div class="box-body">
-			              	<table id="joblog_list" class="table table-bordered table-striped display" width="100%" >
-				                <thead>
-					            	<tr>
-                                        <th name="jobId" >${I18n.jobinfo_field_id}</th>
+			              	<form id="listForm">
+                                <table id="joblog_list" class="table table-bordered table-striped display" width="100%" >
+                                    <thead>
+                                    <tr>
+                                        <th name="jobId" ><input type="checkbox" id="allSelect">  &nbsp;${I18n.jobinfo_field_id}</th>
                                         <th name="jobGroup" >jobGroup</th>
-										<#--<th name="executorAddress" >执行器地址</th>
-										<th name="glueType" >运行模式</th>
-                                      	<th name="executorParam" >任务参数</th>-->
+                                    <#--<th name="executorAddress" >执行器地址</th>
+                                    <th name="glueType" >运行模式</th>
+                                      <th name="executorParam" >任务参数</th>-->
                                         <th name="triggerTime" >${I18n.joblog_field_triggerTime}</th>
                                         <th name="triggerCode" >${I18n.joblog_field_triggerCode}</th>
                                         <th name="triggerMsg" >${I18n.joblog_field_triggerMsg}</th>
-					                  	<th name="handleTime" >${I18n.joblog_field_handleTime}</th>
-					                  	<th name="handleCode" >${I18n.joblog_field_handleCode}</th>
-					                  	<th name="handleMsg" >${I18n.joblog_field_handleMsg}</th>
-					                  	<th name="handleMsg" >${I18n.system_opt}</th>
-					                </tr>
-				                </thead>
-				                <tbody></tbody>
-							</table>
+                                        <th name="handleTime" >${I18n.joblog_field_handleTime}</th>
+                                        <th name="handleCode" >${I18n.joblog_field_handleCode}</th>
+                                        <th name="handleMsg" >${I18n.joblog_field_handleMsg}</th>
+                                        <th name="handleMsg" >${I18n.system_opt}</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </form>
 						</div>
 					</div>
 				</div>
@@ -299,7 +302,7 @@
                         temp += '<br>'+ I18n.jobinfo_field_gluetype +'：' + glueTypeTitle;
                         temp += '<br>'+ I18n.jobinfo_field_executorparam +'：' + row.executorParam;
                         childInfo=(row.childSummary.length>0?"&nbsp;<a href='javascript:research("+row.id+")'>"+row.childSummary+"</a>":"")
-                        return '<a class="logTips" href="javascript:;" >'+ row.jobId +'<span style="display:none;">'+ temp +'</span></a>'+childInfo;
+                        return '<input type="checkbox" name="ids" value="'+row.id+'" >&nbsp;<a class="logTips" href="javascript:;" >'+ row.jobId +'<span style="display:none;">'+ temp +'</span></a>'+childInfo;
                     }
                 },
                 { "data": 'jobGroup', "visible" : false},
@@ -428,6 +431,16 @@
             return;
         });
 
+        $('#allSelect').change(function () {
+            var checked=$('#allSelect').is(':checked')
+            console.log(checked)
+            if(checked){
+                $('input[name="ids"]').attr("checked",true);
+            }else{
+                $('input[name="ids"]').removeAttr("checked");
+            }
+        });
+
         /**
          * log Kill
          */
@@ -491,6 +504,32 @@
             $('#clearLogModal').modal('show');
 
         });
+
+        $('#stopBatch').on('click', function(){
+
+            $.post(base_url + "/joblog/logKillBatch", $("#listForm").serialize(), function(data, status) {
+                if (data.code == "200") {
+                    layer.open({
+                        title: I18n.system_tips ,
+                        btn: [ I18n.system_ok ],
+                        content: (I18n.system_success) ,
+                        icon: '1',
+                        end: function(layero, index){
+                            logTable.fnDraw();
+                        }
+                    });
+                } else {
+                    layer.open({
+                        title: I18n.system_tips ,
+                        btn: [ I18n.system_ok ],
+                        content: (data.msg || ( I18n.system_fail) ),
+                        icon: '2'
+                    });
+                }
+            });
+        });
+
+
         $("#clearLogModal .ok").on('click', function(){
             $.post(base_url + "/joblog/clearLog",  $("#clearLogModal .form").serialize(), function(data, status) {
                 if (data.code == "200") {
