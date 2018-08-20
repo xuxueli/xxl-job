@@ -77,17 +77,6 @@
 		<property name="testOnBorrow" value="true"/>
 	</bean>
 
-	<bean id="jedisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"
-		destroy-method="destroy">
-		<property name="hostName" value="${redis.host}"/>
-		<property name="port" value="${redis.port}"/>
-		<property name="password" value="${redis.password}"/>
-		<property name="database" value="0"/>
-		<property name="timeout" value="${redis.timeout}"/>
-		<property name="usePool" value="true"/>
-		<property name="poolConfig" ref="poolConfig"/>
-	</bean>
-
 	<bean id="keySerializer" class="org.springframework.data.redis.serializer.StringRedisSerializer"/>
 	<bean id="valueSerializer" class="org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer">
 	</bean>
