@@ -8,12 +8,11 @@ import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.admin.dao.XxlJobGroupDao;
 import com.xxl.job.admin.dao.XxlJobInfoDao;
 import com.xxl.job.admin.dao.XxlJobLogDao;
-import com.xxl.job.admin.service.impl.AdminBizImpl;
+import com.xxl.job.admin.service.impl.JobUtils;
 import com.xxl.job.core.biz.ExecutorBiz;
 import com.xxl.job.core.biz.model.LogResult;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.glue.GlueTypeEnum;
-import com.xxl.job.core.rpc.netcom.NetComClientProxy;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
@@ -96,8 +95,8 @@ public class JobLogController {
 		int list_count = xxlJobLogDao.pageListCount(start, length, jobGroup, jobId, triggerTimeStart, triggerTimeEnd, logStatus,parentId);
 
 		for(XxlJobLog log:list){
-			if(AdminBizImpl.parentIdChildMap.containsKey(log.getId())){
-				int size=AdminBizImpl.parentIdChildMap.get(log.getId()).size();
+			if(JobUtils.parentIdChildMap.containsKey(log.getId())){
+				int size= JobUtils.parentIdChildMap.get(log.getId()).size();
 				if(size>0){
 					log.setChildSummary(String.format("运行中:%d",size));
 				}

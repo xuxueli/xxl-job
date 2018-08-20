@@ -38,11 +38,6 @@ public class AdminBizImpl implements AdminBiz {
     @Resource
     private XxlJobService xxlJobService;
 
-    public final static ConcurrentHashMap<Integer,List<Integer>> childJobParentIdMap=new ConcurrentHashMap<>();
-
-
-    public final static ConcurrentHashMap<Integer,List<Integer>> parentIdChildMap=new ConcurrentHashMap<>();
-
 
     /**
      * 新增任务
@@ -108,47 +103,6 @@ public class AdminBizImpl implements AdminBiz {
         return ReturnT.SUCCESS;
     }
 
-    public static Integer getParentId(Integer childId){
-        List<Integer> parentIds=childJobParentIdMap.get(childId);
-        if(parentIds==null || parentIds.size()==0){
-            return null;
-        }
-        synchronized (parentIds){
-            if(parentIds.size()==0){
-                return null;
-            }
-            return parentIds.remove(0);
-        }
-    }
-
-    public static boolean removeChildId(Integer parentId,Integer childId){
-        List<Integer> childIds=parentIdChildMap.get(parentId);
-        if(childIds==null || childIds.size()==0){
-            return true;
-        }
-        synchronized (childIds){
-            childIds.remove(childIds.indexOf(childId));
-            return childIds.size()==0;
-        }
-    }
-
-    public static void putParentId(Integer childId,Integer parentId){
-        putToMap(childId, parentId,childJobParentIdMap);
-        putToMap(parentId,childId,parentIdChildMap);
-    }
-
-    private static void putToMap(Integer childId, Integer parentId,ConcurrentHashMap<Integer,List<Integer>> map) {
-        List<Integer> parentIds=map.get(childId);
-        if(parentIds==null){
-            parentIds = new ArrayList<>();
-            List<Integer> list=map.putIfAbsent(childId,parentIds);
-            if(list!=null){
-                parentIds=list;
-            }
-        }
-        parentIds.add(parentId);
-    }
-
     private ReturnT<String> callback(HandleCallbackParam handleCallbackParam) {
         // valid log item
         XxlJobLog log = xxlJobLogDao.load(handleCallbackParam.getLogId());
@@ -171,7 +125,7 @@ public class AdminBizImpl implements AdminBiz {
                     int childJobId = (StringUtils.isNotBlank(childJobIds[i]) && StringUtils.isNumeric(childJobIds[i]))?Integer.valueOf(childJobIds[i]):-1;
                     if (childJobId > 0) {
 
-                        putParentId(childJobId,log.getId());
+                        JobUtils.putParentId(childJobId,log.getId());
                         ReturnT<String> triggerChildResult = xxlJobService.triggerJob(childJobId);
 
                         // add msg
@@ -224,7 +178,7 @@ public class AdminBizImpl implements AdminBiz {
     public void updateChildSummary(XxlJobLog log) {
         XxlJobInfo xxlJobInfo = xxlJobInfoDao.loadById(log.getJobId());
         if(xxlJobInfo!=null && xxlJobInfo.getParentId()!=null && xxlJobInfo.getParentId()!=0){
-            if(removeChildId(log.getParentId(),xxlJobInfo.getId())){
+            if(JobUtils.removeChildId(log.getParentId(),xxlJobInfo.getId())){
                 List<XxlJobLog> logs=xxlJobLogDao.pageList(0,100,log.getJobGroup(),0,null,null,-2,log.getParentId());
 
                 int callSuccess=0;

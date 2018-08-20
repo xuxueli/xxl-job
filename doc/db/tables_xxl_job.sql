@@ -222,3 +222,10 @@ INSERT INTO `XXL_JOB_QRTZ_TRIGGER_GROUP` ( `app_name`, `title`, `order`, `addres
 
 commit;
 
+-- 父子任务
+alter table XXL_JOB_QRTZ_TRIGGER_LOG
+add column `parent_id` int(11) NOT NULL DEFAULT '0',
+ add column `child_summary` varchar(256) NOT NULL DEFAULT '' COMMENT '子任务总结';
+
+alter table XXL_JOB_QRTZ_TRIGGER_INFO
+add column `parent_id` int(11) NOT NULL DEFAULT '0';
