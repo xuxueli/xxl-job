@@ -84,7 +84,7 @@ public class AdminBizImpl implements AdminBiz {
 
     public ReturnT<String> updateLog(XxlJobLog xxlJobLog){
         xxlJobLogDao.updateChildSummary(xxlJobLog);
-        if(xxlJobLog.getHandleCode()>=0){
+        if(xxlJobLog.getHandleCode()>0){
             XxlJobLog log=xxlJobLogDao.load(xxlJobLog.getId());
             updateChildSummaryByParentId(log.getParentId());
         }

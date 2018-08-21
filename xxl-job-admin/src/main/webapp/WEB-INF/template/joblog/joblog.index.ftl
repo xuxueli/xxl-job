@@ -46,10 +46,11 @@
 	              	</div>
 	            </div>
 
-                <div class="col-xs-2">
+                <div class="col-xs-1">
                     <div class="input-group">
-                        <span class="input-group-addon">显示子任务</span>
+
                         <input type="checkbox" id="showChild">
+                        <span class="input-group-addon">显示子任务</span>
                     </div>
                 </div>
 
@@ -82,8 +83,10 @@
 
 	            <div class="col-xs-1">
                     <button class="btn btn-block btn-nomal" id="clearLog">${I18n.joblog_clean}</button>
-                    <button class="btn btn-block btn-nomal" id="stopBatch">终止执行</button>
 	            </div>
+                <div class="col-xs-1">
+                    <button class="btn btn-block btn-nomal" id="stopBatch">终止执行</button>
+                </div>
           	</div>
 			
 			<div class="row">
@@ -379,7 +382,11 @@
                         } else if (data == 434) {
                             html = '<span style="color: red">'+ "部分失败" +'</span>';
                         }else if (data == 0) {
-                            html = '运行中';
+                            if(row.triggerCode==200){
+                                html = '运行中';
+                            }else{
+                                html='';
+                            }
                         }
                         return html;
                     }
