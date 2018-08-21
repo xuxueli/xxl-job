@@ -50,9 +50,6 @@ public class JobUtils {
         synchronized (childIds){
             childIds.remove(childIds.indexOf(childId));
             boolean empty= childIds.size()==0;
-            if(empty){
-                parentIdChildMap.remove(parentId);
-            }
             return empty;
         }
     }

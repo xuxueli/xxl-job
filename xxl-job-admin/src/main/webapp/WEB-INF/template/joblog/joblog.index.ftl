@@ -54,6 +54,7 @@
                             <option value="1" >${I18n.joblog_status_suc}</option>
                             <option value="2" >${I18n.joblog_status_fail}</option>
                             <option value="3" >${I18n.joblog_status_running}</option>
+                            <#--<option value="4" >子任务运行中</option>-->
                         </select>
                     </div>
                 </div>
@@ -87,6 +88,7 @@
                                     <thead>
                                     <tr>
                                         <th name="jobId" ><input type="checkbox" id="allSelect">  &nbsp;${I18n.jobinfo_field_id}</th>
+                                        <th>子任务信息</th>
                                         <th name="jobGroup" >jobGroup</th>
                                     <#--<th name="executorAddress" >执行器地址</th>
                                     <th name="glueType" >运行模式</th>
@@ -289,7 +291,7 @@
                 {
                     "data": 'jobId',
                     "visible" : true,
-                    "width":'10%',
+                    "width":'7%',
                     "render": function ( data, type, row ) {
 
                         var glueTypeTitle = GlueTypeEnum[row.glueType];
@@ -301,8 +303,17 @@
                         temp += I18n.joblog_field_executorAddress + '：' + (row.executorAddress?row.executorAddress:'');
                         temp += '<br>'+ I18n.jobinfo_field_gluetype +'：' + glueTypeTitle;
                         temp += '<br>'+ I18n.jobinfo_field_executorparam +'：' + row.executorParam;
-                        childInfo=(row.childSummary.length>0?"&nbsp;<a href='javascript:research("+row.id+")'>"+row.childSummary+"</a>":"")
+                        childInfo=''
                         return '<input type="checkbox" name="ids" value="'+row.id+'" >&nbsp;<a class="logTips" href="javascript:;" >'+ row.jobId +'<span style="display:none;">'+ temp +'</span></a>'+childInfo;
+                    }
+                },
+                {
+                    "data": 'childSummary',
+                    "visible" : true,
+                    "width":'10%',
+                    "render": function ( data, type, row ) {
+                        childInfo=(row.childSummary.length>0?"&nbsp;<a href='javascript:research("+row.id+")'>"+row.childSummary+"</a>":"")
+                        return childInfo;
                     }
                 },
                 { "data": 'jobGroup', "visible" : false},

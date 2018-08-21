@@ -118,7 +118,7 @@ public class AdminBizImpl implements AdminBiz {
                 for (int i = 0; i < childJobIds.length; i++) {
                     int childJobId = (StringUtils.isNotBlank(childJobIds[i]) && StringUtils.isNumeric(childJobIds[i]))?Integer.valueOf(childJobIds[i]):-1;
                     if (childJobId > 0) {
-
+                        handleCallbackParam.getExecuteResult().setCode(0);
                         JobUtils.putParentId(childJobId,log.getId());
                         ReturnT<String> triggerChildResult = xxlJobService.triggerJob(childJobId);
 
@@ -172,34 +172,62 @@ public class AdminBizImpl implements AdminBiz {
     public void updateChildSummary(XxlJobLog log) {
         XxlJobInfo xxlJobInfo = xxlJobInfoDao.loadById(log.getJobId());
         if(xxlJobInfo!=null && xxlJobInfo.getParentId()!=null && xxlJobInfo.getParentId()!=0){
-            if(JobUtils.removeChildId(log.getParentId(),xxlJobInfo.getId())){
-                List<XxlJobLog> logs=xxlJobLogDao.pageList(0,100,log.getJobGroup(),0,null,null,-2,log.getParentId());
+            Integer parentId=log.getParentId();
+            if(JobUtils.removeChildId(parentId,xxlJobInfo.getId())){
+                updateChildSummaryByParentId(parentId);
+            }
+        }
+    }
 
-                int callSuccess=0;
-                int callFails=0;
-                int ignores=0;
-                int triggerFails=0;
-                int callSkips=0;
-                for(XxlJobLog l:logs){
-                    if(l.getTriggerCode()==200){
-                        if(l.getHandleCode()==200){
-                            callSuccess++;
-                        }else if(l.getHandleCode()==666){
-                            callSkips++;
-                        }else{
-                            callFails++;
-                        }
-                    }else if(l.getTriggerCode()==600){
-                        ignores++;
+    /**
+     * 根据任务的父id来更新其日志信息
+     * @param parentId
+     */
+    public void updateChildSummaryByParentId(Integer parentId) {
+        List<Integer> list= JobUtils.parentIdChildMap.get(parentId);
+        synchronized (list){
+            int left=list.size();
+
+            List<XxlJobLog> logs=xxlJobLogDao.pageList(0,100,xxlJobLogDao.load(parentId).getJobGroup(),0,null,null,-2,parentId);
+
+            int callSuccess=0;
+            int callFails=0;
+            int ignores=0;
+            int triggerFails=0;
+            int callSkips=0;
+            for(XxlJobLog l:logs){
+                if(l.getTriggerCode()==200){
+                    if(l.getHandleCode()==200){
+                        callSuccess++;
+                    }else if(l.getHandleCode()==666){
+                        callSkips++;
                     }else{
-                        triggerFails++;
+                        callFails++;
                     }
+                }else if(l.getTriggerCode()==600){
+                    ignores++;
+                }else{
+                    triggerFails++;
                 }
+                if(list.contains(l.getJobId())){
+                    left--;
+                }
+            }
 
-                XxlJobLog toUpdate=new XxlJobLog();
-                toUpdate.setId(log.getParentId());
-                toUpdate.setChildSummary(String.format("调度[跳过:%d,失败:%d],执行[失败:%d,成功:%d,跳过:%d]",ignores,triggerFails,callFails,callSuccess,callSkips));
-                xxlJobLogDao.updateChildSummary(toUpdate);
+            XxlJobLog toUpdate=new XxlJobLog();
+            toUpdate.setId(parentId);
+            if(callSuccess==0 && callFails==0 && triggerFails==0 && left==0){//如果子任务的都是正常的跳过
+                toUpdate.setHandleCode(666);
+            }
+            String childSummary=String.format("调度[跳过:%d,失败:%d],执行[失败:%d,成功:%d,跳过:%d]",ignores,triggerFails,callFails,callSuccess,callSkips);
+            if(left>0){
+                childSummary=String.format("运行中:%d,",left)+childSummary;
+            }
+            toUpdate.setChildSummary(childSummary);
+            xxlJobLogDao.updateChildSummary(toUpdate);
+
+            if(left==0){
+                JobUtils.parentIdChildMap.remove(parentId);
             }
         }
     }
