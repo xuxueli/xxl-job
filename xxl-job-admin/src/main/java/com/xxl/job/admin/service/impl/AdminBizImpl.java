@@ -148,7 +148,7 @@ public class AdminBizImpl implements AdminBiz {
                 }
 
             }
-        } else if (IJobHandler.FAIL_RETRY.getCode() == handleCallbackParam.getExecuteResult().getCode() || 0==handleCallbackParam.getExecuteResult().getCode()){
+        } else if (IJobHandler.FAIL_RETRY.getCode() == handleCallbackParam.getExecuteResult().getCode()){
             ReturnT<String> retryTriggerResult = xxlJobService.triggerJob(log.getJobId());
             callbackMsg = "<br><br><span style=\"color:#F39C12;\" > >>>>>>>>>>>"+ I18nUtil.getString("jobconf_exe_fail_retry") +"<<<<<<<<<<< </span><br>";
 
