@@ -97,7 +97,7 @@
                                 <table id="joblog_list" class="table table-bordered table-striped display" width="100%" >
                                     <thead>
                                     <tr>
-                                        <th name="jobId" ><input type="checkbox" id="allSelect">  &nbsp;${I18n.jobinfo_field_id}</th>
+                                        <th nowrap name="jobId" ><input type="checkbox" id="allSelect">  &nbsp;${I18n.jobinfo_field_id}</th>
                                         <th>子任务信息</th>
                                         <th name="jobGroup" >jobGroup</th>
                                     <#--<th name="executorAddress" >执行器地址</th>

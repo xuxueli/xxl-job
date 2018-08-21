@@ -200,6 +200,7 @@
 		SELECT <include refid="Base_Column_List" />
 		FROM XXL_JOB_QRTZ_TRIGGER_INFO AS t
 		WHERE t.job_group = #{jobGroup}
+		order by parent_id asc, id asc
 	</select>
 
 	<select id="findAllCount" resultType="int">
