@@ -62,7 +62,6 @@
                             <option value="1" >${I18n.joblog_status_suc}</option>
                             <option value="2" >${I18n.joblog_status_fail}</option>
                             <option value="3" >${I18n.joblog_status_running}</option>
-                            <#--<option value="4" >子任务运行中</option>-->
                             <option value="5" >部分成功</option>
                         </select>
                     </div>
@@ -379,9 +378,7 @@
                             html = '<span style="color: red">'+ I18n.joblog_handleCode_501 +'</span>';
                         } else if (data == 433) {
                             html = '<span style="color: red">'+ "部分成功" +'</span>';
-                        } else if (data == 434) {
-                            html = '<span style="color: red">'+ "部分失败" +'</span>';
-                        }else if (data == 0) {
+                        } if (data == 0) {
                             if(row.triggerCode==200){
                                 html = '运行中';
                             }else{

@@ -215,12 +215,12 @@ public class AdminBizImpl implements AdminBiz {
                 if(l.getTriggerCode()==200){
                     if(l.getHandleCode()==200){
                         callSuccess++;
-                    }else if(l.getHandleCode()==666){
+                    }else if(l.getHandleCode()==HandleCodeEnum.IGNORE.getCode()){
                         callSkips++;
                     }else{
                         callFails++;
                     }
-                }else if(l.getTriggerCode()==600){
+                }else if(l.getTriggerCode()==ReturnT.IGNORE_CODE){
                     ignores++;
                 }else{
                     triggerFails++;
@@ -233,7 +233,7 @@ public class AdminBizImpl implements AdminBiz {
             XxlJobLog toUpdate=new XxlJobLog();
             toUpdate.setId(parentId);
             if(callSuccess==0 && callFails==0 && triggerFails==0 && left==0){//如果子任务的都是正常的跳过
-                toUpdate.setHandleCode(666);
+                toUpdate.setHandleCode(HandleCodeEnum.IGNORE.getCode());
             }else if(left==0){
                 if(callSuccess>0 && callFails>0){
                     toUpdate.setHandleCode(HandleCodeEnum.CONTAINS_SUCCESS.getCode());
