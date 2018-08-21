@@ -190,7 +190,7 @@
 			`handle_time`= #{handleTime}, 
 			`handle_code`= #{handleCode},
 			<if test="childSummary!=null">
-				child_summary=#{childSummary}
+				child_summary=#{childSummary},
 			</if>
 			`handle_msg`= #{handleMsg} 
 		WHERE `id`= #{id}
