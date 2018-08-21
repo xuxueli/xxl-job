@@ -71,7 +71,7 @@ public class JobLogController {
 	@ResponseBody
 	public Map<String, Object> pageList(@RequestParam(required = false, defaultValue = "0") int start,  
 			@RequestParam(required = false, defaultValue = "10") int length,
-			int jobGroup, int jobId, int logStatus, String filterTime,
+			int jobGroup, int jobId, int logStatus, String filterTime,Boolean showChild,
 										@RequestParam(name = "parentId",required = false,defaultValue = "0")Integer parentId) {
 		
 		// parse param
@@ -86,19 +86,39 @@ public class JobLogController {
 				} catch (ParseException e) {	}
 			}
 		}
-		
-		// page query
-		List<XxlJobLog> list = xxlJobLogDao.pageList(start, length, jobGroup, jobId, triggerTimeStart, triggerTimeEnd, logStatus,parentId);
-		int list_count = xxlJobLogDao.pageListCount(start, length, jobGroup, jobId, triggerTimeStart, triggerTimeEnd, logStatus,parentId);
 
-		for(XxlJobLog log:list){
-			if(JobUtils.parentIdChildMap.containsKey(log.getId())){
-				int size= JobUtils.parentIdChildMap.get(log.getId()).size();
-				if(size>0){
-					log.setChildSummary(String.format("运行中:%d",size));
+		List<XxlJobLog> list =null;
+		int list_count=0;
+		List<Integer> parentIds=new ArrayList<>();
+		if(showChild){
+
+			list=xxlJobLogDao.pageList(0, 1000, jobGroup, jobId, triggerTimeStart, triggerTimeEnd, logStatus,Arrays.asList(parentId));
+			if(list.size()>0){
+				jobId=-1;
+				for(XxlJobLog log:list){
+					parentIds.add(log.getId());
+				}
+				list=null;
+			}
+
+		}else if(parentId!=null && parentId>0){
+			parentIds.add(parentId);
+		}
+		if(list==null){
+			list = xxlJobLogDao.pageList(start, length, jobGroup, jobId, triggerTimeStart, triggerTimeEnd, logStatus,parentIds);
+			list_count = xxlJobLogDao.pageListCount(start, length, jobGroup, jobId, triggerTimeStart, triggerTimeEnd, logStatus,parentIds);
+
+			for(XxlJobLog log:list){
+				if(JobUtils.parentIdChildMap.containsKey(log.getId())){
+					int size= JobUtils.parentIdChildMap.get(log.getId()).size();
+					if(size>0){
+						log.setChildSummary(String.format("运行中:%d",size));
+					}
 				}
 			}
 		}
+
+
 
 		// package result
 		Map<String, Object> maps = new HashMap<String, Object>();

@@ -48,6 +48,13 @@
 
                 <div class="col-xs-2">
                     <div class="input-group">
+                        <span class="input-group-addon">显示子任务</span>
+                        <input type="checkbox" id="showChild">
+                    </div>
+                </div>
+
+                <div class="col-xs-2">
+                    <div class="input-group">
                         <span class="input-group-addon">${I18n.joblog_status}</span>
                         <select class="form-control" id="logStatus" >
                             <option value="-1" >${I18n.joblog_status_all}</option>
@@ -55,6 +62,7 @@
                             <option value="2" >${I18n.joblog_status_fail}</option>
                             <option value="3" >${I18n.joblog_status_running}</option>
                             <#--<option value="4" >子任务运行中</option>-->
+                            <option value="5" >部分成功</option>
                         </select>
                     </div>
                 </div>
@@ -280,6 +288,8 @@
                     obj.logStatus = $('#logStatus').val();
                     obj.filterTime = $('#filterTime').val();
                     obj.start = d.start;
+                    obj.showChild=$('#showChild')[0].checked;
+                    console.log($('#showChild')[0].checked);
                     obj.length = d.length;
                     return obj;
                 }
@@ -364,8 +374,12 @@
                             html = '<span style="color: red">'+ I18n.joblog_handleCode_500 +'</span>';
                         } else if (data == 501) {
                             html = '<span style="color: red">'+ I18n.joblog_handleCode_501 +'</span>';
-                        } else if (data == 0) {
-                            html = '';
+                        } else if (data == 433) {
+                            html = '<span style="color: red">'+ "部分成功" +'</span>';
+                        } else if (data == 434) {
+                            html = '<span style="color: red">'+ "部分失败" +'</span>';
+                        }else if (data == 0) {
+                            html = '运行中';
                         }
                         return html;
                     }

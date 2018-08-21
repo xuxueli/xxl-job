@@ -9,6 +9,7 @@ import com.xxl.job.admin.dao.XxlJobRegistryDao;
 import com.xxl.job.admin.service.XxlJobService;
 import com.xxl.job.core.biz.AdminBiz;
 import com.xxl.job.core.biz.model.HandleCallbackParam;
+import com.xxl.job.core.biz.model.HandleCodeEnum;
 import com.xxl.job.core.biz.model.RegistryParam;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.handler.IJobHandler;
@@ -185,10 +186,13 @@ public class AdminBizImpl implements AdminBiz {
      */
     public void updateChildSummaryByParentId(Integer parentId) {
         List<Integer> list= JobUtils.parentIdChildMap.get(parentId);
+        if(list==null){
+            return;
+        }
         synchronized (list){
             int left=list.size();
 
-            List<XxlJobLog> logs=xxlJobLogDao.pageList(0,100,xxlJobLogDao.load(parentId).getJobGroup(),0,null,null,-2,parentId);
+            List<XxlJobLog> logs=xxlJobLogDao.pageList(0,100,xxlJobLogDao.load(parentId).getJobGroup(),0,null,null,-2,Arrays.asList(parentId));
 
             int callSuccess=0;
             int callFails=0;
@@ -218,6 +222,14 @@ public class AdminBizImpl implements AdminBiz {
             toUpdate.setId(parentId);
             if(callSuccess==0 && callFails==0 && triggerFails==0 && left==0){//如果子任务的都是正常的跳过
                 toUpdate.setHandleCode(666);
+            }else if(left==0){
+                if(callSuccess>0 && callFails>0){
+                    toUpdate.setHandleCode(HandleCodeEnum.CONTAINS_SUCCESS.getCode());
+                }else if(callSuccess>0){
+                    toUpdate.setHandleCode(200);
+                }else {
+                    toUpdate.setHandleCode(500);
+                }
             }
             String childSummary=String.format("调度[跳过:%d,失败:%d],执行[失败:%d,成功:%d,跳过:%d]",ignores,triggerFails,callFails,callSuccess,callSkips);
             if(left>0){
