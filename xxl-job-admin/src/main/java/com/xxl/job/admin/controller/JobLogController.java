@@ -101,7 +101,7 @@ public class JobLogController {
 				list=null;
 			}
 
-		}else if(parentId!=null && parentId>0){
+		}else if(parentId!=null){
 			parentIds.add(parentId);
 		}
 		if(list==null){

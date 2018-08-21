@@ -117,6 +117,7 @@ public class JobThread extends Thread{
 					// log filename, like "logPath/yyyy-MM-dd/9999.log"
 					String logFileName = XxlJobFileAppender.makeLogFileName(new Date(triggerParam.getLogDateTim()), triggerParam.getLogId());
 					XxlJobFileAppender.contextHolder.set(logFileName);
+					XxlJobFileAppender.logId.set(triggerParam.getLogId());
 					ShardingUtil.setShardingVo(new ShardingUtil.ShardingVO(triggerParam.getBroadcastIndex(), triggerParam.getBroadcastTotal()));
 
 					// execute

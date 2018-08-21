@@ -18,6 +18,9 @@ public class XxlJobFileAppender {
 	// for JobThread (support log for child thread of job handler)
 	//public static ThreadLocal<String> contextHolder = new ThreadLocal<String>();
 	public static final InheritableThreadLocal<String> contextHolder = new InheritableThreadLocal<String>();
+	public static final InheritableThreadLocal<String> subLogFile = new InheritableThreadLocal<String>();
+
+	public static final InheritableThreadLocal<Integer> logId=new InheritableThreadLocal<>();
 
 
 	/**

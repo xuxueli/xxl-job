@@ -24,6 +24,8 @@ public interface AdminBiz {
 
     ReturnT<List<XxlJobInfo>> queryJobs(Integer parentId,String executorHandler,String paramKeyword);
 
+    ReturnT<String> updateLog(XxlJobLog xxlJobLog);
+
     /**
      * 批量新增，主要用于新增某个父任务下的子任务
      * @param jobInfos

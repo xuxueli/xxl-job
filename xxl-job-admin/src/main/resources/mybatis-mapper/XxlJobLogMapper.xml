@@ -137,10 +137,15 @@
 	</select>
 
 	<update id="updateChildSummary">
-		update XXL_JOB_QRTZ_TRIGGER_LOG set child_summary=#{childSummary}
-		<if test="handleCode gt 0">
-			,handle_code=#{handleCode}
-		</if>
+		update XXL_JOB_QRTZ_TRIGGER_LOG set
+		<trim prefixOverrides=",">
+			<if test="childSummary!=null">
+				,child_summary=#{childSummary}
+			</if>
+			<if test="handleCode gt 0">
+				,handle_code=#{handleCode}
+			</if>
+		</trim>
 		where id=#{id}
 	</update>
 

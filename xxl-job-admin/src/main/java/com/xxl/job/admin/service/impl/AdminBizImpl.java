@@ -82,6 +82,15 @@ public class AdminBizImpl implements AdminBiz {
         return new ReturnT<>(xxlJobInfoDao.query(parentId,executorHandler,paramKeyword));
     }
 
+    public ReturnT<String> updateLog(XxlJobLog xxlJobLog){
+        xxlJobLogDao.updateChildSummary(xxlJobLog);
+        if(xxlJobLog.getHandleCode()>=0){
+            XxlJobLog log=xxlJobLogDao.load(xxlJobLog.getId());
+            updateChildSummaryByParentId(log.getParentId());
+        }
+        return ReturnT.SUCCESS;
+    }
+
     public ReturnT<String> updateJob(XxlJobInfo jobInfo){
         return xxlJobService.update(jobInfo);
     }
@@ -139,7 +148,7 @@ public class AdminBizImpl implements AdminBiz {
                 }
 
             }
-        } else if (IJobHandler.FAIL_RETRY.getCode() == handleCallbackParam.getExecuteResult().getCode()){
+        } else if (IJobHandler.FAIL_RETRY.getCode() == handleCallbackParam.getExecuteResult().getCode() || 0==handleCallbackParam.getExecuteResult().getCode()){
             ReturnT<String> retryTriggerResult = xxlJobService.triggerJob(log.getJobId());
             callbackMsg = "<br><br><span style=\"color:#F39C12;\" > >>>>>>>>>>>"+ I18nUtil.getString("jobconf_exe_fail_retry") +"<<<<<<<<<<< </span><br>";
 
@@ -163,6 +172,9 @@ public class AdminBizImpl implements AdminBiz {
         log.setHandleTime(new Date());
         log.setHandleCode(handleCallbackParam.getExecuteResult().getCode());
         log.setHandleMsg(handleMsg.toString());
+        if(log.getHandleCode()==0 && StringUtils.isNotEmpty(handleCallbackParam.getExecuteResult().getContent())){//如果返回结果为进行中
+            log.setChildSummary(handleCallbackParam.getExecuteResult().getContent());
+        }
         xxlJobLogDao.updateHandleInfo(log);
 
         updateChildSummary(log);
