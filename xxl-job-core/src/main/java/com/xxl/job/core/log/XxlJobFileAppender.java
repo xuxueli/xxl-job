@@ -107,6 +107,7 @@ public class XxlJobFileAppender {
 				logFile.createNewFile();
 			} catch (IOException e) {
 				logger.error(e.getMessage(), e);
+				logger.error(String.format("xxlJob文件失败[%s]:%s",logFileName,appendLog));
 				return;
 			}
 		}
