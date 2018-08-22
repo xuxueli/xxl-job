@@ -1,4 +1,6 @@
 function research(id){
+	// console.log(location.search)
+    // location.search=location.search+(location.search.indexOf('?')>0?'&':'?')+"parentId="+id;
     $('#parentIdParam').val(id)
     logTable.fnDraw();
 }

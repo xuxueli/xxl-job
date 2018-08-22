@@ -46,7 +46,7 @@
 	              	</div>
 	            </div>
 
-                <div class="col-xs-1">
+                <div class="col-xs-1" style="margin-top: 5px;margin-right: 10px;margin-left: -25px;">
                     <div class="input-group">
 
                         <input type="checkbox" id="showChild">
@@ -54,6 +54,7 @@
                     </div>
                 </div>
 
+                &nbsp; &nbsp;
                 <div class="col-xs-2">
                     <div class="input-group">
                         <span class="input-group-addon">${I18n.joblog_status}</span>
@@ -81,10 +82,10 @@
                 </div>
 
 	            <div class="col-xs-1">
-                    <button class="btn btn-block btn-nomal" id="clearLog">${I18n.joblog_clean}</button>
+                    <button class="btn btn-block btn-danger" id="clearLog">${I18n.joblog_clean}</button>
 	            </div>
                 <div class="col-xs-1">
-                    <button class="btn btn-block btn-nomal" id="stopBatch">终止执行</button>
+                    <button class="btn btn-block btn-danger" id="stopBatch">终止执行</button>
                 </div>
           	</div>
 			

@@ -207,6 +207,9 @@ public class JobLogController {
 			log.setHandleMsg( I18nUtil.getString("joblog_kill_log_byman")+":" + (runResult.getMsg()!=null?runResult.getMsg():""));
 			log.setHandleTime(new Date());
 			xxlJobLogDao.updateHandleInfo(log);
+			if(log.getParentId()!=null && log.getParentId()!=0){
+				XxlJobDynamicScheduler.adminBiz.updateChildSummaryByParentId(log.getParentId());
+			}
 			return new ReturnT<String>(runResult.getMsg());
 		} else {
 			return new ReturnT<String>(500, runResult.getMsg());
