@@ -128,8 +128,8 @@ $(function() {
                 "visible" : true,
                 "width":'10%',
                 "render": function ( data, type, row ) {
-                    childInfo=(row.childSummary.length>0?"&nbsp;<a href='javascript:research("+row.id+")'>"+row.childSummary+"</a>":"")
-                    return "<span style='white-space:nowrap'>"+childInfo+"</span>";
+                    return data?(data.length<100?"<span style='white-space:nowrap'><a href='javascript:research("+row.id+")'>"+row.childSummary+"</a></span>":'<a class="logTips" href="javascript:;" >'+ I18n.system_show +'<span style="display:none;">'+ data +'</span></a>')
+                        :I18n.system_empty;
                 }
             },
             { "data": 'jobGroup', "visible" : false},
