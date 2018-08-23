@@ -180,7 +180,7 @@ public class XxlJobExecutor implements ApplicationContextAware {
     // ---------------------- job thread repository ----------------------
     private static ConcurrentHashMap<Integer, JobThread> JobThreadRepository = new ConcurrentHashMap<Integer, JobThread>();
 
-    public static ExecutorService executorService= Executors.newCachedThreadPool();
+    public static ExecutorService executorService= Executors.newFixedThreadPool(30);
     public static JobThread registJobThread(int jobId, IJobHandler handler, String removeOldReason){
         JobThread newJobThread = new JobThread(jobId, handler);
         executorService.submit(newJobThread);
