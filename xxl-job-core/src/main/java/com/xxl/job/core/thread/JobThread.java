@@ -43,7 +43,7 @@ public class JobThread extends Thread{
 		this.handler = handler;
 		this.triggerQueue = new LinkedBlockingQueue<TriggerParam>();
 		this.triggerLogIdSet = new ConcurrentHashSet<Integer>();
-		this.setName("jobThread");
+		this.setName("jobThread-"+jobId+"-"+System.currentTimeMillis());
 	}
 	public IJobHandler getHandler() {
 		return handler;
