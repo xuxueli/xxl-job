@@ -22,6 +22,13 @@ public interface AdminBiz {
      */
     public ReturnT<String> addJob(XxlJobInfo jobInfo);
 
+    /**
+     * 批量更新
+     * @param jobInfos
+     * @return
+     */
+    ReturnT<String> updateJobs(List<XxlJobInfo> jobInfos);
+
     ReturnT<List<XxlJobInfo>> queryJobs(Integer parentId,String executorHandler,String paramKeyword);
 
     ReturnT<String> updateLog(XxlJobLog xxlJobLog);

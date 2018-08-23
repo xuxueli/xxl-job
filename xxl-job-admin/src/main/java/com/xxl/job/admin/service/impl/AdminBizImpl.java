@@ -75,6 +75,17 @@ public class AdminBizImpl implements AdminBiz {
         return ReturnT.SUCCESS;
     }
 
+    /**
+     * 批量更新
+     * @param jobInfos
+     * @return
+     */
+    public ReturnT<String> updateJobs(List<XxlJobInfo> jobInfos){
+        for(XxlJobInfo jobInfo:jobInfos){
+            xxlJobService.update(jobInfo);
+        }
+        return ReturnT.SUCCESS;
+    }
 
 
 

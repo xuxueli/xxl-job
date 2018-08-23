@@ -200,7 +200,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 		if (exists_jobInfo == null) {
 			return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("jobinfo_field_id")+I18nUtil.getString("system_not_found")) );
 		}
-		//String old_cron = exists_jobInfo.getJobCron();
+		String old_cron = exists_jobInfo.getJobCron();
 
 		exists_jobInfo.setJobCron(jobInfo.getJobCron());
 		exists_jobInfo.setJobDesc(jobInfo.getJobDesc());
@@ -214,15 +214,18 @@ public class XxlJobServiceImpl implements XxlJobService {
 		exists_jobInfo.setChildJobId(jobInfo.getChildJobId());
         xxlJobInfoDao.update(exists_jobInfo);
 
-		// fresh quartz
-		String qz_group = String.valueOf(exists_jobInfo.getJobGroup());
-		String qz_name = String.valueOf(exists_jobInfo.getId());
-        try {
-            boolean ret = XxlJobDynamicScheduler.rescheduleJob(qz_group, qz_name, exists_jobInfo.getJobCron());
-            return ret?ReturnT.SUCCESS:ReturnT.FAIL;
-        } catch (SchedulerException e) {
-            logger.error(e.getMessage(), e);
-        }
+        if(!StringUtils.equals(old_cron,exists_jobInfo.getJobCron())){
+			// fresh quartz
+			String qz_group = String.valueOf(exists_jobInfo.getJobGroup());
+			String qz_name = String.valueOf(exists_jobInfo.getId());
+			try {
+				boolean ret = XxlJobDynamicScheduler.rescheduleJob(qz_group, qz_name, exists_jobInfo.getJobCron());
+				return ret?ReturnT.SUCCESS:ReturnT.FAIL;
+			} catch (SchedulerException e) {
+				logger.error(e.getMessage(), e);
+			}
+		}
+
 
 		return ReturnT.FAIL;
 	}
