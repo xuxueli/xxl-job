@@ -205,6 +205,7 @@ public class XxlJobExecutor implements ApplicationContextAware {
 
         return newJobThread;
     }
+
     public static void removeJobThread(int jobId, String removeOldReason){
         JobThread oldJobThread = JobThreadRepository.remove(jobId);
         if (oldJobThread != null) {
