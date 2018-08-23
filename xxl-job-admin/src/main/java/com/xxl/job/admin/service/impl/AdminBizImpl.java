@@ -97,7 +97,7 @@ public class AdminBizImpl implements AdminBiz {
         xxlJobLogDao.updateChildSummary(xxlJobLog);
         if(xxlJobLog.getHandleCode()>0){
             XxlJobLog log=xxlJobLogDao.load(xxlJobLog.getId());
-            updateChildSummaryByParentId(log.getParentId());
+            updateChildSummaryByParentId(log.getParentId(),new ArrayList<Integer>());
         }
         return ReturnT.SUCCESS;
     }
@@ -212,10 +212,14 @@ public class AdminBizImpl implements AdminBiz {
         if(list==null){
             return;
         }
+        updateChildSummaryByParentId(parentId, list);
+    }
+
+    private void updateChildSummaryByParentId(Integer parentId, List<Integer> list) {
         synchronized (list){
             int left=list.size();
 
-            List<XxlJobLog> logs=xxlJobLogDao.pageList(0,100,xxlJobLogDao.load(parentId).getJobGroup(),0,null,null,-2,Arrays.asList(parentId));
+            List<XxlJobLog> logs=xxlJobLogDao.pageList(0,100,xxlJobLogDao.load(parentId).getJobGroup(),0,null,null,-2, Arrays.asList(parentId));
 
             int callSuccess=0;
             int callFails=0;
@@ -226,12 +230,12 @@ public class AdminBizImpl implements AdminBiz {
                 if(l.getTriggerCode()==200){
                     if(l.getHandleCode()==200){
                         callSuccess++;
-                    }else if(l.getHandleCode()==HandleCodeEnum.IGNORE.getCode()){
+                    }else if(l.getHandleCode()== HandleCodeEnum.IGNORE.getCode()){
                         callSkips++;
                     }else{
                         callFails++;
                     }
-                }else if(l.getTriggerCode()==ReturnT.IGNORE_CODE){
+                }else if(l.getTriggerCode()== ReturnT.IGNORE_CODE){
                     ignores++;
                 }else{
                     triggerFails++;
