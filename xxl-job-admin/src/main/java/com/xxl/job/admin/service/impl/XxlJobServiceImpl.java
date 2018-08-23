@@ -233,31 +233,51 @@ public class XxlJobServiceImpl implements XxlJobService {
 
 	@Override
 	public ReturnT<String> remove(int id) {
-		XxlJobInfo xxlJobInfo = xxlJobInfoDao.loadById(id);
-        String group = String.valueOf(xxlJobInfo.getJobGroup());
-        String name = String.valueOf(xxlJobInfo.getId());
+		if (removeOnly(id)) {
+			XxlJobInfo xxlJobInfo = xxlJobInfoDao.loadById(id);
+			if (xxlJobInfo.getParentId() != null && xxlJobInfo.getParentId() != 0) {
+				XxlJobInfo parentJob = xxlJobInfoDao.loadById(xxlJobInfo.getParentId());
 
-		try {
-			XxlJobDynamicScheduler.removeJob(name, group);
-			xxlJobInfoDao.delete(id);
-			if(xxlJobInfo.getParentId()!=null && xxlJobInfo.getParentId()!=0){
-				XxlJobInfo parentJob=xxlJobInfoDao.loadById(xxlJobInfo.getParentId());
-
-				if(StringUtils.isNotEmpty(parentJob.getChildJobId())){
-					Pattern p=Pattern.compile(String.format(",%s,|,%s$|^%s,|^%s$",xxlJobInfo.getId(),xxlJobInfo.getId(),xxlJobInfo.getId(),xxlJobInfo.getId()));
-					Matcher matcher=p.matcher(parentJob.getChildJobId());
-					if(matcher.find()){
+				if (StringUtils.isNotEmpty(parentJob.getChildJobId())) {
+					Pattern p = Pattern.compile(String.format(",%s,|,%s$|^%s,|^%s$", xxlJobInfo.getId(), xxlJobInfo.getId(), xxlJobInfo.getId(), xxlJobInfo.getId()));
+					Matcher matcher = p.matcher(parentJob.getChildJobId());
+					if (matcher.find()) {
 						updateChildIds(parentJob.getId());
 					}
 				}
 			}
+			return ReturnT.SUCCESS;
+		}
+		return ReturnT.FAIL;
+	}
+
+	/**
+	 * 仅仅移除，不更新上级的子任务信息
+	 * @param id
+	 * @return
+	 */
+	public boolean removeOnly(int id) {
+		XxlJobInfo xxlJobInfo = xxlJobInfoDao.loadById(id);
+		try {
+			String group = String.valueOf(xxlJobInfo.getJobGroup());
+			String name = String.valueOf(xxlJobInfo.getId());
+			XxlJobDynamicScheduler.removeJob(name, group);
+
+			if(StringUtils.isNotEmpty(xxlJobInfo.getChildJobId())) {
+				String[] childJobIds = xxlJobInfo.getChildJobId().split(",");
+				for (String childJobId : childJobIds) {
+					Integer childJobIdI = Integer.parseInt(childJobId);
+					removeOnly(childJobIdI);
+				}
+			}
+			xxlJobInfoDao.delete(id);
 			xxlJobLogDao.delete(id);
 			xxlJobLogGlueDao.deleteByJobId(id);
-			return ReturnT.SUCCESS;
+			return true;
 		} catch (SchedulerException e) {
 			logger.error(e.getMessage(), e);
 		}
-		return ReturnT.FAIL;
+		return false;
 	}
 
 	/**
@@ -415,6 +435,25 @@ public class XxlJobServiceImpl implements XxlJobService {
 		LocalCacheUtil.set(cacheKey, result, 60*1000);     // cache 60s
 
 		return new ReturnT<Map<String, Object>>(result);
+	}
+
+	@Override
+	public ReturnT<String> copy(Integer id) {
+		XxlJobInfo xxlJobInfo=xxlJobInfoDao.loadById(id);
+		ReturnT<String> result=add(xxlJobInfo);
+		if(result.getCode()!=ReturnT.SUCCESS_CODE){
+			return result;
+		}
+		logger.debug(String.format("复制前%d,%d",id,xxlJobInfo.getId()));
+		if(StringUtils.isNotEmpty(xxlJobInfo.getChildJobId())){
+			String[] childJobIds=xxlJobInfo.getChildJobId().split(",");
+			for(String childJobId:childJobIds){
+				Integer childJobIdI=Integer.parseInt(childJobId);
+				XxlJobInfo childJob=xxlJobInfoDao.loadById(childJobIdI);
+				add(childJob);
+			}
+		}
+		return ReturnT.SUCCESS;
 	}
 
 }

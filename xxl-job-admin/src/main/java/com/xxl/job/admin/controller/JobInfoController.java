@@ -65,6 +65,12 @@ public class JobInfoController {
 	public ReturnT<String> add(XxlJobInfo jobInfo) {
 		return xxlJobService.add(jobInfo);
 	}
+
+	@RequestMapping("/copy")
+	@ResponseBody
+	public ReturnT<String> copy(Integer id){
+		return xxlJobService.copy(id);
+	}
 	
 	@RequestMapping("/update")
 	@ResponseBody
