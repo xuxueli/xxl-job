@@ -223,51 +223,54 @@ public class XxlJobServiceImpl implements XxlJobService {
 				return ret?ReturnT.SUCCESS:ReturnT.FAIL;
 			} catch (SchedulerException e) {
 				logger.error(e.getMessage(), e);
+				return ReturnT.FAIL;
 			}
 		}
 
 
-		return ReturnT.FAIL;
+		return ReturnT.SUCCESS;
 	}
 
 
 	@Override
 	public ReturnT<String> remove(int id) {
-		if (removeOnly(id)) {
-			XxlJobInfo xxlJobInfo = xxlJobInfoDao.loadById(id);
-			if (xxlJobInfo.getParentId() != null && xxlJobInfo.getParentId() != 0) {
-				XxlJobInfo parentJob = xxlJobInfoDao.loadById(xxlJobInfo.getParentId());
-
-				if (StringUtils.isNotEmpty(parentJob.getChildJobId())) {
-					Pattern p = Pattern.compile(String.format(",%s,|,%s$|^%s,|^%s$", xxlJobInfo.getId(), xxlJobInfo.getId(), xxlJobInfo.getId(), xxlJobInfo.getId()));
-					Matcher matcher = p.matcher(parentJob.getChildJobId());
-					if (matcher.find()) {
-						updateChildIds(parentJob.getId());
-					}
-				}
-			}
+		if (removeCur(id,true)) {
 			return ReturnT.SUCCESS;
 		}
 		return ReturnT.FAIL;
 	}
 
 	/**
-	 * 仅仅移除，不更新上级的子任务信息
+	 * 移除
 	 * @param id
 	 * @return
 	 */
-	public boolean removeOnly(int id) {
+	public boolean removeCur(int id, Boolean updateParent) {
 		XxlJobInfo xxlJobInfo = xxlJobInfoDao.loadById(id);
 		try {
 			String group = String.valueOf(xxlJobInfo.getJobGroup());
 			String name = String.valueOf(xxlJobInfo.getId());
 			XxlJobDynamicScheduler.removeJob(name, group);
 
+			if(updateParent){
+				if (xxlJobInfo.getParentId() != null && xxlJobInfo.getParentId() != 0) {
+					XxlJobInfo parentJob = xxlJobInfoDao.loadById(xxlJobInfo.getParentId());
+
+					if (StringUtils.isNotEmpty(parentJob.getChildJobId())) {
+						Pattern p = Pattern.compile(String.format(",%s,|,%s$|^%s,|^%s$", xxlJobInfo.getId(), xxlJobInfo.getId(), xxlJobInfo.getId(), xxlJobInfo.getId()));
+						Matcher matcher = p.matcher(parentJob.getChildJobId());
+						if (matcher.find()) {
+							updateChildIds(parentJob.getId());
+						}
+					}
+				}
+			}
+
 			if(StringUtils.isNotEmpty(xxlJobInfo.getChildJobId())) {
 				String[] childJobIds = xxlJobInfo.getChildJobId().split(",");
 				for (String childJobId : childJobIds) {
 					Integer childJobIdI = Integer.parseInt(childJobId);
-					removeOnly(childJobIdI);
+					removeCur(childJobIdI,false);
 				}
 			}
 			xxlJobInfoDao.delete(id);
@@ -450,6 +453,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 			for(String childJobId:childJobIds){
 				Integer childJobIdI=Integer.parseInt(childJobId);
 				XxlJobInfo childJob=xxlJobInfoDao.loadById(childJobIdI);
+				childJob.setParentId(xxlJobInfo.getId());
 				add(childJob);
 			}
 		}

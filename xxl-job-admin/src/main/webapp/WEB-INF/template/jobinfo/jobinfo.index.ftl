@@ -508,6 +508,7 @@ process.exit(0)
                                     '<button class="btn btn-primary btn-xs" type="job_del" type="button" onclick="javascript:window.open(\'' + logUrl + '\')" >'+ I18n.jobinfo_opt_log +'</button><br>  '+
                                     '<button class="btn btn-warning btn-xs update" type="button">'+ I18n.system_opt_edit +'</button>  '+
                                     codeBtn +
+                                    '<button class="btn btn-warning btn-xs job_operate" _type="job_copy">复制</button>  '+
                                     '<button class="btn btn-danger btn-xs job_operate" _type="job_del" type="button">'+ I18n.system_opt_del +'</button>  '+
                                     '</p>';
 
@@ -580,6 +581,9 @@ process.exit(0)
             } else if ("job_trigger" == type) {
                 typeName = I18n.jobinfo_opt_run ;
                 url = base_url + "/jobinfo/trigger";
+            } else if ("job_copy" == type) {
+                typeName = "复制" ;
+                url = base_url + "/jobinfo/copy";
             } else {
                 return;
             }
