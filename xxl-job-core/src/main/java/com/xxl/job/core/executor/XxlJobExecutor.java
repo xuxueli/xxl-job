@@ -193,8 +193,8 @@ public class XxlJobExecutor implements ApplicationContextAware {
     public static ExecutorService executorService= null;
     public static JobThread registJobThread(int jobId, IJobHandler handler, String removeOldReason){
         JobThread newJobThread = new JobThread(jobId, handler);
-        executorService.submit(newJobThread);
-       // newJobThread.start();
+        //executorService.submit(newJobThread);
+        newJobThread.start();
         logger.info(">>>>>>>>>>> xxl-job regist JobThread success, jobId:{}, handler:{}", new Object[]{jobId, handler});
 
         JobThread oldJobThread = JobThreadRepository.put(jobId, newJobThread);	// putIfAbsent | oh my god, map's put method return the old value!!!
