@@ -1,7 +1,10 @@
 package com.xxl.job.admin.controller.interceptor;
 
 import com.xxl.job.admin.core.schedule.XxlJobDynamicScheduler;
+import com.xxl.job.admin.service.impl.AdminBizImpl;
 import com.xxl.job.admin.service.impl.JobUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -14,6 +17,10 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 public class Job4Dispose implements InitializingBean,DisposableBean {
+
+
+    private static Logger logger = LoggerFactory.getLogger(Job4Dispose.class);
+
 
     @Resource
     RedisTemplate<String, ConcurrentHashMap<Integer,List<Integer>>> redisTemplate;
@@ -35,6 +42,8 @@ public class Job4Dispose implements InitializingBean,DisposableBean {
             if(left==0){
                 continue;
             }
+            logger.info(String.format("更新日志结果:%d[updateLeftChildSummarys]",entry.getKey()));
+
             XxlJobDynamicScheduler.adminBiz.updateChildSummaryByParentId(entry.getKey());
         }
         flushToCache();

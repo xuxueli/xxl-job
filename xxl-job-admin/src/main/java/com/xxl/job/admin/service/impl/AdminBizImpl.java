@@ -94,6 +94,7 @@ public class AdminBizImpl implements AdminBiz {
     }
 
     public ReturnT<String> updateLog(XxlJobLog xxlJobLog){
+        logger.info(String.format("更新日志结果:%d,%d[updateLog]",xxlJobLog.getId(),xxlJobLog.getHandleCode()));
         xxlJobLogDao.updateChildSummary(xxlJobLog);
         if(xxlJobLog.getHandleCode()>0){
             XxlJobLog log=xxlJobLogDao.load(xxlJobLog.getId());
@@ -187,7 +188,8 @@ public class AdminBizImpl implements AdminBiz {
             log.setChildSummary(handleCallbackParam.getExecuteResult().getContent());
         }
         xxlJobLogDao.updateHandleInfo(log);
-
+        logger.info(String.format("更新日志结果:%d,%d[callback本身]",log.getId(),log.getHandleCode()));
+        logger.info(String.format("更新日志结果:%d[callback]",log.getParentId()));
         updateChildSummary(log);
 
         return ReturnT.SUCCESS;
@@ -264,6 +266,8 @@ public class AdminBizImpl implements AdminBiz {
             }
             toUpdate.setChildSummary(childSummary);
             xxlJobLogDao.updateChildSummary(toUpdate);
+
+            logger.info(String.format("更新日志结果:%d,%d[updateChildSummaryByParentId],%s",toUpdate.getId(),toUpdate.getHandleCode(),list));
 
             if(left==0){
                 JobUtils.parentIdChildMap.remove(parentId);

@@ -191,6 +191,7 @@ public class XxlJobTrigger {
             jobLog.setTriggerMsg(triggerMsgSb.toString());
             XxlJobDynamicScheduler.xxlJobLogDao.updateTriggerInfo(jobLog);
             if(jobLog.getTriggerCode()!=200){
+                logger.info(String.format("更新日志结果:%d[trigger]",jobLog.getParentId()));
                 XxlJobDynamicScheduler.adminBiz.updateChildSummary(jobLog);
             }
 

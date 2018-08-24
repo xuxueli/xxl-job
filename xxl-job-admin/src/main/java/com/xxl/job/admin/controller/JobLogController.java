@@ -208,6 +208,7 @@ public class JobLogController {
 			log.setHandleTime(new Date());
 			xxlJobLogDao.updateHandleInfo(log);
 			if(log.getParentId()!=null && log.getParentId()!=0){
+				logger.info(String.format("更新日志结果:%d[logKill]",log.getParentId()));
 				XxlJobDynamicScheduler.adminBiz.updateChildSummaryByParentId(log.getParentId());
 			}
 			return new ReturnT<String>(runResult.getMsg());
