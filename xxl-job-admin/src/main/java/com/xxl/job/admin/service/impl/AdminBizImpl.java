@@ -110,6 +110,7 @@ public class AdminBizImpl implements AdminBiz {
 
     @Override
     public ReturnT<String> callback(List<HandleCallbackParam> callbackParamList) {
+        logger.info(String.format("callback receive:%s",callbackParamList));
         for (HandleCallbackParam handleCallbackParam: callbackParamList) {
             ReturnT<String> callbackResult = callback(handleCallbackParam);
             logger.info(">>>>>>>>> JobApiController.callback {}, handleCallbackParam={}, callbackResult={}",
@@ -120,6 +121,7 @@ public class AdminBizImpl implements AdminBiz {
     }
 
     private ReturnT<String> callback(HandleCallbackParam handleCallbackParam) {
+        logger.info(String.format("%d callback前1,%s",handleCallbackParam.getLogId(),handleCallbackParam));
         // valid log item
         XxlJobLog log = xxlJobLogDao.load(handleCallbackParam.getLogId());
         if (log == null) {
