@@ -134,7 +134,8 @@ public class AdminBizImpl implements AdminBiz {
         logger.info(String.format("%d callback前%s",log.getId(),handleCallbackParam));
         // trigger success, to trigger child job
         String callbackMsg = null;
-        if (IJobHandler.SUCCESS.getCode() == handleCallbackParam.getExecuteResult().getCode()) {
+        int handleCode = handleCallbackParam.getExecuteResult().getCode();
+        if (IJobHandler.SUCCESS.getCode() == handleCode) {
             XxlJobInfo xxlJobInfo = xxlJobInfoDao.loadById(log.getJobId());
             if (xxlJobInfo!=null && StringUtils.isNotBlank(xxlJobInfo.getChildJobId())) {
                 callbackMsg = "<br><br><span style=\"color:#00c0ef;\" > >>>>>>>>>>>"+ I18nUtil.getString("jobconf_trigger_child_run") +"<<<<<<<<<<< </span><br>";
@@ -144,7 +145,7 @@ public class AdminBizImpl implements AdminBiz {
                 for (int i = 0; i < childJobIds.length; i++) {
                     int childJobId = (StringUtils.isNotBlank(childJobIds[i]) && StringUtils.isNumeric(childJobIds[i]))?Integer.valueOf(childJobIds[i]):-1;
                     if (childJobId > 0) {
-                        handleCallbackParam.getExecuteResult().setCode(0);
+                        handleCode=0;
                         JobUtils.putParentId(childJobId,log.getId());
                         ReturnT<String> triggerChildResult = xxlJobService.triggerJob(childJobId);
 
@@ -164,7 +165,7 @@ public class AdminBizImpl implements AdminBiz {
                 }
 
             }
-        } else if (IJobHandler.FAIL_RETRY.getCode() == handleCallbackParam.getExecuteResult().getCode()){
+        } else if (IJobHandler.FAIL_RETRY.getCode() == handleCode){
             ReturnT<String> retryTriggerResult = xxlJobService.triggerJob(log.getJobId());
             callbackMsg = "<br><br><span style=\"color:#F39C12;\" > >>>>>>>>>>>"+ I18nUtil.getString("jobconf_exe_fail_retry") +"<<<<<<<<<<< </span><br>";
 
@@ -190,7 +191,7 @@ public class AdminBizImpl implements AdminBiz {
         log.setHandleTime(new Date());
         logger.info(String.format("%d callback后2%s",log.getId(),handleCallbackParam));
 
-        log.setHandleCode(handleCallbackParam.getExecuteResult().getCode());
+        log.setHandleCode(handleCode);
         log.setHandleMsg(handleMsg.toString());
         if(log.getHandleCode()==0 && StringUtils.isNotEmpty(handleCallbackParam.getExecuteResult().getContent())){//如果返回结果为进行中
             log.setChildSummary(handleCallbackParam.getExecuteResult().getContent());
