@@ -129,6 +129,7 @@ public class AdminBizImpl implements AdminBiz {
             return new ReturnT<String>(ReturnT.FAIL_CODE, "log repeate callback.");     // avoid repeat callback, trigger child job etc
         }
 
+        logger.info(String.format("%d callback前%s",log.getId(),handleCallbackParam));
         // trigger success, to trigger child job
         String callbackMsg = null;
         if (IJobHandler.SUCCESS.getCode() == handleCallbackParam.getExecuteResult().getCode()) {
@@ -136,6 +137,7 @@ public class AdminBizImpl implements AdminBiz {
             if (xxlJobInfo!=null && StringUtils.isNotBlank(xxlJobInfo.getChildJobId())) {
                 callbackMsg = "<br><br><span style=\"color:#00c0ef;\" > >>>>>>>>>>>"+ I18nUtil.getString("jobconf_trigger_child_run") +"<<<<<<<<<<< </span><br>";
 
+                logger.info(String.format("%d触发的子任务:%s",handleCallbackParam.getLogId(),xxlJobInfo.getChildJobId()));
                 String[] childJobIds = xxlJobInfo.getChildJobId().split(",");
                 for (int i = 0; i < childJobIds.length; i++) {
                     int childJobId = (StringUtils.isNotBlank(childJobIds[i]) && StringUtils.isNumeric(childJobIds[i]))?Integer.valueOf(childJobIds[i]):-1;
@@ -168,6 +170,8 @@ public class AdminBizImpl implements AdminBiz {
                     (retryTriggerResult.getCode()==ReturnT.SUCCESS_CODE?I18nUtil.getString("system_success"):I18nUtil.getString("system_fail")), retryTriggerResult.getMsg());
         }
 
+        logger.info(String.format("%d callback后1%s",log.getId(),handleCallbackParam));
+
         // handle msg
         StringBuffer handleMsg = new StringBuffer();
         if (log.getHandleMsg()!=null) {
@@ -182,6 +186,8 @@ public class AdminBizImpl implements AdminBiz {
 
         // success, save log
         log.setHandleTime(new Date());
+        logger.info(String.format("%d callback后2%s",log.getId(),handleCallbackParam));
+
         log.setHandleCode(handleCallbackParam.getExecuteResult().getCode());
         log.setHandleMsg(handleMsg.toString());
         if(log.getHandleCode()==0 && StringUtils.isNotEmpty(handleCallbackParam.getExecuteResult().getContent())){//如果返回结果为进行中
