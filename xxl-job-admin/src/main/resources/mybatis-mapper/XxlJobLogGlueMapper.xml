@@ -58,7 +58,12 @@
 				SELECT id FROM XXL_JOB_QRTZ_TRIGGER_LOGGLUE
 				WHERE `job_id` = #{jobId}
 				ORDER BY update_time desc
-				LIMIT 0, #{limit}
+				<if test="_databaseId == 'mysql'">
+					LIMIT 0, #{limit}
+				</if>
+				<if test="_databaseId == 'postgresql'">
+					LIMIT #{limit} OFFSET 0
+				</if>
 			) t1
 		) AND `job_id` = #{jobId}
 	</delete>
