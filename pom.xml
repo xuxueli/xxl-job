@@ -38,6 +38,7 @@
 
 		<c3p0.version>0.9.5.2</c3p0.version>
 		<mysql-connector-java.version>5.1.45</mysql-connector-java.version>
+		<postgresql.version>42.2.4</postgresql.version>
 		<mybatis-spring.version>1.3.1</mybatis-spring.version>
 		<mybatis.version>3.4.5</mybatis.version>
 

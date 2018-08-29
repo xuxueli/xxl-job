@@ -108,6 +108,13 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<version>${mysql-connector-java.version}</version>
 		</dependency>
+		<!-- postgresql-connector -->
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>${postgresql.version}</version>
+		</dependency>
+
 		<!-- mybatis-spring -->
 		<dependency>
 			<groupId>org.mybatis</groupId>
