@@ -35,18 +35,35 @@
 	</select>
 
 	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobGroup" useGeneratedKeys="true" keyProperty="id" >
-		INSERT INTO XXL_JOB_QRTZ_TRIGGER_GROUP ( app_name, title, order, address_type, address_list)
-		values ( #{appName}, #{title}, #{order}, #{addressType}, #{addressList});
+		<if test="_databaseId == 'mysql'">
+			INSERT INTO XXL_JOB_QRTZ_TRIGGER_GROUP ( app_name, title, XXL_JOB_QRTZ_TRIGGER_GROUP.order, address_type, address_list)
+			values ( #{appName}, #{title}, #{order}, #{addressType}, #{addressList});
+		</if>
+		<if test="_databaseId == 'postgresql'">
+			INSERT INTO XXL_JOB_QRTZ_TRIGGER_GROUP ( app_name, title, "order", address_type, address_list)
+			values ( #{appName}, #{title}, #{order}, #{addressType}, #{addressList});
+		</if>
 	</insert>
 
 	<update id="update" parameterType="com.xxl.job.admin.core.model.XxlJobGroup" >
-		UPDATE XXL_JOB_QRTZ_TRIGGER_GROUP
-		SET app_name = #{appName},
+		<if test="_databaseId == 'mysql'">
+			UPDATE XXL_JOB_QRTZ_TRIGGER_GROUP
+			SET app_name = #{appName},
+				title = #{title},
+				XXL_JOB_QRTZ_TRIGGER_GROUP.order = #{order},
+				address_type = #{addressType},
+				address_list = #{addressList}
+			WHERE id = #{id}
+		</if>
+		<if test="_databaseId == 'postgresql'">
+			UPDATE XXL_JOB_QRTZ_TRIGGER_GROUP
+			SET app_name = #{appName},
 			title = #{title},
-			order = #{order},
+			"order" = #{order},
 			address_type = #{addressType},
 			address_list = #{addressList}
-		WHERE id = #{id}
+			WHERE id = #{id}
+		</if>
 	</update>
 
 	<delete id="remove" parameterType="java.lang.Integer" >
