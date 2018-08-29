@@ -73,10 +73,10 @@
 		</trim>
 		ORDER BY id DESC
 		<if test="_databaseId == 'mysql'">
-		LIMIT #{offset}, #{pagesize}
+			LIMIT #{offset}, #{pagesize}
 		</if>
 		<if test="_databaseId == 'postgresql'">
-		LIMIT #{pagesize} OFFSET #{offset}
+			LIMIT #{pagesize} OFFSET #{offset}
 		</if>
 	</select>
 	
@@ -209,7 +209,12 @@
 							</if>
 						</trim>
 						ORDER BY t.trigger_time desc
-						LIMIT 0, #{clearBeforeNum}
+						<if test="_databaseId == 'mysql'">
+							LIMIT 0, #{clearBeforeNum}
+						</if>
+						<if test="_databaseId == 'postgresql'">
+						  	LIMIT #{clearBeforeNum} OFFSET 0
+						</if>
 					) t1
 				)
 			</if>
