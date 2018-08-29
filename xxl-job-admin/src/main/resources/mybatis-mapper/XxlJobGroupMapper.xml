@@ -35,17 +35,17 @@
 	</select>
 
 	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobGroup" useGeneratedKeys="true" keyProperty="id" >
-		INSERT INTO XXL_JOB_QRTZ_TRIGGER_GROUP ( `app_name`, `title`, `order`, `address_type`, `address_list`)
+		INSERT INTO XXL_JOB_QRTZ_TRIGGER_GROUP ( app_name, title, order, address_type, address_list)
 		values ( #{appName}, #{title}, #{order}, #{addressType}, #{addressList});
 	</insert>
 
 	<update id="update" parameterType="com.xxl.job.admin.core.model.XxlJobGroup" >
 		UPDATE XXL_JOB_QRTZ_TRIGGER_GROUP
-		SET `app_name` = #{appName},
-			`title` = #{title},
-			`order` = #{order},
-			`address_type` = #{addressType},
-			`address_list` = #{addressList}
+		SET app_name = #{appName},
+			title = #{title},
+			order = #{order},
+			address_type = #{addressType},
+			address_list = #{addressList}
 		WHERE id = #{id}
 	</update>
 
