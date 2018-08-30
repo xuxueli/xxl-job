@@ -26,7 +26,7 @@
 			DATE_ADD(NOW(),INTERVAL -#{timeout} SECOND)
 		</if>
 		<if test="_databaseId == 'postgresql'">
-			((select NOW())-INTERVAL &apos; #{timeout} SEC&apos;)
+			((select NOW())-INTERVAL &apos;  ${timeout} SEC &apos; )
 		</if>
 	</delete>
 
@@ -38,7 +38,7 @@
 			DATE_ADD(NOW(),INTERVAL -#{timeout} SECOND)
 		</if>
 		<if test="_databaseId == 'postgresql'">
-			((select NOW())-INTERVAL &apos;#{timeout} SEC&apos;)
+			((select NOW())-INTERVAL  &apos;  ${timeout} SEC &apos; )
 		</if>
 	</select>
 
