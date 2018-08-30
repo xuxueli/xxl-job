@@ -36,8 +36,14 @@
 			#{glueType},
 			#{glueSource},
 			#{glueRemark},
-			now(),
-			now()
+			<if test="_databaseId == 'mysql'">
+				NOW(),
+				NOW(),
+			</if>
+			<if test="_databaseId == 'postgresql'">
+				(select NOW()),
+				(select NOW()),
+			</if>
 		);
 		<!--<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
 			SELECT LAST_INSERT_ID() 

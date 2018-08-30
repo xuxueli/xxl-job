@@ -21,13 +21,25 @@
 	
 	<delete id="removeDead" parameterType="java.lang.Integer" >
 		DELETE FROM XXL_JOB_QRTZ_TRIGGER_REGISTRY
-		WHERE update_time <![CDATA[ < ]]> DATE_ADD(NOW(),INTERVAL -#{timeout} SECOND)
+		WHERE update_time <![CDATA[ < ]]>
+		<if test="_databaseId == 'mysql'">
+			DATE_ADD(NOW(),INTERVAL -#{timeout} SECOND)
+		</if>
+		<if test="_databaseId == 'postgresql'">
+			((select NOW())-INTERVAL &apos; #{timeout} SEC&apos;)
+		</if>
 	</delete>
 
 	<select id="findAll" parameterType="java.lang.Integer" resultMap="XxlJobRegistry">
 		SELECT <include refid="Base_Column_List" />
 		FROM XXL_JOB_QRTZ_TRIGGER_REGISTRY AS t
-		WHERE t.update_time <![CDATA[ > ]]> DATE_ADD(NOW(),INTERVAL -#{timeout} SECOND)
+		WHERE t.update_time <![CDATA[ > ]]>
+		<if test="_databaseId == 'mysql'">
+			DATE_ADD(NOW(),INTERVAL -#{timeout} SECOND)
+		</if>
+		<if test="_databaseId == 'postgresql'">
+			((select NOW())-INTERVAL &apos;#{timeout} SEC&apos;)
+		</if>
 	</select>
 
     <update id="registryUpdate" >
