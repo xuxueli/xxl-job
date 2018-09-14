@@ -150,7 +150,7 @@ public class JobFailMonitorHelper {
 			"         <td width=\"10%\" >"+ I18nUtil.getString("jobconf_monitor_alarm_title") +"</td>\n" +
 			"         <td width=\"40%\" >"+ I18nUtil.getString("jobconf_monitor_alarm_content") +"</td>\n" +
 			"      </tr>\n" +
-			"   <thead/>\n" +
+			"   </thead>\n" +
 			"   <tbody>\n" +
 			"      <tr>\n" +
 			"         <td>{0}</td>\n" +
@@ -159,7 +159,7 @@ public class JobFailMonitorHelper {
 			"         <td>"+ I18nUtil.getString("jobconf_monitor_alarm_type") +"</td>\n" +
 			"         <td>{3}</td>\n" +
 			"      </tr>\n" +
-			"   <tbody>\n" +
+			"   </tbody>\n" +
 			"</table>";
 
 	/**
