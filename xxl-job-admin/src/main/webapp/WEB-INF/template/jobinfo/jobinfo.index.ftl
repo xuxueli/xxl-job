@@ -268,7 +268,28 @@ console.log("${I18n.jobinfo_shard_total}: " + arguments[4])
 
 console.log("Good bye!")
 process.exit(0)
-</textarea>		
+</textarea>
+<textarea class="glueSource_powershell" style="display:none;" >
+Write-Host "xxl-job: hello powershell"
+
+if($args.Count -eq 3) {
+	$executorparam = $args[0]
+	$shard_index = $args[1]
+	$shard_total = $args[2]
+} Else {
+	$executorparam = ""
+	$shard_index = $args[0]
+	$shard_total = $args[1]
+}
+
+Write-Host "${I18n.jobinfo_script_location}: " $MyInvocation.MyCommand.Definition
+Write-Host "${I18n.jobinfo_field_executorparam}: " $executorparam
+Write-Host "${I18n.jobinfo_shard_index}: " $shard_index
+Write-Host "${I18n.jobinfo_shard_total}: " $shard_total
+
+Write-Host "Good bye!"
+exit 0
+</textarea>
 				</form>
          	</div>
 		</div>
