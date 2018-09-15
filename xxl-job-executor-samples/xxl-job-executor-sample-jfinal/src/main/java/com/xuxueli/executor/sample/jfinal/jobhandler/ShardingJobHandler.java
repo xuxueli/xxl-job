@@ -5,7 +5,6 @@ import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.log.XxlJobLogger;
 import com.xxl.job.core.util.ShardingUtil;
 
-
 /**
  * 分片广播任务
  *
