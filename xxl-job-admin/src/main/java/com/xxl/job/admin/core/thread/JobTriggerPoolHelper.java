@@ -1,5 +1,6 @@
 package com.xxl.job.admin.core.thread;
 
+import com.xxl.job.admin.core.trigger.TriggerTypeEnum;
 import com.xxl.job.admin.core.trigger.XxlJobTrigger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,11 +29,11 @@ public class JobTriggerPoolHelper {
             new ThreadPoolExecutor.CallerRunsPolicy());
 
 
-    public void addTrigger(final int jobId, final int failRetryCount, final String type){
+    public void addTrigger(final int jobId, final int failRetryCount, final TriggerTypeEnum triggerType){
         triggerPool.execute(new Runnable() {
             @Override
             public void run() {
-                XxlJobTrigger.trigger(jobId, failRetryCount, type);
+                XxlJobTrigger.trigger(jobId, failRetryCount, triggerType);
             }
         });
     }
@@ -55,8 +56,8 @@ public class JobTriggerPoolHelper {
      * 			<0: use param from job info config
      *
      */
-    public static void trigger(int jobId, int failRetryCount, String type) {
-        helper.addTrigger(jobId, failRetryCount, type);
+    public static void trigger(int jobId, int failRetryCount, TriggerTypeEnum triggerType) {
+        helper.addTrigger(jobId, failRetryCount, triggerType);
     }
 
     public static void toStop(){

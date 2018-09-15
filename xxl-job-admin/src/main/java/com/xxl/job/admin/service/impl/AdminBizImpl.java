@@ -3,6 +3,7 @@ package com.xxl.job.admin.service.impl;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.admin.core.thread.JobTriggerPoolHelper;
+import com.xxl.job.admin.core.trigger.TriggerTypeEnum;
 import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.admin.dao.XxlJobInfoDao;
 import com.xxl.job.admin.dao.XxlJobLogDao;
@@ -70,7 +71,7 @@ public class AdminBizImpl implements AdminBiz {
                     int childJobId = (StringUtils.isNotBlank(childJobIds[i]) && StringUtils.isNumeric(childJobIds[i]))?Integer.valueOf(childJobIds[i]):-1;
                     if (childJobId > 0) {
 
-                        JobTriggerPoolHelper.trigger(childJobId, 0, I18nUtil.getString("jobconf_trigger_type_parent"));
+                        JobTriggerPoolHelper.trigger(childJobId, 0, TriggerTypeEnum.PARENT);
                         ReturnT<String> triggerChildResult = ReturnT.SUCCESS;
 
                         // add msg
@@ -129,7 +130,7 @@ public class AdminBizImpl implements AdminBiz {
 
     @Override
     public ReturnT<String> triggerJob(int jobId) {
-        JobTriggerPoolHelper.trigger(jobId, -1, I18nUtil.getString("jobconf_trigger_type_api"));
+        JobTriggerPoolHelper.trigger(jobId, -1, TriggerTypeEnum.API);
         return ReturnT.SUCCESS;
     }
 

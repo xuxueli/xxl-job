@@ -35,7 +35,7 @@ public class XxlJobTrigger {
      * 			<0: use param from job info config
      *
      */
-    public static void trigger(int jobId, int failRetryCount, String type) {
+    public static void trigger(int jobId, int failRetryCount, TriggerTypeEnum triggerType) {
 
         // load data
         XxlJobInfo jobInfo = XxlJobDynamicScheduler.xxlJobInfoDao.loadById(jobId);              // job info
@@ -75,7 +75,7 @@ public class XxlJobTrigger {
 
                 ReturnT<String> triggerResult = new ReturnT<String>(null);
                 StringBuffer triggerMsgSb = new StringBuffer();
-                triggerMsgSb.append(I18nUtil.getString("jobconf_trigger_type")).append("：").append(type);
+                triggerMsgSb.append(I18nUtil.getString("jobconf_trigger_type")).append("：").append(triggerType.getTitle());
                 triggerMsgSb.append("<br>").append(I18nUtil.getString("jobconf_trigger_admin_adress")).append("：").append(IpUtil.getIp());
                 triggerMsgSb.append("<br>").append(I18nUtil.getString("jobconf_trigger_exe_regtype")).append("：")
                         .append( (group.getAddressType() == 0)?I18nUtil.getString("jobgroup_field_addressType_0"):I18nUtil.getString("jobgroup_field_addressType_1") );
@@ -134,7 +134,7 @@ public class XxlJobTrigger {
 
             ReturnT<String> triggerResult = new ReturnT<String>(null);
             StringBuffer triggerMsgSb = new StringBuffer();
-            triggerMsgSb.append(I18nUtil.getString("jobconf_trigger_type")).append("：").append(type);
+            triggerMsgSb.append(I18nUtil.getString("jobconf_trigger_type")).append("：").append(triggerType.getTitle());
             triggerMsgSb.append("<br>").append(I18nUtil.getString("jobconf_trigger_admin_adress")).append("：").append(IpUtil.getIp());
             triggerMsgSb.append("<br>").append(I18nUtil.getString("jobconf_trigger_exe_regtype")).append("：")
                     .append( (group.getAddressType() == 0)?I18nUtil.getString("jobgroup_field_addressType_0"):I18nUtil.getString("jobgroup_field_addressType_1") );
