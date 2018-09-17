@@ -103,7 +103,7 @@ public class JobThread extends Thread{
 		// execute
 		while(!toStop){
 			running = false;
-			//空闲次数
+			//空闲次数（超过30次就中断线程）
 			idleTimes++;
             //执行参数
             TriggerParam triggerParam = null;
@@ -176,6 +176,7 @@ public class JobThread extends Thread{
 
 				XxlJobLogger.log("<br>----------- JobThread Exception:" + errorMsg + "<br>----------- xxl-job job execute end(error) -----------");
 			} finally {
+            	// 回调（记录日志等操作）
                 if(triggerParam != null) {
                     // callback handler info
                     if (!toStop) {
@@ -191,6 +192,7 @@ public class JobThread extends Thread{
         }
 
 		// callback trigger request in queue
+		//回调 因线程结束未被执行的日志
 		while(triggerQueue !=null && triggerQueue.size()>0){
 			TriggerParam triggerParam = triggerQueue.poll();
 			if (triggerParam!=null) {

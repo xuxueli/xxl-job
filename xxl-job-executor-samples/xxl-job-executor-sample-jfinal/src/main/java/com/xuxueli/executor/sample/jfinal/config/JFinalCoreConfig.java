@@ -18,6 +18,10 @@ public class JFinalCoreConfig extends JFinalConfig {
 
 	// ---------------------- xxl-job executor ----------------------
 	private XxlJobExecutor xxlJobExecutor = null;
+
+	/**
+	 * 初始化执行器
+	 */
 	private void initXxlJobExecutor() {
 
 		// registry jobhandler
@@ -51,7 +55,7 @@ public class JFinalCoreConfig extends JFinalConfig {
 	}
 
 	// ---------------------- jfinal ----------------------
-
+	@Override
 	public void configRoute(Routes route) {
 		route.add("/", IndexController.class);
 	}
@@ -65,19 +69,19 @@ public class JFinalCoreConfig extends JFinalConfig {
 	public void beforeJFinalStop() {
 		destoryXxlJobExecutor();
 	}
-
+	@Override
 	public void configConstant(Constants constants) {
 
 	}
-
+	@Override
 	public void configPlugin(Plugins plugins) {
 
 	}
-
+	@Override
 	public void configInterceptor(Interceptors interceptors) {
 
 	}
-
+	@Override
 	public void configHandler(Handlers handlers) {
 
 	}

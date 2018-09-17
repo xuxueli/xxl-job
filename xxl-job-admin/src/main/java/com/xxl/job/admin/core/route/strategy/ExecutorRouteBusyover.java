@@ -41,7 +41,7 @@ public class ExecutorRouteBusyover extends ExecutorRouter {
                     .append("<br>code：").append(idleBeatResult.getCode())
                     .append("<br>msg：").append(idleBeatResult.getMsg());
 
-            // beat success
+            // beat success(判断是否繁忙)
             if (idleBeatResult.getCode() == ReturnT.SUCCESS_CODE) {
 
                 ReturnT<String> runResult = XxlJobTrigger.runExecutor(triggerParam, address);

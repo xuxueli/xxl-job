@@ -72,6 +72,14 @@ public class XxlJobExecutor implements ApplicationContextAware {
 
 
     // ---------------------- start + stop ----------------------
+    /**执行器初始化的时候调用
+      * @Description:
+      * @author      lixing
+      * @param 
+      * @return      void
+      * @exception   
+      * @date        2018/9/17 10:31
+      */
     public void start() throws Exception {
         // init admin-client  初始化了调度中心，在本地保存了调度中心的代理（好像是有回调功能可能那个时候会用）
         initAdminBizList(adminAddresses, accessToken);
@@ -107,6 +115,13 @@ public class XxlJobExecutor implements ApplicationContextAware {
 
     // ---------------------- admin-client ----------------------
     private static List<AdminBiz> adminBizList;
+
+    /**
+     * 初始化调度中心
+     * @param adminAddresses  调度中心地址
+     * @param accessToken  通信地址
+     * @throws Exception
+     */
     private static void initAdminBizList(String adminAddresses, String accessToken) throws Exception {
         if (adminAddresses!=null && adminAddresses.trim().length()>0) {
             for (String address: adminAddresses.trim().split(",")) {
@@ -116,6 +131,7 @@ public class XxlJobExecutor implements ApplicationContextAware {
                     if (adminBizList == null) {
                         adminBizList = new ArrayList<AdminBiz>();
                     }
+                    //保存远程代理对象
                     adminBizList.add(adminBiz);
                 }
             }
@@ -147,6 +163,7 @@ public class XxlJobExecutor implements ApplicationContextAware {
     // ---------------------- job handler repository ----------------------
     // key :@JobHandler(value="shardingJobHandler")  value:IJobHandler的实例对象
     private static ConcurrentHashMap<String, IJobHandler> jobHandlerRepository = new ConcurrentHashMap<String, IJobHandler>();
+    //记录执行器的名称 与 具体对象
     public static IJobHandler registJobHandler(String name, IJobHandler jobHandler){
         logger.info(">>>>>>>>>>> xxl-job register jobhandler success, name:{}, jobHandler:{}", name, jobHandler);
         return jobHandlerRepository.put(name, jobHandler);
@@ -154,6 +171,11 @@ public class XxlJobExecutor implements ApplicationContextAware {
     public static IJobHandler loadJobHandler(String name){
         return jobHandlerRepository.get(name);
     }
+
+    /**
+     * 执行器 缓存具体执行对象
+     * @param applicationContext
+     */
     private static void initJobHandlerRepository(ApplicationContext applicationContext){
         if (applicationContext == null) {
             return;
@@ -170,6 +192,7 @@ public class XxlJobExecutor implements ApplicationContextAware {
                     if (loadJobHandler(name) != null) {
                         throw new RuntimeException("xxl-job jobhandler naming conflicts.");
                     }
+                    //注册执行器
                     registJobHandler(name, handler);
                 }
             }

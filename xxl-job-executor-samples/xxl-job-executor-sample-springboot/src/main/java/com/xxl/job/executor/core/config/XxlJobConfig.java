@@ -51,6 +51,7 @@ public class XxlJobConfig {
         xxlJobExecutor.setPort(port);
         xxlJobExecutor.setAccessToken(accessToken);
         xxlJobExecutor.setLogPath(logPath);
+        //日志保留时间
         xxlJobExecutor.setLogRetentionDays(logRetentionDays);
 
         return xxlJobExecutor;
