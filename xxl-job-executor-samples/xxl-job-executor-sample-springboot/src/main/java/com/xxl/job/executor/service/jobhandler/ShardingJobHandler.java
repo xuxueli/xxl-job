@@ -7,7 +7,6 @@ import com.xxl.job.core.log.XxlJobLogger;
 import com.xxl.job.core.util.ShardingUtil;
 import org.springframework.stereotype.Service;
 
-
 /**
  * 分片广播任务
  *

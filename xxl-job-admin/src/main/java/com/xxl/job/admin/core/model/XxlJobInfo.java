@@ -25,8 +25,8 @@ public class XxlJobInfo {
 	private String executorHandler;		    // 执行器，任务Handler名称
 	private String executorParam;		    // 执行器，任务参数
 	private String executorBlockStrategy;	// 阻塞处理策略
-	private String executorFailStrategy;	// 失败处理策略
 	private int executorTimeout;     		// 任务执行超时时间，单位秒
+	private int executorFailRetryCount;		// 失败重试次数
 	
 	private String glueType;		// GLUE类型	#com.xxl.job.core.glue.GlueTypeEnum
 	private String glueSource;		// GLUE源代码
@@ -135,20 +135,20 @@ public class XxlJobInfo {
 		this.executorBlockStrategy = executorBlockStrategy;
 	}
 
-	public String getExecutorFailStrategy() {
-		return executorFailStrategy;
-	}
-
-	public void setExecutorFailStrategy(String executorFailStrategy) {
-		this.executorFailStrategy = executorFailStrategy;
-	}
-
 	public int getExecutorTimeout() {
 		return executorTimeout;
 	}
 
 	public void setExecutorTimeout(int executorTimeout) {
 		this.executorTimeout = executorTimeout;
+	}
+
+	public int getExecutorFailRetryCount() {
+		return executorFailRetryCount;
+	}
+
+	public void setExecutorFailRetryCount(int executorFailRetryCount) {
+		this.executorFailRetryCount = executorFailRetryCount;
 	}
 
 	public String getGlueType() {

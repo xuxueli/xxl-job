@@ -98,14 +98,14 @@ $(function() {
                         "width":'10%',
 						"render": function ( data, type, row ) {
 
-                            var glueTypeTitle = GlueTypeEnum[row.glueType];
+							var jobhandler = '';
                             if (row.executorHandler) {
-                                glueTypeTitle = glueTypeTitle +"：" + row.executorHandler;
+                                jobhandler = "<br>JobHandler：" + row.executorHandler;
                             }
 
 							var temp = '';
 							temp += I18n.joblog_field_executorAddress + '：' + (row.executorAddress?row.executorAddress:'');
-							temp += '<br>'+ I18n.jobinfo_field_gluetype +'：' + glueTypeTitle;
+							temp += jobhandler;
 							temp += '<br>'+ I18n.jobinfo_field_executorparam +'：' + row.executorParam;
 
 							return '<a class="logTips" href="javascript:;" >'+ row.jobId +'<span style="display:none;">'+ temp +'</span></a>';
@@ -157,8 +157,6 @@ $(function() {
                                 html = '<span style="color: green">'+ I18n.joblog_handleCode_200 +'</span>';
                             } else if (data == 500) {
                                 html = '<span style="color: red">'+ I18n.joblog_handleCode_500 +'</span>';
-                            } else if (data == 501) {
-                                html = '<span style="color: red">'+ I18n.joblog_handleCode_501 +'</span>';
                             } else if (data == 502) {
                                 html = '<span style="color: red">'+ I18n.joblog_handleCode_502 +'</span>';
                             } else if (data == 0) {

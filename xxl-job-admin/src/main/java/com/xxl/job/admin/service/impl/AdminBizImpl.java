@@ -94,25 +94,6 @@ public class AdminBizImpl implements AdminBiz {
                 }
 
             }
-        } else {
-            boolean ifHandleRetry = false;
-            //ScriptJobHandler 才会有这种情况
-            if (IJobHandler.FAIL_RETRY.getCode() == handleCallbackParam.getExecuteResult().getCode()) {
-                ifHandleRetry = true;
-            } else {
-                XxlJobInfo xxlJobInfo = xxlJobInfoDao.loadById(log.getJobId());
-                if (ExecutorFailStrategyEnum.FAIL_HANDLE_RETRY.name().equals(xxlJobInfo.getExecutorFailStrategy())) {
-                    ifHandleRetry = true;
-                }
-            }
-            if (ifHandleRetry){
-                //失败后重试
-                ReturnT<String> retryTriggerResult = xxlJobService.triggerJob(log.getJobId());
-                callbackMsg = "<br><br><span style=\"color:#F39C12;\" > >>>>>>>>>>>"+ I18nUtil.getString("jobconf_fail_handle_retry") +"<<<<<<<<<<< </span><br>";
-
-                callbackMsg += MessageFormat.format(I18nUtil.getString("jobconf_callback_msg1"),
-                        (retryTriggerResult.getCode()==ReturnT.SUCCESS_CODE?I18nUtil.getString("system_success"):I18nUtil.getString("system_fail")), retryTriggerResult.getMsg());
-            }
         }
 
         // handle msg
@@ -153,7 +134,8 @@ public class AdminBizImpl implements AdminBiz {
 
     @Override
     public ReturnT<String> triggerJob(int jobId) {
-        return xxlJobService.triggerJob(jobId);
+        JobTriggerPoolHelper.trigger(jobId, -1, TriggerTypeEnum.API);
+        return ReturnT.SUCCESS;
     }
 
 }

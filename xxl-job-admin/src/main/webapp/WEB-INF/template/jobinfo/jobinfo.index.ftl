@@ -157,14 +157,8 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="lastname" class="col-sm-2 control-label">${I18n.jobinfo_field_executorFailStrategy}<font color="red">*</font></label>
-                        <div class="col-sm-4">
-                            <select class="form-control" name="executorFailStrategy" >
-								<#list ExecutorFailStrategyEnum as item>
-									<option value="${item}" >${item.title}</option>
-								</#list>
-                            </select>
-						</div>
+                        <label for="lastname" class="col-sm-2 control-label">${I18n.jobinfo_field_executorFailRetryCount}<font color="black">*</font></label>
+                        <div class="col-sm-4"><input type="text" class="form-control" name="executorFailRetryCount" placeholder="${I18n.jobinfo_field_executorFailRetryCount_placeholder}" maxlength="4" ></div>
                         <label for="lastname" class="col-sm-2 control-label">${I18n.jobinfo_field_alarmemail}<font color="black">*</font></label>
                         <div class="col-sm-4"><input type="text" class="form-control" name="alarmEmail" placeholder="${I18n.jobinfo_field_alarmemail_placeholder}" maxlength="100" ></div>
                     </div>
@@ -242,6 +236,22 @@ logging.basicConfig(level=logging.DEBUG)
 logging.info("脚本文件：" + sys.argv[0])
 -->
 </textarea>
+<#--这里有问题，新建一个运行模式为 php 的任务后，GLUE 中没有下边的 php 代码-->
+<textarea class="glueSource_php" style="display:none;" >
+<?php
+
+    echo "xxl-job: hello php  \n";
+
+    echo "${I18n.jobinfo_script_location}：$argv[0]  \n";
+    echo "${I18n.jobinfo_field_executorparam}：$argv[1]  \n";
+    echo "${I18n.jobinfo_shard_index} = $argv[2]  \n";
+    echo "${I18n.jobinfo_shard_total} = $argv[3]  \n";
+
+    echo "Good bye!  \n";
+    exit(0);
+
+?>
+</textarea>
 <textarea class="glueSource_nodejs" style="display:none;" >
 #!/usr/bin/env node
 console.log("xxl-job: hello nodejs")
@@ -258,7 +268,19 @@ console.log("${I18n.jobinfo_shard_total}: " + arguments[4])
 
 console.log("Good bye!")
 process.exit(0)
-</textarea>		
+</textarea>
+<textarea class="glueSource_powershell" style="display:none;" >
+Write-Host "xxl-job: hello powershell"
+
+Write-Host "${I18n.jobinfo_script_location}: " $MyInvocation.MyCommand.Definition
+Write-Host "${I18n.jobinfo_field_executorparam}: "
+	if ($args.Count -gt 2) { $args[0..($args.Count-3)] }
+Write-Host "${I18n.jobinfo_shard_index}: " $args[$args.Count-2]
+Write-Host "${I18n.jobinfo_shard_total}: " $args[$args.Count-1]
+
+Write-Host "Good bye!"
+exit 0
+</textarea>
 				</form>
          	</div>
 		</div>
@@ -329,14 +351,8 @@ process.exit(0)
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="lastname" class="col-sm-2 control-label">${I18n.jobinfo_field_executorFailStrategy}<font color="red">*</font></label>
-                        <div class="col-sm-4">
-                            <select class="form-control" name="executorFailStrategy" >
-							<#list ExecutorFailStrategyEnum as item>
-                                <option value="${item}" >${item.title}</option>
-							</#list>
-                            </select>
-                        </div>
+                        <label for="lastname" class="col-sm-2 control-label">${I18n.jobinfo_field_executorFailRetryCount}<font color="black">*</font></label>
+                        <div class="col-sm-4"><input type="text" class="form-control" name="executorFailRetryCount" placeholder="${I18n.jobinfo_field_executorFailRetryCount_placeholder}" maxlength="4" ></div>
                         <label for="lastname" class="col-sm-2 control-label">${I18n.jobinfo_field_alarmemail}<font color="black">*</font></label>
                         <div class="col-sm-4"><input type="text" class="form-control" name="alarmEmail" placeholder="${I18n.jobinfo_field_alarmemail_placeholder}" maxlength="100" ></div>
 

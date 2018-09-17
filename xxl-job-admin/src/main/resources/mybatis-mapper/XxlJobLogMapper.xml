@@ -9,11 +9,10 @@
 		<result column="job_group" property="jobGroup" />
 		<result column="job_id" property="jobId" />
 
-		<result column="glue_type" property="glueType" />
-
 		<result column="executor_address" property="executorAddress" />
 		<result column="executor_handler" property="executorHandler" />
 	    <result column="executor_param" property="executorParam" />
+		<result column="executor_fail_retry_count" property="executorFailRetryCount" />
 	    
 	    <result column="trigger_time" property="triggerTime" />
 	    <result column="trigger_code" property="triggerCode" />
@@ -29,10 +28,10 @@
 		t.id,
 		t.job_group,
 		t.job_id,
-		t.glue_type,
 		t.executor_address,
 		t.executor_handler,
 		t.executor_param,
+		t.executor_fail_retry_count,
 		t.trigger_time,
 		t.trigger_code,
 		t.trigger_msg,
@@ -134,13 +133,13 @@
 	<update id="updateTriggerInfo" >
 		UPDATE XXL_JOB_QRTZ_TRIGGER_LOG
 		SET
-		    `glue_type`= #{glueType},
 			`trigger_time`= #{triggerTime},
 			`trigger_code`= #{triggerCode},
 			`trigger_msg`= #{triggerMsg},
 			`executor_address`= #{executorAddress},
 			`executor_handler`=#{executorHandler},
-			`executor_param`= #{executorParam}
+			`executor_param`= #{executorParam},
+			`executor_fail_retry_count`= #{executorFailRetryCount}
 		WHERE `id`= #{id}
 	</update>
 

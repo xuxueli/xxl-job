@@ -1,5 +1,6 @@
 package com.xxl.job.core.log;
 
+import com.xxl.job.core.util.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.helpers.FormattingTuple;
@@ -7,7 +8,6 @@ import org.slf4j.helpers.MessageFormatter;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -15,7 +15,6 @@ import java.util.Date;
  */
 public class XxlJobLogger {
     private static Logger logger = LoggerFactory.getLogger("xxl-job logger");
-    private static SimpleDateFormat xxlJobLoggerFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");   // TODO，concurrent issue
 
     /**
      * append log
@@ -31,7 +30,7 @@ public class XxlJobLogger {
         StackTraceElement callInfo = stackTraceElements[1];*/
 
         StringBuffer stringBuffer = new StringBuffer();
-        stringBuffer.append(xxlJobLoggerFormat.format(new Date())).append(" ")
+        stringBuffer.append(DateUtil.format(new Date())).append(" ")
             .append("["+ callInfo.getClassName() + "#" + callInfo.getMethodName() +"]").append("-")
             .append("["+ callInfo.getLineNumber() +"]").append("-")
             .append("["+ Thread.currentThread().getName() +"]").append(" ")

@@ -4,6 +4,7 @@ import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.admin.core.schedule.XxlJobDynamicScheduler;
+import com.xxl.job.admin.core.trigger.TriggerTypeEnum;
 import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.admin.core.util.MailUtil;
 import com.xxl.job.core.biz.model.ReturnT;
@@ -67,8 +68,25 @@ public class JobFailMonitorHelper {
 								} else /*if (IJobHandler.FAIL.getCode() == log.getTriggerCode()
 										|| IJobHandler.FAIL.getCode() == log.getHandleCode()
 										|| IJobHandler.FAIL_RETRY.getCode() == log.getHandleCode() )*/ {
+
 									// job fail,
-									failAlarm(log);
+
+									// 1、fail retry
+									XxlJobInfo info = XxlJobDynamicScheduler.xxlJobInfoDao.loadById(log.getJobId());
+
+									if (log.getExecutorFailRetryCount() > 0) {
+
+										// TODO，分片任务失败重试优化，仅重试失败分片
+
+										JobTriggerPoolHelper.trigger(log.getJobId(), (log.getExecutorFailRetryCount()-1), TriggerTypeEnum.RETRY);
+										String retryMsg = "<br><br><span style=\"color:#F39C12;\" > >>>>>>>>>>>"+ I18nUtil.getString("jobconf_trigger_type_retry") +"<<<<<<<<<<< </span><br>";
+										log.setTriggerMsg(log.getTriggerMsg() + retryMsg);
+										XxlJobDynamicScheduler.xxlJobLogDao.updateTriggerInfo(log);
+									}
+
+									// 2、fail alarm
+									failAlarm(info, log);
+
 									logger.info(">>>>>>>>>>> job monitor, job fail, JobLogId:{}", jobLogId);
 								}/* else {
 									JobFailMonitorHelper.monitor(jobLogId);
@@ -91,7 +109,9 @@ public class JobFailMonitorHelper {
 						XxlJobLog log = XxlJobDynamicScheduler.xxlJobLogDao.load(jobLogId);
 						if (ReturnT.FAIL_CODE == log.getTriggerCode()|| ReturnT.FAIL_CODE==log.getHandleCode()) {
 							// job fail,
-							failAlarm(log);
+							XxlJobInfo info = XxlJobDynamicScheduler.xxlJobInfoDao.loadById(log.getJobId());
+
+							failAlarm(info, log);
 							logger.info(">>>>>>>>>>> job monitor last, job fail, JobLogId:{}", jobLogId);
 						}
 					}
@@ -151,10 +171,9 @@ public class JobFailMonitorHelper {
 	 *
 	 * @param jobLog
 	 */
-	private void failAlarm(XxlJobLog jobLog){
+	private void failAlarm(XxlJobInfo info, XxlJobLog jobLog){
 
 		// send monitor email
-		XxlJobInfo info = XxlJobDynamicScheduler.xxlJobInfoDao.loadById(jobLog.getJobId());
 		if (info!=null && info.getAlarmEmail()!=null && info.getAlarmEmail().trim().length()>0) {
 
 			String alarmContent = "Alarm Job LogId=" + jobLog.getId();
