@@ -1,6 +1,6 @@
 package com.xxl.job.admin.core.trigger;
 
-import com.xxl.job.admin.core.enums.ExecutorFailStrategyEnum;
+
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
