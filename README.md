@@ -1,4 +1,4 @@
-##任务调度中心支持Postgresql
+## 任务调度中心支持Postgresql
 
 <p align="center">
     <img src="https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/xxl-logo.jpg" width="150">
