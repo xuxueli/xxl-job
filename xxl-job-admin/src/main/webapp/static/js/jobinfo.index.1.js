@@ -374,6 +374,10 @@ $(function() {
             $("#addModal .form textarea[name='glueSource']").val( $("#addModal .form .glueSource_php").val() );
         } else if ('GLUE_NODEJS'==glueType){
 			$("#addModal .form textarea[name='glueSource']").val( $("#addModal .form .glueSource_nodejs").val() );			
+		} else if ('GLUE_POWERSHELL'==glueType){
+            $("#addModal .form textarea[name='glueSource']").val( $("#addModal .form .glueSource_powershell").val() );
+        } else {
+            $("#addModal .form textarea[name='glueSource']").val("");
 		}
 	});
 

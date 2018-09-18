@@ -1,6 +1,7 @@
 package com.xxl.job.admin.core.jobbean;
 
 import com.xxl.job.admin.core.thread.JobTriggerPoolHelper;
+import com.xxl.job.admin.core.trigger.TriggerTypeEnum;
 import com.xxl.job.admin.core.util.I18nUtil;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -28,7 +29,7 @@ public class RemoteHttpJobBean extends QuartzJobBean {
 
 		// trigger
 		//XxlJobTrigger.trigger(jobId);
-		JobTriggerPoolHelper.trigger(jobId, -1, I18nUtil.getString("jobconf_trigger_type_cron"));
+		JobTriggerPoolHelper.trigger(jobId, -1, TriggerTypeEnum.CRON);
 	}
 
 }

@@ -4,6 +4,7 @@ import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.route.ExecutorRouteStrategyEnum;
 import com.xxl.job.admin.core.thread.JobTriggerPoolHelper;
+import com.xxl.job.admin.core.trigger.TriggerTypeEnum;
 import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.admin.dao.XxlJobGroupDao;
 import com.xxl.job.admin.service.XxlJobService;
@@ -91,7 +92,7 @@ public class JobInfoController {
 	@RequestMapping("/trigger")
 	@ResponseBody
 	public ReturnT<String> triggerJob(int id) {
-		JobTriggerPoolHelper.trigger(id, -1, I18nUtil.getString("jobconf_trigger_type_manual"));
+		JobTriggerPoolHelper.trigger(id, -1, TriggerTypeEnum.MANUAL);
 		return ReturnT.SUCCESS;
 	}
 	
