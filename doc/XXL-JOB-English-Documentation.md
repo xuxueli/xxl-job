@@ -153,6 +153,24 @@ So far, XXL-JOB has access to a number of companies online product line, access 
     - 97、昆明龙慧
     - 98、上海涩瑶软件
     - 99、易信 (网易)
+    - 100、铜板街
+    - 101、杭州云若网络科技有限公司
+    - 102、特百惠（中国）有限公司
+    - 103、常山众卡运力供应链管理有限公司
+    - 104、深圳立创电子商务有限公司
+    - 105、杭州智诺科技股份有限公司
+    - 106、北京云漾信息科技有限公司
+    - 107、深圳市多银科技有限公司
+    - 108、亲宝宝
+    - 109、上海博卡软件科技有限公司
+    - 110、智慧树在线教育平台
+    - 111、米族金融
+    - 112、北京辰森世纪
+    - 113、云南滇医通
+    - 114、广州市分领网络科技有限责任公司
+    - 115、浙江微能科技有限公司
+    - 116、上海馨飞电子商务有限公司
+    - 117、上海宝尊电子商务有限公司
 	- ……
 
 > The company that access and use this product is welcome to register at the [address](https://github.com/xuxueli/xxl-job/issues/1 ), only for product promotion. 
