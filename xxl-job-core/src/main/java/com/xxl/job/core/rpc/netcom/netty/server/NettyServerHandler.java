@@ -59,14 +59,14 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        logger.error(cause.getMessage());
+        logger.error(cause.getMessage(), cause);
         ctx.close();
     }
 
     private RpcResponse doInvoke(FullHttpRequest httpRequest) {
+        ByteBuf byteBuf = httpRequest.content();
         try {
             // deserialize request
-            ByteBuf byteBuf = httpRequest.content();
             byte[] requestBytes = new byte[byteBuf.readableBytes()];
             byteBuf.readBytes(requestBytes);
             if (requestBytes.length==0) {
@@ -84,6 +84,10 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
             RpcResponse rpcResponse = new RpcResponse();
             rpcResponse.setError("Server-error:" + e.getMessage());
             return rpcResponse;
+        } finally {
+            if(byteBuf != null){
+                byteBuf.release();
+            }
         }
     }
 
