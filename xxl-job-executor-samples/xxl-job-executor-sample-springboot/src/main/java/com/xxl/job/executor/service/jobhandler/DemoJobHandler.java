@@ -33,6 +33,8 @@ public class DemoJobHandler extends IJobHandler {
 			XxlJobLogger.log("beat at:" + i);
 			TimeUnit.SECONDS.sleep(2);
 		}
+		//	throw new RuntimeException();
+		System.out.println("demo success");
 		return SUCCESS;
 	}
 
