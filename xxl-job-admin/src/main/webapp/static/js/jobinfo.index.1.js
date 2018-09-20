@@ -66,6 +66,11 @@ $(function() {
 						"visible" : true,
 						"width":'10%'
 					},
+					{
+						"data": 'jobZone',
+						"visible" : false,
+						"width":'10%'
+					},
 	                { 
 	                	"data": 'addTime', 
 	                	"visible" : false, 
@@ -392,6 +397,7 @@ $(function() {
 		$('#updateModal .form select[name=jobGroup] option[value='+ row.jobGroup +']').prop('selected', true);
 		$("#updateModal .form input[name='jobDesc']").val( row.jobDesc );
 		$("#updateModal .form input[name='jobCron']").val( row.jobCron );
+        $("#updateModal .form input[name='jobZone']").val( row.jobZone );
 		$("#updateModal .form input[name='author']").val( row.author );
 		$("#updateModal .form input[name='alarmEmail']").val( row.alarmEmail );
 		$("#updateModal .form input[name='executorTimeout']").val( row.executorTimeout );
