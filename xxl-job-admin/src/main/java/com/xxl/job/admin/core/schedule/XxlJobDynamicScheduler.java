@@ -24,9 +24,11 @@ import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.TimeZone;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -185,7 +187,7 @@ public final class XxlJobDynamicScheduler implements ApplicationContextAware {
      * @return
      * @throws SchedulerException
      */
-	public static boolean addJob(String jobName, String jobGroup, String cronExpression) throws SchedulerException {
+	public static boolean addJob(String jobName, String jobGroup, String cronExpression, String zone) throws SchedulerException {
     	// TriggerKey : name + group
         TriggerKey triggerKey = TriggerKey.triggerKey(jobName, jobGroup);
         JobKey jobKey = new JobKey(jobName, jobGroup);
@@ -197,7 +199,7 @@ public final class XxlJobDynamicScheduler implements ApplicationContextAware {
         }
         
         // CronTrigger : TriggerKey + cronExpression	// withMisfireHandlingInstructionDoNothing 忽略掉调度终止过程中忽略的调度
-        CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.cronSchedule(cronExpression).withMisfireHandlingInstructionDoNothing();
+        CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.cronSchedule(cronExpression).withMisfireHandlingInstructionDoNothing().inTimeZone(getTimeZone(zone));
         CronTrigger cronTrigger = TriggerBuilder.newTrigger().withIdentity(triggerKey).withSchedule(cronScheduleBuilder).build();
 
         // JobDetail : jobClass
@@ -226,7 +228,7 @@ public final class XxlJobDynamicScheduler implements ApplicationContextAware {
      * @return
      * @throws SchedulerException
      */
-	public static boolean rescheduleJob(String jobGroup, String jobName, String cronExpression) throws SchedulerException {
+	public static boolean rescheduleJob(String jobGroup, String jobName, String cronExpression, String zone) throws SchedulerException {
     	
     	// TriggerKey valid if_exists
         if (!checkExists(jobName, jobGroup)) {
@@ -237,23 +239,27 @@ public final class XxlJobDynamicScheduler implements ApplicationContextAware {
         // TriggerKey : name + group
         TriggerKey triggerKey = TriggerKey.triggerKey(jobName, jobGroup);
         CronTrigger oldTrigger = (CronTrigger) scheduler.getTrigger(triggerKey);
+        TimeZone timeZone = getTimeZone(zone);
 
         if (oldTrigger != null) {
             // avoid repeat
             String oldCron = oldTrigger.getCronExpression();
+            TimeZone oldZone = oldTrigger.getTimeZone();
             if (oldCron.equals(cronExpression)){
-                return true;
+                if (oldZone==null && timeZone==null || oldZone!=null && oldZone.hasSameRules(timeZone)) {
+                    return true;
+                }
             }
 
             // CronTrigger : TriggerKey + cronExpression
-            CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.cronSchedule(cronExpression).withMisfireHandlingInstructionDoNothing();
+            CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.cronSchedule(cronExpression).withMisfireHandlingInstructionDoNothing().inTimeZone(timeZone);
             oldTrigger = oldTrigger.getTriggerBuilder().withIdentity(triggerKey).withSchedule(cronScheduleBuilder).build();
 
             // rescheduleJob
             scheduler.rescheduleJob(triggerKey, oldTrigger);
         } else {
             // CronTrigger : TriggerKey + cronExpression
-            CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.cronSchedule(cronExpression).withMisfireHandlingInstructionDoNothing();
+            CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.cronSchedule(cronExpression).withMisfireHandlingInstructionDoNothing().inTimeZone(timeZone);
             CronTrigger cronTrigger = TriggerBuilder.newTrigger().withIdentity(triggerKey).withSchedule(cronScheduleBuilder).build();
 
             // JobDetail-JobDataMap fresh
@@ -398,5 +404,15 @@ public final class XxlJobDynamicScheduler implements ApplicationContextAware {
         }
         return jobList;
     }*/
+
+    private static TimeZone getTimeZone(String zone){
+        TimeZone timeZone;
+        if (StringUtils.hasText(zone)) {
+            timeZone = StringUtils.parseTimeZoneString(zone);
+        } else {
+            timeZone = TimeZone.getDefault();
+        }
+        return timeZone;
+    }
 
 }

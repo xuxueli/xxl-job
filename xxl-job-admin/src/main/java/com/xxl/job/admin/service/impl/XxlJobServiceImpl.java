@@ -128,7 +128,7 @@ public class XxlJobServiceImpl implements XxlJobService {
         String qz_group = String.valueOf(jobInfo.getJobGroup());
         String qz_name = String.valueOf(jobInfo.getId());
         try {
-            XxlJobDynamicScheduler.addJob(qz_name, qz_group, jobInfo.getJobCron());
+            XxlJobDynamicScheduler.addJob(qz_name, qz_group, jobInfo.getJobCron(), jobInfo.getJobZone());
             //XxlJobDynamicScheduler.pauseJob(qz_name, qz_group);
             return ReturnT.SUCCESS;
         } catch (SchedulerException e) {
@@ -189,6 +189,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 		//String old_cron = exists_jobInfo.getJobCron();
 
 		exists_jobInfo.setJobCron(jobInfo.getJobCron());
+		exists_jobInfo.setJobZone(jobInfo.getJobZone());
 		exists_jobInfo.setJobDesc(jobInfo.getJobDesc());
 		exists_jobInfo.setAuthor(jobInfo.getAuthor());
 		exists_jobInfo.setAlarmEmail(jobInfo.getAlarmEmail());
@@ -205,7 +206,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 		String qz_group = String.valueOf(exists_jobInfo.getJobGroup());
 		String qz_name = String.valueOf(exists_jobInfo.getId());
         try {
-            boolean ret = XxlJobDynamicScheduler.rescheduleJob(qz_group, qz_name, exists_jobInfo.getJobCron());
+            boolean ret = XxlJobDynamicScheduler.rescheduleJob(qz_group, qz_name, exists_jobInfo.getJobCron(), exists_jobInfo.getJobZone());
             return ret?ReturnT.SUCCESS:ReturnT.FAIL;
         } catch (SchedulerException e) {
             logger.error(e.getMessage(), e);

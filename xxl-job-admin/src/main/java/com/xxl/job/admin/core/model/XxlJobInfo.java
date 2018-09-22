@@ -14,6 +14,7 @@ public class XxlJobInfo {
 	private int jobGroup;		// 执行器主键ID	(JobKey.group)
 	private String jobCron;		// 任务执行CRON表达式 【base on quartz】
 	private String jobDesc;
+	private String jobZone;
 	
 	private Date addTime;
 	private Date updateTime;
@@ -61,6 +62,14 @@ public class XxlJobInfo {
 
 	public void setJobCron(String jobCron) {
 		this.jobCron = jobCron;
+	}
+
+	public String getJobZone() {
+		return jobZone;
+	}
+
+	public void setJobZone(String jobZone) {
+		this.jobZone = jobZone;
 	}
 
 	public String getJobDesc() {

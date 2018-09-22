@@ -153,6 +153,7 @@ CREATE TABLE `XXL_JOB_QRTZ_TRIGGER_INFO` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `job_group` int(11) NOT NULL COMMENT '执行器主键ID',
   `job_cron` varchar(128) NOT NULL COMMENT '任务执行CRON',
+  `job_zone` varchar(128) DEFAULT NULL COMMENT 'CRON时区',
   `job_desc` varchar(255) NOT NULL,
   `add_time` datetime DEFAULT NULL,
   `update_time` datetime DEFAULT NULL,

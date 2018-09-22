@@ -8,6 +8,7 @@
 
 		<result column="job_group" property="jobGroup" />
 	    <result column="job_cron" property="jobCron" />
+		<result column="job_zone" property="jobZone" />
 	    <result column="job_desc" property="jobDesc" />
 
 	    <result column="add_time" property="addTime" />
@@ -35,6 +36,7 @@
 		t.id,
 		t.job_group,
 		t.job_cron,
+		t.job_zone,
 		t.job_desc,
 		t.add_time,
 		t.update_time,
@@ -91,6 +93,7 @@
 		INSERT INTO XXL_JOB_QRTZ_TRIGGER_INFO (
 			job_group,
 			job_cron,
+			job_zone,
 			job_desc,
 			add_time,
 			update_time,
@@ -110,6 +113,7 @@
 		) VALUES (
 			#{jobGroup},
 			#{jobCron},
+			#{jobZone},
 			#{jobDesc},
 			NOW(),
 			NOW(),
@@ -143,6 +147,7 @@
 		UPDATE XXL_JOB_QRTZ_TRIGGER_INFO
 		SET
 			job_cron = #{jobCron},
+			job_zone = #{jobZone},
 			job_desc = #{jobDesc},
 			update_time = NOW(),
 			author = #{author},

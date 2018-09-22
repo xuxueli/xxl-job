@@ -71,6 +71,7 @@
                                         <th name="glueType" >${I18n.jobinfo_field_gluetype}</th>
 					                  	<th name="executorParam" >${I18n.jobinfo_field_executorparam}</th>
                                         <th name="jobCron" >Cron</th>
+                                        <th name="jobZone" >TimeZone</th>
 					                  	<th name="addTime" >addTime</th>
 					                  	<th name="updateTime" >updateTime</th>
 					                  	<th name="author" >${I18n.jobinfo_field_author}</th>
@@ -165,6 +166,8 @@
 					<div class="form-group">
                         <label for="lastname" class="col-sm-2 control-label">${I18n.jobinfo_field_author}<font color="red">*</font></label>
                         <div class="col-sm-4"><input type="text" class="form-control" name="author" placeholder="${I18n.system_please_input}${I18n.jobinfo_field_author}" maxlength="50" ></div>
+                        <label for="lastname" class="col-sm-2 control-label">TimeZone<font color="black">*</font></label>
+                        <div class="col-sm-4"><input type="text" class="form-control" name="jobZone" placeholder="${I18n.system_please_input}${I18n.jobinfo_field_jobzone}" maxlength="50" ></div>
 					</div>
 
                     <hr>
@@ -360,6 +363,8 @@ exit 0
                     <div class="form-group">
                         <label for="lastname" class="col-sm-2 control-label">${I18n.jobinfo_field_author}<font color="red">*</font></label>
                         <div class="col-sm-4"><input type="text" class="form-control" name="author" placeholder="${I18n.system_please_input}${I18n.jobinfo_field_author}" maxlength="50" ></div>
+                        <label for="lastname" class="col-sm-2 control-label">TimeZone<font color="black">*</font></label>
+                        <div class="col-sm-4"><input type="text" class="form-control" name="jobZone" placeholder="${I18n.system_please_input}${I18n.jobinfo_field_jobzone}" maxlength="50" ></div>
                     </div>
 
 					<hr>
