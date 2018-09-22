@@ -128,10 +128,4 @@ public class AdminBizImpl implements AdminBiz {
         return ReturnT.SUCCESS;
     }
 
-    @Override
-    public ReturnT<String> triggerJob(int jobId) {
-        JobTriggerPoolHelper.trigger(jobId, -1, TriggerTypeEnum.API);
-        return ReturnT.SUCCESS;
-    }
-
 }

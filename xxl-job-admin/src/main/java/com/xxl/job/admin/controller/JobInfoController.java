@@ -5,7 +5,6 @@ import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.route.ExecutorRouteStrategyEnum;
 import com.xxl.job.admin.core.thread.JobTriggerPoolHelper;
 import com.xxl.job.admin.core.trigger.TriggerTypeEnum;
-import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.admin.dao.XxlJobGroupDao;
 import com.xxl.job.admin.service.XxlJobService;
 import com.xxl.job.core.biz.model.ReturnT;
@@ -91,6 +90,7 @@ public class JobInfoController {
 	
 	@RequestMapping("/trigger")
 	@ResponseBody
+	//@PermessionLimit(limit = false)
 	public ReturnT<String> triggerJob(int id) {
 		JobTriggerPoolHelper.trigger(id, -1, TriggerTypeEnum.MANUAL);
 		return ReturnT.SUCCESS;
