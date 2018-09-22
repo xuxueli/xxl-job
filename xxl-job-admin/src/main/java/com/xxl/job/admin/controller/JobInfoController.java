@@ -92,7 +92,7 @@ public class JobInfoController {
 	@ResponseBody
 	//@PermessionLimit(limit = false)
 	public ReturnT<String> triggerJob(int id) {
-		JobTriggerPoolHelper.trigger(id, -1, TriggerTypeEnum.MANUAL);
+		JobTriggerPoolHelper.trigger(id, TriggerTypeEnum.MANUAL, -1, null);
 		return ReturnT.SUCCESS;
 	}
 	

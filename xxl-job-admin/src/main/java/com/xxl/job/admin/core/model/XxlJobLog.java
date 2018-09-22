@@ -18,6 +18,7 @@ public class XxlJobLog {
 	private String executorAddress;
 	private String executorHandler;
 	private String executorParam;
+	private String executorShardingParam;
 	private int executorFailRetryCount;
 	
 	// trigger info
@@ -76,6 +77,14 @@ public class XxlJobLog {
 
 	public void setExecutorParam(String executorParam) {
 		this.executorParam = executorParam;
+	}
+
+	public String getExecutorShardingParam() {
+		return executorShardingParam;
+	}
+
+	public void setExecutorShardingParam(String executorShardingParam) {
+		this.executorShardingParam = executorShardingParam;
 	}
 
 	public int getExecutorFailRetryCount() {

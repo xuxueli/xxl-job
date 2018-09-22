@@ -29,11 +29,11 @@ public class JobTriggerPoolHelper {
             new ThreadPoolExecutor.CallerRunsPolicy());
 
 
-    public void addTrigger(final int jobId, final int failRetryCount, final TriggerTypeEnum triggerType) {
+    public void addTrigger(final int jobId, final TriggerTypeEnum triggerType, final int failRetryCount, final String executorShardingParam) {
         triggerPool.execute(new Runnable() {
             @Override
             public void run() {
-                XxlJobTrigger.trigger(jobId, failRetryCount, triggerType);
+                XxlJobTrigger.trigger(jobId, triggerType, failRetryCount, executorShardingParam);
             }
         });
     }
@@ -55,8 +55,8 @@ public class JobTriggerPoolHelper {
      * 			<0: use param from job info config
      *
      */
-    public static void trigger(int jobId, int failRetryCount, TriggerTypeEnum triggerType) {
-        helper.addTrigger(jobId, failRetryCount, triggerType);
+    public static void trigger(int jobId, TriggerTypeEnum triggerType, int failRetryCount, String executorShardingParam) {
+        helper.addTrigger(jobId, triggerType, failRetryCount, executorShardingParam);
     }
 
     public static void toStop() {

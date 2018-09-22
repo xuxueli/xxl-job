@@ -73,10 +73,7 @@ public class JobFailMonitorHelper {
 									XxlJobInfo info = XxlJobDynamicScheduler.xxlJobInfoDao.loadById(log.getJobId());
 
 									if (log.getExecutorFailRetryCount() > 0) {
-
-										// TODO，分片任务失败重试优化，仅重试失败分片
-
-										JobTriggerPoolHelper.trigger(log.getJobId(), (log.getExecutorFailRetryCount()-1), TriggerTypeEnum.RETRY);
+										JobTriggerPoolHelper.trigger(log.getJobId(), TriggerTypeEnum.RETRY, (log.getExecutorFailRetryCount()-1), log.getExecutorShardingParam());
 										String retryMsg = "<br><br><span style=\"color:#F39C12;\" > >>>>>>>>>>>"+ I18nUtil.getString("jobconf_trigger_type_retry") +"<<<<<<<<<<< </span><br>";
 										log.setTriggerMsg(log.getTriggerMsg() + retryMsg);
 										XxlJobDynamicScheduler.xxlJobLogDao.updateTriggerInfo(log);

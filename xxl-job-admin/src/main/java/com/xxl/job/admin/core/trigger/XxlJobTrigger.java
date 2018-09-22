@@ -13,12 +13,11 @@ import com.xxl.job.core.biz.model.TriggerParam;
 import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
 import com.xxl.job.core.util.IpUtil;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 /**
  * xxl-job trigger
@@ -36,27 +35,38 @@ public class XxlJobTrigger {
      * 			<0: use param from job info config
      *
      */
-    public static void trigger(int jobId, int failRetryCount, TriggerTypeEnum triggerType) {
+    public static void trigger(int jobId, TriggerTypeEnum triggerType, int failRetryCount, String executorShardingParam) {
         // load data
-        XxlJobInfo jobInfo = XxlJobDynamicScheduler.xxlJobInfoDao.loadById(jobId);              // job info
+        XxlJobInfo jobInfo = XxlJobDynamicScheduler.xxlJobInfoDao.loadById(jobId);
         if (jobInfo == null) {
             logger.warn(">>>>>>>>>>>> trigger fail, jobId invalid，jobId={}", jobId);
             return;
         }
         int finalFailRetryCount = failRetryCount>=0?failRetryCount:jobInfo.getExecutorFailRetryCount();
-        XxlJobGroup group = XxlJobDynamicScheduler.xxlJobGroupDao.load(jobInfo.getJobGroup());  // group info
+        XxlJobGroup group = XxlJobDynamicScheduler.xxlJobGroupDao.load(jobInfo.getJobGroup());
 
         // process trigger
-        if (ExecutorRouteStrategyEnum.SHARDING_BROADCAST == ExecutorRouteStrategyEnum.match(jobInfo.getExecutorRouteStrategy(), null) && CollectionUtils.isNotEmpty(group.getRegistryList())) {
-            for (int i = 0; i < group.getRegistryList().size(); i++) {
-                processTrigger(group, jobInfo, finalFailRetryCount, triggerType, i);
+        if (triggerType==TriggerTypeEnum.RETRY && executorShardingParam!=null) {
+            String[] shardingArr = executorShardingParam.split("/");
+            if (shardingArr.length==2 && StringUtils.isNumeric(shardingArr[0]) && StringUtils.isNumeric(shardingArr[1])); {
+                processTrigger(group, jobInfo, finalFailRetryCount, triggerType, Integer.valueOf(shardingArr[0]), Integer.valueOf(shardingArr[1]));
             }
         } else {
-            processTrigger(group, jobInfo, finalFailRetryCount, triggerType, 0);
+            if (CollectionUtils.isNotEmpty(group.getRegistryList())) {
+                if (ExecutorRouteStrategyEnum.SHARDING_BROADCAST == ExecutorRouteStrategyEnum.match(jobInfo.getExecutorRouteStrategy(), null)) {
+                    for (int i = 0; i < group.getRegistryList().size(); i++) {
+                        processTrigger(group, jobInfo, finalFailRetryCount, triggerType, i, group.getRegistryList().size());
+                    }
+                } else {
+                    processTrigger(group, jobInfo, finalFailRetryCount, triggerType, 0, 1);
+                }
+            } else {
+                processTrigger(group, jobInfo, finalFailRetryCount, triggerType, 0, 0);
+            }
         }
     }
 
-    private static void processTrigger(XxlJobGroup group, XxlJobInfo jobInfo, int finalFailRetryCount, TriggerTypeEnum triggerType, int index){
+    private static void processTrigger(XxlJobGroup group, XxlJobInfo jobInfo, int finalFailRetryCount, TriggerTypeEnum triggerType, int index, int total){
 
         // param
         ExecutorBlockStrategyEnum blockStrategy = ExecutorBlockStrategyEnum.match(jobInfo.getExecutorBlockStrategy(), ExecutorBlockStrategyEnum.SERIAL_EXECUTION);  // block strategy
@@ -83,11 +93,12 @@ public class XxlJobTrigger {
         triggerParam.setGlueSource(jobInfo.getGlueSource());
         triggerParam.setGlueUpdatetime(jobInfo.getGlueUpdatetime().getTime());
         triggerParam.setBroadcastIndex(index);
-        triggerParam.setBroadcastTotal(group.getRegistryList()!=null?group.getRegistryList().size():0);
+        triggerParam.setBroadcastTotal(total);
 
         // 3、init address
         String address = null;
         ReturnT<String> routeAddressResult = null;
+        String shardingParam = (ExecutorRouteStrategyEnum.SHARDING_BROADCAST==executorRouteStrategyEnum &&total>0)?String.valueOf(triggerParam.getBroadcastIndex()).concat("/").concat(String.valueOf(triggerParam.getBroadcastTotal())):null;
         if (CollectionUtils.isNotEmpty(group.getRegistryList())) {
             if (ExecutorRouteStrategyEnum.SHARDING_BROADCAST == executorRouteStrategyEnum) {
                 address = group.getRegistryList().get(index);
@@ -117,8 +128,8 @@ public class XxlJobTrigger {
                 .append( (group.getAddressType() == 0)?I18nUtil.getString("jobgroup_field_addressType_0"):I18nUtil.getString("jobgroup_field_addressType_1") );
         triggerMsgSb.append("<br>").append(I18nUtil.getString("jobconf_trigger_exe_regaddress")).append("：").append(group.getRegistryList());
         triggerMsgSb.append("<br>").append(I18nUtil.getString("jobinfo_field_executorRouteStrategy")).append("：").append(executorRouteStrategyEnum.getTitle());
-        if (ExecutorRouteStrategyEnum.SHARDING_BROADCAST == ExecutorRouteStrategyEnum.match(jobInfo.getExecutorRouteStrategy(), null)) {
-            triggerMsgSb.append("("+index+"/"+(group.getRegistryList()!=null?group.getRegistryList().size():0)+")");
+        if (shardingParam != null) {
+            triggerMsgSb.append("("+shardingParam+")");
         }
         triggerMsgSb.append("<br>").append(I18nUtil.getString("jobinfo_field_executorBlockStrategy")).append("：").append(blockStrategy.getTitle());
         triggerMsgSb.append("<br>").append(I18nUtil.getString("jobinfo_field_timeout")).append("：").append(jobInfo.getExecutorTimeout());
@@ -131,6 +142,7 @@ public class XxlJobTrigger {
         jobLog.setExecutorAddress(address);
         jobLog.setExecutorHandler(jobInfo.getExecutorHandler());
         jobLog.setExecutorParam(jobInfo.getExecutorParam());
+        jobLog.setExecutorShardingParam(shardingParam);
         jobLog.setExecutorFailRetryCount(finalFailRetryCount);
         //jobLog.setTriggerTime();
         jobLog.setTriggerCode(triggerResult.getCode());
