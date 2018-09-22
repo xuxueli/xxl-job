@@ -5,7 +5,7 @@ import com.xxl.job.core.biz.model.TriggerParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by xuxueli on 17/3/10.
@@ -19,6 +19,6 @@ public abstract class ExecutorRouter {
      * @param addressList
      * @return  ReturnT.content=address
      */
-    public abstract ReturnT<String> route(TriggerParam triggerParam, ArrayList<String> addressList);
+    public abstract ReturnT<String> route(TriggerParam triggerParam, List<String> addressList);
 
 }

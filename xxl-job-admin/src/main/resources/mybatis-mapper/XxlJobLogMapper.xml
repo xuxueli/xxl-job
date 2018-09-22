@@ -117,11 +117,13 @@
 		INSERT INTO XXL_JOB_QRTZ_TRIGGER_LOG (
 			`job_group`,
 			`job_id`,
+			`trigger_time`,
 			`trigger_code`,
 			`handle_code`
 		) VALUES (
 			#{jobGroup},
 			#{jobId},
+			#{triggerTime},
 			#{triggerCode},
 			#{handleCode}
 		);
