@@ -178,7 +178,7 @@ public class TriggerCallbackThread {
     }
 
 
-    // ---------------------- fial-callback file TODO ----------------------
+    // ---------------------- fail-callback file ----------------------
 
     private static String failCallbackFileName = XxlJobFileAppender.getLogPath().concat(File.separator).concat("xxl-job-callback").concat(".log");
 
