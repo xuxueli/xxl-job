@@ -14,12 +14,11 @@ public abstract class ExecutorRouter {
     protected static Logger logger = LoggerFactory.getLogger(ExecutorRouter.class);
 
     /**
-     * route run executor
+     * route address
      *
-     * @param triggerParam
      * @param addressList
-     * @return  ReturnT.content: final address
+     * @return  ReturnT.content=address
      */
-    public abstract ReturnT<String> routeRun(TriggerParam triggerParam, ArrayList<String> addressList);
+    public abstract ReturnT<String> route(TriggerParam triggerParam, ArrayList<String> addressList);
 
 }

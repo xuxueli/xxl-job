@@ -15,20 +15,10 @@ public class ExecutorRouteRandom extends ExecutorRouter {
 
     private static Random localRandom = new Random();
 
-    public String route(int jobId, ArrayList<String> addressList) {
-        // Collections.shuffle(addressList);
-        return addressList.get(localRandom.nextInt(addressList.size()));
-    }
-
     @Override
-    public ReturnT<String> routeRun(TriggerParam triggerParam, ArrayList<String> addressList) {
-        // address
-        String address = route(triggerParam.getJobId(), addressList);
-
-        // run executor
-        ReturnT<String> runResult = XxlJobTrigger.runExecutor(triggerParam, address);
-        runResult.setContent(address);
-        return runResult;
+    public ReturnT<String> route(TriggerParam triggerParam, ArrayList<String> addressList) {
+        String address = addressList.get(localRandom.nextInt(addressList.size()));
+        return new ReturnT<String>(address);
     }
 
 }

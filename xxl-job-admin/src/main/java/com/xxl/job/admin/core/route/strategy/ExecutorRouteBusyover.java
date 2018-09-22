@@ -15,13 +15,8 @@ import java.util.ArrayList;
  */
 public class ExecutorRouteBusyover extends ExecutorRouter {
 
-    public String route(int jobId, ArrayList<String> addressList) {
-        return addressList.get(0);
-    }
-
     @Override
-    public ReturnT<String> routeRun(TriggerParam triggerParam, ArrayList<String> addressList) {
-
+    public ReturnT<String> route(TriggerParam triggerParam, ArrayList<String> addressList) {
         StringBuffer idleBeatResultSB = new StringBuffer();
         for (String address : addressList) {
             // beat
@@ -41,17 +36,13 @@ public class ExecutorRouteBusyover extends ExecutorRouter {
 
             // beat success
             if (idleBeatResult.getCode() == ReturnT.SUCCESS_CODE) {
-
-                ReturnT<String> runResult = XxlJobTrigger.runExecutor(triggerParam, address);
-                idleBeatResultSB.append("<br><br>").append(runResult.getMsg());
-
-                // result
-                runResult.setMsg(idleBeatResultSB.toString());
-                runResult.setContent(address);
-                return runResult;
+                idleBeatResult.setMsg(idleBeatResultSB.toString());
+                idleBeatResult.setContent(address);
+                return idleBeatResult;
             }
         }
 
         return new ReturnT<String>(ReturnT.FAIL_CODE, idleBeatResultSB.toString());
     }
+
 }

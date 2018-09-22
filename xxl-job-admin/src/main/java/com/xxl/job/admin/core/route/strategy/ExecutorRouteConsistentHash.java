@@ -57,7 +57,7 @@ public class ExecutorRouteConsistentHash extends ExecutorRouter {
         return truncateHashCode;
     }
 
-    public String route(int jobId, ArrayList<String> addressList) {
+    public String hashJob(int jobId, ArrayList<String> addressList) {
 
         // ------A1------A2-------A3------
         // -----------J1------------------
@@ -78,13 +78,9 @@ public class ExecutorRouteConsistentHash extends ExecutorRouter {
     }
 
     @Override
-    public ReturnT<String> routeRun(TriggerParam triggerParam, ArrayList<String> addressList) {
-        // address
-        String address = route(triggerParam.getJobId(), addressList);
-
-        // run executor
-        ReturnT<String> runResult = XxlJobTrigger.runExecutor(triggerParam, address);
-        runResult.setContent(address);
-        return runResult;
+    public ReturnT<String> route(TriggerParam triggerParam, ArrayList<String> addressList) {
+        String address = hashJob(triggerParam.getJobId(), addressList);
+        return new ReturnT<String>(address);
     }
+
 }

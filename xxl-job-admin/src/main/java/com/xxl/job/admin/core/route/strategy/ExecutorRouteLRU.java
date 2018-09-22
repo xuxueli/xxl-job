@@ -54,17 +54,10 @@ public class ExecutorRouteLRU extends ExecutorRouter {
         return eldestValue;
     }
 
-
     @Override
-    public ReturnT<String> routeRun(TriggerParam triggerParam, ArrayList<String> addressList) {
-
-        // address
+    public ReturnT<String> route(TriggerParam triggerParam, ArrayList<String> addressList) {
         String address = route(triggerParam.getJobId(), addressList);
-
-        // run executor
-        ReturnT<String> runResult = XxlJobTrigger.runExecutor(triggerParam, address);
-        runResult.setContent(address);
-        return runResult;
+        return new ReturnT<String>(address);
     }
 
 }

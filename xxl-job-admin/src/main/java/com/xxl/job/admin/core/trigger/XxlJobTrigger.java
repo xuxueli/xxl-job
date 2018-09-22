@@ -145,6 +145,7 @@ public class XxlJobTrigger {
             triggerMsgSb.append("<br>").append(I18nUtil.getString("jobinfo_field_executorFailRetryCount")).append("：").append(finalFailRetryCount);
 
             // 3.0、trigger-valid
+            String address = null;
             if (CollectionUtils.isEmpty(addressList)) {
                 triggerResult.setCode(ReturnT.FAIL_CODE);
                 triggerMsgSb.append("<br>----------------------<br>").append(I18nUtil.getString("jobconf_trigger_address_empty"));
@@ -165,14 +166,19 @@ public class XxlJobTrigger {
                 triggerParam.setBroadcastTotal(1);
 
                 // 3.2、trigger-run (route run / trigger remote executor)
-                triggerResult = executorRouteStrategyEnum.getRouter().routeRun(triggerParam, addressList);
-                triggerMsgSb.append("<br><br><span style=\"color:#00c0ef;\" > >>>>>>>>>>>"+ I18nUtil.getString("jobconf_trigger_run") +"<<<<<<<<<<< </span><br>").append(triggerResult.getMsg());
-
+                //triggerResult = executorRouteStrategyEnum.getRouter().routeRun(triggerParam, addressList);
+                ReturnT<String> routeAddressResult = executorRouteStrategyEnum.getRouter().route(triggerParam, addressList);
+                if (routeAddressResult.getCode() == ReturnT.SUCCESS_CODE) {
+                    address = routeAddressResult.getContent();
+                    triggerResult = runExecutor(triggerParam, address);
+                }
+                triggerMsgSb.append("<br><br><span style=\"color:#00c0ef;\" > >>>>>>>>>>>"+ I18nUtil.getString("jobconf_trigger_run") +"<<<<<<<<<<< </span><br>")
+                        .append(routeAddressResult.getMsg()!=null?routeAddressResult.getMsg()+"<br><br>":"").append(triggerResult.getMsg()!=null?triggerResult.getMsg():"");
 
             }
 
             // 4、save trigger-info
-            jobLog.setExecutorAddress(triggerResult.getContent());
+            jobLog.setExecutorAddress(address);
             jobLog.setTriggerCode(triggerResult.getCode());
             jobLog.setTriggerMsg(triggerMsgSb.toString());
             XxlJobDynamicScheduler.xxlJobLogDao.updateTriggerInfo(jobLog);
