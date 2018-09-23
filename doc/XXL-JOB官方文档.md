@@ -980,7 +980,7 @@ API服务请求参考代码：com.xxl.executor.test.DemoJobHandlerTest
 -- | Bean/Glue(Java) | Glue(Shell) 等脚本任务
 --- | --- | ---
 成功 | IJobHandler.SUCCESS | 0
-失败 | IJobHandler.FAIL | -1（其他）
+失败 | IJobHandler.FAIL | -1（非0状态码）
 
 ### 5.16 任务超时控制
 支持设置任务超时时间，任务运行超时的情况下，将会主动中断任务；
@@ -1317,6 +1317,7 @@ Tips: 历史版本(V1.3.x)目前已经Release至稳定版本, 进入维护阶段
 - 20、Release发布时，一同发布调度中心安装包，真正实现开箱即用；
 - 21、Cron TimeZone 自定义；
 - 22、忙碌转移优化，全部机器忙碌时不再直接失败；
+- 23、流程任务等，透传动态参数；
 
 ## 七、其他
 
