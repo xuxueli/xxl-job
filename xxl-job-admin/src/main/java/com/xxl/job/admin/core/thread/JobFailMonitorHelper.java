@@ -59,7 +59,7 @@ public class JobFailMonitorHelper {
 								if (IJobHandler.SUCCESS.getCode() == log.getTriggerCode() && log.getHandleCode() == 0) {
 									// job running
 									JobFailMonitorHelper.monitor(jobLogId);
-									logger.info(">>>>>>>>>>> job monitor, job running, JobLogId:{}", jobLogId);
+									logger.debug(">>>>>>>>>>> job monitor, job running, JobLogId:{}", jobLogId);
 								} else if (IJobHandler.SUCCESS.getCode() == log.getHandleCode()) {
 									// job success, pass
 									logger.info(">>>>>>>>>>> job monitor, job success, JobLogId:{}", jobLogId);
