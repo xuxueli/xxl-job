@@ -1,5 +1,6 @@
 package com.xxl.job.admin.core.schedule;
 
+import com.xxl.job.admin.core.conf.XxlJobAdminConfig;
 import com.xxl.job.admin.core.jobbean.RemoteHttpJobBean;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.thread.JobFailMonitorHelper;
@@ -15,6 +16,7 @@ import com.xxl.job.core.biz.ExecutorBiz;
 import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
 import com.xxl.job.core.rpc.netcom.NetComClientProxy;
 import com.xxl.job.core.rpc.netcom.NetComServerFactory;
+import com.xxl.job.core.util.ExpireTimeHolder;
 import org.quartz.*;
 import org.quartz.Trigger.TriggerState;
 import org.quartz.impl.triggers.CronTriggerImpl;
@@ -69,6 +71,9 @@ public final class XxlJobDynamicScheduler implements ApplicationContextAware {
 
     // ---------------------- init + destroy ----------------------
     public void init() throws Exception {
+        //initialize the expire time
+        ExpireTimeHolder.setExpire(Integer.parseInt(XxlJobAdminConfig.getAdminConfig().getExpireTime())) ;
+
         // admin registry monitor run
         JobRegistryMonitorHelper.getInstance().start();
 

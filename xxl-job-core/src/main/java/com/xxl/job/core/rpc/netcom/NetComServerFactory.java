@@ -4,6 +4,7 @@ import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.rpc.codec.RpcRequest;
 import com.xxl.job.core.rpc.codec.RpcResponse;
 import com.xxl.job.core.rpc.netcom.jetty.server.JettyServer;
+import com.xxl.job.core.util.ExpireTimeHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cglib.reflect.FastClass;
@@ -52,7 +53,8 @@ public class NetComServerFactory  {
 
 		RpcResponse response = new RpcResponse();
 
-		if (System.currentTimeMillis() - request.getCreateMillisTime() > 180000) {
+		int expire = ExpireTimeHolder.getExpire() == 0 ? 3 :ExpireTimeHolder.getExpire() ;
+		if (System.currentTimeMillis() - request.getCreateMillisTime() > expire * 60 * 1000) {
 			response.setResult(new ReturnT<String>(ReturnT.FAIL_CODE, "The timestamp difference between admin and executor exceeds the limit."));
 			return response;
 		}
