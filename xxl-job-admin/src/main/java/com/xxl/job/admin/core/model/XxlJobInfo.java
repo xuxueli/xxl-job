@@ -1,5 +1,6 @@
 package com.xxl.job.admin.core.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -7,7 +8,7 @@ import java.util.Date;
  *
  * @author xuxueli  2016-1-12 18:25:49
  */
-public class XxlJobInfo {
+public class XxlJobInfo implements Serializable {
 	
 	private int id;				// 主键ID	    (JobKey.name)
 	

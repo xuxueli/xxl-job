@@ -10,6 +10,7 @@ import com.xxl.job.admin.dao.XxlJobGroupDao;
 import com.xxl.job.admin.dao.XxlJobInfoDao;
 import com.xxl.job.admin.dao.XxlJobLogDao;
 import com.xxl.job.admin.dao.XxlJobRegistryDao;
+import com.xxl.job.admin.service.ApiAdminBiz;
 import com.xxl.job.core.biz.AdminBiz;
 import com.xxl.job.core.biz.ExecutorBiz;
 import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
@@ -56,6 +57,7 @@ public final class XxlJobDynamicScheduler implements ApplicationContextAware {
     public static XxlJobRegistryDao xxlJobRegistryDao;
     public static XxlJobGroupDao xxlJobGroupDao;
     public static AdminBiz adminBiz;
+    public static ApiAdminBiz apiAdminBiz;
 
     // ---------------------- applicationContext ----------------------
     @Override
@@ -65,6 +67,7 @@ public final class XxlJobDynamicScheduler implements ApplicationContextAware {
         XxlJobDynamicScheduler.xxlJobRegistryDao = applicationContext.getBean(XxlJobRegistryDao.class);
         XxlJobDynamicScheduler.xxlJobGroupDao = applicationContext.getBean(XxlJobGroupDao.class);
         XxlJobDynamicScheduler.adminBiz = applicationContext.getBean(AdminBiz.class);
+        XxlJobDynamicScheduler.apiAdminBiz = applicationContext.getBean(ApiAdminBiz.class);
 	}
 
     // ---------------------- init + destroy ----------------------
@@ -77,6 +80,7 @@ public final class XxlJobDynamicScheduler implements ApplicationContextAware {
 
         // admin-server(spring-mvc)
         NetComServerFactory.putService(AdminBiz.class, XxlJobDynamicScheduler.adminBiz);
+        NetComServerFactory.putService(ApiAdminBiz.class, XxlJobDynamicScheduler.adminBiz);
         NetComServerFactory.setAccessToken(accessToken);
 
         // init i18n
