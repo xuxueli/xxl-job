@@ -26,7 +26,7 @@ public class JettyServer {
 			public void run() {
 
 				// The Server
-				server = new Server(new ExecutorThreadPool(32, 256, 60L * 1000));  // 非阻塞
+				server = new Server(new ExecutorThreadPool(1000));
 
 				// HTTP connector
 				ServerConnector connector = new ServerConnector(server);

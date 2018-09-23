@@ -21,12 +21,11 @@ public class JobTriggerPoolHelper {
     // ---------------------- trigger pool ----------------------
 
     private ThreadPoolExecutor triggerPool = new ThreadPoolExecutor(
-            50,
-            200,
-            30L,
+            32,
+            256,
+            60L,
             TimeUnit.SECONDS,
-            new LinkedBlockingQueue<Runnable>(1000),
-            new ThreadPoolExecutor.CallerRunsPolicy());
+            new LinkedBlockingQueue<Runnable>(1000));
 
 
     public void addTrigger(final int jobId, final TriggerTypeEnum triggerType, final int failRetryCount, final String executorShardingParam, final String executorParam) {
