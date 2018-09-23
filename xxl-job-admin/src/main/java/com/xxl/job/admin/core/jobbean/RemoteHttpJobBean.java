@@ -29,7 +29,7 @@ public class RemoteHttpJobBean extends QuartzJobBean {
 
 		// trigger
 		//XxlJobTrigger.trigger(jobId);
-		JobTriggerPoolHelper.trigger(jobId, TriggerTypeEnum.CRON, -1, null);
+		JobTriggerPoolHelper.trigger(jobId, TriggerTypeEnum.CRON, -1, null, null);
 	}
 
 }

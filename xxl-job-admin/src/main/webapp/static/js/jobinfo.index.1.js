@@ -122,7 +122,7 @@ $(function() {
 								// html
                                 tableData['key'+row.id] = row;
 								var html = '<p id="'+ row.id +'" >'+
-									'<button class="btn btn-primary btn-xs job_operate" _type="job_trigger" type="button">'+ I18n.jobinfo_opt_run +'</button>  '+
+									'<button class="btn btn-primary btn-xs job_trigger" type="button">'+ I18n.jobinfo_opt_run +'</button>  '+
 									pause_resume +
 									'<button class="btn btn-primary btn-xs" type="job_del" type="button" onclick="javascript:window.open(\'' + logUrl + '\')" >'+ I18n.jobinfo_opt_log +'</button><br>  '+
 									'<button class="btn btn-warning btn-xs update" type="button">'+ I18n.system_opt_edit +'</button>  '+
@@ -195,9 +195,6 @@ $(function() {
 			typeName = I18n.system_opt_del ;
 			url = base_url + "/jobinfo/remove";
 			needFresh = true;
-		} else if ("job_trigger" == type) {
-			typeName = I18n.jobinfo_opt_run ;
-			url = base_url + "/jobinfo/trigger";
 		} else {
 			return;
 		}
@@ -245,6 +242,50 @@ $(function() {
 			});
 		});
 	});
+
+    // job trigger
+    $("#job_list").on('click', '.job_trigger',function() {
+        var id = $(this).parent('p').attr("id");
+        var row = tableData['key'+id];
+
+        $("#jobTriggerModal .form input[name='id']").val( row.id );
+        $("#jobTriggerModal .form textarea[name='executorParam']").val( row.executorParam );
+
+        $('#jobTriggerModal').modal({backdrop: false, keyboard: false}).modal('show');
+    });
+    $("#jobTriggerModal .ok").on('click',function() {
+        $.ajax({
+            type : 'POST',
+            url : base_url + "/jobinfo/trigger",
+            data : {
+                "id" : $("#jobTriggerModal .form input[name='id']").val(),
+                "executorParam" : $("#jobTriggerModal .textarea[name='executorParam']").val()
+            },
+            dataType : "json",
+            success : function(data){
+                if (data.code == 200) {
+                    $('#jobTriggerModal').modal('hide');
+
+                    layer.open({
+                        title: I18n.system_tips,
+                        btn: [ I18n.system_ok ],
+                        content: I18n.jobinfo_opt_run + I18n.system_success ,
+                        icon: '1'
+                    });
+                } else {
+                    layer.open({
+                        title: I18n.system_tips,
+                        btn: [ I18n.system_ok ],
+                        content: (data.msg || I18n.jobinfo_opt_run + I18n.system_fail ),
+                        icon: '2'
+                    });
+                }
+            }
+        });
+    });
+    $("#jobTriggerModal").on('hide.bs.modal', function () {
+        $("#jobTriggerModal .form")[0].reset();
+    });
 
 	// add
 	$(".add").click(function(){

@@ -91,8 +91,13 @@ public class JobInfoController {
 	@RequestMapping("/trigger")
 	@ResponseBody
 	//@PermessionLimit(limit = false)
-	public ReturnT<String> triggerJob(int id) {
-		JobTriggerPoolHelper.trigger(id, TriggerTypeEnum.MANUAL, -1, null);
+	public ReturnT<String> triggerJob(int id, String executorParam) {
+		// force cover job param
+		if (executorParam == null) {
+			executorParam = "";
+		}
+
+		JobTriggerPoolHelper.trigger(id, TriggerTypeEnum.MANUAL, -1, null, executorParam);
 		return ReturnT.SUCCESS;
 	}
 	
