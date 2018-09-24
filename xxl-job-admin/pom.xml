@@ -53,9 +53,10 @@
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet.jsp</groupId>
-			<artifactId>jsp-api</artifactId>
-			<version>${jsp-api.version}</version>
+			<artifactId>javax.servlet.jsp-api</artifactId>
+			<version>${javax.servlet.jsp-api.version}</version>
 		</dependency>
+
 		<!-- freemarker -->
 		<dependency>
 			<groupId>org.freemarker</groupId>
