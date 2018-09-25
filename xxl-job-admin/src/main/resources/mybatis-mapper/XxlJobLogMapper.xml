@@ -68,7 +68,7 @@
 			<if test="logStatus == 2" >
 				AND (
 					(t.trigger_code <![CDATA[ > ]]> 0 AND t.trigger_code!=200) ||
-					(t.handle_code <![CDATA[ > ]]> 0 AND t.handle_code!=200)
+					(t.handle_code <![CDATA[ > ]]> 0 AND t.handle_code not in(200,433) )
 				)
 			</if>
 			<if test="logStatus == 3" >
@@ -112,7 +112,7 @@
 			<if test="logStatus == 2" >
 				AND (
 				(t.trigger_code <![CDATA[ > ]]> 0 AND t.trigger_code!=200) ||
-				(t.handle_code <![CDATA[ > ]]> 0 AND t.handle_code!=200)
+				(t.handle_code <![CDATA[ > ]]> 0 AND t.handle_code not in(200,433) )
 				)
 			</if>
 			<if test="logStatus == 3" >
