@@ -49,18 +49,4 @@ public class AdminBizTest {
         Assert.assertTrue(returnT.getCode() == ReturnT.SUCCESS_CODE);
     }
 
-    /**
-     * trigger job for once
-     *
-     * @throws Exception
-     */
-    @Test
-    public void triggerJob() throws Exception {
-        AdminBiz adminBiz = (AdminBiz) new NetComClientProxy(AdminBiz.class, addressUrl, accessToken).getObject();
-
-        int jobId = 1;
-        ReturnT<String> returnT = adminBiz.triggerJob(jobId);
-        Assert.assertTrue(returnT.getCode() == ReturnT.SUCCESS_CODE);
-    }
-
 }

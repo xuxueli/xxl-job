@@ -9,11 +9,14 @@ public class HandleCallbackParam implements Serializable {
     private static final long serialVersionUID = 42L;
 
     private int logId;
+    private long logDateTim;
+
     private ReturnT<String> executeResult;
 
     public HandleCallbackParam(){}
-    public HandleCallbackParam(int logId, ReturnT<String> executeResult) {
+    public HandleCallbackParam(int logId, long logDateTim, ReturnT<String> executeResult) {
         this.logId = logId;
+        this.logDateTim = logDateTim;
         this.executeResult = executeResult;
     }
 
@@ -23,6 +26,14 @@ public class HandleCallbackParam implements Serializable {
 
     public void setLogId(int logId) {
         this.logId = logId;
+    }
+
+    public long getLogDateTim() {
+        return logDateTim;
+    }
+
+    public void setLogDateTim(long logDateTim) {
+        this.logDateTim = logDateTim;
     }
 
     public ReturnT<String> getExecuteResult() {
@@ -37,7 +48,9 @@ public class HandleCallbackParam implements Serializable {
     public String toString() {
         return "HandleCallbackParam{" +
                 "logId=" + logId +
+                ", logDateTim=" + logDateTim +
                 ", executeResult=" + executeResult +
                 '}';
     }
+
 }

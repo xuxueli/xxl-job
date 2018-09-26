@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.xuxueli</groupId>
         <artifactId>xxl-job-executor-samples</artifactId>
-        <version>1.9.1</version>
+        <version>1.9.2-SNAPSHOT</version>
     </parent>
     <artifactId>xxl-job-executor-sample-springboot</artifactId>
     <packaging>jar</packaging>
@@ -84,6 +84,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring-boot.version}</version>
                 <executions>
                     <execution>
                         <goals>

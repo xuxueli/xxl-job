@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.xxl.job.admin.dao.XxlJobInfoDao">
-	
+
 	<resultMap id="XxlJobInfo" type="com.xxl.job.admin.core.model.XxlJobInfo" >
 		<result column="id" property="id" />
-	
+
 		<result column="job_group" property="jobGroup" />
 	    <result column="job_cron" property="jobCron" />
 	    <result column="job_desc" property="jobDesc" />
-	    
+
 	    <result column="add_time" property="addTime" />
 	    <result column="update_time" property="updateTime" />
-	    
+
 	    <result column="author" property="author" />
 	    <result column="alarm_email" property="alarmEmail" />
 
@@ -20,8 +20,9 @@
 		<result column="executor_handler" property="executorHandler" />
 	    <result column="executor_param" property="executorParam" />
 		<result column="executor_block_strategy" property="executorBlockStrategy" />
-		<result column="executor_fail_strategy" property="executorFailStrategy" />
-	    
+		<result column="executor_timeout" property="executorTimeout" />
+		<result column="executor_fail_retry_count" property="executorFailRetryCount" />
+
 	    <result column="glue_type" property="glueType" />
 	    <result column="glue_source" property="glueSource" />
 	    <result column="glue_remark" property="glueRemark" />
@@ -43,14 +44,15 @@
 		t.executor_handler,
 		t.executor_param,
 		t.executor_block_strategy,
-		t.executor_fail_strategy,
+		t.executor_timeout,
+		t.executor_fail_retry_count,
 		t.glue_type,
 		t.glue_source,
 		t.glue_remark,
 		t.glue_updatetime,
 		t.child_jobid
 	</sql>
-	
+
 	<select id="pageList" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
 		SELECT <include refid="Base_Column_List" />
 		FROM XXL_JOB_QRTZ_TRIGGER_INFO AS t
@@ -68,7 +70,7 @@
 		ORDER BY id DESC
 		LIMIT #{offset}, #{pagesize}
 	</select>
-	
+
 	<select id="pageListCount" parameterType="java.util.HashMap" resultType="int">
 		SELECT count(1)
 		FROM XXL_JOB_QRTZ_TRIGGER_INFO AS t
@@ -98,7 +100,8 @@
 			executor_handler,
 			executor_param,
 			executor_block_strategy,
-			executor_fail_strategy,
+			executor_timeout,
+			executor_fail_retry_count,
 			glue_type,
 			glue_source,
 			glue_remark,
@@ -106,7 +109,7 @@
 			child_jobid
 		) VALUES (
 			#{jobGroup},
-			#{jobCron}, 
+			#{jobCron},
 			#{jobDesc},
 			NOW(),
 			NOW(),
@@ -116,7 +119,8 @@
 			#{executorHandler},
 			#{executorParam},
 			#{executorBlockStrategy},
-			#{executorFailStrategy},
+			#{executorTimeout},
+			#{executorFailRetryCount},
 			#{glueType},
 			#{glueSource},
 			#{glueRemark},
@@ -134,10 +138,10 @@
 		FROM XXL_JOB_QRTZ_TRIGGER_INFO AS t
 		WHERE t.id = #{id}
 	</select>
-	
+
 	<update id="update" parameterType="com.xxl.job.admin.core.model.XxlJobInfo" >
 		UPDATE XXL_JOB_QRTZ_TRIGGER_INFO
-		SET 
+		SET
 			job_cron = #{jobCron},
 			job_desc = #{jobDesc},
 			update_time = NOW(),
@@ -147,7 +151,8 @@
 			executor_handler = #{executorHandler},
 			executor_param = #{executorParam},
 			executor_block_strategy = #{executorBlockStrategy},
-			executor_fail_strategy = #{executorFailStrategy},
+			executor_timeout = ${executorTimeout},
+			executor_fail_retry_count = ${executorFailRetryCount},
 			glue_type = #{glueType},
 			glue_source = #{glueSource},
 			glue_remark = #{glueRemark},
@@ -155,7 +160,7 @@
 			child_jobid = #{childJobId}
 		WHERE id = #{id}
 	</update>
-	
+
 	<delete id="delete" parameterType="java.util.HashMap">
 		DELETE
 		FROM XXL_JOB_QRTZ_TRIGGER_INFO

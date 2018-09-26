@@ -35,10 +35,16 @@ public class MailUtil {
 			//email.setSSL(true);
 
 			email.setHostName(XxlJobAdminConfig.getAdminConfig().getMailHost());
-			email.setSmtpPort(Integer.valueOf(XxlJobAdminConfig.getAdminConfig().getMailPort()));
-			//email.setSslSmtpPort(port);
+
+			if (XxlJobAdminConfig.getAdminConfig().isMailSSL()) {
+				email.setSslSmtpPort(XxlJobAdminConfig.getAdminConfig().getMailPort());
+				email.setSSLOnConnect(true);
+			} else {
+				email.setSmtpPort(Integer.valueOf(XxlJobAdminConfig.getAdminConfig().getMailPort()));
+			}
+
 			email.setAuthenticator(new DefaultAuthenticator(XxlJobAdminConfig.getAdminConfig().getMailUsername(), XxlJobAdminConfig.getAdminConfig().getMailPassword()));
-			email.setCharset(Charset.defaultCharset().name());
+			email.setCharset("UTF-8");
 
 			email.setFrom(XxlJobAdminConfig.getAdminConfig().getMailUsername(), XxlJobAdminConfig.getAdminConfig().getMailSendNick());
 			email.addTo(toAddress);

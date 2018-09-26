@@ -1,5 +1,6 @@
 package com.xxl.job.core.util;
 
+import com.xxl.job.core.log.XxlJobLogger;
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
 import org.apache.commons.exec.PumpStreamHandler;
@@ -59,7 +60,10 @@ public class ScriptUtil {
         // 标准输出：print （null if watchdog timeout）
         // 错误输出：logging + 异常 （still exists if watchdog timeout）
         // 标准输入
-        try (FileOutputStream fileOutputStream = new FileOutputStream(logFile, true)) {
+
+        FileOutputStream fileOutputStream = null;   //
+        try {
+            fileOutputStream = new FileOutputStream(logFile, true);
             PumpStreamHandler streamHandler = new PumpStreamHandler(fileOutputStream, fileOutputStream, null);
 
             // command
@@ -75,6 +79,18 @@ public class ScriptUtil {
             exec.setStreamHandler(streamHandler);
             int exitValue = exec.execute(commandline);  // exit code: 0=success, 1=error
             return exitValue;
+        } catch (Exception e) {
+            XxlJobLogger.log(e);
+            return -1;
+        } finally {
+            if (fileOutputStream != null) {
+                try {
+                    fileOutputStream.close();
+                } catch (IOException e) {
+                    XxlJobLogger.log(e);
+                }
+
+            }
         }
     }
 

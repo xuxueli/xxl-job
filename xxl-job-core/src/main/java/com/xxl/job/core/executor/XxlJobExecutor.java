@@ -91,7 +91,7 @@ public class XxlJobExecutor implements ApplicationContextAware {
         // destory JobThreadRepository
         if (JobThreadRepository.size() > 0) {
             for (Map.Entry<Integer, JobThread> item: JobThreadRepository.entrySet()) {
-                removeJobThread(item.getKey(), "Web容器销毁终止");
+                removeJobThread(item.getKey(), "web container destroy and kill the job.");
             }
             JobThreadRepository.clear();
         }

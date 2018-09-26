@@ -5,11 +5,13 @@ package com.xxl.job.core.glue;
  */
 public enum GlueTypeEnum {
 
-    BEAN("BEAN模式", false, null, null),
-    GLUE_GROOVY("GLUE模式(Java)", false, null, null),
-    GLUE_SHELL("GLUE模式(Shell)", true, "bash", ".sh"),
-    GLUE_PYTHON("GLUE模式(Python)", true, "python", ".py"),
-    GLUE_NODEJS("GLUE模式(Nodejs)", true, "node", ".js");
+    BEAN("BEAN", false, null, null),
+    GLUE_GROOVY("GLUE(Java)", false, null, null),
+    GLUE_SHELL("GLUE(Shell)", true, "bash", ".sh"),
+    GLUE_PYTHON("GLUE(Python)", true, "python", ".py"),
+    GLUE_PHP("GLUE(PHP)", true, "php", ".php"),
+    GLUE_NODEJS("GLUE(Nodejs)", true, "node", ".js"),
+    GLUE_POWERSHELL("GLUE(PowerShell)", true, "powershell ", ".ps1");
 
     private String desc;
     private boolean isScript;

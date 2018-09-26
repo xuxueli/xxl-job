@@ -127,14 +127,24 @@
     <#elseif jobInfo.glueType == "GLUE_PYTHON" >
         <#assign glueTypeModeSrc = "${request.contextPath}/static/plugins/codemirror/mode/python/python.js" />
         <#assign glueTypeIdeMode = "text/x-python" />
+    <#elseif jobInfo.glueType == "GLUE_PHP" >
+        <#assign glueTypeModeSrc = "${request.contextPath}/static/plugins/codemirror/mode/php/php.js" />
+        <#assign glueTypeIdeMode = "text/x-php" />
+        <#assign glueTypeModeSrc02 = "${request.contextPath}/static/plugins/codemirror/mode/clike/clike.js" />
     <#elseif jobInfo.glueType == "GLUE_NODEJS" >
         <#assign glueTypeModeSrc = "${request.contextPath}/static/plugins/codemirror/mode/javascript/javascript.js" />
         <#assign glueTypeIdeMode = "text/javascript" />
+    <#elseif jobInfo.glueType == "GLUE_POWERSHELL" >
+        <#assign glueTypeModeSrc = "${request.contextPath}/static/plugins/codemirror/mode/powershell/powershell.js" />
+        <#assign glueTypeIdeMode = "powershell" />
     </#if>
 
 
 <script src="${request.contextPath}/static/plugins/codemirror/lib/codemirror.js"></script>
 <script src="${glueTypeModeSrc}"></script>
+<#if glueTypeModeSrc02?exists>
+    <script src="${glueTypeModeSrc02}"></script>
+</#if>
 <script src="${request.contextPath}/static/plugins/codemirror/addon/hint/show-hint.js"></script>
 <script src="${request.contextPath}/static/plugins/codemirror/addon/hint/anyword-hint.js"></script>
 

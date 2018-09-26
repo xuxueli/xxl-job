@@ -9,11 +9,11 @@
 		<result column="job_group" property="jobGroup" />
 		<result column="job_id" property="jobId" />
 
-		<result column="glue_type" property="glueType" />
-
 		<result column="executor_address" property="executorAddress" />
 		<result column="executor_handler" property="executorHandler" />
 	    <result column="executor_param" property="executorParam" />
+		<result column="executor_sharding_param" property="executorShardingParam" />
+		<result column="executor_fail_retry_count" property="executorFailRetryCount" />
 	    
 	    <result column="trigger_time" property="triggerTime" />
 	    <result column="trigger_code" property="triggerCode" />
@@ -29,10 +29,11 @@
 		t.id,
 		t.job_group,
 		t.job_id,
-		t.glue_type,
 		t.executor_address,
 		t.executor_handler,
 		t.executor_param,
+		t.executor_sharding_param,
+		t.executor_fail_retry_count,
 		t.trigger_time,
 		t.trigger_code,
 		t.trigger_msg,
@@ -45,7 +46,7 @@
 		SELECT <include refid="Base_Column_List" />
 		FROM XXL_JOB_QRTZ_TRIGGER_LOG AS t
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
-			<if test="jobGroup != null and jobGroup != ''">
+			<if test="jobGroup gt 0">
 				AND t.job_group = #{jobGroup}
 			</if>
 			<if test="jobId gt 0">
@@ -62,12 +63,13 @@
 			</if>
 			<if test="logStatus == 2" >
 				AND (
-					(t.trigger_code <![CDATA[ > ]]> 0 AND t.trigger_code!=200) ||
-					(t.handle_code <![CDATA[ > ]]> 0 AND t.handle_code!=200)
+					t.trigger_code NOT IN (0, 200) OR
+					t.handle_code NOT IN (0, 200)
 				)
 			</if>
 			<if test="logStatus == 3" >
-				AND (t.trigger_code = 200 AND t.handle_code=0)
+				AND t.trigger_code = 200
+				AND t.handle_code = 0
 			</if>
 		</trim>
 		ORDER BY id DESC
@@ -78,7 +80,7 @@
 		SELECT count(1)
 		FROM XXL_JOB_QRTZ_TRIGGER_LOG AS t
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
-			<if test="jobGroup != null and jobGroup != ''">
+			<if test="jobGroup gt 0">
 				AND t.job_group = #{jobGroup}
 			</if>
 			<if test="jobId gt 0">
@@ -95,12 +97,13 @@
 			</if>
 			<if test="logStatus == 2" >
 				AND (
-				(t.trigger_code <![CDATA[ > ]]> 0 AND t.trigger_code!=200) ||
-				(t.handle_code <![CDATA[ > ]]> 0 AND t.handle_code!=200)
+					t.trigger_code NOT IN (0, 200) OR
+					t.handle_code NOT IN (0, 200)
 				)
 			</if>
 			<if test="logStatus == 3" >
-				AND (t.trigger_code = 200 AND t.handle_code=0)
+				AND t.trigger_code = 200
+				AND t.handle_code = 0
 			</if>
 		</trim>
 	</select>
@@ -115,10 +118,16 @@
 	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobLog" useGeneratedKeys="true" keyProperty="id" >
 		INSERT INTO XXL_JOB_QRTZ_TRIGGER_LOG (
 			`job_group`,
-			`job_id`
+			`job_id`,
+			`trigger_time`,
+			`trigger_code`,
+			`handle_code`
 		) VALUES (
 			#{jobGroup},
-			#{jobId}
+			#{jobId},
+			#{triggerTime},
+			#{triggerCode},
+			#{handleCode}
 		);
 		<!--<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
 			SELECT LAST_INSERT_ID() 
@@ -128,13 +137,14 @@
 	<update id="updateTriggerInfo" >
 		UPDATE XXL_JOB_QRTZ_TRIGGER_LOG
 		SET
-		    `glue_type`= #{glueType},
 			`trigger_time`= #{triggerTime},
 			`trigger_code`= #{triggerCode},
 			`trigger_msg`= #{triggerMsg},
 			`executor_address`= #{executorAddress},
 			`executor_handler`=#{executorHandler},
-			`executor_param`= #{executorParam}
+			`executor_param`= #{executorParam},
+			`executor_sharding_param`= #{executorShardingParam},
+			`executor_fail_retry_count`= #{executorFailRetryCount}
 		WHERE `id`= #{id}
 	</update>
 
@@ -166,7 +176,7 @@
 		SELECT
 			DATE_FORMAT(trigger_time,'%Y-%m-%d') triggerDay,
 			COUNT(handle_code) triggerDayCount,
-			SUM(CASE WHEN handle_code = 0 then 1 else 0 end) as triggerDayCountRunning,
+			SUM(CASE WHEN (trigger_code = 200 and handle_code = 0) then 1 else 0 end) as triggerDayCountRunning,
 			SUM(CASE WHEN handle_code = 200 then 1 else 0 end) as triggerDayCountSuc
 		FROM XXL_JOB_QRTZ_TRIGGER_LOG
 		WHERE trigger_time BETWEEN #{from} and #{to}

@@ -16,7 +16,7 @@
 		t.id,
 		t.app_name,
 		t.title,
-		t.order,
+		t.`order`,
 		t.address_type,
 		t.address_list
 	</sql>

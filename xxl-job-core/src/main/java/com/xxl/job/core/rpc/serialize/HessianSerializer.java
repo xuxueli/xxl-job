@@ -1,7 +1,7 @@
 package com.xxl.job.core.rpc.serialize;
 
-import com.caucho.hessian.io.HessianInput;
-import com.caucho.hessian.io.HessianOutput;
+import com.caucho.hessian.io.Hessian2Input;
+import com.caucho.hessian.io.Hessian2Output;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -15,22 +15,47 @@ public class HessianSerializer  {
 
 	public static <T> byte[] serialize(T obj){
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
-		HessianOutput ho = new HessianOutput(os);
+		Hessian2Output ho = new Hessian2Output(os);
 		try {
 			ho.writeObject(obj);
+			ho.flush();
+			byte[] result = os.toByteArray();
+			return result;
 		} catch (IOException e) {
 			throw new IllegalStateException(e.getMessage(), e);
+		} finally {
+			try {
+				ho.close();
+			} catch (IOException e) {
+				throw new IllegalStateException(e.getMessage(), e);
+			}
+			try {
+				os.close();
+			} catch (IOException e) {
+				throw new IllegalStateException(e.getMessage(), e);
+			}
 		}
-		return os.toByteArray();
 	}
 
 	public static <T> Object deserialize(byte[] bytes, Class<T> clazz) {
 		ByteArrayInputStream is = new ByteArrayInputStream(bytes);
-		HessianInput hi = new HessianInput(is);
+		Hessian2Input hi = new Hessian2Input(is);
 		try {
-			return hi.readObject();
+			Object result = hi.readObject();
+			return result;
 		} catch (IOException e) {
 			throw new IllegalStateException(e.getMessage(), e);
+		} finally {
+			try {
+				hi.close();
+			} catch (Exception e) {
+				throw new IllegalStateException(e.getMessage(), e);
+			}
+			try {
+				is.close();
+			} catch (IOException e) {
+				throw new IllegalStateException(e.getMessage(), e);
+			}
 		}
 	}
 	

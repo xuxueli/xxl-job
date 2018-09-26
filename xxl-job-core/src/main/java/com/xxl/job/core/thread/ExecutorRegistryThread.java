@@ -74,7 +74,7 @@ public class ExecutorRegistryThread extends Thread {
                     try {
                         TimeUnit.SECONDS.sleep(RegistryConfig.BEAT_TIMEOUT);
                     } catch (InterruptedException e) {
-                        logger.error(e.getMessage(), e);
+                        logger.warn(">>>>>>>>>>> xxl-job, executor registry thread interrupted, error msg:{}", e.getMessage());
                     }
                 }
 

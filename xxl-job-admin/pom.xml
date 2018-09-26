@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>com.xuxueli</groupId>
 		<artifactId>xxl-job</artifactId>
-		<version>1.9.1</version>
+		<version>1.9.2-SNAPSHOT</version>
 	</parent>
 	<artifactId>xxl-job-admin</artifactId>
 	<packaging>war</packaging>
@@ -54,10 +54,11 @@
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet.jsp</groupId>
-			<artifactId>jsp-api</artifactId>
-			<version>${jsp-api.version}</version>
+			<artifactId>javax.servlet.jsp-api</artifactId>
+			<version>${javax.servlet.jsp-api.version}</version>
 			<scope>provided</scope>
 		</dependency>
+
 		<!-- freemarker -->
 		<dependency>
 			<groupId>org.freemarker</groupId>

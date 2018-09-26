@@ -135,39 +135,39 @@
 								</#list>
                             </select>
                         </div>
-                        <label for="firstname" class="col-sm-2 control-label">JobHandler<font color="black">*</font></label>
+                        <label for="firstname" class="col-sm-2 control-label">JobHandler<font color="red">*</font></label>
                         <div class="col-sm-4"><input type="text" class="form-control" name="executorHandler" placeholder="${I18n.system_please_input}JobHandler" maxlength="100" ></div>
-                    </div>
-                    <div class="form-group">
-                        <label for="firstname" class="col-sm-2 control-label">${I18n.jobinfo_field_executorparam}<font color="black">*</font></label>
-                        <div class="col-sm-4"><input type="text" class="form-control" name="executorParam" placeholder="${I18n.system_please_input}${I18n.jobinfo_field_executorparam}" maxlength="512" ></div>
-                        <label for="lastname" class="col-sm-2 control-label">${I18n.jobinfo_field_childJobId}<font color="black">*</font></label>
-                        <div class="col-sm-4"><input type="text" class="form-control" name="childJobId" placeholder="${I18n.jobinfo_field_childJobId_placeholder}" maxlength="100" ></div>
                     </div>
                     <div class="form-group">
                         <label for="firstname" class="col-sm-2 control-label">${I18n.jobinfo_field_executorBlockStrategy}<font color="red">*</font></label>
                         <div class="col-sm-4">
                             <select class="form-control" name="executorBlockStrategy" >
 								<#list ExecutorBlockStrategyEnum as item>
-									<option value="${item}" >${item.title}</option>
-								</#list>
+                                    <option value="${item}" >${item.title}</option>
+                                </#list>
                             </select>
-						</div>
-                        <label for="lastname" class="col-sm-2 control-label">${I18n.jobinfo_field_executorFailStrategy}<font color="red">*</font></label>
-                        <div class="col-sm-4">
-                            <select class="form-control" name="executorFailStrategy" >
-								<#list ExecutorFailStrategyEnum as item>
-									<option value="${item}" >${item.title}</option>
-								</#list>
-                            </select>
-						</div>
+                        </div>
+                        <label for="lastname" class="col-sm-2 control-label">${I18n.jobinfo_field_childJobId}<font color="black">*</font></label>
+                        <div class="col-sm-4"><input type="text" class="form-control" name="childJobId" placeholder="${I18n.jobinfo_field_childJobId_placeholder}" maxlength="100" ></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="lastname" class="col-sm-2 control-label">${I18n.jobinfo_field_timeout}<font color="black">*</font></label>
+                        <div class="col-sm-4"><input type="text" class="form-control" name="executorTimeout" placeholder="${I18n.jobinfo_field_executorTimeout_placeholder}" maxlength="6" ></div>
+                        <label for="lastname" class="col-sm-2 control-label">${I18n.jobinfo_field_executorFailRetryCount}<font color="black">*</font></label>
+                        <div class="col-sm-4"><input type="text" class="form-control" name="executorFailRetryCount" placeholder="${I18n.jobinfo_field_executorFailRetryCount_placeholder}" maxlength="4" ></div>
                     </div>
 					<div class="form-group">
                         <label for="lastname" class="col-sm-2 control-label">${I18n.jobinfo_field_author}<font color="red">*</font></label>
                         <div class="col-sm-4"><input type="text" class="form-control" name="author" placeholder="${I18n.system_please_input}${I18n.jobinfo_field_author}" maxlength="50" ></div>
-						<label for="lastname" class="col-sm-2 control-label">${I18n.jobinfo_field_alarmemail}<font color="black">*</font></label>
-						<div class="col-sm-4"><input type="text" class="form-control" name="alarmEmail" placeholder="${I18n.jobinfo_field_alarmemail_placeholder}" maxlength="100" ></div>
+                        <label for="lastname" class="col-sm-2 control-label">${I18n.jobinfo_field_alarmemail}<font color="black">*</font></label>
+                        <div class="col-sm-4"><input type="text" class="form-control" name="alarmEmail" placeholder="${I18n.jobinfo_field_alarmemail_placeholder}" maxlength="100" ></div>
 					</div>
+                    <div class="form-group">
+                        <label for="firstname" class="col-sm-2 control-label">${I18n.jobinfo_field_executorparam}<font color="black">*</font></label>
+                        <div class="col-sm-10">
+                            <textarea class="textarea form-control" name="executorParam" placeholder="${I18n.system_please_input}${I18n.jobinfo_field_executorparam}" maxlength="512" style="height: 63px; line-height: 1.2;"></textarea>
+						</div>
+                    </div>
 
                     <hr>
 					<div class="form-group">
@@ -238,6 +238,22 @@ logging.basicConfig(level=logging.DEBUG)
 logging.info("脚本文件：" + sys.argv[0])
 -->
 </textarea>
+<#--这里有问题，新建一个运行模式为 php 的任务后，GLUE 中没有下边的 php 代码-->
+<textarea class="glueSource_php" style="display:none;" >
+<?php
+
+    echo "xxl-job: hello php  \n";
+
+    echo "${I18n.jobinfo_script_location}：$argv[0]  \n";
+    echo "${I18n.jobinfo_field_executorparam}：$argv[1]  \n";
+    echo "${I18n.jobinfo_shard_index} = $argv[2]  \n";
+    echo "${I18n.jobinfo_shard_total} = $argv[3]  \n";
+
+    echo "Good bye!  \n";
+    exit(0);
+
+?>
+</textarea>
 <textarea class="glueSource_nodejs" style="display:none;" >
 #!/usr/bin/env node
 console.log("xxl-job: hello nodejs")
@@ -254,7 +270,19 @@ console.log("${I18n.jobinfo_shard_total}: " + arguments[4])
 
 console.log("Good bye!")
 process.exit(0)
-</textarea>		
+</textarea>
+<textarea class="glueSource_powershell" style="display:none;" >
+Write-Host "xxl-job: hello powershell"
+
+Write-Host "${I18n.jobinfo_script_location}: " $MyInvocation.MyCommand.Definition
+Write-Host "${I18n.jobinfo_field_executorparam}: "
+	if ($args.Count -gt 2) { $args[0..($args.Count-3)] }
+Write-Host "${I18n.jobinfo_shard_index}: " $args[$args.Count-2]
+Write-Host "${I18n.jobinfo_shard_total}: " $args[$args.Count-1]
+
+Write-Host "Good bye!"
+exit 0
+</textarea>
 				</form>
          	</div>
 		</div>
@@ -303,14 +331,8 @@ process.exit(0)
 							</#list>
                             </select>
                         </div>
-                        <label for="firstname" class="col-sm-2 control-label">JobHandler<font color="black">*</font></label>
+                        <label for="firstname" class="col-sm-2 control-label">JobHandler<font color="red">*</font></label>
                         <div class="col-sm-4"><input type="text" class="form-control" name="executorHandler" placeholder="${I18n.system_please_input}JobHandler" maxlength="100" ></div>
-                    </div>
-                    <div class="form-group">
-                        <label for="firstname" class="col-sm-2 control-label">${I18n.jobinfo_field_executorparam}<font color="black">*</font></label>
-                        <div class="col-sm-4"><input type="text" class="form-control" name="executorParam" placeholder="${I18n.system_please_input}${I18n.jobinfo_field_executorparam}" maxlength="512" ></div>
-                        <label for="lastname" class="col-sm-2 control-label">${I18n.jobinfo_field_childJobId}<font color="black">*</font></label>
-                        <div class="col-sm-4"><input type="text" class="form-control" name="childJobId" placeholder="${I18n.jobinfo_field_childJobId_placeholder}" maxlength="100" ></div>
                     </div>
                     <div class="form-group">
                         <label for="firstname" class="col-sm-2 control-label">${I18n.jobinfo_field_executorBlockStrategy}<font color="red">*</font></label>
@@ -321,20 +343,26 @@ process.exit(0)
 							</#list>
                             </select>
                         </div>
-                        <label for="lastname" class="col-sm-2 control-label">${I18n.jobinfo_field_executorFailStrategy}<font color="red">*</font></label>
-                        <div class="col-sm-4">
-                            <select class="form-control" name="executorFailStrategy" >
-							<#list ExecutorFailStrategyEnum as item>
-                                <option value="${item}" >${item.title}</option>
-							</#list>
-                            </select>
-                        </div>
+                        <label for="lastname" class="col-sm-2 control-label">${I18n.jobinfo_field_childJobId}<font color="black">*</font></label>
+                        <div class="col-sm-4"><input type="text" class="form-control" name="childJobId" placeholder="${I18n.jobinfo_field_childJobId_placeholder}" maxlength="100" ></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="lastname" class="col-sm-2 control-label">${I18n.jobinfo_field_timeout}<font color="black">*</font></label>
+                        <div class="col-sm-4"><input type="text" class="form-control" name="executorTimeout" placeholder="${I18n.jobinfo_field_executorTimeout_placeholder}" maxlength="6" ></div>
+                        <label for="lastname" class="col-sm-2 control-label">${I18n.jobinfo_field_executorFailRetryCount}<font color="black">*</font></label>
+                        <div class="col-sm-4"><input type="text" class="form-control" name="executorFailRetryCount" placeholder="${I18n.jobinfo_field_executorFailRetryCount_placeholder}" maxlength="4" ></div>
                     </div>
                     <div class="form-group">
                         <label for="lastname" class="col-sm-2 control-label">${I18n.jobinfo_field_author}<font color="red">*</font></label>
                         <div class="col-sm-4"><input type="text" class="form-control" name="author" placeholder="${I18n.system_please_input}${I18n.jobinfo_field_author}" maxlength="50" ></div>
                         <label for="lastname" class="col-sm-2 control-label">${I18n.jobinfo_field_alarmemail}<font color="black">*</font></label>
                         <div class="col-sm-4"><input type="text" class="form-control" name="alarmEmail" placeholder="${I18n.jobinfo_field_alarmemail_placeholder}" maxlength="100" ></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="firstname" class="col-sm-2 control-label">${I18n.jobinfo_field_executorparam}<font color="black">*</font></label>
+                        <div class="col-sm-10">
+                            <textarea class="textarea form-control" name="executorParam" placeholder="${I18n.system_please_input}${I18n.jobinfo_field_executorparam}" maxlength="512" style="height: 63px; line-height: 1.2;"></textarea>
+						</div>
                     </div>
 
 					<hr>
@@ -350,6 +378,35 @@ process.exit(0)
          	</div>
 		</div>
 	</div>
+</div>
+
+<#-- trigger -->
+<div class="modal fade" id="jobTriggerModal" tabindex="-1" role="dialog"  aria-hidden="true">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" >${I18n.jobinfo_opt_run}</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal form" role="form" >
+                    <div class="form-group">
+                        <label for="firstname" class="col-sm-2 control-label">${I18n.jobinfo_field_executorparam}<font color="black">*</font></label>
+                        <div class="col-sm-10">
+                            <textarea class="textarea form-control" name="executorParam" placeholder="${I18n.system_please_input}${I18n.jobinfo_field_executorparam}" maxlength="512" style="height: 63px; line-height: 1.2;"></textarea>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="form-group">
+                        <div class="col-sm-offset-3 col-sm-6">
+                            <button type="button" class="btn btn-primary ok" >${I18n.system_save}</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">${I18n.system_cancel}</button>
+                            <input type="hidden" name="id" >
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 
 <@netCommon.commonScript />
