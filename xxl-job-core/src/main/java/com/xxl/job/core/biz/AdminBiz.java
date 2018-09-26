@@ -81,14 +81,6 @@ public interface AdminBiz {
 
 
     /**
-     * trigger job for once
-     *
-     * @param jobId
-     * @return
-     */
-    public ReturnT<String> triggerJob(int jobId);
-
-    /**
      * 根据任务的父id来更新其日志信息
      * @param parentId
      */

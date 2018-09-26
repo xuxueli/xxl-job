@@ -457,6 +457,7 @@ $(function() {
 		$("#updateModal .form input[name='executorHandler']").val( row.executorHandler );
 		$("#updateModal .form textarea[name='executorParam']").val( row.executorParam );
         $("#updateModal .form input[name='childJobId']").val( row.childJobId );
+        $("#updateModal .form input[name='parentId']").val( row.parentId );
 		$('#updateModal .form select[name=executorBlockStrategy] option[value='+ row.executorBlockStrategy +']').prop('selected', true);
 		$('#updateModal .form select[name=glueType] option[value='+ row.glueType +']').prop('selected', true);
 

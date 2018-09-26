@@ -145,7 +145,6 @@
 			`trigger_time`,
 			`trigger_code`,
 			`handle_code`
-			`job_id`
 		<if test="parentId!=null">
 			,parent_id
 		</if>
@@ -155,7 +154,6 @@
 			#{triggerTime},
 			#{triggerCode},
 			#{handleCode}
-			#{jobId}
 		<if test="parentId!=null">
 			,#{parentId}
 		</if>

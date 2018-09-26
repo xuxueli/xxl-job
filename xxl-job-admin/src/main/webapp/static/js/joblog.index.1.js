@@ -197,7 +197,7 @@ $(function() {
 	                	"data": 'handleMsg',
                         "width":'12%',
 	                	"render": function ( data, type, row ) {
-	                		return data?'<a class="logTips" href="javascript:;" >'+ I18n.system_show +'<span style="display:none;">'+ data +'</span></a>':I18n.system_empty;
+	                		return data?(data.length<100?data:'<a class="logTips" href="javascript:;" >'+ I18n.system_show +'<span style="display:none;">'+ data +'</span></a>'):I18n.system_empty;
 	                	}
 	                },
 	                {
@@ -208,7 +208,7 @@ $(function() {
 	                		// better support expression or string, not function
 	                		return function () {
 		                		if (row.triggerCode == 200){
-		                			var temp = data.length<100?data:'<a href="javascript:;" class="logDetail" _id="'+ row.id +'">'+ I18n.joblog_rolling_log +'</a>';
+		                			var temp = '<a href="javascript:;" class="logDetail" _id="'+ row.id +'">'+ I18n.joblog_rolling_log +'</a>';
 		                			if(row.handleCode == 0){
 		                				temp += '<br><a href="javascript:;" class="logKill" _id="'+ row.id +'" style="color: red;" >'+ I18n.joblog_kill_log +'</a>';
 		                			}
