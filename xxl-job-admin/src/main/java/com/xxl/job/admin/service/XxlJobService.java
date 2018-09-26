@@ -25,7 +25,7 @@ public interface XxlJobService {
 	 * @param filterTime
 	 * @return
 	 */
-	public Map<String, Object> pageList(int start, int length, int jobGroup, String jobDesc, String executorHandler, String filterTime);
+	public Map<String, Object> pageList(int start, int length, int jobGroup, String jobDesc, String executorHandler, String filterTime,int parentId);
 
 	/**
 	 * add job
@@ -59,6 +59,13 @@ public interface XxlJobService {
 	 */
 	public ReturnT<String> pause(int id);
 
+
+	/**
+	 * 更新指定任务的子id列表
+	 * @param id
+	 */
+	public void updateChildIds(Integer id);
+
 	/**
 	 * resume job
 	 *
@@ -83,4 +90,5 @@ public interface XxlJobService {
 	 */
 	public ReturnT<Map<String,Object>> chartInfo(Date startDate, Date endDate);
 
+    ReturnT<String> copy(Integer id);
 }

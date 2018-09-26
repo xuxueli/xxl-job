@@ -14,7 +14,7 @@
 	    <result column="executor_param" property="executorParam" />
 		<result column="executor_sharding_param" property="executorShardingParam" />
 		<result column="executor_fail_retry_count" property="executorFailRetryCount" />
-	    
+
 	    <result column="trigger_time" property="triggerTime" />
 	    <result column="trigger_code" property="triggerCode" />
 	    <result column="trigger_msg" property="triggerMsg" />
@@ -22,7 +22,8 @@
 	    <result column="handle_time" property="handleTime" />
 	    <result column="handle_code" property="handleCode" />
 	    <result column="handle_msg" property="handleMsg" />
-	    
+		<result column="parent_id" property="parentId"/>
+	    <result column="child_summary" property="childSummary"/>
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -39,7 +40,9 @@
 		t.trigger_msg,
 		t.handle_time,
 		t.handle_code,
-		t.handle_msg
+		t.handle_msg,
+		t.parent_id,
+		t.child_summary
 	</sql>
 	
 	<select id="pageList" resultMap="XxlJobLog">
@@ -58,18 +61,29 @@
 			<if test="triggerTimeEnd != null">
 				AND t.trigger_time <![CDATA[ <= ]]> #{triggerTimeEnd}
 			</if>
+			and t.trigger_code!=600 <!-- 过滤掉因为正在执行而忽略的任务 -->
+			and t.handle_code!=666
 			<if test="logStatus == 1" >
 				AND t.handle_code = 200
 			</if>
 			<if test="logStatus == 2" >
 				AND (
 					t.trigger_code NOT IN (0, 200) OR
-					t.handle_code NOT IN (0, 200)
+					t.handle_code NOT IN (0, 200,433)
 				)
 			</if>
 			<if test="logStatus == 3" >
 				AND t.trigger_code = 200
 				AND t.handle_code = 0
+			</if>
+			<if test="logStatus==5">
+				AND (t.trigger_code = 200 AND t.handle_code=433)
+			</if>
+			<if test="jobId lte 0 and parentIds!=null and parentIds.size()>0">
+				AND t.parent_id in(
+				<foreach collection="parentIds" item="parentId" separator=",">
+					#{parentId}
+				</foreach>)
 			</if>
 		</trim>
 		ORDER BY id DESC
@@ -92,18 +106,28 @@
 			<if test="triggerTimeEnd != null">
 				AND t.trigger_time <![CDATA[ <= ]]> #{triggerTimeEnd}
 			</if>
+			and t.trigger_code!=600 <!-- 过滤掉因为正在执行忽略的任务 -->
+			and t.handle_code!=666
 			<if test="logStatus == 1" >
 				AND t.handle_code = 200
 			</if>
 			<if test="logStatus == 2" >
 				AND (
 					t.trigger_code NOT IN (0, 200) OR
-					t.handle_code NOT IN (0, 200)
+					t.handle_code NOT IN (0, 200,433)
 				)
 			</if>
 			<if test="logStatus == 3" >
-				AND t.trigger_code = 200
-				AND t.handle_code = 0
+				AND (t.trigger_code = 200 AND t.handle_code=0)
+			</if>
+			<if test="logStatus==5">
+				AND (t.trigger_code = 200 AND t.handle_code=433)
+			</if>
+			<if test="jobId lte 0 and parentIds!=null  and parentIds.size()>0 ">
+				AND t.parent_id in(
+				<foreach collection="parentIds" item="parentId" separator=",">
+					#{parentId}
+				</foreach>)
 			</if>
 		</trim>
 	</select>
@@ -113,7 +137,6 @@
 		FROM XXL_JOB_QRTZ_TRIGGER_LOG AS t
 		WHERE t.id = #{id}
 	</select>
-
 	
 	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobLog" useGeneratedKeys="true" keyProperty="id" >
 		INSERT INTO XXL_JOB_QRTZ_TRIGGER_LOG (
@@ -122,17 +145,39 @@
 			`trigger_time`,
 			`trigger_code`,
 			`handle_code`
+			`job_id`
+		<if test="parentId!=null">
+			,parent_id
+		</if>
 		) VALUES (
 			#{jobGroup},
 			#{jobId},
 			#{triggerTime},
 			#{triggerCode},
 			#{handleCode}
+			#{jobId}
+		<if test="parentId!=null">
+			,#{parentId}
+		</if>
 		);
 		<!--<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
 			SELECT LAST_INSERT_ID() 
 		</selectKey>-->
 	</insert>
+
+	<update id="updateChildSummary">
+		update XXL_JOB_QRTZ_TRIGGER_LOG set
+		<trim prefixOverrides=",">
+			<if test="childSummary!=null">
+				,child_summary=#{childSummary}
+			</if>
+			<if test="handleCode gt 0">
+				,handle_code=#{handleCode}
+			</if>
+			,handle_time=now()
+		</trim>
+		where id=#{id}
+	</update>
 
 	<update id="updateTriggerInfo" >
 		UPDATE XXL_JOB_QRTZ_TRIGGER_LOG
@@ -153,7 +198,10 @@
 		SET 
 			`handle_time`= #{handleTime}, 
 			`handle_code`= #{handleCode},
-			`handle_msg`= #{handleMsg} 
+			<if test="childSummary!=null">
+				child_summary=#{childSummary},
+			</if>
+			`handle_msg`= #{handleMsg}
 		WHERE `id`= #{id}
 	</update>
 	

@@ -46,6 +46,15 @@
 	              	</div>
 	            </div>
 
+                <div class="col-xs-1" style="margin-top: 5px;margin-right: 10px;margin-left: -25px;">
+                    <div class="input-group">
+
+                        <input type="checkbox" id="showChild">
+                        <span class="input-group-addon">显示子任务</span>
+                    </div>
+                </div>
+
+                &nbsp; &nbsp;
                 <div class="col-xs-2">
                     <div class="input-group">
                         <span class="input-group-addon">${I18n.joblog_status}</span>
@@ -54,6 +63,7 @@
                             <option value="1" >${I18n.joblog_status_suc}</option>
                             <option value="2" >${I18n.joblog_status_fail}</option>
                             <option value="3" >${I18n.joblog_status_running}</option>
+                            <option value="5" >部分成功</option>
                         </select>
                     </div>
                 </div>
@@ -72,8 +82,11 @@
                 </div>
 
 	            <div class="col-xs-1">
-                    <button class="btn btn-block btn-nomal" id="clearLog">${I18n.joblog_clean}</button>
+                    <button class="btn btn-block btn-danger" id="clearLog">${I18n.joblog_clean}</button>
 	            </div>
+                <div class="col-xs-1">
+                    <button class="btn btn-block btn-danger" id="stopBatch">终止执行</button>
+                </div>
           	</div>
 			
 			<div class="row">
@@ -81,25 +94,28 @@
 					<div class="box">
 			            <#--<div class="box-header hide"><h3 class="box-title">调度日志</h3></div>-->
 			            <div class="box-body">
-			              	<table id="joblog_list" class="table table-bordered table-striped display" width="100%" >
-				                <thead>
-					            	<tr>
-                                        <th name="jobId" >${I18n.jobinfo_field_id}</th>
+			              	<form id="listForm">
+                                <table id="joblog_list" class="table table-bordered table-striped display" width="100%" >
+                                    <thead>
+                                    <tr>
+                                        <th nowrap name="jobId" ><input type="checkbox" id="allSelect">  &nbsp;${I18n.jobinfo_field_id}</th>
+                                        <th>子任务信息</th>
                                         <th name="jobGroup" >jobGroup</th>
-										<#--<th name="executorAddress" >执行器地址</th>
-										<th name="glueType" >运行模式</th>
-                                      	<th name="executorParam" >任务参数</th>-->
+                                    <#--<th name="executorAddress" >执行器地址</th>
+                                    <th name="glueType" >运行模式</th>
+                                      <th name="executorParam" >任务参数</th>-->
                                         <th name="triggerTime" >${I18n.joblog_field_triggerTime}</th>
                                         <th name="triggerCode" >${I18n.joblog_field_triggerCode}</th>
                                         <th name="triggerMsg" >${I18n.joblog_field_triggerMsg}</th>
-					                  	<th name="handleTime" >${I18n.joblog_field_handleTime}</th>
-					                  	<th name="handleCode" >${I18n.joblog_field_handleCode}</th>
-					                  	<th name="handleMsg" >${I18n.joblog_field_handleMsg}</th>
-					                  	<th name="handleMsg" >${I18n.system_opt}</th>
-					                </tr>
-				                </thead>
-				                <tbody></tbody>
-							</table>
+                                        <th name="handleTime" >${I18n.joblog_field_handleTime}</th>
+                                        <th name="handleCode" >${I18n.joblog_field_handleCode}</th>
+                                        <th name="handleMsg" >${I18n.joblog_field_handleMsg}</th>
+                                        <th name="handleMsg" >${I18n.system_opt}</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </form>
 						</div>
 					</div>
 				</div>
@@ -165,7 +181,7 @@
         </div>
     </div>
 </div>
-
+<input type="hidden" id="parentIdParam" value="0" />
 <@netCommon.commonScript />
 <!-- DataTables -->
 <script src="${request.contextPath}/static/adminlte/plugins/datatables/jquery.dataTables.min.js"></script>
@@ -174,5 +190,8 @@
 <script src="${request.contextPath}/static/adminlte/plugins/daterangepicker/moment.min.js"></script>
 <script src="${request.contextPath}/static/adminlte/plugins/daterangepicker/daterangepicker.js"></script>
 <script src="${request.contextPath}/static/js/joblog.index.1.js"></script>
+<#--<script type="text/javascript">-->
+    <#---->
+<#--</script>-->
 </body>
 </html>

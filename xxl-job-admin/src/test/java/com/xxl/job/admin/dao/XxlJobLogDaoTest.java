@@ -21,8 +21,8 @@ public class XxlJobLogDaoTest {
 
     @Test
     public void test(){
-        List<XxlJobLog> list = xxlJobLogDao.pageList(0, 10, 1, 1, null, null, 1);
-        int list_count = xxlJobLogDao.pageListCount(0, 10, 1, 1, null, null, 1);
+        List<XxlJobLog> list = xxlJobLogDao.pageList(0, 10, 1, 1, null, null, 1,null);
+        int list_count = xxlJobLogDao.pageListCount(0, 10, 1, 1, null, null, 1,null);
 
         XxlJobLog log = new XxlJobLog();
         log.setJobGroup(1);

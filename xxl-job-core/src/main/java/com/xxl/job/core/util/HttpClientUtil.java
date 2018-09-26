@@ -45,9 +45,9 @@ public class HttpClientUtil {
 
 			// timeout
 			RequestConfig requestConfig = RequestConfig.custom()
-                    .setConnectionRequestTimeout(10000)
-                    .setSocketTimeout(10000)
-                    .setConnectTimeout(10000)
+                    .setConnectionRequestTimeout(120000)
+                    .setSocketTimeout(120000)
+                    .setConnectTimeout(120000)
                     .build();
 
 			httpPost.setConfig(requestConfig);

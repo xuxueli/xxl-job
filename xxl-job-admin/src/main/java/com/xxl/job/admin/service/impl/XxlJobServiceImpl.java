@@ -26,6 +26,8 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.text.MessageFormat;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * core job action for xxl-job
@@ -45,11 +47,11 @@ public class XxlJobServiceImpl implements XxlJobService {
 	private XxlJobLogGlueDao xxlJobLogGlueDao;
 	
 	@Override
-	public Map<String, Object> pageList(int start, int length, int jobGroup, String jobDesc, String executorHandler, String filterTime) {
+	public Map<String, Object> pageList(int start, int length, int jobGroup, String jobDesc, String executorHandler, String filterTime,int parentId) {
 
 		// page list
-		List<XxlJobInfo> list = xxlJobInfoDao.pageList(start, length, jobGroup, jobDesc, executorHandler);
-		int list_count = xxlJobInfoDao.pageListCount(start, length, jobGroup, jobDesc, executorHandler);
+		List<XxlJobInfo> list = xxlJobInfoDao.pageList(start, length, jobGroup, jobDesc, executorHandler,parentId);
+		int list_count = xxlJobInfoDao.pageListCount(start, length, jobGroup, jobDesc, executorHandler,parentId);
 		
 		// fill job info
 		if (list!=null && list.size()>0) {
@@ -66,6 +68,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 		return maps;
 	}
 
+	//TODO:新增或或者更新某一个父任务下的子任务，也要更新对应的子任务信息
 	@Override
 	public ReturnT<String> add(XxlJobInfo jobInfo) {
 		// valid
@@ -186,7 +189,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 		if (exists_jobInfo == null) {
 			return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("jobinfo_field_id")+I18nUtil.getString("system_not_found")) );
 		}
-		//String old_cron = exists_jobInfo.getJobCron();
+		String old_cron = exists_jobInfo.getJobCron();
 
 		exists_jobInfo.setJobCron(jobInfo.getJobCron());
 		exists_jobInfo.setJobDesc(jobInfo.getJobDesc());
@@ -201,35 +204,91 @@ public class XxlJobServiceImpl implements XxlJobService {
 		exists_jobInfo.setChildJobId(jobInfo.getChildJobId());
         xxlJobInfoDao.update(exists_jobInfo);
 
-		// fresh quartz
-		String qz_group = String.valueOf(exists_jobInfo.getJobGroup());
-		String qz_name = String.valueOf(exists_jobInfo.getId());
-        try {
-            boolean ret = XxlJobDynamicScheduler.rescheduleJob(qz_group, qz_name, exists_jobInfo.getJobCron());
-            return ret?ReturnT.SUCCESS:ReturnT.FAIL;
-        } catch (SchedulerException e) {
-            logger.error(e.getMessage(), e);
-        }
+        if(!StringUtils.equals(old_cron,exists_jobInfo.getJobCron())){
+			// fresh quartz
+			String qz_group = String.valueOf(exists_jobInfo.getJobGroup());
+			String qz_name = String.valueOf(exists_jobInfo.getId());
+			try {
+				boolean ret = XxlJobDynamicScheduler.rescheduleJob(qz_group, qz_name, exists_jobInfo.getJobCron());
+				return ret?ReturnT.SUCCESS:ReturnT.FAIL;
+			} catch (SchedulerException e) {
+				logger.error(e.getMessage(), e);
+				return ReturnT.FAIL;
+			}
+		}
 
-		return ReturnT.FAIL;
+
+		return ReturnT.SUCCESS;
 	}
+
 
 	@Override
 	public ReturnT<String> remove(int id) {
-		XxlJobInfo xxlJobInfo = xxlJobInfoDao.loadById(id);
-        String group = String.valueOf(xxlJobInfo.getJobGroup());
-        String name = String.valueOf(xxlJobInfo.getId());
+		if (removeCur(id,true)) {
+			return ReturnT.SUCCESS;
+		}
+		return ReturnT.FAIL;
+	}
 
+	/**
+	 * 移除
+	 * @param id
+	 * @param updateParent 当移除了子任务之后，要更新父任务的子任务id字段
+	 * @return
+	 */
+	private boolean removeCur(int id, Boolean updateParent) {
+		XxlJobInfo xxlJobInfo = xxlJobInfoDao.loadById(id);
 		try {
+			String group = String.valueOf(xxlJobInfo.getJobGroup());
+			String name = String.valueOf(xxlJobInfo.getId());
 			XxlJobDynamicScheduler.removeJob(name, group);
+
+			if(updateParent){
+				if (xxlJobInfo.getParentId() != null && xxlJobInfo.getParentId() != 0) {
+					XxlJobInfo parentJob = xxlJobInfoDao.loadById(xxlJobInfo.getParentId());
+
+					if (StringUtils.isNotEmpty(parentJob.getChildJobId())) {
+						Pattern p = Pattern.compile(String.format(",%s,|,%s$|^%s,|^%s$", xxlJobInfo.getId(), xxlJobInfo.getId(), xxlJobInfo.getId(), xxlJobInfo.getId()));
+						Matcher matcher = p.matcher(parentJob.getChildJobId());
+						if (matcher.find()) {
+							updateChildIds(parentJob.getId());
+						}
+					}
+				}
+			}
+
+			//如果该任务本身有子任务，在递归删除下面的子任务，此时不需要更新这些子任务的父任务，即自身的信息
+			if(StringUtils.isNotEmpty(xxlJobInfo.getChildJobId())) {
+				String[] childJobIds = xxlJobInfo.getChildJobId().split(",");
+				for (String childJobId : childJobIds) {
+					Integer childJobIdI = Integer.parseInt(childJobId);
+					removeCur(childJobIdI,false);
+				}
+			}
 			xxlJobInfoDao.delete(id);
 			xxlJobLogDao.delete(id);
 			xxlJobLogGlueDao.deleteByJobId(id);
-			return ReturnT.SUCCESS;
+			return true;
 		} catch (SchedulerException e) {
 			logger.error(e.getMessage(), e);
 		}
-		return ReturnT.FAIL;
+		return false;
+	}
+
+	/**
+	 * 更新指定任务的子id列表
+	 * @param id
+	 */
+	public void updateChildIds(Integer id) {
+		List<XxlJobInfo> children=xxlJobInfoDao.query(id,null,null);
+		StringBuffer sb=new StringBuffer();
+		for(XxlJobInfo job:children){
+			sb.append(",").append(job.getId());
+		}
+
+		XxlJobInfo jobInfo=xxlJobInfoDao.loadById(id);
+		jobInfo.setChildJobId(sb.length()>0?sb.substring(1):"");
+		xxlJobInfoDao.update(jobInfo);//自动更新子任务id
 	}
 
 	@Override
@@ -285,6 +344,8 @@ public class XxlJobServiceImpl implements XxlJobService {
 		}*//*
 
 	}*/
+
+
 
 	@Override
 	public Map<String, Object> dashboardInfo() {
@@ -374,6 +435,26 @@ public class XxlJobServiceImpl implements XxlJobService {
 		LocalCacheUtil.set(cacheKey, result, 60*1000);     // cache 60s*/
 
 		return new ReturnT<Map<String, Object>>(result);
+	}
+
+	@Override
+	public ReturnT<String> copy(Integer id) {
+		XxlJobInfo xxlJobInfo=xxlJobInfoDao.loadById(id);
+		ReturnT<String> result=add(xxlJobInfo);
+		if(result.getCode()!=ReturnT.SUCCESS_CODE){
+			return result;
+		}
+		logger.debug(String.format("复制前%d,%d",id,xxlJobInfo.getId()));
+		if(StringUtils.isNotEmpty(xxlJobInfo.getChildJobId())){
+			String[] childJobIds=xxlJobInfo.getChildJobId().split(",");
+			for(String childJobId:childJobIds){
+				Integer childJobIdI=Integer.parseInt(childJobId);
+				XxlJobInfo childJob=xxlJobInfoDao.loadById(childJobIdI);
+				childJob.setParentId(xxlJobInfo.getId());
+				add(childJob);
+			}
+		}
+		return ReturnT.SUCCESS;
 	}
 
 }

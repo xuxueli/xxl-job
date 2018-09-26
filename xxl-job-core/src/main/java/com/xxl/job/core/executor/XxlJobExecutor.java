@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created by xuxueli on 2016/3/2 21:14.
@@ -36,6 +38,7 @@ public class XxlJobExecutor implements ApplicationContextAware {
     private String accessToken;
     private String logPath;
     private int logRetentionDays;
+    private int maxThreads=30;
 
     public void setAdminAddresses(String adminAddresses) {
         this.adminAddresses = adminAddresses;
@@ -59,6 +62,14 @@ public class XxlJobExecutor implements ApplicationContextAware {
         this.logRetentionDays = logRetentionDays;
     }
 
+    public int getMaxThreads() {
+        return maxThreads;
+    }
+
+    public void setMaxThreads(int maxThreads) {
+        this.maxThreads = maxThreads;
+    }
+
     // ---------------------- applicationContext ----------------------
     private static ApplicationContext applicationContext;
     @Override
@@ -72,6 +83,7 @@ public class XxlJobExecutor implements ApplicationContextAware {
 
     // ---------------------- start + stop ----------------------
     public void start() throws Exception {
+        executorService=Executors.newFixedThreadPool(getMaxThreads());
         // init admin-client
         initAdminBizList(adminAddresses, accessToken);
 
@@ -81,6 +93,8 @@ public class XxlJobExecutor implements ApplicationContextAware {
         // init logpath
         XxlJobFileAppender.initLogPath(logPath);
 
+        //logger.info("job类加载器:"+Thread.currentThread().getContextClassLoader());
+        //logger.info(String.format("classpath:%s",System.getProperty("java.class.path")));
         // init executor-server
         initExecutorServer(port, ip, appName, accessToken);
 
@@ -175,8 +189,11 @@ public class XxlJobExecutor implements ApplicationContextAware {
 
     // ---------------------- job thread repository ----------------------
     private static ConcurrentHashMap<Integer, JobThread> JobThreadRepository = new ConcurrentHashMap<Integer, JobThread>();
+
+    public static ExecutorService executorService= null;
     public static JobThread registJobThread(int jobId, IJobHandler handler, String removeOldReason){
         JobThread newJobThread = new JobThread(jobId, handler);
+        //executorService.submit(newJobThread);
         newJobThread.start();
         logger.info(">>>>>>>>>>> xxl-job regist JobThread success, jobId:{}, handler:{}", new Object[]{jobId, handler});
 
@@ -188,6 +205,7 @@ public class XxlJobExecutor implements ApplicationContextAware {
 
         return newJobThread;
     }
+
     public static void removeJobThread(int jobId, String removeOldReason){
         JobThread oldJobThread = JobThreadRepository.remove(jobId);
         if (oldJobThread != null) {

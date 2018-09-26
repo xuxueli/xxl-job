@@ -5,6 +5,7 @@
 
 	<resultMap id="XxlJobInfo" type="com.xxl.job.admin.core.model.XxlJobInfo" >
 		<result column="id" property="id" />
+		<result column="parent_id" property="parentId"/>
 
 		<result column="job_group" property="jobGroup" />
 	    <result column="job_cron" property="jobCron" />
@@ -50,7 +51,8 @@
 		t.glue_source,
 		t.glue_remark,
 		t.glue_updatetime,
-		t.child_jobid
+		t.child_jobid,
+		t.parent_id
 	</sql>
 
 	<select id="pageList" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
@@ -66,9 +68,29 @@
 			<if test="executorHandler != null and executorHandler != ''">
 				AND t.executor_handler like CONCAT(CONCAT('%', #{executorHandler}), '%')
 			</if>
+			<if test="parentId!=null">
+			  	AND t.parent_id=#{parentId}
+			</if>
 		</trim>
 		ORDER BY id DESC
 		LIMIT #{offset}, #{pagesize}
+	</select>
+
+	<select id="query" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
+		SELECT <include refid="Base_Column_List" />
+		FROM XXL_JOB_QRTZ_TRIGGER_INFO AS t
+		<trim prefix="WHERE" prefixOverrides="AND | OR" >
+			<if test="paramKeyword != null and paramKeyword != ''">
+				AND t.executor_param like CONCAT(CONCAT('%', #{paramKeyword}), '%')
+			</if>
+			<if test="executorHandler!=null">
+				AND t.executor_handler=#{executorHandler}
+			</if>
+			<if test="parentId!=null">
+				AND t.parent_id=#{parentId}
+			</if>
+		</trim>
+		ORDER BY id DESC
 	</select>
 
 	<select id="pageListCount" parameterType="java.util.HashMap" resultType="int">
@@ -83,6 +105,9 @@
 			</if>
 			<if test="executorHandler != null and executorHandler != ''">
 				AND t.executor_handler like CONCAT(CONCAT('%', #{executorHandler}), '%')
+			</if>
+			<if test="parentId!=null">
+				AND t.parent_id=#{parentId}
 			</if>
 		</trim>
 	</select>
@@ -107,6 +132,9 @@
 			glue_remark,
 			glue_updatetime,
 			child_jobid
+		<if test="parentId!=null">
+			,parent_id
+		</if>
 		) VALUES (
 			#{jobGroup},
 			#{jobCron},
@@ -126,6 +154,9 @@
 			#{glueRemark},
 			NOW(),
 			#{childJobId}
+		<if test="parentId!=null">
+			,#{parentId}
+		</if>
 		);
 		<!--<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
 			SELECT LAST_INSERT_ID()
@@ -158,6 +189,9 @@
 			glue_remark = #{glueRemark},
 			glue_updatetime = #{glueUpdatetime},
 			child_jobid = #{childJobId}
+		<if test="parentId!=null">
+			,parent_id=#{parentId}
+		</if>
 		WHERE id = #{id}
 	</update>
 
@@ -171,6 +205,7 @@
 		SELECT <include refid="Base_Column_List" />
 		FROM XXL_JOB_QRTZ_TRIGGER_INFO AS t
 		WHERE t.job_group = #{jobGroup}
+		order by parent_id asc, id asc
 	</select>
 
 	<select id="findAllCount" resultType="int">

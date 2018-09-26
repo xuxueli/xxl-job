@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/tx
+		http://www.springframework.org/schema/tx/spring-tx.xsd">
+    <bean id="redisClusterConfiguration"
+          class="org.springframework.data.redis.connection.RedisClusterConfiguration">
+        <property name="maxRedirects" value="3"></property>
+        <!-- 节点配置 -->
+        <property name="clusterNodes">
+            <set>
+                <bean class="org.springframework.data.redis.connection.RedisClusterNode">
+                    <constructor-arg name="host" value="172.31.0.249"></constructor-arg>
+                    <constructor-arg name="port" value="6379"></constructor-arg>
+                </bean>
+            </set>
+        </property>
+    </bean>
+
+    <bean id="jedisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"
+          destroy-method="destroy">
+        <constructor-arg ref="redisClusterConfiguration"/>
+        <constructor-arg ref="poolConfig"/>
+    </bean>
+</beans>

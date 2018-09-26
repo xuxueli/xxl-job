@@ -7,6 +7,7 @@ import com.xxl.job.admin.core.route.ExecutorRouteStrategyEnum;
 import com.xxl.job.admin.core.schedule.XxlJobDynamicScheduler;
 import com.xxl.job.admin.core.thread.JobFailMonitorHelper;
 import com.xxl.job.admin.core.util.I18nUtil;
+import com.xxl.job.admin.service.impl.JobUtils;
 import com.xxl.job.core.biz.ExecutorBiz;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.biz.model.TriggerParam;
@@ -94,6 +95,13 @@ public class XxlJobTrigger {
         // 1、save log-id
         XxlJobLog jobLog = new XxlJobLog();
         jobLog.setJobGroup(jobInfo.getJobGroup());
+
+        //如果该任务是子任务，设置该任务日志的父任务日志id
+        if(jobInfo.getParentId()!=null && jobInfo.getParentId()!=0){
+            jobLog.setParentId(JobUtils.getParentId(jobInfo.getId()));
+        }
+        jobInfo.setParentId(jobInfo.getParentId());
+
         jobLog.setJobId(jobInfo.getId());
         jobLog.setTriggerTime(new Date());
         XxlJobDynamicScheduler.xxlJobLogDao.save(jobLog);
@@ -168,6 +176,13 @@ public class XxlJobTrigger {
         jobLog.setExecutorFailRetryCount(finalFailRetryCount);
         //jobLog.setTriggerTime();
         jobLog.setTriggerCode(triggerResult.getCode());
+
+        //如果调度失败，需要更新父任务信息；默认算到调度成功，所以成功时不用更新
+        if(jobLog.getTriggerCode()!=200){
+            logger.info(String.format("更新日志结果:%d[trigger]",jobLog.getParentId()));
+            XxlJobDynamicScheduler.adminBiz.updateChildSummary(jobLog);
+        }
+
         jobLog.setTriggerMsg(triggerMsgSb.toString());
         XxlJobDynamicScheduler.xxlJobLogDao.updateTriggerInfo(jobLog);
 

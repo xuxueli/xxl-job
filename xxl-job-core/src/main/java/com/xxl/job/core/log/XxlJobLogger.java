@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.helpers.FormattingTuple;
 import org.slf4j.helpers.MessageFormatter;
+import org.springframework.util.StringUtils;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -43,6 +44,10 @@ public class XxlJobLogger {
             XxlJobFileAppender.appendLog(logFileName, formatAppendLog);
         } else {
             logger.info(">>>>>>>>>>> {}", formatAppendLog);
+        }
+        String subFileName=XxlJobFileAppender.subLogFile.get();
+        if(!StringUtils.isEmpty(subFileName)){
+            XxlJobFileAppender.appendLog(subFileName,formatAppendLog);
         }
     }
 

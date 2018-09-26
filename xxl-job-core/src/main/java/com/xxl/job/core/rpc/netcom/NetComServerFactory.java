@@ -67,6 +67,8 @@ public class NetComServerFactory  {
 			Class<?>[] parameterTypes = request.getParameterTypes();
 			Object[] parameters = request.getParameters();
 
+			//logger.debug(String.format("%s生成的类:%s,加载器:%s",serviceBean,serviceClass,serviceClass.getClassLoader()));
+			//logger.info(String.format("classpath:%s",System.getProperty("java.class.path")));
 			FastClass serviceFastClass = FastClass.create(serviceClass);
 			FastMethod serviceFastMethod = serviceFastClass.getMethod(methodName, parameterTypes);
 

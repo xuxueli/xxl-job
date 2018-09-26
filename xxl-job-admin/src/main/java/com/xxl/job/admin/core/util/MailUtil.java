@@ -32,7 +32,6 @@ public class MailUtil {
 
 			//email.setDebug(true);		// 将会打印一些log
 			//email.setTLS(true);		// 是否TLS校验，，某些邮箱需要TLS安全校验，同理有SSL校验
-			//email.setSSL(true);
 
 			email.setHostName(XxlJobAdminConfig.getAdminConfig().getMailHost());
 
@@ -50,6 +49,8 @@ public class MailUtil {
 			email.addTo(toAddress);
 			email.setSubject(mailSubject);
 			email.setMsg(mailBody);
+			email.setSocketTimeout(180000);
+			email.setSocketConnectionTimeout(180000);
 
 			//email.attach(attachment);	// add the attachment
 

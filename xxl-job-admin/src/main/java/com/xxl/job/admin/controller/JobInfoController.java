@@ -56,15 +56,20 @@ public class JobInfoController {
 	@ResponseBody
 	public Map<String, Object> pageList(@RequestParam(required = false, defaultValue = "0") int start,  
 			@RequestParam(required = false, defaultValue = "10") int length,
-			int jobGroup, String jobDesc, String executorHandler, String filterTime) {
-		
-		return xxlJobService.pageList(start, length, jobGroup, jobDesc, executorHandler, filterTime);
+			int jobGroup, String jobDesc, String executorHandler, String filterTime,@RequestParam(required = false,defaultValue = "0") int parentId) {
+		return xxlJobService.pageList(start, length, jobGroup, jobDesc, executorHandler, filterTime,parentId);
 	}
 	
 	@RequestMapping("/add")
 	@ResponseBody
 	public ReturnT<String> add(XxlJobInfo jobInfo) {
 		return xxlJobService.add(jobInfo);
+	}
+
+	@RequestMapping("/copy")
+	@ResponseBody
+	public ReturnT<String> copy(Integer id){
+		return xxlJobService.copy(id);
 	}
 	
 	@RequestMapping("/update")

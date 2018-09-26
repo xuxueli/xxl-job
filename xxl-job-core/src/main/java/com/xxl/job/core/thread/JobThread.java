@@ -44,6 +44,7 @@ public class JobThread extends Thread{
 		this.handler = handler;
 		this.triggerQueue = new LinkedBlockingQueue<TriggerParam>();
 		this.triggerLogIdSet = Collections.synchronizedSet(new HashSet<Integer>());
+		this.setName("jobThread-"+jobId+"-"+System.currentTimeMillis());
 	}
 	public IJobHandler getHandler() {
 		return handler;
@@ -118,6 +119,7 @@ public class JobThread extends Thread{
 					// log filename, like "logPath/yyyy-MM-dd/9999.log"
 					String logFileName = XxlJobFileAppender.makeLogFileName(new Date(triggerParam.getLogDateTim()), triggerParam.getLogId());
 					XxlJobFileAppender.contextHolder.set(logFileName);
+					XxlJobFileAppender.logId.set(triggerParam.getLogId());
 					ShardingUtil.setShardingVo(new ShardingUtil.ShardingVO(triggerParam.getBroadcastIndex(), triggerParam.getBroadcastTotal()));
 
 					// execute
@@ -175,6 +177,7 @@ public class JobThread extends Thread{
 				XxlJobLogger.log("<br>----------- JobThread Exception:" + errorMsg + "<br>----------- xxl-job job execute end(error) -----------");
 			} finally {
                 if(triggerParam != null) {
+                	//XxlJobFileAppender.contextHolder.remove();
                     // callback handler info
                     if (!toStop) {
                         // commonm

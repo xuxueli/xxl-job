@@ -8,9 +8,12 @@ import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.admin.dao.XxlJobGroupDao;
 import com.xxl.job.admin.dao.XxlJobInfoDao;
 import com.xxl.job.admin.dao.XxlJobLogDao;
+import com.xxl.job.admin.service.impl.JobUtils;
 import com.xxl.job.core.biz.ExecutorBiz;
 import com.xxl.job.core.biz.model.LogResult;
 import com.xxl.job.core.biz.model.ReturnT;
+import com.xxl.job.core.glue.GlueTypeEnum;
+import com.xxl.job.core.rpc.netcom.NetComClientProxy;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
@@ -23,10 +26,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import java.text.ParseException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * index controller
@@ -71,7 +71,8 @@ public class JobLogController {
 	@ResponseBody
 	public Map<String, Object> pageList(@RequestParam(required = false, defaultValue = "0") int start,  
 			@RequestParam(required = false, defaultValue = "10") int length,
-			int jobGroup, int jobId, int logStatus, String filterTime) {
+			int jobGroup, int jobId, int logStatus, String filterTime,Boolean showChild,
+										@RequestParam(name = "parentId",required = false,defaultValue = "0")Integer parentId) {
 		
 		// parse param
 		Date triggerTimeStart = null;
@@ -85,11 +86,40 @@ public class JobLogController {
 				} catch (ParseException e) {	}
 			}
 		}
-		
-		// page query
-		List<XxlJobLog> list = xxlJobLogDao.pageList(start, length, jobGroup, jobId, triggerTimeStart, triggerTimeEnd, logStatus);
-		int list_count = xxlJobLogDao.pageListCount(start, length, jobGroup, jobId, triggerTimeStart, triggerTimeEnd, logStatus);
-		
+
+		List<XxlJobLog> list =null;
+		int list_count=0;
+		List<Integer> parentIds=new ArrayList<>();
+		if(showChild){
+
+			list=xxlJobLogDao.pageList(0, 1000, jobGroup, jobId, triggerTimeStart, triggerTimeEnd, logStatus,Arrays.asList(parentId));
+			if(list.size()>0){
+				jobId=-1;
+				for(XxlJobLog log:list){
+					parentIds.add(log.getId());
+				}
+				list=null;
+			}
+
+		}else if(parentId!=null){
+			parentIds.add(parentId);
+		}
+		if(list==null){
+			list = xxlJobLogDao.pageList(start, length, jobGroup, jobId, triggerTimeStart, triggerTimeEnd, logStatus,parentIds);
+			list_count = xxlJobLogDao.pageListCount(start, length, jobGroup, jobId, triggerTimeStart, triggerTimeEnd, logStatus,parentIds);
+
+			for(XxlJobLog log:list){
+				if(JobUtils.parentIdChildMap.containsKey(log.getId())){
+					int size= JobUtils.parentIdChildMap.get(log.getId()).size();
+					if(size>0){
+						log.setChildSummary(String.format("运行中:%d",size));
+					}
+				}
+			}
+		}
+
+
+
 		// package result
 		Map<String, Object> maps = new HashMap<String, Object>();
 	    maps.put("recordsTotal", list_count);		// 总记录数
@@ -166,10 +196,23 @@ public class JobLogController {
 			log.setHandleMsg( I18nUtil.getString("joblog_kill_log_byman")+":" + (runResult.getMsg()!=null?runResult.getMsg():""));
 			log.setHandleTime(new Date());
 			xxlJobLogDao.updateHandleInfo(log);
+			if(log.getParentId()!=null && log.getParentId()!=0){
+				logger.info(String.format("更新日志结果:%d[logKill]",log.getParentId()));
+				XxlJobDynamicScheduler.adminBiz.updateChildSummaryByParentId(log.getParentId());
+			}
 			return new ReturnT<String>(runResult.getMsg());
 		} else {
 			return new ReturnT<String>(500, runResult.getMsg());
 		}
+	}
+
+	@RequestMapping("/logKillBatch")
+	@ResponseBody
+	public ReturnT<String> logKill(Integer[] ids){
+		for(Integer id:ids){
+			logKill(id);
+		}
+		return ReturnT.SUCCESS;
 	}
 
 	@RequestMapping("/clearLog")
