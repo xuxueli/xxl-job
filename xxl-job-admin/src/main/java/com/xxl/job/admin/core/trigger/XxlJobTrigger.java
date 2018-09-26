@@ -56,10 +56,13 @@ public class XxlJobTrigger {
                 // 1、save log-id
                 XxlJobLog jobLog = new XxlJobLog();
                 jobLog.setJobGroup(jobInfo.getJobGroup());
+
+                //如果该任务是子任务，设置该任务日志的父任务日志id
                 if(jobInfo.getParentId()!=null && jobInfo.getParentId()!=0){
                     jobLog.setParentId(JobUtils.getParentId(jobId));
                 }
                 jobInfo.setParentId(jobInfo.getParentId());
+
                 jobLog.setJobId(jobInfo.getId());
                 XxlJobDynamicScheduler.xxlJobLogDao.save(jobLog);
                 logger.debug(">>>>>>>>>>> xxl-job trigger start, jobId:{}", jobLog.getId());
@@ -129,9 +132,11 @@ public class XxlJobTrigger {
             XxlJobLog jobLog = new XxlJobLog();
             jobLog.setJobGroup(jobInfo.getJobGroup());
             jobLog.setJobId(jobInfo.getId());
+
             if(jobInfo.getParentId()!=null && jobInfo.getParentId()!=0){
                 jobLog.setParentId(JobUtils.getParentId(jobId));
             }
+
             XxlJobDynamicScheduler.xxlJobLogDao.save(jobLog);
             logger.debug(">>>>>>>>>>> xxl-job trigger start, jobId:{}", jobLog.getId());
 
@@ -190,6 +195,8 @@ public class XxlJobTrigger {
             jobLog.setTriggerCode(triggerResult.getCode());
             jobLog.setTriggerMsg(triggerMsgSb.toString());
             XxlJobDynamicScheduler.xxlJobLogDao.updateTriggerInfo(jobLog);
+
+            //如果调度失败，需要更新父任务信息；默认算到调度成功，所以成功时不用更新
             if(jobLog.getTriggerCode()!=200){
                 logger.info(String.format("更新日志结果:%d[trigger]",jobLog.getParentId()));
                 XxlJobDynamicScheduler.adminBiz.updateChildSummary(jobLog);

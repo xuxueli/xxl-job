@@ -70,6 +70,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 		return maps;
 	}
 
+	//TODO:新增或或者更新某一个父任务下的子任务，也要更新对应的子任务信息
 	@Override
 	public ReturnT<String> add(XxlJobInfo jobInfo) {
 		// valid
@@ -243,9 +244,10 @@ public class XxlJobServiceImpl implements XxlJobService {
 	/**
 	 * 移除
 	 * @param id
+	 * @param updateParent 当移除了子任务之后，要更新父任务的子任务id字段
 	 * @return
 	 */
-	public boolean removeCur(int id, Boolean updateParent) {
+	private boolean removeCur(int id, Boolean updateParent) {
 		XxlJobInfo xxlJobInfo = xxlJobInfoDao.loadById(id);
 		try {
 			String group = String.valueOf(xxlJobInfo.getJobGroup());
@@ -266,6 +268,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 				}
 			}
 
+			//如果该任务本身有子任务，在递归删除下面的子任务，此时不需要更新这些子任务的父任务，即自身的信息
 			if(StringUtils.isNotEmpty(xxlJobInfo.getChildJobId())) {
 				String[] childJobIds = xxlJobInfo.getChildJobId().split(",");
 				for (String childJobId : childJobIds) {

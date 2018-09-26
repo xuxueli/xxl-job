@@ -135,21 +135,6 @@
 		FROM XXL_JOB_QRTZ_TRIGGER_LOG AS t
 		WHERE t.id = #{id}
 	</select>
-
-	<update id="updateChildSummary">
-		update XXL_JOB_QRTZ_TRIGGER_LOG set
-		<trim prefixOverrides=",">
-			<if test="childSummary!=null">
-				,child_summary=#{childSummary}
-			</if>
-			<if test="handleCode gt 0">
-				,handle_code=#{handleCode}
-			</if>
-			,handle_time=now()
-		</trim>
-		where id=#{id}
-	</update>
-
 	
 	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobLog" useGeneratedKeys="true" keyProperty="id" >
 		INSERT INTO XXL_JOB_QRTZ_TRIGGER_LOG (
@@ -169,6 +154,20 @@
 			SELECT LAST_INSERT_ID() 
 		</selectKey>-->
 	</insert>
+
+	<update id="updateChildSummary">
+		update XXL_JOB_QRTZ_TRIGGER_LOG set
+		<trim prefixOverrides=",">
+			<if test="childSummary!=null">
+				,child_summary=#{childSummary}
+			</if>
+			<if test="handleCode gt 0">
+				,handle_code=#{handleCode}
+			</if>
+			,handle_time=now()
+		</trim>
+		where id=#{id}
+	</update>
 
 	<update id="updateTriggerInfo" >
 		UPDATE XXL_JOB_QRTZ_TRIGGER_LOG
