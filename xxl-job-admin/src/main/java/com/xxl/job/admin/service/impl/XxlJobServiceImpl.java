@@ -132,6 +132,10 @@ public class XxlJobServiceImpl implements XxlJobService {
 			return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("jobinfo_field_add")+I18nUtil.getString("system_fail")) );
 		}
 
+		if (jobInfo.getParentId() != null && jobInfo.getParentId() != 0) {
+			updateChildIds(jobInfo.getParentId());
+		}
+
 		// add in quartz
         String qz_group = String.valueOf(jobInfo.getJobGroup());
         String qz_name = String.valueOf(jobInfo.getId());
