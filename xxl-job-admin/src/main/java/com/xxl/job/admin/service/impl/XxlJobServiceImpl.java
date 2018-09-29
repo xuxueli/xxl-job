@@ -401,8 +401,10 @@ public class XxlJobServiceImpl implements XxlJobService {
 		List<Integer> triggerDayCountRunningList = new ArrayList<Integer>();
 		List<Integer> triggerDayCountSucList = new ArrayList<Integer>();
 		List<Integer> triggerDayCountFailList = new ArrayList<Integer>();
+		List<Integer> triggerDayCountPartSucList = new ArrayList<Integer>();
 		int triggerCountRunningTotal = 0;
 		int triggerCountSucTotal = 0;
+		int triggerCountPartSucTotal = 0;
 		int triggerCountFailTotal = 0;
 
 		List<Map<String, Object>> triggerCountMapAll = xxlJobLogDao.triggerCountByDay(startDate, endDate);
@@ -411,17 +413,20 @@ public class XxlJobServiceImpl implements XxlJobService {
 				String day = String.valueOf(item.get("triggerDay"));
 				int triggerDayCount = Integer.valueOf(String.valueOf(item.get("triggerDayCount")));
 				int triggerDayCountRunning = Integer.valueOf(String.valueOf(item.get("triggerDayCountRunning")));
+				int triggerDayCountPartSuc = Integer.valueOf(String.valueOf(item.get("triggerDayCountPartSuc")));
 				int triggerDayCountSuc = Integer.valueOf(String.valueOf(item.get("triggerDayCountSuc")));
-				int triggerDayCountFail = triggerDayCount - triggerDayCountRunning - triggerDayCountSuc;
+				int triggerDayCountFail = triggerDayCount - triggerDayCountRunning - triggerDayCountSuc-triggerDayCountPartSuc;
 
 				triggerDayList.add(day);
 				triggerDayCountRunningList.add(triggerDayCountRunning);
 				triggerDayCountSucList.add(triggerDayCountSuc);
 				triggerDayCountFailList.add(triggerDayCountFail);
+				triggerDayCountPartSucList.add(triggerDayCountPartSuc);
 
 				triggerCountRunningTotal += triggerDayCountRunning;
 				triggerCountSucTotal += triggerDayCountSuc;
 				triggerCountFailTotal += triggerDayCountFail;
+				triggerCountPartSucTotal+=triggerDayCountPartSuc;
 			}
 		} else {
             for (int i = 4; i > -1; i--) {
@@ -436,9 +441,11 @@ public class XxlJobServiceImpl implements XxlJobService {
 		result.put("triggerDayCountRunningList", triggerDayCountRunningList);
 		result.put("triggerDayCountSucList", triggerDayCountSucList);
 		result.put("triggerDayCountFailList", triggerDayCountFailList);
+		result.put("triggerDayCountPartSucList", triggerDayCountPartSucList);
 
 		result.put("triggerCountRunningTotal", triggerCountRunningTotal);
 		result.put("triggerCountSucTotal", triggerCountSucTotal);
+		result.put("triggerCountPartSucTotal", triggerCountPartSucTotal);
 		result.put("triggerCountFailTotal", triggerCountFailTotal);
 
 		// set cache

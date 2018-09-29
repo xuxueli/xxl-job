@@ -89,7 +89,7 @@ $(function () {
                    }
                },
                legend: {
-                   data:[I18n.joblog_status_suc, I18n.joblog_status_fail, I18n.joblog_status_running]
+                   data:[I18n.joblog_status_suc, "部分成功", I18n.joblog_status_fail, I18n.joblog_status_running]
                },
                toolbox: {
                    feature: {
@@ -123,6 +123,13 @@ $(function () {
                        data: data.content.triggerDayCountSucList
                    },
                    {
+                       name:"部分成功",
+                       type:'line',
+                       stack: 'Total',
+                       areaStyle: {normal: {}},
+                       data: data.content.triggerDayCountPartSucList
+                   },
+                   {
                        name:I18n.joblog_status_fail,
                        type:'line',
                        stack: 'Total',
@@ -143,7 +150,7 @@ $(function () {
                        data: data.content.triggerDayCountRunningList
                    }
                ],
-                color:['#00A65A', '#c23632', '#F39C12']
+                color:['#00A65A', '#00c0ef', '#c23632', '#F39C12']
         };
 
         var lineChart = echarts.init(document.getElementById('lineChart'));
@@ -167,7 +174,7 @@ $(function () {
             legend: {
                 orient: 'vertical',
                 left: 'left',
-                data: [I18n.joblog_status_suc, I18n.joblog_status_fail, I18n.joblog_status_running ]
+                data: [I18n.joblog_status_suc,"部分成功", I18n.joblog_status_fail, I18n.joblog_status_running ]
             },
             series : [
                 {
@@ -179,6 +186,10 @@ $(function () {
                         {
                             name:I18n.joblog_status_suc,
                             value:data.content.triggerCountSucTotal
+                        },
+                        {
+                            name:"部分成功",
+                            value:data.content.triggerCountPartSucTotal
                         },
                         {
                             name:I18n.joblog_status_fail,
@@ -198,7 +209,7 @@ $(function () {
                     }
                 }
             ],
-            color:['#00A65A', '#c23632', '#F39C12']
+            color:['#00A65A', '#00c0ef', '#c23632', '#F39C12']
         };
         var pieChart = echarts.init(document.getElementById('pieChart'));
         pieChart.setOption(option);
