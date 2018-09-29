@@ -70,7 +70,7 @@
 			  	AND t.parent_id=#{parentId}
 			</if>
 		</trim>
-		order by executor_handler desc,author desc , id DESC
+		order by author desc ,executor_handler desc, id DESC
 		LIMIT #{offset}, #{pagesize}
 	</select>
 
