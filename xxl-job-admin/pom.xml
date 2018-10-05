@@ -7,7 +7,7 @@
 		<version>1.9.2-SNAPSHOT</version>
 	</parent>
 	<artifactId>xxl-job-admin</artifactId>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 
 	<dependencies>
 		<!-- springframe start -->
