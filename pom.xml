@@ -17,6 +17,9 @@
     </modules>
 
 	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.encoding>UTF-8</maven.compiler.encoding>
+
 		<javax.servlet-api.version>3.1.0</javax.servlet-api.version>
 		<javax.servlet.jsp-api.version>2.3.3</javax.servlet.jsp-api.version>
 
