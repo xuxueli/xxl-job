@@ -31,7 +31,7 @@ public class ExecutorRouteLFU extends ExecutorRouter {
         HashMap<String, Integer> lfuItemMap = jobLfuMap.get(jobId);     // Key排序可以用TreeMap+构造入参Compare；Value排序暂时只能通过ArrayList；
         if (lfuItemMap == null) {
             lfuItemMap = new HashMap<String, Integer>();
-            jobLfuMap.put(jobId, lfuItemMap);
+            jobLfuMap.putIfAbsent(jobId, lfuItemMap);   // 避免重复覆盖
         }
         for (String address: addressList) {
             if (!lfuItemMap.containsKey(address) || lfuItemMap.get(address) >1000000 ) {
