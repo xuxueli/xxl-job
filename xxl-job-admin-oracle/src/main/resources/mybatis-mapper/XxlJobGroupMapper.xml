@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xxl.job.admin.dao.XxlJobGroupDao">
+	
+	<resultMap id="XxlJobGroup" type="com.xxl.job.admin.core.model.XxlJobGroup" >
+		<result column="id" property="id" />
+	    <result column="app_name" property="appName" />
+	    <result column="title" property="title" />
+	    <result column="orderby" property="order" />
+		<result column="address_type" property="addressType" />
+		<result column="address_list" property="addressList" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		t.id,
+		t.app_name,
+		t.title,
+		t.orderby,
+		t.address_type,
+		t.address_list
+	</sql>
+
+	<select id="findAll" resultMap="XxlJobGroup">
+		SELECT <include refid="Base_Column_List" />
+		FROM JOB_QRTZ_TRIGGER_GROUP  t
+		ORDER BY t.orderby ASC
+	</select>
+
+	<select id="findByAddressType" parameterType="java.lang.Integer" resultMap="XxlJobGroup">
+		SELECT <include refid="Base_Column_List" />
+		FROM JOB_QRTZ_TRIGGER_GROUP  t
+		WHERE t.address_type = #{addressType}
+		ORDER BY t.orderby ASC
+	</select>
+
+	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobGroup">
+		<selectKey keyProperty="id" resultType="int" order="BEFORE">  
+    		select SEQ_JOB_COMMON.NEXTVAL from dual  
+     	</selectKey>
+		INSERT INTO JOB_QRTZ_TRIGGER_GROUP (id, app_name, title, orderby, address_type, address_list)
+		values (#{id}, #{appName}, #{title}, #{order}, #{addressType}, #{addressList,jdbcType=VARCHAR})
+	</insert>
+
+	<update id="update" parameterType="com.xxl.job.admin.core.model.XxlJobGroup" >
+		UPDATE JOB_QRTZ_TRIGGER_GROUP
+		SET app_name = #{appName},
+			title = #{title},
+			orderby = #{order},
+			address_type = #{addressType},
+			address_list = #{addressList,jdbcType=VARCHAR}
+		WHERE id = #{id}
+	</update>
+
+	<delete id="remove" parameterType="java.lang.Integer" >
+		DELETE FROM JOB_QRTZ_TRIGGER_GROUP
+		WHERE id = #{id}
+	</delete>
+
+	<select id="load" parameterType="java.lang.Integer" resultMap="XxlJobGroup">
+		SELECT <include refid="Base_Column_List" />
+		FROM JOB_QRTZ_TRIGGER_GROUP t
+		WHERE t.id = #{id}
+	</select>
+
+</mapper>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:tx="http://www.springframework.org/schema/tx"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/tx 
+		http://www.springframework.org/schema/tx/spring-tx.xsd">
+	
+	
+	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="fileEncoding" value="utf-8" />
+		<property name="locations">
+			<list>
+				<value>classpath*:xxl-job-admin.properties</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- ********************************* part 1 :for datasource ********************************* -->
+
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"  destroy-method="close">
+	    <property name="driverClass" value="${xxl.job.db.driverClass}" />
+	    <property name="jdbcUrl" value="${xxl.job.db.url}" />
+	    <property name="user" value="${xxl.job.db.user}" />
+	    <property name="password" value="${xxl.job.db.password}" />
+	    <property name="initialPoolSize" value="3" />  
+	    <property name="minPoolSize" value="2" />  
+	    <property name="maxPoolSize" value="10" />  
+	    <property name="maxIdleTime" value="60" />
+	    <property name="acquireRetryDelay" value="1000" />
+	    <property name="acquireRetryAttempts" value="10" />
+	    <property name="preferredTestQuery" value="SELECT 1" />
+	</bean>
+	
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="mapperLocations" value="classpath:mybatis-mapper/*.xml"/>
+	</bean>
+
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+		<property name="basePackage" value="com.xxl.job.admin.dao" />
+	</bean>
+    
+	<!-- ********************************* part 2 :for tx ********************************* -->
+
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+      
+	<tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true"/>
+
+	<!-- ********************************* part 3 :for xxl-job scheduler ********************************* -->
+
+	<bean id="quartzScheduler" lazy-init="false" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="autoStartup" value="true" />			<!--自动启动 -->
+		<property name="startupDelay" value="20" />				<!--延时启动，应用启动成功后在启动 -->
+		<property name="overwriteExistingJobs" value="true" />	<!--覆盖DB中JOB：true、以数据库中已经存在的为准：false -->
+		<property name="applicationContextSchedulerContextKey"  value="applicationContextKey" />
+		<property name="configLocation" value="classpath:quartz.properties"/>
+	</bean>
+
+	<bean id="xxlJobDynamicScheduler" class="com.xxl.job.admin.core.schedule.XxlJobDynamicScheduler" init-method="init" destroy-method="destroy" >
+		<!-- (轻易不要变更“调度器名称”, 任务创建时会绑定该“调度器名称”) -->
+		<property name="scheduler" ref="quartzScheduler"/>
+		<property name="accessToken" value="${xxl.job.accessToken}" />
+	</bean>
+	
+</beans>

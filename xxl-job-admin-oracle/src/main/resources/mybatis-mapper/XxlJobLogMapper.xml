@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xxl.job.admin.dao.XxlJobLogDao">
+	
+	<resultMap id="XxlJobLog" type="com.xxl.job.admin.core.model.XxlJobLog" >
+		<result column="id" property="id" />
+
+		<result column="job_group" property="jobGroup" />
+		<result column="job_id" property="jobId" />
+
+		<result column="glue_type" property="glueType" />
+
+		<result column="executor_address" property="executorAddress" />
+		<result column="executor_handler" property="executorHandler" />
+	    <result column="executor_param" property="executorParam" />
+	    
+	    <result column="trigger_time" property="triggerTime" />
+	    <result column="trigger_code" property="triggerCode" />
+	    <result column="trigger_msg" property="triggerMsg" />
+	    
+	    <result column="handle_time" property="handleTime" />
+	    <result column="handle_code" property="handleCode" />
+	    <result column="handle_msg" property="handleMsg" />
+	    
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		t.id,
+		t.job_group,
+		t.job_id,
+		t.glue_type,
+		t.executor_address,
+		t.executor_handler,
+		t.executor_param,
+		t.trigger_time,
+		t.trigger_code,
+		t.trigger_msg,
+		t.handle_time,
+		t.handle_code,
+		t.handle_msg
+	</sql>
+	
+	<select id="pageList" resultMap="XxlJobLog">
+		SELECT <include refid="Base_Column_List" />
+		FROM(
+		SELECT rownum rownu,t1.* FROM(
+		SELECT * FROM JOB_QRTZ_TRIGGER_LOG
+		<trim prefix="WHERE" prefixOverrides="AND | OR" >
+			<if test="jobGroup != null and jobGroup != ''">
+				AND job_group = #{jobGroup}
+			</if>
+			<if test="jobId gt 0">
+				AND job_id = #{jobId}
+			</if>
+			<if test="triggerTimeStart != null">
+				AND trigger_time <![CDATA[ >= ]]> #{triggerTimeStart}
+			</if>
+			<if test="triggerTimeEnd != null">
+				AND trigger_time <![CDATA[ <= ]]> #{triggerTimeEnd}
+			</if>
+			<if test="logStatus == 1" >
+				AND handle_code = 200
+			</if>
+			<if test="logStatus == 2" >
+				AND (
+					(trigger_code <![CDATA[ > ]]> 0 AND trigger_code!=200) OR
+					(handle_code <![CDATA[ > ]]> 0 AND handle_code!=200)
+				)
+			</if>
+			<if test="logStatus == 3" >
+				AND (trigger_code = 200 AND handle_code=0)
+			</if>
+		</trim>
+		ORDER BY id DESC) t1 WHERE rownum <![CDATA[ <= ]]> (#{offset} + #{pagesize}) ) t WHERE rownu <![CDATA[ > ]]> #{offset}
+	</select>
+	
+	<select id="pageListCount" resultType="int">
+		SELECT count(1)
+		FROM JOB_QRTZ_TRIGGER_LOG  t
+		<trim prefix="WHERE" prefixOverrides="AND | OR" >
+			<if test="jobGroup != null and jobGroup != ''">
+				AND t.job_group = #{jobGroup}
+			</if>
+			<if test="jobId gt 0">
+				AND t.job_id = #{jobId}
+			</if>
+			<if test="triggerTimeStart != null">
+				AND t.trigger_time <![CDATA[ >= ]]> #{triggerTimeStart}
+			</if>
+			<if test="triggerTimeEnd != null">
+				AND t.trigger_time <![CDATA[ <= ]]> #{triggerTimeEnd}
+			</if>
+			<if test="logStatus == 1" >
+				AND t.handle_code = 200
+			</if>
+			<if test="logStatus == 2" >
+				AND (
+				(t.trigger_code <![CDATA[ > ]]> 0 AND t.trigger_code!=200) OR
+				(t.handle_code <![CDATA[ > ]]> 0 AND t.handle_code!=200)
+				)
+			</if>
+			<if test="logStatus == 3" >
+				AND (t.trigger_code = 200 AND t.handle_code=0)
+			</if>
+		</trim>
+	</select>
+	
+	<select id="load" parameterType="java.lang.Integer" resultMap="XxlJobLog">
+		SELECT <include refid="Base_Column_List" />
+		FROM JOB_QRTZ_TRIGGER_LOG  t
+		WHERE t.id = #{id}
+	</select>
+
+	
+	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobLog">
+		<selectKey resultType="int" order="BEFORE" keyProperty="id">
+			select SEQ_JOB_LOG.NEXTVAL from dual  
+		</selectKey>
+		INSERT INTO JOB_QRTZ_TRIGGER_LOG (
+			id,
+			job_group,
+			job_id
+		) VALUES (
+			#{id},
+			#{jobGroup},
+			#{jobId}
+		)
+	</insert>
+
+	<update id="updateTriggerInfo" >
+		UPDATE JOB_QRTZ_TRIGGER_LOG
+		SET
+		    glue_type= #{glueType},
+			trigger_time= #{triggerTime},
+			trigger_code= #{triggerCode},
+			trigger_msg= #{triggerMsg},
+			executor_address= #{executorAddress,jdbcType=VARCHAR},
+			executor_handler=#{executorHandler,jdbcType=VARCHAR},
+			executor_param= #{executorParam,jdbcType=VARCHAR}
+		WHERE id= #{id}
+	</update>
+
+	<update id="updateHandleInfo">
+		UPDATE JOB_QRTZ_TRIGGER_LOG
+		SET 
+			handle_time= #{handleTime}, 
+			handle_code= #{handleCode},
+			handle_msg= #{handleMsg} 
+		WHERE id= #{id}
+	</update>
+	
+	<delete id="delete" >
+		delete from JOB_QRTZ_TRIGGER_LOG
+		WHERE job_id = #{jobId}
+	</delete>
+
+	<select id="triggerCountByHandleCode" resultType="int" >
+		SELECT count(1)
+		FROM JOB_QRTZ_TRIGGER_LOG  t
+		<trim prefix="WHERE" prefixOverrides="AND | OR" >
+			<if test="handleCode gt 0">
+				AND t.handle_code = #{handleCode}
+			</if>
+		</trim>
+	</select>
+
+    <select id="triggerCountByDay" resultType="java.util.Map" >
+        SELECT TO_CHAR(trigger_time,'yyyy-MM-dd') "triggerDay", COUNT(id) "triggerCount"
+        FROM JOB_QRTZ_TRIGGER_LOG
+        WHERE trigger_time BETWEEN #{from} and #{to}
+		<if test="handleCode gt 0">
+			AND handle_code = #{handleCode}
+		</if>
+        GROUP BY TO_CHAR(trigger_time,'yyyy-MM-dd')
+    </select>
+
+	<delete id="clearLog" >
+		delete from JOB_QRTZ_TRIGGER_LOG
+		<trim prefix="WHERE" prefixOverrides="AND | OR" >
+			<if test="jobGroup gt 0">
+				AND job_group = #{jobGroup}
+			</if>
+			<if test="jobId gt 0">
+				AND job_id = #{jobId}
+			</if>
+			<if test="clearBeforeTime != null">
+				AND trigger_time <![CDATA[ <= ]]> #{clearBeforeTime}
+			</if>
+			<if test="clearBeforeNum gt 0">
+				AND id NOT in(
+					SELECT id FROM(
+						SELECT rownum rownu,id from 
+							(SELECT id FROM JOB_QRTZ_TRIGGER_LOG t
+							<trim prefix="WHERE" prefixOverrides="AND | OR" >
+								<if test="jobGroup gt 0">
+									AND t.job_group = #{jobGroup}
+								</if>
+								<if test="jobId gt 0">
+									AND t.job_id = #{jobId}
+								</if>
+							</trim>
+							ORDER BY t.trigger_time desc)
+						where rownum <![CDATA[ <= ]]> #{clearBeforeNum}
+					) 
+				)
+			</if>
+		</trim>
+	</delete>
+	
+</mapper>
