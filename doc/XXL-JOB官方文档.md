@@ -1000,6 +1000,14 @@ API服务请求参考代码：com.xxl.executor.test.DemoJobHandlerTest
 默认提供邮件失败告警，可扩展短信、钉钉等方式，扩展代码位置为 "JobFailMonitorHelper.failAlarm"；
 
 
+### 5.19 调度中心Docker镜像构建
+可以通过以下命令快速构建调度中心，并启动运行；
+```
+mvn clean package
+docker build -t xuxueli/xxl-job-admin ./xxl-job-admin
+docker run --name xxl-job-admin -p 8080:8080 -d xuxueli/xxl-job-admin
+```
+
 ## 六、版本更新日志
 ### 6.1 版本 V1.1.x，新特性[2015-12-05]
 **【于V1.1.x版本，XXL-JOB正式应用于我司，内部定制别名为 “Ferrari”，新接入应用推荐使用最新版本】**
@@ -1298,6 +1306,7 @@ Tips: 历史版本(V1.3.x)目前已经Release至稳定版本, 进入维护阶段
 - 38、GLUE任务脚本字段类型调整，改为mediumtext类型，提高GLUE长度上限；
 - 39、任务监控线程Log输出优化，运行中任务的监控Log改为debug级别，减少非核心日志量；
 - 40、项目依赖全量升级至较新稳定版本，如spring、Jackson、groovy等等；
+- 41、docker支持：调度中心提供 Dockerfile 方便快速构建docker镜像； 
 
 ### TODO LIST
 - 1、任务权限管理：执行器为粒度分配权限，核心操作校验权限；
