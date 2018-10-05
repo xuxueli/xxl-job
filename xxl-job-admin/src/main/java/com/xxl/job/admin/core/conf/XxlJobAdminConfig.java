@@ -4,8 +4,6 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
-import javax.annotation.PostConstruct;
-
 /**
  * xxl-job config
  *
@@ -87,14 +85,4 @@ public class XxlJobAdminConfig implements InitializingBean{
         return i18n;
     }
 
-    @PostConstruct
-    public void init() {
-        if(this.getLoginUsername().length()>18){
-            throw new IllegalArgumentException("username length greater than 18");
-        }
-
-        if(this.getLoginPassword().length()>18){
-            throw new IllegalArgumentException("password length greater than 18");
-        }
-    }
 }
