@@ -18,6 +18,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<maven.compiler.encoding>UTF-8</maven.compiler.encoding>
 
 		<javax.servlet-api.version>3.1.0</javax.servlet-api.version>
