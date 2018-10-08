@@ -1324,6 +1324,7 @@ Tips: 历史版本(V1.3.x)目前已经Release至稳定版本, 进入维护阶段
 - 22、忙碌转移优化，全部机器忙碌时不再直接失败；
 - 23、流程任务等，透传动态参数；
 - 24、任务状态与quartz解耦，降低quartz调度压力，仅NORMAL状态任务绑定quartz；
+- 25、批量触发支持，添加参数 "org.quartz.scheduler.batchTriggerAcquisitionMaxCount: 50"；
 
 ## 七、其他
 
