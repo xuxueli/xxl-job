@@ -1338,6 +1338,7 @@ Tips: 历史版本(V1.3.x)目前已经Release至稳定版本, 进入维护阶段
 - 18、流程任务等，透传动态参数；
 - 19、任务支持切换执行器；
 - 20、任务自动注册；待考虑，因为任务自动注册将会导致任务难以管理控制；
+- 21、批量触发支持，添加参数 "org.quartz.scheduler.batchTriggerAcquisitionMaxCount: 50"；
 
 ## 七、其他
 
