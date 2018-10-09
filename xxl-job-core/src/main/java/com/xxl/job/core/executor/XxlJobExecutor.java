@@ -88,12 +88,12 @@ public class XxlJobExecutor implements ApplicationContextAware {
         JobLogFileCleanThread.getInstance().start(logRetentionDays);
     }
     public void destroy(){
-        // destory JobThreadRepository
-        if (JobThreadRepository.size() > 0) {
-            for (Map.Entry<Integer, JobThread> item: JobThreadRepository.entrySet()) {
+        // destory jobThreadRepository
+        if (jobThreadRepository.size() > 0) {
+            for (Map.Entry<Integer, JobThread> item: jobThreadRepository.entrySet()) {
                 removeJobThread(item.getKey(), "web container destroy and kill the job.");
             }
-            JobThreadRepository.clear();
+            jobThreadRepository.clear();
         }
 
         // destory executor-server
@@ -174,13 +174,13 @@ public class XxlJobExecutor implements ApplicationContextAware {
 
 
     // ---------------------- job thread repository ----------------------
-    private static ConcurrentHashMap<Integer, JobThread> JobThreadRepository = new ConcurrentHashMap<Integer, JobThread>();
+    private static ConcurrentHashMap<Integer, JobThread> jobThreadRepository = new ConcurrentHashMap<Integer, JobThread>();
     public static JobThread registJobThread(int jobId, IJobHandler handler, String removeOldReason){
         JobThread newJobThread = new JobThread(jobId, handler);
         newJobThread.start();
         logger.info(">>>>>>>>>>> xxl-job regist JobThread success, jobId:{}, handler:{}", new Object[]{jobId, handler});
 
-        JobThread oldJobThread = JobThreadRepository.put(jobId, newJobThread);	// putIfAbsent | oh my god, map's put method return the old value!!!
+        JobThread oldJobThread = jobThreadRepository.put(jobId, newJobThread);	// putIfAbsent | oh my god, map's put method return the old value!!!
         if (oldJobThread != null) {
             oldJobThread.toStop(removeOldReason);
             oldJobThread.interrupt();
@@ -189,14 +189,14 @@ public class XxlJobExecutor implements ApplicationContextAware {
         return newJobThread;
     }
     public static void removeJobThread(int jobId, String removeOldReason){
-        JobThread oldJobThread = JobThreadRepository.remove(jobId);
+        JobThread oldJobThread = jobThreadRepository.remove(jobId);
         if (oldJobThread != null) {
             oldJobThread.toStop(removeOldReason);
             oldJobThread.interrupt();
         }
     }
     public static JobThread loadJobThread(int jobId){
-        JobThread jobThread = JobThreadRepository.get(jobId);
+        JobThread jobThread = jobThreadRepository.get(jobId);
         return jobThread;
     }
 
