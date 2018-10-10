@@ -68,23 +68,4 @@
 		<property name="accessToken" value="${xxl.job.accessToken}" />
 	</bean>
 
-
-	<!-- redis -->
-	<bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig">
-		<property name="maxIdle" value="${redis.max-idle}"/>
-		<property name="maxTotal" value="${redis.max-total}"/>
-		<property name="maxWaitMillis" value="${redis.max-wait}"/>
-		<property name="testOnBorrow" value="true"/>
-	</bean>
-
-	<bean id="keySerializer" class="org.springframework.data.redis.serializer.StringRedisSerializer"/>
-	<bean id="valueSerializer" class="org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer">
-	</bean>
-	
-	<bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate">
-		<property name="connectionFactory" ref="jedisConnectionFactory"/>
-		<property name="keySerializer" ref="keySerializer"/>
-		<property name="valueSerializer" ref="valueSerializer"/>
-		<property name="enableTransactionSupport" value="true"/>
-	</bean>
 </beans>
