@@ -163,20 +163,22 @@
                 <finalName>xxl-job-admin</finalName>
 				<resources>
 					<resource>
-						<directory>src/main/java</directory>
-						<excludes>
-							<exclude>
-								com/xxl/job/admin/service/impl/RedisCacheTemplate.java
-							</exclude>
-						</excludes>
-					</resource>
-					<resource>
 						<directory>src/main/resources</directory>
 						<excludes>
 							<exclude>redis.xml</exclude>
 						</excludes>
 					</resource>
 				</resources>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-war-plugin</artifactId>
+						<version>2.2</version>
+						<configuration>
+							<packagingExcludes>*com/xxl/job/admin/service/impl/RedisCacheTemplate.class</packagingExcludes>
+						</configuration>
+					</plugin>
+				</plugins>
             </build>
         </profile>
     </profiles>

@@ -1,7 +1,7 @@
 package com.xxl.job.admin.controller.interceptor;
 
 import com.xxl.job.admin.core.schedule.XxlJobDynamicScheduler;
-import com.xxl.job.admin.service.impl.RedisCacheTemplate;
+import com.xxl.job.admin.service.impl.CacheTemplate;
 import com.xxl.job.admin.service.impl.JobUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,7 +10,6 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -23,7 +22,7 @@ public class Job4Dispose implements InitializingBean,DisposableBean {
 
 
     @Autowired(required = false)
-    RedisCacheTemplate cacheTemplate;
+    CacheTemplate cacheTemplate;
 
 
     @Override
