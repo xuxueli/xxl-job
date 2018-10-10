@@ -1,13 +1,13 @@
 package com.xxl.job.admin.controller.interceptor;
 
 import com.xxl.job.admin.core.schedule.XxlJobDynamicScheduler;
-import com.xxl.job.admin.service.impl.AdminBizImpl;
+import com.xxl.job.admin.service.impl.RedisCacheTemplate;
 import com.xxl.job.admin.service.impl.JobUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -22,8 +22,8 @@ public class Job4Dispose implements InitializingBean,DisposableBean {
     private static Logger logger = LoggerFactory.getLogger(Job4Dispose.class);
 
 
-    @Resource
-    RedisTemplate<String, ConcurrentHashMap<Integer,List<Integer>>> redisTemplate;
+    @Autowired(required = false)
+    RedisCacheTemplate cacheTemplate;
 
 
     @Override
@@ -50,18 +50,24 @@ public class Job4Dispose implements InitializingBean,DisposableBean {
     }
 
     public void flushToCache(){
-        redisTemplate.opsForValue().set("childJobParentIdMap",JobUtils.childJobParentIdMap);
-        redisTemplate.opsForValue().set("parentIdChildMap",JobUtils.parentIdChildMap);
+        if(cacheTemplate==null){
+            return;
+        }
+        cacheTemplate.set("childJobParentIdMap",JobUtils.childJobParentIdMap);
+        cacheTemplate.set("parentIdChildMap",JobUtils.parentIdChildMap);
     }
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        ConcurrentHashMap<Integer,List<Integer>> map=redisTemplate.opsForValue().get("parentIdChildMap");
+        if(cacheTemplate==null){
+            return;
+        }
+        ConcurrentHashMap<Integer,List<Integer>> map= cacheTemplate.get("parentIdChildMap",ConcurrentHashMap.class);
         if(map!=null){
             JobUtils.parentIdChildMap.putAll(map);
         }
 
-        map=redisTemplate.opsForValue().get("childJobParentIdMap");
+        map= cacheTemplate.get("childJobParentIdMap",ConcurrentHashMap.class);
         if(map!=null){
             JobUtils.childJobParentIdMap.putAll(map);
         }
