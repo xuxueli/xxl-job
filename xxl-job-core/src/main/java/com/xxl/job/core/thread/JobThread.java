@@ -147,7 +147,7 @@ public class JobThread extends Thread{
 				XxlJobLogger.log("<br>----------- JobThread Exception:" + errorMsg + "<br>----------- xxl-job job execute end(error) -----------");
 			} finally {
                 if(triggerParam != null) {
-                	XxlJobFileAppender.contextHolder.remove();
+                	//XxlJobFileAppender.contextHolder.remove();
                     // callback handler info
                     if (!toStop) {
                         // commonm

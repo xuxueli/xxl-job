@@ -38,6 +38,9 @@ public class XxlJobLog implements Serializable {
 	 */
 	private Integer parentId;
 
+	/**
+	 * 该父任务下子任务处理进度的汇总
+	 */
 	private String childSummary;
 
 	public String getChildSummary() {

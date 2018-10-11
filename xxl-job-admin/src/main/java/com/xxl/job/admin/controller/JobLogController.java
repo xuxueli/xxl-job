@@ -168,17 +168,6 @@ public class JobLogController {
 		}
 	}
 
-	@RequestMapping("/logKillBatch")
-	@ResponseBody
-	public ReturnT<String> logKill(Integer[] ids){
-		for(Integer id:ids){
-			logKill(id);
-		}
-		return ReturnT.SUCCESS;
-	}
-
-
-
 	@RequestMapping("/logKill")
 	@ResponseBody
 	public ReturnT<String> logKill(int id){
@@ -215,6 +204,15 @@ public class JobLogController {
 		} else {
 			return new ReturnT<String>(500, runResult.getMsg());
 		}
+	}
+
+	@RequestMapping("/logKillBatch")
+	@ResponseBody
+	public ReturnT<String> logKill(Integer[] ids){
+		for(Integer id:ids){
+			logKill(id);
+		}
+		return ReturnT.SUCCESS;
 	}
 
 	@RequestMapping("/clearLog")

@@ -70,6 +70,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 		return maps;
 	}
 
+	//TODO:新增或或者更新某一个父任务下的子任务，也要更新对应的子任务信息
 	@Override
 	public ReturnT<String> add(XxlJobInfo jobInfo) {
 		// valid
@@ -129,6 +130,10 @@ public class XxlJobServiceImpl implements XxlJobService {
 		xxlJobInfoDao.save(jobInfo);
 		if (jobInfo.getId() < 1) {
 			return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("jobinfo_field_add")+I18nUtil.getString("system_fail")) );
+		}
+
+		if (jobInfo.getParentId() != null && jobInfo.getParentId() != 0) {
+			updateChildIds(jobInfo.getParentId());
 		}
 
 		// add in quartz
@@ -243,9 +248,10 @@ public class XxlJobServiceImpl implements XxlJobService {
 	/**
 	 * 移除
 	 * @param id
+	 * @param updateParent 当移除了子任务之后，要更新父任务的子任务id字段
 	 * @return
 	 */
-	public boolean removeCur(int id, Boolean updateParent) {
+	private boolean removeCur(int id, Boolean updateParent) {
 		XxlJobInfo xxlJobInfo = xxlJobInfoDao.loadById(id);
 		try {
 			String group = String.valueOf(xxlJobInfo.getJobGroup());
@@ -266,6 +272,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 				}
 			}
 
+			//如果该任务本身有子任务，在递归删除下面的子任务，此时不需要更新这些子任务的父任务，即自身的信息
 			if(StringUtils.isNotEmpty(xxlJobInfo.getChildJobId())) {
 				String[] childJobIds = xxlJobInfo.getChildJobId().split(",");
 				for (String childJobId : childJobIds) {
@@ -394,8 +401,10 @@ public class XxlJobServiceImpl implements XxlJobService {
 		List<Integer> triggerDayCountRunningList = new ArrayList<Integer>();
 		List<Integer> triggerDayCountSucList = new ArrayList<Integer>();
 		List<Integer> triggerDayCountFailList = new ArrayList<Integer>();
+		List<Integer> triggerDayCountPartSucList = new ArrayList<Integer>();
 		int triggerCountRunningTotal = 0;
 		int triggerCountSucTotal = 0;
+		int triggerCountPartSucTotal = 0;
 		int triggerCountFailTotal = 0;
 
 		List<Map<String, Object>> triggerCountMapAll = xxlJobLogDao.triggerCountByDay(startDate, endDate);
@@ -404,17 +413,20 @@ public class XxlJobServiceImpl implements XxlJobService {
 				String day = String.valueOf(item.get("triggerDay"));
 				int triggerDayCount = Integer.valueOf(String.valueOf(item.get("triggerDayCount")));
 				int triggerDayCountRunning = Integer.valueOf(String.valueOf(item.get("triggerDayCountRunning")));
+				int triggerDayCountPartSuc = Integer.valueOf(String.valueOf(item.get("triggerDayCountPartSuc")));
 				int triggerDayCountSuc = Integer.valueOf(String.valueOf(item.get("triggerDayCountSuc")));
-				int triggerDayCountFail = triggerDayCount - triggerDayCountRunning - triggerDayCountSuc;
+				int triggerDayCountFail = triggerDayCount - triggerDayCountRunning - triggerDayCountSuc-triggerDayCountPartSuc;
 
 				triggerDayList.add(day);
 				triggerDayCountRunningList.add(triggerDayCountRunning);
 				triggerDayCountSucList.add(triggerDayCountSuc);
 				triggerDayCountFailList.add(triggerDayCountFail);
+				triggerDayCountPartSucList.add(triggerDayCountPartSuc);
 
 				triggerCountRunningTotal += triggerDayCountRunning;
 				triggerCountSucTotal += triggerDayCountSuc;
 				triggerCountFailTotal += triggerDayCountFail;
+				triggerCountPartSucTotal+=triggerDayCountPartSuc;
 			}
 		} else {
             for (int i = 4; i > -1; i--) {
@@ -429,9 +441,11 @@ public class XxlJobServiceImpl implements XxlJobService {
 		result.put("triggerDayCountRunningList", triggerDayCountRunningList);
 		result.put("triggerDayCountSucList", triggerDayCountSucList);
 		result.put("triggerDayCountFailList", triggerDayCountFailList);
+		result.put("triggerDayCountPartSucList", triggerDayCountPartSucList);
 
 		result.put("triggerCountRunningTotal", triggerCountRunningTotal);
 		result.put("triggerCountSucTotal", triggerCountSucTotal);
+		result.put("triggerCountPartSucTotal", triggerCountPartSucTotal);
 		result.put("triggerCountFailTotal", triggerCountFailTotal);
 
 		// set cache

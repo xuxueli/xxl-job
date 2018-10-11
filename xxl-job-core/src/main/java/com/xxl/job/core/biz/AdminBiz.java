@@ -13,14 +13,23 @@ import java.util.List;
  */
 public interface AdminBiz {
 
-    public static final String MAPPING = "/api";
+    String MAPPING = "/api";
 
     /**
      * 新增任务
      * @param jobInfo
      * @return
      */
-    public ReturnT<String> addJob(XxlJobInfo jobInfo);
+    ReturnT<String> addJob(XxlJobInfo jobInfo);
+
+    /**
+     * 批量新增，主要用于新增某个父任务下的子任务
+     * @param jobInfos
+     * @return
+     */
+    ReturnT<String> addJobs(List<XxlJobInfo> jobInfos);
+
+    ReturnT<String> updateJob(XxlJobInfo jobInfo);
 
     /**
      * 批量更新
@@ -47,9 +56,12 @@ public interface AdminBiz {
      */
     public ReturnT<String> deleteChildJobs(List<XxlJobInfo> toDeletes);
 
+    /**
+     * 更新某个子任务对应的父任务的childSummary字段，这里的任务指正在运行的任务日志
+     * @param log
+     */
     void updateChildSummary(XxlJobLog log);
 
-    ReturnT<String> updateJob(XxlJobInfo jobInfo);
 
     /**
      * callback
