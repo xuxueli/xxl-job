@@ -35,10 +35,17 @@ public interface AdminBiz {
 
     /**
      * 批量新增，主要用于新增某个父任务下的子任务
-     * @param jobInfos
+     * @param toAdds
      * @return
      */
-    public ReturnT<String> addJobs(List<XxlJobInfo> jobInfos);
+    public ReturnT<String> addChildJobs(List<XxlJobInfo> toAdds);
+
+    /**
+     * 批量删除，主要用于删除某个父任务下的子任务
+     * @param toDeletes
+     * @return
+     */
+    public ReturnT<String> deleteChildJobs(List<XxlJobInfo> toDeletes);
 
     void updateChildSummary(XxlJobLog log);
 
