@@ -22,12 +22,6 @@ public interface AdminBiz {
      */
     ReturnT<String> addJob(XxlJobInfo jobInfo);
 
-    /**
-     * 批量新增，主要用于新增某个父任务下的子任务
-     * @param jobInfos
-     * @return
-     */
-    ReturnT<String> addJobs(List<XxlJobInfo> jobInfos);
 
     ReturnT<String> updateJob(XxlJobInfo jobInfo);
 
@@ -41,6 +35,20 @@ public interface AdminBiz {
     ReturnT<List<XxlJobInfo>> queryJobs(Integer parentId,String executorHandler,String paramKeyword);
 
     ReturnT<String> updateLog(XxlJobLog xxlJobLog);
+
+    /**
+     * 批量新增，主要用于新增某个父任务下的子任务
+     * @param toAdds
+     * @return
+     */
+    public ReturnT<String> addChildJobs(List<XxlJobInfo> toAdds);
+
+    /**
+     * 批量删除，主要用于删除某个父任务下的子任务
+     * @param toDeletes
+     * @return
+     */
+    public ReturnT<String> deleteChildJobs(List<XxlJobInfo> toDeletes);
 
     /**
      * 更新某个子任务对应的父任务的childSummary字段，这里的任务指正在运行的任务日志

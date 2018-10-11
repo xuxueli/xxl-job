@@ -23,7 +23,6 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.text.MessageFormat;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author xuxueli 2017-07-27 21:54:20
@@ -54,12 +53,12 @@ public class AdminBizImpl implements AdminBiz {
 
     /**
      * 批量新增，主要用于新增某个父任务下的子任务
-     * @param jobInfos
+     * @param toAdds
      * @return
      */
-    public ReturnT<String> addJobs(List<XxlJobInfo> jobInfos){
-        List<Integer> parentIds=new ArrayList<>();
-        for(XxlJobInfo jobInfo:jobInfos){
+    public ReturnT<String> addChildJobs(List<XxlJobInfo> toAdds){
+        Set<Integer> parentIds=new HashSet<>();
+        for(XxlJobInfo jobInfo:toAdds){
             if(jobInfo.getParentId()!=null && jobInfo.getParentId()!=0){
                 int size=xxlJobInfoDao.query(jobInfo.getParentId(),null,jobInfo.getExecutorParam()).size();
                 if(size>0){
@@ -68,8 +67,31 @@ public class AdminBizImpl implements AdminBiz {
                 }
                 parentIds.add(jobInfo.getParentId());
             }
-
             xxlJobService.add(jobInfo);
+        }
+        for(Integer id:parentIds){
+            xxlJobService.updateChildIds(id);
+        }
+        return ReturnT.SUCCESS;
+    }
+
+    /**
+     * 批量删除，主要用于删除某个父任务下的子任务
+     * @param toDeletes
+     * @return
+     */
+    public ReturnT<String> deleteChildJobs(List<XxlJobInfo> toDeletes){
+        Set<Integer> parentIds=new HashSet<>();
+        for(XxlJobInfo jobInfo:toDeletes){
+            XxlJobInfo pre=xxlJobInfoDao.loadById(jobInfo.getId());
+            if(pre==null){
+                logger.info(String.format("删除数据不存在，跳过[%s,%s,%s]",jobInfo.getId(),jobInfo.getParentId(),jobInfo.getExecutorParam()));
+                continue;
+            }
+            xxlJobService.remove(jobInfo.getId());
+            if(jobInfo.getParentId()!=null && jobInfo.getParentId()>0){
+                parentIds.add(jobInfo.getParentId());
+            }
         }
         for(Integer id:parentIds){
             xxlJobService.updateChildIds(id);
@@ -100,7 +122,9 @@ public class AdminBizImpl implements AdminBiz {
         xxlJobLogDao.updateChildSummary(xxlJobLog);
         if(xxlJobLog.getHandleCode()>0){
             XxlJobLog log=xxlJobLogDao.load(xxlJobLog.getId());
-            updateChildSummaryByParentId(log.getParentId(),new ArrayList<Integer>());
+            if(log.getParentId()!=null && log.getParentId()>0){
+                updateChildSummaryByParentId(log.getParentId(),new ArrayList<Integer>());
+            }
         }
         return ReturnT.SUCCESS;
     }
@@ -206,7 +230,7 @@ public class AdminBizImpl implements AdminBiz {
         XxlJobInfo xxlJobInfo = xxlJobInfoDao.loadById(log.getJobId());
         if(xxlJobInfo!=null && xxlJobInfo.getParentId()!=null && xxlJobInfo.getParentId()!=0){
             Integer parentId=log.getParentId();
-            if(JobUtils.removeChildId(parentId,xxlJobInfo.getId())){
+            if(parentId!=null && parentId>0 && JobUtils.removeChildId(parentId,xxlJobInfo.getId())){
                 updateChildSummaryByParentId(parentId);
             }
         }
