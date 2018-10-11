@@ -86,7 +86,7 @@ public class AdminBizImpl implements AdminBiz {
                 logger.info(String.format("删除数据不存在，跳过[%s,%s,%s]",jobInfo.getId(),jobInfo.getParentId(),jobInfo.getExecutorParam()));
                 continue;
             }
-            xxlJobInfoDao.delete(jobInfo.getId());
+            xxlJobService.remove(jobInfo.getId());
             if(jobInfo.getParentId()!=null && jobInfo.getParentId()>0){
                 parentIds.add(jobInfo.getParentId());
             }

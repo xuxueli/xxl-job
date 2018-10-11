@@ -22,12 +22,6 @@ public interface AdminBiz {
      */
     ReturnT<String> addJob(XxlJobInfo jobInfo);
 
-    /**
-     * 批量新增，主要用于新增某个父任务下的子任务
-     * @param jobInfos
-     * @return
-     */
-    ReturnT<String> addJobs(List<XxlJobInfo> jobInfos);
 
     ReturnT<String> updateJob(XxlJobInfo jobInfo);
 
