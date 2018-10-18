@@ -70,8 +70,8 @@ public class JobRegistryMonitorHelper {
 								if (CollectionUtils.isNotEmpty(registryList)) {
 									Collections.sort(registryList);
 									//防止注册的服务器过多，超过数据字段长度，数据库字段长度为200
-									if(registryList.size() > 6){
-										registryList = registryList.subList(0,6);
+									if(registryList.size() > 5){
+										registryList = registryList.subList(0,5);
 									}
 									addressListStr = StringUtils.join(registryList, ",");
 								}
