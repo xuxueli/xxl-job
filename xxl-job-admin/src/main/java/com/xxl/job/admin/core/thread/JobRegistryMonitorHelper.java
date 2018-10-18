@@ -4,6 +4,7 @@ import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobRegistry;
 import com.xxl.job.admin.core.schedule.XxlJobDynamicScheduler;
 import com.xxl.job.core.enums.RegistryConfig;
+import com.xxl.job.core.util.JacksonUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -68,10 +69,18 @@ public class JobRegistryMonitorHelper {
 								String addressListStr = null;
 								if (CollectionUtils.isNotEmpty(registryList)) {
 									Collections.sort(registryList);
+									//防止注册的服务器过多，超过数据字段长度，数据库字段长度为200
+									if(registryList.size() > 6){
+										registryList = registryList.subList(0,6);
+									}
 									addressListStr = StringUtils.join(registryList, ",");
 								}
 								group.setAddressList(addressListStr);
-								XxlJobDynamicScheduler.xxlJobGroupDao.update(group);
+								try {
+									XxlJobDynamicScheduler.xxlJobGroupDao.update(group);
+								}catch (Exception e){
+									logger.error("job registry update group error:{}", JacksonUtil.writeValueAsString(group), e);
+								}
 							}
 						}
 					} catch (Exception e) {
