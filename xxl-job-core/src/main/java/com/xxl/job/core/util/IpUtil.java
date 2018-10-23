@@ -1,13 +1,16 @@
 package com.xxl.job.core.util;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.regex.Pattern;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * get ip
@@ -42,15 +45,6 @@ public class IpUtil {
 	 * @return
 	 */
 	private static InetAddress getFirstValidAddress() {
-		InetAddress localAddress = null;
-		try {
-			localAddress = InetAddress.getLocalHost();
-			if (isValidAddress(localAddress)) {
-				return localAddress;
-			}
-		} catch (Throwable e) {
-			logger.error("Failed to retriving ip address, " + e.getMessage(), e);
-		}
 		try {
 			Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
 			if (interfaces != null) {
@@ -78,9 +72,22 @@ public class IpUtil {
 		} catch (Throwable e) {
 			logger.error("Failed to retriving ip address, " + e.getMessage(), e);
 		}
+		
+		
+		InetAddress localAddress = null;
+		try {
+			localAddress = InetAddress.getLocalHost();
+			if (isValidAddress(localAddress)) {
+				return localAddress;
+			}
+		} catch (Throwable e) {
+			logger.error("Failed to retriving ip address, " + e.getMessage(), e);
+		}
+		
 		logger.error("Could not get local host ip address, will use 127.0.0.1 instead.");
 		return localAddress;
 	}
+	
 
 	/**
 	 * get address
