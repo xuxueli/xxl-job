@@ -1,19 +1,17 @@
 package com.xxl.job.core.util;
 
-import java.net.Inet6Address;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.regex.Pattern;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.UnknownHostException;
+import java.util.Enumeration;
+import java.util.regex.Pattern;
+
 /**
  * get ip
+ *
  * @author xuxueli 2016-5-22 11:38:05
  */
 public class IpUtil {
@@ -23,16 +21,17 @@ public class IpUtil {
 	private static final String LOCALHOST = "127.0.0.1";
 	public static final Pattern IP_PATTERN = Pattern.compile("\\d{1,3}(\\.\\d{1,3}){3,5}$");
 
-	private static volatile InetAddress LOCAL_ADDRESS = null;
+	private static volatile String LOCAL_ADDRESS = null;
 
 	/**
 	 * valid address
 	 * @param address
-	 * @return
+	 * @return boolean
 	 */
 	private static boolean isValidAddress(InetAddress address) {
-		if (address == null || address.isLoopbackAddress())
+		if (address == null || address.isLoopbackAddress() || address.isLinkLocalAddress()) {
 			return false;
+		}
 		String name = address.getHostAddress();
 		return (name != null
 				&& ! ANYHOST.equals(name)
@@ -42,9 +41,12 @@ public class IpUtil {
 
 	/**
 	 * get first valid addredd
-	 * @return
+	 *
+	 * @return InetAddress
 	 */
 	private static InetAddress getFirstValidAddress() {
+
+		// NetworkInterface address
 		try {
 			Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
 			if (interfaces != null) {
@@ -72,11 +74,10 @@ public class IpUtil {
 		} catch (Throwable e) {
 			logger.error("Failed to retriving ip address, " + e.getMessage(), e);
 		}
-		
-		
-		InetAddress localAddress = null;
+
+		// getLocalHost address
 		try {
-			localAddress = InetAddress.getLocalHost();
+			InetAddress localAddress = InetAddress.getLocalHost();
 			if (isValidAddress(localAddress)) {
 				return localAddress;
 			}
@@ -85,38 +86,38 @@ public class IpUtil {
 		}
 		
 		logger.error("Could not get local host ip address, will use 127.0.0.1 instead.");
-		return localAddress;
+		return null;
 	}
 	
 
 	/**
 	 * get address
-	 * @return
+	 *
+	 * @return String
 	 */
-	private static InetAddress getAddress() {
-		if (LOCAL_ADDRESS != null)
+	private static String getAddress() {
+		if (LOCAL_ADDRESS != null) {
 			return LOCAL_ADDRESS;
+		}
 		InetAddress localAddress = getFirstValidAddress();
-		LOCAL_ADDRESS = localAddress;
-		return localAddress;
+		LOCAL_ADDRESS = localAddress.getHostAddress();
+		return LOCAL_ADDRESS;
 	}
 
 	/**
 	 * get ip
-	 * @return
+	 *
+	 * @return String
 	 */
 	public static String getIp(){
-		InetAddress address = getAddress();
-		if (address==null) {
-			return null;
-		}
-		return address.getHostAddress();
+		return getAddress();
 	}
 
 	/**
 	 * get ip:port
+	 *
 	 * @param port
-	 * @return
+	 * @return String
 	 */
 	public static String getIpPort(int port){
 		String ip = getIp();
