@@ -32,25 +32,36 @@ public class HttpJobHandler extends IJobHandler {
 		}
 
 		// httpclient
-		HttpClient httpClient = new HttpClient();
-		httpClient.setFollowRedirects(false);	// Configure HttpClient, for example:
-		httpClient.start();						// Start HttpClient
+		HttpClient httpClient = null;
+		try {
+			httpClient = new HttpClient();
+			httpClient.setFollowRedirects(false);	// Configure HttpClient, for example:
+			httpClient.start();						// Start HttpClient
 
-		// request
-		Request request = httpClient.newRequest(param);
-		request.method(HttpMethod.GET);
-		request.timeout(5000, TimeUnit.MILLISECONDS);
+			// request
+			Request request = httpClient.newRequest(param);
+			request.method(HttpMethod.GET);
+			request.timeout(5000, TimeUnit.MILLISECONDS);
 
-		// invoke
-		ContentResponse response = request.send();
-		if (response.getStatus() != HttpStatus.OK_200) {
-			XxlJobLogger.log("Http StatusCode({}) Invalid.", response.getStatus());
+			// invoke
+			ContentResponse response = request.send();
+			if (response.getStatus() != HttpStatus.OK_200) {
+				XxlJobLogger.log("Http StatusCode({}) Invalid.", response.getStatus());
+				return FAIL;
+			}
+
+			String responseMsg = response.getContentAsString();
+			XxlJobLogger.log(responseMsg);
+			return SUCCESS;
+		} catch (Exception e) {
+			XxlJobLogger.log(e);
 			return FAIL;
+		} finally {
+			if (httpClient != null) {
+				httpClient.stop();
+			}
 		}
 
-		String responseMsg = response.getContentAsString();
-		XxlJobLogger.log(responseMsg);
-		return SUCCESS;
 	}
 
 }
