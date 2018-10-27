@@ -1,5 +1,6 @@
 package com.xxl.job.admin.core.schedule;
 
+import com.xxl.job.admin.core.conf.XxlJobAdminConfig;
 import com.xxl.job.admin.core.jobbean.RemoteHttpJobBean;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.thread.JobFailMonitorHelper;
@@ -21,6 +22,8 @@ import org.quartz.impl.triggers.CronTriggerImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.util.Assert;
@@ -33,7 +36,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * base quartz scheduler util
  * @author xuxueli 2015-12-19 16:13:53
  */
-public final class XxlJobDynamicScheduler implements ApplicationContextAware {
+public final class XxlJobDynamicScheduler {
     private static final Logger logger = LoggerFactory.getLogger(XxlJobDynamicScheduler.class);
 
     // ---------------------- param ----------------------
@@ -44,31 +47,9 @@ public final class XxlJobDynamicScheduler implements ApplicationContextAware {
 		XxlJobDynamicScheduler.scheduler = scheduler;
 	}
 
-	// accessToken
-    private static String accessToken;
-    public void setAccessToken(String accessToken) {
-        this.accessToken = accessToken;
-    }
-
-    // dao
-    public static XxlJobLogDao xxlJobLogDao;
-    public static XxlJobInfoDao xxlJobInfoDao;
-    public static XxlJobRegistryDao xxlJobRegistryDao;
-    public static XxlJobGroupDao xxlJobGroupDao;
-    public static AdminBiz adminBiz;
-
-    // ---------------------- applicationContext ----------------------
-    @Override
-	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-		XxlJobDynamicScheduler.xxlJobLogDao = applicationContext.getBean(XxlJobLogDao.class);
-		XxlJobDynamicScheduler.xxlJobInfoDao = applicationContext.getBean(XxlJobInfoDao.class);
-        XxlJobDynamicScheduler.xxlJobRegistryDao = applicationContext.getBean(XxlJobRegistryDao.class);
-        XxlJobDynamicScheduler.xxlJobGroupDao = applicationContext.getBean(XxlJobGroupDao.class);
-        XxlJobDynamicScheduler.adminBiz = applicationContext.getBean(AdminBiz.class);
-	}
 
     // ---------------------- init + destroy ----------------------
-    public void init() throws Exception {
+    public void start() throws Exception {
         // admin registry monitor run
         JobRegistryMonitorHelper.getInstance().start();
 
@@ -76,8 +57,8 @@ public final class XxlJobDynamicScheduler implements ApplicationContextAware {
         JobFailMonitorHelper.getInstance().start();
 
         // admin-server(spring-mvc)
-        NetComServerFactory.putService(AdminBiz.class, XxlJobDynamicScheduler.adminBiz);
-        NetComServerFactory.setAccessToken(accessToken);
+        NetComServerFactory.putService(AdminBiz.class, XxlJobAdminConfig.getAdminConfig().getAdminBiz());
+        NetComServerFactory.setAccessToken(XxlJobAdminConfig.getAdminConfig().getAccessToken());
 
         // init i18n
         initI18n();
@@ -105,6 +86,7 @@ public final class XxlJobDynamicScheduler implements ApplicationContextAware {
         JobFailMonitorHelper.getInstance().toStop();
     }
 
+
     // ---------------------- executor-client ----------------------
     private static ConcurrentHashMap<String, ExecutorBiz> executorBizRepository = new ConcurrentHashMap<String, ExecutorBiz>();
     public static ExecutorBiz getExecutorBiz(String address) throws Exception {
@@ -121,7 +103,7 @@ public final class XxlJobDynamicScheduler implements ApplicationContextAware {
         }
 
         // set-cache
-        executorBiz = (ExecutorBiz) new NetComClientProxy(ExecutorBiz.class, address, accessToken).getObject();
+        executorBiz = (ExecutorBiz) new NetComClientProxy(ExecutorBiz.class, address, XxlJobAdminConfig.getAdminConfig().getAccessToken()).getObject();
         executorBizRepository.put(address, executorBiz);
         return executorBiz;
     }
@@ -361,6 +343,7 @@ public final class XxlJobDynamicScheduler implements ApplicationContextAware {
         }
         return result;
     }
+
 
     /**
      * finaAllJobList

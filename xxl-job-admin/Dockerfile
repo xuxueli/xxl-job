@@ -1,6 +1,8 @@
-FROM tomcat:8.0-jre8-slim
+FROM openjdk:7-jre-slim
 MAINTAINER xuxueli
 
-ADD target/xxl-job-admin*.war /usr/local/tomcat/webapps/xxl-job-admin.war
+ENV PARAMS=""
 
-CMD ["catalina.sh", "run"]
+ADD target/xxl-conf-admin-*.jar /app.jar
+
+ENTRYPOINT ["sh","-c","java -jar /app.jar $PARAMS"]
