@@ -15,32 +15,11 @@
 
 	<dependencies>
 
-		<!-- slf4j -->
+		<!-- xxl-rpc-core -->
 		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>${slf4j-api.version}</version>
-		</dependency>
-
-		<!-- jetty -->
-		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>jetty-server</artifactId>
-			<version>${jetty-server.version}</version>
-		</dependency>
-
-		<!-- httpclient -->
-		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpclient</artifactId>
-			<version>${httpclient.version}</version>
-		</dependency>
-
-		<!-- hessian -->
-		<dependency>
-			<groupId>com.caucho</groupId>
-			<artifactId>hessian</artifactId>
-			<version>${hessian.version}</version>
+			<groupId>com.xuxueli</groupId>
+			<artifactId>xxl-rpc-core</artifactId>
+			<version>1.2.0</version>
 		</dependency>
 
 		<!-- groovy-all -->

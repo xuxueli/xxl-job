@@ -6,11 +6,19 @@ import com.xxl.job.core.biz.impl.ExecutorBizImpl;
 import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.handler.annotation.JobHandler;
 import com.xxl.job.core.log.XxlJobFileAppender;
-import com.xxl.job.core.rpc.netcom.NetComClientProxy;
-import com.xxl.job.core.rpc.netcom.NetComServerFactory;
+import com.xxl.job.core.thread.ExecutorRegistryThread;
 import com.xxl.job.core.thread.JobLogFileCleanThread;
 import com.xxl.job.core.thread.JobThread;
-import com.xxl.job.core.util.NetUtil;
+import com.xxl.job.core.thread.TriggerCallbackThread;
+import com.xxl.rpc.registry.impl.LocalServiceRegistry;
+import com.xxl.rpc.remoting.invoker.XxlRpcInvokerFactory;
+import com.xxl.rpc.remoting.invoker.call.CallType;
+import com.xxl.rpc.remoting.invoker.reference.XxlRpcReferenceBean;
+import com.xxl.rpc.remoting.net.NetEnum;
+import com.xxl.rpc.remoting.provider.XxlRpcProviderFactory;
+import com.xxl.rpc.serialize.Serializer;
+import com.xxl.rpc.util.IpUtil;
+import com.xxl.rpc.util.NetUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -30,7 +38,7 @@ public class XxlJobExecutor implements ApplicationContextAware {
 
     // ---------------------- param ----------------------
     private String adminAddresses;
-    private String appName;
+    private static String appName;
     private String ip;
     private int port;
     private String accessToken;
@@ -72,20 +80,26 @@ public class XxlJobExecutor implements ApplicationContextAware {
 
     // ---------------------- start + stop ----------------------
     public void start() throws Exception {
-        // init admin-client
-        initAdminBizList(adminAddresses, accessToken);
-
-        // init executor-jobHandlerRepository
-        initJobHandlerRepository(applicationContext);
 
         // init logpath
         XxlJobFileAppender.initLogPath(logPath);
 
-        // init executor-server
-        initExecutorServer(port, ip, appName, accessToken);
+        // init JobHandler Repository
+        initJobHandlerRepository(applicationContext);
+
+        // init admin-client
+        initAdminBizList(adminAddresses, accessToken);
 
         // init JobLogFileCleanThread
         JobLogFileCleanThread.getInstance().start(logRetentionDays);
+
+        // init TriggerCallbackThread
+        TriggerCallbackThread.getInstance().start();
+
+        // init executor-server
+        port = port>0?port: NetUtil.findAvailablePort(9999);
+        ip = (ip!=null&&ip.trim().length()>0)?ip: IpUtil.getIp();
+        initRpcProvider(ip, port, appName, accessToken);
     }
     public void destroy(){
         // destory jobThreadRepository
@@ -96,22 +110,35 @@ public class XxlJobExecutor implements ApplicationContextAware {
             jobThreadRepository.clear();
         }
 
-        // destory executor-server
-        stopExecutorServer();
-
         // destory JobLogFileCleanThread
         JobLogFileCleanThread.getInstance().toStop();
+
+        // destory TriggerCallbackThread
+        TriggerCallbackThread.getInstance().toStop();
+
+        // destory executor-server
+        stopRpcProvider();
     }
 
 
-    // ---------------------- admin-client ----------------------
+    // ---------------------- admin-client (rpc invoker) ----------------------
     private static List<AdminBiz> adminBizList;
     private static void initAdminBizList(String adminAddresses, String accessToken) throws Exception {
         if (adminAddresses!=null && adminAddresses.trim().length()>0) {
             for (String address: adminAddresses.trim().split(",")) {
                 if (address!=null && address.trim().length()>0) {
+
                     String addressUrl = address.concat(AdminBiz.MAPPING);
-                    AdminBiz adminBiz = (AdminBiz) new NetComClientProxy(AdminBiz.class, addressUrl, accessToken).getObject();
+                    if (addressUrl.startsWith("http://")) {
+                        addressUrl = addressUrl.replace("http://", "");
+                    }
+                    if (addressUrl.startsWith("https://")) {
+                        addressUrl = addressUrl.replace("https://", "");
+                    }
+
+                    AdminBiz adminBiz = (AdminBiz) new XxlRpcReferenceBean(NetEnum.JETTY, Serializer.SerializeEnum.HESSIAN.getSerializer(), CallType.SYNC,
+                            AdminBiz.class, null, 10000, addressUrl, accessToken, null).getObject();
+
                     if (adminBizList == null) {
                         adminBizList = new ArrayList<AdminBiz>();
                     }
@@ -125,19 +152,59 @@ public class XxlJobExecutor implements ApplicationContextAware {
     }
 
 
-    // ---------------------- executor-server(jetty) ----------------------
-    private NetComServerFactory serverFactory = new NetComServerFactory();
-    private void initExecutorServer(int port, String ip, String appName, String accessToken) throws Exception {
-        // valid param
-        port = port>0?port: NetUtil.findAvailablePort(9999);
+    // ---------------------- executor-server (rpc provider) ----------------------
+    private XxlRpcInvokerFactory xxlRpcInvokerFactory = null;
+    private XxlRpcProviderFactory xxlRpcProviderFactory = null;
+    private void initRpcProvider(String ip, int port, String appName, String accessToken) throws Exception {
+        // init invoker factory
+        xxlRpcInvokerFactory = new XxlRpcInvokerFactory();
 
-        // start server
-        NetComServerFactory.putService(ExecutorBiz.class, new ExecutorBizImpl());   // rpc-service, base on jetty
-        NetComServerFactory.setAccessToken(accessToken);
-        serverFactory.start(port, ip, appName); // jetty + registry
+        // init, provider factory
+        xxlRpcProviderFactory = new XxlRpcProviderFactory();
+        xxlRpcProviderFactory.initConfig(NetEnum.JETTY, Serializer.SerializeEnum.HESSIAN.getSerializer(), ip, port, accessToken, ExecutorServiceRegistry.class, null);
+
+        // add services
+        xxlRpcProviderFactory.addService(ExecutorBiz.class.getName(), null, new ExecutorBizImpl());
+
+        // start
+       xxlRpcProviderFactory.start();
+
     }
-    private void stopExecutorServer() {
-        serverFactory.destroy();    // jetty + registry + callback
+
+    public static class ExecutorServiceRegistry extends LocalServiceRegistry {
+        @Override
+        public boolean registry(String key, String value) {
+
+            // start registry
+            if (ExecutorBiz.class.getName().equalsIgnoreCase(key)) {
+                ExecutorRegistryThread.getInstance().start(appName, value);
+            }
+
+            return super.registry(key, value);
+        }
+
+        @Override
+        public void stop() {
+            // stop registry
+            ExecutorRegistryThread.getInstance().toStop();
+
+            super.stop();
+        }
+    }
+
+    private void stopRpcProvider() {
+        // stop invoker factory
+        try {
+            xxlRpcInvokerFactory.stop();
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
+        // stop provider factory
+        try {
+            xxlRpcProviderFactory.stop();
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
     }
 
 

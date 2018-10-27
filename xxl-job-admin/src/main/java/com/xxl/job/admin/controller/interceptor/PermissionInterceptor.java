@@ -3,8 +3,8 @@ package com.xxl.job.admin.controller.interceptor;
 import com.xxl.job.admin.controller.annotation.PermessionLimit;
 import com.xxl.job.admin.core.conf.XxlJobAdminConfig;
 import com.xxl.job.admin.core.util.CookieUtil;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.util.DigestUtils;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
@@ -29,7 +29,7 @@ public class PermissionInterceptor extends HandlerInterceptorAdapter {
 			String password = XxlJobAdminConfig.getAdminConfig().getLoginPassword();
 
 			// login token
-			String tokenTmp = DigestUtils.md5Hex(username + "_" + password);
+			String tokenTmp = DigestUtils.md5DigestAsHex(String.valueOf(username + "_" + password).getBytes());		//.getBytes("UTF-8")
 			tokenTmp = new BigInteger(1, tokenTmp.getBytes()).toString(16);
 
 			LOGIN_IDENTITY_TOKEN = tokenTmp;
@@ -40,7 +40,7 @@ public class PermissionInterceptor extends HandlerInterceptorAdapter {
 	public static boolean login(HttpServletResponse response, String username, String password, boolean ifRemember){
 
     	// login token
-		String tokenTmp = DigestUtils.md5Hex(username + "_" + password);
+		String tokenTmp = DigestUtils.md5DigestAsHex(String.valueOf(username + "_" + password).getBytes());
 		tokenTmp = new BigInteger(1, tokenTmp.getBytes()).toString(16);
 
 		if (!getLoginIdentityToken().equals(tokenTmp)){

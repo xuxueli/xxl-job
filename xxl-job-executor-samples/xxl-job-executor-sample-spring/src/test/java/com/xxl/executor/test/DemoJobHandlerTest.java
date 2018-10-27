@@ -5,7 +5,10 @@ import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.biz.model.TriggerParam;
 import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
 import com.xxl.job.core.glue.GlueTypeEnum;
-import com.xxl.job.core.rpc.netcom.NetComClientProxy;
+import com.xxl.rpc.remoting.invoker.call.CallType;
+import com.xxl.rpc.remoting.invoker.reference.XxlRpcReferenceBean;
+import com.xxl.rpc.remoting.net.NetEnum;
+import com.xxl.rpc.serialize.Serializer;
 
 /**
  * executor-api client, test
@@ -34,7 +37,9 @@ public class DemoJobHandlerTest {
 
         // do remote trigger
         String accessToken = null;
-        ExecutorBiz executorBiz = (ExecutorBiz) new NetComClientProxy(ExecutorBiz.class, "127.0.0.1:9999", null).getObject();
+        ExecutorBiz executorBiz = (ExecutorBiz) new XxlRpcReferenceBean(NetEnum.JETTY, Serializer.SerializeEnum.HESSIAN.getSerializer(), CallType.SYNC,
+                ExecutorBiz.class, null, 10000, "127.0.0.1:9999", null, null).getObject();
+
         ReturnT<String> runResult = executorBiz.run(triggerParam);
     }
 

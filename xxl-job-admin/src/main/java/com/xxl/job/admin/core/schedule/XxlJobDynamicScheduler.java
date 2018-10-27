@@ -7,27 +7,28 @@ import com.xxl.job.admin.core.thread.JobFailMonitorHelper;
 import com.xxl.job.admin.core.thread.JobRegistryMonitorHelper;
 import com.xxl.job.admin.core.thread.JobTriggerPoolHelper;
 import com.xxl.job.admin.core.util.I18nUtil;
-import com.xxl.job.admin.dao.XxlJobGroupDao;
-import com.xxl.job.admin.dao.XxlJobInfoDao;
-import com.xxl.job.admin.dao.XxlJobLogDao;
-import com.xxl.job.admin.dao.XxlJobRegistryDao;
 import com.xxl.job.core.biz.AdminBiz;
 import com.xxl.job.core.biz.ExecutorBiz;
 import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
-import com.xxl.job.core.rpc.netcom.NetComClientProxy;
-import com.xxl.job.core.rpc.netcom.NetComServerFactory;
+import com.xxl.rpc.remoting.invoker.XxlRpcInvokerFactory;
+import com.xxl.rpc.remoting.invoker.call.CallType;
+import com.xxl.rpc.remoting.invoker.reference.XxlRpcReferenceBean;
+import com.xxl.rpc.remoting.net.NetEnum;
+import com.xxl.rpc.remoting.net.impl.jetty.server.JettyServerHandler;
+import com.xxl.rpc.remoting.provider.XxlRpcProviderFactory;
+import com.xxl.rpc.serialize.Serializer;
+import org.eclipse.jetty.server.Request;
 import org.quartz.*;
 import org.quartz.Trigger.TriggerState;
 import org.quartz.impl.triggers.CronTriggerImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.DisposableBean;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.util.Assert;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.concurrent.ConcurrentHashMap;
@@ -50,32 +51,26 @@ public final class XxlJobDynamicScheduler {
 
     // ---------------------- init + destroy ----------------------
     public void start() throws Exception {
+        // valid
+        Assert.notNull(scheduler, "quartz scheduler is null");
+
+        // init i18n
+        initI18n();
+
         // admin registry monitor run
         JobRegistryMonitorHelper.getInstance().start();
 
         // admin monitor run
         JobFailMonitorHelper.getInstance().start();
 
-        // admin-server(spring-mvc)
-        NetComServerFactory.putService(AdminBiz.class, XxlJobAdminConfig.getAdminConfig().getAdminBiz());
-        NetComServerFactory.setAccessToken(XxlJobAdminConfig.getAdminConfig().getAccessToken());
+        // admin-server
+        initRpcProvider();
 
-        // init i18n
-        initI18n();
-
-        // valid
-        Assert.notNull(scheduler, "quartz scheduler is null");
         logger.info(">>>>>>>>> init xxl-job admin success.");
     }
 
-    private void initI18n(){
-        for (ExecutorBlockStrategyEnum item:ExecutorBlockStrategyEnum.values()) {
-            item.setTitle(I18nUtil.getString("jobconf_block_".concat(item.name())));
-        }
-    }
 
-    public void destroy(){
-
+    public void destroy() throws Exception {
         // admin trigger pool stop
         JobTriggerPoolHelper.toStop();
 
@@ -84,6 +79,38 @@ public final class XxlJobDynamicScheduler {
 
         // admin monitor stop
         JobFailMonitorHelper.getInstance().toStop();
+
+        // admin-server
+        stopRpcProvider();
+    }
+
+
+    // ---------------------- I18n ----------------------
+
+    private void initI18n(){
+        for (ExecutorBlockStrategyEnum item:ExecutorBlockStrategyEnum.values()) {
+            item.setTitle(I18nUtil.getString("jobconf_block_".concat(item.name())));
+        }
+    }
+
+    // ---------------------- admin rpc provider (no server version) ----------------------
+    private static JettyServerHandler jettyServerHandler;
+    private void initRpcProvider(){
+        // init
+        XxlRpcProviderFactory xxlRpcProviderFactory = new XxlRpcProviderFactory();
+        xxlRpcProviderFactory.initConfig(NetEnum.JETTY, Serializer.SerializeEnum.HESSIAN.getSerializer(), null, 0, XxlJobAdminConfig.getAdminConfig().getAccessToken(), null, null);
+
+        // add services
+        xxlRpcProviderFactory.addService(AdminBiz.class.getName(), null, XxlJobAdminConfig.getAdminConfig().getAdminBiz());
+
+        // jetty handler
+        jettyServerHandler = new JettyServerHandler(xxlRpcProviderFactory);
+    }
+    private void stopRpcProvider() throws Exception {
+        new XxlRpcInvokerFactory().stop();
+    }
+    public static void invokeAdminService(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        jettyServerHandler.handle(null, new Request(null, null), request, response);
     }
 
 
@@ -103,7 +130,9 @@ public final class XxlJobDynamicScheduler {
         }
 
         // set-cache
-        executorBiz = (ExecutorBiz) new NetComClientProxy(ExecutorBiz.class, address, XxlJobAdminConfig.getAdminConfig().getAccessToken()).getObject();
+        executorBiz = (ExecutorBiz) new XxlRpcReferenceBean(NetEnum.JETTY, Serializer.SerializeEnum.HESSIAN.getSerializer(), CallType.SYNC,
+                ExecutorBiz.class, null, 10000, address, XxlJobAdminConfig.getAdminConfig().getAccessToken(), null).getObject();
+
         executorBizRepository.put(address, executorBiz);
         return executorBiz;
     }
