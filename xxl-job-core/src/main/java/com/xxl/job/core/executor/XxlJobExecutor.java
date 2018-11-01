@@ -4,7 +4,6 @@ import com.xxl.job.core.biz.AdminBiz;
 import com.xxl.job.core.biz.ExecutorBiz;
 import com.xxl.job.core.biz.impl.ExecutorBizImpl;
 import com.xxl.job.core.handler.IJobHandler;
-import com.xxl.job.core.handler.annotation.JobHandler;
 import com.xxl.job.core.log.XxlJobFileAppender;
 import com.xxl.job.core.thread.ExecutorRegistryThread;
 import com.xxl.job.core.thread.JobLogFileCleanThread;
@@ -21,9 +20,6 @@ import com.xxl.rpc.util.IpUtil;
 import com.xxl.rpc.util.NetUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeansException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -31,7 +27,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Created by xuxueli on 2016/3/2 21:14.
  */
-public class XxlJobExecutor implements ApplicationContextAware {
+public class XxlJobExecutor  {
     private static final Logger logger = LoggerFactory.getLogger(XxlJobExecutor.class);
 
     // ---------------------- param ----------------------
@@ -65,16 +61,6 @@ public class XxlJobExecutor implements ApplicationContextAware {
         this.logRetentionDays = logRetentionDays;
     }
 
-    // ---------------------- applicationContext ----------------------
-    private static ApplicationContext applicationContext;
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
-    }
-    public static ApplicationContext getApplicationContext() {
-        return applicationContext;
-    }
-
 
     // ---------------------- start + stop ----------------------
     public void start() throws Exception {
@@ -82,11 +68,9 @@ public class XxlJobExecutor implements ApplicationContextAware {
         // init logpath
         XxlJobFileAppender.initLogPath(logPath);
 
-        // init JobHandler Repository
-        initJobHandlerRepository(applicationContext);
-
         // init admin-client
         initAdminBizList(adminAddresses, accessToken);
+
 
         // init JobLogFileCleanThread
         JobLogFileCleanThread.getInstance().start(logRetentionDays);
@@ -107,6 +91,7 @@ public class XxlJobExecutor implements ApplicationContextAware {
             }
             jobThreadRepository.clear();
         }
+
 
         // destory JobLogFileCleanThread
         JobLogFileCleanThread.getInstance().toStop();
@@ -227,27 +212,6 @@ public class XxlJobExecutor implements ApplicationContextAware {
     }
     public static IJobHandler loadJobHandler(String name){
         return jobHandlerRepository.get(name);
-    }
-    private void initJobHandlerRepository(ApplicationContext applicationContext){
-        if (applicationContext == null) {
-            return;
-        }
-
-        // init job handler action
-        Map<String, Object> serviceBeanMap = applicationContext.getBeansWithAnnotation(JobHandler.class);
-
-        if (serviceBeanMap!=null && serviceBeanMap.size()>0) {
-            for (Object serviceBean : serviceBeanMap.values()) {
-                if (serviceBean instanceof IJobHandler){
-                    String name = serviceBean.getClass().getAnnotation(JobHandler.class).value();
-                    IJobHandler handler = (IJobHandler) serviceBean;
-                    if (loadJobHandler(name) != null) {
-                        throw new RuntimeException("xxl-job jobhandler naming conflicts.");
-                    }
-                    registJobHandler(name, handler);
-                }
-            }
-        }
     }
 
 

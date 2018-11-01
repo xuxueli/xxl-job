@@ -1,7 +1,7 @@
 $(function() {
 
     // trigger fail, end
-    if (triggerCode != 200) {
+    if ( !(triggerCode == 200 || handleCode != 0) ) {
         $('#logConsoleRunning').hide();
         $('#logConsole').append('<span style="color: red;">'+ I18n.joblog_rolling_log_triggerfail +'</span>');
         return;

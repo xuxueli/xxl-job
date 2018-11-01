@@ -179,7 +179,7 @@ $(function() {
 	                	"render": function ( data, type, row ) {
 	                		// better support expression or string, not function
 	                		return function () {
-		                		if (row.triggerCode == 200){
+		                		if (row.triggerCode == 200 || row.handleCode != 0){
 		                			var temp = '<a href="javascript:;" class="logDetail" _id="'+ row.id +'">'+ I18n.joblog_rolling_log +'</a>';
 		                			if(row.handleCode == 0){
 		                				temp += '<br><a href="javascript:;" class="logKill" _id="'+ row.id +'" style="color: red;" >'+ I18n.joblog_kill_log +'</a>';

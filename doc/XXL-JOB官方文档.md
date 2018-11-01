@@ -1328,12 +1328,14 @@ Tips: 历史版本(V1.3.x)目前已经Release至稳定版本, 进入维护阶段
 - 2、底层通讯组件迁移至 xxl-rpc；
 - 3、IP获取逻辑优化，优先遍历网卡来获取可用IP；
 - 4、任务新增的API服务接口返回任务ID，方便调用方实用；
-- 5、新增无框架执行器Sample示例项目 "xxl-job-executor-sample-frameless"。不依赖第三方框架，只需main方法即可启动运行执行器；
-- 6、[迭代中]任务状态与quartz解耦，降低quartz调度压力，仅NORMAL状态任务绑定quartz；
-- 7、[迭代中]新增任务默认运行状态，任务更新时运行状态保持不变；
-- 8、[迭代中]原生提供通用命令行任务Handler（Bean任务，"CommandJobHandler"）；业务方只需要提供命令行即可，可执行任意命令；
-- 9、[迭代中]cron在线生成工具，如 "cronboot/cron.qqe2"；
-- 10、[迭代中]docker镜像，并且推送docker镜像到中央仓库，更进一步实现产品开箱即用；
+- 5、组件化优化，移除对 spring 的依赖：非spring应用选用 "XxlJobExecutor" 、spring应用选用 "XxlJobSpringExecutor" 作为执行器组件； 
+- 6、新增无框架执行器Sample示例项目 "xxl-job-executor-sample-frameless"。不依赖第三方框架，只需main方法即可启动运行执行器；
+- 7、任务RollingLog展示逻辑优化，修复超时任务无法查看的问题；
+- 8、[迭代中]任务状态与quartz解耦，降低quartz调度压力，仅NORMAL状态任务绑定quartz；
+- 9、[迭代中]新增任务默认运行状态，任务更新时运行状态保持不变；
+- 10、[迭代中]原生提供通用命令行任务Handler（Bean任务，"CommandJobHandler"）；业务方只需要提供命令行即可，可执行任意命令；
+- 11、[迭代中]cron在线生成工具，如 "cronboot/cron.qqe2"；
+- 12、[迭代中]docker镜像，并且推送docker镜像到中央仓库，更进一步实现产品开箱即用；
 
 
 ### TODO LIST
