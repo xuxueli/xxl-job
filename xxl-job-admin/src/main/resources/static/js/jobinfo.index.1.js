@@ -87,13 +87,18 @@ $(function() {
 						"width":'10%',
 	                	"visible" : true,
 	                	"render": function ( data, type, row ) {
-	                		if ('NORMAL' == data) {
-	                			return '<small class="label label-success" ><i class="fa fa-clock-o"></i>'+ data +'</small>'; 
-							} else if ('PAUSED' == data){
-								return '<small class="label label-default" ><i class="fa fa-clock-o"></i>'+ data +'</small>';
-							} else if ('BLOCKED' == data){
-								return '<small class="label label-default" ><i class="fa fa-clock-o"></i>'+ data +'</small>';
+
+                            // status
+	                		if (data && data != 'NONE') {
+                                if ('NORMAL' == data) {
+                                    return '<small class="label label-success" ><i class="fa fa-clock-o"></i>RUNNING</small>';
+                                } else {
+                                    return '<small class="label label-warning" >ERROR('+ data +')</small>';
+                                }
+							} else {
+                                return '<small class="label label-default" ><i class="fa fa-clock-o"></i>STOP</small>';
 							}
+
 	                		return data;
 	                	}
 	                },
@@ -103,12 +108,17 @@ $(function() {
 	                	"render": function ( data, type, row ) {
 	                		return function(){
 	                			// status
-	                			var pause_resume = "";
-	                			if ('NORMAL' == row.jobStatus) {
-	                				pause_resume = '<button class="btn btn-primary btn-xs job_operate" _type="job_pause" type="button">'+ I18n.jobinfo_opt_pause +'</button>  ';
-								} else if ('PAUSED' == row.jobStatus){
-									pause_resume = '<button class="btn btn-primary btn-xs job_operate" _type="job_resume" type="button">'+ I18n.jobinfo_opt_resume +'</button>  ';
-								}
+	                			var start_stop = "";
+                                if (row.jobStatus && row.jobStatus != 'NONE') {
+                                    if ('NORMAL' == row.jobStatus) {
+                                        start_stop = '<button class="btn btn-primary btn-xs job_operate" _type="job_pause" type="button">'+ I18n.jobinfo_opt_stop +'</button>  ';
+                                    } else {
+                                        start_stop = '<button class="btn btn-primary btn-xs job_operate" _type="job_pause" type="button">'+ I18n.jobinfo_opt_stop +'</button>  ';
+                                    }
+                                } else {
+                                    start_stop = '<button class="btn btn-primary btn-xs job_operate" _type="job_resume" type="button">'+ I18n.jobinfo_opt_start +'</button>  ';
+                                }
+
 	                			// log url
 	                			var logUrl = base_url +'/joblog?jobId='+ row.id;
 	                			
@@ -123,7 +133,7 @@ $(function() {
                                 tableData['key'+row.id] = row;
 								var html = '<p id="'+ row.id +'" >'+
 									'<button class="btn btn-primary btn-xs job_trigger" type="button">'+ I18n.jobinfo_opt_run +'</button>  '+
-									pause_resume +
+                                    start_stop +
 									'<button class="btn btn-primary btn-xs" type="job_del" type="button" onclick="javascript:window.open(\'' + logUrl + '\')" >'+ I18n.jobinfo_opt_log +'</button><br>  '+
 									'<button class="btn btn-warning btn-xs update" type="button">'+ I18n.system_opt_edit +'</button>  '+
 									codeBtn +
@@ -184,12 +194,12 @@ $(function() {
 
 		var type = $(this).attr("_type");
 		if ("job_pause" == type) {
-			typeName = I18n.jobinfo_opt_pause ;
-			url = base_url + "/jobinfo/pause";
+			typeName = I18n.jobinfo_opt_stop ;
+			url = base_url + "/jobinfo/stop";
 			needFresh = true;
 		} else if ("job_resume" == type) {
-			typeName = I18n.jobinfo_opt_resume ;
-			url = base_url + "/jobinfo/resume";
+			typeName = I18n.jobinfo_opt_start ;
+			url = base_url + "/jobinfo/start";
 			needFresh = true;
 		} else if ("job_del" == type) {
 			typeName = I18n.system_opt_del ;

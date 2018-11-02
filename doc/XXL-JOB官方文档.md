@@ -1331,11 +1331,10 @@ Tips: 历史版本(V1.3.x)目前已经Release至稳定版本, 进入维护阶段
 - 5、组件化优化，移除对 spring 的依赖：非spring应用选用 "XxlJobExecutor" 、spring应用选用 "XxlJobSpringExecutor" 作为执行器组件； 
 - 6、新增无框架执行器Sample示例项目 "xxl-job-executor-sample-frameless"。不依赖第三方框架，只需main方法即可启动运行执行器；
 - 7、任务RollingLog展示逻辑优化，修复超时任务无法查看的问题；
-- 8、[迭代中]任务状态与quartz解耦，降低quartz调度压力，仅NORMAL状态任务绑定quartz；
-- 9、[迭代中]新增任务默认运行状态，任务更新时运行状态保持不变；
+- 8、任务状态优化，仅运行状态"NORMAL"任务关联至quartz，降低quartz底层数据存储与调度压力；
+- 9、任务状态规范：新增任务默认停止状态，任务更新时保持任务状态不变；
 - 10、[迭代中]原生提供通用命令行任务Handler（Bean任务，"CommandJobHandler"）；业务方只需要提供命令行即可，可执行任意命令；
-- 11、[迭代中]cron在线生成工具，如 "cronboot/cron.qqe2"；
-- 12、[迭代中]docker镜像，并且推送docker镜像到中央仓库，更进一步实现产品开箱即用；
+- 11、[迭代中]docker镜像，并且推送docker镜像到中央仓库，更进一步实现产品开箱即用；
 
 
 ### TODO LIST
@@ -1364,6 +1363,7 @@ Tips: 历史版本(V1.3.x)目前已经Release至稳定版本, 进入维护阶段
 - 23、Release发布时，一同发布调度中心安装包，真正实现开箱即用；
 - 24、任务权限管理：执行器为粒度分配权限，核心操作校验权限；
 - 25、SimpleTrigger 支持；
+- 26、cron在线生成工具，如 "cronboot/cron.qqe2"；
 
 
 ## 七、其他
