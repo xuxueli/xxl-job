@@ -25,7 +25,7 @@
 		<!-- groovy-all -->
 		<dependency>
 			<groupId>org.codehaus.groovy</groupId>
-			<artifactId>groovy-all</artifactId>
+			<artifactId>groovy</artifactId>
 			<version>${groovy-all.version}</version>
 		</dependency>
 
