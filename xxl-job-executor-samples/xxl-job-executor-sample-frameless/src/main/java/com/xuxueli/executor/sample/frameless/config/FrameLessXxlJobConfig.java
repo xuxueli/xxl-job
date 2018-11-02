@@ -1,5 +1,6 @@
 package com.xuxueli.executor.sample.frameless.config;
 
+import com.xuxueli.executor.sample.frameless.jobhandler.CommandJobHandler;
 import com.xuxueli.executor.sample.frameless.jobhandler.DemoJobHandler;
 import com.xuxueli.executor.sample.frameless.jobhandler.HttpJobHandler;
 import com.xuxueli.executor.sample.frameless.jobhandler.ShardingJobHandler;
@@ -35,6 +36,7 @@ public class FrameLessXxlJobConfig {
         XxlJobExecutor.registJobHandler("demoJobHandler", new DemoJobHandler());
         XxlJobExecutor.registJobHandler("shardingJobHandler", new ShardingJobHandler());
         XxlJobExecutor.registJobHandler("httpJobHandler", new HttpJobHandler());
+        XxlJobExecutor.registJobHandler("commandJobHandler", new CommandJobHandler());
 
         // load executor prop
         Properties xxlJobProp = loadProperties("xxl-job-executor.properties");
