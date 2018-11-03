@@ -46,6 +46,7 @@ XXL-JOB是一个轻量级分布式任务调度平台，其核心设计目标是�
 - 29、全异步：任务调度流程全异步化设计实现，如异步调度、异步运行、异步回调等，有效对密集调度进行流量削峰，理论上支持任意时长任务的运行；
 - 30、跨平台：原生提供通用HTTP任务Handler（Bean任务，"HttpJobHandler"）；业务方只需要提供HTTP链接即可，不限制语言、平台；
 - 31、国际化：调度中心支持国际化设置，提供中文、英文两种可选语言，默认为中文；
+- 32、容器化：提供官方docker镜像，并实时更新推送dockerhub，进一步实现产品开箱即用；
 
 
 ### 1.3 发展
@@ -1363,7 +1364,7 @@ Tips: 历史版本(V1.3.x)目前已经Release至稳定版本, 进入维护阶段
 ### 6.23 版本 V2.0.0 Release Notes[2018-11-04]
 - 1、调度中心迁移到 springboot；
 - 2、底层通讯组件迁移至 xxl-rpc；
-- 3、提供官方docker镜像，并推送至中央仓库（docker pull xuxueli/xxl-job-admin），更进一步实现产品开箱即用；
+- 3、容器化：提供官方docker镜像，并实时更新推送dockerhub（docker pull xuxueli/xxl-job-admin），进一步实现产品开箱即用；
 - 4、新增无框架执行器Sample示例项目 "xxl-job-executor-sample-frameless"。不依赖第三方框架，只需main方法即可启动运行执行器；
 - 5、命令行任务：原生提供通用命令行任务Handler（Bean任务，"CommandJobHandler"）；业务方只需要提供命令行即可；
 - 6、任务状态优化，仅运行状态"NORMAL"任务关联至quartz，降低quartz底层数据存储与调度压力；
