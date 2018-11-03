@@ -316,7 +316,7 @@ XXL-JOB是一个轻量级分布式任务调度平台，其核心设计目标是�
     xxl.job.i18n=
 
 #### 步骤二：部署项目：
-如果已经正确进行上述配置，可将项目编译打war包并部署到tomcat中。
+如果已经正确进行上述配置，可将项目编译打包部署。
 调度中心访问地址：http://localhost:8080/xxl-job-admin (该地址执行器将会使用到，作为回调地址)，登录后运行界面如下图所示
 
 ![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_6yC0.png "在这里输入图片标题")
@@ -331,6 +331,26 @@ XXL-JOB是一个轻量级分布式任务调度平台，其核心设计目标是�
 - 登陆账号配置保持一致；
 - 集群机器时钟保持一致（单机集群忽视）；
 - 建议：推荐通过nginx为调度中心集群做负载均衡，分配域名。调度中心访问、执行器回调配置、调用API服务等操作均通过该域名进行。
+
+
+#### 其他：Docker 镜像方式搭建调度中心：
+- 下载镜像
+```
+// Docker地址：https://hub.docker.com/r/xuxueli/xxl-job-admin/
+docker pull xuxueli/xxl-job-admin
+```
+
+- 创建容器并运行
+```
+docker run -p 8080:8080 -v /tmp:/data/applogs --name xxl-job-admin  -d xuxueli/xxl-job-admin
+
+/**
+* 如需自定义 mysql 等配置，可通过 "PARAMS" 指定；
+* 配置项参考文件：/xxl-job/xxl-job-admin/src/main/resources/application.properties
+*/
+docker run -e PARAMS="--spring.datasource.url=jdbc:mysql://127.0.0.1:3306/xxl-job?Unicode=true&characterEncoding=UTF-8" -p 8080:8080 -v /tmp:/data/applogs --name xxl-job-admin  -d xuxueli/xxl-job-admin
+```
+
 
 ### 2.4 配置部署“执行器项目”
 
