@@ -1360,21 +1360,21 @@ Tips: 历史版本(V1.3.x)目前已经Release至稳定版本, 进入维护阶段
 - 40、项目依赖全量升级至较新稳定版本，如spring、Jackson、groovy等等；
 - 41、docker支持：调度中心提供 Dockerfile 方便快速构建docker镜像； 
 
-### 6.23 版本 V2.0.0 特性[2018-11-04]
+### 6.23 版本 V2.0.0 Release Notes[2018-11-04]
 - 1、调度中心迁移到 springboot；
 - 2、底层通讯组件迁移至 xxl-rpc；
-- 3、IP获取逻辑优化，优先遍历网卡来获取可用IP；
-- 4、任务新增的API服务接口返回任务ID，方便调用方实用；
-- 5、组件化优化，移除对 spring 的依赖：非spring应用选用 "XxlJobExecutor" 、spring应用选用 "XxlJobSpringExecutor" 作为执行器组件； 
-- 6、新增无框架执行器Sample示例项目 "xxl-job-executor-sample-frameless"。不依赖第三方框架，只需main方法即可启动运行执行器；
-- 7、任务RollingLog展示逻辑优化，修复超时任务无法查看的问题；
-- 8、任务状态优化，仅运行状态"NORMAL"任务关联至quartz，降低quartz底层数据存储与调度压力；
-- 9、任务状态规范：新增任务默认停止状态，任务更新时保持任务状态不变；
-- 10、命令行任务：原生提供通用命令行任务Handler（Bean任务，"CommandJobHandler"）；业务方只需要提供命令行即可；
-- 11、项目依赖升级 groovy 至较新稳定版本；pom清理；
-- 12、子任务失败重试重试逻辑优化，子任务失败时将会按照其预设的失败重试次数主动进行重试
-- 13、多项UI组件升级到最新版本，如：CodeMirror、Echarts、Jquery 等；
-- 14、提供官方docker镜像，并推送至中央仓库（docker pull xuxueli/xxl-job-admin），更进一步实现产品开箱即用；
+- 3、提供官方docker镜像，并推送至中央仓库（docker pull xuxueli/xxl-job-admin），更进一步实现产品开箱即用；
+- 4、新增无框架执行器Sample示例项目 "xxl-job-executor-sample-frameless"。不依赖第三方框架，只需main方法即可启动运行执行器；
+- 5、命令行任务：原生提供通用命令行任务Handler（Bean任务，"CommandJobHandler"）；业务方只需要提供命令行即可；
+- 6、任务状态优化，仅运行状态"NORMAL"任务关联至quartz，降低quartz底层数据存储与调度压力；
+- 7、任务状态规范：新增任务默认停止状态，任务更新时保持任务状态不变；
+- 8、IP获取逻辑优化，优先遍历网卡来获取可用IP；
+- 9、任务新增的API服务接口返回任务ID，方便调用方实用；
+- 10、组件化优化，移除对 spring 的依赖：非spring应用选用 "XxlJobExecutor" 、spring应用选用 "XxlJobSpringExecutor" 作为执行器组件； 
+- 11、任务RollingLog展示逻辑优化，修复超时任务无法查看的问题；
+- 12、多项UI组件升级到最新版本，如：CodeMirror、Echarts、Jquery 等；
+- 13、项目依赖升级 groovy 至较新稳定版本；pom清理；
+- 14、子任务失败重试重试逻辑优化，子任务失败时将会按照其预设的失败重试次数主动进行重试
 
 
 ### TODO LIST
