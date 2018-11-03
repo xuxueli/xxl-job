@@ -1374,7 +1374,7 @@ Tips: 历史版本(V1.3.x)目前已经Release至稳定版本, 进入维护阶段
 - 11、项目依赖升级 groovy 至较新稳定版本；pom清理；
 - 12、子任务失败重试重试逻辑优化，子任务失败时将会按照其预设的失败重试次数主动进行重试
 - 13、多项UI组件升级到最新版本，如：CodeMirror、Echarts、Jquery 等；
-- 14、提供官方docker镜像，并推送至中央仓库，更进一步实现产品开箱即用；
+- 14、提供官方docker镜像，并推送至中央仓库（docker pull xuxueli/xxl-job-admin），更进一步实现产品开箱即用；
 
 
 ### TODO LIST
