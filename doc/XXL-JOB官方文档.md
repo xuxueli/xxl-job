@@ -16,7 +16,7 @@ XXL-JOB是一个轻量级分布式任务调度平台，其核心设计目标是�
 
 ### 1.2 特性
 - 1、简单：支持通过Web页面对任务进行CRUD操作，操作简单，一分钟上手；
-- 2、动态：支持动态修改任务状态、暂停/恢复任务，以及终止运行中任务，即时生效；
+- 2、动态：支持动态修改任务状态、启动/停止任务，以及终止运行中任务，即时生效；
 - 3、调度中心HA（中心式）：调度采用中心式设计，“调度中心”基于集群Quartz实现并支持集群部署，可保证调度中心HA；
 - 4、执行器HA（分布式）：任务分布式执行，任务"执行器"支持集群部署，可保证任务执行HA；
 - 5、注册中心: 执行器会周期性自动注册任务, 调度中心将会自动发现注册的任务并触发执行。同时，也支持手动录入执行器地址；
@@ -527,6 +527,15 @@ docker run -e PARAMS="--spring.datasource.url=jdbc:mysql://127.0.0.1:3306/xxl-jo
 
 ![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_ZAsz.png "在这里输入图片标题")
 
+#### 原生内置Bean模式任务
+为方便用户参考与快速实用，示例执行器内原生提供多个Bean模式任务Handler，可以直接配置实用，如下：
+
+- demoJobHandler：简单示例任务，任务内部模拟耗时任务逻辑，用户可在线体验Rolling Log等功能；
+- shardingJobHandler：分片示例任务，任务内部模拟处理分片参数，可参考熟悉分片任务；
+- httpJobHandler：通用HTTP任务Handler；业务方只需要提供HTTP链接即可，不限制语言、平台；
+- commandJobHandler：通用命令行任务Handler；业务方只需要提供命令行即可；如 “pwd”命令；
+
+
 ### 3.2 GLUE模式(Java)
 任务以源码方式维护在调度中心，支持通过Web IDE在线更新，实时编译和生效，因此不需要指定JobHandler。开发流程如下：
 
@@ -582,6 +591,8 @@ docker run -e PARAMS="--spring.datasource.url=jdbc:mysql://127.0.0.1:3306/xxl-jo
 ### 3.7 GLUE模式(PowerShell)
 同上
 
+
+
 ## 四、任务管理
 
 ### 4.0 配置执行器  
@@ -617,21 +628,21 @@ docker run -e PARAMS="--spring.datasource.url=jdbc:mysql://127.0.0.1:3306/xxl-jo
 
 选中指定任务，点击该任务右侧“GLUE”按钮，将会前往GLUE任务的Web IDE界面，在该界面支持对任务代码进行开发。可参考章节 "3.2 GLUE模式(Java)"。
 
-### 4.4 暂停/恢复任务
-可对任务进行“暂停”和“恢复”操作。
-需要注意的是，此处的暂停/恢复仅针对任务的后续调度触发行为，不会影响到已经触发的调度任务，如需终止已经触发的调度任务，可查看“4.8 终止运行中的任务”
+### 4.4 启动/停止任务
+可对任务进行“启动”和“停止”操作。
+需要注意的是，此处的启动/停止仅针对任务的后续调度触发行为，不会影响到已经触发的调度任务，如需终止已经触发的调度任务，可查看“4.8 终止运行中的任务”
 
 ![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_ZAhX.png "在这里输入图片标题")
 
 ### 4.5 手动触发一次调度
 点击“执行”按钮，可手动触发一次任务调度，不影响原有调度规则。
 
-![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_Z5wp.png "在这里输入图片标题")
+![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_ZAhX.png "在这里输入图片标题")
 
 ### 4.6 查看调度日志
 点击“日志”按钮，可以查看任务历史调度日志。在历史调入日志界面可查看每次任务调度的调度结果、执行结果等，点击“执行日志”按钮可查看执行器完整日志。
 
-![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_9235.png "在这里输入图片标题")
+![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_ZAhX.png "在这里输入图片标题")
 
 ![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_UDSo.png "在这里输入图片标题")
 
@@ -700,8 +711,6 @@ try{
 XXL-JOB调度模块基于Quartz集群实现，其“调度数据库”是在Quartz的11张集群mysql表基础上扩展而成。
 
 XXL-JOB首先定制了Quartz原生表结构前缀（XXL_JOB_QRTZ_）。
-
-![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_bNwm.png "在这里输入图片标题")
 
 然后，在此基础上新增了几张张扩展表，如下：
     - XXL_JOB_QRTZ_TRIGGER_GROUP：执行器信息表，维护任务执行器信息；
@@ -978,8 +987,8 @@ API服务请求参考代码：com.xxl.job.adminbiz.AdminBizTest.java
     2、任务新增；
     3、任务更新；
     4、任务删除；
-    5、任务暂停；
-    6、任务恢复；
+    5、任务启动；
+    6、任务停止；
     7、任务触发；
     
 API服务位置：com.xxl.job.admin.controller.JobInfoController.java     
