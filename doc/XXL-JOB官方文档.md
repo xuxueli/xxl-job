@@ -1,6 +1,7 @@
 ## 《分布式任务调度平台XXL-JOB》
 
 [![Build Status](https://travis-ci.org/xuxueli/xxl-job.svg?branch=master)](https://travis-ci.org/xuxueli/xxl-job)
+[![Docker Status](https://img.shields.io/badge/docker-passing-brightgreen.svg)](https://hub.docker.com/r/xuxueli/xxl-job-admin/)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.xuxueli/xxl-job/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.xuxueli/xxl-job/)
 [![GitHub release](https://img.shields.io/github/release/xuxueli/xxl-job.svg)](https://github.com/xuxueli/xxl-job/releases)
 [![License](https://img.shields.io/badge/license-GPLv3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0.html)
@@ -1330,7 +1331,7 @@ Tips: 历史版本(V1.3.x)目前已经Release至稳定版本, 进入维护阶段
 - 40、项目依赖全量升级至较新稳定版本，如spring、Jackson、groovy等等；
 - 41、docker支持：调度中心提供 Dockerfile 方便快速构建docker镜像； 
 
-### 6.23 版本 V2.0.0 特性[迭代中]
+### 6.23 版本 V2.0.0 特性[2018-11-04]
 - 1、调度中心迁移到 springboot；
 - 2、底层通讯组件迁移至 xxl-rpc；
 - 3、IP获取逻辑优化，优先遍历网卡来获取可用IP；
@@ -1344,7 +1345,7 @@ Tips: 历史版本(V1.3.x)目前已经Release至稳定版本, 进入维护阶段
 - 11、项目依赖升级 groovy 至较新稳定版本；pom清理；
 - 12、子任务失败重试重试逻辑优化，子任务失败时将会按照其预设的失败重试次数主动进行重试
 - 13、多项UI组件升级到最新版本，如：CodeMirror、Echarts、Jquery 等；
-- 14、[迭代中]docker镜像，并且推送docker镜像到中央仓库，更进一步实现产品开箱即用；
+- 14、提供官方docker镜像，并推送至中央仓库，更进一步实现产品开箱即用；
 
 
 ### TODO LIST

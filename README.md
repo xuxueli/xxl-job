@@ -10,6 +10,9 @@
         <a href="https://travis-ci.org/xuxueli/xxl-job">
             <img src="https://travis-ci.org/xuxueli/xxl-job.svg?branch=master" >
         </a>
+        <a href="https://hub.docker.com/r/xuxueli/xxl-job-admin/">
+            <img src="https://img.shields.io/badge/docker-passing-brightgreen.svg" >
+        </a>
         <a href="https://maven-badges.herokuapp.com/maven-central/com.xuxueli/xxl-job/">
             <img src="https://maven-badges.herokuapp.com/maven-central/com.xuxueli/xxl-job/badge.svg" >
         </a>
