@@ -1343,7 +1343,7 @@ Tips: 历史版本(V1.3.x)目前已经Release至稳定版本, 进入维护阶段
 - 10、命令行任务：原生提供通用命令行任务Handler（Bean任务，"CommandJobHandler"）；业务方只需要提供命令行即可；
 - 11、项目依赖升级 groovy 至较新稳定版本；pom清理；
 - 12、子任务失败重试重试逻辑优化，子任务失败时将会按照其预设的失败重试次数主动进行重试
-- 13、多项UI组件升级到最新版本，如：layer/pace/jquery.validate；
+- 13、多项UI组件升级到最新版本，如：layer/pace/jquery.validate/echarts/CodeMirror；
 - 14、[迭代中]docker镜像，并且推送docker镜像到中央仓库，更进一步实现产品开箱即用；
 
 
@@ -1366,7 +1366,7 @@ Tips: 历史版本(V1.3.x)目前已经Release至稳定版本, 进入维护阶段
 - 16、Cron TimeZone 自定义；
 - 17、忙碌转移优化，全部机器忙碌时不再直接失败；
 - 18、流程任务等，透传动态参数；
-- 19、任务支持切换执行器；
+- 19、任务支持切换执行器，quartz job group固定；
 - 20、任务自动注册；待考虑，因为任务自动注册将会导致任务难以管理控制；
 - 21、批量触发支持，添加参数 "org.quartz.scheduler.batchTriggerAcquisitionMaxCount: 50"；
 - 22、失败重试间隔；
