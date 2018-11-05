@@ -17,7 +17,7 @@ public class ExecutorRouteFailover extends ExecutorRouter {
     @Override
     public ReturnT<String> route(TriggerParam triggerParam, List<String> addressList) {
 
-        StringBuffer beatResultSB = new StringBuffer();
+        StringBuilder beatResultSB = new StringBuilder();
         for (String address : addressList) {
             // beat
             ReturnT<String> beatResult = null;

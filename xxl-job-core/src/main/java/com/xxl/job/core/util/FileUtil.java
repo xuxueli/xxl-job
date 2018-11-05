@@ -94,7 +94,7 @@ public class FileUtil {
         }
 
         // read file
-        StringBuffer logContentBuffer = new StringBuffer();
+//        StringBuffer logContentBuffer = new StringBuffer();
         int toLineNum = 0;
         LineNumberReader reader = null;
         try {

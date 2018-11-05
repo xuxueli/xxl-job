@@ -29,13 +29,13 @@ public class XxlJobLogger {
         StackTraceElement[] stackTraceElements = new Throwable().getStackTrace();
         StackTraceElement callInfo = stackTraceElements[1];*/
 
-        StringBuffer stringBuffer = new StringBuffer();
-        stringBuffer.append(DateUtil.format(new Date())).append(" ")
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(DateUtil.format(new Date())).append(" ")
             .append("["+ callInfo.getClassName() + "#" + callInfo.getMethodName() +"]").append("-")
             .append("["+ callInfo.getLineNumber() +"]").append("-")
             .append("["+ Thread.currentThread().getName() +"]").append(" ")
             .append(appendLog!=null?appendLog:"");
-        String formatAppendLog = stringBuffer.toString();
+        String formatAppendLog = stringBuilder.toString();
 
         // appendlog
         String logFileName = XxlJobFileAppender.contextHolder.get();
