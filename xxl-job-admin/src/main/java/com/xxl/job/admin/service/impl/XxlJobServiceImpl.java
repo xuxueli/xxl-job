@@ -345,6 +345,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 		} else {
             for (int i = 4; i > -1; i--) {
                 triggerDayList.add(FastDateFormat.getInstance("yyyy-MM-dd").format(DateUtils.addDays(new Date(), -i)));
+				triggerDayCountRunningList.add(0);
                 triggerDayCountSucList.add(0);
                 triggerDayCountFailList.add(0);
             }
