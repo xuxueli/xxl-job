@@ -63,7 +63,7 @@
     // 参数
     var triggerCode = '${triggerCode}';
     var handleCode = '${handleCode}';
-    var executorAddress = '${executorAddress}';
+    var executorAddress = '${executorAddress!}';
     var triggerTime = '${triggerTime?c}';
     var logId = '${logId}';
 </script>
