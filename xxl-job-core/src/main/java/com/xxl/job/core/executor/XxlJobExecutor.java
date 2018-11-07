@@ -112,12 +112,6 @@ public class XxlJobExecutor  {
                 if (address!=null && address.trim().length()>0) {
 
                     String addressUrl = address.concat(AdminBiz.MAPPING);
-                    if (addressUrl.startsWith("http://")) {
-                        addressUrl = addressUrl.replace("http://", "");
-                    }
-                    if (addressUrl.startsWith("https://")) {
-                        addressUrl = addressUrl.replace("https://", "");
-                    }
 
                     AdminBiz adminBiz = (AdminBiz) new XxlRpcReferenceBean(NetEnum.JETTY, Serializer.SerializeEnum.HESSIAN.getSerializer(), CallType.SYNC,
                             AdminBiz.class, null, 10000, addressUrl, accessToken, null).getObject();
