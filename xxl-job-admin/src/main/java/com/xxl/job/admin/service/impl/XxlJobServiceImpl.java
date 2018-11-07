@@ -124,23 +124,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 			return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("jobinfo_field_add")+I18nUtil.getString("system_fail")) );
 		}
 
-		// add in quartz
-        String qz_group = String.valueOf(jobInfo.getJobGroup());
-        String qz_name = String.valueOf(jobInfo.getId());
-        try {
-            XxlJobDynamicScheduler.addJob(qz_name, qz_group, jobInfo.getJobCron());
-            //XxlJobDynamicScheduler.pauseJob(qz_name, qz_group);
-            return new ReturnT<String>(qz_name);
-        } catch (SchedulerException e) {
-            logger.error(e.getMessage(), e);
-            try {
-                xxlJobInfoDao.delete(jobInfo.getId());
-                XxlJobDynamicScheduler.removeJob(qz_name, qz_group);
-            } catch (SchedulerException e1) {
-                logger.error(e.getMessage(), e1);
-            }
-            return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("jobinfo_field_add")+I18nUtil.getString("system_fail"))+":" + e.getMessage());
-        }
+		return new ReturnT<String>(String.valueOf(jobInfo.getId()));
 	}
 
 	@Override
@@ -201,17 +185,18 @@ public class XxlJobServiceImpl implements XxlJobService {
 		exists_jobInfo.setChildJobId(jobInfo.getChildJobId());
         xxlJobInfoDao.update(exists_jobInfo);
 
-		// fresh quartz
+
+		// update quartz-cron if started
 		String qz_group = String.valueOf(exists_jobInfo.getJobGroup());
 		String qz_name = String.valueOf(exists_jobInfo.getId());
         try {
-            boolean ret = XxlJobDynamicScheduler.rescheduleJob(qz_group, qz_name, exists_jobInfo.getJobCron());
-            return ret?ReturnT.SUCCESS:ReturnT.FAIL;
+            XxlJobDynamicScheduler.updateJobCron(qz_group, qz_name, exists_jobInfo.getJobCron());
         } catch (SchedulerException e) {
             logger.error(e.getMessage(), e);
+			return ReturnT.FAIL;
         }
 
-		return ReturnT.FAIL;
+		return ReturnT.SUCCESS;
 	}
 
 	@Override
@@ -221,26 +206,30 @@ public class XxlJobServiceImpl implements XxlJobService {
         String name = String.valueOf(xxlJobInfo.getId());
 
 		try {
+			// unbind quartz
 			XxlJobDynamicScheduler.removeJob(name, group);
+
 			xxlJobInfoDao.delete(id);
 			xxlJobLogDao.delete(id);
 			xxlJobLogGlueDao.deleteByJobId(id);
 			return ReturnT.SUCCESS;
 		} catch (SchedulerException e) {
 			logger.error(e.getMessage(), e);
+			return ReturnT.FAIL;
 		}
-		return ReturnT.FAIL;
+
 	}
 
 	@Override
-	public ReturnT<String> pause(int id) {
-        XxlJobInfo xxlJobInfo = xxlJobInfoDao.loadById(id);
-        String group = String.valueOf(xxlJobInfo.getJobGroup());
-        String name = String.valueOf(xxlJobInfo.getId());
+	public ReturnT<String> start(int id) {
+		XxlJobInfo xxlJobInfo = xxlJobInfoDao.loadById(id);
+		String group = String.valueOf(xxlJobInfo.getJobGroup());
+		String name = String.valueOf(xxlJobInfo.getId());
+		String cronExpression = xxlJobInfo.getJobCron();
 
 		try {
-            boolean ret = XxlJobDynamicScheduler.pauseJob(name, group);	// jobStatus do not store
-            return ret?ReturnT.SUCCESS:ReturnT.FAIL;
+			boolean ret = XxlJobDynamicScheduler.addJob(name, group, cronExpression);
+			return ret?ReturnT.SUCCESS:ReturnT.FAIL;
 		} catch (SchedulerException e) {
 			logger.error(e.getMessage(), e);
 			return ReturnT.FAIL;
@@ -248,14 +237,15 @@ public class XxlJobServiceImpl implements XxlJobService {
 	}
 
 	@Override
-	public ReturnT<String> resume(int id) {
+	public ReturnT<String> stop(int id) {
         XxlJobInfo xxlJobInfo = xxlJobInfoDao.loadById(id);
         String group = String.valueOf(xxlJobInfo.getJobGroup());
         String name = String.valueOf(xxlJobInfo.getId());
 
 		try {
-			boolean ret = XxlJobDynamicScheduler.resumeJob(name, group);
-			return ret?ReturnT.SUCCESS:ReturnT.FAIL;
+			// bind quartz
+            boolean ret = XxlJobDynamicScheduler.removeJob(name, group);
+            return ret?ReturnT.SUCCESS:ReturnT.FAIL;
 		} catch (SchedulerException e) {
 			logger.error(e.getMessage(), e);
 			return ReturnT.FAIL;
@@ -355,6 +345,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 		} else {
             for (int i = 4; i > -1; i--) {
                 triggerDayList.add(FastDateFormat.getInstance("yyyy-MM-dd").format(DateUtils.addDays(new Date(), -i)));
+				triggerDayCountRunningList.add(0);
                 triggerDayCountSucList.add(0);
                 triggerDayCountFailList.add(0);
             }
