@@ -19,7 +19,7 @@
 		<dependency>
 			<groupId>com.xuxueli</groupId>
 			<artifactId>xxl-rpc-core</artifactId>
-			<version>1.2.0</version>
+			<version>${xxl-rpc.version}</version>
 		</dependency>
 
 		<!-- groovy-all -->
