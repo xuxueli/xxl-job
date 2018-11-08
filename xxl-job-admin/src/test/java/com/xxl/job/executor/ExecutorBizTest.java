@@ -1,4 +1,4 @@
-package com.xxl.executor.test;
+package com.xxl.job.executor;
 
 import com.xxl.job.core.biz.ExecutorBiz;
 import com.xxl.job.core.biz.model.ReturnT;
@@ -15,7 +15,7 @@ import com.xxl.rpc.serialize.Serializer;
  *
  * Created by xuxueli on 17/5/12.
  */
-public class DemoJobHandlerTest {
+public class ExecutorBizTest {
 
     public static void main(String[] args) throws Exception {
 
@@ -23,6 +23,16 @@ public class DemoJobHandlerTest {
         String jobHandler = "demoJobHandler";
         String params = "";
 
+        runTest(jobHandler, params);
+    }
+
+    /**
+     * run jobhandler
+     *
+     * @param jobHandler
+     * @param params
+     */
+    private static void runTest(String jobHandler, String params){
         // trigger data
         TriggerParam triggerParam = new TriggerParam();
         triggerParam.setJobId(1);

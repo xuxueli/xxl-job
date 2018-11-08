@@ -998,14 +998,14 @@ API服务请求参考代码：可参考任务界面操作的ajax请求。任何a
 ### 5.12 执行器API服务
 执行器提供了API服务，供调度中心选择使用，目前提供的API服务有：
 
-    1、心跳检测
-    2、忙碌检测
-    3、触发任务执行
-    4、获取Rolling Log
-    5、终止任务
+    1、心跳检测：调度中心使用
+    2、忙碌检测：调度中心使用
+    3、触发任务执行：调度中心使用；本地进行任务开发时，可使用该API服务模拟触发任务；
+    4、获取Rolling Log：调度中心使用
+    5、终止任务：调度中心使用
     
 API服务位置：com.xxl.job.core.biz.ExecutorBiz     
-API服务请求参考代码：com.xxl.executor.test.DemoJobHandlerTest
+API服务请求参考代码：com.xxl.job.executor.ExecutorBizTest
 
 ### 5.13 故障转移 & 失败重试
 一次完整任务流程包括"调度（调度中心） + 执行（执行器）"两个阶段。
