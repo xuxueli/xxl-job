@@ -1408,10 +1408,9 @@ Tips: 历史版本(V1.3.x)目前已经Release至稳定版本, 进入维护阶段
 - 20、任务自动注册；待考虑，因为任务自动注册将会导致任务难以管理控制；
 - 21、批量触发支持，添加参数 "org.quartz.scheduler.batchTriggerAcquisitionMaxCount: 50"；
 - 22、失败重试间隔；
-- 23、Release发布时，一同发布调度中心安装包，真正实现开箱即用；
-- 24、任务权限管理：执行器为粒度分配权限，核心操作校验权限；
-- 25、SimpleTrigger 支持；
-- 26、cron在线生成工具，如 "cronboot/cron.qqe2"；
+- 23、任务权限管理：执行器为粒度分配权限，核心操作校验权限；
+- 24、SimpleTrigger 支持；
+- 25、cron在线生成工具，如 "cronboot/cron.qqe2"；
 
 
 ## 七、其他
