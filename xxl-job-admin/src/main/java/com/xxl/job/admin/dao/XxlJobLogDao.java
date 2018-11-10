@@ -50,4 +50,10 @@ public interface XxlJobLogDao {
 						@Param("clearBeforeTime") Date clearBeforeTime,
 						@Param("clearBeforeNum") int clearBeforeNum);
 
+	public List<Integer> findFailJobLogIds(@Param("pagesize") int pagesize);
+
+	public int updateAlarmStatus(@Param("logId") int logId,
+								 @Param("oldAlarmStatus") int oldAlarmStatus,
+								 @Param("newAlarmStatus") int newAlarmStatus);
+
 }
