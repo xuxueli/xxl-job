@@ -69,6 +69,12 @@
 			<artifactId>spring-boot-starter-freemarker</artifactId>
 		</dependency>
 
+		<!-- mail-starter -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-mail</artifactId>
+		</dependency>
+
 		<!-- mybatis-starter：mybatis + mybatis-spring + tomcat-jdbc（default） -->
 		<dependency>
 			<groupId>org.mybatis.spring.boot</groupId>
@@ -94,12 +100,9 @@
 			<artifactId>commons-lang3</artifactId>
 			<version>${commons-lang3.version}</version>
 		</dependency>
-		<!-- commons-email -->
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-email</artifactId>
-			<version>${commons-email.version}</version>
-		</dependency>
+
+
+
 
 		<!-- quartz ：quartz-2.2.3/c3p0-0.9.1.1/slf4j-api-1.6.6 -->
 		<dependency>

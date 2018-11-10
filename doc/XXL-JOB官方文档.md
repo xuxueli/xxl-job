@@ -295,19 +295,19 @@ XXL-JOB是一个轻量级分布式任务调度平台，其核心设计目标是�
 调度中心配置内容说明：
 
     ### 调度中心JDBC链接：链接地址请保持和 2.1章节 所创建的调度数据库的地址一致
-    xxl.job.db.driverClass=com.mysql.jdbc.Driver
-    xxl.job.db.url=jdbc:mysql://localhost:3306/xxl-job?useUnicode=true&characterEncoding=UTF-8
-    xxl.job.db.user=root
-    xxl.job.db.password=root_pwd
+    spring.datasource.url=jdbc:mysql://127.0.0.1:3306/xxl-job?Unicode=true&characterEncoding=UTF-8
+    spring.datasource.username=root
+    spring.datasource.password=root_pwd
+    spring.datasource.driver-class-name=com.mysql.jdbc.Driver
     
     ### 报警邮箱
-    xxl.job.mail.host=smtp.163.com
-    xxl.job.mail.port=25
-    xxl.job.mail.ssl=false
-    xxl.job.mail.username=ovono802302@163.com
-    xxl.job.mail.password=asdfzxcv
-    xxl.job.mail.sendFrom=ovono802302@163.com
-    xxl.job.mail.sendNick=《任务调度平台XXL-JOB》
+    spring.mail.host=smtp.qq.com
+    spring.mail.port=25
+    spring.mail.username=xxx@qq.com
+    spring.mail.password=xxx
+    spring.mail.properties.mail.smtp.auth=true
+    spring.mail.properties.mail.smtp.starttls.enable=true
+    spring.mail.properties.mail.smtp.starttls.required=true
     
     ### 登录账号
     xxl.job.login.username=admin
@@ -1388,7 +1388,8 @@ Tips: 历史版本(V1.3.x)目前已经Release至稳定版本, 进入维护阶段
 - 5、执行器启动之后jetty停止的问题修复；
 
 ### 6.24 版本 v2.0.2 Release Notes[迭代中]
-- 1、[迭代中]任务告警逻辑调整：任务调度，以及任务回调失败时，均推送监控队列。考虑通过任务Log字段控制告警状态；
+- 1、调度中心告警邮件发送组件改为 “spring-boot-starter-mail”；
+- 2、[迭代中]任务告警逻辑调整：任务调度，以及任务回调失败时，均推送监控队列。考虑通过任务Log字段控制告警状态；
 
 
 ### TODO LIST

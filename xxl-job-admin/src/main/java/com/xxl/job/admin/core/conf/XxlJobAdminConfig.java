@@ -8,6 +8,7 @@ import com.xxl.job.core.biz.AdminBiz;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.mail.javamail.JavaMailSender;
 
 import javax.annotation.Resource;
 
@@ -30,24 +31,6 @@ public class XxlJobAdminConfig implements InitializingBean{
 
     // conf
 
-    @Value("${xxl.job.mail.host}")
-    private String mailHost;
-
-    @Value("${xxl.job.mail.port}")
-    private String mailPort;
-
-    @Value("${xxl.job.mail.ssl}")
-    private boolean mailSSL;
-
-    @Value("${xxl.job.mail.username}")
-    private String mailUsername;
-
-    @Value("${xxl.job.mail.password}")
-    private String mailPassword;
-
-    @Value("${xxl.job.mail.sendNick}")
-    private String mailSendNick;
-
     @Value("${xxl.job.login.username}")
     private String loginUsername;
 
@@ -60,43 +43,23 @@ public class XxlJobAdminConfig implements InitializingBean{
     @Value("${xxl.job.accessToken}")
     private String accessToken;
 
+    @Value("${spring.mail.username}")
+    private String emailUserName;
+
     // dao, service
 
     @Resource
-    public XxlJobLogDao xxlJobLogDao;
+    private XxlJobLogDao xxlJobLogDao;
     @Resource
-    public XxlJobInfoDao xxlJobInfoDao;
+    private XxlJobInfoDao xxlJobInfoDao;
     @Resource
-    public XxlJobRegistryDao xxlJobRegistryDao;
+    private XxlJobRegistryDao xxlJobRegistryDao;
     @Resource
-    public XxlJobGroupDao xxlJobGroupDao;
+    private XxlJobGroupDao xxlJobGroupDao;
     @Resource
-    public AdminBiz adminBiz;
-
-
-    public String getMailHost() {
-        return mailHost;
-    }
-
-    public String getMailPort() {
-        return mailPort;
-    }
-
-    public boolean isMailSSL() {
-        return mailSSL;
-    }
-
-    public String getMailUsername() {
-        return mailUsername;
-    }
-
-    public String getMailPassword() {
-        return mailPassword;
-    }
-
-    public String getMailSendNick() {
-        return mailSendNick;
-    }
+    private AdminBiz adminBiz;
+    @Resource
+    private JavaMailSender mailSender;
 
     public String getLoginUsername() {
         return loginUsername;
@@ -112,6 +75,10 @@ public class XxlJobAdminConfig implements InitializingBean{
 
     public String getAccessToken() {
         return accessToken;
+    }
+
+    public String getEmailUserName() {
+        return emailUserName;
     }
 
     public XxlJobLogDao getXxlJobLogDao() {
@@ -132,6 +99,10 @@ public class XxlJobAdminConfig implements InitializingBean{
 
     public AdminBiz getAdminBiz() {
         return adminBiz;
+    }
+
+    public JavaMailSender getMailSender() {
+        return mailSender;
     }
 
 }

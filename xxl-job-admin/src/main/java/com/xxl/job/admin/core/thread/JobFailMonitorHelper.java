@@ -4,16 +4,18 @@ import com.xxl.job.admin.core.conf.XxlJobAdminConfig;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
-import com.xxl.job.admin.core.schedule.XxlJobDynamicScheduler;
 import com.xxl.job.admin.core.trigger.TriggerTypeEnum;
 import com.xxl.job.admin.core.util.I18nUtil;
-import com.xxl.job.admin.core.util.MailUtil;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.handler.IJobHandler;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.mail.javamail.MimeMessageHelper;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import java.io.UnsupportedEncodingException;
 import java.text.MessageFormat;
 import java.util.*;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -173,7 +175,7 @@ public class JobFailMonitorHelper {
 
 			String alarmContent = "Alarm Job LogId=" + jobLog.getId();
 			if (jobLog.getTriggerCode() != ReturnT.SUCCESS_CODE) {
-				alarmContent += "<br>TriggerMsg=" + jobLog.getTriggerMsg();
+				alarmContent += "<br>TriggerMsg=<br>" + jobLog.getTriggerMsg();
 			}
 			if (jobLog.getHandleCode()>0 && jobLog.getHandleCode() != ReturnT.SUCCESS_CODE) {
 				alarmContent += "<br>HandleCode=" + jobLog.getHandleMsg();
@@ -183,6 +185,7 @@ public class JobFailMonitorHelper {
 			for (String email: emailSet) {
 				XxlJobGroup group = XxlJobAdminConfig.getAdminConfig().getXxlJobGroupDao().load(Integer.valueOf(info.getJobGroup()));
 
+				String personal = I18nUtil.getString("admin_name_full");
 				String title = I18nUtil.getString("jobconf_monitor");
 				String content = MessageFormat.format(mailBodyTemplate,
 						group!=null?group.getTitle():"null",
@@ -190,7 +193,22 @@ public class JobFailMonitorHelper {
 						info.getJobDesc(),
 						alarmContent);
 
-				MailUtil.sendMail(email, title, content);
+
+				// make mail
+				try {
+					MimeMessage mimeMessage = XxlJobAdminConfig.getAdminConfig().getMailSender().createMimeMessage();
+
+					MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+					helper.setFrom(XxlJobAdminConfig.getAdminConfig().getEmailUserName(), personal);
+					helper.setTo(email);
+					helper.setSubject(title);
+					helper.setText(content, true);
+
+					XxlJobAdminConfig.getAdminConfig().getMailSender().send(mimeMessage);
+				} catch (UnsupportedEncodingException | MessagingException e) {
+					logger.error(">>>>>>>>>>> job monitor alarm email send error, JobLogId:{}", jobLog.getId(), e);
+				}
+
 			}
 		}
 
