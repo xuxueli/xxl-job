@@ -1,5 +1,5 @@
-FROM openjdk:7-jre-slim
-MAINTAINER xuxueli
+FROM java:8-jre-alpine
+MAINTAINER joseph
 
 ENV PARAMS=""
 
