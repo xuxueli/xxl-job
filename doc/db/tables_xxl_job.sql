@@ -187,10 +187,8 @@ CREATE TABLE `XXL_JOB_QRTZ_TRIGGER_LOG` (
   `handle_time` datetime DEFAULT NULL COMMENT '执行-时间',
   `handle_code` int(11) NOT NULL COMMENT '执行-状态',
   `handle_msg` text COMMENT '执行-日志',
-  `alarm_status` tinyint(4) NOT NULL DEFAULT '0' COMMENT '告警状态：0-默认、1-无需告警、2-告警成功、3-告警失败',
   PRIMARY KEY (`id`),
-  KEY `I_trigger_time` (`trigger_time`),
-  KEY `I_handle_code` (`handle_code`)
+  KEY `I_trigger_time` (`trigger_time`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `XXL_JOB_QRTZ_TRIGGER_LOGGLUE` (

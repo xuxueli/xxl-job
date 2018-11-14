@@ -46,7 +46,6 @@ XXL-JOB是一个轻量级分布式任务调度平台，其核心设计目标是�
 - 29、全异步：任务调度流程全异步化设计实现，如异步调度、异步运行、异步回调等，有效对密集调度进行流量削峰，理论上支持任意时长任务的运行；
 - 30、跨平台：原生提供通用HTTP任务Handler（Bean任务，"HttpJobHandler"）；业务方只需要提供HTTP链接即可，不限制语言、平台；
 - 31、国际化：调度中心支持国际化设置，提供中文、英文两种可选语言，默认为中文；
-- 32、容器化：提供官方docker镜像，并实时更新推送dockerhub，进一步实现产品开箱即用；
 
 
 ### 1.3 发展
@@ -207,9 +206,6 @@ XXL-JOB是一个轻量级分布式任务调度平台，其核心设计目标是�
     - 128、上海恺域信息科技有限公司
     - 129、广州荔支网络有限公司(荔枝FM)
     - 130、杭州闪宝科技有限公司
-    - 131、北京互联新网科技发展有限公司
-    - 132、誉道科技
-    - 133、山西兆盛房地产开发有限公司
 	- ……
 
 > 更多接入的公司，欢迎在 [登记地址](https://github.com/xuxueli/xxl-job/issues/1 ) 登记，登记仅仅为了产品推广。
@@ -295,19 +291,19 @@ XXL-JOB是一个轻量级分布式任务调度平台，其核心设计目标是�
 调度中心配置内容说明：
 
     ### 调度中心JDBC链接：链接地址请保持和 2.1章节 所创建的调度数据库的地址一致
-    spring.datasource.url=jdbc:mysql://127.0.0.1:3306/xxl-job?Unicode=true&characterEncoding=UTF-8
-    spring.datasource.username=root
-    spring.datasource.password=root_pwd
-    spring.datasource.driver-class-name=com.mysql.jdbc.Driver
+    xxl.job.db.driverClass=com.mysql.jdbc.Driver
+    xxl.job.db.url=jdbc:mysql://localhost:3306/xxl-job?useUnicode=true&characterEncoding=UTF-8
+    xxl.job.db.user=root
+    xxl.job.db.password=root_pwd
     
     ### 报警邮箱
-    spring.mail.host=smtp.qq.com
-    spring.mail.port=25
-    spring.mail.username=xxx@qq.com
-    spring.mail.password=xxx
-    spring.mail.properties.mail.smtp.auth=true
-    spring.mail.properties.mail.smtp.starttls.enable=true
-    spring.mail.properties.mail.smtp.starttls.required=true
+    xxl.job.mail.host=smtp.163.com
+    xxl.job.mail.port=25
+    xxl.job.mail.ssl=false
+    xxl.job.mail.username=ovono802302@163.com
+    xxl.job.mail.password=asdfzxcv
+    xxl.job.mail.sendFrom=ovono802302@163.com
+    xxl.job.mail.sendNick=《任务调度平台XXL-JOB》
     
     ### 登录账号
     xxl.job.login.username=admin
@@ -1001,14 +997,14 @@ API服务请求参考代码：可参考任务界面操作的ajax请求。任何a
 ### 5.12 执行器API服务
 执行器提供了API服务，供调度中心选择使用，目前提供的API服务有：
 
-    1、心跳检测：调度中心使用
-    2、忙碌检测：调度中心使用
-    3、触发任务执行：调度中心使用；本地进行任务开发时，可使用该API服务模拟触发任务；
-    4、获取Rolling Log：调度中心使用
-    5、终止任务：调度中心使用
+    1、心跳检测
+    2、忙碌检测
+    3、触发任务执行
+    4、获取Rolling Log
+    5、终止任务
     
 API服务位置：com.xxl.job.core.biz.ExecutorBiz     
-API服务请求参考代码：com.xxl.job.executor.ExecutorBizTest
+API服务请求参考代码：com.xxl.executor.test.DemoJobHandlerTest
 
 ### 5.13 故障转移 & 失败重试
 一次完整任务流程包括"调度（调度中心） + 执行（执行器）"两个阶段。
@@ -1364,32 +1360,21 @@ Tips: 历史版本(V1.3.x)目前已经Release至稳定版本, 进入维护阶段
 - 40、项目依赖全量升级至较新稳定版本，如spring、Jackson、groovy等等；
 - 41、docker支持：调度中心提供 Dockerfile 方便快速构建docker镜像； 
 
-### 6.23 版本 V2.0.0 Release Notes[2018-11-04]
+### 6.23 版本 V2.0.0 特性[2018-11-04]
 - 1、调度中心迁移到 springboot；
 - 2、底层通讯组件迁移至 xxl-rpc；
-- 3、容器化：提供官方docker镜像，并实时更新推送dockerhub（docker pull xuxueli/xxl-job-admin），进一步实现产品开箱即用；
-- 4、新增无框架执行器Sample示例项目 "xxl-job-executor-sample-frameless"。不依赖第三方框架，只需main方法即可启动运行执行器；
-- 5、命令行任务：原生提供通用命令行任务Handler（Bean任务，"CommandJobHandler"）；业务方只需要提供命令行即可；
-- 6、任务状态优化，仅运行状态"NORMAL"任务关联至quartz，降低quartz底层数据存储与调度压力；
-- 7、任务状态规范：新增任务默认停止状态，任务更新时保持任务状态不变；
-- 8、IP获取逻辑优化，优先遍历网卡来获取可用IP；
-- 9、任务新增的API服务接口返回任务ID，方便调用方实用；
-- 10、组件化优化，移除对 spring 的依赖：非spring应用选用 "XxlJobExecutor" 、spring应用选用 "XxlJobSpringExecutor" 作为执行器组件； 
-- 11、任务RollingLog展示逻辑优化，修复超时任务无法查看的问题；
-- 12、多项UI组件升级到最新版本，如：CodeMirror、Echarts、Jquery 等；
-- 13、项目依赖升级 groovy 至较新稳定版本；pom清理；
-- 14、子任务失败重试重试逻辑优化，子任务失败时将会按照其预设的失败重试次数主动进行重试
-
-### 6.23 版本 v2.0.1 Release Notes[2018-11-09]
-- 1、左侧菜单折叠动画问题修复；
-- 2、调度报表日期分布图默认值统一；
-- 3、freemarker对数字默认加千分位问题修复，解决日志ID被分隔导致查看日志失败问题；
-- 4、底层通讯组件升级，修复通讯异常时无效等待的问题；
-- 5、执行器启动之后jetty停止的问题修复；
-
-### 6.24 版本 v2.0.2 Release Notes[迭代中]
-- 1、调度中心告警邮件发送组件改为 “spring-boot-starter-mail”；
-- 2、任务告警逻辑调整，改为通过扫描失败日志方式触发。一方面精确扫描失败任务，降低扫描范围；另一方面取消内存队列，降低线程内存消耗；
+- 3、IP获取逻辑优化，优先遍历网卡来获取可用IP；
+- 4、任务新增的API服务接口返回任务ID，方便调用方实用；
+- 5、组件化优化，移除对 spring 的依赖：非spring应用选用 "XxlJobExecutor" 、spring应用选用 "XxlJobSpringExecutor" 作为执行器组件； 
+- 6、新增无框架执行器Sample示例项目 "xxl-job-executor-sample-frameless"。不依赖第三方框架，只需main方法即可启动运行执行器；
+- 7、任务RollingLog展示逻辑优化，修复超时任务无法查看的问题；
+- 8、任务状态优化，仅运行状态"NORMAL"任务关联至quartz，降低quartz底层数据存储与调度压力；
+- 9、任务状态规范：新增任务默认停止状态，任务更新时保持任务状态不变；
+- 10、命令行任务：原生提供通用命令行任务Handler（Bean任务，"CommandJobHandler"）；业务方只需要提供命令行即可；
+- 11、项目依赖升级 groovy 至较新稳定版本；pom清理；
+- 12、子任务失败重试重试逻辑优化，子任务失败时将会按照其预设的失败重试次数主动进行重试
+- 13、多项UI组件升级到最新版本，如：CodeMirror、Echarts、Jquery 等；
+- 14、提供官方docker镜像，并推送至中央仓库（docker pull xuxueli/xxl-job-admin），更进一步实现产品开箱即用；
 
 
 ### TODO LIST
@@ -1404,22 +1389,21 @@ Tips: 历史版本(V1.3.x)目前已经Release至稳定版本, 进入维护阶段
 - 9、API事件触发类型任务（更类似MQ消息）支持"动态传参、延时消费"；该类型任务不走Quartz，单独建立MQ消息表，调度中心竞争触发；待定，该功能与 XXL-MQ 冲突，该场景建议用后者；
 - 10、调度线程池改为协程方式实现，大幅降低系统内存消耗；
 - 11、任务依赖增强，新增任务类型 "流程任务"，流程节点可挂载普通类型任务，承担任务依赖功能。现有子任务模型取消；需要考虑任务依赖死循环问题；
-- 12、提供多版本执行器：不依赖容器版本、不内嵌Jetty版本（通过配置executoraddress替换jetty通讯）等；
-- 13、注册中心支持扩展，除默认基于DB之外，支持扩展接入第三方注册中心如zk、eureka等；
-- 14、流程任务，支持参数传递；
-- 15、Cron TimeZone 自定义；
-- 16、忙碌转移优化，全部机器忙碌时不再直接失败；
-- 17、流程任务等，透传动态参数；
-- 18、任务支持切换执行器，quartz job group固定；
-- 19、任务自动注册；待考虑，因为任务自动注册将会导致任务难以管理控制；
-- 20、批量触发支持，添加参数 "org.quartz.scheduler.batchTriggerAcquisitionMaxCount: 50"；
-- 21、失败重试间隔；
-- 22、任务权限管理：执行器为粒度分配权限，核心操作校验权限；
-- 23、SimpleTrigger 支持；
-- 24、cron在线生成工具，如 "cronboot/cron.qqe2"；
-- 25、调度日志列表加上执行时长列，并支持排序；
-- 26、dag任务，替换子任务：配置并列的"a-b、b-c"路径列表，构成串行、并行、dag任务流程，"dagre-d3"绘图；
-- 27、排程任务：支持时间短、时间点配置，支持配置多个，精确到秒；
+- 12、任务告警逻辑调整：任务调度，以及任务回调失败时，均推送监控队列。后期考虑通过任务Log字段控制告警状态；
+- 13、提供多版本执行器：不依赖容器版本、不内嵌Jetty版本（通过配置executoraddress替换jetty通讯）等；
+- 14、注册中心支持扩展，除默认基于DB之外，支持扩展接入第三方注册中心如zk、eureka等；
+- 15、流程任务，支持参数传递；
+- 16、Cron TimeZone 自定义；
+- 17、忙碌转移优化，全部机器忙碌时不再直接失败；
+- 18、流程任务等，透传动态参数；
+- 19、任务支持切换执行器，quartz job group固定；
+- 20、任务自动注册；待考虑，因为任务自动注册将会导致任务难以管理控制；
+- 21、批量触发支持，添加参数 "org.quartz.scheduler.batchTriggerAcquisitionMaxCount: 50"；
+- 22、失败重试间隔；
+- 23、Release发布时，一同发布调度中心安装包，真正实现开箱即用；
+- 24、任务权限管理：执行器为粒度分配权限，核心操作校验权限；
+- 25、SimpleTrigger 支持；
+- 26、cron在线生成工具，如 "cronboot/cron.qqe2"；
 
 
 ## 七、其他

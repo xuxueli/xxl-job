@@ -1,14 +1,18 @@
 package com.xxl.job.admin.dao;
 
-import com.xxl.job.admin.core.model.XxlJobRegistry;
-import com.xxl.job.admin.dao.XxlJobRegistryDao;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
+import java.util.List;
+
+import javax.annotation.Resource;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import javax.annotation.Resource;
-import java.util.List;
+import com.xxl.job.admin.core.model.XxlJobRegistry;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath*:spring/applicationcontext-*.xml")
@@ -18,15 +22,17 @@ public class XxlJobRegistryDaoTest {
     private XxlJobRegistryDao xxlJobRegistryDao;
 
     @Test
-    public void test(){
+    public void test() {
         int ret = xxlJobRegistryDao.registryUpdate("g1", "k1", "v1");
         if (ret < 1) {
             ret = xxlJobRegistryDao.registrySave("g1", "k1", "v1");
         }
 
-        List<XxlJobRegistry> list = xxlJobRegistryDao.findAll(1);
+        List<XxlJobRegistry> list = xxlJobRegistryDao
+                .findAll(Date.from(LocalDateTime.now().minusSeconds(1).atZone(ZoneId.systemDefault()).toInstant()));
 
-        int ret2 = xxlJobRegistryDao.removeDead(1);
+        int ret2 = xxlJobRegistryDao
+                .removeDead(Date.from(LocalDateTime.now().minusSeconds(1).atZone(ZoneId.systemDefault()).toInstant()));
     }
 
 }

@@ -4,133 +4,141 @@
 <mapper namespace="com.xxl.job.admin.dao.XxlJobLogDao">
 	
 	<resultMap id="XxlJobLog" type="com.xxl.job.admin.core.model.XxlJobLog" >
-		<result column="id" property="id" />
+		<result column="ID" property="id" />
 
-		<result column="job_group" property="jobGroup" />
-		<result column="job_id" property="jobId" />
+		<result column="JOB_GROUP" property="jobGroup" />
+		<result column="JOB_ID" property="jobId" />
 
-		<result column="executor_address" property="executorAddress" />
-		<result column="executor_handler" property="executorHandler" />
-	    <result column="executor_param" property="executorParam" />
-		<result column="executor_sharding_param" property="executorShardingParam" />
-		<result column="executor_fail_retry_count" property="executorFailRetryCount" />
+		<result column="EXECUTOR_ADDRESS" property="executorAddress" />
+		<result column="EXECUTOR_HANDLER" property="executorHandler" />
+	    <result column="EXECUTOR_PARAM" property="executorParam" />
+		<result column="EXECUTOR_SHARDING_PARAM" property="executorShardingParam" />
+		<result column="EXECUTOR_FAIL_RETRY_COUNT" property="executorFailRetryCount" />
 	    
-	    <result column="trigger_time" property="triggerTime" />
-	    <result column="trigger_code" property="triggerCode" />
-	    <result column="trigger_msg" property="triggerMsg" />
+	    <result column="TRIGGER_TIME" property="triggerTime" />
+	    <result column="TRIGGER_CODE" property="triggerCode" />
+	    <result column="TRIGGER_MSG" property="triggerMsg" />
 	    
-	    <result column="handle_time" property="handleTime" />
-	    <result column="handle_code" property="handleCode" />
-	    <result column="handle_msg" property="handleMsg" />
-
-		<result column="alarm_status" property="alarmStatus" />
+	    <result column="HANDLE_TIME" property="handleTime" />
+	    <result column="HANDLE_CODE" property="handleCode" />
+	    <result column="HANDLE_MSG" property="handleMsg" />
+	    
 	</resultMap>
 
 	<sql id="Base_Column_List">
-		t.id,
-		t.job_group,
-		t.job_id,
-		t.executor_address,
-		t.executor_handler,
-		t.executor_param,
-		t.executor_sharding_param,
-		t.executor_fail_retry_count,
-		t.trigger_time,
-		t.trigger_code,
-		t.trigger_msg,
-		t.handle_time,
-		t.handle_code,
-		t.handle_msg,
-		t.alarm_status
+		t.ID,
+		t.JOB_GROUP,
+		t.JOB_ID,
+		t.EXECUTOR_ADDRESS,
+		t.EXECUTOR_HANDLER,
+		t.EXECUTOR_PARAM,
+		t.EXECUTOR_SHARDING_PARAM,
+		t.EXECUTOR_FAIL_RETRY_COUNT,
+		t.TRIGGER_TIME,
+		t.TRIGGER_CODE,
+		t.TRIGGER_MSG,
+		t.HANDLE_TIME,
+		t.HANDLE_CODE,
+		t.HANDLE_MSG
 	</sql>
 	
 	<select id="pageList" resultMap="XxlJobLog">
 		SELECT <include refid="Base_Column_List" />
-		FROM XXL_JOB_QRTZ_TRIGGER_LOG AS t
-		<trim prefix="WHERE" prefixOverrides="AND | OR" >
-			<if test="jobGroup gt 0">
-				AND t.job_group = #{jobGroup}
-			</if>
-			<if test="jobId gt 0">
-				AND t.job_id = #{jobId}
-			</if>
-			<if test="triggerTimeStart != null">
-				AND t.trigger_time <![CDATA[ >= ]]> #{triggerTimeStart}
-			</if>
-			<if test="triggerTimeEnd != null">
-				AND t.trigger_time <![CDATA[ <= ]]> #{triggerTimeEnd}
-			</if>
-			<if test="logStatus == 1" >
-				AND t.handle_code = 200
-			</if>
-			<if test="logStatus == 2" >
-				AND (
-					t.trigger_code NOT IN (0, 200) OR
-					t.handle_code NOT IN (0, 200)
-				)
-			</if>
-			<if test="logStatus == 3" >
-				AND t.trigger_code = 200
-				AND t.handle_code = 0
-			</if>
-		</trim>
-		ORDER BY id DESC
-		LIMIT #{offset}, #{pagesize}
+		FROM (
+			SELECT <include refid="Base_Column_List" />,ROWNUM rn
+			FROM (
+				SELECT t.* 
+				FROM XXL_JOB_QRTZ_TRIGGER_LOG  t
+				<trim prefix="WHERE" prefixOverrides="AND | OR" >
+					<if test="jobGroup gt 0">
+						AND t.JOB_GROUP = #{jobGroup}
+					</if>
+					<if test="jobId gt 0">
+						AND t.JOB_ID = #{jobId}
+					</if>
+					<if test="triggerTimeStart != null">
+						AND t.TRIGGER_TIME <![CDATA[ >= ]]> #{triggerTimeStart}
+					</if>
+					<if test="triggerTimeEnd != null">
+						AND t.TRIGGER_TIME <![CDATA[ <= ]]> #{triggerTimeEnd}
+					</if>
+					<if test="logStatus == 1" >
+						AND t.HANDLE_CODE = 200
+					</if>
+					<if test="logStatus == 2" >
+						AND (
+							t.TRIGGER_CODE NOT IN (0, 200) OR
+							t.HANDLE_CODE NOT IN (0, 200)
+						)
+					</if>
+					<if test="logStatus == 3" >
+						AND t.TRIGGER_CODE = 200
+						AND t.HANDLE_CODE = 0
+					</if>
+				</trim>
+				ORDER BY id DESC
+				) t WHERE ROWNUM<![CDATA[ < ]]>=#{end} 
+			) t WHERE t.rn<![CDATA[ > ]]>=#{start}
 	</select>
 	
 	<select id="pageListCount" resultType="int">
 		SELECT count(1)
-		FROM XXL_JOB_QRTZ_TRIGGER_LOG AS t
+		FROM XXL_JOB_QRTZ_TRIGGER_LOG  t
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
 			<if test="jobGroup gt 0">
-				AND t.job_group = #{jobGroup}
+				AND t.JOB_GROUP = #{jobGroup}
 			</if>
 			<if test="jobId gt 0">
-				AND t.job_id = #{jobId}
+				AND t.JOB_ID = #{jobId}
 			</if>
 			<if test="triggerTimeStart != null">
-				AND t.trigger_time <![CDATA[ >= ]]> #{triggerTimeStart}
+				AND t.TRIGGER_TIME <![CDATA[ >= ]]> #{triggerTimeStart}
 			</if>
 			<if test="triggerTimeEnd != null">
-				AND t.trigger_time <![CDATA[ <= ]]> #{triggerTimeEnd}
+				AND t.TRIGGER_TIME <![CDATA[ <= ]]> #{triggerTimeEnd}
 			</if>
 			<if test="logStatus == 1" >
-				AND t.handle_code = 200
+				AND t.HANDLE_CODE = 200
 			</if>
 			<if test="logStatus == 2" >
 				AND (
-					t.trigger_code NOT IN (0, 200) OR
-					t.handle_code NOT IN (0, 200)
+					t.TRIGGER_CODE NOT IN (0, 200) OR
+					t.HANDLE_CODE NOT IN (0, 200)
 				)
 			</if>
 			<if test="logStatus == 3" >
-				AND t.trigger_code = 200
-				AND t.handle_code = 0
+				AND t.TRIGGER_CODE = 200
+				AND t.HANDLE_CODE = 0
 			</if>
 		</trim>
 	</select>
 	
 	<select id="load" parameterType="java.lang.Integer" resultMap="XxlJobLog">
 		SELECT <include refid="Base_Column_List" />
-		FROM XXL_JOB_QRTZ_TRIGGER_LOG AS t
-		WHERE t.id = #{id}
+		FROM XXL_JOB_QRTZ_TRIGGER_LOG  t
+		WHERE t.ID = #{id}
 	</select>
 
 	
 	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobLog" useGeneratedKeys="true" keyProperty="id" >
+		<selectKey resultType="java.lang.Integer" order="BEFORE" keyProperty="id">
+			select TRIGGER_LOG_sequence.nextval  as id from dual
+		</selectKey>
 		INSERT INTO XXL_JOB_QRTZ_TRIGGER_LOG (
-			`job_group`,
-			`job_id`,
-			`trigger_time`,
-			`trigger_code`,
-			`handle_code`
+			ID,
+			JOB_GROUP,
+			JOB_ID,
+			TRIGGER_TIME,
+			TRIGGER_CODE,
+			HANDLE_CODE
 		) VALUES (
-			#{jobGroup},
-			#{jobId},
-			#{triggerTime},
-			#{triggerCode},
-			#{handleCode}
-		);
+			#{id,jdbcType=INTEGER},
+			#{jobGroup,jdbcType=INTEGER},
+			#{jobId,jdbcType=INTEGER},
+			#{triggerTime,jdbcType=TIMESTAMP},
+			#{triggerCode,jdbcType=VARCHAR},
+			#{handleCode,jdbcType=VARCHAR}
+		)
 		<!--<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
 			SELECT LAST_INSERT_ID() 
 		</selectKey>-->
@@ -139,50 +147,50 @@
 	<update id="updateTriggerInfo" >
 		UPDATE XXL_JOB_QRTZ_TRIGGER_LOG
 		SET
-			`trigger_time`= #{triggerTime},
-			`trigger_code`= #{triggerCode},
-			`trigger_msg`= #{triggerMsg},
-			`executor_address`= #{executorAddress},
-			`executor_handler`=#{executorHandler},
-			`executor_param`= #{executorParam},
-			`executor_sharding_param`= #{executorShardingParam},
-			`executor_fail_retry_count`= #{executorFailRetryCount}
-		WHERE `id`= #{id}
+			TRIGGER_TIME= #{triggerTime,jdbcType=TIMESTAMP},
+			TRIGGER_CODE= #{triggerCode,jdbcType=VARCHAR},
+		    TRIGGER_MSG= #{triggerMsg,jdbcType=VARCHAR},
+			EXECUTOR_ADDRESS= #{executorAddress,jdbcType=VARCHAR},
+			EXECUTOR_HANDLER=#{executorHandler,jdbcType=VARCHAR},
+			EXECUTOR_PARAM= #{executorParam,jdbcType=VARCHAR},
+			EXECUTOR_SHARDING_PARAM= #{executorShardingParam,jdbcType=VARCHAR},
+			EXECUTOR_FAIL_RETRY_COUNT= #{executorFailRetryCount,jdbcType=INTEGER}
+		WHERE ID= #{id}
 	</update>
 
 	<update id="updateHandleInfo">
 		UPDATE XXL_JOB_QRTZ_TRIGGER_LOG
 		SET 
-			`handle_time`= #{handleTime}, 
-			`handle_code`= #{handleCode},
-			`handle_msg`= #{handleMsg} 
-		WHERE `id`= #{id}
+			HANDLE_TIME= #{handleTime}, 
+			HANDLE_CODE= #{handleCode},
+			HANDLE_MSG= #{handleMsg} 
+		WHERE ID= #{id}
 	</update>
 	
 	<delete id="delete" >
 		delete from XXL_JOB_QRTZ_TRIGGER_LOG
-		WHERE job_id = #{jobId}
+		WHERE JOB_ID = #{jobId}
 	</delete>
 
 	<select id="triggerCountByHandleCode" resultType="int" >
 		SELECT count(1)
-		FROM XXL_JOB_QRTZ_TRIGGER_LOG AS t
+		FROM XXL_JOB_QRTZ_TRIGGER_LOG  t
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
 			<if test="handleCode gt 0">
-				AND t.handle_code = #{handleCode}
+				AND t.HANDLE_CODE = #{handleCode}
 			</if>
 		</trim>
 	</select>
 
     <select id="triggerCountByDay" resultType="java.util.Map" >
 		SELECT
-			DATE_FORMAT(trigger_time,'%Y-%m-%d') triggerDay,
-			COUNT(handle_code) triggerDayCount,
-			SUM(CASE WHEN (trigger_code in (0, 200) and handle_code = 0) then 1 else 0 end) as triggerDayCountRunning,
-			SUM(CASE WHEN handle_code = 200 then 1 else 0 end) as triggerDayCountSuc
+			to_char(TRIGGER_TIME, 'yyyy-mm-dd') triggerDay,
+			COUNT(HANDLE_CODE) triggerDayCount,
+			SUM(CASE WHEN (TRIGGER_CODE = 200 and HANDLE_CODE = 0) then 1 else 0 end) as triggerDayCountRunning,
+			SUM(CASE WHEN HANDLE_CODE = 200 then 1 else 0 end) as triggerDayCountSuc
 		FROM XXL_JOB_QRTZ_TRIGGER_LOG
-		WHERE trigger_time BETWEEN #{from} and #{to}
-		GROUP BY triggerDay;
+		WHERE TRIGGER_TIME BETWEEN #{from} and #{to}
+		GROUP BY to_char(trigger_time, 'yyyy-mm-dd')
     </select>
 
 	<delete id="clearLog" >
@@ -200,8 +208,9 @@
 			<if test="clearBeforeNum gt 0">
 				AND id NOT in(
 					SELECT id FROM(
-						SELECT id FROM XXL_JOB_QRTZ_TRIGGER_LOG AS t
+						SELECT id FROM XXL_JOB_QRTZ_TRIGGER_LOG  t
 						<trim prefix="WHERE" prefixOverrides="AND | OR" >
+							ROWNUM <![CDATA[ < ]]>= #{limit}
 							<if test="jobGroup gt 0">
 								AND t.job_group = #{jobGroup}
 							</if>
@@ -210,29 +219,10 @@
 							</if>
 						</trim>
 						ORDER BY t.trigger_time desc
-						LIMIT 0, #{clearBeforeNum}
-					) t1
+					) t1 WHERE ROWNUM <![CDATA[ < ]]>= #{clearBeforeNum}
 				)
 			</if>
 		</trim>
 	</delete>
-
-	<select id="findFailJobLogIds" resultType="int" >
-		SELECT id FROM `XXL_JOB_QRTZ_TRIGGER_LOG`
-		WHERE !(
-			(trigger_code in (0, 200) and handle_code = 0)
-			OR
-			(handle_code = 200)
-		)
-		AND `alarm_status` = 0
-		ORDER BY id ASC
-	</select>
-
-	<update id="updateAlarmStatus" >
-		UPDATE XXL_JOB_QRTZ_TRIGGER_LOG
-		SET
-			`alarm_status` = #{newAlarmStatus}
-		WHERE `id`= #{logId} AND `alarm_status` = #{oldAlarmStatus}
-	</update>
 	
 </mapper>
