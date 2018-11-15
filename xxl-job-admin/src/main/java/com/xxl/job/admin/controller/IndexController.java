@@ -1,6 +1,6 @@
 package com.xxl.job.admin.controller;
 
-import com.xxl.job.admin.controller.annotation.PermessionLimit;
+import com.xxl.job.admin.controller.annotation.PermissionLimit;
 import com.xxl.job.admin.controller.interceptor.PermissionInterceptor;
 import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.admin.service.XxlJobService;
@@ -49,7 +49,7 @@ public class IndexController {
     }
 	
 	@RequestMapping("/toLogin")
-	@PermessionLimit(limit=false)
+	@PermissionLimit(limit=false)
 	public String toLogin(Model model, HttpServletRequest request) {
 		if (PermissionInterceptor.ifLogin(request)) {
 			return "redirect:/";
@@ -59,7 +59,7 @@ public class IndexController {
 	
 	@RequestMapping(value="login", method=RequestMethod.POST)
 	@ResponseBody
-	@PermessionLimit(limit=false)
+	@PermissionLimit(limit=false)
 	public ReturnT<String> loginDo(HttpServletRequest request, HttpServletResponse response, String userName, String password, String ifRemember){
 		// valid
 		if (PermissionInterceptor.ifLogin(request)) {
@@ -82,7 +82,7 @@ public class IndexController {
 	
 	@RequestMapping(value="logout", method=RequestMethod.POST)
 	@ResponseBody
-	@PermessionLimit(limit=false)
+	@PermissionLimit(limit=false)
 	public ReturnT<String> logout(HttpServletRequest request, HttpServletResponse response){
 		if (PermissionInterceptor.ifLogin(request)) {
 			PermissionInterceptor.logout(request, response);

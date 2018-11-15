@@ -1,6 +1,6 @@
 package com.xxl.job.admin.controller.interceptor;
 
-import com.xxl.job.admin.controller.annotation.PermessionLimit;
+import com.xxl.job.admin.controller.annotation.PermissionLimit;
 import com.xxl.job.admin.core.conf.XxlJobAdminConfig;
 import com.xxl.job.admin.core.util.CookieUtil;
 import org.springframework.stereotype.Component;
@@ -73,7 +73,7 @@ public class PermissionInterceptor extends HandlerInterceptorAdapter {
 		
 		if (!ifLogin(request)) {
 			HandlerMethod method = (HandlerMethod)handler;
-			PermessionLimit permission = method.getMethodAnnotation(PermessionLimit.class);
+			PermissionLimit permission = method.getMethodAnnotation(PermissionLimit.class);
 			if (permission == null || permission.limit()) {
 				response.sendRedirect(request.getContextPath() + "/toLogin");
 				//request.getRequestDispatcher("/toLogin").forward(request, response);
