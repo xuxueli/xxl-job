@@ -4,7 +4,9 @@ import com.jfinal.config.*;
 import com.jfinal.kit.Prop;
 import com.jfinal.kit.PropKit;
 import com.xuxueli.executor.sample.jfinal.controller.IndexController;
+import com.xuxueli.executor.sample.jfinal.jobhandler.CommandJobHandler;
 import com.xuxueli.executor.sample.jfinal.jobhandler.DemoJobHandler;
+import com.xuxueli.executor.sample.jfinal.jobhandler.HttpJobHandler;
 import com.xuxueli.executor.sample.jfinal.jobhandler.ShardingJobHandler;
 import com.xxl.job.core.executor.XxlJobExecutor;
 import org.slf4j.Logger;
@@ -23,6 +25,8 @@ public class JFinalCoreConfig extends JFinalConfig {
 		// registry jobhandler
 		XxlJobExecutor.registJobHandler("demoJobHandler", new DemoJobHandler());
 		XxlJobExecutor.registJobHandler("shardingJobHandler", new ShardingJobHandler());
+		XxlJobExecutor.registJobHandler("httpJobHandler", new HttpJobHandler());
+		XxlJobExecutor.registJobHandler("commandJobHandler", new CommandJobHandler());
 
 		// load executor prop
 		Prop xxlJobProp = PropKit.use("xxl-job-executor.properties");

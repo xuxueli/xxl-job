@@ -1,7 +1,6 @@
 package com.xxl.job.admin.dao;
 
 import com.xxl.job.admin.core.model.XxlJobInfo;
-import com.xxl.job.admin.dao.XxlJobInfoDao;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -41,7 +40,6 @@ public class XxlJobInfoDaoTest {
 		info.setExecutorHandler("setExecutorHandler");
 		info.setExecutorParam("setExecutorParam");
 		info.setExecutorBlockStrategy("setExecutorBlockStrategy");
-		info.setExecutorFailStrategy("setExecutorFailStrategy");
 		info.setGlueType("setGlueType");
 		info.setGlueSource("setGlueSource");
 		info.setGlueRemark("setGlueRemark");
@@ -58,7 +56,6 @@ public class XxlJobInfoDaoTest {
 		info2.setExecutorHandler("setExecutorHandler2");
 		info2.setExecutorParam("setExecutorParam2");
 		info2.setExecutorBlockStrategy("setExecutorBlockStrategy2");
-		info2.setExecutorFailStrategy("setExecutorFailStrategy2");
 		info2.setGlueType("setGlueType2");
 		info2.setGlueSource("setGlueSource2");
 		info2.setGlueRemark("setGlueRemark2");

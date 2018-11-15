@@ -11,8 +11,6 @@ import com.xxl.job.admin.dao.XxlJobLogDao;
 import com.xxl.job.core.biz.ExecutorBiz;
 import com.xxl.job.core.biz.model.LogResult;
 import com.xxl.job.core.biz.model.ReturnT;
-import com.xxl.job.core.glue.GlueTypeEnum;
-import com.xxl.job.core.rpc.netcom.NetComClientProxy;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
@@ -52,7 +50,6 @@ public class JobLogController {
 		// 执行器列表
 		List<XxlJobGroup> jobGroupList =  xxlJobGroupDao.findAll();
 		model.addAttribute("JobGroupList", jobGroupList);
-		model.addAttribute("GlueTypeEnum", GlueTypeEnum.values());
 
 		// 任务
 		if (jobId > 0) {
