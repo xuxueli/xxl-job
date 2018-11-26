@@ -338,13 +338,16 @@ XXL-JOB是一个轻量级分布式任务调度平台，其核心设计目标是�
 
 
 #### 其他：Docker 镜像方式搭建调度中心：
+
 - 下载镜像
+
 ```
 // Docker地址：https://hub.docker.com/r/xuxueli/xxl-job-admin/
 docker pull xuxueli/xxl-job-admin
 ```
 
 - 创建容器并运行
+
 ```
 docker run -p 8080:8080 -v /tmp:/data/applogs --name xxl-job-admin  -d xuxueli/xxl-job-admin
 
