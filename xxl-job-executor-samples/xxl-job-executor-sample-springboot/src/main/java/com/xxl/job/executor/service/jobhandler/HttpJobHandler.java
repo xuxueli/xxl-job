@@ -4,16 +4,14 @@ import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.handler.annotation.JobHandler;
 import com.xxl.job.core.log.XxlJobLogger;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
+import org.eclipse.jetty.client.HttpClient;
+import org.eclipse.jetty.client.api.ContentResponse;
+import org.eclipse.jetty.client.api.Request;
+import org.eclipse.jetty.http.HttpMethod;
+import org.eclipse.jetty.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 跨平台Http任务
@@ -33,46 +31,37 @@ public class HttpJobHandler extends IJobHandler {
 			return FAIL;
 		}
 
-		// httpGet config
-		HttpGet httpGet = new HttpGet(param);
-		RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(5000).setConnectTimeout(5000).build();
-		httpGet.setConfig(requestConfig);
+		// httpclient
+		HttpClient httpClient = null;
+		try {
+			httpClient = new HttpClient();
+			httpClient.setFollowRedirects(false);	// Configure HttpClient, for example:
+			httpClient.start();						// Start HttpClient
 
-		CloseableHttpClient httpClient = null;
-		try{
-			httpClient = HttpClients.custom().disableAutomaticRetries().build();
+			// request
+			Request request = httpClient.newRequest(param);
+			request.method(HttpMethod.GET);
+			request.timeout(5000, TimeUnit.MILLISECONDS);
 
-			// parse response
-			HttpResponse response = httpClient.execute(httpGet);
-			HttpEntity entity = response.getEntity();
-			if (response.getStatusLine().getStatusCode() != 200) {
-				XxlJobLogger.log("Http StatusCode({}) Invalid.", response.getStatusLine().getStatusCode());
+			// invoke
+			ContentResponse response = request.send();
+			if (response.getStatus() != HttpStatus.OK_200) {
+				XxlJobLogger.log("Http StatusCode({}) Invalid.", response.getStatus());
 				return FAIL;
 			}
-			if (null == entity) {
-				XxlJobLogger.log("Http Entity Empty.");
-				return FAIL;
-			}
 
-			String responseMsg = EntityUtils.toString(entity, "UTF-8");
+			String responseMsg = response.getContentAsString();
 			XxlJobLogger.log(responseMsg);
-			EntityUtils.consume(entity);
 			return SUCCESS;
 		} catch (Exception e) {
 			XxlJobLogger.log(e);
 			return FAIL;
-		} finally{
-			if (httpGet!=null) {
-				httpGet.releaseConnection();
-			}
-			if (httpClient!=null) {
-				try {
-					httpClient.close();
-				} catch (IOException e) {
-					XxlJobLogger.log(e);
-				}
+		} finally {
+			if (httpClient != null) {
+				httpClient.stop();
 			}
 		}
+
 	}
 
 }

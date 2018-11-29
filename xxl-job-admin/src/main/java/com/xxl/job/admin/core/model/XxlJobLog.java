@@ -31,6 +31,9 @@ public class XxlJobLog {
 	private int handleCode;
 	private String handleMsg;
 
+	// alarm info
+	private int alarmStatus;
+
 	public int getId() {
 		return id;
 	}
@@ -142,4 +145,13 @@ public class XxlJobLog {
 	public void setHandleMsg(String handleMsg) {
 		this.handleMsg = handleMsg;
 	}
+
+	public int getAlarmStatus() {
+		return alarmStatus;
+	}
+
+	public void setAlarmStatus(int alarmStatus) {
+		this.alarmStatus = alarmStatus;
+	}
+
 }

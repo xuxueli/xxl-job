@@ -187,8 +187,10 @@ CREATE TABLE `XXL_JOB_QRTZ_TRIGGER_LOG` (
   `handle_time` datetime DEFAULT NULL COMMENT '执行-时间',
   `handle_code` int(11) NOT NULL COMMENT '执行-状态',
   `handle_msg` text COMMENT '执行-日志',
+  `alarm_status` tinyint(4) NOT NULL DEFAULT '0' COMMENT '告警状态：0-默认、1-无需告警、2-告警成功、3-告警失败',
   PRIMARY KEY (`id`),
-  KEY `I_trigger_time` (`trigger_time`)
+  KEY `I_trigger_time` (`trigger_time`),
+  KEY `I_handle_code` (`handle_code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `XXL_JOB_QRTZ_TRIGGER_LOGGLUE` (
@@ -221,7 +223,10 @@ CREATE TABLE `XXL_JOB_QRTZ_TRIGGER_GROUP` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO `XXL_JOB_QRTZ_TRIGGER_GROUP` ( `app_name`, `title`, `order`, `address_type`, `address_list`) values ( 'xxl-job-executor-sample', '示例执行器', '1', '0', null);
+
+
+INSERT INTO `XXL_JOB_QRTZ_TRIGGER_GROUP`(`id`, `app_name`, `title`, `order`, `address_type`, `address_list`) VALUES (1, 'xxl-job-executor-sample', '示例执行器', 1, 0, NULL);
+INSERT INTO `XXL_JOB_QRTZ_TRIGGER_INFO`(`id`, `job_group`, `job_cron`, `job_desc`, `add_time`, `update_time`, `author`, `alarm_email`, `executor_route_strategy`, `executor_handler`, `executor_param`, `executor_block_strategy`, `executor_timeout`, `executor_fail_retry_count`, `glue_type`, `glue_source`, `glue_remark`, `glue_updatetime`, `child_jobid`) VALUES (1, 1, '0 0 0 * * ? *', '测试任务1', '2018-11-03 22:21:31', '2018-11-03 22:21:31', 'XXL', '', 'FIRST', 'demoJobHandler', '', 'SERIAL_EXECUTION', 0, 0, 'BEAN', '', 'GLUE代码初始化', '2018-11-03 22:21:31', '');
 
 commit;
 
