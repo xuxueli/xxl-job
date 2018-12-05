@@ -21,24 +21,23 @@ public class JobTriggerPoolHelper {
     // ---------------------- trigger pool ----------------------
 
     private ThreadPoolExecutor triggerPool = new ThreadPoolExecutor(
-            20,
-            200,
+            32,
+            256,
             60L,
             TimeUnit.SECONDS,
-            new LinkedBlockingQueue<Runnable>(100000),
-            new ThreadPoolExecutor.CallerRunsPolicy());
+            new LinkedBlockingQueue<Runnable>(1000));
 
 
-    public void addTrigger(final int jobId, final int failRetryCount, final TriggerTypeEnum triggerType){
+    public void addTrigger(final int jobId, final TriggerTypeEnum triggerType, final int failRetryCount, final String executorShardingParam, final String executorParam) {
         triggerPool.execute(new Runnable() {
             @Override
             public void run() {
-                XxlJobTrigger.trigger(jobId, failRetryCount, triggerType);
+                XxlJobTrigger.trigger(jobId, triggerType, failRetryCount, executorShardingParam, executorParam);
             }
         });
     }
 
-    public void stop(){
+    public void stop() {
         //triggerPool.shutdown();
         triggerPool.shutdownNow();
         logger.info(">>>>>>>>> xxl-job trigger thread pool shutdown success.");
@@ -49,18 +48,21 @@ public class JobTriggerPoolHelper {
     private static JobTriggerPoolHelper helper = new JobTriggerPoolHelper();
 
     /**
-     *
      * @param jobId
+     * @param triggerType
      * @param failRetryCount
      * 			>=0: use this param
      * 			<0: use param from job info config
-     *
+     * @param executorShardingParam
+     * @param executorParam
+     *          null: use job param
+     *          not null: cover job param
      */
-    public static void trigger(int jobId, int failRetryCount, TriggerTypeEnum triggerType) {
-        helper.addTrigger(jobId, failRetryCount, triggerType);
+    public static void trigger(int jobId, TriggerTypeEnum triggerType, int failRetryCount, String executorShardingParam, String executorParam) {
+        helper.addTrigger(jobId, triggerType, failRetryCount, executorShardingParam, executorParam);
     }
 
-    public static void toStop(){
+    public static void toStop() {
         helper.stop();
     }
 

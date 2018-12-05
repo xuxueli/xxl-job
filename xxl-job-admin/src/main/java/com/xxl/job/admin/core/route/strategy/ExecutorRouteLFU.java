@@ -1,7 +1,6 @@
 package com.xxl.job.admin.core.route.strategy;
 
 import com.xxl.job.admin.core.route.ExecutorRouter;
-import com.xxl.job.admin.core.trigger.XxlJobTrigger;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.biz.model.TriggerParam;
 
@@ -20,7 +19,7 @@ public class ExecutorRouteLFU extends ExecutorRouter {
     private static ConcurrentHashMap<Integer, HashMap<String, Integer>> jobLfuMap = new ConcurrentHashMap<Integer, HashMap<String, Integer>>();
     private static long CACHE_VALID_TIME = 0;
 
-    public String route(int jobId, ArrayList<String> addressList) {
+    public String route(int jobId, List<String> addressList) {
 
         // cache clear
         if (System.currentTimeMillis() > CACHE_VALID_TIME) {
@@ -32,7 +31,7 @@ public class ExecutorRouteLFU extends ExecutorRouter {
         HashMap<String, Integer> lfuItemMap = jobLfuMap.get(jobId);     // Key排序可以用TreeMap+构造入参Compare；Value排序暂时只能通过ArrayList；
         if (lfuItemMap == null) {
             lfuItemMap = new HashMap<String, Integer>();
-            jobLfuMap.put(jobId, lfuItemMap);
+            jobLfuMap.putIfAbsent(jobId, lfuItemMap);   // 避免重复覆盖
         }
         for (String address: addressList) {
             if (!lfuItemMap.containsKey(address) || lfuItemMap.get(address) >1000000 ) {
@@ -57,15 +56,9 @@ public class ExecutorRouteLFU extends ExecutorRouter {
     }
 
     @Override
-    public ReturnT<String> routeRun(TriggerParam triggerParam, ArrayList<String> addressList) {
-
-        // address
+    public ReturnT<String> route(TriggerParam triggerParam, List<String> addressList) {
         String address = route(triggerParam.getJobId(), addressList);
-
-        // run executor
-        ReturnT<String> runResult = XxlJobTrigger.runExecutor(triggerParam, address);
-        runResult.setContent(address);
-        return runResult;
+        return new ReturnT<String>(address);
     }
 
 }

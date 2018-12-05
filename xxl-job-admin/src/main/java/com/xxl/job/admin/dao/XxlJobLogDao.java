@@ -1,6 +1,7 @@
 package com.xxl.job.admin.dao;
 
 import com.xxl.job.admin.core.model.XxlJobLog;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;
@@ -11,6 +12,7 @@ import java.util.Map;
  * job log
  * @author xuxueli 2016-1-12 18:03:06
  */
+@Mapper
 public interface XxlJobLogDao {
 	
 	public List<XxlJobLog> pageList(@Param("offset") int offset,
@@ -47,5 +49,11 @@ public interface XxlJobLogDao {
 						@Param("jobId") int jobId,
 						@Param("clearBeforeTime") Date clearBeforeTime,
 						@Param("clearBeforeNum") int clearBeforeNum);
+
+	public List<Integer> findFailJobLogIds(@Param("pagesize") int pagesize);
+
+	public int updateAlarmStatus(@Param("logId") int logId,
+								 @Param("oldAlarmStatus") int oldAlarmStatus,
+								 @Param("newAlarmStatus") int newAlarmStatus);
 
 }
