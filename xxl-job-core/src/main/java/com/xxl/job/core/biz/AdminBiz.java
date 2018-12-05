@@ -43,15 +43,4 @@ public interface AdminBiz {
      */
     public ReturnT<String> registryRemove(RegistryParam registryParam);
 
-
-    // ---------------------- job opt ----------------------
-
-    /**
-     * trigger job for once
-     *
-     * @param jobId
-     * @return
-     */
-    public ReturnT<String> triggerJob(int jobId);
-
 }
