@@ -1,5 +1,6 @@
 package com.xxl.job.admin.core.thread;
 
+import com.xxl.job.admin.core.conf.XxlJobAdminConfig;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobRegistry;
 import com.xxl.job.admin.core.schedule.XxlJobDynamicScheduler;
@@ -16,7 +17,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
- * æ‰§è¡Œå™¨è‡ªåŠ¨æ³¨å†Œçº¿ç¨‹
+ * Ö´ĞĞÆ÷×Ô¶¯×¢²áÏß³Ì
  * job registry instance
  * @author xuxueli 2016-10-02 19:10:24
  */
@@ -36,16 +37,16 @@ public class JobRegistryMonitorHelper {
 			public void run() {
 				while (!toStop) {
 					try {
-						// auto registry group  è‡ªåŠ¨è·å–åœ°å€çš„æ‰§è¡Œå™¨
-						List<XxlJobGroup> groupList = XxlJobDynamicScheduler.xxlJobGroupDao.findByAddressType(0);
+						// auto registry group  ×Ô¶¯»ñÈ¡µØÖ·µÄÖ´ĞĞÆ÷
+						List<XxlJobGroup> groupList = XxlJobAdminConfig.getAdminConfig().getXxlJobGroupDao().findByAddressType(0);
 						if (CollectionUtils.isNotEmpty(groupList)) {
 
-							// remove dead address (admin/executor)  è¿ç»­ä¸‰æ¬¡å¿ƒè·³ç»´æŠ¤å¤±è´¥å°±ä¼šåˆ é™¤ è°ƒåº¦å™¨å’Œæ‰§è¡Œå™¨
-							XxlJobDynamicScheduler.xxlJobRegistryDao.removeDead(RegistryConfig.DEAD_TIMEOUT);
+							// remove dead address (admin/executor)  Á¬ĞøÈı´ÎĞÄÌøÎ¬»¤Ê§°Ü¾Í»áÉ¾³ı µ÷¶ÈÆ÷ºÍÖ´ĞĞÆ÷
+							XxlJobAdminConfig.getAdminConfig().getXxlJobRegistryDao().removeDead(RegistryConfig.DEAD_TIMEOUT);
 
 							// fresh online address (admin/executor)
 							HashMap<String, List<String>> appAddressMap = new HashMap<String, List<String>>();
-							List<XxlJobRegistry> list = XxlJobDynamicScheduler.xxlJobRegistryDao.findAll(RegistryConfig.DEAD_TIMEOUT);
+							List<XxlJobRegistry> list = XxlJobAdminConfig.getAdminConfig().getXxlJobRegistryDao().findAll(RegistryConfig.DEAD_TIMEOUT);
 							if (list != null) {
 								for (XxlJobRegistry item: list) {
 									if (RegistryConfig.RegistType.EXECUTOR.name().equals(item.getRegistryGroup())) {
@@ -72,7 +73,7 @@ public class JobRegistryMonitorHelper {
 									addressListStr = StringUtils.join(registryList, ",");
 								}
 								group.setAddressList(addressListStr);
-								XxlJobDynamicScheduler.xxlJobGroupDao.update(group);
+								XxlJobAdminConfig.getAdminConfig().getXxlJobGroupDao().update(group);
 							}
 						}
 					} catch (Exception e) {

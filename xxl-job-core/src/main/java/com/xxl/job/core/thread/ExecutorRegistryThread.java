@@ -5,14 +5,13 @@ import com.xxl.job.core.biz.model.RegistryParam;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.enums.RegistryConfig;
 import com.xxl.job.core.executor.XxlJobExecutor;
-import com.xxl.job.core.util.IpUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.TimeUnit;
 
 /**
- * ç¡®å®æœ‰å¿…è¦é€šè¿‡æ¯30ç§’æ³¨å†Œä¸€æ¬¡ï¼Œè¿™æ ·èƒ½ç¡®å®šåŒæ–¹éƒ½å­˜æ´»
+ * È·ÊµÓĞ±ØÒªÍ¨¹ıÃ¿30Ãë×¢²áÒ»´Î£¬ÕâÑùÄÜÈ·¶¨Ë«·½¶¼´æ»î
  * Created by xuxueli on 17/3/2.
  */
 public class ExecutorRegistryThread extends Thread {
@@ -25,7 +24,8 @@ public class ExecutorRegistryThread extends Thread {
 
     private Thread registryThread;
     private volatile boolean toStop = false;
-    public void start(final int port, final String ip, final String appName){
+  
+    public void start(final String appName, final String address){
 
         // valid
         if (appName==null || appName.trim().length()==0) {
@@ -37,14 +37,6 @@ public class ExecutorRegistryThread extends Thread {
             return;
         }
 
-        // executor address (generate addredd = ip:port)
-        final String executorAddress;
-        if (ip != null && ip.trim().length()>0) {
-            executorAddress = ip.trim().concat(":").concat(String.valueOf(port));
-        } else {
-            executorAddress = IpUtil.getIpPort(port);
-        }
-
         registryThread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -52,8 +44,9 @@ public class ExecutorRegistryThread extends Thread {
                 // registry
                 while (!toStop) {
                     try {
-                        RegistryParam registryParam = new RegistryParam(RegistryConfig.RegistType.EXECUTOR.name(), appName, executorAddress);
-                          //ä¹‹å‰å·²ç»è·å–äº†æ‰€æœ‰è°ƒåº¦ä¸­å¿ƒçš„æœ¬åœ°ä»£ç†
+                      
+                        RegistryParam registryParam = new RegistryParam(RegistryConfig.RegistType.EXECUTOR.name(), appName, address);
+                          //Ö®Ç°ÒÑ¾­»ñÈ¡ÁËËùÓĞµ÷¶ÈÖĞĞÄµÄ±¾µØ´úÀí
                         for (AdminBiz adminBiz: XxlJobExecutor.getAdminBizList()) {
                             try {
                                 ReturnT<String> registryResult = adminBiz.registry(registryParam);
@@ -76,13 +69,14 @@ public class ExecutorRegistryThread extends Thread {
                     try {
                         TimeUnit.SECONDS.sleep(RegistryConfig.BEAT_TIMEOUT);
                     } catch (InterruptedException e) {
-                        logger.error(e.getMessage(), e);
+                       
+                        logger.warn(">>>>>>>>>>> xxl-job, executor registry thread interrupted, error msg:{}", e.getMessage());
                     }
                 }
 
                 // registry remove
-                try {
-                    RegistryParam registryParam = new RegistryParam(RegistryConfig.RegistType.EXECUTOR.name(), appName, executorAddress);
+                try {          
+                    RegistryParam registryParam = new RegistryParam(RegistryConfig.RegistType.EXECUTOR.name(), appName, address);
                     for (AdminBiz adminBiz: XxlJobExecutor.getAdminBizList()) {
                         try {
                             ReturnT<String> registryResult = adminBiz.registryRemove(registryParam);

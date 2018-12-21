@@ -112,7 +112,7 @@ public class TriggerCallbackThread {
                     try {
                         TimeUnit.SECONDS.sleep(RegistryConfig.BEAT_TIMEOUT);
                     } catch (InterruptedException e) {
-                        logger.error(e.getMessage(), e);
+                        logger.warn(">>>>>>>>>>> xxl-job, executor retry callback thread interrupted, error msg:{}", e.getMessage());
                     }
                 }
                 logger.info(">>>>>>>>>>> xxl-job, executor retry callback thread destory.");
@@ -181,7 +181,7 @@ public class TriggerCallbackThread {
     }
 
 
-    // ---------------------- fial-callback file TODO ----------------------
+    // ---------------------- fail-callback file ----------------------
 
     private static String failCallbackFileName = XxlJobFileAppender.getLogPath().concat(File.separator).concat("xxl-job-callback").concat(".log");
 

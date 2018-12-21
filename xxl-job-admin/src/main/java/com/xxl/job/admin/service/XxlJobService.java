@@ -28,7 +28,7 @@ public interface XxlJobService {
 	public Map<String, Object> pageList(int start, int length, int jobGroup, String jobDesc, String executorHandler, String filterTime);
 
 	/**
-	 * add job
+	 * add job, default quartz stop
 	 *
 	 * @param jobInfo
 	 * @return
@@ -36,7 +36,7 @@ public interface XxlJobService {
 	public ReturnT<String> add(XxlJobInfo jobInfo);
 
 	/**
-	 * update job
+	 * update job, update quartz-cron if started
 	 *
 	 * @param jobInfo
 	 * @return
@@ -44,7 +44,7 @@ public interface XxlJobService {
 	public ReturnT<String> update(XxlJobInfo jobInfo);
 
 	/**
-	 * remove job
+	 * remove job, unbind quartz
 	 *
 	 * @param id
 	 * @return
@@ -52,20 +52,20 @@ public interface XxlJobService {
 	public ReturnT<String> remove(int id);
 
 	/**
-	 * pause job
+	 * start job, bind quartz
 	 *
 	 * @param id
 	 * @return
 	 */
-	public ReturnT<String> pause(int id);
+	public ReturnT<String> start(int id);
 
 	/**
-	 * resume job
+	 * stop job, unbind quartz
 	 *
 	 * @param id
 	 * @return
 	 */
-	public ReturnT<String> resume(int id);
+	public ReturnT<String> stop(int id);
 
 	/**
 	 * dashboard info

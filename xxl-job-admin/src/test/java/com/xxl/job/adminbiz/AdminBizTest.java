@@ -4,7 +4,10 @@ import com.xxl.job.core.biz.AdminBiz;
 import com.xxl.job.core.biz.model.RegistryParam;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.enums.RegistryConfig;
-import com.xxl.job.core.rpc.netcom.NetComClientProxy;
+import com.xxl.rpc.remoting.invoker.call.CallType;
+import com.xxl.rpc.remoting.invoker.reference.XxlRpcReferenceBean;
+import com.xxl.rpc.remoting.net.NetEnum;
+import com.xxl.rpc.serialize.Serializer;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -26,7 +29,9 @@ public class AdminBizTest {
      */
     @Test
     public void registryTest() throws Exception {
-        AdminBiz adminBiz = (AdminBiz) new NetComClientProxy(AdminBiz.class, addressUrl, accessToken).getObject();
+        addressUrl = addressUrl.replace("http://", "");
+        AdminBiz adminBiz = (AdminBiz) new XxlRpcReferenceBean(NetEnum.JETTY, Serializer.SerializeEnum.HESSIAN.getSerializer(), CallType.SYNC,
+                AdminBiz.class, null, 10000, addressUrl, accessToken, null).getObject();
 
         // test executor registry
         RegistryParam registryParam = new RegistryParam(RegistryConfig.RegistType.EXECUTOR.name(), "xxl-job-executor-example", "127.0.0.1:9999");
@@ -41,25 +46,13 @@ public class AdminBizTest {
      */
     @Test
     public void registryRemove() throws Exception {
-        AdminBiz adminBiz = (AdminBiz) new NetComClientProxy(AdminBiz.class, addressUrl, accessToken).getObject();
+        addressUrl = addressUrl.replace("http://", "");
+        AdminBiz adminBiz = (AdminBiz) new XxlRpcReferenceBean(NetEnum.JETTY, Serializer.SerializeEnum.HESSIAN.getSerializer(), CallType.SYNC,
+                AdminBiz.class, null, 10000, addressUrl, accessToken, null).getObject();
 
         // test executor registry remove
         RegistryParam registryParam = new RegistryParam(RegistryConfig.RegistType.EXECUTOR.name(), "xxl-job-executor-example", "127.0.0.1:9999");
         ReturnT<String> returnT = adminBiz.registryRemove(registryParam);
-        Assert.assertTrue(returnT.getCode() == ReturnT.SUCCESS_CODE);
-    }
-
-    /**
-     * trigger job for once
-     *
-     * @throws Exception
-     */
-    @Test
-    public void triggerJob() throws Exception {
-        AdminBiz adminBiz = (AdminBiz) new NetComClientProxy(AdminBiz.class, addressUrl, accessToken).getObject();
-
-        int jobId = 1;
-        ReturnT<String> returnT = adminBiz.triggerJob(jobId);
         Assert.assertTrue(returnT.getCode() == ReturnT.SUCCESS_CODE);
     }
 
