@@ -7,14 +7,11 @@ import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.admin.core.trigger.TriggerTypeEnum;
 import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.core.biz.model.ReturnT;
-import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.mail.javamail.MimeMessageHelper;
 
-import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import java.io.UnsupportedEncodingException;
 import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -50,7 +47,7 @@ public class JobFailMonitorHelper {
 					try {
 
 						List<Integer> failLogIds = XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().findFailJobLogIds(1000);
-						if (CollectionUtils.isNotEmpty(failLogIds)) {
+						if (failLogIds!=null && !failLogIds.isEmpty()) {
 							for (int failLogId: failLogIds) {
 
 								// lock log

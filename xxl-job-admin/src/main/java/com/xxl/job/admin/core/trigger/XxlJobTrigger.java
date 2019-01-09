@@ -13,7 +13,6 @@ import com.xxl.job.core.biz.model.TriggerParam;
 import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
 import com.xxl.rpc.util.IpUtil;
 import com.xxl.rpc.util.ThrowableUtil;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,7 +63,8 @@ public class XxlJobTrigger {
             }
         }
         if (ExecutorRouteStrategyEnum.SHARDING_BROADCAST==ExecutorRouteStrategyEnum.match(jobInfo.getExecutorRouteStrategy(), null)
-                && CollectionUtils.isNotEmpty(group.getRegistryList()) && shardingParam==null) {
+                && group.getRegistryList()!=null && !group.getRegistryList().isEmpty()
+                && shardingParam==null) {
             for (int i = 0; i < group.getRegistryList().size(); i++) {
                 processTrigger(group, jobInfo, finalFailRetryCount, triggerType, i, group.getRegistryList().size());
             }
@@ -118,7 +118,7 @@ public class XxlJobTrigger {
         // 3、init address
         String address = null;
         ReturnT<String> routeAddressResult = null;
-        if (CollectionUtils.isNotEmpty(group.getRegistryList())) {
+        if (group.getRegistryList()!=null && !group.getRegistryList().isEmpty()) {
             if (ExecutorRouteStrategyEnum.SHARDING_BROADCAST == executorRouteStrategyEnum) {
                 if (index < group.getRegistryList().size()) {
                     address = group.getRegistryList().get(index);

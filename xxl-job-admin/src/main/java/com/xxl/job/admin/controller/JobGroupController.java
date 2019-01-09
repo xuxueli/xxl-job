@@ -3,13 +3,11 @@ package com.xxl.job.admin.controller;
 import com.xxl.job.admin.core.conf.XxlJobAdminConfig;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobRegistry;
-import com.xxl.job.admin.core.schedule.XxlJobDynamicScheduler;
 import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.admin.dao.XxlJobGroupDao;
 import com.xxl.job.admin.dao.XxlJobInfoDao;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.enums.RegistryConfig;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -92,7 +90,7 @@ public class JobGroupController {
 			// 0=自动注册
 			List<String> registryList = findRegistryByAppName(xxlJobGroup.getAppName());
 			String addressListStr = null;
-			if (CollectionUtils.isNotEmpty(registryList)) {
+			if (registryList!=null && !registryList.isEmpty()) {
 				Collections.sort(registryList);
 				addressListStr = StringUtils.join(registryList, ",");
 			}

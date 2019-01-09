@@ -13,7 +13,6 @@ import com.xxl.job.admin.service.XxlJobService;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
 import com.xxl.job.core.glue.GlueTypeEnum;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.commons.lang3.time.FastDateFormat;
@@ -287,9 +286,9 @@ public class XxlJobServiceImpl implements XxlJobService {
 		Set<String> executerAddressSet = new HashSet<String>();
 		List<XxlJobGroup> groupList = xxlJobGroupDao.findAll();
 
-		if (CollectionUtils.isNotEmpty(groupList)) {
+		if (groupList!=null && !groupList.isEmpty()) {
 			for (XxlJobGroup group: groupList) {
-				if (CollectionUtils.isNotEmpty(group.getRegistryList())) {
+				if (group.getRegistryList()!=null && !group.getRegistryList().isEmpty()) {
 					executerAddressSet.addAll(group.getRegistryList());
 				}
 			}
@@ -325,7 +324,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 		int triggerCountFailTotal = 0;
 
 		List<Map<String, Object>> triggerCountMapAll = xxlJobLogDao.triggerCountByDay(startDate, endDate);
-		if (CollectionUtils.isNotEmpty(triggerCountMapAll)) {
+		if (triggerCountMapAll!=null && triggerCountMapAll.size()>0) {
 			for (Map<String, Object> item: triggerCountMapAll) {
 				String day = String.valueOf(item.get("triggerDay"));
 				int triggerDayCount = Integer.valueOf(String.valueOf(item.get("triggerDayCount")));

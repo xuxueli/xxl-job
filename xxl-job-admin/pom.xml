@@ -88,20 +88,12 @@
 			<version>${mysql-connector-java.version}</version>
 		</dependency>
 
-		<!-- commons-collections4 -->
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-collections4</artifactId>
-			<version>${commons-collections4.version}</version>
-		</dependency>
 		<!-- commons-lang3 -->
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
 			<version>${commons-lang3.version}</version>
 		</dependency>
-
-
 
 
 		<!-- quartz ：quartz-2.2.3/c3p0-0.9.1.1/slf4j-api-1.6.6 -->
