@@ -13,6 +13,7 @@ import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
 import com.xxl.rpc.remoting.invoker.XxlRpcInvokerFactory;
 import com.xxl.rpc.remoting.invoker.call.CallType;
 import com.xxl.rpc.remoting.invoker.reference.XxlRpcReferenceBean;
+import com.xxl.rpc.remoting.invoker.route.LoadBalance;
 import com.xxl.rpc.remoting.net.NetEnum;
 import com.xxl.rpc.remoting.net.impl.jetty.server.JettyServerHandler;
 import com.xxl.rpc.remoting.provider.XxlRpcProviderFactory;
@@ -98,7 +99,14 @@ public final class XxlJobDynamicScheduler {
     private void initRpcProvider(){
         // init
         XxlRpcProviderFactory xxlRpcProviderFactory = new XxlRpcProviderFactory();
-        xxlRpcProviderFactory.initConfig(NetEnum.JETTY, Serializer.SerializeEnum.HESSIAN.getSerializer(), null, 0, XxlJobAdminConfig.getAdminConfig().getAccessToken(), null, null);
+        xxlRpcProviderFactory.initConfig(
+                NetEnum.JETTY,
+                Serializer.SerializeEnum.HESSIAN.getSerializer(),
+                null,
+                0,
+                XxlJobAdminConfig.getAdminConfig().getAccessToken(),
+                null,
+                null);
 
         // add services
         xxlRpcProviderFactory.addService(AdminBiz.class.getName(), null, XxlJobAdminConfig.getAdminConfig().getAdminBiz());
@@ -107,7 +115,7 @@ public final class XxlJobDynamicScheduler {
         jettyServerHandler = new JettyServerHandler(xxlRpcProviderFactory);
     }
     private void stopRpcProvider() throws Exception {
-        new XxlRpcInvokerFactory().stop();
+        XxlRpcInvokerFactory.getInstance().stop();
     }
     public static void invokeAdminService(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         jettyServerHandler.handle(null, new Request(null, null), request, response);
@@ -130,8 +138,18 @@ public final class XxlJobDynamicScheduler {
         }
 
         // set-cache
-        executorBiz = (ExecutorBiz) new XxlRpcReferenceBean(NetEnum.JETTY, Serializer.SerializeEnum.HESSIAN.getSerializer(), CallType.SYNC,
-                ExecutorBiz.class, null, 10000, address, XxlJobAdminConfig.getAdminConfig().getAccessToken(), null).getObject();
+        executorBiz = (ExecutorBiz) new XxlRpcReferenceBean(
+                NetEnum.JETTY,
+                Serializer.SerializeEnum.HESSIAN.getSerializer(),
+                CallType.SYNC,
+                LoadBalance.ROUND,
+                ExecutorBiz.class,
+                null,
+                10000,
+                address,
+                XxlJobAdminConfig.getAdminConfig().getAccessToken(),
+                null,
+                null).getObject();
 
         executorBizRepository.put(address, executorBiz);
         return executorBiz;

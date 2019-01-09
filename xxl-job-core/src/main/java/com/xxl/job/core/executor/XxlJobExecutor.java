@@ -13,6 +13,7 @@ import com.xxl.rpc.registry.ServiceRegistry;
 import com.xxl.rpc.remoting.invoker.XxlRpcInvokerFactory;
 import com.xxl.rpc.remoting.invoker.call.CallType;
 import com.xxl.rpc.remoting.invoker.reference.XxlRpcReferenceBean;
+import com.xxl.rpc.remoting.invoker.route.LoadBalance;
 import com.xxl.rpc.remoting.net.NetEnum;
 import com.xxl.rpc.remoting.provider.XxlRpcProviderFactory;
 import com.xxl.rpc.serialize.Serializer;
@@ -113,8 +114,19 @@ public class XxlJobExecutor  {
 
                     String addressUrl = address.concat(AdminBiz.MAPPING);
 
-                    AdminBiz adminBiz = (AdminBiz) new XxlRpcReferenceBean(NetEnum.JETTY, Serializer.SerializeEnum.HESSIAN.getSerializer(), CallType.SYNC,
-                            AdminBiz.class, null, 10000, addressUrl, accessToken, null).getObject();
+                    AdminBiz adminBiz = (AdminBiz) new XxlRpcReferenceBean(
+                            NetEnum.JETTY,
+                            Serializer.SerializeEnum.HESSIAN.getSerializer(),
+                            CallType.SYNC,
+                            LoadBalance.ROUND,
+                            AdminBiz.class,
+                            null,
+                            10000,
+                            addressUrl,
+                            accessToken,
+                            null,
+                            null
+                    ).getObject();
 
                     if (adminBizList == null) {
                         adminBizList = new ArrayList<AdminBiz>();
@@ -130,12 +142,9 @@ public class XxlJobExecutor  {
 
 
     // ---------------------- executor-server (rpc provider) ----------------------
-    private XxlRpcInvokerFactory xxlRpcInvokerFactory = null;
     private XxlRpcProviderFactory xxlRpcProviderFactory = null;
 
     private void initRpcProvider(String ip, int port, String appName, String accessToken) throws Exception {
-        // init invoker factory
-        xxlRpcInvokerFactory = new XxlRpcInvokerFactory();
 
         // init, provider factory
         String address = IpUtil.getIpPort(ip, port);
@@ -150,7 +159,7 @@ public class XxlJobExecutor  {
         xxlRpcProviderFactory.addService(ExecutorBiz.class.getName(), null, new ExecutorBizImpl());
 
         // start
-       xxlRpcProviderFactory.start();
+        xxlRpcProviderFactory.start();
 
     }
 
@@ -168,12 +177,16 @@ public class XxlJobExecutor  {
         }
 
         @Override
-        public boolean registry(String key, String value) {
+        public boolean registry(Set<String> keys, String value) {
             return false;
         }
         @Override
-        public boolean remove(String key, String value) {
+        public boolean remove(Set<String> keys, String value) {
             return false;
+        }
+        @Override
+        public Map<String, TreeSet<String>> discovery(Set<String> keys) {
+            return null;
         }
         @Override
         public TreeSet<String> discovery(String key) {
@@ -185,7 +198,7 @@ public class XxlJobExecutor  {
     private void stopRpcProvider() {
         // stop invoker factory
         try {
-            xxlRpcInvokerFactory.stop();
+            XxlRpcInvokerFactory.getInstance().stop();
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }

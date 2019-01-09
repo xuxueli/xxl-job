@@ -7,6 +7,7 @@ import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
 import com.xxl.job.core.glue.GlueTypeEnum;
 import com.xxl.rpc.remoting.invoker.call.CallType;
 import com.xxl.rpc.remoting.invoker.reference.XxlRpcReferenceBean;
+import com.xxl.rpc.remoting.invoker.route.LoadBalance;
 import com.xxl.rpc.remoting.net.NetEnum;
 import com.xxl.rpc.serialize.Serializer;
 
@@ -47,8 +48,18 @@ public class ExecutorBizTest {
 
         // do remote trigger
         String accessToken = null;
-        ExecutorBiz executorBiz = (ExecutorBiz) new XxlRpcReferenceBean(NetEnum.JETTY, Serializer.SerializeEnum.HESSIAN.getSerializer(), CallType.SYNC,
-                ExecutorBiz.class, null, 10000, "127.0.0.1:9999", null, null).getObject();
+        ExecutorBiz executorBiz = (ExecutorBiz) new XxlRpcReferenceBean(
+                NetEnum.JETTY,
+                Serializer.SerializeEnum.HESSIAN.getSerializer(),
+                CallType.SYNC,
+                LoadBalance.ROUND,
+                ExecutorBiz.class,
+                null,
+                10000,
+                "127.0.0.1:9999",
+                null,
+                null,
+                null).getObject();
 
         ReturnT<String> runResult = executorBiz.run(triggerParam);
     }
