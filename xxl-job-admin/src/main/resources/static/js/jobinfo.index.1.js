@@ -126,7 +126,7 @@ $(function() {
 	                			var codeBtn = "";
                                 if ('BEAN' != row.glueType) {
 									var codeUrl = base_url +'/jobcode?jobId='+ row.id;
-									codeBtn = '<button class="btn btn-warning btn-xs" type="button" onclick="javascript:window.open(\'' + codeUrl + '\')" >GLUE</button>  '
+									codeBtn = '<a href="'+ codeUrl +'" target="_blank" > <button class="btn btn-warning btn-xs" type="button" >GLUE</button> </a> '
 								}
 
 								// html
@@ -134,7 +134,7 @@ $(function() {
 								var html = '<p id="'+ row.id +'" >'+
 									'<button class="btn btn-primary btn-xs job_trigger" type="button">'+ I18n.jobinfo_opt_run +'</button>  '+
                                     start_stop +
-									'<button class="btn btn-primary btn-xs" type="job_del" type="button" onclick="javascript:window.open(\'' + logUrl + '\', \'_self\' )" >'+ I18n.jobinfo_opt_log +'</button><br>  '+
+									'<a href="'+ logUrl +'"> <button class="btn btn-primary btn-xs" type="job_del" type="button" >'+ I18n.jobinfo_opt_log +'</button> </a> <br>  '+
 									'<button class="btn btn-warning btn-xs update" type="button">'+ I18n.system_opt_edit +'</button>  '+
 									codeBtn +
 									'<button class="btn btn-danger btn-xs job_operate" _type="job_del" type="button">'+ I18n.system_opt_del +'</button>  '+
