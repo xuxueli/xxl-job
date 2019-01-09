@@ -5,6 +5,7 @@ import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.biz.model.TriggerParam;
 import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
 import com.xxl.job.core.glue.GlueTypeEnum;
+import com.xxl.rpc.remoting.invoker.XxlRpcInvokerFactory;
 import com.xxl.rpc.remoting.invoker.call.CallType;
 import com.xxl.rpc.remoting.invoker.reference.XxlRpcReferenceBean;
 import com.xxl.rpc.remoting.invoker.route.LoadBalance;
@@ -33,7 +34,7 @@ public class ExecutorBizTest {
      * @param jobHandler
      * @param params
      */
-    private static void runTest(String jobHandler, String params){
+    private static void runTest(String jobHandler, String params) throws Exception {
         // trigger data
         TriggerParam triggerParam = new TriggerParam();
         triggerParam.setJobId(1);
@@ -62,6 +63,9 @@ public class ExecutorBizTest {
                 null).getObject();
 
         ReturnT<String> runResult = executorBiz.run(triggerParam);
+
+        System.out.println(runResult);
+        XxlRpcInvokerFactory.getInstance().stop();
     }
 
 }
