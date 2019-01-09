@@ -86,7 +86,7 @@ public class JobRegistryMonitorHelper {
 						}
 					}
 				}
-				logger.warn(">>>>>>>>>>> xxl-job, job registry monitor thread stop");
+				logger.info(">>>>>>>>>>> xxl-job, job registry monitor thread stop");
 			}
 		});
 		registryThread.setDaemon(true);

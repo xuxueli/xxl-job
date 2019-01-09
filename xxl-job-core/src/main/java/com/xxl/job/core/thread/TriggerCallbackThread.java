@@ -110,12 +110,17 @@ public class TriggerCallbackThread {
                     try {
                         retryFailCallbackFile();
                     } catch (Exception e) {
-                        logger.error(e.getMessage(), e);
+                        if (!toStop) {
+                            logger.error(e.getMessage(), e);
+                        }
+
                     }
                     try {
                         TimeUnit.SECONDS.sleep(RegistryConfig.BEAT_TIMEOUT);
                     } catch (InterruptedException e) {
-                        logger.warn(">>>>>>>>>>> xxl-job, executor retry callback thread interrupted, error msg:{}", e.getMessage());
+                        if (!toStop) {
+                            logger.error(e.getMessage(), e);
+                        }
                     }
                 }
                 logger.info(">>>>>>>>>>> xxl-job, executor retry callback thread destory.");

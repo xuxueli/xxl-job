@@ -93,7 +93,7 @@ public class JobFailMonitorHelper {
 					}
 				}
 
-				logger.warn(">>>>>>>>>>> xxl-job, job fail monitor thread stop");
+				logger.info(">>>>>>>>>>> xxl-job, job fail monitor thread stop");
 
 			}
 		});
