@@ -59,13 +59,18 @@ public class ExecutorRegistryThread extends Thread {
 
                         }
                     } catch (Exception e) {
-                        logger.error(e.getMessage(), e);
+                        if (!toStop) {
+                            logger.error(e.getMessage(), e);
+                        }
+
                     }
 
                     try {
                         TimeUnit.SECONDS.sleep(RegistryConfig.BEAT_TIMEOUT);
                     } catch (InterruptedException e) {
-                        logger.warn(">>>>>>>>>>> xxl-job, executor registry thread interrupted, error msg:{}", e.getMessage());
+                        if (!toStop) {
+                            logger.warn(">>>>>>>>>>> xxl-job, executor registry thread interrupted, error msg:{}", e.getMessage());
+                        }
                     }
                 }
 

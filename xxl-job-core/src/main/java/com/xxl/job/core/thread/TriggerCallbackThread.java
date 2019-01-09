@@ -76,7 +76,9 @@ public class TriggerCallbackThread {
                             }
                         }
                     } catch (Exception e) {
-                        logger.error(e.getMessage(), e);
+                        if (!toStop) {
+                            logger.error(e.getMessage(), e);
+                        }
                     }
                 }
 
@@ -88,7 +90,9 @@ public class TriggerCallbackThread {
                         doCallback(callbackParamList);
                     }
                 } catch (Exception e) {
-                    logger.error(e.getMessage(), e);
+                    if (!toStop) {
+                        logger.error(e.getMessage(), e);
+                    }
                 }
                 logger.info(">>>>>>>>>>> xxl-job, executor callback thread destory.");
 

@@ -82,13 +82,18 @@ public class JobLogFileCleanThread extends Thread {
                         }
 
                     } catch (Exception e) {
-                        logger.error(e.getMessage(), e);
+                        if (!toStop) {
+                            logger.error(e.getMessage(), e);
+                        }
+
                     }
 
                     try {
                         TimeUnit.DAYS.sleep(1);
                     } catch (InterruptedException e) {
-                        logger.error(e.getMessage(), e);
+                        if (!toStop) {
+                            logger.error(e.getMessage(), e);
+                        }
                     }
                 }
                 logger.info(">>>>>>>>>>> xxl-job, executor JobLogFileCleanThread thread destory.");
