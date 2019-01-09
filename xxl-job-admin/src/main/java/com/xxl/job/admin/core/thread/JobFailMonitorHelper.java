@@ -87,9 +87,13 @@ public class JobFailMonitorHelper {
 
 						TimeUnit.SECONDS.sleep(10);
 					} catch (Exception e) {
-						logger.error("job monitor error:{}", e);
+						if (!toStop) {
+							logger.error(">>>>>>>>>>> xxl-job, job fail monitor thread error:{}", e);
+						}
 					}
 				}
+
+				logger.warn(">>>>>>>>>>> xxl-job, job fail monitor thread stop");
 
 			}
 		});
@@ -178,7 +182,7 @@ public class JobFailMonitorHelper {
 
 					XxlJobAdminConfig.getAdminConfig().getMailSender().send(mimeMessage);
 				} catch (Exception e) {
-					logger.error(">>>>>>>>>>> job monitor alarm email send error, JobLogId:{}", jobLog.getId(), e);
+					logger.error(">>>>>>>>>>> xxl-job, job fail alarm email send error, JobLogId:{}", jobLog.getId(), e);
 
 					alarmResult = false;
 				}
