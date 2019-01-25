@@ -126,19 +126,28 @@ $(function() {
 	                			var codeBtn = "";
                                 if ('BEAN' != row.glueType) {
 									var codeUrl = base_url +'/jobcode?jobId='+ row.id;
-									codeBtn = '<a href="'+ codeUrl +'" target="_blank" > <button class="btn btn-warning btn-xs" type="button" >GLUE</button> </a> '
+									codeBtn = '<input type="hidden" class="code-url" value="' + codeUrl + '"/>'
+										    + '<button class="btn btn-warning btn-xs to-code-edit-page" type="button" >GLUE</button>'
 								}
 
 								// html
                                 tableData['key'+row.id] = row;
-								var html = '<p id="'+ row.id +'" >'+
-									'<button class="btn btn-primary btn-xs job_trigger" type="button">'+ I18n.jobinfo_opt_run +'</button>  '+
-                                    start_stop +
-									'<a href="'+ logUrl +'"> <button class="btn btn-primary btn-xs" type="job_del" type="button" >'+ I18n.jobinfo_opt_log +'</button> </a> <br>  '+
-									'<button class="btn btn-warning btn-xs update" type="button">'+ I18n.system_opt_edit +'</button>  '+
-									codeBtn +
-									'<button class="btn btn-danger btn-xs job_operate" _type="job_del" type="button">'+ I18n.system_opt_del +'</button>  '+
-									'</p>';
+								var html = ''
+									+ '<div class="btn-group">' 
+									+ '<button class="btn btn-primary btn-xs job_trigger" type="button">'+ I18n.jobinfo_opt_run +'</button>  '
+									+ '<input type="hidden" class="row-id" value="' + row.id + '"/>'
+									+ start_stop 
+									+ '<input type="hidden" class="log-url" value="' + logUrl + '"/>'
+									+ '<button class="btn btn-primary btn-xs to-log-page" type="job_del" type="button" >'+ I18n.jobinfo_opt_log +'</button>'
+									+ '</div> '
+									
+									+ '<div class="btn-group">'
+									+ '<button class="btn btn-warning btn-xs update" type="button">'+ I18n.system_opt_edit +'</button>  '
+									+ '<input type="hidden" class="row-id" value="' + row.id + '"/>'
+									+ codeBtn 
+									+ '<button class="btn btn-danger btn-xs job_operate" _type="job_del" type="button">'+ I18n.system_opt_del +'</button>  '
+									+ '</div>'
+									+ '';
 
 	                			return html;
 							};
@@ -208,8 +217,7 @@ $(function() {
 		} else {
 			return;
 		}
-		
-		var id = $(this).parent('p').attr("id");
+		var id = $(this).siblings('.row-id').val();
 
 		layer.confirm( I18n.system_ok + typeName + '?', {
 			icon: 3,
@@ -255,7 +263,7 @@ $(function() {
 
     // job trigger
     $("#job_list").on('click', '.job_trigger',function() {
-        var id = $(this).parent('p').attr("id");
+        var id = $(this).siblings('.row-id').val();
         var row = tableData['key'+id];
 
         $("#jobTriggerModal .form input[name='id']").val( row.id );
@@ -434,10 +442,8 @@ $(function() {
 
 	// update
 	$("#job_list").on('click', '.update',function() {
-
-        var id = $(this).parent('p').attr("id");
+        var id = $(this).siblings('.row-id').val();
         var row = tableData['key'+id];
-
 		// base data
 		$("#updateModal .form input[name='id']").val( row.id );
 		$('#updateModal .form select[name=jobGroup] option[value='+ row.jobGroup +']').prop('selected', true);
@@ -459,6 +465,17 @@ $(function() {
 		// show
 		$('#updateModal').modal({backdrop: false, keyboard: false}).modal('show');
 	});
+	
+	$("#job_list").on('click', '.to-log-page', function() {
+		var logUrl = $(this).siblings('.log-url').val();
+		window.open(logUrl)
+	});
+	
+	$("#job_list").on('click', '.to-code-edit-page', function() {
+		var codeUrl = $(this).siblings('.code-url').val();
+		window.open(codeUrl)
+	});
+	
 	var updateModalValidate = $("#updateModal .form").validate({
 		errorElement : 'span',  
         errorClass : 'help-block',
