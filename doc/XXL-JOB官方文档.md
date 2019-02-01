@@ -363,7 +363,7 @@ XXL-JOB是一个轻量级分布式任务调度平台，其核心设计目标是�
 - 下载镜像
 
 ```
-// Docker地址：https://hub.docker.com/r/xuxueli/xxl-job-admin/
+// Docker地址：https://hub.docker.com/r/xuxueli/xxl-job-admin/     (建议指定版本号)
 docker pull xuxueli/xxl-job-admin
 ```
 
@@ -1453,6 +1453,11 @@ Tips: 历史版本(V1.3.x)目前已经Release至稳定版本, 进入维护阶段
 - 27、排程任务：支持时间短、时间点配置，支持配置多个，精确到秒；
 - 28、告警邮件内容，支持自定义模板配置；
 - 29、暂停状态，支持Cron 为空；
+- 30、新增任务运行模式 "GLUE模式(GO) "，支持GO任务；
+- 31、调度中心-执行器通讯模型统一，双向RPC切换为Netty；
+- 32、任务暂停、删除优化，避免quartz delete不完整导致任务脏数据；
+- 32、quartz misfire 配置优化，计划改为0；
+
 
 
 ## 七、其他
