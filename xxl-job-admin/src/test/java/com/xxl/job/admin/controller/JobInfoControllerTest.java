@@ -17,16 +17,7 @@ public class JobInfoControllerTest extends AbstractSpringMvcTest {
 
   private Cookie cookie;
 
-  @Before
-  public void login() throws Exception {
-    MvcResult ret = mockMvc.perform(
-        post("/login")
-            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-            .param("userName", XxlJobAdminConfig.getAdminConfig().getLoginUsername())
-            .param("password", XxlJobAdminConfig.getAdminConfig().getLoginPassword())
-    ).andReturn();
-    cookie = ret.getResponse().getCookie(PermissionInterceptor.LOGIN_IDENTITY_KEY);
-  }
+
 
   @Test
   public void testAdd() throws Exception {
