@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
@@ -34,7 +35,7 @@ public class JobInfoController {
 	private XxlJobService xxlJobService;
 	
 	@RequestMapping
-	public String index(Model model, @RequestParam(required = false, defaultValue = "-1") int jobGroup) {
+	public String index(Model model, @RequestParam(required = false, defaultValue = "-1") int jobGroup, HttpServletRequest request) {
 
 		// 枚举-字典
 		model.addAttribute("ExecutorRouteStrategyEnum", ExecutorRouteStrategyEnum.values());	// 路由策略-列表
@@ -42,7 +43,7 @@ public class JobInfoController {
 		model.addAttribute("ExecutorBlockStrategyEnum", ExecutorBlockStrategyEnum.values());	// 阻塞处理策略-字典
 
 		// 任务组
-		List<XxlJobGroup> jobGroupList =  xxlJobGroupDao.findAll();
+		List<XxlJobGroup> jobGroupList =  xxlJobService.findJobGroupList(request);
 		model.addAttribute("JobGroupList", jobGroupList);
 		model.addAttribute("jobGroup", jobGroup);
 

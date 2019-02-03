@@ -8,15 +8,24 @@ import java.lang.annotation.Target;
 
 /**
  * 权限限制
- * @author xuxueli 2015-12-12 18:29:02
+ * @author yang.liu
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface PermessionLimit {
-	
+
 	/**
-	 * 登录拦截 (默认拦截)
+	 * 要求用户登录
+	 *
+	 * @return
 	 */
 	boolean limit() default true;
+
+	/**
+	 * 要求管理员权限
+	 *
+	 * @return
+	 */
+	boolean adminuser() default false;
 
 }

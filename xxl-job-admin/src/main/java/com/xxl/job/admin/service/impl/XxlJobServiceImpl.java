@@ -5,9 +5,11 @@ import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobUser;
 import com.xxl.job.admin.core.route.ExecutorRouteStrategyEnum;
 import com.xxl.job.admin.core.schedule.XxlJobDynamicScheduler;
-import com.xxl.job.admin.core.util.CookieUtil;
 import com.xxl.job.admin.core.util.I18nUtil;
-import com.xxl.job.admin.dao.*;
+import com.xxl.job.admin.dao.XxlJobGroupDao;
+import com.xxl.job.admin.dao.XxlJobInfoDao;
+import com.xxl.job.admin.dao.XxlJobLogDao;
+import com.xxl.job.admin.dao.XxlJobLogGlueDao;
 import com.xxl.job.admin.service.XxlJobService;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
@@ -20,14 +22,12 @@ import org.quartz.SchedulerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.util.DigestUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.math.BigInteger;
 import java.text.MessageFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * core job action for xxl-job
@@ -46,70 +46,8 @@ public class XxlJobServiceImpl implements XxlJobService {
 	public XxlJobLogDao xxlJobLogDao;
 	@Resource
 	private XxlJobLogGlueDao xxlJobLogGlueDao;
-    @Resource
-	private XxlJobUserDao xxlJobUserDao;
-
-	@Override
-	public boolean login(HttpServletResponse response, String username, String password, boolean ifRemember){
-		// load user by name
-		XxlJobUser xxlJobUser = xxlJobUserDao.loadByName(username);
-		if (xxlJobUser == null){
-			return false;
-		}
-        // login password
-		String loginPassword = xxlJobUser.getPassword();
-		//md5
-		password = DigestUtils.md5DigestAsHex(String.valueOf(username + "_" + password).getBytes());
-
-		if(!password.equals(loginPassword)){
-			return false;
-		}
-
-		// login token
-		String tokenTmp = DigestUtils.md5DigestAsHex(String.valueOf(username + "_" + loginPassword).getBytes());
-		tokenTmp = new BigInteger(1, tokenTmp.getBytes()).toString(16);
-		String loginIdentityValue = username+LOGIN_IDENTITY_SPLIT+tokenTmp;
-		// do login
-		CookieUtil.set(response, LOGIN_IDENTITY_KEY, loginIdentityValue, ifRemember);
-		return true;
-	}
-
-	@Override
-	public void logout(HttpServletRequest request, HttpServletResponse response) {
-		CookieUtil.remove(request, response, LOGIN_IDENTITY_KEY);
-	}
-
-	@Override
-	public boolean ifLogin(HttpServletRequest request){
-
-		String indentityInfo = CookieUtil.getValue(request, LOGIN_IDENTITY_KEY);
-		if(StringUtils.isBlank(indentityInfo)){
-			return false;
-		}
-
-		String[] split = indentityInfo.split(LOGIN_IDENTITY_SPLIT);
-		if(split.length != 2){
-			return false;
-		}
-
-		String username = split[0];
-		String token = split[1];
-
-		XxlJobUser xxlJobUser = xxlJobUserDao.loadByName(username);
-		if (xxlJobUser == null){
-			return false;
-		}
-		// login password
-		String password = xxlJobUser.getPassword();
-		// login token
-		String tokenTmp = DigestUtils.md5DigestAsHex(String.valueOf(username + "_" + password).getBytes());
-		tokenTmp = new BigInteger(1, tokenTmp.getBytes()).toString(16);
-
-		if (!tokenTmp.equals(token.trim())) {
-			return false;
-		}
-		return true;
-	}
+	@Resource
+	private LoginService loginService;
 
 	@Override
 	public Map<String, Object> pageList(int start, int length, int jobGroup, String jobDesc, String executorHandler, String filterTime) {
@@ -434,4 +372,21 @@ public class XxlJobServiceImpl implements XxlJobService {
 		return new ReturnT<Map<String, Object>>(result);
 	}
 
+	@Override
+	public List<XxlJobGroup> findJobGroupList(HttpServletRequest request) {
+
+		XxlJobUser loginUser = loginService.ifLogin(request);
+		if(loginUser.getPermission()!=1){
+			String permissionData = loginUser.getPermissionData();
+			if(StringUtils.isBlank(permissionData)){
+				return null;
+			}
+
+			List<Integer> ids = Arrays.asList(permissionData.split(",")).stream().map(e->Integer.parseInt(e)).collect(Collectors.toList());
+			return xxlJobGroupDao.findAllByIds(ids);
+		}
+
+
+		return xxlJobGroupDao.findAll();
+	}
 }

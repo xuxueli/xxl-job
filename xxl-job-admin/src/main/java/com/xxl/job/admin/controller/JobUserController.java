@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,6 +52,7 @@ public class JobUserController {
 
     @RequestMapping("pageList")
     @ResponseBody
+    @PermessionLimit(adminuser = true)
     public Map<String, Object> pageList(@RequestParam(required = false, defaultValue = "0") int start,
                                         @RequestParam(required = false, defaultValue = "10") int length,
                                         String username,
@@ -70,7 +72,7 @@ public class JobUserController {
 
 
     @RequestMapping("/add")
-    @PermessionLimit
+    @PermessionLimit(adminuser = true)
     @ResponseBody
     public ReturnT<String> add(XxlJobUser xxlJobUser){
 
@@ -78,6 +80,11 @@ public class JobUserController {
         if (StringUtils.isBlank(xxlJobUser.getUsername())){
             return new ReturnT<String>(ReturnT.FAIL.getCode(), "用户名不可为空");
         }
+
+        if(xxlJobUser.getUsername().length() < 5 || xxlJobUser.getUsername().length() > 50){
+            return new ReturnT<String>(ReturnT.FAIL.getCode(), "用户名长度限制为5~50");
+        }
+
         if (StringUtils.isBlank(xxlJobUser.getPassword())){
             return new ReturnT<String>(ReturnT.FAIL.getCode(), "密码不可为空");
         }
@@ -86,7 +93,7 @@ public class JobUserController {
         }
 
         // passowrd md5
-        String md5Password = DigestUtils.md5DigestAsHex((xxlJobUser.getUsername() + "_" +xxlJobUser.getPassword()).getBytes());
+        String md5Password = DigestUtils.md5DigestAsHex(xxlJobUser.getPassword().getBytes());
         xxlJobUser.setPassword(md5Password);
 
         int ret = xxlJobUserDao.add(xxlJobUser);
@@ -99,7 +106,7 @@ public class JobUserController {
      * @return
      */
     @RequestMapping("/delete")
-    @PermessionLimit
+    @PermessionLimit(adminuser = true)
     @ResponseBody
     public ReturnT<String> delete(HttpServletRequest request, String username){
 
@@ -121,7 +128,7 @@ public class JobUserController {
      * @return
      */
     @RequestMapping("/update")
-    @PermessionLimit
+    @PermessionLimit(adminuser = true)
     @ResponseBody
     public ReturnT<String> update(HttpServletRequest request, XxlJobUser xxlJobUser){
 
@@ -153,7 +160,7 @@ public class JobUserController {
 
 
     @RequestMapping("/updatePermissionData")
-    @PermessionLimit
+    @PermessionLimit(adminuser = true)
     @ResponseBody
     public ReturnT<String> updatePermissionData(HttpServletRequest request,
                                                 String username,

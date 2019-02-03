@@ -3,6 +3,7 @@ package com.xxl.job.admin.controller;
 import com.xxl.job.admin.controller.annotation.PermessionLimit;
 import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.admin.service.XxlJobService;
+import com.xxl.job.admin.service.impl.LoginService;
 import com.xxl.job.core.biz.model.ReturnT;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -32,6 +33,9 @@ public class IndexController {
     @Resource
     private XxlJobService xxlJobService;
 
+    @Resource
+    private LoginService loginService;
+
     @RequestMapping("/")
     public String index(Model model) {
 
@@ -49,43 +53,39 @@ public class IndexController {
     }
 
     @RequestMapping("/toLogin")
-    @PermessionLimit(limit = false)
+    @PermessionLimit(limit=false)
     public String toLogin(Model model, HttpServletRequest request) {
-        if (xxlJobService.ifLogin(request)) {
+        if (loginService.ifLogin(request) != null) {
             return "redirect:/";
         }
         return "login";
     }
 
-    @RequestMapping(value = "login", method = RequestMethod.POST)
+    @RequestMapping(value="login", method= RequestMethod.POST)
     @ResponseBody
-    @PermessionLimit(limit = false)
-    public ReturnT<String> loginDo(HttpServletRequest request, HttpServletResponse response, String userName, String password, String ifRemember) {
+    @PermessionLimit(limit=false)
+    public ReturnT<String> loginDo(HttpServletRequest request, HttpServletResponse response, String userName, String password, String ifRemember){
         // valid
-        if (xxlJobService.ifLogin(request)) {
+        if (loginService.ifLogin(request) != null) {
             return ReturnT.SUCCESS;
         }
 
         // param
-        if (StringUtils.isBlank(userName) || StringUtils.isBlank(password)) {
-            return new ReturnT<String>(500, I18nUtil.getString("login_param_empty"));
+        if (StringUtils.isBlank(userName) || StringUtils.isBlank(password)){
+            return new ReturnT<String>(500, "账号或密码为空");
         }
-        boolean ifRem = StringUtils.isNotBlank(ifRemember) && "on".equals(ifRemember);
+        boolean ifRem = (StringUtils.isNotBlank(ifRemember) && "on".equals(ifRemember))?true:false;
 
         // do login
-        boolean loginRet = xxlJobService.login(response, userName, password, ifRem);
-        if (!loginRet) {
-            return new ReturnT<String>(500, I18nUtil.getString("login_param_unvalid"));
-        }
-        return ReturnT.SUCCESS;
+        return loginService.login(response, userName, password, ifRem);
     }
 
-    @RequestMapping(value = "logout", method = RequestMethod.POST)
+    @RequestMapping(value="logout", method=RequestMethod.POST)
     @ResponseBody
-    @PermessionLimit(limit = false)
-    public ReturnT<String> logout(HttpServletRequest request, HttpServletResponse response) {
-        if (xxlJobService.ifLogin(request)) {
-            xxlJobService.logout(request, response);
+    @PermessionLimit(limit=false)
+    public ReturnT<String> logout(HttpServletRequest request, HttpServletResponse response){
+        if (loginService.ifLogin(request) != null) {
+            loginService.logout(request, response);
         }
         return ReturnT.SUCCESS;
     }

@@ -27,6 +27,18 @@
 		ORDER BY t.order ASC
 	</select>
 
+	<select id="findAllByIds" resultMap="XxlJobGroup" parameterType="java.util.Map">
+		SELECT <include refid="Base_Column_List" />
+		FROM XXL_JOB_QRTZ_TRIGGER_GROUP AS t
+		<if test="ids != null and ids.size() > 0" >
+			where t.id in
+			<foreach collection="ids" item="idItem"  index="index" separator="," open="(" close=")">
+				#{idItem}
+			</foreach>
+		</if>
+		ORDER BY t.order ASC
+	</select>
+
 	<select id="findByAddressType" parameterType="java.lang.Integer" resultMap="XxlJobGroup">
 		SELECT <include refid="Base_Column_List" />
 		FROM XXL_JOB_QRTZ_TRIGGER_GROUP AS t

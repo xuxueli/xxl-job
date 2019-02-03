@@ -1,11 +1,13 @@
 package com.xxl.job.admin.controller;
 
+import com.xxl.job.admin.controller.annotation.PermessionLimit;
 import com.xxl.job.admin.core.conf.XxlJobAdminConfig;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobRegistry;
 import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.admin.dao.XxlJobGroupDao;
 import com.xxl.job.admin.dao.XxlJobInfoDao;
+import com.xxl.job.admin.service.XxlJobService;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.enums.RegistryConfig;
 import org.apache.commons.lang3.StringUtils;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -29,15 +32,17 @@ import java.util.List;
 public class JobGroupController {
 
 	@Resource
+	private XxlJobService xxlJobService;
+	@Resource
 	public XxlJobInfoDao xxlJobInfoDao;
 	@Resource
 	public XxlJobGroupDao xxlJobGroupDao;
 
 	@RequestMapping
-	public String index(Model model) {
+	public String index(Model model, HttpServletRequest request) {
 
 		// job group (executor)
-		List<XxlJobGroup> list = xxlJobGroupDao.findAll();
+		List<XxlJobGroup> list = xxlJobService.findJobGroupList(request);
 
 		model.addAttribute("list", list);
 		return "jobgroup/jobgroup.index";
@@ -45,6 +50,7 @@ public class JobGroupController {
 
 	@RequestMapping("/save")
 	@ResponseBody
+	@PermessionLimit(adminuser = true)
 	public ReturnT<String> save(XxlJobGroup xxlJobGroup){
 
 		// valid
@@ -75,6 +81,7 @@ public class JobGroupController {
 
 	@RequestMapping("/update")
 	@ResponseBody
+	@PermessionLimit(adminuser = true)
 	public ReturnT<String> update(XxlJobGroup xxlJobGroup){
 		// valid
 		if (xxlJobGroup.getAppName()==null || StringUtils.isBlank(xxlJobGroup.getAppName())) {
@@ -136,6 +143,7 @@ public class JobGroupController {
 
 	@RequestMapping("/remove")
 	@ResponseBody
+	@PermessionLimit(adminuser = true)
 	public ReturnT<String> remove(int id){
 
 		// valid

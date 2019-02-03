@@ -1,12 +1,14 @@
 package com.xxl.job.admin.service;
 
 
+import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.core.biz.model.ReturnT;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -15,36 +17,6 @@ import java.util.Map;
  * @author xuxueli 2016-5-28 15:30:33
  */
 public interface XxlJobService {
-
-
-    /**
-     * login
-     *
-     * @param response
-     * @param username
-     * @param password
-     * @param ifRemember
-     * @return
-     */
-    public boolean login(HttpServletResponse response, String username, String password, boolean ifRemember);
-
-
-    /**
-     * logout
-     *
-     * @param request
-     * @param response
-     */
-    public void logout(HttpServletRequest request, HttpServletResponse response);
-
-
-    /**
-     * if login
-     *
-     * @param request
-     * @return
-     */
-    public boolean ifLogin(HttpServletRequest request);
 
 	/**
 	 * page list
@@ -114,5 +86,7 @@ public interface XxlJobService {
 	 * @return
 	 */
 	public ReturnT<Map<String,Object>> chartInfo(Date startDate, Date endDate);
+
+	public List<XxlJobGroup> findJobGroupList(HttpServletRequest request);
 
 }
