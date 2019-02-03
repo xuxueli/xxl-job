@@ -2,9 +2,9 @@ package com.xxl.job.admin.controller;
 
 import com.xxl.job.admin.controller.annotation.PermessionLimit;
 import com.xxl.job.admin.core.model.XxlJobGroup;
-import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobUser;
 import com.xxl.job.admin.core.util.CookieUtil;
+import com.xxl.job.admin.dao.XxlJobGroupDao;
 import com.xxl.job.admin.dao.XxlJobUserDao;
 import com.xxl.job.admin.service.impl.XxlJobServiceImpl;
 import com.xxl.job.core.biz.model.ReturnT;
@@ -37,8 +37,14 @@ public class JobUserController {
     @Resource
     private XxlJobUserDao xxlJobUserDao;
 
+    @Resource
+    private XxlJobGroupDao xxlJobGroupDao;
+
     @RequestMapping
     public String index(Model model) {
+
+        List<XxlJobGroup> jobGroups = xxlJobGroupDao.findAll();
+        model.addAttribute("jobGroups",jobGroups);
         return "jobuser/jobuser.index";
     }
 
@@ -143,6 +149,26 @@ public class JobUserController {
 
         int ret = xxlJobUserDao.update(existUser);
         return ret>0? ReturnT.SUCCESS: ReturnT.FAIL;
+    }
+
+
+    @RequestMapping("/updatePermissionData")
+    @PermessionLimit
+    @ResponseBody
+    public ReturnT<String> updatePermissionData(HttpServletRequest request,
+                                                String username,
+                                                @RequestParam(required = false) String[] permissionData){
+
+        XxlJobUser existUser = xxlJobUserDao.loadByName(username);
+        if (existUser == null) {
+            return new ReturnT<String>(ReturnT.FAIL.getCode(), "参数非法");
+        }
+
+        String permissionDataArrStr = permissionData!=null?StringUtils.join(permissionData, ","):"";
+        existUser.setPermissionData(permissionDataArrStr);
+        xxlJobUserDao.update(existUser);
+
+        return ReturnT.SUCCESS;
     }
 
 }

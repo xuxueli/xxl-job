@@ -154,6 +154,44 @@
             </div>
         </div>
     </div>
+
+    <!-- 分配项目权限.模态框 -->
+    <div class="modal fade" id="permissionDataModal" tabindex="-1" role="dialog"  aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" >分配项目权限</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal form" role="form" >
+
+                        <!-- permission start -->
+                        <div class="table-responsive">
+                            <table id="permissionData" class="table table-bordered" width="100%" >
+                                <ul class="list-group">
+                                    <#if jobGroups?exists>
+                                        <#list jobGroups as jobGroup>
+                                           <li class="list-group-item"> <label><input type="checkbox" name="permissionData" value="${jobGroup.id}" > ${jobGroup.appName} / ${jobGroup.title} </label></li>
+                                        </#list>
+                                    </#if>
+                                </ul>
+                            </table>
+                        </div>
+                        <!-- permission end -->
+
+                        <div class="form-group">
+                            <div class="text-center">
+                                <button type="button" class="btn btn-primary ok" >保存</button>
+                                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+
+                                <input type="hidden" name="username"  >
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 	
 	<!-- footer -->
 	<@netCommon.commonFooter />
