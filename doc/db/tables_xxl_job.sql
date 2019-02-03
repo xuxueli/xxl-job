@@ -224,7 +224,7 @@ CREATE TABLE `XXL_JOB_QRTZ_TRIGGER_GROUP` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-CREATE TABLE `XXL_JOB_QRTZ__USER` (
+CREATE TABLE `XXL_JOB_QRTZ_USER` (
   `name` varchar(100) NOT NULL COMMENT '账号',
   `password` varchar(100) NOT NULL COMMENT '密码',
   `permission` tinyint(4) NOT NULL DEFAULT '0' COMMENT '权限：0-普通用户、1-管理员',
