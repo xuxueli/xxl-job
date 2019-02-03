@@ -37,7 +37,7 @@ import java.util.*;
 public class XxlJobServiceImpl implements XxlJobService {
 	private static Logger logger = LoggerFactory.getLogger(XxlJobServiceImpl.class);
 	public static final String LOGIN_IDENTITY_KEY = "XXL_JOB_LOGIN_IDENTITY";
-	private static final String LOGIN_IDENTITY_SPLIT = "#";
+	public static final String LOGIN_IDENTITY_SPLIT = "#";
 	@Resource
 	private XxlJobGroupDao xxlJobGroupDao;
 	@Resource

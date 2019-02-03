@@ -2,28 +2,78 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.xxl.job.admin.dao.XxlJobUserDao">
     <resultMap id="BaseResultMap" type="com.xxl.job.admin.core.model.XxlJobUser">
-        <id column="id" property="id" jdbcType="INTEGER"/>
-        <result column="name" property="name" jdbcType="VARCHAR"/>
-        <result column="email" property="email" jdbcType="VARCHAR"/>
-        <result column="mobile" property="mobile" jdbcType="VARCHAR"/>
-        <result column="type" property="type" jdbcType="INTEGER"/>
-        <result column="add_time" property="addTime" jdbcType="TIMESTAMP"/>
-        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
-        <result column="receive_notice" property="receiveNotice" jdbcType="INTEGER"/>
-        <result column="password" property="password" jdbcType="VARCHAR"/>
+        <result column="username" property="username" />
+        <result column="password" property="password" />
+        <result column="permission" property="permission" />
+        <result column="permission_data" property="permissionData" />
     </resultMap>
 
     <sql id="Base_Column_List">
-      id, name, email, mobile, type, add_time, update_time, receive_notice, password
+      username, password, permission,permission_data
     </sql>
 
     <select id="loadByName" resultMap="BaseResultMap" parameterType="java.lang.String" >
         select
         <include refid="Base_Column_List" />
         from xxl_job_qrtz_user
-        where name = #{name}
+        where username = #{username}
     </select>
 
+    <select id="pageList" parameterType="java.util.Map" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM XXL_JOB_QRTZ_USER AS t
+        <trim prefix="WHERE" prefixOverrides="AND | OR" >
+            <if test="username != null and username != '' ">
+                AND t.username like CONCAT('%',#{username},'%')
+            </if>
+            <if test="permission gt -1">
+                t.permission = #{permission}
+            </if>
+        </trim>
+        ORDER BY t.username
+        LIMIT #{offset}, #{pagesize}
+    </select>
 
+    <select id="pageListCount" parameterType="java.util.Map" resultType="int">
+        SELECT count(1)
+        FROM XXL_JOB_QRTZ_USER AS t
+        <trim prefix="WHERE" prefixOverrides="AND | OR" >
+            <if test="username != null and username != '' ">
+                AND t.username like CONCAT('%',#{username},'%')
+            </if>
+            <if test="permission gt -1">
+                t.permission = #{permission}
+            </if>
+        </trim>
+    </select>
+
+    <insert id="add" parameterType="com.xxl.job.admin.core.model.XxlJobUser" >
+		INSERT INTO XXL_JOB_QRTZ_USER(
+			`username`,
+			`password`,
+			`permission`,
+			`permission_data`
+		)
+		VALUES(
+			#{username},
+			#{password},
+			#{permission},
+			#{permissionData}
+		)
+	</insert>
+
+    <update id="update" parameterType="com.xxl.job.admin.core.model.XxlJobUser" >
+		UPDATE XXL_JOB_QRTZ_USER
+		SET `password` = #{password},
+			`permission` = #{permission},
+			`permission_data` = #{permissionData}
+		WHERE `username` = #{username}
+	</update>
+
+    <delete id="delete" parameterType="java.util.Map" >
+		DELETE FROM XXL_JOB_QRTZ_USER
+		WHERE `username` = #{username}
+	</delete>
+    
 
 </mapper>

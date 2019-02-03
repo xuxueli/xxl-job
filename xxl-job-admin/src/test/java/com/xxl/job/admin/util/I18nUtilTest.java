@@ -22,4 +22,7 @@ public class I18nUtilTest {
         System.out.println(I18nUtil.getMultString());
     }
 
+
+
+
 }

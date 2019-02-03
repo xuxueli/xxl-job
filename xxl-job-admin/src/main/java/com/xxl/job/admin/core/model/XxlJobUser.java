@@ -4,86 +4,19 @@ import java.util.Date;
 
 public class XxlJobUser {
 
-    private int id;
-
-    private String name;
-
-    private String email;
-
-    private String mobile;
-
-    private int type;
-
-    private Date addTime;
-
-    private Date updateTime;
-
-    private int receiveNotice;
+    private String username;
 
     private String password;
 
-    public int getId() {
-        return id;
+    private int permission;             // 权限：0-普通用户、1-管理员
+    private String permissionData;      // 权限配置数据, 格式 "appname#env,appname#env02"
+
+    public String getUsername() {
+        return username;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getMobile() {
-        return mobile;
-    }
-
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
-    }
-
-    public int getType() {
-        return type;
-    }
-
-    public void setType(int type) {
-        this.type = type;
-    }
-
-    public Date getAddTime() {
-        return addTime;
-    }
-
-    public void setAddTime(Date addTime) {
-        this.addTime = addTime;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
-
-    public int getReceiveNotice() {
-        return receiveNotice;
-    }
-
-    public void setReceiveNotice(int receiveNotice) {
-        this.receiveNotice = receiveNotice;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {
@@ -92,6 +25,22 @@ public class XxlJobUser {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public int getPermission() {
+        return permission;
+    }
+
+    public void setPermission(int permission) {
+        this.permission = permission;
+    }
+
+    public String getPermissionData() {
+        return permissionData;
+    }
+
+    public void setPermissionData(String permissionData) {
+        this.permissionData = permissionData;
     }
 }
 

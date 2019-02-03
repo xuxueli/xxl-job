@@ -12,6 +12,7 @@ import com.xxl.rpc.remoting.net.NetEnum;
 import com.xxl.rpc.serialize.Serializer;
 import org.junit.Assert;
 import org.junit.Test;
+import org.springframework.util.DigestUtils;
 
 /**
  * admin api test
@@ -82,6 +83,14 @@ public class AdminBizTest {
 
         // stop invoker
         XxlRpcInvokerFactory.getInstance().stop();
+    }
+
+
+    public static void main(String[] args) {
+
+        String tokenTmp = DigestUtils.md5DigestAsHex(String.valueOf("admin" + "_" + "123456").getBytes());
+
+        System.out.println(tokenTmp);
     }
 
 }
