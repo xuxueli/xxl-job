@@ -140,7 +140,6 @@ $(function(){
 
     // 新增
     $("#add").click(function(){
-        alert("123");
         $('#addModal').modal('show');
     });
     var addModalValidate = $("#addModal .form").validate({
