@@ -225,7 +225,7 @@ CREATE TABLE `XXL_JOB_QRTZ_TRIGGER_GROUP` (
 
 
 CREATE TABLE `XXL_JOB_QRTZ_USER` (
-  `name` varchar(100) NOT NULL COMMENT '账号',
+  `username` varchar(100) NOT NULL COMMENT '账号',
   `password` varchar(100) NOT NULL COMMENT '密码',
   `permission` tinyint(4) NOT NULL DEFAULT '0' COMMENT '权限：0-普通用户、1-管理员',
   `permission_data` varchar(1000) DEFAULT NULL COMMENT '权限配置数据',
