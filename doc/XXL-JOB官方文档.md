@@ -1457,7 +1457,9 @@ Tips: 历史版本(V1.3.x)目前已经Release至稳定版本, 进入维护阶段
 - 31、调度中心-执行器通讯模型统一，双向RPC切换为Netty；
 - 32、任务暂停、删除优化，避免quartz delete不完整导致任务脏数据；
 - 32、quartz misfire 配置优化，计划改为0；
-
+- 33、job通讯调优：
+    - 调度tcp；
+    - 回调http（netty），handler复用mvc（考虑是否双向tcp）；
 
 
 ## 七、其他
