@@ -15,10 +15,9 @@ import com.xxl.rpc.remoting.invoker.call.CallType;
 import com.xxl.rpc.remoting.invoker.reference.XxlRpcReferenceBean;
 import com.xxl.rpc.remoting.invoker.route.LoadBalance;
 import com.xxl.rpc.remoting.net.NetEnum;
-import com.xxl.rpc.remoting.net.impl.jetty.server.JettyServerHandler;
+import com.xxl.rpc.remoting.net.impl.servlet.server.ServletServerHandler;
 import com.xxl.rpc.remoting.provider.XxlRpcProviderFactory;
 import com.xxl.rpc.serialize.Serializer;
-import org.eclipse.jetty.server.Request;
 import org.quartz.*;
 import org.quartz.Trigger.TriggerState;
 import org.quartz.impl.triggers.CronTriggerImpl;
@@ -95,12 +94,12 @@ public final class XxlJobDynamicScheduler {
 
 
     // ---------------------- admin rpc provider (no server version) ----------------------
-    private static JettyServerHandler jettyServerHandler;
+    private static ServletServerHandler servletServerHandler;
     private void initRpcProvider(){
         // init
         XxlRpcProviderFactory xxlRpcProviderFactory = new XxlRpcProviderFactory();
         xxlRpcProviderFactory.initConfig(
-                NetEnum.JETTY,
+                NetEnum.NETTY_HTTP,
                 Serializer.SerializeEnum.HESSIAN.getSerializer(),
                 null,
                 0,
@@ -112,13 +111,13 @@ public final class XxlJobDynamicScheduler {
         xxlRpcProviderFactory.addService(AdminBiz.class.getName(), null, XxlJobAdminConfig.getAdminConfig().getAdminBiz());
 
         // jetty handler
-        jettyServerHandler = new JettyServerHandler(xxlRpcProviderFactory);
+        servletServerHandler = new ServletServerHandler(xxlRpcProviderFactory);
     }
     private void stopRpcProvider() throws Exception {
         XxlRpcInvokerFactory.getInstance().stop();
     }
     public static void invokeAdminService(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        jettyServerHandler.handle(null, new Request(null, null), request, response);
+        servletServerHandler.handle(null, request, response);
     }
 
 
@@ -139,7 +138,7 @@ public final class XxlJobDynamicScheduler {
 
         // set-cache
         executorBiz = (ExecutorBiz) new XxlRpcReferenceBean(
-                NetEnum.JETTY,
+                NetEnum.NETTY_HTTP,
                 Serializer.SerializeEnum.HESSIAN.getSerializer(),
                 CallType.SYNC,
                 LoadBalance.ROUND,

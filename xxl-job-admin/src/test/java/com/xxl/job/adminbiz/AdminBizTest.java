@@ -33,7 +33,7 @@ public class AdminBizTest {
     public void registryTest() throws Exception {
         addressUrl = addressUrl.replace("http://", "");
         AdminBiz adminBiz = (AdminBiz) new XxlRpcReferenceBean(
-                NetEnum.JETTY,
+                NetEnum.NETTY_HTTP,
                 Serializer.SerializeEnum.HESSIAN.getSerializer(),
                 CallType.SYNC,
                 LoadBalance.ROUND,
@@ -63,7 +63,7 @@ public class AdminBizTest {
     public void registryRemove() throws Exception {
         addressUrl = addressUrl.replace("http://", "");
         AdminBiz adminBiz = (AdminBiz) new XxlRpcReferenceBean(
-                NetEnum.JETTY,
+                NetEnum.NETTY_HTTP,
                 Serializer.SerializeEnum.HESSIAN.getSerializer(),
                 CallType.SYNC,
                 LoadBalance.ROUND,

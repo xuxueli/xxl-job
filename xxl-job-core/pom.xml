@@ -20,26 +20,6 @@
 			<groupId>com.xuxueli</groupId>
 			<artifactId>xxl-rpc-core</artifactId>
 			<version>${xxl-rpc.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>io.netty</groupId>
-					<artifactId>netty-all</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.apache.commons</groupId>
-					<artifactId>commons-pool2</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>jetty-server</artifactId>
-			<version>${jetty-server.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>jetty-client</artifactId>
-			<version>${jetty-server.version}</version>
 		</dependency>
 
 		<!-- groovy-all -->

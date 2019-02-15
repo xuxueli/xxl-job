@@ -115,7 +115,7 @@ public class XxlJobExecutor  {
                     String addressUrl = address.concat(AdminBiz.MAPPING);
 
                     AdminBiz adminBiz = (AdminBiz) new XxlRpcReferenceBean(
-                            NetEnum.JETTY,
+                            NetEnum.NETTY_HTTP,
                             Serializer.SerializeEnum.HESSIAN.getSerializer(),
                             CallType.SYNC,
                             LoadBalance.ROUND,
@@ -153,7 +153,7 @@ public class XxlJobExecutor  {
         serviceRegistryParam.put("address", address);
 
         xxlRpcProviderFactory = new XxlRpcProviderFactory();
-        xxlRpcProviderFactory.initConfig(NetEnum.JETTY, Serializer.SerializeEnum.HESSIAN.getSerializer(), ip, port, accessToken, ExecutorServiceRegistry.class, serviceRegistryParam);
+        xxlRpcProviderFactory.initConfig(NetEnum.NETTY_HTTP, Serializer.SerializeEnum.HESSIAN.getSerializer(), ip, port, accessToken, ExecutorServiceRegistry.class, serviceRegistryParam);
 
         // add services
         xxlRpcProviderFactory.addService(ExecutorBiz.class.getName(), null, new ExecutorBizImpl());

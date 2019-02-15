@@ -50,7 +50,7 @@ public class ExecutorBizTest {
         // do remote trigger
         String accessToken = null;
         ExecutorBiz executorBiz = (ExecutorBiz) new XxlRpcReferenceBean(
-                NetEnum.JETTY,
+                NetEnum.NETTY_HTTP,
                 Serializer.SerializeEnum.HESSIAN.getSerializer(),
                 CallType.SYNC,
                 LoadBalance.ROUND,
