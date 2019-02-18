@@ -41,8 +41,6 @@
 		<groovy.version>2.5.5</groovy.version>
 		<quartz.version>2.3.0</quartz.version>
 
-		<jackson.version>2.9.8</jackson.version>
-
 	</properties>
 
 	<build>

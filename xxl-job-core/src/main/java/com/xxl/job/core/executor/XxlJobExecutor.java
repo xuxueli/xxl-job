@@ -107,7 +107,9 @@ public class XxlJobExecutor  {
 
     // ---------------------- admin-client (rpc invoker) ----------------------
     private static List<AdminBiz> adminBizList;
+    private static Serializer serializer;
     private void initAdminBizList(String adminAddresses, String accessToken) throws Exception {
+        serializer = Serializer.SerializeEnum.HESSIAN.getSerializer();
         if (adminAddresses!=null && adminAddresses.trim().length()>0) {
             for (String address: adminAddresses.trim().split(",")) {
                 if (address!=null && address.trim().length()>0) {
@@ -116,7 +118,7 @@ public class XxlJobExecutor  {
 
                     AdminBiz adminBiz = (AdminBiz) new XxlRpcReferenceBean(
                             NetEnum.NETTY_HTTP,
-                            Serializer.SerializeEnum.HESSIAN.getSerializer(),
+                            serializer,
                             CallType.SYNC,
                             LoadBalance.ROUND,
                             AdminBiz.class,
@@ -138,6 +140,9 @@ public class XxlJobExecutor  {
     }
     public static List<AdminBiz> getAdminBizList(){
         return adminBizList;
+    }
+    public static Serializer getSerializer() {
+        return serializer;
     }
 
 

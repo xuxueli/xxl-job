@@ -8,7 +8,6 @@ import com.xxl.job.core.executor.XxlJobExecutor;
 import com.xxl.job.core.log.XxlJobFileAppender;
 import com.xxl.job.core.log.XxlJobLogger;
 import com.xxl.job.core.util.FileUtil;
-import com.xxl.job.core.util.JacksonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -190,46 +189,53 @@ public class TriggerCallbackThread {
 
     // ---------------------- fail-callback file ----------------------
 
-    private static String failCallbackFileName = XxlJobFileAppender.getLogPath().concat(File.separator).concat("xxl-job-callback").concat(".log");
+    private static String failCallbackFilePath = XxlJobFileAppender.getLogPath().concat(File.separator);
+    private static String failCallbackFileName = failCallbackFilePath.concat("xxl-job-callback-{x}").concat(".log");
 
     private void appendFailCallbackFile(List<HandleCallbackParam> callbackParamList){
+        // valid
+        if (callbackParamList==null || callbackParamList.size()==0) {
+            return;
+        }
+
         // append file
-        String content = JacksonUtil.writeValueAsString(callbackParamList);
-        FileUtil.appendFileLine(failCallbackFileName, content);
+        byte[] callbackParamList_bytes = XxlJobExecutor.getSerializer().serialize(callbackParamList);
+
+        File callbackLogFile = new File(failCallbackFileName.replace("{x}", String.valueOf(System.currentTimeMillis())));
+        if (callbackLogFile.exists()) {
+            for (int i = 0; i < 100; i++) {
+                callbackLogFile = new File(failCallbackFileName.replace("{x}", String.valueOf(System.currentTimeMillis()).concat("-").concat(String.valueOf(i)) ));
+                if (!callbackLogFile.exists()) {
+                    break;
+                }
+            }
+        }
+        FileUtil.writeFileContent(callbackLogFile, callbackParamList_bytes);
     }
 
     private void retryFailCallbackFile(){
 
-        // load and clear file
-        List<String> fileLines = FileUtil.loadFileLines(failCallbackFileName);
-        FileUtil.deleteFile(failCallbackFileName);
-
-        // parse
-        List<HandleCallbackParam> failCallbackParamList = new ArrayList<>();
-        if (fileLines!=null && fileLines.size()>0) {
-            for (String line: fileLines) {
-                List<HandleCallbackParam> failCallbackParamListTmp = JacksonUtil.readValue(line, List.class, HandleCallbackParam.class);
-                if (failCallbackParamListTmp!=null && failCallbackParamListTmp.size()>0) {
-                    failCallbackParamList.addAll(failCallbackParamListTmp);
-                }
-            }
+        // valid
+        File callbackLogPath = new File(failCallbackFilePath);
+        if (!callbackLogPath.exists()) {
+            return;
+        }
+        if (callbackLogPath.isFile()) {
+            callbackLogPath.delete();
+        }
+        if (!(callbackLogPath.isDirectory() && callbackLogPath.list()!=null && callbackLogPath.list().length>0)) {
+            return;
         }
 
-        // retry callback, 100 lines per page
-        if (failCallbackParamList!=null && failCallbackParamList.size()>0) {
-            int pagesize = 100;
-            List<HandleCallbackParam> pageData = new ArrayList<>();
-            for (int i = 0; i < failCallbackParamList.size(); i++) {
-                pageData.add(failCallbackParamList.get(i));
-                if (i>0 && i%pagesize == 0) {
-                    doCallback(pageData);
-                    pageData.clear();
-                }
-            }
-            if (pageData.size() > 0) {
-                doCallback(pageData);
-            }
+        // load and clear file, retry
+        for (File callbaclLogFile: callbackLogPath.listFiles()) {
+            byte[] callbackParamList_bytes = FileUtil.readFileContent(callbaclLogFile);
+            List<HandleCallbackParam> callbackParamList = (List<HandleCallbackParam>) XxlJobExecutor.getSerializer().deserialize(callbackParamList_bytes, HandleCallbackParam.class);
+
+            callbaclLogFile.delete();
+            doCallback(callbackParamList);
         }
+
     }
 
 }
