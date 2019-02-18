@@ -253,7 +253,7 @@ public final class XxlJobDynamicScheduler {
             scheduler.unscheduleJob(triggerKey);    // trigger + job
         }*/
 
-        logger.info(">>>>>>>>>>> removeJob success(quartz), triggerKey:{}", jobKey);
+        logger.info(">>>>>>>>>>> removeJob success(quartz), jobKey:{}", jobKey);
         return true;
     }
 
