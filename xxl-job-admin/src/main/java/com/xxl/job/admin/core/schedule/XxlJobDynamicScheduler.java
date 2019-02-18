@@ -230,7 +230,7 @@ public final class XxlJobDynamicScheduler {
         // 5、schedule job
         Date date = scheduler.scheduleJob(jobDetail, cronTrigger);
 
-        logger.info(">>>>>>>>>>> addJob success, jobDetail:{}, cronTrigger:{}, date:{}", jobDetail, cronTrigger, date);
+        logger.info(">>>>>>>>>>> addJob success(quartz), jobDetail:{}, cronTrigger:{}, date:{}", jobDetail, cronTrigger, date);
         return true;
     }
 
@@ -245,13 +245,15 @@ public final class XxlJobDynamicScheduler {
      */
     public static boolean removeJob(String jobName, String jobGroup) throws SchedulerException {
 
-        TriggerKey triggerKey = TriggerKey.triggerKey(jobName, jobGroup);
+        JobKey jobKey = new JobKey(jobName, jobGroup);
+        scheduler.deleteJob(jobKey);
 
+        /*TriggerKey triggerKey = TriggerKey.triggerKey(jobName, jobGroup);
         if (scheduler.checkExists(triggerKey)) {
             scheduler.unscheduleJob(triggerKey);    // trigger + job
-        }
+        }*/
 
-        logger.info(">>>>>>>>>>> removeJob success, triggerKey:{}", triggerKey);
+        logger.info(">>>>>>>>>>> removeJob success(quartz), triggerKey:{}", jobKey);
         return true;
     }
 
