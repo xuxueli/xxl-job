@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -25,7 +26,13 @@ public class JobTriggerPoolHelper {
             256,
             60L,
             TimeUnit.SECONDS,
-            new LinkedBlockingQueue<Runnable>(1000));
+            new LinkedBlockingQueue<Runnable>(1000),
+            new ThreadFactory() {
+                @Override
+                public Thread newThread(Runnable r) {
+                    return new Thread(r, "xxl-job, admin JobTriggerPoolHelper-triggerPool" + r.hashCode());
+                }
+            });
 
 
     public void addTrigger(final int jobId, final TriggerTypeEnum triggerType, final int failRetryCount, final String executorShardingParam, final String executorParam) {
