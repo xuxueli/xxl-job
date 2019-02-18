@@ -100,6 +100,7 @@ public class ExecutorRegistryThread extends Thread {
             }
         });
         registryThread.setDaemon(true);
+        registryThread.setName("xxl-job, executor ExecutorRegistryThread");
         registryThread.start();
     }
 

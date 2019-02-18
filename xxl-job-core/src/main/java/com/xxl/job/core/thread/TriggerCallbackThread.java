@@ -99,6 +99,7 @@ public class TriggerCallbackThread {
             }
         });
         triggerCallbackThread.setDaemon(true);
+        triggerCallbackThread.setName("xxl-job, executor TriggerCallbackThread");
         triggerCallbackThread.start();
 
 

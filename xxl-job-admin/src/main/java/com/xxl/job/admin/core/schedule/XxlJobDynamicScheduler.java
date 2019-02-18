@@ -144,7 +144,7 @@ public final class XxlJobDynamicScheduler {
                 LoadBalance.ROUND,
                 ExecutorBiz.class,
                 null,
-                10000,
+                5000,
                 address,
                 XxlJobAdminConfig.getAdminConfig().getAccessToken(),
                 null,

@@ -90,6 +90,7 @@ public class JobRegistryMonitorHelper {
 			}
 		});
 		registryThread.setDaemon(true);
+		registryThread.setName("xxl-job, admin JobRegistryMonitorHelper");
 		registryThread.start();
 	}
 

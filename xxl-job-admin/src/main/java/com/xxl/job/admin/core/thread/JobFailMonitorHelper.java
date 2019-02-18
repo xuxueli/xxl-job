@@ -98,6 +98,7 @@ public class JobFailMonitorHelper {
 			}
 		});
 		monitorThread.setDaemon(true);
+		monitorThread.setName("xxl-job, admin JobFailMonitorHelper");
 		monitorThread.start();
 	}
 

@@ -101,6 +101,7 @@ public class JobLogFileCleanThread extends Thread {
             }
         });
         localThread.setDaemon(true);
+        localThread.setName("xxl-job, executor JobLogFileCleanThread");
         localThread.start();
     }
 
