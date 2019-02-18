@@ -30,7 +30,7 @@ public class JobTriggerPoolHelper {
             new ThreadFactory() {
                 @Override
                 public Thread newThread(Runnable r) {
-                    return new Thread(r, "xxl-job, admin JobTriggerPoolHelper-triggerPool" + r.hashCode());
+                    return new Thread(r, "xxl-job, admin JobTriggerPoolHelper-triggerPool-" + r.hashCode());
                 }
             });
 
