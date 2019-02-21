@@ -48,7 +48,7 @@
 		SELECT <include refid="Base_Column_List" />
 		FROM XXL_JOB_QRTZ_TRIGGER_LOG AS t
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
-			<if test="jobGroup gt 0">
+			<if test="jobId==0 and jobGroup gt 0">
 				AND t.job_group = #{jobGroup}
 			</if>
 			<if test="jobId gt 0">
@@ -82,7 +82,7 @@
 		SELECT count(1)
 		FROM XXL_JOB_QRTZ_TRIGGER_LOG AS t
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
-			<if test="jobGroup gt 0">
+			<if test="jobId==0 and jobGroup gt 0">
 				AND t.job_group = #{jobGroup}
 			</if>
 			<if test="jobId gt 0">

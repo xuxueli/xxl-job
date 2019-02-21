@@ -142,6 +142,7 @@
 	<update id="update" parameterType="com.xxl.job.admin.core.model.XxlJobInfo" >
 		UPDATE XXL_JOB_QRTZ_TRIGGER_INFO
 		SET
+			job_group = #{jobGroup},
 			job_cron = #{jobCron},
 			job_desc = #{jobDesc},
 			update_time = NOW(),

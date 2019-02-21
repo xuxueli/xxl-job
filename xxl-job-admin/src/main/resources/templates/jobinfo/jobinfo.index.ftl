@@ -301,7 +301,7 @@ exit 0
 					<div class="form-group">
                         <label for="firstname" class="col-sm-2 control-label">${I18n.jobinfo_field_jobgroup}<font color="red">*</font></label>
                         <div class="col-sm-4">
-                            <select class="form-control" name="jobGroup" disabled >
+                            <select class="form-control" name="jobGroup" >
 							<#list JobGroupList as group>
                                 <option value="${group.id}" >${group.title}</option>
 							</#list>
