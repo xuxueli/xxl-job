@@ -92,6 +92,12 @@ public class XxlJobExecutor  {
             }
             jobThreadRepository.clear();
         }
+        if(jobHandlerRepository.size() >0 ){
+            for (Map.Entry<String, IJobHandler> item: jobHandlerRepository.entrySet()){
+                removeJobHandler(item.getKey(), "web container destroy and kill the jod handler");
+            }
+            jobHandlerRepository.clear();
+        }
 
 
         // destory JobLogFileCleanThread
@@ -102,6 +108,13 @@ public class XxlJobExecutor  {
 
         // destory executor-server
         stopRpcProvider();
+    }
+
+    private void removeJobHandler(String handlerId, String removeOldReason){
+        IJobHandler oldJobHandler = jobHandlerRepository.remove(handlerId);
+        if (oldJobHandler != null) {
+            oldJobHandler.destroy();
+        }
     }
 
 
