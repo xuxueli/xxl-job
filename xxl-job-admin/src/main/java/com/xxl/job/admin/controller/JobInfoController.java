@@ -76,13 +76,13 @@ public class JobInfoController {
 		return xxlJobService.remove(id);
 	}
 	
-	@RequestMapping("/stop")		// TODO, pause >> stop
+	@RequestMapping("/stop")
 	@ResponseBody
 	public ReturnT<String> pause(int id) {
 		return xxlJobService.stop(id);
 	}
 	
-	@RequestMapping("/start")		// TODO, resume >> start
+	@RequestMapping("/start")
 	@ResponseBody
 	public ReturnT<String> start(int id) {
 		return xxlJobService.start(id);
