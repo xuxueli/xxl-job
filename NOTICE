@@ -10,12 +10,12 @@ Spring:
   * HOMEPAGE:
     * http://www.springsource.org
 
-Jetty:
+Netty:
 
   * LICENSE:
     * http://www.apache.org/licenses/LICENSE-2.0 (Apache License 2.0)
   * HOMEPAGE:
-    * http://jetty.mortbay.org
+    * https://github.com/netty/netty
 
 Hessian:
 
