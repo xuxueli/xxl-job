@@ -33,12 +33,12 @@ $(function () {
             monthNames : I18n.daterangepicker_custom_monthnames.split(',') ,        // '一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'
             firstDay : 1
         },
-        startDate: rangesConf[I18n.daterangepicker_ranges_recent_month][0] ,
-        endDate: rangesConf[I18n.daterangepicker_ranges_recent_month][1]
+        startDate: rangesConf[I18n.daterangepicker_ranges_recent_week][0] ,
+        endDate: rangesConf[I18n.daterangepicker_ranges_recent_week][1]
     }, function (start, end, label) {
         freshChartDate(start, end);
     });
-    freshChartDate(rangesConf[I18n.daterangepicker_ranges_recent_month][0], rangesConf[I18n.daterangepicker_ranges_recent_month][1]);
+    freshChartDate(rangesConf[I18n.daterangepicker_ranges_recent_week][0], rangesConf[I18n.daterangepicker_ranges_recent_week][1]);
 
     /**
      * fresh Chart Date
