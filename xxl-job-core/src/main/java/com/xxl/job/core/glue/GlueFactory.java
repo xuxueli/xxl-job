@@ -33,9 +33,7 @@ public class GlueFactory {
 	 * groovy class loader
 	 */
 	private GroovyClassLoader groovyClassLoader = new GroovyClassLoader();
-
-	private static final ConcurrentHashMap<String, Class<?>> CLASS_CACHE = new ConcurrentHashMap<>();
-	private static final ConcurrentHashMap<Long, String> JOBID_MD5KEY_CACHE = new ConcurrentHashMap<>();
+	private ConcurrentHashMap<String, Class<?>> CLASS_CACHE = new ConcurrentHashMap<>();
 
 	/**
 	 * load new instance, prototype
@@ -44,9 +42,9 @@ public class GlueFactory {
 	 * @return
 	 * @throws Exception
 	 */
-	public IJobHandler loadNewInstance(long jobId, String codeSource) throws Exception{
+	public IJobHandler loadNewInstance(String codeSource) throws Exception{
 		if (codeSource!=null && codeSource.trim().length()>0) {
-			Class<?> clazz = getCodeSourceClass(jobId, codeSource);
+			Class<?> clazz = getCodeSourceClass(codeSource);
 			if (clazz != null) {
 				Object instance = clazz.newInstance();
 				if (instance!=null) {
@@ -62,6 +60,22 @@ public class GlueFactory {
 		}
 		throw new IllegalArgumentException(">>>>>>>>>>> xxl-glue, loadNewInstance error, instance is null");
 	}
+	private Class<?> getCodeSourceClass(String codeSource){
+		try {
+			// md5
+			byte[] md5 = MessageDigest.getInstance("MD5").digest(codeSource.getBytes());
+			String md5Str = new BigInteger(1, md5).toString(16);
+
+			Class<?> clazz = CLASS_CACHE.get(md5Str);
+			if(clazz == null){
+				clazz = groovyClassLoader.parseClass(codeSource);
+				CLASS_CACHE.putIfAbsent(md5Str, clazz);
+			}
+			return clazz;
+		} catch (Exception e) {
+			return groovyClassLoader.parseClass(codeSource);
+		}
+	}
 
 	/**
 	 * inject service of bean field
@@ -72,28 +86,4 @@ public class GlueFactory {
 		// do something
 	}
 
-	private Class<?> getCodeSourceClass(long jobId, String codeSource){
-		try {
-			MessageDigest md = MessageDigest.getInstance("MD5");
-			byte[] md5 = md.digest(codeSource.getBytes());
-			BigInteger no = new BigInteger(1, md5);
-			String md5Str = no.toString(16);
-			Class<?> clazz = CLASS_CACHE.get(md5Str);
-			if(clazz == null){
-				clazz = groovyClassLoader.parseClass(codeSource);
-				Class<?> preClazz = CLASS_CACHE.putIfAbsent(md5Str, clazz);
-
-				// 如果代碼有變化則刪除之前class緩存
-				if(preClazz == null){
-					String preMd5 = JOBID_MD5KEY_CACHE.put(jobId, md5Str);
-					if(preMd5 != null){
-						CLASS_CACHE.remove(preMd5);
-					}
-				}
-			}
-			return clazz;
-		} catch (Exception e) {
-			return groovyClassLoader.parseClass(codeSource);
-		}
-	}
 }
