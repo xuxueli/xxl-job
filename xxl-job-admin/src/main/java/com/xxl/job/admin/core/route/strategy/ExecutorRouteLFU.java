@@ -33,9 +33,23 @@ public class ExecutorRouteLFU extends ExecutorRouter {
             lfuItemMap = new HashMap<String, Integer>();
             jobLfuMap.putIfAbsent(jobId, lfuItemMap);   // 避免重复覆盖
         }
+
+        // put new
         for (String address: addressList) {
             if (!lfuItemMap.containsKey(address) || lfuItemMap.get(address) >1000000 ) {
                 lfuItemMap.put(address, new Random().nextInt(addressList.size()));  // 初始化时主动Random一次，缓解首次压力
+            }
+        }
+        // remove old
+        List<String> delKeys = new ArrayList<>();
+        for (String existKey: lfuItemMap.keySet()) {
+            if (!addressList.contains(existKey)) {
+                delKeys.add(existKey);
+            }
+        }
+        if (delKeys.size() > 0) {
+            for (String delKey: delKeys) {
+                lfuItemMap.remove(delKey);
             }
         }
 
