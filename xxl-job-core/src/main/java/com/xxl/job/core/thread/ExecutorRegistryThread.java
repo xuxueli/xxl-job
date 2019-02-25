@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by xuxueli on 17/3/2.
  */
-public class ExecutorRegistryThread extends Thread {
+public class ExecutorRegistryThread {
     private static Logger logger = LoggerFactory.getLogger(ExecutorRegistryThread.class);
 
     private static ExecutorRegistryThread instance = new ExecutorRegistryThread();
