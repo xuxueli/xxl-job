@@ -90,12 +90,17 @@ public class ExecutorRegistryThread {
                                 logger.info(">>>>>>>>>>> xxl-job registry-remove fail, registryParam:{}, registryResult:{}", new Object[]{registryParam, registryResult});
                             }
                         } catch (Exception e) {
-                            logger.info(">>>>>>>>>>> xxl-job registry-remove error, registryParam:{}", registryParam, e);
+                            if (!toStop) {
+                                logger.info(">>>>>>>>>>> xxl-job registry-remove error, registryParam:{}", registryParam, e);
+                            }
+
                         }
 
                     }
                 } catch (Exception e) {
-                    logger.error(e.getMessage(), e);
+                    if (!toStop) {
+                        logger.error(e.getMessage(), e);
+                    }
                 }
                 logger.info(">>>>>>>>>>> xxl-job, executor registry thread destory.");
 
