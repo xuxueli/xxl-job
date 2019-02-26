@@ -69,7 +69,7 @@ public class XxlJobExecutor  {
         // init logpath
         XxlJobFileAppender.initLogPath(logPath);
 
-        // init admin-client
+        // init invoker, admin-client
         initAdminBizList(adminAddresses, accessToken);
 
 
@@ -103,6 +103,9 @@ public class XxlJobExecutor  {
 
         // destory executor-server
         stopRpcProvider();
+
+        // destory invoker
+        stopInvokerFactory();
     }
 
 
@@ -137,6 +140,14 @@ public class XxlJobExecutor  {
                     adminBizList.add(adminBiz);
                 }
             }
+        }
+    }
+    private void stopInvokerFactory(){
+        // stop invoker factory
+        try {
+            XxlRpcInvokerFactory.getInstance().stop();
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
         }
     }
     public static List<AdminBiz> getAdminBizList(){
@@ -202,12 +213,6 @@ public class XxlJobExecutor  {
     }
 
     private void stopRpcProvider() {
-        // stop invoker factory
-        try {
-            XxlRpcInvokerFactory.getInstance().stop();
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-        }
         // stop provider factory
         try {
             xxlRpcProviderFactory.stop();
