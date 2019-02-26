@@ -74,7 +74,7 @@
 				AND t.handle_code = 0
 			</if>
 		</trim>
-		ORDER BY id DESC
+		ORDER BY t.trigger_time DESC
 		LIMIT #{offset}, #{pagesize}
 	</select>
 	
