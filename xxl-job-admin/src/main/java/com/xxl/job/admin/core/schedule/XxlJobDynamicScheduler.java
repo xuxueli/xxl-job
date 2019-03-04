@@ -110,7 +110,7 @@ public final class XxlJobDynamicScheduler {
         // add services
         xxlRpcProviderFactory.addService(AdminBiz.class.getName(), null, XxlJobAdminConfig.getAdminConfig().getAdminBiz());
 
-        // jetty handler
+        // servlet handler
         servletServerHandler = new ServletServerHandler(xxlRpcProviderFactory);
     }
     private void stopRpcProvider() throws Exception {
