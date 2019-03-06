@@ -391,7 +391,7 @@ docker run -e PARAMS="--spring.datasource.url=jdbc:mysql://127.0.0.1:3306/xxl-jo
 
 ### 2.4 配置部署“执行器项目”
 
-    “执行器”项目：xxl-job-executor-sample-springboot (提供多种版本执行器供选择，现以Spring版本为例，可直接使用，也可以参考其并将现有项目改造成执行器)
+    “执行器”项目：xxl-job-executor-sample-springboot (提供多种版本执行器供选择，现以 springboot 版本为例，可直接使用，也可以参考其并将现有项目改造成执行器)
     作用：负责接收“调度中心”的调度并执行；可直接部署执行器，也可以将执行器集成到现有业务项目中。
     
 #### 步骤一：maven依赖
@@ -404,21 +404,25 @@ docker run -e PARAMS="--spring.datasource.url=jdbc:mysql://127.0.0.1:3306/xxl-jo
 
 执行器配置，配置内容说明：
 
-    ### xxl-job admin address list：调度中心部署跟地址：如调度中心集群部署存在多个地址则用逗号分隔。执行器将会使用该地址进行"执行器心跳注册"和"任务结果回调"。
+    ### 调度中心部署跟地址 [选填]：如调度中心集群部署存在多个地址则用逗号分隔。执行器将会使用该地址进行"执行器心跳注册"和"任务结果回调"；为空则关闭自动注册；
     xxl.job.admin.addresses=http://127.0.0.1:8080/xxl-job-admin
     
-    ### xxl-job executor address：执行器"AppName"和地址信息配置：AppName执行器心跳注册分组依据；地址信息用于"调度中心请求并触发任务"和"执行器注册"。执行器默认端口为9999，执行器IP默认为空表示自动获取IP，多网卡时可手动设置指定IP，该IP不会绑定Host仅作为通讯实用。单机部署多个执行器时，注意要配置不同执行器端口；
+    ### 执行器AppName [选填]：执行器心跳注册分组依据；为空则关闭自动注册
     xxl.job.executor.appname=xxl-job-executor-sample
+    
+    ### 执行器IP [选填]：默认为空表示自动获取IP，多网卡时可手动设置指定IP，该IP不会绑定Host仅作为通讯实用；地址信息用于 "执行器注册" 和 "调度中心请求并触发任务"；
     xxl.job.executor.ip=
+    
+    ### 执行器端口号 [选填]：小于等于0则自动获取；默认端口为9999，单机部署多个执行器时，注意要配置不同执行器端口；
     xxl.job.executor.port=9999
     
-    ### xxl-job, access token：执行器通讯TOKEN，非空时启用
+    ### 执行器通讯TOKEN [选填]：非空时启用；
     xxl.job.accessToken=
         
-    ### xxl-job log path：执行器运行日志文件存储的磁盘位置，需要对该路径拥有读写权限
+    ### 执行器运行日志文件存储磁盘路径 [选填] ：需要对该路径拥有读写权限；为空则使用默认路径；
     xxl.job.executor.logpath=/data/applogs/xxl-job/jobhandler
     
-    ### xxl-job log retention days：执行器Log文件定期清理功能，指定日志保存天数，日志文件过期自动删除。限制至少保持3天，否则功能不生效；
+    ### 执行器日志保存天数 [选填] ：值大于3时生效，启用执行器Log文件定期清理功能，否则不生效；
     xxl.job.executor.logretentiondays=-1
     
 
@@ -435,13 +439,13 @@ docker run -e PARAMS="--spring.datasource.url=jdbc:mysql://127.0.0.1:3306/xxl-jo
 public XxlJobSpringExecutor xxlJobExecutor() {
     logger.info(">>>>>>>>>>> xxl-job config init.");
     XxlJobSpringExecutor xxlJobSpringExecutor = new XxlJobSpringExecutor();
-    xxlJobSpringExecutor.setAdminAddresses(adminAddresses);     // 执行器注册中心地址[选填]，为空则关闭自动注册
-    xxlJobSpringExecutor.setAppName(appName);                   // 执行器AppName[选填]，为空则关闭自动注册
-    xxlJobSpringExecutor.setIp(ip);                             // 执行器IP[选填]，为空则自动获取
-    xxlJobSpringExecutor.setPort(port);                         // 执行器端口号[选填]，小于等于0则自动获取
-    xxlJobSpringExecutor.setAccessToken(accessToken);           // 访问令牌[选填]，非空则进行匹配校验
-    xxlJobSpringExecutor.setLogPath(logPath);                   // 执行器日志路径[选填]，为空则使用默认路径
-    xxlJobSpringExecutor.setLogRetentionDays(logRetentionDays); // 日志保存天数[选填]，值大于3时生效
+    xxlJobSpringExecutor.setAdminAddresses(adminAddresses);
+    xxlJobSpringExecutor.setAppName(appName);
+    xxlJobSpringExecutor.setIp(ip);
+    xxlJobSpringExecutor.setPort(port);
+    xxlJobSpringExecutor.setAccessToken(accessToken);
+    xxlJobSpringExecutor.setLogPath(logPath);
+    xxlJobSpringExecutor.setLogRetentionDays(logRetentionDays);
 
     return xxlJobSpringExecutor;
 }
