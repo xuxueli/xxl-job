@@ -234,6 +234,14 @@ XXL-JOB是一个轻量级分布式任务调度平台，其核心设计目标是�
     - 153、天津青芒果科技有限公司 (芒果头条)
     - 154、长飞光纤光缆股份有限公司
     - 155、世纪凯歌（北京）医疗科技有限公司
+    - 156、浙江霖梓控股有限公司
+    - 157、江西腾飞网络技术有限公司
+    - 158、安迅物流有限公司
+    - 159、肉联网
+    - 160、北京北广梯影广告传媒有限公司
+    - 161、上海数慧系统技术有限公司
+    - 162、大志天成
+    - 163、上海云鹊医
 	- ……
 
 > 更多接入的公司，欢迎在 [登记地址](https://github.com/xuxueli/xxl-job/issues/1 ) 登记，登记仅仅为了产品推广。
@@ -295,9 +303,10 @@ XXL-JOB是一个轻量级分布式任务调度平台，其核心设计目标是�
 
     xxl-job-admin：调度中心
     xxl-job-core：公共依赖
-    xxl-job-executor：执行器Sample示例（选择合适的版本执行器，可直接使用，也可以参考其并将现有项目改造成执行器）
-        ：xxl-job-executor-sample-spring：Spring版本，通过Spring容器管理执行器，比较通用，推荐这种方式；
-        ：xxl-job-executor-sample-springboot：Springboot版本，通过Springboot管理执行器；
+    xxl-job-executor-samples：执行器Sample示例（选择合适的版本执行器，可直接使用，也可以参考其并将现有项目改造成执行器）
+        ：xxl-job-executor-sample-springboot：Springboot版本，通过Springboot管理执行器，推荐这种方式；
+        ：xxl-job-executor-sample-spring：Spring版本，通过Spring容器管理执行器，比较通用；
+        ：xxl-job-executor-sample-frameless：无框架版本；
         ：xxl-job-executor-sample-jfinal：JFinal版本，通过JFinal管理执行器；
         ：xxl-job-executor-sample-nutz：Nutz版本，通过Nutz管理执行器；
         
@@ -382,7 +391,7 @@ docker run -e PARAMS="--spring.datasource.url=jdbc:mysql://127.0.0.1:3306/xxl-jo
 
 ### 2.4 配置部署“执行器项目”
 
-    “执行器”项目：xxl-job-executor-sample-spring (提供多种版本执行器供选择，现以Spring版本为例，可直接使用，也可以参考其并将现有项目改造成执行器)
+    “执行器”项目：xxl-job-executor-sample-springboot (提供多种版本执行器供选择，现以Spring版本为例，可直接使用，也可以参考其并将现有项目改造成执行器)
     作用：负责接收“调度中心”的调度并执行；可直接部署执行器，也可以将执行器集成到现有业务项目中。
     
 #### 步骤一：maven依赖
@@ -391,7 +400,7 @@ docker run -e PARAMS="--spring.datasource.url=jdbc:mysql://127.0.0.1:3306/xxl-jo
 #### 步骤二：执行器配置
 执行器配置，配置文件地址：
 
-    /xxl-job/xxl-job-executor-samples/xxl-job-executor-sample-spring/src/main/resources/xxl-job-executor.properties
+    /xxl-job/xxl-job-executor-samples/xxl-job-executor-sample-springboot/src/main/resources/application.properties
 
 执行器配置，配置内容说明：
 
@@ -407,7 +416,7 @@ docker run -e PARAMS="--spring.datasource.url=jdbc:mysql://127.0.0.1:3306/xxl-jo
     xxl.job.accessToken=
         
     ### xxl-job log path：执行器运行日志文件存储的磁盘位置，需要对该路径拥有读写权限
-    xxl.job.executor.logpath=/data/applogs/xxl-job/jobhandler/
+    xxl.job.executor.logpath=/data/applogs/xxl-job/jobhandler
     
     ### xxl-job log retention days：执行器Log文件定期清理功能，指定日志保存天数，日志文件过期自动删除。限制至少保持3天，否则功能不生效；
     xxl.job.executor.logretentiondays=-1
@@ -417,31 +426,25 @@ docker run -e PARAMS="--spring.datasource.url=jdbc:mysql://127.0.0.1:3306/xxl-jo
 
 执行器组件，配置文件地址：
 
-    /xxl-job/xxl-job-executor-samples/xxl-job-executor-sample-spring/src/main/resources/applicationcontext-xxl-job.xml
+    /xxl-job/xxl-job-executor-samples/xxl-job-executor-sample-springboot/src/main/java/com/xxl/job/executor/core/config/XxlJobConfig.java
 
 执行器组件，配置内容说明：
 
 ```
-<!-- 配置01、JobHandler 扫描路径：自动扫描容器中JobHandler -->
-<context:component-scan base-package="com.xxl.job.executor.service.jobhandler" />
+@Bean(initMethod = "start", destroyMethod = "destroy")
+public XxlJobSpringExecutor xxlJobExecutor() {
+    logger.info(">>>>>>>>>>> xxl-job config init.");
+    XxlJobSpringExecutor xxlJobSpringExecutor = new XxlJobSpringExecutor();
+    xxlJobSpringExecutor.setAdminAddresses(adminAddresses);     // 执行器注册中心地址[选填]，为空则关闭自动注册
+    xxlJobSpringExecutor.setAppName(appName);                   // 执行器AppName[选填]，为空则关闭自动注册
+    xxlJobSpringExecutor.setIp(ip);                             // 执行器IP[选填]，为空则自动获取
+    xxlJobSpringExecutor.setPort(port);                         // 执行器端口号[选填]，小于等于0则自动获取
+    xxlJobSpringExecutor.setAccessToken(accessToken);           // 访问令牌[选填]，非空则进行匹配校验
+    xxlJobSpringExecutor.setLogPath(logPath);                   // 执行器日志路径[选填]，为空则使用默认路径
+    xxlJobSpringExecutor.setLogRetentionDays(logRetentionDays); // 日志保存天数[选填]，值大于3时生效
 
-<!-- 配置02、执行器 -->
-<bean id="xxlJobExecutor" class="com.xxl.job.core.executor.XxlJobExecutor" init-method="start" destroy-method="destroy" >
-    <!-- 执行器注册中心地址[选填]，为空则关闭自动注册 -->
-    <property name="adminAddresses" value="${xxl.job.admin.addresses}" />
-    <!-- 执行器AppName[选填]，为空则关闭自动注册 -->
-    <property name="appName" value="${xxl.job.executor.appname}" />
-    <!-- 执行器IP[选填]，为空则自动获取 -->
-    <property name="ip" value="${xxl.job.executor.ip}" />
-    <!-- 执行器端口号[选填]，小于等于0则自动获取 -->
-    <property name="port" value="${xxl.job.executor.port}" />
-    <!-- 访问令牌[选填]，非空则进行匹配校验 -->
-    <property name="accessToken" value="${xxl.job.accessToken}" />
-    <!-- 执行器日志路径[选填]，为空则使用默认路径 -->
-    <property name="logPath" value="${xxl.job.executor.logpath}" />
-    <!-- 日志保存天数[选填]，值大于3时生效 -->
-    <property name="logRetentionDays" value="${xxl.job.executor.logretentiondays}" />
-</bean>
+    return xxlJobSpringExecutor;
+}
 ```
 
 #### 步骤四：部署执行器项目：
