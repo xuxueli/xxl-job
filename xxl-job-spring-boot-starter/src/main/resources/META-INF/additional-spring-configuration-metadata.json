@@ -1,0 +1,46 @@
+{
+  "properties": [
+    {
+      "name": "xxl.job.enabled",
+      "type": "java.lang.Boolean",
+      "defaultValue": false,
+      "description": "Enable xxl job."
+    },
+    {
+      "name": "xxl.job.access-token",
+      "type": "java.lang.String",
+      "defaultValue": null,
+      "description": "xxl-job, access token：执行器通讯TOKEN."
+    },
+    {
+      "name": "xxl.job.admin.addresses",
+      "type": "java.lang.String",
+      "description": "xxl-job admin address list：调度中心部署跟地址：如调度中心集群部署存在多个地址则用逗号分隔。执行器将会使用该地址进行 `执行器心跳注册` 和 `任务结果回调`."
+    },
+    {
+      "name": "xxl.job.executor.app-name",
+      "type": "java.lang.String",
+      "description": "xxl-job executor address：执行器 `AppName` 和地址信息配置：AppName执行器心跳注册分组依据；地址信息用于 `调度中心请求并触发任务` 和 `执行器注册`。执行器默认端口为9999，执行器IP默认为空表示自动获取IP，多网卡时可手动设置指定IP，手动设置IP时将会绑定Host。单机部署多个执行器时，注意要配置不同执行器端口."
+    },
+    {
+      "name": "xxl.job.executor.log-path",
+      "type": "java.lang.String",
+      "description": "xxl-job log path：执行器运行日志文件存储的磁盘位置，需要对该路径拥有读写权限."
+    },
+    {
+      "name": "xxl.job.executor.ip",
+      "type": "java.lang.String",
+      "defaultValue": null
+    },
+    {
+      "name": "xxl.job.executor.port",
+      "type": "java.lang.Integer",
+      "defaultValue": 10019
+    },
+    {
+      "name": "xxl.job.executor.log-retention-days",
+      "type": "java.lang.Integer",
+      "defaultValue": -1
+    }
+  ]
+}
