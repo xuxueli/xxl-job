@@ -1,6 +1,7 @@
 package com.xxl.job.spring.boot.autoconfigure;
 
 import com.xxl.job.core.executor.XxlJobExecutor;
+import com.xxl.job.core.executor.impl.XxlJobSpringExecutor;
 import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +18,7 @@ import org.springframework.context.annotation.Configuration;
  * @date 2019-04-11
  */
 @Configuration
-@ConditionalOnClass(XxlJobExecutor.class)
+@ConditionalOnClass(XxlJobSpringExecutor.class)
 @ConditionalOnProperty(prefix = "xxl.job", name = "enabled", havingValue = "true")
 @EnableConfigurationProperties({XxlJobProperties.class})
 public class XxlJobAutoConfiguration {
@@ -33,7 +34,7 @@ public class XxlJobAutoConfiguration {
     @Bean(initMethod = "start", destroyMethod = "destroy")
     @ConditionalOnMissingBean
     public XxlJobExecutor xxlJobExecutor() {
-        LOGGER.info(">>>>>>>>>>> xxl-job init.");
+        LOGGER.info(">>>>>>>>>>> xxl-job config init.");
 
         XxlJobProperties.AdminProperties admin = this.properties.getAdmin();
         XxlJobProperties.ExecutorProperties executor = this.properties.getExecutor();
@@ -41,7 +42,7 @@ public class XxlJobAutoConfiguration {
         Objects.requireNonNull(admin, "xxl job admin properties must not be null.");
         Objects.requireNonNull(executor, "xxl job executor properties must not be null.");
 
-        XxlJobExecutor xxlJobExecutor = new XxlJobExecutor();
+        XxlJobExecutor xxlJobExecutor = new XxlJobSpringExecutor();
         xxlJobExecutor.setIp(executor.getIp());
         xxlJobExecutor.setPort(executor.getPort());
         xxlJobExecutor.setAppName(executor.getAppName());
