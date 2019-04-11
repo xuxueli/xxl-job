@@ -22,6 +22,7 @@ import com.xxl.rpc.util.NetUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Method;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -224,14 +225,27 @@ public class XxlJobExecutor  {
 
     // ---------------------- job handler repository ----------------------
     private static ConcurrentHashMap<String, IJobHandler> jobHandlerRepository = new ConcurrentHashMap<String, IJobHandler>();
+    
+    // ---------------------- job method repository ----------------------
+    private static ConcurrentHashMap<String, Method> jobMethodRepository = new ConcurrentHashMap<String, Method>();
+    
     public static IJobHandler registJobHandler(String name, IJobHandler jobHandler){
         logger.info(">>>>>>>>>>> xxl-job register jobhandler success, name:{}, jobHandler:{}", name, jobHandler);
         return jobHandlerRepository.put(name, jobHandler);
     }
+    
+    public static Method registJobMethod(String name, Method jobMethod){
+        logger.info(">>>>>>>>>>> xxl-job register jobmethod success, name:{}, jobMethod:{}", name, jobMethod);
+        return jobMethodRepository.put(name, jobMethod);
+    }
+    
     public static IJobHandler loadJobHandler(String name){
         return jobHandlerRepository.get(name);
     }
 
+    public static Method loadJobMethod(String name){
+        return jobMethodRepository.get(name);
+    }
 
     // ---------------------- job thread repository ----------------------
     private static ConcurrentHashMap<Integer, JobThread> jobThreadRepository = new ConcurrentHashMap<Integer, JobThread>();
