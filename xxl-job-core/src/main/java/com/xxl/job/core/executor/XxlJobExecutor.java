@@ -23,6 +23,8 @@ import com.xxl.rpc.remoting.provider.XxlRpcProviderFactory;
 import com.xxl.rpc.serialize.Serializer;
 import com.xxl.rpc.util.IpUtil;
 import com.xxl.rpc.util.NetUtil;
+
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,6 +32,7 @@ import java.lang.reflect.Method;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -273,6 +276,7 @@ public class XxlJobExecutor  {
 
     // ---------------------- job thread repository ----------------------
     private static ConcurrentHashMap<Integer, JobThread> jobThreadRepository = new ConcurrentHashMap<Integer, JobThread>();
+    
     public static JobThread registJobThread(int jobId, IJobHandler handler, String removeOldReason){
         JobThread newJobThread = new JobThread(jobId, handler);
         newJobThread.start();
@@ -298,6 +302,9 @@ public class XxlJobExecutor  {
         return jobThread;
     }
 
+    // ---------------------- job future repository ----------------------
+    private static ConcurrentHashMap<Integer, Future<?>> jobFutureRepository = new ConcurrentHashMap<Integer, Future<?>>();
+    
     public static ReturnT<String> addJobTask(TriggerParam triggerParam, IJobHandler handler){
     	JobTask jobTask = null;
     	if(handler instanceof AbstractMultiJobHandler){
@@ -315,10 +322,22 @@ public class XxlJobExecutor  {
     	}
         //JobThread newJobThread = new JobThread(jobId, handler);
         //.start();
-    	jobExecutor.submit(jobTask);
-        logger.info(">>>>>>>>>>> xxl-job JobTask放入executor success, jobId:{}, handler:{}", new Object[]{triggerParam.getJobId(), handler});
+    	int jobId = triggerParam.getJobId();
+    	Future<?> future = jobExecutor.submit(jobTask);
+    	Future<?> previousFuture = jobFutureRepository.put(jobId, future);
+    	if(previousFuture != null) {
+    		logger.warn(">>>>>>>>>>> jobId:{},jobFutureRepository中新加入 future:{}替换原有future:{},原有future.isDone:{}", jobId,future,previousFuture,previousFuture.isDone());
+    	}
+        logger.info(">>>>>>>>>>> xxl-job JobTask放入job executor success, jobId:{}, handler:{}", new Object[]{triggerParam.getJobId(), handler});
 
         return ReturnT.SUCCESS;
+    }
+    
+    public static void removeJobFuture(int jobId, String removeReason){
+    	Future<?> future = jobFutureRepository.remove(jobId);
+        if (future != null) {
+        	logger.info(">>>>>>>>>>> 从jobFutureRepository中移除jobId:{}对应的future:{},移除原因:{}", jobId,future,removeReason);
+        }
     }
     
     private class JobWorkerThreadFactory implements ThreadFactory{

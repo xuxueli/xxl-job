@@ -153,11 +153,13 @@ public class ExecutorBizImpl implements ExecutorBiz {
         }
 
         // replace thread (new or exists invalid)
-        if (jobThread == null) {
-            jobThread = XxlJobExecutor.registJobThread(triggerParam.getJobId(), jobHandler, removeOldReason);
-        }
+		/*
+		 * if (jobThread == null) { jobThread =
+		 * XxlJobExecutor.registJobThread(triggerParam.getJobId(), jobHandler,
+		 * removeOldReason); }
+		 */
 
-        // push data to queue
+        // add task to job executor
         ReturnT<String> pushResult = XxlJobExecutor.addJobTask(triggerParam, jobHandler);
         return pushResult;
     }

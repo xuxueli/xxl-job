@@ -19,6 +19,7 @@ import org.springframework.util.Assert;
 import com.xxl.job.core.biz.model.HandleCallbackParam;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.biz.model.TriggerParam;
+import com.xxl.job.core.executor.XxlJobExecutor;
 import com.xxl.job.core.handler.AbstractJobHandler;
 import com.xxl.job.core.handler.AbstractMultiJobHandler;
 import com.xxl.job.core.handler.IJobHandler;
@@ -150,8 +151,11 @@ public class JobTask implements Runnable {
 			XxlJobLogger.log("<br>----------- JobThread Exception:" + errorMsg + "<br>----------- xxl-job job execute end(error) -----------");
 		} finally {
             if(triggerParam != null) {
+            	//after job execution done, clear future reference associated with the job id 
+            	int code = executeResult.getCode();
+            	String removeReason = code == ReturnT.SUCCESS_CODE ? "job执行成功" : "job执行异常:"+executeResult.getMsg();
+            	XxlJobExecutor.removeJobFuture(jobId, removeReason);
                 // callback handler info
-                // commonm
                 TriggerCallbackThread.pushCallBack(new HandleCallbackParam(triggerParam.getLogId(), triggerParam.getLogDateTim(), executeResult));
             }
         }
