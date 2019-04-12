@@ -44,6 +44,13 @@ XXL-JOB是一个轻量级分布式任务调度平台，其核心设计目标是�
 - [中文文档](http://www.xuxueli.com/xxl-job/)
 - [English Documentation](http://www.xuxueli.com/xxl-job/en/)
 
+基于2.0版本新加功能：
+
+新加任务执行线程池，替换JobThread,减少线程创建销毁带来的开销
+新增注解@MultiplexJobHandler和@JobMethod，支持方法级别任务，类似spring的@scheduled
+使用方式见CompositeJobHandler
+新增job.log日志文件，记录日内执行的所有任务log
+
 
 ## Features
 - 1、简单：支持通过Web页面对任务进行CRUD操作，操作简单，一分钟上手；
@@ -79,7 +86,6 @@ XXL-JOB是一个轻量级分布式任务调度平台，其核心设计目标是�
 - 31、国际化：调度中心支持国际化设置，提供中文、英文两种可选语言，默认为中文；
 - 32、容器化：提供官方docker镜像，并实时更新推送dockerhub，进一步实现产品开箱即用；
 - 33、线程池隔离：调度线程池进行隔离拆分，慢任务自动降级进入"Slow"线程池，避免耗尽调度线程，提高系统稳定性；
-- 34、添加方法级别注解使定时任务实现更加灵活，一个类中可加多个定时任务，类似spring中的@scheduled；
 
 
 ## Development
