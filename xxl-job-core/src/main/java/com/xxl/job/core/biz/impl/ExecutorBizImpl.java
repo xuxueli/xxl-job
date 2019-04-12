@@ -77,24 +77,15 @@ public class ExecutorBizImpl implements ExecutorBiz {
         GlueTypeEnum glueTypeEnum = GlueTypeEnum.match(triggerParam.getGlueType());
         if (GlueTypeEnum.BEAN == glueTypeEnum) {
 
-            // new jobhandler
-            IJobHandler newJobHandler = XxlJobExecutor.loadJobHandler(triggerParam.getExecutorHandler());
-
-            // valid old jobThread
-            if (jobThread!=null && jobHandler != newJobHandler) {
-                // change handler, need kill old thread
-                removeOldReason = "change jobhandler or glue type, and terminate the old job thread.";
-
-                jobThread = null;
-                jobHandler = null;
-            }
+        	String handlerName = triggerParam.getExecutorHandler();
+        	if(handlerName.contains(":")){
+        		handlerName = handlerName.split(":")[0];
+        	}
+            jobHandler = XxlJobExecutor.loadJobHandler(handlerName);
 
             // valid handler
             if (jobHandler == null) {
-                jobHandler = newJobHandler;
-                if (jobHandler == null) {
-                    return new ReturnT<String>(ReturnT.FAIL_CODE, "job handler [" + triggerParam.getExecutorHandler() + "] not found.");
-                }
+                return new ReturnT<String>(ReturnT.FAIL_CODE, "job handler [" + triggerParam.getExecutorHandler() + "] not found.");
             }
 
         } else if (GlueTypeEnum.GLUE_GROOVY == glueTypeEnum) {
@@ -167,7 +158,7 @@ public class ExecutorBizImpl implements ExecutorBiz {
         }
 
         // push data to queue
-        ReturnT<String> pushResult = jobThread.pushTriggerQueue(triggerParam);
+        ReturnT<String> pushResult = XxlJobExecutor.addJobTask(triggerParam, jobHandler);
         return pushResult;
     }
 
