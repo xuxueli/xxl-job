@@ -77,7 +77,7 @@ public class XxlJobProperties {
         private String appName;
         private String logPath;
         private String ip;
-        private Integer port = 10019;
+        private Integer port = 9999;
         private Integer logRetentionDays = -1;
 
         public String getAppName() {
