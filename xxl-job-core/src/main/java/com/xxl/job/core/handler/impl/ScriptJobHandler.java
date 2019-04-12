@@ -1,19 +1,19 @@
 package com.xxl.job.core.handler.impl;
 
+import java.io.File;
+
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.glue.GlueTypeEnum;
-import com.xxl.job.core.handler.IJobHandler;
+import com.xxl.job.core.handler.AbstractJobHandler;
 import com.xxl.job.core.log.XxlJobFileAppender;
 import com.xxl.job.core.log.XxlJobLogger;
 import com.xxl.job.core.util.ScriptUtil;
 import com.xxl.job.core.util.ShardingUtil;
 
-import java.io.File;
-
 /**
  * Created by xuxueli on 17/4/27.
  */
-public class ScriptJobHandler extends IJobHandler {
+public class ScriptJobHandler extends AbstractJobHandler {
 
     private int jobId;
     private long glueUpdatetime;
@@ -49,7 +49,7 @@ public class ScriptJobHandler extends IJobHandler {
     public ReturnT<String> execute(String param) throws Exception {
 
         if (!glueType.isScript()) {
-            return new ReturnT<String>(IJobHandler.FAIL.getCode(), "glueType["+ glueType +"] invalid.");
+            return new ReturnT<String>(FAIL.getCode(), "glueType["+ glueType +"] invalid.");
         }
 
         // cmd
@@ -82,9 +82,9 @@ public class ScriptJobHandler extends IJobHandler {
         int exitValue = ScriptUtil.execToFile(cmd, scriptFileName, logFileName, scriptParams);
 
         if (exitValue == 0) {
-            return IJobHandler.SUCCESS;
+            return SUCCESS;
         } else {
-            return new ReturnT<String>(IJobHandler.FAIL.getCode(), "script exit value("+exitValue+") is failed");
+            return new ReturnT<String>(FAIL.getCode(), "script exit value("+exitValue+") is failed");
         }
 
     }

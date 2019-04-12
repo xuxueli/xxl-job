@@ -3,10 +3,14 @@ package com.xxl.job.core.executor;
 import com.xxl.job.core.biz.AdminBiz;
 import com.xxl.job.core.biz.ExecutorBiz;
 import com.xxl.job.core.biz.impl.ExecutorBizImpl;
+import com.xxl.job.core.biz.model.ReturnT;
+import com.xxl.job.core.biz.model.TriggerParam;
+import com.xxl.job.core.handler.AbstractMultiJobHandler;
 import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.log.XxlJobFileAppender;
 import com.xxl.job.core.thread.ExecutorRegistryThread;
 import com.xxl.job.core.thread.JobLogFileCleanThread;
+import com.xxl.job.core.thread.JobTask;
 import com.xxl.job.core.thread.JobThread;
 import com.xxl.job.core.thread.TriggerCallbackThread;
 import com.xxl.rpc.registry.ServiceRegistry;
@@ -25,6 +29,12 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by xuxueli on 2016/3/2 21:14.
@@ -41,6 +51,8 @@ public class XxlJobExecutor  {
     private String logPath;
     private int logRetentionDays;
 
+    private static ExecutorService jobExecutor;
+    
     public void setAdminAddresses(String adminAddresses) {
         this.adminAddresses = adminAddresses;
     }
@@ -67,6 +79,13 @@ public class XxlJobExecutor  {
     // ---------------------- start + stop ----------------------
     public void start() throws Exception {
 
+    	int cores = Runtime.getRuntime().availableProcessors();
+    	//初始化job执行线程池
+    	jobExecutor = new ThreadPoolExecutor(cores,cores<<1,
+									      60L,TimeUnit.SECONDS,
+									      new LinkedBlockingQueue<Runnable>(),
+									      new JobWorkerThreadFactory());
+    	
         // init logpath
         XxlJobFileAppender.initLogPath(logPath);
 
@@ -86,6 +105,11 @@ public class XxlJobExecutor  {
         initRpcProvider(ip, port, appName, accessToken);
     }
     public void destroy(){
+    	// destory job executor
+        if (jobExecutor != null) {
+        	jobExecutor.shutdown();
+        }
+    	
         // destory jobThreadRepository
         if (jobThreadRepository.size() > 0) {
             for (Map.Entry<Integer, JobThread> item: jobThreadRepository.entrySet()) {
@@ -274,4 +298,49 @@ public class XxlJobExecutor  {
         return jobThread;
     }
 
+    public static ReturnT<String> addJobTask(TriggerParam triggerParam, IJobHandler handler){
+    	JobTask jobTask = null;
+    	if(handler instanceof AbstractMultiJobHandler){
+    		String handlerName = triggerParam.getExecutorHandler();
+    		logger.info("AbstractMultiJobHandler名称->"+handlerName);
+    		String[] namePair = handlerName.split(":");
+    		if(namePair == null || namePair.length!=2){
+    			throw new RuntimeException("AbstractMultiJobHandler 名称"+handlerName+"不符合规范: handlerName:methodName");
+    		}
+    		Method jobMethod = loadJobMethod(namePair[1]);
+    		jobTask = new JobTask(handler,triggerParam,jobMethod);
+    	}
+    	else {
+    		jobTask = new JobTask(handler,triggerParam,null);
+    	}
+        //JobThread newJobThread = new JobThread(jobId, handler);
+        //.start();
+    	jobExecutor.submit(jobTask);
+        logger.info(">>>>>>>>>>> xxl-job JobTask放入executor success, jobId:{}, handler:{}", new Object[]{triggerParam.getJobId(), handler});
+
+        return ReturnT.SUCCESS;
+    }
+    
+    private class JobWorkerThreadFactory implements ThreadFactory{
+		
+		private AtomicInteger threadNum = new AtomicInteger();
+		
+		private String namePrefix;
+		
+		public JobWorkerThreadFactory(){
+				namePrefix = port+"-job-worker-";
+		}
+		
+		@Override
+		public Thread newThread(Runnable r) {
+			Thread t = new Thread(r,namePrefix + threadNum.getAndIncrement());
+			if(t.isDaemon()){
+				t.setDaemon(false);
+			}
+			if(t.getPriority() != Thread.NORM_PRIORITY){
+				t.setPriority(Thread.NORM_PRIORITY);
+			}
+		    return t;
+		}
+	}
 }

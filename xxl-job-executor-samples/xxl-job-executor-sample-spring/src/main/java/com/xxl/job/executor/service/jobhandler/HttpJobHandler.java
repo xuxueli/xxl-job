@@ -1,15 +1,16 @@
 package com.xxl.job.executor.service.jobhandler;
 
-import com.xxl.job.core.biz.model.ReturnT;
-import com.xxl.job.core.handler.IJobHandler;
-import com.xxl.job.core.handler.annotation.JobHandler;
-import com.xxl.job.core.log.XxlJobLogger;
-import org.springframework.stereotype.Component;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+
+import org.springframework.stereotype.Component;
+
+import com.xxl.job.core.biz.model.ReturnT;
+import com.xxl.job.core.handler.AbstractJobHandler;
+import com.xxl.job.core.handler.annotation.JobHandler;
+import com.xxl.job.core.log.XxlJobLogger;
 
 /**
  * 跨平台Http任务
@@ -18,7 +19,7 @@ import java.net.URL;
  */
 @JobHandler(value = "httpJobHandler")
 @Component
-public class HttpJobHandler extends IJobHandler {
+public class HttpJobHandler extends AbstractJobHandler {
 
     @Override
     public ReturnT<String> execute(String param) throws Exception {

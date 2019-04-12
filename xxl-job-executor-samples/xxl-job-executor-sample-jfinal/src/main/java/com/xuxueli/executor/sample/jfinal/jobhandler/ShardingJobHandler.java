@@ -1,7 +1,7 @@
 package com.xuxueli.executor.sample.jfinal.jobhandler;
 
 import com.xxl.job.core.biz.model.ReturnT;
-import com.xxl.job.core.handler.IJobHandler;
+import com.xxl.job.core.handler.AbstractJobHandler;
 import com.xxl.job.core.log.XxlJobLogger;
 import com.xxl.job.core.util.ShardingUtil;
 
@@ -10,7 +10,7 @@ import com.xxl.job.core.util.ShardingUtil;
  *
  * @author xuxueli 2017-07-25 20:56:50
  */
-public class ShardingJobHandler extends IJobHandler {
+public class ShardingJobHandler extends AbstractJobHandler {
 
 	@Override
 	public ReturnT<String> execute(String param) throws Exception {

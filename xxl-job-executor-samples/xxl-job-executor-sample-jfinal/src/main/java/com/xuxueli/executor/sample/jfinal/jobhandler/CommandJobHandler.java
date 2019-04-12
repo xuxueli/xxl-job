@@ -1,6 +1,7 @@
 package com.xuxueli.executor.sample.jfinal.jobhandler;
 
 import com.xxl.job.core.biz.model.ReturnT;
+import com.xxl.job.core.handler.AbstractJobHandler;
 import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.log.XxlJobLogger;
 
@@ -13,7 +14,7 @@ import java.io.InputStreamReader;
  *
  * @author xuxueli 2018-09-16 03:48:34
  */
-public class CommandJobHandler extends IJobHandler {
+public class CommandJobHandler extends AbstractJobHandler {
 
     @Override
     public ReturnT<String> execute(String param) throws Exception {
@@ -45,9 +46,9 @@ public class CommandJobHandler extends IJobHandler {
         }
 
         if (exitValue == 0) {
-            return IJobHandler.SUCCESS;
+            return SUCCESS;
         } else {
-            return new ReturnT<String>(IJobHandler.FAIL.getCode(), "command exit value("+exitValue+") is failed");
+            return new ReturnT<String>(FAIL.getCode(), "command exit value("+exitValue+") is failed");
         }
     }
 

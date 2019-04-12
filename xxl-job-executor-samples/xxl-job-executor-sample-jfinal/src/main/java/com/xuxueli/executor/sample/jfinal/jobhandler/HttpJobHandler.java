@@ -1,6 +1,7 @@
 package com.xuxueli.executor.sample.jfinal.jobhandler;
 
 import com.xxl.job.core.biz.model.ReturnT;
+import com.xxl.job.core.handler.AbstractJobHandler;
 import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.log.XxlJobLogger;
 
@@ -14,7 +15,7 @@ import java.net.URL;
  *
  * @author xuxueli 2018-09-16 03:48:34
  */
-public class HttpJobHandler extends IJobHandler {
+public class HttpJobHandler extends AbstractJobHandler {
 
     @Override
     public ReturnT<String> execute(String param) throws Exception {

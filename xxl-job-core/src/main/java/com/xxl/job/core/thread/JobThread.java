@@ -4,6 +4,7 @@ import com.xxl.job.core.biz.model.HandleCallbackParam;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.biz.model.TriggerParam;
 import com.xxl.job.core.executor.XxlJobExecutor;
+import com.xxl.job.core.handler.AbstractJobHandler;
 import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.log.XxlJobFileAppender;
 import com.xxl.job.core.log.XxlJobLogger;
@@ -143,7 +144,7 @@ public class JobThread extends Thread{
 							XxlJobLogger.log("<br>----------- xxl-job job execute timeout");
 							XxlJobLogger.log(e);
 
-							executeResult = new ReturnT<String>(IJobHandler.FAIL_TIMEOUT.getCode(), "job execute timeout ");
+							executeResult = new ReturnT<String>(AbstractJobHandler.FAIL_TIMEOUT.getCode(), "job execute timeout ");
 						} finally {
 							futureThread.interrupt();
 						}
@@ -153,7 +154,7 @@ public class JobThread extends Thread{
 					}
 
 					if (executeResult == null) {
-						executeResult = IJobHandler.FAIL;
+						executeResult = AbstractJobHandler.FAIL;
 					} else {
 						executeResult.setMsg(
 								(executeResult!=null&&executeResult.getMsg()!=null&&executeResult.getMsg().length()>50000)

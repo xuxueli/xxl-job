@@ -19,6 +19,7 @@ public class XxlJobFileAppender {
 	//public static ThreadLocal<String> contextHolder = new ThreadLocal<String>();
 	public static final InheritableThreadLocal<String> contextHolder = new InheritableThreadLocal<String>();
 
+	public static String dayLogFileName;
 
 	/**
 	 * log base path
@@ -86,6 +87,33 @@ public class XxlJobFileAppender {
 	}
 
 	/**
+	 * log filename, like "logPath/job.log"
+	 * 当天log名字
+	 * @param triggerDate
+	 * @return string
+	 */
+	public static void makeIntraDayLogFileName(Date triggerDate) {
+
+		// filePath/yyyy-MM-dd
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");	// avoid concurrent problem, can not be static
+		File logFilePath = new File(getLogPath(), sdf.format(triggerDate));
+		if (!logFilePath.exists()) {
+			logFilePath.mkdir();
+		}
+
+		// filePath/yyyy-MM-dd/job.log
+		File dayLogFile = new File(logFilePath,"job.log");
+		if(!dayLogFile.exists()){
+			try {
+				dayLogFile.createNewFile();
+			} catch (IOException e) {
+				logger.error("创建job.log失败:"+e.getMessage(),e);
+			}
+		}
+		dayLogFileName = dayLogFile.getAbsolutePath();
+	}
+	
+	/**
 	 * append log
 	 *
 	 * @param logFileName
@@ -134,6 +162,16 @@ public class XxlJobFileAppender {
 		
 	}
 
+	/**
+	 * append to daily log file
+	 *
+	 * @param appendLog
+	 */
+	public static void appendIntraDayLog(String appendLog) {
+		appendLog(dayLogFileName,appendLog);
+	}
+
+	
 	/**
 	 * support read log-file
 	 *
