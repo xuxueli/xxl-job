@@ -24,7 +24,7 @@
 		<maven.compiler.target>1.7</maven.compiler.target>
 		<maven.test.skip>true</maven.test.skip>
 
-		<xxl-rpc.version>1.3.2</xxl-rpc.version>
+		<xxl-rpc.version>1.4.0</xxl-rpc.version>
 
 		<spring-boot.version>1.5.20.RELEASE</spring-boot.version>
 		<mybatis-spring-boot-starter.version>1.3.4</mybatis-spring-boot-starter.version>
