@@ -227,28 +227,15 @@ $(function() {
 				dataType : "json",
 				success : function(data){
 					if (data.code == 200) {
-
-						layer.open({
-							title: I18n.system_tips,
-                            btn: [ I18n.system_ok ],
-							content: typeName + I18n.system_success ,
-							icon: '1',
-							end: function(layero, index){
-								if (needFresh) {
-									//window.location.reload();
-									jobTable.fnDraw(false);
-								}
-							}
-						});
+                        layer.msg( typeName + I18n.system_success );
+                        if (needFresh) {
+                            //window.location.reload();
+                            jobTable.fnDraw(false);
+                        }
 					} else {
-						layer.open({
-							title: I18n.system_tips,
-                            btn: [ I18n.system_ok ],
-							content: (data.msg || typeName + I18n.system_fail ),
-							icon: '2'
-						});
+                        layer.msg( data.msg || typeName + I18n.system_fail );
 					}
-				},
+				}
 			});
 		});
 	});
@@ -276,19 +263,9 @@ $(function() {
                 if (data.code == 200) {
                     $('#jobTriggerModal').modal('hide');
 
-                    layer.open({
-                        title: I18n.system_tips,
-                        btn: [ I18n.system_ok ],
-                        content: I18n.jobinfo_opt_run + I18n.system_success ,
-                        icon: '1'
-                    });
+                    layer.msg( I18n.jobinfo_opt_run + I18n.system_success );
                 } else {
-                    layer.open({
-                        title: I18n.system_tips,
-                        btn: [ I18n.system_ok ],
-                        content: (data.msg || I18n.jobinfo_opt_run + I18n.system_fail ),
-                        icon: '2'
-                    });
+                    layer.msg( data.msg || I18n.jobinfo_opt_run + I18n.system_fail );
                 }
             }
         });
