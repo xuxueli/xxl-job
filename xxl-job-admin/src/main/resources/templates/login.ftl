@@ -26,7 +26,7 @@
 					<div class="col-xs-8">
 		              	<div class="checkbox icheck">
 		                	<label>
-		                  		<input type="checkbox" name="ifRemember" >${I18n.login_remember_me}
+		                  		<input type="checkbox" name="ifRemember" > &nbsp; ${I18n.login_remember_me}
 		                	</label>
 						</div>
 		            </div><!-- /.col -->
