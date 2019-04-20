@@ -13,9 +13,7 @@ import com.xxl.job.admin.service.XxlJobService;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
 import com.xxl.job.core.glue.GlueTypeEnum;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.DateUtils;
-import org.apache.commons.lang3.time.FastDateFormat;
+import com.xxl.job.core.util.DateUtil;
 import org.quartz.CronExpression;
 import org.quartz.SchedulerException;
 import org.slf4j.Logger;
@@ -75,10 +73,10 @@ public class XxlJobServiceImpl implements XxlJobService {
 		if (!CronExpression.isValidExpression(jobInfo.getJobCron())) {
 			return new ReturnT<String>(ReturnT.FAIL_CODE, I18nUtil.getString("jobinfo_field_cron_unvalid") );
 		}
-		if (StringUtils.isBlank(jobInfo.getJobDesc())) {
+		if (jobInfo.getJobDesc()==null || jobInfo.getJobDesc().trim().length()==0) {
 			return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("system_please_input")+I18nUtil.getString("jobinfo_field_jobdesc")) );
 		}
-		if (StringUtils.isBlank(jobInfo.getAuthor())) {
+		if (jobInfo.getAuthor()==null || jobInfo.getAuthor().trim().length()==0) {
 			return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("system_please_input")+I18nUtil.getString("jobinfo_field_author")) );
 		}
 		if (ExecutorRouteStrategyEnum.match(jobInfo.getExecutorRouteStrategy(), null) == null) {
@@ -90,7 +88,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 		if (GlueTypeEnum.match(jobInfo.getGlueType()) == null) {
 			return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("jobinfo_field_gluetype")+I18nUtil.getString("system_unvalid")) );
 		}
-		if (GlueTypeEnum.BEAN==GlueTypeEnum.match(jobInfo.getGlueType()) && StringUtils.isBlank(jobInfo.getExecutorHandler())) {
+		if (GlueTypeEnum.BEAN==GlueTypeEnum.match(jobInfo.getGlueType()) && (jobInfo.getExecutorHandler()==null || jobInfo.getExecutorHandler().trim().length()==0) ) {
 			return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("system_please_input")+"JobHandler") );
 		}
 
@@ -100,10 +98,10 @@ public class XxlJobServiceImpl implements XxlJobService {
 		}
 
 		// ChildJobId valid
-		if (StringUtils.isNotBlank(jobInfo.getChildJobId())) {
-			String[] childJobIds = StringUtils.split(jobInfo.getChildJobId(), ",");
+		if (jobInfo.getChildJobId()!=null && jobInfo.getChildJobId().trim().length()>0) {
+			String[] childJobIds = jobInfo.getChildJobId().split(",");
 			for (String childJobIdItem: childJobIds) {
-				if (StringUtils.isNotBlank(childJobIdItem) && StringUtils.isNumeric(childJobIdItem)) {
+				if (childJobIdItem!=null && childJobIdItem.trim().length()>0 && isNumeric(childJobIdItem)) {
 					XxlJobInfo childJobInfo = xxlJobInfoDao.loadById(Integer.valueOf(childJobIdItem));
 					if (childJobInfo==null) {
 						return new ReturnT<String>(ReturnT.FAIL_CODE,
@@ -114,7 +112,14 @@ public class XxlJobServiceImpl implements XxlJobService {
 							MessageFormat.format((I18nUtil.getString("jobinfo_field_childJobId")+"({0})"+I18nUtil.getString("system_unvalid")), childJobIdItem));
 				}
 			}
-			jobInfo.setChildJobId(StringUtils.join(childJobIds, ","));
+
+			String temp = "";	// join ,
+			for (String item:childJobIds) {
+				temp += item + ",";
+			}
+			temp = temp.substring(0, temp.length()-1);
+
+			jobInfo.setChildJobId(temp);
 		}
 
 		// add in db
@@ -126,6 +131,15 @@ public class XxlJobServiceImpl implements XxlJobService {
 		return new ReturnT<String>(String.valueOf(jobInfo.getId()));
 	}
 
+	private boolean isNumeric(String str){
+		try {
+			int result = Integer.valueOf(str);
+			return true;
+		} catch (NumberFormatException e) {
+			return false;
+		}
+	}
+
 	@Override
 	public ReturnT<String> update(XxlJobInfo jobInfo) {
 
@@ -133,10 +147,10 @@ public class XxlJobServiceImpl implements XxlJobService {
 		if (!CronExpression.isValidExpression(jobInfo.getJobCron())) {
 			return new ReturnT<String>(ReturnT.FAIL_CODE, I18nUtil.getString("jobinfo_field_cron_unvalid") );
 		}
-		if (StringUtils.isBlank(jobInfo.getJobDesc())) {
+		if (jobInfo.getJobDesc()==null || jobInfo.getJobDesc().trim().length()==0) {
 			return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("system_please_input")+I18nUtil.getString("jobinfo_field_jobdesc")) );
 		}
-		if (StringUtils.isBlank(jobInfo.getAuthor())) {
+		if (jobInfo.getAuthor()==null || jobInfo.getAuthor().trim().length()==0) {
 			return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("system_please_input")+I18nUtil.getString("jobinfo_field_author")) );
 		}
 		if (ExecutorRouteStrategyEnum.match(jobInfo.getExecutorRouteStrategy(), null) == null) {
@@ -147,10 +161,10 @@ public class XxlJobServiceImpl implements XxlJobService {
 		}
 
 		// ChildJobId valid
-		if (StringUtils.isNotBlank(jobInfo.getChildJobId())) {
-			String[] childJobIds = StringUtils.split(jobInfo.getChildJobId(), ",");
+		if (jobInfo.getChildJobId()!=null && jobInfo.getChildJobId().trim().length()>0) {
+			String[] childJobIds = jobInfo.getChildJobId().split(",");
 			for (String childJobIdItem: childJobIds) {
-				if (StringUtils.isNotBlank(childJobIdItem) && StringUtils.isNumeric(childJobIdItem)) {
+				if (childJobIdItem!=null && childJobIdItem.trim().length()>0 && isNumeric(childJobIdItem)) {
 					XxlJobInfo childJobInfo = xxlJobInfoDao.loadById(Integer.valueOf(childJobIdItem));
 					if (childJobInfo==null) {
 						return new ReturnT<String>(ReturnT.FAIL_CODE,
@@ -161,7 +175,14 @@ public class XxlJobServiceImpl implements XxlJobService {
 							MessageFormat.format((I18nUtil.getString("jobinfo_field_childJobId")+"({0})"+I18nUtil.getString("system_unvalid")), childJobIdItem));
 				}
 			}
-			jobInfo.setChildJobId(StringUtils.join(childJobIds, ","));
+
+			String temp = "";	// join ,
+			for (String item:childJobIds) {
+				temp += item + ",";
+			}
+			temp = temp.substring(0, temp.length()-1);
+
+			jobInfo.setChildJobId(temp);
 		}
 
 		// group valid
@@ -348,7 +369,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 			}
 		} else {
             for (int i = 4; i > -1; i--) {
-                triggerDayList.add(FastDateFormat.getInstance("yyyy-MM-dd").format(DateUtils.addDays(new Date(), -i)));
+                triggerDayList.add(DateUtil.formatDate(DateUtil.addDays(new Date(), -i)));
 				triggerDayCountRunningList.add(0);
                 triggerDayCountSucList.add(0);
                 triggerDayCountFailList.add(0);

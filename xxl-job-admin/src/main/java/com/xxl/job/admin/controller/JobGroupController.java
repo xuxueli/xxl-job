@@ -8,7 +8,6 @@ import com.xxl.job.admin.dao.XxlJobGroupDao;
 import com.xxl.job.admin.dao.XxlJobInfoDao;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.enums.RegistryConfig;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,22 +47,22 @@ public class JobGroupController {
 	public ReturnT<String> save(XxlJobGroup xxlJobGroup){
 
 		// valid
-		if (xxlJobGroup.getAppName()==null || StringUtils.isBlank(xxlJobGroup.getAppName())) {
+		if (xxlJobGroup.getAppName()==null || xxlJobGroup.getAppName().trim().length()==0) {
 			return new ReturnT<String>(500, (I18nUtil.getString("system_please_input")+"AppName") );
 		}
 		if (xxlJobGroup.getAppName().length()<4 || xxlJobGroup.getAppName().length()>64) {
 			return new ReturnT<String>(500, I18nUtil.getString("jobgroup_field_appName_length") );
 		}
-		if (xxlJobGroup.getTitle()==null || StringUtils.isBlank(xxlJobGroup.getTitle())) {
+		if (xxlJobGroup.getTitle()==null || xxlJobGroup.getTitle().trim().length()==0) {
 			return new ReturnT<String>(500, (I18nUtil.getString("system_please_input") + I18nUtil.getString("jobgroup_field_title")) );
 		}
 		if (xxlJobGroup.getAddressType()!=0) {
-			if (StringUtils.isBlank(xxlJobGroup.getAddressList())) {
+			if (xxlJobGroup.getAddressList()==null || xxlJobGroup.getAddressList().trim().length()==0) {
 				return new ReturnT<String>(500, I18nUtil.getString("jobgroup_field_addressType_limit") );
 			}
 			String[] addresss = xxlJobGroup.getAddressList().split(",");
 			for (String item: addresss) {
-				if (StringUtils.isBlank(item)) {
+				if (item==null || item.trim().length()==0) {
 					return new ReturnT<String>(500, I18nUtil.getString("jobgroup_field_registryList_unvalid") );
 				}
 			}
@@ -77,13 +76,13 @@ public class JobGroupController {
 	@ResponseBody
 	public ReturnT<String> update(XxlJobGroup xxlJobGroup){
 		// valid
-		if (xxlJobGroup.getAppName()==null || StringUtils.isBlank(xxlJobGroup.getAppName())) {
+		if (xxlJobGroup.getAppName()==null || xxlJobGroup.getAppName().trim().length()==0) {
 			return new ReturnT<String>(500, (I18nUtil.getString("system_please_input")+"AppName") );
 		}
 		if (xxlJobGroup.getAppName().length()<4 || xxlJobGroup.getAppName().length()>64) {
 			return new ReturnT<String>(500, I18nUtil.getString("jobgroup_field_appName_length") );
 		}
-		if (xxlJobGroup.getTitle()==null || StringUtils.isBlank(xxlJobGroup.getTitle())) {
+		if (xxlJobGroup.getTitle()==null || xxlJobGroup.getTitle().trim().length()==0) {
 			return new ReturnT<String>(500, (I18nUtil.getString("system_please_input") + I18nUtil.getString("jobgroup_field_title")) );
 		}
 		if (xxlJobGroup.getAddressType() == 0) {
@@ -92,17 +91,21 @@ public class JobGroupController {
 			String addressListStr = null;
 			if (registryList!=null && !registryList.isEmpty()) {
 				Collections.sort(registryList);
-				addressListStr = StringUtils.join(registryList, ",");
+				addressListStr = "";
+				for (String item:registryList) {
+					addressListStr += item + ",";
+				}
+				addressListStr = addressListStr.substring(0, addressListStr.length()-1);
 			}
 			xxlJobGroup.setAddressList(addressListStr);
 		} else {
 			// 1=手动录入
-			if (StringUtils.isBlank(xxlJobGroup.getAddressList())) {
+			if (xxlJobGroup.getAddressList()==null || xxlJobGroup.getAddressList().trim().length()==0) {
 				return new ReturnT<String>(500, I18nUtil.getString("jobgroup_field_addressType_limit") );
 			}
 			String[] addresss = xxlJobGroup.getAddressList().split(",");
 			for (String item: addresss) {
-				if (StringUtils.isBlank(item)) {
+				if (item==null || item.trim().length()==0) {
 					return new ReturnT<String>(500, I18nUtil.getString("jobgroup_field_registryList_unvalid") );
 				}
 			}

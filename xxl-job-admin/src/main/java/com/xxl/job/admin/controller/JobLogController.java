@@ -11,8 +11,7 @@ import com.xxl.job.admin.dao.XxlJobLogDao;
 import com.xxl.job.core.biz.ExecutorBiz;
 import com.xxl.job.core.biz.model.LogResult;
 import com.xxl.job.core.biz.model.ReturnT;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.DateUtils;
+import com.xxl.job.core.util.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -76,13 +75,11 @@ public class JobLogController {
 		// parse param
 		Date triggerTimeStart = null;
 		Date triggerTimeEnd = null;
-		if (StringUtils.isNotBlank(filterTime)) {
+		if (filterTime!=null && filterTime.trim().length()>0) {
 			String[] temp = filterTime.split(" - ");
 			if (temp!=null && temp.length == 2) {
-				try {
-					triggerTimeStart = DateUtils.parseDate(temp[0], new String[]{"yyyy-MM-dd HH:mm:ss"});
-					triggerTimeEnd = DateUtils.parseDate(temp[1], new String[]{"yyyy-MM-dd HH:mm:ss"});
-				} catch (ParseException e) {	}
+				triggerTimeStart = DateUtil.parseDateTime(temp[0]);
+				triggerTimeEnd = DateUtil.parseDateTime(temp[1]);
 			}
 		}
 		
@@ -179,13 +176,13 @@ public class JobLogController {
 		Date clearBeforeTime = null;
 		int clearBeforeNum = 0;
 		if (type == 1) {
-			clearBeforeTime = DateUtils.addMonths(new Date(), -1);	// 清理一个月之前日志数据
+			clearBeforeTime = DateUtil.addMonths(new Date(), -1);	// 清理一个月之前日志数据
 		} else if (type == 2) {
-			clearBeforeTime = DateUtils.addMonths(new Date(), -3);	// 清理三个月之前日志数据
+			clearBeforeTime = DateUtil.addMonths(new Date(), -3);	// 清理三个月之前日志数据
 		} else if (type == 3) {
-			clearBeforeTime = DateUtils.addMonths(new Date(), -6);	// 清理六个月之前日志数据
+			clearBeforeTime = DateUtil.addMonths(new Date(), -6);	// 清理六个月之前日志数据
 		} else if (type == 4) {
-			clearBeforeTime = DateUtils.addYears(new Date(), -1);	// 清理一年之前日志数据
+			clearBeforeTime = DateUtil.addYears(new Date(), -1);	// 清理一年之前日志数据
 		} else if (type == 5) {
 			clearBeforeNum = 1000;		// 清理一千条以前日志数据
 		} else if (type == 6) {

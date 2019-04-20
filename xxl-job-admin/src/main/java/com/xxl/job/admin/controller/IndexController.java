@@ -5,7 +5,6 @@ import com.xxl.job.admin.controller.interceptor.PermissionInterceptor;
 import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.admin.service.XxlJobService;
 import com.xxl.job.core.biz.model.ReturnT;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -67,10 +66,10 @@ public class IndexController {
 		}
 
 		// param
-		if (StringUtils.isBlank(userName) || StringUtils.isBlank(password)){
+		if (userName==null || userName.trim().length()==0 || password==null || password.trim().length()==0){
 			return new ReturnT<String>(500, I18nUtil.getString("login_param_empty"));
 		}
-		boolean ifRem = (StringUtils.isNotBlank(ifRemember) && "on".equals(ifRemember))?true:false;
+		boolean ifRem = (ifRemember!=null && ifRemember.trim().length()>0 && "on".equals(ifRemember))?true:false;
 
 		// do login
 		boolean loginRet = PermissionInterceptor.login(response, userName, password, ifRem);

@@ -13,7 +13,6 @@ import com.xxl.job.core.biz.model.TriggerParam;
 import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
 import com.xxl.rpc.util.IpUtil;
 import com.xxl.rpc.util.ThrowableUtil;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,7 +55,7 @@ public class XxlJobTrigger {
         int[] shardingParam = null;
         if (executorShardingParam!=null){
             String[] shardingArr = executorShardingParam.split("/");
-            if (shardingArr.length==2 && StringUtils.isNumeric(shardingArr[0]) && StringUtils.isNumeric(shardingArr[1])) {
+            if (shardingArr.length==2 && isNumeric(shardingArr[0]) && isNumeric(shardingArr[1])) {
                 shardingParam = new int[2];
                 shardingParam[0] = Integer.valueOf(shardingArr[0]);
                 shardingParam[1] = Integer.valueOf(shardingArr[1]);
@@ -75,6 +74,15 @@ public class XxlJobTrigger {
             processTrigger(group, jobInfo, finalFailRetryCount, triggerType, shardingParam[0], shardingParam[1]);
         }
 
+    }
+
+    private static boolean isNumeric(String str){
+        try {
+            int result = Integer.valueOf(str);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 
     /**
