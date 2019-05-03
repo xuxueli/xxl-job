@@ -204,13 +204,14 @@ CREATE TABLE `XXL_JOB_QRTZ_TRIGGER_LOGGLUE` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE XXL_JOB_QRTZ_TRIGGER_REGISTRY (
+CREATE TABLE `XXL_JOB_QRTZ_TRIGGER_REGISTRY` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `registry_group` varchar(255) NOT NULL,
   `registry_key` varchar(255) NOT NULL,
   `registry_value` varchar(255) NOT NULL,
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `i_g_k_v` (`registry_group`,`registry_key`,`registry_value`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `XXL_JOB_QRTZ_TRIGGER_GROUP` (
