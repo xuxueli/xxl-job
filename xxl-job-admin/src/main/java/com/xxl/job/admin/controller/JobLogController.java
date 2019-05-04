@@ -1,13 +1,16 @@
 package com.xxl.job.admin.controller;
 
+import com.xxl.job.admin.core.exception.XxlJobException;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
+import com.xxl.job.admin.core.model.XxlJobUser;
 import com.xxl.job.admin.core.schedule.XxlJobDynamicScheduler;
 import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.admin.dao.XxlJobGroupDao;
 import com.xxl.job.admin.dao.XxlJobInfoDao;
 import com.xxl.job.admin.dao.XxlJobLogDao;
+import com.xxl.job.admin.service.LoginService;
 import com.xxl.job.core.biz.ExecutorBiz;
 import com.xxl.job.core.biz.model.LogResult;
 import com.xxl.job.core.biz.model.ReturnT;
@@ -21,11 +24,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * index controller
@@ -44,10 +45,33 @@ public class JobLogController {
 	public XxlJobLogDao xxlJobLogDao;
 
 	@RequestMapping
-	public String index(Model model, @RequestParam(required = false, defaultValue = "0") Integer jobId) {
+	public String index(HttpServletRequest request, Model model, @RequestParam(required = false, defaultValue = "0") Integer jobId) {
 
 		// 执行器列表
-		List<XxlJobGroup> jobGroupList =  xxlJobGroupDao.findAll();
+		List<XxlJobGroup> jobGroupList_all =  xxlJobGroupDao.findAll();
+
+		// filter group
+		List<XxlJobGroup> jobGroupList = new ArrayList<>();
+		if (jobGroupList_all!=null && jobGroupList_all.size()>0) {
+			XxlJobUser loginUser = (XxlJobUser) request.getAttribute(LoginService.LOGIN_IDENTITY_KEY);
+			if (loginUser.getRole() == 1) {
+				jobGroupList = jobGroupList_all;
+			} else {
+				List<String> groupIdStrs = new ArrayList<>();
+				if (loginUser.getPermission()!=null && loginUser.getPermission().trim().length()>0) {
+					groupIdStrs = Arrays.asList(loginUser.getPermission().trim().split(","));
+				}
+				for (XxlJobGroup groupItem:jobGroupList_all) {
+					if (groupIdStrs.contains(String.valueOf(groupItem.getId()))) {
+						jobGroupList.add(groupItem);
+					}
+				}
+			}
+		}
+		if (jobGroupList==null || jobGroupList.size()==0) {
+			throw new XxlJobException(I18nUtil.getString("jobgroup_empty"));
+		}
+
 		model.addAttribute("JobGroupList", jobGroupList);
 
 		// 任务
