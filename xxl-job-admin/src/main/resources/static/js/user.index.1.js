@@ -133,6 +133,17 @@ $(function() {
 		});
 	});
 
+	// add role
+    $("#addModal .form input[name=role]").change(function () {
+		var role = $(this).val();
+		if (role == 1) {
+            $("#addModal .form input[name=permission]").parents('.form-group').hide();
+		} else {
+            $("#addModal .form input[name=permission]").parents('.form-group').show();
+		}
+        $("#addModal .form input[name='permission']").prop("checked",false);
+    });
+
 	// add
 	$(".add").click(function(){
 		$('#addModal').modal({backdrop: false, keyboard: false}).modal('show');
@@ -207,7 +218,20 @@ $(function() {
 		addModalValidate.resetForm();
 		$("#addModal .form .form-group").removeClass("has-error");
 		$(".remote_panel").show();	// remote
+
+        $("#addModal .form input[name=permission]").parents('.form-group').show();
 	});
+
+    // update role
+    $("#updateModal .form input[name=role]").change(function () {
+        var role = $(this).val();
+        if (role == 1) {
+            $("#updateModal .form input[name=permission]").parents('.form-group').hide();
+        } else {
+            $("#updateModal .form input[name=permission]").parents('.form-group').show();
+        }
+        $("#updateModal .form input[name='permission']").prop("checked",false);
+    });
 
 	// update
 	$("#user_list").on('click', '.update',function() {
@@ -219,18 +243,11 @@ $(function() {
 		$("#updateModal .form input[name='id']").val( row.id );
 		$("#updateModal .form input[name='username']").val( row.username );
 		$("#updateModal .form input[name='password']").val( '' );
-		$("#updateModal .form input[name='role']").each(function () {
-			if($(this).val() == row.role) {
-                $(this).prop("checked",true);
-			} else {
-                $(this).prop("checked",false);
-			}
-        });
+		$("#updateModal .form input[name='role'][value='"+ row.role +"']").click();
         var permissionArr = [];
         if (row.permission) {
             permissionArr = row.permission.split(",");
 		}
-        $("#updateModal .form input[name='permission']").removeProp('checked');
         $("#updateModal .form input[name='permission']").each(function () {
             if($.inArray($(this).val(), permissionArr) > -1) {
                 $(this).prop("checked",true);
@@ -293,6 +310,8 @@ $(function() {
         updateModalValidate.resetForm();
         $("#updateModal .form .form-group").removeClass("has-error");
         $(".remote_panel").show();	// remote
+
+        $("#updateModal .form input[name=permission]").parents('.form-group').show();
 	});
 
 });
