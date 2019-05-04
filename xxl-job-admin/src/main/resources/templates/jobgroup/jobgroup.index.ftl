@@ -194,8 +194,6 @@
 <!-- DataTables -->
 <script src="${request.contextPath}/static/adminlte/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
 <script src="${request.contextPath}/static/adminlte/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
-<#-- jquery.validate -->
-<script src="${request.contextPath}/static/plugins/jquery/jquery.validate.min.js"></script>
 <script src="${request.contextPath}/static/js/jobgroup.index.1.js"></script>
 </body>
 </html>

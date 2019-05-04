@@ -1,10 +1,12 @@
 package com.xxl.job.admin.controller;
 
+import com.xxl.job.admin.controller.annotation.PermessionLimit;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobUser;
 import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.admin.dao.XxlJobGroupDao;
 import com.xxl.job.admin.dao.XxlJobUserDao;
+import com.xxl.job.admin.service.LoginService;
 import com.xxl.job.core.biz.model.ReturnT;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +35,7 @@ public class UserController {
     private XxlJobGroupDao xxlJobGroupDao;
 
     @RequestMapping
+    @PermessionLimit(adminuser = true)
     public String index(Model model) {
 
         // 执行器列表
@@ -43,6 +47,7 @@ public class UserController {
 
     @RequestMapping("/pageList")
     @ResponseBody
+    @PermessionLimit(adminuser = true)
     public Map<String, Object> pageList(@RequestParam(required = false, defaultValue = "0") int start,
                                         @RequestParam(required = false, defaultValue = "10") int length,
                                         String username) {
@@ -61,6 +66,7 @@ public class UserController {
 
     @RequestMapping("/add")
     @ResponseBody
+    @PermessionLimit(adminuser = true)
     public ReturnT<String> add(XxlJobUser xxlJobUser) {
 
         // valid username
@@ -95,7 +101,14 @@ public class UserController {
 
     @RequestMapping("/update")
     @ResponseBody
-    public ReturnT<String> update(XxlJobUser xxlJobUser) {
+    @PermessionLimit(adminuser = true)
+    public ReturnT<String> update(HttpServletRequest request, XxlJobUser xxlJobUser) {
+
+        // avoid opt login seft
+        XxlJobUser loginUser = (XxlJobUser) request.getAttribute(LoginService.LOGIN_IDENTITY_KEY);
+        if (loginUser.getUsername().equals(xxlJobUser.getUsername())) {
+            return new ReturnT<String>(ReturnT.FAIL.getCode(), I18nUtil.getString("user_update_loginuser_limit"));
+        }
 
         // valid password
         if (StringUtils.hasText(xxlJobUser.getPassword())) {
@@ -116,8 +129,43 @@ public class UserController {
 
     @RequestMapping("/remove")
     @ResponseBody
-    public ReturnT<String> remove(int id) {
+    @PermessionLimit(adminuser = true)
+    public ReturnT<String> remove(HttpServletRequest request, int id) {
+
+        // avoid opt login seft
+        XxlJobUser loginUser = (XxlJobUser) request.getAttribute(LoginService.LOGIN_IDENTITY_KEY);
+        if (loginUser.getId() == id) {
+            return new ReturnT<String>(ReturnT.FAIL.getCode(), I18nUtil.getString("user_update_loginuser_limit"));
+        }
+
         xxlJobUserDao.delete(id);
+        return ReturnT.SUCCESS;
+    }
+
+    @RequestMapping("/updatePwd")
+    @ResponseBody
+    public ReturnT<String> updatePwd(HttpServletRequest request, String password){
+
+        // valid password
+        if (password==null || password.trim().length()==0){
+            return new ReturnT<String>(ReturnT.FAIL.getCode(), "密码不可为空");
+        }
+        password = password.trim();
+        if (!(password.length()>=4 && password.length()<=20)) {
+            return new ReturnT<String>(ReturnT.FAIL_CODE, I18nUtil.getString("system_lengh_limit")+"[4-20]" );
+        }
+
+        // md5 password
+        String md5Password = DigestUtils.md5DigestAsHex(password.getBytes());
+
+        // update pwd
+        XxlJobUser loginUser = (XxlJobUser) request.getAttribute(LoginService.LOGIN_IDENTITY_KEY);
+
+        // do write
+        XxlJobUser existUser = xxlJobUserDao.loadByUserName(loginUser.getUsername());
+        existUser.setPassword(md5Password);
+        xxlJobUserDao.update(existUser);
+
         return ReturnT.SUCCESS;
     }
 

@@ -50,7 +50,7 @@ $(function() {
 	                {
 	                	"data": 'permission',
 						"width":'10%',
-	                	"visible" : true
+	                	"visible" : false
 	                },
 	                {
 						"data": I18n.system_opt ,
@@ -144,6 +144,12 @@ $(function() {
         $("#addModal .form input[name='permission']").prop("checked",false);
     });
 
+    jQuery.validator.addMethod("myValid01", function(value, element) {
+        var length = value.length;
+        var valid = /^[a-z][a-z0-9]*$/;
+        return this.optional(element) || valid.test(value);
+    }, I18n.user_username_valid );
+
 	// add
 	$(".add").click(function(){
 		$('#addModal').modal({backdrop: false, keyboard: false}).modal('show');
@@ -155,7 +161,8 @@ $(function() {
         rules : {
             username : {
 				required : true,
-                rangelength:[4, 20]
+                rangelength:[4, 20],
+                myValid01: true
 			},
             password : {
                 required : true,

@@ -19,4 +19,11 @@ public @interface PermessionLimit {
 	 */
 	boolean limit() default true;
 
+	/**
+	 * 要求管理员权限
+	 *
+	 * @return
+	 */
+	boolean adminuser() default false;
+
 }
