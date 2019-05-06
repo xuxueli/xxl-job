@@ -648,9 +648,9 @@ public XxlJobSpringExecutor xxlJobExecutor() {
 
 
 
-## 四、任务管理
+## 四、操作指南
 
-### 4.1 配置执行器  
+### 4.1 配置执行器
 点击进入"执行器管理"界面, 如下图:
 ![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_Hr2T.png "在这里输入图片标题")
 
@@ -754,6 +754,17 @@ try{
 点击删除按钮，可以删除对应任务。
 
 ![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_Z9Qr.png "在这里输入图片标题")
+
+### 4.12 用户管理
+进入 "用户管理" 界面，可查看和管理用户信息；
+
+目前用户分为两种角色：
+- 管理员：拥有全量权限，支持在线管理用户信息，为用户分配权限，权限分配粒度为执行器；
+- 普通用户：仅拥有被分配权限的执行器，及相关任务的操作权限；
+
+![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_1001.png "在这里输入图片标题")
+
+![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_1002.png "在这里输入图片标题")
 
 
 ## 五、总体设计

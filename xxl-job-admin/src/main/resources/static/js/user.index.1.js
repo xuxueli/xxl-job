@@ -33,7 +33,10 @@ $(function() {
 	                {
 	                	"data": 'password',
 						"visible" : true,
-                        "width":'20%'
+                        "width":'20%',
+                        "render": function ( data, type, row ) {
+                            return '*********';
+                        }
 					},
 					{
 						"data": 'role',
