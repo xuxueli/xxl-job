@@ -26,6 +26,9 @@
 			<if test="username != null and username != ''">
 				AND t.username like CONCAT(CONCAT('%', #{username}), '%')
 			</if>
+			<if test="role gt -1">
+				AND t.role = #{role}
+			</if>
 		</trim>
 		ORDER BY username ASC
 		LIMIT #{offset}, #{pagesize}
@@ -37,6 +40,9 @@
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
 			<if test="username != null and username != ''">
 				AND t.username like CONCAT(CONCAT('%', #{username}), '%')
+			</if>
+			<if test="role gt -1">
+				AND t.role = #{role}
 			</if>
 		</trim>
 	</select>

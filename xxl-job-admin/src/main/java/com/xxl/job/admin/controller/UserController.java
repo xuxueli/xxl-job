@@ -50,11 +50,11 @@ public class UserController {
     @PermessionLimit(adminuser = true)
     public Map<String, Object> pageList(@RequestParam(required = false, defaultValue = "0") int start,
                                         @RequestParam(required = false, defaultValue = "10") int length,
-                                        String username) {
+                                        String username, int role) {
 
         // page list
-        List<XxlJobUser> list = xxlJobUserDao.pageList(start, length, username);
-        int list_count = xxlJobUserDao.pageListCount(start, length, username);
+        List<XxlJobUser> list = xxlJobUserDao.pageList(start, length, username, role);
+        int list_count = xxlJobUserDao.pageListCount(start, length, username, role);
 
         // package result
         Map<String, Object> maps = new HashMap<String, Object>();
