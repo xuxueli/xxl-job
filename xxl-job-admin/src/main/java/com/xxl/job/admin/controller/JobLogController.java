@@ -61,7 +61,14 @@ public class JobLogController {
 		// 任务
 		if (jobId > 0) {
 			XxlJobInfo jobInfo = xxlJobInfoDao.loadById(jobId);
+			if (jobInfo == null) {
+				throw new RuntimeException(I18nUtil.getString("jobinfo_field_id") + I18nUtil.getString("system_unvalid"));
+			}
+
 			model.addAttribute("jobInfo", jobInfo);
+
+			// valid permission
+			JobInfoController.validPermission(request, jobInfo.getJobGroup());
 		}
 
 		return "joblog/joblog.index";
@@ -76,9 +83,13 @@ public class JobLogController {
 	
 	@RequestMapping("/pageList")
 	@ResponseBody
-	public Map<String, Object> pageList(@RequestParam(required = false, defaultValue = "0") int start,  
-			@RequestParam(required = false, defaultValue = "10") int length,
-			int jobGroup, int jobId, int logStatus, String filterTime) {
+	public Map<String, Object> pageList(HttpServletRequest request,
+										@RequestParam(required = false, defaultValue = "0") int start,
+										@RequestParam(required = false, defaultValue = "10") int length,
+										int jobGroup, int jobId, int logStatus, String filterTime) {
+
+		// valid permission
+		JobInfoController.validPermission(request, jobGroup);	// 仅管理员支持查询全部；普通用户仅支持查询有权限的 jobGroup
 		
 		// parse param
 		Date triggerTimeStart = null;
