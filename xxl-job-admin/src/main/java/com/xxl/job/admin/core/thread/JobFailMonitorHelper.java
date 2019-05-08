@@ -192,7 +192,7 @@ public class JobFailMonitorHelper {
 			}
 		}
 
-		// TODO, custom alarm strategy, such as sms
+		// do something, custom alarm strategy, such as sms
 
 
 		return alarmResult;

@@ -730,7 +730,7 @@ public XxlJobSpringExecutor xxlJobExecutor() {
 因此, 如果遇到上述任务终止不可用的情况, 需要在JobHandler中应该针对 "InterruptedException" 异常进行特殊处理 (向上抛出) , 正确逻辑如下:
 ```
 try{
-    // TODO
+    // do something
 } catch (Exception e) {
     if (e instanceof InterruptedException) {
         throw e;
