@@ -1,6 +1,6 @@
 package com.xxl.job.admin.controller;
 
-import com.xxl.job.admin.controller.annotation.PermessionLimit;
+import com.xxl.job.admin.controller.annotation.PermissionLimit;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobUser;
 import com.xxl.job.admin.core.util.I18nUtil;
@@ -35,7 +35,7 @@ public class UserController {
     private XxlJobGroupDao xxlJobGroupDao;
 
     @RequestMapping
-    @PermessionLimit(adminuser = true)
+    @PermissionLimit(adminuser = true)
     public String index(Model model) {
 
         // 执行器列表
@@ -47,7 +47,7 @@ public class UserController {
 
     @RequestMapping("/pageList")
     @ResponseBody
-    @PermessionLimit(adminuser = true)
+    @PermissionLimit(adminuser = true)
     public Map<String, Object> pageList(@RequestParam(required = false, defaultValue = "0") int start,
                                         @RequestParam(required = false, defaultValue = "10") int length,
                                         String username, int role) {
@@ -66,7 +66,7 @@ public class UserController {
 
     @RequestMapping("/add")
     @ResponseBody
-    @PermessionLimit(adminuser = true)
+    @PermissionLimit(adminuser = true)
     public ReturnT<String> add(XxlJobUser xxlJobUser) {
 
         // valid username
@@ -101,7 +101,7 @@ public class UserController {
 
     @RequestMapping("/update")
     @ResponseBody
-    @PermessionLimit(adminuser = true)
+    @PermissionLimit(adminuser = true)
     public ReturnT<String> update(HttpServletRequest request, XxlJobUser xxlJobUser) {
 
         // avoid opt login seft
@@ -129,7 +129,7 @@ public class UserController {
 
     @RequestMapping("/remove")
     @ResponseBody
-    @PermessionLimit(adminuser = true)
+    @PermissionLimit(adminuser = true)
     public ReturnT<String> remove(HttpServletRequest request, int id) {
 
         // avoid opt login seft

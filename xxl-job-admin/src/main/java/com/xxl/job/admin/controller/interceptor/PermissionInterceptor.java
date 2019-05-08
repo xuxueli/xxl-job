@@ -1,6 +1,6 @@
 package com.xxl.job.admin.controller.interceptor;
 
-import com.xxl.job.admin.controller.annotation.PermessionLimit;
+import com.xxl.job.admin.controller.annotation.PermissionLimit;
 import com.xxl.job.admin.core.model.XxlJobUser;
 import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.admin.service.LoginService;
@@ -34,7 +34,7 @@ public class PermissionInterceptor extends HandlerInterceptorAdapter {
 		boolean needLogin = true;
 		boolean needAdminuser = false;
 		HandlerMethod method = (HandlerMethod)handler;
-		PermessionLimit permission = method.getMethodAnnotation(PermessionLimit.class);
+		PermissionLimit permission = method.getMethodAnnotation(PermissionLimit.class);
 		if (permission!=null) {
 			needLogin = permission.limit();
 			needAdminuser = permission.adminuser();
