@@ -16,7 +16,6 @@ import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
 import com.xxl.job.core.glue.GlueTypeEnum;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -53,6 +52,18 @@ public class JobInfoController {
 		List<XxlJobGroup> jobGroupList_all =  xxlJobGroupDao.findAll();
 
 		// filter group
+		List<XxlJobGroup> jobGroupList = filterJobGroupByRole(request, jobGroupList_all);
+		if (jobGroupList==null || jobGroupList.size()==0) {
+			throw new XxlJobException(I18nUtil.getString("jobgroup_empty"));
+		}
+
+		model.addAttribute("JobGroupList", jobGroupList);
+		model.addAttribute("jobGroup", jobGroup);
+
+		return "jobinfo/jobinfo.index";
+	}
+
+	public static List<XxlJobGroup> filterJobGroupByRole(HttpServletRequest request, List<XxlJobGroup> jobGroupList_all){
 		List<XxlJobGroup> jobGroupList = new ArrayList<>();
 		if (jobGroupList_all!=null && jobGroupList_all.size()>0) {
 			XxlJobUser loginUser = (XxlJobUser) request.getAttribute(LoginService.LOGIN_IDENTITY_KEY);
@@ -70,14 +81,7 @@ public class JobInfoController {
 				}
 			}
 		}
-		if (jobGroupList==null || jobGroupList.size()==0) {
-			throw new XxlJobException(I18nUtil.getString("jobgroup_empty"));
-		}
-
-		model.addAttribute("JobGroupList", jobGroupList);
-		model.addAttribute("jobGroup", jobGroup);
-
-		return "jobinfo/jobinfo.index";
+		return jobGroupList;
 	}
 	
 	@RequestMapping("/pageList")
