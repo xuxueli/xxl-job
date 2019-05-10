@@ -78,7 +78,7 @@
 		LIMIT #{offset}, #{pagesize}
 	</select>
 	
-	<select id="pageListCount" resultType="int">
+	<select id="pageListCount" resultType="java.lang.Integer">
 		SELECT count(1)
 		FROM XXL_JOB_QRTZ_TRIGGER_LOG AS t
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
@@ -164,7 +164,7 @@
 		WHERE job_id = #{jobId}
 	</delete>
 
-	<select id="triggerCountByHandleCode" resultType="int" >
+	<select id="triggerCountByHandleCode" resultType="java.lang.Integer" >
 		SELECT count(1)
 		FROM XXL_JOB_QRTZ_TRIGGER_LOG AS t
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
@@ -217,7 +217,7 @@
 		</trim>
 	</delete>
 
-	<select id="findFailJobLogIds" resultType="int" >
+	<select id="findFailJobLogIds" resultType="java.lang.Integer" >
 		SELECT id FROM `XXL_JOB_QRTZ_TRIGGER_LOG`
 		WHERE !(
 			(trigger_code in (0, 200) and handle_code = 0)

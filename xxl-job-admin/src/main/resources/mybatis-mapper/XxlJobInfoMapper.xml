@@ -71,7 +71,7 @@
 		LIMIT #{offset}, #{pagesize}
 	</select>
 
-	<select id="pageListCount" parameterType="java.util.HashMap" resultType="int">
+	<select id="pageListCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
 		SELECT count(1)
 		FROM XXL_JOB_QRTZ_TRIGGER_INFO AS t
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
@@ -174,7 +174,7 @@
 		WHERE t.job_group = #{jobGroup}
 	</select>
 
-	<select id="findAllCount" resultType="int">
+	<select id="findAllCount" resultType="java.lang.Integer">
 		SELECT count(1)
 		FROM XXL_JOB_QRTZ_TRIGGER_INFO
 	</select>

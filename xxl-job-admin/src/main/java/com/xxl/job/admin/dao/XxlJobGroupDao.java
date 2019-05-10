@@ -12,15 +12,15 @@ import java.util.List;
 @Mapper
 public interface XxlJobGroupDao {
 
-    public List<XxlJobGroup> findAll();
+    List<XxlJobGroup> findAll();
 
-    public List<XxlJobGroup> findByAddressType(@Param("addressType") int addressType);
+    List<XxlJobGroup> findByAddressType(@Param("addressType") int addressType);
 
-    public int save(XxlJobGroup xxlJobGroup);
+    int save(XxlJobGroup xxlJobGroup);
 
-    public int update(XxlJobGroup xxlJobGroup);
+    int update(XxlJobGroup xxlJobGroup);
 
-    public int remove(@Param("id") int id);
+    int remove(@Param("id") int id);
 
-    public XxlJobGroup load(@Param("id") int id);
+    XxlJobGroup load(@Param("id") int id);
 }
