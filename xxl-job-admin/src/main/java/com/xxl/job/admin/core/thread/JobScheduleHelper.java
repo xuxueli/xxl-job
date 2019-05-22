@@ -58,8 +58,8 @@ public class JobScheduleHelper {
 
                         // tx start
 
-                        // 1、查询JOB："下次调度30s内"
-                        long maxNextTime = System.currentTimeMillis() + 30000;
+                        // 1、预读10s内调度任务
+                        long maxNextTime = System.currentTimeMillis() + 10000;
                         long nowTime = System.currentTimeMillis();
                         List<XxlJobInfo> scheduleList = XxlJobAdminConfig.getAdminConfig().getXxlJobInfoDao().scheduleJobQuery(maxNextTime);
                         if (scheduleList!=null && scheduleList.size()>0) {

@@ -189,13 +189,15 @@ public class XxlJobServiceImpl implements XxlJobService {
 			return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("jobinfo_field_id")+I18nUtil.getString("system_not_found")) );
 		}
 
-		// next trigger time
+		// next trigger time (10s后生效，避开预读周期)
 		long nextTriggerTime = 0;
-		try {
-			nextTriggerTime = new CronExpression(jobInfo.getJobCron()).getNextValidTimeAfter(new Date()).getTime();
-		} catch (ParseException e) {
-			logger.error(e.getMessage(), e);
-			return new ReturnT<String>(ReturnT.FAIL_CODE, I18nUtil.getString("jobinfo_field_cron_unvalid")+" | "+ e.getMessage());
+		if (exists_jobInfo.getTriggerStatus() == 1) {
+			try {
+				nextTriggerTime = new CronExpression(jobInfo.getJobCron()).getNextValidTimeAfter(new Date(System.currentTimeMillis() + 10000)).getTime();
+			} catch (ParseException e) {
+				logger.error(e.getMessage(), e);
+				return new ReturnT<String>(ReturnT.FAIL_CODE, I18nUtil.getString("jobinfo_field_cron_unvalid")+" | "+ e.getMessage());
+			}
 		}
 
 		exists_jobInfo.setJobGroup(jobInfo.getJobGroup());
@@ -234,10 +236,10 @@ public class XxlJobServiceImpl implements XxlJobService {
 	public ReturnT<String> start(int id) {
 		XxlJobInfo xxlJobInfo = xxlJobInfoDao.loadById(id);
 
-		// next trigger time
+		// next trigger time (10s后生效，避开预读周期)
 		long nextTriggerTime = 0;
 		try {
-			nextTriggerTime = new CronExpression(xxlJobInfo.getJobCron()).getNextValidTimeAfter(new Date()).getTime();
+			nextTriggerTime = new CronExpression(xxlJobInfo.getJobCron()).getNextValidTimeAfter(new Date(System.currentTimeMillis() + 10000)).getTime();
 		} catch (ParseException e) {
 			logger.error(e.getMessage(), e);
 			return new ReturnT<String>(ReturnT.FAIL_CODE, I18nUtil.getString("jobinfo_field_cron_unvalid")+" | "+ e.getMessage());
@@ -255,18 +257,9 @@ public class XxlJobServiceImpl implements XxlJobService {
 	public ReturnT<String> stop(int id) {
         XxlJobInfo xxlJobInfo = xxlJobInfoDao.loadById(id);
 
-		// next trigger time
-		long nextTriggerTime = 0;
-		try {
-			nextTriggerTime = new CronExpression(xxlJobInfo.getJobCron()).getNextValidTimeAfter(new Date()).getTime();
-		} catch (ParseException e) {
-			logger.error(e.getMessage(), e);
-			return new ReturnT<String>(ReturnT.FAIL_CODE, I18nUtil.getString("jobinfo_field_cron_unvalid")+" | "+ e.getMessage());
-		}
-
 		xxlJobInfo.setTriggerStatus(0);
 		xxlJobInfo.setTriggerLastTime(0);
-		xxlJobInfo.setTriggerNextTime(nextTriggerTime);
+		xxlJobInfo.setTriggerNextTime(0);
 
 		xxlJobInfoDao.update(xxlJobInfo);
 		return ReturnT.SUCCESS;
