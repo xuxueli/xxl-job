@@ -36,13 +36,16 @@ public class JobScheduleHelper {
         scheduleThread = new Thread(new Runnable() {
             @Override
             public void run() {
-                while (!toStop) {
-                    // 随机休眠1s内
-                    try {
-                        TimeUnit.MILLISECONDS.sleep(500+new Random().nextInt(500));
-                    } catch (InterruptedException e) {
+
+                try {
+                    TimeUnit.MILLISECONDS.sleep(5000);
+                } catch (InterruptedException e) {
+                    if (!toStop) {
                         logger.error(e.getMessage(), e);
                     }
+                }
+
+                while (!toStop) {
 
                     // 匹配任务
                     Connection conn = null;
@@ -139,6 +142,16 @@ public class JobScheduleHelper {
                             }
                         }
                     }
+
+                    // 随机休眠1s内
+                    try {
+                        TimeUnit.MILLISECONDS.sleep(500+new Random().nextInt(500));
+                    } catch (InterruptedException e) {
+                        if (!toStop) {
+                            logger.error(e.getMessage(), e);
+                        }
+                    }
+
                 }
                 logger.info(">>>>>>>>>>> xxl-job, JobScheduleHelper#scheduleThread stop");
             }
@@ -154,6 +167,7 @@ public class JobScheduleHelper {
             public void run() {
                 int lastSecond = -1;
                 while (!toStop) {
+
                     try {
                         // second data
                         List<Integer> ringItemData = new ArrayList<>();
@@ -195,7 +209,9 @@ public class JobScheduleHelper {
                     try {
                         TimeUnit.SECONDS.sleep(1);
                     } catch (InterruptedException e) {
-                        logger.error(e.getMessage(), e);
+                        if (!toStop) {
+                            logger.error(e.getMessage(), e);
+                        }
                     }
                 }
                 logger.info(">>>>>>>>>>> xxl-job, JobScheduleHelper#ringThread stop");
