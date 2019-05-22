@@ -83,22 +83,16 @@ $(function() {
 	                { "data": 'author', "visible" : true, "width":'10%'},
 	                { "data": 'alarmEmail', "visible" : false},
 	                { 
-	                	"data": 'jobStatus',
+	                	"data": 'triggerStatus',
 						"width":'10%',
 	                	"visible" : true,
 	                	"render": function ( data, type, row ) {
-
                             // status
-	                		if (data && data != 'NONE') {
-                                if ('NORMAL' == data) {
-                                    return '<small class="label label-success" ><i class="fa fa-clock-o"></i>RUNNING</small>';
-                                } else {
-                                    return '<small class="label label-warning" >ERROR('+ data +')</small>';
-                                }
-							} else {
+                            if (1 == data) {
+                                return '<small class="label label-success" ><i class="fa fa-clock-o"></i>RUNNING</small>';
+                            } else {
                                 return '<small class="label label-default" ><i class="fa fa-clock-o"></i>STOP</small>';
-							}
-
+                            }
 	                		return data;
 	                	}
 	                },
@@ -109,15 +103,11 @@ $(function() {
 	                		return function(){
 	                			// status
 	                			var start_stop = "";
-                                if (row.jobStatus && row.jobStatus != 'NONE') {
-                                    if ('NORMAL' == row.jobStatus) {
-                                        start_stop = '<button class="btn btn-primary btn-xs job_operate" _type="job_pause" type="button">'+ I18n.jobinfo_opt_stop +'</button>  ';
-                                    } else {
-                                        start_stop = '<button class="btn btn-primary btn-xs job_operate" _type="job_pause" type="button">'+ I18n.jobinfo_opt_stop +'</button>  ';
-                                    }
+                                if (1 == row.triggerStatus ) {
+                                    start_stop = '<button class="btn btn-primary btn-xs job_operate" _type="job_pause" type="button">'+ I18n.jobinfo_opt_stop +'</button>  ';
                                 } else {
                                     start_stop = '<button class="btn btn-primary btn-xs job_operate" _type="job_resume" type="button">'+ I18n.jobinfo_opt_start +'</button>  ';
-                                }
+								}
 
 	                			// log url
 	                			var logUrl = base_url +'/joblog?jobId='+ row.id;

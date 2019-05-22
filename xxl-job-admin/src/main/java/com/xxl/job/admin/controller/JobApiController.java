@@ -1,7 +1,7 @@
 package com.xxl.job.admin.controller;
 
 import com.xxl.job.admin.controller.annotation.PermissionLimit;
-import com.xxl.job.admin.core.schedule.XxlJobDynamicScheduler;
+import com.xxl.job.admin.core.conf.XxlJobScheduler;
 import com.xxl.job.core.biz.AdminBiz;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Controller;
@@ -27,7 +27,7 @@ public class JobApiController implements InitializingBean {
     @RequestMapping(AdminBiz.MAPPING)
     @PermissionLimit(limit=false)
     public void api(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        XxlJobDynamicScheduler.invokeAdminService(request, response);
+        XxlJobScheduler.invokeAdminService(request, response);
     }
 
 

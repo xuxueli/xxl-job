@@ -29,12 +29,17 @@ public interface XxlJobInfoDao {
 
 	public XxlJobInfo loadById(@Param("id") int id);
 	
-	public int update(XxlJobInfo item);
+	public int update(XxlJobInfo xxlJobInfo);
 	
 	public int delete(@Param("id") int id);
 
 	public List<XxlJobInfo> getJobsByGroup(@Param("jobGroup") int jobGroup);
 
 	public int findAllCount();
+
+	public List<XxlJobInfo> scheduleJobQuery(@Param("maxNextTime") long maxNextTime);
+
+	public int scheduleUpdate(XxlJobInfo xxlJobInfo);
+
 
 }

@@ -2,8 +2,8 @@ package com.xxl.job.admin.service.impl;
 
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
+import com.xxl.job.admin.core.cron.CronExpression;
 import com.xxl.job.admin.core.route.ExecutorRouteStrategyEnum;
-import com.xxl.job.admin.core.schedule.XxlJobDynamicScheduler;
 import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.admin.dao.XxlJobGroupDao;
 import com.xxl.job.admin.dao.XxlJobInfoDao;
@@ -14,14 +14,13 @@ import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
 import com.xxl.job.core.glue.GlueTypeEnum;
 import com.xxl.job.core.util.DateUtil;
-import org.quartz.CronExpression;
-import org.quartz.SchedulerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.text.MessageFormat;
+import java.text.ParseException;
 import java.util.*;
 
 /**
@@ -47,13 +46,6 @@ public class XxlJobServiceImpl implements XxlJobService {
 		// page list
 		List<XxlJobInfo> list = xxlJobInfoDao.pageList(start, length, jobGroup, jobDesc, executorHandler);
 		int list_count = xxlJobInfoDao.pageListCount(start, length, jobGroup, jobDesc, executorHandler);
-		
-		// fill job info
-		if (list!=null && list.size()>0) {
-			for (XxlJobInfo jobInfo : list) {
-				XxlJobDynamicScheduler.fillJobInfo(jobInfo);
-			}
-		}
 		
 		// package result
 		Map<String, Object> maps = new HashMap<String, Object>();
@@ -197,6 +189,15 @@ public class XxlJobServiceImpl implements XxlJobService {
 			return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("jobinfo_field_id")+I18nUtil.getString("system_not_found")) );
 		}
 
+		// next trigger time
+		long nextTriggerTime = 0;
+		try {
+			nextTriggerTime = new CronExpression(jobInfo.getJobCron()).getNextValidTimeAfter(new Date()).getTime();
+		} catch (ParseException e) {
+			logger.error(e.getMessage(), e);
+			return new ReturnT<String>(ReturnT.FAIL_CODE, I18nUtil.getString("jobinfo_field_cron_unvalid")+" | "+ e.getMessage());
+		}
+
 		exists_jobInfo.setJobGroup(jobInfo.getJobGroup());
 		exists_jobInfo.setJobCron(jobInfo.getJobCron());
 		exists_jobInfo.setJobDesc(jobInfo.getJobDesc());
@@ -209,17 +210,9 @@ public class XxlJobServiceImpl implements XxlJobService {
 		exists_jobInfo.setExecutorTimeout(jobInfo.getExecutorTimeout());
 		exists_jobInfo.setExecutorFailRetryCount(jobInfo.getExecutorFailRetryCount());
 		exists_jobInfo.setChildJobId(jobInfo.getChildJobId());
+		exists_jobInfo.setTriggerNextTime(nextTriggerTime);
         xxlJobInfoDao.update(exists_jobInfo);
 
-
-		// update quartz-cron if started
-        try {
-			String qz_name = String.valueOf(exists_jobInfo.getId());
-            XxlJobDynamicScheduler.updateJobCron(qz_name, exists_jobInfo.getJobCron());
-        } catch (SchedulerException e) {
-            logger.error(e.getMessage(), e);
-			return ReturnT.FAIL;
-        }
 
 		return ReturnT.SUCCESS;
 	}
@@ -230,76 +223,54 @@ public class XxlJobServiceImpl implements XxlJobService {
 		if (xxlJobInfo == null) {
 			return ReturnT.SUCCESS;
 		}
-		String name = String.valueOf(xxlJobInfo.getId());
 
-		try {
-			// unbind quartz
-			XxlJobDynamicScheduler.removeJob(name);
-
-			xxlJobInfoDao.delete(id);
-			xxlJobLogDao.delete(id);
-			xxlJobLogGlueDao.deleteByJobId(id);
-			return ReturnT.SUCCESS;
-		} catch (SchedulerException e) {
-			logger.error(e.getMessage(), e);
-			return ReturnT.FAIL;
-		}
-
+		xxlJobInfoDao.delete(id);
+		xxlJobLogDao.delete(id);
+		xxlJobLogGlueDao.deleteByJobId(id);
+		return ReturnT.SUCCESS;
 	}
 
 	@Override
 	public ReturnT<String> start(int id) {
 		XxlJobInfo xxlJobInfo = xxlJobInfoDao.loadById(id);
-		String name = String.valueOf(xxlJobInfo.getId());
-		String cronExpression = xxlJobInfo.getJobCron();
 
+		// next trigger time
+		long nextTriggerTime = 0;
 		try {
-			boolean ret = XxlJobDynamicScheduler.addJob(name, cronExpression);
-			return ret?ReturnT.SUCCESS:ReturnT.FAIL;
-		} catch (SchedulerException e) {
+			nextTriggerTime = new CronExpression(xxlJobInfo.getJobCron()).getNextValidTimeAfter(new Date()).getTime();
+		} catch (ParseException e) {
 			logger.error(e.getMessage(), e);
-			return ReturnT.FAIL;
+			return new ReturnT<String>(ReturnT.FAIL_CODE, I18nUtil.getString("jobinfo_field_cron_unvalid")+" | "+ e.getMessage());
 		}
+
+		xxlJobInfo.setTriggerStatus(1);
+		xxlJobInfo.setTriggerLastTime(0);
+		xxlJobInfo.setTriggerNextTime(nextTriggerTime);
+
+		xxlJobInfoDao.update(xxlJobInfo);
+		return ReturnT.SUCCESS;
 	}
 
 	@Override
 	public ReturnT<String> stop(int id) {
         XxlJobInfo xxlJobInfo = xxlJobInfoDao.loadById(id);
-        String name = String.valueOf(xxlJobInfo.getId());
 
+		// next trigger time
+		long nextTriggerTime = 0;
 		try {
-			// bind quartz
-            boolean ret = XxlJobDynamicScheduler.removeJob(name);
-            return ret?ReturnT.SUCCESS:ReturnT.FAIL;
-		} catch (SchedulerException e) {
+			nextTriggerTime = new CronExpression(xxlJobInfo.getJobCron()).getNextValidTimeAfter(new Date()).getTime();
+		} catch (ParseException e) {
 			logger.error(e.getMessage(), e);
-			return ReturnT.FAIL;
+			return new ReturnT<String>(ReturnT.FAIL_CODE, I18nUtil.getString("jobinfo_field_cron_unvalid")+" | "+ e.getMessage());
 		}
-	}
 
-	/*@Override
-    public ReturnT<String> triggerJob(int id, int failRetryCount) {
+		xxlJobInfo.setTriggerStatus(0);
+		xxlJobInfo.setTriggerLastTime(0);
+		xxlJobInfo.setTriggerNextTime(nextTriggerTime);
 
-		JobTriggerPoolHelper.trigger(id, failRetryCount);
+		xxlJobInfoDao.update(xxlJobInfo);
 		return ReturnT.SUCCESS;
-
-        *//*XxlJobInfo xxlJobInfo = xxlJobInfoDao.loadById(id);
-        if (xxlJobInfo == null) {
-        	return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("jobinfo_field_id")+I18nUtil.getString("system_unvalid")) );
-		}
-
-        String group = String.valueOf(xxlJobInfo.getJobGroup());
-        String name = String.valueOf(xxlJobInfo.getId());
-
-		try {
-			XxlJobDynamicScheduler.triggerJob(name, group);
-			return ReturnT.SUCCESS;
-		} catch (SchedulerException e) {
-			logger.error(e.getMessage(), e);
-			return new ReturnT<String>(ReturnT.FAIL_CODE, e.getMessage());
-		}*//*
-
-	}*/
+	}
 
 	@Override
 	public Map<String, Object> dashboardInfo() {

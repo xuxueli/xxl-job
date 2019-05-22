@@ -60,13 +60,6 @@
 			<version>${mysql-connector-java.version}</version>
 		</dependency>
 
-		<!-- quartz ：quartz-2.2.3/c3p0-0.9.1.1/slf4j-api-1.6.6 -->
-		<dependency>
-			<groupId>org.quartz-scheduler</groupId>
-			<artifactId>quartz</artifactId>
-			<version>${quartz.version}</version>
-		</dependency>
-
 		<!-- xxl-job-core -->
 		<dependency>
 			<groupId>com.xuxueli</groupId>

@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
 
 import javax.annotation.Resource;
+import javax.sql.DataSource;
 
 /**
  * xxl-job config
@@ -53,6 +54,8 @@ public class XxlJobAdminConfig implements InitializingBean{
     private AdminBiz adminBiz;
     @Resource
     private JavaMailSender mailSender;
+    @Resource
+    private DataSource dataSource;
 
 
     public String getI18n() {
@@ -89,6 +92,10 @@ public class XxlJobAdminConfig implements InitializingBean{
 
     public JavaMailSender getMailSender() {
         return mailSender;
+    }
+
+    public DataSource getDataSource() {
+        return dataSource;
     }
 
 }

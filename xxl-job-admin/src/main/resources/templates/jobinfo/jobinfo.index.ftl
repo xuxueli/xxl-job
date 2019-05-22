@@ -75,7 +75,7 @@
 					                  	<th name="updateTime" >updateTime</th>
 					                  	<th name="author" >${I18n.jobinfo_field_author}</th>
 					                  	<th name="alarmEmail" >${I18n.jobinfo_field_alarmemail}</th>
-					                  	<th name="jobStatus" >${I18n.system_status}</th>
+					                  	<th name="triggerStatus" >${I18n.system_status}</th>
 					                  	<th>${I18n.system_opt}</th>
 					                </tr>
 				                </thead>
