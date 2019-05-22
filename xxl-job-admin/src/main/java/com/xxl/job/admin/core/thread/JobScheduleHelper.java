@@ -38,13 +38,13 @@ public class JobScheduleHelper {
             public void run() {
 
                 try {
-                    TimeUnit.MILLISECONDS.sleep(5000);
+                    TimeUnit.MILLISECONDS.sleep(5000 + System.currentTimeMillis()%1000 );
                 } catch (InterruptedException e) {
                     if (!toStop) {
                         logger.error(e.getMessage(), e);
                     }
                 }
-                logger.info(">>>>>>>>> init xxl-job admin scheduler running.");
+                logger.info(">>>>>>>>> init xxl-job admin scheduler success.");
 
                 while (!toStop) {
 
@@ -166,6 +166,15 @@ public class JobScheduleHelper {
         ringThread = new Thread(new Runnable() {
             @Override
             public void run() {
+
+                try {
+                    TimeUnit.MILLISECONDS.sleep(System.currentTimeMillis()%1000 );
+                } catch (InterruptedException e) {
+                    if (!toStop) {
+                        logger.error(e.getMessage(), e);
+                    }
+                }
+
                 int lastSecond = -1;
                 while (!toStop) {
 
