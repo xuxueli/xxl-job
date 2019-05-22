@@ -44,6 +44,7 @@ public class JobScheduleHelper {
                         logger.error(e.getMessage(), e);
                     }
                 }
+                logger.info(">>>>>>>>> init xxl-job admin scheduler running.");
 
                 while (!toStop) {
 
@@ -111,7 +112,7 @@ public class JobScheduleHelper {
                                 }
                                 ringItemData.add(jobInfo.getId());
 
-                                logger.info(">>>>>>>>>>> xxl-job, push time-ring : " + ringSecond + " = " + Arrays.asList(ringItemData) );
+                                logger.debug(">>>>>>>>>>> xxl-job, push time-ring : " + ringSecond + " = " + Arrays.asList(ringItemData) );
                             }
 
                             // 3、更新trigger信息
@@ -190,7 +191,7 @@ public class JobScheduleHelper {
                         lastSecond = nowSecond;
 
 
-                        logger.info(">>>>>>>>>>> xxl-job, time-ring beat : " + nowSecond + " = " + Arrays.asList(ringItemData) );
+                        logger.debug(">>>>>>>>>>> xxl-job, time-ring beat : " + nowSecond + " = " + Arrays.asList(ringItemData) );
                         if (ringItemData!=null && ringItemData.size()>0) {
                             // do trigger
                             for (int jobId: ringItemData) {
