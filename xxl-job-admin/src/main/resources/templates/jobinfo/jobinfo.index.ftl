@@ -35,6 +35,15 @@
 	                  	</select>
 	              	</div>
 	            </div>
+                <div class="col-xs-1">
+                    <div class="input-group">
+                        <select class="form-control" id="triggerStatus" >
+                            <option value="-1" >${I18n.system_all}</option>
+                            <option value="0" >${I18n.jobinfo_opt_stop}</option>
+                            <option value="1" >${I18n.jobinfo_opt_start}</option>
+                        </select>
+                    </div>
+                </div>
                 <div class="col-xs-3">
                     <div class="input-group">
                         <span class="input-group-addon">${I18n.jobinfo_field_jobdesc}</span>
@@ -50,7 +59,7 @@
 	            <div class="col-xs-1">
 	            	<button class="btn btn-block btn-info" id="searchBtn">${I18n.system_search}</button>
 	            </div>
-	            <div class="col-xs-2">
+	            <div class="col-xs-1">
 	            	<button class="btn btn-block btn-success add" type="button">${I18n.jobinfo_field_add}</button>
 	            </div>
           	</div>

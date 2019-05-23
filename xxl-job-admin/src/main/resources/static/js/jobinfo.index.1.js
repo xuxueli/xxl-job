@@ -11,6 +11,7 @@ $(function() {
 	        data : function ( d ) {
 	        	var obj = {};
 	        	obj.jobGroup = $('#jobGroup').val();
+                obj.triggerStatus = $('#triggerStatus').val();
                 obj.jobDesc = $('#jobDesc').val();
 	        	obj.executorHandler = $('#executorHandler').val();
 	        	obj.start = d.start;
