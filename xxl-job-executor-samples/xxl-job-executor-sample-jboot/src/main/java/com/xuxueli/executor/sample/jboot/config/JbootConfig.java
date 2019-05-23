@@ -10,11 +10,7 @@ import io.jboot.core.listener.JbootAppListenerBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * @author https://github.com/souvc
- */
 public class JbootConfig extends JbootAppListenerBase {
-
     private Logger logger = LoggerFactory.getLogger(JbootConfig.class);
 
     // ---------------------- xxl-job executor ----------------------

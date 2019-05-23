@@ -1,11 +1,9 @@
-package com.xuxueli;
+package com.xuxueli.executor.sample.jboot;
 
 import io.jboot.app.JbootApplication;
 
 /**
  * Jboot app
- *
- * @author https://github.com/souvc
  */
 public class JbootApp {
     public static void main(String[] args) {
