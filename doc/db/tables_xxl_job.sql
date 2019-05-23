@@ -151,6 +151,7 @@ CREATE TABLE XXL_JOB_QRTZ_LOCKS
 
 CREATE TABLE `XXL_JOB_QRTZ_TRIGGER_INFO` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uniq_name` varchar(255) charset utf8mb4 default '' not null comment '唯一名字',
   `job_group` int(11) NOT NULL COMMENT '执行器主键ID',
   `job_cron` varchar(128) NOT NULL COMMENT '任务执行CRON',
   `job_desc` varchar(255) NOT NULL,
@@ -171,6 +172,9 @@ CREATE TABLE `XXL_JOB_QRTZ_TRIGGER_INFO` (
   `child_jobid` varchar(255) DEFAULT NULL COMMENT '子任务ID，多个逗号分隔',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+create index XXL_JOB_QRTZ_TRIGGER_INFO_uniq_name_index
+	on `xxl-job`.XXL_JOB_QRTZ_TRIGGER_INFO (uniq_name);
 
 CREATE TABLE `XXL_JOB_QRTZ_TRIGGER_LOG` (
   `id` int(11) NOT NULL AUTO_INCREMENT,

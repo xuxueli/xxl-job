@@ -66,6 +66,7 @@
 				                <thead>
 					            	<tr>
 					            		<th name="id" >${I18n.jobinfo_field_id}</th>
+					            		<th name="uniqName" >${I18n.jobinfo_field_uniqname}</th>
 					                	<th name="jobGroup" >${I18n.jobinfo_field_jobgroup}</th>
 					                  	<th name="jobDesc" >${I18n.jobinfo_field_jobdesc}</th>
                                         <th name="glueType" >${I18n.jobinfo_field_gluetype}</th>
@@ -102,6 +103,10 @@
          	</div>
          	<div class="modal-body">
 				<form class="form-horizontal form" role="form" >
+					<div class="form-group">
+                        <label for="firstname" class="col-sm-2 control-label">${I18n.jobinfo_field_uniqname}<font color="red">*</font></label>
+                        <div class="col-sm-4"><input type="text" class="form-control" name="uniqName" placeholder="${I18n.system_please_input}${I18n.jobinfo_field_uniqname}" maxlength="50" ></div>
+					</div>
 					<div class="form-group">
 						<label for="firstname" class="col-sm-2 control-label">${I18n.jobinfo_field_jobgroup}<font color="red">*</font></label>
 						<div class="col-sm-4">
@@ -298,6 +303,10 @@ exit 0
          	</div>
          	<div class="modal-body">
 				<form class="form-horizontal form" role="form" >
+					<div class="form-group">
+                        <label for="uniqName" class="col-sm-2 control-label">${I18n.jobinfo_field_uniqname}<font color="red">*</font></label>
+                        <div class="col-sm-4"><input type="text" class="form-control" name="uniqName" placeholder="${I18n.system_please_input}${I18n.jobinfo_field_uniqname}" maxlength="50" ></div>
+                    </div>
 					<div class="form-group">
                         <label for="firstname" class="col-sm-2 control-label">${I18n.jobinfo_field_jobgroup}<font color="red">*</font></label>
                         <div class="col-sm-4">

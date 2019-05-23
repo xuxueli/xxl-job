@@ -10,7 +10,8 @@ import java.util.Date;
 public class XxlJobInfo {
 	
 	private int id;				// 主键ID	    (JobKey.name)
-	
+	private String uniqName;    // 唯一名字
+
 	private int jobGroup;		// 执行器主键ID	(JobKey.group)
 	private String jobCron;		// 任务执行CRON表达式 【base on quartz】
 	private String jobDesc;
@@ -41,6 +42,14 @@ public class XxlJobInfo {
 
 	public int getId() {
 		return id;
+	}
+
+	public String getUniqName() {
+		return uniqName;
+	}
+
+	public void setUniqName(String uniqName) {
+		this.uniqName = uniqName;
 	}
 
 	public void setId(int id) {
