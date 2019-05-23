@@ -134,7 +134,7 @@ $(function() {
 		if (addressType == 0) {
             $addressList.css("background-color", "#eee");	// 自动注册
             $addressList.attr("readonly","readonly");
-			//$addressList.val("");
+			$addressList.val("");
 		} else {
             $addressList.css("background-color", "white");
 			$addressList.removeAttr("readonly");
