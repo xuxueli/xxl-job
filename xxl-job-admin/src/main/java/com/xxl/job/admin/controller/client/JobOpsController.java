@@ -3,12 +3,16 @@ package com.xxl.job.admin.controller.client;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.thread.JobTriggerPoolHelper;
 import com.xxl.job.admin.core.trigger.TriggerTypeEnum;
+import com.xxl.job.admin.dao.XxlJobInfoDao;
 import com.xxl.job.admin.service.XxlJobService;
 import com.xxl.job.core.biz.model.ReturnT;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @author Luo Bao Ding
@@ -18,6 +22,10 @@ import javax.annotation.Resource;
 @RequestMapping(JobOpsController.JOB_OPS)
 public class JobOpsController {
     public static final String JOB_OPS = "/jobops";
+    public static final int PARAM_CONDITION_NOT_SATISFIED = 428;
+
+    @Resource
+    private XxlJobInfoDao xxlJobInfoDao;
 
     @Resource
     private XxlJobService xxlJobService;
@@ -56,5 +64,26 @@ public class JobOpsController {
 
         JobTriggerPoolHelper.trigger(id, TriggerTypeEnum.MANUAL, -1, null, executorParam);
         return ReturnT.SUCCESS;
+    }
+
+    @RequestMapping("/triggerByUniqName")
+    public ReturnT<String> triggerByUniqName(@RequestParam("uniqName") String uniqName, @RequestParam("executorParam") String executorParam) {
+        if (!StringUtils.hasText(uniqName)) {
+            return new ReturnT<>(PARAM_CONDITION_NOT_SATISFIED, "uniqName '" + uniqName + "' should not be blank");
+        }
+        List<Integer> ids = xxlJobInfoDao.findIdByUniqName(uniqName);
+        if (ids == null || ids.size() == 0) {
+            return new ReturnT<>(PARAM_CONDITION_NOT_SATISFIED, "uniqName '" + uniqName + "' does not exist");
+        }
+        int id = ids.get(0);
+
+        if (executorParam == null) {
+            executorParam = "";
+        }
+
+        JobTriggerPoolHelper.trigger(id, TriggerTypeEnum.MANUAL, -1, null, executorParam);
+
+        return ReturnT.SUCCESS;
+
     }
 }

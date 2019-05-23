@@ -184,4 +184,10 @@
 		FROM XXL_JOB_QRTZ_TRIGGER_INFO
 	</select>
 
+	<select id="findIdByUniqName" resultType="int">
+		SELECT t.id
+		FROM XXL_JOB_QRTZ_TRIGGER_INFO AS t
+		WHERE t.uniq_name = #{uniqName}
+	</select>
+
 </mapper>
