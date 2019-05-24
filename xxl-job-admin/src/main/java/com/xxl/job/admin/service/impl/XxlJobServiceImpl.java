@@ -190,8 +190,8 @@ public class XxlJobServiceImpl implements XxlJobService {
 		}
 
 		// next trigger time (10s后生效，避开预读周期)
-		long nextTriggerTime = 0;
-		if (exists_jobInfo.getTriggerStatus() == 1) {
+		long nextTriggerTime = exists_jobInfo.getTriggerNextTime();
+		if (exists_jobInfo.getTriggerStatus() == 1 && !jobInfo.getJobCron().equals(exists_jobInfo.getJobCron()) ) {
 			try {
 				nextTriggerTime = new CronExpression(jobInfo.getJobCron()).getNextValidTimeAfter(new Date(System.currentTimeMillis() + 10000)).getTime();
 			} catch (ParseException e) {
