@@ -62,7 +62,7 @@
 
 	<select id="pageList" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
 		SELECT <include refid="Base_Column_List" />
-		FROM XXL_JOB_INFO AS t
+		FROM xxl_job_info AS t
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
 			<if test="jobGroup gt 0">
 				AND t.job_group = #{jobGroup}
@@ -83,7 +83,7 @@
 
 	<select id="pageListCount" parameterType="java.util.HashMap" resultType="int">
 		SELECT count(1)
-		FROM XXL_JOB_INFO AS t
+		FROM xxl_job_info AS t
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
 			<if test="jobGroup gt 0">
 				AND t.job_group = #{jobGroup}
@@ -101,7 +101,7 @@
 	</select>
 
 	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobInfo" useGeneratedKeys="true" keyProperty="id" >
-		INSERT INTO XXL_JOB_INFO (
+		INSERT INTO xxl_job_info (
 			job_group,
 			job_cron,
 			job_desc,
@@ -154,12 +154,12 @@
 
 	<select id="loadById" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
 		SELECT <include refid="Base_Column_List" />
-		FROM XXL_JOB_INFO AS t
+		FROM xxl_job_info AS t
 		WHERE t.id = #{id}
 	</select>
 
 	<update id="update" parameterType="com.xxl.job.admin.core.model.XxlJobInfo" >
-		UPDATE XXL_JOB_INFO
+		UPDATE xxl_job_info
 		SET
 			job_group = #{jobGroup},
 			job_cron = #{jobCron},
@@ -186,31 +186,31 @@
 
 	<delete id="delete" parameterType="java.util.HashMap">
 		DELETE
-		FROM XXL_JOB_INFO
+		FROM xxl_job_info
 		WHERE id = #{id}
 	</delete>
 
 	<select id="getJobsByGroup" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
 		SELECT <include refid="Base_Column_List" />
-		FROM XXL_JOB_INFO AS t
+		FROM xxl_job_info AS t
 		WHERE t.job_group = #{jobGroup}
 	</select>
 
 	<select id="findAllCount" resultType="int">
 		SELECT count(1)
-		FROM XXL_JOB_INFO
+		FROM xxl_job_info
 	</select>
 
 
 	<select id="scheduleJobQuery" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
 		SELECT <include refid="Base_Column_List" />
-		FROM XXL_JOB_INFO AS t
+		FROM xxl_job_info AS t
 		WHERE t.trigger_status = 1
 			and t.trigger_next_time<![CDATA[ < ]]> #{maxNextTime}
 	</select>
 
 	<update id="scheduleUpdate" parameterType="com.xxl.job.admin.core.model.XxlJobInfo"  >
-		UPDATE XXL_JOB_INFO
+		UPDATE xxl_job_info
 		SET
 			trigger_last_time = #{triggerLastTime},
 			trigger_next_time = #{triggerNextTime}
