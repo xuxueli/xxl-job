@@ -19,6 +19,7 @@ import org.quartz.SchedulerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.text.MessageFormat;
@@ -66,7 +67,12 @@ public class XxlJobServiceImpl implements XxlJobService {
 	@Override
 	public ReturnT<String> add(XxlJobInfo jobInfo) {
 		// valid
-		XxlJobGroup group = xxlJobGroupDao.load(jobInfo.getJobGroup());
+        XxlJobGroup group;
+        if (StringUtils.hasText(jobInfo.getAppName())) {
+            group = xxlJobGroupDao.loadByAppName(jobInfo.getAppName());
+        } else {
+            group = xxlJobGroupDao.load(jobInfo.getJobGroup());
+        }
 		if (group == null) {
 			return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("system_please_choose")+I18nUtil.getString("jobinfo_field_jobgroup")) );
 		}
@@ -198,7 +204,12 @@ public class XxlJobServiceImpl implements XxlJobService {
 		}
 
 		// stage job info
-		XxlJobInfo exists_jobInfo = xxlJobInfoDao.loadById(jobInfo.getId());
+        XxlJobInfo exists_jobInfo;
+        if (StringUtils.hasText(jobInfo.getUniqName())) {
+            exists_jobInfo = xxlJobInfoDao.loadByUniqName(jobInfo.getUniqName());
+        } else {
+            exists_jobInfo = xxlJobInfoDao.loadById(jobInfo.getId());
+        }
 		if (exists_jobInfo == null) {
 			return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("jobinfo_field_id")+I18nUtil.getString("system_not_found")) );
 		}

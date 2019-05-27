@@ -37,6 +37,8 @@ public interface XxlJobInfoDao {
 
 	public int findAllCount();
 
-	public List<Integer> findIdByUniqName(@Param("uniqName") String uniqName);
+	public int findIdByUniqName(@Param("uniqName") String uniqName);
+
+	public XxlJobInfo loadByUniqName(@Param("uniqName") String uniqName);
 
 }

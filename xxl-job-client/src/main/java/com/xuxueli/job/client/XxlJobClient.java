@@ -24,16 +24,13 @@ public interface XxlJobClient {
     ReturnT<String> update(@RequestBody XxlJobInfo jobInfo);
 
     @PostMapping("/remove")
-    ReturnT<String> remove(@RequestParam("id") int id);
+    ReturnT<String> remove(@RequestParam("uniqName") String uniqName);
 
     @PostMapping("/stop")
-    ReturnT<String> stop(@RequestParam("id") int id);
+    ReturnT<String> stop(@RequestParam("uniqName") String uniqName);
 
     @PostMapping("/start")
-    ReturnT<String> start(@RequestParam("id") int id);
-
-    @PostMapping("/trigger")
-    ReturnT<String> trigger(@RequestParam("id") int id, @RequestParam("executorParam") String executorParam);
+    ReturnT<String> start(@RequestParam("uniqName") String uniqName);
 
     @PostMapping("/triggerByUniqName")
     ReturnT<String> triggerByUniqName(@RequestParam("uniqName") String uniqName,

@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 /**
  * @author Luo Bao Ding
@@ -41,29 +40,21 @@ public class JobOpsController {
     }
 
     @RequestMapping("/remove")
-    public ReturnT<String> remove(int id) {
+    public ReturnT<String> remove(String uniqName) {
+        int id = xxlJobInfoDao.findIdByUniqName(uniqName);
         return xxlJobService.remove(id);
     }
 
     @RequestMapping("/stop")
-    public ReturnT<String> pause(int id) {
+    public ReturnT<String> pause(String uniqName) {
+        int id = xxlJobInfoDao.findIdByUniqName(uniqName);
         return xxlJobService.stop(id);
     }
 
     @RequestMapping("/start")
-    public ReturnT<String> start(int id) {
+    public ReturnT<String> start(String uniqName) {
+        int id = xxlJobInfoDao.findIdByUniqName(uniqName);
         return xxlJobService.start(id);
-    }
-
-    @RequestMapping("/trigger")
-    public ReturnT<String> triggerJob(int id, String executorParam) {
-        // force cover job param
-        if (executorParam == null) {
-            executorParam = "";
-        }
-
-        JobTriggerPoolHelper.trigger(id, TriggerTypeEnum.MANUAL, -1, null, executorParam);
-        return ReturnT.SUCCESS;
     }
 
     @RequestMapping("/triggerByUniqName")
@@ -71,11 +62,10 @@ public class JobOpsController {
         if (!StringUtils.hasText(uniqName)) {
             return new ReturnT<>(PARAM_CONDITION_NOT_SATISFIED, "uniqName '" + uniqName + "' should not be blank");
         }
-        List<Integer> ids = xxlJobInfoDao.findIdByUniqName(uniqName);
-        if (ids == null || ids.size() == 0) {
+        int id = xxlJobInfoDao.findIdByUniqName(uniqName);
+        if (id <= 0) {
             return new ReturnT<>(PARAM_CONDITION_NOT_SATISFIED, "uniqName '" + uniqName + "' does not exist");
         }
-        int id = ids.get(0);
 
         if (executorParam == null) {
             executorParam = "";

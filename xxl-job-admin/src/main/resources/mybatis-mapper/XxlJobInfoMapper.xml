@@ -189,5 +189,10 @@
 		FROM XXL_JOB_QRTZ_TRIGGER_INFO AS t
 		WHERE t.uniq_name = #{uniqName}
 	</select>
+	<select id="loadByUniqName" resultMap="XxlJobInfo">
+		SELECT <include refid="Base_Column_List" />
+		FROM XXL_JOB_QRTZ_TRIGGER_INFO AS t
+		WHERE t.uniq_name = #{uniqName}
+	</select>
 
 </mapper>

@@ -89,7 +89,7 @@ public class XxlJobClientTest {
     @Test
     public void remove() throws JsonProcessingException {
         String path = "remove";
-        Supplier<ReturnT<String>> supplier = () -> xxlJobClient.remove(1);
+        Supplier<ReturnT<String>> supplier = () -> xxlJobClient.remove("xx");
 
         testTemplate(path, supplier);
 
@@ -98,7 +98,7 @@ public class XxlJobClientTest {
     @Test
     public void stop() throws JsonProcessingException {
         String path = "stop";
-        Supplier<ReturnT<String>> supplier = () -> xxlJobClient.stop(1);
+        Supplier<ReturnT<String>> supplier = () -> xxlJobClient.stop("xx");
 
         testTemplate(path, supplier);
 
@@ -107,20 +107,12 @@ public class XxlJobClientTest {
     @Test
     public void start() throws JsonProcessingException {
         String path = "start";
-        Supplier<ReturnT<String>> supplier = () -> xxlJobClient.start(1);
+        Supplier<ReturnT<String>> supplier = () -> xxlJobClient.start("xx");
 
         testTemplate(path, supplier);
 
     }
 
-    @Test
-    public void trigger() throws JsonProcessingException {
-        String path = "trigger";
-        Supplier<ReturnT<String>> supplier = () -> xxlJobClient.trigger(1, "");
-
-        testTemplate(path, supplier);
-
-    }
 
 
     private void testTemplate(String path, Supplier<ReturnT<String>> supplier) throws JsonProcessingException {

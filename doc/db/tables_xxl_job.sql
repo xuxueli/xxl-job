@@ -224,7 +224,9 @@ CREATE TABLE `XXL_JOB_QRTZ_TRIGGER_GROUP` (
   `order` tinyint(4) NOT NULL DEFAULT '0' COMMENT '排序',
   `address_type` tinyint(4) NOT NULL DEFAULT '0' COMMENT '执行器地址类型：0=自动注册、1=手动录入',
   `address_list` varchar(512) DEFAULT NULL COMMENT '执行器地址列表，多地址逗号分隔',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  constraint XXL_JOB_QRTZ_TRIGGER_GROUP_app_name_uindex
+		unique (app_name)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
