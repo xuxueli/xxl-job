@@ -171,7 +171,7 @@ public class JobScheduleHelper {
 
                 // align second
                 try {
-                    TimeUnit.MILLISECONDS.sleep(System.currentTimeMillis()%1000 );
+                    TimeUnit.MILLISECONDS.sleep(1000 - System.currentTimeMillis()%1000 );
                 } catch (InterruptedException e) {
                     if (!toStop) {
                         logger.error(e.getMessage(), e);
@@ -181,7 +181,6 @@ public class JobScheduleHelper {
                 int lastSecond = -1;
                 while (!toStop) {
 
-                    long start = System.currentTimeMillis();
                     try {
                         // second data
                         List<Integer> ringItemData = new ArrayList<>();
@@ -219,11 +218,10 @@ public class JobScheduleHelper {
                             logger.error(">>>>>>>>>>> xxl-job, JobScheduleHelper#ringThread error:{}", e);
                         }
                     }
-                    long cost = System.currentTimeMillis() - start;
 
                     // next second, align second
                     try {
-                        TimeUnit.MILLISECONDS.sleep(1000-cost);
+                        TimeUnit.MILLISECONDS.sleep(1000 - System.currentTimeMillis()%1000);
                     } catch (InterruptedException e) {
                         if (!toStop) {
                             logger.error(e.getMessage(), e);
