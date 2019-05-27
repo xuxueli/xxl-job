@@ -38,7 +38,7 @@ public class JobScheduleHelper {
             public void run() {
 
                 try {
-                    TimeUnit.MILLISECONDS.sleep(5000 + System.currentTimeMillis()%1000 );
+                    TimeUnit.MILLISECONDS.sleep(5000 - System.currentTimeMillis()%1000 );
                 } catch (InterruptedException e) {
                     if (!toStop) {
                         logger.error(e.getMessage(), e);
@@ -148,7 +148,9 @@ public class JobScheduleHelper {
 
                     // next second, align second
                     try {
-                        TimeUnit.MILLISECONDS.sleep(cost<1000?(1000-cost):100);
+                        if (cost < 1000) {
+                            TimeUnit.MILLISECONDS.sleep(1000 - System.currentTimeMillis()%1000);
+                        }
                     } catch (InterruptedException e) {
                         if (!toStop) {
                             logger.error(e.getMessage(), e);
