@@ -8,17 +8,17 @@ import java.util.Date;
  * @author xuxueli  2016-1-12 18:25:49
  */
 public class XxlJobInfo {
-	
 	private int id;				// 主键ID	    (JobKey.name)
 	private String uniqName;    // 唯一名字
 
 	private int jobGroup;		// 执行器主键ID	(JobKey.group)
+	private String appName;     // 执行器名字
 	private String jobCron;		// 任务执行CRON表达式 【base on quartz】
 	private String jobDesc;
-	
+
 	private Date addTime;
 	private Date updateTime;
-	
+
 	private String author;		// 负责人
 	private String alarmEmail;	// 报警邮件
 
@@ -28,14 +28,14 @@ public class XxlJobInfo {
 	private String executorBlockStrategy;	// 阻塞处理策略
 	private int executorTimeout;     		// 任务执行超时时间，单位秒
 	private int executorFailRetryCount;		// 失败重试次数
-	
+
 	private String glueType;		// GLUE类型	#com.xxl.job.core.glue.GlueTypeEnum
 	private String glueSource;		// GLUE源代码
 	private String glueRemark;		// GLUE备注
 	private Date glueUpdatetime;	// GLUE更新时间
 
 	private String childJobId;		// 子任务ID，多个逗号分隔
-	
+
 	// copy from quartz
 	private String jobStatus;		// 任务状态 【base on quartz】
 
@@ -62,6 +62,14 @@ public class XxlJobInfo {
 
 	public void setJobGroup(int jobGroup) {
 		this.jobGroup = jobGroup;
+	}
+
+	public String getAppName() {
+		return appName;
+	}
+
+	public void setAppName(String appName) {
+		this.appName = appName;
 	}
 
 	public String getJobCron() {
