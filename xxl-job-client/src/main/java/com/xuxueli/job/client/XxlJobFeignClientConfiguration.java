@@ -13,9 +13,8 @@ import org.springframework.context.annotation.Import;
 @Import(FeignClientsConfiguration.class)
 public class XxlJobFeignClientConfiguration {
 
-
     @Bean
-    public AccessTokenPutRequestInterceptor accessTokenPutRequestInterceptor() {
-        return new AccessTokenPutRequestInterceptor();
+    public AccessTokenPutRequestInterceptor accessTokenPutRequestInterceptor(XxlJobProperties xxlJobProperties) {
+        return new AccessTokenPutRequestInterceptor(xxlJobProperties);
     }
 }

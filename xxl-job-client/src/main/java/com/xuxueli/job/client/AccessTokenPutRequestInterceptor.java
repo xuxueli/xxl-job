@@ -2,7 +2,6 @@ package com.xuxueli.job.client;
 
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
-import org.springframework.beans.factory.annotation.Value;
 
 /**
  * @author Luo Bao Ding
@@ -11,12 +10,17 @@ import org.springframework.beans.factory.annotation.Value;
 public class AccessTokenPutRequestInterceptor implements RequestInterceptor {
     public static final String H_ACCESS_TOKEN = "ACCESS_TOKEN";
 
-    @Value("${xxl.job.accessToken:}")
-    private String accessToken;
+
+    private final XxlJobProperties xxlJobProperties;
+
+    public AccessTokenPutRequestInterceptor(XxlJobProperties xxlJobProperties) {
+        this.xxlJobProperties = xxlJobProperties;
+    }
+
 
     @Override
     public void apply(RequestTemplate template) {
-        template.header(H_ACCESS_TOKEN, accessToken);
+        template.header(H_ACCESS_TOKEN, xxlJobProperties.getAccessToken());
 
     }
 }
