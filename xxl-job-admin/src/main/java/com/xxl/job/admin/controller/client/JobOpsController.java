@@ -58,8 +58,8 @@ public class JobOpsController {
         return xxlJobService.start(id);
     }
 
-    @RequestMapping("/triggerByUniqName")
-    public ReturnT<String> triggerByUniqName(@RequestParam("uniqName") String uniqName, @RequestParam("executorParam") String executorParam) {
+    @RequestMapping("/trigger")
+    public ReturnT<String> trigger(@RequestParam("uniqName") String uniqName, @RequestParam("executorParam") String executorParam) {
         if (!StringUtils.hasText(uniqName)) {
             return new ReturnT<>(PARAM_CONDITION_NOT_SATISFIED, "uniqName '" + uniqName + "' should not be blank");
         }

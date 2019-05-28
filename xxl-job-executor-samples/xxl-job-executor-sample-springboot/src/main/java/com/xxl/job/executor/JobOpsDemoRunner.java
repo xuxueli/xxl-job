@@ -45,7 +45,7 @@ public class JobOpsDemoRunner implements ApplicationRunner {
 //        Thread.sleep(3000);
 
         //trigger by unique name
-        returnT = xxlJobClient.triggerByUniqName("auto_created_job", "");
+        returnT = xxlJobClient.trigger("auto_created_job", "");
         Assert.isTrue(returnT.getCode() == 200, "update a job should succeed");
 
 

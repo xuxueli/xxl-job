@@ -60,9 +60,9 @@ public class XxlJobClientTest {
 
     }
     @Test
-    public void triggerByUniqName() throws JsonProcessingException {
-        String path = "triggerByUniqName";
-        Supplier<ReturnT<String>> supplier = () -> xxlJobClient.triggerByUniqName("test_every_second2", "");
+    public void trigger() throws JsonProcessingException {
+        String path = "trigger";
+        Supplier<ReturnT<String>> supplier = () -> xxlJobClient.trigger("test_every_second2", "");
 
         testTemplate(path, supplier);
 

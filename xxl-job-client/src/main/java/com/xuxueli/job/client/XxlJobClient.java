@@ -32,8 +32,8 @@ public interface XxlJobClient {
     @PostMapping("/start")
     ReturnT<String> start(@RequestParam("uniqName") String uniqName);
 
-    @PostMapping("/triggerByUniqName")
-    ReturnT<String> triggerByUniqName(@RequestParam("uniqName") String uniqName,
-                                      @RequestParam("executorParam") String executorParam);
+    @PostMapping("/trigger")
+    ReturnT<String> trigger(@RequestParam("uniqName") String uniqName,
+                            @RequestParam("executorParam") String executorParam);
 
 }
