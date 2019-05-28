@@ -170,11 +170,11 @@ CREATE TABLE `XXL_JOB_QRTZ_TRIGGER_INFO` (
   `glue_remark` varchar(128) DEFAULT NULL COMMENT 'GLUE备注',
   `glue_updatetime` datetime DEFAULT NULL COMMENT 'GLUE更新时间',
   `child_jobid` varchar(255) DEFAULT NULL COMMENT '子任务ID，多个逗号分隔',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  constraint XXL_JOB_QRTZ_TRIGGER_INFO_uniq_name_uindex
+		unique (uniq_name)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-create index XXL_JOB_QRTZ_TRIGGER_INFO_uniq_name_index
-	on `xxl-job`.XXL_JOB_QRTZ_TRIGGER_INFO (uniq_name);
 
 CREATE TABLE `XXL_JOB_QRTZ_TRIGGER_LOG` (
   `id` int(11) NOT NULL AUTO_INCREMENT,

@@ -31,7 +31,8 @@ import java.util.*;
  */
 @Service
 public class XxlJobServiceImpl implements XxlJobService {
-	private static Logger logger = LoggerFactory.getLogger(XxlJobServiceImpl.class);
+    public static final int ALREADY_EXISTS_EXCEPTION = 1000;
+    private static Logger logger = LoggerFactory.getLogger(XxlJobServiceImpl.class);
 
 	@Resource
 	private XxlJobGroupDao xxlJobGroupDao;
@@ -134,7 +135,14 @@ public class XxlJobServiceImpl implements XxlJobService {
 			jobInfo.setChildJobId(temp);
 		}
 
-		// add in db
+        XxlJobInfo xxlJobInfo = xxlJobInfoDao.loadByUniqName(jobInfo.getUniqName());
+
+        if (xxlJobInfo != null) {
+            return new ReturnT<String>(ALREADY_EXISTS_EXCEPTION, (I18nUtil.getString("jobinfo_field_add")+I18nUtil.getString("system_fail")
+                   +": " +I18nUtil.getString("jobinfo_already_exists")));
+
+        }
+        // add in db
 		xxlJobInfoDao.save(jobInfo);
 		if (jobInfo.getId() < 1) {
 			return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("jobinfo_field_add")+I18nUtil.getString("system_fail")) );
@@ -201,8 +209,13 @@ public class XxlJobServiceImpl implements XxlJobService {
 		}
 
 		// group valid
-		XxlJobGroup jobGroup = xxlJobGroupDao.load(jobInfo.getJobGroup());
-		if (jobGroup == null) {
+        XxlJobGroup jobGroup;
+        if (StringUtils.hasText(jobInfo.getAppName())) {
+            jobGroup = xxlJobGroupDao.loadByAppName(jobInfo.getAppName());
+        } else {
+            jobGroup = xxlJobGroupDao.load(jobInfo.getJobGroup());
+        }
+        if (jobGroup == null) {
 			return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("jobinfo_field_jobgroup")+I18nUtil.getString("system_unvalid")) );
 		}
 
@@ -217,8 +230,10 @@ public class XxlJobServiceImpl implements XxlJobService {
 			return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("jobinfo_field_id")+I18nUtil.getString("system_not_found")) );
 		}
 
-		exists_jobInfo.setJobGroup(jobInfo.getJobGroup());
-		exists_jobInfo.setJobCron(jobInfo.getJobCron());
+        exists_jobInfo.setJobGroup(jobGroup.getId());
+        exists_jobInfo.setAppName(jobGroup.getAppName());
+
+        exists_jobInfo.setJobCron(jobInfo.getJobCron());
 		exists_jobInfo.setJobDesc(jobInfo.getJobDesc());
 		exists_jobInfo.setUniqName(jobInfo.getUniqName());
 		exists_jobInfo.setAuthor(jobInfo.getAuthor());
