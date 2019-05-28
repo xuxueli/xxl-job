@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestParam;
  * @author Luo Bao Ding
  * @since 2019/5/23
  */
-@FeignClient(name = "xxl-job-admin", url = "${xxl.job.adminUrl:http://localhost:8080}",
+@FeignClient(name = "xxl-job-admin", url = "${xxl.job.serverAddresses:http://localhost:8080/xxl-job-admin}",
         configuration = XxlJobFeignClientConfiguration.class)
-@RequestMapping(path = "/xxl-job-admin/jobops")
+@RequestMapping(path = "/jobops")
 public interface XxlJobClient {
 
     @PostMapping("/add")
