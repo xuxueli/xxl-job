@@ -7,6 +7,7 @@ import com.xxl.job.admin.dao.XxlJobInfoDao;
 import com.xxl.job.admin.service.XxlJobService;
 import com.xxl.job.core.biz.model.ReturnT;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,29 +31,29 @@ public class JobOpsController {
     private XxlJobService xxlJobService;
 
     @RequestMapping("/add")
-    public ReturnT<String> add(XxlJobInfo jobInfo) {
+    public ReturnT<String> add(@RequestBody XxlJobInfo jobInfo) {
         return xxlJobService.add(jobInfo);
     }
 
     @RequestMapping("/update")
-    public ReturnT<String> update(XxlJobInfo jobInfo) {
+    public ReturnT<String> update(@RequestBody XxlJobInfo jobInfo) {
         return xxlJobService.update(jobInfo);
     }
 
     @RequestMapping("/remove")
-    public ReturnT<String> remove(String uniqName) {
+    public ReturnT<String> remove(@RequestParam("uniqName") String uniqName) {
         int id = xxlJobInfoDao.findIdByUniqName(uniqName);
         return xxlJobService.remove(id);
     }
 
     @RequestMapping("/stop")
-    public ReturnT<String> pause(String uniqName) {
+    public ReturnT<String> pause(@RequestParam("uniqName") String uniqName) {
         int id = xxlJobInfoDao.findIdByUniqName(uniqName);
         return xxlJobService.stop(id);
     }
 
     @RequestMapping("/start")
-    public ReturnT<String> start(String uniqName) {
+    public ReturnT<String> start(@RequestParam("uniqName") String uniqName) {
         int id = xxlJobInfoDao.findIdByUniqName(uniqName);
         return xxlJobService.start(id);
     }

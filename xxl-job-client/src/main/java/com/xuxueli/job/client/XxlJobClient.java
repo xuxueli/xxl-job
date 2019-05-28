@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  */
 @FeignClient(name = "xxl-job-admin", url = "${xxl.job.serverAddresses:http://localhost:8080/xxl-job-admin}",
         configuration = XxlJobFeignClientConfiguration.class)
-@RequestMapping(path = "/jobops")
+@RequestMapping(path = "/jobops", produces = {"application/json"}, headers = "Content-Type=application/json")
 public interface XxlJobClient {
 
     @PostMapping("/add")
