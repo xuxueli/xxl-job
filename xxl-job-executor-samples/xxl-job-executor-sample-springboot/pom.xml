@@ -32,6 +32,7 @@
     </dependencyManagement>
 
     <dependencies>
+
         <!-- spring-boot-starter-web (spring-webmvc + tomcat) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -43,10 +44,10 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- xxl-job-core -->
+        <!-- xxl-job-client -->
         <dependency>
             <groupId>com.xuxueli</groupId>
-            <artifactId>xxl-job-core</artifactId>
+            <artifactId>xxl-job-client</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
 
