@@ -565,7 +565,7 @@ It is implemented by interrupt execute thread, it will trigger InterruptedExcept
 So if you want stop the running task ,the JobHandler need to handle InterruptedException separately by throw this exception.the right logic is as shown below:
 ```
 try{
-    // TODO
+    // do something
 } catch (Exception e) {
     if (e instanceof InterruptedException) {
         throw e;

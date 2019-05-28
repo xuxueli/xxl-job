@@ -216,6 +216,11 @@ $(function() {
             }
         }
 	});
+    logTable.on('xhr.dt',function(e, settings, json, xhr) {
+        if (json.code && json.code != 200) {
+            layer.msg( json.msg || I18n.system_api_error );
+        }
+    });
 	
 	// logTips alert
 	$('#joblog_list').on('click', '.logTips', function(){

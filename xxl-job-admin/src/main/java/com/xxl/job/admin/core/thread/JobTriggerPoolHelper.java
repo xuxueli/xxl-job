@@ -22,7 +22,7 @@ public class JobTriggerPoolHelper {
 
     // fast/slow thread pool
     private ThreadPoolExecutor fastTriggerPool = new ThreadPoolExecutor(
-            8,
+            50,
             200,
             60L,
             TimeUnit.SECONDS,
@@ -35,7 +35,7 @@ public class JobTriggerPoolHelper {
             });
 
     private ThreadPoolExecutor slowTriggerPool = new ThreadPoolExecutor(
-            0,
+            10,
             100,
             60L,
             TimeUnit.SECONDS,

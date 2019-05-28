@@ -1,5 +1,6 @@
 package com.xxl.job.admin.controller.resolver;
 
+import com.xxl.job.admin.core.exception.XxlJobException;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.admin.core.util.JacksonUtil;
 import org.slf4j.Logger;
@@ -26,7 +27,10 @@ public class WebExceptionResolver implements HandlerExceptionResolver {
 	@Override
 	public ModelAndView resolveException(HttpServletRequest request,
 			HttpServletResponse response, Object handler, Exception ex) {
-		logger.error("WebExceptionResolver:{}", ex);
+
+		if (!(ex instanceof XxlJobException)) {
+			logger.error("WebExceptionResolver:{}", ex);
+		}
 
 		// if json
 		boolean isJson = false;
