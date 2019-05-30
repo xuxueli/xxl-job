@@ -18,6 +18,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.io.IOException;
 import java.util.function.Supplier;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
@@ -40,21 +41,28 @@ public class XxlJobClientTest {
 
 
     @BeforeClass
-    public static void before(){
+    public static void before() {
         wireMockServer = new WireMockServer(wireMockConfig().port(7005));
         WireMock.configureFor(7005);
         wireMockServer.start();
     }
 
     @AfterClass
-    public static void after(){
+    public static void after() {
         wireMockServer.stop();
 
     }
+
     @Test
     public void trigger() throws JsonProcessingException {
         String path = "trigger";
-        Supplier<ReturnT<String>> supplier = () -> xxlJobClient.trigger("test_every_second2", "");
+        Supplier<ReturnT<String>> supplier = () -> {
+            try {
+                return xxlJobClient.trigger("test_every_second2", "");
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        };
 
         testTemplate(path, supplier);
 
@@ -63,7 +71,13 @@ public class XxlJobClientTest {
     @Test
     public void add() throws JsonProcessingException {
         String path = "add";
-        Supplier<ReturnT<String>> supplier = () -> xxlJobClient.add(new XxlJobInfo());
+        Supplier<ReturnT<String>> supplier = () -> {
+            try {
+                return xxlJobClient.add(new XxlJobInfo());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        };
 
         testTemplate(path, supplier);
 
@@ -72,7 +86,13 @@ public class XxlJobClientTest {
     @Test
     public void update() throws JsonProcessingException {
         String path = "update";
-        Supplier<ReturnT<String>> supplier = () -> xxlJobClient.update(new XxlJobInfo());
+        Supplier<ReturnT<String>> supplier = () -> {
+            try {
+                return xxlJobClient.update(new XxlJobInfo());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        };
 
         testTemplate(path, supplier);
 
@@ -81,7 +101,13 @@ public class XxlJobClientTest {
     @Test
     public void remove() throws JsonProcessingException {
         String path = "remove";
-        Supplier<ReturnT<String>> supplier = () -> xxlJobClient.remove("xx");
+        Supplier<ReturnT<String>> supplier = () -> {
+            try {
+                return xxlJobClient.remove("xx");
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        };
 
         testTemplate(path, supplier);
 
@@ -90,7 +116,13 @@ public class XxlJobClientTest {
     @Test
     public void stop() throws JsonProcessingException {
         String path = "stop";
-        Supplier<ReturnT<String>> supplier = () -> xxlJobClient.stop("xx");
+        Supplier<ReturnT<String>> supplier = () -> {
+            try {
+                return xxlJobClient.stop("xx");
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        };
 
         testTemplate(path, supplier);
 
@@ -99,12 +131,17 @@ public class XxlJobClientTest {
     @Test
     public void start() throws JsonProcessingException {
         String path = "start";
-        Supplier<ReturnT<String>> supplier = () -> xxlJobClient.start("xx");
+        Supplier<ReturnT<String>> supplier = () -> {
+            try {
+                return xxlJobClient.start("xx");
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        };
 
         testTemplate(path, supplier);
 
     }
-
 
 
     private void testTemplate(String path, Supplier<ReturnT<String>> supplier) throws JsonProcessingException {
