@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.xuxueli.job.client.XxlJobClient;
-import com.xuxueli.job.client.XxlJobClientAutoConfiguration;
 import com.xuxueli.job.client.model.XxlJobInfo;
 import com.xxl.job.core.biz.model.ReturnT;
 import org.junit.AfterClass;
@@ -17,8 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.function.Supplier;
@@ -37,11 +34,6 @@ import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMoc
 public class XxlJobClientTest {
 
     private static WireMockServer wireMockServer;
-
-    @Configuration
-    @Import(XxlJobClientAutoConfiguration.class)
-    static class TestConfiguration {
-    }
 
     @Autowired
     private XxlJobClient xxlJobClient;

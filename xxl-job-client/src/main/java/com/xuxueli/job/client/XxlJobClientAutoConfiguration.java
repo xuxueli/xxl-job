@@ -8,6 +8,7 @@ import org.springframework.cloud.commons.util.InetUtils;
 import org.springframework.cloud.commons.util.UtilAutoConfiguration;
 import org.springframework.cloud.netflix.feign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
@@ -18,7 +19,8 @@ import org.springframework.context.annotation.Import;
 @Configuration
 @EnableFeignClients
 @EnableConfigurationProperties(XxlJobProperties.class)
-@Import({UtilAutoConfiguration.class, XxlJobFeignClientConfiguration.class})
+@Import({UtilAutoConfiguration.class})
+@ComponentScan
 public class XxlJobClientAutoConfiguration {
     private Logger logger = LoggerFactory.getLogger(getClass());
 

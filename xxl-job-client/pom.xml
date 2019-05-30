@@ -27,6 +27,7 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-openfeign</artifactId>
+<!--            <version>2.0.3.RELEASE</version>-->
         </dependency>
 
         <dependency>
@@ -42,13 +43,6 @@
         </dependency>
 
         <!--  test -->
-        <dependency>
-            <groupId>io.github.openfeign</groupId>
-            <artifactId>feign-mock</artifactId>
-            <version>${feign-mock.version}</version>
-            <scope>test</scope>
-        </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
