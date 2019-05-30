@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.xuxueli.job.client.XxlJobClient;
+import com.xuxueli.job.client.XxlJobClientException;
 import com.xuxueli.job.client.model.XxlJobInfo;
 import com.xxl.job.core.biz.model.ReturnT;
 import org.junit.AfterClass;
@@ -65,6 +66,24 @@ public class XxlJobClientTest {
         };
 
         testTemplate(path, supplier);
+
+    }
+
+    @Test
+    public void triggerAbnormal() throws IOException {
+        String path = "trigger";
+
+        stubFor(post(urlEqualTo("/xxl-job-admin/jobops/" + path))
+                .willReturn(aResponse().withStatus(400)
+                        .withHeader("Content-Type", "text/html")
+                        .withBody("<h1>error</h1>")));
+
+        try {
+            xxlJobClient.trigger("test_every_second2", "");
+        } catch (XxlJobClientException ex) {
+            return;
+        }
+        Assert.fail("should throw XxlJobClientException");
 
     }
 
