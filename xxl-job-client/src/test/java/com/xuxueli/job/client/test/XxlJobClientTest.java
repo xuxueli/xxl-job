@@ -34,6 +34,7 @@ import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMoc
 @SpringBootConfiguration
 @EnableAutoConfiguration
 public class XxlJobClientTest {
+    public static final int PORT = 7003;
 
     private static WireMockServer wireMockServer;
 
@@ -43,8 +44,8 @@ public class XxlJobClientTest {
 
     @BeforeClass
     public static void before() {
-        wireMockServer = new WireMockServer(wireMockConfig().port(7005));
-        WireMock.configureFor(7005);
+        wireMockServer = new WireMockServer(wireMockConfig().port(PORT));
+        WireMock.configureFor(PORT);
         wireMockServer.start();
     }
 
