@@ -2,38 +2,25 @@ package com.xuxueli.job.client;
 
 import com.xuxueli.job.client.model.XxlJobInfo;
 import com.xxl.job.core.biz.model.ReturnT;
-import org.springframework.cloud.netflix.feign.FeignClient;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+
+import java.io.IOException;
 
 /**
  * @author Luo Bao Ding
  * @since 2019/5/23
  */
-@FeignClient(name = "xxl-job-admin", url = "${xxl.job.serverAddresses:http://localhost:8080/xxl-job-admin}",
-        configuration = XxlJobFeignClientConfiguration.class)
-@RequestMapping(path = "/jobops", produces = {"application/json"}, headers = "Content-Type=application/json")
 public interface XxlJobClient {
 
-    @PostMapping("/add")
-    ReturnT<String> add(@RequestBody XxlJobInfo jobInfo);
+    ReturnT<String> add(XxlJobInfo jobInfo) throws IOException;
 
-    @PostMapping("/update")
-    ReturnT<String> update(@RequestBody XxlJobInfo jobInfo);
+    ReturnT<String> update(XxlJobInfo jobInfo) throws IOException;
 
-    @PostMapping("/remove")
-    ReturnT<String> remove(@RequestParam("uniqName") String uniqName);
+    ReturnT<String> remove(String uniqName) throws IOException;
 
-    @PostMapping("/stop")
-    ReturnT<String> stop(@RequestParam("uniqName") String uniqName);
+    ReturnT<String> stop(String uniqName) throws IOException;
 
-    @PostMapping("/start")
-    ReturnT<String> start(@RequestParam("uniqName") String uniqName);
+    ReturnT<String> start(String uniqName) throws IOException;
 
-    @PostMapping("/trigger")
-    ReturnT<String> trigger(@RequestParam("uniqName") String uniqName,
-                            @RequestParam("executorParam") String executorParam);
+    ReturnT<String> trigger(String uniqName, String executorParam) throws IOException;
 
 }

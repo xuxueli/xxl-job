@@ -10,7 +10,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class XxlJobProperties {
     public static final String DEFAULT_LOG_PATH = "./logs/applogs/xxl-job/jobhandler";
 
-    private String serverAddresses;
+    private String serverAddresses = "http://localhost:8080/xxl-job-admin";
 
     private String clientAppName;
 

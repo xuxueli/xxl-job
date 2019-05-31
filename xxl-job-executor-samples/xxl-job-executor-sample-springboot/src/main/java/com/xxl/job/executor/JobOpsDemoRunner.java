@@ -17,7 +17,7 @@ import org.springframework.util.Assert;
  */
 @Component
 public class JobOpsDemoRunner implements ApplicationRunner {
-
+    public static final String UNIQ_NAME = "auto_created_job";
     private final XxlJobClient xxlJobClient;
 
     public JobOpsDemoRunner(XxlJobClient xxlJobClient) {
@@ -31,29 +31,39 @@ public class JobOpsDemoRunner implements ApplicationRunner {
         XxlJobInfo jobInfo;
         ReturnT<String> returnT;
         jobInfo = buildJob();
+
+        //remove
+        returnT = xxlJobClient.remove(UNIQ_NAME);
+        Assert.isTrue(returnT.getCode() == 200, "update a job should succeed");
+
         //add
         returnT = xxlJobClient.add(jobInfo);
         Assert.isTrue(returnT.getCode() == 200 || returnT.getCode() == 1000, "add a job should succeed");
-
-//        Thread.sleep(3000);
 
         //update
         jobInfo.setAuthor("tester-updated");
         returnT = xxlJobClient.update(jobInfo);
         Assert.isTrue(returnT.getCode() == 200, "update a job should succeed");
 
-//        Thread.sleep(3000);
-
         //trigger by unique name
-        returnT = xxlJobClient.trigger("auto_created_job", "");
+        returnT = xxlJobClient.trigger(UNIQ_NAME, "");
         Assert.isTrue(returnT.getCode() == 200, "update a job should succeed");
 
+        //start
+        returnT = xxlJobClient.start(UNIQ_NAME);
+        Assert.isTrue(returnT.getCode() == 200, "update a job should succeed");
+
+        Thread.sleep(3000);
+
+        //stop
+        returnT = xxlJobClient.stop(UNIQ_NAME);
+        Assert.isTrue(returnT.getCode() == 200, "update a job should succeed");
 
     }
 
     private XxlJobInfo buildJob() {
         XxlJobInfo jobInfo = new XxlJobInfo();
-        jobInfo.setUniqName("auto_created_job");
+        jobInfo.setUniqName(UNIQ_NAME);
         jobInfo.setAppName("xxl-job-executor-sample");
         jobInfo.setJobCron("0/1 * * * * ? *");
         jobInfo.setJobDesc("test-job-ops");

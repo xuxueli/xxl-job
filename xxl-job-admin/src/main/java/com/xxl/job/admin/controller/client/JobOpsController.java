@@ -22,7 +22,7 @@ import javax.annotation.Resource;
 @RequestMapping(JobOpsController.JOB_OPS)
 public class JobOpsController {
     public static final String JOB_OPS = "/jobops";
-    public static final int PARAM_CONDITION_NOT_SATISFIED = 428;
+    public static final int CODE_PARAM_CONDITION_NOT_SATISFIED = 428;
 
     @Resource
     private XxlJobInfoDao xxlJobInfoDao;
@@ -47,7 +47,7 @@ public class JobOpsController {
     }
 
     @RequestMapping("/stop")
-    public ReturnT<String> pause(@RequestParam("uniqName") String uniqName) {
+    public ReturnT<String> stop(@RequestParam("uniqName") String uniqName) {
         int id = xxlJobInfoDao.findIdByUniqName(uniqName);
         return xxlJobService.stop(id);
     }
@@ -61,11 +61,11 @@ public class JobOpsController {
     @RequestMapping("/trigger")
     public ReturnT<String> trigger(@RequestParam("uniqName") String uniqName, @RequestParam("executorParam") String executorParam) {
         if (!StringUtils.hasText(uniqName)) {
-            return new ReturnT<>(PARAM_CONDITION_NOT_SATISFIED, "uniqName '" + uniqName + "' should not be blank");
+            return new ReturnT<>(CODE_PARAM_CONDITION_NOT_SATISFIED, "uniqName '" + uniqName + "' should not be blank");
         }
         int id = xxlJobInfoDao.findIdByUniqName(uniqName);
         if (id <= 0) {
-            return new ReturnT<>(PARAM_CONDITION_NOT_SATISFIED, "uniqName '" + uniqName + "' does not exist");
+            return new ReturnT<>(CODE_PARAM_CONDITION_NOT_SATISFIED, "uniqName '" + uniqName + "' does not exist");
         }
 
         if (executorParam == null) {

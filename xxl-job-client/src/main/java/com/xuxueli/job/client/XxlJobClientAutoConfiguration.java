@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cloud.commons.util.InetUtils;
 import org.springframework.cloud.commons.util.UtilAutoConfiguration;
-import org.springframework.cloud.netflix.feign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -16,9 +15,8 @@ import org.springframework.context.annotation.Import;
  * @since 2019/5/23
  */
 @Configuration
-@EnableFeignClients
 @EnableConfigurationProperties(XxlJobProperties.class)
-@Import({UtilAutoConfiguration.class, XxlJobFeignClientConfiguration.class})
+@Import({UtilAutoConfiguration.class})
 public class XxlJobClientAutoConfiguration {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -39,5 +37,10 @@ public class XxlJobClientAutoConfiguration {
         xxlJobSpringExecutor.setLogRetentionDays(xxlJobProperties.getLogRetentionDays());
 
         return xxlJobSpringExecutor;
+    }
+
+    @Bean
+    public XxlJobClient xxlJobClient(XxlJobProperties xxlJobProperties) {
+        return new XxlJobClientImpl(xxlJobProperties);
     }
 }
