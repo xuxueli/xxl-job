@@ -47,7 +47,7 @@ public class JobOpsController {
     }
 
     @RequestMapping("/stop")
-    public ReturnT<String> pause(@RequestParam("uniqName") String uniqName) {
+    public ReturnT<String> stop(@RequestParam("uniqName") String uniqName) {
         int id = xxlJobInfoDao.findIdByUniqName(uniqName);
         return xxlJobService.stop(id);
     }
