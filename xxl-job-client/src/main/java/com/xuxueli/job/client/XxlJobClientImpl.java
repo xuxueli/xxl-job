@@ -79,34 +79,6 @@ public class XxlJobClientImpl implements XxlJobClient, DisposableBean {
         reader = objectMapper.readerFor(typeReference);
     }
 
-    public static class FiniteConnectionKeepAliveStrategy implements ConnectionKeepAliveStrategy {
-
-        public final long connMaxLiveMilSec;
-
-        public FiniteConnectionKeepAliveStrategy(int connMaxLiveSeconds) {
-            this.connMaxLiveMilSec = connMaxLiveSeconds * 1000;
-        }
-
-        @Override
-        public long getKeepAliveDuration(HttpResponse response, HttpContext context) {
-            Args.notNull(response, "HTTP response");
-            final HeaderElementIterator it = new BasicHeaderElementIterator(
-                    response.headerIterator(HTTP.CONN_KEEP_ALIVE));
-            while (it.hasNext()) {
-                final HeaderElement he = it.nextElement();
-                final String param = he.getName();
-                final String value = he.getValue();
-                if (value != null && param.equalsIgnoreCase("timeout")) {
-                    try {
-                        return Long.parseLong(value) * 1000;
-                    } catch (final NumberFormatException ignore) {
-                    }
-                }
-            }
-            return connMaxLiveMilSec;
-        }
-    }
-
     @Override
     public ReturnT<String> add(XxlJobInfo jobInfo) throws IOException {
         String ops = "/add";
@@ -208,4 +180,31 @@ public class XxlJobClientImpl implements XxlJobClient, DisposableBean {
     }
 
 
+    public static class FiniteConnectionKeepAliveStrategy implements ConnectionKeepAliveStrategy {
+
+        public final long connMaxLiveMilSec;
+
+        public FiniteConnectionKeepAliveStrategy(int connMaxLiveSeconds) {
+            this.connMaxLiveMilSec = connMaxLiveSeconds * 1000;
+        }
+
+        @Override
+        public long getKeepAliveDuration(HttpResponse response, HttpContext context) {
+            Args.notNull(response, "HTTP response");
+            final HeaderElementIterator it = new BasicHeaderElementIterator(
+                    response.headerIterator(HTTP.CONN_KEEP_ALIVE));
+            while (it.hasNext()) {
+                final HeaderElement he = it.nextElement();
+                final String param = he.getName();
+                final String value = he.getValue();
+                if (value != null && param.equalsIgnoreCase("timeout")) {
+                    try {
+                        return Long.parseLong(value) * 1000;
+                    } catch (final NumberFormatException ignore) {
+                    }
+                }
+            }
+            return connMaxLiveMilSec;
+        }
+    }
 }
