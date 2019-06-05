@@ -44,7 +44,7 @@ public interface XxlJobInfoDao {
 	public int scheduleUpdate(XxlJobInfo xxlJobInfo);
 
 
-	public int findIdByUniqName(@Param("uniqName") String uniqName);
+	public Integer findIdByUniqName(@Param("uniqName") String uniqName);
 
 	public XxlJobInfo loadByUniqName(@Param("uniqName") String uniqName);
 

@@ -42,7 +42,10 @@ public class JobOpsController {
 
     @RequestMapping("/remove")
     public ReturnT<String> remove(@RequestParam("uniqName") String uniqName) {
-        int id = xxlJobInfoDao.findIdByUniqName(uniqName);
+        Integer id = xxlJobInfoDao.findIdByUniqName(uniqName);
+        if (id == null) {
+            return ReturnT.SUCCESS;
+        }
         return xxlJobService.remove(id);
     }
 
