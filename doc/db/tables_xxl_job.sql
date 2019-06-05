@@ -28,7 +28,7 @@ CREATE TABLE `xxl_job_info` (
   `trigger_last_time` bigint(13) NOT NULL DEFAULT '0' COMMENT '上次调度时间',
   `trigger_next_time` bigint(13) NOT NULL DEFAULT '0' COMMENT '下次调度时间',
   PRIMARY KEY (`id`),
-  constraint XXL_JOB_QRTZ_TRIGGER_INFO_uniq_name_uindex
+  constraint xxl_job_info_uniq_name_uindex
 		unique (uniq_name)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -82,7 +82,7 @@ CREATE TABLE `xxl_job_group` (
   `address_type` tinyint(4) NOT NULL DEFAULT '0' COMMENT '执行器地址类型：0=自动注册、1=手动录入',
   `address_list` varchar(512) DEFAULT NULL COMMENT '执行器地址列表，多地址逗号分隔',
   PRIMARY KEY (`id`),
-  constraint XXL_JOB_QRTZ_TRIGGER_GROUP_app_name_uindex
+  constraint xxl_job_group_app_name_uindex
 		unique (app_name)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
