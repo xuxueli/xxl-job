@@ -61,7 +61,7 @@
 	</select>
 	<select id="loadByAppName" resultMap="XxlJobGroup">
 		SELECT <include refid="Base_Column_List"/>
-		FROM XXL_JOB_QRTZ_TRIGGER_GROUP AS t
+		FROM xxl_job_group AS t
 		WHERE t.app_name=#{appName}
 	</select>
 
