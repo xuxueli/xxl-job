@@ -30,8 +30,8 @@
                         <span class="input-group-addon">${I18n.user_role}</span>
                         <select class="form-control" id="role" >
                             <option value="-1" >${I18n.system_all}</option>
-                            <option value="0" >${I18n.user_role_admin}</option>
-                            <option value="1" >${I18n.user_role_normal}</option>
+                            <option value="1" >${I18n.user_role_admin}</option>
+                            <option value="0" >${I18n.user_role_normal}</option>
                         </select>
                     </div>
                 </div>

@@ -16,10 +16,10 @@ public class XxlJobInfo {
 	private String appName;     // 执行器名字
 	private String jobCron;		// 任务执行CRON表达式 【base on quartz】
 	private String jobDesc;
-
+	
 	private Date addTime;
 	private Date updateTime;
-
+	
 	private String author;		// 负责人
 	private String alarmEmail;	// 报警邮件
 
@@ -29,7 +29,7 @@ public class XxlJobInfo {
 	private String executorBlockStrategy;	// 阻塞处理策略
 	private int executorTimeout;     		// 任务执行超时时间，单位秒
 	private int executorFailRetryCount;		// 失败重试次数
-
+	
 	private String glueType;		// GLUE类型	#com.xxl.job.core.glue.GlueTypeEnum
 	private String glueSource;		// GLUE源代码
 	private String glueRemark;		// GLUE备注
@@ -37,8 +37,9 @@ public class XxlJobInfo {
 
 	private String childJobId;		// 子任务ID，多个逗号分隔
 
-	// copy from quartz
-	private String jobStatus;		// 任务状态 【base on quartz】
+	private int triggerStatus;		// 调度状态：0-停止，1-运行
+	private long triggerLastTime;	// 上次调度时间
+	private long triggerNextTime;	// 下次调度时间
 
 
 	public int getId() {
@@ -209,12 +210,27 @@ public class XxlJobInfo {
 		this.childJobId = childJobId;
 	}
 
-	public String getJobStatus() {
-		return jobStatus;
+	public int getTriggerStatus() {
+		return triggerStatus;
 	}
 
-	public void setJobStatus(String jobStatus) {
-		this.jobStatus = jobStatus;
+	public void setTriggerStatus(int triggerStatus) {
+		this.triggerStatus = triggerStatus;
 	}
 
+	public long getTriggerLastTime() {
+		return triggerLastTime;
+	}
+
+	public void setTriggerLastTime(long triggerLastTime) {
+		this.triggerLastTime = triggerLastTime;
+	}
+
+	public long getTriggerNextTime() {
+		return triggerNextTime;
+	}
+
+	public void setTriggerNextTime(long triggerNextTime) {
+		this.triggerNextTime = triggerNextTime;
+	}
 }

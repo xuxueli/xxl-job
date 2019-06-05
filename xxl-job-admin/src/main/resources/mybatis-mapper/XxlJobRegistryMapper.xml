@@ -20,18 +20,18 @@
 	</sql>
 	
 	<delete id="removeDead" parameterType="java.lang.Integer" >
-		DELETE FROM XXL_JOB_QRTZ_TRIGGER_REGISTRY
+		DELETE FROM xxl_job_registry
 		WHERE update_time <![CDATA[ < ]]> DATE_ADD(NOW(),INTERVAL -#{timeout} SECOND)
 	</delete>
 
 	<select id="findAll" parameterType="java.lang.Integer" resultMap="XxlJobRegistry">
 		SELECT <include refid="Base_Column_List" />
-		FROM XXL_JOB_QRTZ_TRIGGER_REGISTRY AS t
+		FROM xxl_job_registry AS t
 		WHERE t.update_time <![CDATA[ > ]]> DATE_ADD(NOW(),INTERVAL -#{timeout} SECOND)
 	</select>
 
     <update id="registryUpdate" >
-        UPDATE XXL_JOB_QRTZ_TRIGGER_REGISTRY
+        UPDATE xxl_job_registry
         SET `update_time` = NOW()
         WHERE `registry_group` = #{registryGroup}
           AND `registry_key` = #{registryKey}
@@ -39,12 +39,12 @@
     </update>
 
     <insert id="registrySave" >
-        INSERT INTO XXL_JOB_QRTZ_TRIGGER_REGISTRY( `registry_group` , `registry_key` , `registry_value`, `update_time`)
+        INSERT INTO xxl_job_registry( `registry_group` , `registry_key` , `registry_value`, `update_time`)
         VALUES( #{registryGroup}  , #{registryKey} , #{registryValue}, NOW())
     </insert>
 
 	<delete id="registryDelete" >
-		DELETE FROM XXL_JOB_QRTZ_TRIGGER_REGISTRY
+		DELETE FROM xxl_job_registry
 		WHERE registry_group = #{registryGroup}
 			AND registry_key = #{registryKey}
 			AND registry_value = #{registryValue}
