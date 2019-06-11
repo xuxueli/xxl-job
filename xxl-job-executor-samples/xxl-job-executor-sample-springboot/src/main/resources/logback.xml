@@ -2,7 +2,7 @@
 <configuration debug="false" scan="true" scanPeriod="1 seconds">
 
     <contextName>logback</contextName>
-    <property name="log.path" value="/data/applogs/xxl-job/xxl-job-executor-sample-springboot.log"/>
+    <property name="log.path" value="logs/xxl-job-executor-sample-springboot"/>
 
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
        <!-- <filter class="ch.qos.logback.classic.filter.ThresholdFilter" >
@@ -29,9 +29,5 @@
         <appender-ref ref="file"/>
     </root>
 
-    <!--<logger name="com.xxl.job.executor.service.info" level="WARN" additivity="false">
-        <appender-ref ref="console"/>
-        <appender-ref ref="file"/>
-    </logger>-->
 
 </configuration>
