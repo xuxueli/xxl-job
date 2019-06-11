@@ -76,6 +76,9 @@
 			<if test="executorHandler != null and executorHandler != ''">
 				AND t.executor_handler like CONCAT(CONCAT('%', #{executorHandler}), '%')
 			</if>
+			<if test="author != null and author != ''">
+				AND t.author like CONCAT(CONCAT('%', #{author}), '%')
+			</if>
 		</trim>
 		ORDER BY id DESC
 		LIMIT #{offset}, #{pagesize}
@@ -96,6 +99,9 @@
 			</if>
 			<if test="executorHandler != null and executorHandler != ''">
 				AND t.executor_handler like CONCAT(CONCAT('%', #{executorHandler}), '%')
+			</if>
+			<if test="author != null and author != ''">
+				AND t.author like CONCAT(CONCAT('%', #{author}), '%')
 			</if>
 		</trim>
 	</select>

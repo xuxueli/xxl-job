@@ -22,10 +22,10 @@ public interface XxlJobService {
 	 * @param jobGroup
 	 * @param jobDesc
 	 * @param executorHandler
-	 * @param filterTime
+	 * @param author
 	 * @return
 	 */
-	public Map<String, Object> pageList(int start, int length, int jobGroup, int triggerStatus, String jobDesc, String executorHandler, String filterTime);
+	public Map<String, Object> pageList(int start, int length, int jobGroup, int triggerStatus, String jobDesc, String executorHandler, String author);
 
 	/**
 	 * add job
