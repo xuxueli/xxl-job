@@ -63,8 +63,8 @@ public class JobScheduleHelper {
 
                         // tx start
 
-                        // 1、预读10s内调度任务
-                        long maxNextTime = System.currentTimeMillis() + 10000;
+                        // 1、预读5s内调度任务
+                        long maxNextTime = System.currentTimeMillis() + 5000;
                         long nowTime = System.currentTimeMillis();
                         List<XxlJobInfo> scheduleList = XxlJobAdminConfig.getAdminConfig().getXxlJobInfoDao().scheduleJobQuery(maxNextTime);
                         if (scheduleList!=null && scheduleList.size()>0) {
@@ -73,7 +73,7 @@ public class JobScheduleHelper {
 
                                 // 时间轮刻度计算
                                 int ringSecond = -1;
-                                if (jobInfo.getTriggerNextTime() < nowTime - 10000) {   // 过期超10s：本地忽略，当前时间开始计算下次触发时间
+                                if (jobInfo.getTriggerNextTime() < nowTime - 5000) {   // 过期超5s：本地忽略，当前时间开始计算下次触发时间
                                     ringSecond = -1;
 
                                     jobInfo.setTriggerLastTime(jobInfo.getTriggerNextTime());
@@ -82,7 +82,7 @@ public class JobScheduleHelper {
                                                     .getNextValidTimeAfter(new Date())
                                                     .getTime()
                                     );
-                                } else if (jobInfo.getTriggerNextTime() < nowTime) {    // 过期10s内：立即触发一次，当前时间开始计算下次触发时间
+                                } else if (jobInfo.getTriggerNextTime() < nowTime) {    // 过期5s内：立即触发一次，当前时间开始计算下次触发时间
                                     ringSecond = (int)((nowTime/1000)%60);
 
                                     jobInfo.setTriggerLastTime(jobInfo.getTriggerNextTime());

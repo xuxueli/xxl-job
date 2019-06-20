@@ -56,7 +56,7 @@ public class ExecutorBizTest {
                 LoadBalance.ROUND,
                 ExecutorBiz.class,
                 null,
-                10000,
+                3000,
                 "127.0.0.1:9999",
                 null,
                 null,
