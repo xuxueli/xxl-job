@@ -1,5 +1,5 @@
-CREATE database if NOT EXISTS `xxl-job` default character set utf8 collate utf8_general_ci;
-use `xxl-job`;
+CREATE database if NOT EXISTS `xxl_job` default character set utf8 collate utf8_general_ci;
+use `xxl_job`;
 
 
 
