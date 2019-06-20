@@ -66,16 +66,14 @@ public class JobScheduleHelper {
 
                         // 1、预读5s内调度任务
                         long maxNextTime = System.currentTimeMillis() + 5000;
-                        long nowTime = System.currentTimeMillis();
                         List<XxlJobInfo> scheduleList = XxlJobAdminConfig.getAdminConfig().getXxlJobInfoDao().scheduleJobQuery(maxNextTime);
                         if (scheduleList!=null && scheduleList.size()>0) {
                             // 2、推送时间轮
                             for (XxlJobInfo jobInfo: scheduleList) {
 
                                 // 时间轮刻度计算
-                                int ringSecond = -1;
-                                if (jobInfo.getTriggerNextTime() < nowTime - 5000) {   // 过期超5s：本地忽略，当前时间开始计算下次触发时间
-                                    ringSecond = -1;
+                                if (System.currentTimeMillis() > jobInfo.getTriggerNextTime() + 5000) {
+                                    // 过期超5s：本地忽略，当前时间开始计算下次触发时间
 
                                     jobInfo.setTriggerLastTime(jobInfo.getTriggerNextTime());
                                     jobInfo.setTriggerNextTime(
@@ -83,8 +81,12 @@ public class JobScheduleHelper {
                                                     .getNextValidTimeAfter(new Date())
                                                     .getTime()
                                     );
-                                } else if (jobInfo.getTriggerNextTime() < nowTime) {    // 过期5s内：立即触发一次，当前时间开始计算下次触发时间
-                                    ringSecond = (int)((nowTime/1000)%60);
+
+                                    // pass
+                                    continue;
+
+                                } else if (System.currentTimeMillis() > jobInfo.getTriggerNextTime()) {
+                                    // 过期5s内 ：立即触发一次，当前时间开始计算下次触发时间
 
                                     jobInfo.setTriggerLastTime(jobInfo.getTriggerNextTime());
                                     jobInfo.setTriggerNextTime(
@@ -92,8 +94,15 @@ public class JobScheduleHelper {
                                                     .getNextValidTimeAfter(new Date())
                                                     .getTime()
                                     );
-                                } else {    // 未过期：正常触发，递增计算下次触发时间
-                                    ringSecond = (int)((jobInfo.getTriggerNextTime()/1000)%60);
+
+                                    // do trigger
+                                    JobTriggerPoolHelper.trigger(jobInfo.getId(), TriggerTypeEnum.CRON, -1, null, null);
+
+                                    logger.debug(">>>>>>>>>>> xxl-job, push trigger : jobId = " + jobInfo.getId() );
+                                } else {
+                                    // 未过期：正常触发，递增计算下次触发时间
+
+                                    int ringSecond = (int)((jobInfo.getTriggerNextTime()/1000)%60);
 
                                     jobInfo.setTriggerLastTime(jobInfo.getTriggerNextTime());
                                     jobInfo.setTriggerNextTime(
@@ -101,20 +110,18 @@ public class JobScheduleHelper {
                                                     .getNextValidTimeAfter(new Date(jobInfo.getTriggerNextTime()))
                                                     .getTime()
                                     );
-                                }
-                                if (ringSecond == -1) {
-                                    continue;
+
+                                    // push async ring
+                                    List<Integer> ringItemData = ringData.get(ringSecond);
+                                    if (ringItemData == null) {
+                                        ringItemData = new ArrayList<Integer>();
+                                        ringData.put(ringSecond, ringItemData);
+                                    }
+                                    ringItemData.add(jobInfo.getId());
+
+                                    logger.debug(">>>>>>>>>>> xxl-job, push time-ring : " + ringSecond + " = " + Arrays.asList(ringItemData) );
                                 }
 
-                                // push async ring
-                                List<Integer> ringItemData = ringData.get(ringSecond);
-                                if (ringItemData == null) {
-                                    ringItemData = new ArrayList<Integer>();
-                                    ringData.put(ringSecond, ringItemData);
-                                }
-                                ringItemData.add(jobInfo.getId());
-
-                                logger.debug(">>>>>>>>>>> xxl-job, push time-ring : " + ringSecond + " = " + Arrays.asList(ringItemData) );
                             }
 
                             // 3、更新trigger信息
@@ -181,29 +188,18 @@ public class JobScheduleHelper {
                     }
                 }
 
-                int lastSecond = -1;
                 while (!ringThreadToStop) {
 
                     try {
                         // second data
                         List<Integer> ringItemData = new ArrayList<>();
-                        int nowSecond = (int)((System.currentTimeMillis()/1000)%60);   // 避免处理耗时太长，跨过刻度；
-                        if (lastSecond == -1) {
-                            lastSecond = (nowSecond+59)%60;
-                        }
-                        for (int i = 1; i <=60; i++) {
-                            int secondItem = (lastSecond+i)%60;
-
-                            List<Integer> tmpData = ringData.remove(secondItem);
+                        int nowSecond = Calendar.getInstance().get(Calendar.SECOND);   // 避免处理耗时太长，跨过刻度，向前校验一个刻度；
+                        for (int i = 0; i < 2; i++) {
+                            List<Integer> tmpData = ringData.remove( (nowSecond+60-i)%60 );
                             if (tmpData != null) {
                                 ringItemData.addAll(tmpData);
                             }
-
-                            if (secondItem == nowSecond) {
-                                break;
-                            }
                         }
-                        lastSecond = nowSecond;
 
                         // ring trigger
                         logger.debug(">>>>>>>>>>> xxl-job, time-ring beat : " + nowSecond + " = " + Arrays.asList(ringItemData) );
