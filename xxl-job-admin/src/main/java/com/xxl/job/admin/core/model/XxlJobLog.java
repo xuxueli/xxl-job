@@ -8,7 +8,7 @@ import java.util.Date;
  */
 public class XxlJobLog {
 	
-	private int id;
+	private long id;
 	
 	// job info
 	private int jobGroup;
@@ -34,11 +34,11 @@ public class XxlJobLog {
 	// alarm info
 	private int alarmStatus;
 
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
