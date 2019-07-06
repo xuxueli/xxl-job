@@ -1,5 +1,5 @@
 #
-# XXL-JOB v2.1.0
+# XXL-JOB v2.1.1-SNAPSHOT
 # Copyright (c) 2015-present, xuxueli.
 
 CREATE database if NOT EXISTS `xxl_job` default character set utf8 collate utf8_general_ci;
