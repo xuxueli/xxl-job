@@ -3,16 +3,18 @@ package com.xxl.job.admin.dao;
 import com.xxl.job.admin.core.model.XxlJobLog;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "classpath*:spring/applicationcontext-*.xml")
+@RunWith(SpringRunner.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class XxlJobLogDaoTest {
 
     @Resource
@@ -27,7 +29,7 @@ public class XxlJobLogDaoTest {
         log.setJobGroup(1);
         log.setJobId(1);
 
-        int ret1 = xxlJobLogDao.save(log);
+        long ret1 = xxlJobLogDao.save(log);
         XxlJobLog dto = xxlJobLogDao.load(log.getId());
 
         log.setTriggerTime(new Date());

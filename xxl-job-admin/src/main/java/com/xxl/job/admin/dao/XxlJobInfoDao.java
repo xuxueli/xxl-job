@@ -35,7 +35,7 @@ public interface XxlJobInfoDao {
 	
 	public int update(XxlJobInfo xxlJobInfo);
 	
-	public int delete(@Param("id") int id);
+	public int delete(@Param("id") long id);
 
 	public List<XxlJobInfo> getJobsByGroup(@Param("jobGroup") int jobGroup);
 

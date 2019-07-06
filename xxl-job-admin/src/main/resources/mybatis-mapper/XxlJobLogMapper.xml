@@ -110,7 +110,7 @@
 		</trim>
 	</select>
 	
-	<select id="load" parameterType="java.lang.Integer" resultMap="XxlJobLog">
+	<select id="load" parameterType="java.lang.Long" resultMap="XxlJobLog">
 		SELECT <include refid="Base_Column_List" />
 		FROM xxl_job_log AS t
 		WHERE t.id = #{id}
@@ -218,7 +218,7 @@
 		</trim>
 	</delete>
 
-	<select id="findFailJobLogIds" resultType="int" >
+	<select id="findFailJobLogIds" resultType="long" >
 		SELECT id FROM `xxl_job_log`
 		WHERE !(
 			(trigger_code in (0, 200) and handle_code = 0)
