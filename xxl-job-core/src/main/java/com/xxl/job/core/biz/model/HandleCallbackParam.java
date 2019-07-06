@@ -24,7 +24,7 @@ public class HandleCallbackParam implements Serializable {
         return logId;
     }
 
-    public void setLogId(int logId) {
+    public void setLogId(long logId) {
         this.logId = logId;
     }
 

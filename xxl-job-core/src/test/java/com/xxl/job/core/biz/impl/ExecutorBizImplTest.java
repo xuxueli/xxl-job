@@ -109,7 +109,7 @@ public class ExecutorBizImplTest {
     @Test
     public void log(){
         final long logDateTim = 0L;
-        final int logId = 0;
+        final long logId = 0;
         final int fromLineNum = 0;
 
         // Act
