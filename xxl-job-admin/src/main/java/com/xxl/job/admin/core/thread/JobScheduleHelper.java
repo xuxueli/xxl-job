@@ -160,7 +160,9 @@ public class JobScheduleHelper {
                         try {
                             conn.commit();
                         } catch (SQLException e) {
-                            e.printStackTrace();
+                            if (!scheduleThreadToStop) {
+                                logger.error(e.getMessage(), e);
+                            }
                         }
 
                         // close PreparedStatement
@@ -168,6 +170,9 @@ public class JobScheduleHelper {
                             try {
                                 preparedStatement.close();
                             } catch (SQLException ignore) {
+                                if (!scheduleThreadToStop) {
+                                    logger.error(ignore.getMessage(), ignore);
+                                }
                             }
                         }
                     }
