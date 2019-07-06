@@ -133,20 +133,25 @@ public class TriggerCallbackThread {
     public void toStop(){
         toStop = true;
         // stop callback, interrupt and wait
-        triggerCallbackThread.interrupt();
-        try {
-            triggerCallbackThread.join();
-        } catch (InterruptedException e) {
-            logger.error(e.getMessage(), e);
+        if (triggerCallbackThread != null) {    // support empty admin address
+            triggerCallbackThread.interrupt();
+            try {
+                triggerCallbackThread.join();
+            } catch (InterruptedException e) {
+                logger.error(e.getMessage(), e);
+            }
         }
 
         // stop retry, interrupt and wait
-        triggerRetryCallbackThread.interrupt();
-        try {
-            triggerRetryCallbackThread.join();
-        } catch (InterruptedException e) {
-            logger.error(e.getMessage(), e);
+        if (triggerRetryCallbackThread != null) {
+            triggerRetryCallbackThread.interrupt();
+            try {
+                triggerRetryCallbackThread.join();
+            } catch (InterruptedException e) {
+                logger.error(e.getMessage(), e);
+            }
         }
+
     }
 
     /**
