@@ -7,6 +7,7 @@ import groovy.lang.GroovyClassLoader;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * glue factory, product class/object by name
@@ -33,7 +34,7 @@ public class GlueFactory {
 	 * groovy class loader
 	 */
 	private GroovyClassLoader groovyClassLoader = new GroovyClassLoader();
-	private ConcurrentHashMap<String, Class<?>> CLASS_CACHE = new ConcurrentHashMap<>();
+	private ConcurrentMap<String, Class<?>> CLASS_CACHE = new ConcurrentHashMap<>();
 
 	/**
 	 * load new instance, prototype
