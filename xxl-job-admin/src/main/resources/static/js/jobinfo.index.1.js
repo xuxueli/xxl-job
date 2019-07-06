@@ -46,11 +46,11 @@ $(function() {
 	                {
 	                	"data": 'jobDesc',
 						"visible" : true,
-						"width":'20%'
+						"width":'25%'
 					},
 					{
 						"data": 'glueType',
-						"width":'20%',
+						"width":'25%',
 						"visible" : true,
 						"render": function ( data, type, row ) {
 							var glueTypeTitle = findGlueTypeTitle(row.glueType);
