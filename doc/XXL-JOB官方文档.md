@@ -393,16 +393,15 @@ XXL-JOB是一个轻量级分布式任务调度平台，其核心设计目标是�
     spring.mail.properties.mail.smtp.auth=true
     spring.mail.properties.mail.smtp.starttls.enable=true
     spring.mail.properties.mail.smtp.starttls.required=true
+    spring.mail.properties.mail.smtp.socketFactory.class=javax.net.ssl.SSLSocketFactory
     
-    ### 登录账号
-    xxl.job.login.username=admin
-    xxl.job.login.password=123456
-    
-    ### 调度中心通讯TOKEN，非空时启用
+    ### xxl-job, access token
     xxl.job.accessToken=
     
-    ### 调度中心国际化设置，默认为中文版本，值设置为“en”时切换为英文版本
+    ### xxl-job, i18n (default empty as chinese, "en" as english)
     xxl.job.i18n=
+    
+    
 
 #### 步骤二：部署项目：
 如果已经正确进行上述配置，可将项目编译打包部署。
