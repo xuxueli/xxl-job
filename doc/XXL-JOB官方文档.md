@@ -405,7 +405,10 @@ XXL-JOB是一个轻量级分布式任务调度平台，其核心设计目标是�
 
 #### 步骤二：部署项目：
 如果已经正确进行上述配置，可将项目编译打包部署。
-调度中心访问地址：http://localhost:8080/xxl-job-admin (该地址执行器将会使用到，作为回调地址)，登录后运行界面如下图所示
+
+调度中心访问地址：http://localhost:8080/xxl-job-admin (该地址执行器将会使用到，作为回调地址)
+
+默认登录账号 "admin/123456", 登录后运行界面如下图所示。
 
 ![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_6yC0.png "在这里输入图片标题")
 
@@ -1511,6 +1514,7 @@ Tips: 历史版本(V1.3.x)目前已经Release至稳定版本, 进入维护阶段
 - 3、[ING]调度中心JDK版本调整为JDK8，从而升级至最新版本SpringBoot；
 - 4、[ING]执行器端口复用，复用容器端口提供通讯服务；
 - 5、[ING]执行器服务端口与注册端口分离，支持docker动态随机端口；
+- 6、登录界面取消默认填写的登录账号密码；
 
 
 ### TODO LIST
