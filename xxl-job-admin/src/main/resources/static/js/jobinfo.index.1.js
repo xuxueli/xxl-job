@@ -68,6 +68,11 @@ $(function() {
 						"visible" : true,
 						"width":'10%'
 					},
+					{
+						"data": 'nextExecuteTime',
+						"visible" : true,
+						"width": '10%'
+					},
 	                { 
 	                	"data": 'addTime', 
 	                	"visible" : false, 

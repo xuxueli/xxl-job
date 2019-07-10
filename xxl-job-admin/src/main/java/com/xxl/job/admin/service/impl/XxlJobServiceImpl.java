@@ -6,6 +6,7 @@ import com.xxl.job.admin.core.cron.CronExpression;
 import com.xxl.job.admin.core.route.ExecutorRouteStrategyEnum;
 import com.xxl.job.admin.core.thread.JobScheduleHelper;
 import com.xxl.job.admin.core.util.I18nUtil;
+import com.xxl.job.admin.core.util.JacksonUtil;
 import com.xxl.job.admin.dao.XxlJobGroupDao;
 import com.xxl.job.admin.dao.XxlJobInfoDao;
 import com.xxl.job.admin.dao.XxlJobLogDao;
@@ -46,13 +47,28 @@ public class XxlJobServiceImpl implements XxlJobService {
 
 		// page list
 		List<XxlJobInfo> list = xxlJobInfoDao.pageList(start, length, jobGroup, triggerStatus, jobDesc, executorHandler, author);
+		List<Map> postList = new ArrayList<>(list.size());
+		for (XxlJobInfo xxlJobInfo : list) {
+			String json = JacksonUtil.writeValueAsString(xxlJobInfo);
+			Map map = JacksonUtil.readValue(json, Map.class);
+			try {
+				CronExpression cronExpression = new CronExpression(xxlJobInfo.getJobCron());
+				Date nextExecuteTime = cronExpression.getNextValidTimeAfter(new Date());
+				map.put("nextExecuteTime", DateUtil.formatDateTime(nextExecuteTime));
+			} catch (ParseException e) {
+				e.printStackTrace();
+				map.put("nextExecuteTime", "Null");
+			}
+			postList.add(map);
+		}
+
 		int list_count = xxlJobInfoDao.pageListCount(start, length, jobGroup, triggerStatus, jobDesc, executorHandler, author);
 		
 		// package result
 		Map<String, Object> maps = new HashMap<String, Object>();
 	    maps.put("recordsTotal", list_count);		// 总记录数
 	    maps.put("recordsFiltered", list_count);	// 过滤后的总记录数
-	    maps.put("data", list);  					// 分页列表
+		maps.put("data", postList);                    // 分页列表
 		return maps;
 	}
 
