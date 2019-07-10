@@ -83,7 +83,7 @@
                                         <th name="glueType" >${I18n.jobinfo_field_gluetype}</th>
 					                  	<th name="executorParam" >${I18n.jobinfo_field_executorparam}</th>
                                         <th name="jobCron" >Cron</th>
-                                        <th name="nextExecuteTime">NextExecuteTime</th>
+                                        <th name="nextExecuteTime">${I18n.jobinfo_field_nextExecuteTime}</th>
 					                  	<th name="addTime" >addTime</th>
 					                  	<th name="updateTime" >updateTime</th>
 					                  	<th name="author" >${I18n.jobinfo_field_author}</th>
