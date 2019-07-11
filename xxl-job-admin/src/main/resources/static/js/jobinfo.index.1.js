@@ -278,6 +278,10 @@ $(function() {
 
 	// add
 	$(".add").click(function(){
+
+		// init
+        //$("#addModal .form input[name='jobCron']").cronGen({});
+
 		$('#addModal').modal({backdrop: false, keyboard: false}).modal('show');
 	});
 	var addModalValidate = $("#addModal .form").validate({
@@ -434,6 +438,9 @@ $(function() {
 		$('#updateModal .form select[name=glueType] option[value='+ row.glueType +']').prop('selected', true);
 
         $("#updateModal .form select[name=glueType]").change();
+
+        // init
+        //$("#updateModal .form input[name='jobCron']").cronGen({});
 
 		// show
 		$('#updateModal').modal({backdrop: false, keyboard: false}).modal('show');

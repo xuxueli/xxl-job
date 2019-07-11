@@ -427,6 +427,8 @@ exit 0
 <script src="${request.contextPath}/static/adminlte/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
 <!-- moment -->
 <script src="${request.contextPath}/static/adminlte/bower_components/moment/moment.min.js"></script>
+<#-- cronGen -->
+<script src="${request.contextPath}/static/plugins/cronGen/cronGen.js"></script>
 <script src="${request.contextPath}/static/js/jobinfo.index.1.js"></script>
 </body>
 </html>
