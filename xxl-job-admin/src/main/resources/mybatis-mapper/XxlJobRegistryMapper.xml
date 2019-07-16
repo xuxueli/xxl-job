@@ -18,10 +18,19 @@
 		t.registry_value,
 		t.update_time
 	</sql>
+
+	<select id="findDead" parameterType="java.lang.Integer" resultType="java.lang.Integer" >
+		SELECT t.id
+		FROM xxl_job_registry AS t
+		WHERE t.update_time <![CDATA[ < ]]> DATE_ADD(NOW(),INTERVAL -#{timeout} SECOND)
+	</select>
 	
 	<delete id="removeDead" parameterType="java.lang.Integer" >
 		DELETE FROM xxl_job_registry
-		WHERE update_time <![CDATA[ < ]]> DATE_ADD(NOW(),INTERVAL -#{timeout} SECOND)
+		WHERE id in
+		<foreach collection="ids" item="item" open="(" close=")" separator="," >
+			#{item}
+		</foreach>
 	</delete>
 
 	<select id="findAll" parameterType="java.lang.Integer" resultMap="XxlJobRegistry">
