@@ -219,7 +219,8 @@
 		UPDATE xxl_job_info
 		SET
 			trigger_last_time = #{triggerLastTime},
-			trigger_next_time = #{triggerNextTime}
+			trigger_next_time = #{triggerNextTime},
+			trigger_status = #{triggerStatus}
 		WHERE id = #{id}
 	</update>
 

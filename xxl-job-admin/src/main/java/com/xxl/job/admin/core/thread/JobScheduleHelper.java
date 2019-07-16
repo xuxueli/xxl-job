@@ -78,12 +78,15 @@ public class JobScheduleHelper {
                                     // 过期超5s：本地忽略，当前时间开始计算下次触发时间
 
                                     // fresh next
-                                    jobInfo.setTriggerLastTime(jobInfo.getTriggerNextTime());
-                                    jobInfo.setTriggerNextTime(
-                                            new CronExpression(jobInfo.getJobCron())
-                                                    .getNextValidTimeAfter(new Date())
-                                                    .getTime()
-                                    );
+                                    Date nextValidTime = new CronExpression(jobInfo.getJobCron()).getNextValidTimeAfter(new Date());
+                                    if (nextValidTime != null) {
+                                        jobInfo.setTriggerLastTime(jobInfo.getTriggerNextTime());
+                                        jobInfo.setTriggerNextTime(nextValidTime.getTime());
+                                    } else {
+                                        jobInfo.setTriggerStatus(0);
+                                        jobInfo.setTriggerLastTime(0);
+                                        jobInfo.setTriggerNextTime(0);
+                                    }
 
                                 } else if (nowTime > jobInfo.getTriggerNextTime()) {
                                     // 过期5s内 ：立即触发一次，当前时间开始计算下次触发时间；
@@ -110,12 +113,15 @@ public class JobScheduleHelper {
                                         pushTimeRing(ringSecond, jobInfo.getId());
 
                                         // 3、fresh next
-                                        jobInfo.setTriggerLastTime(jobInfo.getTriggerNextTime());
-                                        jobInfo.setTriggerNextTime(
-                                                new CronExpression(jobInfo.getJobCron())
-                                                        .getNextValidTimeAfter(new Date(jobInfo.getTriggerNextTime()))
-                                                        .getTime()
-                                        );
+                                        Date nextValidTime = new CronExpression(jobInfo.getJobCron()).getNextValidTimeAfter(new Date(jobInfo.getTriggerNextTime()));
+                                        if (nextValidTime != null) {
+                                            jobInfo.setTriggerLastTime(jobInfo.getTriggerNextTime());
+                                            jobInfo.setTriggerNextTime(nextValidTime.getTime());
+                                        } else {
+                                            jobInfo.setTriggerStatus(0);
+                                            jobInfo.setTriggerLastTime(0);
+                                            jobInfo.setTriggerNextTime(0);
+                                        }
 
                                     }
 
@@ -129,12 +135,15 @@ public class JobScheduleHelper {
                                     pushTimeRing(ringSecond, jobInfo.getId());
 
                                     // 3、fresh next
-                                    jobInfo.setTriggerLastTime(jobInfo.getTriggerNextTime());
-                                    jobInfo.setTriggerNextTime(
-                                            new CronExpression(jobInfo.getJobCron())
-                                                    .getNextValidTimeAfter(new Date(jobInfo.getTriggerNextTime()))
-                                                    .getTime()
-                                    );
+                                    Date nextValidTime = new CronExpression(jobInfo.getJobCron()).getNextValidTimeAfter(new Date(jobInfo.getTriggerNextTime()));
+                                    if (nextValidTime != null) {
+                                        jobInfo.setTriggerLastTime(jobInfo.getTriggerNextTime());
+                                        jobInfo.setTriggerNextTime(nextValidTime.getTime());
+                                    } else {
+                                        jobInfo.setTriggerStatus(0);
+                                        jobInfo.setTriggerLastTime(0);
+                                        jobInfo.setTriggerNextTime(0);
+                                    }
 
                                 }
 
