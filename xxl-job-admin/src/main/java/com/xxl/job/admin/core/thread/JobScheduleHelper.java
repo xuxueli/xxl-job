@@ -52,9 +52,10 @@ public class JobScheduleHelper {
                 Connection conn = null;
                 while (!scheduleThreadToStop) {
 
-                    // 扫描任务
+                    // Scan Job
                     long start = System.currentTimeMillis();
                     PreparedStatement preparedStatement = null;
+                    boolean preReadSuc = true;
                     try {
                         if (conn==null || conn.isClosed()) {
                             conn = XxlJobAdminConfig.getAdminConfig().getDataSource().getConnection();
@@ -154,6 +155,8 @@ public class JobScheduleHelper {
                                 XxlJobAdminConfig.getAdminConfig().getXxlJobInfoDao().scheduleUpdate(jobInfo);
                             }
 
+                        } else {
+                            preReadSuc = false;
                         }
 
                         // tx stop
@@ -187,14 +190,17 @@ public class JobScheduleHelper {
                     }
                     long cost = System.currentTimeMillis()-start;
 
-                    // next second, align second
-                    try {
-                        if (cost < 1000) {
-                            TimeUnit.MILLISECONDS.sleep(1000 - System.currentTimeMillis()%1000);
-                        }
-                    } catch (InterruptedException e) {
-                        if (!scheduleThreadToStop) {
-                            logger.error(e.getMessage(), e);
+
+                    // Wait seconds, align second
+                    if (cost < 1000) {  // scan-overtime, not wait
+                        try {
+                            // pre-read success, exist job in 5s, wait 1s;
+                            // pre-read fail, no exist job in 5s, wait 1s
+                            TimeUnit.MILLISECONDS.sleep((preReadSuc?1000:4000) - System.currentTimeMillis()%1000);
+                        } catch (InterruptedException e) {
+                            if (!scheduleThreadToStop) {
+                                logger.error(e.getMessage(), e);
+                            }
                         }
                     }
 
