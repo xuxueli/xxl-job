@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.ServletException;
@@ -33,6 +34,7 @@ import java.util.concurrent.ConcurrentMap;
  * @author xuxueli 2018-10-28 00:18:17
  */
 @Component
+@DependsOn("xxlJobAdminConfig")
 public class XxlJobScheduler implements InitializingBean, DisposableBean {
     private static final Logger logger = LoggerFactory.getLogger(XxlJobScheduler.class);
 
