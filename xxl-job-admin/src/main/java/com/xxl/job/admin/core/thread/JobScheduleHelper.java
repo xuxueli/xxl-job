@@ -194,9 +194,8 @@ public class JobScheduleHelper {
                     // Wait seconds, align second
                     if (cost < 1000) {  // scan-overtime, not wait
                         try {
-                            // pre-read success, exist job in pre-read period, wait 1s;
-                            // pre-read fail, no exist job in pre-read period, wait 4s
-                            TimeUnit.MILLISECONDS.sleep((preReadSuc?1000:4000) - System.currentTimeMillis()%1000);
+                            // pre-read period: success > scan each second; fail > skip this period;
+                            TimeUnit.MILLISECONDS.sleep((preReadSuc?1000:PRE_READ_MS) - System.currentTimeMillis()%1000);
                         } catch (InterruptedException e) {
                             if (!scheduleThreadToStop) {
                                 logger.error(e.getMessage(), e);
