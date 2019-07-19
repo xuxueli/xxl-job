@@ -67,16 +67,16 @@ public class JobScheduleHelper {
 
                         // tx start
 
-                        // 1、预读5s内调度任务
+                        // 1、pre read
                         long nowTime = System.currentTimeMillis();
                         List<XxlJobInfo> scheduleList = XxlJobAdminConfig.getAdminConfig().getXxlJobInfoDao().scheduleJobQuery(nowTime + PRE_READ_MS);
                         if (scheduleList!=null && scheduleList.size()>0) {
-                            // 2、推送时间轮
+                            // 2、push time-ring
                             for (XxlJobInfo jobInfo: scheduleList) {
 
-                                // 时间轮刻度计算
+                                // time-ring jump
                                 if (nowTime > jobInfo.getTriggerNextTime() + PRE_READ_MS) {
-                                    // 过期超5s：本地忽略，当前时间开始计算下次触发时间
+                                    // 2.1、trigger-expire > 5s：pass && make next-trigger-time
 
                                     // fresh next
                                     Date nextValidTime = new CronExpression(jobInfo.getJobCron()).getNextValidTimeAfter(new Date());
@@ -90,7 +90,7 @@ public class JobScheduleHelper {
                                     }
 
                                 } else if (nowTime > jobInfo.getTriggerNextTime()) {
-                                    // 过期5s内 ：立即触发一次，当前时间开始计算下次触发时间；
+                                    // 2.2、trigger-expire < 5s：direct-trigger && make next-trigger-time
 
                                     CronExpression cronExpression = new CronExpression(jobInfo.getJobCron());
                                     long nextTime = cronExpression.getNextValidTimeAfter(new Date()).getTime();
@@ -104,7 +104,7 @@ public class JobScheduleHelper {
                                     jobInfo.setTriggerNextTime(nextTime);
 
 
-                                    // 下次5s内：预读一次；
+                                    // next-trigger-time in 5s, pre-read again
                                     if (jobInfo.getTriggerNextTime() - nowTime < PRE_READ_MS) {
 
                                         // 1、make ring second
@@ -127,7 +127,7 @@ public class JobScheduleHelper {
                                     }
 
                                 } else {
-                                    // 未过期：正常触发，递增计算下次触发时间
+                                    // 2.3、trigger-pre-read：time-ring trigger && make next-trigger-time
 
                                     // 1、make ring second
                                     int ringSecond = (int)((jobInfo.getTriggerNextTime()/1000)%60);
@@ -150,7 +150,7 @@ public class JobScheduleHelper {
 
                             }
 
-                            // 3、更新trigger信息
+                            // 3、update trigger info
                             for (XxlJobInfo jobInfo: scheduleList) {
                                 XxlJobAdminConfig.getAdminConfig().getXxlJobInfoDao().scheduleUpdate(jobInfo);
                             }
