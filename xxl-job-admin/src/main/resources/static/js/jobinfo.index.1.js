@@ -28,7 +28,7 @@ $(function() {
 	                	"data": 'id',
 						"bSortable": false,
 						"visible" : true,
-						"width":'10%'
+						"width":'7%'
 					},
 	                { 
 	                	"data": 'jobGroup', 
@@ -65,7 +65,7 @@ $(function() {
 					{
 						"data": 'jobCron',
 						"visible" : true,
-						"width":'10%'
+						"width":'13%'
 					},
 	                { 
 	                	"data": 'addTime', 

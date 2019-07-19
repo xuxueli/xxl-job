@@ -114,14 +114,14 @@ $(function() {
 					{ "data": 'jobGroup', "visible" : false},
 					{
 						"data": 'triggerTime',
-                        "width":'16%',
+                        "width":'20%',
 						"render": function ( data, type, row ) {
 							return data?moment(new Date(data)).format("YYYY-MM-DD HH:mm:ss"):"";
 						}
 					},
 					{
 						"data": 'triggerCode',
-                        "width":'12%',
+                        "width":'10%',
 						"render": function ( data, type, row ) {
 							var html = data;
 							if (data == 200) {
@@ -136,21 +136,21 @@ $(function() {
 					},
 					{
 						"data": 'triggerMsg',
-                        "width":'12%',
+                        "width":'10%',
 						"render": function ( data, type, row ) {
 							return data?'<a class="logTips" href="javascript:;" >'+ I18n.system_show +'<span style="display:none;">'+ data +'</span></a>':I18n.system_empty;
 						}
 					},
 	                { 
 	                	"data": 'handleTime',
-                        "width":'16%',
+                        "width":'20%',
 	                	"render": function ( data, type, row ) {
 	                		return data?moment(new Date(data)).format("YYYY-MM-DD HH:mm:ss"):"";
 	                	}
 	                },
 	                {
 						"data": 'handleCode',
-                        "width":'12%',
+                        "width":'10%',
 						"render": function ( data, type, row ) {
                             var html = data;
                             if (data == 200) {
@@ -167,7 +167,7 @@ $(function() {
 	                },
 	                { 
 	                	"data": 'handleMsg',
-                        "width":'12%',
+                        "width":'10%',
 	                	"render": function ( data, type, row ) {
 	                		return data?'<a class="logTips" href="javascript:;" >'+ I18n.system_show +'<span style="display:none;">'+ data +'</span></a>':I18n.system_empty;
 	                	}
