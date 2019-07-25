@@ -49,17 +49,20 @@ public class JobScheduleHelper {
                 }
                 logger.info(">>>>>>>>> init xxl-job admin scheduler success.");
 
-                Connection conn = null;
                 while (!scheduleThreadToStop) {
 
                     // Scan Job
                     long start = System.currentTimeMillis();
+
+                    Connection conn = null;
+                    Boolean connAutoCommit = null;
                     PreparedStatement preparedStatement = null;
+
                     boolean preReadSuc = true;
                     try {
-                        if (conn==null || conn.isClosed()) {
-                            conn = XxlJobAdminConfig.getAdminConfig().getDataSource().getConnection();
-                        }
+
+                        conn = XxlJobAdminConfig.getAdminConfig().getDataSource().getConnection();
+                        connAutoCommit = conn.getAutoCommit();
                         conn.setAutoCommit(false);
 
                         preparedStatement = conn.prepareStatement(  "select * from xxl_job_lock where lock_name = 'schedule_lock' for update" );
@@ -169,11 +172,27 @@ public class JobScheduleHelper {
                     } finally {
 
                         // commit
-                        try {
-                            conn.commit();
-                        } catch (SQLException e) {
-                            if (!scheduleThreadToStop) {
-                                logger.error(e.getMessage(), e);
+                        if (conn != null) {
+                            try {
+                                conn.commit();
+                            } catch (SQLException e) {
+                                if (!scheduleThreadToStop) {
+                                    logger.error(e.getMessage(), e);
+                                }
+                            }
+                            try {
+                                conn.setAutoCommit(connAutoCommit);
+                            } catch (SQLException e) {
+                                if (!scheduleThreadToStop) {
+                                    logger.error(e.getMessage(), e);
+                                }
+                            }
+                            try {
+                                conn.close();
+                            } catch (SQLException e) {
+                                if (!scheduleThreadToStop) {
+                                    logger.error(e.getMessage(), e);
+                                }
                             }
                         }
 
@@ -204,12 +223,7 @@ public class JobScheduleHelper {
                     }
 
                 }
-                if (conn != null) {
-                    try {
-                        conn.close();
-                    } catch (SQLException e) {
-                    }
-                }
+
                 logger.info(">>>>>>>>>>> xxl-job, JobScheduleHelper#scheduleThread stop");
             }
         });
