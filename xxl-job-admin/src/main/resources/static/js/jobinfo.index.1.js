@@ -90,9 +90,9 @@ $(function() {
 	                	"render": function ( data, type, row ) {
                             // status
                             if (1 == data) {
-                                return '<small class="label label-success" ><i class="fa fa-clock-o"></i>RUNNING</small>';
+                                return '<small class="label label-success" >RUNNING</small>';
                             } else {
-                                return '<small class="label label-default" ><i class="fa fa-clock-o"></i>STOP</small>';
+                                return '<small class="label label-default" >STOP</small>';
                             }
 	                		return data;
 	                	}
