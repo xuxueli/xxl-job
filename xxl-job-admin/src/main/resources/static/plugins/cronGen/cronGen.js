@@ -1,5 +1,5 @@
 ﻿(function ($) {
-    var resultsName = "";
+    // var resultsName = "";
     var inputElement;
     var displayElement;
     $.fn.extend({
@@ -34,7 +34,7 @@
             $("<input/>",{type : "radio", value : "1", name : "second"}).appendTo(seconds1);
             $(seconds1).append("每秒 允许的通配符[, - * /]");
             $(seconds1).appendTo(secondsTab);
-            
+
             var seconds2 = $("<div/>",{"class":"line"});
             $("<input/>",{type : "radio", value : "2", name : "second"}).appendTo(seconds2);
             $(seconds2).append("周期 从");
@@ -43,7 +43,7 @@
             $("<input/>",{type : "text", id : "secondEnd_0", value : "2", style:"width:35px; height:20px; text-align: center; margin: 0 3px;"}).appendTo(seconds2);
             $(seconds2).append("秒");
             $(seconds2).appendTo(secondsTab);
-            
+
             var seconds3 = $("<div/>",{"class":"line"});
             $("<input/>",{type : "radio", value : "3", name : "second"}).appendTo(seconds3);
             $(seconds3).append("从");
@@ -52,12 +52,12 @@
             $("<input/>",{type : "text", id : "secondEnd_1", value : "1", style:"width:35px; height:20px; text-align: center; margin: 0 3px;"}).appendTo(seconds3);
             $(seconds3).append("秒执行一次");
             $(seconds3).appendTo(secondsTab);
-            
+
             var seconds4 = $("<div/>",{"class":"line"});
             $("<input/>",{type : "radio", value : "4", name : "second", id: "sencond_appoint"}).appendTo(seconds4);
             $(seconds4).append("指定");
             $(seconds4).appendTo(secondsTab);
-            
+
             $(secondsTab).append('<div class="imp secondList"><input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="0">00<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="1">01<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="2">02<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="3">03<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="4">04<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="5">05<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="6">06<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="7">07<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="8">08<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="9">09</div>');
             $(secondsTab).append('<div class="imp secondList"><input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="10">10<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="11">11<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="12">12<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="13">13<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="14">14<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="15">15<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="16">16<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="17">17<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="18">18<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="19">19</div>');
             $(secondsTab).append('<div class="imp secondList"><input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="20">20<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="21">21<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="22">22<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="23">23<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="24">24<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="25">25<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="26">26<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="27">27<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="28">28<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="29">29</div>');
@@ -66,15 +66,15 @@
             $(secondsTab).append('<div class="imp secondList"><input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="50">50<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="51">51<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="52">52<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="53">53<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="54">54<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="55">55<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="56">56<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="57">57<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="58">58<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="59">59</div>');
             $("<input/>",{type : "hidden", id : "secondHidden"}).appendTo(secondsTab);
             $(secondsTab).appendTo(tabContent);
-            
+
             //creating the minutesTab
             var minutesTab = $("<div/>", { "class": "tab-pane", id: "Minutes" });
-            
+
             var minutes1 = $("<div/>",{"class":"line"});
             $("<input/>",{type : "radio", value : "1", name : "min"}).appendTo(minutes1);
             $(minutes1).append("每分钟 允许的通配符[, - * /]");
             $(minutes1).appendTo(minutesTab);
-            
+
             var minutes2 = $("<div/>",{"class":"line"});
             $("<input/>",{type : "radio", value : "2", name : "min"}).appendTo(minutes2);
             $(minutes2).append("周期 从");
@@ -83,7 +83,7 @@
             $("<input/>",{type : "text", id : "minEnd_0", value : "2", style:"width:35px; height:20px; text-align: center; margin: 0 3px;"}).appendTo(minutes2);
             $(minutes2).append("分钟");
             $(minutes2).appendTo(minutesTab);
-            
+
             var minutes3 = $("<div/>",{"class":"line"});
             $("<input/>",{type : "radio", value : "3", name : "min"}).appendTo(minutes3);
             $(minutes3).append("从");
@@ -92,12 +92,12 @@
             $("<input/>",{type : "text", id : "minEnd_1", value : "1", style:"width:35px; height:20px; text-align: center; margin: 0 3px;"}).appendTo(minutes3);
             $(minutes3).append("分钟执行一次");
             $(minutes3).appendTo(minutesTab);
-            
+
             var minutes4 = $("<div/>",{"class":"line"});
             $("<input/>",{type : "radio", value : "4", name : "min", id: "min_appoint"}).appendTo(minutes4);
             $(minutes4).append("指定");
             $(minutes4).appendTo(minutesTab);
-            
+
             $(minutesTab).append('<div class="imp minList"><input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="0">00<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="1">01<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="2">02<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="3">03<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="4">04<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="5">05<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="6">06<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="7">07<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="8">08<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="9">09</div>');
             $(minutesTab).append('<div class="imp minList"><input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="10">10<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="11">11<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="12">12<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="13">13<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="14">14<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="15">15<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="16">16<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="17">17<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="18">18<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="19">19</div>');
             $(minutesTab).append('<div class="imp minList"><input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="20">20<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="21">21<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="22">22<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="23">23<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="24">24<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="25">25<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="26">26<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="27">27<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="28">28<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="29">29</div>');
@@ -106,7 +106,7 @@
             $(minutesTab).append('<div class="imp minList"><input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="50">50<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="51">51<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="52">52<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="53">53<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="54">54<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="55">55<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="56">56<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="57">57<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="58">58<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="59">59</div>');
             $("<input/>",{type : "hidden", id : "minHidden"}).appendTo(minutesTab);
             $(minutesTab).appendTo(tabContent);
-            
+
             //creating the hourlyTab
             var hourlyTab = $("<div/>", { "class": "tab-pane", id: "Hourly" });
 
@@ -114,7 +114,7 @@
             $("<input/>",{type : "radio", value : "1", name : "hour"}).appendTo(hourly1);
             $(hourly1).append("每小时 允许的通配符[, - * /]");
             $(hourly1).appendTo(hourlyTab);
-            
+
             var hourly2 = $("<div/>",{"class":"line"});
             $("<input/>",{type : "radio", value : "2", name : "hour"}).appendTo(hourly2);
             $(hourly2).append("周期 从");
@@ -123,7 +123,7 @@
             $("<input/>",{type : "text", id : "hourEnd_0", value : "2", style:"width:35px; height:20px; text-align: center; margin: 0 3px;"}).appendTo(hourly2);
             $(hourly2).append("小时");
             $(hourly2).appendTo(hourlyTab);
-            
+
             var hourly3 = $("<div/>",{"class":"line"});
             $("<input/>",{type : "radio", value : "3", name : "hour"}).appendTo(hourly3);
             $(hourly3).append("从");
@@ -132,19 +132,19 @@
             $("<input/>",{type : "text", id : "hourEnd_1", value : "1", style:"width:35px; height:20px; text-align: center; margin: 0 3px;"}).appendTo(hourly3);
             $(hourly3).append("小时执行一次");
             $(hourly3).appendTo(hourlyTab);
-            
+
             var hourly4 = $("<div/>",{"class":"line"});
             $("<input/>",{type : "radio", value : "4", name : "hour", id: "hour_appoint"}).appendTo(hourly4);
             $(hourly4).append("指定");
             $(hourly4).appendTo(hourlyTab);
-            
+
             $(hourlyTab).append('<div class="imp hourList"><input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="0">00<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="1">01<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="2">02<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="3">03<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="4">04<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="5">05</div>');
             $(hourlyTab).append('<div class="imp hourList"><input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="6">06<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="7">07<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="8">08<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="9">09<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="10">10<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="11">11</div>');
             $(hourlyTab).append('<div class="imp hourList"><input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="12">12<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="13">13<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="14">14<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="15">15<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="16">16<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="17">17</div>');
             $(hourlyTab).append('<div class="imp hourList"><input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="18">18<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="19">19<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="20">20<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="21">21<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="22">22<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="23">23</div>');
             $("<input/>",{type : "hidden", id : "hourHidden"}).appendTo(hourlyTab);
             $(hourlyTab).appendTo(tabContent);
-            
+
 
             //creating the dailyTab
             var dailyTab = $("<div/>", { "class": "tab-pane", id: "Daily" });
@@ -153,12 +153,12 @@
             $("<input/>",{type : "radio", value : "1", name : "day"}).appendTo(daily1);
             $(daily1).append("每天 允许的通配符[, - * / L W]");
             $(daily1).appendTo(dailyTab);
-            
+
             var daily5 = $("<div/>",{"class":"line"});
             $("<input/>",{type : "radio", value : "2", name : "day"}).appendTo(daily5);
             $(daily5).append("不指定");
             $(daily5).appendTo(dailyTab);
-            
+
             var daily2 = $("<div/>",{"class":"line"});
             $("<input/>",{type : "radio", value : "3", name : "day"}).appendTo(daily2);
             $(daily2).append("周期 从");
@@ -167,7 +167,7 @@
             $("<input/>",{type : "text", id : "dayEnd_0", value : "2", style:"width:35px; height:20px; text-align: center; margin: 0 3px;"}).appendTo(daily2);
             $(daily2).append("日");
             $(daily2).appendTo(dailyTab);
-            
+
             var daily3 = $("<div/>",{"class":"line"});
             $("<input/>",{type : "radio", value : "4", name : "day"}).appendTo(daily3);
             $(daily3).append("从");
@@ -176,32 +176,32 @@
             $("<input/>",{type : "text", id : "dayEnd_1", value : "1", style:"width:35px; height:20px; text-align: center; margin: 0 3px;"}).appendTo(daily3);
             $(daily3).append("天执行一次");
             $(daily3).appendTo(dailyTab);
-            
+
             var daily6 = $("<div/>",{"class":"line"});
             $("<input/>",{type : "radio", value : "5", name : "day"}).appendTo(daily6);
             $(daily6).append("每月");
             $("<input/>",{type : "text", id : "dayStart_2", value : "1", style:"width:35px; height:20px; text-align: center; margin: 0 3px;"}).appendTo(daily6);
             $(daily6).append("号最近的那个工作日");
             $(daily6).appendTo(dailyTab);
-            
+
             var daily7 = $("<div/>",{"class":"line"});
             $("<input/>",{type : "radio", value : "6", name : "day"}).appendTo(daily7);
             $(daily7).append("本月最后一天");
             $(daily7).appendTo(dailyTab);
-            
+
             var daily4 = $("<div/>",{"class":"line"});
             $("<input/>",{type : "radio", value : "7", name : "day", id: "day_appoint"}).appendTo(daily4);
             $(daily4).append("指定");
             $(daily4).appendTo(dailyTab);
-            
+
             $(dailyTab).append('<div class="imp dayList"><input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="1">01<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="2">02<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="3">03<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="4">04<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="5">05<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="6">06<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="7">07<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="8">08<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="9">09<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="10">10</div>');
             $(dailyTab).append('<div class="imp dayList"><input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="11">11<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="12">12<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="13">13<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="14">14<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="15">15<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="16">16<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="17">17<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="18">18<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="19">19<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="20">20</div>');
             $(dailyTab).append('<div class="imp dayList"><input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="21">21<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="22">22<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="23">23<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="24">24<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="25">25<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="26">26<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="27">27<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="28">28<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="29">29<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="30">30</div>');
             $(dailyTab).append('<div class="imp dayList"><input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="31">31</div>');
             $("<input/>",{type : "hidden", id : "dayHidden"}).appendTo(dailyTab);
             $(dailyTab).appendTo(tabContent);
-            
-            
+
+
             //creating the monthlyTab
             var monthlyTab = $("<div/>", { "class": "tab-pane", id: "Monthly" });
 
@@ -209,12 +209,12 @@
             $("<input/>",{type : "radio", value : "1", name : "month"}).appendTo(monthly1);
             $(monthly1).append("每月 允许的通配符[, - * /]");
             $(monthly1).appendTo(monthlyTab);
-            
+
             var monthly2 = $("<div/>",{"class":"line"});
             $("<input/>",{type : "radio", value : "2", name : "month"}).appendTo(monthly2);
             $(monthly2).append("不指定");
             $(monthly2).appendTo(monthlyTab);
-            
+
             var monthly3 = $("<div/>",{"class":"line"});
             $("<input/>",{type : "radio", value : "3", name : "month"}).appendTo(monthly3);
             $(monthly3).append("周期 从");
@@ -223,7 +223,7 @@
             $("<input/>",{type : "text", id : "monthEnd_0", value : "2", style:"width:35px; height:20px; text-align: center; margin: 0 3px;"}).appendTo(monthly3);
             $(monthly3).append("月");
             $(monthly3).appendTo(monthlyTab);
-            
+
             var monthly4 = $("<div/>",{"class":"line"});
             $("<input/>",{type : "radio", value : "4", name : "month"}).appendTo(monthly4);
             $(monthly4).append("从");
@@ -232,12 +232,12 @@
             $("<input/>",{type : "text", id : "monthEnd_1", value : "1", style:"width:35px; height:20px; text-align: center; margin: 0 3px;"}).appendTo(monthly4);
             $(monthly4).append("月执行一次");
             $(monthly4).appendTo(monthlyTab);
-            
+
             var monthly5 = $("<div/>",{"class":"line"});
             $("<input/>",{type : "radio", value : "5", name : "month", id: "month_appoint"}).appendTo(monthly5);
             $(monthly5).append("指定");
             $(monthly5).appendTo(monthlyTab);
-            
+
             $(monthlyTab).append('<div class="imp monthList"><input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="1">01<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="2">02<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="3">03<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="4">04<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="5">05<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="6">06</div>');
             $(monthlyTab).append('<div class="imp monthList"><input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="7">07<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="8">08<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="9">09<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="10">10<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="11">11<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="12">12</div>');
             $("<input/>",{type : "hidden", id : "monthHidden"}).appendTo(monthlyTab);
@@ -245,17 +245,17 @@
 
             //creating the weeklyTab
             var weeklyTab = $("<div/>", { "class": "tab-pane", id: "Weekly" });
-            
+
             var weekly1 = $("<div/>",{"class":"line"});
             $("<input/>",{type : "radio", value : "1", name : "week"}).appendTo(weekly1);
             $(weekly1).append("每周 允许的通配符[, - * / L #]");
             $(weekly1).appendTo(weeklyTab);
-            
+
             var weekly2 = $("<div/>",{"class":"line"});
             $("<input/>",{type : "radio", value : "2", name : "week"}).appendTo(weekly2);
             $(weekly2).append("不指定");
             $(weekly2).appendTo(weeklyTab);
-            
+
             var weekly3 = $("<div/>",{"class":"line"});
             $("<input/>",{type : "radio", value : "3", name : "week"}).appendTo(weekly3);
             $(weekly3).append("周期 从星期");
@@ -263,7 +263,7 @@
             $(weekly3).append("-");
             $("<input/>",{type : "text", id : "weekEnd_0", value : "2", style:"width:35px; height:20px; text-align: center; margin: 0 3px;"}).appendTo(weekly3);
             $(weekly3).appendTo(weeklyTab);
-            
+
             var weekly4 = $("<div/>",{"class":"line"});
             $("<input/>",{type : "radio", value : "4", name : "week"}).appendTo(weekly4);
             $(weekly4).append("第");
@@ -271,36 +271,36 @@
             $(weekly4).append("周的星期");
             $("<input/>",{type : "text", id : "weekEnd_1", value : "1", style:"width:35px; height:20px; text-align: center; margin: 0 3px;"}).appendTo(weekly4);
             $(weekly4).appendTo(weeklyTab);
-            
+
             var weekly5 = $("<div/>",{"class":"line"});
             $("<input/>",{type : "radio", value : "5", name : "week"}).appendTo(weekly5);
             $(weekly5).append("本月最后一个星期");
             $("<input/>",{type : "text", id : "weekStart_2", value : "1", style:"width:35px; height:20px; text-align: center; margin: 0 3px;"}).appendTo(weekly5);
             $(weekly5).appendTo(weeklyTab);
-            
+
             var weekly6 = $("<div/>",{"class":"line"});
             $("<input/>",{type : "radio", value : "6", name : "week", id: "week_appoint"}).appendTo(weekly6);
             $(weekly6).append("指定");
             $(weekly6).appendTo(weeklyTab);
-            
+
             $(weeklyTab).append('<div class="imp weekList"><input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="1">1<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="2">2<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="3">3<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="4">4<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="5">5<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="6">6<input type="checkbox" disabled="disabled" style="margin-left: 5px"  value="7">7</div>');
-            
+
             $("<input/>",{type : "hidden", id : "weekHidden"}).appendTo(weeklyTab);
             $(weeklyTab).appendTo(tabContent);
 
             //creating the yearlyTab
             var yearlyTab = $("<div/>", { "class": "tab-pane", id: "Yearly" });
-            
+
             var yearly1 = $("<div/>",{"class":"line"});
             $("<input/>",{type : "radio", value : "1", name : "year"}).appendTo(yearly1);
             $(yearly1).append("不指定 允许的通配符[, - * /] 非必填");
             $(yearly1).appendTo(yearlyTab);
-            
+
             var yearly3 = $("<div/>",{"class":"line"});
             $("<input/>",{type : "radio", value : "2", name : "year"}).appendTo(yearly3);
             $(yearly3).append("每年");
             $(yearly3).appendTo(yearlyTab);
-            
+
             var yearly2 = $("<div/>",{"class":"line"});
             $("<input/>",{type : "radio", value : "3", name : "year"}).appendTo(yearly2);
             $(yearly2).append("周期从");
@@ -311,18 +311,18 @@
             $(yearly2).appendTo(yearlyTab);
             $("<input/>",{type : "hidden", id : "yearHidden"}).appendTo(yearlyTab);
             $(yearlyTab).appendTo(tabContent);
-            
+
             $(tabContent).appendTo(span12);
 
-            //creating the button and results input           
-            resultsName = $(this).prop("id");
-            $(this).prop("name", resultsName);
+            //creating the button and results input
+            // resultsName = $(this).prop("id");
+            // $(this).prop("name", resultsName);
 
             $(span12).appendTo(row);
             $(row).appendTo(container);
             $(container).appendTo(mainDiv);
             $(cronContainer).append(mainDiv);
-            
+
             var that = $(this);
 
             // Hide the original input
@@ -355,18 +355,18 @@
 
             }).on('click', function (e) {
                 e.preventDefault();
-                
+
                 //fillDataOfMinutesAndHoursSelectOptions();
                 //fillDayWeekInMonth();
                 //fillInWeekDays();
                 //fillInMonths();
-                
+
                 $.fn.cronGen.tools.cronParse(inputElement.val());
-                
+
                 //绑定指定事件
                 $.fn.cronGen.tools.initChangeEvent();
-                
-                
+
+
                 $('#CronGenTabs a').click(function (e) {
                     e.preventDefault();
                     $(this).tab('show');
@@ -711,7 +711,7 @@
                     secondList.eq(0).change();
                 }
             });
-        
+
             secondList.change(function() {
                 var sencond_appoint = $("#sencond_appoint").prop("checked");
                 if (sencond_appoint) {
@@ -723,14 +723,14 @@
                     });
                     var val = "?";
                     if (vals.length > 0 && vals.length < 59) {
-                        val = vals.join(","); 
+                        val = vals.join(",");
                     }else if(vals.length == 59){
                         val = "*";
                     }
                     $("#secondHidden").val(val);
                 }
             });
-            
+
             var minList = $(".minList").children();
             $("#min_appoint").click(function(){
                 if (this.checked) {
@@ -740,7 +740,7 @@
                     minList.eq(0).change();
                 }
             });
-            
+
             minList.change(function() {
                 var min_appoint = $("#min_appoint").prop("checked");
                 if (min_appoint) {
@@ -759,7 +759,7 @@
                     $("#minHidden").val(val);
                 }
             });
-            
+
             var hourList = $(".hourList").children();
             $("#hour_appoint").click(function(){
                 if (this.checked) {
@@ -769,7 +769,7 @@
                     hourList.eq(0).change();
                 }
             });
-            
+
             hourList.change(function() {
                 var hour_appoint = $("#hour_appoint").prop("checked");
                 if (hour_appoint) {
@@ -788,7 +788,7 @@
                     $("#hourHidden").val(val);
                 }
             });
-            
+
             var dayList = $(".dayList").children();
             $("#day_appoint").click(function(){
                 if (this.checked) {
@@ -798,7 +798,7 @@
                     dayList.eq(0).change();
                 }
             });
-            
+
             dayList.change(function() {
                 var day_appoint = $("#day_appoint").prop("checked");
                 if (day_appoint) {
@@ -817,7 +817,7 @@
                    $("#dayHidden").val(val);
                 }
             });
-            
+
             var monthList = $(".monthList").children();
             $("#month_appoint").click(function(){
                 if (this.checked) {
@@ -827,7 +827,7 @@
                     monthList.eq(0).change();
                 }
             });
-            
+
             monthList.change(function() {
                 var month_appoint = $("#month_appoint").prop("checked");
                 if (month_appoint) {
@@ -846,7 +846,7 @@
                     $("#monthHidden").val(val);
                 }
             });
-            
+
             var weekList = $(".weekList").children();
             $("#week_appoint").click(function(){
                 if (this.checked) {
@@ -856,7 +856,7 @@
                     weekList.eq(0).change();
                 }
             });
-            
+
             weekList.change(function() {
                 var week_appoint = $("#week_appoint").prop("checked");
                 if (week_appoint) {

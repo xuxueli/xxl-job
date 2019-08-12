@@ -3,7 +3,7 @@ $(function() {
 	// init date tables
 	var jobTable = $("#job_list").dataTable({
 		"deferRender": true,
-		"processing" : true, 
+		"processing" : true,
 	    "serverSide": true,
 		"ajax": {
 			url: base_url + "/jobinfo/pageList",
@@ -30,8 +30,8 @@ $(function() {
 						"visible" : true,
 						"width":'7%'
 					},
-	                { 
-	                	"data": 'jobGroup', 
+	                {
+	                	"data": 'jobGroup',
 	                	"visible" : false,
 	                	"render": function ( data, type, row ) {
 	            			var groupMenu = $("#jobGroup").find("option");
@@ -67,23 +67,23 @@ $(function() {
 						"visible" : true,
 						"width":'13%'
 					},
-	                { 
-	                	"data": 'addTime', 
-	                	"visible" : false, 
+	                {
+	                	"data": 'addTime',
+	                	"visible" : false,
 	                	"render": function ( data, type, row ) {
 	                		return data?moment(new Date(data)).format("YYYY-MM-DD HH:mm:ss"):"";
 	                	}
 	                },
-	                { 
-	                	"data": 'updateTime', 
-	                	"visible" : false, 
+	                {
+	                	"data": 'updateTime',
+	                	"visible" : false,
 	                	"render": function ( data, type, row ) {
 	                		return data?moment(new Date(data)).format("YYYY-MM-DD HH:mm:ss"):"";
 	                	}
 	                },
 	                { "data": 'author', "visible" : true, "width":'10%'},
 	                { "data": 'alarmEmail', "visible" : false},
-	                { 
+	                {
 	                	"data": 'triggerStatus',
 						"width":'10%',
 	                	"visible" : true,
@@ -181,14 +181,14 @@ $(function() {
 	$('#searchBtn').on('click', function(){
 		jobTable.fnDraw();
 	});
-	
+
 	// jobGroup change
 	$('#jobGroup').on('change', function(){
         //reload
         var jobGroup = $('#jobGroup').val();
         window.location.href = base_url + "/jobinfo?jobGroup=" + jobGroup;
     });
-	
+
 	// job operate
 	$("#job_list").on('click', '.job_operate',function() {
 		var typeName;
@@ -211,7 +211,7 @@ $(function() {
 		} else {
 			return;
 		}
-		
+
 		var id = $(this).parents('ul').attr("_id");
 
 		layer.confirm( I18n.system_ok + typeName + '?', {
@@ -319,14 +319,14 @@ $(function() {
 	$(".add").click(function(){
 
 		// init
-        //$("#addModal .form input[name='jobCron']").cronGen({});
+        $("#addModal .form input[name='jobCron']").cronGen({});
 
 		$('#addModal').modal({backdrop: false, keyboard: false}).modal('show');
 	});
 	var addModalValidate = $("#addModal .form").validate({
-		errorElement : 'span',  
+		errorElement : 'span',
         errorClass : 'help-block',
-        focusInvalid : true,  
+        focusInvalid : true,
         rules : {
 			jobDesc : {
 				required : true,
@@ -344,8 +344,8 @@ $(function() {
             executorFailRetryCount : {
                 digits:true
             }
-        }, 
-        messages : {  
+        },
+        messages : {
             jobDesc : {
             	required : I18n.system_please_input + I18n.jobinfo_field_jobdesc
             },
@@ -362,15 +362,15 @@ $(function() {
                 digits: I18n.system_please_input + I18n.system_digits
             }
         },
-		highlight : function(element) {  
-            $(element).closest('.form-group').addClass('has-error');  
+		highlight : function(element) {
+            $(element).closest('.form-group').addClass('has-error');
         },
-        success : function(label) {  
-            label.closest('.form-group').removeClass('has-error');  
-            label.remove();  
+        success : function(label) {
+            label.closest('.form-group').removeClass('has-error');
+            label.remove();
         },
-        errorPlacement : function(error, element) {  
-            element.parent('div').append(error);  
+        errorPlacement : function(error, element) {
+            element.parent('div').append(error);
         },
         submitHandler : function(form) {
 
@@ -414,6 +414,8 @@ $(function() {
 	$("#addModal").on('hide.bs.modal', function () {
 		$("#addModal .form")[0].reset();
 		addModalValidate.resetForm();
+		// 清理 cronGen
+		$("input[name=jobCron]").show().siblings().remove();
 		$("#addModal .form .form-group").removeClass("has-error");
 		$(".remote_panel").show();	// remote
 
@@ -446,7 +448,7 @@ $(function() {
 		} else if ('GLUE_PHP'==glueType){
             $("#addModal .form textarea[name='glueSource']").val( $("#addModal .form .glueSource_php").val() );
         } else if ('GLUE_NODEJS'==glueType){
-			$("#addModal .form textarea[name='glueSource']").val( $("#addModal .form .glueSource_nodejs").val() );			
+			$("#addModal .form textarea[name='glueSource']").val( $("#addModal .form .glueSource_nodejs").val() );
 		} else if ('GLUE_POWERSHELL'==glueType){
             $("#addModal .form textarea[name='glueSource']").val( $("#addModal .form .glueSource_powershell").val() );
         } else {
@@ -479,13 +481,13 @@ $(function() {
         $("#updateModal .form select[name=glueType]").change();
 
         // init
-        //$("#updateModal .form input[name='jobCron']").cronGen({});
+        $("#updateModal .form input[name='jobCron']").cronGen({});
 
 		// show
 		$('#updateModal').modal({backdrop: false, keyboard: false}).modal('show');
 	});
 	var updateModalValidate = $("#updateModal .form").validate({
-		errorElement : 'span',  
+		errorElement : 'span',
         errorClass : 'help-block',
         focusInvalid : true,
 
@@ -525,14 +527,14 @@ $(function() {
             }
 		},
 		highlight : function(element) {
-            $(element).closest('.form-group').addClass('has-error');  
+            $(element).closest('.form-group').addClass('has-error');
         },
-        success : function(label) {  
-            label.closest('.form-group').removeClass('has-error');  
-            label.remove();  
+        success : function(label) {
+            label.closest('.form-group').removeClass('has-error');
+            label.remove();
         },
-        errorPlacement : function(error, element) {  
-            element.parent('div').append(error);  
+        errorPlacement : function(error, element) {
+            element.parent('div').append(error);
         },
         submitHandler : function(form) {
 
@@ -574,7 +576,9 @@ $(function() {
 		}
 	});
 	$("#updateModal").on('hide.bs.modal', function () {
-		$("#updateModal .form")[0].reset()
+		$("#updateModal .form")[0].reset();
+		// 清理 cronGen
+		$("input[name=jobCron]").show().siblings().remove();
 	});
 
     /**
