@@ -131,7 +131,7 @@ public class ExecutorBizImplTest {
         triggerParam.setGlueSource(null);
         triggerParam.setGlueUpdatetime(System.currentTimeMillis());
         triggerParam.setLogId(1);
-        triggerParam.setLogDateTim(System.currentTimeMillis());
+        triggerParam.setLogDateTime(System.currentTimeMillis());
 
         // Act
         final ReturnT<String> retval = executorBiz.run(triggerParam);
