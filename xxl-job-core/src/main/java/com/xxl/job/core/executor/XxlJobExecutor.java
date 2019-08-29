@@ -86,6 +86,11 @@ public class XxlJobExecutor  {
         initRpcProvider(ip, port, appName, accessToken);
     }
     public void destroy(){
+        List<JobThread> runningThreads = new ArrayList<>(jobThreadRepository.values());
+        if (logger.isInfoEnabled()) {
+            logger.info("running threads {}", runningThreads);
+        }
+
         // destory jobThreadRepository
         if (jobThreadRepository.size() > 0) {
             for (Map.Entry<Integer, JobThread> item: jobThreadRepository.entrySet()) {
@@ -95,6 +100,15 @@ public class XxlJobExecutor  {
         }
         jobHandlerRepository.clear();
 
+        for (JobThread runningThread : runningThreads) {
+            try {
+                // wait for all job thread push result to callback queue
+                runningThread.join();
+            } catch (InterruptedException e) {
+                logger.warn("interrupted while stopping {}", runningThread);
+                break;
+            }
+        }
 
         // destory JobLogFileCleanThread
         JobLogFileCleanThread.getInstance().toStop();
