@@ -1,10 +1,12 @@
 package com.xxl.job.admin.service.impl;
 
+import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.admin.core.thread.JobTriggerPoolHelper;
 import com.xxl.job.admin.core.trigger.TriggerTypeEnum;
 import com.xxl.job.admin.core.util.I18nUtil;
+import com.xxl.job.admin.dao.XxlJobGroupDao;
 import com.xxl.job.admin.dao.XxlJobInfoDao;
 import com.xxl.job.admin.dao.XxlJobLogDao;
 import com.xxl.job.admin.dao.XxlJobRegistryDao;
@@ -16,6 +18,8 @@ import com.xxl.job.core.handler.IJobHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.text.MessageFormat;
@@ -35,6 +39,8 @@ public class AdminBizImpl implements AdminBiz {
     private XxlJobInfoDao xxlJobInfoDao;
     @Resource
     private XxlJobRegistryDao xxlJobRegistryDao;
+    @Resource
+    private XxlJobGroupDao xxlJobGroupDao;
 
 
     @Override
@@ -132,8 +138,40 @@ public class AdminBizImpl implements AdminBiz {
 
     @Override
     public ReturnT<String> registryRemove(RegistryParam registryParam) {
-        xxlJobRegistryDao.registryDelete(registryParam.getRegistGroup(), registryParam.getRegistryKey(), registryParam.getRegistryValue());
+        int ret = xxlJobRegistryDao.registryDelete(registryParam.getRegistGroup(), registryParam.getRegistryKey(), registryParam.getRegistryValue());
+        if (ret == 1) {
+            List<XxlJobGroup> autoRegisterGroups = xxlJobGroupDao.findAutoRegisterGroupByAppName(registryParam.getRegistryKey());
+            removeRegisterFromGroups(autoRegisterGroups, registryParam.getRegistryValue());
+        }
         return ReturnT.SUCCESS;
+    }
+
+    private void removeRegisterFromGroups(List<XxlJobGroup> groups, String address) {
+        if (StringUtils.isEmpty(address)) {
+            return;
+        }
+        if (CollectionUtils.isEmpty(groups)) {
+            return;
+        }
+
+        for (XxlJobGroup group : groups) {
+            List<String> addressList = group.getRegistryList();
+            if (addressList == null) {
+                continue;
+            }
+            if (!addressList.contains(address)) {
+                continue;
+            }
+
+            addressList.remove(address);
+            String newAddressListStr = StringUtils.collectionToCommaDelimitedString(addressList);
+            String oldAddressListStr = group.getAddressList();
+            int update = xxlJobGroupDao.updateAddressListById(group.getId(), newAddressListStr);
+            if (logger.isDebugEnabled()) {
+                logger.debug("update group name [{}] title [{}] old address list [{}] new address list [{}] update result [{}]",
+                        group.getAppName(), group.getTitle(), oldAddressListStr, newAddressListStr, update);
+            }
+        }
     }
 
 }
