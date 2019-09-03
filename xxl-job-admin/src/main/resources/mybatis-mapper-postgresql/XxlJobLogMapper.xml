@@ -176,14 +176,14 @@
 
     <select id="triggerCountByDay" resultType="java.util.Map" >
 		SELECT
-			to_char(trigger_time,'yyyy-mm-dd') triggerDay,
-			COUNT(handle_code) triggerDayCount,
-			SUM(CASE WHEN (trigger_code in (0, 200) and handle_code = 0) then 1 else 0 end) as triggerDayCountRunning,
-			SUM(CASE WHEN handle_code = 200 then 1 else 0 end) as triggerDayCountSuc
+			to_char(trigger_time,'yyyy-mm-dd') "triggerDay",
+			COUNT(handle_code) "triggerDayCount",
+			SUM(CASE WHEN (trigger_code in (0, 200) and handle_code = 0) then 1 else 0 end) as "triggerDayCountRunning",
+			SUM(CASE WHEN handle_code = 200 then 1 else 0 end) as "triggerDayCountSuc"
 		FROM xxl_job_log
 		WHERE trigger_time BETWEEN #{from} and #{to}
-		GROUP BY triggerDay
-		ORDER BY triggerDay
+		GROUP BY "triggerDay"
+		ORDER BY "triggerDay"
     </select>
 
 	<delete id="clearLog" >
