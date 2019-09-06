@@ -14,7 +14,8 @@ import java.util.Map;
  */
 @Mapper
 public interface XxlJobLogDao {
-	
+
+	// exist jobId not use jobGroup, not exist use jobGroup
 	public List<XxlJobLog> pageList(@Param("offset") int offset,
 									@Param("pagesize") int pagesize,
 									@Param("jobGroup") int jobGroup,
@@ -30,9 +31,9 @@ public interface XxlJobLogDao {
 							 @Param("triggerTimeEnd") Date triggerTimeEnd,
 							 @Param("logStatus") int logStatus);
 	
-	public XxlJobLog load(@Param("id") int id);
+	public XxlJobLog load(@Param("id") long id);
 
-	public int save(XxlJobLog xxlJobLog);
+	public long save(XxlJobLog xxlJobLog);
 
 	public int updateTriggerInfo(XxlJobLog xxlJobLog);
 
@@ -50,9 +51,9 @@ public interface XxlJobLogDao {
 						@Param("clearBeforeTime") Date clearBeforeTime,
 						@Param("clearBeforeNum") int clearBeforeNum);
 
-	public List<Integer> findFailJobLogIds(@Param("pagesize") int pagesize);
+	public List<Long> findFailJobLogIds(@Param("pagesize") int pagesize);
 
-	public int updateAlarmStatus(@Param("logId") int logId,
+	public int updateAlarmStatus(@Param("logId") long logId,
 								 @Param("oldAlarmStatus") int oldAlarmStatus,
 								 @Param("newAlarmStatus") int newAlarmStatus);
 

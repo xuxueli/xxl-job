@@ -3,15 +3,17 @@ package com.xxl.job.admin.dao;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "classpath*:spring/applicationcontext-*.xml")
+@RunWith(SpringRunner.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class XxlJobInfoDaoTest {
 	
 	@Resource
@@ -19,8 +21,8 @@ public class XxlJobInfoDaoTest {
 	
 	@Test
 	public void pageList(){
-		List<XxlJobInfo> list = xxlJobInfoDao.pageList(0, 20, 0, null, null);
-		int list_count = xxlJobInfoDao.pageListCount(0, 20, 0, null, null);
+		List<XxlJobInfo> list = xxlJobInfoDao.pageList(0, 20, 0, -1, null, null, null);
+		int list_count = xxlJobInfoDao.pageListCount(0, 20, 0, -1, null, null, null);
 		
 		System.out.println(list);
 		System.out.println(list_count);

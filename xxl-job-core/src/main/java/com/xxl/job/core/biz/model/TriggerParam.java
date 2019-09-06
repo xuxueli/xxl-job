@@ -15,7 +15,7 @@ public class TriggerParam implements Serializable{
     private String executorBlockStrategy;
     private int executorTimeout;
 
-    private int logId;
+    private long logId;
     private long logDateTim;
 
     private String glueType;
@@ -66,11 +66,11 @@ public class TriggerParam implements Serializable{
         this.executorTimeout = executorTimeout;
     }
 
-    public int getLogId() {
+    public long getLogId() {
         return logId;
     }
 
-    public void setLogId(int logId) {
+    public void setLogId(long logId) {
         this.logId = logId;
     }
 

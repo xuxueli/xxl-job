@@ -32,7 +32,7 @@ public abstract class IJobHandler {
 	 * init handler, invoked when JobThread init
 	 */
 	public void init() {
-		// TODO
+		// do something
 	}
 
 
@@ -40,7 +40,7 @@ public abstract class IJobHandler {
 	 * destroy handler, invoked when JobThread destroy
 	 */
 	public void destroy() {
-		// TODO
+		// do something
 	}
 
 

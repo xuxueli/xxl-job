@@ -30,7 +30,7 @@ public class JobThread extends Thread{
 	private int jobId;
 	private IJobHandler handler;
 	private LinkedBlockingQueue<TriggerParam> triggerQueue;
-	private Set<Integer> triggerLogIdSet;		// avoid repeat trigger for the same TRIGGER_LOG_ID
+	private Set<Long> triggerLogIdSet;		// avoid repeat trigger for the same TRIGGER_LOG_ID
 
 	private volatile boolean toStop = false;
 	private String stopReason;
@@ -43,7 +43,7 @@ public class JobThread extends Thread{
 		this.jobId = jobId;
 		this.handler = handler;
 		this.triggerQueue = new LinkedBlockingQueue<TriggerParam>();
-		this.triggerLogIdSet = Collections.synchronizedSet(new HashSet<Integer>());
+		this.triggerLogIdSet = Collections.synchronizedSet(new HashSet<Long>());
 	}
 	public IJobHandler getHandler() {
 		return handler;
@@ -154,6 +154,12 @@ public class JobThread extends Thread{
 
 					if (executeResult == null) {
 						executeResult = IJobHandler.FAIL;
+					} else {
+						executeResult.setMsg(
+								(executeResult!=null&&executeResult.getMsg()!=null&&executeResult.getMsg().length()>50000)
+										?executeResult.getMsg().substring(0, 50000).concat("...")
+										:executeResult.getMsg());
+						executeResult.setContent(null);	// limit obj size
 					}
 					XxlJobLogger.log("<br>----------- xxl-job job execute end(finish) -----------<br>----------- ReturnT:" + executeResult);
 

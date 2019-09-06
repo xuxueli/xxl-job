@@ -73,6 +73,12 @@
                                     ${I18n.system_save}
 								</a>
 							</li>
+                            <li>
+                                <a href="javascript:window.close();" >
+                                    <i class="fa fa-fw fa-close" ></i>
+                                ${I18n.system_close}
+                                </a>
+                            </li>
                         </ul>
                     </div>
 

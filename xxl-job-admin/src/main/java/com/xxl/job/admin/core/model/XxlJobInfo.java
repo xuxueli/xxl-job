@@ -9,10 +9,10 @@ import java.util.Date;
  */
 public class XxlJobInfo {
 	
-	private int id;				// 主键ID	    (JobKey.name)
+	private int id;				// 主键ID
 	
-	private int jobGroup;		// 执行器主键ID	(JobKey.group)
-	private String jobCron;		// 任务执行CRON表达式 【base on quartz】
+	private int jobGroup;		// 执行器主键ID
+	private String jobCron;		// 任务执行CRON表达式
 	private String jobDesc;
 	
 	private Date addTime;
@@ -34,9 +34,10 @@ public class XxlJobInfo {
 	private Date glueUpdatetime;	// GLUE更新时间
 
 	private String childJobId;		// 子任务ID，多个逗号分隔
-	
-	// copy from quartz
-	private String jobStatus;		// 任务状态 【base on quartz】
+
+	private int triggerStatus;		// 调度状态：0-停止，1-运行
+	private long triggerLastTime;	// 上次调度时间
+	private long triggerNextTime;	// 下次调度时间
 
 
 	public int getId() {
@@ -191,12 +192,27 @@ public class XxlJobInfo {
 		this.childJobId = childJobId;
 	}
 
-	public String getJobStatus() {
-		return jobStatus;
+	public int getTriggerStatus() {
+		return triggerStatus;
 	}
 
-	public void setJobStatus(String jobStatus) {
-		this.jobStatus = jobStatus;
+	public void setTriggerStatus(int triggerStatus) {
+		this.triggerStatus = triggerStatus;
 	}
 
+	public long getTriggerLastTime() {
+		return triggerLastTime;
+	}
+
+	public void setTriggerLastTime(long triggerLastTime) {
+		this.triggerLastTime = triggerLastTime;
+	}
+
+	public long getTriggerNextTime() {
+		return triggerNextTime;
+	}
+
+	public void setTriggerNextTime(long triggerNextTime) {
+		this.triggerNextTime = triggerNextTime;
+	}
 }

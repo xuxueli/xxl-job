@@ -3,9 +3,10 @@ package com.xxl.job.core.util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 /**
  * file tool
@@ -14,6 +15,7 @@ import java.util.List;
  */
 public class FileUtil {
     private static Logger logger = LoggerFactory.getLogger(FileUtil.class);
+
 
     /**
      * delete recursively
@@ -36,6 +38,7 @@ public class FileUtil {
         return false;
     }
 
+
     public static void deleteFile(String fileName) {
         // file
         File file = new File(fileName);
@@ -44,7 +47,59 @@ public class FileUtil {
         }
     }
 
-    public static void appendFileLine(String fileName, String content) {
+
+    public static void writeFileContent(File file, byte[] data) {
+
+        // file
+        if (!file.exists()) {
+            file.getParentFile().mkdirs();
+        }
+
+        // append file content
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(file);
+            fos.write(data);
+            fos.flush();
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        } finally {
+            if (fos != null) {
+                try {
+                    fos.close();
+                } catch (IOException e) {
+                    logger.error(e.getMessage(), e);
+                }
+            }
+        }
+
+    }
+
+    public static byte[] readFileContent(File file) {
+        Long filelength = file.length();
+        byte[] filecontent = new byte[filelength.intValue()];
+
+        FileInputStream in = null;
+        try {
+            in = new FileInputStream(file);
+            in.read(filecontent);
+            in.close();
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    logger.error(e.getMessage(), e);
+                }
+            }
+        }
+        return filecontent;
+    }
+
+
+    /*public static void appendFileLine(String fileName, String content) {
 
         // file
         File file = new File(fileName);
@@ -119,6 +174,6 @@ public class FileUtil {
         }
 
         return result;
-    }
+    }*/
 
 }

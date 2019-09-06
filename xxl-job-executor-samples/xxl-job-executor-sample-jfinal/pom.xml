@@ -3,9 +3,9 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>xxl-job-executor-samples</artifactId>
         <groupId>com.xuxueli</groupId>
-        <version>2.0.2-SNAPSHOT</version>
+        <artifactId>xxl-job-executor-samples</artifactId>
+        <version>2.1.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>xxl-job-executor-sample-jfinal</artifactId>

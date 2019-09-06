@@ -54,11 +54,11 @@ public class ExecutorBizImpl implements ExecutorBiz {
             return ReturnT.SUCCESS;
         }
 
-        return new ReturnT<String>(ReturnT.SUCCESS_CODE, "job thread aleady killed.");
+        return new ReturnT<String>(ReturnT.SUCCESS_CODE, "job thread already killed.");
     }
 
     @Override
-    public ReturnT<LogResult> log(long logDateTim, int logId, int fromLineNum) {
+    public ReturnT<LogResult> log(long logDateTim, long logId, int fromLineNum) {
         // log filename: logPath/yyyy-MM-dd/9999.log
         String logFileName = XxlJobFileAppender.makeLogFileName(new Date(logDateTim), logId);
 

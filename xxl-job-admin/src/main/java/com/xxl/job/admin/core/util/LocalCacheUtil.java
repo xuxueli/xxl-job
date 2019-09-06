@@ -1,7 +1,5 @@
 package com.xxl.job.admin.core.util;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -67,7 +65,7 @@ public class LocalCacheUtil {
         cleanTimeutCache();
 
         // set new cache
-        if (StringUtils.isBlank(key)) {
+        if (key==null || key.trim().length()==0) {
             return false;
         }
         if (val == null) {
@@ -89,7 +87,7 @@ public class LocalCacheUtil {
      * @return
      */
     public static boolean remove(String key){
-        if (StringUtils.isBlank(key)) {
+        if (key==null || key.trim().length()==0) {
             return false;
         }
         cacheRepository.remove(key);
@@ -103,7 +101,7 @@ public class LocalCacheUtil {
      * @return
      */
     public static Object get(String key){
-        if (StringUtils.isBlank(key)) {
+        if (key==null || key.trim().length()==0) {
             return null;
         }
         LocalCacheData localCacheData = cacheRepository.get(key);

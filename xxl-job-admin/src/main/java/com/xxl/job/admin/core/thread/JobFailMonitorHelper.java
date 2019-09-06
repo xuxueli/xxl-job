@@ -7,14 +7,11 @@ import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.admin.core.trigger.TriggerTypeEnum;
 import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.core.biz.model.ReturnT;
-import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.mail.javamail.MimeMessageHelper;
 
-import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import java.io.UnsupportedEncodingException;
 import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -49,9 +46,9 @@ public class JobFailMonitorHelper {
 				while (!toStop) {
 					try {
 
-						List<Integer> failLogIds = XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().findFailJobLogIds(1000);
-						if (CollectionUtils.isNotEmpty(failLogIds)) {
-							for (int failLogId: failLogIds) {
+						List<Long> failLogIds = XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().findFailJobLogIds(1000);
+						if (failLogIds!=null && !failLogIds.isEmpty()) {
+							for (long failLogId: failLogIds) {
 
 								// lock log
 								int lockRet = XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().updateAlarmStatus(failLogId, 0, -1);
@@ -90,13 +87,18 @@ public class JobFailMonitorHelper {
 
 						TimeUnit.SECONDS.sleep(10);
 					} catch (Exception e) {
-						logger.error("job monitor error:{}", e);
+						if (!toStop) {
+							logger.error(">>>>>>>>>>> xxl-job, job fail monitor thread error:{}", e);
+						}
 					}
 				}
+
+				logger.info(">>>>>>>>>>> xxl-job, job fail monitor thread stop");
 
 			}
 		});
 		monitorThread.setDaemon(true);
+		monitorThread.setName("xxl-job, admin JobFailMonitorHelper");
 		monitorThread.start();
 	}
 
@@ -148,6 +150,7 @@ public class JobFailMonitorHelper {
 		// send monitor email
 		if (info!=null && info.getAlarmEmail()!=null && info.getAlarmEmail().trim().length()>0) {
 
+			// alarmContent
 			String alarmContent = "Alarm Job LogId=" + jobLog.getId();
 			if (jobLog.getTriggerCode() != ReturnT.SUCCESS_CODE) {
 				alarmContent += "<br>TriggerMsg=<br>" + jobLog.getTriggerMsg();
@@ -156,18 +159,18 @@ public class JobFailMonitorHelper {
 				alarmContent += "<br>HandleCode=" + jobLog.getHandleMsg();
 			}
 
+			// email info
+			XxlJobGroup group = XxlJobAdminConfig.getAdminConfig().getXxlJobGroupDao().load(Integer.valueOf(info.getJobGroup()));
+			String personal = I18nUtil.getString("admin_name_full");
+			String title = I18nUtil.getString("jobconf_monitor");
+			String content = MessageFormat.format(mailBodyTemplate,
+					group!=null?group.getTitle():"null",
+					info.getId(),
+					info.getJobDesc(),
+					alarmContent);
+
 			Set<String> emailSet = new HashSet<String>(Arrays.asList(info.getAlarmEmail().split(",")));
 			for (String email: emailSet) {
-				XxlJobGroup group = XxlJobAdminConfig.getAdminConfig().getXxlJobGroupDao().load(Integer.valueOf(info.getJobGroup()));
-
-				String personal = I18nUtil.getString("admin_name_full");
-				String title = I18nUtil.getString("jobconf_monitor");
-				String content = MessageFormat.format(mailBodyTemplate,
-						group!=null?group.getTitle():"null",
-						info.getId(),
-						info.getJobDesc(),
-						alarmContent);
-
 
 				// make mail
 				try {
@@ -181,7 +184,7 @@ public class JobFailMonitorHelper {
 
 					XxlJobAdminConfig.getAdminConfig().getMailSender().send(mimeMessage);
 				} catch (Exception e) {
-					logger.error(">>>>>>>>>>> job monitor alarm email send error, JobLogId:{}", jobLog.getId(), e);
+					logger.error(">>>>>>>>>>> xxl-job, job fail alarm email send error, JobLogId:{}", jobLog.getId(), e);
 
 					alarmResult = false;
 				}
@@ -189,7 +192,7 @@ public class JobFailMonitorHelper {
 			}
 		}
 
-		// TODO, custom alarm strategy, such as sms
+		// do something, custom alarm strategy, such as sms
 
 
 		return alarmResult;

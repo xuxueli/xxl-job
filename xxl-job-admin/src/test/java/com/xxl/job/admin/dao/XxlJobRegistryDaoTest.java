@@ -1,17 +1,17 @@
 package com.xxl.job.admin.dao;
 
 import com.xxl.job.admin.core.model.XxlJobRegistry;
-import com.xxl.job.admin.dao.XxlJobRegistryDao;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
+import java.util.Arrays;
 import java.util.List;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "classpath*:spring/applicationcontext-*.xml")
+@RunWith(SpringRunner.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class XxlJobRegistryDaoTest {
 
     @Resource
@@ -26,7 +26,7 @@ public class XxlJobRegistryDaoTest {
 
         List<XxlJobRegistry> list = xxlJobRegistryDao.findAll(1);
 
-        int ret2 = xxlJobRegistryDao.removeDead(1);
+        int ret2 = xxlJobRegistryDao.removeDead(Arrays.asList(1));
     }
 
 }

@@ -13,6 +13,7 @@ import com.xxl.rpc.registry.ServiceRegistry;
 import com.xxl.rpc.remoting.invoker.XxlRpcInvokerFactory;
 import com.xxl.rpc.remoting.invoker.call.CallType;
 import com.xxl.rpc.remoting.invoker.reference.XxlRpcReferenceBean;
+import com.xxl.rpc.remoting.invoker.route.LoadBalance;
 import com.xxl.rpc.remoting.net.NetEnum;
 import com.xxl.rpc.remoting.provider.XxlRpcProviderFactory;
 import com.xxl.rpc.serialize.Serializer;
@@ -23,6 +24,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * Created by xuxueli on 2016/3/2 21:14.
@@ -68,7 +70,7 @@ public class XxlJobExecutor  {
         // init logpath
         XxlJobFileAppender.initLogPath(logPath);
 
-        // init admin-client
+        // init invoker, admin-client
         initAdminBizList(adminAddresses, accessToken);
 
 
@@ -91,6 +93,7 @@ public class XxlJobExecutor  {
             }
             jobThreadRepository.clear();
         }
+        jobHandlerRepository.clear();
 
 
         // destory JobLogFileCleanThread
@@ -101,20 +104,36 @@ public class XxlJobExecutor  {
 
         // destory executor-server
         stopRpcProvider();
+
+        // destory invoker
+        stopInvokerFactory();
     }
 
 
     // ---------------------- admin-client (rpc invoker) ----------------------
     private static List<AdminBiz> adminBizList;
+    private static Serializer serializer;
     private void initAdminBizList(String adminAddresses, String accessToken) throws Exception {
+        serializer = Serializer.SerializeEnum.HESSIAN.getSerializer();
         if (adminAddresses!=null && adminAddresses.trim().length()>0) {
             for (String address: adminAddresses.trim().split(",")) {
                 if (address!=null && address.trim().length()>0) {
 
                     String addressUrl = address.concat(AdminBiz.MAPPING);
 
-                    AdminBiz adminBiz = (AdminBiz) new XxlRpcReferenceBean(NetEnum.JETTY, Serializer.SerializeEnum.HESSIAN.getSerializer(), CallType.SYNC,
-                            AdminBiz.class, null, 10000, addressUrl, accessToken, null).getObject();
+                    AdminBiz adminBiz = (AdminBiz) new XxlRpcReferenceBean(
+                            NetEnum.NETTY_HTTP,
+                            serializer,
+                            CallType.SYNC,
+                            LoadBalance.ROUND,
+                            AdminBiz.class,
+                            null,
+                            3000,
+                            addressUrl,
+                            accessToken,
+                            null,
+                            null
+                    ).getObject();
 
                     if (adminBizList == null) {
                         adminBizList = new ArrayList<AdminBiz>();
@@ -124,18 +143,26 @@ public class XxlJobExecutor  {
             }
         }
     }
+    private void stopInvokerFactory(){
+        // stop invoker factory
+        try {
+            XxlRpcInvokerFactory.getInstance().stop();
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
+    }
     public static List<AdminBiz> getAdminBizList(){
         return adminBizList;
+    }
+    public static Serializer getSerializer() {
+        return serializer;
     }
 
 
     // ---------------------- executor-server (rpc provider) ----------------------
-    private XxlRpcInvokerFactory xxlRpcInvokerFactory = null;
     private XxlRpcProviderFactory xxlRpcProviderFactory = null;
 
     private void initRpcProvider(String ip, int port, String appName, String accessToken) throws Exception {
-        // init invoker factory
-        xxlRpcInvokerFactory = new XxlRpcInvokerFactory();
 
         // init, provider factory
         String address = IpUtil.getIpPort(ip, port);
@@ -144,13 +171,13 @@ public class XxlJobExecutor  {
         serviceRegistryParam.put("address", address);
 
         xxlRpcProviderFactory = new XxlRpcProviderFactory();
-        xxlRpcProviderFactory.initConfig(NetEnum.JETTY, Serializer.SerializeEnum.HESSIAN.getSerializer(), ip, port, accessToken, ExecutorServiceRegistry.class, serviceRegistryParam);
+        xxlRpcProviderFactory.initConfig(NetEnum.NETTY_HTTP, Serializer.SerializeEnum.HESSIAN.getSerializer(), ip, port, accessToken, ExecutorServiceRegistry.class, serviceRegistryParam);
 
         // add services
         xxlRpcProviderFactory.addService(ExecutorBiz.class.getName(), null, new ExecutorBizImpl());
 
         // start
-       xxlRpcProviderFactory.start();
+        xxlRpcProviderFactory.start();
 
     }
 
@@ -168,12 +195,16 @@ public class XxlJobExecutor  {
         }
 
         @Override
-        public boolean registry(String key, String value) {
+        public boolean registry(Set<String> keys, String value) {
             return false;
         }
         @Override
-        public boolean remove(String key, String value) {
+        public boolean remove(Set<String> keys, String value) {
             return false;
+        }
+        @Override
+        public Map<String, TreeSet<String>> discovery(Set<String> keys) {
+            return null;
         }
         @Override
         public TreeSet<String> discovery(String key) {
@@ -183,12 +214,6 @@ public class XxlJobExecutor  {
     }
 
     private void stopRpcProvider() {
-        // stop invoker factory
-        try {
-            xxlRpcInvokerFactory.stop();
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-        }
         // stop provider factory
         try {
             xxlRpcProviderFactory.stop();
@@ -199,7 +224,7 @@ public class XxlJobExecutor  {
 
 
     // ---------------------- job handler repository ----------------------
-    private static ConcurrentHashMap<String, IJobHandler> jobHandlerRepository = new ConcurrentHashMap<String, IJobHandler>();
+    private static ConcurrentMap<String, IJobHandler> jobHandlerRepository = new ConcurrentHashMap<String, IJobHandler>();
     public static IJobHandler registJobHandler(String name, IJobHandler jobHandler){
         logger.info(">>>>>>>>>>> xxl-job register jobhandler success, name:{}, jobHandler:{}", name, jobHandler);
         return jobHandlerRepository.put(name, jobHandler);
@@ -210,7 +235,7 @@ public class XxlJobExecutor  {
 
 
     // ---------------------- job thread repository ----------------------
-    private static ConcurrentHashMap<Integer, JobThread> jobThreadRepository = new ConcurrentHashMap<Integer, JobThread>();
+    private static ConcurrentMap<Integer, JobThread> jobThreadRepository = new ConcurrentHashMap<Integer, JobThread>();
     public static JobThread registJobThread(int jobId, IJobHandler handler, String removeOldReason){
         JobThread newJobThread = new JobThread(jobId, handler);
         newJobThread.start();
