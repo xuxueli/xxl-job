@@ -67,6 +67,13 @@
 			<version>${project.parent.version}</version>
 		</dependency>
 
+		<!-- 集成flyway -->
+		<dependency>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-core</artifactId>
+			<version>5.2.4</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
