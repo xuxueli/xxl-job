@@ -86,6 +86,9 @@ public class XxlJobExecutor  {
         initRpcProvider(ip, port, appName, accessToken);
     }
     public void destroy(){
+        // destory executor-server
+        stopRpcProvider();
+
         // destory jobThreadRepository
         if (jobThreadRepository.size() > 0) {
             for (Map.Entry<Integer, JobThread> item: jobThreadRepository.entrySet()) {
@@ -101,9 +104,6 @@ public class XxlJobExecutor  {
 
         // destory TriggerCallbackThread
         TriggerCallbackThread.getInstance().toStop();
-
-        // destory executor-server
-        stopRpcProvider();
 
         // destory invoker
         stopInvokerFactory();
