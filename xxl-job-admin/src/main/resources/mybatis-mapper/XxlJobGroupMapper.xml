@@ -27,13 +27,6 @@
 		ORDER BY t.order ASC
 	</select>
 
-	<select id="findAutoRegisterGroupByAppName" resultMap="XxlJobGroup">
-		SELECT <include refid="Base_Column_List" />
-		FROM xxl_job_group AS t
-		WHERE `app_name` = #{appName}
-		AND `address_type` = 0
-	</select>
-
 	<select id="findByAddressType" parameterType="java.lang.Integer" resultMap="XxlJobGroup">
 		SELECT <include refid="Base_Column_List" />
 		FROM xxl_job_group AS t
@@ -53,12 +46,6 @@
 			`order` = #{order},
 			`address_type` = #{addressType},
 			`address_list` = #{addressList}
-		WHERE id = #{id}
-	</update>
-
-	<update id="updateAddressListById">
-		UPDATE xxl_job_group
-		SET `address_list` = #{addressList}
 		WHERE id = #{id}
 	</update>
 

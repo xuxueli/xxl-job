@@ -1,6 +1,5 @@
 package com.xxl.job.admin.service.impl;
 
-import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.admin.core.thread.JobTriggerPoolHelper;
@@ -18,8 +17,6 @@ import com.xxl.job.core.handler.IJobHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.text.MessageFormat;
@@ -132,6 +129,9 @@ public class AdminBizImpl implements AdminBiz {
         int ret = xxlJobRegistryDao.registryUpdate(registryParam.getRegistGroup(), registryParam.getRegistryKey(), registryParam.getRegistryValue());
         if (ret < 1) {
             xxlJobRegistryDao.registrySave(registryParam.getRegistGroup(), registryParam.getRegistryKey(), registryParam.getRegistryValue());
+
+            // fresh
+            freshGroupRegistryInfo(registryParam);
         }
         return ReturnT.SUCCESS;
     }
@@ -139,39 +139,16 @@ public class AdminBizImpl implements AdminBiz {
     @Override
     public ReturnT<String> registryRemove(RegistryParam registryParam) {
         int ret = xxlJobRegistryDao.registryDelete(registryParam.getRegistGroup(), registryParam.getRegistryKey(), registryParam.getRegistryValue());
-        if (ret == 1) {
-            List<XxlJobGroup> autoRegisterGroups = xxlJobGroupDao.findAutoRegisterGroupByAppName(registryParam.getRegistryKey());
-            removeRegisterFromGroups(autoRegisterGroups, registryParam.getRegistryValue());
+        if (ret > 0) {
+
+            // fresh
+            freshGroupRegistryInfo(registryParam);
         }
         return ReturnT.SUCCESS;
     }
 
-    private void removeRegisterFromGroups(List<XxlJobGroup> groups, String address) {
-        if (StringUtils.isEmpty(address)) {
-            return;
-        }
-        if (CollectionUtils.isEmpty(groups)) {
-            return;
-        }
-
-        for (XxlJobGroup group : groups) {
-            List<String> addressList = group.getRegistryList();
-            if (addressList == null) {
-                continue;
-            }
-            if (!addressList.contains(address)) {
-                continue;
-            }
-
-            addressList.remove(address);
-            String newAddressListStr = StringUtils.collectionToCommaDelimitedString(addressList);
-            String oldAddressListStr = group.getAddressList();
-            int update = xxlJobGroupDao.updateAddressListById(group.getId(), newAddressListStr);
-            if (logger.isDebugEnabled()) {
-                logger.debug("update group name [{}] title [{}] old address list [{}] new address list [{}] update result [{}]",
-                        group.getAppName(), group.getTitle(), oldAddressListStr, newAddressListStr, update);
-            }
-        }
+    private void freshGroupRegistryInfo(RegistryParam registryParam){
+        // Under consideration, prevent affecting core tables
     }
 
 }
