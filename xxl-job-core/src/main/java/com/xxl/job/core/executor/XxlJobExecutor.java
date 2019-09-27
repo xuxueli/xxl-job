@@ -86,10 +86,14 @@ public class XxlJobExecutor  {
         initRpcProvider(ip, port, appName, accessToken);
     }
     public void destroy(){
+
         List<JobThread> runningThreads = new ArrayList<>(jobThreadRepository.values());
         if (logger.isInfoEnabled()) {
             logger.info("running threads {}", runningThreads);
         }
+
+        // destory executor-server
+        stopRpcProvider();
 
         // destory jobThreadRepository
         if (jobThreadRepository.size() > 0) {
@@ -115,9 +119,6 @@ public class XxlJobExecutor  {
 
         // destory TriggerCallbackThread
         TriggerCallbackThread.getInstance().toStop();
-
-        // destory executor-server
-        stopRpcProvider();
 
         // destory invoker
         stopInvokerFactory();
