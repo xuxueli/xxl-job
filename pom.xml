@@ -45,9 +45,45 @@
 	</properties>
 
 	<build>
-		<plugins>
-		</plugins>
-	</build>
+        <plugins>
+            <plugin>
+                <groupId>io.github.phillipuniverse</groupId>
+                <artifactId>githook-maven-plugin</artifactId>
+                <version>1.0.4</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>install</goal>
+                        </goals>
+                        <configuration>
+                            <hooks>
+                                <commit-msg>
+									# regex to validate in commit msg
+									commit_regex='(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test)(\([a-z]{1,10}\))?: .{1,100}'
+
+									if ! grep -iqE "$commit_regex" "$1"; then
+										echo "\033[31m Aborting commit, (ㄒoㄒ)!"
+										echo "\033[31m Your commit message should follow the pattern below :"
+										echo ""
+										echo "\033[33m      type(scope?): subject"
+										echo ""
+										echo "\033[97m Available type is: build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test"
+										echo ""
+										echo "\033[97m For Example:"
+										echo ""
+										echo "\033[92m      fix: email can be accepted without '@'"
+										echo ""
+										echo "\033[36m Check detail explanation at: https://github.com/conventional-changelog/commitlint#what-is-commitlint"
+										exit 1
+									fi
+                                </commit-msg>
+                            </hooks>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 
 
 	<licenses>
