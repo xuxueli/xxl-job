@@ -54,7 +54,7 @@ public class ExecutorBizImpl implements ExecutorBiz {
             return ReturnT.SUCCESS;
         }
 
-        return new ReturnT<String>(ReturnT.SUCCESS_CODE, "job thread aleady killed.");
+        return new ReturnT<String>(ReturnT.SUCCESS_CODE, "job thread already killed.");
     }
 
     @Override

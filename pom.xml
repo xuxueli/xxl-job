@@ -27,16 +27,16 @@
 		<xxl-rpc.version>1.4.1</xxl-rpc.version>
 
 		<spring.version>4.3.24.RELEASE</spring.version>
-		<spring-boot.version>1.5.21.RELEASE</spring-boot.version>
-		<mybatis-spring-boot-starter.version>1.3.4</mybatis-spring-boot-starter.version>
-		<mysql-connector-java.version>5.1.47</mysql-connector-java.version>
+		<spring-boot.version>1.5.22.RELEASE</spring-boot.version>
+		<mybatis-spring-boot-starter.version>1.3.5</mybatis-spring-boot-starter.version>
+		<mysql-connector-java.version>5.1.48</mysql-connector-java.version>
 
-		<slf4j-api.version>1.7.26</slf4j-api.version>
+		<slf4j-api.version>1.7.28</slf4j-api.version>
 		<junit.version>4.12</junit.version>
 
 		<commons-exec.version>1.3</commons-exec.version>
 
-		<groovy.version>2.5.7</groovy.version>
+		<groovy.version>2.5.8</groovy.version>
 
 		<maven-source-plugin.version>3.1.0</maven-source-plugin.version>
 		<maven-javadoc-plugin.version>3.1.1</maven-javadoc-plugin.version>
