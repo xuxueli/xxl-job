@@ -401,7 +401,7 @@ XXL-JOB是一个轻量级分布式任务调度平台，其核心设计目标是�
 #### 步骤一：调度中心配置：
 调度中心配置文件地址：
 
-    /xxl-job/xxl-job-admin/src/main/resources/xxl-job-admin.properties
+    /xxl-job/xxl-job-admin/src/main/resources/application.properties
 
 
 调度中心配置内容说明：
