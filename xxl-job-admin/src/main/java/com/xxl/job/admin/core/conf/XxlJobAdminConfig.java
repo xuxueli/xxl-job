@@ -18,16 +18,15 @@ import javax.sql.DataSource;
  *
  * @author xuxueli 2017-04-28
  */
-@Component
-public class XxlJobAdminConfig implements InitializingBean{
+
+public class XxlJobAdminConfig {
     private static XxlJobAdminConfig adminConfig = null;
     public static XxlJobAdminConfig getAdminConfig() {
         return adminConfig;
     }
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        adminConfig = this;
+    public static void setAdminConfig(XxlJobAdminConfig config) {
+        XxlJobAdminConfig.adminConfig = config;
     }
 
     // conf
