@@ -33,14 +33,13 @@ import java.util.concurrent.ConcurrentMap;
 /**
  * @author xuxueli 2018-10-28 00:18:17
  */
-@Component
-@DependsOn("xxlJobAdminConfig")
-public class XxlJobScheduler implements InitializingBean, DisposableBean {
+
+public class XxlJobScheduler  {
     private static final Logger logger = LoggerFactory.getLogger(XxlJobScheduler.class);
 
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
+    
+    public void init() throws Exception {
         // init i18n
         initI18n();
 
@@ -59,7 +58,7 @@ public class XxlJobScheduler implements InitializingBean, DisposableBean {
         logger.info(">>>>>>>>> init xxl-job admin success.");
     }
 
-    @Override
+    
     public void destroy() throws Exception {
 
         // stop-schedule
