@@ -23,7 +23,9 @@
 	    <result column="handle_code" property="handleCode" />
 	    <result column="handle_msg" property="handleMsg" />
 
-		<result column="alarm_status" property="alarmStatus" />
+		<result column="email_alarm_status" property="emailAlarmStatus" />
+		<result column="sms_alarm_status" property="smsAlarmStatus" />
+		<result column="ding_robot_alarm_status" property="dingRobotAlarmStatus" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -41,7 +43,9 @@
 		t.handle_time,
 		t.handle_code,
 		t.handle_msg,
-		t.alarm_status
+		t.email_alarm_status,
+		t.sms_alarm_status,
+		t.ding_robot_alarm_status
 	</sql>
 	
 	<select id="pageList" resultMap="XxlJobLog">
@@ -225,7 +229,7 @@
 			OR
 			(handle_code = 200)
 		)
-		AND `alarm_status` = 0
+		AND (`email_alarm_status` = 0 or `sms_alarm_status` = 0 or `ding_robot_alarm_status` = 0)
 		ORDER BY id ASC
 	</select>
 
@@ -235,7 +239,7 @@
 			`email_alarm_status` = #{emailAlarmStatus},
 			`sms_alarm_status` = #{smsAlarmStatus},
 			`ding_robot_alarm_status` = #{dingRobotAlarmStatus}
-		WHERE `id`= #{logId} AND `alarm_status` = #{oldAlarmStatus}
+		WHERE `id`= #{logId} AND (`email_alarm_status` = #{oldAlarmStatus} or `sms_alarm_status` = #{oldAlarmStatus} or `ding_robot_alarm_status` = #{oldAlarmStatus})
 	</update>
 	
 </mapper>

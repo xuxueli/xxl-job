@@ -32,7 +32,9 @@ public class XxlJobLog {
 	private String handleMsg;
 
 	// alarm info
-	private int alarmStatus;
+	private int emailAlarmStatus;
+	private int smsAlarmStatus;
+	private int dingRobotAlarmStatus;
 
 	public long getId() {
 		return id;
@@ -146,12 +148,27 @@ public class XxlJobLog {
 		this.handleMsg = handleMsg;
 	}
 
-	public int getAlarmStatus() {
-		return alarmStatus;
+	public int getEmailAlarmStatus() {
+		return emailAlarmStatus;
 	}
 
-	public void setAlarmStatus(int alarmStatus) {
-		this.alarmStatus = alarmStatus;
+	public void setEmailAlarmStatus(int emailAlarmStatus) {
+		this.emailAlarmStatus = emailAlarmStatus;
 	}
 
+	public int getSmsAlarmStatus() {
+		return smsAlarmStatus;
+	}
+
+	public void setSmsAlarmStatus(int smsAlarmStatus) {
+		this.smsAlarmStatus = smsAlarmStatus;
+	}
+
+	public int getDingRobotAlarmStatus() {
+		return dingRobotAlarmStatus;
+	}
+
+	public void setDingRobotAlarmStatus(int dingRobotAlarmStatus) {
+		this.dingRobotAlarmStatus = dingRobotAlarmStatus;
+	}
 }

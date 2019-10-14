@@ -15,6 +15,8 @@
 
 	    <result column="author" property="author" />
 	    <result column="alarm_email" property="alarmEmail" />
+		<result column="alarm_phone" property="alarmPhone" />
+		<result column="alarm_ding_robot" property="alarmDingRobot" />
 
 		<result column="executor_route_strategy" property="executorRouteStrategy" />
 		<result column="executor_handler" property="executorHandler" />
@@ -44,6 +46,8 @@
 		t.update_time,
 		t.author,
 		t.alarm_email,
+		t.alarm_phone,
+		t.alarm_ding_robot,
 		t.executor_route_strategy,
 		t.executor_handler,
 		t.executor_param,
@@ -115,6 +119,8 @@
 			update_time,
 			author,
 			alarm_email,
+			alarm_phone,
+			alarm_ding_robot,
             executor_route_strategy,
 			executor_handler,
 			executor_param,
@@ -137,6 +143,8 @@
 			NOW(),
 			#{author},
 			#{alarmEmail},
+			#{alarmPhone},
+			#{alarmDingRobot},
 			#{executorRouteStrategy},
 			#{executorHandler},
 			#{executorParam},
@@ -173,6 +181,8 @@
 			update_time = NOW(),
 			author = #{author},
 			alarm_email = #{alarmEmail},
+			alarm_phone = #{alarmPhone},
+			alarm_ding_robot = #{alarmDingRobot},
 			executor_route_strategy = #{executorRouteStrategy},
 			executor_handler = #{executorHandler},
 			executor_param = #{executorParam},
