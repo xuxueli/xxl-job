@@ -20,6 +20,8 @@ public class XxlJobInfo {
 	
 	private String author;		// 负责人
 	private String alarmEmail;	// 报警邮件
+	private String alarmPhone;	// 报警短信手机号
+	private String alarmDingRobot;	// 报警钉钉机器人
 
 	private String executorRouteStrategy;	// 执行器路由策略
 	private String executorHandler;		    // 执行器，任务Handler名称
@@ -214,5 +216,21 @@ public class XxlJobInfo {
 
 	public void setTriggerNextTime(long triggerNextTime) {
 		this.triggerNextTime = triggerNextTime;
+	}
+
+	public String getAlarmPhone() {
+		return alarmPhone;
+	}
+
+	public void setAlarmPhone(String alarmPhone) {
+		this.alarmPhone = alarmPhone;
+	}
+
+	public String getAlarmDingRobot() {
+		return alarmDingRobot;
+	}
+
+	public void setAlarmDingRobot(String alarmDingRobot) {
+		this.alarmDingRobot = alarmDingRobot;
 	}
 }

@@ -232,7 +232,9 @@
 	<update id="updateAlarmStatus" >
 		UPDATE xxl_job_log
 		SET
-			`alarm_status` = #{newAlarmStatus}
+			`email_alarm_status` = #{emailAlarmStatus},
+			`sms_alarm_status` = #{smsAlarmStatus},
+			`ding_robot_alarm_status` = #{dingRobotAlarmStatus}
 		WHERE `id`= #{logId} AND `alarm_status` = #{oldAlarmStatus}
 	</update>
 	
