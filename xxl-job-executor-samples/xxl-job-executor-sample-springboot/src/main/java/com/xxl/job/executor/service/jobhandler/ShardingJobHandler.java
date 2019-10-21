@@ -5,7 +5,7 @@ import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.handler.annotation.JobHandler;
 import com.xxl.job.core.log.XxlJobLogger;
 import com.xxl.job.core.util.ShardingUtil;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 /**
  * 分片广播任务
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
  * @author xuxueli 2017-07-25 20:56:50
  */
 @JobHandler(value="shardingJobHandler")
-@Service
+@Component
 public class ShardingJobHandler extends IJobHandler {
 
 	@Override
