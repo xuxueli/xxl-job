@@ -428,7 +428,7 @@ exit 0
 <!-- moment -->
 <script src="${request.contextPath}/static/adminlte/bower_components/moment/moment.min.js"></script>
 <#-- cronGen -->
-<script src="${request.contextPath}/static/plugins/cronGen/cronGen.js"></script>
+<script src="${request.contextPath}/static/plugins/cronGen/cronGen<#if I18n.admin_i18n?default('')?length gt 0 >_${I18n.admin_i18n}</#if>.js"></script>
 <script src="${request.contextPath}/static/js/jobinfo.index.1.js"></script>
 </body>
 </html>

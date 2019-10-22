@@ -44,9 +44,9 @@ public class JobInfoController {
 	public String index(HttpServletRequest request, Model model, @RequestParam(required = false, defaultValue = "-1") int jobGroup) {
 
 		// 枚举-字典
-		model.addAttribute("ExecutorRouteStrategyEnum", ExecutorRouteStrategyEnum.values());	// 路由策略-列表
+		model.addAttribute("ExecutorRouteStrategyEnum", ExecutorRouteStrategyEnum.values());	    // 路由策略-列表
 		model.addAttribute("GlueTypeEnum", GlueTypeEnum.values());								// Glue类型-字典
-		model.addAttribute("ExecutorBlockStrategyEnum", ExecutorBlockStrategyEnum.values());	// 阻塞处理策略-字典
+		model.addAttribute("ExecutorBlockStrategyEnum", ExecutorBlockStrategyEnum.values());	    // 阻塞处理策略-字典
 
 		// 执行器列表
 		List<XxlJobGroup> jobGroupList_all =  xxlJobGroupDao.findAll();
