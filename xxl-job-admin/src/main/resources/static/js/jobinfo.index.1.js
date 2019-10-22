@@ -135,6 +135,7 @@ $(function() {
                                     '       <li><a href="javascript:void(0);" class="job_trigger" >'+ I18n.jobinfo_opt_run +'</a></li>\n' +
                                     '       <li><a href="'+ logHref +'">'+ I18n.jobinfo_opt_log +'</a></li>\n' +
                                     '       <li><a href="javascript:void(0);" class="job_registryinfo" >' + I18n.jobinfo_opt_registryinfo + '</a></li>\n' +
+                                    '       <li><a href="javascript:void(0);" class="job_next_time" >' + I18n.jobinfo_opt_next_time + '</a></li>\n' +
                                     '       <li class="divider"></li>\n' +
                                     codeBtn +
                                     start_stop_div +
@@ -311,7 +312,48 @@ $(function() {
             }
         });
 
+    });
 
+    // job_next_time
+    $("#job_list").on('click', '.job_next_time',function() {
+        var id = $(this).parents('ul').attr("_id");
+        var row = tableData['key'+id];
+
+        var jobCron = row.jobCron;
+
+        $.ajax({
+            type : 'POST',
+            url : base_url + "/jobinfo/nextTriggerTime",
+            data : {
+                "cron" : jobCron
+            },
+            dataType : "json",
+            success : function(data){
+            	
+            	if (data.code != 200) {
+                    layer.open({
+                        title: I18n.jobinfo_opt_next_time ,
+                        btn: [ I18n.system_ok ],
+                        content: data.msg
+                    });
+				} else {
+                    var html = '<center>';
+                    if (data.code == 200 && data.content) {
+                        for (var index in data.content) {
+                            html += '<span>' + data.content[index] + '</span><br>';
+                        }
+                    }
+                    html += '</center>';
+
+                    layer.open({
+                        title: I18n.jobinfo_opt_next_time ,
+                        btn: [ I18n.system_ok ],
+                        content: html
+                    });
+				}
+
+            }
+        });
 
     });
 
