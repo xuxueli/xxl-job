@@ -115,7 +115,7 @@ public class DateUtil {
             Date date = getDateFormat(pattern).parse(dateString);
             return date;
         } catch (Exception e) {
-            logger.warn("parse date error, dateString = {}, pattern={}; errorMsg = ", dateString, pattern, e.getMessage());
+            logger.warn("parse date error, dateString = {}, pattern={}; errorMsg = {}", dateString, pattern, e.getMessage());
             return null;
         }
     }
