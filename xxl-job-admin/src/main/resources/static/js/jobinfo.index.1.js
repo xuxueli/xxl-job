@@ -418,7 +418,7 @@ $(function() {
 		$(".remote_panel").show();	// remote
 
         // remove-cronGen
-        $("input[name=jobCron]").show().siblings().remove();
+        $("#addModal .form input[name='jobCron']").show().siblings().remove();
 
 		$("#addModal .form input[name='executorHandler']").removeAttr("readonly");
 	});
@@ -582,7 +582,7 @@ $(function() {
         $("#updateModal .form .form-group").removeClass("has-error");
 
 		// remove-cronGen
-		$("input[name=jobCron]").show().siblings().remove();
+        $("#updateModal .form input[name='jobCron']").show().siblings().remove();
 	});
 
     /**
