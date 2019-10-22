@@ -91,11 +91,12 @@ public class XxlJobServiceImpl implements XxlJobService {
 		}
 
 		// ChildJobId valid
-		if (jobInfo.getChildJobId()!=null && jobInfo.getChildJobId().trim().length()>0) {
-			String[] childJobIds = jobInfo.getChildJobId().split(",");
+        String childJobId = jobInfo.getChildJobId();
+        if (childJobId !=null && childJobId.trim().length()>0) {
+			String[] childJobIds = childJobId.split(",");
 			for (String childJobIdItem: childJobIds) {
 				if (childJobIdItem!=null && childJobIdItem.trim().length()>0 && isNumeric(childJobIdItem)) {
-					XxlJobInfo childJobInfo = xxlJobInfoDao.loadById(Integer.valueOf(childJobIdItem));
+					XxlJobInfo childJobInfo = xxlJobInfoDao.loadById(Integer.parseInt(childJobIdItem));
 					if (childJobInfo==null) {
 						return new ReturnT<String>(ReturnT.FAIL_CODE,
 								MessageFormat.format((I18nUtil.getString("jobinfo_field_childJobId")+"({0})"+I18nUtil.getString("system_not_found")), childJobIdItem));
@@ -106,13 +107,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 				}
 			}
 
-			String temp = "";	// join ,
-			for (String item:childJobIds) {
-				temp += item + ",";
-			}
-			temp = temp.substring(0, temp.length()-1);
-
-			jobInfo.setChildJobId(temp);
+			jobInfo.setChildJobId(childJobId);
 		}
 
 		// add in db
@@ -154,11 +149,12 @@ public class XxlJobServiceImpl implements XxlJobService {
 		}
 
 		// ChildJobId valid
-		if (jobInfo.getChildJobId()!=null && jobInfo.getChildJobId().trim().length()>0) {
-			String[] childJobIds = jobInfo.getChildJobId().split(",");
+        String childJobId = jobInfo.getChildJobId();
+        if (childJobId !=null && childJobId.trim().length()>0) {
+			String[] childJobIds = childJobId.split(",");
 			for (String childJobIdItem: childJobIds) {
 				if (childJobIdItem!=null && childJobIdItem.trim().length()>0 && isNumeric(childJobIdItem)) {
-					XxlJobInfo childJobInfo = xxlJobInfoDao.loadById(Integer.valueOf(childJobIdItem));
+					XxlJobInfo childJobInfo = xxlJobInfoDao.loadById(Integer.parseInt(childJobIdItem));
 					if (childJobInfo==null) {
 						return new ReturnT<String>(ReturnT.FAIL_CODE,
 								MessageFormat.format((I18nUtil.getString("jobinfo_field_childJobId")+"({0})"+I18nUtil.getString("system_not_found")), childJobIdItem));
@@ -169,13 +165,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 				}
 			}
 
-			String temp = "";	// join ,
-			for (String item:childJobIds) {
-				temp += item + ",";
-			}
-			temp = temp.substring(0, temp.length()-1);
-
-			jobInfo.setChildJobId(temp);
+			jobInfo.setChildJobId(childJobId);
 		}
 
 		// group valid
@@ -216,7 +206,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 		exists_jobInfo.setExecutorBlockStrategy(jobInfo.getExecutorBlockStrategy());
 		exists_jobInfo.setExecutorTimeout(jobInfo.getExecutorTimeout());
 		exists_jobInfo.setExecutorFailRetryCount(jobInfo.getExecutorFailRetryCount());
-		exists_jobInfo.setChildJobId(jobInfo.getChildJobId());
+		exists_jobInfo.setChildJobId(childJobId);
 		exists_jobInfo.setTriggerNextTime(nextTriggerTime);
         xxlJobInfoDao.update(exists_jobInfo);
 
