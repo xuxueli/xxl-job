@@ -165,7 +165,9 @@ public class JobThread extends Thread{
 
 				} else {
 					if (idleTimes > 30) {
-						XxlJobExecutor.removeJobThread(jobId, "excutor idel times over limit.");
+						if(triggerQueue.size() == 0) {	// avoid concurrent trigger causes jobId-lost
+							XxlJobExecutor.removeJobThread(jobId, "excutor idel times over limit.");
+						}
 					}
 				}
 			} catch (Throwable e) {
