@@ -331,7 +331,7 @@
             // Replace the input with an input group
             var $g = $("<div>").addClass("input-group");
             // Add an input
-            var $i = $("<input>", { type: 'text', placeholder: 'cron expression...'}).addClass("form-control").val($(that).val());
+            var $i = $("<input>", { type: 'text', placeholder: 'cron expression...', name: 'cronGen_display' }).addClass("form-control").val($(that).val());
             $i.appendTo($g);
             // Add the button
             var $b = $("<button class=\"btn btn-default\"><i class=\"fa fa-edit\"></i></button>");

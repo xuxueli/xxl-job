@@ -430,6 +430,8 @@ $(function() {
             }
             $("#addModal .form input[name='executorFailRetryCount']").val(executorFailRetryCount);
 
+            // process-cronGen
+            $("#addModal .form input[name='jobCron']").val( $("#addModal .form input[name='cronGen_display']").val() );
 
         	$.post(base_url + "/jobinfo/add",  $("#addModal .form").serialize(), function(data, status) {
     			if (data.code == "200") {
@@ -592,6 +594,9 @@ $(function() {
                 executorFailRetryCount = 0;
             }
             $("#updateModal .form input[name='executorFailRetryCount']").val(executorFailRetryCount);
+
+            // process-cronGen
+            $("#updateModal .form input[name='jobCron']").val( $("#updateModal .form input[name='cronGen_display']").val() );
 
 			// post
     		$.post(base_url + "/jobinfo/update", $("#updateModal .form").serialize(), function(data, status) {
