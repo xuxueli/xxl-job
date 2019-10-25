@@ -455,6 +455,9 @@
     var generate = function () {
 
         var activeTab = $("ul#CronGenTabs li.active a").prop("id");
+        if (activeTab == undefined) {
+            return;
+        }
         var results = "";
         switch (activeTab) {
             case "SecondlyTab":
