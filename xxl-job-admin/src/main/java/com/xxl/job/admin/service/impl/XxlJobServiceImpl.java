@@ -91,9 +91,8 @@ public class XxlJobServiceImpl implements XxlJobService {
 		}
 
 		// ChildJobId valid
-        String childJobId = jobInfo.getChildJobId();
-        if (childJobId !=null && childJobId.trim().length()>0) {
-			String[] childJobIds = childJobId.split(",");
+        if (jobInfo.getChildJobId()!=null && jobInfo.getChildJobId().trim().length()>0) {
+			String[] childJobIds = jobInfo.getChildJobId().split(",");
 			for (String childJobIdItem: childJobIds) {
 				if (childJobIdItem!=null && childJobIdItem.trim().length()>0 && isNumeric(childJobIdItem)) {
 					XxlJobInfo childJobInfo = xxlJobInfoDao.loadById(Integer.parseInt(childJobIdItem));
@@ -106,6 +105,15 @@ public class XxlJobServiceImpl implements XxlJobService {
 							MessageFormat.format((I18nUtil.getString("jobinfo_field_childJobId")+"({0})"+I18nUtil.getString("system_unvalid")), childJobIdItem));
 				}
 			}
+
+			// join , avoid "xxx,,"
+			String temp = "";
+			for (String item:childJobIds) {
+				temp += item + ",";
+			}
+			temp = temp.substring(0, temp.length()-1);
+
+			jobInfo.setChildJobId(temp);
 		}
 
 		// add in db
@@ -147,9 +155,8 @@ public class XxlJobServiceImpl implements XxlJobService {
 		}
 
 		// ChildJobId valid
-        String childJobId = jobInfo.getChildJobId();
-        if (childJobId !=null && childJobId.trim().length()>0) {
-			String[] childJobIds = childJobId.split(",");
+        if (jobInfo.getChildJobId()!=null && jobInfo.getChildJobId().trim().length()>0) {
+			String[] childJobIds = jobInfo.getChildJobId().split(",");
 			for (String childJobIdItem: childJobIds) {
 				if (childJobIdItem!=null && childJobIdItem.trim().length()>0 && isNumeric(childJobIdItem)) {
 					XxlJobInfo childJobInfo = xxlJobInfoDao.loadById(Integer.parseInt(childJobIdItem));
@@ -162,6 +169,15 @@ public class XxlJobServiceImpl implements XxlJobService {
 							MessageFormat.format((I18nUtil.getString("jobinfo_field_childJobId")+"({0})"+I18nUtil.getString("system_unvalid")), childJobIdItem));
 				}
 			}
+
+			// join , avoid "xxx,,"
+			String temp = "";
+			for (String item:childJobIds) {
+				temp += item + ",";
+			}
+			temp = temp.substring(0, temp.length()-1);
+
+			jobInfo.setChildJobId(temp);
 		}
 
 		// group valid
