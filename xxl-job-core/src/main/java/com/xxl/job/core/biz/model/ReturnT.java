@@ -19,6 +19,7 @@ public class ReturnT<T> implements Serializable {
 	private int code;
 	private String msg;
 	private T content;
+	private String subParam;
 
 	public ReturnT(){}
 	public ReturnT(int code, String msg) {
@@ -29,7 +30,13 @@ public class ReturnT<T> implements Serializable {
 		this.code = SUCCESS_CODE;
 		this.content = content;
 	}
-	
+
+	public String getSubParam() {
+		return subParam;
+	}
+	public void setSubParam(String subParam) {
+		this.subParam = subParam;
+	}
 	public int getCode() {
 		return code;
 	}
