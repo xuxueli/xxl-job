@@ -270,8 +270,8 @@ public class JobScheduleHelper {
         ringThread.start();
     }
 
-    private void refreshNextValidTime(XxlJobInfo jobInfo, Date date) throws ParseException {
-        Date nextValidTime = new CronExpression(jobInfo.getJobCron()).getNextValidTimeAfter(date);
+    private void refreshNextValidTime(XxlJobInfo jobInfo, Date fromTime) throws ParseException {
+        Date nextValidTime = new CronExpression(jobInfo.getJobCron()).getNextValidTimeAfter(fromTime);
         if (nextValidTime != null) {
             jobInfo.setTriggerLastTime(jobInfo.getTriggerNextTime());
             jobInfo.setTriggerNextTime(nextValidTime.getTime());
