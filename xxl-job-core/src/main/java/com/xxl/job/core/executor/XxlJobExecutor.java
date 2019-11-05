@@ -30,7 +30,7 @@ import java.util.concurrent.ConcurrentMap;
  * Created by xuxueli on 2016/3/2 21:14.
  */
 public class XxlJobExecutor  {
-    private static final Logger logger = LoggerFactory.getLogger(XxlJobExecutor.class);
+    protected static final Logger logger = LoggerFactory.getLogger(XxlJobExecutor.class);
 
     // ---------------------- param ----------------------
     private String adminAddresses;
@@ -63,6 +63,17 @@ public class XxlJobExecutor  {
         this.logRetentionDays = logRetentionDays;
     }
 
+    public String getAppName() {
+        return appName;
+    }
+
+    public String getIp() {
+        return ip;
+    }
+
+    public int getPort() {
+        return port;
+    }
 
     // ---------------------- start + stop ----------------------
     public void start() throws Exception {
