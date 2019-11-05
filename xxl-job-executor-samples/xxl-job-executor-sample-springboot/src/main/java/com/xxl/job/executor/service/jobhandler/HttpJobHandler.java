@@ -33,15 +33,21 @@ public class HttpJobHandler extends IJobHandler {
 
     @Override
     public ReturnT<String> execute(String param) throws Exception {
-        HttpRequestParam httpRequestParam = httpRequestParamHandler.convertParam(param);
-        HttpEntity<String> requestEntity = new HttpEntity<>(httpRequestParam.getRequestBody(), null);
-        ResponseEntity<String> exchange = this.restTemplate.exchange(httpRequestParam.getEndpoint(), httpRequestParam.getHttpMethod(), requestEntity, String.class);
-        HttpStatus statusCode = exchange.getStatusCode();
+        try {
+            HttpRequestParam httpRequestParam = httpRequestParamHandler.convertParam(param);
+            HttpEntity<String> requestEntity = new HttpEntity<>(httpRequestParam.getRequestBody(), null);
+            ResponseEntity<String> exchange = this.restTemplate.exchange(httpRequestParam.getEndpoint(), httpRequestParam.getHttpMethod(), requestEntity, String.class);
+            HttpStatus statusCode = exchange.getStatusCode();
 
-        if (HttpStatus.OK != statusCode && HttpStatus.CREATED != statusCode) {
-            throw new RuntimeException("Http Request StatusCode (" + statusCode + ") Invalid.");
+            if (HttpStatus.OK != statusCode && HttpStatus.CREATED != statusCode) {
+                throw new RuntimeException("Http Request StatusCode (" + statusCode + ") Invalid.");
+            }
+
+            XxlJobLogger.log(exchange.toString());
+        } catch (Exception ex) {
+            XxlJobLogger.log(ex);
+            return FAIL;
         }
-        XxlJobLogger.log(exchange.toString());
         return ReturnT.SUCCESS;
     }
 
