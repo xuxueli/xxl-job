@@ -456,7 +456,7 @@ XXL-JOB是一个轻量级分布式任务调度平台，其核心设计目标是�
 
 默认登录账号 "admin/123456", 登录后运行界面如下图所示。
 
-![输入图片说明](https://www.xuxueli.com/xxl-job/data/images/img_6yC0.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/doc/static/xxl-job/images/img_6yC0.png "在这里输入图片标题")
 
 至此“调度中心”项目已经部署成功。
 
@@ -582,18 +582,18 @@ public XxlJobSpringExecutor xxlJobExecutor() {
 #### 步骤一：新建任务：
 登录调度中心，点击下图所示“新建任务”按钮，新建示例任务。然后，参考下面截图中任务的参数配置，点击保存。
 
-![输入图片说明](https://www.xuxueli.com/xxl-job/data/images/img_o8HQ.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/doc/static/xxl-job/images/img_o8HQ.png "在这里输入图片标题")
 
-![输入图片说明](https://www.xuxueli.com/xxl-job/data/images/img_ZAsz.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/doc/static/xxl-job/images/img_ZAsz.png "在这里输入图片标题")
 
 
 #### 步骤二：“GLUE模式(Java)” 任务开发：
 请点击任务右侧 “GLUE” 按钮，进入 “GLUE编辑器开发界面” ，见下图。“GLUE模式(Java)” 运行模式的任务默认已经初始化了示例任务代码，即打印Hello World。
 （ “GLUE模式(Java)” 运行模式的任务实际上是一段继承自IJobHandler的Java类代码，它在执行器项目中运行，可使用@Resource/@Autowire注入执行器里中的其他服务，详细介绍请查看第三章节）
 
-![输入图片说明](https://www.xuxueli.com/xxl-job/data/images/img_Fgql.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/doc/static/xxl-job/images/img_Fgql.png "在这里输入图片标题")
 
-![输入图片说明](https://www.xuxueli.com/xxl-job/data/images/img_dNUJ.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/doc/static/xxl-job/images/img_dNUJ.png "在这里输入图片标题")
 
 #### 步骤三：触发执行：
 请点击任务右侧 “执行” 按钮，可手动触发一次任务执行（通常情况下，通过配置Cron表达式进行任务调度出发）。
@@ -602,11 +602,11 @@ public XxlJobSpringExecutor xxlJobExecutor() {
 请点击任务右侧 “日志” 按钮，可前往任务日志界面查看任务日志。
 在任务日志界面中，可查看该任务的历史调度记录以及每一次调度的任务调度信息、执行参数和执行信息。运行中的任务点击右侧的“执行日志”按钮，可进入日志控制台查看实时执行日志。
 
-![输入图片说明](https://www.xuxueli.com/xxl-job/data/images/img_inc8.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/doc/static/xxl-job/images/img_inc8.png "在这里输入图片标题")
 
 在日志控制台，可以Rolling方式实时查看任务在执行器一侧运行输出的日志信息，实时监控任务进度；
 
-![输入图片说明](https://www.xuxueli.com/xxl-job/data/images/img_eYrv.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/doc/static/xxl-job/images/img_eYrv.png "在这里输入图片标题")
 
 ## 三、任务详解
 
@@ -658,12 +658,12 @@ public XxlJobSpringExecutor xxlJobExecutor() {
      - 4、执行日志：需要通过 "XxlJobLogger.log" 打印执行日志；
     （可参考Sample示例执行器中的DemoJobHandler，见下图）
 
-![输入图片说明](https://www.xuxueli.com/xxl-job/data/images/img_oLlM.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/doc/static/xxl-job/images/img_oLlM.png "在这里输入图片标题")
 
 #### 步骤二：调度中心，新建调度任务
 参考上文“配置属性详细说明”对新建的任务进行参数配置，运行模式选中 "BEAN模式"，JobHandler属性填写任务注解“@JobHandler”中定义的值；
 
-![输入图片说明](https://www.xuxueli.com/xxl-job/data/images/img_ZAsz.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/doc/static/xxl-job/images/img_ZAsz.png "在这里输入图片标题")
 
 #### 原生内置Bean模式任务
 为方便用户参考与快速实用，示例执行器内原生提供多个Bean模式任务Handler，可以直接配置实用，如下：
@@ -680,14 +680,14 @@ public XxlJobSpringExecutor xxlJobExecutor() {
 #### 步骤一：调度中心，新建调度任务：
 参考上文“配置属性详细说明”对新建的任务进行参数配置，运行模式选中 "GLUE模式(Java)"；
 
-![输入图片说明](https://www.xuxueli.com/xxl-job/data/images/img_tJOq.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/doc/static/xxl-job/images/img_tJOq.png "在这里输入图片标题")
 
 #### 步骤二：开发任务代码：
 选中指定任务，点击该任务右侧“GLUE”按钮，将会前往GLUE任务的Web IDE界面，在该界面支持对任务代码进行开发（也可以在IDE中开发完成后，复制粘贴到编辑中）。
 
 版本回溯功能（支持30个版本的版本回溯）：在GLUE任务的Web IDE界面，选择右上角下拉框“版本回溯”，会列出该GLUE的更新历史，选择相应版本即可显示该版本代码，保存后GLUE代码即回退到对应的历史版本；
 
-![输入图片说明](https://www.xuxueli.com/xxl-job/data/images/img_dNUJ.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/doc/static/xxl-job/images/img_dNUJ.png "在这里输入图片标题")
 
 ### 3.3 GLUE模式(Shell)
 
@@ -699,7 +699,7 @@ public XxlJobSpringExecutor xxlJobExecutor() {
 
 该模式的任务实际上是一段 "shell" 脚本；
 
-![输入图片说明](https://www.xuxueli.com/xxl-job/data/images/img_iUw0.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/doc/static/xxl-job/images/img_iUw0.png "在这里输入图片标题")
 
 ### 3.4 GLUE模式(Python)
 
@@ -711,7 +711,7 @@ public XxlJobSpringExecutor xxlJobExecutor() {
 
 该模式的任务实际上是一段 "python" 脚本；
 
-![输入图片说明](https://www.xuxueli.com/xxl-job/data/images/img_BPLG.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/doc/static/xxl-job/images/img_BPLG.png "在这里输入图片标题")
 
 ### 3.5 GLUE模式(NodeJS)
 
@@ -735,14 +735,14 @@ public XxlJobSpringExecutor xxlJobExecutor() {
 
 ### 4.1 配置执行器
 点击进入"执行器管理"界面, 如下图:
-![输入图片说明](https://www.xuxueli.com/xxl-job/data/images/img_Hr2T.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/doc/static/xxl-job/images/img_Hr2T.png "在这里输入图片标题")
 
     1、"调度中心OnLine:"右侧显示在线的"调度中心"列表, 任务执行结束后, 将会以failover的模式进行回调调度中心通知执行结果, 避免回调的单点风险;
     2、"执行器列表" 中显示在线的执行器列表, 可通过"OnLine 机器"查看对应执行器的集群机器。
 
 点击按钮 "+新增执行器" 弹框如下图, 可新增执行器配置:
 
-![输入图片说明](https://www.xuxueli.com/xxl-job/data/images/img_V3vF.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/doc/static/xxl-job/images/img_V3vF.png "在这里输入图片标题")
 
 ### 执行器属性说明
 
@@ -770,19 +770,19 @@ public XxlJobSpringExecutor xxlJobExecutor() {
 可对任务进行“启动”和“停止”操作。
 需要注意的是，此处的启动/停止仅针对任务的后续调度触发行为，不会影响到已经触发的调度任务，如需终止已经触发的调度任务，可查看“4.9 终止运行中的任务”
 
-![输入图片说明](https://www.xuxueli.com/xxl-job/data/images/img_ZAhX.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/doc/static/xxl-job/images/img_ZAhX.png "在这里输入图片标题")
 
 ### 4.6 手动触发一次调度
 点击“执行”按钮，可手动触发一次任务调度，不影响原有调度规则。
 
-![输入图片说明](https://www.xuxueli.com/xxl-job/data/images/img_ZAhX.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/doc/static/xxl-job/images/img_ZAhX.png "在这里输入图片标题")
 
 ### 4.7 查看调度日志
 点击“日志”按钮，可以查看任务历史调度日志。在历史调入日志界面可查看每次任务调度的调度结果、执行结果等，点击“执行日志”按钮可查看执行器完整日志。
 
-![输入图片说明](https://www.xuxueli.com/xxl-job/data/images/img_ZAhX.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/doc/static/xxl-job/images/img_ZAhX.png "在这里输入图片标题")
 
-![输入图片说明](https://www.xuxueli.com/xxl-job/data/images/img_UDSo.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/doc/static/xxl-job/images/img_UDSo.png "在这里输入图片标题")
 
     调度时间："调度中心"触发本次调度并向"执行器"发送任务执行信号的时间；
     调度结果："调度中心"触发本次调度的结果，200表示成功，500或其他表示失败；
@@ -800,13 +800,13 @@ public XxlJobSpringExecutor xxlJobExecutor() {
 ### 4.8 查看执行日志
 点击执行日志右侧的 “执行日志” 按钮，可跳转至执行日志界面，可以查看业务代码中打印的完整日志，如下图；
 
-![输入图片说明](https://www.xuxueli.com/xxl-job/data/images/img_tvGI.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/doc/static/xxl-job/images/img_tvGI.png "在这里输入图片标题")
 
 ### 4.9 终止运行中的任务
 仅针对执行中的任务。
 在任务日志界面，点击右侧的“终止任务”按钮，将会向本次任务对应的执行器发送任务终止请求，将会终止掉本次任务，同时会清空掉整个任务执行队列。
 
-![输入图片说明](https://www.xuxueli.com/xxl-job/data/images/img_hIci.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/doc/static/xxl-job/images/img_hIci.png "在这里输入图片标题")
 
 任务终止时通过 "interrupt" 执行线程的方式实现, 将会触发 "InterruptedException" 异常。因此如果JobHandler内部catch到了该异常并消化掉的话, 任务终止功能将不可用。
 
@@ -829,14 +829,14 @@ try{
 
 ### 4.10 删除执行日志
 在任务日志界面，选中执行器和任务之后，点击右侧的"删除"按钮将会出现"日志清理"弹框，弹框中支持选择不同类型的日志清理策略，选中后点击"确定"按钮即可进行日志清理操作；
-![输入图片说明](https://www.xuxueli.com/xxl-job/data/images/img_Ypik.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/doc/static/xxl-job/images/img_Ypik.png "在这里输入图片标题")
 
-![输入图片说明](https://www.xuxueli.com/xxl-job/data/images/img_EB65.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/doc/static/xxl-job/images/img_EB65.png "在这里输入图片标题")
 
 ### 4.11 删除任务
 点击删除按钮，可以删除对应任务。
 
-![输入图片说明](https://www.xuxueli.com/xxl-job/data/images/img_Z9Qr.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/doc/static/xxl-job/images/img_Z9Qr.png "在这里输入图片标题")
 
 ### 4.12 用户管理
 进入 "用户管理" 界面，可查看和管理用户信息；
@@ -845,9 +845,9 @@ try{
 - 管理员：拥有全量权限，支持在线管理用户信息，为用户分配权限，权限分配粒度为执行器；
 - 普通用户：仅拥有被分配权限的执行器，及相关任务的操作权限；
 
-![输入图片说明](https://www.xuxueli.com/xxl-job/data/images/img_1001.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/doc/static/xxl-job/images/img_1001.png "在这里输入图片标题")
 
-![输入图片说明](https://www.xuxueli.com/xxl-job/data/images/img_1002.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/doc/static/xxl-job/images/img_1002.png "在这里输入图片标题")
 
 
 ## 五、总体设计
@@ -888,7 +888,7 @@ XXL-JOB调度模块基于自研调度组件并支持集群部署，调度数据�
 
 #### 5.3.3 架构图
 
-![输入图片说明](https://www.xuxueli.com/xxl-job/data/images/img_Qohm.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/doc/static/xxl-job/images/img_Qohm.png "在这里输入图片标题")
 
 ### 5.4 调度模块剖析
 #### 5.4.1 quartz的不足
@@ -942,7 +942,7 @@ xxl-job-admin#com.xxl.job.admin.controller.JobApiController.callback
 当任务"路由策略"选择"故障转移(FAILOVER)"时，当调度中心每次发起调度请求时，会按照顺序对执行器发出心跳检测请求，第一个检测为存活状态的执行器将会被选定并发送调度请求。
 
 调度成功后，可在日志监控界面查看“调度备注”，如下；
-![输入图片说明](https://www.xuxueli.com/xxl-job/data/images/img_jrdI.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/doc/static/xxl-job/images/img_jrdI.png "在这里输入图片标题")
 
 “调度备注”可以看出本地调度运行轨迹，执行器的"注册方式"、"地址列表"和任务的"路由策略"。"故障转移(FAILOVER)"路由策略下，调度中心首先对第一个地址进行心跳检测，心跳失败因此自动跳过，第二个依然心跳检测失败……
 直至心跳检测第三个地址“127.0.0.1:9999”成功，选定为“目标执行器”；然后对“目标执行器”发送调度请求，调度流程结束，等待执行器回调执行结果。
@@ -973,9 +973,9 @@ xxl-job-admin#com.xxl.job.admin.controller.JobApiController.callback
 
 在任务日志界面，点击任务的“执行备注”的“查看”按钮，可以看到匹配子任务以及触发子任务执行的日志信息，如无信息则表示未触发子任务执行，可参考下图。
 
-![输入图片说明](https://www.xuxueli.com/xxl-job/data/images/img_Wb2o.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/doc/static/xxl-job/images/img_Wb2o.png "在这里输入图片标题")
 
-![输入图片说明](https://www.xuxueli.com/xxl-job/data/images/img_jOAU.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/doc/static/xxl-job/images/img_jOAU.png "在这里输入图片标题")
 
 #### 5.4.11  全异步化 & 轻量级
 
