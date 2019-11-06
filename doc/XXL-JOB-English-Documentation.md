@@ -277,7 +277,7 @@ The concrete contet describe as follows:
 If you has finished step 1,then you can compile the project in maven and deploy the war package to tomcat.
 the url to visit is :http://localhost:8080/xxl-job-admin (this address will be used by executor and use it as callback url),the index page after login in is as follow
 
-![index page after login in](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_6yC0.png "index page after login in")
+![index page after login in](https://www.xuxueli.com/xxl-job/data/images/img_6yC0.png "index page after login in")
 
 Now,the “xxl-job-admin” project is deployed success.
 
@@ -371,16 +371,16 @@ Now let’s create a "GLUE模式(Java)" job,if you want to learn more about it ,
 #### Step 1:Create new job
 Login in xxl-job-admin,click on the"新建任务" button, configure the job params as follows and click "保存" button to save the job info.
 
-![task management](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_o8HQ.png "task management")
+![task management](https://www.xuxueli.com/xxl-job/data/images/img_o8HQ.png "task management")
 
-![create task](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_ZAsz.png "create task")
+![create task](https://www.xuxueli.com/xxl-job/data/images/img_ZAsz.png "create task")
 
 #### Step 2：develop “GLUE模式(Java)” job
 Click “GLUE” button on the right of the job to go to GLUE editor view as shown below。“GLUE模式(Java)” mode task has been inited with default task code for printing Hello World。 （ “GLUE模式(Java)” mode task is a java code fragment implements IJobHandler interface,it will be executed in executor,you can use @Resource/@Autowire to inject other java bean instance,if you want to see more info please go to chapter 3）
 
-![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_Fgql.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/xxl-job/data/images/img_Fgql.png "在这里输入图片标题")
 
-![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_dNUJ.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/xxl-job/data/images/img_dNUJ.png "在这里输入图片标题")
 
 #### Step 3:trigger task
 If you want to run the job manually please click "执行" button on the right of the job(usually we trigger job by Cron expression)
@@ -388,11 +388,11 @@ If you want to run the job manually please click "执行" button on the right of
 #### Step 4:view log 
 Click “日志” button on the right side of the task you will go to the task log list ,you will see the schedule history records of the task and the schedule detail info,execution info and execution params.If you click the “执行日志” button on the right side of the task log record,you will go to log console and view the execute log in the course of task execution.
 
-![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_inc8.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/xxl-job/data/images/img_inc8.png "在这里输入图片标题")
 
 On the log console,you can view task execution log on the executor immediately after it dump to log file,so you can monitor the task execution process by Rolling way.
 
-![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_eYrv.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/xxl-job/data/images/img_eYrv.png "在这里输入图片标题")
 
 ## 3. Task details
 
@@ -440,12 +440,12 @@ The task logic exist in the executor project as JobHandler,the develop steps as 
     - 3, add  “@JobHandler(value=" customize jobhandler name")” annotation，the value stand for JobHandler name,it will be used as JobHandler property when create a new task in the schedule center.
     （go and see DemoJobHandler in the xxl-job-executor-example project, as shown below）
 
-![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_oLlM.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/xxl-job/data/images/img_oLlM.png "在这里输入图片标题")
 
 #### Step 2:create task in schedule center
 If you want learn more about configure item please go and sedd “Description of configuration item”，select  "BEAN模式" as run mode，property JobHandler please fill in the value defined by @JobHande.
 
-![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_ZAsz.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/xxl-job/data/images/img_ZAsz.png "在这里输入图片标题")
 
 ### 3.2 GLUE模式(Java)
 Task source code is maintained in the schedule center and can be updated by Web IDE online, it will be compiled and effective real-time,didn’t need to assign JobHandler,develop flow shown as below:
@@ -453,14 +453,14 @@ Task source code is maintained in the schedule center and can be updated by Web 
 #### Step 1:create task in schedule center
 If you want learn more about configure item please go and sedd “Description of configuration item”，select "GLUE模式(Java)" as run mode.
 
-![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_tJOq.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/xxl-job/data/images/img_tJOq.png "在这里输入图片标题")
 
 #### Step 2:develop task source code
 Select the task record and click “GLUE” button on the righe of it,it will go to GLUE task’s WEB IDE page,on this page yo can edit you task code(also can edit in other IDE tools,copy and paste into this page).
 
 Version backtrack（support 30 versions while backtrack）：on the WEB IDE page of GLUE task,on upper right corner drop down box please select “版本回溯”,it will display GLUE updated history,select the version you want it will display the source code of this version,it will backtrace the version while click save button. 
 
-![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_dNUJ.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/xxl-job/data/images/img_dNUJ.png "在这里输入图片标题")
 
 ### 3.3 GLUE模式(Shell)
 
@@ -472,7 +472,7 @@ Select the task record and click “GLUE” button on the righe of it,it will go
 
 Actually it is a shell script fragment.
 
-![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_iUw0.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/xxl-job/data/images/img_iUw0.png "在这里输入图片标题")
 
 ### 3.4 GLUE模式(Python)
 
@@ -484,19 +484,19 @@ Select the task record and click “GLUE” button on the righe of it,it will go
 
 Actually it is a python script fragment.
 
-![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_BPLG.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/xxl-job/data/images/img_BPLG.png "在这里输入图片标题")
 
 
 ## 4. Task Management
 ### 4.0 configure executor
 click"执行器管理" on the left menu,it will go to the page as shown below:
-![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_Hr2T.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/xxl-job/data/images/img_Hr2T.png "在这里输入图片标题")
 
     1,"调度中心OnLine”:display schedule center machine list,when task is scheduled it will callback schedule center for notify the execution result in failover mode, so that it can avoid a single point scheduler;
     2,"执行器列表" :display all nodes under this executor group.
 
 If you want to create a new executor,please click "+新增执行器" button: 
-![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_V3vF.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/xxl-job/data/images/img_V3vF.png "在这里输入图片标题")
 
 ### Description of executor attributes
 
@@ -523,19 +523,19 @@ choose the task you want to edit and click” GLUE”button on the right side of
 ### 4.4 pause/recover task
 You can pause or recover task but it just fit to follow up schedule trigger and won’t affect scheduled tasks,if you want to stop tasks which has been triggered,please go and see “4.8 stop the running task”
 
-![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_ZAhX.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/xxl-job/data/images/img_ZAhX.png "在这里输入图片标题")
 
 ### 4.5 manually trigger
 You can trigger a task manually by Click “执行”button,it won’t affect original scheduling rules.
 
-![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_Z5wp.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/xxl-job/data/images/img_Z5wp.png "在这里输入图片标题")
 
 ### 4.6 view schedule log
 You can view task’s history schedule log by click “日志” button,on the history schedule log list page you can view every time of task’s schedule result,execution result and so on,click “执行日志” button can view the task’s full execute log.
 
-![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_9235.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/xxl-job/data/images/img_9235.png "在这里输入图片标题")
 
-![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_inc8.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/xxl-job/data/images/img_inc8.png "在这里输入图片标题")
 
     调度时间:schedule center trigger time when schedule and send execution signal to executor;
     调度结果:schedule center trigger task’s result, 200 represent success,500 or other number stands for fail;
@@ -553,12 +553,12 @@ You can view task’s history schedule log by click “日志” button,on the h
 ### 4.7 view execution log
 Click the “执行日志” button on the right side of the record,you can go to the execution log page,you can view the full execution log of the logic business code, shown as below:
 
-![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_tvGI.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/xxl-job/data/images/img_tvGI.png "在这里输入图片标题")
 
 ### 4.8 stop running tasks
 Just fit to running tasks,on the task log list page,click “终止任务” button on the right side of the record, it will send stop command to the executor where the task was executed,finally the task was killed and the task instance execute queue of this task will be clear.
 
-![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_hIci.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/xxl-job/data/images/img_hIci.png "在这里输入图片标题")
 
 It is implemented by interrupt execute thread, it will trigger InterruptedException.so if JobHandler catch this execuption and handle this exception this function is unavailable.
 
@@ -579,14 +579,14 @@ If JobHandler start child thread,child thread also must not catch InterruptedExc
 
 ### 4.9 delete execution log
 On the task log list page, after you select executor and task, you can click"删除" button on the right side and it will pop-up "日志清理" window,on the pop-up window you can choose different log delete policy,choose the policy you want to execute and click "确定" button it will delele relative logs:
-![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_Ypik.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/xxl-job/data/images/img_Ypik.png "在这里输入图片标题")
 
-![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_EB65.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/xxl-job/data/images/img_EB65.png "在这里输入图片标题")
 
 ### 4.10 delete task
 Click the delete button on the right side of the task,the task will be deteted.
 
-![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_Z9Qr.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/xxl-job/data/images/img_Z9Qr.png "在这里输入图片标题")
 
 ## 5. Overall design
 ### 5.1 Source directory introduction
@@ -601,7 +601,7 @@ XXL-JOB schedule module is implemented based on Quartz cluster,it’s “databas
 
 XXL-JOB custom Quartz table structure prefix(XXL_JOB_QRTZ_).
 
-![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_bNwm.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/xxl-job/data/images/img_bNwm.png "在这里输入图片标题")
 
 The added tables as shown below:
     - XXL_JOB_QRTZ_TRIGGER_GROUP:executor basic table, maintain the info about the executor;
@@ -630,7 +630,7 @@ So schedule and task can be decoupled from each other, by the way it can improve
 
 #### 5.3.3 Architecture diagram
 
-![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_Qohm.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/xxl-job/data/images/img_Qohm.png "在这里输入图片标题")
 
 ### 5.4 Schedule module analysis
 #### 5.4.1 Disadvantage of quartz
@@ -713,7 +713,7 @@ If executor project was deployed as cluster schedule center will known all onlin
 When "路由策略" select "故障转移(FAILOVER)",it will send heart beat check request in order while schedule center start schedule request.  The first alive checked executor node will be selected and send schedule request to it.
 
 “调度备注” can be viewed on the monitor page when schedule success. As shown below: 
-![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_jrdI.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/xxl-job/data/images/img_jrdI.png "在这里输入图片标题")
 
 “调度备注” will display local schedule route path、executor’s "注册方式"、"地址列表" and task’s "路由策略"。Under "故障转移(FAILOVER)" policy, schedule center take first address to do heartbeat detection, heat beat fail will automatically skip, the second address heart beat fail…… until the third address “127.0.0.1:9999” heart beat success, it was selected as target executor, then send schedule request to target executor, now the schedule process is end wait for the executor’s callback execution result.
 
@@ -743,9 +743,9 @@ When parent task end execute and success, it will match child task dependency ac
 
 On the task log page ,you can see matched child task and triggered child task’s log info when you “查看”button of “执行备注”,otherwise the child task didin’t execute, as shown beleow:
 
-![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_Wb2o.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/xxl-job/data/images/img_Wb2o.png "在这里输入图片标题")
 
-![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_jOAU.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/xxl-job/data/images/img_jOAU.png "在这里输入图片标题")
 
 ### 5.5 Task "run mode" analysis
 #### 5.5.1 "Bean模式" task
