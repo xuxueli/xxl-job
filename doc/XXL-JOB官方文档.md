@@ -6,7 +6,7 @@
 [![GitHub release](https://img.shields.io/github/release/xuxueli/xxl-job.svg)](https://github.com/xuxueli/xxl-job/releases)
 [![License](https://img.shields.io/badge/license-GPLv3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0.html)
 [![Gitter](https://badges.gitter.im/xuxueli/xxl-job.svg)](https://gitter.im/xuxueli/xxl-job?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
-[![donate](https://img.shields.io/badge/%24-donate-ff69b4.svg?style=flat-square)](http://www.xuxueli.com/page/donate.html)
+[![donate](https://img.shields.io/badge/%24-donate-ff69b4.svg?style=flat-square)](https://www.xuxueli.com/page/donate.html)
 
 
 ## 一、简介
@@ -15,7 +15,7 @@
 XXL-JOB是一个轻量级分布式任务调度平台，其核心设计目标是开发迅速、学习简单、轻量级、易扩展。现已开放源代码并接入多家公司线上产品线，开箱即用。
 
 ### 1.2 社区交流    
-- [社区交流](http://www.xuxueli.com/page/community.html)
+- [社区交流](https://www.xuxueli.com/page/community.html)
 
 ### 1.3 特性
 - 1、简单：支持通过Web页面对任务进行CRUD操作，操作简单，一分钟上手；
@@ -357,8 +357,8 @@ XXL-JOB是一个轻量级分布式任务调度平台，其核心设计目标是�
 
 #### 文档地址
 
-- [中文文档](http://www.xuxueli.com/xxl-job/)
-- [English Documentation](http://www.xuxueli.com/xxl-job/en/)
+- [中文文档](https://www.xuxueli.com/xxl-job/)
+- [English Documentation](https://www.xuxueli.com/xxl-job/en/)
 
 #### 源码仓库地址
 
@@ -1384,7 +1384,7 @@ Tips: 历史版本(V1.3.x)目前已经Release至稳定版本, 进入维护阶段
 - 11、统一maven依赖版本管理；
 
 ### 6.19 版本 V1.8.2 特性[2017-09-04]
-- 1、项目主页搭建：提供中英文文档：http://www.xuxueli.com/xxl-job 
+- 1、项目主页搭建：提供中英文文档：https://www.xuxueli.com/xxl-job 
 - 2、JFinal执行器Sample示例项目；
 - 3、事件触发：除了"Cron方式"和"任务依赖方式"触发任务执行之外，支持基于事件的触发任务方式。调度中心提供触发任务单次执行的API服务，可根据业务事件灵活触发。
 - 4、执行器摘除：执行器销毁时，主动通知调度中心并摘除对应执行器节点，提高执行器状态感知的时效性。
@@ -1622,4 +1622,4 @@ Tips: 历史版本(V1.3.x)目前已经Release至稳定版本, 进入维护阶段
 
 ---
 ### 捐赠
-无论捐赠金额多少都足够表达您这份心意，非常感谢 ：）      [前往捐赠](http://www.xuxueli.com/page/donate.html )
+无论捐赠金额多少都足够表达您这份心意，非常感谢 ：）      [前往捐赠](https://www.xuxueli.com/page/donate.html )

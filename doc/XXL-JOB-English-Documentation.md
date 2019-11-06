@@ -5,7 +5,7 @@
 [![GitHub release](https://img.shields.io/github/release/xuxueli/xxl-job.svg)](https://github.com/xuxueli/xxl-job/releases)
 [![License](https://img.shields.io/badge/license-GPLv3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0.html)
 [![Gitter](https://badges.gitter.im/xuxueli/xxl-job.svg)](https://gitter.im/xuxueli/xxl-job?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
-[![donate](https://img.shields.io/badge/%24-donate-ff69b4.svg?style=flat-square)](http://www.xuxueli.com/page/donate.html)
+[![donate](https://img.shields.io/badge/%24-donate-ff69b4.svg?style=flat-square)](https://www.xuxueli.com/page/donate.html)
 
 
 ## 1. Brief introduction
@@ -180,8 +180,8 @@ Welcome everyone's attention and use, XXL-JOB will also embrace changes, sustain
 ### 1.4 Download
 
 #### Documentation
-- [中文文档](http://www.xuxueli.com/xxl-job/)
-- [English Documentation](http://www.xuxueli.com/xxl-job/en/)
+- [中文文档](https://www.xuxueli.com/xxl-job/)
+- [English Documentation](https://www.xuxueli.com/xxl-job/en/)
 
 #### Source repository address (The latest code will be released in the two git warehouse in the same time)
 
@@ -201,7 +201,7 @@ Source repository address | Release Download
 ```
 
 #### Technical exchange group
-- [社区交流](http://www.xuxueli.com/page/community.html)
+- [社区交流](https://www.xuxueli.com/page/community.html)
 - [Gitter](https://gitter.im/xuxueli/xxl-job)
 
 ### 1.5 Environment
@@ -1081,4 +1081,4 @@ This product is open source and free, and will continue to provide free communit
 
 ---
 ### Donate
-No matter how much the amount is enough to express your thought, thank you very much ：）     [To donate](http://www.xuxueli.com/page/donate.html )
+No matter how much the amount is enough to express your thought, thank you very much ：）     [To donate](https://www.xuxueli.com/page/donate.html )
