@@ -230,7 +230,7 @@
         Powered by <b>XXL-JOB</b> ${I18n.admin_version}
 		<div class="pull-right hidden-xs">
             <strong>Copyright &copy; 2015-${.now?string('yyyy')} &nbsp;
-                <a href="http://www.xuxueli.com/" target="_blank" >xuxueli</a>
+                <a href="https://www.xuxueli.com/" target="_blank" >xuxueli</a>
 				&nbsp;
                 <a href="https://github.com/xuxueli/xxl-job" target="_blank" >github</a>
             </strong><!-- All rights reserved. -->
