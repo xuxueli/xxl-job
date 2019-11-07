@@ -93,7 +93,7 @@ public class JobScheduleHelper {
 
                                     // 1、trigger
                                     JobTriggerPoolHelper.trigger(jobInfo.getId(), TriggerTypeEnum.CRON, -1, null, null);
-                                    logger.debug(">>>>>>>>>>> xxl-job, shecule push trigger : jobId = " + jobInfo.getId() );
+                                    logger.debug(">>>>>>>>>>> xxl-job, schedule push trigger : jobId = " + jobInfo.getId() );
 
                                     // 2、fresh next
                                     jobInfo.setTriggerLastTime(jobInfo.getTriggerNextTime());
@@ -177,9 +177,9 @@ public class JobScheduleHelper {
                         if (null != preparedStatement) {
                             try {
                                 preparedStatement.close();
-                            } catch (SQLException ignore) {
+                            } catch (SQLException e) {
                                 if (!scheduleThreadToStop) {
-                                    logger.error(ignore.getMessage(), ignore);
+                                    logger.error(e.getMessage(), e);
                                 }
                             }
                         }
@@ -238,7 +238,7 @@ public class JobScheduleHelper {
 
                         // ring trigger
                         logger.debug(">>>>>>>>>>> xxl-job, time-ring beat : " + nowSecond + " = " + Arrays.asList(ringItemData) );
-                        if (ringItemData!=null && ringItemData.size()>0) {
+                        if (ringItemData.size() > 0) {
                             // do trigger
                             for (int jobId: ringItemData) {
                                 // do trigger
@@ -291,7 +291,7 @@ public class JobScheduleHelper {
         }
         ringItemData.add(jobId);
 
-        logger.debug(">>>>>>>>>>> xxl-job, shecule push time-ring : " + ringSecond + " = " + Arrays.asList(ringItemData) );
+        logger.debug(">>>>>>>>>>> xxl-job, schedule push time-ring : " + ringSecond + " = " + Arrays.asList(ringItemData) );
     }
 
     public void toStop(){

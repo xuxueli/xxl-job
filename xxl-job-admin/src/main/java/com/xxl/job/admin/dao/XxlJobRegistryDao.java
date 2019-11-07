@@ -26,7 +26,7 @@ public interface XxlJobRegistryDao {
                             @Param("registryKey") String registryKey,
                             @Param("registryValue") String registryValue);
 
-    public int registryDelete(@Param("registryGroup") String registGroup,
+    public int registryDelete(@Param("registryGroup") String registryGroup,
                           @Param("registryKey") String registryKey,
                           @Param("registryValue") String registryValue);
 

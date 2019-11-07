@@ -19,8 +19,8 @@ XXL-JOB is a lightweight distributed task scheduling framework, the core design 
 - 1.Simple: support through the Web page on the task CRUD operation, simple operation, a minute to get started;
 - 2.Dynamic: support dynamic modification of task status, pause / resume tasks, and termination of running tasks,immediate effect;
 - 3.Dispatch center HA (center type): Dispatch with central design, "dispatch center" based on the cluster of Quartz implementation, can guarantee the scheduling - center HA;
-- 4.Executer HA (Distributed): Task Distributed Execution, Task " Executer " supports cluster deployment to ensure that tasks perform HA;
-- 5.Task Failover: Deploy the Excuter cluster,tasks will be smooth to switch excuter when the strategy of the router choose ‘failover’;
+- 4.Executor HA (Distributed): Task Distributed Execution, Task " Executer " supports cluster deployment to ensure that tasks perform HA;
+- 5.Task Failover: Deploy the Excutor cluster,tasks will be smooth to switch excuter when the strategy of the router choose ‘failover’;
 - 6.Consistency: "Dispatch Center" through the DB lock to ensure the consistency of cluster distributed scheduling,one task excuted for once;
 - 7.Custom task parameters: support online configuration scheduling tasks into the parameters, immediate effect;
 - 8.Scheduling thread pool: scheduling system multi-threaded trigger scheduling operation, to ensure accurate scheduling, not blocked;

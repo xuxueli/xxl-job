@@ -40,7 +40,7 @@ public class XxlJobScheduler implements InitializingBean, DisposableBean {
 
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         // init i18n
         initI18n();
 
@@ -116,7 +116,7 @@ public class XxlJobScheduler implements InitializingBean, DisposableBean {
 
     // ---------------------- executor-client ----------------------
     private static ConcurrentMap<String, ExecutorBiz> executorBizRepository = new ConcurrentHashMap<String, ExecutorBiz>();
-    public static ExecutorBiz getExecutorBiz(String address) throws Exception {
+    public static ExecutorBiz getExecutorBiz(String address) {
         // valid
         if (address==null || address.trim().length()==0) {
             return null;
