@@ -67,10 +67,52 @@
 			<version>${project.parent.version}</version>
 		</dependency>
 
+		<!--辅助工具类-->
+		<dependency>
+			<groupId>cn.hutool</groupId>
+			<artifactId>hutool-all</artifactId>
+			<version>4.5.9</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.dingtalk.open</groupId>
+			<artifactId>taobao-sdk-java</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+			<scope>system</scope>
+			<!--${project.basedir}表示项目路径-->
+			<!--这个方式jar必须在resources里-->
+			<systemPath>${project.basedir}/src/main/resources/lib/taobao-sdk-java-auto_1479188381469-20191104.jar</systemPath>
+		</dependency>
+
 	</dependencies>
+
 
 	<build>
 		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<includeSystemScope>true</includeSystemScope>
+				</configuration>
+			</plugin>
+
+
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<!--这部分可有可无,加上的话则直接生成可运行jar包-->
+					<!--<archive>-->
+					<!--<manifest>-->
+					<!--<mainClass>${exec.mainClass}</mainClass>-->
+					<!--</manifest>-->
+					<!--</archive>-->
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+				</configuration>
+			</plugin>
+
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>

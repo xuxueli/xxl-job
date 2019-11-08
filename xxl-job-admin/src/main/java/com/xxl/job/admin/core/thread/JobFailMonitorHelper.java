@@ -1,22 +1,26 @@
 package com.xxl.job.admin.core.thread;
 
+import com.dingtalk.api.DefaultDingTalkClient;
+import com.dingtalk.api.DingTalkClient;
+import com.dingtalk.api.request.OapiRobotSendRequest;
+import com.dingtalk.api.response.OapiRobotSendResponse;
+import com.taobao.api.ApiException;
 import com.xxl.job.admin.core.conf.XxlJobAdminConfig;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.admin.core.trigger.TriggerTypeEnum;
 import com.xxl.job.admin.core.util.I18nUtil;
+import com.xxl.job.core.biz.model.AlarmParaConfig;
 import com.xxl.job.core.biz.model.ReturnT;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.util.StringUtils;
 
 import javax.mail.internet.MimeMessage;
 import java.text.MessageFormat;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -139,6 +143,16 @@ public class JobFailMonitorHelper {
 			"   </tbody>\n" +
 			"</table>";
 
+	private static final String dingdingBodyTemplate="#### {0} "+I18nUtil.getString("jobconf_monitor")+"\n\n"+
+			I18nUtil.getString("jobconf_monitor_detail")+" {1} \n\n >"+
+			I18nUtil.getString("jobinfo_field_jobgroup")+":{2} \n\n >"+
+			I18nUtil.getString("jobinfo_field_id")+":{3} \n\n >"+
+			I18nUtil.getString("jobinfo_field_jobdesc")+":{4} \n\n >"+
+			I18nUtil.getString("jobinfo_field_author")+":{5} \n\n >"+
+			I18nUtil.getString("jobconf_monitor_alarm_title")+":"+I18nUtil.getString("jobconf_monitor_alarm_type")+" \n\n >"+
+			"###### "+new Date()+"\n\n"+
+			"["+I18nUtil.getString("jobinfo_opt_log")+"]({6})";
+
 	/**
 	 * fail alarm
 	 *
@@ -150,46 +164,93 @@ public class JobFailMonitorHelper {
 		// send monitor email
 		if (info!=null && info.getAlarmEmail()!=null && info.getAlarmEmail().trim().length()>0) {
 
-			// alarmContent
-			String alarmContent = "Alarm Job LogId=" + jobLog.getId();
-			if (jobLog.getTriggerCode() != ReturnT.SUCCESS_CODE) {
-				alarmContent += "<br>TriggerMsg=<br>" + jobLog.getTriggerMsg();
-			}
-			if (jobLog.getHandleCode()>0 && jobLog.getHandleCode() != ReturnT.SUCCESS_CODE) {
-				alarmContent += "<br>HandleCode=" + jobLog.getHandleMsg();
-			}
-
 			// email info
 			XxlJobGroup group = XxlJobAdminConfig.getAdminConfig().getXxlJobGroupDao().load(Integer.valueOf(info.getJobGroup()));
 			String personal = I18nUtil.getString("admin_name_full");
 			String title = I18nUtil.getString("jobconf_monitor");
-			String content = MessageFormat.format(mailBodyTemplate,
-					group!=null?group.getTitle():"null",
-					info.getId(),
-					info.getJobDesc(),
-					alarmContent);
 
-			Set<String> emailSet = new HashSet<String>(Arrays.asList(info.getAlarmEmail().split(",")));
-			for (String email: emailSet) {
+			//未配置发件邮箱，不进行警报
+		 	AlarmParaConfig alarmParaConfig =new AlarmParaConfig(info.getAlarmEmail());
+			if(!StringUtils.isEmpty(XxlJobAdminConfig.getAdminConfig().getEmailUserName())){
+				// alarmContent
+				String alarmContent = "Alarm Job LogId=" + jobLog.getId();
+				if (jobLog.getTriggerCode() != ReturnT.SUCCESS_CODE) {
+					alarmContent += "<br>TriggerMsg=<br>" + jobLog.getTriggerMsg();
+				}
+				if (jobLog.getHandleCode()>0 && jobLog.getHandleCode() != ReturnT.SUCCESS_CODE) {
+					alarmContent += "<br>HandleCode=" + jobLog.getHandleMsg();
+				}
 
-				// make mail
-				try {
-					MimeMessage mimeMessage = XxlJobAdminConfig.getAdminConfig().getMailSender().createMimeMessage();
+				String content = MessageFormat.format(mailBodyTemplate,
+						group!=null?group.getTitle():"null",
+						info.getId(),
+						info.getJobDesc(),
+						alarmContent);
 
-					MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
-					helper.setFrom(XxlJobAdminConfig.getAdminConfig().getEmailUserName(), personal);
-					helper.setTo(email);
-					helper.setSubject(title);
-					helper.setText(content, true);
+				Set<String> emailSet = new HashSet<String>(alarmParaConfig.getEmailPara().getEmails());
+				for (String email: emailSet) {
 
-					XxlJobAdminConfig.getAdminConfig().getMailSender().send(mimeMessage);
-				} catch (Exception e) {
-					logger.error(">>>>>>>>>>> xxl-job, job fail alarm email send error, JobLogId:{}", jobLog.getId(), e);
+					// make mail
+					try {
+						MimeMessage mimeMessage = XxlJobAdminConfig.getAdminConfig().getMailSender().createMimeMessage();
 
-					alarmResult = false;
+						MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+						helper.setFrom(XxlJobAdminConfig.getAdminConfig().getEmailUserName(), personal);
+						helper.setTo(email);
+						helper.setSubject(title);
+						helper.setText(content, true);
+
+						XxlJobAdminConfig.getAdminConfig().getMailSender().send(mimeMessage);
+					} catch (Exception e) {
+						logger.error(">>>>>>>>>>> xxl-job, job fail alarm email send error, JobLogId:{}", jobLog.getId(), e);
+
+						alarmResult = false;
+					}
+				}
+			}
+			AlarmParaConfig.DingDingPara dingDingPara=alarmParaConfig.getDingDingPara();
+			if(null!=dingDingPara&&null!=dingDingPara.getAccess_token()&&!dingDingPara.getAccess_token().isEmpty()){
+				// alarmContent
+//				String alarmContent ="";
+//				if (jobLog.getTriggerCode() != ReturnT.SUCCESS_CODE) {
+//					alarmContent += "TriggerMsg=<br>" + jobLog.getTriggerMsg();
+//				}
+//				if (jobLog.getHandleCode()>0 && jobLog.getHandleCode() != ReturnT.SUCCESS_CODE) {
+//					alarmContent += "HandleCode=" + jobLog.getHandleMsg();
+//				}
+
+				String content = MessageFormat.format(dingdingBodyTemplate,
+						"["+alarmParaConfig.getEnv_tag()+"]",
+						dingDingPara.getAtListString(" "),
+						group!=null?group.getTitle():"null",
+						info.getId(),
+						info.getJobDesc(),
+						info.getAuthor(),
+						alarmParaConfig.getRootUrl()+"/joblog?jobId="+info.getId()
+				);
+				for (String access_token : alarmParaConfig.getDingDingPara().getAccess_token())
+				{
+					try{
+						DingTalkClient client = new DefaultDingTalkClient("https://oapi.dingtalk.com/robot/send?access_token="+access_token);
+						OapiRobotSendRequest request = new OapiRobotSendRequest();
+						request.setMsgtype("markdown");
+						OapiRobotSendRequest.Markdown markdown = new OapiRobotSendRequest.Markdown();
+						markdown.setTitle("["+alarmParaConfig.getEnv_tag()+"]"+I18nUtil.getString("jobconf_monitor"));
+						markdown.setText(content);
+						request.setMarkdown(markdown);
+						OapiRobotSendRequest.At at=new OapiRobotSendRequest.At();
+						at.setAtMobiles(dingDingPara.getAtList());
+						request.setAt(at);
+						OapiRobotSendResponse response = client.execute(request);
+					} catch (Exception e) {
+						logger.error(">>>>>>>>>>> xxl-job, job fail alarm email send error, JobLogId:{}", jobLog.getId(), e);
+						alarmResult = false;
+					}
+
 				}
 
 			}
+
 		}
 
 		// do something, custom alarm strategy, such as sms

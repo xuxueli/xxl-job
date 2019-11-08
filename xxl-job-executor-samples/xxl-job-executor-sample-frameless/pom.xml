@@ -13,7 +13,7 @@
 
     <name>${project.artifactId}</name>
     <description>Example executor project for spring boot.</description>
-    <url>https://www.xuxueli.com/</url>
+    <url>http://www.xuxueli.com/</url>
 
 
     <dependencies>
