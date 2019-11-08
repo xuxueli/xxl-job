@@ -1,149 +1,144 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>com.xuxueli</groupId>
-		<artifactId>xxl-job</artifactId>
-		<version>2.1.1-SNAPSHOT</version>
-	</parent>
-	<artifactId>xxl-job-admin</artifactId>
-	<packaging>jar</packaging>
+	<groupId>com.xuxueli</groupId>
+	<artifactId>xxl-job</artifactId>
+	<version>2.1.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
 
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-starter-parent</artifactId>
-				<version>${spring-boot.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
+	<name>${project.artifactId}</name>
+	<description>A lightweight distributed task scheduling framework.</description>
+	<url>https://www.xuxueli.com/</url>
 
-	<dependencies>
+	<modules>
+		<module>xxl-job-core</module>
+		<module>xxl-job-admin</module>
+		<module>xxl-job-executor-samples</module>
+    </modules>
 
-		<!-- starter-web：spring-webmvc + autoconfigure + logback + yaml + tomcat -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
-		<!-- starter-test：junit + spring-test + mockito -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<maven.compiler.encoding>UTF-8</maven.compiler.encoding>
+		<maven.compiler.source>1.7</maven.compiler.source>
+		<maven.compiler.target>1.7</maven.compiler.target>
+		<maven.test.skip>true</maven.test.skip>
 
-		<!-- freemarker-starter -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-freemarker</artifactId>
-		</dependency>
+		<xxl-rpc.version>1.4.1</xxl-rpc.version>
 
-		<!-- mail-starter -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-mail</artifactId>
-		</dependency>
+		<spring.version>4.3.25.RELEASE</spring.version>
+		<spring-boot.version>1.5.22.RELEASE</spring-boot.version>
+		<mybatis-spring-boot-starter.version>1.3.5</mybatis-spring-boot-starter.version>
+		<mysql-connector-java.version>5.1.48</mysql-connector-java.version>
 
-		<!-- mybatis-starter：mybatis + mybatis-spring + tomcat-jdbc（default） -->
-		<dependency>
-			<groupId>org.mybatis.spring.boot</groupId>
-			<artifactId>mybatis-spring-boot-starter</artifactId>
-			<version>${mybatis-spring-boot-starter.version}</version>
-		</dependency>
-		<!-- mysql -->
-		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<version>${mysql-connector-java.version}</version>
-		</dependency>
+		<slf4j-api.version>1.7.28</slf4j-api.version>
+		<junit.version>4.12</junit.version>
 
-		<!-- xxl-job-core -->
-		<dependency>
-			<groupId>com.xuxueli</groupId>
-			<artifactId>xxl-job-core</artifactId>
-			<version>${project.parent.version}</version>
-		</dependency>
+		<commons-exec.version>1.3</commons-exec.version>
 
-		<!--辅助工具类-->
-		<dependency>
-			<groupId>cn.hutool</groupId>
-			<artifactId>hutool-all</artifactId>
-			<version>4.5.9</version>
-		</dependency>
+		<groovy.version>2.5.8</groovy.version>
 
-		<dependency>
-			<groupId>com.dingtalk.open</groupId>
-			<artifactId>taobao-sdk-java</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
-			<scope>system</scope>
-			<!--${project.basedir}表示项目路径-->
-			<!--这个方式jar必须在resources里-->
-			<systemPath>${project.basedir}/src/main/resources/lib/taobao-sdk-java-auto_1479188381469-20191104.jar</systemPath>
-		</dependency>
-
-	</dependencies>
-
+		<maven-source-plugin.version>3.1.0</maven-source-plugin.version>
+		<maven-javadoc-plugin.version>3.1.1</maven-javadoc-plugin.version>
+		<maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
+		<maven-war-plugin.version>3.2.3</maven-war-plugin.version>
+	</properties>
 
 	<build>
 		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<includeSystemScope>true</includeSystemScope>
-				</configuration>
-			</plugin>
-
-
-			<plugin>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<configuration>
-					<!--这部分可有可无,加上的话则直接生成可运行jar包-->
-					<!--<archive>-->
-					<!--<manifest>-->
-					<!--<mainClass>${exec.mainClass}</mainClass>-->
-					<!--</manifest>-->
-					<!--</archive>-->
-					<descriptorRefs>
-						<descriptorRef>jar-with-dependencies</descriptorRef>
-					</descriptorRefs>
-				</configuration>
-			</plugin>
-
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<version>${spring-boot.version}</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>repackage</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<!-- docker -->
-			<plugin>
-				<groupId>com.spotify</groupId>
-				<artifactId>docker-maven-plugin</artifactId>
-				<version>0.4.13</version>
-				<configuration>
-					<!-- made of '[a-z0-9-_.]' -->
-					<imageName>${project.artifactId}:${project.version}</imageName>
-					<dockerDirectory>${project.basedir}</dockerDirectory>
-					<resources>
-						<resource>
-							<targetPath>/</targetPath>
-							<directory>${project.build.directory}</directory>
-							<include>${project.build.finalName}.jar</include>
-						</resource>
-					</resources>
-				</configuration>
-			</plugin>
 		</plugins>
 	</build>
+
+
+	<licenses>
+		<license>
+			<name>GNU General Public License version 3</name>
+			<url>https://opensource.org/licenses/GPL-3.0</url>
+		</license>
+	</licenses>
+
+	<scm>
+		<tag>master</tag>
+		<url>https://github.com/xuxueli/xxl-job.git</url>
+		<connection>scm:git:https://github.com/xuxueli/xxl-job.git</connection>
+		<developerConnection>scm:git:git@github.com:xuxueli/xxl-job.git</developerConnection>
+	</scm>
+	<developers>
+		<developer>
+			<id>XXL</id>
+			<name>hezhiqiang</name>
+			<email>1987463004@qq.com</email>
+			<url>https://github.com/hezhiqiang8909/xxl-job</url>
+		</developer>
+	</developers>
+
+	<profiles>
+
+		<profile>
+			<id>release</id>
+			<build>
+				<plugins>
+					<!-- Source -->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-source-plugin</artifactId>
+						<version>${maven-source-plugin.version}</version>
+						<executions>
+							<execution>
+								<phase>package</phase>
+								<goals>
+									<goal>jar-no-fork</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<!-- Javadoc -->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<version>${maven-javadoc-plugin.version}</version>
+						<executions>
+							<execution>
+								<phase>package</phase>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+								<configuration>
+									<doclint>none</doclint>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<!-- GPG -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>${maven-gpg-plugin.version}</version>
+						<configuration>
+							<useAgent>false</useAgent>
+						</configuration>
+                        <executions>
+                            <execution>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+				</plugins>
+			</build>
+			<distributionManagement>
+				<snapshotRepository>
+					<id>oss</id>
+					<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+				</snapshotRepository>
+				<repository>
+					<id>oss</id>
+					<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+				</repository>
+			</distributionManagement>
+		</profile>
+	</profiles>
 
 </project>
