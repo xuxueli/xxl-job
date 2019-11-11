@@ -1113,7 +1113,7 @@ API服务请求参考代码：com.xxl.job.adminbiz.AdminBizTest.java
     7、任务触发；
     
 API服务位置：com.xxl.job.admin.controller.JobInfoController.java     
-API服务请求参考代码：可参考任务界面操作的ajax请求。任何ajax接口均可配置成为API服务，只需在待启用的API服务上添加 “@PermessionLimit(limit = false)” 注解取消登陆态拦截即可；
+API服务请求参考代码：可参考任务界面操作的ajax请求。任何ajax接口均可配置成为API服务，只需在待启用的API服务上添加 “@PermissionLimit(limit = false)” 注解取消登陆态拦截即可；
 
 ### 5.12 执行器API服务
 执行器提供了API服务，供调度中心选择使用，目前提供的API服务有：
