@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -44,6 +45,12 @@ public class HttpJobHandler extends IJobHandler {
             connection.setRequestProperty("connection", "Keep-Alive");
             connection.setRequestProperty("Content-Type", "application/json;charset=UTF-8");
             connection.setRequestProperty("Accept-Charset", "application/json;charset=UTF-8");
+
+            if (httpRequestParam.getRequestBody() != null) {
+                OutputStream outputStream = connection.getOutputStream();
+                byte[] requestBody = httpRequestParam.getRequestBody().getBytes("UTF-8");
+                outputStream.write(requestBody, 0 , requestBody.length);
+            }
 
             // do connection
             connection.connect();
