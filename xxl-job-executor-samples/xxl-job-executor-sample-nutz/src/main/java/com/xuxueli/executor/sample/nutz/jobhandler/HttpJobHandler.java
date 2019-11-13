@@ -1,5 +1,7 @@
 package com.xuxueli.executor.sample.nutz.jobhandler;
 
+import com.xuxueli.executor.sample.nutz.jobhandler.param.HttpRequestParam;
+import com.xuxueli.executor.sample.nutz.jobhandler.param.HttpRequestParamHandler;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.handler.annotation.JobHandler;
@@ -28,11 +30,12 @@ public class HttpJobHandler extends IJobHandler {
         BufferedReader bufferedReader = null;
         try {
             // connection
-            URL realUrl = new URL(param);
+            HttpRequestParam httpRequestParam = HttpRequestParamHandler.getInstance().convertParam(param);
+            URL realUrl = new URL(httpRequestParam.getEndpoint());
             connection = (HttpURLConnection) realUrl.openConnection();
 
             // connection setting
-            connection.setRequestMethod("GET");
+            connection.setRequestMethod(httpRequestParam.getHttpMethod());
             connection.setDoOutput(true);
             connection.setDoInput(true);
             connection.setUseCaches(false);

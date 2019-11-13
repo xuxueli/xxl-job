@@ -4,6 +4,8 @@ import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.handler.annotation.JobHandler;
 import com.xxl.job.core.log.XxlJobLogger;
+import com.xxl.job.executor.service.jobhandler.param.HttpRequestParam;
+import com.xxl.job.executor.service.jobhandler.param.HttpRequestParamHandler;
 import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
@@ -28,11 +30,12 @@ public class HttpJobHandler extends IJobHandler {
         BufferedReader bufferedReader = null;
         try {
             // connection
-            URL realUrl = new URL(param);
+            HttpRequestParam httpRequestParam = HttpRequestParamHandler.getInstance().convertParam(param);
+            URL realUrl = new URL(httpRequestParam.getEndpoint());
             connection = (HttpURLConnection) realUrl.openConnection();
 
             // connection setting
-            connection.setRequestMethod("GET");
+            connection.setRequestMethod(httpRequestParam.getHttpMethod());
             connection.setDoOutput(true);
             connection.setDoInput(true);
             connection.setUseCaches(false);
