@@ -93,7 +93,7 @@ public class JobScheduleHelper {
                                     logger.debug(">>>>>>>>>>> xxl-job, shecule push trigger : jobId = " + jobInfo.getId() );
 
                                     // 2、fresh next
-                                    refreshNextValidTime(jobInfo, new Date(jobInfo.getTriggerNextTime()));
+                                    refreshNextValidTime(jobInfo, new Date());
 
                                     // next-trigger-time in 5s, pre-read again
                                     if (jobInfo.getTriggerStatus()==1 && nowTime + PRE_READ_MS > jobInfo.getTriggerNextTime()) {
