@@ -40,6 +40,9 @@ public class XxlJobAdminConfig implements InitializingBean{
     @Value("${spring.mail.username}")
     private String emailUserName;
 
+    @Value("${xxl.job.hook.path:hooks}")
+    private String hookPath;
+
     // dao, service
 
     @Resource
