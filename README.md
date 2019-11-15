@@ -7,8 +7,8 @@
         <a href="https://www.xuxueli.com/xxl-job/"><strong>-- Home Page --</strong></a>
         <br>
         <br>
-        <a href="https://travis-ci.org/xuxueli/xxl-job">
-            <img src="https://travis-ci.org/xuxueli/xxl-job.svg?branch=master" >
+        <a href="https://github.com/xuxueli/xxl-job/actions">
+            <img src="https://github.com/xuxueli/xxl-job/workflows/Java%20CI/badge.svg" >
         </a>
         <a href="https://hub.docker.com/r/xuxueli/xxl-job-admin/">
             <img src="https://img.shields.io/badge/docker-passing-brightgreen.svg" >
