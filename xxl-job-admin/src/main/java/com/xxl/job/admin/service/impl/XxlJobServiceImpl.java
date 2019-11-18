@@ -51,7 +51,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 		// package result
 		Map<String, Object> maps = new HashMap<String, Object>();
 	    maps.put("recordsTotal", list_count);		// 总记录数
-	    maps.put("recordsFiltered", list_count);	// 过滤后的总记录数
+	    maps.put("recordsFiltered", list.size());	// 过滤后的总记录数
 	    maps.put("data", list);  					// 分页列表
 		return maps;
 	}
