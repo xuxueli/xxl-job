@@ -60,6 +60,12 @@ public class XxlJobAdminConfig implements InitializingBean, DisposableBean {
     @Value("${spring.mail.username}")
     private String emailUserName;
 
+    @Value("${xxl.job.triggerpool.fast.max}")
+    private int triggerPoolFastMax;
+
+    @Value("${xxl.job.triggerpool.slow.max}")
+    private int triggerPoolSlowMax;
+
     // dao, service
 
     @Resource
@@ -88,6 +94,20 @@ public class XxlJobAdminConfig implements InitializingBean, DisposableBean {
 
     public String getEmailUserName() {
         return emailUserName;
+    }
+
+    public int getTriggerPoolFastMax() {
+        if (triggerPoolFastMax < 200) {
+            return 200;
+        }
+        return triggerPoolFastMax;
+    }
+
+    public int getTriggerPoolSlowMax() {
+        if (triggerPoolSlowMax < 100) {
+            return 100;
+        }
+        return triggerPoolSlowMax;
     }
 
     public XxlJobLogDao getXxlJobLogDao() {

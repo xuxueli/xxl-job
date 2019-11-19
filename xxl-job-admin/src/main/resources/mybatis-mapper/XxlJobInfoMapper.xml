@@ -213,6 +213,8 @@
 		FROM xxl_job_info AS t
 		WHERE t.trigger_status = 1
 			and t.trigger_next_time <![CDATA[ <= ]]> #{maxNextTime}
+		ORDER BY id ASC
+		LIMIT #{pagesize}
 	</select>
 
 	<update id="scheduleUpdate" parameterType="com.xxl.job.admin.core.model.XxlJobInfo"  >

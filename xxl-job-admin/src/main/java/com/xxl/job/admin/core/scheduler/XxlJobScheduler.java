@@ -39,14 +39,17 @@ public class XxlJobScheduler  {
         // init i18n
         initI18n();
 
+        // admin-server
+        initRpcProvider();
+
         // admin registry monitor run
         JobRegistryMonitorHelper.getInstance().start();
 
         // admin monitor run
         JobFailMonitorHelper.getInstance().start();
 
-        // admin-server
-        initRpcProvider();
+        // admin trigger pool start
+        JobTriggerPoolHelper.toStart();
 
         // start-schedule
         JobScheduleHelper.getInstance().start();
@@ -63,11 +66,11 @@ public class XxlJobScheduler  {
         // admin trigger pool stop
         JobTriggerPoolHelper.toStop();
 
-        // admin registry stop
-        JobRegistryMonitorHelper.getInstance().toStop();
-
         // admin monitor stop
         JobFailMonitorHelper.getInstance().toStop();
+
+        // admin registry stop
+        JobRegistryMonitorHelper.getInstance().toStop();
 
         // admin-server
         stopRpcProvider();
