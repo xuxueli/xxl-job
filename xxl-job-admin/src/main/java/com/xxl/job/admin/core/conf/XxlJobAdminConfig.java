@@ -1,10 +1,12 @@
 package com.xxl.job.admin.core.conf;
 
+import com.xxl.job.admin.core.scheduler.XxlJobScheduler;
 import com.xxl.job.admin.dao.XxlJobGroupDao;
 import com.xxl.job.admin.dao.XxlJobInfoDao;
 import com.xxl.job.admin.dao.XxlJobLogDao;
 import com.xxl.job.admin.dao.XxlJobRegistryDao;
 import com.xxl.job.core.biz.AdminBiz;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -19,15 +21,34 @@ import javax.sql.DataSource;
  * @author xuxueli 2017-04-28
  */
 
-public class XxlJobAdminConfig {
+@Component
+public class XxlJobAdminConfig implements InitializingBean, DisposableBean {
+
     private static XxlJobAdminConfig adminConfig = null;
     public static XxlJobAdminConfig getAdminConfig() {
         return adminConfig;
     }
 
-    public static void setAdminConfig(XxlJobAdminConfig config) {
-        XxlJobAdminConfig.adminConfig = config;
+
+    // ---------------------- XxlJobScheduler ----------------------
+
+    private XxlJobScheduler xxlJobScheduler;
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        adminConfig = this;
+
+        xxlJobScheduler = new XxlJobScheduler();
+        xxlJobScheduler.init();
     }
+
+    @Override
+    public void destroy() throws Exception {
+        xxlJobScheduler.destroy();
+    }
+
+
+    // ---------------------- XxlJobScheduler ----------------------
 
     // conf
     @Value("${xxl.job.i18n}")
