@@ -66,7 +66,7 @@ CREATE TABLE `xxl_job_logglue` (
 
 CREATE TABLE `xxl_job_registry` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `registry_group` varchar(255) NOT NULL,
+  `registry_group` varchar(50) NOT NULL,
   `registry_key` varchar(255) NOT NULL,
   `registry_value` varchar(255) NOT NULL,
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
