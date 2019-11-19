@@ -59,7 +59,7 @@ public class ExecutorBizTest {
         referenceBean.setVersion(null);
         referenceBean.setTimeout(3000);
         referenceBean.setAddress("127.0.0.1:9999");
-        referenceBean.setAccessToken(null);
+        referenceBean.setAccessToken(accessToken);
         referenceBean.setInvokeCallback(null);
         referenceBean.setInvokerFactory(null);
 
