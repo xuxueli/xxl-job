@@ -45,7 +45,7 @@ public class ExecutorBizTest {
         triggerParam.setGlueSource(null);
         triggerParam.setGlueUpdatetime(System.currentTimeMillis());
         triggerParam.setLogId(1);
-        triggerParam.setLogDateTim(System.currentTimeMillis());
+        triggerParam.setLogDateTime(System.currentTimeMillis());
 
         // do remote trigger
         String accessToken = null;
