@@ -227,6 +227,7 @@
 		)
 		AND `alarm_status` = 0
 		ORDER BY id ASC
+		LIMIT #{pagesize}
 	</select>
 
 	<update id="updateAlarmStatus" >
