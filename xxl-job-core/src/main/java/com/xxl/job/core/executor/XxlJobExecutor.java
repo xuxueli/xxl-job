@@ -147,7 +147,7 @@ public class XxlJobExecutor  {
 
         xxlRpcProviderFactory.setServer(NettyHttpServer.class);
         xxlRpcProviderFactory.setSerializer(HessianSerializer.class);
-        xxlRpcProviderFactory.setCorePoolSize(30);
+        xxlRpcProviderFactory.setCorePoolSize(20);
         xxlRpcProviderFactory.setMaxPoolSize(200);
         xxlRpcProviderFactory.setIp(ip);
         xxlRpcProviderFactory.setPort(port);
