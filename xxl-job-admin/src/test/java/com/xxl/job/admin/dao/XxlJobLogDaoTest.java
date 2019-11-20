@@ -4,8 +4,6 @@ import com.xxl.job.admin.core.model.XxlJobLog;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
@@ -51,7 +49,7 @@ public class XxlJobLogDaoTest {
 
         List<Map<String, Object>> list2 = xxlJobLogDao.triggerCountByDay(new Date(new Date().getTime() + 30*24*60*60*1000), new Date());
 
-        int ret4 = xxlJobLogDao.clearLog(1, 1, new Date(), 100);
+        List<Long> ret4 = xxlJobLogDao.findClearLogIds(1, 1, new Date(), 100, 100);
 
         int ret2 = xxlJobLogDao.delete(log.getJobId());
 
