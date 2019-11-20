@@ -11,7 +11,7 @@
 //
 ///**
 // * http job bean
-// * “@DisallowConcurrentExecution” diable concurrent, thread size can not be only one, better given more
+// * “@DisallowConcurrentExecution” disable concurrent, thread size can not be only one, better given more
 // * @author xuxueli 2015-12-17 18:20:34
 // */
 ////@DisallowConcurrentExecution
