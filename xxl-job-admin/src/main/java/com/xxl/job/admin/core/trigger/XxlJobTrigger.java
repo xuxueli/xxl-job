@@ -1,7 +1,7 @@
 package com.xxl.job.admin.core.trigger;
 
 import com.xxl.job.admin.core.conf.XxlJobAdminConfig;
-import com.xxl.job.admin.core.conf.XxlJobScheduler;
+import com.xxl.job.admin.core.scheduler.XxlJobScheduler;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
@@ -116,7 +116,7 @@ public class XxlJobTrigger {
         triggerParam.setExecutorBlockStrategy(jobInfo.getExecutorBlockStrategy());
         triggerParam.setExecutorTimeout(jobInfo.getExecutorTimeout());
         triggerParam.setLogId(jobLog.getId());
-        triggerParam.setLogDateTim(jobLog.getTriggerTime().getTime());
+        triggerParam.setLogDateTime(jobLog.getTriggerTime().getTime());
         triggerParam.setGlueType(jobInfo.getGlueType());
         triggerParam.setGlueSource(jobInfo.getGlueSource());
         triggerParam.setGlueUpdatetime(jobInfo.getGlueUpdatetime().getTime());

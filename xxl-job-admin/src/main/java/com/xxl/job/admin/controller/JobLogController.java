@@ -1,6 +1,6 @@
 package com.xxl.job.admin.controller;
 
-import com.xxl.job.admin.core.conf.XxlJobScheduler;
+import com.xxl.job.admin.core.scheduler.XxlJobScheduler;
 import com.xxl.job.admin.core.exception.XxlJobException;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
