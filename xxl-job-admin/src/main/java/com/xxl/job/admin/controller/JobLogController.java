@@ -216,7 +216,14 @@ public class JobLogController {
 			return new ReturnT<String>(ReturnT.FAIL_CODE, I18nUtil.getString("joblog_clean_type_unvalid"));
 		}
 
-		xxlJobLogDao.clearLog(jobGroup, jobId, clearBeforeTime, clearBeforeNum);
+		List<Long> logIds = null;
+		do {
+			logIds = xxlJobLogDao.findClearLogIds(jobGroup, jobId, clearBeforeTime, clearBeforeNum, 1000);
+			if (logIds!=null && logIds.size()>0) {
+				xxlJobLogDao.clearLog(logIds);
+			}
+		} while (logIds!=null && logIds.size()>0);
+
 		return ReturnT.SUCCESS;
 	}
 

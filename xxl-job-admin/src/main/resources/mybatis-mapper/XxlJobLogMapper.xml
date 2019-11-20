@@ -186,8 +186,8 @@
 		ORDER BY triggerDay
     </select>
 
-	<delete id="clearLog" >
-		delete from xxl_job_log
+	<select id="findClearLogIds" resultType="long" >
+		SELECT id FROM xxl_job_log
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
 			<if test="jobGroup gt 0">
 				AND job_group = #{jobGroup}
@@ -200,22 +200,32 @@
 			</if>
 			<if test="clearBeforeNum gt 0">
 				AND id NOT in(
-					SELECT id FROM(
-						SELECT id FROM xxl_job_log AS t
-						<trim prefix="WHERE" prefixOverrides="AND | OR" >
-							<if test="jobGroup gt 0">
-								AND t.job_group = #{jobGroup}
-							</if>
-							<if test="jobId gt 0">
-								AND t.job_id = #{jobId}
-							</if>
-						</trim>
-						ORDER BY t.trigger_time desc
-						LIMIT 0, #{clearBeforeNum}
-					) t1
+				SELECT id FROM(
+				SELECT id FROM xxl_job_log AS t
+				<trim prefix="WHERE" prefixOverrides="AND | OR" >
+					<if test="jobGroup gt 0">
+						AND t.job_group = #{jobGroup}
+					</if>
+					<if test="jobId gt 0">
+						AND t.job_id = #{jobId}
+					</if>
+				</trim>
+				ORDER BY t.trigger_time desc
+				LIMIT 0, #{clearBeforeNum}
+				) t1
 				)
 			</if>
 		</trim>
+		order by id asc
+		LIMIT #{pagesize}
+	</select>
+
+	<delete id="clearLog" >
+		delete from xxl_job_log
+		WHERE id in
+		<foreach collection="logIds" item="item" open="(" close=")" separator="," >
+			#{item}
+		</foreach>
 	</delete>
 
 	<select id="findFailJobLogIds" resultType="long" >
