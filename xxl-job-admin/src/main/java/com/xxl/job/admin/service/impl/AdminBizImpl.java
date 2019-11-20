@@ -129,15 +129,15 @@ public class AdminBizImpl implements AdminBiz {
     public ReturnT<String> registry(RegistryParam registryParam) {
 
         // valid
-        if (!StringUtils.hasText(registryParam.getRegistGroup())
+        if (!StringUtils.hasText(registryParam.getRegistryGroup())
                 || !StringUtils.hasText(registryParam.getRegistryKey())
                 || !StringUtils.hasText(registryParam.getRegistryValue())) {
             return new ReturnT<String>(ReturnT.FAIL_CODE, "Illegal Argument.");
         }
 
-        int ret = xxlJobRegistryDao.registryUpdate(registryParam.getRegistGroup(), registryParam.getRegistryKey(), registryParam.getRegistryValue(), new Date());
+        int ret = xxlJobRegistryDao.registryUpdate(registryParam.getRegistryGroup(), registryParam.getRegistryKey(), registryParam.getRegistryValue(), new Date());
         if (ret < 1) {
-            xxlJobRegistryDao.registrySave(registryParam.getRegistGroup(), registryParam.getRegistryKey(), registryParam.getRegistryValue(), new Date());
+            xxlJobRegistryDao.registrySave(registryParam.getRegistryGroup(), registryParam.getRegistryKey(), registryParam.getRegistryValue(), new Date());
 
             // fresh
             freshGroupRegistryInfo(registryParam);
@@ -149,13 +149,13 @@ public class AdminBizImpl implements AdminBiz {
     public ReturnT<String> registryRemove(RegistryParam registryParam) {
 
         // valid
-        if (!StringUtils.hasText(registryParam.getRegistGroup())
+        if (!StringUtils.hasText(registryParam.getRegistryGroup())
                 || !StringUtils.hasText(registryParam.getRegistryKey())
                 || !StringUtils.hasText(registryParam.getRegistryValue())) {
             return new ReturnT<String>(ReturnT.FAIL_CODE, "Illegal Argument.");
         }
 
-        int ret = xxlJobRegistryDao.registryDelete(registryParam.getRegistGroup(), registryParam.getRegistryKey(), registryParam.getRegistryValue());
+        int ret = xxlJobRegistryDao.registryDelete(registryParam.getRegistryGroup(), registryParam.getRegistryKey(), registryParam.getRegistryValue());
         if (ret > 0) {
 
             // fresh
