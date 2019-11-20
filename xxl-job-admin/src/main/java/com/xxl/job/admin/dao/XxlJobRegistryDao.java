@@ -31,7 +31,7 @@ public interface XxlJobRegistryDao {
                             @Param("registryValue") String registryValue,
                             @Param("updateTime") Date updateTime);
 
-    public int registryDelete(@Param("registryGroup") String registGroup,
+    public int registryDelete(@Param("registryGroup") String registryGroup,
                           @Param("registryKey") String registryKey,
                           @Param("registryValue") String registryValue);
 

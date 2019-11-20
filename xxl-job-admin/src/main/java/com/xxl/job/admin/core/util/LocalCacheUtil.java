@@ -62,7 +62,7 @@ public class LocalCacheUtil {
     public static boolean set(String key, Object val, long cacheTime){
 
         // clean timeout cache, before set new cache (avoid cache too much)
-        cleanTimeutCache();
+        cleanTimeoutCache();
 
         // set new cache
         if (key==null || key.trim().length()==0) {
@@ -118,7 +118,7 @@ public class LocalCacheUtil {
      *
      * @return
      */
-    public static boolean cleanTimeutCache(){
+    public static boolean cleanTimeoutCache(){
         if (!cacheRepository.keySet().isEmpty()) {
             for (String key: cacheRepository.keySet()) {
                 LocalCacheData localCacheData = cacheRepository.get(key);
