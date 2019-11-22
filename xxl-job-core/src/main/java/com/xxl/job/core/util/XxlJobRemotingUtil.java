@@ -17,7 +17,7 @@ import java.util.Map;
  */
 public class XxlJobRemotingUtil {
     private static Logger logger = LoggerFactory.getLogger(XxlJobRemotingUtil.class);
-    public static String XXL_RPC_ACCESS_TOKEN = "XXL_RPC_ACCESS_TOKEN";
+    public static String XXL_RPC_ACCESS_TOKEN = "XXL-RPC-ACCESS-TOKEN";
 
     /**
      * post
