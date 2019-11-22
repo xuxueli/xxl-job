@@ -98,8 +98,8 @@ public class XxlJobRemotingUtil {
                 }
                 return returnT;
             } catch (Exception e) {
-                logger.error("xxl-rpc remoting response content invalid("+ resultJson +"), for url : " + url);
-                return new ReturnT<String>(ReturnT.FAIL_CODE, "xxl-rpc remoting response content invalid("+ resultJson +"), for url : " + url);
+                logger.error("xxl-rpc remoting (url="+url+") response content invalid("+ resultJson +").", e);
+                return new ReturnT<String>(ReturnT.FAIL_CODE, "xxl-rpc remoting (url="+url+") response content invalid("+ resultJson +").");
             }
 
         } catch (Exception e) {
