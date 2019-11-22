@@ -98,7 +98,7 @@ public class XxlJobRemotingUtil {
                 }
                 return returnT;
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(), e);
                 return new ReturnT<String>(ReturnT.FAIL_CODE, "xxl-rpc remoting response content invalid("+ resultJson +"), for url : " + url);
             }
 
