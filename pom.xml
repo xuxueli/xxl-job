@@ -24,7 +24,7 @@
 		<maven.compiler.target>1.7</maven.compiler.target>
 		<maven.test.skip>true</maven.test.skip>
 
-		<xxl-rpc.version>1.4.2</xxl-rpc.version>
+		<xxl-rpc.version>1.5.0</xxl-rpc.version>
 
 		<spring.version>4.3.25.RELEASE</spring.version>
 		<spring-boot.version>1.5.22.RELEASE</spring-boot.version>
