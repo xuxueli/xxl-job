@@ -1,10 +1,7 @@
 package com.xxl.job.admin.core.conf;
 
 import com.xxl.job.admin.core.scheduler.XxlJobScheduler;
-import com.xxl.job.admin.dao.XxlJobGroupDao;
-import com.xxl.job.admin.dao.XxlJobInfoDao;
-import com.xxl.job.admin.dao.XxlJobLogDao;
-import com.xxl.job.admin.dao.XxlJobRegistryDao;
+import com.xxl.job.admin.dao.*;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
@@ -76,6 +73,8 @@ public class XxlJobAdminConfig implements InitializingBean, DisposableBean {
     @Resource
     private XxlJobGroupDao xxlJobGroupDao;
     @Resource
+    private XxlJobLogReportDao xxlJobLogReportDao;
+    @Resource
     private JavaMailSender mailSender;
     @Resource
     private DataSource dataSource;
@@ -121,6 +120,10 @@ public class XxlJobAdminConfig implements InitializingBean, DisposableBean {
 
     public XxlJobGroupDao getXxlJobGroupDao() {
         return xxlJobGroupDao;
+    }
+
+    public XxlJobLogReportDao getXxlJobLogReportDao() {
+        return xxlJobLogReportDao;
     }
 
     public JavaMailSender getMailSender() {

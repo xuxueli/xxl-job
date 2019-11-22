@@ -85,13 +85,21 @@ public class JobFailMonitorHelper {
 							}
 						}
 
-						TimeUnit.SECONDS.sleep(10);
 					} catch (Exception e) {
 						if (!toStop) {
 							logger.error(">>>>>>>>>>> xxl-job, job fail monitor thread error:{}", e);
 						}
 					}
-				}
+
+                    try {
+                        TimeUnit.SECONDS.sleep(10);
+                    } catch (Exception e) {
+                        if (!toStop) {
+                            logger.error(e.getMessage(), e);
+                        }
+                    }
+
+                }
 
 				logger.info(">>>>>>>>>>> xxl-job, job fail monitor thread stop");
 

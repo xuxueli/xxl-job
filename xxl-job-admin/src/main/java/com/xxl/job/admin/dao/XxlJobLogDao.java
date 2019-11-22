@@ -41,10 +41,8 @@ public interface XxlJobLogDao {
 	
 	public int delete(@Param("jobId") int jobId);
 
-	public int triggerCountByHandleCode(@Param("handleCode") int handleCode);
-
-	public List<Map<String, Object>> triggerCountByDay(@Param("from") Date from,
-													   @Param("to") Date to);
+	public Map<String, Object> findLogReport(@Param("from") Date from,
+											 @Param("to") Date to);
 
 	public List<Long> findClearLogIds(@Param("jobGroup") int jobGroup,
 									  @Param("jobId") int jobId,

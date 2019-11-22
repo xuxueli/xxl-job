@@ -1,10 +1,7 @@
 package com.xxl.job.admin.core.scheduler;
 
 import com.xxl.job.admin.core.conf.XxlJobAdminConfig;
-import com.xxl.job.admin.core.thread.JobFailMonitorHelper;
-import com.xxl.job.admin.core.thread.JobRegistryMonitorHelper;
-import com.xxl.job.admin.core.thread.JobScheduleHelper;
-import com.xxl.job.admin.core.thread.JobTriggerPoolHelper;
+import com.xxl.job.admin.core.thread.*;
 import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.core.biz.ExecutorBiz;
 import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
@@ -40,6 +37,9 @@ public class XxlJobScheduler  {
         // admin trigger pool start
         JobTriggerPoolHelper.toStart();
 
+        // admin log report start
+        JobLogReportHelper.getInstance().start();
+
         // start-schedule
         JobScheduleHelper.getInstance().start();
 
@@ -51,6 +51,9 @@ public class XxlJobScheduler  {
 
         // stop-schedule
         JobScheduleHelper.getInstance().toStop();
+
+        // admin log report stop
+        JobLogReportHelper.getInstance().toStop();
 
         // admin trigger pool stop
         JobTriggerPoolHelper.toStop();
