@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -32,11 +33,15 @@ public class JobLogReportHelper {
             @Override
             public void run() {
 
-                // monitor
+                // last clean log time
+                long lastCleanLogTime = 0;
+
+
                 while (!toStop) {
+
+                    // 1、log-report refresh: refresh log report in 3 days
                     try {
 
-                        // refresh log report in 3 days
                         for (int i = 0; i < 3; i++) {
 
                             // today
@@ -86,6 +91,32 @@ public class JobLogReportHelper {
                         if (!toStop) {
                             logger.error(">>>>>>>>>>> xxl-job, job log report thread error:{}", e);
                         }
+                    }
+
+                    // 2、log-clean: switch open & once each day
+                    if (XxlJobAdminConfig.getAdminConfig().getLogretentiondays()>0
+                            && System.currentTimeMillis() - lastCleanLogTime > 24*60*60*1000) {
+
+                        // expire-time
+                        Calendar expiredDay = Calendar.getInstance();
+                        expiredDay.add(Calendar.DAY_OF_MONTH, -1 * XxlJobAdminConfig.getAdminConfig().getLogretentiondays());
+                        expiredDay.set(Calendar.HOUR_OF_DAY, 0);
+                        expiredDay.set(Calendar.MINUTE, 0);
+                        expiredDay.set(Calendar.SECOND, 0);
+                        expiredDay.set(Calendar.MILLISECOND, 0);
+                        Date clearBeforeTime = expiredDay.getTime();
+
+                        // clean expired log
+                        List<Long> logIds = null;
+                        do {
+                            logIds = XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().findClearLogIds(0, 0, clearBeforeTime, 0, 1000);
+                            if (logIds!=null && logIds.size()>0) {
+                                XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().clearLog(logIds);
+                            }
+                        } while (logIds!=null && logIds.size()>0);
+
+                        // update clean time
+                        lastCleanLogTime = System.currentTimeMillis();
                     }
 
                     try {
