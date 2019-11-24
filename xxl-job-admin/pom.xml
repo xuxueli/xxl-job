@@ -47,6 +47,12 @@
 			<artifactId>spring-boot-starter-mail</artifactId>
 		</dependency>
 
+		<!-- starter-actuator -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+
 		<!-- mybatis-starter：mybatis + mybatis-spring + tomcat-jdbc（default） -->
 		<dependency>
 			<groupId>org.mybatis.spring.boot</groupId>
