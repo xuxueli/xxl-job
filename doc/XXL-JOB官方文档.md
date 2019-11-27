@@ -747,7 +747,7 @@ public XxlJobSpringExecutor xxlJobExecutor() {
 #### 步骤二：开发任务代码：
 选中指定任务，点击该任务右侧“GLUE”按钮，将会前往GLUE任务的Web IDE界面，在该界面支持对任务代码进行开发（也可以在IDE中开发完成后，复制粘贴到编辑中）。
 
-该模式的任务实际上是一段 "nodejS" 脚本；
+该模式的任务实际上是一段 "nodeJS" 脚本；
 
 ### 3.6 GLUE模式(PHP)
 同上
