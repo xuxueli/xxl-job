@@ -48,7 +48,7 @@ XXL-JOB是一个轻量级分布式任务调度平台，其核心设计目标是�
 ## Communication    
 - [社区交流](https://www.xuxueli.com/page/community.html)
 
-
+test
 ## Features
 - 1、简单：支持通过Web页面对任务进行CRUD操作，操作简单，一分钟上手；
 - 2、动态：支持动态修改任务状态、启动/停止任务，以及终止运行中任务，即时生效；
