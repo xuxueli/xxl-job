@@ -82,7 +82,7 @@ CREATE TABLE `xxl_job_registry` (
   `update_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `i_g_k_v` (`registry_group`,`registry_key`,`registry_value`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;
 
 CREATE TABLE `xxl_job_group` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
