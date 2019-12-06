@@ -1,4 +1,4 @@
-<p align="center">
+<p align="center" >
     <img src="https://www.xuxueli.com/doc/static/xxl-job/images/xxl-logo.jpg" width="150">
     <h3 align="center">XXL-JOB</h3>
     <p align="center">
@@ -7,28 +7,28 @@
         <a href="https://www.xuxueli.com/xxl-job/"><strong>-- Home Page --</strong></a>
         <br>
         <br>
-        <a href="https://travis-ci.org/xuxueli/xxl-job">
-            <img src="https://travis-ci.org/xuxueli/xxl-job.svg?branch=master" >
-        </a>
-        <a href="https://hub.docker.com/r/xuxueli/xxl-job-admin/">
-            <img src="https://img.shields.io/badge/docker-passing-brightgreen.svg" >
+        <a href="https://github.com/xuxueli/xxl-job/actions">
+            <img src="https://github.com/xuxueli/xxl-job/workflows/Java%20CI/badge.svg" >
         </a>
         <a href="https://maven-badges.herokuapp.com/maven-central/com.xuxueli/xxl-job/">
             <img src="https://maven-badges.herokuapp.com/maven-central/com.xuxueli/xxl-job/badge.svg" >
         </a>
-         <a href="https://github.com/xuxueli/xxl-job/releases">
-             <img src="https://img.shields.io/github/release/xuxueli/xxl-job.svg" >
-         </a>
-         <a href="http://www.gnu.org/licenses/gpl-3.0.html">
-             <img src="https://img.shields.io/badge/license-GPLv3-blue.svg" >
-         </a>
-         <a href="https://gitter.im/xuxueli/xxl-job?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge">
-              <img src="https://badges.gitter.im/xuxueli/xxl-job.svg" >
-         </a>
-         <a href="https://www.xuxueli.com/page/donate.html">
-               <img src="https://img.shields.io/badge/%24-donate-ff69b4.svg?style=flat-square" >
-         </a>
-    </p>    
+        <a href="https://github.com/xuxueli/xxl-job/releases">
+         <img src="https://img.shields.io/github/release/xuxueli/xxl-job.svg" >
+        </a>
+        <a href="https://github.com/xuxueli/xxl-job/">
+            <img src="https://img.shields.io/github/stars/xuxueli/xxl-job" >
+        </a>
+        <a href="https://hub.docker.com/r/xuxueli/xxl-job-admin/">
+            <img src="https://img.shields.io/docker/pulls/xuxueli/xxl-job-admin" >
+        </a>
+        <a href="http://www.gnu.org/licenses/gpl-3.0.html">
+         <img src="https://img.shields.io/badge/license-GPLv3-blue.svg" >
+        </a>
+        <a href="https://www.xuxueli.com/page/donate.html">
+           <img src="https://img.shields.io/badge/%24-donate-ff69b4.svg?style=flat" >
+        </a>
+    </p>
 </p>
 
 
@@ -378,6 +378,23 @@ XXL-JOB是一个轻量级分布式任务调度平台，其核心设计目标是�
     - 259、爱乐优（二手平台）
     - 260、猫眼电影（私有化部署）【猫眼电影】
     - 261、美团大象（私有化部署）【美团大象】
+    - 262、作业帮教育科技（北京）有限公司【作业帮】
+    - 263、北京小年糕互联网技术有限公司
+    - 264、山东矩阵软件工程股份有限公司
+    - 265、陕西国驿软件科技有限公司
+    - 266、君开信息科技
+    - 267、村鸟网络科技有限责任公司
+    - 268、云南国际信托有限公司
+    - 269、金智教育
+    - 270、珠海市筑巢科技有限公司
+    - 271、上海百胜软件股份有限公司
+    - 272、深圳市科盾科技有限公司
+    - 273、哈啰出行【哈啰】
+    - 274、途虎养车【途虎】
+    - 275、卡思优派人力资源集团
+    - 276、南京观为智慧软件科技有限公司
+    - 277、杭州城市大脑科技有限公司
+    - 278、猿辅导【猿辅导】
 	- ……
 
 > 更多接入的公司，欢迎在 [登记地址](https://github.com/xuxueli/xxl-job/issues/1 ) 登记，登记仅仅为了产品推广。

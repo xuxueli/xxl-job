@@ -41,15 +41,15 @@ public interface XxlJobLogDao {
 	
 	public int delete(@Param("jobId") int jobId);
 
-	public int triggerCountByHandleCode(@Param("handleCode") int handleCode);
+	public Map<String, Object> findLogReport(@Param("from") Date from,
+											 @Param("to") Date to);
 
-	public List<Map<String, Object>> triggerCountByDay(@Param("from") Date from,
-													   @Param("to") Date to);
-
-	public int clearLog(@Param("jobGroup") int jobGroup,
-						@Param("jobId") int jobId,
-						@Param("clearBeforeTime") Date clearBeforeTime,
-						@Param("clearBeforeNum") int clearBeforeNum);
+	public List<Long> findClearLogIds(@Param("jobGroup") int jobGroup,
+									  @Param("jobId") int jobId,
+									  @Param("clearBeforeTime") Date clearBeforeTime,
+									  @Param("clearBeforeNum") int clearBeforeNum,
+									  @Param("pagesize") int pagesize);
+	public int clearLog(@Param("logIds") List<Long> logIds);
 
 	public List<Long> findFailJobLogIds(@Param("pagesize") int pagesize);
 
