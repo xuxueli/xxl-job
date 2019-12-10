@@ -57,7 +57,7 @@ public class XxlJobRemotingUtil {
             String requestBody = BasicJson.toJson(requestObj);
 
             DataOutputStream dataOutputStream = new DataOutputStream(connection.getOutputStream());
-            dataOutputStream.writeBytes(requestBody);
+            dataOutputStream.write(requestBody.getBytes("UTF-8"));
             dataOutputStream.flush();
             dataOutputStream.close();
 
