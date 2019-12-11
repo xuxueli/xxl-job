@@ -1630,10 +1630,19 @@ Tips: 历史版本(V1.3.x)目前已经Release至稳定版本, 进入维护阶段
 - 25、项目依赖升级至较新稳定版本，如spring、spring-boot、mybatis、slf4j、groovy等等；
 
 ### 6.27 版本 v2.1.2 Release Notes[迭代中]
-- 1、调度中心dispatcher servlet加载顺序优化；
-- 2、执行器回调乱码问题修复；
-- 3、[迭代中]移除commons-exec，采用原生方式实现；
-- 4、[迭代中]任务操作API服务调整为restful方式，降低接入成本；
+- 1、方法任务支持：由原来基于JobHandler类任务开发方式，优化为支持基于方法的任务开发方式；因此，可以支持单个类中开发多个任务方法，进行类复用（TODO：JobHandler移除）；
+```
+@XxlJob("demoJobHandler2")
+public ReturnT<String> execute(String param) {
+    XxlJobLogger.log("hello world");
+    return ReturnT.SUCCESS;
+}
+```
+- 2、调度中心dispatcher servlet加载顺序优化；
+- 3、执行器回调乱码问题修复；
+- 4、[迭代中]移除commons-exec，采用原生方式实现；
+- 5、[迭代中]任务操作API服务调整为restful方式，降低接入成本；
+
 
 
 ### TODO LIST

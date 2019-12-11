@@ -10,6 +10,8 @@ import java.util.concurrent.TimeUnit;
 
 
 /**
+ * 【类方式任务开发即将废弃，建议采用方法方式开发，参考：com.xxl.job.executor.service.jobhandler.SampleXxlJob 】
+ *
  * 任务Handler示例（Bean模式）
  *
  * 开发步骤：

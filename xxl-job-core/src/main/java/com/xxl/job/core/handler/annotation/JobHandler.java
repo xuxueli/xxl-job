@@ -8,23 +8,16 @@ import java.lang.annotation.Target;
 
 /**
  * annotation for job handler
+ *
+ *
  * @author 2016-5-17 21:06:49
- * @author liuzh 2019-12-07
  */
-@Target({ElementType.TYPE, ElementType.METHOD})
+@Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
+@Deprecated
 public @interface JobHandler {
 
     String value() default "";
 
-    /**
-     * init handler, invoked when JobThread init
-     */
-    String init() default "";
-
-    /**
-     * destroy handler, invoked when JobThread destroy
-     */
-    String destroy() default "";
 }
