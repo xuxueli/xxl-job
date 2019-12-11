@@ -575,7 +575,7 @@ docker run -e PARAMS="--spring.datasource.url=jdbc:mysql://127.0.0.1:3306/xxl_jo
 执行器组件，配置内容说明：
 
 ```
-@Bean(initMethod = "start", destroyMethod = "destroy")
+@Bean
 public XxlJobSpringExecutor xxlJobExecutor() {
     logger.info(">>>>>>>>>>> xxl-job config init.");
     XxlJobSpringExecutor xxlJobSpringExecutor = new XxlJobSpringExecutor();
