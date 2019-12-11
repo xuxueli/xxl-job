@@ -9,8 +9,8 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author xuxueli 2018-10-31 19:05:43
  */
-public class Application {
-    private static Logger logger = LoggerFactory.getLogger(Application.class);
+public class FramelessApplication {
+    private static Logger logger = LoggerFactory.getLogger(FramelessApplication.class);
 
     public static void main(String[] args) {
 
@@ -18,8 +18,13 @@ public class Application {
             // start
             FrameLessXxlJobConfig.getInstance().initXxlJobExecutor();
 
+            // Blocks until interrupted
             while (true) {
-                TimeUnit.HOURS.sleep(1);
+                try {
+                    TimeUnit.HOURS.sleep(1);
+                } catch (InterruptedException e) {
+                    break;
+                }
             }
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
