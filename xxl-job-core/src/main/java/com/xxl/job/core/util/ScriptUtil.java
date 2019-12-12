@@ -52,7 +52,7 @@ public class ScriptUtil {
      * @return
      * @throws IOException
      */
-    public static int execToFileB(String command, String scriptFile, String logFile, String... params) throws IOException {
+    public static int execToFile(String command, String scriptFile, String logFile, String... params) throws IOException {
 
         FileOutputStream fileOutputStream = null;
         Thread inputThread = null;
@@ -187,7 +187,7 @@ public class ScriptUtil {
      * @return
      * @throws IOException
      */
-    /*public static int execToFile(String command, String scriptFile, String logFile, String... params) throws IOException {
+    /*public static int execToFileB(String command, String scriptFile, String logFile, String... params) throws IOException {
         // 标准输出：print （null if watchdog timeout）
         // 错误输出：logging + 异常 （still exists if watchdog timeout）
         // 标准输入
