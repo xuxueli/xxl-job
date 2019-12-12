@@ -1672,9 +1672,9 @@ public ReturnT<String> execute(String param) {
     return ReturnT.SUCCESS;
 }
 ```
-- 2、调度中心dispatcher servlet加载顺序优化；
+- 2、移除commons-exec，采用原生方式实现；
 - 3、执行器回调乱码问题修复；
-- 4、[迭代中]移除commons-exec，采用原生方式实现；
+- 4、调度中心dispatcher servlet加载顺序优化；
 - 5、[迭代中]任务操作API服务调整为restful方式，降低接入成本；
 
 

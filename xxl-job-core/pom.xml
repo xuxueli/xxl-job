@@ -29,13 +29,6 @@
 			<version>${groovy.version}</version>
 		</dependency>
 
-		<!-- commons-exec -->
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-exec</artifactId>
-			<version>${commons-exec.version}</version>
-		</dependency>
-
 		<!-- spring-context -->
 		<dependency>
 			<groupId>org.springframework</groupId>
