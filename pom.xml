@@ -7,7 +7,7 @@
 	<packaging>pom</packaging>
 
 	<name>${project.artifactId}</name>
-	<description>A lightweight distributed task scheduling framework.</description>
+	<description>A distributed task scheduling framework.</description>
 	<url>https://www.xuxueli.com/</url>
 
 	<modules>

@@ -15,7 +15,7 @@
 ## 1. Brief introduction
 
 ### 1.1 Overview
-XXL-JOB is a lightweight distributed task scheduling framework, the core design goal is to develop quickly, learning simple, lightweight, easy to expand. Is now open source and access to a number of companies online product line, download and use it now.
+XXL-JOB is a distributed task scheduling framework, the core design goal is to develop quickly, learning simple, lightweight, easy to expand. Is now open source and access to a number of companies online product line, download and use it now.
 
 > English document update slightly delayed, Please check the Chinese version for the latest document.
 
