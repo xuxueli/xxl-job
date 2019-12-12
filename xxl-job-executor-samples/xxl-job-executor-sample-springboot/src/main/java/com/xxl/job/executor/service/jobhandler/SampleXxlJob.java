@@ -22,14 +22,14 @@ public class SampleXxlJob {
     @XxlJob("demoJobHandler2")
     public ReturnT<String> execute(String param) {
 
-        XxlJobLogger.log("222");
+        XxlJobLogger.log("hello world.");
         return ReturnT.SUCCESS;
     }
 
     @XxlJob(value="demoJobHandler3", init = "init", destroy = "destory")
     public ReturnT<String> execute3(String param) {
 
-        XxlJobLogger.log("333");
+        XxlJobLogger.log("hello world.");
         return ReturnT.SUCCESS;
     }
 

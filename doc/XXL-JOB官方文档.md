@@ -685,17 +685,23 @@ public XxlJobSpringExecutor xxlJobExecutor() {
     - 执行参数：任务执行所需的参数；
     
 ### 3.1 BEAN模式
-任务逻辑以JobHandler的形式存在于“执行器”所在项目中，开发流程如下：
+任务逻辑以注解方法的形式存在于“执行器”所在项目中（任务方法底层会自动生成代理JobHandler），开发流程如下：
 
-#### 步骤一：执行器项目中，开发JobHandler：
+#### 步骤一：执行器项目中，开发Job方法：
 
-     - 1、继承"IJobHandler"：“com.xxl.job.core.handler.IJobHandler”；
-     - 2、注册到Spring容器：添加“@Component”注解，被Spring容器扫描为Bean实例；
-     - 3、注册到执行器工厂：添加“@JobHandler(value="自定义jobhandler名称")”注解，注解value值对应的是调度中心新建任务的JobHandler属性的值。
-     - 4、执行日志：需要通过 "XxlJobLogger.log" 打印执行日志；
-    （可参考Sample示例执行器中的DemoJobHandler，见下图）
+    - 1、在Spring Bean实例中，开发Job方法，方式格式要求为 "public ReturnT<String> execute(String param)"
+    - 2、为Job方法添加注解 "@XxlJob(value="自定义jobhandler名称", init = "JobHandler初始化方法", destroy = "JobHandler销毁方法")"，注解value值对应的是调度中心新建任务的JobHandler属性的值。
+    - 3、执行日志：需要通过 "XxlJobLogger.log" 打印执行日志；
+    
+```
+// 可参考Sample示例执行器中的 "com.xxl.job.executor.service.jobhandler.SampleXxlJob" ，如下：
+@XxlJob("demoJobHandler")
+public ReturnT<String> execute(String param) {
 
-![输入图片说明](https://www.xuxueli.com/doc/static/xxl-job/images/img_oLlM.png "在这里输入图片标题")
+    XxlJobLogger.log("hello world.");
+    return ReturnT.SUCCESS;
+}
+```
 
 #### 步骤二：调度中心，新建调度任务
 参考上文“配置属性详细说明”对新建的任务进行参数配置，运行模式选中 "BEAN模式"，JobHandler属性填写任务注解“@JobHandler”中定义的值；

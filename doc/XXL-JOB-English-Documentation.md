@@ -603,9 +603,7 @@ The task logic exist in the executor project as JobHandler,the develop steps as 
     - 1, create new java class implent com.xxl.job.core.handler.IJobHandler;
     - 2, if you add @Component annotation on the top of the class name it’s will be managed as a bean instance by spring container;
     - 3, add  “@JobHandler(value=" customize jobhandler name")” annotation，the value stand for JobHandler name,it will be used as JobHandler property when create a new task in the schedule center.
-    （go and see DemoJobHandler in the xxl-job-executor-example project, as shown below）
 
-![输入图片说明](https://www.xuxueli.com/doc/static/xxl-job/images/img_oLlM.png "在这里输入图片标题")
 
 #### Step 2:create task in schedule center
 If you want learn more about configure item please go and sedd “Description of configuration item”，select  "BEAN模式" as run mode，property JobHandler please fill in the value defined by @JobHande.
