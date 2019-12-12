@@ -685,19 +685,35 @@ public XxlJobSpringExecutor xxlJobExecutor() {
     - 报警邮件：任务调度失败时邮件通知的邮箱地址，支持配置多邮箱地址，配置多个邮箱地址时用逗号分隔；
     - 负责人：任务的负责人；
     - 执行参数：任务执行所需的参数；
+
     
-### 3.1 BEAN模式
+### 3.1 BEAN模式（类形式）
 
-BEAN模式有两种开发方式：
-- 1、基于类的方式：早期提供的方式，需要开发一个继承自"com.xxl.job.core.handler.IJobHandler"的JobHandler类。新版本已经不提供这种方式的任务自动注入支持，需要手动通过如下方式注入到执行器容器。方式比较原始；
-```
-XxlJobExecutor.registJobHandler("demoJobHandler", new DemoJobHandler());
-```
-- 2、基于方法的方式：新版本提供，也是推荐的方式，只需要在相关任务方法上添加"@XxlJob"注解即可，会自动完成任务注入到执行器容器。更加方便、高效；
+基于类的Bean模式开发方式，这是比较原始的一种开发方式。
 
->注意：上面两种方式开发的任务，底层都会生成JobHandler代理，因此，任务都会以JobHandler的形式存在于执行器任务容器中。
+- 优点：兼容性好、不限制项目环境，即使是无框架项目，如main方法直接启动的项目也可以提供支持，可以参考示例项目 "xxl-job-executor-sample-frameless"；
+- 缺点：每个任务需要占用一个Java类，比较浪费资源；而且，不支持自动扫描任务注入到执行器容器，需要手动注入。
 
-基于方法的方式，开发步骤如下：
+#### 步骤一：执行器项目中，开发Job类：
+
+    - 1、开发一个继承自"com.xxl.job.core.handler.IJobHandler"的JobHandler类。
+    - 2、手动通过如下方式注入到执行器容器。
+    ```
+    XxlJobExecutor.registJobHandler("demoJobHandler", new DemoJobHandler());
+    ```
+
+#### 步骤二：调度中心，新建调度任务
+后续步骤和 "3.2 BEAN模式（方法形式）"一致，可以前往参考。
+
+
+### 3.2 BEAN模式（方法形式）
+
+基于方法的Bean模式开发方式，这是比较推荐的开发方式。
+
+- 优点：每个任务只需要开发一个方法，添加"@XxlJob"注解即可。更加方便、快速。会自动扫描任务注入到执行器容器。
+- 缺点：要求Spring容器环境；
+
+>基于方法开发的任务，底层会生成JobHandler代理，和基于类的方式一样，任务也会以JobHandler的形式存在于执行器任务容器中。
 
 #### 步骤一：执行器项目中，开发Job方法：
 
@@ -729,7 +745,7 @@ public ReturnT<String> execute(String param) {
 - commandJobHandler：通用命令行任务Handler；业务方只需要提供命令行即可；如 “pwd”命令；
 
 
-### 3.2 GLUE模式(Java)
+### 3.3 GLUE模式(Java)
 任务以源码方式维护在调度中心，支持通过Web IDE在线更新，实时编译和生效，因此不需要指定JobHandler。开发流程如下：
 
 #### 步骤一：调度中心，新建调度任务：
@@ -744,7 +760,7 @@ public ReturnT<String> execute(String param) {
 
 ![输入图片说明](https://www.xuxueli.com/doc/static/xxl-job/images/img_dNUJ.png "在这里输入图片标题")
 
-### 3.3 GLUE模式(Shell)
+### 3.4 GLUE模式(Shell)
 
 #### 步骤一：调度中心，新建调度任务   
 参考上文“配置属性详细说明”对新建的任务进行参数配置，运行模式选中 "GLUE模式(Shell)"；
@@ -819,7 +835,7 @@ public ReturnT<String> execute(String param) {
 
 该操作仅针对GLUE任务。
 
-选中指定任务，点击该任务右侧“GLUE”按钮，将会前往GLUE任务的Web IDE界面，在该界面支持对任务代码进行开发。可参考章节 "3.2 GLUE模式(Java)"。
+选中指定任务，点击该任务右侧“GLUE”按钮，将会前往GLUE任务的Web IDE界面，在该界面支持对任务代码进行开发。可参考章节 "3.3 GLUE模式(Java)"。
 
 ### 4.5 启动/停止任务
 可对任务进行“启动”和“停止”操作。
