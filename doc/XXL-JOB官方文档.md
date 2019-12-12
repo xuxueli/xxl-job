@@ -1674,10 +1674,11 @@ public ReturnT<String> execute(String param) {
     return ReturnT.SUCCESS;
 }
 ```
-- 2、移除commons-exec依赖，采用原生方式实现；
+- 2、移除commons-exec，采用原生方式实现，降低第三方依赖；
 - 3、执行器回调乱码问题修复；
 - 4、调度中心dispatcher servlet加载顺序优化；
 - 5、执行器回调地址https兼容支持；
+- 6、多个项目依赖升级至较新稳定版本；
 注意：最新版本 "XxlJobSpringExecutor" 逻辑有调整，历史项目中该组件的配置方式请参考Sample示例项目进行调整，尤其注意需要移除组件的init和destroy方法；
 
 

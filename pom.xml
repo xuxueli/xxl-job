@@ -31,12 +31,12 @@
 		<mybatis-spring-boot-starter.version>1.3.5</mybatis-spring-boot-starter.version>
 		<mysql-connector-java.version>5.1.48</mysql-connector-java.version>
 
-		<slf4j-api.version>1.7.28</slf4j-api.version>
+		<slf4j-api.version>1.7.29</slf4j-api.version>
 		<junit.version>4.12</junit.version>
 
 		<groovy.version>2.5.8</groovy.version>
 
-		<maven-source-plugin.version>3.1.0</maven-source-plugin.version>
+		<maven-source-plugin.version>3.2.0</maven-source-plugin.version>
 		<maven-javadoc-plugin.version>3.1.1</maven-javadoc-plugin.version>
 		<maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
 		<maven-war-plugin.version>3.2.3</maven-war-plugin.version>
