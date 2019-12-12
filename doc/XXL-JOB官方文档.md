@@ -441,6 +441,7 @@ XXL-JOB是一个轻量级分布式任务调度平台，其核心设计目标是�
         ：xxl-job-executor-sample-frameless：无框架版本；
         ：xxl-job-executor-sample-jfinal：JFinal版本，通过JFinal管理执行器；
         ：xxl-job-executor-sample-nutz：Nutz版本，通过Nutz管理执行器；
+        ：xxl-job-executor-sample-jboot：jboot版本，通过jboot管理执行器；
         
 
 ### 2.3 配置部署“调度中心”
@@ -598,6 +599,7 @@ public XxlJobSpringExecutor xxlJobExecutor() {
     xxl-job-executor-sample-spring：项目编译打包成WAR包，并部署到tomcat中。
     xxl-job-executor-sample-jfinal：同上
     xxl-job-executor-sample-nutz：同上
+    xxl-job-executor-sample-jboot：同上
     
 
 至此“执行器”项目已经部署结束。
@@ -685,7 +687,17 @@ public XxlJobSpringExecutor xxlJobExecutor() {
     - 执行参数：任务执行所需的参数；
     
 ### 3.1 BEAN模式
-任务逻辑以注解方法的形式存在于“执行器”所在项目中（任务方法底层会自动生成代理JobHandler），开发流程如下：
+
+BEAN模式有两种开发方式：
+- 1、基于类的方式：早期提供的方式，需要开发一个继承自"com.xxl.job.core.handler.IJobHandler"的JobHandler类。新版本已经不提供这种方式的任务自动注入支持，需要手动通过如下方式注入到执行器容器。方式比较原始；
+```
+XxlJobExecutor.registJobHandler("demoJobHandler", new DemoJobHandler());
+```
+- 2、基于方法的方式：新版本提供，也是推荐的方式，只需要在相关任务方法上添加"@XxlJob"注解即可，会自动完成任务注入到执行器容器。更加方便、高效；
+
+>注意：上面两种方式开发的任务，底层都会生成JobHandler代理，因此，任务都会以JobHandler的形式存在于执行器任务容器中。
+
+基于方法的方式，开发步骤如下：
 
 #### 步骤一：执行器项目中，开发Job方法：
 
@@ -704,7 +716,7 @@ public ReturnT<String> execute(String param) {
 ```
 
 #### 步骤二：调度中心，新建调度任务
-参考上文“配置属性详细说明”对新建的任务进行参数配置，运行模式选中 "BEAN模式"，JobHandler属性填写任务注解“@JobHandler”中定义的值；
+参考上文“配置属性详细说明”对新建的任务进行参数配置，运行模式选中 "BEAN模式"，JobHandler属性填写任务注解“@XxlJob”中定义的值；
 
 ![输入图片说明](https://www.xuxueli.com/doc/static/xxl-job/images/img_ZAsz.png "在这里输入图片标题")
 
