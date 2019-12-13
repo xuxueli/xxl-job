@@ -1,6 +1,7 @@
 package com.xxl.job.admin.controller;
 
 import com.xxl.job.admin.core.model.XxlJobGroup;
+import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobRegistry;
 import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.admin.dao.XxlJobGroupDao;
@@ -33,10 +34,8 @@ public class JobGroupController {
 
 	@RequestMapping
 	public String index(Model model) {
-
 		// job group (executor)
-		List<XxlJobGroup> list = xxlJobGroupDao.findAll();
-
+		List<XxlJobGroup> list = xxlJobGroupDao.select(new XxlJobGroup());
 		model.addAttribute("list", list);
 		return "jobgroup/jobgroup.index";
 	}
@@ -117,21 +116,22 @@ public class JobGroupController {
 	private List<String> findRegistryByAppName(String appNameParam){
 		HashMap<String, List<String>> appAddressMap = new HashMap<String, List<String>>();
 		List<XxlJobRegistry> list = xxlJobRegistryDao.findAll(RegistryConfig.DEAD_TIMEOUT, new Date());
-		if (list != null) {
-			for (XxlJobRegistry item: list) {
-				if (RegistryConfig.RegistType.EXECUTOR.name().equals(item.getRegistryGroup())) {
-					String appName = item.getRegistryKey();
-					List<String> registryList = appAddressMap.get(appName);
-					if (registryList == null) {
-						registryList = new ArrayList<String>();
-					}
+		if (list == null)
+			return appAddressMap.get(appNameParam);
 
-					if (!registryList.contains(item.getRegistryValue())) {
-						registryList.add(item.getRegistryValue());
-					}
-					appAddressMap.put(appName, registryList);
-				}
+		for (XxlJobRegistry item: list) {
+			if (!RegistryConfig.RegistType.EXECUTOR.name().equals(item.getRegistryGroup()))
+				continue;
+
+			String appName = item.getRegistryKey();
+			List<String> registryList = appAddressMap.get(appName);
+			if (registryList == null) {
+				registryList = new ArrayList<String>();
 			}
+			if (!registryList.contains(item.getRegistryValue())) {
+				registryList.add(item.getRegistryValue());
+			}
+			appAddressMap.put(appName, registryList);
 		}
 		return appAddressMap.get(appNameParam);
 	}
@@ -141,12 +141,12 @@ public class JobGroupController {
 	public ReturnT<String> remove(int id){
 
 		// valid
-		int count = xxlJobInfoDao.pageListCount(0, 10, id, -1,  null, null, null);
+		int count = xxlJobInfoDao.pageListCount(new XxlJobInfo().setJobGroup(id).setTriggerStatus(-1));
 		if (count > 0) {
 			return new ReturnT<String>(500, I18nUtil.getString("jobgroup_del_limit_0") );
 		}
 
-		List<XxlJobGroup> allList = xxlJobGroupDao.findAll();
+		List<XxlJobGroup> allList = xxlJobGroupDao.select(new XxlJobGroup());
 		if (allList.size() == 1) {
 			return new ReturnT<String>(500, I18nUtil.getString("jobgroup_del_limit_1") );
 		}

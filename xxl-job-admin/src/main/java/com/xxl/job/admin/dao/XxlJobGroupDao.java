@@ -1,5 +1,6 @@
 package com.xxl.job.admin.dao;
 
+import com.github.pagehelper.Page;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -12,7 +13,7 @@ import java.util.List;
 @Mapper
 public interface XxlJobGroupDao {
 
-    public List<XxlJobGroup> findAll();
+    public Page<XxlJobGroup> select(XxlJobGroup jg);
 
     public List<XxlJobGroup> findByAddressType(@Param("addressType") int addressType);
 

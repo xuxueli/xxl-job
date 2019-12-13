@@ -34,6 +34,10 @@ public class XxlJobLogGlueDaoTest {
         int ret2 = xxlJobLogGlueDao.removeOld(1, 1);
 
         int ret3 =xxlJobLogGlueDao.deleteByJobId(1);
+        System.out.println(ret);
+        System.out.println(list);
+        System.out.println(ret2);
+        System.out.println(ret3);
     }
 
 }

@@ -4,8 +4,8 @@ import com.xxl.job.admin.controller.annotation.PermissionLimit;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobUser;
 import com.xxl.job.admin.core.util.I18nUtil;
-import com.xxl.job.admin.dao.XxlJobGroupDao;
 import com.xxl.job.admin.dao.XxlJobUserDao;
+import com.xxl.job.admin.service.JobGroupService;
 import com.xxl.job.admin.service.LoginService;
 import com.xxl.job.core.biz.model.ReturnT;
 import org.springframework.stereotype.Controller;
@@ -32,16 +32,15 @@ public class UserController {
     @Resource
     private XxlJobUserDao xxlJobUserDao;
     @Resource
-    private XxlJobGroupDao xxlJobGroupDao;
+    private JobGroupService jobGroupService;
 
     @RequestMapping
     @PermissionLimit(adminuser = true)
     public String index(Model model) {
 
         // 执行器列表
-        List<XxlJobGroup> groupList = xxlJobGroupDao.findAll();
+        List<XxlJobGroup> groupList = jobGroupService.select(null, new XxlJobGroup());
         model.addAttribute("groupList", groupList);
-
         return "user/user.index";
     }
 

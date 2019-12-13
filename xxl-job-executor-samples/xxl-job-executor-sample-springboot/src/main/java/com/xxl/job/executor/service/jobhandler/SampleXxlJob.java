@@ -30,7 +30,6 @@ import java.util.concurrent.TimeUnit;
 public class SampleXxlJob {
     private static Logger logger = LoggerFactory.getLogger(SampleXxlJob.class);
 
-
     /**
      * 1、简单任务示例（Bean模式）
      */
@@ -189,5 +188,12 @@ public class SampleXxlJob {
         logger.info("destory");
     }
 
-
+    /**
+     * 6、动态添加任务；
+     */
+    @XxlJob(value = "demoJobDynamicAdd")
+    public ReturnT<String> addDynamicJob(String param) throws Exception {
+        XxlJobLogger.log("XXL-JOB, Dynamic add.\r\n" + param);
+        return ReturnT.SUCCESS.setMsg("动态添加任务完成").setContent("动态添加任务");
+    }
 }

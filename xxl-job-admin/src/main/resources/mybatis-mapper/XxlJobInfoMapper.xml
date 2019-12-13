@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.xxl.job.admin.dao.XxlJobInfoDao">
 
 	<resultMap id="XxlJobInfo" type="com.xxl.job.admin.core.model.XxlJobInfo" >
 		<result column="id" property="id" />
 
 		<result column="job_group" property="jobGroup" />
-	    <result column="job_cron" property="jobCron" />
-	    <result column="job_desc" property="jobDesc" />
+		<result column="job_cron" property="jobCron" />
+		<result column="job_desc" property="jobDesc" />
 
-	    <result column="add_time" property="addTime" />
-	    <result column="update_time" property="updateTime" />
+		<result column="add_time" property="addTime" />
+		<result column="update_time" property="updateTime" />
 
-	    <result column="author" property="author" />
-	    <result column="alarm_email" property="alarmEmail" />
+		<result column="author" property="author" />
+		<result column="alarm_email" property="alarmEmail" />
 
 		<result column="executor_route_strategy" property="executorRouteStrategy" />
 		<result column="executor_handler" property="executorHandler" />
-	    <result column="executor_param" property="executorParam" />
+		<result column="executor_param" property="executorParam" />
 		<result column="executor_block_strategy" property="executorBlockStrategy" />
 		<result column="executor_timeout" property="executorTimeout" />
 		<result column="executor_fail_retry_count" property="executorFailRetryCount" />
 
-	    <result column="glue_type" property="glueType" />
-	    <result column="glue_source" property="glueSource" />
-	    <result column="glue_remark" property="glueRemark" />
+		<result column="glue_type" property="glueType" />
+		<result column="glue_source" property="glueSource" />
+		<result column="glue_remark" property="glueRemark" />
 		<result column="glue_updatetime" property="glueUpdatetime" />
 
 		<result column="child_jobid" property="childJobId" />
@@ -60,16 +60,16 @@
 		t.trigger_next_time
 	</sql>
 
-	<select id="pageList" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
+	<select id="select" resultMap="XxlJobInfo">
 		SELECT <include refid="Base_Column_List" />
 		FROM xxl_job_info AS t
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
 			<if test="jobGroup gt 0">
 				AND t.job_group = #{jobGroup}
 			</if>
-            <if test="triggerStatus gte 0">
-                AND t.trigger_status = #{triggerStatus}
-            </if>
+			<if test="triggerStatus gte 0">
+				AND t.trigger_status = #{triggerStatus}
+			</if>
 			<if test="jobDesc != null and jobDesc != ''">
 				AND t.job_desc like CONCAT(CONCAT('%', #{jobDesc}), '%')
 			</if>
@@ -81,19 +81,18 @@
 			</if>
 		</trim>
 		ORDER BY id DESC
-		LIMIT #{offset}, #{pagesize}
 	</select>
 
-	<select id="pageListCount" parameterType="java.util.HashMap" resultType="int">
-		SELECT count(1)
+	<select id="pageListCount" resultType="int">
+		SELECT count(*)
 		FROM xxl_job_info AS t
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
 			<if test="jobGroup gt 0">
 				AND t.job_group = #{jobGroup}
 			</if>
-            <if test="triggerStatus gte 0">
-                AND t.trigger_status = #{triggerStatus}
-            </if>
+			<if test="triggerStatus gte 0">
+				AND t.trigger_status = #{triggerStatus}
+			</if>
 			<if test="jobDesc != null and jobDesc != ''">
 				AND t.job_desc like CONCAT(CONCAT('%', #{jobDesc}), '%')
 			</if>
@@ -108,49 +107,49 @@
 
 	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobInfo" useGeneratedKeys="true" keyProperty="id" >
 		INSERT INTO xxl_job_info (
-			job_group,
-			job_cron,
-			job_desc,
-			add_time,
-			update_time,
-			author,
-			alarm_email,
-            executor_route_strategy,
-			executor_handler,
-			executor_param,
-			executor_block_strategy,
-			executor_timeout,
-			executor_fail_retry_count,
-			glue_type,
-			glue_source,
-			glue_remark,
-			glue_updatetime,
-			child_jobid,
-			trigger_status,
-			trigger_last_time,
-			trigger_next_time
+		job_group,
+		job_cron,
+		job_desc,
+		add_time,
+		update_time,
+		author,
+		alarm_email,
+		executor_route_strategy,
+		executor_handler,
+		executor_param,
+		executor_block_strategy,
+		executor_timeout,
+		executor_fail_retry_count,
+		glue_type,
+		glue_source,
+		glue_remark,
+		glue_updatetime,
+		child_jobid,
+		trigger_status,
+		trigger_last_time,
+		trigger_next_time
 		) VALUES (
-			#{jobGroup},
-			#{jobCron},
-			#{jobDesc},
-			#{addTime},
-			#{updateTime},
-			#{author},
-			#{alarmEmail},
-			#{executorRouteStrategy},
-			#{executorHandler},
-			#{executorParam},
-			#{executorBlockStrategy},
-			#{executorTimeout},
-			#{executorFailRetryCount},
-			#{glueType},
-			#{glueSource},
-			#{glueRemark},
-			#{glueUpdatetime},
-			#{childJobId},
-			#{triggerStatus},
-			#{triggerLastTime},
-			#{triggerNextTime}
+		#{jobGroup},
+		#{jobCron},
+		#{jobDesc},
+		#{addTime},
+		#{updateTime},
+		#{author},
+		#{alarmEmail},
+		#{executorRouteStrategy},
+		#{executorHandler},
+		#{executorParam},
+		#{executorBlockStrategy},
+		#{executorTimeout},
+		#{executorFailRetryCount},
+		#{glueType},
+		#{glueSource},
+		#{glueRemark},
+		#{glueUpdatetime},
+		#{childJobId},
+		#{triggerStatus},
+		#{triggerLastTime},
+		#{triggerNextTime}
 		);
 		<!--<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
 			SELECT LAST_INSERT_ID()
@@ -166,27 +165,31 @@
 
 	<update id="update" parameterType="com.xxl.job.admin.core.model.XxlJobInfo" >
 		UPDATE xxl_job_info
-		SET
-			job_group = #{jobGroup},
-			job_cron = #{jobCron},
-			job_desc = #{jobDesc},
-			update_time = #{updateTime},
-			author = #{author},
-			alarm_email = #{alarmEmail},
-			executor_route_strategy = #{executorRouteStrategy},
-			executor_handler = #{executorHandler},
-			executor_param = #{executorParam},
-			executor_block_strategy = #{executorBlockStrategy},
-			executor_timeout = ${executorTimeout},
-			executor_fail_retry_count = ${executorFailRetryCount},
-			glue_type = #{glueType},
-			glue_source = #{glueSource},
-			glue_remark = #{glueRemark},
-			glue_updatetime = #{glueUpdatetime},
-			child_jobid = #{childJobId},
+		<set>
 			trigger_status = #{triggerStatus},
 			trigger_last_time = #{triggerLastTime},
-			trigger_next_time = #{triggerNextTime}
+			trigger_next_time = #{triggerNextTime},
+			executor_timeout = ${executorTimeout},
+			executor_fail_retry_count = ${executorFailRetryCount},
+			<if test="jobGroup != null and jobGroup gt 0">job_group = #{jobGroup},</if>
+			<if test="jobCron != null">job_cron = #{jobCron},</if>
+			<if test="jobDesc != null">job_desc = #{jobDesc},</if>
+			<if test="childJobId != null">child_jobid = #{childJobId},</if>
+			<if test="glueType != null">glue_type = #{glueType},</if>
+			<if test="glueSource != null">glue_source = #{glueSource},</if>
+			<if test="glueRemark != null">glue_remark = #{glueRemark},</if>
+			<if test="glueUpdatetime != null">glue_updatetime = #{glueUpdatetime},</if>
+			<if test="executorParam != null">executor_param = #{executorParam},</if>
+			<if test="executorHandler != null">executor_handler = #{executorHandler},</if>
+			<if test="executorRouteStrategy != null">executor_route_strategy = #{executorRouteStrategy},</if>
+			<if test="executorBlockStrategy != null">executor_block_strategy = #{executorBlockStrategy},</if>
+			<if test="alarmEmail != null">alarm_email = #{alarmEmail},</if>
+			<if test="author != null">author = #{author},</if>
+			<choose>
+				<when test="updateTime == null">update_time = NOW()</when>
+				<otherwise>update_time = #{updateTime }</otherwise>
+			</choose>
+		</set>
 		WHERE id = #{id}
 	</update>
 
@@ -203,16 +206,15 @@
 	</select>
 
 	<select id="findAllCount" resultType="int">
-		SELECT count(1)
+		SELECT count(*)
 		FROM xxl_job_info
 	</select>
-
 
 	<select id="scheduleJobQuery" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
 		SELECT <include refid="Base_Column_List" />
 		FROM xxl_job_info AS t
 		WHERE t.trigger_status = 1
-			and t.trigger_next_time <![CDATA[ <= ]]> #{maxNextTime}
+		and t.trigger_next_time <![CDATA[ <= ]]> #{maxNextTime}
 		ORDER BY id ASC
 		LIMIT #{pagesize}
 	</select>

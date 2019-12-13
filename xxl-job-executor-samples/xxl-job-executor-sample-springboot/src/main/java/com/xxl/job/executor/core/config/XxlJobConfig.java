@@ -1,5 +1,6 @@
 package com.xxl.job.executor.core.config;
 
+import com.xxl.job.core.executor.XxlJobExecutor;
 import com.xxl.job.core.executor.impl.XxlJobSpringExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,18 +10,11 @@ import org.springframework.context.annotation.Configuration;
 
 /**
  * xxl-job config
- *
  * @author xuxueli 2017-04-28
  */
 @Configuration
 public class XxlJobConfig {
-    private Logger logger = LoggerFactory.getLogger(XxlJobConfig.class);
-
-    @Value("${xxl.job.admin.addresses}")
-    private String adminAddresses;
-
-    @Value("${xxl.job.executor.appname}")
-    private String appName;
+    private static Logger log = LoggerFactory.getLogger(XxlJobConfig.class);
 
     @Value("${xxl.job.executor.ip}")
     private String ip;
@@ -28,8 +22,20 @@ public class XxlJobConfig {
     @Value("${xxl.job.executor.port}")
     private int port;
 
+    @Value("${xxl.job.admin.addresses}")
+    private String addresses;
+
+    @Value("${xxl.job.executor.appname}")
+    private String appName;
+
     @Value("${xxl.job.accessToken}")
     private String accessToken;
+
+    @Value("${xxl.job.pool.core}")
+    private int poolCore;
+
+    @Value("${xxl.job.pool.max}")
+    private int poolMax;
 
     @Value("${xxl.job.executor.logpath}")
     private String logPath;
@@ -37,20 +43,15 @@ public class XxlJobConfig {
     @Value("${xxl.job.executor.logretentiondays}")
     private int logRetentionDays;
 
-
     @Bean
-    public XxlJobSpringExecutor xxlJobExecutor() {
-        logger.info(">>>>>>>>>>> xxl-job config init.");
-        XxlJobSpringExecutor xxlJobSpringExecutor = new XxlJobSpringExecutor();
-        xxlJobSpringExecutor.setAdminAddresses(adminAddresses);
-        xxlJobSpringExecutor.setAppName(appName);
-        xxlJobSpringExecutor.setIp(ip);
-        xxlJobSpringExecutor.setPort(port);
-        xxlJobSpringExecutor.setAccessToken(accessToken);
-        xxlJobSpringExecutor.setLogPath(logPath);
-        xxlJobSpringExecutor.setLogRetentionDays(logRetentionDays);
-
-        return xxlJobSpringExecutor;
+    public XxlJobExecutor xxlJobExecutor() {
+        XxlJobExecutor exec = new XxlJobSpringExecutor();
+        exec.setIp(ip).setPort(port).setAppName(appName)
+                .setAccessToken(accessToken).setAdminAddresses(addresses)
+                .setPoolCore(poolCore).setPoolMax(poolMax)
+                .setLogPath(logPath).setLogRetentionDays(logRetentionDays);
+        log.info(">>>>>>>>>>> xxl-job config init: " + exec);
+        return exec;
     }
 
     /**
@@ -69,6 +70,4 @@ public class XxlJobConfig {
      *      3、获取IP
      *          String ip_ = inetUtils.findFirstNonLoopbackHostInfo().getIpAddress();
      */
-
-
 }

@@ -42,15 +42,9 @@ public class ExecutorRouteLFU extends ExecutorRouter {
             }
         }
         // remove old
-        List<String> delKeys = new ArrayList<>();
         for (String existKey: lfuItemMap.keySet()) {
             if (!addressList.contains(existKey)) {
-                delKeys.add(existKey);
-            }
-        }
-        if (delKeys.size() > 0) {
-            for (String delKey: delKeys) {
-                lfuItemMap.remove(delKey);
+                lfuItemMap.remove(existKey);
             }
         }
 
@@ -64,7 +58,7 @@ public class ExecutorRouteLFU extends ExecutorRouter {
         });
 
         Map.Entry<String, Integer> addressItem = lfuItemList.get(0);
-        String minAddress = addressItem.getKey();
+//        String minAddress = addressItem.getKey();
         addressItem.setValue(addressItem.getValue() + 1);
 
         return addressItem.getKey();

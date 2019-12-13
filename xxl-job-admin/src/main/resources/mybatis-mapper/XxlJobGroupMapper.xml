@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
-	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.xxl.job.admin.dao.XxlJobGroupDao">
-	
+
 	<resultMap id="XxlJobGroup" type="com.xxl.job.admin.core.model.XxlJobGroup" >
 		<result column="id" property="id" />
-	    <result column="app_name" property="appName" />
-	    <result column="title" property="title" />
-	    <result column="order" property="order" />
+		<result column="app_name" property="appName" />
+		<result column="title" property="title" />
+		<result column="order" property="order" />
 		<result column="address_type" property="addressType" />
 		<result column="address_list" property="addressList" />
 	</resultMap>
@@ -21,9 +21,15 @@
 		t.address_list
 	</sql>
 
-	<select id="findAll" resultMap="XxlJobGroup">
+	<select id="select" resultMap="XxlJobGroup">
 		SELECT <include refid="Base_Column_List" />
 		FROM xxl_job_group AS t
+		<where>
+			<if test="title != null">t.title LIKE CONCAT('%', #{title }, '%')</if>
+			<!-- <if test="addressType gte 0">AND t.address_type = #{addressType }</if> -->
+			<if test="appName != null">AND t.app_name = #{appName }</if>
+			<if test="id gt 0">AND t.id = #{id }</if>
+		</where>
 		ORDER BY t.order ASC
 	</select>
 
