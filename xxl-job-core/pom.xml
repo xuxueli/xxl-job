@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>com.xuxueli</groupId>
 		<artifactId>xxl-job</artifactId>
-		<version>2.1.1-SNAPSHOT</version>
+		<version>2.1.2-SNAPSHOT</version>
 	</parent>
 	<artifactId>xxl-job-core</artifactId>
 	<packaging>jar</packaging>
@@ -29,13 +29,6 @@
 			<version>${groovy.version}</version>
 		</dependency>
 
-		<!-- commons-exec -->
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-exec</artifactId>
-			<version>${commons-exec.version}</version>
-		</dependency>
-
 		<!-- spring-context -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -58,7 +51,6 @@
 			<artifactId>fastjson</artifactId>
 			<version>1.2.62</version>
 		</dependency>
-		
 
 	</dependencies>
 

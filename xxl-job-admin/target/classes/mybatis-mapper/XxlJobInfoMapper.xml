@@ -133,8 +133,8 @@
 			#{jobGroup},
 			#{jobCron},
 			#{jobDesc},
-			NOW(),
-			NOW(),
+			#{addTime},
+			#{updateTime},
 			#{author},
 			#{alarmEmail},
 			#{executorRouteStrategy},
@@ -146,7 +146,7 @@
 			#{glueType},
 			#{glueSource},
 			#{glueRemark},
-			NOW(),
+			#{glueUpdatetime},
 			#{childJobId},
 			#{triggerStatus},
 			#{triggerLastTime},
@@ -170,7 +170,7 @@
 			job_group = #{jobGroup},
 			job_cron = #{jobCron},
 			job_desc = #{jobDesc},
-			update_time = NOW(),
+			update_time = #{updateTime},
 			author = #{author},
 			alarm_email = #{alarmEmail},
 			executor_route_strategy = #{executorRouteStrategy},
@@ -212,7 +212,9 @@
 		SELECT <include refid="Base_Column_List" />
 		FROM xxl_job_info AS t
 		WHERE t.trigger_status = 1
-			and t.trigger_next_time<![CDATA[ <= ]]> #{maxNextTime}
+			and t.trigger_next_time <![CDATA[ <= ]]> #{maxNextTime}
+		ORDER BY id ASC
+		LIMIT #{pagesize}
 	</select>
 
 	<update id="scheduleUpdate" parameterType="com.xxl.job.admin.core.model.XxlJobInfo"  >

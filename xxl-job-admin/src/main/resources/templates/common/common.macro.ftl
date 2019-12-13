@@ -109,7 +109,7 @@
 					<form class="form-horizontal form" role="form" >
 						<div class="form-group">
 							<label for="lastname" class="col-sm-2 control-label">${I18n.change_pwd_field_newpwd}<font color="red">*</font></label>
-							<div class="col-sm-10"><input type="text" class="form-control" name="password" placeholder="${I18n.system_please_input} ${I18n.change_pwd_field_newpwd}" maxlength="100" ></div>
+							<div class="col-sm-10"><input type="text" class="form-control" name="password" placeholder="${I18n.system_please_input} ${I18n.change_pwd_field_newpwd}" maxlength="18" ></div>
 						</div>
 						<hr>
 						<div class="form-group">
@@ -230,7 +230,7 @@
         Powered by <b>XXL-JOB</b> ${I18n.admin_version}
 		<div class="pull-right hidden-xs">
             <strong>Copyright &copy; 2015-${.now?string('yyyy')} &nbsp;
-                <a href="http://www.xuxueli.com/" target="_blank" >xuxueli</a>
+                <a href="https://www.xuxueli.com/" target="_blank" >xuxueli</a>
 				&nbsp;
                 <a href="https://github.com/xuxueli/xxl-job" target="_blank" >github</a>
             </strong><!-- All rights reserved. -->

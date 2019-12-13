@@ -22,7 +22,7 @@
 	<context:component-scan base-package="com.xxl.job.executor.service.jobhandler" />
 
 	<!-- 配置02、执行器 -->
-	<bean id="xxlJobSpringExecutor" class="com.xxl.job.core.executor.impl.XxlJobSpringExecutor" init-method="start" destroy-method="destroy" >
+	<bean id="xxlJobSpringExecutor" class="com.xxl.job.core.executor.impl.XxlJobSpringExecutor" >
 		<!-- 执行器注册中心地址[选填]，为空则关闭自动注册 -->
 		<property name="adminAddresses" value="${xxl.job.admin.addresses}" />
 		<!-- 执行器AppName[选填]，为空则关闭自动注册 -->

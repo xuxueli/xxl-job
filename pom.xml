@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.xuxueli</groupId>
 	<artifactId>xxl-job</artifactId>
-	<version>2.1.1-SNAPSHOT</version>
+	<version>2.1.2-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>${project.artifactId}</name>
@@ -24,7 +24,7 @@
 		<maven.compiler.target>1.7</maven.compiler.target>
 		<maven.test.skip>true</maven.test.skip>
 
-		<xxl-rpc.version>1.4.1</xxl-rpc.version>
+		<xxl-rpc.version>1.5.0</xxl-rpc.version>
 
 		<spring.version>4.3.25.RELEASE</spring.version>
 		<spring-boot.version>1.5.22.RELEASE</spring-boot.version>
@@ -33,8 +33,6 @@
 
 		<slf4j-api.version>1.7.28</slf4j-api.version>
 		<junit.version>4.12</junit.version>
-
-		<commons-exec.version>1.3</commons-exec.version>
 
 		<groovy.version>2.5.8</groovy.version>
 
@@ -66,9 +64,9 @@
 	<developers>
 		<developer>
 			<id>XXL</id>
-			<name>hezhiqiang</name>
-			<email>1987463004@qq.com</email>
-			<url>https://github.com/hezhiqiang8909/xxl-job</url>
+			<name>xuxueli</name>
+			<email>931591021@qq.com</email>
+			<url>https://github.com/xuxueli</url>
 		</developer>
 	</developers>
 

@@ -36,8 +36,8 @@
 			#{glueType},
 			#{glueSource},
 			#{glueRemark},
-			now(),
-			now()
+			#{addTime},
+			#{updateTime}
 		);
 		<!--<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
 			SELECT LAST_INSERT_ID() 

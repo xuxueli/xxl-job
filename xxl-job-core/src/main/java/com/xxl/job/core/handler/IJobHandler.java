@@ -2,6 +2,8 @@ package com.xxl.job.core.handler;
 
 import com.xxl.job.core.biz.model.ReturnT;
 
+import java.lang.reflect.InvocationTargetException;
+
 /**
  * job handler
  *
@@ -31,7 +33,7 @@ public abstract class IJobHandler {
 	/**
 	 * init handler, invoked when JobThread init
 	 */
-	public void init() {
+	public void init() throws InvocationTargetException, IllegalAccessException {
 		// do something
 	}
 
@@ -39,7 +41,7 @@ public abstract class IJobHandler {
 	/**
 	 * destroy handler, invoked when JobThread destroy
 	 */
-	public void destroy() {
+	public void destroy() throws InvocationTargetException, IllegalAccessException {
 		// do something
 	}
 
