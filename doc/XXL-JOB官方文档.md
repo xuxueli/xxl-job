@@ -691,15 +691,17 @@ public XxlJobSpringExecutor xxlJobExecutor() {
     
 ### 3.1 BEAN模式（类形式）
 
-基于类的Bean模式开发方式，这是比较原始的一种开发方式。
+Bean模式任务，支持基于类的开发方式，每个任务对应一个Java类。
 
-- 优点：兼容性好、不限制项目环境，即使是无框架项目，如main方法直接启动的项目也可以提供支持，可以参考示例项目 "xxl-job-executor-sample-frameless"；
-- 缺点：每个任务需要占用一个Java类，比较浪费资源；而且，不支持自动扫描任务注入到执行器容器，需要手动注入。
+- 优点：不限制项目环境，兼容性好。即使是无框架项目，如main方法直接启动的项目也可以提供支持，可以参考示例项目 "xxl-job-executor-sample-frameless"；
+- 缺点：
+    - 每个任务需要占用一个Java类，造成类的浪费；
+    - 不支持自动扫描任务并注入到执行器容器，需要手动注入。
 
 #### 步骤一：执行器项目中，开发Job类：
 
-    - 1、开发一个继承自"com.xxl.job.core.handler.IJobHandler"的JobHandler类。
-    - 2、手动通过如下方式注入到执行器容器。
+    1、开发一个继承自"com.xxl.job.core.handler.IJobHandler"的JobHandler类，实现其中任务方法。
+    2、手动通过如下方式注入到执行器容器。
     ```
     XxlJobExecutor.registJobHandler("demoJobHandler", new DemoJobHandler());
     ```
@@ -710,18 +712,20 @@ public XxlJobSpringExecutor xxlJobExecutor() {
 
 ### 3.2 BEAN模式（方法形式）
 
-基于方法的Bean模式开发方式，这是比较推荐的开发方式。
+Bean模式任务，支持基于方法的开发方式，每个任务对应一个方法。
 
-- 优点：每个任务只需要开发一个方法，添加"@XxlJob"注解即可。更加方便、快速。会自动扫描任务注入到执行器容器。
+- 优点：
+    - 每个任务只需要开发一个方法，并添加"@XxlJob"注解即可，更加方便、快速。
+    - 支持自动扫描任务并注入到执行器容器。
 - 缺点：要求Spring容器环境；
 
 >基于方法开发的任务，底层会生成JobHandler代理，和基于类的方式一样，任务也会以JobHandler的形式存在于执行器任务容器中。
 
 #### 步骤一：执行器项目中，开发Job方法：
 
-    - 1、在Spring Bean实例中，开发Job方法，方式格式要求为 "public ReturnT<String> execute(String param)"
-    - 2、为Job方法添加注解 "@XxlJob(value="自定义jobhandler名称", init = "JobHandler初始化方法", destroy = "JobHandler销毁方法")"，注解value值对应的是调度中心新建任务的JobHandler属性的值。
-    - 3、执行日志：需要通过 "XxlJobLogger.log" 打印执行日志；
+    1、在Spring Bean实例中，开发Job方法，方式格式要求为 "public ReturnT<String> execute(String param)"
+    2、为Job方法添加注解 "@XxlJob(value="自定义jobhandler名称", init = "JobHandler初始化方法", destroy = "JobHandler销毁方法")"，注解value值对应的是调度中心新建任务的JobHandler属性的值。
+    3、执行日志：需要通过 "XxlJobLogger.log" 打印执行日志；
     
 ```
 // 可参考Sample示例执行器中的 "com.xxl.job.executor.service.jobhandler.SampleXxlJob" ，如下：
@@ -1682,6 +1686,7 @@ public ReturnT<String> execute(String param) {
 - 注意：最新版本 "XxlJobSpringExecutor" 逻辑有调整，历史项目中该组件的配置方式请参考Sample示例项目进行调整，尤其注意需要移除组件的init和destroy方法；
 
 ### 6.28 版本 v2.2.0 Release Notes[迭代中]
+- 1、[迭代中]调度中心升级springboot2.x；因此，系统要求JDK8+；
 
 
 ### TODO LIST
