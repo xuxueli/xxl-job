@@ -81,12 +81,14 @@ $(function() {
 	        	var obj = {};
 	        	obj.jobGroup = $('#jobGroup').val();
 	        	obj.jobId = $('#jobId').val();
-                obj.logStatus = $('#logStatus').val();
-				obj.filterTime = $('#filterTime').val();
+						obj.jobDesc = $('#jobDesc').val();
+						obj.jobCron = $('#jobCron').val();
+						obj.logStatus = $('#logStatus').val();
+						obj.filterTime = $('#filterTime').val();
 	        	obj.start = d.start;
 	        	obj.length = d.length;
-                return obj;
-            }
+            return obj;
+	        }
 	    },
 	    "searching": false,
 	    "ordering": false,
@@ -95,7 +97,7 @@ $(function() {
 					{
 						"data": 'jobId',
 						"visible" : true,
-                        "width":'10%',
+                        "width":'5%',
 						"render": function ( data, type, row ) {
 
 							var jobhandler = '';
@@ -113,8 +115,23 @@ $(function() {
 					},
 					{ "data": 'jobGroup', "visible" : false},
 					{
+						"data": 'jobDesc',
+						"width": '10%',
+						"render": function (data, type, row) {
+							return data;
+						}
+					},
+					{
+						"data": 'jobCron',
+						"visible": true,
+						"width": '10%',
+						"render": function (data, type, row) {
+							return data;
+						}
+					},
+					{
 						"data": 'triggerTime',
-                        "width":'20%',
+                        "width":'10%',
 						"render": function ( data, type, row ) {
 							return data?moment(new Date(data)).format("YYYY-MM-DD HH:mm:ss"):"";
 						}
@@ -143,7 +160,7 @@ $(function() {
 					},
 	                { 
 	                	"data": 'handleTime',
-                        "width":'20%',
+                        "width":'10%',
 	                	"render": function ( data, type, row ) {
 	                		return data?moment(new Date(data)).format("YYYY-MM-DD HH:mm:ss"):"";
 	                	}

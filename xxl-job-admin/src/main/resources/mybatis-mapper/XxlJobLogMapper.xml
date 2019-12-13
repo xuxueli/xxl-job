@@ -8,6 +8,8 @@
 
 		<result column="job_group" property="jobGroup" />
 		<result column="job_id" property="jobId" />
+		<result column="job_desc" property="jobDesc" />
+		<result column="job_cron" property="jobCron" />
 
 		<result column="executor_address" property="executorAddress" />
 		<result column="executor_handler" property="executorHandler" />
@@ -45,8 +47,8 @@
 	</sql>
 	
 	<select id="pageList" resultMap="XxlJobLog">
-		SELECT <include refid="Base_Column_List" />
-		FROM xxl_job_log AS t
+		SELECT <include refid="Base_Column_List" /> ,tji.job_desc,tji.job_cron
+		FROM xxl_job_log AS t left JOIN xxl_job_info AS tji ON t.job_id = tji.id
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
 			<if test="jobId==0 and jobGroup gt 0">
 				AND t.job_group = #{jobGroup}
