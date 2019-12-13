@@ -27,220 +27,262 @@ import java.util.concurrent.ConcurrentMap;
 /**
  * Created by xuxueli on 2016/3/2 21:14.
  */
-public class XxlJobExecutor  {
-    private static final Logger logger = LoggerFactory.getLogger(XxlJobExecutor.class);
+public class XxlJobExecutor {
+	private static final Logger logger = LoggerFactory.getLogger(XxlJobExecutor.class);
 
-    // ---------------------- param ----------------------
-    private String adminAddresses;
-    private String appName;
-    private String ip;
-    private int port;
-    private String accessToken;
-    private String logPath;
-    private int logRetentionDays;
+	// ---------------------- param ----------------------
+	private String adminAddresses;
+	private String appName;
+	private String ip;
+	private int port;
+	private String accessToken;
+	private String logPath;
+	private int logRetentionDays;
+	private int poolCore;
+	private int poolMax;
 
-    public void setAdminAddresses(String adminAddresses) {
-        this.adminAddresses = adminAddresses;
-    }
-    public void setAppName(String appName) {
-        this.appName = appName;
-    }
-    public void setIp(String ip) {
-        this.ip = ip;
-    }
-    public void setPort(int port) {
-        this.port = port;
-    }
-    public void setAccessToken(String accessToken) {
-        this.accessToken = accessToken;
-    }
-    public void setLogPath(String logPath) {
-        this.logPath = logPath;
-    }
-    public void setLogRetentionDays(int logRetentionDays) {
-        this.logRetentionDays = logRetentionDays;
-    }
+	public XxlJobExecutor setAdminAddresses(String adminAddresses) {
+		this.adminAddresses = adminAddresses;
+		return this;
+	}
 
+	public XxlJobExecutor setAppName(String appName) {
+		this.appName = appName;
+		return this;
+	}
 
-    // ---------------------- start + stop ----------------------
-    public void start() throws Exception {
+	public XxlJobExecutor setIp(String ip) {
+		this.ip = ip;
+		return this;
+	}
 
-        // init logpath
-        XxlJobFileAppender.initLogPath(logPath);
+	public XxlJobExecutor setPort(int port) {
+		this.port = port;
+		return this;
+	}
 
-        // init invoker, admin-client
-        initAdminBizList(adminAddresses, accessToken);
+	public XxlJobExecutor setAccessToken(String accessToken) {
+		this.accessToken = accessToken;
+		return this;
+	}
 
+	public XxlJobExecutor setLogPath(String logPath) {
+		this.logPath = logPath;
+		return this;
+	}
 
-        // init JobLogFileCleanThread
-        JobLogFileCleanThread.getInstance().start(logRetentionDays);
+	public XxlJobExecutor setLogRetentionDays(int logRetentionDays) {
+		this.logRetentionDays = logRetentionDays;
+		return this;
+	}
 
-        // init TriggerCallbackThread
-        TriggerCallbackThread.getInstance().start();
+	public XxlJobExecutor setPoolCore(int poolCore) {
+		this.poolCore = poolCore;
+		return this;
+	}
 
-        // init executor-server
-        port = port>0?port: NetUtil.findAvailablePort(9999);
-        ip = (ip!=null&&ip.trim().length()>0)?ip: IpUtil.getIp();
-        initRpcProvider(ip, port, appName, accessToken);
-    }
-    public void destroy(){
-        // destory executor-server
-        stopRpcProvider();
+	public XxlJobExecutor setPoolMax(int poolMax) {
+		this.poolMax = poolMax;
+		return this;
+	}
 
-        // destory jobThreadRepository
-        if (jobThreadRepository.size() > 0) {
-            for (Map.Entry<Integer, JobThread> item: jobThreadRepository.entrySet()) {
-                removeJobThread(item.getKey(), "web container destroy and kill the job.");
-            }
-            jobThreadRepository.clear();
-        }
-        jobHandlerRepository.clear();
+	// ---------------------- start + stop ----------------------
+	public void start() throws Exception {
+		// init logpath
+		XxlJobFileAppender.initLogPath(logPath);
 
+		// init invoker, admin-client
+		initAdminBizList(adminAddresses, accessToken);
 
-        // destory JobLogFileCleanThread
-        JobLogFileCleanThread.getInstance().toStop();
+		// init JobLogFileCleanThread
+		JobLogFileCleanThread.getInstance().start(logRetentionDays);
 
-        // destory TriggerCallbackThread
-        TriggerCallbackThread.getInstance().toStop();
+		// init TriggerCallbackThread
+		TriggerCallbackThread.getInstance().start();
 
-    }
+		// init executor-server
+		port = port > 0 ? port : NetUtil.findAvailablePort(9999);
+		ip = (ip != null && ip.trim().length() > 0) ? ip : IpUtil.getIp();
+		initRpcProvider();
+	}
 
+	public void destroy() {
+		// destory executor-server
+		stopRpcProvider();
 
-    // ---------------------- admin-client (rpc invoker) ----------------------
-    private static List<AdminBiz> adminBizList;
-    private static Serializer serializer = new HessianSerializer();
-    private void initAdminBizList(String adminAddresses, String accessToken) throws Exception {
-        if (adminAddresses!=null && adminAddresses.trim().length()>0) {
-            for (String address: adminAddresses.trim().split(",")) {
-                if (address!=null && address.trim().length()>0) {
+		// destory jobThreadRepository
+		if (jobThreadRepository.size() > 0) {
+			for (Map.Entry<Integer, JobThread> item : jobThreadRepository.entrySet()) {
+				removeJobThread(item.getKey(), "web container destroy and kill the job.");
+			}
+			jobThreadRepository.clear();
+		}
+		jobHandlerRepository.clear();
 
-                    AdminBiz adminBiz = new AdminBizClient(address.trim(), accessToken);
+		// destory JobLogFileCleanThread
+		JobLogFileCleanThread.getInstance().toStop();
 
-                    if (adminBizList == null) {
-                        adminBizList = new ArrayList<AdminBiz>();
-                    }
-                    adminBizList.add(adminBiz);
-                }
-            }
-        }
-    }
-    public static List<AdminBiz> getAdminBizList(){
-        return adminBizList;
-    }
-    public static Serializer getSerializer() {
-        return serializer;
-    }
+		// destory TriggerCallbackThread
+		TriggerCallbackThread.getInstance().toStop();
 
+	}
 
-    // ---------------------- executor-server (rpc provider) ----------------------
-    private XxlRpcProviderFactory xxlRpcProviderFactory = null;
+	// ---------------------- admin-client (rpc invoker) ----------------------
+	private static List<AdminBiz> adminBizList;
+	private static Serializer serializer = new HessianSerializer();
 
-    private void initRpcProvider(String ip, int port, String appName, String accessToken) throws Exception {
+	private void initAdminBizList(String adminAddresses, String accessToken) throws Exception {
+		if (adminAddresses == null || (adminAddresses = adminAddresses.trim()).length() <= 1)
+			return;
 
-        // init, provider factory
-        String address = IpUtil.getIpPort(ip, port);
-        Map<String, String> serviceRegistryParam = new HashMap<String, String>();
-        serviceRegistryParam.put("appName", appName);
-        serviceRegistryParam.put("address", address);
+		for (String address : adminAddresses.split(",")) {
+			if (address == null || (address = address.trim()).length() <= 0)
+				continue;
 
-        xxlRpcProviderFactory = new XxlRpcProviderFactory();
+			AdminBiz adminBiz = new AdminBizClient(address, accessToken);
+			if (adminBizList == null) {
+				adminBizList = new ArrayList<AdminBiz>();
+			}
+			adminBizList.add(adminBiz);
+		}
+	}
 
-        xxlRpcProviderFactory.setServer(NettyHttpServer.class);
-        xxlRpcProviderFactory.setSerializer(HessianSerializer.class);
-        xxlRpcProviderFactory.setCorePoolSize(20);
-        xxlRpcProviderFactory.setMaxPoolSize(200);
-        xxlRpcProviderFactory.setIp(ip);
-        xxlRpcProviderFactory.setPort(port);
-        xxlRpcProviderFactory.setAccessToken(accessToken);
-        xxlRpcProviderFactory.setServiceRegistry(ExecutorServiceRegistry.class);
-        xxlRpcProviderFactory.setServiceRegistryParam(serviceRegistryParam);
+	public static List<AdminBiz> getAdminBizList() {
+		return adminBizList;
+	}
 
-        // add services
-        xxlRpcProviderFactory.addService(ExecutorBiz.class.getName(), null, new ExecutorBizImpl());
+	public static Serializer getSerializer() {
+		return serializer;
+	}
 
-        // start
-        xxlRpcProviderFactory.start();
+	// ---------------------- executor-server (rpc provider) ----------------------
+	private XxlRpcProviderFactory xxlRpcProviderFactory = null;
 
-    }
+	private void initRpcProvider() throws Exception {
+		// init, provider factory
+		String address = IpUtil.getIpPort(this.ip, this.port);
+		Map<String, String> regPm = new HashMap<String, String>();
+		regPm.put("appName", this.appName);
+		regPm.put("address", address);
 
-    public static class ExecutorServiceRegistry extends ServiceRegistry {
+		xxlRpcProviderFactory = new XxlRpcProviderFactory();
+		xxlRpcProviderFactory.setIp(this.ip);
+		xxlRpcProviderFactory.setPort(this.port);
+		xxlRpcProviderFactory.setAccessToken(this.accessToken);
+		xxlRpcProviderFactory.setCorePoolSize(this.poolCore <= 0 ? 10 : this.poolCore);
+		xxlRpcProviderFactory.setMaxPoolSize(this.poolMax <= 0 ? 100 : this.poolMax);
+		xxlRpcProviderFactory.setServer(NettyHttpServer.class);
+		xxlRpcProviderFactory.setSerializer(HessianSerializer.class);
+		xxlRpcProviderFactory.setServiceRegistry(ExecutorServiceRegistry.class);
+		xxlRpcProviderFactory.setServiceRegistryParam(regPm);
 
-        @Override
-        public void start(Map<String, String> param) {
-            // start registry
-            ExecutorRegistryThread.getInstance().start(param.get("appName"), param.get("address"));
-        }
-        @Override
-        public void stop() {
-            // stop registry
-            ExecutorRegistryThread.getInstance().toStop();
-        }
+		// add services
+		xxlRpcProviderFactory.addService(ExecutorBiz.class.getName(), null, new ExecutorBizImpl());
 
-        @Override
-        public boolean registry(Set<String> keys, String value) {
-            return false;
-        }
-        @Override
-        public boolean remove(Set<String> keys, String value) {
-            return false;
-        }
-        @Override
-        public Map<String, TreeSet<String>> discovery(Set<String> keys) {
-            return null;
-        }
-        @Override
-        public TreeSet<String> discovery(String key) {
-            return null;
-        }
+		// start
+		xxlRpcProviderFactory.start();
 
-    }
+	}
 
-    private void stopRpcProvider() {
-        // stop provider factory
-        try {
-            xxlRpcProviderFactory.stop();
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-        }
-    }
+	public static class ExecutorServiceRegistry extends ServiceRegistry {
 
+		@Override
+		public void start(Map<String, String> param) {
+			// start registry
+			ExecutorRegistryThread.getInstance().start(param.get("appName"), param.get("address"));
+		}
 
-    // ---------------------- job handler repository ----------------------
-    private static ConcurrentMap<String, IJobHandler> jobHandlerRepository = new ConcurrentHashMap<String, IJobHandler>();
-    public static IJobHandler registJobHandler(String name, IJobHandler jobHandler){
-        logger.info(">>>>>>>>>>> xxl-job register jobhandler success, name:{}, jobHandler:{}", name, jobHandler);
-        return jobHandlerRepository.put(name, jobHandler);
-    }
-    public static IJobHandler loadJobHandler(String name){
-        return jobHandlerRepository.get(name);
-    }
+		@Override
+		public void stop() {
+			// stop registry
+			ExecutorRegistryThread.getInstance().toStop();
+		}
 
+		@Override
+		public boolean registry(Set<String> keys, String value) {
+			return false;
+		}
 
-    // ---------------------- job thread repository ----------------------
-    private static ConcurrentMap<Integer, JobThread> jobThreadRepository = new ConcurrentHashMap<Integer, JobThread>();
-    public static JobThread registJobThread(int jobId, IJobHandler handler, String removeOldReason){
-        JobThread newJobThread = new JobThread(jobId, handler);
-        newJobThread.start();
-        logger.info(">>>>>>>>>>> xxl-job regist JobThread success, jobId:{}, handler:{}", new Object[]{jobId, handler});
+		@Override
+		public boolean remove(Set<String> keys, String value) {
+			return false;
+		}
 
-        JobThread oldJobThread = jobThreadRepository.put(jobId, newJobThread);	// putIfAbsent | oh my god, map's put method return the old value!!!
-        if (oldJobThread != null) {
-            oldJobThread.toStop(removeOldReason);
-            oldJobThread.interrupt();
-        }
+		@Override
+		public Map<String, TreeSet<String>> discovery(Set<String> keys) {
+			return null;
+		}
 
-        return newJobThread;
-    }
-    public static void removeJobThread(int jobId, String removeOldReason){
-        JobThread oldJobThread = jobThreadRepository.remove(jobId);
-        if (oldJobThread != null) {
-            oldJobThread.toStop(removeOldReason);
-            oldJobThread.interrupt();
-        }
-    }
-    public static JobThread loadJobThread(int jobId){
-        JobThread jobThread = jobThreadRepository.get(jobId);
-        return jobThread;
-    }
+		@Override
+		public TreeSet<String> discovery(String key) {
+			return null;
+		}
 
+	}
+
+	private void stopRpcProvider() {
+		// stop provider factory
+		try {
+			xxlRpcProviderFactory.stop();
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+	}
+
+	// ---------------------- job handler repository ----------------------
+	private static ConcurrentMap<String, IJobHandler> jobHandlerRepository = new ConcurrentHashMap<String, IJobHandler>();
+
+	public static IJobHandler registJobHandler(String name, IJobHandler jobHandler) {
+		logger.info(">>>>>>>>>>> xxl-job register jobhandler success, name:{}, jobHandler:{}", name, jobHandler);
+		return jobHandlerRepository.put(name, jobHandler);
+	}
+
+	public static IJobHandler loadJobHandler(String name) {
+		return jobHandlerRepository.get(name);
+	}
+
+	// ---------------------- job thread repository ----------------------
+	private static ConcurrentMap<Integer, JobThread> jobThreadRepository = new ConcurrentHashMap<Integer, JobThread>();
+
+	public static JobThread registJobThread(int jobId, IJobHandler handler, String removeOldReason) {
+		JobThread newJobThread = new JobThread(jobId, handler);
+		newJobThread.start();
+		logger.info(">>>>>>>>>>> xxl-job regist JobThread success, jobId:{}, handler:{}", new Object[]{jobId, handler});
+
+		JobThread oldJobThread = jobThreadRepository.put(jobId, newJobThread); // putIfAbsent | oh my god, map's put method return the old value!!!
+		if (oldJobThread != null) {
+			oldJobThread.toStop(removeOldReason);
+			oldJobThread.interrupt();
+		}
+
+		return newJobThread;
+	}
+
+	public static void removeJobThread(int jobId, String removeOldReason) {
+		JobThread oldJobThread = jobThreadRepository.remove(jobId);
+		if (oldJobThread != null) {
+			oldJobThread.toStop(removeOldReason);
+			oldJobThread.interrupt();
+		}
+	}
+
+	public static JobThread loadJobThread(int jobId) {
+		JobThread jobThread = jobThreadRepository.get(jobId);
+		return jobThread;
+	}
+
+	@Override
+	public String toString() {
+		return "{ip:" + ip
+				+ ", port:" + port
+				+ ", appName:" + appName
+				+ ", accessToken:" + accessToken
+				+ ", adminAddresses:" + adminAddresses
+				+ ", poolCore:" + poolCore
+				+ ", poolMax:" + poolMax
+				+ ", logPath:" + logPath
+				+ ", logRetentionDays:" + logRetentionDays
+				+ ", xxlRpcProviderFactory:" + xxlRpcProviderFactory
+				+ "}";
+	}
 }

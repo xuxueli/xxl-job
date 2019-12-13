@@ -66,7 +66,7 @@ public class TriggerCallbackThread {
 
                             // callback list param
                             List<HandleCallbackParam> callbackParamList = new ArrayList<HandleCallbackParam>();
-                            int drainToNum = getInstance().callBackQueue.drainTo(callbackParamList);
+                            /*int drainToNum =*/ getInstance().callBackQueue.drainTo(callbackParamList);
                             callbackParamList.add(callback);
 
                             // callback, will retry if error
@@ -84,7 +84,7 @@ public class TriggerCallbackThread {
                 // last callback
                 try {
                     List<HandleCallbackParam> callbackParamList = new ArrayList<HandleCallbackParam>();
-                    int drainToNum = getInstance().callBackQueue.drainTo(callbackParamList);
+                    /*int drainToNum =*/ getInstance().callBackQueue.drainTo(callbackParamList);
                     if (callbackParamList!=null && callbackParamList.size()>0) {
                         doCallback(callbackParamList);
                     }
@@ -235,6 +235,7 @@ public class TriggerCallbackThread {
         // load and clear file, retry
         for (File callbaclLogFile: callbackLogPath.listFiles()) {
             byte[] callbackParamList_bytes = FileUtil.readFileContent(callbaclLogFile);
+            @SuppressWarnings("unchecked")
             List<HandleCallbackParam> callbackParamList = (List<HandleCallbackParam>) XxlJobExecutor.getSerializer().deserialize(callbackParamList_bytes, HandleCallbackParam.class);
 
             callbaclLogFile.delete();

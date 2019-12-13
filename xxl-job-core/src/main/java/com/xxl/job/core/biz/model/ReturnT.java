@@ -29,29 +29,31 @@ public class ReturnT<T> implements Serializable {
 		this.code = SUCCESS_CODE;
 		this.content = content;
 	}
-	
+
 	public int getCode() {
 		return code;
 	}
-	public void setCode(int code) {
+	public ReturnT<T> setCode(int code) {
 		this.code = code;
+		return this;
 	}
 	public String getMsg() {
 		return msg;
 	}
-	public void setMsg(String msg) {
+	public ReturnT<T> setMsg(String msg) {
 		this.msg = msg;
+		return this;
 	}
 	public T getContent() {
 		return content;
 	}
-	public void setContent(T content) {
+	public ReturnT<T> setContent(T content) {
 		this.content = content;
+		return this;
 	}
 
 	@Override
 	public String toString() {
 		return "ReturnT [code=" + code + ", msg=" + msg + ", content=" + content + "]";
 	}
-
 }
