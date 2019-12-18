@@ -38,6 +38,8 @@ public class XxlJobExecutor  {
     private String accessToken;
     private String logPath;
     private int logRetentionDays;
+    private int readTimeout;
+    private int connectionTimeout;
 
     public void setAdminAddresses(String adminAddresses) {
         this.adminAddresses = adminAddresses;
@@ -60,6 +62,12 @@ public class XxlJobExecutor  {
     public void setLogRetentionDays(int logRetentionDays) {
         this.logRetentionDays = logRetentionDays;
     }
+    public void setReadTimeout(int readTimeout) {
+        this.readTimeout = readTimeout;
+    }
+    public void setConnectionTimeout(int connectionTimeout) {
+        this.connectionTimeout = connectionTimeout;
+    }
 
 
     // ---------------------- start + stop ----------------------
@@ -69,7 +77,7 @@ public class XxlJobExecutor  {
         XxlJobFileAppender.initLogPath(logPath);
 
         // init invoker, admin-client
-        initAdminBizList(adminAddresses, accessToken);
+        initAdminBizList(adminAddresses, accessToken, readTimeout, connectionTimeout);
 
 
         // init JobLogFileCleanThread
@@ -109,12 +117,12 @@ public class XxlJobExecutor  {
     // ---------------------- admin-client (rpc invoker) ----------------------
     private static List<AdminBiz> adminBizList;
     private static Serializer serializer = new HessianSerializer();
-    private void initAdminBizList(String adminAddresses, String accessToken) throws Exception {
+    private void initAdminBizList(String adminAddresses, String accessToken, int readTimeout, int connectTimeout) throws Exception {
         if (adminAddresses!=null && adminAddresses.trim().length()>0) {
             for (String address: adminAddresses.trim().split(",")) {
                 if (address!=null && address.trim().length()>0) {
 
-                    AdminBiz adminBiz = new AdminBizClient(address.trim(), accessToken);
+                    AdminBiz adminBiz = new AdminBizClient(address.trim(), accessToken, readTimeout, connectTimeout);
 
                     if (adminBizList == null) {
                         adminBizList = new ArrayList<AdminBiz>();

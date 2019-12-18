@@ -60,7 +60,7 @@ public class XxlJobRemotingUtil {
      * @param requestObj
      * @return
      */
-    public static ReturnT<String> postBody(String url, String accessToken, Object requestObj, int timeout) {
+    public static ReturnT<String> postBody(String url, String accessToken, Object requestObj, int readTimeout, int connectTimeout) {
         HttpURLConnection connection = null;
         BufferedReader bufferedReader = null;
         try {
@@ -80,8 +80,8 @@ public class XxlJobRemotingUtil {
             connection.setDoOutput(true);
             connection.setDoInput(true);
             connection.setUseCaches(false);
-            connection.setReadTimeout(timeout * 1000);
-            connection.setConnectTimeout(3 * 1000);
+            connection.setReadTimeout(readTimeout * 1000);
+            connection.setConnectTimeout(connectTimeout * 1000);
             connection.setRequestProperty("connection", "Keep-Alive");
             connection.setRequestProperty("Content-Type", "application/json;charset=UTF-8");
             connection.setRequestProperty("Accept-Charset", "application/json;charset=UTF-8");
