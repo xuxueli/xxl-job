@@ -19,6 +19,6 @@ import java.lang.annotation.Target;
 @Deprecated
 public @interface JobHandler {
 
-    String value() default "";
+    String value();
 
 }
