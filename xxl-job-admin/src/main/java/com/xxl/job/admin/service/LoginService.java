@@ -14,6 +14,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.math.BigInteger;
 
+import org.keycloak.adapters.springsecurity.account.SimpleKeycloakAccount;
+import org.keycloak.representations.IDToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import java.security.Principal;
+import javax.servlet.ServletException;
+import java.util.Arrays;
+
 /**
  * @author xuxueli 2019-05-04 22:13:264
  */
@@ -26,12 +34,12 @@ public class LoginService {
     private XxlJobUserDao xxlJobUserDao;
 
 
-    private String makeToken(XxlJobUser xxlJobUser){
+    private String makeToken(XxlJobUser xxlJobUser) {
         String tokenJson = JacksonUtil.writeValueAsString(xxlJobUser);
         String tokenHex = new BigInteger(tokenJson.getBytes()).toString(16);
         return tokenHex;
     }
-    private XxlJobUser parseToken(String tokenHex){
+    private XxlJobUser parseToken(String tokenHex) {
         XxlJobUser xxlJobUser = null;
         if (tokenHex != null) {
             String tokenJson = new String(new BigInteger(tokenHex, 16).toByteArray());      // username_password(md5)
@@ -41,10 +49,10 @@ public class LoginService {
     }
 
 
-    public ReturnT<String> login(HttpServletRequest request, HttpServletResponse response, String username, String password, boolean ifRemember){
+    public ReturnT<String> login(HttpServletRequest request, HttpServletResponse response, String username, String password, boolean ifRemember) {
 
         // param
-        if (username==null || username.trim().length()==0 || password==null || password.trim().length()==0){
+        if (username == null || username.trim().length() == 0 || password == null || password.trim().length() == 0) {
             return new ReturnT<String>(500, I18nUtil.getString("login_param_empty"));
         }
 
@@ -71,7 +79,12 @@ public class LoginService {
      * @param request
      * @param response
      */
-    public ReturnT<String> logout(HttpServletRequest request, HttpServletResponse response){
+    public ReturnT<String> logout(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            request.logout();
+        } catch (ServletException e) {
+            e.printStackTrace();
+        }
         CookieUtil.remove(request, response, LOGIN_IDENTITY_KEY);
         return ReturnT.SUCCESS;
     }
@@ -82,7 +95,8 @@ public class LoginService {
      * @param request
      * @return
      */
-    public XxlJobUser ifLogin(HttpServletRequest request, HttpServletResponse response){
+    public XxlJobUser ifLogin(HttpServletRequest request, HttpServletResponse response) {
+        Principal principal = request.getUserPrincipal();
         String cookieToken = CookieUtil.getValue(request, LOGIN_IDENTITY_KEY);
         if (cookieToken != null) {
             XxlJobUser cookieUser = null;
@@ -92,12 +106,48 @@ public class LoginService {
                 logout(request, response);
             }
             if (cookieUser != null) {
-                XxlJobUser dbUser = xxlJobUserDao.loadByUserName(cookieUser.getUsername());
-                if (dbUser != null) {
-                    if (cookieUser.getPassword().equals(dbUser.getPassword())) {
-                        return dbUser;
+                if (principal == null) {
+                    XxlJobUser dbUser = xxlJobUserDao.loadByUserName(cookieUser.getUsername());
+                    if (dbUser != null) {
+                        if (cookieUser.getPassword().equals(dbUser.getPassword())) {
+                            return dbUser;
+                        }
                     }
+                } else {
+                    return cookieUser;
                 }
+            }
+        } else {
+            if (principal != null) {
+                Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+                Object currentPrincipalName = authentication.getDetails();
+                SimpleKeycloakAccount kkAccount = ((SimpleKeycloakAccount) currentPrincipalName);
+                String name = kkAccount.getPrincipal().getName();
+                int roleId = 0;
+                Object[] roles = kkAccount.getRoles().toArray();
+                if (roles.length > 0 && Arrays.asList(roles).contains("admin")) {
+                    roleId = 1;
+                }
+
+                IDToken token = kkAccount.getKeycloakSecurityContext().getToken();
+                String tokenName = token.getName();
+                if (tokenName == null) {
+                    tokenName = name;
+                }
+
+                //赋值
+                XxlJobUser loginUser = null;
+                loginUser = new XxlJobUser();
+                loginUser.setId(1);
+                loginUser.setRole(roleId);
+                loginUser.setUsername(tokenName);
+
+                //写入cookie
+                String loginToken = makeToken(loginUser);
+                // do login
+                CookieUtil.set(response, LOGIN_IDENTITY_KEY, loginToken, false);
+
+                return loginUser;
             }
         }
         return null;
