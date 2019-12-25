@@ -5,11 +5,14 @@ import com.xxl.registry.client.util.json.BasicJson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.net.ssl.*;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.Map;
 
 /**
@@ -18,6 +21,36 @@ import java.util.Map;
 public class XxlJobRemotingUtil {
     private static Logger logger = LoggerFactory.getLogger(XxlJobRemotingUtil.class);
     public static String XXL_RPC_ACCESS_TOKEN = "XXL-RPC-ACCESS-TOKEN";
+
+
+    // trust-https start
+    private static void trustAllHosts(HttpsURLConnection connection) {
+        try {
+            SSLContext sc = SSLContext.getInstance("TLS");
+            sc.init(null, trustAllCerts, new java.security.SecureRandom());
+            SSLSocketFactory newFactory = sc.getSocketFactory();
+
+            connection.setSSLSocketFactory(newFactory);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
+        connection.setHostnameVerifier(new HostnameVerifier() {
+            public boolean verify(String hostname, SSLSession session) {
+                return true;
+            }
+        });
+    }
+    private static final TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager() {
+        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+            return new java.security.cert.X509Certificate[]{};
+        }
+        public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+        }
+        public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+        }
+    }};
+    // trust-https end
+
 
     /**
      * post
@@ -34,6 +67,13 @@ public class XxlJobRemotingUtil {
             // connection
             URL realUrl = new URL(url);
             connection = (HttpURLConnection) realUrl.openConnection();
+
+            // trust-https
+            boolean useHttps = url.startsWith("https");
+            if (useHttps) {
+                HttpsURLConnection https = (HttpsURLConnection) connection;
+                trustAllHosts(https);
+            }
 
             // connection setting
             connection.setRequestMethod("POST");
@@ -57,7 +97,7 @@ public class XxlJobRemotingUtil {
             String requestBody = BasicJson.toJson(requestObj);
 
             DataOutputStream dataOutputStream = new DataOutputStream(connection.getOutputStream());
-            dataOutputStream.writeBytes(requestBody);
+            dataOutputStream.write(requestBody.getBytes("UTF-8"));
             dataOutputStream.flush();
             dataOutputStream.close();
 

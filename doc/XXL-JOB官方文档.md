@@ -15,7 +15,7 @@
 ## 一、简介
 
 ### 1.1 概述
-XXL-JOB是一个轻量级分布式任务调度平台，其核心设计目标是开发迅速、学习简单、轻量级、易扩展。现已开放源代码并接入多家公司线上产品线，开箱即用。
+XXL-JOB是一个分布式任务调度平台，其核心设计目标是开发迅速、学习简单、轻量级、易扩展。现已开放源代码并接入多家公司线上产品线，开箱即用。
 
 ### 1.2 社区交流    
 - [社区交流](https://www.xuxueli.com/page/community.html)
@@ -81,7 +81,9 @@ XXL-JOB是一个轻量级分布式任务调度平台，其核心设计目标是�
 
 于2018-05-27，在上海举办的 "[第75期开源中国源创会](https://www.oschina.net/event/2278742)" 的 "架构" 主题专场，我登台进行“基础架构与中间件图谱”主题演讲，台下上千位在场观众反响热烈（[图文回顾](https://www.oschina.net/question/3802184_2280606) ）。
 
-于2018-12-05，XXL-JOB参与"[2018年度最受欢迎中国开源软件](https://www.oschina.net/project/top_cn_2018?sort=1)"评比，在当时已录入的一万多个国产开源项目中角逐，最终排名第19名。
+于2018-12-05，XXL-JOB参与"[2018年度最受欢迎中国开源软件](https://www.oschina.net/project/top_cn_2018?sort=1)"评比，在当时已录入的一万多个开源项目中角逐，最终排名第19名。
+
+于2019-12-10，XXL-JOB参与"[2019年度最受欢迎中国开源软件](https://www.oschina.net/project/top_cn_2019)"评比，在当时已录入的一万多个开源项目中角逐，最终排名"开发框架和基础组件类"第9名。
 
 > 我司大众点评目前已接入XXL-JOB，内部别名《Ferrari》（Ferrari基于XXL-JOB的V1.1版本定制而成，新接入应用推荐升级最新版本）。
 据最新统计, 自2016-01-21接入至2017-12-01期间，该系统已调度约100万次，表现优异。新接入应用推荐使用最新版本，因为经过数十个版本的更新，系统的任务模型、UI交互模型以及底层调度通讯模型都有了较大的优化和提升，核心功能更加稳定高效。
@@ -366,6 +368,17 @@ XXL-JOB是一个轻量级分布式任务调度平台，其核心设计目标是�
     - 276、南京观为智慧软件科技有限公司
     - 277、杭州城市大脑科技有限公司
     - 278、猿辅导【猿辅导】
+    - 279、洛阳健创网络科技有限公司
+    - 280、魔力耳朵
+    - 281、亿阳信通
+    - 282、上海招鲤科技有限公司
+    - 283、四川商旅无忧科技服务有限公司
+    - 284、UU跑腿
+    - 285、北京老虎证券【老虎证券】
+    - 286、悠活省吧（北京）网络科技有限公司
+    - 287、F5未来商店
+    - 288、深圳环阳通信息技术有限公司
+    - 289、遠傳電信
 	- ……
 
 > 更多接入的公司，欢迎在 [登记地址](https://github.com/xuxueli/xxl-job/issues/1 ) 登记，登记仅仅为了产品推广。
@@ -430,6 +443,7 @@ XXL-JOB是一个轻量级分布式任务调度平台，其核心设计目标是�
         ：xxl-job-executor-sample-frameless：无框架版本；
         ：xxl-job-executor-sample-jfinal：JFinal版本，通过JFinal管理执行器；
         ：xxl-job-executor-sample-nutz：Nutz版本，通过Nutz管理执行器；
+        ：xxl-job-executor-sample-jboot：jboot版本，通过jboot管理执行器；
         
 
 ### 2.3 配置部署“调度中心”
@@ -564,7 +578,7 @@ docker run -e PARAMS="--spring.datasource.url=jdbc:mysql://127.0.0.1:3306/xxl_jo
 执行器组件，配置内容说明：
 
 ```
-@Bean(initMethod = "start", destroyMethod = "destroy")
+@Bean
 public XxlJobSpringExecutor xxlJobExecutor() {
     logger.info(">>>>>>>>>>> xxl-job config init.");
     XxlJobSpringExecutor xxlJobSpringExecutor = new XxlJobSpringExecutor();
@@ -587,6 +601,7 @@ public XxlJobSpringExecutor xxlJobExecutor() {
     xxl-job-executor-sample-spring：项目编译打包成WAR包，并部署到tomcat中。
     xxl-job-executor-sample-jfinal：同上
     xxl-job-executor-sample-nutz：同上
+    xxl-job-executor-sample-jboot：同上
     
 
 至此“执行器”项目已经部署结束。
@@ -672,22 +687,58 @@ public XxlJobSpringExecutor xxlJobExecutor() {
     - 报警邮件：任务调度失败时邮件通知的邮箱地址，支持配置多邮箱地址，配置多个邮箱地址时用逗号分隔；
     - 负责人：任务的负责人；
     - 执行参数：任务执行所需的参数；
+
     
-### 3.1 BEAN模式
-任务逻辑以JobHandler的形式存在于“执行器”所在项目中，开发流程如下：
+### 3.1 BEAN模式（类形式）
 
-#### 步骤一：执行器项目中，开发JobHandler：
+Bean模式任务，支持基于类的开发方式，每个任务对应一个Java类。
 
-     - 1、继承"IJobHandler"：“com.xxl.job.core.handler.IJobHandler”；
-     - 2、注册到Spring容器：添加“@Component”注解，被Spring容器扫描为Bean实例；
-     - 3、注册到执行器工厂：添加“@JobHandler(value="自定义jobhandler名称")”注解，注解value值对应的是调度中心新建任务的JobHandler属性的值。
-     - 4、执行日志：需要通过 "XxlJobLogger.log" 打印执行日志；
-    （可参考Sample示例执行器中的DemoJobHandler，见下图）
+- 优点：不限制项目环境，兼容性好。即使是无框架项目，如main方法直接启动的项目也可以提供支持，可以参考示例项目 "xxl-job-executor-sample-frameless"；
+- 缺点：
+    - 每个任务需要占用一个Java类，造成类的浪费；
+    - 不支持自动扫描任务并注入到执行器容器，需要手动注入。
 
-![输入图片说明](https://www.xuxueli.com/doc/static/xxl-job/images/img_oLlM.png "在这里输入图片标题")
+#### 步骤一：执行器项目中，开发Job类：
+
+    1、开发一个继承自"com.xxl.job.core.handler.IJobHandler"的JobHandler类，实现其中任务方法。
+    2、手动通过如下方式注入到执行器容器。
+    ```
+    XxlJobExecutor.registJobHandler("demoJobHandler", new DemoJobHandler());
+    ```
 
 #### 步骤二：调度中心，新建调度任务
-参考上文“配置属性详细说明”对新建的任务进行参数配置，运行模式选中 "BEAN模式"，JobHandler属性填写任务注解“@JobHandler”中定义的值；
+后续步骤和 "3.2 BEAN模式（方法形式）"一致，可以前往参考。
+
+
+### 3.2 BEAN模式（方法形式）
+
+Bean模式任务，支持基于方法的开发方式，每个任务对应一个方法。
+
+- 优点：
+    - 每个任务只需要开发一个方法，并添加"@XxlJob"注解即可，更加方便、快速。
+    - 支持自动扫描任务并注入到执行器容器。
+- 缺点：要求Spring容器环境；
+
+>基于方法开发的任务，底层会生成JobHandler代理，和基于类的方式一样，任务也会以JobHandler的形式存在于执行器任务容器中。
+
+#### 步骤一：执行器项目中，开发Job方法：
+
+    1、在Spring Bean实例中，开发Job方法，方式格式要求为 "public ReturnT<String> execute(String param)"
+    2、为Job方法添加注解 "@XxlJob(value="自定义jobhandler名称", init = "JobHandler初始化方法", destroy = "JobHandler销毁方法")"，注解value值对应的是调度中心新建任务的JobHandler属性的值。
+    3、执行日志：需要通过 "XxlJobLogger.log" 打印执行日志；
+    
+```
+// 可参考Sample示例执行器中的 "com.xxl.job.executor.service.jobhandler.SampleXxlJob" ，如下：
+@XxlJob("demoJobHandler")
+public ReturnT<String> execute(String param) {
+
+    XxlJobLogger.log("hello world.");
+    return ReturnT.SUCCESS;
+}
+```
+
+#### 步骤二：调度中心，新建调度任务
+参考上文“配置属性详细说明”对新建的任务进行参数配置，运行模式选中 "BEAN模式"，JobHandler属性填写任务注解“@XxlJob”中定义的值；
 
 ![输入图片说明](https://www.xuxueli.com/doc/static/xxl-job/images/img_ZAsz.png "在这里输入图片标题")
 
@@ -700,7 +751,7 @@ public XxlJobSpringExecutor xxlJobExecutor() {
 - commandJobHandler：通用命令行任务Handler；业务方只需要提供命令行即可；如 “pwd”命令；
 
 
-### 3.2 GLUE模式(Java)
+### 3.3 GLUE模式(Java)
 任务以源码方式维护在调度中心，支持通过Web IDE在线更新，实时编译和生效，因此不需要指定JobHandler。开发流程如下：
 
 #### 步骤一：调度中心，新建调度任务：
@@ -715,7 +766,7 @@ public XxlJobSpringExecutor xxlJobExecutor() {
 
 ![输入图片说明](https://www.xuxueli.com/doc/static/xxl-job/images/img_dNUJ.png "在这里输入图片标题")
 
-### 3.3 GLUE模式(Shell)
+### 3.4 GLUE模式(Shell)
 
 #### 步骤一：调度中心，新建调度任务   
 参考上文“配置属性详细说明”对新建的任务进行参数配置，运行模式选中 "GLUE模式(Shell)"；
@@ -790,7 +841,7 @@ public XxlJobSpringExecutor xxlJobExecutor() {
 
 该操作仅针对GLUE任务。
 
-选中指定任务，点击该任务右侧“GLUE”按钮，将会前往GLUE任务的Web IDE界面，在该界面支持对任务代码进行开发。可参考章节 "3.2 GLUE模式(Java)"。
+选中指定任务，点击该任务右侧“GLUE”按钮，将会前往GLUE任务的Web IDE界面，在该界面支持对任务代码进行开发。可参考章节 "3.3 GLUE模式(Java)"。
 
 ### 4.5 启动/停止任务
 可对任务进行“启动”和“停止”操作。
@@ -923,7 +974,7 @@ Quartz作为开源作业调度中的佼佼者，是作业调度的首选。但�
    
 - 问题一：调用API的的方式操作任务，不人性化；
 - 问题二：需要持久化业务QuartzJobBean到底层数据表中，系统侵入性相当严重。
-- 问题三：调度逻辑和QuartzJobBean耦合在同一个项目中，这将导致一个问题，在调度任务数量逐渐增多，同时调度任务逻辑逐渐加重的情况加，此时调度系统的性能将大大受限于业务；
+- 问题三：调度逻辑和QuartzJobBean耦合在同一个项目中，这将导致一个问题，在调度任务数量逐渐增多，同时调度任务逻辑逐渐加重的情况下，此时调度系统的性能将大大受限于业务；
 - 问题四：quartz底层以“抢占式”获取DB锁并由抢占成功节点负责运行任务，会导致节点负载悬殊非常大；而XXL-JOB通过执行器实现“协同分配式”运行任务，充分发挥集群优势，负载各节点均衡。
 
 XXL-JOB弥补了quartz的上述不足之处。
@@ -1618,9 +1669,24 @@ Tips: 历史版本(V1.3.x)目前已经Release至稳定版本, 进入维护阶段
 - 24、任务列表交互优化，支持查看任务所属执行器的注册节点；
 - 25、项目依赖升级至较新稳定版本，如spring、spring-boot、mybatis、slf4j、groovy等等；
 
-### 6.27 版本 v2.1.2 Release Notes[迭代中]
-- 1、[迭代中]移除commons-exec，采用原生方式实现；
-- 2、[迭代中]任务操作API服务调整为restful方式，降低接入成本；
+### 6.27 版本 v2.1.2 Release Notes[2019-12-12]
+- 1、方法任务支持：由原来基于JobHandler类任务开发方式，优化为支持基于方法的任务开发方式；因此，可以支持单个类中开发多个任务方法，进行类复用
+```
+@XxlJob("demoJobHandler")
+public ReturnT<String> execute(String param) {
+    XxlJobLogger.log("hello world");
+    return ReturnT.SUCCESS;
+}
+```
+- 2、移除commons-exec，采用原生方式实现，降低第三方依赖；
+- 3、执行器回调乱码问题修复；
+- 4、调度中心dispatcher servlet加载顺序优化；
+- 5、执行器回调地址https兼容支持；
+- 6、多个项目依赖升级至较新稳定版本；
+- 注意：最新版本 "XxlJobSpringExecutor" 逻辑有调整，历史项目中该组件的配置方式请参考Sample示例项目进行调整，尤其注意需要移除组件的init和destroy方法；
+
+### 6.28 版本 v2.2.0 Release Notes[迭代中]
+- 1、[迭代中]调度中心升级springboot2.x；因此，系统要求JDK8+；
 
 
 ### TODO LIST

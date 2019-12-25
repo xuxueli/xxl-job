@@ -4,13 +4,13 @@
 	<parent>
 		<groupId>com.xuxueli</groupId>
 		<artifactId>xxl-job</artifactId>
-		<version>2.1.2-SNAPSHOT</version>
+		<version>2.2.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>xxl-job-core</artifactId>
 	<packaging>jar</packaging>
 
 	<name>${project.artifactId}</name>
-	<description>A lightweight distributed task scheduling framework.</description>
+	<description>A distributed task scheduling framework.</description>
 	<url>https://www.xuxueli.com/</url>
 
 	<dependencies>
@@ -27,13 +27,6 @@
 			<groupId>org.codehaus.groovy</groupId>
 			<artifactId>groovy</artifactId>
 			<version>${groovy.version}</version>
-		</dependency>
-
-		<!-- commons-exec -->
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-exec</artifactId>
-			<version>${commons-exec.version}</version>
 		</dependency>
 
 		<!-- spring-context -->
