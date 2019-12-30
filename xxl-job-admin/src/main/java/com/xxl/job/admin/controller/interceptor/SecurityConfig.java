@@ -71,6 +71,7 @@ public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
                 .antMatchers("/**/*.js").permitAll()
                 .antMatchers("/favicon.ico").permitAll()
                 .antMatchers("/").permitAll()
+                .antMatchers("/api/**").permitAll()
                 .anyRequest().authenticated();
     }
 

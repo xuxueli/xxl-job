@@ -1,5 +1,6 @@
 package com.xxl.job.admin.controller;
 
+import com.xxl.job.admin.core.model.XxlJobUser;
 import com.xxl.job.admin.core.scheduler.XxlJobScheduler;
 import com.xxl.job.admin.core.exception.XxlJobException;
 import com.xxl.job.admin.core.model.XxlJobGroup;
@@ -9,6 +10,7 @@ import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.admin.dao.XxlJobGroupDao;
 import com.xxl.job.admin.dao.XxlJobInfoDao;
 import com.xxl.job.admin.dao.XxlJobLogDao;
+import com.xxl.job.admin.service.LoginService;
 import com.xxl.job.core.biz.ExecutorBiz;
 import com.xxl.job.core.biz.model.LogResult;
 import com.xxl.job.core.biz.model.ReturnT;
@@ -51,7 +53,8 @@ public class JobLogController {
 		List<XxlJobGroup> jobGroupList_all =  xxlJobGroupDao.findAll();
 
 		// filter group
-		List<XxlJobGroup> jobGroupList = JobInfoController.filterJobGroupByRole(request, jobGroupList_all);
+		//List<XxlJobGroup> jobGroupList = JobInfoController.filterJobGroupByRole(request, jobGroupList_all);
+		List<XxlJobGroup> jobGroupList = jobGroupList_all;
 		if (jobGroupList==null || jobGroupList.size()==0) {
 			throw new XxlJobException(I18nUtil.getString("jobgroup_empty"));
 		}
@@ -154,9 +157,16 @@ public class JobLogController {
 		}
 	}
 
+	public static void validPermissionIsRole(HttpServletRequest request) {
+		XxlJobUser loginUser = (XxlJobUser) request.getAttribute(LoginService.LOGIN_IDENTITY_KEY);
+		if (loginUser.getRole() != 1) {
+			throw new RuntimeException(I18nUtil.getString("system_permission_limit") + "[username=" + loginUser.getUsername() + "]");
+		}
+	}
+
 	@RequestMapping("/logKill")
 	@ResponseBody
-	public ReturnT<String> logKill(int id){
+	public ReturnT<String> logKill(HttpServletRequest request,int id){
 		// base check
 		XxlJobLog log = xxlJobLogDao.load(id);
 		XxlJobInfo jobInfo = xxlJobInfoDao.loadById(log.getJobId());
@@ -190,7 +200,10 @@ public class JobLogController {
 
 	@RequestMapping("/clearLog")
 	@ResponseBody
-	public ReturnT<String> clearLog(int jobGroup, int jobId, int type){
+	public ReturnT<String> clearLog(HttpServletRequest request,int jobGroup, int jobId, int type){
+
+		// valid permission
+		JobLogController.validPermissionIsRole(request);
 
 		Date clearBeforeTime = null;
 		int clearBeforeNum = 0;
