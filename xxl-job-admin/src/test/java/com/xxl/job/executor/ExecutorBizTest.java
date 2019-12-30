@@ -9,8 +9,8 @@ import com.xxl.rpc.remoting.invoker.XxlRpcInvokerFactory;
 import com.xxl.rpc.remoting.invoker.call.CallType;
 import com.xxl.rpc.remoting.invoker.reference.XxlRpcReferenceBean;
 import com.xxl.rpc.remoting.invoker.route.LoadBalance;
-import com.xxl.rpc.remoting.net.NetEnum;
-import com.xxl.rpc.serialize.Serializer;
+import com.xxl.rpc.remoting.net.impl.netty_http.client.NettyHttpClient;
+import com.xxl.rpc.serialize.impl.HessianSerializer;
 
 /**
  * executor-api client, test
@@ -45,22 +45,25 @@ public class ExecutorBizTest {
         triggerParam.setGlueSource(null);
         triggerParam.setGlueUpdatetime(System.currentTimeMillis());
         triggerParam.setLogId(1);
-        triggerParam.setLogDateTim(System.currentTimeMillis());
+        triggerParam.setLogDateTime(System.currentTimeMillis());
 
         // do remote trigger
         String accessToken = null;
-        ExecutorBiz executorBiz = (ExecutorBiz) new XxlRpcReferenceBean(
-                NetEnum.NETTY_HTTP,
-                Serializer.SerializeEnum.HESSIAN.getSerializer(),
-                CallType.SYNC,
-                LoadBalance.ROUND,
-                ExecutorBiz.class,
-                null,
-                3000,
-                "127.0.0.1:9999",
-                null,
-                null,
-                null).getObject();
+
+        XxlRpcReferenceBean referenceBean = new XxlRpcReferenceBean();
+        referenceBean.setClient(NettyHttpClient.class);
+        referenceBean.setSerializer(HessianSerializer.class);
+        referenceBean.setCallType(CallType.SYNC);
+        referenceBean.setLoadBalance(LoadBalance.ROUND);
+        referenceBean.setIface(ExecutorBiz.class);
+        referenceBean.setVersion(null);
+        referenceBean.setTimeout(3000);
+        referenceBean.setAddress("127.0.0.1:9999");
+        referenceBean.setAccessToken(accessToken);
+        referenceBean.setInvokeCallback(null);
+        referenceBean.setInvokerFactory(null);
+
+        ExecutorBiz executorBiz = (ExecutorBiz) referenceBean.getObject();
 
         ReturnT<String> runResult = executorBiz.run(triggerParam);
 
