@@ -15,7 +15,7 @@ public @interface XxlJob {
     /**
      * jobhandler name
      */
-    String value() default "";
+    String value();
 
     /**
      * init handler, invoked when JobThread init
