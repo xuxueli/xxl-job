@@ -20,11 +20,11 @@ public @interface XxlJob {
     /**
      * init handler, invoked when JobThread init
      */
-    String init();
+    String init() default "";
 
     /**
      * destroy handler, invoked when JobThread destroy
      */
-    String destroy();
+    String destroy() default "";
 
 }
