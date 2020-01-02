@@ -1687,6 +1687,7 @@ public ReturnT<String> execute(String param) {
 
 ### 6.28 版本 v2.2.0 Release Notes[迭代中]
 - 1、[迭代中]调度中心升级springboot2.x；因此，系统要求JDK8+；
+- 2、执行器注册默认值优化；
 
 
 ### TODO LIST
