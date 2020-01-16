@@ -4,8 +4,6 @@ import com.xxl.job.admin.core.model.XxlJobInfo;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
@@ -47,6 +45,10 @@ public class XxlJobInfoDaoTest {
 		info.setGlueRemark("setGlueRemark");
 		info.setChildJobId("1");
 
+		info.setAddTime(new Date());
+		info.setUpdateTime(new Date());
+		info.setGlueUpdatetime(new Date());
+
 		int count = xxlJobInfoDao.save(info);
 
 		XxlJobInfo info2 = xxlJobInfoDao.loadById(info.getId());
@@ -64,6 +66,7 @@ public class XxlJobInfoDaoTest {
 		info2.setGlueUpdatetime(new Date());
 		info2.setChildJobId("1");
 
+		info2.setUpdateTime(new Date());
 		int item2 = xxlJobInfoDao.update(info2);
 
 		xxlJobInfoDao.delete(info2.getId());

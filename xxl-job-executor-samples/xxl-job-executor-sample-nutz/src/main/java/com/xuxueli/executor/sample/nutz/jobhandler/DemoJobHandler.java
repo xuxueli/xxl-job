@@ -2,9 +2,7 @@ package com.xuxueli.executor.sample.nutz.jobhandler;
 
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.handler.IJobHandler;
-import com.xxl.job.core.handler.annotation.JobHandler;
 import com.xxl.job.core.log.XxlJobLogger;
-import org.nutz.ioc.loader.annotation.IocBean;
 
 import java.util.concurrent.TimeUnit;
 
@@ -19,8 +17,6 @@ import java.util.concurrent.TimeUnit;
  *
  * @author xuxueli 2015-12-19 19:43:36
  */
-@JobHandler(value="demoJobHandler")
-@IocBean
 public class DemoJobHandler extends IJobHandler {
 
 	@Override

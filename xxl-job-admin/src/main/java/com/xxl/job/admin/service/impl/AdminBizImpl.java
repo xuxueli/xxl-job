@@ -5,6 +5,7 @@ import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.admin.core.thread.JobTriggerPoolHelper;
 import com.xxl.job.admin.core.trigger.TriggerTypeEnum;
 import com.xxl.job.admin.core.util.I18nUtil;
+import com.xxl.job.admin.dao.XxlJobGroupDao;
 import com.xxl.job.admin.dao.XxlJobInfoDao;
 import com.xxl.job.admin.dao.XxlJobLogDao;
 import com.xxl.job.admin.dao.XxlJobRegistryDao;
@@ -16,6 +17,7 @@ import com.xxl.job.core.handler.IJobHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.text.MessageFormat;
@@ -35,6 +37,8 @@ public class AdminBizImpl implements AdminBiz {
     private XxlJobInfoDao xxlJobInfoDao;
     @Resource
     private XxlJobRegistryDao xxlJobRegistryDao;
+    @Resource
+    private XxlJobGroupDao xxlJobGroupDao;
 
 
     @Override
@@ -123,17 +127,45 @@ public class AdminBizImpl implements AdminBiz {
 
     @Override
     public ReturnT<String> registry(RegistryParam registryParam) {
-        int ret = xxlJobRegistryDao.registryUpdate(registryParam.getRegistGroup(), registryParam.getRegistryKey(), registryParam.getRegistryValue());
+
+        // valid
+        if (!StringUtils.hasText(registryParam.getRegistryGroup())
+                || !StringUtils.hasText(registryParam.getRegistryKey())
+                || !StringUtils.hasText(registryParam.getRegistryValue())) {
+            return new ReturnT<String>(ReturnT.FAIL_CODE, "Illegal Argument.");
+        }
+
+        int ret = xxlJobRegistryDao.registryUpdate(registryParam.getRegistryGroup(), registryParam.getRegistryKey(), registryParam.getRegistryValue(), new Date());
         if (ret < 1) {
-            xxlJobRegistryDao.registrySave(registryParam.getRegistGroup(), registryParam.getRegistryKey(), registryParam.getRegistryValue());
+            xxlJobRegistryDao.registrySave(registryParam.getRegistryGroup(), registryParam.getRegistryKey(), registryParam.getRegistryValue(), new Date());
+
+            // fresh
+            freshGroupRegistryInfo(registryParam);
         }
         return ReturnT.SUCCESS;
     }
 
     @Override
     public ReturnT<String> registryRemove(RegistryParam registryParam) {
-        xxlJobRegistryDao.registryDelete(registryParam.getRegistGroup(), registryParam.getRegistryKey(), registryParam.getRegistryValue());
+
+        // valid
+        if (!StringUtils.hasText(registryParam.getRegistryGroup())
+                || !StringUtils.hasText(registryParam.getRegistryKey())
+                || !StringUtils.hasText(registryParam.getRegistryValue())) {
+            return new ReturnT<String>(ReturnT.FAIL_CODE, "Illegal Argument.");
+        }
+
+        int ret = xxlJobRegistryDao.registryDelete(registryParam.getRegistryGroup(), registryParam.getRegistryKey(), registryParam.getRegistryValue());
+        if (ret > 0) {
+
+            // fresh
+            freshGroupRegistryInfo(registryParam);
+        }
         return ReturnT.SUCCESS;
+    }
+
+    private void freshGroupRegistryInfo(RegistryParam registryParam){
+        // Under consideration, prevent affecting core tables
     }
 
 }

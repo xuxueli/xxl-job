@@ -1,8 +1,5 @@
 package com.xuxueli.executor.sample.nutz.jobhandler;
 
-import com.xxl.job.core.handler.annotation.JobHandler;
-import org.nutz.ioc.loader.annotation.IocBean;
-
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.log.XxlJobLogger;
@@ -13,8 +10,6 @@ import com.xxl.job.core.util.ShardingUtil;
  *
  * @author xuxueli 2017-07-25 20:56:50
  */
-@JobHandler(value="shardingJobHandler")
-@IocBean
 public class ShardingJobHandler extends IJobHandler {
 
 	@Override

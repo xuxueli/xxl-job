@@ -1,52 +1,52 @@
-<p align="center">
-    <img src="https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/xxl-logo.jpg" width="150">
+<p align="center" >
+    <img src="https://www.xuxueli.com/doc/static/xxl-job/images/xxl-logo.jpg" width="150">
     <h3 align="center">XXL-JOB</h3>
     <p align="center">
-        XXL-JOB, a lightweight distributed task scheduling framework.
+        XXL-JOB, a distributed task scheduling framework.
         <br>
-        <a href="http://www.xuxueli.com/xxl-job/"><strong>-- Home Page --</strong></a>
+        <a href="https://www.xuxueli.com/xxl-job/"><strong>-- Home Page --</strong></a>
         <br>
         <br>
-        <a href="https://travis-ci.org/xuxueli/xxl-job">
-            <img src="https://travis-ci.org/xuxueli/xxl-job.svg?branch=master" >
-        </a>
-        <a href="https://hub.docker.com/r/xuxueli/xxl-job-admin/">
-            <img src="https://img.shields.io/badge/docker-passing-brightgreen.svg" >
+        <a href="https://github.com/xuxueli/xxl-job/actions">
+            <img src="https://github.com/xuxueli/xxl-job/workflows/Java%20CI/badge.svg" >
         </a>
         <a href="https://maven-badges.herokuapp.com/maven-central/com.xuxueli/xxl-job/">
             <img src="https://maven-badges.herokuapp.com/maven-central/com.xuxueli/xxl-job/badge.svg" >
         </a>
-         <a href="https://github.com/xuxueli/xxl-job/releases">
-             <img src="https://img.shields.io/github/release/xuxueli/xxl-job.svg" >
-         </a>
-         <a href="http://www.gnu.org/licenses/gpl-3.0.html">
-             <img src="https://img.shields.io/badge/license-GPLv3-blue.svg" >
-         </a>
-         <a href="https://gitter.im/xuxueli/xxl-job?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge">
-              <img src="https://badges.gitter.im/xuxueli/xxl-job.svg" >
-         </a>
-         <a href="http://www.xuxueli.com/page/donate.html">
-               <img src="https://img.shields.io/badge/%24-donate-ff69b4.svg?style=flat-square" >
-         </a>
-    </p>    
+        <a href="https://github.com/xuxueli/xxl-job/releases">
+         <img src="https://img.shields.io/github/release/xuxueli/xxl-job.svg" >
+        </a>
+        <a href="https://github.com/xuxueli/xxl-job/">
+            <img src="https://img.shields.io/github/stars/xuxueli/xxl-job" >
+        </a>
+        <a href="https://hub.docker.com/r/xuxueli/xxl-job-admin/">
+            <img src="https://img.shields.io/docker/pulls/xuxueli/xxl-job-admin" >
+        </a>
+        <a href="http://www.gnu.org/licenses/gpl-3.0.html">
+         <img src="https://img.shields.io/badge/license-GPLv3-blue.svg" >
+        </a>
+        <a href="https://www.xuxueli.com/page/donate.html">
+           <img src="https://img.shields.io/badge/%24-donate-ff69b4.svg?style=flat" >
+        </a>
+    </p>
 </p>
 
 
 ## Introduction
-XXL-JOB is a lightweight distributed task scheduling framework. 
+XXL-JOB is a distributed task scheduling framework. 
 It's core design goal is to develop quickly and learn simple, lightweight, and easy to expand. 
 Now, it's already open source, and many companies use it in production environments, real "out-of-the-box".
 
-XXL-JOB是一个轻量级分布式任务调度平台，其核心设计目标是开发迅速、学习简单、轻量级、易扩展。现已开放源代码并接入多家公司线上产品线，开箱即用。
+XXL-JOB是一个分布式任务调度平台，其核心设计目标是开发迅速、学习简单、轻量级、易扩展。现已开放源代码并接入多家公司线上产品线，开箱即用。
 
 
 ## Documentation
-- [中文文档](http://www.xuxueli.com/xxl-job/)
-- [English Documentation](http://www.xuxueli.com/xxl-job/en/)
+- [中文文档](https://www.xuxueli.com/xxl-job/)
+- [English Documentation](https://www.xuxueli.com/xxl-job/en/)
 
 
 ## Communication    
-- [社区交流](http://www.xuxueli.com/page/community.html)
+- [社区交流](https://www.xuxueli.com/page/community.html)
 
 
 ## Features
@@ -110,7 +110,9 @@ XXL-JOB是一个轻量级分布式任务调度平台，其核心设计目标是�
 
 于2018-05-27，在上海举办的 "[第75期开源中国源创会](https://www.oschina.net/event/2278742)" 的 "架构" 主题专场，我登台进行“基础架构与中间件图谱”主题演讲，台下上千位在场观众反响热烈（[图文回顾](https://www.oschina.net/question/3802184_2280606) ）。
 
-于2018-12-05，XXL-JOB参与"[2018年度最受欢迎中国开源软件](https://www.oschina.net/project/top_cn_2018?sort=1)"评比，在当时已录入的一万多个国产开源项目中角逐，最终排名第19名。
+于2018-12-05，XXL-JOB参与"[2018年度最受欢迎中国开源软件](https://www.oschina.net/project/top_cn_2018?sort=1)"评比，在当时已录入的一万多个开源项目中角逐，最终排名第19名。
+
+于2019-12-10，XXL-JOB参与"[2019年度最受欢迎中国开源软件](https://www.oschina.net/project/top_cn_2019)"评比，在当时已录入的一万多个开源项目中角逐，最终排名"开发框架和基础组件类"第9名。
 
 > 我司大众点评目前已接入XXL-JOB，内部别名《Ferrari》（Ferrari基于XXL-JOB的V1.1版本定制而成，新接入应用推荐升级最新版本）。
 据最新统计, 自2016-01-21接入至2017-12-01期间，该系统已调度约100万次，表现优异。新接入应用推荐使用最新版本，因为经过数十个版本的更新，系统的任务模型、UI交互模型以及底层调度通讯模型都有了较大的优化和提升，核心功能更加稳定高效。
@@ -345,6 +347,67 @@ XXL-JOB是一个轻量级分布式任务调度平台，其核心设计目标是�
     - 226、杭州找趣
     - 227、浩鲸云计算科技股份有限公司
     - 228、科大讯飞【科大讯飞】
+    - 229、杭州行装网络科技有限公司
+    - 230、即有分期金融
+    - 231、深圳法司德信息科技有限公司
+    - 232、上海博复信息科技有限公司
+    - 233、杭州云嘉云计算有限公司
+    - 234、有家民宿(有家美宿)
+    - 235、北京赢销通软件技术有限公司
+    - 236、浙江聚有财金融服务外包有限公司
+    - 237、易族智汇(北京)科技有限公司
+    - 238、合肥顶岭医疗科技开发有限公司
+    - 239、车船宝(深圳)旭珩科技有限公司)
+    - 240、广州富力地产有限公司
+    - 241、氢课（上海）教育科技有限公司
+    - 242、武汉氪细胞网络技术有限公司
+    - 243、杭州有云科技有限公司
+    - 244、上海仙豆智能机器人有限公司
+    - 245、拉卡拉支付股份有限公司【拉卡拉】
+    - 246、虎彩印艺股份有限公司
+    - 247、北京数微科技有限公司
+    - 248、广东智瑞科技有限公司
+    - 249、找钢网
+    - 250、九机网
+    - 251、杭州跑跑网络科技有限公司
+    - 252、深圳未来云集
+    - 253、杭州每日给力科技有限公司
+    - 254、上海齐犇信息科技有限公司
+    - 255、滴滴出行【滴滴】
+    - 256、合肥云诊信息科技有限公司
+    - 257、云知声智能科技股份有限公司
+    - 258、南京坦道科技有限公司
+    - 259、爱乐优（二手平台）
+    - 260、猫眼电影（私有化部署）【猫眼电影】
+    - 261、美团大象（私有化部署）【美团大象】
+    - 262、作业帮教育科技（北京）有限公司【作业帮】
+    - 263、北京小年糕互联网技术有限公司
+    - 264、山东矩阵软件工程股份有限公司
+    - 265、陕西国驿软件科技有限公司
+    - 266、君开信息科技
+    - 267、村鸟网络科技有限责任公司
+    - 268、云南国际信托有限公司
+    - 269、金智教育
+    - 270、珠海市筑巢科技有限公司
+    - 271、上海百胜软件股份有限公司
+    - 272、深圳市科盾科技有限公司
+    - 273、哈啰出行【哈啰】
+    - 274、途虎养车【途虎】
+    - 275、卡思优派人力资源集团
+    - 276、南京观为智慧软件科技有限公司
+    - 277、杭州城市大脑科技有限公司
+    - 278、猿辅导【猿辅导】
+    - 279、洛阳健创网络科技有限公司
+    - 280、魔力耳朵
+    - 281、亿阳信通
+    - 282、上海招鲤科技有限公司
+    - 283、四川商旅无忧科技服务有限公司
+    - 284、UU跑腿
+    - 285、北京老虎证券【老虎证券】
+    - 286、悠活省吧（北京）网络科技有限公司
+    - 287、F5未来商店
+    - 288、深圳环阳通信息技术有限公司
+    - 289、遠傳電信
 	- ……
 
 > 更多接入的公司，欢迎在 [登记地址](https://github.com/xuxueli/xxl-job/issues/1 ) 登记，登记仅仅为了产品推广。
@@ -368,6 +431,6 @@ This product is open source and free, and will continue to provide free communit
 
 
 ## Donate
-No matter how much the donation amount is enough to express your thought, thank you very much ：）     [To donate](http://www.xuxueli.com/page/donate.html )
+No matter how much the donation amount is enough to express your thought, thank you very much ：）     [To donate](https://www.xuxueli.com/page/donate.html )
 
-无论捐赠金额多少都足够表达您这份心意，非常感谢 ：）      [前往捐赠](http://www.xuxueli.com/page/donate.html )
+无论捐赠金额多少都足够表达您这份心意，非常感谢 ：）      [前往捐赠](https://www.xuxueli.com/page/donate.html )

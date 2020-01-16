@@ -164,17 +164,7 @@
 		WHERE job_id = #{jobId}
 	</delete>
 
-	<select id="triggerCountByHandleCode" resultType="int" >
-		SELECT count(1)
-		FROM xxl_job_log AS t
-		<trim prefix="WHERE" prefixOverrides="AND | OR" >
-			<if test="handleCode gt 0">
-				AND t.handle_code = #{handleCode}
-			</if>
-		</trim>
-	</select>
-
-    <select id="triggerCountByDay" resultType="java.util.Map" >
+    <!--<select id="triggerCountByDay" resultType="java.util.Map" >
 		SELECT
 			DATE_FORMAT(trigger_time,'%Y-%m-%d') triggerDay,
 			COUNT(handle_code) triggerDayCount,
@@ -184,10 +174,19 @@
 		WHERE trigger_time BETWEEN #{from} and #{to}
 		GROUP BY triggerDay
 		ORDER BY triggerDay
+    </select>-->
+
+    <select id="findLogReport" resultType="java.util.Map" >
+		SELECT
+			COUNT(handle_code) triggerDayCount,
+			SUM(CASE WHEN (trigger_code in (0, 200) and handle_code = 0) then 1 else 0 end) as triggerDayCountRunning,
+			SUM(CASE WHEN handle_code = 200 then 1 else 0 end) as triggerDayCountSuc
+		FROM xxl_job_log
+		WHERE trigger_time BETWEEN #{from} and #{to}
     </select>
 
-	<delete id="clearLog" >
-		delete from xxl_job_log
+	<select id="findClearLogIds" resultType="long" >
+		SELECT id FROM xxl_job_log
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
 			<if test="jobGroup gt 0">
 				AND job_group = #{jobGroup}
@@ -200,22 +199,32 @@
 			</if>
 			<if test="clearBeforeNum gt 0">
 				AND id NOT in(
-					SELECT id FROM(
-						SELECT id FROM xxl_job_log AS t
-						<trim prefix="WHERE" prefixOverrides="AND | OR" >
-							<if test="jobGroup gt 0">
-								AND t.job_group = #{jobGroup}
-							</if>
-							<if test="jobId gt 0">
-								AND t.job_id = #{jobId}
-							</if>
-						</trim>
-						ORDER BY t.trigger_time desc
-						LIMIT 0, #{clearBeforeNum}
-					) t1
+				SELECT id FROM(
+				SELECT id FROM xxl_job_log AS t
+				<trim prefix="WHERE" prefixOverrides="AND | OR" >
+					<if test="jobGroup gt 0">
+						AND t.job_group = #{jobGroup}
+					</if>
+					<if test="jobId gt 0">
+						AND t.job_id = #{jobId}
+					</if>
+				</trim>
+				ORDER BY t.trigger_time desc
+				LIMIT 0, #{clearBeforeNum}
+				) t1
 				)
 			</if>
 		</trim>
+		order by id asc
+		LIMIT #{pagesize}
+	</select>
+
+	<delete id="clearLog" >
+		delete from xxl_job_log
+		WHERE id in
+		<foreach collection="logIds" item="item" open="(" close=")" separator="," >
+			#{item}
+		</foreach>
 	</delete>
 
 	<select id="findFailJobLogIds" resultType="long" >
@@ -227,6 +236,7 @@
 		)
 		AND `alarm_status` = 0
 		ORDER BY id ASC
+		LIMIT #{pagesize}
 	</select>
 
 	<update id="updateAlarmStatus" >

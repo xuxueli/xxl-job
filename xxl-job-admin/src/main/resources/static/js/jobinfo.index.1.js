@@ -3,7 +3,7 @@ $(function() {
 	// init date tables
 	var jobTable = $("#job_list").dataTable({
 		"deferRender": true,
-		"processing" : true, 
+		"processing" : true,
 	    "serverSide": true,
 		"ajax": {
 			url: base_url + "/jobinfo/pageList",
@@ -30,8 +30,8 @@ $(function() {
 						"visible" : true,
 						"width":'7%'
 					},
-	                { 
-	                	"data": 'jobGroup', 
+	                {
+	                	"data": 'jobGroup',
 	                	"visible" : false,
 	                	"render": function ( data, type, row ) {
 	            			var groupMenu = $("#jobGroup").find("option");
@@ -67,23 +67,23 @@ $(function() {
 						"visible" : true,
 						"width":'13%'
 					},
-	                { 
-	                	"data": 'addTime', 
-	                	"visible" : false, 
+	                {
+	                	"data": 'addTime',
+	                	"visible" : false,
 	                	"render": function ( data, type, row ) {
 	                		return data?moment(new Date(data)).format("YYYY-MM-DD HH:mm:ss"):"";
 	                	}
 	                },
-	                { 
-	                	"data": 'updateTime', 
-	                	"visible" : false, 
+	                {
+	                	"data": 'updateTime',
+	                	"visible" : false,
 	                	"render": function ( data, type, row ) {
 	                		return data?moment(new Date(data)).format("YYYY-MM-DD HH:mm:ss"):"";
 	                	}
 	                },
 	                { "data": 'author', "visible" : true, "width":'10%'},
 	                { "data": 'alarmEmail', "visible" : false},
-	                { 
+	                {
 	                	"data": 'triggerStatus',
 						"width":'10%',
 	                	"visible" : true,
@@ -119,6 +119,7 @@ $(function() {
                                 if ('BEAN' != row.glueType) {
                                     var codeUrl = base_url +'/jobcode?jobId='+ row.id;
                                     codeBtn = '<li><a href="'+ codeUrl +'" target="_blank" >GLUE IDE</a></li>\n';
+                                    codeBtn += '<li class="divider"></li>\n';
                                 }
 
                                 // data
@@ -135,9 +136,10 @@ $(function() {
                                     '       <li><a href="javascript:void(0);" class="job_trigger" >'+ I18n.jobinfo_opt_run +'</a></li>\n' +
                                     '       <li><a href="'+ logHref +'">'+ I18n.jobinfo_opt_log +'</a></li>\n' +
                                     '       <li><a href="javascript:void(0);" class="job_registryinfo" >' + I18n.jobinfo_opt_registryinfo + '</a></li>\n' +
+                                    '       <li><a href="javascript:void(0);" class="job_next_time" >' + I18n.jobinfo_opt_next_time + '</a></li>\n' +
                                     '       <li class="divider"></li>\n' +
-                                    start_stop_div +
                                     codeBtn +
+                                    start_stop_div +
                                     '       <li><a href="javascript:void(0);" class="update" >'+ I18n.system_opt_edit +'</a></li>\n' +
                                     '       <li><a href="javascript:void(0);" class="job_operate" _type="job_del" >'+ I18n.system_opt_del +'</a></li>\n' +
                                     '     </ul>\n' +
@@ -181,14 +183,14 @@ $(function() {
 	$('#searchBtn').on('click', function(){
 		jobTable.fnDraw();
 	});
-	
+
 	// jobGroup change
 	$('#jobGroup').on('change', function(){
         //reload
         var jobGroup = $('#jobGroup').val();
         window.location.href = base_url + "/jobinfo?jobGroup=" + jobGroup;
     });
-	
+
 	// job operate
 	$("#job_list").on('click', '.job_operate',function() {
 		var typeName;
@@ -211,7 +213,7 @@ $(function() {
 		} else {
 			return;
 		}
-		
+
 		var id = $(this).parents('ul').attr("_id");
 
 		layer.confirm( I18n.system_ok + typeName + '?', {
@@ -311,22 +313,64 @@ $(function() {
             }
         });
 
+    });
 
+    // job_next_time
+    $("#job_list").on('click', '.job_next_time',function() {
+        var id = $(this).parents('ul').attr("_id");
+        var row = tableData['key'+id];
+
+        var jobCron = row.jobCron;
+
+        $.ajax({
+            type : 'POST',
+            url : base_url + "/jobinfo/nextTriggerTime",
+            data : {
+                "cron" : jobCron
+            },
+            dataType : "json",
+            success : function(data){
+            	
+            	if (data.code != 200) {
+                    layer.open({
+                        title: I18n.jobinfo_opt_next_time ,
+                        btn: [ I18n.system_ok ],
+                        content: data.msg
+                    });
+				} else {
+                    var html = '<center>';
+                    if (data.code == 200 && data.content) {
+                        for (var index in data.content) {
+                            html += '<span>' + data.content[index] + '</span><br>';
+                        }
+                    }
+                    html += '</center>';
+
+                    layer.open({
+                        title: I18n.jobinfo_opt_next_time ,
+                        btn: [ I18n.system_ok ],
+                        content: html
+                    });
+				}
+
+            }
+        });
 
     });
 
 	// add
 	$(".add").click(function(){
 
-		// init
-        //$("#addModal .form input[name='jobCron']").cronGen({});
+		// init-cronGen
+        $("#addModal .form input[name='jobCron']").show().siblings().remove();
+        $("#addModal .form input[name='jobCron']").cronGen({});
 
 		$('#addModal').modal({backdrop: false, keyboard: false}).modal('show');
 	});
 	var addModalValidate = $("#addModal .form").validate({
-		errorElement : 'span',  
+		errorElement : 'span',
         errorClass : 'help-block',
-        focusInvalid : true,  
+        focusInvalid : true,
         rules : {
 			jobDesc : {
 				required : true,
@@ -344,8 +388,8 @@ $(function() {
             executorFailRetryCount : {
                 digits:true
             }
-        }, 
-        messages : {  
+        },
+        messages : {
             jobDesc : {
             	required : I18n.system_please_input + I18n.jobinfo_field_jobdesc
             },
@@ -362,15 +406,15 @@ $(function() {
                 digits: I18n.system_please_input + I18n.system_digits
             }
         },
-		highlight : function(element) {  
-            $(element).closest('.form-group').addClass('has-error');  
+		highlight : function(element) {
+            $(element).closest('.form-group').addClass('has-error');
         },
-        success : function(label) {  
-            label.closest('.form-group').removeClass('has-error');  
-            label.remove();  
+        success : function(label) {
+            label.closest('.form-group').removeClass('has-error');
+            label.remove();
         },
-        errorPlacement : function(error, element) {  
-            element.parent('div').append(error);  
+        errorPlacement : function(error, element) {
+            element.parent('div').append(error);
         },
         submitHandler : function(form) {
 
@@ -386,6 +430,8 @@ $(function() {
             }
             $("#addModal .form input[name='executorFailRetryCount']").val(executorFailRetryCount);
 
+            // process-cronGen
+            $("#addModal .form input[name='jobCron']").val( $("#addModal .form input[name='cronGen_display']").val() );
 
         	$.post(base_url + "/jobinfo/add",  $("#addModal .form").serialize(), function(data, status) {
     			if (data.code == "200") {
@@ -412,8 +458,8 @@ $(function() {
 		}
 	});
 	$("#addModal").on('hide.bs.modal', function () {
+        addModalValidate.resetForm();
 		$("#addModal .form")[0].reset();
-		addModalValidate.resetForm();
 		$("#addModal .form .form-group").removeClass("has-error");
 		$(".remote_panel").show();	// remote
 
@@ -446,7 +492,7 @@ $(function() {
 		} else if ('GLUE_PHP'==glueType){
             $("#addModal .form textarea[name='glueSource']").val( $("#addModal .form .glueSource_php").val() );
         } else if ('GLUE_NODEJS'==glueType){
-			$("#addModal .form textarea[name='glueSource']").val( $("#addModal .form .glueSource_nodejs").val() );			
+			$("#addModal .form textarea[name='glueSource']").val( $("#addModal .form .glueSource_nodejs").val() );
 		} else if ('GLUE_POWERSHELL'==glueType){
             $("#addModal .form textarea[name='glueSource']").val( $("#addModal .form .glueSource_powershell").val() );
         } else {
@@ -478,14 +524,15 @@ $(function() {
 
         $("#updateModal .form select[name=glueType]").change();
 
-        // init
-        //$("#updateModal .form input[name='jobCron']").cronGen({});
+        // init-cronGen
+        $("#updateModal .form input[name='jobCron']").show().siblings().remove();
+        $("#updateModal .form input[name='jobCron']").cronGen({});
 
 		// show
 		$('#updateModal').modal({backdrop: false, keyboard: false}).modal('show');
 	});
 	var updateModalValidate = $("#updateModal .form").validate({
-		errorElement : 'span',  
+		errorElement : 'span',
         errorClass : 'help-block',
         focusInvalid : true,
 
@@ -525,14 +572,14 @@ $(function() {
             }
 		},
 		highlight : function(element) {
-            $(element).closest('.form-group').addClass('has-error');  
+            $(element).closest('.form-group').addClass('has-error');
         },
-        success : function(label) {  
-            label.closest('.form-group').removeClass('has-error');  
-            label.remove();  
+        success : function(label) {
+            label.closest('.form-group').removeClass('has-error');
+            label.remove();
         },
-        errorPlacement : function(error, element) {  
-            element.parent('div').append(error);  
+        errorPlacement : function(error, element) {
+            element.parent('div').append(error);
         },
         submitHandler : function(form) {
 
@@ -547,6 +594,9 @@ $(function() {
                 executorFailRetryCount = 0;
             }
             $("#updateModal .form input[name='executorFailRetryCount']").val(executorFailRetryCount);
+
+            // process-cronGen
+            $("#updateModal .form input[name='jobCron']").val( $("#updateModal .form input[name='cronGen_display']").val() );
 
 			// post
     		$.post(base_url + "/jobinfo/update", $("#updateModal .form").serialize(), function(data, status) {
@@ -574,7 +624,9 @@ $(function() {
 		}
 	});
 	$("#updateModal").on('hide.bs.modal', function () {
-		$("#updateModal .form")[0].reset()
+        updateModalValidate.resetForm();
+        $("#updateModal .form")[0].reset();
+        $("#updateModal .form .form-group").removeClass("has-error");
 	});
 
     /**
