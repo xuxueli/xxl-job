@@ -78,59 +78,62 @@ public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationC
 
         // init job handler from method
         String[] beanDefinitionNames = applicationContext.getBeanDefinitionNames();
-        for (String beanDefinitionName : beanDefinitionNames) {
-            Object bean = applicationContext.getBean(beanDefinitionName);
-            Method[] methods = bean.getClass().getDeclaredMethods();
-            for (Method method: methods) {
-                XxlJob xxlJob = AnnotationUtils.findAnnotation(method, XxlJob.class);
-                if (xxlJob != null) {
+        if (beanDefinitionNames!=null && beanDefinitionNames.length>0) {
+            for (String beanDefinitionName : beanDefinitionNames) {
+                Object bean = applicationContext.getBean(beanDefinitionName);
+                Method[] methods = bean.getClass().getDeclaredMethods();
+                for (Method method: methods) {
+                    XxlJob xxlJob = AnnotationUtils.findAnnotation(method, XxlJob.class);
+                    if (xxlJob != null) {
 
-                    // name
-                    String name = xxlJob.value();
-                    if (name.trim().length() == 0) {
-                        throw new RuntimeException("xxl-job method-jobhandler name invalid, for[" + bean.getClass() + "#"+ method.getName() +"] .");
-                    }
-                    if (loadJobHandler(name) != null) {
-                        throw new RuntimeException("xxl-job jobhandler[" + name + "] naming conflicts.");
-                    }
-
-                    // execute method
-                    if (!(method.getParameterTypes()!=null && method.getParameterTypes().length==1 && method.getParameterTypes()[0].isAssignableFrom(String.class))) {
-                        throw new RuntimeException("xxl-job method-jobhandler param-classtype invalid, for[" + bean.getClass() + "#"+ method.getName() +"] , " +
-                                "The correct method format like \" public ReturnT<String> execute(String param) \" .");
-                    }
-                    if (!method.getReturnType().isAssignableFrom(ReturnT.class)) {
-                        throw new RuntimeException("xxl-job method-jobhandler return-classtype invalid, for[" + bean.getClass() + "#"+ method.getName() +"] , " +
-                                "The correct method format like \" public ReturnT<String> execute(String param) \" .");
-                    }
-                    method.setAccessible(true);
-
-                    // init and destory
-                    Method initMethod = null;
-                    Method destroyMethod = null;
-
-                    if(xxlJob.init().trim().length() > 0) {
-                        try {
-                            initMethod = bean.getClass().getDeclaredMethod(xxlJob.init());
-                            initMethod.setAccessible(true);
-                        } catch (NoSuchMethodException e) {
-                            throw new RuntimeException("xxl-job method-jobhandler initMethod invalid, for[" + bean.getClass() + "#"+ method.getName() +"] .");
+                        // name
+                        String name = xxlJob.value();
+                        if (name.trim().length() == 0) {
+                            throw new RuntimeException("xxl-job method-jobhandler name invalid, for[" + bean.getClass() + "#"+ method.getName() +"] .");
                         }
-                    }
-                    if(xxlJob.destroy().trim().length() > 0) {
-                        try {
-                            destroyMethod = bean.getClass().getDeclaredMethod(xxlJob.destroy());
-                            destroyMethod.setAccessible(true);
-                        } catch (NoSuchMethodException e) {
-                            throw new RuntimeException("xxl-job method-jobhandler destroyMethod invalid, for[" + bean.getClass() + "#"+ method.getName() +"] .");
+                        if (loadJobHandler(name) != null) {
+                            throw new RuntimeException("xxl-job jobhandler[" + name + "] naming conflicts.");
                         }
-                    }
 
-                    // registry jobhandler
-                    registJobHandler(name, new MethodJobHandler(bean, method, initMethod, destroyMethod));
+                        // execute method
+                        if (!(method.getParameterTypes()!=null && method.getParameterTypes().length==1 && method.getParameterTypes()[0].isAssignableFrom(String.class))) {
+                            throw new RuntimeException("xxl-job method-jobhandler param-classtype invalid, for[" + bean.getClass() + "#"+ method.getName() +"] , " +
+                                    "The correct method format like \" public ReturnT<String> execute(String param) \" .");
+                        }
+                        if (!method.getReturnType().isAssignableFrom(ReturnT.class)) {
+                            throw new RuntimeException("xxl-job method-jobhandler return-classtype invalid, for[" + bean.getClass() + "#"+ method.getName() +"] , " +
+                                    "The correct method format like \" public ReturnT<String> execute(String param) \" .");
+                        }
+                        method.setAccessible(true);
+
+                        // init and destory
+                        Method initMethod = null;
+                        Method destroyMethod = null;
+
+                        if(xxlJob.init().trim().length() > 0) {
+                            try {
+                                initMethod = bean.getClass().getDeclaredMethod(xxlJob.init());
+                                initMethod.setAccessible(true);
+                            } catch (NoSuchMethodException e) {
+                                throw new RuntimeException("xxl-job method-jobhandler initMethod invalid, for[" + bean.getClass() + "#"+ method.getName() +"] .");
+                            }
+                        }
+                        if(xxlJob.destroy().trim().length() > 0) {
+                            try {
+                                destroyMethod = bean.getClass().getDeclaredMethod(xxlJob.destroy());
+                                destroyMethod.setAccessible(true);
+                            } catch (NoSuchMethodException e) {
+                                throw new RuntimeException("xxl-job method-jobhandler destroyMethod invalid, for[" + bean.getClass() + "#"+ method.getName() +"] .");
+                            }
+                        }
+
+                        // registry jobhandler
+                        registJobHandler(name, new MethodJobHandler(bean, method, initMethod, destroyMethod));
+                    }
                 }
             }
         }
+
     }
 
     // ---------------------- applicationContext ----------------------
