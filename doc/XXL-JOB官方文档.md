@@ -1686,7 +1686,7 @@ public ReturnT<String> execute(String param) {
 - 注意：最新版本 "XxlJobSpringExecutor" 逻辑有调整，历史项目中该组件的配置方式请参考Sample示例项目进行调整，尤其注意需要移除组件的init和destroy方法；
 
 ### 6.28 版本 v2.2.0 Release Notes[迭代中]
-- 1、[迭代中]调度中心升级springboot2.x；因此，系统要求JDK8+；
+- 1、调度中心升级springboot2.x；因此，系统要求JDK8+；
 - 2、执行器注册默认值优化；
 - 3、SQL脚本编码默认utf8mb4执行，避免小概率下容器环境中乱码问题；
 
