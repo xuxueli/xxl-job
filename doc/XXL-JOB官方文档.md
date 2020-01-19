@@ -1245,7 +1245,8 @@ API服务请求参考代码：com.xxl.job.executor.ExecutorBizTest
 - 2、提供基于HTTP的任务Handler（Bean任务，JobHandler="HttpJobHandler"）；业务方只需要提供HTTP链接即可，不限制语言、平台；
 
 ### 5.18 任务失败告警
-默认提供邮件失败告警，可扩展短信、钉钉等方式，扩展代码位置为 "JobFailMonitorHelper.failAlarm"；
+默认提供邮件失败告警，可扩展短信、钉钉等方式，扩展代码位置为 "com.xxl.job.admin.core.alarm.JobAlarmer"。
+如果需要新增一种告警方式，只需要新增一个实现 "com.xxl.job.admin.core.alarm.JobAlarm" 接口的告警实现即可
 
 ### 5.19 调度中心Docker镜像构建
 可以通过以下命令快速构建调度中心，并启动运行；
@@ -1691,6 +1692,7 @@ public ReturnT<String> execute(String param) {
 - 3、SQL脚本编码默认utf8mb4执行，避免小概率下容器环境中乱码问题；
 - 4、多个项目依赖升级至较新稳定版本，如mybatis、groovy和mysql驱动等；
 - 5、默认数据库连接池调整为hikari，移除tomcat-jdbc依赖；
+- 6、任务告警组件模块化：如果需要新增一种告警方式，只需要新增一个实现 "com.xxl.job.admin.core.alarm.JobAlarm" 接口的告警实现即可，更加灵活、方便定制；
 
 
 ### TODO LIST
