@@ -1690,7 +1690,7 @@ public ReturnT<String> execute(String param) {
 - 2、执行器注册默认值优化；
 - 3、SQL脚本编码默认utf8mb4执行，避免小概率下容器环境中乱码问题；
 - 4、多个项目依赖升级至较新稳定版本，如mybatis、groovy和mysql驱动等；
-- 5、默认数据库连接池调整为hikari；
+- 5、默认数据库连接池调整为hikari，移除tomcat-jdbc依赖；
 
 
 ### TODO LIST
