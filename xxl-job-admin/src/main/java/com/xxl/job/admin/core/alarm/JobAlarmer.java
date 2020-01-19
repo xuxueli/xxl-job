@@ -1,17 +1,38 @@
 package com.xxl.job.admin.core.alarm;
 
-import com.xxl.job.admin.core.alarm.impl.EmailJobAlarm;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @Component
-public class JobAlarmer {
+public class JobAlarmer implements ApplicationContextAware, InitializingBean {
+    private static Logger logger = LoggerFactory.getLogger(JobAlarmer.class);
 
-    @Resource
-    private EmailJobAlarm emailJobAlarm;
+    private ApplicationContext applicationContext;
+    private List<JobAlarm> jobAlarmList;
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        Map<String, JobAlarm> serviceBeanMap = applicationContext.getBeansOfType(JobAlarm.class);
+        if (serviceBeanMap != null && serviceBeanMap.size() > 0) {
+            jobAlarmList = new ArrayList<JobAlarm>(serviceBeanMap.values());
+        }
+    }
 
     /**
      * job alarm
@@ -22,15 +43,23 @@ public class JobAlarmer {
      */
     public boolean alarm(XxlJobInfo info, XxlJobLog jobLog) {
 
-        // alarm by email
-        boolean emailResult = emailJobAlarm.doAlarm(info, jobLog);
+        boolean result = false;
+        if (jobAlarmList!=null && jobAlarmList.size()>0) {
+            result = true;  // success means all-success
+            for (JobAlarm alarm: jobAlarmList) {
+                boolean resultItem = false;
+                try {
+                    resultItem = alarm.doAlarm(info, jobLog);
+                } catch (Exception e) {
+                    logger.error(e.getMessage(), e);
+                }
+                if (!resultItem) {
+                    result = false;
+                }
+            }
+        }
 
-        // do something, custom alarm strategy, such as sms
-        // ...
-
-        return emailResult;
+        return result;
     }
-
-
 
 }

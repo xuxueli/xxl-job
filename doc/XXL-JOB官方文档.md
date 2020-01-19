@@ -1245,8 +1245,7 @@ API服务请求参考代码：com.xxl.job.executor.ExecutorBizTest
 - 2、提供基于HTTP的任务Handler（Bean任务，JobHandler="HttpJobHandler"）；业务方只需要提供HTTP链接即可，不限制语言、平台；
 
 ### 5.18 任务失败告警
-默认提供邮件失败告警，可扩展短信、钉钉等方式，扩展代码位置为 "com.xxl.job.admin.core.alarm.JobAlarmer"。
-如果需要新增一种告警方式，只需要新增一个实现 "com.xxl.job.admin.core.alarm.JobAlarm" 接口的告警实现即可
+默认提供邮件失败告警，可扩展短信、钉钉等方式。如果需要新增一种告警方式，只需要新增一个实现 "com.xxl.job.admin.core.alarm.JobAlarm" 接口的告警实现即可。可以参考默认提供邮箱告警实现 "EmailJobAlarm"。
 
 ### 5.19 调度中心Docker镜像构建
 可以通过以下命令快速构建调度中心，并启动运行；
