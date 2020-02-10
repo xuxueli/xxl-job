@@ -53,7 +53,7 @@
 			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
 
-		<!-- mybatis-starter：mybatis + mybatis-spring + tomcat-jdbc（default） -->
+		<!-- mybatis-starter：mybatis + mybatis-spring + hikari（default） -->
 		<dependency>
 			<groupId>org.mybatis.spring.boot</groupId>
 			<artifactId>mybatis-spring-boot-starter</artifactId>
