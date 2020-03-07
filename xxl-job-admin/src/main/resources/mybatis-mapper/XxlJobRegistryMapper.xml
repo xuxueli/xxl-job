@@ -33,6 +33,11 @@
 		</foreach>
 	</delete>
 
+	<delete id="removeDeadByTime" parameterType="java.util.HashMap" >
+		DELETE FROM xxl_job_registry
+		WHERE update_time &lt; DATE_ADD(#{nowTime}, INTERVAL -#{timeout} SECOND)
+	</delete>
+
 	<select id="findAll" parameterType="java.util.HashMap" resultMap="XxlJobRegistry">
 		SELECT <include refid="Base_Column_List" />
 		FROM xxl_job_registry AS t

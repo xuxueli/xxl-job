@@ -253,6 +253,7 @@ public class JobScheduleHelper {
                     }
 
                     // next second, align second
+                    // make sure the next run starts with a aligned second
                     try {
                         TimeUnit.MILLISECONDS.sleep(1000 - System.currentTimeMillis()%1000);
                     } catch (InterruptedException e) {
