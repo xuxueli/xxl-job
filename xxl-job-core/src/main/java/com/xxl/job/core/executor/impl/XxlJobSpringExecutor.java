@@ -81,6 +81,7 @@ public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationC
         if (beanDefinitionNames!=null && beanDefinitionNames.length>0) {
             for (String beanDefinitionName : beanDefinitionNames) {
                 Object bean = applicationContext.getBean(beanDefinitionName);
+                if (bean == null) continue;
                 Method[] methods = bean.getClass().getDeclaredMethods();
                 for (Method method: methods) {
                     XxlJob xxlJob = AnnotationUtils.findAnnotation(method, XxlJob.class);
