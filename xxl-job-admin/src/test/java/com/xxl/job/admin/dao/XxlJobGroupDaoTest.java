@@ -32,7 +32,7 @@ public class XxlJobGroupDaoTest {
         group.setAddressType(0);
         group.setAddressList("setAddressList");
 
-        int ret = xxlJobGroupDao.save(group);
+        xxlJobGroupDao.save(group);
 
         XxlJobGroup group2 = xxlJobGroupDao.load(group.getId());
         group2.setAppName("setAppName2");

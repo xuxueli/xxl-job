@@ -109,7 +109,7 @@ public class JobLogReportHelper {
                         // clean expired log
                         List<Long> logIds = null;
                         do {
-                            logIds = XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().findClearLogIds(0, 0, clearBeforeTime, 0, 1000);
+                            logIds = XxlJobAdminConfig.getAdminConfig().getXxlJobService().findClearLogIds(0, 0, clearBeforeTime, 0, 1000);
                             if (logIds!=null && logIds.size()>0) {
                                 XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().clearLog(logIds);
                             }

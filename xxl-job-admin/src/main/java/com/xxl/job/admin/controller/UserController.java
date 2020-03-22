@@ -8,6 +8,10 @@ import com.xxl.job.admin.dao.XxlJobGroupDao;
 import com.xxl.job.admin.dao.XxlJobUserDao;
 import com.xxl.job.admin.service.LoginService;
 import com.xxl.job.core.biz.model.ReturnT;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.DigestUtils;
@@ -17,7 +21,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import javax.persistence.criteria.Predicate;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,14 +59,29 @@ public class UserController {
                                         String username, int role) {
 
         // page list
-        List<XxlJobUser> list = xxlJobUserDao.pageList(start, length, username, role);
-        int list_count = xxlJobUserDao.pageListCount(start, length, username, role);
+        // 排序和分页
+        Sort sort = Sort.by("username").ascending();
+        PageRequest pageRequest = PageRequest.of(start % length, length, sort);
+        // 查询条件
+        Specification<XxlJobUser> specification = (Specification<XxlJobUser>) (root, query, criteriaBuilder) -> {
+            ArrayList<Predicate> list = new ArrayList<>();
+            if (StringUtils.hasText(username)) {
+                list.add(criteriaBuilder.like(root.get("username"), "%" + username + "%"));
+            }
+            if (role > -1) {
+                list.add(criteriaBuilder.equal(root.get("role"), role));
+            }
+
+            Predicate[] predicates = new Predicate[list.size()];
+            return criteriaBuilder.and(list.toArray(predicates));
+        };
+        Page<XxlJobUser> page = xxlJobUserDao.findAll(specification, pageRequest);
 
         // package result
         Map<String, Object> maps = new HashMap<String, Object>();
-        maps.put("recordsTotal", list_count);		// 总记录数
-        maps.put("recordsFiltered", list_count);	// 过滤后的总记录数
-        maps.put("data", list);  					// 分页列表
+        maps.put("recordsTotal", page.getTotalElements());		// 总记录数
+        maps.put("recordsFiltered", page.getTotalElements());	// 过滤后的总记录数
+        maps.put("data", page.getContent());  					// 分页列表
         return maps;
     }
 
@@ -130,7 +151,7 @@ public class UserController {
     @RequestMapping("/remove")
     @ResponseBody
     @PermissionLimit(adminuser = true)
-    public ReturnT<String> remove(HttpServletRequest request, int id) {
+    public ReturnT<String> remove(HttpServletRequest request, long id) {
 
         // avoid opt login seft
         XxlJobUser loginUser = (XxlJobUser) request.getAttribute(LoginService.LOGIN_IDENTITY_KEY);

@@ -9,12 +9,14 @@ import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.admin.dao.XxlJobGroupDao;
 import com.xxl.job.admin.dao.XxlJobInfoDao;
 import com.xxl.job.admin.dao.XxlJobLogDao;
+import com.xxl.job.admin.service.XxlJobService;
 import com.xxl.job.core.biz.ExecutorBiz;
 import com.xxl.job.core.biz.model.LogResult;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.util.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,10 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * index controller
@@ -43,6 +42,8 @@ public class JobLogController {
 	public XxlJobInfoDao xxlJobInfoDao;
 	@Resource
 	public XxlJobLogDao xxlJobLogDao;
+	@Resource
+	public XxlJobService xxlJobService;
 
 	@RequestMapping
 	public String index(HttpServletRequest request, Model model, @RequestParam(required = false, defaultValue = "0") Integer jobId) {
@@ -76,7 +77,7 @@ public class JobLogController {
 
 	@RequestMapping("/getJobsByGroup")
 	@ResponseBody
-	public ReturnT<List<XxlJobInfo>> getJobsByGroup(int jobGroup){
+	public ReturnT<List<XxlJobInfo>> getJobsByGroup(long jobGroup){
 		List<XxlJobInfo> list = xxlJobInfoDao.getJobsByGroup(jobGroup);
 		return new ReturnT<List<XxlJobInfo>>(list);
 	}
@@ -86,7 +87,7 @@ public class JobLogController {
 	public Map<String, Object> pageList(HttpServletRequest request,
 										@RequestParam(required = false, defaultValue = "0") int start,
 										@RequestParam(required = false, defaultValue = "10") int length,
-										int jobGroup, int jobId, int logStatus, String filterTime) {
+										long jobGroup, long jobId, int logStatus, String filterTime) {
 
 		// valid permission
 		JobInfoController.validPermission(request, jobGroup);	// 仅管理员支持查询全部；普通用户仅支持查询有权限的 jobGroup
@@ -103,14 +104,13 @@ public class JobLogController {
 		}
 		
 		// page query
-		List<XxlJobLog> list = xxlJobLogDao.pageList(start, length, jobGroup, jobId, triggerTimeStart, triggerTimeEnd, logStatus);
-		int list_count = xxlJobLogDao.pageListCount(start, length, jobGroup, jobId, triggerTimeStart, triggerTimeEnd, logStatus);
-		
+		Page<XxlJobLog> page = xxlJobService.jobLogPageList(start, length, jobGroup, jobId, triggerTimeStart, triggerTimeEnd, logStatus);
+
 		// package result
 		Map<String, Object> maps = new HashMap<String, Object>();
-	    maps.put("recordsTotal", list_count);		// 总记录数
-	    maps.put("recordsFiltered", list_count);	// 过滤后的总记录数
-	    maps.put("data", list);  					// 分页列表
+	    maps.put("recordsTotal", page.getTotalElements());		// 总记录数
+	    maps.put("recordsFiltered", page.getTotalElements());	// 过滤后的总记录数
+	    maps.put("data", page.getContent());  					// 分页列表
 		return maps;
 	}
 
@@ -190,7 +190,7 @@ public class JobLogController {
 
 	@RequestMapping("/clearLog")
 	@ResponseBody
-	public ReturnT<String> clearLog(int jobGroup, int jobId, int type){
+	public ReturnT<String> clearLog(long jobGroup, long jobId, int type){
 
 		Date clearBeforeTime = null;
 		int clearBeforeNum = 0;
@@ -218,7 +218,7 @@ public class JobLogController {
 
 		List<Long> logIds = null;
 		do {
-			logIds = xxlJobLogDao.findClearLogIds(jobGroup, jobId, clearBeforeTime, clearBeforeNum, 1000);
+			logIds = xxlJobService.findClearLogIds(jobGroup, jobId, clearBeforeTime, clearBeforeNum, 1000);
 			if (logIds!=null && logIds.size()>0) {
 				xxlJobLogDao.clearLog(logIds);
 			}

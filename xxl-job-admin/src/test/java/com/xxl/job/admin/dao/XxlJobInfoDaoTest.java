@@ -4,6 +4,8 @@ import com.xxl.job.admin.core.model.XxlJobInfo;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
@@ -16,14 +18,9 @@ public class XxlJobInfoDaoTest {
 	
 	@Resource
 	private XxlJobInfoDao xxlJobInfoDao;
-	
+
 	@Test
 	public void pageList(){
-		List<XxlJobInfo> list = xxlJobInfoDao.pageList(0, 20, 0, -1, null, null, null);
-		int list_count = xxlJobInfoDao.pageListCount(0, 20, 0, -1, null, null, null);
-		
-		System.out.println(list);
-		System.out.println(list_count);
 
 		List<XxlJobInfo> list2 = xxlJobInfoDao.getJobsByGroup(1);
 	}
@@ -31,7 +28,7 @@ public class XxlJobInfoDaoTest {
 	@Test
 	public void save_load(){
 		XxlJobInfo info = new XxlJobInfo();
-		info.setJobGroup(1);
+		info.setJobGroup(1L);
 		info.setJobCron("jobCron");
 		info.setJobDesc("desc");
 		info.setAuthor("setAuthor");
@@ -49,7 +46,7 @@ public class XxlJobInfoDaoTest {
 		info.setUpdateTime(new Date());
 		info.setGlueUpdatetime(new Date());
 
-		int count = xxlJobInfoDao.save(info);
+		xxlJobInfoDao.save(info);
 
 		XxlJobInfo info2 = xxlJobInfoDao.loadById(info.getId());
 		info2.setJobCron("jobCron2");
@@ -68,6 +65,13 @@ public class XxlJobInfoDaoTest {
 
 		info2.setUpdateTime(new Date());
 		int item2 = xxlJobInfoDao.update(info2);
+
+		Sort sort = Sort.by("id").ascending();
+		PageRequest pageRequest = PageRequest.of(0, 10, sort);
+		xxlJobInfoDao.scheduleJobQuery(System.currentTimeMillis(), pageRequest);
+
+		info2.setTriggerStatus(1);
+		xxlJobInfoDao.scheduleUpdate(info2);
 
 		xxlJobInfoDao.delete(info2.getId());
 

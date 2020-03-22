@@ -6,6 +6,8 @@ import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.trigger.TriggerTypeEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -32,7 +34,7 @@ public class JobScheduleHelper {
     private Thread ringThread;
     private volatile boolean scheduleThreadToStop = false;
     private volatile boolean ringThreadToStop = false;
-    private volatile static Map<Integer, List<Integer>> ringData = new ConcurrentHashMap<>();
+    private volatile static Map<Long, List<Long>> ringData = new ConcurrentHashMap<>();
 
     public void start(){
 
@@ -76,7 +78,9 @@ public class JobScheduleHelper {
 
                         // 1、pre read
                         long nowTime = System.currentTimeMillis();
-                        List<XxlJobInfo> scheduleList = XxlJobAdminConfig.getAdminConfig().getXxlJobInfoDao().scheduleJobQuery(nowTime + PRE_READ_MS, preReadCount);
+                        Sort sort = Sort.by("id").ascending();
+                        PageRequest pageRequest = PageRequest.of(0, preReadCount, sort); // ORDER BY id ASC LIMIT #{preReadCount}
+                        List<XxlJobInfo> scheduleList = XxlJobAdminConfig.getAdminConfig().getXxlJobInfoDao().scheduleJobQuery(nowTime + PRE_READ_MS, pageRequest);
                         if (scheduleList!=null && scheduleList.size()>0) {
                             // 2、push time-ring
                             for (XxlJobInfo jobInfo: scheduleList) {
@@ -226,10 +230,10 @@ public class JobScheduleHelper {
 
                     try {
                         // second data
-                        List<Integer> ringItemData = new ArrayList<>();
+                        List<Long> ringItemData = new ArrayList<>();
                         int nowSecond = Calendar.getInstance().get(Calendar.SECOND);   // 避免处理耗时太长，跨过刻度，向前校验一个刻度；
                         for (int i = 0; i < 2; i++) {
-                            List<Integer> tmpData = ringData.remove( (nowSecond+60-i)%60 );
+                            List<Long> tmpData = ringData.remove( (nowSecond+60-i)%60 );
                             if (tmpData != null) {
                                 ringItemData.addAll(tmpData);
                             }
@@ -239,7 +243,7 @@ public class JobScheduleHelper {
                         logger.debug(">>>>>>>>>>> xxl-job, time-ring beat : " + nowSecond + " = " + Arrays.asList(ringItemData) );
                         if (ringItemData.size() > 0) {
                             // do trigger
-                            for (int jobId: ringItemData) {
+                            for (long jobId: ringItemData) {
                                 // do trigger
                                 JobTriggerPoolHelper.trigger(jobId, TriggerTypeEnum.CRON, -1, null, null);
                             }
@@ -281,11 +285,11 @@ public class JobScheduleHelper {
         }
     }
 
-    private void pushTimeRing(int ringSecond, int jobId){
+    private void pushTimeRing(long ringSecond, long jobId){
         // push async ring
-        List<Integer> ringItemData = ringData.get(ringSecond);
+        List<Long> ringItemData = ringData.get(ringSecond);
         if (ringItemData == null) {
-            ringItemData = new ArrayList<Integer>();
+            ringItemData = new ArrayList<Long>();
             ringData.put(ringSecond, ringItemData);
         }
         ringItemData.add(jobId);
@@ -315,8 +319,8 @@ public class JobScheduleHelper {
         // if has ring data
         boolean hasRingData = false;
         if (!ringData.isEmpty()) {
-            for (int second : ringData.keySet()) {
-                List<Integer> tmpData = ringData.get(second);
+            for (long second : ringData.keySet()) {
+                List<Long> tmpData = ringData.get(second);
                 if (tmpData!=null && tmpData.size()>0) {
                     hasRingData = true;
                     break;

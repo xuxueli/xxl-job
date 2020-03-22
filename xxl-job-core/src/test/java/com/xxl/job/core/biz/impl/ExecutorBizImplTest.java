@@ -82,7 +82,7 @@ public class ExecutorBizImplTest {
 
     @Test
     public void idleBeat(){
-        final int jobId = 0;
+        final long jobId = 0;
 
         // Act
         final ReturnT<String> retval = executorBiz.idleBeat(jobId);
@@ -96,7 +96,7 @@ public class ExecutorBizImplTest {
 
     @Test
     public void kill(){
-        final int jobId = 0;
+        final long jobId = 0;
 
         // Act
         final ReturnT<String> retval = executorBiz.kill(jobId);

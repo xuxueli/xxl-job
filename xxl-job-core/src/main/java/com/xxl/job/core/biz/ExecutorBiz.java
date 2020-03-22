@@ -21,14 +21,14 @@ public interface ExecutorBiz {
      * @param jobId
      * @return
      */
-    public ReturnT<String> idleBeat(int jobId);
+    public ReturnT<String> idleBeat(long jobId);
 
     /**
      * kill
      * @param jobId
      * @return
      */
-    public ReturnT<String> kill(int jobId);
+    public ReturnT<String> kill(long jobId);
 
     /**
      * log

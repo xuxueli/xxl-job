@@ -20,14 +20,17 @@ public class XxlJobRegistryDaoTest {
 
     @Test
     public void test(){
+        xxlJobRegistryDao.findDead(new Date(System.currentTimeMillis() - 600 * 1000));
+
         int ret = xxlJobRegistryDao.registryUpdate("g1", "k1", "v1", new Date());
         if (ret < 1) {
-            ret = xxlJobRegistryDao.registrySave("g1", "k1", "v1", new Date());
+            xxlJobRegistryDao.save(new XxlJobRegistry("g1", "k1", "v1", new Date()));
         }
+        xxlJobRegistryDao.registryDelete("g1", "k1", "v1");
 
-        List<XxlJobRegistry> list = xxlJobRegistryDao.findAll(1, new Date());
+        List<XxlJobRegistry> list = xxlJobRegistryDao.findAll(new Date(System.currentTimeMillis() - 90 * 1000));
 
-        int ret2 = xxlJobRegistryDao.removeDead(Arrays.asList(1));
+        int ret2 = xxlJobRegistryDao.removeDead(Arrays.asList(1L));
     }
 
 }

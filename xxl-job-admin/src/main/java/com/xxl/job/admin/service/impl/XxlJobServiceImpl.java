@@ -1,9 +1,7 @@
 package com.xxl.job.admin.service.impl;
 
-import com.xxl.job.admin.core.model.XxlJobGroup;
-import com.xxl.job.admin.core.model.XxlJobInfo;
+import com.xxl.job.admin.core.model.*;
 import com.xxl.job.admin.core.cron.CronExpression;
-import com.xxl.job.admin.core.model.XxlJobLogReport;
 import com.xxl.job.admin.core.route.ExecutorRouteStrategyEnum;
 import com.xxl.job.admin.core.thread.JobScheduleHelper;
 import com.xxl.job.admin.core.util.I18nUtil;
@@ -15,9 +13,15 @@ import com.xxl.job.core.glue.GlueTypeEnum;
 import com.xxl.job.core.util.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
+import javax.persistence.criteria.Predicate;
 import java.text.MessageFormat;
 import java.text.ParseException;
 import java.util.*;
@@ -40,20 +44,38 @@ public class XxlJobServiceImpl implements XxlJobService {
 	private XxlJobLogGlueDao xxlJobLogGlueDao;
 	@Resource
 	private XxlJobLogReportDao xxlJobLogReportDao;
-	
+
 	@Override
-	public Map<String, Object> pageList(int start, int length, int jobGroup, int triggerStatus, String jobDesc, String executorHandler, String author) {
+	public Page<XxlJobInfo> pageList(int start, int length, long jobGroup, int triggerStatus, String jobDesc, String executorHandler, String author) {
 
 		// page list
-		List<XxlJobInfo> list = xxlJobInfoDao.pageList(start, length, jobGroup, triggerStatus, jobDesc, executorHandler, author);
-		int list_count = xxlJobInfoDao.pageListCount(start, length, jobGroup, triggerStatus, jobDesc, executorHandler, author);
-		
-		// package result
-		Map<String, Object> maps = new HashMap<String, Object>();
-	    maps.put("recordsTotal", list_count);		// 总记录数
-	    maps.put("recordsFiltered", list_count);	// 过滤后的总记录数
-	    maps.put("data", list);  					// 分页列表
-		return maps;
+		// 排序和分页
+		Sort sort = Sort.by("id").ascending();
+		PageRequest pageRequest = PageRequest.of(start % length, length, sort);
+		// 查询条件
+		Specification<XxlJobInfo> specification = (Specification<XxlJobInfo>) (root, query, criteriaBuilder) -> {
+			ArrayList<Predicate> list = new ArrayList<>();
+			if (jobGroup > 0) {
+				list.add(criteriaBuilder.equal(root.get("jobGroup"), jobGroup));
+			}
+			if (triggerStatus >= 0) {
+				list.add(criteriaBuilder.equal(root.get("triggerStatus"), triggerStatus));
+			}
+			if (StringUtils.hasText(jobDesc)) {
+				list.add(criteriaBuilder.like(root.get("jobDesc"), "%" + jobDesc + "%"));
+			}
+			if (StringUtils.hasText(executorHandler)) {
+				list.add(criteriaBuilder.like(root.get("jobDesc"), "%" + executorHandler + "%"));
+			}
+			if (StringUtils.hasText(author)) {
+				list.add(criteriaBuilder.like(root.get("jobDesc"), "%" + author + "%"));
+			}
+			Predicate[] predicates = new Predicate[list.size()];
+			return criteriaBuilder.and(list.toArray(predicates));
+		};
+		Page<XxlJobInfo> page = xxlJobInfoDao.findAll(specification, pageRequest);
+
+		return page;
 	}
 
 	@Override
@@ -120,8 +142,8 @@ public class XxlJobServiceImpl implements XxlJobService {
 		jobInfo.setAddTime(new Date());
 		jobInfo.setUpdateTime(new Date());
 		jobInfo.setGlueUpdatetime(new Date());
-		xxlJobInfoDao.save(jobInfo);
-		if (jobInfo.getId() < 1) {
+		XxlJobInfo save = xxlJobInfoDao.save(jobInfo);
+		if (save.getId() < 1) {
 			return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("jobinfo_field_add")+I18nUtil.getString("system_fail")) );
 		}
 
@@ -367,6 +389,100 @@ public class XxlJobServiceImpl implements XxlJobService {
 		result.put("triggerCountFailTotal", triggerCountFailTotal);
 
 		return new ReturnT<Map<String, Object>>(result);
+	}
+
+	@Override
+	public List<Long> findClearLogIds(long jobGroup, long jobId, Date clearBeforeTime, int clearBeforeNum, int pagesize) {
+		// 排序和分页
+		Sort sort = Sort.by("id").ascending();
+		PageRequest pageRequest = PageRequest.of(0, pagesize, sort);
+		// 查询条件
+		Specification<XxlJobLog> specification = (Specification<XxlJobLog>) (root, query, criteriaBuilder) -> {
+			ArrayList<Predicate> list = new ArrayList<>();
+			if (jobGroup > 0) {
+				list.add(criteriaBuilder.equal(root.get("jobGroup"), jobGroup));
+			}
+			if (jobId > 0) {
+				list.add(criteriaBuilder.equal(root.get("jobId"), jobId));
+			}
+			if (clearBeforeTime != null) {
+				list.add(criteriaBuilder.greaterThanOrEqualTo(root.get("triggerTime"), clearBeforeTime));
+			}
+			if (clearBeforeNum > 0) {
+				list.add(criteriaBuilder.not(root.get("id").in(findNotClearLogIds(jobGroup, jobId, clearBeforeNum))));
+			}
+			Predicate[] predicates = new Predicate[list.size()];
+			return criteriaBuilder.and(list.toArray(predicates));
+		};
+		return xxlJobLogDao.findJobLogIds(specification, pageRequest);
+	}
+
+	private List<Long> findNotClearLogIds(long jobGroup, long jobId, int clearBeforeNum) {
+		// 排序和分页
+		Sort sort = Sort.by("triggerTime").descending();
+		PageRequest pageRequest = PageRequest.of(0, clearBeforeNum, sort);
+		// 查询条件
+		Specification<XxlJobLog> specification = (Specification<XxlJobLog>) (root, query, criteriaBuilder) -> {
+			ArrayList<Predicate> list = new ArrayList<>();
+			if (jobGroup > 0) {
+				list.add(criteriaBuilder.equal(root.get("jobGroup"), jobGroup));
+			}
+			if (jobId > 0) {
+				list.add(criteriaBuilder.equal(root.get("jobId"), jobId));
+			}
+			Predicate[] predicates = new Predicate[list.size()];
+			return criteriaBuilder.and(list.toArray(predicates));
+		};
+		return xxlJobLogDao.findJobLogIds(specification, pageRequest);
+	}
+
+	@Override
+	public Page<XxlJobLog> jobLogPageList(int offset, int pagesize, long jobGroup, long jobId, Date triggerTimeStart, Date triggerTimeEnd, int logStatus) {
+		// 排序和分页
+		Sort sort = Sort.by("triggerTime").descending();
+		PageRequest pageRequest = PageRequest.of(offset % pagesize, pagesize, sort);
+		// 查询条件
+		Specification<XxlJobLog> specification = (Specification<XxlJobLog>) (root, query, criteriaBuilder) -> {
+			ArrayList<Predicate> list = new ArrayList<>();
+			if (jobId == 0 && jobGroup > 0) {
+				list.add(criteriaBuilder.equal(root.get("jobGroup"), jobGroup));
+			}
+			if (jobId > 0) {
+				list.add(criteriaBuilder.equal(root.get("jobId"), jobId));
+			}
+			if (triggerTimeStart != null && triggerTimeEnd != null) {
+				list.add(criteriaBuilder.between(root.get("triggerTime"), triggerTimeStart, triggerTimeEnd));
+			}
+			if (logStatus == 1) {
+				list.add(criteriaBuilder.equal(root.get("handleCode"), 200));
+			}
+			if (logStatus == 2) {
+				// t.trigger_code NOT IN (0, 200) OR t.handle_code NOT IN (0, 200)
+				list.add(criteriaBuilder.or(criteriaBuilder.not(root.get("handleCode").in(0, 200)), criteriaBuilder.not(root.get("triggerCode").in(0, 200))));
+			}
+			if (logStatus == 3) {
+				// AND t.trigger_code = 200 AND t.handle_code = 0
+				list.add(criteriaBuilder.equal(root.get("triggerCode"), 200));
+				list.add(criteriaBuilder.equal(root.get("handleCode"), 0));
+			}
+			Predicate[] predicates = new Predicate[list.size()];
+			return criteriaBuilder.and(list.toArray(predicates));
+		};
+		Page<XxlJobLog> page = xxlJobLogDao.findAll(specification, pageRequest);
+		return page;
+	}
+
+	@Override
+	public int removeOldLogGlue(long jobId, int limit) {
+		int remove = xxlJobLogGlueDao.removeOld(jobId, logGlueIdPageList(jobId, limit));
+		return remove;
+	}
+
+	private List<Long> logGlueIdPageList(long jobId, int limit) {
+		// 排序和分页
+		Sort sort = Sort.by("updateTime").descending();
+		PageRequest pageRequest = PageRequest.of(0, limit, sort);
+		return xxlJobLogGlueDao.findJobGlueIds(pageRequest);
 	}
 
 }

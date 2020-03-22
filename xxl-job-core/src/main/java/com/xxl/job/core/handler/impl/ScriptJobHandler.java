@@ -15,12 +15,12 @@ import java.io.File;
  */
 public class ScriptJobHandler extends IJobHandler {
 
-    private int jobId;
+    private long jobId;
     private long glueUpdatetime;
     private String gluesource;
     private GlueTypeEnum glueType;
 
-    public ScriptJobHandler(int jobId, long glueUpdatetime, String gluesource, GlueTypeEnum glueType){
+    public ScriptJobHandler(long jobId, long glueUpdatetime, String gluesource, GlueTypeEnum glueType){
         this.jobId = jobId;
         this.glueUpdatetime = glueUpdatetime;
         this.gluesource = gluesource;

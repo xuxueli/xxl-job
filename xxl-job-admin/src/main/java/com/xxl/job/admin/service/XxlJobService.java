@@ -2,9 +2,12 @@ package com.xxl.job.admin.service;
 
 
 import com.xxl.job.admin.core.model.XxlJobInfo;
+import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.core.biz.model.ReturnT;
+import org.springframework.data.domain.Page;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -25,7 +28,7 @@ public interface XxlJobService {
 	 * @param author
 	 * @return
 	 */
-	public Map<String, Object> pageList(int start, int length, int jobGroup, int triggerStatus, String jobDesc, String executorHandler, String author);
+	public Page<XxlJobInfo> pageList(int start, int length, long jobGroup, int triggerStatus, String jobDesc, String executorHandler, String author);
 
 	/**
 	 * add job
@@ -82,5 +85,11 @@ public interface XxlJobService {
 	 * @return
 	 */
 	public ReturnT<Map<String,Object>> chartInfo(Date startDate, Date endDate);
+
+	List<Long> findClearLogIds(long jobGroup, long jobId, Date clearBeforeTime, int clearBeforeNum, int pagesize);
+
+	Page<XxlJobLog> jobLogPageList(int offset, int pagesize, long jobGroup, long jobId, Date triggerTimeStart, Date triggerTimeEnd, int logStatus);
+
+	int removeOldLogGlue(long jobId, int limit);
 
 }

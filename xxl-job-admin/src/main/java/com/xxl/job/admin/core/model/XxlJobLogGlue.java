@@ -1,34 +1,49 @@
 package com.xxl.job.admin.core.model;
 
+import org.hibernate.annotations.GenericGenerator;
+
+import javax.persistence.*;
 import java.util.Date;
 
 /**
  * xxl-job log for glue, used to track job code process
  * @author xuxueli 2016-5-19 17:57:46
  */
+@Entity
+@Table(name = "xxl_job_logglue")
 public class XxlJobLogGlue {
-	
-	private int id;
-	private int jobId;				// 任务主键ID
+
+	@Id
+	@Column(name = "id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY, generator = "IdentityGenerator") // 使用基于雪花算法的主键生成策略
+	@GenericGenerator(name = "IdentityGenerator", strategy = "com.xxl.job.admin.core.util.XxlJobGenerator")
+	private Long id;
+	@Column(name = "job_id", nullable = false, length = 20)
+	private Long jobId;				// 任务主键ID
+	@Column(name = "glue_type", length = 50)
 	private String glueType;		// GLUE类型	#com.xxl.job.core.glue.GlueTypeEnum
+	@Column(name = "glue_source", columnDefinition = "text")
 	private String glueSource;
+	@Column(name = "glue_remark", length = 128)
 	private String glueRemark;
+	@Column(name = "add_time")
 	private Date addTime;
+	@Column(name = "update_time")
 	private Date updateTime;
 
-	public int getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
-	public int getJobId() {
+	public Long getJobId() {
 		return jobId;
 	}
 
-	public void setJobId(int jobId) {
+	public void setJobId(Long jobId) {
 		this.jobId = jobId;
 	}
 

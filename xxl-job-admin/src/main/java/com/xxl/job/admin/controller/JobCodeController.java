@@ -5,6 +5,7 @@ import com.xxl.job.admin.core.model.XxlJobLogGlue;
 import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.admin.dao.XxlJobInfoDao;
 import com.xxl.job.admin.dao.XxlJobLogGlueDao;
+import com.xxl.job.admin.service.XxlJobService;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.glue.GlueTypeEnum;
 import org.springframework.stereotype.Controller;
@@ -29,9 +30,11 @@ public class JobCodeController {
 	private XxlJobInfoDao xxlJobInfoDao;
 	@Resource
 	private XxlJobLogGlueDao xxlJobLogGlueDao;
+	@Resource
+	private XxlJobService xxlJobService;
 
 	@RequestMapping
-	public String index(HttpServletRequest request, Model model, int jobId) {
+	public String index(HttpServletRequest request, Model model, long jobId) {
 		XxlJobInfo jobInfo = xxlJobInfoDao.loadById(jobId);
 		List<XxlJobLogGlue> jobLogGlues = xxlJobLogGlueDao.findByJobId(jobId);
 
@@ -88,7 +91,7 @@ public class JobCodeController {
 		xxlJobLogGlueDao.save(xxlJobLogGlue);
 
 		// remove code backup more than 30
-		xxlJobLogGlueDao.removeOld(exists_jobInfo.getId(), 30);
+		xxlJobService.removeOldLogGlue(exists_jobInfo.getId(), 30);
 
 		return ReturnT.SUCCESS;
 	}

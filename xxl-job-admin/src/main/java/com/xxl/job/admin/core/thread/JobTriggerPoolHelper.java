@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * job trigger thread pool helper
@@ -63,17 +63,17 @@ public class JobTriggerPoolHelper {
 
     // job timeout count
     private volatile long minTim = System.currentTimeMillis()/60000;     // ms > min
-    private volatile ConcurrentMap<Integer, AtomicInteger> jobTimeoutCountMap = new ConcurrentHashMap<>();
+    private volatile ConcurrentMap<Long, AtomicLong> jobTimeoutCountMap = new ConcurrentHashMap<>();
 
 
     /**
      * add trigger
      */
-    public void addTrigger(final int jobId, final TriggerTypeEnum triggerType, final int failRetryCount, final String executorShardingParam, final String executorParam) {
+    public void addTrigger(final long jobId, final TriggerTypeEnum triggerType, final int failRetryCount, final String executorShardingParam, final String executorParam) {
 
         // choose thread pool
         ThreadPoolExecutor triggerPool_ = fastTriggerPool;
-        AtomicInteger jobTimeoutCount = jobTimeoutCountMap.get(jobId);
+        AtomicLong jobTimeoutCount = jobTimeoutCountMap.get(jobId);
         if (jobTimeoutCount!=null && jobTimeoutCount.get() > 10) {      // job-timeout 10 times in 1 min
             triggerPool_ = slowTriggerPool;
         }
@@ -102,7 +102,7 @@ public class JobTriggerPoolHelper {
                     // incr timeout-count-map
                     long cost = System.currentTimeMillis()-start;
                     if (cost > 500) {       // ob-timeout threshold 500ms
-                        AtomicInteger timeoutCount = jobTimeoutCountMap.putIfAbsent(jobId, new AtomicInteger(1));
+                        AtomicLong timeoutCount = jobTimeoutCountMap.putIfAbsent(jobId, new AtomicLong(1));
                         if (timeoutCount != null) {
                             timeoutCount.incrementAndGet();
                         }
@@ -138,7 +138,7 @@ public class JobTriggerPoolHelper {
      *          null: use job param
      *          not null: cover job param
      */
-    public static void trigger(int jobId, TriggerTypeEnum triggerType, int failRetryCount, String executorShardingParam, String executorParam) {
+    public static void trigger(long jobId, TriggerTypeEnum triggerType, int failRetryCount, String executorShardingParam, String executorParam) {
         helper.addTrigger(jobId, triggerType, failRetryCount, executorShardingParam, executorParam);
     }
 
