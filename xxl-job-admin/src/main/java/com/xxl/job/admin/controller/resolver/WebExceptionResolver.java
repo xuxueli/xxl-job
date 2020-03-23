@@ -46,6 +46,11 @@ public class WebExceptionResolver implements HandlerExceptionResolver {
 		// response
 		ModelAndView mv = new ModelAndView();
 		if (isJson) {
+            String errDesc = ex.getMessage();
+            //ignore the parameter validation exception,otherwise executor would be forever retry
+            if ("The request data invalid.".equals(errDesc)) {
+                errorResult = ReturnT.SUCCESS;
+            }
 			try {
 				response.setContentType("application/json;charset=utf-8");
 				response.getWriter().print(JacksonUtil.writeValueAsString(errorResult));
@@ -60,5 +65,5 @@ public class WebExceptionResolver implements HandlerExceptionResolver {
 			return mv;
 		}
 	}
-	
+
 }
