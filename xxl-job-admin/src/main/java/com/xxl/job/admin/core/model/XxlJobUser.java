@@ -24,7 +24,7 @@ public class XxlJobUser {
 	private String password;		// 密码
 	@Column(name = "role", nullable = false, length = 4)
 	private int role;				// 角色：0-普通用户、1-管理员
-	@Column(name = "permission", nullable = false, length = 512)
+	@Column(name = "permission", length = 512)
 	private String permission;	// 权限：执行器ID列表，多个逗号分割
 
 	public Long getId() {

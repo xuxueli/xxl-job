@@ -9,7 +9,7 @@ import java.io.Serializable;
 /**
  * jpa 主键生成
  *
- * @author songyinyin
+ * @author dudiao
  * @date 2020/3/21 下午 03:49
  */
 public class XxlJobGenerator implements IdentifierGenerator {

@@ -3,7 +3,7 @@ package com.xxl.job.admin.core.util;
 /**
  * 主键生成器，基于Snowflake实现64位自增ID算法
  *
- * @author songyinyin
+ * @author dudiao
  * @date 2020/3/21 下午 04:15
  */
 public class XxlJobIdWorker {
