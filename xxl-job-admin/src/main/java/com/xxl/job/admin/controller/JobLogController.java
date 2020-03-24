@@ -115,7 +115,7 @@ public class JobLogController {
 	}
 
 	@RequestMapping("/logDetailPage")
-	public String logDetailPage(int id, Model model){
+	public String logDetailPage(long id, Model model){
 
 		// base check
 		ReturnT<String> logStatue = ReturnT.SUCCESS;
@@ -156,7 +156,7 @@ public class JobLogController {
 
 	@RequestMapping("/logKill")
 	@ResponseBody
-	public ReturnT<String> logKill(int id){
+	public ReturnT<String> logKill(long id){
 		// base check
 		XxlJobLog log = xxlJobLogDao.load(id);
 		XxlJobInfo jobInfo = xxlJobInfoDao.loadById(log.getJobId());

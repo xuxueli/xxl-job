@@ -25,6 +25,7 @@ import javax.persistence.criteria.Predicate;
 import java.text.MessageFormat;
 import java.text.ParseException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * core job action for xxl-job
@@ -406,7 +407,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 				list.add(criteriaBuilder.equal(root.get("jobId"), jobId));
 			}
 			if (clearBeforeTime != null) {
-				list.add(criteriaBuilder.greaterThanOrEqualTo(root.get("triggerTime"), clearBeforeTime));
+				list.add(criteriaBuilder.lessThanOrEqualTo(root.get("triggerTime"), clearBeforeTime));
 			}
 			if (clearBeforeNum > 0) {
 				list.add(criteriaBuilder.not(root.get("id").in(findNotClearLogIds(jobGroup, jobId, clearBeforeNum))));
@@ -414,7 +415,8 @@ public class XxlJobServiceImpl implements XxlJobService {
 			Predicate[] predicates = new Predicate[list.size()];
 			return criteriaBuilder.and(list.toArray(predicates));
 		};
-		return xxlJobLogDao.findJobLogIds(specification, pageRequest);
+		Page<XxlJobLog> xxlJobLogs = xxlJobLogDao.findAll(specification, pageRequest);
+		return xxlJobLogs.stream().map(XxlJobLog::getId).collect(Collectors.toList());
 	}
 
 	private List<Long> findNotClearLogIds(long jobGroup, long jobId, int clearBeforeNum) {
@@ -433,7 +435,8 @@ public class XxlJobServiceImpl implements XxlJobService {
 			Predicate[] predicates = new Predicate[list.size()];
 			return criteriaBuilder.and(list.toArray(predicates));
 		};
-		return xxlJobLogDao.findJobLogIds(specification, pageRequest);
+		Page<XxlJobLog> xxlJobLogs = xxlJobLogDao.findAll(specification, pageRequest);
+		return xxlJobLogs.stream().map(XxlJobLog::getId).collect(Collectors.toList());
 	}
 
 	@Override

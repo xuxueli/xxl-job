@@ -53,9 +53,6 @@ public interface XxlJobLogDao extends JpaRepository<XxlJobLog, Long>, JpaSpecifi
 	public Map<String, Object> findLogReport(@Param("fromDate") Date from,
 											 @Param("toDate") Date to);
 
-	@Query("select t.id from XxlJobLog t")
-	public List<Long> findJobLogIds(Specification<XxlJobLog> spec, Pageable pageable);
-
 	@Transactional
 	@Modifying
 	@Query("delete from XxlJobLog t where t.id in :logIds")

@@ -25,7 +25,7 @@ public interface XxlJobRegistryDao extends JpaRepository<XxlJobRegistry, Long> {
     @Query("delete from XxlJobRegistry t where t.id in :ids")
     public int removeDead(@Param("ids") List<Long> ids);
 
-    @Query("select t.id from XxlJobRegistry t where t.updateTime > :timeoutTime")
+    @Query("select t from XxlJobRegistry t where t.updateTime > :timeoutTime")
     public List<XxlJobRegistry> findAll(@Param("timeoutTime") Date timeoutTime);
 
     @Transactional

@@ -63,7 +63,6 @@ public class XxlJobLogDaoTest {
             Predicate[] predicates = new Predicate[list.size()];
             return criteriaBuilder.and(list.toArray(predicates));
         };
-        xxlJobLogDao.findJobLogIds(specification, pageRequest);
 
         xxlJobLogDao.clearLog(Arrays.asList(-1L));
 
