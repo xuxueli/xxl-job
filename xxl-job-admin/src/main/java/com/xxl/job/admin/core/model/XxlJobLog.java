@@ -43,7 +43,9 @@ public class XxlJobLog {
 	private Date triggerTime;
 	@Column(name = "trigger_code", nullable = false, length = 11)
 	private int triggerCode;
-	@Column(name = "trigger_msg", columnDefinition = "text")
+	@Lob
+	@Basic(fetch=FetchType.LAZY)
+	@Column(name = "trigger_msg")
 	private String triggerMsg;
 	
 	// handle info
@@ -51,7 +53,9 @@ public class XxlJobLog {
 	private Date handleTime;
 	@Column(name = "handle_code", nullable = false, length = 11)
 	private int handleCode;
-	@Column(name = "handle_msg", columnDefinition = "text")
+	@Lob
+	@Basic(fetch=FetchType.LAZY)
+	@Column(name = "handle_msg")
 	private String handleMsg;
 
 	// alarm info

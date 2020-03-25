@@ -22,7 +22,9 @@ public class XxlJobLogGlue {
 	private Long jobId;				// 任务主键ID
 	@Column(name = "glue_type", length = 50)
 	private String glueType;		// GLUE类型	#com.xxl.job.core.glue.GlueTypeEnum
-	@Column(name = "glue_source", columnDefinition = "text")
+	@Lob
+	@Basic(fetch=FetchType.LAZY)
+	@Column(name = "glue_source")
 	private String glueSource;
 	@Column(name = "glue_remark", length = 128)
 	private String glueRemark;

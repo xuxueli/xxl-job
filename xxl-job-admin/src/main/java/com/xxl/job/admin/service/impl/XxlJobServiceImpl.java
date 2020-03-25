@@ -66,10 +66,10 @@ public class XxlJobServiceImpl implements XxlJobService {
 				list.add(criteriaBuilder.like(root.get("jobDesc"), "%" + jobDesc + "%"));
 			}
 			if (StringUtils.hasText(executorHandler)) {
-				list.add(criteriaBuilder.like(root.get("jobDesc"), "%" + executorHandler + "%"));
+				list.add(criteriaBuilder.like(root.get("executorHandler"), "%" + executorHandler + "%"));
 			}
 			if (StringUtils.hasText(author)) {
-				list.add(criteriaBuilder.like(root.get("jobDesc"), "%" + author + "%"));
+				list.add(criteriaBuilder.like(root.get("author"), "%" + author + "%"));
 			}
 			Predicate[] predicates = new Predicate[list.size()];
 			return criteriaBuilder.and(list.toArray(predicates));

@@ -86,10 +86,45 @@ public interface XxlJobService {
 	 */
 	public ReturnT<Map<String,Object>> chartInfo(Date startDate, Date endDate);
 
+	/**
+	 * find clear job log ids
+	 *
+	 * @param jobGroup
+	 * @param jobId
+	 * @param clearBeforeTime
+	 * @param clearBeforeNum
+	 * @param pagesize
+	 * @return
+	 * @author dudiao
+	 * @date 2020/3/23
+	 */
 	List<Long> findClearLogIds(long jobGroup, long jobId, Date clearBeforeTime, int clearBeforeNum, int pagesize);
 
+	/**
+	 * job log page list
+	 *
+	 * @param offset
+	 * @param pagesize
+	 * @param jobGroup
+	 * @param jobId
+	 * @param triggerTimeStart
+	 * @param triggerTimeEnd
+	 * @param logStatus
+	 * @return
+	 * @author dudiao
+	 * @date 2020/3/23
+	 */
 	Page<XxlJobLog> jobLogPageList(int offset, int pagesize, long jobGroup, long jobId, Date triggerTimeStart, Date triggerTimeEnd, int logStatus);
 
+	/**
+	 * remove glue backup
+	 *
+	 * @param jobId
+	 * @param limit
+	 * @return
+	 * @author songyinyin
+	 * @date 2020/3/25
+	 */
 	int removeOldLogGlue(long jobId, int limit);
 
 }

@@ -29,7 +29,7 @@ public interface XxlJobLogReportDao extends JpaRepository<XxlJobLogReport, Long>
 	public List<XxlJobLogReport> queryLogReport(@Param("triggerDayFrom") Date triggerDayFrom,
 												@Param("triggerDayTo") Date triggerDayTo);
 
-	@Query(value = "SELECT 0 id, '2020-01-01' trigger_day, SUM(running_count) running_count, SUM(suc_count) suc_count, SUM(fail_count) fail_count FROM xxl_job_log_report", nativeQuery = true)
+	@Query(value = "SELECT 0 id, '2020-01-01 00:00:00' trigger_day, SUM(running_count) running_count, SUM(suc_count) suc_count, SUM(fail_count) fail_count FROM xxl_job_log_report", nativeQuery = true)
 	public XxlJobLogReport queryLogReportTotal();
 
 }
