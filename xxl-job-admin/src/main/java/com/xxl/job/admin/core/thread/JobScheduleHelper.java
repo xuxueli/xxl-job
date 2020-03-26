@@ -8,10 +8,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.transaction.TransactionException;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -60,19 +61,17 @@ public class JobScheduleHelper {
                     // Scan Job
                     long start = System.currentTimeMillis();
 
-                    Connection conn = null;
-                    Boolean connAutoCommit = null;
-                    PreparedStatement preparedStatement = null;
+                    JpaTransactionManager transactionManager = null;
+                    TransactionStatus transactionStatus = null;
 
                     boolean preReadSuc = true;
                     try {
+                        DefaultTransactionDefinition transDefinition = new DefaultTransactionDefinition();
+                        transDefinition.setPropagationBehavior(DefaultTransactionDefinition.PROPAGATION_REQUIRES_NEW);
+                        transactionManager = XxlJobAdminConfig.getAdminConfig().getTransactionManager();
+                        transactionStatus = transactionManager.getTransaction(transDefinition);
 
-                        conn = XxlJobAdminConfig.getAdminConfig().getDataSource().getConnection();
-                        connAutoCommit = conn.getAutoCommit();
-                        conn.setAutoCommit(false);
-
-                        preparedStatement = conn.prepareStatement(  "select * from xxl_job_lock where lock_name = 'schedule_lock' for update" );
-                        preparedStatement.execute();
+                        XxlJobAdminConfig.getAdminConfig().getXxlJobLockDao().getJobLockForUpdate();
 
                         // tx start
 
@@ -152,40 +151,16 @@ public class JobScheduleHelper {
                     } finally {
 
                         // commit
-                        if (conn != null) {
+                        if(transactionManager != null && transactionStatus != null) {
                             try {
-                                conn.commit();
-                            } catch (SQLException e) {
-                                if (!scheduleThreadToStop) {
-                                    logger.error(e.getMessage(), e);
-                                }
-                            }
-                            try {
-                                conn.setAutoCommit(connAutoCommit);
-                            } catch (SQLException e) {
-                                if (!scheduleThreadToStop) {
-                                    logger.error(e.getMessage(), e);
-                                }
-                            }
-                            try {
-                                conn.close();
-                            } catch (SQLException e) {
+                                transactionManager.commit(transactionStatus);
+                            } catch (TransactionException e) {
                                 if (!scheduleThreadToStop) {
                                     logger.error(e.getMessage(), e);
                                 }
                             }
                         }
 
-                        // close PreparedStatement
-                        if (null != preparedStatement) {
-                            try {
-                                preparedStatement.close();
-                            } catch (SQLException e) {
-                                if (!scheduleThreadToStop) {
-                                    logger.error(e.getMessage(), e);
-                                }
-                            }
-                        }
                     }
                     long cost = System.currentTimeMillis()-start;
 

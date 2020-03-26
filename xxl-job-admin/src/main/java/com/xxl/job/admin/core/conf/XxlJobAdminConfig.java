@@ -8,10 +8,10 @@ import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import javax.sql.DataSource;
 import java.util.Arrays;
 
 /**
@@ -81,11 +81,13 @@ public class XxlJobAdminConfig implements InitializingBean, DisposableBean {
     @Resource
     private XxlJobLogReportDao xxlJobLogReportDao;
     @Resource
+    private XxlJobLockDao xxlJobLockDao;
+    @Resource
     private XxlJobService xxlJobService;
     @Resource
     private JavaMailSender mailSender;
-    @Resource
-    private DataSource dataSource;
+    @Resource(name = "transactionManager")
+    private JpaTransactionManager transactionManager;
     @Resource
     private JobAlarmer jobAlarmer;
 
@@ -146,6 +148,10 @@ public class XxlJobAdminConfig implements InitializingBean, DisposableBean {
         return xxlJobLogReportDao;
     }
 
+    public XxlJobLockDao getXxlJobLockDao() {
+        return xxlJobLockDao;
+    }
+
     public XxlJobService getXxlJobService() {
         return xxlJobService;
     }
@@ -154,12 +160,12 @@ public class XxlJobAdminConfig implements InitializingBean, DisposableBean {
         return mailSender;
     }
 
-    public DataSource getDataSource() {
-        return dataSource;
-    }
-
     public JobAlarmer getJobAlarmer() {
         return jobAlarmer;
+    }
+
+    public JpaTransactionManager getTransactionManager() {
+        return transactionManager;
     }
 
 }
