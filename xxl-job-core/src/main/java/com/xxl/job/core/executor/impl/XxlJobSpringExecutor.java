@@ -3,8 +3,6 @@ package com.xxl.job.core.executor.impl;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.executor.XxlJobExecutor;
 import com.xxl.job.core.glue.GlueFactory;
-import com.xxl.job.core.handler.IJobHandler;
-import com.xxl.job.core.handler.annotation.JobHandler;
 import com.xxl.job.core.handler.annotation.XxlJob;
 import com.xxl.job.core.handler.impl.MethodJobHandler;
 import org.slf4j.Logger;
@@ -18,8 +16,10 @@ import org.springframework.core.MethodIntrospector;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 
 import java.lang.reflect.Method;
+
 import java.util.HashMap;
 import java.util.Map;
+
 
 /**
  * xxl-job executor (for spring)
@@ -35,7 +35,7 @@ public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationC
     public void afterPropertiesSet() throws Exception {
 
         // init JobHandler Repository
-        initJobHandlerRepository(applicationContext);
+        /*initJobHandlerRepository(applicationContext);*/
 
         // init JobHandler Repository (for method)
         initJobHandlerMethodRepository(applicationContext);
@@ -54,7 +54,7 @@ public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationC
     }
 
 
-    private void initJobHandlerRepository(ApplicationContext applicationContext) {
+    /*private void initJobHandlerRepository(ApplicationContext applicationContext) {
         if (applicationContext == null) {
             return;
         }
@@ -74,13 +74,14 @@ public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationC
                 }
             }
         }
-    }
+    }*/
 
     private void initJobHandlerMethodRepository(ApplicationContext applicationContext) {
         if (applicationContext == null) {
             return;
         }
         // init job handler from method
+
         String[] beanDefinitionNames = applicationContext.getBeanNamesForType(Object.class, false, true);
         for (String beanDefinitionName : beanDefinitionNames) {
             Object bean = applicationContext.getBean(beanDefinitionName);
@@ -150,6 +151,7 @@ public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationC
                 registJobHandler(name, new MethodJobHandler(bean, method, initMethod, destroyMethod));
             }
         }
+
     }
 
     // ---------------------- applicationContext ----------------------
