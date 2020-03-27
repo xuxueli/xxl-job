@@ -360,7 +360,7 @@ $(function() {
 
 	// add
 	$(".add").click(function(){
-
+		$(".bootstrap-select button").css({"background-color":"#fff"});
 		// init-cronGen
         $("#addModal .form input[name='jobCron']").show().siblings().remove();
         $("#addModal .form input[name='jobCron']").cronGen({});
@@ -502,7 +502,7 @@ $(function() {
 
 	// update
 	$("#job_list").on('click', '.update',function() {
-
+		$(".bootstrap-select button").css({"background-color":"#fff"});
         var id = $(this).parents('ul').attr("_id");
         var row = tableData['key'+id];
 
@@ -512,7 +512,7 @@ $(function() {
 		$("#updateModal .form input[name='jobDesc']").val( row.jobDesc );
 		$("#updateModal .form input[name='jobCron']").val( row.jobCron );
 		$("#updateModal .form input[name='author']").val( row.author );
-		$("#updateModal .form input[name='alarmEmail']").val( row.alarmEmail );
+		//$("#updateModal .form input[name='alarmEmail']").val( row.alarmEmail );
 		$("#updateModal .form input[name='executorTimeout']").val( row.executorTimeout );
         $("#updateModal .form input[name='executorFailRetryCount']").val( row.executorFailRetryCount );
 		$('#updateModal .form select[name=executorRouteStrategy] option[value='+ row.executorRouteStrategy +']').prop('selected', true);
@@ -523,7 +523,10 @@ $(function() {
 		$('#updateModal .form select[name=glueType] option[value='+ row.glueType +']').prop('selected', true);
 
         $("#updateModal .form select[name=glueType]").change();
-
+        
+        //alarm info
+        $('#updateModal .selectpicker').selectpicker('val', row.alarmEmail.split(','));
+        
         // init-cronGen
         $("#updateModal .form input[name='jobCron']").show().siblings().remove();
         $("#updateModal .form input[name='jobCron']").cronGen({});

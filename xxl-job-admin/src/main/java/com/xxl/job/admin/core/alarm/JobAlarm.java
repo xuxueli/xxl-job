@@ -1,5 +1,6 @@
 package com.xxl.job.admin.core.alarm;
 
+import com.xxl.job.admin.core.model.XxlAlarmInfo;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
 
@@ -13,8 +14,9 @@ public interface JobAlarm {
      *
      * @param info
      * @param jobLog
+     * @param alarmInfo
      * @return
      */
-    public boolean doAlarm(XxlJobInfo info, XxlJobLog jobLog);
+    public boolean doAlarm(XxlJobInfo info, XxlJobLog jobLog, XxlAlarmInfo alarmInfo);
 
 }

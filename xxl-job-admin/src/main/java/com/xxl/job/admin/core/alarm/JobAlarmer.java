@@ -1,65 +1,62 @@
 package com.xxl.job.admin.core.alarm;
 
-import com.xxl.job.admin.core.model.XxlJobInfo;
-import com.xxl.job.admin.core.model.XxlJobLog;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import com.xxl.job.admin.core.conf.XxlJobAdminConfig;
+import com.xxl.job.admin.core.model.XxlAlarmInfo;
+import com.xxl.job.admin.core.model.XxlJobInfo;
+import com.xxl.job.admin.core.model.XxlJobLog;
 
 @Component
-public class JobAlarmer implements ApplicationContextAware, InitializingBean {
+public class JobAlarmer {
     private static Logger logger = LoggerFactory.getLogger(JobAlarmer.class);
 
-    private ApplicationContext applicationContext;
-    private List<JobAlarm> jobAlarmList;
-
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
-    }
-
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        Map<String, JobAlarm> serviceBeanMap = applicationContext.getBeansOfType(JobAlarm.class);
-        if (serviceBeanMap != null && serviceBeanMap.size() > 0) {
-            jobAlarmList = new ArrayList<JobAlarm>(serviceBeanMap.values());
-        }
-    }
-
-    /**
-     * job alarm
-     *
-     * @param info
-     * @param jobLog
-     * @return
-     */
-    public boolean alarm(XxlJobInfo info, XxlJobLog jobLog) {
-
-        boolean result = false;
-        if (jobAlarmList!=null && jobAlarmList.size()>0) {
-            result = true;  // success means all-success
-            for (JobAlarm alarm: jobAlarmList) {
-                boolean resultItem = false;
-                try {
-                    resultItem = alarm.doAlarm(info, jobLog);
-                } catch (Exception e) {
-                    logger.error(e.getMessage(), e);
-                }
-                if (!resultItem) {
-                    result = false;
-                }
-            }
-        }
-
-        return result;
-    }
-
+	/**
+	 * job alarm
+	 *
+	 * @param info
+	 * @param jobLog
+	 * @return
+	 */
+	public boolean alarm(XxlJobInfo info, XxlJobLog jobLog) {
+		boolean result = true;
+		//fetch alarmers
+		List<XxlAlarmInfo> jobAlarmList = null;
+		if (info != null && info.getAlarmEmail() != null && info.getAlarmEmail().trim().length() > 0) {
+			String[] idStrs = info.getAlarmEmail().split(",");
+			long[] ids = new long[idStrs.length];
+			for (int i = 0; i < idStrs.length; i++) {
+				try {
+					ids[i] = Long.valueOf(idStrs[i]);
+				} catch (Exception e) {
+					logger.error("alarm id error [{}]", idStrs[i]);
+					logger.error(e.getMessage(), e);
+				}
+			}
+			jobAlarmList = XxlJobAdminConfig.getAdminConfig().getAlarmInfoDao().listInfo(ids);
+		}
+		
+		// alarm
+		if (jobAlarmList != null && jobAlarmList.size() > 0) {
+			for (XxlAlarmInfo alarm : jobAlarmList) {
+				JobAlarmerEnum alarmer = JobAlarmerEnum.match(alarm.getAlarmType(), null);
+				if (alarmer != null) {
+					try {
+						result = alarmer.getAlarm().doAlarm(info, jobLog, alarm) && result;
+					} catch (Exception e) {
+						result = false;
+						logger.error(e.getMessage(), e);
+					}
+				} else {
+					result = false;
+					logger.debug("alarmer [{}] dosen't exist", alarm.getAlarmType());
+				}
+			}
+		}
+		return result;
+	}
 }

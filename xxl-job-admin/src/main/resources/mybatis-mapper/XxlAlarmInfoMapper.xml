@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xxl.job.admin.dao.XxlAlarmInfoDao">
+
+	<resultMap id="XxlAlarmInfo" type="com.xxl.job.admin.core.model.XxlAlarmInfo" >
+		<result column="id" property="id" />
+		<result column="alarm_name" property="alarmName" />
+		<result column="alarm_type" property="alarmType" />
+	    <result column="alarm_param" property="alarmParam" />
+	    <result column="alarm_desc" property="alarmDesc" />
+	    <result column="create_time" property="createTime" />
+	    <result column="update_time" property="updateTime" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		t.id,
+		t.alarm_name,
+		t.alarm_type,
+		t.alarm_param,
+		t.alarm_desc,
+		t.create_time,
+		t.update_time
+	</sql>
+	
+	<select id="findAll" resultMap="XxlAlarmInfo">
+		SELECT <include refid="Base_Column_List" />
+		FROM xxl_alarm_info AS t
+		ORDER BY t.id ASC
+	</select>
+
+	<select id="pageList" parameterType="java.util.HashMap" resultMap="XxlAlarmInfo">
+		SELECT <include refid="Base_Column_List" />
+		FROM xxl_alarm_info AS t
+		<trim prefix="WHERE" prefixOverrides="AND | OR" >
+			<if test="alarmEnum != null and alarmEnum !=''">
+				AND t.alarm_type = #{alarmEnum}
+			</if>
+			<if test="alarmName != null and alarmName !=''">
+				AND t.alarm_name LIKE CONCAT(CONCAT('%', #{alarmName}), '%')
+			</if>
+			<if test="alarmDesc != null and alarmDesc != ''">
+				AND t.alarm_desc LIKE CONCAT(CONCAT('%', #{alarmDesc}), '%')
+			</if>
+		</trim>
+		ORDER BY id DESC
+		LIMIT #{offset}, #{pagesize}
+	</select>
+	
+	<select id="pageListCount" parameterType="java.util.HashMap" resultType="int">
+		SELECT COUNT(0)
+		FROM xxl_alarm_info AS t
+		<trim prefix="WHERE" prefixOverrides="AND | OR" >
+			<if test="alarmEnum != null and alarmEnum !=''">
+				AND t.alarm_type = #{alarmEnum}
+			</if>
+			<if test="alarmName != null and alarmName !=''">
+				AND t.alarm_name LIKE CONCAT(CONCAT('%', #{alarmName}), '%')
+			</if>
+			<if test="alarmDesc != null and alarmDesc != ''">
+				AND t.alarm_desc LIKE CONCAT(CONCAT('%', #{alarmDesc}), '%')
+			</if>
+		</trim>
+		ORDER BY id DESC
+		LIMIT #{offset}, #{pagesize}
+	</select>
+	
+	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlAlarmInfo" useGeneratedKeys="true" keyProperty="id" >
+		INSERT INTO xxl_alarm_info (
+			alarm_name,
+			alarm_type,
+			alarm_param,
+			alarm_desc,
+			create_time,
+			update_time
+		) VALUES (
+			#{alarmName},
+			#{alarmType},
+			#{alarmParam},
+			#{alarmDesc},
+			now(),
+			now()
+		);
+		<!--<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+			SELECT LAST_INSERT_ID()
+			/*SELECT @@IDENTITY AS id*/
+		</selectKey>-->
+	</insert>
+	
+	<select id="loadById" parameterType="java.util.HashMap" resultMap="XxlAlarmInfo">
+		SELECT <include refid="Base_Column_List" />
+		FROM xxl_alarm_info AS t
+		WHERE t.id = #{id}
+	</select>
+
+	<update id="update" parameterType="com.xxl.job.admin.core.model.XxlAlarmInfo" >
+		UPDATE xxl_alarm_info
+		SET
+			alarm_name = #{alarmName},
+			alarm_type = #{alarmType},
+			alarm_param = #{alarmParam},
+			alarm_desc = #{alarmDesc},
+			update_time = now()
+		WHERE id = #{id}
+	</update>
+	
+	<select id="listInfo" resultMap="XxlAlarmInfo">
+		SELECT <include refid="Base_Column_List" />
+		FROM xxl_alarm_info AS t
+		WHERE t.id IN
+		<foreach collection="array" open="(" separator="," close=")" item="idx">
+    		#{idx}
+    	</foreach>
+	</select>
+
+	<delete id="delete" parameterType="java.lang.Long" >
+		DELETE
+		FROM xxl_alarm_info
+		WHERE id = #{id}
+	</delete>
+</mapper>

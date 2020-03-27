@@ -1,29 +1,30 @@
 package com.xxl.job.admin.core.alarm.impl;
 
+import java.text.MessageFormat;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.mail.internet.MimeMessage;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.mail.javamail.MimeMessageHelper;
+
 import com.xxl.job.admin.core.alarm.JobAlarm;
 import com.xxl.job.admin.core.conf.XxlJobAdminConfig;
+import com.xxl.job.admin.core.model.XxlAlarmInfo;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.core.biz.model.ReturnT;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.stereotype.Component;
-
-import javax.mail.internet.MimeMessage;
-import java.text.MessageFormat;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * job alarm by email
  *
  * @author xuxueli 2020-01-19
  */
-@Component
 public class EmailJobAlarm implements JobAlarm {
     private static Logger logger = LoggerFactory.getLogger(EmailJobAlarm.class);
 
@@ -32,11 +33,11 @@ public class EmailJobAlarm implements JobAlarm {
      *
      * @param jobLog
      */
-    public boolean doAlarm(XxlJobInfo info, XxlJobLog jobLog){
+    public boolean doAlarm(XxlJobInfo info, XxlJobLog jobLog, XxlAlarmInfo alarmInfo){
         boolean alarmResult = true;
 
         // send monitor email
-        if (info!=null && info.getAlarmEmail()!=null && info.getAlarmEmail().trim().length()>0) {
+        if (alarmInfo!=null && alarmInfo.getAlarmParam()!=null && alarmInfo.getAlarmParam().trim().length()>0) {
 
             // alarmContent
             String alarmContent = "Alarm Job LogId=" + jobLog.getId();
@@ -57,7 +58,7 @@ public class EmailJobAlarm implements JobAlarm {
                     info.getJobDesc(),
                     alarmContent);
 
-            Set<String> emailSet = new HashSet<String>(Arrays.asList(info.getAlarmEmail().split(",")));
+            Set<String> emailSet = new HashSet<String>(Arrays.asList(alarmInfo.getAlarmParam().split(",")));
             for (String email: emailSet) {
 
                 // make mail
