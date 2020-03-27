@@ -16,8 +16,6 @@ import org.springframework.core.MethodIntrospector;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 
 import java.lang.reflect.Method;
-
-import java.util.HashMap;
 import java.util.Map;
 
 
@@ -81,12 +79,11 @@ public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationC
             return;
         }
         // init job handler from method
-
         String[] beanDefinitionNames = applicationContext.getBeanNamesForType(Object.class, false, true);
         for (String beanDefinitionName : beanDefinitionNames) {
             Object bean = applicationContext.getBean(beanDefinitionName);
 
-            Map<Method, XxlJob> annotatedMethods = new HashMap<>();
+            Map<Method, XxlJob> annotatedMethods = null;   // referred to ：org.springframework.context.event.EventListenerMethodProcessor.processBean
             try {
                 annotatedMethods = MethodIntrospector.selectMethods(bean.getClass(),
                         new MethodIntrospector.MetadataLookup<XxlJob>() {
@@ -96,9 +93,10 @@ public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationC
                             }
                         });
             } catch (Throwable ex) {
-                if (logger.isDebugEnabled()) {
-                    logger.debug("Could not resolve methods for bean with name '" + beanDefinitionName + "'", ex);
-                }
+                logger.debug("xxl-job method-jobhandler resolve error for bean[" + beanDefinitionName + "].", ex);
+            }
+            if (annotatedMethods==null || annotatedMethods.isEmpty()) {
+                continue;
             }
 
             for (Map.Entry<Method, XxlJob> methodXxlJobEntry : annotatedMethods.entrySet()) {
@@ -107,6 +105,7 @@ public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationC
                 if (xxlJob == null) {
                     continue;
                 }
+
                 String name = xxlJob.value();
                 if (name.trim().length() == 0) {
                     throw new RuntimeException("xxl-job method-jobhandler name invalid, for[" + bean.getClass() + "#" + method.getName() + "] .");
