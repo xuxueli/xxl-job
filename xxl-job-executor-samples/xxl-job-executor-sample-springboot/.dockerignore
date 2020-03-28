@@ -1,0 +1,6 @@
+.gitignore
+.git/
+src/
+target/
+target/*.jar.original
+!target/*.jar
