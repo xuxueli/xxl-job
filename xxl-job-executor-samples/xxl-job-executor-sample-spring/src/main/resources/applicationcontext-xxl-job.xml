@@ -7,7 +7,7 @@
            http://www.springframework.org/schema/context
            http://www.springframework.org/schema/context/spring-context.xsd">
 
-	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+	<bean id="propertyConfigurer" class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
 		<property name="fileEncoding" value="utf-8" />
 		<property name="locations">
 			<list>
@@ -40,6 +40,5 @@
 		<!-- 日志保存天数[选填]，值大于3时生效 -->
 		<property name="logRetentionDays" value="${xxl.job.executor.logretentiondays}" />
 	</bean>
-
 
 </beans>
