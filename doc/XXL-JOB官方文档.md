@@ -766,7 +766,7 @@ public ReturnT<String> execute(String param) {
 
 - demoJobHandler：简单示例任务，任务内部模拟耗时任务逻辑，用户可在线体验Rolling Log等功能；
 - shardingJobHandler：分片示例任务，任务内部模拟处理分片参数，可参考熟悉分片任务；
-- httpJobHandler：通用HTTP任务Handler；业务方只需要提供HTTP链接即可，不限制语言、平台；
+- httpJobHandler：通用HTTP任务Handler；业务方只需要提供HTTP链接等信息即可，不限制语言、平台；
 - commandJobHandler：通用命令行任务Handler；业务方只需要提供命令行即可；如 “pwd”命令；
 
 
@@ -1261,7 +1261,12 @@ API服务请求参考代码：com.xxl.job.executor.ExecutorBizTest
 ### 5.17 跨平台 & 跨语言
 跨平台、跨语言主要体现在以下两个方面：
 - 1、提供Java、Python、PHP……等十来种任务模式，可参考章节 “5.5 任务 "运行模式" ”；理论上可扩展任意语言任务模式；
-- 2、提供基于HTTP的任务Handler（Bean任务，JobHandler="HttpJobHandler"）；业务方只需要提供HTTP链接即可，不限制语言、平台；
+- 2、提供基于HTTP的任务Handler（Bean任务，JobHandler="httpJobHandler"）；业务方只需要提供HTTP链接等相关信息即可，不限制语言、平台；
+```
+url: http://www.xxx.com
+method: get 或 post
+data: post-data
+```
 
 ### 5.18 任务失败告警
 默认提供邮件失败告警，可扩展短信、钉钉等方式。如果需要新增一种告警方式，只需要新增一个实现 "com.xxl.job.admin.core.alarm.JobAlarm" 接口的告警实现即可。可以参考默认提供邮箱告警实现 "EmailJobAlarm"。
@@ -1718,12 +1723,18 @@ public ReturnT<String> execute(String param) {
 - 11、修复bootstrap.min.css.map 404问题；
 - 12、XxlJob注解扫描方式优化，支持查找父类以及接口和基于类代理等常见情况；
 - 13、执行器优雅停机优化，修复任务线程中断未join导致回调丢失的问题；
-- 14、[迭代中]自定义失败重试时间间隔；
-- 15、[迭代中]任务复制功能；点击复制是弹出新建任务弹框，并初始化被复制任务信息；
-- 16、[迭代中]新增执行器描述、任务描述属性；
-- 17、[迭代中]任务执行一次的时候指定IP；
-- 18、[迭代中]任务日志支持单个清理和状态转移，方便触发子任务；
-- 19、[迭代中]任务结果丢失处理：针对长期处于运行中的任务（设置过期时间时，运行超过"过期时间+1min"；未设置超时时间时，运行超过"30min"），主动检测该执行器是否在线，如果不在线主动标记失败；
+- 14、通用HTTP任务Handler（httpJobHandler）优化，扩展自定义参数信息，示例参数如下；
+```
+url: http://www.xxx.com
+method: get 或 post
+data: post-data
+```
+- 15、[迭代中]自定义失败重试时间间隔；
+- 16、[迭代中]任务复制功能；点击复制是弹出新建任务弹框，并初始化被复制任务信息；
+- 17、[迭代中]新增执行器描述、任务描述属性；
+- 18、[迭代中]任务执行一次的时候指定IP；
+- 19、[迭代中]任务日志支持单个清理和状态转移，方便触发子任务；
+- 20、[迭代中]任务结果丢失处理：针对长期处于运行中的任务（设置过期时间时，运行超过"过期时间+1min"；未设置超时时间时，运行超过"30min"），主动检测该执行器是否在线，如果不在线主动标记失败；
 
 
 ### TODO LIST
