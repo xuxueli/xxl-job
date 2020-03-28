@@ -32,27 +32,31 @@ public class XxlJobExecutor  {
 
     // ---------------------- param ----------------------
     private String adminAddresses;
+    private String accessToken;
     private String appName;
+    private String address;
     private String ip;
     private int port;
-    private String accessToken;
     private String logPath;
     private int logRetentionDays;
 
     public void setAdminAddresses(String adminAddresses) {
         this.adminAddresses = adminAddresses;
     }
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
+    }
     public void setAppName(String appName) {
         this.appName = appName;
+    }
+    public void setAddress(String address) {
+        this.address = address;
     }
     public void setIp(String ip) {
         this.ip = ip;
     }
     public void setPort(int port) {
         this.port = port;
-    }
-    public void setAccessToken(String accessToken) {
-        this.accessToken = accessToken;
     }
     public void setLogPath(String logPath) {
         this.logPath = logPath;
@@ -81,7 +85,7 @@ public class XxlJobExecutor  {
         // init executor-server
         port = port>0?port: NetUtil.findAvailablePort(9999);
         ip = (ip!=null&&ip.trim().length()>0)?ip: IpUtil.getIp();
-        initRpcProvider(ip, port, appName, accessToken);
+        initRpcProvider(address, ip, port, appName, accessToken);
     }
     public void destroy(){
         // destory executor-server
@@ -143,10 +147,12 @@ public class XxlJobExecutor  {
     // ---------------------- executor-server (rpc provider) ----------------------
     private XxlRpcProviderFactory xxlRpcProviderFactory = null;
 
-    private void initRpcProvider(String ip, int port, String appName, String accessToken) throws Exception {
+    private void initRpcProvider(String address, String ip, int port, String appName, String accessToken) throws Exception {
 
         // init, provider factory
-        String address = IpUtil.getIpPort(ip, port);
+        if (address==null || address.trim().length()==0) {
+            address = IpUtil.getIpPort(ip, port);   // registry-address：default use address to registry , otherwise use ip:port if address is null
+        }
         Map<String, String> serviceRegistryParam = new HashMap<String, String>();
         serviceRegistryParam.put("appName", appName);
         serviceRegistryParam.put("address", address);
