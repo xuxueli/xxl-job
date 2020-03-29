@@ -17,7 +17,7 @@ import java.util.List;
 public interface XxlJobLockDao extends JpaRepository<XxlJobLock, String> {
 
     @Lock(value = LockModeType.PESSIMISTIC_WRITE)
-    @Query(value = "select jl from XxlJobLock jl")
+    @Query(value = "select jl from XxlJobLock jl where jl.lockName = 'schedule_lock'")
     List<XxlJobLock> getJobLockForUpdate();
 
 }
