@@ -540,13 +540,14 @@ docker pull xuxueli/xxl-job-admin
 - 创建容器并运行
 
 ```
-docker run -p 8080:8080 -v /tmp:/data/applogs --name xxl-job-admin  -d xuxueli/xxl-job-admin
+docker run -p 8080:8080 -v /tmp:/data/applogs --name xxl-job-admin  -d xuxueli/xxl-job-admin:{指定版本}
 
 /**
-* 如需自定义 mysql 等配置，可通过 "PARAMS" 指定，参数格式 RAMS="--key=value  --key2=value2" ；
+* 如需自定义 mysql 等配置，可通过 "-e PARAMS" 指定，参数格式 PARAMS="--key=value  --key2=value2" ；
 * 配置项参考文件：/xxl-job/xxl-job-admin/src/main/resources/application.properties
+* 如需自定义 JVM内存参数 等配置，可通过 "-e JAVA_OPTS" 指定，参数格式 JAVA_OPTS="-Xmx512m" ；
 */
-docker run -e PARAMS="--spring.datasource.url=jdbc:mysql://127.0.0.1:3306/xxl_job?Unicode=true&characterEncoding=UTF-8" -p 8080:8080 -v /tmp:/data/applogs --name xxl-job-admin  -d xuxueli/xxl-job-admin
+docker run -e PARAMS="--spring.datasource.url=jdbc:mysql://127.0.0.1:3306/xxl_job?Unicode=true&characterEncoding=UTF-8" -p 8080:8080 -v /tmp:/data/applogs --name xxl-job-admin  -d xuxueli/xxl-job-admin:{指定版本}
 ```
 
 
@@ -568,21 +569,19 @@ docker run -e PARAMS="--spring.datasource.url=jdbc:mysql://127.0.0.1:3306/xxl_jo
     ### 调度中心部署跟地址 [选填]：如调度中心集群部署存在多个地址则用逗号分隔。执行器将会使用该地址进行"执行器心跳注册"和"任务结果回调"；为空则关闭自动注册；
     xxl.job.admin.addresses=http://127.0.0.1:8080/xxl-job-admin
     
-    ### 执行器AppName [选填]：执行器心跳注册分组依据；为空则关闭自动注册
-    xxl.job.executor.appname=xxl-job-executor-sample
-    
-    ### 执行器IP [选填]：默认为空表示自动获取IP，多网卡时可手动设置指定IP，该IP不会绑定Host仅作为通讯实用；地址信息用于 "执行器注册" 和 "调度中心请求并触发任务"；
-    xxl.job.executor.ip=
-    
-    ### 执行器端口号 [选填]：小于等于0则自动获取；默认端口为9999，单机部署多个执行器时，注意要配置不同执行器端口；
-    xxl.job.executor.port=9999
-    
     ### 执行器通讯TOKEN [选填]：非空时启用；
     xxl.job.accessToken=
-        
+    
+    ### 执行器AppName [选填]：执行器心跳注册分组依据；为空则关闭自动注册
+    xxl.job.executor.appname=xxl-job-executor-sample
+    ### 执行器注册 [选填]：优先使用该配置作为注册地址，为空时使用内嵌服务 ”IP:PORT“ 作为注册地址。从而更灵活的支持容器类型执行器动态IP和动态映射端口问题。
+    xxl.job.executor.address=
+    ### 执行器IP [选填]：默认为空表示自动获取IP，多网卡时可手动设置指定IP，该IP不会绑定Host仅作为通讯实用；地址信息用于 "执行器注册" 和 "调度中心请求并触发任务"；
+    xxl.job.executor.ip=
+    ### 执行器端口号 [选填]：小于等于0则自动获取；默认端口为9999，单机部署多个执行器时，注意要配置不同执行器端口；
+    xxl.job.executor.port=9999
     ### 执行器运行日志文件存储磁盘路径 [选填] ：需要对该路径拥有读写权限；为空则使用默认路径；
     xxl.job.executor.logpath=/data/applogs/xxl-job/jobhandler
-    
     ### 执行器日志文件保存天数 [选填] ： 过期日志自动清理, 限制值大于等于3时生效; 否则, 如-1, 关闭自动清理功能；
     xxl.job.executor.logretentiondays=30
     
@@ -655,7 +654,7 @@ public XxlJobSpringExecutor xxlJobExecutor() {
 ![输入图片说明](https://www.xuxueli.com/doc/static/xxl-job/images/img_dNUJ.png "在这里输入图片标题")
 
 #### 步骤三：触发执行：
-请点击任务右侧 “执行” 按钮，可手动触发一次任务执行（通常情况下，通过配置Cron表达式进行任务调度出发）。
+请点击任务右侧 “执行” 按钮，可手动触发一次任务执行（通常情况下，通过配置Cron表达式进行任务调度触发）。
 
 #### 步骤四：查看日志： 
 请点击任务右侧 “日志” 按钮，可前往任务日志界面查看任务日志。
@@ -680,7 +679,7 @@ public XxlJobSpringExecutor xxlJobExecutor() {
         RANDOM（随机）：随机选择在线的机器；
         CONSISTENT_HASH（一致性HASH）：每个任务按照Hash算法固定选择某一台机器，且所有任务均匀散列在不同机器上。
         LEAST_FREQUENTLY_USED（最不经常使用）：使用频率最低的机器优先被选举；
-        LEAST_RECENTLY_USED（最近最久未使用）：最久为使用的机器优先被选举；
+        LEAST_RECENTLY_USED（最近最久未使用）：最久未使用的机器优先被选举；
         FAILOVER（故障转移）：按照顺序依次进行心跳检测，第一个心跳检测成功的机器选定为目标执行器并发起调度；
         BUSYOVER（忙碌转移）：按照顺序依次进行空闲检测，第一个空闲检测成功的机器选定为目标执行器并发起调度；
         SHARDING_BROADCAST(分片广播)：广播触发对应集群中所有机器执行一次任务，同时系统自动传递分片参数；可根据分片参数开发分片任务；
@@ -765,7 +764,7 @@ public ReturnT<String> execute(String param) {
 
 - demoJobHandler：简单示例任务，任务内部模拟耗时任务逻辑，用户可在线体验Rolling Log等功能；
 - shardingJobHandler：分片示例任务，任务内部模拟处理分片参数，可参考熟悉分片任务；
-- httpJobHandler：通用HTTP任务Handler；业务方只需要提供HTTP链接即可，不限制语言、平台；
+- httpJobHandler：通用HTTP任务Handler；业务方只需要提供HTTP链接等信息即可，不限制语言、平台；
 - commandJobHandler：通用命令行任务Handler；业务方只需要提供命令行即可；如 “pwd”命令；
 
 
@@ -1159,7 +1158,7 @@ XXL-JOB会为每次调度请求生成一个单独的日志文件，需要通过 
 
 "分片广播" 以执行器为维度进行分片，支持动态扩容执行器集群从而动态增加分片数量，协同进行业务处理；在进行大数据量业务操作时可显著提升任务处理能力和速度。
 
-"分片广播" 和普通任务开发流程一致，不同之处在于可以可以获取分片参数，获取分片参数进行分片业务处理。
+"分片广播" 和普通任务开发流程一致，不同之处在于可以获取分片参数，获取分片参数进行分片业务处理。
 
 - Java语言任务获取分片参数方式：BEAN、GLUE模式(Java)
 ```
@@ -1214,7 +1213,7 @@ API服务请求参考代码：com.xxl.job.adminbiz.AdminBizTest.java
     7、任务触发；
     
 API服务位置：com.xxl.job.admin.controller.JobInfoController.java     
-API服务请求参考代码：可参考任务界面操作的ajax请求。任何ajax接口均可配置成为API服务，只需在待启用的API服务上添加 “@PermissionLimit(limit = false)” 注解取消登陆态拦截即可；
+API服务请求参考代码：可参考任务界面操作的ajax请求。任何ajax接口均可配置成为API服务，只需在待启用的API服务上添加 “@PermissionLimit(limit = false)” 注解取消登录态拦截即可；
 
 ### 5.12 执行器API服务
 执行器提供了API服务，供调度中心选择使用，目前提供的API服务有：
@@ -1260,7 +1259,12 @@ API服务请求参考代码：com.xxl.job.executor.ExecutorBizTest
 ### 5.17 跨平台 & 跨语言
 跨平台、跨语言主要体现在以下两个方面：
 - 1、提供Java、Python、PHP……等十来种任务模式，可参考章节 “5.5 任务 "运行模式" ”；理论上可扩展任意语言任务模式；
-- 2、提供基于HTTP的任务Handler（Bean任务，JobHandler="HttpJobHandler"）；业务方只需要提供HTTP链接即可，不限制语言、平台；
+- 2、提供基于HTTP的任务Handler（Bean任务，JobHandler="httpJobHandler"）；业务方只需要提供HTTP链接等相关信息即可，不限制语言、平台；
+```
+url: http://www.xxx.com
+method: get 或 post
+data: post-data
+```
 
 ### 5.18 任务失败告警
 默认提供邮件失败告警，可扩展短信、钉钉等方式。如果需要新增一种告警方式，只需要新增一个实现 "com.xxl.job.admin.core.alarm.JobAlarm" 接口的告警实现即可。可以参考默认提供邮箱告警实现 "EmailJobAlarm"。
@@ -1513,7 +1517,7 @@ Tips: 历史版本(V1.3.x)目前已经Release至稳定版本, 进入维护阶段
 - 9、告警邮件样式优化，调整为表格形式，邮件组件调整为commons-email简化邮件操作；
 - 10、项目依赖全量升级至较新稳定版本，如spring、jackson等等；
 - 11、任务日志，记录发起调度的机器信息；
-- 12、交互优化，如登陆注销；
+- 12、交互优化，如登录注销；
 - 13、任务Cron长度扩展支持至128位，支持负责类型Cron设置；
 - 14、执行器地址录入交互优化，地址长度扩展支持至512位，支持大规模执行器集群配置；
 - 15、任务参数“IJobHandler.execute”入参改为“String params”，增强入参通用性。
@@ -1528,7 +1532,7 @@ Tips: 历史版本(V1.3.x)目前已经Release至稳定版本, 进入维护阶段
 - 24、Log地址格式兼容，支持非"/"结尾路径配置；
 - 25、底层系统日志级别规范调整，清理遗留代码；
 - 26、建表SQL优化，支持同步创建制定编码的库和表；
-- 27、系统安全性优化，登陆Token写Cookie时进行MD5加密，同时Cookie启用HttpOnly；
+- 27、系统安全性优化，登录Token写Cookie时进行MD5加密，同时Cookie启用HttpOnly；
 - 28、新增"任务ID"属性，移除"JobKey"属性，前者承担所有功能，方便后续增强任务依赖功能。
 - 29、任务循环依赖问题修复，避免子任务与父任务重复导致的调度死循环；
 - 30、任务列表新增筛选条件 "任务描述"，快速检索任务；
@@ -1677,7 +1681,7 @@ Tips: 历史版本(V1.3.x)目前已经Release至稳定版本, 进入维护阶段
 - 14、调度中心移除SQL中的 "now()" 函数；集群部署时不再依赖DB时钟，仅需要保证调度中心应用节点时钟一致即可；
 - 15、任务触发组件加载顺序调整，避免小概率情况下组件随机加载顺序导致的I18N的NPE问题;
 - 16、JobThread自销毁优化，避免并发触发导致triggerQueue中任务丢失问题；
-- 17、调度中心密码限制18位，修复修改密码超过18位无法登陆的问题；
+- 17、调度中心密码限制18位，修复修改密码超过18位无法登录的问题；
 - 18、任务告警组件分页参数无效问题修复；
 - 19、升级xxl-rpc版本：服务端线程优化，降低线程内存开销；IpUtil优化：增加连通性校，过滤明确非法的网卡；
 - 20、调度中心回调API服务改为restful方式；
@@ -1713,14 +1717,24 @@ public ReturnT<String> execute(String param) {
 - 7、执行器XxlJob注解扫描逻辑优化，修复任务为空时小概率NPE问题；
 - 8、Web IDE交互问题修复：输入源码备注之后按回车跳转error问题处理；
 - 9、调度中心国际化完善：新增 "中文繁体" 支持。默认为 "zh_CN"/中文简体, 可选范围为 "zh_CN"/中文简体, "zh_TC"/中文繁体 and "en"/英文；
-- 10、[迭代中]自定义失败重试时间间隔；
-- 11、[迭代中]任务复制功能；点击复制是弹出新建任务弹框，并初始化被复制任务信息；
-- 12、[迭代中]新增执行器描述、任务描述属性；
-- 13、[迭代中]任务执行一次的时候指定IP；
-- 14、[迭代中]移除旧类注解JobHandler，推荐使用基于方法注解 "@XxlJob" 的方式进行任务开发；
-- 15、[迭代中]任务日志支持单个清理和状态转移，方便触发子任务；
-- 16、[迭代中]任务结果丢失处理：针对长期处于运行中的任务（设置过期时间时，运行超过"过期时间+1min"；未设置超时时间时，运行超过"30min"），主动检测该执行器是否在线，如果不在线主动标记失败；
-- 17、[迭代中]优雅停机回调丢失问题修复；
+- 10、移除旧类注解JobHandler，推荐使用基于方法注解 "@XxlJob" 的方式进行任务开发；(如需保留类注解JobHandler使用方式，可以参考旧版逻辑定制开发);
+- 11、修复bootstrap.min.css.map 404问题；
+- 12、XxlJob注解扫描方式优化，支持查找父类以及接口和基于类代理等常见情况；
+- 13、执行器优雅停机优化，修复任务线程中断未join导致回调丢失的问题；
+- 14、通用HTTP任务Handler（httpJobHandler）优化，扩展自定义参数信息，示例参数如下；
+```
+url: http://www.xxx.com
+method: get 或 post
+data: post-data
+```
+- 15、执行器注册逻辑优化：新增配置项 ”注册地址 / xxl.job.executor.address“，优先使用该配置作为注册地址，为空时使用内嵌服务 ”IP:PORT“ 作为注册地址。从而更灵活的支持容器类型执行器动态IP和动态映射端口问题。
+- 16、执行器初始化逻辑优化：修复懒加载的Bean被提前初始化问题；
+- 17、[迭代中]自定义失败重试时间间隔；
+- 18、[迭代中]任务复制功能；点击复制是弹出新建任务弹框，并初始化被复制任务信息；
+- 19、[迭代中]新增执行器描述、任务描述属性；
+- 20、[迭代中]任务执行一次的时候指定IP；
+- 21、[迭代中]任务日志支持单个清理和状态转移，方便触发子任务；
+- 22、[迭代中]任务结果丢失处理：针对长期处于运行中的任务（设置过期时间时，运行超过"过期时间+1min"；未设置超时时间时，运行超过"30min"），主动检测该执行器是否在线，如果不在线主动标记失败；
 
 
 ### TODO LIST
