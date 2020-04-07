@@ -228,7 +228,7 @@
             $("<input/>",{type : "radio", value : "4", name : "month"}).appendTo(monthly4);
             $(monthly4).append("从");
             $("<input/>",{type : "text", id : "monthStart_1", value : "1", style:"width:35px; height:20px; text-align: center; margin: 0 3px;"}).appendTo(monthly4);
-            $(monthly4).append("日开始,每");
+            $(monthly4).append("月开始,每");
             $("<input/>",{type : "text", id : "monthEnd_1", value : "1", style:"width:35px; height:20px; text-align: center; margin: 0 3px;"}).appendTo(monthly4);
             $(monthly4).append("月执行一次");
             $(monthly4).appendTo(monthlyTab);
