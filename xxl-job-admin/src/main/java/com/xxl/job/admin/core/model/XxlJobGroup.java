@@ -12,7 +12,6 @@ public class XxlJobGroup {
     private int id;
     private String appName;
     private String title;
-    private int order;
     private int addressType;        // 执行器地址类型：0=自动注册、1=手动录入
     private String addressList;     // 执行器地址列表，多地址逗号分隔(手动录入)
 
@@ -47,14 +46,6 @@ public class XxlJobGroup {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public int getOrder() {
-        return order;
-    }
-
-    public void setOrder(int order) {
-        this.order = order;
     }
 
     public int getAddressType() {

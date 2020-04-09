@@ -11,9 +11,11 @@ import com.xxl.job.core.enums.RegistryConfig;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 /**
@@ -33,12 +35,26 @@ public class JobGroupController {
 
 	@RequestMapping
 	public String index(Model model) {
-
-		// job group (executor)
-		List<XxlJobGroup> list = xxlJobGroupDao.findAll();
-
-		model.addAttribute("list", list);
 		return "jobgroup/jobgroup.index";
+	}
+
+	@RequestMapping("/pageList")
+	@ResponseBody
+	public Map<String, Object> pageList(HttpServletRequest request,
+										@RequestParam(required = false, defaultValue = "0") int start,
+										@RequestParam(required = false, defaultValue = "10") int length,
+										String appName, String title) {
+
+		// page query
+		List<XxlJobGroup> list = xxlJobGroupDao.pageList(start, length, appName, title);
+		int list_count = xxlJobGroupDao.pageListCount(start, length, appName, title);
+
+		// package result
+		Map<String, Object> maps = new HashMap<String, Object>();
+		maps.put("recordsTotal", list_count);		// 总记录数
+		maps.put("recordsFiltered", list_count);	// 过滤后的总记录数
+		maps.put("data", list);  					// 分页列表
+		return maps;
 	}
 
 	@RequestMapping("/save")
