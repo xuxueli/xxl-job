@@ -34,7 +34,7 @@
                 <div class="col-xs-3">
                     <div class="input-group">
                         <span class="input-group-addon">${I18n.jobgroup_field_title}</span>
-                        <input type="text" class="form-control" id="title" autocomplete="on" placeholder="${I18n.jobgroup_field_title}JobHandler" >
+                        <input type="text" class="form-control" id="title" autocomplete="on" placeholder="${I18n.jobgroup_field_title}" >
                     </div>
                 </div>
                 <div class="col-xs-2">
