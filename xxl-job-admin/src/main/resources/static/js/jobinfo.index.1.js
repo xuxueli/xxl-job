@@ -262,7 +262,8 @@ $(function() {
             url : base_url + "/jobinfo/trigger",
             data : {
                 "id" : $("#jobTriggerModal .form input[name='id']").val(),
-                "executorParam" : $("#jobTriggerModal .textarea[name='executorParam']").val()
+                "executorParam" : $("#jobTriggerModal .textarea[name='executorParam']").val(),
+				"addressList" : $("#jobTriggerModal .textarea[name='addressList']").val()
             },
             dataType : "json",
             success : function(data){
