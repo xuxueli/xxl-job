@@ -4,6 +4,7 @@ import com.xxl.job.admin.core.model.XxlJobInfo;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
@@ -19,8 +20,9 @@ public class XxlJobInfoDaoTest {
 	
 	@Test
 	public void pageList(){
-		List<XxlJobInfo> list = xxlJobInfoDao.pageList(0, 20, 0, -1, null, null, null);
-		int list_count = xxlJobInfoDao.pageListCount(0, 20, 0, -1, null, null, null);
+		Page<XxlJobInfo> page = xxlJobInfoDao.pageList(0, 20, 0, -1, null, null, null);
+		List<XxlJobInfo> list = page.getContent();
+		int list_count = (int) page.getTotalElements();
 		
 		System.out.println(list);
 		System.out.println(list_count);
