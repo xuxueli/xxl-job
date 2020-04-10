@@ -72,12 +72,12 @@ public class JobLosedMonitorHelper {
 
                 }
 
-				logger.info(">>>>>>>>>>> xxl-job, job fail monitor thread stop");
+				logger.info(">>>>>>>>>>> xxl-job, JobLosedMonitorHelper stop");
 
 			}
 		});
 		monitorThread.setDaemon(true);
-		monitorThread.setName("xxl-job, admin JobFailMonitorHelper");
+		monitorThread.setName("xxl-job, admin JobLosedMonitorHelper");
 		monitorThread.start();
 	}
 
