@@ -17,9 +17,11 @@ public class AdminBizClient implements AdminBiz {
 
     public AdminBizClient() {
     }
-    public AdminBizClient(String addressUrl, String accessToken) {
+    public AdminBizClient(String addressUrl, String accessToken, int readTimeout, int connectTimeout) {
         this.addressUrl = addressUrl;
         this.accessToken = accessToken;
+        this.readTimeout = readTimeout;
+        this.connectTimeout = connectTimeout;
 
         // valid
         if (!this.addressUrl.endsWith("/")) {
@@ -29,20 +31,22 @@ public class AdminBizClient implements AdminBiz {
 
     private String addressUrl ;
     private String accessToken;
+    private int readTimeout = 3;
+    private int connectTimeout = 3;
 
 
     @Override
     public ReturnT<String> callback(List<HandleCallbackParam> callbackParamList) {
-        return XxlJobRemotingUtil.postBody(addressUrl+"api/callback", accessToken, callbackParamList, 3);
+        return XxlJobRemotingUtil.postBody(addressUrl+"api/callback", accessToken, callbackParamList, readTimeout, connectTimeout);
     }
 
     @Override
     public ReturnT<String> registry(RegistryParam registryParam) {
-        return XxlJobRemotingUtil.postBody(addressUrl + "api/registry", accessToken, registryParam, 3);
+        return XxlJobRemotingUtil.postBody(addressUrl + "api/registry", accessToken, registryParam, readTimeout, connectTimeout);
     }
 
     @Override
     public ReturnT<String> registryRemove(RegistryParam registryParam) {
-        return XxlJobRemotingUtil.postBody(addressUrl + "api/registryRemove", accessToken, registryParam, 3);
+        return XxlJobRemotingUtil.postBody(addressUrl + "api/registryRemove", accessToken, registryParam, readTimeout, connectTimeout);
     }
 }
