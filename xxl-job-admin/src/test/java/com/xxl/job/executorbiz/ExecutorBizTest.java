@@ -1,4 +1,4 @@
-package com.xxl.job.executor;
+package com.xxl.job.executorbiz;
 
 import com.xxl.job.core.biz.ExecutorBiz;
 import com.xxl.job.core.biz.client.ExecutorBizClient;
@@ -12,7 +12,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * executor-api client, test
+ * executor api test
  *
  * Created by xuxueli on 17/5/12.
  */
@@ -52,6 +52,29 @@ public class ExecutorBizTest {
     }
 
     @Test
+    public void run(){
+        ExecutorBiz executorBiz = new ExecutorBizClient(addressUrl, accessToken);
+
+        // trigger data
+        final TriggerParam triggerParam = new TriggerParam();
+        triggerParam.setJobId(1);
+        triggerParam.setExecutorHandler("demoJobHandler");
+        triggerParam.setExecutorParams(null);
+        triggerParam.setExecutorBlockStrategy(ExecutorBlockStrategyEnum.COVER_EARLY.name());
+        triggerParam.setGlueType(GlueTypeEnum.BEAN.name());
+        triggerParam.setGlueSource(null);
+        triggerParam.setGlueUpdatetime(System.currentTimeMillis());
+        triggerParam.setLogId(1);
+        triggerParam.setLogDateTime(System.currentTimeMillis());
+
+        // Act
+        final ReturnT<String> retval = executorBiz.run(triggerParam);
+
+        // Assert result
+        Assert.assertNotNull(retval);
+    }
+
+    @Test
     public void kill(){
         ExecutorBiz executorBiz = new ExecutorBizClient(addressUrl, accessToken);
 
@@ -77,29 +100,6 @@ public class ExecutorBizTest {
 
         // Act
         final ReturnT<LogResult> retval = executorBiz.log(new LogParam(logDateTim, logId, fromLineNum));
-
-        // Assert result
-        Assert.assertNotNull(retval);
-    }
-
-    @Test
-    public void run(){
-        ExecutorBiz executorBiz = new ExecutorBizClient(addressUrl, accessToken);
-
-        // trigger data
-        final TriggerParam triggerParam = new TriggerParam();
-        triggerParam.setJobId(1);
-        triggerParam.setExecutorHandler("demoJobHandler");
-        triggerParam.setExecutorParams(null);
-        triggerParam.setExecutorBlockStrategy(ExecutorBlockStrategyEnum.COVER_EARLY.name());
-        triggerParam.setGlueType(GlueTypeEnum.BEAN.name());
-        triggerParam.setGlueSource(null);
-        triggerParam.setGlueUpdatetime(System.currentTimeMillis());
-        triggerParam.setLogId(1);
-        triggerParam.setLogDateTime(System.currentTimeMillis());
-
-        // Act
-        final ReturnT<String> retval = executorBiz.run(triggerParam);
 
         // Assert result
         Assert.assertNotNull(retval);

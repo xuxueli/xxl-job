@@ -36,8 +36,14 @@ public class ExecutorBizClient implements ExecutorBiz {
         return XxlJobRemotingUtil.postBody(addressUrl+"beat", accessToken, timeout, null, String.class);
     }
 
+    @Override
     public ReturnT<String> idleBeat(int jobId){
         return XxlJobRemotingUtil.postBody(addressUrl+"idleBeat", accessToken, timeout, jobId, String.class);
+    }
+
+    @Override
+    public ReturnT<String> run(TriggerParam triggerParam) {
+        return XxlJobRemotingUtil.postBody(addressUrl + "run", accessToken, timeout, triggerParam, String.class);
     }
 
     @Override
@@ -48,10 +54,6 @@ public class ExecutorBizClient implements ExecutorBiz {
     @Override
     public ReturnT<LogResult> log(LogParam logParam) {
         return XxlJobRemotingUtil.postBody(addressUrl + "log", accessToken, timeout, logParam, LogResult.class);
-    }
-
-    public ReturnT<String> run(TriggerParam triggerParam) {
-        return XxlJobRemotingUtil.postBody(addressUrl + "run", accessToken, timeout, triggerParam, String.class);
     }
 
 }

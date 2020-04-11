@@ -25,6 +25,13 @@ public interface ExecutorBiz {
     public ReturnT<String> idleBeat(int jobId);
 
     /**
+     * run
+     * @param triggerParam
+     * @return
+     */
+    public ReturnT<String> run(TriggerParam triggerParam);
+
+    /**
      * kill
      * @param jobId
      * @return
@@ -37,12 +44,5 @@ public interface ExecutorBiz {
      * @return
      */
     public ReturnT<LogResult> log(LogParam logParam);
-
-    /**
-     * run
-     * @param triggerParam
-     * @return
-     */
-    public ReturnT<String> run(TriggerParam triggerParam);
 
 }

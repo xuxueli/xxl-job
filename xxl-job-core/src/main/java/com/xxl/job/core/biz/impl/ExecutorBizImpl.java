@@ -47,27 +47,6 @@ public class ExecutorBizImpl implements ExecutorBiz {
     }
 
     @Override
-    public ReturnT<String> kill(int jobId) {
-        // kill handlerThread, and create new one
-        JobThread jobThread = XxlJobExecutor.loadJobThread(jobId);
-        if (jobThread != null) {
-            XxlJobExecutor.removeJobThread(jobId, "scheduling center kill job.");
-            return ReturnT.SUCCESS;
-        }
-
-        return new ReturnT<String>(ReturnT.SUCCESS_CODE, "job thread already killed.");
-    }
-
-    @Override
-    public ReturnT<LogResult> log(LogParam logParam) {
-        // log filename: logPath/yyyy-MM-dd/9999.log
-        String logFileName = XxlJobFileAppender.makeLogFileName(new Date(logParam.getLogDateTim()), logParam.getLogId());
-
-        LogResult logResult = XxlJobFileAppender.readLog(logFileName, logParam.getFromLineNum());
-        return new ReturnT<LogResult>(logResult);
-    }
-
-    @Override
     public ReturnT<String> run(TriggerParam triggerParam) {
         // load old：jobHandler + jobThread
         JobThread jobThread = XxlJobExecutor.loadJobThread(triggerParam.getJobId());
@@ -170,6 +149,27 @@ public class ExecutorBizImpl implements ExecutorBiz {
         // push data to queue
         ReturnT<String> pushResult = jobThread.pushTriggerQueue(triggerParam);
         return pushResult;
+    }
+
+    @Override
+    public ReturnT<String> kill(int jobId) {
+        // kill handlerThread, and create new one
+        JobThread jobThread = XxlJobExecutor.loadJobThread(jobId);
+        if (jobThread != null) {
+            XxlJobExecutor.removeJobThread(jobId, "scheduling center kill job.");
+            return ReturnT.SUCCESS;
+        }
+
+        return new ReturnT<String>(ReturnT.SUCCESS_CODE, "job thread already killed.");
+    }
+
+    @Override
+    public ReturnT<LogResult> log(LogParam logParam) {
+        // log filename: logPath/yyyy-MM-dd/9999.log
+        String logFileName = XxlJobFileAppender.makeLogFileName(new Date(logParam.getLogDateTim()), logParam.getLogId());
+
+        LogResult logResult = XxlJobFileAppender.readLog(logFileName, logParam.getFromLineNum());
+        return new ReturnT<LogResult>(logResult);
     }
 
 }
