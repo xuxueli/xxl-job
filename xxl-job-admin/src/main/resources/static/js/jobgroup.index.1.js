@@ -186,7 +186,7 @@ $(function() {
 		var length = value.length;
 		var valid = /^[a-z][a-zA-Z0-9-]*$/;
 		return this.optional(element) || valid.test(value);
-	}, I18n.jobgroup_field_appName_limit );
+	}, I18n.jobgroup_field_appname_limit );
 
 	$('.add').on('click', function(){
 		$('#addModal').modal({backdrop: false, keyboard: false}).modal('show');
@@ -209,8 +209,8 @@ $(function() {
 		messages : {
 			appName : {
 				required : I18n.system_please_input+"AppName",
-				rangelength: I18n.jobgroup_field_appName_length ,
-				myValid01: I18n.jobgroup_field_appName_limit
+				rangelength: I18n.jobgroup_field_appname_length ,
+				myValid01: I18n.jobgroup_field_appname_limit
 			},
 			title : {
 				required : I18n.system_please_input + I18n.jobgroup_field_title ,
@@ -306,8 +306,8 @@ $(function() {
 		messages : {
             appName : {
                 required : I18n.system_please_input+"AppName",
-                rangelength: I18n.jobgroup_field_appName_length ,
-                myValid01: I18n.jobgroup_field_appName_limit
+                rangelength: I18n.jobgroup_field_appname_length ,
+                myValid01: I18n.jobgroup_field_appname_limit
             },
             title : {
                 required : I18n.system_please_input + I18n.jobgroup_field_title ,

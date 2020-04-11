@@ -66,7 +66,7 @@ public class JobGroupController {
 			return new ReturnT<String>(500, (I18nUtil.getString("system_please_input")+"AppName") );
 		}
 		if (xxlJobGroup.getAppName().length()<4 || xxlJobGroup.getAppName().length()>64) {
-			return new ReturnT<String>(500, I18nUtil.getString("jobgroup_field_appName_length") );
+			return new ReturnT<String>(500, I18nUtil.getString("jobgroup_field_appname_length") );
 		}
 		if (xxlJobGroup.getTitle()==null || xxlJobGroup.getTitle().trim().length()==0) {
 			return new ReturnT<String>(500, (I18nUtil.getString("system_please_input") + I18nUtil.getString("jobgroup_field_title")) );
@@ -95,7 +95,7 @@ public class JobGroupController {
 			return new ReturnT<String>(500, (I18nUtil.getString("system_please_input")+"AppName") );
 		}
 		if (xxlJobGroup.getAppName().length()<4 || xxlJobGroup.getAppName().length()>64) {
-			return new ReturnT<String>(500, I18nUtil.getString("jobgroup_field_appName_length") );
+			return new ReturnT<String>(500, I18nUtil.getString("jobgroup_field_appname_length") );
 		}
 		if (xxlJobGroup.getTitle()==null || xxlJobGroup.getTitle().trim().length()==0) {
 			return new ReturnT<String>(500, (I18nUtil.getString("system_please_input") + I18nUtil.getString("jobgroup_field_title")) );
