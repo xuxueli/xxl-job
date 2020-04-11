@@ -1299,7 +1299,7 @@ API服务请求参考代码：com.xxl.job.adminbiz.AdminBizTest
 
 #### a、任务回调
 ```
-说明：任务执行结果回调
+说明：执行器执行完任务后，回调任务结果时使用
 
 ------
 
@@ -1310,10 +1310,10 @@ Header：
  
 请求数据格式如下，放置在 RequestBody 中，JSON格式：
     [{
-        "logId":1,
-        "logDateTim":0,
+        "logId":1,              // 本次调度日志ID
+        "logDateTim":0,         // 本次调度日志时间
         "executeResult":{
-            "code": 200,      // 200 表示任务执行正常，500表示失败
+            "code": 200,        // 200 表示任务执行正常，500表示失败
             "msg": null
         }
     }]
@@ -1327,7 +1327,7 @@ Header：
     
 #### b、执行器注册
 ```
-说明：执行器注册，调度中心会实时感知注册成功的执行器并发起任务调度
+说明：执行器注册时使用，调度中心会实时感知注册成功的执行器并发起任务调度
 
 ------
 
@@ -1338,7 +1338,7 @@ Header：
  
 请求数据格式如下，放置在 RequestBody 中，JSON格式：
     {
-        "registryGroup":"EXECUTOR",
+        "registryGroup":"EXECUTOR",                     // 固定值
         "registryKey":"xxl-job-executor-example",       // 执行器AppName
         "registryValue":"http://127.0.0.1:9999/"        // 执行器地址，内置服务跟地址
     }
@@ -1352,7 +1352,7 @@ Header：
 
 #### c、执行器注册摘除
 ```
-说明：执行器注册摘除，注册摘除后的执行器不参与任务调度与执行
+说明：执行器注册摘除时使用，注册摘除后的执行器不参与任务调度与执行
 
 ------
 
@@ -1363,7 +1363,7 @@ Header：
  
 请求数据格式如下，放置在 RequestBody 中，JSON格式：
     {
-        "registryGroup":"EXECUTOR",
+        "registryGroup":"EXECUTOR",                     // 固定值
         "registryKey":"xxl-job-executor-example",       // 执行器AppName
         "registryValue":"http://127.0.0.1:9999/"        // 执行器地址，内置服务跟地址
     }
@@ -1382,7 +1382,7 @@ API服务请求参考代码：com.xxl.job.executorbiz.ExecutorBizTest
 
 #### a、心跳检测
 ```
-说明：心跳检测，检测执行器是否在线
+说明：调度中心检测执行器是否在线时使用
 
 ------
 
@@ -1402,7 +1402,7 @@ Header：
 
 #### b、忙碌检测
 ```
-说明：忙碌检测，检测执行器上该任务是否空闲
+说明：调度中心检测指定执行器上指定任务是否忙碌（运行中）时使用
 
 ------
 
@@ -1438,11 +1438,13 @@ Header：
     {
         "jobId":1,                                  // 任务ID
         "executorHandler":"demoJobHandler",         // 任务标识
+        "executorParams":"demoJobHandler",          // 任务参数
         "executorBlockStrategy":"COVER_EARLY",      // 任务阻塞策略，可选值参考 com.xxl.job.core.enums.ExecutorBlockStrategyEnum
         "executorTimeout":0,                        // 任务超时时间，单位秒，大于零时生效
         "logId":1,                                  // 本次调度日志ID
         "logDateTime":1586629003729,                // 本次调度日志时间
         "glueType":"BEAN",                          // 任务模式，可选值参考 com.xxl.job.core.glue.GlueTypeEnum
+        "glueSource":"xxx",                         // GLUE脚本代码
         "glueUpdatetime":1586629003727,             // GLUE脚本更新时间，用于判定脚本是否变更以及是否需要刷新
         "broadcastIndex":0,                         // 分片参数：当前分片
         "broadcastTotal":0                          // 分片参数：总分片
@@ -1481,7 +1483,7 @@ Header：
 
 #### d、查看执行日志
 ```
-说明：终止任务
+说明：终止任务，滚动方式加载
 
 ------
 
