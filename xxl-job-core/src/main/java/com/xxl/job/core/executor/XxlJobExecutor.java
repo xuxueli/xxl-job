@@ -28,7 +28,7 @@ public class XxlJobExecutor  {
     // ---------------------- param ----------------------
     private String adminAddresses;
     private String accessToken;
-    private String appName;
+    private String appname;
     private String address;
     private String ip;
     private int port;
@@ -41,8 +41,8 @@ public class XxlJobExecutor  {
     public void setAccessToken(String accessToken) {
         this.accessToken = accessToken;
     }
-    public void setAppName(String appName) {
-        this.appName = appName;
+    public void setAppname(String appname) {
+        this.appname = appname;
     }
     public void setAddress(String address) {
         this.address = address;
@@ -78,7 +78,7 @@ public class XxlJobExecutor  {
         TriggerCallbackThread.getInstance().start();
 
         // init executor-server
-        initEmbedServer(address, ip, port, appName, accessToken);
+        initEmbedServer(address, ip, port, appname, accessToken);
     }
     public void destroy(){
         // destory executor-server

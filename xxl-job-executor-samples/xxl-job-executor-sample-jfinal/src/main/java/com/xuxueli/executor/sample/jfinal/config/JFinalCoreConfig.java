@@ -36,7 +36,7 @@ public class JFinalCoreConfig extends JFinalConfig {
 		xxlJobExecutor.setAdminAddresses(xxlJobProp.get("xxl.job.admin.addresses"));
 		xxlJobExecutor.setAccessToken(xxlJobProp.get("xxl.job.accessToken"));
 		xxlJobExecutor.setAddress(xxlJobProp.get("xxl.job.executor.address"));
-		xxlJobExecutor.setAppName(xxlJobProp.get("xxl.job.executor.appname"));
+		xxlJobExecutor.setAppname(xxlJobProp.get("xxl.job.executor.appname"));
 		xxlJobExecutor.setIp(xxlJobProp.get("xxl.job.executor.ip"));
 		xxlJobExecutor.setPort(xxlJobProp.getInt("xxl.job.executor.port"));
 

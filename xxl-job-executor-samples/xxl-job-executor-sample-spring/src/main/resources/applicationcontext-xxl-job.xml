@@ -28,7 +28,7 @@
 		<!-- 访问令牌[选填]，非空则进行匹配校验 -->
 		<property name="accessToken" value="${xxl.job.accessToken}" />
 		<!-- 执行器AppName[选填]，为空则关闭自动注册 -->
-		<property name="appName" value="${xxl.job.executor.appname}" />
+		<property name="appname" value="${xxl.job.executor.appname}" />
 		<!-- 注册地址[选填]，优先使用该配置作为注册地址，为空时使用内嵌服务 ”IP:PORT“ 作为注册地址 -->
 		<property name="address" value="${xxl.job.executor.address}" />
 		<!-- 执行器IP[选填]，为空则自动获取 -->
