@@ -298,13 +298,13 @@ $(function() {
             dataType : "json",
             success : function(data){
 
-                var html = '<center>';
+                var html = '<div>';
                 if (data.code == 200 && data.content.registryList) {
                     for (var index in data.content.registryList) {
-                        html += '<span class="badge bg-green" >' + data.content.registryList[index] + '</span><br>';
+                        html += (parseInt(index)+1) + '. <span class="badge bg-green" >' + data.content.registryList[index] + '</span><br>';
                     }
                 }
-                html += '</center>';
+                html += '</div>';
 
                 layer.open({
                     title: I18n.jobinfo_opt_registryinfo ,

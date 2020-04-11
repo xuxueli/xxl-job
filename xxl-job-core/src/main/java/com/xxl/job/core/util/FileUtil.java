@@ -48,7 +48,7 @@ public class FileUtil {
     }
 
 
-    public static void writeFileContent(File file, String data) {
+    public static void writeFileContent(File file, byte[] data) {
 
         // file
         if (!file.exists()) {
@@ -59,7 +59,7 @@ public class FileUtil {
         FileOutputStream fos = null;
         try {
             fos = new FileOutputStream(file);
-            fos.write(data.getBytes("utf-8"));
+            fos.write(data);
             fos.flush();
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
@@ -75,7 +75,7 @@ public class FileUtil {
 
     }
 
-    public static String readFileContent(File file) {
+    public static byte[] readFileContent(File file) {
         Long filelength = file.length();
         byte[] filecontent = new byte[filelength.intValue()];
 
@@ -85,7 +85,7 @@ public class FileUtil {
             in.read(filecontent);
             in.close();
 
-            return new String(filecontent, "utf-8");
+            return filecontent;
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             return null;

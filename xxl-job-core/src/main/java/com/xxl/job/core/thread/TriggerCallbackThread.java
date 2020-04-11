@@ -8,7 +8,7 @@ import com.xxl.job.core.executor.XxlJobExecutor;
 import com.xxl.job.core.log.XxlJobFileAppender;
 import com.xxl.job.core.log.XxlJobLogger;
 import com.xxl.job.core.util.FileUtil;
-import com.xxl.job.core.util.GsonTool;
+import com.xxl.job.core.util.JdkSerializeTool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -205,7 +205,7 @@ public class TriggerCallbackThread {
         }
 
         // append file
-        String callbackParamList_Str = GsonTool.toJson(callbackParamList);
+        byte[] callbackParamList_bytes = JdkSerializeTool.serialize(callbackParamList);
 
         File callbackLogFile = new File(failCallbackFileName.replace("{x}", String.valueOf(System.currentTimeMillis())));
         if (callbackLogFile.exists()) {
@@ -216,7 +216,7 @@ public class TriggerCallbackThread {
                 }
             }
         }
-        FileUtil.writeFileContent(callbackLogFile, callbackParamList_Str);
+        FileUtil.writeFileContent(callbackLogFile, callbackParamList_bytes);
     }
 
     private void retryFailCallbackFile(){
@@ -235,8 +235,8 @@ public class TriggerCallbackThread {
 
         // load and clear file, retry
         for (File callbaclLogFile: callbackLogPath.listFiles()) {
-            String callbackParamList_str = FileUtil.readFileContent(callbaclLogFile);
-            List<HandleCallbackParam> callbackParamList = GsonTool.fromJsonList(callbackParamList_str, HandleCallbackParam.class);
+            byte[] callbackParamList_bytes = FileUtil.readFileContent(callbaclLogFile);
+            List<HandleCallbackParam> callbackParamList = (List<HandleCallbackParam>) JdkSerializeTool.deserialize(callbackParamList_bytes, List.class);
 
             callbaclLogFile.delete();
             doCallback(callbackParamList);
