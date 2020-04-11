@@ -1,26 +1,21 @@
 package com.xxl.job.core.executor;
 
 import com.xxl.job.core.biz.AdminBiz;
-import com.xxl.job.core.biz.ExecutorBiz;
 import com.xxl.job.core.biz.client.AdminBizClient;
-import com.xxl.job.core.biz.impl.ExecutorBizImpl;
 import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.log.XxlJobFileAppender;
-import com.xxl.job.core.thread.ExecutorRegistryThread;
+import com.xxl.job.core.server.EmbedServer;
 import com.xxl.job.core.thread.JobLogFileCleanThread;
 import com.xxl.job.core.thread.JobThread;
 import com.xxl.job.core.thread.TriggerCallbackThread;
-import com.xxl.rpc.registry.ServiceRegistry;
-import com.xxl.rpc.remoting.net.impl.netty_http.server.NettyHttpServer;
-import com.xxl.rpc.remoting.provider.XxlRpcProviderFactory;
-import com.xxl.rpc.serialize.Serializer;
-import com.xxl.rpc.serialize.impl.HessianSerializer;
-import com.xxl.rpc.util.IpUtil;
-import com.xxl.rpc.util.NetUtil;
+import com.xxl.job.core.util.IpUtil;
+import com.xxl.job.core.util.NetUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -83,13 +78,11 @@ public class XxlJobExecutor  {
         TriggerCallbackThread.getInstance().start();
 
         // init executor-server
-        port = port>0?port: NetUtil.findAvailablePort(9999);
-        ip = (ip!=null&&ip.trim().length()>0)?ip: IpUtil.getIp();
-        initRpcProvider(address, ip, port, appName, accessToken);
+        initEmbedServer(address, ip, port, appName, accessToken);
     }
     public void destroy(){
         // destory executor-server
-        stopRpcProvider();
+        stopEmbedServer();
 
         // destory jobThreadRepository
         if (jobThreadRepository.size() > 0) {
@@ -120,7 +113,6 @@ public class XxlJobExecutor  {
 
     // ---------------------- admin-client (rpc invoker) ----------------------
     private static List<AdminBiz> adminBizList;
-    private static Serializer serializer = new HessianSerializer();
     private void initAdminBizList(String adminAddresses, String accessToken) throws Exception {
         if (adminAddresses!=null && adminAddresses.trim().length()>0) {
             for (String address: adminAddresses.trim().split(",")) {
@@ -139,80 +131,31 @@ public class XxlJobExecutor  {
     public static List<AdminBiz> getAdminBizList(){
         return adminBizList;
     }
-    public static Serializer getSerializer() {
-        return serializer;
-    }
-
 
     // ---------------------- executor-server (rpc provider) ----------------------
-    private XxlRpcProviderFactory xxlRpcProviderFactory = null;
+    private EmbedServer embedServer = null;
 
-    private void initRpcProvider(String address, String ip, int port, String appName, String accessToken) throws Exception {
+    private void initEmbedServer(String address, String ip, int port, String appName, String accessToken) throws Exception {
 
-        // init, provider factory
+        // fill ip port
+        port = port>0?port: NetUtil.findAvailablePort(9999);
+        ip = (ip!=null&&ip.trim().length()>0)?ip: IpUtil.getIp();
+
+        // generate address
         if (address==null || address.trim().length()==0) {
-            address = IpUtil.getIpPort(ip, port);   // registry-address：default use address to registry , otherwise use ip:port if address is null
+            String ip_port_address = IpUtil.getIpPort(ip, port);   // registry-address：default use address to registry , otherwise use ip:port if address is null
+            address = "http://{ip_port}/".replace("{ip_port}", ip_port_address);
         }
-        Map<String, String> serviceRegistryParam = new HashMap<String, String>();
-        serviceRegistryParam.put("appName", appName);
-        serviceRegistryParam.put("address", address);
-
-        xxlRpcProviderFactory = new XxlRpcProviderFactory();
-
-        xxlRpcProviderFactory.setServer(NettyHttpServer.class);
-        xxlRpcProviderFactory.setSerializer(HessianSerializer.class);
-        xxlRpcProviderFactory.setCorePoolSize(20);
-        xxlRpcProviderFactory.setMaxPoolSize(200);
-        xxlRpcProviderFactory.setIp(ip);
-        xxlRpcProviderFactory.setPort(port);
-        xxlRpcProviderFactory.setAccessToken(accessToken);
-        xxlRpcProviderFactory.setServiceRegistry(ExecutorServiceRegistry.class);
-        xxlRpcProviderFactory.setServiceRegistryParam(serviceRegistryParam);
-
-        // add services
-        xxlRpcProviderFactory.addService(ExecutorBiz.class.getName(), null, new ExecutorBizImpl());
 
         // start
-        xxlRpcProviderFactory.start();
-
+        embedServer = new EmbedServer();
+        embedServer.start(address, port, appName, accessToken);
     }
 
-    public static class ExecutorServiceRegistry extends ServiceRegistry {
-
-        @Override
-        public void start(Map<String, String> param) {
-            // start registry
-            ExecutorRegistryThread.getInstance().start(param.get("appName"), param.get("address"));
-        }
-        @Override
-        public void stop() {
-            // stop registry
-            ExecutorRegistryThread.getInstance().toStop();
-        }
-
-        @Override
-        public boolean registry(Set<String> keys, String value) {
-            return false;
-        }
-        @Override
-        public boolean remove(Set<String> keys, String value) {
-            return false;
-        }
-        @Override
-        public Map<String, TreeSet<String>> discovery(Set<String> keys) {
-            return null;
-        }
-        @Override
-        public TreeSet<String> discovery(String key) {
-            return null;
-        }
-
-    }
-
-    private void stopRpcProvider() {
+    private void stopEmbedServer() {
         // stop provider factory
         try {
-            xxlRpcProviderFactory.stop();
+            embedServer.stop();
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }

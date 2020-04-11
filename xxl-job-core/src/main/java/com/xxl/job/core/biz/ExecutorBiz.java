@@ -1,5 +1,6 @@
 package com.xxl.job.core.biz;
 
+import com.xxl.job.core.biz.model.LogParam;
 import com.xxl.job.core.biz.model.LogResult;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.biz.model.TriggerParam;
@@ -32,12 +33,10 @@ public interface ExecutorBiz {
 
     /**
      * log
-     * @param logDateTim
-     * @param logId
-     * @param fromLineNum
+     * @param logParam
      * @return
      */
-    public ReturnT<LogResult> log(long logDateTim, long logId, int fromLineNum);
+    public ReturnT<LogResult> log(LogParam logParam);
 
     /**
      * run

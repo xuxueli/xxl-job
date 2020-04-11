@@ -3,11 +3,11 @@ package com.xxl.job.admin.controller;
 import com.xxl.job.admin.controller.annotation.PermissionLimit;
 import com.xxl.job.admin.core.conf.XxlJobAdminConfig;
 import com.xxl.job.admin.core.exception.XxlJobException;
-import com.xxl.job.admin.core.util.JacksonUtil;
 import com.xxl.job.core.biz.AdminBiz;
 import com.xxl.job.core.biz.model.HandleCallbackParam;
 import com.xxl.job.core.biz.model.RegistryParam;
 import com.xxl.job.core.biz.model.ReturnT;
+import com.xxl.job.core.util.GsonTool;
 import com.xxl.job.core.util.XxlJobRemotingUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -37,7 +37,7 @@ public class JobApiController {
     private void validAccessToken(HttpServletRequest request){
         if (XxlJobAdminConfig.getAdminConfig().getAccessToken()!=null
                 && XxlJobAdminConfig.getAdminConfig().getAccessToken().trim().length()>0
-                && !XxlJobAdminConfig.getAdminConfig().getAccessToken().equals(request.getHeader(XxlJobRemotingUtil.XXL_RPC_ACCESS_TOKEN))) {
+                && !XxlJobAdminConfig.getAdminConfig().getAccessToken().equals(request.getHeader(XxlJobRemotingUtil.XXL_JOB_ACCESS_TOKEN))) {
             throw new XxlJobException("The access token is wrong.");
         }
     }
@@ -45,10 +45,24 @@ public class JobApiController {
     /**
      * parse Param
      */
-    private Object parseParam(String data, Class<?> parametrized, Class<?>... parameterClasses){
+    private Object parseParam(String data, Class<?> parametrized, Class<?> parameterClasses){
         Object param = null;
         try {
             if (parameterClasses != null) {
+                param = GsonTool.fromJson(data, parametrized, parameterClasses);
+            } else {
+                param = GsonTool.fromJson(data, parametrized);
+            }
+        } catch (Exception e) { }
+        if (param==null) {
+            throw new XxlJobException("The request data invalid.");
+        }
+        return param;
+    }
+    /*private Object parseParam(String data, Class<?> parametrized, Class<?>... parameterClasses){
+        Object param = null;
+        try {
+            if (parameterClasses!=null && parameterClasses.length>0) {
                 param = JacksonUtil.readValue(data, parametrized, parameterClasses);
             } else {
                 param = JacksonUtil.readValue(data, parametrized);
@@ -58,7 +72,7 @@ public class JobApiController {
             throw new XxlJobException("The request data invalid.");
         }
         return param;
-    }
+    }*/
 
     // ---------------------- admin biz ----------------------
 
@@ -98,7 +112,7 @@ public class JobApiController {
         validAccessToken(request);
 
         // param
-        RegistryParam registryParam = (RegistryParam) parseParam(data, RegistryParam.class);
+        RegistryParam registryParam = (RegistryParam) parseParam(data, RegistryParam.class, null);
 
         // invoke
         return adminBiz.registry(registryParam);
@@ -118,7 +132,7 @@ public class JobApiController {
         validAccessToken(request);
 
         // param
-        RegistryParam registryParam = (RegistryParam) parseParam(data, RegistryParam.class);
+        RegistryParam registryParam = (RegistryParam) parseParam(data, RegistryParam.class, null);
 
         // invoke
         return adminBiz.registryRemove(registryParam);

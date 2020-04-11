@@ -1,16 +1,15 @@
 package com.xxl.job.executor;
 
 import com.xxl.job.core.biz.ExecutorBiz;
+import com.xxl.job.core.biz.client.ExecutorBizClient;
+import com.xxl.job.core.biz.model.LogParam;
+import com.xxl.job.core.biz.model.LogResult;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.biz.model.TriggerParam;
 import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
 import com.xxl.job.core.glue.GlueTypeEnum;
-import com.xxl.rpc.remoting.invoker.XxlRpcInvokerFactory;
-import com.xxl.rpc.remoting.invoker.call.CallType;
-import com.xxl.rpc.remoting.invoker.reference.XxlRpcReferenceBean;
-import com.xxl.rpc.remoting.invoker.route.LoadBalance;
-import com.xxl.rpc.remoting.net.impl.netty_http.client.NettyHttpClient;
-import com.xxl.rpc.serialize.impl.HessianSerializer;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * executor-api client, test
@@ -19,27 +18,79 @@ import com.xxl.rpc.serialize.impl.HessianSerializer;
  */
 public class ExecutorBizTest {
 
-    public static void main(String[] args) throws Exception {
+    // admin-client
+    private static String addressUrl = "http://127.0.0.1:8081/";
+    private static String accessToken = null;
 
-        // param
-        String jobHandler = "demoJobHandler";
-        String params = "";
+    @Test
+    public void beat() throws Exception {
+        ExecutorBiz executorBiz = new ExecutorBizClient(addressUrl, accessToken);
+        // Act
+        final ReturnT<String> retval = executorBiz.beat();
 
-        runTest(jobHandler, params);
+        // Assert result
+        Assert.assertNotNull(retval);
+        Assert.assertNull(((ReturnT<String>) retval).getContent());
+        Assert.assertEquals(200, retval.getCode());
+        Assert.assertNull(retval.getMsg());
     }
 
-    /**
-     * run jobhandler
-     *
-     * @param jobHandler
-     * @param params
-     */
-    private static void runTest(String jobHandler, String params) throws Exception {
+    @Test
+    public void idleBeat(){
+        ExecutorBiz executorBiz = new ExecutorBizClient(addressUrl, accessToken);
+
+        final int jobId = 0;
+
+        // Act
+        final ReturnT<String> retval = executorBiz.idleBeat(jobId);
+
+        // Assert result
+        Assert.assertNotNull(retval);
+        Assert.assertNull(((ReturnT<String>) retval).getContent());
+        Assert.assertEquals(500, retval.getCode());
+        Assert.assertEquals("job thread is running or has trigger queue.", retval.getMsg());
+    }
+
+    @Test
+    public void kill(){
+        ExecutorBiz executorBiz = new ExecutorBizClient(addressUrl, accessToken);
+
+        final int jobId = 0;
+
+        // Act
+        final ReturnT<String> retval = executorBiz.kill(jobId);
+
+        // Assert result
+        Assert.assertNotNull(retval);
+        Assert.assertNull(((ReturnT<String>) retval).getContent());
+        Assert.assertEquals(200, retval.getCode());
+        Assert.assertNull(retval.getMsg());
+    }
+
+    @Test
+    public void log(){
+        ExecutorBiz executorBiz = new ExecutorBizClient(addressUrl, accessToken);
+
+        final long logDateTim = 0L;
+        final long logId = 0;
+        final int fromLineNum = 0;
+
+        // Act
+        final ReturnT<LogResult> retval = executorBiz.log(new LogParam(logDateTim, logId, fromLineNum));
+
+        // Assert result
+        Assert.assertNotNull(retval);
+    }
+
+    @Test
+    public void run(){
+        ExecutorBiz executorBiz = new ExecutorBizClient(addressUrl, accessToken);
+
         // trigger data
-        TriggerParam triggerParam = new TriggerParam();
+        final TriggerParam triggerParam = new TriggerParam();
         triggerParam.setJobId(1);
-        triggerParam.setExecutorHandler(jobHandler);
-        triggerParam.setExecutorParams(params);
+        triggerParam.setExecutorHandler("demoJobHandler");
+        triggerParam.setExecutorParams(null);
         triggerParam.setExecutorBlockStrategy(ExecutorBlockStrategyEnum.COVER_EARLY.name());
         triggerParam.setGlueType(GlueTypeEnum.BEAN.name());
         triggerParam.setGlueSource(null);
@@ -47,28 +98,11 @@ public class ExecutorBizTest {
         triggerParam.setLogId(1);
         triggerParam.setLogDateTime(System.currentTimeMillis());
 
-        // do remote trigger
-        String accessToken = null;
+        // Act
+        final ReturnT<String> retval = executorBiz.run(triggerParam);
 
-        XxlRpcReferenceBean referenceBean = new XxlRpcReferenceBean();
-        referenceBean.setClient(NettyHttpClient.class);
-        referenceBean.setSerializer(HessianSerializer.class);
-        referenceBean.setCallType(CallType.SYNC);
-        referenceBean.setLoadBalance(LoadBalance.ROUND);
-        referenceBean.setIface(ExecutorBiz.class);
-        referenceBean.setVersion(null);
-        referenceBean.setTimeout(3000);
-        referenceBean.setAddress("127.0.0.1:9999");
-        referenceBean.setAccessToken(accessToken);
-        referenceBean.setInvokeCallback(null);
-        referenceBean.setInvokerFactory(null);
-
-        ExecutorBiz executorBiz = (ExecutorBiz) referenceBean.getObject();
-
-        ReturnT<String> runResult = executorBiz.run(triggerParam);
-
-        System.out.println(runResult);
-        XxlRpcInvokerFactory.getInstance().stop();
+        // Assert result
+        Assert.assertNotNull(retval);
     }
 
 }

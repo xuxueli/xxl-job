@@ -123,13 +123,13 @@ $(function() {
 		var id = $(this).attr("_id");
 		var row = tableData['key'+id];
 
-		var html = '<center>';
+		var html = '<div>';
 		if (row.registryList) {
 			for (var index in row.registryList) {
-				html += '<span class="badge bg-green" >' + row.registryList[index] + '</span><br>';
+				html += (parseInt(index)+1) + '. <span class="badge bg-green" >' + row.registryList[index] + '</span><br>';
 			}
 		}
-		html += '</center>';
+		html += '</div>';
 
 		layer.open({
 			title: I18n.jobinfo_opt_registryinfo ,

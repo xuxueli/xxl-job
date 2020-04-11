@@ -1,6 +1,7 @@
 package com.xxl.job.core.biz.impl;
 
 import com.xxl.job.core.biz.ExecutorBiz;
+import com.xxl.job.core.biz.model.LogParam;
 import com.xxl.job.core.biz.model.LogResult;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.biz.model.TriggerParam;
@@ -58,11 +59,11 @@ public class ExecutorBizImpl implements ExecutorBiz {
     }
 
     @Override
-    public ReturnT<LogResult> log(long logDateTim, long logId, int fromLineNum) {
+    public ReturnT<LogResult> log(LogParam logParam) {
         // log filename: logPath/yyyy-MM-dd/9999.log
-        String logFileName = XxlJobFileAppender.makeLogFileName(new Date(logDateTim), logId);
+        String logFileName = XxlJobFileAppender.makeLogFileName(new Date(logParam.getLogDateTim()), logParam.getLogId());
 
-        LogResult logResult = XxlJobFileAppender.readLog(logFileName, fromLineNum);
+        LogResult logResult = XxlJobFileAppender.readLog(logFileName, logParam.getFromLineNum());
         return new ReturnT<LogResult>(logResult);
     }
 
