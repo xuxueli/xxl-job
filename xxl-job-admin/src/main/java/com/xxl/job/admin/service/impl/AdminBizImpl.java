@@ -110,7 +110,13 @@ public class AdminBizImpl implements AdminBiz {
         // success, save log
         log.setHandleTime(new Date());
         log.setHandleCode(handleCallbackParam.getExecuteResult().getCode());
-        log.setHandleMsg(handleMsg.toString());
+
+        if (handleMsg.length() > 15000) { // text最大64kb 避免长度过长
+            log.setHandleMsg(handleMsg.substring(0, 15000));
+        } else {
+            log.setHandleMsg(handleMsg.toString());
+        }
+
         xxlJobLogDao.updateHandleInfo(log);
 
         return ReturnT.SUCCESS;
