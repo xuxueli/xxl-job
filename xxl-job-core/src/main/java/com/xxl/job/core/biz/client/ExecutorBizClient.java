@@ -1,10 +1,7 @@
 package com.xxl.job.core.biz.client;
 
 import com.xxl.job.core.biz.ExecutorBiz;
-import com.xxl.job.core.biz.model.LogParam;
-import com.xxl.job.core.biz.model.LogResult;
-import com.xxl.job.core.biz.model.ReturnT;
-import com.xxl.job.core.biz.model.TriggerParam;
+import com.xxl.job.core.biz.model.*;
 import com.xxl.job.core.util.XxlJobRemotingUtil;
 
 /**
@@ -37,8 +34,8 @@ public class ExecutorBizClient implements ExecutorBiz {
     }
 
     @Override
-    public ReturnT<String> idleBeat(int jobId){
-        return XxlJobRemotingUtil.postBody(addressUrl+"idleBeat", accessToken, timeout, jobId, String.class);
+    public ReturnT<String> idleBeat(IdleBeatParam idleBeatParam){
+        return XxlJobRemotingUtil.postBody(addressUrl+"idleBeat", accessToken, timeout, idleBeatParam, String.class);
     }
 
     @Override
@@ -47,8 +44,8 @@ public class ExecutorBizClient implements ExecutorBiz {
     }
 
     @Override
-    public ReturnT<String> kill(int jobId) {
-        return XxlJobRemotingUtil.postBody(addressUrl + "kill", accessToken, timeout, jobId, String.class);
+    public ReturnT<String> kill(KillParam killParam) {
+        return XxlJobRemotingUtil.postBody(addressUrl + "kill", accessToken, timeout, killParam, String.class);
     }
 
     @Override

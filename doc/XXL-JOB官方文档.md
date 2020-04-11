@@ -1406,7 +1406,9 @@ Header：
     XXL-JOB-ACCESS-TOKEN : {请求令牌}
  
 请求数据格式如下，放置在 RequestBody 中，JSON格式：
-    1                   // 任务ID
+    {
+        "jobId":1       // 任务ID
+    }
 
 响应数据格式：
     {
@@ -1459,7 +1461,10 @@ Header：
     XXL-JOB-ACCESS-TOKEN : {请求令牌}
  
 请求数据格式如下，放置在 RequestBody 中，JSON格式：
-    1                   // 任务ID
+    {
+        "jobId":1       // 任务ID
+    }
+    
 
 响应数据格式：
     {

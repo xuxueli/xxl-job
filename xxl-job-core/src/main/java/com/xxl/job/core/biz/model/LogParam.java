@@ -8,6 +8,8 @@ import java.io.Serializable;
 public class LogParam implements Serializable {
     private static final long serialVersionUID = 42L;
 
+    public LogParam() {
+    }
     public LogParam(long logDateTim, long logId, int fromLineNum) {
         this.logDateTim = logDateTim;
         this.logId = logId;

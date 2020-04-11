@@ -1,10 +1,7 @@
 package com.xxl.job.core.biz.impl;
 
 import com.xxl.job.core.biz.ExecutorBiz;
-import com.xxl.job.core.biz.model.LogParam;
-import com.xxl.job.core.biz.model.LogResult;
-import com.xxl.job.core.biz.model.ReturnT;
-import com.xxl.job.core.biz.model.TriggerParam;
+import com.xxl.job.core.biz.model.*;
 import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
 import com.xxl.job.core.executor.XxlJobExecutor;
 import com.xxl.job.core.glue.GlueFactory;
@@ -31,11 +28,11 @@ public class ExecutorBizImpl implements ExecutorBiz {
     }
 
     @Override
-    public ReturnT<String> idleBeat(int jobId) {
+    public ReturnT<String> idleBeat(IdleBeatParam idleBeatParam) {
 
         // isRunningOrHasQueue
         boolean isRunningOrHasQueue = false;
-        JobThread jobThread = XxlJobExecutor.loadJobThread(jobId);
+        JobThread jobThread = XxlJobExecutor.loadJobThread(idleBeatParam.getJobId());
         if (jobThread != null && jobThread.isRunningOrHasQueue()) {
             isRunningOrHasQueue = true;
         }
@@ -152,11 +149,11 @@ public class ExecutorBizImpl implements ExecutorBiz {
     }
 
     @Override
-    public ReturnT<String> kill(int jobId) {
+    public ReturnT<String> kill(KillParam killParam) {
         // kill handlerThread, and create new one
-        JobThread jobThread = XxlJobExecutor.loadJobThread(jobId);
+        JobThread jobThread = XxlJobExecutor.loadJobThread(killParam.getJobId());
         if (jobThread != null) {
-            XxlJobExecutor.removeJobThread(jobId, "scheduling center kill job.");
+            XxlJobExecutor.removeJobThread(killParam.getJobId(), "scheduling center kill job.");
             return ReturnT.SUCCESS;
         }
 

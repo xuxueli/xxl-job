@@ -2,10 +2,7 @@ package com.xxl.job.executorbiz;
 
 import com.xxl.job.core.biz.ExecutorBiz;
 import com.xxl.job.core.biz.client.ExecutorBizClient;
-import com.xxl.job.core.biz.model.LogParam;
-import com.xxl.job.core.biz.model.LogResult;
-import com.xxl.job.core.biz.model.ReturnT;
-import com.xxl.job.core.biz.model.TriggerParam;
+import com.xxl.job.core.biz.model.*;
 import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
 import com.xxl.job.core.glue.GlueTypeEnum;
 import org.junit.Assert;
@@ -42,7 +39,7 @@ public class ExecutorBizTest {
         final int jobId = 0;
 
         // Act
-        final ReturnT<String> retval = executorBiz.idleBeat(jobId);
+        final ReturnT<String> retval = executorBiz.idleBeat(new IdleBeatParam(jobId));
 
         // Assert result
         Assert.assertNotNull(retval);
@@ -81,7 +78,7 @@ public class ExecutorBizTest {
         final int jobId = 0;
 
         // Act
-        final ReturnT<String> retval = executorBiz.kill(jobId);
+        final ReturnT<String> retval = executorBiz.kill(new KillParam(jobId));
 
         // Assert result
         Assert.assertNotNull(retval);

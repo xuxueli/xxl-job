@@ -2,9 +2,7 @@ package com.xxl.job.core.server;
 
 import com.xxl.job.core.biz.ExecutorBiz;
 import com.xxl.job.core.biz.impl.ExecutorBizImpl;
-import com.xxl.job.core.biz.model.LogParam;
-import com.xxl.job.core.biz.model.ReturnT;
-import com.xxl.job.core.biz.model.TriggerParam;
+import com.xxl.job.core.biz.model.*;
 import com.xxl.job.core.thread.ExecutorRegistryThread;
 import com.xxl.job.core.util.GsonTool;
 import com.xxl.job.core.util.ThrowableUtil;
@@ -169,18 +167,18 @@ public class EmbedServer {
                 if ("/beat".equals(uri)) {
                     return executorBiz.beat();
                 } else if ("/idleBeat".equals(uri)) {
-                    int jobId = GsonTool.fromJson(requestData, Integer.class);
-                    return executorBiz.idleBeat(jobId);
-                } else if ("/kill".equals(uri)) {
-                    int jobId = GsonTool.fromJson(requestData, Integer.class);
-                    return executorBiz.kill(jobId);
-                } else if ("/log".equals(uri)) {
-                    LogParam logParam = GsonTool.fromJson(requestData, LogParam.class);
-                    return executorBiz.log(logParam);
+                    IdleBeatParam idleBeatParam = GsonTool.fromJson(requestData, IdleBeatParam.class);
+                    return executorBiz.idleBeat(idleBeatParam);
                 } else if ("/run".equals(uri)) {
                     TriggerParam triggerParam = GsonTool.fromJson(requestData, TriggerParam.class);
                     return executorBiz.run(triggerParam);
-                }  else {
+                } else if ("/kill".equals(uri)) {
+                    KillParam killParam = GsonTool.fromJson(requestData, KillParam.class);
+                    return executorBiz.kill(killParam);
+                } else if ("/log".equals(uri)) {
+                    LogParam logParam = GsonTool.fromJson(requestData, LogParam.class);
+                    return executorBiz.log(logParam);
+                } else {
                     return new ReturnT<String>(ReturnT.FAIL_CODE, "invalid request, uri-mapping("+ uri +") not found.");
                 }
             } catch (Exception e) {
