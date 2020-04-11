@@ -504,7 +504,7 @@ Concrete contet describe as follows：
     <!-- executor port[required] -->
     <property name="port" value="${xxl.job.executor.port}" />
     <!-- executor AppName[required]，auto register will be closed if it blank -->
-    <property name="appName" value="${xxl.job.executor.appname}" />
+    <property name="appname" value="${xxl.job.executor.appname}" />
     <!-- register center address of executor [required]，auto register will be closed if it blank -->
     <property name="adminAddresses" value="${xxl.job.admin.addresses}" />
     <!-- log path of executor[required] -->
@@ -663,7 +663,7 @@ If you want to create a new executor,please click "+新增执行器" button:
 
 ### Description of executor attributes
 
-    AppName: the unique identity of the executor cluster,executor will registe automatically and periodically by appName so that it can be scheduled.
+    Appname: the unique identity of the executor cluster,executor will registe automatically and periodically by appname so that it can be scheduled.
     名称: the name of ther executor,it is used to describe the executor.
     排序: the order of executor,it will be used in the place where need to select executor.
     注册方式:which way the schedule center used to acquire executor address through;

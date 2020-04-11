@@ -10,7 +10,7 @@ $(function() {
 			type:"post",
 			data : function ( d ) {
 				var obj = {};
-				obj.appName = $('#appName').val();
+				obj.appname = $('#appname').val();
 				obj.title = $('#title').val();
 				obj.start = d.start;
 				obj.length = d.length;
@@ -26,7 +26,7 @@ $(function() {
 				"visible" : false
 			},
 			{
-				"data": 'appName',
+				"data": 'appname',
 				"visible" : true,
 				"width":'30%'
 			},
@@ -196,7 +196,7 @@ $(function() {
 		errorClass : 'help-block',
 		focusInvalid : true,
 		rules : {
-			appName : {
+			appname : {
 				required : true,
 				rangelength:[4,64],
 				myValid01 : true
@@ -207,7 +207,7 @@ $(function() {
 			}
 		},
 		messages : {
-			appName : {
+			appname : {
 				required : I18n.system_please_input+"AppName",
 				rangelength: I18n.jobgroup_field_appname_length ,
 				myValid01: I18n.jobgroup_field_appname_limit
@@ -277,7 +277,7 @@ $(function() {
 		var row = tableData['key'+id];
 
 		$("#updateModal .form input[name='id']").val( row.id );
-		$("#updateModal .form input[name='appName']").val( row.appName );
+		$("#updateModal .form input[name='appname']").val( row.appname );
 		$("#updateModal .form input[name='title']").val( row.title );
 
 		// 注册方式
@@ -293,7 +293,7 @@ $(function() {
 		errorClass : 'help-block',
 		focusInvalid : true,
 		rules : {
-			appName : {
+			appname : {
 				required : true,
 				rangelength:[4,64],
 				myValid01 : true
@@ -304,7 +304,7 @@ $(function() {
 			}
 		},
 		messages : {
-            appName : {
+			appname : {
                 required : I18n.system_please_input+"AppName",
                 rangelength: I18n.jobgroup_field_appname_length ,
                 myValid01: I18n.jobgroup_field_appname_limit

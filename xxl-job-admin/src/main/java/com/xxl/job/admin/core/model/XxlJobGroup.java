@@ -10,7 +10,7 @@ import java.util.List;
 public class XxlJobGroup {
 
     private int id;
-    private String appName;
+    private String appname;
     private String title;
     private int addressType;        // 执行器地址类型：0=自动注册、1=手动录入
     private String addressList;     // 执行器地址列表，多地址逗号分隔(手动录入)
@@ -32,12 +32,12 @@ public class XxlJobGroup {
         this.id = id;
     }
 
-    public String getAppName() {
-        return appName;
+    public String getAppname() {
+        return appname;
     }
 
-    public void setAppName(String appName) {
-        this.appName = appName;
+    public void setAppname(String appname) {
+        this.appname = appname;
     }
 
     public String getTitle() {
