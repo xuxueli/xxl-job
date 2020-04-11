@@ -19,7 +19,7 @@ import org.junit.Test;
 public class ExecutorBizTest {
 
     // admin-client
-    private static String addressUrl = "http://127.0.0.1:8081/";
+    private static String addressUrl = "http://127.0.0.1:9999/";
     private static String accessToken = null;
 
     @Test
