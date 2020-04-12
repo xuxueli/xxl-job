@@ -58,6 +58,9 @@ public class XxlJobAdminConfig implements InitializingBean, DisposableBean {
     @Value("${spring.mail.username}")
     private String emailUserName;
 
+    @Value("${xxl.job.alarm.mattermost.webhook}")
+    private String mattermostWebhookUrl;
+
     @Value("${xxl.job.triggerpool.fast.max}")
     private int triggerPoolFastMax;
 
@@ -100,6 +103,10 @@ public class XxlJobAdminConfig implements InitializingBean, DisposableBean {
 
     public String getEmailUserName() {
         return emailUserName;
+    }
+
+    public String getMattermostWebhookUrl() {
+        return mattermostWebhookUrl;
     }
 
     public int getTriggerPoolFastMax() {
