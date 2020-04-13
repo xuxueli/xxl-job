@@ -2,6 +2,7 @@ package com.xxl.job.admin.dao;
 
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -22,7 +23,7 @@ public interface XxlJobGroupDao {
 
     public XxlJobGroup load(@Param("id") int id);
 
-    public List<XxlJobGroup> pageList(@Param("offset") int offset,
+    public Page<XxlJobGroup> pageList(@Param("offset") int offset,
                                       @Param("pagesize") int pagesize,
                                       @Param("appname") String appname,
                                       @Param("title") String title);

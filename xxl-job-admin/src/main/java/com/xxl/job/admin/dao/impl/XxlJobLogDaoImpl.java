@@ -1,6 +1,7 @@
 package com.xxl.job.admin.dao.impl;
 
 import com.xxl.job.admin.core.model.XxlJobLog;
+import com.xxl.job.admin.core.model.XxlJobRegistry;
 import com.xxl.job.admin.dao.XxlJobLogDao;
 import com.xxl.job.admin.repository.XxlJobLogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +58,29 @@ public class XxlJobLogDaoImpl implements XxlJobLogDao {
         };
 
         return xxlJobLogRepository.findAll(specification, pageable);
+    }
+
+    @Override
+    public List<Long> findLostJobIds(Date losedTime) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
+        Root<XxlJobLog> root = criteriaQuery.from(XxlJobLog.class);
+        Path<Integer> handleCode = root.get("handleCode");
+        Path<Integer> triggerCode = root.get("triggerCode");
+        Predicate predicate = criteriaBuilder.conjunction();
+
+        Subquery<String> subquery = criteriaQuery.subquery(String.class);
+        Root subRoot = subquery.from(XxlJobRegistry.class);
+        subquery.select(subRoot.get("registryValue"));
+
+        predicate.getExpressions().add(criteriaBuilder.equal(triggerCode,200));
+        predicate.getExpressions().add(criteriaBuilder.equal(handleCode,0));
+        predicate.getExpressions().add(criteriaBuilder.lessThanOrEqualTo(root.get("triggerTime"),losedTime));
+        predicate.getExpressions().add(criteriaBuilder.not(root.get("executorAddress").in(subquery)));
+
+        criteriaQuery.select(root.get("id").as(Long.class)).where(predicate);
+
+        return entityManager.createQuery(criteriaQuery).getResultList();
     }
 
     @Override

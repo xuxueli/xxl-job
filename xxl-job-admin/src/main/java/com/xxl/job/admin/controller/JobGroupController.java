@@ -8,6 +8,7 @@ import com.xxl.job.admin.dao.XxlJobInfoDao;
 import com.xxl.job.admin.dao.XxlJobRegistryDao;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.enums.RegistryConfig;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,8 +47,9 @@ public class JobGroupController {
 										String appname, String title) {
 
 		// page query
-		List<XxlJobGroup> list = xxlJobGroupDao.pageList(start, length, appname, title);
-		int list_count = xxlJobGroupDao.pageListCount(start, length, appname, title);
+		Page<XxlJobGroup> page = xxlJobGroupDao.pageList(start, length, appname, title);
+		List<XxlJobGroup> list = page.getContent();
+		int list_count = (int) page.getTotalElements();
 
 		// package result
 		Map<String, Object> maps = new HashMap<String, Object>();
