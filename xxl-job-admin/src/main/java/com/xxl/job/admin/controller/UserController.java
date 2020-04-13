@@ -8,6 +8,7 @@ import com.xxl.job.admin.dao.XxlJobGroupDao;
 import com.xxl.job.admin.dao.XxlJobUserDao;
 import com.xxl.job.admin.service.LoginService;
 import com.xxl.job.core.biz.model.ReturnT;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.DigestUtils;
@@ -53,8 +54,9 @@ public class UserController {
                                         String username, int role) {
 
         // page list
-        List<XxlJobUser> list = xxlJobUserDao.pageList(start, length, username, role);
-        int list_count = xxlJobUserDao.pageListCount(start, length, username, role);
+        Page<XxlJobUser> page = xxlJobUserDao.pageList(start, length, username, role);
+        List<XxlJobUser> list = page.getContent();
+        int list_count = (int) page.getTotalElements();
 
         // package result
         Map<String, Object> maps = new HashMap<String, Object>();

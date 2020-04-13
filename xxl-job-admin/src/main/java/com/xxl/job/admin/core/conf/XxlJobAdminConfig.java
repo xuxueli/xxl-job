@@ -62,6 +62,9 @@ public class XxlJobAdminConfig implements InitializingBean, DisposableBean {
     @Value("${xxl.job.triggerpool.fast.max}")
     private int triggerPoolFastMax;
 
+    @Value("${xxl.tablename.prefix:xxl}")
+    private String tableNamePrefix;
+
     @Value("${xxl.job.triggerpool.slow.max}")
     private int triggerPoolSlowMax;
 
@@ -97,6 +100,10 @@ public class XxlJobAdminConfig implements InitializingBean, DisposableBean {
 
     public String getAccessToken() {
         return accessToken;
+    }
+
+    public String getTableNamePrefix() {
+        return tableNamePrefix;
     }
 
     public String getEmailUserName() {

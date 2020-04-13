@@ -32,9 +32,9 @@ public class XxlJobInfoDaoImpl implements XxlJobInfoDao {
             Predicate predicate = criteriaBuilder.conjunction();
             List<Expression<Boolean>> expressions = predicate.getExpressions();
             if (jobGroup > 0) {
-                expressions.add(criteriaBuilder.equal(root.get("JobGroup"), jobGroup));
+                expressions.add(criteriaBuilder.equal(root.get("jobGroup"), jobGroup));
             }
-            if (triggerStatus > 0) {
+            if (triggerStatus >= 0) {
                 expressions.add(criteriaBuilder.equal(root.get("triggerStatus"),triggerStatus));
             }
             if (!StringUtils.isEmpty(jobDesc)) {
@@ -58,7 +58,7 @@ public class XxlJobInfoDaoImpl implements XxlJobInfoDao {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     @Scope("prototype")
     public int save(XxlJobInfo info) {
         entityManager.persist(info);
@@ -72,7 +72,7 @@ public class XxlJobInfoDaoImpl implements XxlJobInfoDao {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public int update(XxlJobInfo xxlJobInfo) {
         if (loadById(xxlJobInfo.getId()) == null){
             return 0;
@@ -83,7 +83,7 @@ public class XxlJobInfoDaoImpl implements XxlJobInfoDao {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public int delete(long id) {
         xxlJobInfoRepository.deleteById((int) id);
         return 1;
@@ -113,12 +113,17 @@ public class XxlJobInfoDaoImpl implements XxlJobInfoDao {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public int scheduleUpdate(XxlJobInfo xxlJobInfo) {
-        if (loadById(xxlJobInfo.getId()) == null){
+        XxlJobInfo data = loadById(xxlJobInfo.getId());
+        if (data == null){
             return 0;
         }
-        xxlJobInfoRepository.updateSchedule(xxlJobInfo.getId(),xxlJobInfo.getTriggerLastTime(),xxlJobInfo.getTriggerNextTime(),xxlJobInfo.getTriggerStatus());
+        data.setTriggerLastTime(xxlJobInfo.getTriggerLastTime());
+        data.setTriggerNextTime(xxlJobInfo.getTriggerNextTime());
+        data.setTriggerStatus(xxlJobInfo.getTriggerStatus());
+        entityManager.merge(data);
+        entityManager.flush();
         return 1;
     }
 

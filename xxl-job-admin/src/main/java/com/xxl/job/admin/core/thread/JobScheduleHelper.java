@@ -53,6 +53,8 @@ public class JobScheduleHelper {
                 // pre-read count: treadpool-size * trigger-qps (each trigger cost 50ms, qps = 1000/50 = 20)
                 int preReadCount = (XxlJobAdminConfig.getAdminConfig().getTriggerPoolFastMax() + XxlJobAdminConfig.getAdminConfig().getTriggerPoolSlowMax()) * 20;
 
+                String tableNamePrefix = XxlJobAdminConfig.getAdminConfig().getTableNamePrefix();
+
                 while (!scheduleThreadToStop) {
 
                     // Scan Job
@@ -69,7 +71,7 @@ public class JobScheduleHelper {
                         connAutoCommit = conn.getAutoCommit();
                         conn.setAutoCommit(false);
 
-                        preparedStatement = conn.prepareStatement(  "select * from xxl_job_lock where lock_name = 'schedule_lock' for update" );
+                        preparedStatement = conn.prepareStatement(  "select * from " + tableNamePrefix + "_job_lock where lock_name = 'schedule_lock' for update" );
                         preparedStatement.execute();
 
                         // tx start

@@ -31,15 +31,14 @@ public class XxlJobLogDaoImpl implements XxlJobLogDao {
             List<Expression<Boolean>> expressions = predicate.getExpressions();
             if (jobId == 0 && jobGroup > 0) {
                 expressions.add(criteriaBuilder.equal(root.get("jobGroup"), jobGroup));
-            }
-            if (jobId > 0) {
+            }else if (jobId > 0) {
                 expressions.add(criteriaBuilder.equal(root.get("jobId"), jobId));
             }
             if (triggerTimeStart != null) {
-                expressions.add(criteriaBuilder.greaterThanOrEqualTo(root.get("triggerTimeStart"), triggerTimeStart));
+                expressions.add(criteriaBuilder.greaterThanOrEqualTo(root.get("triggerTime"), triggerTimeStart));
             }
             if (triggerTimeEnd != null) {
-                expressions.add(criteriaBuilder.lessThanOrEqualTo(root.get("triggerTimeEnd"), triggerTimeEnd));
+                expressions.add(criteriaBuilder.lessThanOrEqualTo(root.get("triggerTime"), triggerTimeEnd));
             }
             if (logStatus == 1) {
                 expressions.add(criteriaBuilder.equal(root.get("handleCode"), 200));
@@ -71,7 +70,7 @@ public class XxlJobLogDaoImpl implements XxlJobLogDao {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public long save(XxlJobLog xxlJobLog) {
         entityManager.persist(xxlJobLog);
         entityManager.flush();
@@ -79,7 +78,7 @@ public class XxlJobLogDaoImpl implements XxlJobLogDao {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public int updateTriggerInfo(XxlJobLog xxlJobLog) {
         XxlJobLog data = load(xxlJobLog.getId());
         if (data == null) {
@@ -99,7 +98,7 @@ public class XxlJobLogDaoImpl implements XxlJobLogDao {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public int updateHandleInfo(XxlJobLog xxlJobLog) {
         XxlJobLog data = load(xxlJobLog.getId());
         if (data == null) {
@@ -114,10 +113,10 @@ public class XxlJobLogDaoImpl implements XxlJobLogDao {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public int delete(int jobId) {
         xxlJobLogRepository.deleteXxlJobLogsByJobId(jobId);
-        return 0;
+        return 1;
     }
 
     @Override
@@ -140,11 +139,20 @@ public class XxlJobLogDaoImpl implements XxlJobLogDao {
         ).where(
                 criteriaBuilder.between(root.get("triggerTime"), from, to)
         );
+        String query = criteriaQuery.toString();
         Tuple result = entityManager.createQuery(criteriaQuery).getSingleResult();
         Map<String,Object> data = new HashMap<>();
-        data.put("triggerDayCount",result.get(0));
-        data.put("triggerDayCountRunning",result.get(1));
-        data.put("triggerTime",result.get(2));
+        data.put("triggerDayCount",((Long)result.get(0)).intValue());
+        Long triggerDayCountRunning = (Long) result.get(1);
+        if (triggerDayCountRunning == null) {
+            triggerDayCountRunning = 0L;
+        }
+        Long triggerDayCountSuc = (Long) result.get(2);
+        if (triggerDayCountSuc == null) {
+            triggerDayCountSuc = 0L;
+        }
+        data.put("triggerDayCountRunning",triggerDayCountRunning.intValue());
+        data.put("triggerDayCountSuc",triggerDayCountSuc.intValue());
         return data;
     }
 
@@ -192,7 +200,7 @@ public class XxlJobLogDaoImpl implements XxlJobLogDao {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public int clearLog(List<Long> logIds) {
         for (Long id : logIds) {
             xxlJobLogRepository.deleteById(id);
@@ -216,7 +224,7 @@ public class XxlJobLogDaoImpl implements XxlJobLogDao {
                 criteriaBuilder.not(
                         criteriaBuilder.or(
                                 criteriaBuilder.and(in,criteriaBuilder.equal(handleCode,0)),
-                        criteriaBuilder.equal(handleCode,200))));
+                                criteriaBuilder.equal(handleCode,200))));
 
         expressions.add(criteriaBuilder.equal(root.get("alarmStatus"),0));
 
@@ -226,7 +234,7 @@ public class XxlJobLogDaoImpl implements XxlJobLogDao {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public int updateAlarmStatus(long logId, int oldAlarmStatus, int newAlarmStatus) {
         XxlJobLog xxlJobLog = xxlJobLogRepository.queryXxlJobLogByIdEqualsAndAlarmStatusEquals(logId,oldAlarmStatus);
         xxlJobLog.setAlarmStatus(newAlarmStatus);

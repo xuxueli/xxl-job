@@ -19,7 +19,7 @@ public class XxlJobGroupDaoImpl implements XxlJobGroupDao {
 
     @Override
     public List<XxlJobGroup> findAll() {
-        Sort sort = Sort.by(Sort.Direction.ASC,"id");
+        Sort sort = Sort.by(Sort.Direction.ASC,"order");
         return xxlJobGroupRepository.findAll(sort);
     }
 
@@ -29,7 +29,7 @@ public class XxlJobGroupDaoImpl implements XxlJobGroupDao {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public int save(XxlJobGroup xxlJobGroup) {
         entityManager.persist(xxlJobGroup);
         entityManager.flush();
@@ -37,7 +37,7 @@ public class XxlJobGroupDaoImpl implements XxlJobGroupDao {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public int update(XxlJobGroup xxlJobGroup) {
         XxlJobGroup result =  load(xxlJobGroup.getId());
         if (result == null) {
@@ -49,15 +49,15 @@ public class XxlJobGroupDaoImpl implements XxlJobGroupDao {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public int remove(int id) {
-        XxlJobGroup result =  xxlJobGroupRepository.getOne(id);
+        XxlJobGroup result =  xxlJobGroupRepository.findById(id).orElse(null);
         if (result == null) {
             return 0;
         }
         entityManager.remove(result);
         entityManager.flush();
-        return 0;
+        return 1;
     }
 
     @Override

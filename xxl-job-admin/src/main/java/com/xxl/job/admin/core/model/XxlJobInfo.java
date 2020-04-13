@@ -11,21 +11,28 @@ import java.util.Date;
  * @author xuxueli  2016-1-12 18:25:49
  */
 @Entity
-@Table(name = "xxl_job_info")
+@Table(name = "job_info")
 @Proxy(lazy=false)
+@TableGenerator(name = "job_info_gen",
+		table="primary_key_gen",
+		pkColumnName="gen_name",
+		valueColumnName="gen_value",
+		pkColumnValue="JOB_INFO_PK",
+		allocationSize=1
+)
 public class XxlJobInfo {
 
 	@Id
-	@GeneratedValue(strategy= GenerationType.IDENTITY)
-	@Column(name = "id")
+	@GeneratedValue(strategy = GenerationType.TABLE,generator="job_info_gen")
+	@Column(name = "id",length = 11,nullable = false)
 	private Integer id;				// 主键ID
 
-	@Column(name = "job_group")
+	@Column(name = "job_group",length = 11,nullable = false)
 	private Integer jobGroup;		// 执行器主键ID
 
-	@Column(name = "job_cron")
+	@Column(name = "job_cron" ,length = 128,nullable = false)
 	private String jobCron;		// 任务执行CRON表达式
-	@Column(name = "job_desc")
+	@Column(name = "job_desc" ,length = 255,nullable = false)
 	private String jobDesc;
 
 	@Column(name = "add_time")
@@ -33,38 +40,39 @@ public class XxlJobInfo {
 	@Column(name = "update_time")
 	private Date updateTime;
 
-	@Column(name = "author")
+	@Column(name = "author",length = 64)
 	private String author;		// 负责人
 
-	@Column(name = "alarm_email")
+	@Column(name = "alarm_email",length = 255)
 	private String alarmEmail;	// 报警邮件
-	@Column(name = "executor_route_strategy")
+	@Column(name = "executor_route_strategy",length = 50)
 	private String executorRouteStrategy;	// 执行器路由策略
-	@Column(name = "executor_handler")
+	@Column(name = "executor_handler",length = 255)
 	private String executorHandler;		    // 执行器，任务Handler名称
-	@Column(name = "executor_param")
+	@Column(name = "executor_param",length = 512)
 	private String executorParam;		    // 执行器，任务参数
-	@Column(name = "executor_block_strategy")
+	@Column(name = "executor_block_strategy",length = 50)
 	private String executorBlockStrategy;	// 阻塞处理策略
-	@Column(name = "executor_timeout")
+	@Column(name = "executor_timeout",length = 11,nullable = false)
 	private int executorTimeout;     		// 任务执行超时时间，单位秒
-	@Column(name = "executor_fail_retry_count")
+	@Column(name = "executor_fail_retry_count",length = 11,nullable = false)
 	private int executorFailRetryCount;		// 失败重试次数
-	@Column(name = "glue_type")
+	@Column(name = "glue_type",length = 50,nullable = false)
 	private String glueType;		// GLUE类型	#com.xxl.job.core.glue.GlueTypeEnum
+	@Lob
 	@Column(name = "glue_source")
 	private String glueSource;		// GLUE源代码
-	@Column(name = "glue_remark")
+	@Column(name = "glue_remark",length = 128)
 	private String glueRemark;		// GLUE备注
 	@Column(name = "glue_updatetime")
 	private Date glueUpdatetime;	// GLUE更新时间
-	@Column(name = "child_jobid")
+	@Column(name = "child_jobid",length = 255)
 	private String childJobId;		// 子任务ID，多个逗号分隔
-	@Column(name = "trigger_status")
+	@Column(name = "trigger_status",length = 4,nullable = false)
 	private int triggerStatus;		// 调度状态：0-停止，1-运行
-	@Column(name = "trigger_last_time")
+	@Column(name = "trigger_last_time",length = 13)
 	private long triggerLastTime;	// 上次调度时间
-	@Column(name = "trigger_next_time")
+	@Column(name = "trigger_next_time",length = 13,nullable = false)
 	private long triggerNextTime;	// 下次调度时间
 
 
