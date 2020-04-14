@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -156,15 +157,24 @@ public class XxlJobFileAppender {
 		StringBuffer logContentBuffer = new StringBuffer();
 		int toLineNum = 0;
 		LineNumberReader reader = null;
+		boolean isEnd = false;
 		try {
 			//reader = new LineNumberReader(new FileReader(logFile));
 			reader = new LineNumberReader(new InputStreamReader(new FileInputStream(logFile), "utf-8"));
 			String line = null;
-
+			long totalSize = 0;
 			while ((line = reader.readLine())!=null) {
 				toLineNum = reader.getLineNumber();		// [from, to], start as 1
 				if (toLineNum >= fromLineNum) {
 					logContentBuffer.append(line).append("\n");
+				}
+
+				totalSize += line.getBytes(StandardCharsets.UTF_8).length;
+				//read less than 1MiB & 10000 lines to hold on the netty or jvm memory
+				if(toLineNum > 10000 || totalSize > 1024*1024) {
+					logContentBuffer.append("******************** FILE IS TOO LARGE ********************");
+					isEnd = true;
+					break;
 				}
 			}
 		} catch (IOException e) {
@@ -180,7 +190,7 @@ public class XxlJobFileAppender {
 		}
 
 		// result
-		LogResult logResult = new LogResult(fromLineNum, toLineNum, logContentBuffer.toString(), false);
+		LogResult logResult = new LogResult(fromLineNum, toLineNum, logContentBuffer.toString(), isEnd);
 		return logResult;
 
 		/*
