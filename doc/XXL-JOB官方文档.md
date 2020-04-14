@@ -1930,7 +1930,7 @@ public ReturnT<String> execute(String param) {
 - 6、多个项目依赖升级至较新稳定版本；
 - 注意：最新版本 "XxlJobSpringExecutor" 逻辑有调整，历史项目中该组件的配置方式请参考Sample示例项目进行调整，尤其注意需要移除组件的init和destroy方法；
 
-### 7.30 版本 v2.2.0 Release Notes[迭代中]
+### 7.30 版本 v2.2.0 Release Notes[2020-04-14]
 - 1、RESTful API：调度中心与执行器提供语言无关的 RESTful API 服务，第三方任意语言可据此对接调度中心或者实现执行器。
 - 2、任务复制功能：点击复制是弹出新建任务弹框，并初始化被复制任务信息；
 - 3、任务手动执行一次的时候，支持指定本次执行的机器地址，为空则从执行器获取；
