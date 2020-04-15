@@ -23,7 +23,7 @@ public class XxlJobConfig {
     private String accessToken;
 
     @Value("${xxl.job.executor.appname}")
-    private String appName;
+    private String appname;
 
     @Value("${xxl.job.executor.address}")
     private String address;
@@ -46,7 +46,7 @@ public class XxlJobConfig {
         logger.info(">>>>>>>>>>> xxl-job config init.");
         XxlJobSpringExecutor xxlJobSpringExecutor = new XxlJobSpringExecutor();
         xxlJobSpringExecutor.setAdminAddresses(adminAddresses);
-        xxlJobSpringExecutor.setAppName(appName);
+        xxlJobSpringExecutor.setAppname(appname);
         xxlJobSpringExecutor.setAddress(address);
         xxlJobSpringExecutor.setIp(ip);
         xxlJobSpringExecutor.setPort(port);

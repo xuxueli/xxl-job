@@ -20,11 +20,9 @@ public class XxlJobGroup {
     @GenericGenerator(name = "IdentityGenerator", strategy = "com.xxl.job.admin.core.util.XxlJobGenerator")
     private Long id;
     @Column(name = "app_name", nullable = false, length = 64)
-    private String appName;
+    private String appname;
     @Column(name = "title", nullable = false, length = 12)
     private String title;
-    @Column(name = "`order`", nullable = false, length = 11)
-    private int order;
     @Column(name = "address_type", nullable = false, length = 12)
     private int addressType;        // 执行器地址类型：0=自动注册、1=手动录入
     @Column(name = "address_list", length = 512)
@@ -33,9 +31,8 @@ public class XxlJobGroup {
     // registry list
     @Transient
     private List<String> registryList;  // 执行器地址列表(系统注册)
-
     public List<String> getRegistryList() {
-        if (addressList != null && addressList.trim().length() > 0) {
+        if (addressList!=null && addressList.trim().length()>0) {
             registryList = new ArrayList<String>(Arrays.asList(addressList.split(",")));
         }
         return registryList;
@@ -49,12 +46,12 @@ public class XxlJobGroup {
         this.id = id;
     }
 
-    public String getAppName() {
-        return appName;
+    public String getAppname() {
+        return appname;
     }
 
-    public void setAppName(String appName) {
-        this.appName = appName;
+    public void setAppname(String appname) {
+        this.appname = appname;
     }
 
     public String getTitle() {
@@ -63,14 +60,6 @@ public class XxlJobGroup {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public int getOrder() {
-        return order;
-    }
-
-    public void setOrder(int order) {
-        this.order = order;
     }
 
     public int getAddressType() {

@@ -71,4 +71,6 @@ public interface XxlJobLogDao extends JpaRepository<XxlJobLog, Long>, JpaSpecifi
 								 @Param("oldAlarmStatus") int oldAlarmStatus,
 								 @Param("newAlarmStatus") int newAlarmStatus);
 
+	public List<Long> findLostJobIds(@Param("losedTime") Date losedTime);
+
 }
