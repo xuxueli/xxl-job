@@ -3,6 +3,7 @@ package com.xxl.job.admin.controller;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobRegistry;
+import com.xxl.job.admin.core.model.XxlJobUser;
 import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.admin.dao.XxlJobGroupDao;
 import com.xxl.job.admin.dao.XxlJobInfoDao;
@@ -11,13 +12,18 @@ import com.xxl.job.admin.service.XxlJobService;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.enums.RegistryConfig;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import javax.persistence.criteria.Predicate;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
@@ -51,14 +57,28 @@ public class JobGroupController {
 										String appname, String title) {
 
 		// page query
-		List<XxlJobGroup> list = xxlJobGroupDao.pageList(start, length, appname, title);
-		int list_count = xxlJobGroupDao.pageListCount(start, length, appname, title);
+		Sort sort = Sort.by("appname", "title", "id").ascending();
+		PageRequest pageRequest = PageRequest.of(start % length, length, sort);
+		// 查询条件
+		Specification<XxlJobGroup> specification = (Specification<XxlJobGroup>) (root, query, criteriaBuilder) -> {
+			ArrayList<Predicate> list = new ArrayList<>();
+			if (StringUtils.hasText(appname)) {
+				list.add(criteriaBuilder.like(root.get("appname"), "%" + appname + "%"));
+			}
+			if (StringUtils.hasText(title)) {
+				list.add(criteriaBuilder.like(root.get("title"), "%" + title + "%"));
+			}
+
+			Predicate[] predicates = new Predicate[list.size()];
+			return criteriaBuilder.and(list.toArray(predicates));
+		};
+		Page<XxlJobGroup> page = xxlJobGroupDao.findAll(specification, pageRequest);
 
 		// package result
 		Map<String, Object> maps = new HashMap<String, Object>();
-		maps.put("recordsTotal", list_count);		// 总记录数
-		maps.put("recordsFiltered", list_count);	// 过滤后的总记录数
-		maps.put("data", list);  					// 分页列表
+		maps.put("recordsTotal", page.getTotalElements());		// 总记录数
+		maps.put("recordsFiltered", page.getTotalElements());	// 过滤后的总记录数
+		maps.put("data", page.getContent());  					// 分页列表
 		return maps;
 	}
 

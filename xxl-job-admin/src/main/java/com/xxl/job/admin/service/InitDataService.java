@@ -66,9 +66,8 @@ public class InitDataService implements ApplicationRunner {
     private void insertXxlJobGroup() {
         XxlJobGroup xxlJobGroup = new XxlJobGroup();
         xxlJobGroup.setId(1L);
-        xxlJobGroup.setAppName("xxl-job-executor-sample");
+        xxlJobGroup.setAppname("xxl-job-executor-sample");
         xxlJobGroup.setTitle("示例执行器");
-        xxlJobGroup.setOrder(1);
         xxlJobGroup.setAddressType(0);
         xxlJobGroup.setAddressList(null);
         xxlJobGroupDao.save(xxlJobGroup);

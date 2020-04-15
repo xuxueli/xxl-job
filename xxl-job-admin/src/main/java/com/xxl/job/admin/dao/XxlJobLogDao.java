@@ -71,6 +71,8 @@ public interface XxlJobLogDao extends JpaRepository<XxlJobLog, Long>, JpaSpecifi
 								 @Param("oldAlarmStatus") int oldAlarmStatus,
 								 @Param("newAlarmStatus") int newAlarmStatus);
 
+	@Query("select t.id from XxlJobLog t where t.triggerCode = 200 and t.handleCode = 0 and t.triggerTime <= :losedTime " +
+			"and t.executorAddress not in (select t2.registryValue from XxlJobRegistry t2)")
 	public List<Long> findLostJobIds(@Param("losedTime") Date losedTime);
 
 }

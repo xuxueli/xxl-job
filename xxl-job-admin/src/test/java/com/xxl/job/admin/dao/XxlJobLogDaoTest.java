@@ -1,6 +1,7 @@
 package com.xxl.job.admin.dao;
 
 import com.xxl.job.admin.core.model.XxlJobLog;
+import com.xxl.job.core.util.DateUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,6 +15,7 @@ import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -69,6 +71,9 @@ public class XxlJobLogDaoTest {
         xxlJobLogDao.findFailJobLogIds(pageRequest);
 
         xxlJobLogDao.updateAlarmStatus(log.getId(), log.getAlarmStatus(), 3);
+
+        Date losedTime = DateUtil.addMinutes(new Date(), -10);
+        List<Long> lostJobIds = xxlJobLogDao.findLostJobIds(losedTime);
 
         int ret2 = xxlJobLogDao.delete(log.getJobId());
     }
