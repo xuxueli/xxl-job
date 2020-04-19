@@ -82,7 +82,11 @@ public class IndexController {
 
 		return "help";
 	}
+	@RequestMapping("/crontool")
+	public String crontool() {
 
+		return "crontool";
+	}
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

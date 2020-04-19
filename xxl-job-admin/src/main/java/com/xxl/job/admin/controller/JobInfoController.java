@@ -25,6 +25,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 
 /**
@@ -161,6 +164,29 @@ public class JobInfoController {
 			return new ReturnT<List<String>>(ReturnT.FAIL_CODE, I18nUtil.getString("jobinfo_field_cron_unvalid"));
 		}
 		return new ReturnT<List<String>>(result);
+	}
+	//获取cron表达式最近5次的执行时间
+	@RequestMapping("/cron/calcRunTime")
+	@ResponseBody
+	public ReturnT<List<String>> calcRunTimeCron(@RequestParam(value = "CronExpression") String cronExpression) {
+		ReturnT<List<String>> returnT = new ReturnT<>();
+		returnT.setCode(ReturnT.SUCCESS_CODE);
+		try {
+			Date date = new Date();
+			List<String> stringList = new ArrayList<String>();
+			CronExpression expression = new CronExpression(cronExpression);
+
+			for (int i = 0; i < 5; i++) {
+				date = expression.getNextValidTimeAfter(date);
+				LocalDateTime localDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(date.getTime()), ZoneId.systemDefault());
+				stringList.add(localDateTime.toString().replace("T"," "));
+			}
+			returnT.setContent(stringList);
+		} catch (Exception e) {
+			returnT.setMsg("解析Cron错误");
+			returnT.setContent(new ArrayList<>());
+		}
+		return returnT;
 	}
 	
 }
