@@ -10,15 +10,16 @@ import java.util.Date;
 public class XxlJobInfo {
 	
 	private int id;				// 主键ID
-	
+
 	private int jobGroup;		// 执行器主键ID
 	private String jobCron;		// 任务执行CRON表达式
 	private String jobDesc;
-	
+
 	private Date addTime;
 	private Date updateTime;
-	
+
 	private String author;		// 负责人
+	private String alarmPhone;	// 报警电话
 	private String alarmEmail;	// 报警邮件
 
 	private String executorRouteStrategy;	// 执行器路由策略
@@ -27,7 +28,7 @@ public class XxlJobInfo {
 	private String executorBlockStrategy;	// 阻塞处理策略
 	private int executorTimeout;     		// 任务执行超时时间，单位秒
 	private int executorFailRetryCount;		// 失败重试次数
-	
+
 	private String glueType;		// GLUE类型	#com.xxl.job.core.glue.GlueTypeEnum
 	private String glueSource;		// GLUE源代码
 	private String glueRemark;		// GLUE备注
@@ -94,6 +95,14 @@ public class XxlJobInfo {
 
 	public void setAuthor(String author) {
 		this.author = author;
+	}
+
+	public String getAlarmPhone() {
+		return alarmPhone;
+	}
+
+	public void setAlarmPhone(String alarmPhone) {
+		this.alarmPhone = alarmPhone;
 	}
 
 	public String getAlarmEmail() {

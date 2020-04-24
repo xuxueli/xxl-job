@@ -35,6 +35,7 @@ public class XxlJobInfoDaoTest {
 		info.setJobCron("jobCron");
 		info.setJobDesc("desc");
 		info.setAuthor("setAuthor");
+		info.setAlarmPhone("setAlarmPhone");
 		info.setAlarmEmail("setAlarmEmail");
 		info.setExecutorRouteStrategy("setExecutorRouteStrategy");
 		info.setExecutorHandler("setExecutorHandler");
@@ -55,6 +56,7 @@ public class XxlJobInfoDaoTest {
 		info2.setJobCron("jobCron2");
 		info2.setJobDesc("desc2");
 		info2.setAuthor("setAuthor2");
+		info2.setAlarmPhone("setAlarmPhone2");
 		info2.setAlarmEmail("setAlarmEmail2");
 		info2.setExecutorRouteStrategy("setExecutorRouteStrategy2");
 		info2.setExecutorHandler("setExecutorHandler2");

@@ -73,6 +73,12 @@
 			<version>${project.parent.version}</version>
 		</dependency>
 
+		<!-- taobao-sdk -->
+		<dependency>
+			<groupId>com.taobao</groupId>
+			<artifactId>taobao-sdk</artifactId>
+			<version>1.0.0</version>
+		</dependency>
 	</dependencies>
 
 	<build>

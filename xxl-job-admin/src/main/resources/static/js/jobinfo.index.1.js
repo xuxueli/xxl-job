@@ -82,6 +82,7 @@ $(function() {
 	                	}
 	                },
 	                { "data": 'author', "visible" : true, "width":'10%'},
+	                { "data": 'alarmPhone', "visible" : false},
 	                { "data": 'alarmEmail', "visible" : false},
 	                {
 	                	"data": 'triggerStatus',
@@ -514,6 +515,7 @@ $(function() {
 		$("#updateModal .form input[name='jobDesc']").val( row.jobDesc );
 		$("#updateModal .form input[name='jobCron']").val( row.jobCron );
 		$("#updateModal .form input[name='author']").val( row.author );
+		$("#updateModal .form input[name='alarmPhone']").val( row.alarmPhone );
 		$("#updateModal .form input[name='alarmEmail']").val( row.alarmEmail );
 		$("#updateModal .form input[name='executorTimeout']").val( row.executorTimeout );
         $("#updateModal .form input[name='executorFailRetryCount']").val( row.executorFailRetryCount );
