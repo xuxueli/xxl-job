@@ -27,10 +27,11 @@ public class JbootConfig extends JbootAppListenerBase {
         // init executor
         xxlJobExecutor = new XxlJobExecutor();
         xxlJobExecutor.setAdminAddresses(Jboot.configValue("xxl.job.admin.addresses"));
-        xxlJobExecutor.setAppName(Jboot.configValue("xxl.job.executor.appname"));
+        xxlJobExecutor.setAccessToken(Jboot.configValue("xxl.job.accessToken"));
+        xxlJobExecutor.setAddress(Jboot.configValue("xxl.job.executor.address"));
+        xxlJobExecutor.setAppname(Jboot.configValue("xxl.job.executor.appname"));
         xxlJobExecutor.setIp(Jboot.configValue("xxl.job.executor.ip"));
         xxlJobExecutor.setPort(Integer.valueOf(Jboot.configValue("xxl.job.executor.port")));
-        xxlJobExecutor.setAccessToken(Jboot.configValue("xxl.job.accessToken"));
         xxlJobExecutor.setLogPath(Jboot.configValue("xxl.job.executor.logpath"));
         xxlJobExecutor.setLogRetentionDays(Integer.valueOf(Jboot.configValue("xxl.job.executor.logretentiondays")));
 

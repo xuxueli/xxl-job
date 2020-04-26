@@ -8,6 +8,8 @@ import java.io.Serializable;
 public class LogResult implements Serializable {
     private static final long serialVersionUID = 42L;
 
+    public LogResult() {
+    }
     public LogResult(int fromLineNum, int toLineNum, String logContent, boolean isEnd) {
         this.fromLineNum = fromLineNum;
         this.toLineNum = toLineNum;

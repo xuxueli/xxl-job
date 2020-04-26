@@ -180,11 +180,27 @@ $(function() {
 	                		// better support expression or string, not function
 	                		return function () {
 		                		if (row.triggerCode == 200 || row.handleCode != 0){
-		                			var temp = '<a href="javascript:;" class="logDetail" _id="'+ row.id +'">'+ I18n.joblog_rolling_log +'</a>';
+
+		                			/*var temp = '<a href="javascript:;" class="logDetail" _id="'+ row.id +'">'+ I18n.joblog_rolling_log +'</a>';
 		                			if(row.handleCode == 0){
 		                				temp += '<br><a href="javascript:;" class="logKill" _id="'+ row.id +'" style="color: red;" >'+ I18n.joblog_kill_log +'</a>';
-		                			}
-		                			return temp;
+		                			}*/
+		                			//return temp;
+
+									var html = '<div class="btn-group">\n' +
+										'     <button type="button" class="btn btn-primary btn-sm">'+ I18n.system_opt +'</button>\n' +
+										'     <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">\n' +
+										'       <span class="caret"></span>\n' +
+										'       <span class="sr-only">Toggle Dropdown</span>\n' +
+										'     </button>\n' +
+										'     <ul class="dropdown-menu" role="menu" _id="'+ row.id +'" >\n' +
+										'       <li><a href="javascript:void(0);" class="logDetail" _id="'+ row.id +'" >'+ I18n.joblog_rolling_log +'</a></li>\n' +
+										'       <li class="divider"></li>\n' +
+										'       <li><a href="javascript:void(0);" class="logKill" _id="'+ row.id +'" >'+ I18n.joblog_kill_log +'</a></li>\n' +
+										'     </ul>\n' +
+										'   </div>';
+
+		                			return html;
 		                		}
 		                		return null;	
 	                		}

@@ -19,7 +19,7 @@ import java.util.TreeMap;
  */
 public class ExecutorRouteConsistentHash extends ExecutorRouter {
 
-    private static int VIRTUAL_NODE_NUM = 5;
+    private static int VIRTUAL_NODE_NUM = 100;
 
     /**
      * get hash code on 2^32 ring (md5散列的方式计算hash值)
