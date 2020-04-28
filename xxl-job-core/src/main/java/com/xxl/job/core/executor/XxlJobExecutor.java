@@ -34,6 +34,7 @@ public class XxlJobExecutor  {
     private int port;
     private String logPath;
     private int logRetentionDays;
+    private boolean integratedSpringBoot;
 
     public void setAdminAddresses(String adminAddresses) {
         this.adminAddresses = adminAddresses;
@@ -136,23 +137,31 @@ public class XxlJobExecutor  {
     private EmbedServer embedServer = null;
 
     private void initEmbedServer(String address, String ip, int port, String appname, String accessToken) throws Exception {
-
         // fill ip port
         port = port>0?port: NetUtil.findAvailablePort(9999);
         ip = (ip!=null&&ip.trim().length()>0)?ip: IpUtil.getIp();
 
         // generate address
-        if (address==null || address.trim().length()==0) {
+        if (address == null || address.trim().length() == 0) {
             String ip_port_address = IpUtil.getIpPort(ip, port);   // registry-address：default use address to registry , otherwise use ip:port if address is null
             address = "http://{ip_port}/".replace("{ip_port}", ip_port_address);
-        }
+        } else {
+            address = address.replace("{server_ip}", ip);
 
-        // start
+        }
         embedServer = new EmbedServer();
+        if (integratedSpringBoot) {
+            embedServer.startRegistry(appname, address);
+            return;
+        }
+        // start
         embedServer.start(address, port, appname, accessToken);
     }
 
     private void stopEmbedServer() {
+        if (integratedSpringBoot) {
+            return;
+        }
         // stop provider factory
         try {
             embedServer.stop();
@@ -198,9 +207,17 @@ public class XxlJobExecutor  {
         }
         return null;
     }
-    public static JobThread loadJobThread(int jobId){
+
+    public static JobThread loadJobThread(int jobId) {
         JobThread jobThread = jobThreadRepository.get(jobId);
         return jobThread;
     }
 
+    public boolean isIntegratedSpringBoot() {
+        return integratedSpringBoot;
+    }
+
+    public void setIntegratedSpringBoot(boolean integratedSpringBoot) {
+        this.integratedSpringBoot = integratedSpringBoot;
+    }
 }
