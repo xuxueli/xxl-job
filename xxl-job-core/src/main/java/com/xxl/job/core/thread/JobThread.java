@@ -116,7 +116,7 @@ public class JobThread extends Thread{
 					triggerLogIdSet.remove(triggerParam.getLogId());
 
 					// log filename, like "logPath/yyyy-MM-dd/9999.log"
-					String logFileName = XxlJobFileAppender.makeLogFileName(new Date(triggerParam.getLogDateTim()), triggerParam.getLogId());
+					String logFileName = XxlJobFileAppender.makeLogFileName(new Date(triggerParam.getLogDateTime()), triggerParam.getLogId());
 					XxlJobFileAppender.contextHolder.set(logFileName);
 					ShardingUtil.setShardingVo(new ShardingUtil.ShardingVO(triggerParam.getBroadcastIndex(), triggerParam.getBroadcastTotal()));
 
@@ -165,7 +165,9 @@ public class JobThread extends Thread{
 
 				} else {
 					if (idleTimes > 30) {
-						XxlJobExecutor.removeJobThread(jobId, "excutor idel times over limit.");
+						if(triggerQueue.size() == 0) {	// avoid concurrent trigger causes jobId-lost
+							XxlJobExecutor.removeJobThread(jobId, "excutor idel times over limit.");
+						}
 					}
 				}
 			} catch (Throwable e) {
@@ -184,11 +186,11 @@ public class JobThread extends Thread{
                     // callback handler info
                     if (!toStop) {
                         // commonm
-                        TriggerCallbackThread.pushCallBack(new HandleCallbackParam(triggerParam.getLogId(), triggerParam.getLogDateTim(), executeResult));
+                        TriggerCallbackThread.pushCallBack(new HandleCallbackParam(triggerParam.getLogId(), triggerParam.getLogDateTime(), executeResult));
                     } else {
                         // is killed
-                        ReturnT<String> stopResult = new ReturnT<String>(ReturnT.FAIL_CODE, stopReason + " [job running，killed]");
-                        TriggerCallbackThread.pushCallBack(new HandleCallbackParam(triggerParam.getLogId(), triggerParam.getLogDateTim(), stopResult));
+                        ReturnT<String> stopResult = new ReturnT<String>(ReturnT.FAIL_CODE, stopReason + " [job running, killed]");
+                        TriggerCallbackThread.pushCallBack(new HandleCallbackParam(triggerParam.getLogId(), triggerParam.getLogDateTime(), stopResult));
                     }
                 }
             }
@@ -200,7 +202,7 @@ public class JobThread extends Thread{
 			if (triggerParam!=null) {
 				// is killed
 				ReturnT<String> stopResult = new ReturnT<String>(ReturnT.FAIL_CODE, stopReason + " [job not executed, in the job queue, killed.]");
-				TriggerCallbackThread.pushCallBack(new HandleCallbackParam(triggerParam.getLogId(), triggerParam.getLogDateTim(), stopResult));
+				TriggerCallbackThread.pushCallBack(new HandleCallbackParam(triggerParam.getLogId(), triggerParam.getLogDateTime(), stopResult));
 			}
 		}
 

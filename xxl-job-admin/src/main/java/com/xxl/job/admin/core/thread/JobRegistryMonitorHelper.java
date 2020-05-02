@@ -7,10 +7,7 @@ import com.xxl.job.core.enums.RegistryConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -38,19 +35,19 @@ public class JobRegistryMonitorHelper {
 						if (groupList!=null && !groupList.isEmpty()) {
 
 							// remove dead address (admin/executor)
-							List<Integer> ids = XxlJobAdminConfig.getAdminConfig().getXxlJobRegistryDao().findDead(RegistryConfig.DEAD_TIMEOUT);
+							List<Integer> ids = XxlJobAdminConfig.getAdminConfig().getXxlJobRegistryDao().findDead(RegistryConfig.DEAD_TIMEOUT, new Date());
 							if (ids!=null && ids.size()>0) {
 								XxlJobAdminConfig.getAdminConfig().getXxlJobRegistryDao().removeDead(ids);
 							}
 
 							// fresh online address (admin/executor)
 							HashMap<String, List<String>> appAddressMap = new HashMap<String, List<String>>();
-							List<XxlJobRegistry> list = XxlJobAdminConfig.getAdminConfig().getXxlJobRegistryDao().findAll(RegistryConfig.DEAD_TIMEOUT);
+							List<XxlJobRegistry> list = XxlJobAdminConfig.getAdminConfig().getXxlJobRegistryDao().findAll(RegistryConfig.DEAD_TIMEOUT, new Date());
 							if (list != null) {
 								for (XxlJobRegistry item: list) {
 									if (RegistryConfig.RegistType.EXECUTOR.name().equals(item.getRegistryGroup())) {
-										String appName = item.getRegistryKey();
-										List<String> registryList = appAddressMap.get(appName);
+										String appname = item.getRegistryKey();
+										List<String> registryList = appAddressMap.get(appname);
 										if (registryList == null) {
 											registryList = new ArrayList<String>();
 										}
@@ -58,14 +55,14 @@ public class JobRegistryMonitorHelper {
 										if (!registryList.contains(item.getRegistryValue())) {
 											registryList.add(item.getRegistryValue());
 										}
-										appAddressMap.put(appName, registryList);
+										appAddressMap.put(appname, registryList);
 									}
 								}
 							}
 
 							// fresh group address
 							for (XxlJobGroup group: groupList) {
-								List<String> registryList = appAddressMap.get(group.getAppName());
+								List<String> registryList = appAddressMap.get(group.getAppname());
 								String addressListStr = null;
 								if (registryList!=null && !registryList.isEmpty()) {
 									Collections.sort(registryList);

@@ -1,15 +1,17 @@
 package com.xxl.job.admin.controller;
 
-import com.xxl.job.admin.core.conf.XxlJobScheduler;
 import com.xxl.job.admin.core.exception.XxlJobException;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
+import com.xxl.job.admin.core.scheduler.XxlJobScheduler;
 import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.admin.dao.XxlJobGroupDao;
 import com.xxl.job.admin.dao.XxlJobInfoDao;
 import com.xxl.job.admin.dao.XxlJobLogDao;
 import com.xxl.job.core.biz.ExecutorBiz;
+import com.xxl.job.core.biz.model.KillParam;
+import com.xxl.job.core.biz.model.LogParam;
 import com.xxl.job.core.biz.model.LogResult;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.util.DateUtil;
@@ -96,7 +98,7 @@ public class JobLogController {
 		Date triggerTimeEnd = null;
 		if (filterTime!=null && filterTime.trim().length()>0) {
 			String[] temp = filterTime.split(" - ");
-			if (temp!=null && temp.length == 2) {
+			if (temp.length == 2) {
 				triggerTimeStart = DateUtil.parseDateTime(temp[0]);
 				triggerTimeEnd = DateUtil.parseDateTime(temp[1]);
 			}
@@ -137,7 +139,7 @@ public class JobLogController {
 	public ReturnT<LogResult> logDetailCat(String executorAddress, long triggerTime, long logId, int fromLineNum){
 		try {
 			ExecutorBiz executorBiz = XxlJobScheduler.getExecutorBiz(executorAddress);
-			ReturnT<LogResult> logResult = executorBiz.log(triggerTime, logId, fromLineNum);
+			ReturnT<LogResult> logResult = executorBiz.log(new LogParam(triggerTime, logId, fromLineNum));
 
 			// is end
             if (logResult.getContent()!=null && logResult.getContent().getFromLineNum() > logResult.getContent().getToLineNum()) {
@@ -171,7 +173,7 @@ public class JobLogController {
 		ReturnT<String> runResult = null;
 		try {
 			ExecutorBiz executorBiz = XxlJobScheduler.getExecutorBiz(log.getExecutorAddress());
-			runResult = executorBiz.kill(jobInfo.getId());
+			runResult = executorBiz.kill(new KillParam(jobInfo.getId()));
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			runResult = new ReturnT<String>(500, e.getMessage());
@@ -216,7 +218,14 @@ public class JobLogController {
 			return new ReturnT<String>(ReturnT.FAIL_CODE, I18nUtil.getString("joblog_clean_type_unvalid"));
 		}
 
-		xxlJobLogDao.clearLog(jobGroup, jobId, clearBeforeTime, clearBeforeNum);
+		List<Long> logIds = null;
+		do {
+			logIds = xxlJobLogDao.findClearLogIds(jobGroup, jobId, clearBeforeTime, clearBeforeNum, 1000);
+			if (logIds!=null && logIds.size()>0) {
+				xxlJobLogDao.clearLog(logIds);
+			}
+		} while (logIds!=null && logIds.size()>0);
+
 		return ReturnT.SUCCESS;
 	}
 
