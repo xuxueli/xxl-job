@@ -73,6 +73,12 @@
 			<version>${project.parent.version}</version>
 		</dependency>
 
+		<!-- tencentcloud-sdk -->
+		<dependency>
+			<groupId>com.tencentcloudapi</groupId>
+			<artifactId>tencentcloud-sdk-java</artifactId>
+			<version>3.1.46</version>
+		</dependency>
 	</dependencies>
 
 	<build>

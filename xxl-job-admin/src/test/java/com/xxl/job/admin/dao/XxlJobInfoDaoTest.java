@@ -36,6 +36,7 @@ public class XxlJobInfoDaoTest {
 		info.setJobDesc("desc");
 		info.setAuthor("setAuthor");
 		info.setAlarmEmail("setAlarmEmail");
+		info.setAlarmPhone("setAlarmPhone");
 		info.setExecutorRouteStrategy("setExecutorRouteStrategy");
 		info.setExecutorHandler("setExecutorHandler");
 		info.setExecutorParam("setExecutorParam");

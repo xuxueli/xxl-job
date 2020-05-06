@@ -20,6 +20,7 @@ public class XxlJobInfo {
 	
 	private String author;		// 负责人
 	private String alarmEmail;	// 报警邮件
+	private String alarmPhone;	// 报警电话
 
 	private String executorRouteStrategy;	// 执行器路由策略
 	private String executorHandler;		    // 执行器，任务Handler名称
@@ -103,6 +104,10 @@ public class XxlJobInfo {
 	public void setAlarmEmail(String alarmEmail) {
 		this.alarmEmail = alarmEmail;
 	}
+
+	public String getAlarmPhone() { return alarmPhone; }
+
+	public void setAlarmPhone(String alarmPhone) { this.alarmPhone = alarmPhone; }
 
 	public String getExecutorRouteStrategy() {
 		return executorRouteStrategy;

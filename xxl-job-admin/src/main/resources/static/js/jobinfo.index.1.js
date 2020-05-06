@@ -83,6 +83,7 @@ $(function() {
 	                },
 	                { "data": 'author', "visible" : true, "width":'10%'},
 	                { "data": 'alarmEmail', "visible" : false},
+					{ "data": 'alarmPhone', "visible" : false},
 	                {
 	                	"data": 'triggerStatus',
 						"width":'10%',
@@ -515,6 +516,7 @@ $(function() {
 		$("#updateModal .form input[name='jobCron']").val( row.jobCron );
 		$("#updateModal .form input[name='author']").val( row.author );
 		$("#updateModal .form input[name='alarmEmail']").val( row.alarmEmail );
+		$("#updateModal .form input[name='alarmPhone']").val( row.alarmPhone );
 		$("#updateModal .form input[name='executorTimeout']").val( row.executorTimeout );
         $("#updateModal .form input[name='executorFailRetryCount']").val( row.executorFailRetryCount );
 		$('#updateModal .form select[name=executorRouteStrategy] option[value='+ row.executorRouteStrategy +']').prop('selected', true);
@@ -660,6 +662,7 @@ $(function() {
 		$("#addModal .form input[name='jobCron']").val( row.jobCron );
 		$("#addModal .form input[name='author']").val( row.author );
 		$("#addModal .form input[name='alarmEmail']").val( row.alarmEmail );
+		$("#addModal .form input[name='alarmPhone']").val( row.alarmPhone );
 		$("#addModal .form input[name='executorTimeout']").val( row.executorTimeout );
 		$("#addModal .form input[name='executorFailRetryCount']").val( row.executorFailRetryCount );
 		$('#addModal .form select[name=executorRouteStrategy] option[value='+ row.executorRouteStrategy +']').prop('selected', true);
