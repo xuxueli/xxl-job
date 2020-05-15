@@ -10,7 +10,7 @@
             options = $.extend({}, $.fn.cronGen.defaultOptions, options);
             //create top menu
             var cronContainer = $("<div/>", { id: "CronContainer", style: "display:none;width:300px;height:300px;" });
-            var mainDiv = $("<div/>", { id: "CronGenMainDiv", style: "width:410px;height:300px;" });
+            var mainDiv = $("<div/>", { id: "CronGenMainDiv", style: "width:410px;height:430px;" });
             var topMenu = $("<ul/>", { "class": "nav nav-tabs", id: "CronGenTabs" });
             $('<li/>', { 'class': 'active' }).html($('<a id="SecondlyTab" href="#Secondly">秒</a>')).appendTo(topMenu);
             $('<li/>').html($('<a id="MinutesTab" href="#Minutes">分钟</a>')).appendTo(topMenu);
@@ -318,9 +318,12 @@
             // resultsName = $(this).prop("id");
             // $(this).prop("name", resultsName);
 
+            var runTime = '<br style="padding-top: 10px"><label>最近运行时间: </label></br><textarea id="runTime" rows="6" style="width: 90%;resize: none;background: none;border: none;outline: none;" readonly = readonly></textarea></div>';
+
             $(span12).appendTo(row);
             $(row).appendTo(container);
             $(container).appendTo(mainDiv);
+            $(runTime).appendTo(mainDiv);
             $(cronContainer).append(mainDiv);
 
             var that = $(this);
@@ -354,6 +357,9 @@
                 placement: options.direction
 
             }).on('click', function (e) {
+                if (inputElement.val().trim() !== '') {
+                    refreshRunTime();
+                }
                 e.preventDefault();
 
                 //fillDataOfMinutesAndHoursSelectOptions();
@@ -374,6 +380,7 @@
                 });
                 $("#CronGenMainDiv select,input").change(function (e) {
                     generate();
+                    refreshRunTime();
                 });
                 $("#CronGenMainDiv input").focus(function (e) {
                     generate();
@@ -626,6 +633,24 @@
         inputElement.val(results);
         // Update display
         displayElement.val(results);
+    };
+
+    var refreshRunTime = function () {
+        $.ajax({
+            type : 'GET',
+            url : base_url + "/jobinfo/nextTriggerTime",
+            data : {
+                "cron" : inputElement.val(),
+            },
+            dataType : "json",
+            success : function(data){
+                if (data.code === 200) {
+                    $('#runTime').val(data.content.join("\n"));
+                } else {
+                    $('#runTime').val(data.msg);
+                }
+            }
+        });
     };
 
 })(jQuery);
