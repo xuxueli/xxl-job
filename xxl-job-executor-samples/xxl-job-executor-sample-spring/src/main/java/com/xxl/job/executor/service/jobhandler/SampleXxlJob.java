@@ -11,9 +11,11 @@ import org.springframework.stereotype.Component;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -111,20 +113,55 @@ public class SampleXxlJob {
 
     /**
      * 4、跨平台Http任务
+     *  参数示例：
+     *      "url: http://www.baidu.com\n" +
+     *      "method: get\n" +
+     *      "data: content\n";
      */
     @XxlJob("httpJobHandler")
     public ReturnT<String> httpJobHandler(String param) throws Exception {
+
+        // param parse
+        if (param==null || param.trim().length()==0) {
+            XxlJobLogger.log("param["+ param +"] invalid.");
+            return ReturnT.FAIL;
+        }
+        String[] httpParams = param.split("\n");
+        String url = null;
+        String method = null;
+        String data = null;
+        for (String httpParam: httpParams) {
+            if (httpParam.startsWith("url:")) {
+                url = httpParam.substring(httpParam.indexOf("url:") + 4).trim();
+            }
+            if (httpParam.startsWith("method:")) {
+                method = httpParam.substring(httpParam.indexOf("method:") + 7).trim().toUpperCase();
+            }
+            if (httpParam.startsWith("data:")) {
+                data = httpParam.substring(httpParam.indexOf("data:") + 5).trim();
+            }
+        }
+
+        // param valid
+        if (url==null || url.trim().length()==0) {
+            XxlJobLogger.log("url["+ url +"] invalid.");
+            return ReturnT.FAIL;
+        }
+        if (method==null || !Arrays.asList("GET", "POST").contains(method)) {
+            XxlJobLogger.log("method["+ method +"] invalid.");
+            return ReturnT.FAIL;
+        }
 
         // request
         HttpURLConnection connection = null;
         BufferedReader bufferedReader = null;
         try {
             // connection
-            URL realUrl = new URL(param);
+            URL realUrl = new URL(url);
             connection = (HttpURLConnection) realUrl.openConnection();
 
             // connection setting
-            connection.setRequestMethod("GET");
+            connection.setRequestMethod(method);
             connection.setDoOutput(true);
             connection.setDoInput(true);
             connection.setUseCaches(false);
@@ -137,7 +174,13 @@ public class SampleXxlJob {
             // do connection
             connection.connect();
 
-            //Map<String, List<String>> map = connection.getHeaderFields();
+            // data
+            if (data!=null && data.trim().length()>0) {
+                DataOutputStream dataOutputStream = new DataOutputStream(connection.getOutputStream());
+                dataOutputStream.write(data.getBytes("UTF-8"));
+                dataOutputStream.flush();
+                dataOutputStream.close();
+            }
 
             // valid StatusCode
             int statusCode = connection.getResponseCode();

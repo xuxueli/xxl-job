@@ -4,12 +4,8 @@ import com.xxl.job.admin.core.conf.XxlJobAdminConfig;
 import com.xxl.job.admin.core.thread.*;
 import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.core.biz.ExecutorBiz;
+import com.xxl.job.core.biz.client.ExecutorBizClient;
 import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
-import com.xxl.rpc.remoting.invoker.call.CallType;
-import com.xxl.rpc.remoting.invoker.reference.XxlRpcReferenceBean;
-import com.xxl.rpc.remoting.invoker.route.LoadBalance;
-import com.xxl.rpc.remoting.net.impl.netty_http.client.NettyHttpClient;
-import com.xxl.rpc.serialize.impl.HessianSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,8 +27,11 @@ public class XxlJobScheduler  {
         // admin registry monitor run
         JobRegistryMonitorHelper.getInstance().start();
 
-        // admin monitor run
+        // admin fail-monitor run
         JobFailMonitorHelper.getInstance().start();
+
+        // admin lose-monitor run
+        JobLosedMonitorHelper.getInstance().start();
 
         // admin trigger pool start
         JobTriggerPoolHelper.toStart();
@@ -58,7 +57,10 @@ public class XxlJobScheduler  {
         // admin trigger pool stop
         JobTriggerPoolHelper.toStop();
 
-        // admin monitor stop
+        // admin lose-monitor stop
+        JobLosedMonitorHelper.getInstance().toStop();
+
+        // admin fail-monitor stop
         JobFailMonitorHelper.getInstance().toStop();
 
         // admin registry stop
@@ -90,20 +92,7 @@ public class XxlJobScheduler  {
         }
 
         // set-cache
-        XxlRpcReferenceBean referenceBean = new XxlRpcReferenceBean();
-        referenceBean.setClient(NettyHttpClient.class);
-        referenceBean.setSerializer(HessianSerializer.class);
-        referenceBean.setCallType(CallType.SYNC);
-        referenceBean.setLoadBalance(LoadBalance.ROUND);
-        referenceBean.setIface(ExecutorBiz.class);
-        referenceBean.setVersion(null);
-        referenceBean.setTimeout(3000);
-        referenceBean.setAddress(address);
-        referenceBean.setAccessToken(XxlJobAdminConfig.getAdminConfig().getAccessToken());
-        referenceBean.setInvokeCallback(null);
-        referenceBean.setInvokerFactory(null);
-
-        executorBiz = (ExecutorBiz) referenceBean.getObject();
+        executorBiz = new ExecutorBizClient(address, XxlJobAdminConfig.getAdminConfig().getAccessToken());
 
         executorBizRepository.put(address, executorBiz);
         return executorBiz;
