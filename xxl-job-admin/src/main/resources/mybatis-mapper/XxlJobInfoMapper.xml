@@ -67,6 +67,9 @@
 			<if test="jobGroup gt 0">
 				AND t.job_group = #{jobGroup}
 			</if>
+			<if test="jobId gt 0">
+				AND t.id = #{jobId}
+			</if>
             <if test="triggerStatus gte 0">
                 AND t.trigger_status = #{triggerStatus}
             </if>
@@ -90,6 +93,9 @@
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
 			<if test="jobGroup gt 0">
 				AND t.job_group = #{jobGroup}
+			</if>
+			<if test="jobId gt 0">
+				AND t.id = #{jobId}
 			</if>
             <if test="triggerStatus gte 0">
                 AND t.trigger_status = #{triggerStatus}
