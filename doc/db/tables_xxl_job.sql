@@ -109,7 +109,7 @@ CREATE TABLE `xxl_job_lock` (
   PRIMARY KEY (`lock_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-ALTER TABLE `xxl_job_info` ADD COLUMN `alarm_phone` varchar(255) NULL COMMENT '报警电话' AFTER `author`;
+ALTER TABLE `xxl_job_info` ADD COLUMN `alarm_phone` varchar(255) NULL COMMENT '报警手机号' AFTER `author`;
 
 INSERT INTO `xxl_job_group`(`id`, `app_name`, `title`, `address_type`, `address_list`) VALUES (1, 'xxl-job-executor-sample', '示例执行器', 0, NULL);
 INSERT INTO `xxl_job_info`(`id`, `job_group`, `job_cron`, `job_desc`, `add_time`, `update_time`, `author`, `alarm_email`, `executor_route_strategy`, `executor_handler`, `executor_param`, `executor_block_strategy`, `executor_timeout`, `executor_fail_retry_count`, `glue_type`, `glue_source`, `glue_remark`, `glue_updatetime`, `child_jobid`) VALUES (1, 1, '0 0 0 * * ? *', '测试任务1', '2018-11-03 22:21:31', '2018-11-03 22:21:31', 'XXL', '', 'FIRST', 'demoJobHandler', '', 'SERIAL_EXECUTION', 0, 0, 'BEAN', '', 'GLUE代码初始化', '2018-11-03 22:21:31', '');

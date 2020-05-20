@@ -20,7 +20,7 @@ public class XxlJobInfo {
 	
 	private String author;		// 负责人
 	private String alarmEmail;	// 报警邮件
-	private String alarmPhone;	// 报警电话
+	private String alarmPhone;	// 报警手机号
 
 	private String executorRouteStrategy;	// 执行器路由策略
 	private String executorHandler;		    // 执行器，任务Handler名称
