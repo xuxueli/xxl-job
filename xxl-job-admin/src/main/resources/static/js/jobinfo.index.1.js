@@ -33,7 +33,8 @@ $(function() {
 					},
 	                {
 	                	"data": 'jobGroup',
-	                	"visible" : false,
+	                	"visible" : true,
+						"width":'7%',
 	                	"render": function ( data, type, row ) {
 	            			var groupMenu = $("#jobGroup").find("option");
 	            			for ( var index in $("#jobGroup").find("option")) {
@@ -82,11 +83,11 @@ $(function() {
 	                		return data?moment(new Date(data)).format("YYYY-MM-DD HH:mm:ss"):"";
 	                	}
 	                },
-	                { "data": 'author', "visible" : true, "width":'10%'},
+	                { "data": 'author', "visible" : true, "width":'8%'},
 	                { "data": 'alarmEmail', "visible" : false},
 	                {
 	                	"data": 'triggerStatus',
-						"width":'10%',
+						"width":'5%',
 	                	"visible" : true,
 	                	"render": function ( data, type, row ) {
                             // status
