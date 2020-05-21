@@ -1011,12 +1011,12 @@
             //获取参数中表达式的值
             if (cronExpress) {
                 var regs = cronExpress.split(' ');
-                $("input[name=secondHidden]").val(regs[0]);
-                $("input[name=minHidden]").val(regs[1]);
-                $("input[name=hourHidden]").val(regs[2]);
-                $("input[name=dayHidden]").val(regs[3]);
-                $("input[name=monthHidden]").val(regs[4]);
-                $("input[name=weekHidden]").val(regs[5]);
+                $("#secondHidden").val(regs[0]);
+                $("#minHidden").val(regs[1]);
+                $("#hourHidden").val(regs[2]);
+                $("#dayHidden").val(regs[3]);
+                $("#monthHidden").val(regs[4]);
+                $("#weekHidden").val(regs[5]);
 
                 $.fn.cronGen.tools.initObj(regs[0], "second");
                 $.fn.cronGen.tools.initObj(regs[1], "min");
