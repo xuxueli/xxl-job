@@ -66,6 +66,9 @@ $(function() {
 						// data
 						tableData['key'+row.id] = row;
 
+						// jobinfo url
+						var jobInfoHref = base_url +'/jobinfo?jobGroup='+ row.id;
+
 						// opt
 						var html = '<div class="btn-group">\n' +
 							'     <button type="button" class="btn btn-primary btn-sm">'+ I18n.system_opt +'</button>\n' +
@@ -74,6 +77,8 @@ $(function() {
 							'       <span class="sr-only">Toggle Dropdown</span>\n' +
 							'     </button>\n' +
 							'     <ul class="dropdown-menu" role="menu" _id="'+ row.id +'" >\n' +
+							'       <li><a href="'+ jobInfoHref +'">'+ I18n.system_show + I18n.jobinfo_job +'</a></li>\n' +
+							'       <li class="divider"></li>\n' +
 							'       <li><a href="javascript:void(0);" class="opt_edit" >'+ I18n.system_opt_edit +'</a></li>\n' +
 							'       <li><a href="javascript:void(0);" class="opt_del" >'+ I18n.system_opt_del +'</a></li>\n' +
 							'     </ul>\n' +
