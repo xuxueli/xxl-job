@@ -1963,7 +1963,8 @@ data: post-data
 ### 7.31 版本 v2.2.1 Release Notes[迭代中]
 - 1、Cron编辑器增强：Cron编辑器修改cron时可实时查看最近运行时间;
 - 2、Cron编辑器问题修复：修复小概率情况下cron单个字段修改时导致其他字段被重置问题；
-- 3、[迭代中] 新增任务属性 "XxlJobContent" ，统一维护任务上下文信息，方便运行时存取任务相关信息；
+- 3、邮箱告警配置优化：将"spring.mail.from"与"spring.mail.username"属性拆分开，更加灵活的支持一些无密码邮箱服务；
+- 4、[迭代中] 新增任务属性 "XxlJobContent" ，统一维护任务上下文信息，方便运行时存取任务相关信息；
 
 
 ### TODO LIST
