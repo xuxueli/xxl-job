@@ -55,7 +55,7 @@ public class XxlJobAdminConfig implements InitializingBean, DisposableBean {
     @Value("${xxl.job.accessToken}")
     private String accessToken;
 
-    @Value("${spring.mail.username}")
+    @Value("${spring.mail.from}")
     private String emailUserName;
 
     @Value("${xxl.job.triggerpool.fast.max}")
