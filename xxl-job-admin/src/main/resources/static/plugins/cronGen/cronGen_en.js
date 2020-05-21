@@ -10,7 +10,7 @@
             options = $.extend({}, $.fn.cronGen.defaultOptions, options);
             //create top menu
             var cronContainer = $("<div/>", { id: "CronContainer", style: "display:none;width:300px;height:300px;" });
-            var mainDiv = $("<div/>", { id: "CronGenMainDiv", style: "width:410px;height:430px;" });
+            var mainDiv = $("<div/>", { id: "CronGenMainDiv", style: "width:410px;height:420px;" });
             var topMenu = $("<ul/>", { "class": "nav nav-tabs", id: "CronGenTabs" });
             $('<li/>', { 'class': 'active' }).html($('<a id="SecondlyTab" href="#Secondly">秒</a>')).appendTo(topMenu);
             $('<li/>').html($('<a id="MinutesTab" href="#Minutes">Minute</a>')).appendTo(topMenu);
