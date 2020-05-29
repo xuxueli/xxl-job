@@ -121,7 +121,7 @@ public class JobThread extends Thread{
 					ShardingUtil.setShardingVo(new ShardingUtil.ShardingVO(triggerParam.getBroadcastIndex(), triggerParam.getBroadcastTotal()));
 
 					// execute
-					XxlJobLogger.log("<br>----------- xxl-job job execute start -----------<br>----------- Param:" + triggerParam.getExecutorParams());
+					XxlJobLogger.log("\n----------- xxl-job job execute start -----------\n----------- Param:" + triggerParam.getExecutorParams());
 
 					if (triggerParam.getExecutorTimeout() > 0) {
 						// limit timeout
@@ -140,7 +140,7 @@ public class JobThread extends Thread{
 							executeResult = futureTask.get(triggerParam.getExecutorTimeout(), TimeUnit.SECONDS);
 						} catch (TimeoutException e) {
 
-							XxlJobLogger.log("<br>----------- xxl-job job execute timeout");
+							XxlJobLogger.log("\n----------- xxl-job job execute timeout");
 							XxlJobLogger.log(e);
 
 							executeResult = new ReturnT<String>(IJobHandler.FAIL_TIMEOUT.getCode(), "job execute timeout ");
@@ -161,7 +161,7 @@ public class JobThread extends Thread{
 										:executeResult.getMsg());
 						executeResult.setContent(null);	// limit obj size
 					}
-					XxlJobLogger.log("<br>----------- xxl-job job execute end(finish) -----------<br>----------- ReturnT:" + executeResult);
+					XxlJobLogger.log("\n----------- xxl-job job execute end(finish) -----------\n----------- ReturnT:" + executeResult);
 
 				} else {
 					if (idleTimes > 30) {
@@ -172,7 +172,7 @@ public class JobThread extends Thread{
 				}
 			} catch (Throwable e) {
 				if (toStop) {
-					XxlJobLogger.log("<br>----------- JobThread toStop, stopReason:" + stopReason);
+					XxlJobLogger.log("\n----------- JobThread toStop, stopReason:" + stopReason);
 				}
 
 				StringWriter stringWriter = new StringWriter();
@@ -180,7 +180,7 @@ public class JobThread extends Thread{
 				String errorMsg = stringWriter.toString();
 				executeResult = new ReturnT<String>(ReturnT.FAIL_CODE, errorMsg);
 
-				XxlJobLogger.log("<br>----------- JobThread Exception:" + errorMsg + "<br>----------- xxl-job job execute end(error) -----------");
+				XxlJobLogger.log("\n----------- JobThread Exception:" + errorMsg + "\n----------- xxl-job job execute end(error) -----------");
 			} finally {
                 if(triggerParam != null) {
                     // callback handler info

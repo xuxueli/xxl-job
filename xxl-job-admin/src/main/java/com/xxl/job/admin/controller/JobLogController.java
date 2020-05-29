@@ -141,6 +141,11 @@ public class JobLogController {
 			ExecutorBiz executorBiz = XxlJobScheduler.getExecutorBiz(executorAddress);
 			ReturnT<LogResult> logResult = executorBiz.log(new LogParam(triggerTime, logId, fromLineNum));
 
+			if (logResult.getContent()!=null && logResult.getContent().getLogContent()!=null) {
+				String logContent = logResult.getContent().getLogContent();
+				logResult.getContent().setLogContent(logContent.replaceAll("<", "&lt;"));
+			}
+
 			// is end
             if (logResult.getContent()!=null && logResult.getContent().getFromLineNum() > logResult.getContent().getToLineNum()) {
                 XxlJobLog jobLog = xxlJobLogDao.load(logId);
