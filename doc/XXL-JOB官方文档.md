@@ -1989,8 +1989,9 @@ data: post-data
 - 2、Cron编辑器问题修复：修复小概率情况下cron单个字段修改时导致其他字段被重置问题；
 - 3、邮箱告警配置优化：将"spring.mail.from"与"spring.mail.username"属性拆分开，更加灵活的支持一些无密码邮箱服务；
 - 4、多个项目依赖升级至较新稳定版本，如netty、spring、springboot等；
-- 5、[迭代中] 新增任务属性 "XxlJobContent" ，统一维护任务上下文信息，方便运行时存取任务相关信息；
-- 6、[规划中]任务触发参数优化：支持选择 "Cron触发"、"固定间隔时间触发"、"指定时间点触发"、"不选择" 等；
+- 5、通用HTTP任务Handler（httpJobHandler）优化：修复 "setDoOutput(true)" 导致任务请求GetMethod失效问题；
+- 6、[迭代中] 新增任务属性 "XxlJobContent" ，统一维护任务上下文信息，方便运行时存取任务相关信息；
+- 7、[规划中]任务触发参数优化：支持选择 "Cron触发"、"固定间隔时间触发"、"指定时间点触发"、"不选择" 等；
 
 ### 7.32 版本 v2.3.0 Release Notes[规划中]
 - 1、[规划中]多数据库支持，DAO层通过JPA实现，不限制数据库类型；
