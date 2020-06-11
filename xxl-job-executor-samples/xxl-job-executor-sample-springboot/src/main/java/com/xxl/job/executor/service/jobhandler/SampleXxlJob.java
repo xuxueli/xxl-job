@@ -151,6 +151,7 @@ public class SampleXxlJob {
             XxlJobLogger.log("method["+ method +"] invalid.");
             return ReturnT.FAIL;
         }
+        boolean isPostMethod = method.equals("POST");
 
         // request
         HttpURLConnection connection = null;
@@ -162,7 +163,7 @@ public class SampleXxlJob {
 
             // connection setting
             connection.setRequestMethod(method);
-            connection.setDoOutput(true);
+            connection.setDoOutput(isPostMethod);
             connection.setDoInput(true);
             connection.setUseCaches(false);
             connection.setReadTimeout(5 * 1000);
@@ -175,7 +176,7 @@ public class SampleXxlJob {
             connection.connect();
 
             // data
-            if (data!=null && data.trim().length()>0) {
+            if (isPostMethod && data!=null && data.trim().length()>0) {
                 DataOutputStream dataOutputStream = new DataOutputStream(connection.getOutputStream());
                 dataOutputStream.write(data.getBytes("UTF-8"));
                 dataOutputStream.flush();
