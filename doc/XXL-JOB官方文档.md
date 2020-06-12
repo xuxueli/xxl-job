@@ -1989,7 +1989,7 @@ data: post-data
 - 1、Cron编辑器增强：Cron编辑器修改cron时可实时查看最近运行时间;
 - 2、Cron编辑器问题修复：修复小概率情况下cron单个字段修改时导致其他字段被重置问题；
 - 3、邮箱告警配置优化：将"spring.mail.from"与"spring.mail.username"属性拆分开，更加灵活的支持一些无密码邮箱服务；
-- 4、多个项目依赖升级至较新稳定版本，如netty、spring、springboot等；
+- 4、多个项目依赖升级至较新稳定版本，如netty、groovy、spring、springboot、mybatis等；
 - 5、通用HTTP任务Handler（httpJobHandler）优化：修复 "setDoOutput(true)" 导致任务请求GetMethod失效问题；
 - 6、新增任务属性 "XxlJobContent" ，统一维护任务上下文信息，包括任务ID、分片参数等，方便运行时存取任务相关信息；
     - 6.1、废弃 "ShardingUtil" 组件：改用 "XxlJobContext.getXxlJobContext().getShardIndex()/getShardTotal();" 获取分片参数；
