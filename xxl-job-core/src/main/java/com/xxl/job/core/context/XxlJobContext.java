@@ -55,7 +55,7 @@ public class XxlJobContext {
 
     // ---------------------- tool ----------------------
 
-    private static InheritableThreadLocal<XxlJobContext> contextHolder = new InheritableThreadLocal<XxlJobContext>();
+    private static InheritableThreadLocal<XxlJobContext> contextHolder = new InheritableThreadLocal<XxlJobContext>(); // support for child thread of job handler)
 
     public static void setXxlJobContext(XxlJobContext xxlJobContext){
         contextHolder.set(xxlJobContext);

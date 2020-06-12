@@ -3,6 +3,7 @@ package com.xxl.job.core.thread;
 import com.xxl.job.core.biz.AdminBiz;
 import com.xxl.job.core.biz.model.HandleCallbackParam;
 import com.xxl.job.core.biz.model.ReturnT;
+import com.xxl.job.core.context.XxlJobContext;
 import com.xxl.job.core.enums.RegistryConfig;
 import com.xxl.job.core.executor.XxlJobExecutor;
 import com.xxl.job.core.log.XxlJobFileAppender;
@@ -187,7 +188,11 @@ public class TriggerCallbackThread {
     private void callbackLog(List<HandleCallbackParam> callbackParamList, String logContent){
         for (HandleCallbackParam callbackParam: callbackParamList) {
             String logFileName = XxlJobFileAppender.makeLogFileName(new Date(callbackParam.getLogDateTim()), callbackParam.getLogId());
-            XxlJobFileAppender.contextHolder.set(logFileName);
+            XxlJobContext.setXxlJobContext(new XxlJobContext(
+                    -1,
+                    logFileName,
+                    -1,
+                    -1));
             XxlJobLogger.log(logContent);
         }
     }

@@ -123,8 +123,6 @@ public class JobThread extends Thread{
 							triggerParam.getBroadcastIndex(),
 							triggerParam.getBroadcastTotal()));
 
-					XxlJobFileAppender.contextHolder.set(logFileName);
-
 					// execute
 					XxlJobLogger.log("<br>----------- xxl-job job execute start -----------<br>----------- Param:" + triggerParam.getExecutorParams());
 

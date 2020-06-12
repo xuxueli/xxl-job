@@ -1992,7 +1992,8 @@ data: post-data
 - 4、多个项目依赖升级至较新稳定版本，如netty、spring、springboot等；
 - 5、通用HTTP任务Handler（httpJobHandler）优化：修复 "setDoOutput(true)" 导致任务请求GetMethod失效问题；
 - 6、新增任务属性 "XxlJobContent" ，统一维护任务上下文信息，包括任务ID、分片参数等，方便运行时存取任务相关信息；
-    - 废弃 "ShardingUtil" 组件：改用 "XxlJobContext.getXxlJobContext().getShardIndex()/getShardTotal();" 获取分片参数； 
+    - 6.1、废弃 "ShardingUtil" 组件：改用 "XxlJobContext.getXxlJobContext().getShardIndex()/getShardTotal();" 获取分片参数；
+    - 6.2、日志组件逻辑调整：日志组件改为通过 XxlJobContent 获取任务上下文并匹配写入对应日志文件；
 - 7、[规划中]任务触发参数优化：支持选择 "Cron触发"、"固定间隔时间触发"、"指定时间点触发"、"不选择" 等；
 
 ### 7.32 版本 v2.3.0 Release Notes[规划中]
