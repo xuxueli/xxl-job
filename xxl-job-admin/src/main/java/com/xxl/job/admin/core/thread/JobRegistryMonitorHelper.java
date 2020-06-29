@@ -63,16 +63,16 @@ public class JobRegistryMonitorHelper {
 							// fresh group address
 							for (XxlJobGroup group: groupList) {
 								List<String> registryList = appAddressMap.get(group.getAppname());
-								String addressListStr = null;
+								StringBuilder addressListStr = null;
 								if (registryList!=null && !registryList.isEmpty()) {
 									Collections.sort(registryList);
-									addressListStr = "";
+									addressListStr = new StringBuilder();
 									for (String item:registryList) {
-										addressListStr += item + ",";
+										addressListStr.append(item).append(",");
 									}
-									addressListStr = addressListStr.substring(0, addressListStr.length()-1);
+									addressListStr = new StringBuilder(addressListStr.substring(0, addressListStr.length() - 1));
 								}
-								group.setAddressList(addressListStr);
+								group.setAddressList(addressListStr != null ? addressListStr.toString() : null);
 								XxlJobAdminConfig.getAdminConfig().getXxlJobGroupDao().update(group);
 							}
 						}
