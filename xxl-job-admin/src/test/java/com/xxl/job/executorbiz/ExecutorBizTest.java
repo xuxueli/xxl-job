@@ -36,7 +36,7 @@ public class ExecutorBizTest {
     public void idleBeat(){
         ExecutorBiz executorBiz = new ExecutorBizClient(addressUrl, accessToken);
 
-        final int jobId = 0;
+        final long jobId = 0;
 
         // Act
         final ReturnT<String> retval = executorBiz.idleBeat(new IdleBeatParam(jobId));
@@ -75,7 +75,7 @@ public class ExecutorBizTest {
     public void kill(){
         ExecutorBiz executorBiz = new ExecutorBizClient(addressUrl, accessToken);
 
-        final int jobId = 0;
+        final long jobId = 0;
 
         // Act
         final ReturnT<String> retval = executorBiz.kill(new KillParam(jobId));

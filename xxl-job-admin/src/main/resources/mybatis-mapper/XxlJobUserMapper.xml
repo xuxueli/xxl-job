@@ -12,59 +12,60 @@
 	</resultMap>
 
 	<sql id="Base_Column_List">
-		t.id,
-		t.username,
-		t.password,
-		t.role,
-		t.permission
+		id,
+		username,
+		password,
+		role,
+		permission
 	</sql>
 
 	<select id="pageList" parameterType="java.util.HashMap" resultMap="XxlJobUser">
 		SELECT <include refid="Base_Column_List" />
-		FROM xxl_job_user AS t
+		FROM xxl_job_user
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
 			<if test="username != null and username != ''">
-				AND t.username like CONCAT(CONCAT('%', #{username}), '%')
+				AND username like CONCAT(CONCAT('%', #{username}), '%')
 			</if>
 			<if test="role gt -1">
-				AND t.role = #{role}
+				AND role = #{role}
 			</if>
 		</trim>
 		ORDER BY username ASC
-		LIMIT #{offset}, #{pagesize}
 	</select>
 
 	<select id="pageListCount" parameterType="java.util.HashMap" resultType="int">
 		SELECT count(1)
-		FROM xxl_job_user AS t
+		FROM xxl_job_user
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
 			<if test="username != null and username != ''">
-				AND t.username like CONCAT(CONCAT('%', #{username}), '%')
+				AND username like CONCAT(CONCAT('%', #{username}), '%')
 			</if>
 			<if test="role gt -1">
-				AND t.role = #{role}
+				AND role = #{role}
 			</if>
 		</trim>
 	</select>
 
 	<select id="loadByUserName" parameterType="java.util.HashMap" resultMap="XxlJobUser">
 		SELECT <include refid="Base_Column_List" />
-		FROM xxl_job_user AS t
-		WHERE t.username = #{username}
+		FROM xxl_job_user
+		WHERE username = #{username}
 	</select>
 
-	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobUser" useGeneratedKeys="true" keyProperty="id" >
+	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobUser" >
 		INSERT INTO xxl_job_user (
+			id,
 			username,
 			password,
 			role,
 			permission
 		) VALUES (
+			#{id},
 			#{username},
 			#{password},
 			#{role},
 			#{permission}
-		);
+		)
 	</insert>
 
 	<update id="update" parameterType="com.xxl.job.admin.core.model.XxlJobUser" >

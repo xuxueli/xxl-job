@@ -72,6 +72,13 @@
 			<scope>provided</scope>
 		</dependency>
 
+		<!--PageHelper -->
+		<dependency>
+			<groupId>com.github.pagehelper</groupId>
+			<artifactId>pagehelper-spring-boot-starter</artifactId>
+			<version>${mybatis.pagehelper.version}</version>
+		</dependency>
+
 	</dependencies>
 
 </project>

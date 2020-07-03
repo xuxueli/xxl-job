@@ -1,5 +1,7 @@
 package com.xxl.job.admin.controller;
 
+import com.github.pagehelper.PageHelper;
+import com.xxl.job.admin.core.id.GenerateId;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobRegistry;
 import com.xxl.job.admin.core.util.I18nUtil;
@@ -8,6 +10,7 @@ import com.xxl.job.admin.dao.XxlJobInfoDao;
 import com.xxl.job.admin.dao.XxlJobRegistryDao;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.enums.RegistryConfig;
+import com.xxl.job.core.util.DateUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,6 +35,8 @@ public class JobGroupController {
 	public XxlJobGroupDao xxlJobGroupDao;
 	@Resource
 	private XxlJobRegistryDao xxlJobRegistryDao;
+	@Resource
+	private GenerateId generateId;
 
 	@RequestMapping
 	public String index(Model model) {
@@ -45,9 +50,10 @@ public class JobGroupController {
 										@RequestParam(required = false, defaultValue = "10") int length,
 										String appname, String title) {
 
+		PageHelper.startPage(start/length+1,length);
 		// page query
-		List<XxlJobGroup> list = xxlJobGroupDao.pageList(start, length, appname, title);
-		int list_count = xxlJobGroupDao.pageListCount(start, length, appname, title);
+		List<XxlJobGroup> list = xxlJobGroupDao.pageList(appname, title);
+		int list_count = xxlJobGroupDao.pageListCount(appname, title);
 
 		// package result
 		Map<String, Object> maps = new HashMap<String, Object>();
@@ -82,7 +88,7 @@ public class JobGroupController {
 				}
 			}
 		}
-
+		xxlJobGroup.setId(generateId.getId());
 		int ret = xxlJobGroupDao.save(xxlJobGroup);
 		return (ret>0)?ReturnT.SUCCESS:ReturnT.FAIL;
 	}
@@ -132,7 +138,8 @@ public class JobGroupController {
 
 	private List<String> findRegistryByAppName(String appnameParam){
 		HashMap<String, List<String>> appAddressMap = new HashMap<String, List<String>>();
-		List<XxlJobRegistry> list = xxlJobRegistryDao.findAll(RegistryConfig.DEAD_TIMEOUT, new Date());
+		Date date = DateUtil.addSecond(new Date(), -RegistryConfig.DEAD_TIMEOUT);
+		List<XxlJobRegistry> list = xxlJobRegistryDao.findAll(date);
 		if (list != null) {
 			for (XxlJobRegistry item: list) {
 				if (RegistryConfig.RegistType.EXECUTOR.name().equals(item.getRegistryGroup())) {
@@ -154,10 +161,11 @@ public class JobGroupController {
 
 	@RequestMapping("/remove")
 	@ResponseBody
-	public ReturnT<String> remove(int id){
+	public ReturnT<String> remove(long id){
 
 		// valid
-		int count = xxlJobInfoDao.pageListCount(0, 10, id, -1,  null, null, null);
+		PageHelper.startPage(1,10);
+		int count = xxlJobInfoDao.pageListCount(id, -1,  null, null, null);
 		if (count > 0) {
 			return new ReturnT<String>(500, I18nUtil.getString("jobgroup_del_limit_0") );
 		}
@@ -173,7 +181,7 @@ public class JobGroupController {
 
 	@RequestMapping("/loadById")
 	@ResponseBody
-	public ReturnT<XxlJobGroup> loadById(int id){
+	public ReturnT<XxlJobGroup> loadById(long id){
 		XxlJobGroup jobGroup = xxlJobGroupDao.load(id);
 		return jobGroup!=null?new ReturnT<XxlJobGroup>(jobGroup):new ReturnT<XxlJobGroup>(ReturnT.FAIL_CODE, null);
 	}

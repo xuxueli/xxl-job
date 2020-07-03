@@ -1,5 +1,6 @@
 package com.xxl.job.admin.service.impl;
 
+import com.xxl.job.admin.core.id.GenerateId;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.admin.core.thread.JobTriggerPoolHelper;
@@ -39,6 +40,8 @@ public class AdminBizImpl implements AdminBiz {
     private XxlJobRegistryDao xxlJobRegistryDao;
     @Resource
     private XxlJobGroupDao xxlJobGroupDao;
+    @Resource
+    private GenerateId generateId;
 
 
     @Override
@@ -141,7 +144,7 @@ public class AdminBizImpl implements AdminBiz {
 
         int ret = xxlJobRegistryDao.registryUpdate(registryParam.getRegistryGroup(), registryParam.getRegistryKey(), registryParam.getRegistryValue(), new Date());
         if (ret < 1) {
-            xxlJobRegistryDao.registrySave(registryParam.getRegistryGroup(), registryParam.getRegistryKey(), registryParam.getRegistryValue(), new Date());
+            xxlJobRegistryDao.registrySave(registryParam.getRegistryGroup(), registryParam.getRegistryKey(), registryParam.getRegistryValue(), new Date(), generateId.getId());
 
             // fresh
             freshGroupRegistryInfo(registryParam);

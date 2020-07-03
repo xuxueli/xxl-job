@@ -20,18 +20,14 @@ public interface XxlJobGroupDao {
 
     public int update(XxlJobGroup xxlJobGroup);
 
-    public int remove(@Param("id") int id);
+    public int remove(@Param("id") long Id);
 
-    public XxlJobGroup load(@Param("id") int id);
+    public XxlJobGroup load(@Param("id") long Id);
 
-    public List<XxlJobGroup> pageList(@Param("offset") int offset,
-                                      @Param("pagesize") int pagesize,
-                                      @Param("appname") String appname,
+    public List<XxlJobGroup> pageList(@Param("appname") String appname,
                                       @Param("title") String title);
 
-    public int pageListCount(@Param("offset") int offset,
-                             @Param("pagesize") int pagesize,
-                             @Param("appname") String appname,
+    public int pageListCount(@Param("appname") String appname,
                              @Param("title") String title);
 
 }

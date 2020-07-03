@@ -14,9 +14,9 @@ import java.util.concurrent.ConcurrentMap;
  */
 public class ExecutorRouteRound extends ExecutorRouter {
 
-    private static ConcurrentMap<Integer, Integer> routeCountEachJob = new ConcurrentHashMap<Integer, Integer>();
+    private static ConcurrentMap<Long, Integer> routeCountEachJob = new ConcurrentHashMap<>();
     private static long CACHE_VALID_TIME = 0;
-    private static int count(int jobId) {
+    private static int count(long jobId) {
         // cache clear
         if (System.currentTimeMillis() > CACHE_VALID_TIME) {
             routeCountEachJob.clear();

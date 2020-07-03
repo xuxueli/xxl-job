@@ -1,5 +1,6 @@
 package com.xxl.job.admin.core.thread;
 
+import com.github.pagehelper.PageHelper;
 import com.xxl.job.admin.core.conf.XxlJobAdminConfig;
 import com.xxl.job.admin.core.model.XxlJobLogReport;
 import org.slf4j.Logger;
@@ -23,7 +24,6 @@ public class JobLogReportHelper {
     public static JobLogReportHelper getInstance(){
         return instance;
     }
-
 
     private Thread logrThread;
     private volatile boolean toStop = false;
@@ -83,6 +83,7 @@ public class JobLogReportHelper {
                             // do refresh
                             int ret = XxlJobAdminConfig.getAdminConfig().getXxlJobLogReportDao().update(xxlJobLogReport);
                             if (ret < 1) {
+                                xxlJobLogReport.setId(XxlJobAdminConfig.getAdminConfig().getGenerateId().getId());
                                 XxlJobAdminConfig.getAdminConfig().getXxlJobLogReportDao().save(xxlJobLogReport);
                             }
                         }
@@ -109,7 +110,8 @@ public class JobLogReportHelper {
                         // clean expired log
                         List<Long> logIds = null;
                         do {
-                            logIds = XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().findClearLogIds(0, 0, clearBeforeTime, 0, 1000);
+                            PageHelper.startPage(1,1000);
+                            logIds = XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().findClearLogIds(0, 0, clearBeforeTime, null);
                             if (logIds!=null && logIds.size()>0) {
                                 XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().clearLog(logIds);
                             }

@@ -143,6 +143,10 @@ public class DateUtil {
         return add(date, Calendar.MINUTE, amount);
     }
 
+    public static Date addSecond(final Date date, final int amount) {
+        return add(date, Calendar.SECOND, amount);
+    }
+
     private static Date add(final Date date, final int calendarField, final int amount) {
         if (date == null) {
             return null;

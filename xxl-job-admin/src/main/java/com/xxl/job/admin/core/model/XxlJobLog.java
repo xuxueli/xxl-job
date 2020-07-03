@@ -11,8 +11,8 @@ public class XxlJobLog {
 	private long id;
 	
 	// job info
-	private int jobGroup;
-	private int jobId;
+	private long jobGroup;
+	private long jobId;
 
 	// execute info
 	private String executorAddress;
@@ -42,19 +42,19 @@ public class XxlJobLog {
 		this.id = id;
 	}
 
-	public int getJobGroup() {
+	public long getJobGroup() {
 		return jobGroup;
 	}
 
-	public void setJobGroup(int jobGroup) {
+	public void setJobGroup(long jobGroup) {
 		this.jobGroup = jobGroup;
 	}
 
-	public int getJobId() {
+	public long getJobId() {
 		return jobId;
 	}
 
-	public void setJobId(int jobId) {
+	public void setJobId(long jobId) {
 		this.jobId = jobId;
 	}
 
