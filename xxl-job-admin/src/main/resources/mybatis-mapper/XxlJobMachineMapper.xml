@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xxl.job.admin.dao.XxlJobMachineDao">
+	
+	<resultMap id="XxlJobMachine" type="com.xxl.job.admin.core.model.XxlJobMachine" >
+		<result column="machine_ip" property="machineIp" />
+	    <result column="machine_id" property="machineId" />
+	    <result column="add_time" property="addTime" />
+		<result column="heart_last_time" property="heartLastTime" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		machine_ip,machine_id,add_time,heart_last_time
+	</sql>
+
+	<select id="selectByHostIp" resultMap="XxlJobMachine">
+		SELECT machine_ip,machine_id,add_time,heart_last_time
+		FROM XXL_JOB_MACHINE
+		WHERE machine_ip = #{machineIp}
+	</select>
+
+	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobMachine" >
+		INSERT INTO xxl_job_machine ( machine_ip, machine_id, add_time, heart_last_time)
+		VALUES ( #{xxlJobMachine.machineIp}, #{xxlJobMachine.machineId}, #{xxlJobMachine.addTime,jdbcType=TIMESTAMP}, #{xxlJobMachine.heartLastTime,jdbcType=TIMESTAMP})
+	</insert>
+
+	<update id="update" parameterType="object" >
+		UPDATE xxl_job_machine
+		SET heart_last_time = #{heartLastTime,jdbcType=TIMESTAMP}
+		WHERE machine_ip = #{machineIp}
+	</update>
+
+	<select id="selectMaxMachineId" resultType="Integer">
+		SELECT MAX(machine_id) FROM xxl_job_machine
+	</select>
+
+</mapper>
