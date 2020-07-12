@@ -187,6 +187,12 @@ $(function() {
 		                			}*/
 		                			//return temp;
 
+									var logKillDiv = '';
+									if(row.handleCode == 0){
+										logKillDiv = '       <li class="divider"></li>\n' +
+											'       <li><a href="javascript:void(0);" class="logKill" _id="'+ row.id +'" >'+ I18n.joblog_kill_log +'</a></li>\n';
+									}
+
 									var html = '<div class="btn-group">\n' +
 										'     <button type="button" class="btn btn-primary btn-sm">'+ I18n.system_opt +'</button>\n' +
 										'     <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">\n' +
@@ -195,8 +201,7 @@ $(function() {
 										'     </button>\n' +
 										'     <ul class="dropdown-menu" role="menu" _id="'+ row.id +'" >\n' +
 										'       <li><a href="javascript:void(0);" class="logDetail" _id="'+ row.id +'" >'+ I18n.joblog_rolling_log +'</a></li>\n' +
-										'       <li class="divider"></li>\n' +
-										'       <li><a href="javascript:void(0);" class="logKill" _id="'+ row.id +'" >'+ I18n.joblog_kill_log +'</a></li>\n' +
+										logKillDiv +
 										'     </ul>\n' +
 										'   </div>';
 

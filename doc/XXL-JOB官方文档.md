@@ -413,6 +413,30 @@ XXL-JOB是一个分布式任务调度平台，其核心设计目标是开发迅�
     - 322、美图之家科技优先公司【美图】
     - 323、南京太川信息技术有限公司
     - 324、众薪科技（北京）有限公司
+    - 325、武汉安安物联科技有限公司
+    - 326、北京智客朗道网络科技有限公司
+    - 327、深圳市超级猩猩健身管理管理有限公司
+    - 328、重庆达志科技有限公司
+    - 329、上海享评信息科技有限公司
+    - 330、薪得付信息科技
+    - 331、跟谁学
+    - 332、中道（苏州）旅游网络科技有限公司
+    - 333、广州小卫科技有限公司
+    - 334、上海非码网络科技有限公司
+    - 335、途家网网络技术（北京）有限公司【途家】
+    - 336、广州辉凡信息科技有限公司
+    - 337、天维尔信息科技股份有限公司
+    - 338、上海极豆科技有限公司
+    - 339、苏州触达信息技术有限公司
+    - 340、北京热云科技有限公司
+    - 341、中智企服（北京）科技有限公司
+    - 342、易联云计算（杭州）有限责任公司
+    - 343、青岛航空股份有限公司【青岛航空】
+    - 344、山西博睿通科技有限公司
+    - 345、网易杭州网络有限公司【网易】
+    - 346、北京果果乐学科技有限公司
+    - 347、百望股份有限公司
+    - 348、中保金服（深圳）科技有限公司
 	- ……
 
 > 更多接入的公司，欢迎在 [登记地址](https://github.com/xuxueli/xxl-job/issues/1 ) 登记，登记仅仅为了产品推广。
@@ -1183,7 +1207,8 @@ XXL-JOB会为每次调度请求生成一个单独的日志文件，需要通过 
 - Java语言任务获取分片参数方式：BEAN、GLUE模式(Java)
 ```
 // 可参考Sample示例执行器中的示例任务"ShardingJobHandler"了解试用 
-ShardingUtil.ShardingVO shardingVO = ShardingUtil.getShardingVo();
+int shardIndex = XxlJobContext.getXxlJobContext().getShardIndex();
+int shardTotal = XxlJobContext.getXxlJobContext().getShardTotal();
 ```
 - 脚本语言任务获取分片参数方式：GLUE模式(Shell)、GLUE模式(Python)、GLUE模式(Nodejs)
 ```
@@ -1961,8 +1986,21 @@ data: post-data
 注意：XxlJobSpringExecutor组件个别字段调整：“appName” 调整为 “appname” ，升级时该组件时需要注意；
 
 ### 7.31 版本 v2.2.1 Release Notes[迭代中]
-- 1、[迭代中] 新增任务属性 "XxlJobContent" ，统一维护任务上下文信息，方便运行时存取任务相关信息；
+- 1、Cron编辑器增强：Cron编辑器修改cron时可实时查看最近运行时间;
+- 2、Cron编辑器问题修复：修复小概率情况下cron单个字段修改时导致其他字段被重置问题；
+- 3、邮箱告警配置优化：将"spring.mail.from"与"spring.mail.username"属性拆分开，更加灵活的支持一些无密码邮箱服务；
+- 4、多个项目依赖升级至较新稳定版本，如netty、groovy、spring、springboot、mybatis等；
+- 5、通用HTTP任务Handler（httpJobHandler）优化：修复 "setDoOutput(true)" 导致任务请求GetMethod失效问题；
+- 6、新增任务属性 "XxlJobContent" ，统一维护任务上下文信息，包括任务ID、分片参数等，方便运行时存取任务相关信息；
+    - 6.1、废弃 "ShardingUtil" 组件：改用 "XxlJobContext.getXxlJobContext().getShardIndex()/getShardTotal();" 获取分片参数；
+    - 6.2、日志组件逻辑调整：日志组件改为通过 XxlJobContent 获取任务上下文并匹配写入对应日志文件；
+- 7、页面redirect跳转后https变为http问题修复；
+- 8、[规划中]任务触发参数优化：支持选择 "Cron触发"、"固定间隔时间触发"、"指定时间点触发"、"不选择" 等；
 
+### 7.32 版本 v2.3.0 Release Notes[规划中]
+- 1、[规划中]多数据库支持，DAO层通过JPA实现，不限制数据库类型；
+- 2、[规划中]告警增强：邮件告警 + webhook告警；
+- 3、[规划中]DAG流程任务
 
 ### TODO LIST
 - 1、任务分片路由：分片采用一致性Hash算法计算出尽量稳定的分片顺序，即使注册机器存在波动也不会引起分批分片顺序大的波动；目前采用IP自然排序，可以满足需求，待定；
