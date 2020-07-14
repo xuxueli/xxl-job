@@ -43,15 +43,15 @@ public class MachineServiceImpl implements MachineService {
 
     @Override
     public Integer getInitMachineId() {
-        XxlJobMachine xxlJobMachine = selectByMachineIp(MachineUtils.get());
+        XxlJobMachine xxlJobMachine = selectByMachineIp(MachineUtils.getIP());
         Date nowDate = new Date();
         int machineId = -1;
         if(xxlJobMachine != null){
-            update(MachineUtils.get(),nowDate);
+            update(MachineUtils.getIP(),nowDate);
             machineId =  xxlJobMachine.getMachineId();
         }else{
             xxlJobMachine = new XxlJobMachine();
-            xxlJobMachine.setMachineIp(MachineUtils.get());
+            xxlJobMachine.setMachineIp(MachineUtils.getIP());
             xxlJobMachine.setAddTime(nowDate);
             xxlJobMachine.setHeartLastTime(nowDate);
             Random random = new Random();
