@@ -18,6 +18,10 @@ public class MachineUtils {
 	private static final Logger logger = LoggerFactory.getLogger(MachineUtils.class);
 
 	private static String machineIp = null;
+	
+	public static String getIPAndPort(String port) {
+		return getIP().concat(":").concat(port);
+	}
 
 	public static String getIP() {
 		if (machineIp == null) {
