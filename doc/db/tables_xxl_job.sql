@@ -110,7 +110,7 @@ CREATE TABLE `xxl_job_lock` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `xxl_job_machine` (
-  `machine_ip` varchar(16) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '主机IP',
+  `machine_ip` varchar(22) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '主机IP',
   `machine_id` int(4) NOT NULL COMMENT '主机IP对应的机器码',
   `add_time` datetime NOT NULL COMMENT '创建时间',
   `heart_last_time` datetime NOT NULL COMMENT '最后一次心跳时间',
