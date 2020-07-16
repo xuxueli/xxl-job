@@ -45,7 +45,7 @@ public class JobApiController {
     @RequestMapping("/{uri}")
     @ResponseBody
     @PermissionLimit(limit=false)
-    public ReturnT<String> api(HttpServletRequest request, @PathVariable("uri") String uri, @RequestBody(required = false) String data) {
+    public ReturnT<?> api(HttpServletRequest request, @PathVariable("uri") String uri, @RequestBody(required = false) String data) {
 
         // valid
         if (!"POST".equalsIgnoreCase(request.getMethod())) {
@@ -73,9 +73,15 @@ public class JobApiController {
         } else if ("jobInfoAdd".equals(uri)) {
         	XxlJobInfo jobInfo = GsonTool.fromJson(data, XxlJobInfo.class);
         	return xxlJobService.add(jobInfo);
+        } else if ("jobInfoUpdate".equals(uri)) {
+        	XxlJobInfo jobInfo = GsonTool.fromJson(data, XxlJobInfo.class);
+        	return xxlJobService.update(jobInfo);
         } else if ("jobInfoRemove".equals(uri)) {
         	XxlJobInfo jobInfo = GsonTool.fromJson(data, XxlJobInfo.class);
         	return xxlJobService.remove(jobInfo.getId());
+        } else if ("jobInfoGet".equals(uri)) {
+        	XxlJobInfo jobInfo = GsonTool.fromJson(data, XxlJobInfo.class);
+        	return xxlJobService.getXxlJobInfo(jobInfo.getId());
         } else {
             return new ReturnT<String>(ReturnT.FAIL_CODE, "invalid request, uri-mapping("+ uri +") not found.");
         }

@@ -252,6 +252,11 @@ public class XxlJobServiceImpl implements XxlJobService {
 		xxlJobLogGlueDao.deleteByJobId(id);
 		return ReturnT.SUCCESS;
 	}
+	
+	@Override
+	public ReturnT<XxlJobInfo> getXxlJobInfo(long id) {
+		return new ReturnT<XxlJobInfo>(xxlJobInfoDao.loadById(id));
+	}
 
 	@Override
 	public ReturnT<String> start(long id) {
