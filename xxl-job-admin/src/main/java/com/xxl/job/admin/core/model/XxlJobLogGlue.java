@@ -8,27 +8,27 @@ import java.util.Date;
  */
 public class XxlJobLogGlue {
 	
-	private int id;
-	private int jobId;				// 任务主键ID
+	private long id;
+	private long jobId;				// 任务主键ID
 	private String glueType;		// GLUE类型	#com.xxl.job.core.glue.GlueTypeEnum
 	private String glueSource;
 	private String glueRemark;
 	private Date addTime;
 	private Date updateTime;
 
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
-	public int getJobId() {
+	public long getJobId() {
 		return jobId;
 	}
 
-	public void setJobId(int jobId) {
+	public void setJobId(long jobId) {
 		this.jobId = jobId;
 	}
 

@@ -1,5 +1,7 @@
 package com.xxl.job.admin.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.xxl.job.admin.core.id.GenerateId;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.cron.CronExpression;
@@ -16,7 +18,6 @@ import com.xxl.job.core.util.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-
 import javax.annotation.Resource;
 import java.text.MessageFormat;
 import java.text.ParseException;
@@ -40,13 +41,16 @@ public class XxlJobServiceImpl implements XxlJobService {
 	private XxlJobLogGlueDao xxlJobLogGlueDao;
 	@Resource
 	private XxlJobLogReportDao xxlJobLogReportDao;
+	@Resource
+	private GenerateId generateId;
 	
 	@Override
-	public Map<String, Object> pageList(int start, int length, int jobGroup, int triggerStatus, String jobDesc, String executorHandler, String author) {
+	public Map<String, Object> pageList(int start, int length, long jobGroup, int triggerStatus, String jobDesc, String executorHandler, String author) {
 
 		// page list
-		List<XxlJobInfo> list = xxlJobInfoDao.pageList(start, length, jobGroup, triggerStatus, jobDesc, executorHandler, author);
-		int list_count = xxlJobInfoDao.pageListCount(start, length, jobGroup, triggerStatus, jobDesc, executorHandler, author);
+		PageHelper.startPage(start/length+1,length);
+		List<XxlJobInfo> list = xxlJobInfoDao.pageList(jobGroup, triggerStatus, jobDesc, executorHandler, author);
+		int list_count = xxlJobInfoDao.pageListCount(jobGroup, triggerStatus, jobDesc, executorHandler, author);
 		
 		// package result
 		Map<String, Object> maps = new HashMap<String, Object>();
@@ -120,12 +124,17 @@ public class XxlJobServiceImpl implements XxlJobService {
 		jobInfo.setAddTime(new Date());
 		jobInfo.setUpdateTime(new Date());
 		jobInfo.setGlueUpdatetime(new Date());
+		jobInfo.setId(generateId.getId());
 		xxlJobInfoDao.save(jobInfo);
 		if (jobInfo.getId() < 1) {
 			return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("jobinfo_field_add")+I18nUtil.getString("system_fail")) );
 		}
 
 		return new ReturnT<String>(String.valueOf(jobInfo.getId()));
+	}
+
+	public static void main(String[] args) {
+//		Integer a = 185337369535193088;
 	}
 
 	private boolean isNumeric(String str){
@@ -232,7 +241,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 	}
 
 	@Override
-	public ReturnT<String> remove(int id) {
+	public ReturnT<String> remove(long id) {
 		XxlJobInfo xxlJobInfo = xxlJobInfoDao.loadById(id);
 		if (xxlJobInfo == null) {
 			return ReturnT.SUCCESS;
@@ -245,7 +254,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 	}
 
 	@Override
-	public ReturnT<String> start(int id) {
+	public ReturnT<String> start(long id) {
 		XxlJobInfo xxlJobInfo = xxlJobInfoDao.loadById(id);
 
 		// next trigger time (5s后生效，避开预读周期)
@@ -271,7 +280,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 	}
 
 	@Override
-	public ReturnT<String> stop(int id) {
+	public ReturnT<String> stop(long id) {
         XxlJobInfo xxlJobInfo = xxlJobInfoDao.loadById(id);
 
 		xxlJobInfo.setTriggerStatus(0);

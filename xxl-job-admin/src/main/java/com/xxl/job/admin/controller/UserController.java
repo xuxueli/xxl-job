@@ -1,10 +1,14 @@
 package com.xxl.job.admin.controller;
 
+import com.github.pagehelper.PageHelper;
 import com.xxl.job.admin.controller.annotation.PermissionLimit;
+import com.xxl.job.admin.core.id.GenerateId;
 import com.xxl.job.admin.core.model.XxlJobGroup;
+import com.xxl.job.admin.core.model.XxlJobLogGlue;
 import com.xxl.job.admin.core.model.XxlJobUser;
 import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.admin.dao.XxlJobGroupDao;
+import com.xxl.job.admin.dao.XxlJobLogGlueDao;
 import com.xxl.job.admin.dao.XxlJobUserDao;
 import com.xxl.job.admin.service.LoginService;
 import com.xxl.job.core.biz.model.ReturnT;
@@ -18,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +38,10 @@ public class UserController {
     private XxlJobUserDao xxlJobUserDao;
     @Resource
     private XxlJobGroupDao xxlJobGroupDao;
+    @Resource
+    private GenerateId generateId;
+    @Resource
+    private XxlJobLogGlueDao xxlJobLogGlueDao;
 
     @RequestMapping
     @PermissionLimit(adminuser = true)
@@ -52,9 +61,11 @@ public class UserController {
                                         @RequestParam(required = false, defaultValue = "10") int length,
                                         String username, int role) {
 
+        PageHelper.startPage(start/length+1,length);
         // page list
-        List<XxlJobUser> list = xxlJobUserDao.pageList(start, length, username, role);
-        int list_count = xxlJobUserDao.pageListCount(start, length, username, role);
+        List<XxlJobUser> list = xxlJobUserDao.pageList(username, role);
+
+        int list_count = xxlJobUserDao.pageListCount(username, role);
 
         // package result
         Map<String, Object> maps = new HashMap<String, Object>();
@@ -94,6 +105,8 @@ public class UserController {
             return new ReturnT<String>(ReturnT.FAIL_CODE, I18nUtil.getString("user_username_repeat") );
         }
 
+        xxlJobUser.setId(generateId.getId());
+
         // write
         xxlJobUserDao.save(xxlJobUser);
         return ReturnT.SUCCESS;
@@ -130,7 +143,7 @@ public class UserController {
     @RequestMapping("/remove")
     @ResponseBody
     @PermissionLimit(adminuser = true)
-    public ReturnT<String> remove(HttpServletRequest request, int id) {
+    public ReturnT<String> remove(HttpServletRequest request, long id) {
 
         // avoid opt login seft
         XxlJobUser loginUser = (XxlJobUser) request.getAttribute(LoginService.LOGIN_IDENTITY_KEY);

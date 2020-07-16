@@ -1,5 +1,7 @@
 package com.xxl.job.admin.controller;
 
+import com.github.pagehelper.PageHelper;
+import com.xxl.job.admin.core.id.GenerateId;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLogGlue;
 import com.xxl.job.admin.core.util.I18nUtil;
@@ -30,8 +32,11 @@ public class JobCodeController {
 	@Resource
 	private XxlJobLogGlueDao xxlJobLogGlueDao;
 
+	@Resource
+	private GenerateId generateId;
+
 	@RequestMapping
-	public String index(HttpServletRequest request, Model model, int jobId) {
+	public String index(HttpServletRequest request, Model model, long jobId) {
 		XxlJobInfo jobInfo = xxlJobInfoDao.loadById(jobId);
 		List<XxlJobLogGlue> jobLogGlues = xxlJobLogGlueDao.findByJobId(jobId);
 
@@ -55,7 +60,7 @@ public class JobCodeController {
 	
 	@RequestMapping("/save")
 	@ResponseBody
-	public ReturnT<String> save(Model model, int id, String glueSource, String glueRemark) {
+	public ReturnT<String> save(Model model, long id, String glueSource, String glueRemark) {
 		// valid
 		if (glueRemark==null) {
 			return new ReturnT<String>(500, (I18nUtil.getString("system_please_input") + I18nUtil.getString("jobinfo_glue_remark")) );
@@ -85,10 +90,13 @@ public class JobCodeController {
 
 		xxlJobLogGlue.setAddTime(new Date());
 		xxlJobLogGlue.setUpdateTime(new Date());
+		xxlJobLogGlue.setId(generateId.getId());
 		xxlJobLogGlueDao.save(xxlJobLogGlue);
 
 		// remove code backup more than 30
-		xxlJobLogGlueDao.removeOld(exists_jobInfo.getId(), 30);
+		PageHelper.startPage(1,30);
+		List<Long> ids = xxlJobLogGlueDao.findIds(exists_jobInfo.getId());
+		xxlJobLogGlueDao.removeOld(exists_jobInfo.getId(), ids);
 
 		return ReturnT.SUCCESS;
 	}

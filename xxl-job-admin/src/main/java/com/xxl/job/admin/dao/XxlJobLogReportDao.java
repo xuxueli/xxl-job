@@ -14,7 +14,7 @@ import java.util.List;
 @Mapper
 public interface XxlJobLogReportDao {
 
-	public int save(XxlJobLogReport xxlJobLogReport);
+	void save(XxlJobLogReport xxlJobLogReport);
 
 	public int update(XxlJobLogReport xxlJobLogReport);
 

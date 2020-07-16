@@ -14,58 +14,66 @@
 	</resultMap>
 
 	<sql id="Base_Column_List">
-		t.id,
-		t.job_id,
-		t.glue_type,
-		t.glue_source,
-		t.glue_remark,
-		t.add_time,
-		t.update_time
+		id,
+		job_id,
+		glue_type,
+		glue_source,
+		glue_remark,
+		add_time,
+		update_time
 	</sql>
 	
-	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobLogGlue" useGeneratedKeys="true" keyProperty="id" >
+	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobLogGlue" >
 		INSERT INTO xxl_job_logglue (
-			`job_id`,
-			`glue_type`,
-			`glue_source`,
-			`glue_remark`,
-			`add_time`, 
-			`update_time`
+			id,
+			job_id,
+			glue_type,
+			glue_source,
+			glue_remark,
+			add_time,
+			update_time
 		) VALUES (
+			#{id},
 			#{jobId},
 			#{glueType},
 			#{glueSource},
 			#{glueRemark},
-			#{addTime},
-			#{updateTime}
-		);
+			#{addTime,jdbcType=TIMESTAMP},
+			#{updateTime,jdbcType=TIMESTAMP}
+		)
 		<!--<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
 			SELECT LAST_INSERT_ID() 
 		</selectKey>-->
 	</insert>
 	
-	<select id="findByJobId" parameterType="java.lang.Integer" resultMap="XxlJobLogGlue">
+	<select id="findByJobId" parameterType="java.lang.Long" resultMap="XxlJobLogGlue">
 		SELECT <include refid="Base_Column_List" />
-		FROM xxl_job_logglue AS t
-		WHERE t.job_id = #{jobId}
+		FROM xxl_job_logglue
+		WHERE job_id = #{jobId}
 		ORDER BY id DESC
 	</select>
 	
 	<delete id="removeOld" >
 		DELETE FROM xxl_job_logglue
-		WHERE id NOT in(
-			SELECT id FROM(
-				SELECT id FROM xxl_job_logglue
-				WHERE `job_id` = #{jobId}
-				ORDER BY update_time desc
-				LIMIT 0, #{limit}
-			) t1
-		) AND `job_id` = #{jobId}
+		WHERE job_id = #{jobId}
+		<if test="recentLogIds != null and recentLogIds.size() gt 0">
+			AND id NOT in
+			<foreach collection="recentLogIds" item="item" open="(" close=")" separator=",">
+				#{item}
+			</foreach>
+		</if>
+		)
 	</delete>
 	
-	<delete id="deleteByJobId" parameterType="java.lang.Integer" >
+	<delete id="deleteByJobId" parameterType="java.lang.Long" >
 		DELETE FROM xxl_job_logglue
-		WHERE `job_id` = #{jobId}
+		WHERE job_id = #{jobId}
 	</delete>
+
+	<select id="findIds" resultType="long">
+		SELECT id FROM xxl_job_logglue
+				WHERE job_id = #{jobId}
+				ORDER BY update_time desc
+	</select>
 	
 </mapper>

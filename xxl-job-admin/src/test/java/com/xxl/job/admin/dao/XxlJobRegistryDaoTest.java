@@ -1,6 +1,8 @@
 package com.xxl.job.admin.dao;
 
+import com.xxl.job.admin.core.id.GenerateId;
 import com.xxl.job.admin.core.model.XxlJobRegistry;
+import com.xxl.job.core.util.DateUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,17 +19,20 @@ public class XxlJobRegistryDaoTest {
 
     @Resource
     private XxlJobRegistryDao xxlJobRegistryDao;
+    @Resource
+    private GenerateId generateId;
 
     @Test
     public void test(){
         int ret = xxlJobRegistryDao.registryUpdate("g1", "k1", "v1", new Date());
         if (ret < 1) {
-            ret = xxlJobRegistryDao.registrySave("g1", "k1", "v1", new Date());
+            ret = xxlJobRegistryDao.registrySave("g1", "k1", "v1", new Date(), generateId.getId());
         }
 
-        List<XxlJobRegistry> list = xxlJobRegistryDao.findAll(1, new Date());
+        Date time = DateUtil.addSecond(new Date(),1);
+        List<XxlJobRegistry> list = xxlJobRegistryDao.findAll(time);
 
-        int ret2 = xxlJobRegistryDao.removeDead(Arrays.asList(1));
+        int ret2 = xxlJobRegistryDao.removeDead(Arrays.asList(1L));
     }
 
 }

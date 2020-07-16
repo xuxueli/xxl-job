@@ -27,7 +27,7 @@ import java.util.concurrent.*;
 public class JobThread extends Thread{
 	private static Logger logger = LoggerFactory.getLogger(JobThread.class);
 
-	private int jobId;
+	private long jobId;
 	private IJobHandler handler;
 	private LinkedBlockingQueue<TriggerParam> triggerQueue;
 	private Set<Long> triggerLogIdSet;		// avoid repeat trigger for the same TRIGGER_LOG_ID
@@ -39,7 +39,7 @@ public class JobThread extends Thread{
 	private int idleTimes = 0;			// idel times
 
 
-	public JobThread(int jobId, IJobHandler handler) {
+	public JobThread(long jobId, IJobHandler handler) {
 		this.jobId = jobId;
 		this.handler = handler;
 		this.triggerQueue = new LinkedBlockingQueue<TriggerParam>();

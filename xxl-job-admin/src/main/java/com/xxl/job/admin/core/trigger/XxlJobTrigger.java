@@ -15,6 +15,7 @@ import com.xxl.job.core.util.IpUtil;
 import com.xxl.job.core.util.ThrowableUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
@@ -22,8 +23,12 @@ import java.util.Date;
  * xxl-job trigger
  * Created by xuxueli on 17/7/13.
  */
+@Component
 public class XxlJobTrigger {
     private static Logger logger = LoggerFactory.getLogger(XxlJobTrigger.class);
+
+//    @Autowired
+//    private static GenerateId generateId;
 
     /**
      * trigger job
@@ -41,7 +46,7 @@ public class XxlJobTrigger {
      *          null: use executor addressList
      *          not null: cover
      */
-    public static void trigger(int jobId,
+    public static void trigger(long jobId,
                                TriggerTypeEnum triggerType,
                                int failRetryCount,
                                String executorShardingParam,
@@ -120,6 +125,10 @@ public class XxlJobTrigger {
         jobLog.setJobGroup(jobInfo.getJobGroup());
         jobLog.setJobId(jobInfo.getId());
         jobLog.setTriggerTime(new Date());
+        jobLog.setId(XxlJobAdminConfig.getAdminConfig().getGenerateId().getId());
+        jobLog.setHandleTime(new Date());
+        jobLog.setExecutorFailRetryCount(0);
+        jobLog.setAlarmStatus(0);
         XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().save(jobLog);
         logger.debug(">>>>>>>>>>> xxl-job trigger start, jobId:{}", jobLog.getId());
 

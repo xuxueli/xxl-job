@@ -1,5 +1,6 @@
 package com.xxl.job.admin.dao;
 
+import com.github.pagehelper.PageHelper;
 import com.xxl.job.admin.core.model.XxlJobLogGlue;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,7 +32,9 @@ public class XxlJobLogGlueDaoTest {
 
         List<XxlJobLogGlue> list = xxlJobLogGlueDao.findByJobId(1);
 
-        int ret2 = xxlJobLogGlueDao.removeOld(1, 1);
+        PageHelper.startPage(1,30);
+        List<Long> ids = xxlJobLogGlueDao.findIds(1);
+        int ret2 = xxlJobLogGlueDao.removeOld(1, ids);
 
         int ret3 =xxlJobLogGlueDao.deleteByJobId(1);
     }

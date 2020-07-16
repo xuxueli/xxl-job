@@ -8,7 +8,7 @@ use `xxl_job`;
 SET NAMES utf8mb4;
 
 CREATE TABLE `xxl_job_info` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` bigint(20) NOT NULL
   `job_group` int(11) NOT NULL COMMENT '执行器主键ID',
   `job_cron` varchar(128) NOT NULL COMMENT '任务执行CRON',
   `job_desc` varchar(255) NOT NULL,
@@ -34,7 +34,7 @@ CREATE TABLE `xxl_job_info` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `xxl_job_log` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `id` bigint(20) NOT NULL
   `job_group` int(11) NOT NULL COMMENT '执行器主键ID',
   `job_id` int(11) NOT NULL COMMENT '任务，主键ID',
   `executor_address` varchar(255) DEFAULT NULL COMMENT '执行器地址，本次执行的地址',
@@ -55,7 +55,7 @@ CREATE TABLE `xxl_job_log` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `xxl_job_log_report` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` bigint(20) NOT NULL
   `trigger_day` datetime DEFAULT NULL COMMENT '调度-时间',
   `running_count` int(11) NOT NULL DEFAULT '0' COMMENT '运行中-日志数量',
   `suc_count` int(11) NOT NULL DEFAULT '0' COMMENT '执行成功-日志数量',
@@ -65,7 +65,7 @@ CREATE TABLE `xxl_job_log_report` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `xxl_job_logglue` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` bigint(20) NOT NULL
   `job_id` int(11) NOT NULL COMMENT '任务，主键ID',
   `glue_type` varchar(50) DEFAULT NULL COMMENT 'GLUE类型',
   `glue_source` mediumtext COMMENT 'GLUE源代码',
@@ -76,7 +76,7 @@ CREATE TABLE `xxl_job_logglue` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `xxl_job_registry` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` bigint(20) NOT NULL
   `registry_group` varchar(50) NOT NULL,
   `registry_key` varchar(255) NOT NULL,
   `registry_value` varchar(255) NOT NULL,
@@ -86,7 +86,7 @@ CREATE TABLE `xxl_job_registry` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `xxl_job_group` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` bigint(20) NOT NULL
   `app_name` varchar(64) NOT NULL COMMENT '执行器AppName',
   `title` varchar(12) NOT NULL COMMENT '执行器名称',
   `address_type` tinyint(4) NOT NULL DEFAULT '0' COMMENT '执行器地址类型：0=自动注册、1=手动录入',
@@ -95,7 +95,7 @@ CREATE TABLE `xxl_job_group` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `xxl_job_user` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` bigint(20) NOT NULL
   `username` varchar(50) NOT NULL COMMENT '账号',
   `password` varchar(50) NOT NULL COMMENT '密码',
   `role` tinyint(4) NOT NULL COMMENT '角色：0-普通用户、1-管理员',
@@ -108,6 +108,15 @@ CREATE TABLE `xxl_job_lock` (
   `lock_name` varchar(50) NOT NULL COMMENT '锁名称',
   PRIMARY KEY (`lock_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `xxl_job_machine` (
+  `machine_ip` varchar(22) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '主机IP',
+  `machine_id` int(4) NOT NULL COMMENT '主机IP对应的机器码',
+  `add_time` datetime NOT NULL COMMENT '创建时间',
+  `heart_last_time` datetime NOT NULL COMMENT '最后一次心跳时间',
+  PRIMARY KEY (`machine_ip`) USING BTREE,
+  UNIQUE INDEX `index_machine_id`(`machine_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 INSERT INTO `xxl_job_group`(`id`, `app_name`, `title`, `address_type`, `address_list`) VALUES (1, 'xxl-job-executor-sample', '示例执行器', 0, NULL);

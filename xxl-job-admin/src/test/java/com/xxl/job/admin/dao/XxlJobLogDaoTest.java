@@ -1,5 +1,6 @@
 package com.xxl.job.admin.dao;
 
+import com.github.pagehelper.PageHelper;
 import com.xxl.job.admin.core.model.XxlJobLog;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,8 +20,9 @@ public class XxlJobLogDaoTest {
 
     @Test
     public void test(){
-        List<XxlJobLog> list = xxlJobLogDao.pageList(0, 10, 1, 1, null, null, 1);
-        int list_count = xxlJobLogDao.pageListCount(0, 10, 1, 1, null, null, 1);
+        PageHelper.startPage(1,10);
+        List<XxlJobLog> list = xxlJobLogDao.pageList(1, 1, null, null, 1);
+        int list_count = xxlJobLogDao.pageListCount(1, 1, null, null, 1);
 
         XxlJobLog log = new XxlJobLog();
         log.setJobGroup(1);
@@ -46,7 +48,7 @@ public class XxlJobLogDaoTest {
         dto = xxlJobLogDao.load(log.getId());
 
 
-        List<Long> ret4 = xxlJobLogDao.findClearLogIds(1, 1, new Date(), 100, 100);
+        List<Long> ret4 = xxlJobLogDao.findClearLogIds(1, 1, new Date(), null);
 
         int ret2 = xxlJobLogDao.delete(log.getJobId());
 
