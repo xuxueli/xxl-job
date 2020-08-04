@@ -5,7 +5,6 @@ import com.xxl.job.core.biz.model.HandleCallbackParam;
 import com.xxl.job.core.biz.model.RegistryParam;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.util.XxlJobRemotingUtil;
-
 import java.util.List;
 
 /**
@@ -17,13 +16,21 @@ public class AdminBizClient implements AdminBiz {
 
     public AdminBizClient() {
     }
+
     public AdminBizClient(String addressUrl, String accessToken) {
+      initAdminBizClient(addressUrl, accessToken, null);
+    }
+
+    public AdminBizClient(String addressUrl, String accessToken, int timeout) {
+      initAdminBizClient(addressUrl, accessToken, timeout);
+    }
+
+    public void initAdminBizClient(String addressUrl, String accessToken, Integer timeout) {
+        if (timeout != null) this.timeout = timeout;
         this.addressUrl = addressUrl;
         this.accessToken = accessToken;
-
-        // valid
         if (!this.addressUrl.endsWith("/")) {
-            this.addressUrl = this.addressUrl + "/";
+          this.addressUrl = this.addressUrl + "/";
         }
     }
 

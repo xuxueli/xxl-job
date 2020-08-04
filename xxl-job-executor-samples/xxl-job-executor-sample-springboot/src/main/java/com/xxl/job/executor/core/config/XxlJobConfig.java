@@ -40,6 +40,9 @@ public class XxlJobConfig {
     @Value("${xxl.job.executor.logretentiondays}")
     private int logRetentionDays;
 
+    @Value("3")
+    private int timeout;
+
 
     @Bean
     public XxlJobSpringExecutor xxlJobExecutor() {
@@ -48,6 +51,7 @@ public class XxlJobConfig {
         xxlJobSpringExecutor.setAdminAddresses(adminAddresses);
         xxlJobSpringExecutor.setAppname(appname);
         xxlJobSpringExecutor.setAddress(address);
+        xxlJobSpringExecutor.setTimeout(timeout);
         xxlJobSpringExecutor.setIp(ip);
         xxlJobSpringExecutor.setPort(port);
         xxlJobSpringExecutor.setAccessToken(accessToken);
