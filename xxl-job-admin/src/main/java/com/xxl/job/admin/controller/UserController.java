@@ -165,7 +165,6 @@ public class UserController {
         XxlJobUser existUser = xxlJobUserDao.loadByUserName(loginUser.getUsername());
         existUser.setPassword(md5Password);
         xxlJobUserDao.update(existUser);
-
         return ReturnT.SUCCESS;
     }
 

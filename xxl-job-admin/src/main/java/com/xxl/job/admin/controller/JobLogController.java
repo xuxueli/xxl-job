@@ -82,7 +82,7 @@ public class JobLogController {
 		List<XxlJobInfo> list = xxlJobInfoDao.getJobsByGroup(jobGroup);
 		return new ReturnT<List<XxlJobInfo>>(list);
 	}
-	
+
 	@RequestMapping("/pageList")
 	@ResponseBody
 	public Map<String, Object> pageList(HttpServletRequest request,
@@ -91,8 +91,8 @@ public class JobLogController {
 										int jobGroup, int jobId, int logStatus, String filterTime) {
 
 		// valid permission
-		JobInfoController.validPermission(request, jobGroup);	// 仅管理员支持查询全部；普通用户仅支持查询有权限的 jobGroup
-		
+//		JobInfoController.validPermission(request, jobGroup);	// 仅管理员支持查询全部；普通用户仅支持查询有权限的 jobGroup
+
 		// parse param
 		Date triggerTimeStart = null;
 		Date triggerTimeEnd = null;
@@ -103,16 +103,16 @@ public class JobLogController {
 				triggerTimeEnd = DateUtil.parseDateTime(temp[1]);
 			}
 		}
-		
+
 		// page query
 		List<XxlJobLog> list = xxlJobLogDao.pageList(start, length, jobGroup, jobId, triggerTimeStart, triggerTimeEnd, logStatus);
 		int list_count = xxlJobLogDao.pageListCount(start, length, jobGroup, jobId, triggerTimeStart, triggerTimeEnd, logStatus);
-		
+
 		// package result
 		Map<String, Object> maps = new HashMap<String, Object>();
-	    maps.put("recordsTotal", list_count);		// 总记录数
-	    maps.put("recordsFiltered", list_count);	// 过滤后的总记录数
-	    maps.put("data", list);  					// 分页列表
+		maps.put("recordsTotal", list_count);		// 总记录数
+		maps.put("recordsFiltered", list_count);	// 过滤后的总记录数
+		maps.put("data", list);  					// 分页列表
 		return maps;
 	}
 
@@ -123,14 +123,14 @@ public class JobLogController {
 		ReturnT<String> logStatue = ReturnT.SUCCESS;
 		XxlJobLog jobLog = xxlJobLogDao.load(id);
 		if (jobLog == null) {
-            throw new RuntimeException(I18nUtil.getString("joblog_logid_unvalid"));
+			throw new RuntimeException(I18nUtil.getString("joblog_logid_unvalid"));
 		}
 
-        model.addAttribute("triggerCode", jobLog.getTriggerCode());
-        model.addAttribute("handleCode", jobLog.getHandleCode());
-        model.addAttribute("executorAddress", jobLog.getExecutorAddress());
-        model.addAttribute("triggerTime", jobLog.getTriggerTime().getTime());
-        model.addAttribute("logId", jobLog.getId());
+		model.addAttribute("triggerCode", jobLog.getTriggerCode());
+		model.addAttribute("handleCode", jobLog.getHandleCode());
+		model.addAttribute("executorAddress", jobLog.getExecutorAddress());
+		model.addAttribute("triggerTime", jobLog.getTriggerTime().getTime());
+		model.addAttribute("logId", jobLog.getId());
 		return "joblog/joblog.detail";
 	}
 
@@ -142,12 +142,12 @@ public class JobLogController {
 			ReturnT<LogResult> logResult = executorBiz.log(new LogParam(triggerTime, logId, fromLineNum));
 
 			// is end
-            if (logResult.getContent()!=null && logResult.getContent().getFromLineNum() > logResult.getContent().getToLineNum()) {
-                XxlJobLog jobLog = xxlJobLogDao.load(logId);
-                if (jobLog.getHandleCode() > 0) {
-                    logResult.getContent().setEnd(true);
-                }
-            }
+			if (logResult.getContent()!=null && logResult.getContent().getFromLineNum() > logResult.getContent().getToLineNum()) {
+				XxlJobLog jobLog = xxlJobLogDao.load(logId);
+				if (jobLog.getHandleCode() > 0) {
+					logResult.getContent().setEnd(true);
+				}
+			}
 
 			return logResult;
 		} catch (Exception e) {
