@@ -26,8 +26,8 @@ public class ExecutorRouteRound extends ExecutorRouter {
         }
 
         AtomicInteger count = routeCountEachJob.get(jobId);
-        // 初始化时主动Random一次，缓解首次压力
         if (count == null || count.get() > 1000000) {
+            // 初始化时主动Random一次，缓解首次压力
             count = new AtomicInteger(new Random().nextInt(100));
         } else {
             // count++
