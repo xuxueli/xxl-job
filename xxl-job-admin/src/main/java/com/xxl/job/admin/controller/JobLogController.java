@@ -19,6 +19,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -125,10 +127,21 @@ public class JobLogController {
 		if (jobLog == null) {
             throw new RuntimeException(I18nUtil.getString("joblog_logid_unvalid"));
 		}
+		// find active address
+		XxlJobGroup jobGroup = xxlJobGroupDao.load(jobLog.getJobGroup());
+		String executorAddress = null;
+		String addressList = jobGroup.getAddressList();
+		if (!ObjectUtils.isEmpty(jobGroup) && !StringUtils.isEmpty(addressList)) {
+			String[] address = addressList.split(",");
+			executorAddress = address[0];
+		}
+		if (StringUtils.isEmpty(executorAddress)) {
+			throw new RuntimeException(I18nUtil.getString("joblog_trigger_address_empty"));
+		}
 
         model.addAttribute("triggerCode", jobLog.getTriggerCode());
         model.addAttribute("handleCode", jobLog.getHandleCode());
-        model.addAttribute("executorAddress", jobLog.getExecutorAddress());
+        model.addAttribute("executorAddress", executorAddress);
         model.addAttribute("triggerTime", jobLog.getTriggerTime().getTime());
         model.addAttribute("logId", jobLog.getId());
 		return "joblog/joblog.detail";
