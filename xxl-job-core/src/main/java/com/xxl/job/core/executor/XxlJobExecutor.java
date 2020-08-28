@@ -44,6 +44,9 @@ public class XxlJobExecutor  {
     public void setAppname(String appname) {
         this.appname = appname;
     }
+    public void setAppName(String appName) {
+        this.appname = appName;
+    }
     public void setAddress(String address) {
         this.address = address;
     }
