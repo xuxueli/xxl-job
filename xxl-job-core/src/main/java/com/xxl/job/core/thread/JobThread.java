@@ -8,6 +8,7 @@ import com.xxl.job.core.executor.XxlJobExecutor;
 import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.log.XxlJobFileAppender;
 import com.xxl.job.core.log.XxlJobLogger;
+import com.xxl.job.core.util.GsonTool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -106,7 +107,7 @@ public class JobThread extends Thread{
 			idleTimes++;
 
             TriggerParam triggerParam = null;
-            ReturnT<String> executeResult = null;
+            ReturnT executeResult = null;
             try {
 				// to check toStop signal, we need cycle, so wo cannot use queue.take(), instand of poll(timeout)
 				triggerParam = triggerQueue.poll(3L, TimeUnit.SECONDS);
@@ -131,9 +132,9 @@ public class JobThread extends Thread{
 						Thread futureThread = null;
 						try {
 							final TriggerParam triggerParamTmp = triggerParam;
-							FutureTask<ReturnT<String>> futureTask = new FutureTask<ReturnT<String>>(new Callable<ReturnT<String>>() {
+							FutureTask<ReturnT> futureTask = new FutureTask<ReturnT>(new Callable<ReturnT>() {
 								@Override
-								public ReturnT<String> call() throws Exception {
+								public ReturnT call() throws Exception {
 									return handler.execute(triggerParamTmp.getExecutorParams());
 								}
 							});
@@ -158,11 +159,14 @@ public class JobThread extends Thread{
 					if (executeResult == null) {
 						executeResult = IJobHandler.FAIL;
 					} else {
-						executeResult.setMsg(
-								(executeResult!=null&&executeResult.getMsg()!=null&&executeResult.getMsg().length()>50000)
-										?executeResult.getMsg().substring(0, 50000).concat("...")
-										:executeResult.getMsg());
-						executeResult.setContent(null);	// limit obj size
+						executeResult.setMsg(executeResult.getMsg() != null && executeResult.getMsg().length() > 50000
+										? executeResult.getMsg().substring(0, 50000).concat("...")
+										: executeResult.getMsg());
+						// limit obj size
+						String content = GsonTool.toJson(executeResult.getContent());
+						executeResult.setContent(content != null && content.length() > 50000
+										? content.substring(0, 50000).concat("...")
+										: content);
 					}
 					XxlJobLogger.log("<br>----------- xxl-job job execute end(finish) -----------<br>----------- ReturnT:" + executeResult);
 
