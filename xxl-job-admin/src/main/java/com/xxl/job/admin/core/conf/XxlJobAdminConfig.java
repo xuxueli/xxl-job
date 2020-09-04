@@ -71,8 +71,8 @@ public class XxlJobAdminConfig implements InitializingBean, DisposableBean {
     @Value("${xxl.job.accessToken}")
     private String accessToken;
 
-    @Value("${spring.mail.username}")
-    private String emailUserName;
+    @Value("${spring.mail.from}")
+    private String emailFrom;
 
     @Value("${xxl.job.triggerpool.fast.max}")
     private int triggerPoolFastMax;
@@ -142,8 +142,8 @@ public class XxlJobAdminConfig implements InitializingBean, DisposableBean {
         return accessToken;
     }
 
-    public String getEmailUserName() {
-        return emailUserName;
+    public String getEmailFrom() {
+        return emailFrom;
     }
 
     public int getTriggerPoolFastMax() {

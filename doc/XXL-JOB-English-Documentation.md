@@ -416,7 +416,7 @@ The concrete contet describe as follows:
 
     ### JDBC connection info of schedule center：keep Consistent with chapter 2.1
     xxl.job.db.driverClass=com.mysql.jdbc.Driver
-    xxl.job.db.url=jdbc:mysql://localhost:3306/xxl-job?useUnicode=true&characterEncoding=UTF-8
+    xxl.job.db.url=jdbc:mysql://127.0.0.1:3306/xxl_job?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai
     xxl.job.db.user=root
     xxl.job.db.password=root_pwd
     
@@ -974,7 +974,8 @@ When “分片广播” is selected as route policy in executor cluster, one tas
 
 The develop process of "分片广播" is the same as general task, The difference is that you can get slice parameters，code as shown below（go and see ShardingJobHandler in execuotr example ):
 
-    ShardingUtil.ShardingVO shardingVO = ShardingUtil.getShardingVo();
+    int shardIndex = XxlJobContext.getXxlJobContext().getShardIndex();
+    int shardTotal = XxlJobContext.getXxlJobContext().getShardTotal();
     
 This slice parameter object has two properties:
 

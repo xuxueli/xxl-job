@@ -184,7 +184,7 @@ $(function() {
 	// jquery.validate “low letters start, limit contants、 letters、numbers and line-through.”
 	jQuery.validator.addMethod("myValid01", function(value, element) {
 		var length = value.length;
-		var valid = /^[a-z][a-zA-Z0-9-]*$/;
+		var valid = /^[a-z][a-zA-Z0-9-._]*$/;
 		return this.optional(element) || valid.test(value);
 	}, I18n.jobgroup_field_appname_limit );
 

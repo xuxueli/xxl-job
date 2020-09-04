@@ -51,8 +51,9 @@ public class HttpJobHandler extends IJobHandler {
             XxlJobLogger.log("method["+ method +"] invalid.");
             return ReturnT.FAIL;
         }
+        boolean isPostMethod = method.equals("POST");
 
-        // request
+                // request
         HttpURLConnection connection = null;
         BufferedReader bufferedReader = null;
         try {
@@ -62,7 +63,7 @@ public class HttpJobHandler extends IJobHandler {
 
             // connection setting
             connection.setRequestMethod(method);
-            connection.setDoOutput(true);
+            connection.setDoOutput(isPostMethod);
             connection.setDoInput(true);
             connection.setUseCaches(false);
             connection.setReadTimeout(5 * 1000);
@@ -75,7 +76,7 @@ public class HttpJobHandler extends IJobHandler {
             connection.connect();
 
             // data
-            if (data!=null && data.trim().length()>0) {
+            if (isPostMethod && data!=null && data.trim().length()>0) {
                 DataOutputStream dataOutputStream = new DataOutputStream(connection.getOutputStream());
                 dataOutputStream.write(data.getBytes("UTF-8"));
                 dataOutputStream.flush();
