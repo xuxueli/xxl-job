@@ -6,6 +6,7 @@ import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.admin.core.util.JacksonUtil;
 import com.xxl.job.admin.dao.XxlJobUserDao;
 import com.xxl.job.core.biz.model.ReturnT;
+import com.xxl.job.admin.core.conf.XxlJobAdminConfig;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.DigestUtils;
 
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.math.BigInteger;
 
+import com.xxl.job.admin.service.oauth.OauthService;
 /**
  * @author xuxueli 2019-05-04 22:13:264
  */
@@ -25,6 +27,8 @@ public class LoginService {
     @Resource
     private XxlJobUserDao xxlJobUserDao;
 
+    @Resource
+    private OauthService oauthService;
 
     private String makeToken(XxlJobUser xxlJobUser){
         String tokenJson = JacksonUtil.writeValueAsString(xxlJobUser);
@@ -47,17 +51,24 @@ public class LoginService {
         if (username==null || username.trim().length()==0 || password==null || password.trim().length()==0){
             return new ReturnT<String>(500, I18nUtil.getString("login_param_empty"));
         }
-
-        // valid passowrd
-        XxlJobUser xxlJobUser = xxlJobUserDao.loadByUserName(username);
-        if (xxlJobUser == null) {
-            return new ReturnT<String>(500, I18nUtil.getString("login_param_unvalid"));
+        XxlJobUser xxlJobUser;
+        int isEnable = XxlJobAdminConfig.getAdminConfig().getOauthEnable();
+        if(isEnable == 1){
+            xxlJobUser = oauthService.login(username,password);
+            if (xxlJobUser == null) {
+                return new ReturnT<String>(500, I18nUtil.getString("login_param_unvalid"));
+            }
+        } else {
+            // valid passowrd
+            xxlJobUser = xxlJobUserDao.loadByUserName(username);
+            if (xxlJobUser == null) {
+                return new ReturnT<String>(500, I18nUtil.getString("login_param_unvalid"));
+            }
+            String passwordMd5 = DigestUtils.md5DigestAsHex(password.getBytes());
+            if (!passwordMd5.equals(xxlJobUser.getPassword())) {
+                return new ReturnT<String>(500, I18nUtil.getString("login_param_unvalid"));
+            }
         }
-        String passwordMd5 = DigestUtils.md5DigestAsHex(password.getBytes());
-        if (!passwordMd5.equals(xxlJobUser.getPassword())) {
-            return new ReturnT<String>(500, I18nUtil.getString("login_param_unvalid"));
-        }
-
         String loginToken = makeToken(xxlJobUser);
 
         // do login

@@ -47,6 +47,22 @@ public class XxlJobAdminConfig implements InitializingBean, DisposableBean {
 
 
     // ---------------------- XxlJobScheduler ----------------------
+    @Value("${xxl.job.oauth.enable}")
+    private int oauthEnable;
+    @Value("${xxl.job.oauth.clientId}")
+    private String clientId;
+    @Value("${xxl.job.oauth.clientSecret}")
+    private String clientSecret;
+    @Value("${xxl.job.oauth.redirectUrl}")
+    private String redirectUrl;
+    @Value("${xxl.job.oauth.authorizeUrl}")
+    private String authorizeUrl;
+    @Value("${xxl.job.oauth.accessTokenUrl}")
+    private String accessTokenUrl;
+    @Value("${xxl.job.oauth.resourceOwnerDetailUrl}")
+    private String resourceOwnerDetailUrl;
+
+
 
     // conf
     @Value("${xxl.job.i18n}")
@@ -94,6 +110,34 @@ public class XxlJobAdminConfig implements InitializingBean, DisposableBean {
         return i18n;
     }
 
+    public int getOauthEnable()
+    {
+        return oauthEnable;
+    }
+    public String getClientId()
+    {
+        return clientId;
+    }
+    public String getClientSecret()
+    {
+        return clientSecret;
+    }
+    public String getRedirectUrl()
+    {
+        return redirectUrl;
+    }
+    public String getAccessTokenUrl()
+    {
+        return accessTokenUrl;
+    }
+    public String getAuthorizeUrl()
+    {
+        return authorizeUrl;
+    }
+    public String getResourceOwnerDetailUrl()
+    {        
+        return resourceOwnerDetailUrl;
+    }
     public String getAccessToken() {
         return accessToken;
     }
