@@ -35,22 +35,34 @@
 	                  	</select>
 	              	</div>
 	            </div>
-                <div class="col-xs-3">
+                <div class="col-xs-1">
                     <div class="input-group">
-                        <span class="input-group-addon">${I18n.jobinfo_field_jobdesc}</span>
-                        <input type="text" class="form-control" id="jobDesc" autocomplete="on" >
+                        <select class="form-control" id="triggerStatus" >
+                            <option value="-1" >${I18n.system_all}</option>
+                            <option value="0" >${I18n.jobinfo_opt_stop}</option>
+                            <option value="1" >${I18n.jobinfo_opt_start}</option>
+                        </select>
                     </div>
                 </div>
-                <div class="col-xs-3">
+                <div class="col-xs-2">
                     <div class="input-group">
-                        <span class="input-group-addon">JobHandler</span>
-                        <input type="text" class="form-control" id="executorHandler" autocomplete="on" >
+                        <input type="text" class="form-control" id="jobDesc" autocomplete="on" placeholder="${I18n.system_please_input}${I18n.jobinfo_field_jobdesc}" >
+                    </div>
+                </div>
+                <div class="col-xs-2">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="executorHandler" autocomplete="on" placeholder="${I18n.system_please_input}JobHandler" >
+                    </div>
+                </div>
+                <div class="col-xs-2">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="author" autocomplete="on" placeholder="${I18n.system_please_input}${I18n.jobinfo_field_author}" >
                     </div>
                 </div>
 	            <div class="col-xs-1">
 	            	<button class="btn btn-block btn-info" id="searchBtn">${I18n.system_search}</button>
 	            </div>
-	            <div class="col-xs-2">
+	            <div class="col-xs-1">
 	            	<button class="btn btn-block btn-success add" type="button">${I18n.jobinfo_field_add}</button>
 	            </div>
           	</div>
@@ -75,7 +87,7 @@
 					                  	<th name="updateTime" >updateTime</th>
 					                  	<th name="author" >${I18n.jobinfo_field_author}</th>
 					                  	<th name="alarmEmail" >${I18n.jobinfo_field_alarmemail}</th>
-					                  	<th name="jobStatus" >${I18n.system_status}</th>
+					                  	<th name="triggerStatus" >${I18n.system_status}</th>
 					                  	<th>${I18n.system_opt}</th>
 					                </tr>
 				                </thead>
@@ -395,6 +407,12 @@ exit 0
                             <textarea class="textarea form-control" name="executorParam" placeholder="${I18n.system_please_input}${I18n.jobinfo_field_executorparam}" maxlength="512" style="height: 63px; line-height: 1.2;"></textarea>
                         </div>
                     </div>
+                    <div class="form-group">
+                        <label for="firstname" class="col-sm-2 control-label">${I18n.jobgroup_field_registryList}<font color="black">*</font></label>
+                        <div class="col-sm-10">
+                            <textarea class="textarea form-control" name="addressList" placeholder="${I18n.jobinfo_opt_run_tips}" maxlength="512" style="height: 63px; line-height: 1.2;"></textarea>
+                        </div>
+                    </div>
                     <hr>
                     <div class="form-group">
                         <div class="col-sm-offset-3 col-sm-6">
@@ -413,9 +431,10 @@ exit 0
 <!-- DataTables -->
 <script src="${request.contextPath}/static/adminlte/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
 <script src="${request.contextPath}/static/adminlte/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
-<script src="${request.contextPath}/static/plugins/jquery/jquery.validate.min.js"></script>
 <!-- moment -->
 <script src="${request.contextPath}/static/adminlte/bower_components/moment/moment.min.js"></script>
+<#-- cronGen -->
+<script src="${request.contextPath}/static/plugins/cronGen/cronGen<#if I18n.admin_i18n?default('')?length gt 0 >_${I18n.admin_i18n}</#if>.js"></script>
 <script src="${request.contextPath}/static/js/jobinfo.index.1.js"></script>
 </body>
 </html>

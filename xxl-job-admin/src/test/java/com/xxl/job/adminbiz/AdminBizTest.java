@@ -1,17 +1,16 @@
 package com.xxl.job.adminbiz;
 
 import com.xxl.job.core.biz.AdminBiz;
+import com.xxl.job.core.biz.client.AdminBizClient;
+import com.xxl.job.core.biz.model.HandleCallbackParam;
 import com.xxl.job.core.biz.model.RegistryParam;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.enums.RegistryConfig;
-import com.xxl.rpc.remoting.invoker.XxlRpcInvokerFactory;
-import com.xxl.rpc.remoting.invoker.call.CallType;
-import com.xxl.rpc.remoting.invoker.reference.XxlRpcReferenceBean;
-import com.xxl.rpc.remoting.invoker.route.LoadBalance;
-import com.xxl.rpc.remoting.net.NetEnum;
-import com.xxl.rpc.serialize.Serializer;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * admin api test
@@ -21,8 +20,24 @@ import org.junit.Test;
 public class AdminBizTest {
 
     // admin-client
-    private static String addressUrl = "http://127.0.0.1:8080/xxl-job-admin".concat(AdminBiz.MAPPING);
+    private static String addressUrl = "http://127.0.0.1:8080/xxl-job-admin/";
     private static String accessToken = null;
+
+
+    @Test
+    public void callback() throws Exception {
+        AdminBiz adminBiz = new AdminBizClient(addressUrl, accessToken);
+
+        HandleCallbackParam param = new HandleCallbackParam();
+        param.setLogId(1);
+        param.setExecuteResult(ReturnT.SUCCESS);
+
+        List<HandleCallbackParam> callbackParamList = Arrays.asList(param);
+
+        ReturnT<String> returnT = adminBiz.callback(callbackParamList);
+
+        Assert.assertTrue(returnT.getCode() == ReturnT.SUCCESS_CODE);
+    }
 
     /**
      * registry executor
@@ -30,28 +45,13 @@ public class AdminBizTest {
      * @throws Exception
      */
     @Test
-    public void registryTest() throws Exception {
-        addressUrl = addressUrl.replace("http://", "");
-        AdminBiz adminBiz = (AdminBiz) new XxlRpcReferenceBean(
-                NetEnum.NETTY_HTTP,
-                Serializer.SerializeEnum.HESSIAN.getSerializer(),
-                CallType.SYNC,
-                LoadBalance.ROUND,
-                AdminBiz.class,
-                null,
-                10000,
-                addressUrl,
-                accessToken,
-                null,
-                null).getObject();
+    public void registry() throws Exception {
+        AdminBiz adminBiz = new AdminBizClient(addressUrl, accessToken);
 
-        // test executor registry
         RegistryParam registryParam = new RegistryParam(RegistryConfig.RegistType.EXECUTOR.name(), "xxl-job-executor-example", "127.0.0.1:9999");
         ReturnT<String> returnT = adminBiz.registry(registryParam);
-        Assert.assertTrue(returnT.getCode() == ReturnT.SUCCESS_CODE);
 
-        // stop invoker
-        XxlRpcInvokerFactory.getInstance().stop();
+        Assert.assertTrue(returnT.getCode() == ReturnT.SUCCESS_CODE);
     }
 
     /**
@@ -61,27 +61,13 @@ public class AdminBizTest {
      */
     @Test
     public void registryRemove() throws Exception {
-        addressUrl = addressUrl.replace("http://", "");
-        AdminBiz adminBiz = (AdminBiz) new XxlRpcReferenceBean(
-                NetEnum.NETTY_HTTP,
-                Serializer.SerializeEnum.HESSIAN.getSerializer(),
-                CallType.SYNC,
-                LoadBalance.ROUND,
-                AdminBiz.class,
-                null,
-                10000,
-                addressUrl,
-                accessToken,
-                null,
-                null).getObject();
+        AdminBiz adminBiz = new AdminBizClient(addressUrl, accessToken);
 
-        // test executor registry remove
         RegistryParam registryParam = new RegistryParam(RegistryConfig.RegistType.EXECUTOR.name(), "xxl-job-executor-example", "127.0.0.1:9999");
         ReturnT<String> returnT = adminBiz.registryRemove(registryParam);
+
         Assert.assertTrue(returnT.getCode() == ReturnT.SUCCESS_CODE);
 
-        // stop invoker
-        XxlRpcInvokerFactory.getInstance().stop();
     }
 
 }

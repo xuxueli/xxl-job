@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
 
@@ -30,7 +31,7 @@ public class JobCodeController {
 	private XxlJobLogGlueDao xxlJobLogGlueDao;
 
 	@RequestMapping
-	public String index(Model model, int jobId) {
+	public String index(HttpServletRequest request, Model model, int jobId) {
 		XxlJobInfo jobInfo = xxlJobInfoDao.loadById(jobId);
 		List<XxlJobLogGlue> jobLogGlues = xxlJobLogGlueDao.findByJobId(jobId);
 
@@ -40,6 +41,9 @@ public class JobCodeController {
 		if (GlueTypeEnum.BEAN == GlueTypeEnum.match(jobInfo.getGlueType())) {
 			throw new RuntimeException(I18nUtil.getString("jobinfo_glue_gluetype_unvalid"));
 		}
+
+		// valid permission
+		JobInfoController.validPermission(request, jobInfo.getJobGroup());
 
 		// Glue类型-字典
 		model.addAttribute("GlueTypeEnum", GlueTypeEnum.values());
@@ -68,6 +72,8 @@ public class JobCodeController {
 		exists_jobInfo.setGlueSource(glueSource);
 		exists_jobInfo.setGlueRemark(glueRemark);
 		exists_jobInfo.setGlueUpdatetime(new Date());
+
+		exists_jobInfo.setUpdateTime(new Date());
 		xxlJobInfoDao.update(exists_jobInfo);
 
 		// log old code
@@ -76,6 +82,9 @@ public class JobCodeController {
 		xxlJobLogGlue.setGlueType(exists_jobInfo.getGlueType());
 		xxlJobLogGlue.setGlueSource(glueSource);
 		xxlJobLogGlue.setGlueRemark(glueRemark);
+
+		xxlJobLogGlue.setAddTime(new Date());
+		xxlJobLogGlue.setUpdateTime(new Date());
 		xxlJobLogGlueDao.save(xxlJobLogGlue);
 
 		// remove code backup more than 30

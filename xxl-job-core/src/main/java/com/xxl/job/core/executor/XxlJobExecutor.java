@@ -1,29 +1,23 @@
 package com.xxl.job.core.executor;
 
 import com.xxl.job.core.biz.AdminBiz;
-import com.xxl.job.core.biz.ExecutorBiz;
-import com.xxl.job.core.biz.impl.ExecutorBizImpl;
+import com.xxl.job.core.biz.client.AdminBizClient;
 import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.log.XxlJobFileAppender;
-import com.xxl.job.core.thread.ExecutorRegistryThread;
+import com.xxl.job.core.server.EmbedServer;
 import com.xxl.job.core.thread.JobLogFileCleanThread;
 import com.xxl.job.core.thread.JobThread;
 import com.xxl.job.core.thread.TriggerCallbackThread;
-import com.xxl.rpc.registry.ServiceRegistry;
-import com.xxl.rpc.remoting.invoker.XxlRpcInvokerFactory;
-import com.xxl.rpc.remoting.invoker.call.CallType;
-import com.xxl.rpc.remoting.invoker.reference.XxlRpcReferenceBean;
-import com.xxl.rpc.remoting.invoker.route.LoadBalance;
-import com.xxl.rpc.remoting.net.NetEnum;
-import com.xxl.rpc.remoting.provider.XxlRpcProviderFactory;
-import com.xxl.rpc.serialize.Serializer;
-import com.xxl.rpc.util.IpUtil;
-import com.xxl.rpc.util.NetUtil;
+import com.xxl.job.core.util.IpUtil;
+import com.xxl.job.core.util.NetUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * Created by xuxueli on 2016/3/2 21:14.
@@ -33,27 +27,31 @@ public class XxlJobExecutor  {
 
     // ---------------------- param ----------------------
     private String adminAddresses;
-    private String appName;
+    private String accessToken;
+    private String appname;
+    private String address;
     private String ip;
     private int port;
-    private String accessToken;
     private String logPath;
     private int logRetentionDays;
 
     public void setAdminAddresses(String adminAddresses) {
         this.adminAddresses = adminAddresses;
     }
-    public void setAppName(String appName) {
-        this.appName = appName;
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
+    }
+    public void setAppname(String appname) {
+        this.appname = appname;
+    }
+    public void setAddress(String address) {
+        this.address = address;
     }
     public void setIp(String ip) {
         this.ip = ip;
     }
     public void setPort(int port) {
         this.port = port;
-    }
-    public void setAccessToken(String accessToken) {
-        this.accessToken = accessToken;
     }
     public void setLogPath(String logPath) {
         this.logPath = logPath;
@@ -80,15 +78,24 @@ public class XxlJobExecutor  {
         TriggerCallbackThread.getInstance().start();
 
         // init executor-server
-        port = port>0?port: NetUtil.findAvailablePort(9999);
-        ip = (ip!=null&&ip.trim().length()>0)?ip: IpUtil.getIp();
-        initRpcProvider(ip, port, appName, accessToken);
+        initEmbedServer(address, ip, port, appname, accessToken);
     }
     public void destroy(){
+        // destory executor-server
+        stopEmbedServer();
+
         // destory jobThreadRepository
         if (jobThreadRepository.size() > 0) {
             for (Map.Entry<Integer, JobThread> item: jobThreadRepository.entrySet()) {
-                removeJobThread(item.getKey(), "web container destroy and kill the job.");
+                JobThread oldJobThread = removeJobThread(item.getKey(), "web container destroy and kill the job.");
+                // wait for job thread push result to callback queue
+                if (oldJobThread != null) {
+                    try {
+                        oldJobThread.join();
+                    } catch (InterruptedException e) {
+                        logger.error(">>>>>>>>>>> xxl-job, JobThread destroy(join) error, jobId:{}", item.getKey(), e);
+                    }
+                }
             }
             jobThreadRepository.clear();
         }
@@ -101,38 +108,17 @@ public class XxlJobExecutor  {
         // destory TriggerCallbackThread
         TriggerCallbackThread.getInstance().toStop();
 
-        // destory executor-server
-        stopRpcProvider();
-
-        // destory invoker
-        stopInvokerFactory();
     }
 
 
     // ---------------------- admin-client (rpc invoker) ----------------------
     private static List<AdminBiz> adminBizList;
-    private static Serializer serializer;
     private void initAdminBizList(String adminAddresses, String accessToken) throws Exception {
-        serializer = Serializer.SerializeEnum.HESSIAN.getSerializer();
         if (adminAddresses!=null && adminAddresses.trim().length()>0) {
             for (String address: adminAddresses.trim().split(",")) {
                 if (address!=null && address.trim().length()>0) {
 
-                    String addressUrl = address.concat(AdminBiz.MAPPING);
-
-                    AdminBiz adminBiz = (AdminBiz) new XxlRpcReferenceBean(
-                            NetEnum.NETTY_HTTP,
-                            serializer,
-                            CallType.SYNC,
-                            LoadBalance.ROUND,
-                            AdminBiz.class,
-                            null,
-                            10000,
-                            addressUrl,
-                            accessToken,
-                            null,
-                            null
-                    ).getObject();
+                    AdminBiz adminBiz = new AdminBizClient(address.trim(), accessToken);
 
                     if (adminBizList == null) {
                         adminBizList = new ArrayList<AdminBiz>();
@@ -142,80 +128,34 @@ public class XxlJobExecutor  {
             }
         }
     }
-    private void stopInvokerFactory(){
-        // stop invoker factory
-        try {
-            XxlRpcInvokerFactory.getInstance().stop();
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-        }
-    }
     public static List<AdminBiz> getAdminBizList(){
         return adminBizList;
     }
-    public static Serializer getSerializer() {
-        return serializer;
-    }
-
 
     // ---------------------- executor-server (rpc provider) ----------------------
-    private XxlRpcProviderFactory xxlRpcProviderFactory = null;
+    private EmbedServer embedServer = null;
 
-    private void initRpcProvider(String ip, int port, String appName, String accessToken) throws Exception {
+    private void initEmbedServer(String address, String ip, int port, String appname, String accessToken) throws Exception {
 
-        // init, provider factory
-        String address = IpUtil.getIpPort(ip, port);
-        Map<String, String> serviceRegistryParam = new HashMap<String, String>();
-        serviceRegistryParam.put("appName", appName);
-        serviceRegistryParam.put("address", address);
+        // fill ip port
+        port = port>0?port: NetUtil.findAvailablePort(9999);
+        ip = (ip!=null&&ip.trim().length()>0)?ip: IpUtil.getIp();
 
-        xxlRpcProviderFactory = new XxlRpcProviderFactory();
-        xxlRpcProviderFactory.initConfig(NetEnum.NETTY_HTTP, Serializer.SerializeEnum.HESSIAN.getSerializer(), ip, port, accessToken, ExecutorServiceRegistry.class, serviceRegistryParam);
-
-        // add services
-        xxlRpcProviderFactory.addService(ExecutorBiz.class.getName(), null, new ExecutorBizImpl());
+        // generate address
+        if (address==null || address.trim().length()==0) {
+            String ip_port_address = IpUtil.getIpPort(ip, port);   // registry-address：default use address to registry , otherwise use ip:port if address is null
+            address = "http://{ip_port}/".replace("{ip_port}", ip_port_address);
+        }
 
         // start
-        xxlRpcProviderFactory.start();
-
+        embedServer = new EmbedServer();
+        embedServer.start(address, port, appname, accessToken);
     }
 
-    public static class ExecutorServiceRegistry extends ServiceRegistry {
-
-        @Override
-        public void start(Map<String, String> param) {
-            // start registry
-            ExecutorRegistryThread.getInstance().start(param.get("appName"), param.get("address"));
-        }
-        @Override
-        public void stop() {
-            // stop registry
-            ExecutorRegistryThread.getInstance().toStop();
-        }
-
-        @Override
-        public boolean registry(Set<String> keys, String value) {
-            return false;
-        }
-        @Override
-        public boolean remove(Set<String> keys, String value) {
-            return false;
-        }
-        @Override
-        public Map<String, TreeSet<String>> discovery(Set<String> keys) {
-            return null;
-        }
-        @Override
-        public TreeSet<String> discovery(String key) {
-            return null;
-        }
-
-    }
-
-    private void stopRpcProvider() {
+    private void stopEmbedServer() {
         // stop provider factory
         try {
-            xxlRpcProviderFactory.stop();
+            embedServer.stop();
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
@@ -223,7 +163,7 @@ public class XxlJobExecutor  {
 
 
     // ---------------------- job handler repository ----------------------
-    private static ConcurrentHashMap<String, IJobHandler> jobHandlerRepository = new ConcurrentHashMap<String, IJobHandler>();
+    private static ConcurrentMap<String, IJobHandler> jobHandlerRepository = new ConcurrentHashMap<String, IJobHandler>();
     public static IJobHandler registJobHandler(String name, IJobHandler jobHandler){
         logger.info(">>>>>>>>>>> xxl-job register jobhandler success, name:{}, jobHandler:{}", name, jobHandler);
         return jobHandlerRepository.put(name, jobHandler);
@@ -234,7 +174,7 @@ public class XxlJobExecutor  {
 
 
     // ---------------------- job thread repository ----------------------
-    private static ConcurrentHashMap<Integer, JobThread> jobThreadRepository = new ConcurrentHashMap<Integer, JobThread>();
+    private static ConcurrentMap<Integer, JobThread> jobThreadRepository = new ConcurrentHashMap<Integer, JobThread>();
     public static JobThread registJobThread(int jobId, IJobHandler handler, String removeOldReason){
         JobThread newJobThread = new JobThread(jobId, handler);
         newJobThread.start();
@@ -248,12 +188,15 @@ public class XxlJobExecutor  {
 
         return newJobThread;
     }
-    public static void removeJobThread(int jobId, String removeOldReason){
+    public static JobThread removeJobThread(int jobId, String removeOldReason){
         JobThread oldJobThread = jobThreadRepository.remove(jobId);
         if (oldJobThread != null) {
             oldJobThread.toStop(removeOldReason);
             oldJobThread.interrupt();
+
+            return oldJobThread;
         }
+        return null;
     }
     public static JobThread loadJobThread(int jobId){
         JobThread jobThread = jobThreadRepository.get(jobId);

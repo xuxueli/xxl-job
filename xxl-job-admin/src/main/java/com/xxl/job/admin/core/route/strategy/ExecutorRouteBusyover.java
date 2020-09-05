@@ -1,9 +1,10 @@
 package com.xxl.job.admin.core.route.strategy;
 
+import com.xxl.job.admin.core.scheduler.XxlJobScheduler;
 import com.xxl.job.admin.core.route.ExecutorRouter;
-import com.xxl.job.admin.core.schedule.XxlJobDynamicScheduler;
 import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.core.biz.ExecutorBiz;
+import com.xxl.job.core.biz.model.IdleBeatParam;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.biz.model.TriggerParam;
 
@@ -21,8 +22,8 @@ public class ExecutorRouteBusyover extends ExecutorRouter {
             // beat
             ReturnT<String> idleBeatResult = null;
             try {
-                ExecutorBiz executorBiz = XxlJobDynamicScheduler.getExecutorBiz(address);
-                idleBeatResult = executorBiz.idleBeat(triggerParam.getJobId());
+                ExecutorBiz executorBiz = XxlJobScheduler.getExecutorBiz(address);
+                idleBeatResult = executorBiz.idleBeat(new IdleBeatParam(triggerParam.getJobId()));
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);
                 idleBeatResult = new ReturnT<String>(ReturnT.FAIL_CODE, ""+e );

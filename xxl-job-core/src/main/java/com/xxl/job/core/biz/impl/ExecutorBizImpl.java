@@ -1,9 +1,7 @@
 package com.xxl.job.core.biz.impl;
 
 import com.xxl.job.core.biz.ExecutorBiz;
-import com.xxl.job.core.biz.model.LogResult;
-import com.xxl.job.core.biz.model.ReturnT;
-import com.xxl.job.core.biz.model.TriggerParam;
+import com.xxl.job.core.biz.model.*;
 import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
 import com.xxl.job.core.executor.XxlJobExecutor;
 import com.xxl.job.core.glue.GlueFactory;
@@ -30,11 +28,11 @@ public class ExecutorBizImpl implements ExecutorBiz {
     }
 
     @Override
-    public ReturnT<String> idleBeat(int jobId) {
+    public ReturnT<String> idleBeat(IdleBeatParam idleBeatParam) {
 
         // isRunningOrHasQueue
         boolean isRunningOrHasQueue = false;
-        JobThread jobThread = XxlJobExecutor.loadJobThread(jobId);
+        JobThread jobThread = XxlJobExecutor.loadJobThread(idleBeatParam.getJobId());
         if (jobThread != null && jobThread.isRunningOrHasQueue()) {
             isRunningOrHasQueue = true;
         }
@@ -43,27 +41,6 @@ public class ExecutorBizImpl implements ExecutorBiz {
             return new ReturnT<String>(ReturnT.FAIL_CODE, "job thread is running or has trigger queue.");
         }
         return ReturnT.SUCCESS;
-    }
-
-    @Override
-    public ReturnT<String> kill(int jobId) {
-        // kill handlerThread, and create new one
-        JobThread jobThread = XxlJobExecutor.loadJobThread(jobId);
-        if (jobThread != null) {
-            XxlJobExecutor.removeJobThread(jobId, "scheduling center kill job.");
-            return ReturnT.SUCCESS;
-        }
-
-        return new ReturnT<String>(ReturnT.SUCCESS_CODE, "job thread aleady killed.");
-    }
-
-    @Override
-    public ReturnT<LogResult> log(long logDateTim, int logId, int fromLineNum) {
-        // log filename: logPath/yyyy-MM-dd/9999.log
-        String logFileName = XxlJobFileAppender.makeLogFileName(new Date(logDateTim), logId);
-
-        LogResult logResult = XxlJobFileAppender.readLog(logFileName, fromLineNum);
-        return new ReturnT<LogResult>(logResult);
     }
 
     @Override
@@ -169,6 +146,27 @@ public class ExecutorBizImpl implements ExecutorBiz {
         // push data to queue
         ReturnT<String> pushResult = jobThread.pushTriggerQueue(triggerParam);
         return pushResult;
+    }
+
+    @Override
+    public ReturnT<String> kill(KillParam killParam) {
+        // kill handlerThread, and create new one
+        JobThread jobThread = XxlJobExecutor.loadJobThread(killParam.getJobId());
+        if (jobThread != null) {
+            XxlJobExecutor.removeJobThread(killParam.getJobId(), "scheduling center kill job.");
+            return ReturnT.SUCCESS;
+        }
+
+        return new ReturnT<String>(ReturnT.SUCCESS_CODE, "job thread already killed.");
+    }
+
+    @Override
+    public ReturnT<LogResult> log(LogParam logParam) {
+        // log filename: logPath/yyyy-MM-dd/9999.log
+        String logFileName = XxlJobFileAppender.makeLogFileName(new Date(logParam.getLogDateTim()), logParam.getLogId());
+
+        LogResult logResult = XxlJobFileAppender.readLog(logFileName, logParam.getFromLineNum());
+        return new ReturnT<LogResult>(logResult);
     }
 
 }

@@ -24,7 +24,7 @@
 	</sql>
 	
 	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobLogGlue" useGeneratedKeys="true" keyProperty="id" >
-		INSERT INTO XXL_JOB_QRTZ_TRIGGER_LOGGLUE (
+		INSERT INTO xxl_job_logglue (
 			`job_id`,
 			`glue_type`,
 			`glue_source`,
@@ -36,8 +36,8 @@
 			#{glueType},
 			#{glueSource},
 			#{glueRemark},
-			now(),
-			now()
+			#{addTime},
+			#{updateTime}
 		);
 		<!--<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
 			SELECT LAST_INSERT_ID() 
@@ -46,16 +46,16 @@
 	
 	<select id="findByJobId" parameterType="java.lang.Integer" resultMap="XxlJobLogGlue">
 		SELECT <include refid="Base_Column_List" />
-		FROM XXL_JOB_QRTZ_TRIGGER_LOGGLUE AS t
+		FROM xxl_job_logglue AS t
 		WHERE t.job_id = #{jobId}
 		ORDER BY id DESC
 	</select>
 	
 	<delete id="removeOld" >
-		DELETE FROM XXL_JOB_QRTZ_TRIGGER_LOGGLUE
+		DELETE FROM xxl_job_logglue
 		WHERE id NOT in(
 			SELECT id FROM(
-				SELECT id FROM XXL_JOB_QRTZ_TRIGGER_LOGGLUE
+				SELECT id FROM xxl_job_logglue
 				WHERE `job_id` = #{jobId}
 				ORDER BY update_time desc
 				LIMIT 0, #{limit}
@@ -64,7 +64,7 @@
 	</delete>
 	
 	<delete id="deleteByJobId" parameterType="java.lang.Integer" >
-		DELETE FROM XXL_JOB_QRTZ_TRIGGER_LOGGLUE
+		DELETE FROM xxl_job_logglue
 		WHERE `job_id` = #{jobId}
 	</delete>
 	

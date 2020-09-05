@@ -7,10 +7,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class XxlJobRegistryDaoTest {
 
     @Resource
@@ -18,14 +20,14 @@ public class XxlJobRegistryDaoTest {
 
     @Test
     public void test(){
-        int ret = xxlJobRegistryDao.registryUpdate("g1", "k1", "v1");
+        int ret = xxlJobRegistryDao.registryUpdate("g1", "k1", "v1", new Date());
         if (ret < 1) {
-            ret = xxlJobRegistryDao.registrySave("g1", "k1", "v1");
+            ret = xxlJobRegistryDao.registrySave("g1", "k1", "v1", new Date());
         }
 
-        List<XxlJobRegistry> list = xxlJobRegistryDao.findAll(1);
+        List<XxlJobRegistry> list = xxlJobRegistryDao.findAll(1, new Date());
 
-        int ret2 = xxlJobRegistryDao.removeDead(1);
+        int ret2 = xxlJobRegistryDao.removeDead(Arrays.asList(1));
     }
 
 }

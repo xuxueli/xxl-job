@@ -14,11 +14,6 @@ import java.util.Date;
  */
 public class XxlJobFileAppender {
 	private static Logger logger = LoggerFactory.getLogger(XxlJobFileAppender.class);
-	
-	// for JobThread (support log for child thread of job handler)
-	//public static ThreadLocal<String> contextHolder = new ThreadLocal<String>();
-	public static final InheritableThreadLocal<String> contextHolder = new InheritableThreadLocal<String>();
-
 
 	/**
 	 * log base path
@@ -68,7 +63,7 @@ public class XxlJobFileAppender {
 	 * @param logId
 	 * @return
 	 */
-	public static String makeLogFileName(Date triggerDate, int logId) {
+	public static String makeLogFileName(Date triggerDate, long logId) {
 
 		// filePath/yyyy-MM-dd
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");	// avoid concurrent problem, can not be static

@@ -18,33 +18,42 @@
 		t.registry_value,
 		t.update_time
 	</sql>
+
+	<select id="findDead" parameterType="java.util.HashMap" resultType="java.lang.Integer" >
+		SELECT t.id
+		FROM xxl_job_registry AS t
+		WHERE t.update_time <![CDATA[ < ]]> DATE_ADD(#{nowTime},INTERVAL -#{timeout} SECOND)
+	</select>
 	
 	<delete id="removeDead" parameterType="java.lang.Integer" >
-		DELETE FROM XXL_JOB_QRTZ_TRIGGER_REGISTRY
-		WHERE update_time <![CDATA[ < ]]> DATE_ADD(NOW(),INTERVAL -#{timeout} SECOND)
+		DELETE FROM xxl_job_registry
+		WHERE id in
+		<foreach collection="ids" item="item" open="(" close=")" separator="," >
+			#{item}
+		</foreach>
 	</delete>
 
-	<select id="findAll" parameterType="java.lang.Integer" resultMap="XxlJobRegistry">
+	<select id="findAll" parameterType="java.util.HashMap" resultMap="XxlJobRegistry">
 		SELECT <include refid="Base_Column_List" />
-		FROM XXL_JOB_QRTZ_TRIGGER_REGISTRY AS t
-		WHERE t.update_time <![CDATA[ > ]]> DATE_ADD(NOW(),INTERVAL -#{timeout} SECOND)
+		FROM xxl_job_registry AS t
+		WHERE t.update_time <![CDATA[ > ]]> DATE_ADD(#{nowTime},INTERVAL -#{timeout} SECOND)
 	</select>
 
     <update id="registryUpdate" >
-        UPDATE XXL_JOB_QRTZ_TRIGGER_REGISTRY
-        SET `update_time` = NOW()
+        UPDATE xxl_job_registry
+        SET `update_time` = #{updateTime}
         WHERE `registry_group` = #{registryGroup}
           AND `registry_key` = #{registryKey}
           AND `registry_value` = #{registryValue}
     </update>
 
     <insert id="registrySave" >
-        INSERT INTO XXL_JOB_QRTZ_TRIGGER_REGISTRY( `registry_group` , `registry_key` , `registry_value`, `update_time`)
-        VALUES( #{registryGroup}  , #{registryKey} , #{registryValue}, NOW())
+        INSERT INTO xxl_job_registry( `registry_group` , `registry_key` , `registry_value`, `update_time`)
+        VALUES( #{registryGroup}  , #{registryKey} , #{registryValue}, #{updateTime})
     </insert>
 
 	<delete id="registryDelete" >
-		DELETE FROM XXL_JOB_QRTZ_TRIGGER_REGISTRY
+		DELETE FROM xxl_job_registry
 		WHERE registry_group = #{registryGroup}
 			AND registry_key = #{registryKey}
 			AND registry_value = #{registryValue}

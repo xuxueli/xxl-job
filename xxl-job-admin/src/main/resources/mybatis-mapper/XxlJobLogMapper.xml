@@ -46,7 +46,7 @@
 	
 	<select id="pageList" resultMap="XxlJobLog">
 		SELECT <include refid="Base_Column_List" />
-		FROM XXL_JOB_QRTZ_TRIGGER_LOG AS t
+		FROM xxl_job_log AS t
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
 			<if test="jobId==0 and jobGroup gt 0">
 				AND t.job_group = #{jobGroup}
@@ -80,7 +80,7 @@
 	
 	<select id="pageListCount" resultType="int">
 		SELECT count(1)
-		FROM XXL_JOB_QRTZ_TRIGGER_LOG AS t
+		FROM xxl_job_log AS t
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
 			<if test="jobId==0 and jobGroup gt 0">
 				AND t.job_group = #{jobGroup}
@@ -110,15 +110,15 @@
 		</trim>
 	</select>
 	
-	<select id="load" parameterType="java.lang.Integer" resultMap="XxlJobLog">
+	<select id="load" parameterType="java.lang.Long" resultMap="XxlJobLog">
 		SELECT <include refid="Base_Column_List" />
-		FROM XXL_JOB_QRTZ_TRIGGER_LOG AS t
+		FROM xxl_job_log AS t
 		WHERE t.id = #{id}
 	</select>
 
 	
 	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobLog" useGeneratedKeys="true" keyProperty="id" >
-		INSERT INTO XXL_JOB_QRTZ_TRIGGER_LOG (
+		INSERT INTO xxl_job_log (
 			`job_group`,
 			`job_id`,
 			`trigger_time`,
@@ -137,7 +137,7 @@
 	</insert>
 
 	<update id="updateTriggerInfo" >
-		UPDATE XXL_JOB_QRTZ_TRIGGER_LOG
+		UPDATE xxl_job_log
 		SET
 			`trigger_time`= #{triggerTime},
 			`trigger_code`= #{triggerCode},
@@ -151,42 +151,42 @@
 	</update>
 
 	<update id="updateHandleInfo">
-		UPDATE XXL_JOB_QRTZ_TRIGGER_LOG
+		UPDATE xxl_job_log
 		SET 
 			`handle_time`= #{handleTime}, 
 			`handle_code`= #{handleCode},
-			`handle_msg`= #{handleMsg} 
+			`handle_msg`= #{handleMsg}
 		WHERE `id`= #{id}
 	</update>
 	
 	<delete id="delete" >
-		delete from XXL_JOB_QRTZ_TRIGGER_LOG
+		delete from xxl_job_log
 		WHERE job_id = #{jobId}
 	</delete>
 
-	<select id="triggerCountByHandleCode" resultType="int" >
-		SELECT count(1)
-		FROM XXL_JOB_QRTZ_TRIGGER_LOG AS t
-		<trim prefix="WHERE" prefixOverrides="AND | OR" >
-			<if test="handleCode gt 0">
-				AND t.handle_code = #{handleCode}
-			</if>
-		</trim>
-	</select>
-
-    <select id="triggerCountByDay" resultType="java.util.Map" >
+    <!--<select id="triggerCountByDay" resultType="java.util.Map" >
 		SELECT
 			DATE_FORMAT(trigger_time,'%Y-%m-%d') triggerDay,
 			COUNT(handle_code) triggerDayCount,
 			SUM(CASE WHEN (trigger_code in (0, 200) and handle_code = 0) then 1 else 0 end) as triggerDayCountRunning,
 			SUM(CASE WHEN handle_code = 200 then 1 else 0 end) as triggerDayCountSuc
-		FROM XXL_JOB_QRTZ_TRIGGER_LOG
+		FROM xxl_job_log
 		WHERE trigger_time BETWEEN #{from} and #{to}
-		GROUP BY triggerDay;
+		GROUP BY triggerDay
+		ORDER BY triggerDay
+    </select>-->
+
+    <select id="findLogReport" resultType="java.util.Map" >
+		SELECT
+			COUNT(handle_code) triggerDayCount,
+			SUM(CASE WHEN (trigger_code in (0, 200) and handle_code = 0) then 1 else 0 end) as triggerDayCountRunning,
+			SUM(CASE WHEN handle_code = 200 then 1 else 0 end) as triggerDayCountSuc
+		FROM xxl_job_log
+		WHERE trigger_time BETWEEN #{from} and #{to}
     </select>
 
-	<delete id="clearLog" >
-		delete from XXL_JOB_QRTZ_TRIGGER_LOG
+	<select id="findClearLogIds" resultType="long" >
+		SELECT id FROM xxl_job_log
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
 			<if test="jobGroup gt 0">
 				AND job_group = #{jobGroup}
@@ -199,26 +199,36 @@
 			</if>
 			<if test="clearBeforeNum gt 0">
 				AND id NOT in(
-					SELECT id FROM(
-						SELECT id FROM XXL_JOB_QRTZ_TRIGGER_LOG AS t
-						<trim prefix="WHERE" prefixOverrides="AND | OR" >
-							<if test="jobGroup gt 0">
-								AND t.job_group = #{jobGroup}
-							</if>
-							<if test="jobId gt 0">
-								AND t.job_id = #{jobId}
-							</if>
-						</trim>
-						ORDER BY t.trigger_time desc
-						LIMIT 0, #{clearBeforeNum}
-					) t1
+				SELECT id FROM(
+				SELECT id FROM xxl_job_log AS t
+				<trim prefix="WHERE" prefixOverrides="AND | OR" >
+					<if test="jobGroup gt 0">
+						AND t.job_group = #{jobGroup}
+					</if>
+					<if test="jobId gt 0">
+						AND t.job_id = #{jobId}
+					</if>
+				</trim>
+				ORDER BY t.trigger_time desc
+				LIMIT 0, #{clearBeforeNum}
+				) t1
 				)
 			</if>
 		</trim>
+		order by id asc
+		LIMIT #{pagesize}
+	</select>
+
+	<delete id="clearLog" >
+		delete from xxl_job_log
+		WHERE id in
+		<foreach collection="logIds" item="item" open="(" close=")" separator="," >
+			#{item}
+		</foreach>
 	</delete>
 
-	<select id="findFailJobLogIds" resultType="int" >
-		SELECT id FROM `XXL_JOB_QRTZ_TRIGGER_LOG`
+	<select id="findFailJobLogIds" resultType="long" >
+		SELECT id FROM `xxl_job_log`
 		WHERE !(
 			(trigger_code in (0, 200) and handle_code = 0)
 			OR
@@ -226,13 +236,26 @@
 		)
 		AND `alarm_status` = 0
 		ORDER BY id ASC
+		LIMIT #{pagesize}
 	</select>
 
 	<update id="updateAlarmStatus" >
-		UPDATE XXL_JOB_QRTZ_TRIGGER_LOG
+		UPDATE xxl_job_log
 		SET
 			`alarm_status` = #{newAlarmStatus}
 		WHERE `id`= #{logId} AND `alarm_status` = #{oldAlarmStatus}
 	</update>
-	
+
+	<select id="findLostJobIds" resultType="long" >
+		SELECT t.id
+		FROM xxl_job_log AS t
+		WHERE t.trigger_code = 200
+			and t.handle_code = 0
+			and t.trigger_time <![CDATA[ <= ]]> #{losedTime}
+			and t.executor_address not in (
+				SELECT t2.registry_value
+				FROM xxl_job_registry AS t2
+			)
+	</select>
+
 </mapper>

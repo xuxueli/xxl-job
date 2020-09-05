@@ -1,17 +1,16 @@
 package com.xxl.job.admin.dao;
 
 import com.xxl.job.admin.core.model.XxlJobGroup;
-import com.xxl.job.admin.dao.XxlJobGroupDao;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
 import java.util.List;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "classpath*:spring/applicationcontext-*.xml")
+@RunWith(SpringRunner.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class XxlJobGroupDaoTest {
 
     @Resource
@@ -24,18 +23,16 @@ public class XxlJobGroupDaoTest {
         List<XxlJobGroup> list2 = xxlJobGroupDao.findByAddressType(0);
 
         XxlJobGroup group = new XxlJobGroup();
-        group.setAppName("setAppName");
+        group.setAppname("setAppName");
         group.setTitle("setTitle");
-        group.setOrder(1);
         group.setAddressType(0);
         group.setAddressList("setAddressList");
 
         int ret = xxlJobGroupDao.save(group);
 
         XxlJobGroup group2 = xxlJobGroupDao.load(group.getId());
-        group2.setAppName("setAppName2");
+        group2.setAppname("setAppName2");
         group2.setTitle("setTitle2");
-        group2.setOrder(2);
         group2.setAddressType(2);
         group2.setAddressList("setAddressList2");
 
