@@ -480,7 +480,7 @@ docker run -e PARAMS="--spring.datasource.url=jdbc:mysql://127.0.0.1:3306/xxl_jo
     ### 执行器AppName [选填]：执行器心跳注册分组依据；为空则关闭自动注册
     xxl.job.executor.appname=xxl-job-executor-sample
     
-    ### 执行器IP [选填]：默认为空表示自动获取IP，多网卡时可手动设置指定IP，该IP不会绑定Host仅作为通讯实用；地址信息用于 "执行器注册" 和 "调度中心请求并触发任务"；
+    ### 执行器IP [选填]：默认为空表示自动获取IP，多网卡时可手动设置指定IP，该IP不会绑定Host仅作为通讯使用；地址信息用于 "执行器注册" 和 "调度中心请求并触发任务"；
     xxl.job.executor.ip=
     
     ### 执行器端口号 [选填]：小于等于0则自动获取；默认端口为9999，单机部署多个执行器时，注意要配置不同执行器端口；
@@ -1457,7 +1457,7 @@ Tips: 历史版本(V1.3.x)目前已经Release至稳定版本, 进入维护阶段
 - 6、任务状态优化，仅运行状态"NORMAL"任务关联至quartz，降低quartz底层数据存储与调度压力；
 - 7、任务状态规范：新增任务默认停止状态，任务更新时保持任务状态不变；
 - 8、IP获取逻辑优化，优先遍历网卡来获取可用IP；
-- 9、任务新增的API服务接口返回任务ID，方便调用方实用；
+- 9、任务新增的API服务接口返回任务ID，方便调用方使用；
 - 10、组件化优化，移除对 spring 的依赖：非spring应用选用 "XxlJobExecutor" 、spring应用选用 "XxlJobSpringExecutor" 作为执行器组件； 
 - 11、任务RollingLog展示逻辑优化，修复超时任务无法查看的问题；
 - 12、多项UI组件升级到最新版本，如：CodeMirror、Echarts、Jquery 等；
