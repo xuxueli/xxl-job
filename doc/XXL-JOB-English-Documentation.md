@@ -1,17 +1,21 @@
 ## 《Distributed task scheduling framework XXL-JOB》
 
-[![Build Status](https://travis-ci.org/xuxueli/xxl-job.svg?branch=master)](https://travis-ci.org/xuxueli/xxl-job)
+[![Actions Status](https://github.com/xuxueli/xxl-job/workflows/Java%20CI/badge.svg)](https://github.com/xuxueli/xxl-job/actions)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.xuxueli/xxl-job/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.xuxueli/xxl-job/)
 [![GitHub release](https://img.shields.io/github/release/xuxueli/xxl-job.svg)](https://github.com/xuxueli/xxl-job/releases)
+[![GitHub stars](https://img.shields.io/github/stars/xuxueli/xxl-job)](https://github.com/xuxueli/xxl-job/)
+[![Docker Status](https://img.shields.io/docker/pulls/xuxueli/xxl-job-admin)](https://hub.docker.com/r/xuxueli/xxl-job-admin/)
 [![License](https://img.shields.io/badge/license-GPLv3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0.html)
-[![Gitter](https://badges.gitter.im/xuxueli/xxl-job.svg)](https://gitter.im/xuxueli/xxl-job?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
-[![donate](https://img.shields.io/badge/%24-donate-ff69b4.svg?style=flat-square)](http://www.xuxueli.com/page/donate.html)
+[![donate](https://img.shields.io/badge/%24-donate-ff69b4.svg?style=flat)](https://www.xuxueli.com/page/donate.html)
 
+[TOCM]
+
+[TOC]
 
 ## 1. Brief introduction
 
 ### 1.1 Overview
-XXL-JOB is a lightweight distributed task scheduling framework, the core design goal is to develop quickly, learning simple, lightweight, easy to expand. Is now open source and access to a number of companies online product line, download and use it now.
+XXL-JOB is a distributed task scheduling framework, the core design goal is to develop quickly, learning simple, lightweight, easy to expand. Is now open source and access to a number of companies online product line, download and use it now.
 
 > English document update slightly delayed, Please check the Chinese version for the latest document.
 
@@ -19,8 +23,8 @@ XXL-JOB is a lightweight distributed task scheduling framework, the core design 
 - 1.Simple: support through the Web page on the task CRUD operation, simple operation, a minute to get started;
 - 2.Dynamic: support dynamic modification of task status, pause / resume tasks, and termination of running tasks,immediate effect;
 - 3.Dispatch center HA (center type): Dispatch with central design, "dispatch center" based on the cluster of Quartz implementation, can guarantee the scheduling - center HA;
-- 4.Executer HA (Distributed): Task Distributed Execution, Task " Executer " supports cluster deployment to ensure that tasks perform HA;
-- 5.Task Failover: Deploy the Excuter cluster,tasks will be smooth to switch excuter when the strategy of the router choose ‘failover’;
+- 4.Executor HA (Distributed): Task Distributed Execution, Task " Executer " supports cluster deployment to ensure that tasks perform HA;
+- 5.Task Failover: Deploy the Excutor cluster,tasks will be smooth to switch excuter when the strategy of the router choose ‘failover’;
 - 6.Consistency: "Dispatch Center" through the DB lock to ensure the consistency of cluster distributed scheduling,one task excuted for once;
 - 7.Custom task parameters: support online configuration scheduling tasks into the parameters, immediate effect;
 - 8.Scheduling thread pool: scheduling system multi-threaded trigger scheduling operation, to ensure accurate scheduling, not blocked;
@@ -54,32 +58,32 @@ According to the latest statistics, from 2016-01-21 to 2017-07-07 period, the sy
 
 So far, XXL-JOB has access to a number of companies online product line, access to scenes such as electronic commerce, O2O business and large data operations, as of 2016-07-19, XXL-JOB has access to the company But not limited to:
 
-	- 1、大众点评；
+	- 1、大众点评【美团点评】
 	- 2、山东学而网络科技有限公司；
 	- 3、安徽慧通互联科技有限公司；
 	- 4、人人聚财金服；
 	- 5、上海棠棣信息科技股份有限公司
-	- 6、运满满
-	- 7、米其林 (中国区)
+	- 6、运满满【运满满】
+	- 7、米其林 (中国区)【米其林】
 	- 8、妈妈联盟
 	- 9、九樱天下（北京）信息技术有限公司
-	- 10、万普拉斯科技有限公司(一加手机)
+	- 10、万普拉斯科技有限公司【一加手机】
 	- 11、上海亿保健康管理有限公司
-	- 12、海尔馨厨 (海尔)
+	- 12、海尔馨厨【海尔】
 	- 13、河南大红包电子商务有限公司
 	- 14、成都顺点科技有限公司
 	- 15、深圳市怡亚通
 	- 16、深圳麦亚信科技股份有限公司
 	- 17、上海博莹科技信息技术有限公司
-	- 18、中国平安科技有限公司
+	- 18、中国平安科技有限公司【中国平安】
 	- 19、杭州知时信息科技有限公司
 	- 20、博莹科技（上海）有限公司
 	- 21、成都依能股份有限责任公司
 	- 22、湖南高阳通联信息技术有限公司
 	- 23、深圳市邦德文化发展有限公司
 	- 24、福建阿思可网络教育有限公司
-	- 25、优信二手车
-	- 26、上海悠游堂投资发展股份有限公司
+	- 25、优信二手车【优信】
+	- 26、上海悠游堂投资发展股份有限公司【悠游堂】
 	- 27、北京粉笔蓝天科技有限公司
 	- 28、中秀科技(无锡)有限公司
 	- 29、武汉空心科技有限公司
@@ -87,7 +91,7 @@ So far, XXL-JOB has access to a number of companies online product line, access 
 	- 31、四川互宜达科技有限公司
 	- 32、钱包行云（北京）科技有限公司
 	- 33、重庆欣才集团
-    - 34、咪咕互动娱乐有限公司（中国移动）
+    - 34、咪咕互动娱乐有限公司【中国移动】
     - 35、北京诺亦腾科技有限公司
     - 36、增长引擎(北京)信息技术有限公司
     - 37、北京英贝思科技有限公司
@@ -100,7 +104,7 @@ So far, XXL-JOB has access to a number of companies online product line, access 
     - 44、圳临界线网络科技有限公司
     - 45、广州知识圈网络科技有限公司
     - 46、国誉商业上海有限公司
-    - 47、海尔消费金融有限公司，嗨付、够花 (海尔)
+    - 47、海尔消费金融有限公司，嗨付、够花【海尔】
     - 48、广州巴图鲁信息科技有限公司
     - 49、深圳市鹏海运电子数据交换有限公司
     - 50、深圳市亚飞电子商务有限公司
@@ -111,7 +115,7 @@ So far, XXL-JOB has access to a number of companies online product line, access 
     - 55、中商惠民(北京)电子商务有限公司
     - 56、凯京集团
     - 57、华夏票联（北京）科技有限公司
-    - 58、拍拍贷
+    - 58、拍拍贷【拍拍贷】
     - 59、北京尚德机构在线教育有限公司
     - 60、任子行股份有限公司
     - 61、北京时态电子商务有限公司
@@ -137,22 +141,22 @@ So far, XXL-JOB has access to a number of companies online product line, access 
     - 81、深圳小安时代互联网金融服务有限公司
     - 82、湖北享七网络科技有限公司
     - 83、钱包行云(北京)科技有限公司
-    - 84、360金融 (360)
+    - 84、360金融【360】
     - 85、易企秀
     - 86、摩贝（上海）生物科技有限公司
     - 87、广东芯智慧科技有限公司
-    - 88、联想集团 (联想)
+    - 88、联想集团【联想】
     - 89、怪兽充电
     - 90、行圆汽车
     - 91、深圳店店通科技邮箱公司
-    - 92、京东 (京东)
+    - 92、京东【京东】
     - 93、米庄理财
     - 94、咖啡易融
     - 95、梧桐诚选
-    - 96、恒大地产 (恒大)
+    - 96、恒大地产【恒大】
     - 97、昆明龙慧
     - 98、上海涩瑶软件
-    - 99、易信 (网易)
+    - 99、易信【网易】
     - 100、铜板街
     - 101、杭州云若网络科技有限公司
     - 102、特百惠（中国）有限公司
@@ -171,6 +175,167 @@ So far, XXL-JOB has access to a number of companies online product line, access 
     - 115、浙江微能科技有限公司
     - 116、上海馨飞电子商务有限公司
     - 117、上海宝尊电子商务有限公司
+    - 118、直客通科技技术有限公司
+    - 119、科度科技有限公司
+    - 120、上海数慧系统技术有限公司
+    - 121、我的医药网
+    - 122、多粉平台
+    - 123、铁甲二手机
+    - 124、上海海新得数据技术有限公司
+    - 125、深圳市珍爱网信息技术有限公司【珍爱网】
+    - 126、小蜜蜂
+    - 127、吉荣数科技
+    - 128、上海恺域信息科技有限公司
+    - 129、广州荔支网络有限公司【荔枝FM】
+    - 130、杭州闪宝科技有限公司
+    - 131、北京互联新网科技发展有限公司
+    - 132、誉道科技
+    - 133、山西兆盛房地产开发有限公司
+    - 134、北京蓝睿通达科技有限公司
+    - 135、月亮小屋（中国）有限公司【蓝月亮】
+    - 136、青岛国瑞信息技术有限公司
+    - 137、博雅云计算（北京）有限公司
+    - 138、华泰证券香港子公司
+    - 139、杭州东方通信软件技术有限公司
+    - 140、武汉博晟安全技术股份有限公司
+    - 141、深圳市六度人和科技有限公司
+    - 142、杭州趣维科技有限公司（小影）
+    - 143、宁波单车侠之家科技有限公司【单车侠】
+    - 144、丁丁云康信息科技（北京）有限公司
+    - 145、云钱袋
+    - 146、南京中兴力维
+    - 147、上海矽昌通信技术有限公司
+    - 148、深圳萨科科技
+    - 149、中通服创立科技有限责任公司
+    - 150、深圳市对庄科技有限公司
+    - 151、上证所信息网络有限公司
+    - 152、杭州火烧云科技有限公司【婚礼纪】
+    - 153、天津青芒果科技有限公司【芒果头条】
+    - 154、长飞光纤光缆股份有限公司
+    - 155、世纪凯歌（北京）医疗科技有限公司
+    - 156、浙江霖梓控股有限公司
+    - 157、江西腾飞网络技术有限公司
+    - 158、安迅物流有限公司
+    - 159、肉联网
+    - 160、北京北广梯影广告传媒有限公司
+    - 161、上海数慧系统技术有限公司
+    - 162、大志天成
+    - 163、上海云鹊医
+    - 164、上海云鹊医
+    - 165、墨迹天气【墨迹天气】
+    - 166、上海逸橙信息科技有限公司
+    - 167、沅朋物联
+    - 168、杭州恒生云融网络科技有限公司
+    - 169、绿米联创
+    - 170、重庆易宠科技有限公司
+    - 171、安徽引航科技有限公司（乐职网）
+    - 172、上海数联医信企业发展有限公司
+    - 173、良彬建材
+    - 174、杭州求是同创网络科技有限公司
+    - 175、荷马国际
+    - 176、点雇网
+    - 177、深圳市华星光电技术有限公司
+    - 178、厦门神州鹰软件科技有限公司
+    - 179、深圳市招商信诺人寿保险有限公司
+    - 180、上海好屋网信息技术有限公司
+    - 181、海信集团【海信】
+    - 182、信凌可信息科技（上海）有限公司
+    - 183、长春天成科技发展有限公司
+    - 184、用友金融信息技术股份有限公司【用友】
+    - 185、北京咖啡易融有限公司
+    - 186、国投瑞银基金管理有限公司
+    - 187、晋松(上海)网络信息技术有限公司
+    - 188、深圳市随手科技有限公司【随手记】
+    - 189、深圳水务科技有限公司
+    - 190、易企秀【易企秀】
+    - 191、北京磁云科技
+    - 192、南京蜂泰互联网科技有限公司
+    - 193、章鱼直播
+    - 194、奖多多科技
+    - 195、天津市神州商龙科技股份有限公司
+    - 196、岩心科技
+    - 197、车码科技（北京）有限公司
+    - 198、贵阳市投资控股集团
+    - 199、康旗股份
+    - 200、龙腾出行
+    - 201、杭州华量软件
+    - 202、合肥顶岭医疗科技有限公司
+    - 203、重庆表达式科技有限公司
+    - 204、上海米道信息科技有限公司
+    - 205、北京益友会科技有限公司
+    - 206、北京融贯电子商务有限公司
+    - 207、中国外汇交易中心
+    - 208、中国外运股份有限公司
+    - 209、中国上海晓圈教育科技有限公司
+    - 210、普联软件股份有限公司
+    - 211、北京科蓝软件股份有限公司
+    - 212、江苏斯诺物联科技有限公司
+    - 213、北京搜狐-狐友【搜狐】
+    - 214、新大陆网商金融
+    - 215、山东神码中税信息科技有限公司
+    - 216、河南汇顺网络科技有限公司
+    - 217、北京华夏思源科技发展有限公司
+    - 218、上海东普信息科技有限公司
+    - 219、上海鸣勃网络科技有限公司
+    - 220、广东学苑教育发展有限公司
+    - 221、深圳强时科技有限公司
+    - 222、上海云砺信息科技有限公司
+    - 223、重庆愉客行网络有限公司
+    - 224、数云
+    - 225、国家电网运检部
+    - 226、杭州找趣
+    - 227、浩鲸云计算科技股份有限公司
+    - 228、科大讯飞【科大讯飞】
+    - 229、杭州行装网络科技有限公司
+    - 230、即有分期金融
+    - 231、深圳法司德信息科技有限公司
+    - 232、上海博复信息科技有限公司
+    - 233、杭州云嘉云计算有限公司
+    - 234、有家民宿(有家美宿)
+    - 235、北京赢销通软件技术有限公司
+    - 236、浙江聚有财金融服务外包有限公司
+    - 237、易族智汇(北京)科技有限公司
+    - 238、合肥顶岭医疗科技开发有限公司
+    - 239、车船宝(深圳)旭珩科技有限公司)
+    - 240、广州富力地产有限公司
+    - 241、氢课（上海）教育科技有限公司
+    - 242、武汉氪细胞网络技术有限公司
+    - 243、杭州有云科技有限公司
+    - 244、上海仙豆智能机器人有限公司
+    - 245、拉卡拉支付股份有限公司【拉卡拉】
+    - 246、虎彩印艺股份有限公司
+    - 247、北京数微科技有限公司
+    - 248、广东智瑞科技有限公司
+    - 249、找钢网
+    - 250、九机网
+    - 251、杭州跑跑网络科技有限公司
+    - 252、深圳未来云集
+    - 253、杭州每日给力科技有限公司
+    - 254、上海齐犇信息科技有限公司
+    - 255、滴滴出行【滴滴】
+    - 256、合肥云诊信息科技有限公司
+    - 257、云知声智能科技股份有限公司
+    - 258、南京坦道科技有限公司
+    - 259、爱乐优（二手平台）
+    - 260、猫眼电影（私有化部署）【猫眼电影】
+    - 261、美团大象（私有化部署）【美团大象】
+    - 262、作业帮教育科技（北京）有限公司【作业帮】
+    - 263、北京小年糕互联网技术有限公司
+    - 264、山东矩阵软件工程股份有限公司
+    - 265、陕西国驿软件科技有限公司
+    - 266、君开信息科技
+    - 267、村鸟网络科技有限责任公司
+    - 268、云南国际信托有限公司
+    - 269、金智教育
+    - 270、珠海市筑巢科技有限公司
+    - 271、上海百胜软件股份有限公司
+    - 272、深圳市科盾科技有限公司
+    - 273、哈啰出行
+    - 274、途虎养车
+    - 275、卡思优派人力资源集团
+    - 276、南京观为智慧软件科技有限公司
+    - 277、杭州城市大脑科技有限公司
+    - 278、猿辅导
 	- ……
 
 > The company that access and use this product is welcome to register at the [address](https://github.com/xuxueli/xxl-job/issues/1 ), only for product promotion. 
@@ -180,8 +345,8 @@ Welcome everyone's attention and use, XXL-JOB will also embrace changes, sustain
 ### 1.4 Download
 
 #### Documentation
-- [中文文档](http://www.xuxueli.com/xxl-job/)
-- [English Documentation](http://www.xuxueli.com/xxl-job/en/)
+- [中文文档](https://www.xuxueli.com/xxl-job/)
+- [English Documentation](https://www.xuxueli.com/xxl-job/en/)
 
 #### Source repository address (The latest code will be released in the two git warehouse in the same time)
 
@@ -201,7 +366,7 @@ Source repository address | Release Download
 ```
 
 #### Technical exchange group
-- [社区交流](http://www.xuxueli.com/page/community.html)
+- [社区交流](https://www.xuxueli.com/page/community.html)
 - [Gitter](https://gitter.im/xuxueli/xxl-job)
 
 ### 1.5 Environment
@@ -244,14 +409,14 @@ Source code is organized by maven,unzip it and structure is as follows:
 #### Step 1:Configure Schedule Center
 Configure file’s path of schedule center is as follows:
 
-    /xxl-job/xxl-job-admin/src/main/resources/xxl-job-admin.properties
+    /xxl-job/xxl-job-admin/src/main/resources/application.properties
 
 
 The concrete contet describe as follows:
 
     ### JDBC connection info of schedule center：keep Consistent with chapter 2.1
     xxl.job.db.driverClass=com.mysql.jdbc.Driver
-    xxl.job.db.url=jdbc:mysql://localhost:3306/xxl-job?useUnicode=true&characterEncoding=UTF-8
+    xxl.job.db.url=jdbc:mysql://127.0.0.1:3306/xxl_job?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai
     xxl.job.db.user=root
     xxl.job.db.password=root_pwd
     
@@ -277,7 +442,7 @@ The concrete contet describe as follows:
 If you has finished step 1,then you can compile the project in maven and deploy the war package to tomcat.
 the url to visit is :http://localhost:8080/xxl-job-admin (this address will be used by executor and use it as callback url),the index page after login in is as follow
 
-![index page after login in](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_6yC0.png "index page after login in")
+![index page after login in](https://www.xuxueli.com/doc/static/xxl-job/images/img_6yC0.png "index page after login in")
 
 Now,the “xxl-job-admin” project is deployed success.
 
@@ -339,7 +504,7 @@ Concrete contet describe as follows：
     <!-- executor port[required] -->
     <property name="port" value="${xxl.job.executor.port}" />
     <!-- executor AppName[required]，auto register will be closed if it blank -->
-    <property name="appName" value="${xxl.job.executor.appname}" />
+    <property name="appname" value="${xxl.job.executor.appname}" />
     <!-- register center address of executor [required]，auto register will be closed if it blank -->
     <property name="adminAddresses" value="${xxl.job.admin.addresses}" />
     <!-- log path of executor[required] -->
@@ -371,16 +536,16 @@ Now let’s create a "GLUE模式(Java)" job,if you want to learn more about it ,
 #### Step 1:Create new job
 Login in xxl-job-admin,click on the"新建任务" button, configure the job params as follows and click "保存" button to save the job info.
 
-![task management](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_o8HQ.png "task management")
+![task management](https://www.xuxueli.com/doc/static/xxl-job/images/img_o8HQ.png "task management")
 
-![create task](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_ZAsz.png "create task")
+![create task](https://www.xuxueli.com/doc/static/xxl-job/images/img_ZAsz.png "create task")
 
 #### Step 2：develop “GLUE模式(Java)” job
 Click “GLUE” button on the right of the job to go to GLUE editor view as shown below。“GLUE模式(Java)” mode task has been inited with default task code for printing Hello World。 （ “GLUE模式(Java)” mode task is a java code fragment implements IJobHandler interface,it will be executed in executor,you can use @Resource/@Autowire to inject other java bean instance,if you want to see more info please go to chapter 3）
 
-![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_Fgql.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/doc/static/xxl-job/images/img_Fgql.png "在这里输入图片标题")
 
-![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_dNUJ.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/doc/static/xxl-job/images/img_dNUJ.png "在这里输入图片标题")
 
 #### Step 3:trigger task
 If you want to run the job manually please click "执行" button on the right of the job(usually we trigger job by Cron expression)
@@ -388,11 +553,11 @@ If you want to run the job manually please click "执行" button on the right of
 #### Step 4:view log 
 Click “日志” button on the right side of the task you will go to the task log list ,you will see the schedule history records of the task and the schedule detail info,execution info and execution params.If you click the “执行日志” button on the right side of the task log record,you will go to log console and view the execute log in the course of task execution.
 
-![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_inc8.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/doc/static/xxl-job/images/img_inc8.png "在这里输入图片标题")
 
 On the log console,you can view task execution log on the executor immediately after it dump to log file,so you can monitor the task execution process by Rolling way.
 
-![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_eYrv.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/doc/static/xxl-job/images/img_eYrv.png "在这里输入图片标题")
 
 ## 3. Task details
 
@@ -438,14 +603,12 @@ The task logic exist in the executor project as JobHandler,the develop steps as 
     - 1, create new java class implent com.xxl.job.core.handler.IJobHandler;
     - 2, if you add @Component annotation on the top of the class name it’s will be managed as a bean instance by spring container;
     - 3, add  “@JobHandler(value=" customize jobhandler name")” annotation，the value stand for JobHandler name,it will be used as JobHandler property when create a new task in the schedule center.
-    （go and see DemoJobHandler in the xxl-job-executor-example project, as shown below）
 
-![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_oLlM.png "在这里输入图片标题")
 
 #### Step 2:create task in schedule center
 If you want learn more about configure item please go and sedd “Description of configuration item”，select  "BEAN模式" as run mode，property JobHandler please fill in the value defined by @JobHande.
 
-![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_ZAsz.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/doc/static/xxl-job/images/img_ZAsz.png "在这里输入图片标题")
 
 ### 3.2 GLUE模式(Java)
 Task source code is maintained in the schedule center and can be updated by Web IDE online, it will be compiled and effective real-time,didn’t need to assign JobHandler,develop flow shown as below:
@@ -453,14 +616,14 @@ Task source code is maintained in the schedule center and can be updated by Web 
 #### Step 1:create task in schedule center
 If you want learn more about configure item please go and sedd “Description of configuration item”，select "GLUE模式(Java)" as run mode.
 
-![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_tJOq.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/doc/static/xxl-job/images/img_tJOq.png "在这里输入图片标题")
 
 #### Step 2:develop task source code
 Select the task record and click “GLUE” button on the righe of it,it will go to GLUE task’s WEB IDE page,on this page yo can edit you task code(also can edit in other IDE tools,copy and paste into this page).
 
 Version backtrack（support 30 versions while backtrack）：on the WEB IDE page of GLUE task,on upper right corner drop down box please select “版本回溯”,it will display GLUE updated history,select the version you want it will display the source code of this version,it will backtrace the version while click save button. 
 
-![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_dNUJ.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/doc/static/xxl-job/images/img_dNUJ.png "在这里输入图片标题")
 
 ### 3.3 GLUE模式(Shell)
 
@@ -472,7 +635,7 @@ Select the task record and click “GLUE” button on the righe of it,it will go
 
 Actually it is a shell script fragment.
 
-![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_iUw0.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/doc/static/xxl-job/images/img_iUw0.png "在这里输入图片标题")
 
 ### 3.4 GLUE模式(Python)
 
@@ -484,23 +647,23 @@ Select the task record and click “GLUE” button on the righe of it,it will go
 
 Actually it is a python script fragment.
 
-![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_BPLG.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/doc/static/xxl-job/images/img_BPLG.png "在这里输入图片标题")
 
 
 ## 4. Task Management
 ### 4.0 configure executor
 click"执行器管理" on the left menu,it will go to the page as shown below:
-![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_Hr2T.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/doc/static/xxl-job/images/img_Hr2T.png "在这里输入图片标题")
 
     1,"调度中心OnLine”:display schedule center machine list,when task is scheduled it will callback schedule center for notify the execution result in failover mode, so that it can avoid a single point scheduler;
     2,"执行器列表" :display all nodes under this executor group.
 
 If you want to create a new executor,please click "+新增执行器" button: 
-![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_V3vF.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/doc/static/xxl-job/images/img_V3vF.png "在这里输入图片标题")
 
 ### Description of executor attributes
 
-    AppName: the unique identity of the executor cluster,executor will registe automatically and periodically by appName so that it can be scheduled.
+    Appname: the unique identity of the executor cluster,executor will registe automatically and periodically by appname so that it can be scheduled.
     名称: the name of ther executor,it is used to describe the executor.
     排序: the order of executor,it will be used in the place where need to select executor.
     注册方式:which way the schedule center used to acquire executor address through;
@@ -523,19 +686,19 @@ choose the task you want to edit and click” GLUE”button on the right side of
 ### 4.4 pause/recover task
 You can pause or recover task but it just fit to follow up schedule trigger and won’t affect scheduled tasks,if you want to stop tasks which has been triggered,please go and see “4.8 stop the running task”
 
-![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_ZAhX.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/doc/static/xxl-job/images/img_ZAhX.png "在这里输入图片标题")
 
 ### 4.5 manually trigger
 You can trigger a task manually by Click “执行”button,it won’t affect original scheduling rules.
 
-![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_Z5wp.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/doc/static/xxl-job/images/img_Z5wp.png "在这里输入图片标题")
 
 ### 4.6 view schedule log
 You can view task’s history schedule log by click “日志” button,on the history schedule log list page you can view every time of task’s schedule result,execution result and so on,click “执行日志” button can view the task’s full execute log.
 
-![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_9235.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/doc/static/xxl-job/images/img_9235.png "在这里输入图片标题")
 
-![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_inc8.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/doc/static/xxl-job/images/img_inc8.png "在这里输入图片标题")
 
     调度时间:schedule center trigger time when schedule and send execution signal to executor;
     调度结果:schedule center trigger task’s result, 200 represent success,500 or other number stands for fail;
@@ -553,12 +716,12 @@ You can view task’s history schedule log by click “日志” button,on the h
 ### 4.7 view execution log
 Click the “执行日志” button on the right side of the record,you can go to the execution log page,you can view the full execution log of the logic business code, shown as below:
 
-![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_tvGI.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/doc/static/xxl-job/images/img_tvGI.png "在这里输入图片标题")
 
 ### 4.8 stop running tasks
 Just fit to running tasks,on the task log list page,click “终止任务” button on the right side of the record, it will send stop command to the executor where the task was executed,finally the task was killed and the task instance execute queue of this task will be clear.
 
-![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_hIci.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/doc/static/xxl-job/images/img_hIci.png "在这里输入图片标题")
 
 It is implemented by interrupt execute thread, it will trigger InterruptedException.so if JobHandler catch this execuption and handle this exception this function is unavailable.
 
@@ -579,14 +742,14 @@ If JobHandler start child thread,child thread also must not catch InterruptedExc
 
 ### 4.9 delete execution log
 On the task log list page, after you select executor and task, you can click"删除" button on the right side and it will pop-up "日志清理" window,on the pop-up window you can choose different log delete policy,choose the policy you want to execute and click "确定" button it will delele relative logs:
-![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_Ypik.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/doc/static/xxl-job/images/img_Ypik.png "在这里输入图片标题")
 
-![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_EB65.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/doc/static/xxl-job/images/img_EB65.png "在这里输入图片标题")
 
 ### 4.10 delete task
 Click the delete button on the right side of the task,the task will be deteted.
 
-![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_Z9Qr.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/doc/static/xxl-job/images/img_Z9Qr.png "在这里输入图片标题")
 
 ## 5. Overall design
 ### 5.1 Source directory introduction
@@ -601,7 +764,7 @@ XXL-JOB schedule module is implemented based on Quartz cluster,it’s “databas
 
 XXL-JOB custom Quartz table structure prefix(XXL_JOB_QRTZ_).
 
-![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_bNwm.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/doc/static/xxl-job/images/img_bNwm.png "在这里输入图片标题")
 
 The added tables as shown below:
     - XXL_JOB_QRTZ_TRIGGER_GROUP:executor basic table, maintain the info about the executor;
@@ -630,7 +793,7 @@ So schedule and task can be decoupled from each other, by the way it can improve
 
 #### 5.3.3 Architecture diagram
 
-![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_Qohm.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/doc/static/xxl-job/images/img_Qohm.png "在这里输入图片标题")
 
 ### 5.4 Schedule module analysis
 #### 5.4.1 Disadvantage of quartz
@@ -713,7 +876,7 @@ If executor project was deployed as cluster schedule center will known all onlin
 When "路由策略" select "故障转移(FAILOVER)",it will send heart beat check request in order while schedule center start schedule request.  The first alive checked executor node will be selected and send schedule request to it.
 
 “调度备注” can be viewed on the monitor page when schedule success. As shown below: 
-![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_jrdI.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/doc/static/xxl-job/images/img_jrdI.png "在这里输入图片标题")
 
 “调度备注” will display local schedule route path、executor’s "注册方式"、"地址列表" and task’s "路由策略"。Under "故障转移(FAILOVER)" policy, schedule center take first address to do heartbeat detection, heat beat fail will automatically skip, the second address heart beat fail…… until the third address “127.0.0.1:9999” heart beat success, it was selected as target executor, then send schedule request to target executor, now the schedule process is end wait for the executor’s callback execution result.
 
@@ -743,9 +906,9 @@ When parent task end execute and success, it will match child task dependency ac
 
 On the task log page ,you can see matched child task and triggered child task’s log info when you “查看”button of “执行备注”,otherwise the child task didin’t execute, as shown beleow:
 
-![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_Wb2o.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/doc/static/xxl-job/images/img_Wb2o.png "在这里输入图片标题")
 
-![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/img_jOAU.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/doc/static/xxl-job/images/img_jOAU.png "在这里输入图片标题")
 
 ### 5.5 Task "run mode" analysis
 #### 5.5.1 "Bean模式" task
@@ -811,7 +974,8 @@ When “分片广播” is selected as route policy in executor cluster, one tas
 
 The develop process of "分片广播" is the same as general task, The difference is that you can get slice parameters，code as shown below（go and see ShardingJobHandler in execuotr example ):
 
-    ShardingUtil.ShardingVO shardingVO = ShardingUtil.getShardingVo();
+    int shardIndex = XxlJobContext.getXxlJobContext().getShardIndex();
+    int shardTotal = XxlJobContext.getXxlJobContext().getShardTotal();
     
 This slice parameter object has two properties:
 
@@ -1081,4 +1245,4 @@ This product is open source and free, and will continue to provide free communit
 
 ---
 ### Donate
-No matter how much the amount is enough to express your thought, thank you very much ：）     [To donate](http://www.xuxueli.com/page/donate.html )
+No matter how much the amount is enough to express your thought, thank you very much ：）     [To donate](https://www.xuxueli.com/page/donate.html )

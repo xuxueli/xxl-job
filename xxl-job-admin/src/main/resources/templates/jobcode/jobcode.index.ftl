@@ -100,7 +100,7 @@
                     <h4 class="modal-title" ><i class="fa fa-fw fa-save"></i>${I18n.system_save}</h4>
                 </div>
                 <div class="modal-body">
-                    <form class="form-horizontal form" role="form" >
+                    <div class="form-horizontal form" role="form" >
                         <div class="form-group">
                             <label for="lastname" class="col-sm-2 control-label">${I18n.jobinfo_glue_remark}<font color="red">*</font></label>
                             <div class="col-sm-10"><input type="text" class="form-control" id="glueRemark" placeholder="${I18n.system_please_input}${I18n.jobinfo_glue_remark}" maxlength="64" ></div>
@@ -112,7 +112,7 @@
                                 <button type="button" class="btn btn-default" data-dismiss="modal">${I18n.system_cancel}</button>
                             </div>
                         </div>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>

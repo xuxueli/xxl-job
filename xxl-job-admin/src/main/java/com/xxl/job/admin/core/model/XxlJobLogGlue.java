@@ -1,5 +1,7 @@
 package com.xxl.job.admin.core.model;
 
+import java.util.Date;
+
 /**
  * xxl-job log for glue, used to track job code process
  * @author xuxueli 2016-5-19 17:57:46
@@ -11,8 +13,8 @@ public class XxlJobLogGlue {
 	private String glueType;		// GLUE类型	#com.xxl.job.core.glue.GlueTypeEnum
 	private String glueSource;
 	private String glueRemark;
-	private String addTime;
-	private String updateTime;
+	private Date addTime;
+	private Date updateTime;
 
 	public int getId() {
 		return id;
@@ -54,19 +56,19 @@ public class XxlJobLogGlue {
 		this.glueRemark = glueRemark;
 	}
 
-	public String getAddTime() {
+	public Date getAddTime() {
 		return addTime;
 	}
 
-	public void setAddTime(String addTime) {
+	public void setAddTime(Date addTime) {
 		this.addTime = addTime;
 	}
 
-	public String getUpdateTime() {
+	public Date getUpdateTime() {
 		return updateTime;
 	}
 
-	public void setUpdateTime(String updateTime) {
+	public void setUpdateTime(Date updateTime) {
 		this.updateTime = updateTime;
 	}
 

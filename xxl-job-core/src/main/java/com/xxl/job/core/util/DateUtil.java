@@ -24,7 +24,7 @@ public class DateUtil {
     private static final String DATE_FORMAT = "yyyy-MM-dd";
     private static final String DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
-    private static ThreadLocal<Map<String, DateFormat>> dateFormatThreadLocal = new ThreadLocal<Map<String, DateFormat>>();
+    private static final ThreadLocal<Map<String, DateFormat>> dateFormatThreadLocal = new ThreadLocal<Map<String, DateFormat>>();
     private static DateFormat getDateFormat(String pattern) {
         if (pattern==null || pattern.trim().length()==0) {
             throw new IllegalArgumentException("pattern cannot be empty.");
@@ -115,7 +115,7 @@ public class DateUtil {
             Date date = getDateFormat(pattern).parse(dateString);
             return date;
         } catch (Exception e) {
-            logger.warn("parse date error, dateString = {}, pattern={}; errorMsg = ", dateString, pattern, e.getMessage());
+            logger.warn("parse date error, dateString = {}, pattern={}; errorMsg = {}", dateString, pattern, e.getMessage());
             return null;
         }
     }
@@ -123,16 +123,24 @@ public class DateUtil {
 
     // ---------------------- add date ----------------------
 
-    public static Date addDays(final Date date, final int amount) {
-        return add(date, Calendar.DAY_OF_MONTH, amount);
-    }
-
     public static Date addYears(final Date date, final int amount) {
         return add(date, Calendar.YEAR, amount);
     }
 
     public static Date addMonths(final Date date, final int amount) {
         return add(date, Calendar.MONTH, amount);
+    }
+
+    public static Date addDays(final Date date, final int amount) {
+        return add(date, Calendar.DAY_OF_MONTH, amount);
+    }
+
+    public static Date addHours(final Date date, final int amount) {
+        return add(date, Calendar.HOUR_OF_DAY, amount);
+    }
+
+    public static Date addMinutes(final Date date, final int amount) {
+        return add(date, Calendar.MINUTE, amount);
     }
 
     private static Date add(final Date date, final int calendarField, final int amount) {
