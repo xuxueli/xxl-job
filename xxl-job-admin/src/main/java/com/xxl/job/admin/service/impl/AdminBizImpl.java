@@ -63,11 +63,11 @@ public class AdminBizImpl implements AdminBiz {
         }
 
         // trigger success, to trigger child job
-        String callbackMsg = null;
+        StringBuilder callbackMsg = null;
         if (IJobHandler.SUCCESS.getCode() == handleCallbackParam.getExecuteResult().getCode()) {
             XxlJobInfo xxlJobInfo = xxlJobInfoDao.loadById(log.getJobId());
             if (xxlJobInfo!=null && xxlJobInfo.getChildJobId()!=null && xxlJobInfo.getChildJobId().trim().length()>0) {
-                callbackMsg = "<br><br><span style=\"color:#00c0ef;\" > >>>>>>>>>>>"+ I18nUtil.getString("jobconf_trigger_child_run") +"<<<<<<<<<<< </span><br>";
+                callbackMsg = new StringBuilder("<br><br><span style=\"color:#00c0ef;\" > >>>>>>>>>>>" + I18nUtil.getString("jobconf_trigger_child_run") + "<<<<<<<<<<< </span><br>");
 
                 String[] childJobIds = xxlJobInfo.getChildJobId().split(",");
                 for (int i = 0; i < childJobIds.length; i++) {
@@ -78,17 +78,17 @@ public class AdminBizImpl implements AdminBiz {
                         ReturnT<String> triggerChildResult = ReturnT.SUCCESS;
 
                         // add msg
-                        callbackMsg += MessageFormat.format(I18nUtil.getString("jobconf_callback_child_msg1"),
-                                (i+1),
+                        callbackMsg.append(MessageFormat.format(I18nUtil.getString("jobconf_callback_child_msg1"),
+                                (i + 1),
                                 childJobIds.length,
                                 childJobIds[i],
-                                (triggerChildResult.getCode()==ReturnT.SUCCESS_CODE?I18nUtil.getString("system_success"):I18nUtil.getString("system_fail")),
-                                triggerChildResult.getMsg());
+                                (triggerChildResult.getCode() == ReturnT.SUCCESS_CODE ? I18nUtil.getString("system_success") : I18nUtil.getString("system_fail")),
+                                triggerChildResult.getMsg()));
                     } else {
-                        callbackMsg += MessageFormat.format(I18nUtil.getString("jobconf_callback_child_msg2"),
-                                (i+1),
+                        callbackMsg.append(MessageFormat.format(I18nUtil.getString("jobconf_callback_child_msg2"),
+                                (i + 1),
                                 childJobIds.length,
-                                childJobIds[i]);
+                                childJobIds[i]));
                     }
                 }
 

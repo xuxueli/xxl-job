@@ -103,16 +103,16 @@ public class JobGroupController {
 		if (xxlJobGroup.getAddressType() == 0) {
 			// 0=自动注册
 			List<String> registryList = findRegistryByAppName(xxlJobGroup.getAppname());
-			String addressListStr = null;
+			StringBuilder addressListStr = null;
 			if (registryList!=null && !registryList.isEmpty()) {
 				Collections.sort(registryList);
-				addressListStr = "";
+				addressListStr = new StringBuilder();
 				for (String item:registryList) {
-					addressListStr += item + ",";
+					addressListStr.append(item).append(",");
 				}
-				addressListStr = addressListStr.substring(0, addressListStr.length()-1);
+				addressListStr = new StringBuilder(addressListStr.substring(0, addressListStr.length() - 1));
 			}
-			xxlJobGroup.setAddressList(addressListStr);
+			xxlJobGroup.setAddressList(addressListStr.toString());
 		} else {
 			// 1=手动录入
 			if (xxlJobGroup.getAddressList()==null || xxlJobGroup.getAddressList().trim().length()==0) {
