@@ -96,7 +96,7 @@ public class AdminBizImpl implements AdminBiz {
         }
 
         // handle msg
-        StringBuffer handleMsg = new StringBuffer();
+        StringBuilder handleMsg = new StringBuilder();
         if (log.getHandleMsg()!=null) {
             handleMsg.append(log.getHandleMsg()).append("<br>");
         }
@@ -108,7 +108,7 @@ public class AdminBizImpl implements AdminBiz {
         }
 
         if (handleMsg.length() > 15000) {
-            handleMsg = new StringBuffer(handleMsg.substring(0, 15000));  // text最大64kb 避免长度过长
+            handleMsg = new StringBuilder(handleMsg.substring(0, 15000));  // text最大64kb 避免长度过长
         }
 
         // success, save log

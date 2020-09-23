@@ -167,7 +167,7 @@ public class XxlJobTrigger {
         }
 
         // 5、collection trigger info
-        StringBuffer triggerMsgSb = new StringBuffer();
+        StringBuilder triggerMsgSb = new StringBuilder();
         triggerMsgSb.append(I18nUtil.getString("jobconf_trigger_type")).append("：").append(triggerType.getTitle());
         triggerMsgSb.append("<br>").append(I18nUtil.getString("jobconf_trigger_admin_adress")).append("：").append(IpUtil.getIp());
         triggerMsgSb.append("<br>").append(I18nUtil.getString("jobconf_trigger_exe_regtype")).append("：")
@@ -214,7 +214,7 @@ public class XxlJobTrigger {
             runResult = new ReturnT<String>(ReturnT.FAIL_CODE, ThrowableUtil.toString(e));
         }
 
-        StringBuffer runResultSB = new StringBuffer(I18nUtil.getString("jobconf_trigger_run") + "：");
+        StringBuilder runResultSB = new StringBuilder(I18nUtil.getString("jobconf_trigger_run") + "：");
         runResultSB.append("<br>address：").append(address);
         runResultSB.append("<br>code：").append(runResult.getCode());
         runResultSB.append("<br>msg：").append(runResult.getMsg());

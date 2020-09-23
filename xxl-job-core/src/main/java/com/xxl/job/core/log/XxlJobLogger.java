@@ -30,7 +30,7 @@ public class XxlJobLogger {
         StackTraceElement[] stackTraceElements = new Throwable().getStackTrace();
         StackTraceElement callInfo = stackTraceElements[1];*/
 
-        StringBuffer stringBuffer = new StringBuffer();
+    	StringBuilder stringBuffer = new StringBuilder();
         stringBuffer.append(DateUtil.formatDateTime(new Date())).append(" ")
             .append("["+ callInfo.getClassName() + "#" + callInfo.getMethodName() +"]").append("-")
             .append("["+ callInfo.getLineNumber() +"]").append("-")

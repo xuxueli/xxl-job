@@ -148,7 +148,7 @@ public class XxlJobFileAppender {
 		}
 
 		// read file
-		StringBuffer logContentBuffer = new StringBuffer();
+		StringBuilder logContentBuffer = new StringBuilder();
 		int toLineNum = 0;
 		LineNumberReader reader = null;
 		try {
