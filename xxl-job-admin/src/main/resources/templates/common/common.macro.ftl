@@ -58,7 +58,7 @@
 	<#-- common -->
     <script src="${request.contextPath}/static/js/common.1.js"></script>
     <script>
-		var base_url = '${request.contextPath}';
+		var base_url = '${request.contextPath}'+"/";
         var I18n = ${I18nUtil.getMultString()};
 	</script>
 
