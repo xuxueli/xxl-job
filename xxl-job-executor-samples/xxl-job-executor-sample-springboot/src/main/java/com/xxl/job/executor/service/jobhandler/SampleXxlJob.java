@@ -1,19 +1,21 @@
 package com.xxl.job.executor.service.jobhandler;
 
 import com.xxl.job.core.biz.model.ReturnT;
+import com.xxl.job.core.context.XxlJobContext;
 import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.handler.annotation.XxlJob;
 import com.xxl.job.core.log.XxlJobLogger;
-import com.xxl.job.core.util.ShardingUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -53,12 +55,14 @@ public class SampleXxlJob {
     public ReturnT<String> shardingJobHandler(String param) throws Exception {
 
         // 分片参数
-        ShardingUtil.ShardingVO shardingVO = ShardingUtil.getShardingVo();
-        XxlJobLogger.log("分片参数：当前分片序号 = {}, 总分片数 = {}", shardingVO.getIndex(), shardingVO.getTotal());
+        int shardIndex = XxlJobContext.getXxlJobContext().getShardIndex();
+        int shardTotal = XxlJobContext.getXxlJobContext().getShardTotal();
+
+        XxlJobLogger.log("分片参数：当前分片序号 = {}, 总分片数 = {}", shardIndex, shardTotal);
 
         // 业务逻辑
-        for (int i = 0; i < shardingVO.getTotal(); i++) {
-            if (i == shardingVO.getIndex()) {
+        for (int i = 0; i < shardTotal; i++) {
+            if (i == shardIndex) {
                 XxlJobLogger.log("第 {} 片, 命中分片开始处理", i);
             } else {
                 XxlJobLogger.log("第 {} 片, 忽略", i);
@@ -111,21 +115,57 @@ public class SampleXxlJob {
 
     /**
      * 4、跨平台Http任务
+     *  参数示例：
+     *      "url: http://www.baidu.com\n" +
+     *      "method: get\n" +
+     *      "data: content\n";
      */
     @XxlJob("httpJobHandler")
     public ReturnT<String> httpJobHandler(String param) throws Exception {
+
+        // param parse
+        if (param==null || param.trim().length()==0) {
+            XxlJobLogger.log("param["+ param +"] invalid.");
+            return ReturnT.FAIL;
+        }
+        String[] httpParams = param.split("\n");
+        String url = null;
+        String method = null;
+        String data = null;
+        for (String httpParam: httpParams) {
+            if (httpParam.startsWith("url:")) {
+                url = httpParam.substring(httpParam.indexOf("url:") + 4).trim();
+            }
+            if (httpParam.startsWith("method:")) {
+                method = httpParam.substring(httpParam.indexOf("method:") + 7).trim().toUpperCase();
+            }
+            if (httpParam.startsWith("data:")) {
+                data = httpParam.substring(httpParam.indexOf("data:") + 5).trim();
+            }
+        }
+
+        // param valid
+        if (url==null || url.trim().length()==0) {
+            XxlJobLogger.log("url["+ url +"] invalid.");
+            return ReturnT.FAIL;
+        }
+        if (method==null || !Arrays.asList("GET", "POST").contains(method)) {
+            XxlJobLogger.log("method["+ method +"] invalid.");
+            return ReturnT.FAIL;
+        }
+        boolean isPostMethod = method.equals("POST");
 
         // request
         HttpURLConnection connection = null;
         BufferedReader bufferedReader = null;
         try {
             // connection
-            URL realUrl = new URL(param);
+            URL realUrl = new URL(url);
             connection = (HttpURLConnection) realUrl.openConnection();
 
             // connection setting
-            connection.setRequestMethod("GET");
-            connection.setDoOutput(true);
+            connection.setRequestMethod(method);
+            connection.setDoOutput(isPostMethod);
             connection.setDoInput(true);
             connection.setUseCaches(false);
             connection.setReadTimeout(5 * 1000);
@@ -137,7 +177,13 @@ public class SampleXxlJob {
             // do connection
             connection.connect();
 
-            //Map<String, List<String>> map = connection.getHeaderFields();
+            // data
+            if (isPostMethod && data!=null && data.trim().length()>0) {
+                DataOutputStream dataOutputStream = new DataOutputStream(connection.getOutputStream());
+                dataOutputStream.write(data.getBytes("UTF-8"));
+                dataOutputStream.flush();
+                dataOutputStream.close();
+            }
 
             // valid StatusCode
             int statusCode = connection.getResponseCode();

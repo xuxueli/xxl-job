@@ -142,6 +142,7 @@ $(function() {
                                     start_stop_div +
                                     '       <li><a href="javascript:void(0);" class="update" >'+ I18n.system_opt_edit +'</a></li>\n' +
                                     '       <li><a href="javascript:void(0);" class="job_operate" _type="job_del" >'+ I18n.system_opt_del +'</a></li>\n' +
+									'       <li><a href="javascript:void(0);" class="job_copy" >'+ I18n.system_opt_copy +'</a></li>\n' +
                                     '     </ul>\n' +
                                     '   </div>';
 
@@ -261,7 +262,8 @@ $(function() {
             url : base_url + "/jobinfo/trigger",
             data : {
                 "id" : $("#jobTriggerModal .form input[name='id']").val(),
-                "executorParam" : $("#jobTriggerModal .textarea[name='executorParam']").val()
+                "executorParam" : $("#jobTriggerModal .textarea[name='executorParam']").val(),
+				"addressList" : $("#jobTriggerModal .textarea[name='addressList']").val()
             },
             dataType : "json",
             success : function(data){
@@ -296,13 +298,13 @@ $(function() {
             dataType : "json",
             success : function(data){
 
-                var html = '<center>';
+                var html = '<div>';
                 if (data.code == 200 && data.content.registryList) {
                     for (var index in data.content.registryList) {
-                        html += '<span class="badge bg-green" >' + data.content.registryList[index] + '</span><br>';
+                        html += (parseInt(index)+1) + '. <span class="badge bg-green" >' + data.content.registryList[index] + '</span><br>';
                     }
                 }
-                html += '</center>';
+                html += '</div>';
 
                 layer.open({
                     title: I18n.jobinfo_opt_registryinfo ,
@@ -644,5 +646,37 @@ $(function() {
         });
         return glueTypeTitle;
     }
+
+    // job_copy
+	$("#job_list").on('click', '.job_copy',function() {
+
+		var id = $(this).parents('ul').attr("_id");
+		var row = tableData['key'+id];
+
+		// base data
+		//$("#addModal .form input[name='id']").val( row.id );
+		$('#addModal .form select[name=jobGroup] option[value='+ row.jobGroup +']').prop('selected', true);
+		$("#addModal .form input[name='jobDesc']").val( row.jobDesc );
+		$("#addModal .form input[name='jobCron']").val( row.jobCron );
+		$("#addModal .form input[name='author']").val( row.author );
+		$("#addModal .form input[name='alarmEmail']").val( row.alarmEmail );
+		$("#addModal .form input[name='executorTimeout']").val( row.executorTimeout );
+		$("#addModal .form input[name='executorFailRetryCount']").val( row.executorFailRetryCount );
+		$('#addModal .form select[name=executorRouteStrategy] option[value='+ row.executorRouteStrategy +']').prop('selected', true);
+		$("#addModal .form input[name='executorHandler']").val( row.executorHandler );
+		$("#addModal .form textarea[name='executorParam']").val( row.executorParam );
+		$("#addModal .form input[name='childJobId']").val( row.childJobId );
+		$('#addModal .form select[name=executorBlockStrategy] option[value='+ row.executorBlockStrategy +']').prop('selected', true);
+		$('#addModal .form select[name=glueType] option[value='+ row.glueType +']').prop('selected', true);
+
+		$("#addModal .form select[name=glueType]").change();
+
+		// init-cronGen
+		$("#addModal .form input[name='jobCron']").show().siblings().remove();
+		$("#addModal .form input[name='jobCron']").cronGen({});
+
+		// show
+		$('#addModal').modal({backdrop: false, keyboard: false}).modal('show');
+	});
 
 });
