@@ -10,11 +10,10 @@ import com.xxl.job.core.log.XxlJobLogger;
 import com.xxl.job.core.util.FileUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import org.springframework.util.DigestUtils;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
@@ -23,6 +22,8 @@ import java.util.concurrent.TimeUnit;
  */
 public class TriggerCallbackThread {
     private static Logger logger = LoggerFactory.getLogger(TriggerCallbackThread.class);
+
+    private final static int RETRY_COUNT = 20;
 
     private static TriggerCallbackThread instance = new TriggerCallbackThread();
     public static TriggerCallbackThread getInstance(){
@@ -44,6 +45,7 @@ public class TriggerCallbackThread {
     private Thread triggerCallbackThread;
     private Thread triggerRetryCallbackThread;
     private volatile boolean toStop = false;
+    private Map<String, Integer> retryCountMap = new ConcurrentHashMap<>();
     public void start() {
 
         // valid
@@ -71,7 +73,7 @@ public class TriggerCallbackThread {
 
                             // callback, will retry if error
                             if (callbackParamList!=null && callbackParamList.size()>0) {
-                                doCallback(callbackParamList);
+                                doCallback(callbackParamList, null);
                             }
                         }
                     } catch (Exception e) {
@@ -86,7 +88,7 @@ public class TriggerCallbackThread {
                     List<HandleCallbackParam> callbackParamList = new ArrayList<HandleCallbackParam>();
                     int drainToNum = getInstance().callBackQueue.drainTo(callbackParamList);
                     if (callbackParamList!=null && callbackParamList.size()>0) {
-                        doCallback(callbackParamList);
+                        doCallback(callbackParamList, null);
                     }
                 } catch (Exception e) {
                     if (!toStop) {
@@ -158,7 +160,7 @@ public class TriggerCallbackThread {
      * do callback, will retry if error
      * @param callbackParamList
      */
-    private void doCallback(List<HandleCallbackParam> callbackParamList){
+    private void doCallback(List<HandleCallbackParam> callbackParamList, File callbaclLogFile){
         boolean callbackRet = false;
         // callback, will retry if error
         for (AdminBiz adminBiz: XxlJobExecutor.getAdminBizList()) {
@@ -167,6 +169,10 @@ public class TriggerCallbackThread {
                 if (callbackResult!=null && ReturnT.SUCCESS_CODE == callbackResult.getCode()) {
                     callbackLog(callbackParamList, "<br>----------- xxl-job job callback finish.");
                     callbackRet = true;
+                    //delete file if retry success
+                    if(callbaclLogFile != null){
+                        callbaclLogFile.delete();
+                    }
                     break;
                 } else {
                     callbackLog(callbackParamList, "<br>----------- xxl-job job callback fail, callbackResult:" + callbackResult);
@@ -235,12 +241,30 @@ public class TriggerCallbackThread {
         // load and clear file, retry
         for (File callbaclLogFile: callbackLogPath.listFiles()) {
             byte[] callbackParamList_bytes = FileUtil.readFileContent(callbaclLogFile);
+            if(vaidateRetryCount(callbackParamList_bytes)){
+                continue;
+            }
             List<HandleCallbackParam> callbackParamList = (List<HandleCallbackParam>) XxlJobExecutor.getSerializer().deserialize(callbackParamList_bytes, HandleCallbackParam.class);
-
-            callbaclLogFile.delete();
-            doCallback(callbackParamList);
+            doCallback(callbackParamList, callbaclLogFile);
         }
 
     }
 
+    //valid
+    private boolean vaidateRetryCount(byte[] callbackParamList_bytes){
+        String md5Key = DigestUtils.md5DigestAsHex(callbackParamList_bytes);
+        Integer md5Val = retryCountMap.get(md5Key);
+
+        if(md5Val == null){
+            retryCountMap.put(md5Key, 1);
+            return true;
+        }
+
+        if(md5Val<RETRY_COUNT){
+            md5Val++;
+            retryCountMap.put(md5Key, md5Val);
+            return true;
+        }
+        return false;
+    }
 }
