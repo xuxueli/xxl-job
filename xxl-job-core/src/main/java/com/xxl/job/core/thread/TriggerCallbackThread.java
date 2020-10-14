@@ -3,11 +3,13 @@ package com.xxl.job.core.thread;
 import com.xxl.job.core.biz.AdminBiz;
 import com.xxl.job.core.biz.model.HandleCallbackParam;
 import com.xxl.job.core.biz.model.ReturnT;
+import com.xxl.job.core.context.XxlJobContext;
 import com.xxl.job.core.enums.RegistryConfig;
 import com.xxl.job.core.executor.XxlJobExecutor;
 import com.xxl.job.core.log.XxlJobFileAppender;
 import com.xxl.job.core.log.XxlJobLogger;
 import com.xxl.job.core.util.FileUtil;
+import com.xxl.job.core.util.JdkSerializeTool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.DigestUtils;
@@ -192,7 +194,11 @@ public class TriggerCallbackThread {
     private void callbackLog(List<HandleCallbackParam> callbackParamList, String logContent){
         for (HandleCallbackParam callbackParam: callbackParamList) {
             String logFileName = XxlJobFileAppender.makeLogFileName(new Date(callbackParam.getLogDateTim()), callbackParam.getLogId());
-            XxlJobFileAppender.contextHolder.set(logFileName);
+            XxlJobContext.setXxlJobContext(new XxlJobContext(
+                    -1,
+                    logFileName,
+                    -1,
+                    -1));
             XxlJobLogger.log(logContent);
         }
     }
@@ -210,7 +216,7 @@ public class TriggerCallbackThread {
         }
 
         // append file
-        byte[] callbackParamList_bytes = XxlJobExecutor.getSerializer().serialize(callbackParamList);
+        byte[] callbackParamList_bytes = JdkSerializeTool.serialize(callbackParamList);
 
         File callbackLogFile = new File(failCallbackFileName.replace("{x}", String.valueOf(System.currentTimeMillis())));
         if (callbackLogFile.exists()) {
@@ -241,6 +247,12 @@ public class TriggerCallbackThread {
         // load and clear file, retry
         for (File callbaclLogFile: callbackLogPath.listFiles()) {
             byte[] callbackParamList_bytes = FileUtil.readFileContent(callbaclLogFile);
+
+            // avoid empty file
+            if(callbackParamList_bytes == null || callbackParamList_bytes.length < 1){
+                continue;
+            }
+          
             if(vaidateRetryCount(callbackParamList_bytes)){
                 continue;
             }

@@ -135,6 +135,14 @@ public class DateUtil {
         return add(date, Calendar.DAY_OF_MONTH, amount);
     }
 
+    public static Date addHours(final Date date, final int amount) {
+        return add(date, Calendar.HOUR_OF_DAY, amount);
+    }
+
+    public static Date addMinutes(final Date date, final int amount) {
+        return add(date, Calendar.MINUTE, amount);
+    }
+
     private static Date add(final Date date, final int calendarField, final int amount) {
         if (date == null) {
             return null;

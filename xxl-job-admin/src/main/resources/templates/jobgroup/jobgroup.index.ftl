@@ -23,63 +23,44 @@
 
 		<!-- Main content -->
 	    <section class="content">
+
+            <div class="row">
+                <div class="col-xs-3">
+                    <div class="input-group">
+                        <span class="input-group-addon">AppName</span>
+                        <input type="text" class="form-control" id="appname" autocomplete="on" placeholder="${I18n.system_please_input}AppName" >
+                    </div>
+                </div>
+                <div class="col-xs-3">
+                    <div class="input-group">
+                        <span class="input-group-addon">${I18n.jobgroup_field_title}</span>
+                        <input type="text" class="form-control" id="title" autocomplete="on" placeholder="${I18n.jobgroup_field_title}" >
+                    </div>
+                </div>
+                <div class="col-xs-2">
+                    <button class="btn btn-block btn-info" id="searchBtn">${I18n.system_search}</button>
+                </div>
+                <div class="col-xs-2">
+                    <button class="btn btn-block btn-success add" type="button">${I18n.jobinfo_field_add}</button>
+                </div>
+            </div>
 			
 			<div class="row">
 				<div class="col-xs-12">
 					<div class="box">
-			            <div class="box-header">
-							<h3 class="box-title">${I18n.jobgroup_list}</h3>&nbsp;&nbsp;
-                            <button class="btn btn-info btn-xs pull-left2 add" >${I18n.jobgroup_add}</button>
-						</div>
 			            <div class="box-body">
-			              	<table id="joblog_list" class="table table-bordered table-striped display" width="100%" >
+			              	<table id="jobgroup_list" class="table table-bordered table-striped display" width="100%" >
 				                <thead>
 					            	<tr>
-                                        <#--<th name="id" >ID</th>-->
-                                        <th name="order" >${I18n.jobgroup_field_order}</th>
-                                        <th name="appName" >AppName</th>
+                                        <th name="id" >ID</th>
+                                        <th name="appname" >AppName</th>
                                         <th name="title" >${I18n.jobgroup_field_title}</th>
                                         <th name="addressType" >${I18n.jobgroup_field_addressType}</th>
                                         <th name="registryList" >OnLine ${I18n.jobgroup_field_registryList}</th>
-                                        <th name="operate" >${I18n.system_opt}</th>
+                                        <th>${I18n.system_opt}</th>
 					                </tr>
 				                </thead>
                                 <tbody>
-								<#if list?exists && list?size gt 0>
-								<#list list as group>
-									<tr>
-                                        <#--<td>${group.id}</td>-->
-                                        <td>${group.order}</td>
-                                        <td>${group.appName}</td>
-                                        <td>${group.title}</td>
-                                        <td><#if group.addressType==0>${I18n.jobgroup_field_addressType_0}<#else>${I18n.jobgroup_field_addressType_1}</#if></td>
-                                        <td>
-                                            <#if group.registryList?exists>
-                                                <#list group.registryList as item>
-                                                    <span class="badge bg-green" title="${item}" >
-                                                        <#if item?length gt 35>
-                                                            ${item?substring(0, 35)}...
-                                                        <#else>
-                                                            ${item}
-                                                        </#if>
-                                                    </span>
-                                                    <br>
-                                                </#list>
-                                            </#if>
-                                        </td>
-										<td>
-                                            <button class="btn btn-warning btn-xs update"
-                                                    id="${group.id}"
-                                                    appName="${group.appName}"
-                                                    title="${group.title}"
-                                                    order="${group.order}"
-                                                    addressType="${group.addressType}"
-                                                    addressList="${group.addressList!}" >${I18n.system_opt_edit}</button>
-                                            <button class="btn btn-danger btn-xs remove" id="${group.id}" >${I18n.system_opt_del}</button>
-										</td>
-									</tr>
-								</#list>
-								</#if>
 								</tbody>
 							</table>
 						</div>
@@ -100,15 +81,11 @@
                     <form class="form-horizontal form" role="form" >
                         <div class="form-group">
                             <label for="lastname" class="col-sm-2 control-label">AppName<font color="red">*</font></label>
-                            <div class="col-sm-10"><input type="text" class="form-control" name="appName" placeholder="${I18n.system_please_input}AppName" maxlength="64" ></div>
+                            <div class="col-sm-10"><input type="text" class="form-control" name="appname" placeholder="${I18n.system_please_input}AppName" maxlength="64" ></div>
                         </div>
                         <div class="form-group">
                             <label for="lastname" class="col-sm-2 control-label">${I18n.jobgroup_field_title}<font color="red">*</font></label>
                             <div class="col-sm-10"><input type="text" class="form-control" name="title" placeholder="${I18n.system_please_input}${I18n.jobgroup_field_title}" maxlength="12" ></div>
-                        </div>
-                        <div class="form-group">
-                            <label for="lastname" class="col-sm-2 control-label">${I18n.jobgroup_field_order}<font color="red">*</font></label>
-                            <div class="col-sm-10"><input type="text" class="form-control" name="order" placeholder="${I18n.system_please_input}${I18n.jobgroup_field_order}" maxlength="50" ></div>
                         </div>
                         <div class="form-group">
                             <label for="lastname" class="col-sm-2 control-label">${I18n.jobgroup_field_addressType}<font color="red">*</font></label>
@@ -148,15 +125,11 @@
                     <form class="form-horizontal form" role="form" >
                         <div class="form-group">
                             <label for="lastname" class="col-sm-2 control-label">AppName<font color="red">*</font></label>
-                            <div class="col-sm-10"><input type="text" class="form-control" name="appName" placeholder="${I18n.system_please_input}AppName" maxlength="64" ></div>
+                            <div class="col-sm-10"><input type="text" class="form-control" name="appname" placeholder="${I18n.system_please_input}AppName" maxlength="64" ></div>
                         </div>
                         <div class="form-group">
                             <label for="lastname" class="col-sm-2 control-label">${I18n.jobgroup_field_title}<font color="red">*</font></label>
                             <div class="col-sm-10"><input type="text" class="form-control" name="title" placeholder="${I18n.system_please_input}${I18n.jobgroup_field_title}" maxlength="12" ></div>
-                        </div>
-                        <div class="form-group">
-                            <label for="lastname" class="col-sm-2 control-label">${I18n.jobgroup_field_order}<font color="red">*</font></label>
-                            <div class="col-sm-10"><input type="text" class="form-control" name="order" placeholder="${I18n.system_please_input}${I18n.jobgroup_field_order}" maxlength="50" ></div>
                         </div>
                         <div class="form-group">
                             <label for="lastname" class="col-sm-2 control-label">${I18n.jobgroup_field_addressType}<font color="red">*</font></label>
