@@ -15,8 +15,14 @@
         <!-- jfinal -->
         <dependency>
             <groupId>com.jfinal</groupId>
-            <artifactId>jfinal</artifactId>
+            <artifactId>jfinal-undertow</artifactId>
             <version>2.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.jfinal</groupId>
+            <artifactId>jfinal</artifactId>
+            <version>4.9.02</version>
         </dependency>
 
         <!-- slf4j -->
