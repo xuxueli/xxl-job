@@ -552,8 +552,6 @@ XXL-JOB是一个分布式任务调度平台，其核心设计目标是开发迅�
         ：xxl-job-executor-sample-spring：Spring版本，通过Spring容器管理执行器，比较通用；
         ：xxl-job-executor-sample-frameless：无框架版本；
         ：xxl-job-executor-sample-jfinal：JFinal版本，通过JFinal管理执行器；
-        ：xxl-job-executor-sample-nutz：Nutz版本，通过Nutz管理执行器；
-        ：xxl-job-executor-sample-jboot：jboot版本，通过jboot管理执行器；
         
 
 ### 2.3 配置部署“调度中心”
@@ -709,8 +707,6 @@ public XxlJobSpringExecutor xxlJobExecutor() {
     xxl-job-executor-sample-springboot：项目编译打包成springboot类型的可执行JAR包，命令启动即可；
     xxl-job-executor-sample-spring：项目编译打包成WAR包，并部署到tomcat中。
     xxl-job-executor-sample-jfinal：同上
-    xxl-job-executor-sample-nutz：同上
-    xxl-job-executor-sample-jboot：同上
     
 
 至此“执行器”项目已经部署结束。
