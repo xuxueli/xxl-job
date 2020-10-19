@@ -66,10 +66,11 @@ public class JobRegistryMonitorHelper {
 								String addressListStr = null;
 								if (registryList!=null && !registryList.isEmpty()) {
 									Collections.sort(registryList);
-									addressListStr = "";
+									StringBuilder addressListSB = new StringBuilder();
 									for (String item:registryList) {
-										addressListStr += item + ",";
+										addressListSB.append(item).append(",");
 									}
+									addressListStr = addressListSB.toString();
 									addressListStr = addressListStr.substring(0, addressListStr.length()-1);
 								}
 								group.setAddressList(addressListStr);
