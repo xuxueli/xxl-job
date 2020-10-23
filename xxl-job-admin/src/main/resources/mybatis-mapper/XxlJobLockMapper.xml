@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xxl.job.admin.dao.XxlJobLockDao">
+
+    <select id="lock" resultType="java.util.HashMap" >
+       select *
+       from xxl_job_lock
+       where lock_name = 'schedule_lock'
+       for update
+    </select>
+
+</mapper>
