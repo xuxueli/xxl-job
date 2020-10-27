@@ -74,7 +74,7 @@
                 </div>
 
 	            <div class="col-xs-1">
-                    <button class="btn btn-block btn-nomal" id="clearLog">${I18n.joblog_clean}</button>
+                    <button class="btn btn-block btn-default" id="clearLog">${I18n.joblog_clean}</button>
 	            </div>
           	</div>
 			
