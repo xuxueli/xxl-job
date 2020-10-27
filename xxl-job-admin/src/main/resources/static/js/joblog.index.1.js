@@ -116,7 +116,7 @@ $(function() {
 						"data": 'triggerTime',
                         "width":'20%',
 						"render": function ( data, type, row ) {
-							return data?moment(new Date(data)).format("YYYY-MM-DD HH:mm:ss"):"";
+							return data?moment(data).format("YYYY-MM-DD HH:mm:ss"):"";
 						}
 					},
 					{
@@ -145,7 +145,7 @@ $(function() {
 	                	"data": 'handleTime',
                         "width":'20%',
 	                	"render": function ( data, type, row ) {
-	                		return data?moment(new Date(data)).format("YYYY-MM-DD HH:mm:ss"):"";
+	                		return data?moment(data).format("YYYY-MM-DD HH:mm:ss"):"";
 	                	}
 	                },
 	                {
