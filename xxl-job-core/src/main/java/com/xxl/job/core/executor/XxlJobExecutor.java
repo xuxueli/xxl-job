@@ -32,6 +32,7 @@ public class XxlJobExecutor  {
     private String address;
     private String ip;
     private int port;
+    private int timeout;
     private String logPath;
     private int logRetentionDays;
 
@@ -53,6 +54,9 @@ public class XxlJobExecutor  {
     public void setPort(int port) {
         this.port = port;
     }
+    public void setTimeout(int timeout) {
+    this.timeout = timeout;
+  }
     public void setLogPath(String logPath) {
         this.logPath = logPath;
     }
@@ -68,7 +72,7 @@ public class XxlJobExecutor  {
         XxlJobFileAppender.initLogPath(logPath);
 
         // init invoker, admin-client
-        initAdminBizList(adminAddresses, accessToken);
+        initAdminBizList(adminAddresses, accessToken, timeout);
 
 
         // init JobLogFileCleanThread
@@ -113,12 +117,12 @@ public class XxlJobExecutor  {
 
     // ---------------------- admin-client (rpc invoker) ----------------------
     private static List<AdminBiz> adminBizList;
-    private void initAdminBizList(String adminAddresses, String accessToken) throws Exception {
+    private void initAdminBizList(String adminAddresses, String accessToken, int timeout) throws Exception {
         if (adminAddresses!=null && adminAddresses.trim().length()>0) {
             for (String address: adminAddresses.trim().split(",")) {
                 if (address!=null && address.trim().length()>0) {
 
-                    AdminBiz adminBiz = new AdminBizClient(address.trim(), accessToken);
+                    AdminBiz adminBiz = new AdminBizClient(address.trim(), accessToken, timeout);
 
                     if (adminBizList == null) {
                         adminBizList = new ArrayList<AdminBiz>();
