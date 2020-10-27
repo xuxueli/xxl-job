@@ -413,7 +413,7 @@ exit 0
                             <textarea class="textarea form-control" name="addressList" placeholder="${I18n.jobinfo_opt_run_tips}" maxlength="512" style="height: 63px; line-height: 1.2;"></textarea>
                         </div>
                     </div>
-                    <br>
+                    <hr>
                     <div class="form-group">
                         <div class="col-sm-offset-3 col-sm-6">
                             <button type="button" class="btn btn-primary ok" >${I18n.system_save}</button>
