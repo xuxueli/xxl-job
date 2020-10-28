@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 
 @RunWith(SpringRunner.class)
@@ -27,6 +28,7 @@ public class XxlJobGroupDaoTest {
         group.setTitle("setTitle");
         group.setAddressType(0);
         group.setAddressList("setAddressList");
+        group.setUpdateTime(new Date());
 
         int ret = xxlJobGroupDao.save(group);
 
@@ -35,6 +37,7 @@ public class XxlJobGroupDaoTest {
         group2.setTitle("setTitle2");
         group2.setAddressType(2);
         group2.setAddressList("setAddressList2");
+        group2.setUpdateTime(new Date());
 
         int ret2 = xxlJobGroupDao.update(group2);
 

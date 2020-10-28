@@ -83,6 +83,9 @@ public class JobGroupController {
 			}
 		}
 
+		// process
+		xxlJobGroup.setUpdateTime(new Date());
+
 		int ret = xxlJobGroupDao.save(xxlJobGroup);
 		return (ret>0)?ReturnT.SUCCESS:ReturnT.FAIL;
 	}
@@ -125,6 +128,9 @@ public class JobGroupController {
 				}
 			}
 		}
+
+		// process
+		xxlJobGroup.setUpdateTime(new Date());
 
 		int ret = xxlJobGroupDao.update(xxlJobGroup);
 		return (ret>0)?ReturnT.SUCCESS:ReturnT.FAIL;

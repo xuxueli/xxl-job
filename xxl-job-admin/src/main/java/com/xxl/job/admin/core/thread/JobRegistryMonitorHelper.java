@@ -74,6 +74,8 @@ public class JobRegistryMonitorHelper {
 									addressListStr = addressListStr.substring(0, addressListStr.length()-1);
 								}
 								group.setAddressList(addressListStr);
+								group.setUpdateTime(new Date());
+
 								XxlJobAdminConfig.getAdminConfig().getXxlJobGroupDao().update(group);
 							}
 						}
