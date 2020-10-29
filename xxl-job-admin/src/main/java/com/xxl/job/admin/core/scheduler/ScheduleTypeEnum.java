@@ -22,4 +22,13 @@ public enum ScheduleTypeEnum {
      */
     FIX_DELAY;
 
+    public static ScheduleTypeEnum match(String name){
+        for (ScheduleTypeEnum item: ScheduleTypeEnum.values()) {
+            if (item.equals(name)) {
+                return item;
+            }
+        }
+        return NONE;
+    }
+
 }

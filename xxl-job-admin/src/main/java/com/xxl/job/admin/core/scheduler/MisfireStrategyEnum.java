@@ -15,6 +15,13 @@ public enum MisfireStrategyEnum {
      */
     FIRE_ONCE_NOW;
 
-    private int value;
+    public static MisfireStrategyEnum match(String name){
+        for (MisfireStrategyEnum item: MisfireStrategyEnum.values()) {
+            if (item.name().equals(name)) {
+                return item;
+            }
+        }
+        return DO_NOTHING;
+    }
 
 }
