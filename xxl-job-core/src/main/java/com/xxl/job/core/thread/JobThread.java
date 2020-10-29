@@ -118,7 +118,7 @@ public class JobThread extends Thread{
 					// log filename, like "logPath/yyyy-MM-dd/9999.log"
 					String logFileName = XxlJobFileAppender.makeLogFileName(new Date(triggerParam.getLogDateTime()), triggerParam.getLogId());
 					XxlJobContext.setXxlJobContext(new XxlJobContext(
-							triggerParam.getLogId(),
+							triggerParam.getJobId(),
 							logFileName,
 							triggerParam.getBroadcastIndex(),
 							triggerParam.getBroadcastTotal()));
