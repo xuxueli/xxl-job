@@ -35,6 +35,15 @@ public class JobLosedMonitorHelper {
 			@Override
 			public void run() {
 
+				// wait for JobTriggerPoolHelper-init
+				try {
+					TimeUnit.MILLISECONDS.sleep(50);
+				} catch (InterruptedException e) {
+					if (!toStop) {
+						logger.error(e.getMessage(), e);
+					}
+				}
+
 				// monitor
 				while (!toStop) {
 					try {
