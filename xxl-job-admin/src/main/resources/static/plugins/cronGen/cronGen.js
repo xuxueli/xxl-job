@@ -354,6 +354,7 @@
                     return $(cronContainer).html();
                 },
                 template: '<div class="popover" style="max-width:500px !important; width:425px;left:-341.656px;"><div class="arrow"></div><div class="popover-inner"><h3 class="popover-title"></h3><div class="popover-content"><p></p></div></div></div>',
+                sanitize:false,
                 placement: options.direction
 
             }).on('click', function (e) {

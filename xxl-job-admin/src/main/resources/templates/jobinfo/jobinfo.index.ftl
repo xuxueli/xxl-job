@@ -435,7 +435,6 @@ exit 0
 <script src="${request.contextPath}/static/adminlte/bower_components/moment/moment.min.js"></script>
 <#-- cronGen -->
 <script src="${request.contextPath}/static/plugins/cronGen/cronGen<#if I18n.admin_i18n?default('')?length gt 0 >_${I18n.admin_i18n}</#if>.js"></script>
-<script src="${request.contextPath}/static/adminlte/bower_components/bootstrap/js/bootstrap.337.min.js"></script>
 <script src="${request.contextPath}/static/js/jobinfo.index.1.js"></script>
 </body>
 </html>
