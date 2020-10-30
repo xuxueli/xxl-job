@@ -28,13 +28,13 @@
                 <div class="col-xs-3">
                     <div class="input-group">
                         <span class="input-group-addon">AppName</span>
-                        <input type="text" class="form-control" id="appname" autocomplete="on" placeholder="${I18n.system_please_input}AppName" >
+                        <input type="text" class="form-control" id="appname" placeholder="${I18n.system_please_input}AppName" >
                     </div>
                 </div>
                 <div class="col-xs-3">
                     <div class="input-group">
                         <span class="input-group-addon">${I18n.jobgroup_field_title}</span>
-                        <input type="text" class="form-control" id="title" autocomplete="on" placeholder="${I18n.jobgroup_field_title}" >
+                        <input type="text" class="form-control" id="title" placeholder="${I18n.jobgroup_field_title}" >
                     </div>
                 </div>
                 <div class="col-xs-2">

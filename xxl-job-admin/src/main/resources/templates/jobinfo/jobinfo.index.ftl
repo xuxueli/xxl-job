@@ -46,17 +46,17 @@
                 </div>
                 <div class="col-xs-2">
                     <div class="input-group">
-                        <input type="text" class="form-control" id="jobDesc" autocomplete="on" placeholder="${I18n.system_please_input}${I18n.jobinfo_field_jobdesc}" >
+                        <input type="text" class="form-control" id="jobDesc" placeholder="${I18n.system_please_input}${I18n.jobinfo_field_jobdesc}" >
                     </div>
                 </div>
                 <div class="col-xs-2">
                     <div class="input-group">
-                        <input type="text" class="form-control" id="executorHandler" autocomplete="on" placeholder="${I18n.system_please_input}JobHandler" >
+                        <input type="text" class="form-control" id="executorHandler" placeholder="${I18n.system_please_input}JobHandler" >
                     </div>
                 </div>
                 <div class="col-xs-2">
                     <div class="input-group">
-                        <input type="text" class="form-control" id="author" autocomplete="on" placeholder="${I18n.system_please_input}${I18n.jobinfo_field_author}" >
+                        <input type="text" class="form-control" id="author" placeholder="${I18n.system_please_input}${I18n.jobinfo_field_author}" >
                     </div>
                 </div>
 	            <div class="col-xs-1">
