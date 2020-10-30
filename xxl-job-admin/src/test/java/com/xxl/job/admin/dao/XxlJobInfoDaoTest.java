@@ -56,7 +56,7 @@ public class XxlJobInfoDaoTest {
 		int count = xxlJobInfoDao.save(info);
 
 		XxlJobInfo info2 = xxlJobInfoDao.loadById(info.getId());
-		info.setScheduleType(ScheduleTypeEnum.FIX_DELAY.name());
+		info.setScheduleType(ScheduleTypeEnum.FIX_RATE.name());
 		info.setScheduleConf(String.valueOf(44));
 		info.setMisfireStrategy(MisfireStrategyEnum.FIRE_ONCE_NOW.name());
 		info2.setJobDesc("desc2");
