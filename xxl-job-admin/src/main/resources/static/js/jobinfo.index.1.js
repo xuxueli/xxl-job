@@ -49,6 +49,18 @@ $(function() {
 						"width":'25%'
 					},
 					{
+						"data": 'scheduleType',
+						"visible" : true,
+						"width":'13%',
+						"render": function ( data, type, row ) {
+							if (row.scheduleConf) {
+								return row.scheduleType + '：'+ row.scheduleConf;
+							} else {
+								return row.scheduleType;
+							}
+						}
+					},
+					{
 						"data": 'glueType',
 						"width":'25%',
 						"visible" : true,
@@ -62,11 +74,6 @@ $(function() {
 						}
 					},
 	                { "data": 'executorParam', "visible" : false},
-					{
-						"data": 'jobCron',
-						"visible" : true,
-						"width":'13%'
-					},
 	                {
 	                	"data": 'addTime',
 	                	"visible" : false,
@@ -364,8 +371,8 @@ $(function() {
 	$(".add").click(function(){
 
 		// init-cronGen
-        $("#addModal .form input[name='jobCron']").show().siblings().remove();
-        $("#addModal .form input[name='jobCron']").cronGen({});
+        $("#addModal .form input[name='schedule_conf_CRON']").show().siblings().remove();
+        $("#addModal .form input[name='schedule_conf_CRON']").cronGen({});
 
 		$('#addModal').modal({backdrop: false, keyboard: false}).modal('show');
 	});
@@ -378,35 +385,29 @@ $(function() {
 				required : true,
 				maxlength: 50
 			},
-            jobCron : {
-            	required : true
-            },
 			author : {
 				required : true
-			},
+			}/*,
             executorTimeout : {
                 digits:true
             },
             executorFailRetryCount : {
                 digits:true
-            }
+            }*/
         },
         messages : {
             jobDesc : {
             	required : I18n.system_please_input + I18n.jobinfo_field_jobdesc
             },
-            jobCron : {
-            	required : I18n.system_please_input + "Cron"
-            },
             author : {
             	required : I18n.system_please_input + I18n.jobinfo_field_author
-            },
+            }/*,
             executorTimeout : {
                 digits: I18n.system_please_input + I18n.system_digits
             },
             executorFailRetryCount : {
                 digits: I18n.system_please_input + I18n.system_digits
-            }
+            }*/
         },
 		highlight : function(element) {
             $(element).closest('.form-group').addClass('has-error');
@@ -420,7 +421,7 @@ $(function() {
         },
         submitHandler : function(form) {
 
-			// process
+			// process executorTimeout+executorFailRetryCount
             var executorTimeout = $("#addModal .form input[name='executorTimeout']").val();
             if(!/^\d+$/.test(executorTimeout)) {
                 executorTimeout = 0;
@@ -432,8 +433,17 @@ $(function() {
             }
             $("#addModal .form input[name='executorFailRetryCount']").val(executorFailRetryCount);
 
-            // process-cronGen
-            $("#addModal .form input[name='jobCron']").val( $("#addModal .form input[name='cronGen_display']").val() );
+            // process schedule_conf
+			var scheduleType = $("#addModal .form select[name='scheduleType']").val();
+			var scheduleConf;
+			if (scheduleType == 'CRON') {
+				scheduleConf = $("#addModal .form input[name='cronGen_display']").val();
+			} else if (scheduleType == 'FIX_RATE') {
+				scheduleConf = $("#addModal .form input[name='schedule_conf_FIX_RATE']").val();
+			} else if (scheduleType == 'FIX_DELAY') {
+				scheduleConf = $("#addModal .form input[name='schedule_conf_FIX_DELAY']").val();
+			}
+			$("#addModal .form input[name='scheduleConf']").val( scheduleConf );
 
         	$.post(base_url + "/jobinfo/add",  $("#addModal .form").serialize(), function(data, status) {
     			if (data.code == "200") {
@@ -468,6 +478,13 @@ $(function() {
 		$("#addModal .form input[name='executorHandler']").removeAttr("readonly");
 	});
 
+	// scheduleType change
+	$(".scheduleType").change(function(){
+		var scheduleType = $(this).val();
+		$(this).parents("form").find(".schedule_conf").hide();
+		$(this).parents("form").find(".schedule_conf_" + scheduleType).show();
+
+	});
 
     // glueType change
     $(".glueType").change(function(){
@@ -508,27 +525,46 @@ $(function() {
         var id = $(this).parents('ul').attr("_id");
         var row = tableData['key'+id];
 
-		// base data
+		// fill base
 		$("#updateModal .form input[name='id']").val( row.id );
 		$('#updateModal .form select[name=jobGroup] option[value='+ row.jobGroup +']').prop('selected', true);
 		$("#updateModal .form input[name='jobDesc']").val( row.jobDesc );
-		$("#updateModal .form input[name='jobCron']").val( row.jobCron );
 		$("#updateModal .form input[name='author']").val( row.author );
 		$("#updateModal .form input[name='alarmEmail']").val( row.alarmEmail );
-		$("#updateModal .form input[name='executorTimeout']").val( row.executorTimeout );
-        $("#updateModal .form input[name='executorFailRetryCount']").val( row.executorFailRetryCount );
-		$('#updateModal .form select[name=executorRouteStrategy] option[value='+ row.executorRouteStrategy +']').prop('selected', true);
+
+		// fill trigger
+		$('#updateModal .form select[name=scheduleType] option[value='+ row.scheduleType +']').prop('selected', true);
+		$("#updateModal .form input[name='scheduleConf']").val( row.scheduleConf );
+		if (row.scheduleType == 'CRON') {
+			$("#updateModal .form input[name='schedule_conf_CRON']").val( row.scheduleConf );
+		} else if (row.scheduleType == 'FIX_RATE') {
+			$("#updateModal .form input[name='schedule_conf_FIX_RATE']").val( row.scheduleConf );
+		} else if (row.scheduleType == 'FIX_DELAY') {
+			$("#updateModal .form input[name='schedule_conf_FIX_DELAY']").val( row.scheduleConf );
+		}
+
+		// 》init scheduleType
+		$("#updateModal .form select[name=scheduleType]").change();
+
+		// fill job
+		$('#updateModal .form select[name=glueType] option[value='+ row.glueType +']').prop('selected', true);
 		$("#updateModal .form input[name='executorHandler']").val( row.executorHandler );
 		$("#updateModal .form textarea[name='executorParam']").val( row.executorParam );
-        $("#updateModal .form input[name='childJobId']").val( row.childJobId );
+
+		// 》init glueType
+		$("#updateModal .form select[name=glueType]").change();
+
+		// 》init-cronGen
+		$("#updateModal .form input[name='schedule_conf_CRON']").show().siblings().remove();
+		$("#updateModal .form input[name='schedule_conf_CRON']").cronGen({});
+
+		// fill advanced
+		$('#updateModal .form select[name=executorRouteStrategy] option[value='+ row.executorRouteStrategy +']').prop('selected', true);
+		$("#updateModal .form input[name='childJobId']").val( row.childJobId );
+		$('#updateModal .form select[name=misfireStrategy] option[value='+ row.misfireStrategy +']').prop('selected', true);
 		$('#updateModal .form select[name=executorBlockStrategy] option[value='+ row.executorBlockStrategy +']').prop('selected', true);
-		$('#updateModal .form select[name=glueType] option[value='+ row.glueType +']').prop('selected', true);
-
-        $("#updateModal .form select[name=glueType]").change();
-
-        // init-cronGen
-        $("#updateModal .form input[name='jobCron']").show().siblings().remove();
-        $("#updateModal .form input[name='jobCron']").cronGen({});
+		$("#updateModal .form input[name='executorTimeout']").val( row.executorTimeout );
+        $("#updateModal .form input[name='executorFailRetryCount']").val( row.executorFailRetryCount );
 
 		// show
 		$('#updateModal').modal({backdrop: false, keyboard: false}).modal('show');
@@ -548,13 +584,7 @@ $(function() {
 			},
 			author : {
 				required : true
-			},
-            executorTimeout : {
-                digits:true
-            },
-            executorFailRetryCount : {
-                digits:true
-            }
+			}
 		},
 		messages : {
 			jobDesc : {
@@ -565,13 +595,7 @@ $(function() {
 			},
 			author : {
 				required : I18n.system_please_input + I18n.jobinfo_field_author
-			},
-            executorTimeout : {
-                digits: I18n.system_please_input + I18n.system_digits
-            },
-            executorFailRetryCount : {
-                digits: I18n.system_please_input + I18n.system_digits
-            }
+			}
 		},
 		highlight : function(element) {
             $(element).closest('.form-group').addClass('has-error');
@@ -585,7 +609,7 @@ $(function() {
         },
         submitHandler : function(form) {
 
-            // process
+            // process executorTimeout + executorFailRetryCount
             var executorTimeout = $("#updateModal .form input[name='executorTimeout']").val();
             if(!/^\d+$/.test(executorTimeout)) {
                 executorTimeout = 0;
@@ -597,8 +621,18 @@ $(function() {
             }
             $("#updateModal .form input[name='executorFailRetryCount']").val(executorFailRetryCount);
 
-            // process-cronGen
-            $("#updateModal .form input[name='jobCron']").val( $("#updateModal .form input[name='cronGen_display']").val() );
+
+			// process schedule_conf
+			var scheduleType = $("#updateModal .form select[name='scheduleType']").val();
+			var scheduleConf;
+			if (scheduleType == 'CRON') {
+				scheduleConf = $("#updateModal .form input[name='cronGen_display']").val();
+			} else if (scheduleType == 'FIX_RATE') {
+				scheduleConf = $("#updateModal .form input[name='schedule_conf_FIX_RATE']").val();
+			} else if (scheduleType == 'FIX_DELAY') {
+				scheduleConf = $("#updateModal .form input[name='schedule_conf_FIX_DELAY']").val();
+			}
+			$("#updateModal .form input[name='scheduleConf']").val( scheduleConf );
 
 			// post
     		$.post(base_url + "/jobinfo/update", $("#updateModal .form").serialize(), function(data, status) {
@@ -653,27 +687,45 @@ $(function() {
 		var id = $(this).parents('ul').attr("_id");
 		var row = tableData['key'+id];
 
-		// base data
-		//$("#addModal .form input[name='id']").val( row.id );
+		// fill base
 		$('#addModal .form select[name=jobGroup] option[value='+ row.jobGroup +']').prop('selected', true);
 		$("#addModal .form input[name='jobDesc']").val( row.jobDesc );
-		$("#addModal .form input[name='jobCron']").val( row.jobCron );
 		$("#addModal .form input[name='author']").val( row.author );
 		$("#addModal .form input[name='alarmEmail']").val( row.alarmEmail );
-		$("#addModal .form input[name='executorTimeout']").val( row.executorTimeout );
-		$("#addModal .form input[name='executorFailRetryCount']").val( row.executorFailRetryCount );
-		$('#addModal .form select[name=executorRouteStrategy] option[value='+ row.executorRouteStrategy +']').prop('selected', true);
+
+		// fill trigger
+		$('#addModal .form select[name=scheduleType] option[value='+ row.scheduleType +']').prop('selected', true);
+		$("#addModal .form input[name='scheduleConf']").val( row.scheduleConf );
+		if (row.scheduleType == 'CRON') {
+			$("#addModal .form input[name='schedule_conf_CRON']").val( row.scheduleConf );
+		} else if (row.scheduleType == 'FIX_RATE') {
+			$("#addModal .form input[name='schedule_conf_FIX_RATE']").val( row.scheduleConf );
+		} else if (row.scheduleType == 'FIX_DELAY') {
+			$("#addModal .form input[name='schedule_conf_FIX_DELAY']").val( row.scheduleConf );
+		}
+
+		// 》init scheduleType
+		$("#addModal .form select[name=scheduleType]").change();
+
+		// fill job
+		$('#addModal .form select[name=glueType] option[value='+ row.glueType +']').prop('selected', true);
 		$("#addModal .form input[name='executorHandler']").val( row.executorHandler );
 		$("#addModal .form textarea[name='executorParam']").val( row.executorParam );
-		$("#addModal .form input[name='childJobId']").val( row.childJobId );
-		$('#addModal .form select[name=executorBlockStrategy] option[value='+ row.executorBlockStrategy +']').prop('selected', true);
-		$('#addModal .form select[name=glueType] option[value='+ row.glueType +']').prop('selected', true);
 
+		// 》init glueType
 		$("#addModal .form select[name=glueType]").change();
 
-		// init-cronGen
-		$("#addModal .form input[name='jobCron']").show().siblings().remove();
-		$("#addModal .form input[name='jobCron']").cronGen({});
+		// 》init-cronGen
+		$("#addModal .form input[name='schedule_conf_CRON']").show().siblings().remove();
+		$("#addModal .form input[name='schedule_conf_CRON']").cronGen({});
+
+		// fill advanced
+		$('#addModal .form select[name=executorRouteStrategy] option[value='+ row.executorRouteStrategy +']').prop('selected', true);
+		$("#addModal .form input[name='childJobId']").val( row.childJobId );
+		$('#addModal .form select[name=misfireStrategy] option[value='+ row.misfireStrategy +']').prop('selected', true);
+		$('#addModal .form select[name=executorBlockStrategy] option[value='+ row.executorBlockStrategy +']').prop('selected', true);
+		$("#addModal .form input[name='executorTimeout']").val( row.executorTimeout );
+		$("#addModal .form input[name='executorFailRetryCount']").val( row.executorFailRetryCount );
 
 		// show
 		$('#addModal').modal({backdrop: false, keyboard: false}).modal('show');

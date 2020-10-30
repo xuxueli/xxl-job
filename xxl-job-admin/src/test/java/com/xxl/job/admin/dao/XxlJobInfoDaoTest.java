@@ -1,6 +1,8 @@
 package com.xxl.job.admin.dao;
 
 import com.xxl.job.admin.core.model.XxlJobInfo;
+import com.xxl.job.admin.core.scheduler.MisfireStrategyEnum;
+import com.xxl.job.admin.core.scheduler.ScheduleTypeEnum;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -32,10 +34,12 @@ public class XxlJobInfoDaoTest {
 	public void save_load(){
 		XxlJobInfo info = new XxlJobInfo();
 		info.setJobGroup(1);
-		info.setJobCron("jobCron");
 		info.setJobDesc("desc");
 		info.setAuthor("setAuthor");
 		info.setAlarmEmail("setAlarmEmail");
+		info.setScheduleType(ScheduleTypeEnum.FIX_RATE.name());
+		info.setScheduleConf(String.valueOf(33));
+		info.setMisfireStrategy(MisfireStrategyEnum.DO_NOTHING.name());
 		info.setExecutorRouteStrategy("setExecutorRouteStrategy");
 		info.setExecutorHandler("setExecutorHandler");
 		info.setExecutorParam("setExecutorParam");
@@ -52,7 +56,9 @@ public class XxlJobInfoDaoTest {
 		int count = xxlJobInfoDao.save(info);
 
 		XxlJobInfo info2 = xxlJobInfoDao.loadById(info.getId());
-		info2.setJobCron("jobCron2");
+		info.setScheduleType(ScheduleTypeEnum.FIX_DELAY.name());
+		info.setScheduleConf(String.valueOf(44));
+		info.setMisfireStrategy(MisfireStrategyEnum.FIRE_ONCE_NOW.name());
 		info2.setJobDesc("desc2");
 		info2.setAuthor("setAuthor2");
 		info2.setAlarmEmail("setAlarmEmail2");

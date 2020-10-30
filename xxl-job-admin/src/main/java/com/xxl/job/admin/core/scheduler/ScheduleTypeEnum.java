@@ -34,13 +34,13 @@ public enum ScheduleTypeEnum {
         return title;
     }
 
-    public static ScheduleTypeEnum match(String name){
+    public static ScheduleTypeEnum match(String name, ScheduleTypeEnum defaultItem){
         for (ScheduleTypeEnum item: ScheduleTypeEnum.values()) {
-            if (item.equals(name)) {
+            if (item.name().equals(name)) {
                 return item;
             }
         }
-        return NONE;
+        return defaultItem;
     }
 
 }
