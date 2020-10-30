@@ -80,8 +80,8 @@
 					            		<th name="id" >${I18n.jobinfo_field_id}</th>
 					                	<th name="jobGroup" >${I18n.jobinfo_field_jobgroup}</th>
 					                  	<th name="jobDesc" >${I18n.jobinfo_field_jobdesc}</th>
-                                        <th name="glueType" >${I18n.jobinfo_field_gluetype}</th>
                                         <th name="scheduleType" >${I18n.schedule_type}</th>
+                                        <th name="glueType" >${I18n.jobinfo_field_gluetype}</th>
                                         <th name="executorParam" >${I18n.jobinfo_field_executorparam}</th>
 					                  	<th name="addTime" >addTime</th>
 					                  	<th name="updateTime" >updateTime</th>
