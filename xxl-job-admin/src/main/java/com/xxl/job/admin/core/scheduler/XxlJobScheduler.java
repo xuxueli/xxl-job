@@ -28,7 +28,7 @@ public class XxlJobScheduler  {
         JobTriggerPoolHelper.toStart();
 
         // admin registry monitor run
-        JobRegistryMonitorHelper.getInstance().start();
+        JobRegistryHelper.getInstance().start();
 
         // admin fail-monitor run
         JobFailMonitorHelper.getInstance().start();
@@ -61,7 +61,7 @@ public class XxlJobScheduler  {
         JobFailMonitorHelper.getInstance().toStop();
 
         // admin registry stop
-        JobRegistryMonitorHelper.getInstance().toStop();
+        JobRegistryHelper.getInstance().toStop();
 
         // admin trigger pool stop
         JobTriggerPoolHelper.toStop();

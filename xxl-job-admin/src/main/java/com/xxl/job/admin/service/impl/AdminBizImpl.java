@@ -2,6 +2,7 @@ package com.xxl.job.admin.service.impl;
 
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
+import com.xxl.job.admin.core.thread.JobRegistryHelper;
 import com.xxl.job.admin.core.thread.JobTriggerPoolHelper;
 import com.xxl.job.admin.core.trigger.TriggerTypeEnum;
 import com.xxl.job.admin.core.util.I18nUtil;
@@ -17,7 +18,6 @@ import com.xxl.job.core.handler.IJobHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.text.MessageFormat;
@@ -131,45 +131,12 @@ public class AdminBizImpl implements AdminBiz {
 
     @Override
     public ReturnT<String> registry(RegistryParam registryParam) {
-
-        // valid
-        if (!StringUtils.hasText(registryParam.getRegistryGroup())
-                || !StringUtils.hasText(registryParam.getRegistryKey())
-                || !StringUtils.hasText(registryParam.getRegistryValue())) {
-            return new ReturnT<String>(ReturnT.FAIL_CODE, "Illegal Argument.");
-        }
-
-        int ret = xxlJobRegistryDao.registryUpdate(registryParam.getRegistryGroup(), registryParam.getRegistryKey(), registryParam.getRegistryValue(), new Date());
-        if (ret < 1) {
-            xxlJobRegistryDao.registrySave(registryParam.getRegistryGroup(), registryParam.getRegistryKey(), registryParam.getRegistryValue(), new Date());
-
-            // fresh
-            freshGroupRegistryInfo(registryParam);
-        }
-        return ReturnT.SUCCESS;
+        return JobRegistryHelper.getInstance().registry(registryParam);
     }
 
     @Override
     public ReturnT<String> registryRemove(RegistryParam registryParam) {
-
-        // valid
-        if (!StringUtils.hasText(registryParam.getRegistryGroup())
-                || !StringUtils.hasText(registryParam.getRegistryKey())
-                || !StringUtils.hasText(registryParam.getRegistryValue())) {
-            return new ReturnT<String>(ReturnT.FAIL_CODE, "Illegal Argument.");
-        }
-
-        int ret = xxlJobRegistryDao.registryDelete(registryParam.getRegistryGroup(), registryParam.getRegistryKey(), registryParam.getRegistryValue());
-        if (ret > 0) {
-
-            // fresh
-            freshGroupRegistryInfo(registryParam);
-        }
-        return ReturnT.SUCCESS;
-    }
-
-    private void freshGroupRegistryInfo(RegistryParam registryParam){
-        // Under consideration, prevent affecting core tables
+        return JobRegistryHelper.getInstance().registryRemove(registryParam);
     }
 
 }
