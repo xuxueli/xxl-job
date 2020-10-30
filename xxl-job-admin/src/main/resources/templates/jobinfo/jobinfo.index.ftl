@@ -115,7 +115,7 @@
          	<div class="modal-body">
 				<form class="form-horizontal form" role="form" >
 
-                    <p style="margin: 0 0 10px;text-align: center;color: gray;">- ${I18n.jobinfo_conf_base} -</p>    <#-- 基础信息 -->
+                    <p style="margin: 0 0 10px;text-align: left;border-bottom: 1px solid #e5e5e5;color: gray;">${I18n.jobinfo_conf_base}</p>    <#-- 基础信息 -->
 					<div class="form-group">
 						<label for="firstname" class="col-sm-2 control-label">${I18n.jobinfo_field_jobgroup}<font color="red">*</font></label>
 						<div class="col-sm-4">
@@ -136,7 +136,8 @@
                         <div class="col-sm-4"><input type="text" class="form-control" name="alarmEmail" placeholder="${I18n.jobinfo_field_alarmemail_placeholder}" maxlength="100" ></div>
                     </div>
 
-                    <p style="margin: 0 0 10px;text-align: center;color: gray;">- ${I18n.jobinfo_conf_trigger} -</p>    <#-- 触发配置 -->
+                    <br>
+                    <p style="margin: 0 0 10px;text-align: left;border-bottom: 1px solid #e5e5e5;color: gray;">${I18n.jobinfo_conf_schedule}</p>    <#-- 调度 -->
                     <div class="form-group">
                         <label for="firstname" class="col-sm-2 control-label">${I18n.schedule_type}<font color="red">*</font></label>
                         <div class="col-sm-4">
@@ -164,7 +165,8 @@
                         </div>
                     </div>
 
-                    <p style="margin: 0 0 10px;text-align: center;color: gray;">- ${I18n.jobinfo_conf_job} -</p>    <#-- 任务配置 -->
+                    <br>
+                    <p style="margin: 0 0 10px;text-align: left;border-bottom: 1px solid #e5e5e5;color: gray;">${I18n.jobinfo_conf_job}</p>    <#-- 任务配置 -->
 
                     <div class="form-group">
                         <label for="firstname" class="col-sm-2 control-label">${I18n.jobinfo_field_gluetype}<font color="red">*</font></label>
@@ -186,7 +188,8 @@
                         </div>
                     </div>
 
-                    <p style="margin: 0 0 10px;text-align: center;color: gray;">- ${I18n.jobinfo_conf_advanced} -</p>    <#-- 高级配置 -->
+                    <br>
+                    <p style="margin: 0 0 10px;text-align: left;border-bottom: 1px solid #e5e5e5;color: gray;">${I18n.jobinfo_conf_advanced}</p>    <#-- 高级配置 -->
 
                     <div class="form-group">
                         <label for="firstname" class="col-sm-2 control-label">${I18n.jobinfo_field_executorRouteStrategy}<font color="black">*</font></label>
@@ -359,9 +362,7 @@ exit 0
          	<div class="modal-body">
 				<form class="form-horizontal form" role="form" >
 
-
-
-                    <p style="margin: 0 0 10px;text-align: center;color: gray;">- ${I18n.jobinfo_conf_base} -</p>    <#-- 基础信息 -->
+                    <p style="margin: 0 0 10px;text-align: left;border-bottom: 1px solid #e5e5e5;color: gray;">${I18n.jobinfo_conf_base}</p>    <#-- 基础信息 -->
                     <div class="form-group">
                         <label for="firstname" class="col-sm-2 control-label">${I18n.jobinfo_field_jobgroup}<font color="red">*</font></label>
                         <div class="col-sm-4">
@@ -382,7 +383,8 @@ exit 0
                         <div class="col-sm-4"><input type="text" class="form-control" name="alarmEmail" placeholder="${I18n.jobinfo_field_alarmemail_placeholder}" maxlength="100" ></div>
                     </div>
 
-                    <p style="margin: 0 0 10px;text-align: center;color: gray;">- ${I18n.jobinfo_conf_trigger} -</p>    <#-- 触发配置 -->
+                    <br>
+                    <p style="margin: 0 0 10px;text-align: left;border-bottom: 1px solid #e5e5e5;color: gray;">${I18n.jobinfo_conf_schedule}</p>    <#-- 调度配置 -->
                     <div class="form-group">
                         <label for="firstname" class="col-sm-2 control-label">${I18n.schedule_type}<font color="red">*</font></label>
                         <div class="col-sm-4">
@@ -410,7 +412,8 @@ exit 0
                         </div>
                     </div>
 
-                    <p style="margin: 0 0 10px;text-align: center;color: gray;">- ${I18n.jobinfo_conf_job} -</p>    <#-- 任务配置 -->
+                    <br>
+                    <p style="margin: 0 0 10px;text-align: left;border-bottom: 1px solid #e5e5e5;color: gray;">${I18n.jobinfo_conf_job}</p>    <#-- 任务配置 -->
 
                     <div class="form-group">
                         <label for="firstname" class="col-sm-2 control-label">${I18n.jobinfo_field_gluetype}<font color="red">*</font></label>
@@ -432,7 +435,8 @@ exit 0
                         </div>
                     </div>
 
-                    <p style="margin: 0 0 10px;text-align: center;color: gray;">- ${I18n.jobinfo_conf_advanced} -</p>    <#-- 高级配置 -->
+                    <br>
+                    <p style="margin: 0 0 10px;text-align: left;border-bottom: 1px solid #e5e5e5;color: gray;">${I18n.jobinfo_conf_advanced}</p>    <#-- 高级配置 -->
 
                     <div class="form-group">
                         <label for="firstname" class="col-sm-2 control-label">${I18n.jobinfo_field_executorRouteStrategy}<font color="red">*</font></label>
