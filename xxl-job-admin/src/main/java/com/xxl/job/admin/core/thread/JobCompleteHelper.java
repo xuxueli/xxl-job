@@ -1,7 +1,7 @@
 package com.xxl.job.admin.core.thread;
 
 import com.xxl.job.admin.core.conf.XxlJobAdminConfig;
-import com.xxl.job.admin.core.handle.XxlJobPostHandleHelper;
+import com.xxl.job.admin.core.complete.XxlJobCompleter;
 import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.core.biz.model.HandleCallbackParam;
@@ -20,11 +20,11 @@ import java.util.concurrent.*;
  *
  * @author xuxueli 2015-9-1 18:05:56
  */
-public class JobLogHelper {
-	private static Logger logger = LoggerFactory.getLogger(JobLogHelper.class);
+public class JobCompleteHelper {
+	private static Logger logger = LoggerFactory.getLogger(JobCompleteHelper.class);
 	
-	private static JobLogHelper instance = new JobLogHelper();
-	public static JobLogHelper getInstance(){
+	private static JobCompleteHelper instance = new JobCompleteHelper();
+	public static JobCompleteHelper getInstance(){
 		return instance;
 	}
 
@@ -89,7 +89,7 @@ public class JobLogHelper {
 								jobLog.setHandleCode(ReturnT.FAIL_CODE);
 								jobLog.setHandleMsg( I18nUtil.getString("joblog_lost_fail") );
 
-								XxlJobPostHandleHelper.updateHandleInfoAndFinish(jobLog);
+								XxlJobCompleter.updateHandleInfoAndFinish(jobLog);
 							}
 
 						}
@@ -175,7 +175,7 @@ public class JobLogHelper {
 		log.setHandleTime(new Date());
 		log.setHandleCode(handleCallbackParam.getExecuteResult().getCode());
 		log.setHandleMsg(handleMsg.toString());
-		XxlJobPostHandleHelper.updateHandleInfoAndFinish(log);
+		XxlJobCompleter.updateHandleInfoAndFinish(log);
 
 		return ReturnT.SUCCESS;
 	}

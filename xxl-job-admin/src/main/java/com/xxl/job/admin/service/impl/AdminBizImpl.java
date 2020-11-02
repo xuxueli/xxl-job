@@ -1,6 +1,6 @@
 package com.xxl.job.admin.service.impl;
 
-import com.xxl.job.admin.core.thread.JobLogHelper;
+import com.xxl.job.admin.core.thread.JobCompleteHelper;
 import com.xxl.job.admin.core.thread.JobRegistryHelper;
 import com.xxl.job.core.biz.AdminBiz;
 import com.xxl.job.core.biz.model.HandleCallbackParam;
@@ -19,7 +19,7 @@ public class AdminBizImpl implements AdminBiz {
 
     @Override
     public ReturnT<String> callback(List<HandleCallbackParam> callbackParamList) {
-        return JobLogHelper.getInstance().callback(callbackParamList);
+        return JobCompleteHelper.getInstance().callback(callbackParamList);
     }
 
     @Override

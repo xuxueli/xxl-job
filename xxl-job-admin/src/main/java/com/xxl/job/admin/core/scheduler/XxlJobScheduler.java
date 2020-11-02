@@ -34,7 +34,7 @@ public class XxlJobScheduler  {
         JobFailMonitorHelper.getInstance().start();
 
         // admin lose-monitor run ( depend on JobTriggerPoolHelper )
-        JobLogHelper.getInstance().start();
+        JobCompleteHelper.getInstance().start();
 
         // admin log report start
         JobLogReportHelper.getInstance().start();
@@ -55,7 +55,7 @@ public class XxlJobScheduler  {
         JobLogReportHelper.getInstance().toStop();
 
         // admin lose-monitor stop
-        JobLogHelper.getInstance().toStop();
+        JobCompleteHelper.getInstance().toStop();
 
         // admin fail-monitor stop
         JobFailMonitorHelper.getInstance().toStop();

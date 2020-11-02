@@ -1,4 +1,4 @@
-package com.xxl.job.admin.core.handle;
+package com.xxl.job.admin.core.complete;
 
 import com.xxl.job.admin.core.conf.XxlJobAdminConfig;
 import com.xxl.job.admin.core.model.XxlJobInfo;
@@ -16,8 +16,8 @@ import java.text.MessageFormat;
 /**
  * @author xuxueli 2020-10-30 20:43:10
  */
-public class XxlJobPostHandleHelper {
-    private static Logger logger = LoggerFactory.getLogger(XxlJobPostHandleHelper.class);
+public class XxlJobCompleter {
+    private static Logger logger = LoggerFactory.getLogger(XxlJobCompleter.class);
 
     /**
      * common fresh handle entrance (limit only once)

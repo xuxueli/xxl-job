@@ -2086,7 +2086,7 @@ data: post-data
 - 20、执行器注册组件优化：注册逻辑调整为异步方式，提高注册性能；
 - 21、调度过期策略：调度中心错误调度时间的补偿处理策略，包括：忽略、立即补偿触发一次等；
 - 22、触发策略强化：除了常规Cron、API、父子任务触发方式外，新增提供 "固定间隔触发、固定延时触发" 两种新触发方式；
-- 23、任务调度生命周期重构：调度（schedule）、触发(trigger)、执行（handle）、回调(callback)、后处理（posthandle）；
+- 23、任务调度生命周期重构：调度（schedule）、触发(trigger)、执行（handle）、回调(callback)、结束（complete）；
 - 24、执行器鉴权校验：执行器启动时主动校验accessToken，为空则主动Warn告警；（已规划安全强化：AccessToken动态生成、动态启停等）
 
 ### 7.32 版本 v2.3.0 Release Notes[规划中]
