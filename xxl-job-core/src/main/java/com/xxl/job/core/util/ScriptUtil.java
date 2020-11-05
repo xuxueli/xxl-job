@@ -1,6 +1,6 @@
 package com.xxl.job.core.util;
 
-import com.xxl.job.core.log.XxlJobLogger;
+import com.xxl.job.core.context.XxlJobHelper;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -83,7 +83,7 @@ public class ScriptUtil {
                     try {
                         copy(process.getInputStream(), finalFileOutputStream, new byte[1024]);
                     } catch (IOException e) {
-                        XxlJobLogger.log(e);
+                        XxlJobHelper.log(e);
                     }
                 }
             });
@@ -93,7 +93,7 @@ public class ScriptUtil {
                     try {
                         copy(process.getErrorStream(), finalFileOutputStream, new byte[1024]);
                     } catch (IOException e) {
-                        XxlJobLogger.log(e);
+                        XxlJobHelper.log(e);
                     }
                 }
             });
@@ -109,14 +109,14 @@ public class ScriptUtil {
 
             return exitValue;
         } catch (Exception e) {
-            XxlJobLogger.log(e);
+            XxlJobHelper.log(e);
             return -1;
         } finally {
             if (fileOutputStream != null) {
                 try {
                     fileOutputStream.close();
                 } catch (IOException e) {
-                    XxlJobLogger.log(e);
+                    XxlJobHelper.log(e);
                 }
 
             }

@@ -559,7 +559,6 @@ XXL-JOB是一个分布式任务调度平台，其核心设计目标是开发迅�
         ：xxl-job-executor-sample-springboot：Springboot版本，通过Springboot管理执行器，推荐这种方式；
         ：xxl-job-executor-sample-spring：Spring版本，通过Spring容器管理执行器，比较通用；
         ：xxl-job-executor-sample-frameless：无框架版本；
-        ：xxl-job-executor-sample-jfinal：JFinal版本，通过JFinal管理执行器；
         
 
 ### 2.3 配置部署“调度中心”
@@ -714,7 +713,6 @@ public XxlJobSpringExecutor xxlJobExecutor() {
 
     xxl-job-executor-sample-springboot：项目编译打包成springboot类型的可执行JAR包，命令启动即可；
     xxl-job-executor-sample-spring：项目编译打包成WAR包，并部署到tomcat中。
-    xxl-job-executor-sample-jfinal：同上
     
 
 至此“执行器”项目已经部署结束。
@@ -1239,7 +1237,7 @@ xxl-job-admin#com.xxl.job.admin.controller.JobApiController.callback
 “执行器”接收到“调度中心”的调度请求时，如果任务类型为“Bean模式”，将会匹配Spring容器中的“Bean模式任务”，然后调用其execute方法，执行任务逻辑。如果任务类型为“GLUE模式”，将会加载GLue代码，实例化Java对象，注入依赖的Spring服务（注意：Glue代码中注入的Spring服务，必须存在与该“执行器”项目的Spring容器中），然后调用execute方法，执行任务逻辑。
 
 #### 5.5.5 任务日志
-XXL-JOB会为每次调度请求生成一个单独的日志文件，需要通过 "XxlJobLogger.log" 打印执行日志，“调度中心”查看执行日志时将会加载对应的日志文件。
+XXL-JOB会为每次调度请求生成一个单独的日志文件，需要通过 "XxlJobHelper.log" 打印执行日志，“调度中心”查看执行日志时将会加载对应的日志文件。
 
 (历史版本通过重写LOG4J的Appender实现，存在依赖限制，该方式在新版本已经被抛弃)
 
@@ -2062,37 +2060,38 @@ data: post-data
 注意：XxlJobSpringExecutor组件个别字段调整：“appName” 调整为 “appname” ，升级时该组件时需要注意；
 
 ### 7.31 版本 v2.3.0 Release Notes[迭代中]
-- 1、新增调度过期策略：调度中心错过调度时间的补偿处理策略，包括：忽略、立即补偿触发一次等；
-- 2、新增触发策略：除了常规Cron、API、父子任务触发方式外，新增提供 "固定间隔触发、固定延时触发（规划）" 两种新触发方式；
-- 3、Cron编辑器增强：Cron编辑器修改cron时可实时查看最近运行时间;
-- 4、Cron编辑器问题修复：修复小概率情况下cron单个字段修改时导致其他字段被重置问题；
-- 5、新增任务属性 "XxlJobContext" ，统一维护任务上下文信息，包括任务ID、分片参数等，方便运行时存取任务相关信息；
-    - 6.1、废弃 "ShardingUtil" 组件：改用 "XxlJobContext.getXxlJobContext().getShardIndex()/getShardTotal();" 获取分片参数；
-    - 6.2、日志组件逻辑调整：日志组件改为通过 XxlJobContext 获取任务上下文并匹配写入对应日志文件；
-- 6、执行器注册组件优化：注册逻辑调整为异步方式，提高注册性能；
-- 7、执行器鉴权校验：执行器启动时主动校验accessToken，为空则主动Warn告警；（已规划安全强化：AccessToken动态生成、动态启停等）
-- 8、邮箱告警配置优化：将"spring.mail.from"与"spring.mail.username"属性拆分开，更加灵活的支持一些无密码邮箱服务；
-- 9、多个项目依赖升级至较新稳定版本，如netty、groovy、spring、springboot、mybatis等；
-- 10、UI组件常规升级，提升组件稳定性；
-- 11、调度中心页面交互优化：用户管理模块密码列取消；多处表达autocomplete取消；执行器管理模块XSS拦截校验等；
-- 12、通用HTTP任务Handler（httpJobHandler）优化：修复 "setDoOutput(true)" 导致任务请求GetMethod失效问题；
-- 13、执行器Commandhandler示例任务优化，修复极端情况下脚本进程挂起问题；
-- 14、调度通讯组件优化，修复RestFul方式调用 DotNet 版本执行器时心跳检测失败问题；
-- 15、调度中心远程执行日志查询乱码问题修复；
-- 16、调度中心组件加载顺序优化，修复极端情况下调度组件初始慢导致的调度失败问题；
-- 17、执行器注册线程优化，修复极端情况下初始化失败时导致NPE问题；
-- 18、调度线程连接池优化，修复连接有效性校验超时问题；
-- 19、执行器注册表字段优化，解决执行器注册节点过多导致注册信息存储和更新失败的问题；
-- 20、轮训路由策略优化，修复小概率下并发问题；
-- 21、页面redirect跳转后https变为http问题修复；
-- 22、执行器日志清理优化，修复小概率下日志文件为空导致清理异常问题；
-- 23、执行器示例项目规范整理；
-- 24、任务调度生命周期重构：调度（schedule）、触发(trigger)、执行（handle）、回调(callback)、结束（complete）；
-- 25、[规划中]任务日志重构：一次调度只记录一条主任务，维护起止时间和状态。
+- 1、【新增】调度过期策略：调度中心错过调度时间的补偿处理策略，包括：忽略、立即补偿触发一次等；
+- 2、【新增】触发策略：除了常规Cron、API、父子任务触发方式外，新增提供 "固定间隔触发、（固定延时触发，实验中）" 新触发方式；
+- 3、【新增】新增任务辅助工具 "XxlJobHelper"，提供统一任务辅助能力，包括：任务上下文信息维护获取（任务参数、任务ID、分片参数）、日志输出、任务结果设置……等；
+    - 3.1、"ShardingUtil" 组件废弃：改用 "XxlJobHelper.getShardIndex()/getShardTotal();" 获取分片参数；
+    - 3.2、"XxlJobLogger" 组件废弃：改用 "XxlJobHelper.log" 进行日志输出；
+- 4、【优化】任务核心类 "IJobHandler" 的 "execute" 方法取消出入参设计。改为通过 "XxlJobHelper.getJobParam" 获取任务参数并替代方法入参，通过 "XxlJobHelper.handleSuccess/handleFail" 设置任务结果并替代方法出参； 
+- 4、【优化】Cron编辑器增强：Cron编辑器修改cron时可实时查看最近运行时间;
+- 5、【优化】执行器示例项目规范整理；
+- 6、【优化】任务调度生命周期重构：调度（schedule）、触发(trigger)、执行（handle）、回调(callback)、结束（complete）；
+- 7、【优化】[规划中]任务日志重构：一次调度只记录一条主任务，维护起止时间和状态。
     - 普通任务：只记录一条主任务；
     - 广播任务：记录一条主任务，每个分片任务记录一条次任务，关联在主任务上；
     - 重试任务：失败时，新增主任务。所有调度记录，包括入口调度和重试调度，均挂载主任务上。
-- 26、[规划中]分片任务：全部完成后才会出发后置节点；
+- 8、【优化】[规划中]分片任务：全部完成后才会出发后置节点；
+- 9、【优化】执行器注册组件优化：注册逻辑调整为异步方式，提高注册性能；
+- 10、【优化】执行器鉴权校验：执行器启动时主动校验accessToken，为空则主动Warn告警；（已规划安全强化：AccessToken动态生成、动态启停等）
+- 11、【优化】邮箱告警配置优化：将"spring.mail.from"与"spring.mail.username"属性拆分开，更加灵活的支持一些无密码邮箱服务；
+- 12、【优化】多个项目依赖升级至较新稳定版本，如netty、groovy、spring、springboot、mybatis等；
+- 13、【优化】UI组件常规升级，提升组件稳定性；
+- 14、【优化】调度中心页面交互优化：用户管理模块密码列取消；多处表达autocomplete取消；执行器管理模块XSS拦截校验等；
+- 15、【修复】Cron编辑器问题修复：修复小概率情况下cron单个字段修改时导致其他字段被重置问题；
+- 16、【修复】通用HTTP任务Handler（httpJobHandler）优化：修复 "setDoOutput(true)" 导致任务请求GetMethod失效问题；
+- 17、【修复】执行器Commandhandler示例任务优化，修复极端情况下脚本进程挂起问题；
+- 18、【修复】调度通讯组件优化，修复RestFul方式调用 DotNet 版本执行器时心跳检测失败问题；
+- 19、【修复】调度中心远程执行日志查询乱码问题修复；
+- 20、【修复】调度中心组件加载顺序优化，修复极端情况下调度组件初始慢导致的调度失败问题；
+- 21、【修复】执行器注册线程优化，修复极端情况下初始化失败时导致NPE问题；
+- 22、【修复】调度线程连接池优化，修复连接有效性校验超时问题；
+- 23、【修复】执行器注册表字段优化，解决执行器注册节点过多导致注册信息存储和更新失败的问题；
+- 24、【修复】轮训路由策略优化，修复小概率下并发问题；
+- 25、【修复】页面redirect跳转后https变为http问题修复；
+- 26、【修复】执行器日志清理优化，修复小概率下日志文件为空导致清理异常问题；
 
 
 ### 7.32 版本 v2.4.0 Release Notes[规划中]

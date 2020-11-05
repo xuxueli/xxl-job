@@ -5,6 +5,7 @@ import com.xxl.job.core.biz.client.AdminBizClient;
 import com.xxl.job.core.biz.model.HandleCallbackParam;
 import com.xxl.job.core.biz.model.RegistryParam;
 import com.xxl.job.core.biz.model.ReturnT;
+import com.xxl.job.core.context.XxlJobContext;
 import com.xxl.job.core.enums.RegistryConfig;
 import org.junit.Assert;
 import org.junit.Test;
@@ -30,7 +31,7 @@ public class AdminBizTest {
 
         HandleCallbackParam param = new HandleCallbackParam();
         param.setLogId(1);
-        param.setExecuteResult(ReturnT.SUCCESS);
+        param.setHandleCode(XxlJobContext.HANDLE_COCE_SUCCESS);
 
         List<HandleCallbackParam> callbackParamList = Arrays.asList(param);
 

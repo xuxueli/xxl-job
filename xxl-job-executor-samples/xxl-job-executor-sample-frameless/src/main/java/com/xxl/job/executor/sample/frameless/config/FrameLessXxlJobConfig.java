@@ -1,15 +1,13 @@
-package com.xuxueli.executor.sample.frameless.config;
+package com.xxl.job.executor.sample.frameless.config;
 
-import com.xuxueli.executor.sample.frameless.jobhandler.CommandJobHandler;
-import com.xuxueli.executor.sample.frameless.jobhandler.DemoJobHandler;
-import com.xuxueli.executor.sample.frameless.jobhandler.HttpJobHandler;
-import com.xuxueli.executor.sample.frameless.jobhandler.ShardingJobHandler;
-import com.xxl.job.core.executor.XxlJobExecutor;
+import com.xxl.job.executor.sample.frameless.jobhandler.SampleXxlJob;
+import com.xxl.job.core.executor.impl.XxlJobSimpleExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.Properties;
 
 /**
@@ -25,25 +23,18 @@ public class FrameLessXxlJobConfig {
     }
 
 
-    private XxlJobExecutor xxlJobExecutor = null;
+    private XxlJobSimpleExecutor xxlJobExecutor = null;
 
     /**
      * init
      */
     public void initXxlJobExecutor() {
 
-        // registry jobhandler
-        XxlJobExecutor.registJobHandler("demoJobHandler", new DemoJobHandler());
-        XxlJobExecutor.registJobHandler("shardingJobHandler", new ShardingJobHandler());
-        XxlJobExecutor.registJobHandler("httpJobHandler", new HttpJobHandler());
-        XxlJobExecutor.registJobHandler("commandJobHandler", new CommandJobHandler());
-
         // load executor prop
         Properties xxlJobProp = loadProperties("xxl-job-executor.properties");
 
-
         // init executor
-        xxlJobExecutor = new XxlJobExecutor();
+        xxlJobExecutor = new XxlJobSimpleExecutor();
         xxlJobExecutor.setAdminAddresses(xxlJobProp.getProperty("xxl.job.admin.addresses"));
         xxlJobExecutor.setAccessToken(xxlJobProp.getProperty("xxl.job.accessToken"));
         xxlJobExecutor.setAppname(xxlJobProp.getProperty("xxl.job.executor.appname"));
@@ -52,6 +43,9 @@ public class FrameLessXxlJobConfig {
         xxlJobExecutor.setPort(Integer.valueOf(xxlJobProp.getProperty("xxl.job.executor.port")));
         xxlJobExecutor.setLogPath(xxlJobProp.getProperty("xxl.job.executor.logpath"));
         xxlJobExecutor.setLogRetentionDays(Integer.valueOf(xxlJobProp.getProperty("xxl.job.executor.logretentiondays")));
+
+        // registry job bean
+        xxlJobExecutor.setXxlJobBeanList(Arrays.asList(new SampleXxlJob()));
 
         // start executor
         try {

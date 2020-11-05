@@ -1,12 +1,11 @@
 package com.xxl.job.admin.core.thread;
 
-import com.xxl.job.admin.core.conf.XxlJobAdminConfig;
 import com.xxl.job.admin.core.complete.XxlJobCompleter;
+import com.xxl.job.admin.core.conf.XxlJobAdminConfig;
 import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.core.biz.model.HandleCallbackParam;
 import com.xxl.job.core.biz.model.ReturnT;
-import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.util.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -144,7 +143,7 @@ public class JobCompleteHelper {
 				for (HandleCallbackParam handleCallbackParam: callbackParamList) {
 					ReturnT<String> callbackResult = callback(handleCallbackParam);
 					logger.debug(">>>>>>>>> JobApiController.callback {}, handleCallbackParam={}, callbackResult={}",
-							(callbackResult.getCode()== IJobHandler.SUCCESS.getCode()?"success":"fail"), handleCallbackParam, callbackResult);
+							(callbackResult.getCode()== ReturnT.SUCCESS_CODE?"success":"fail"), handleCallbackParam, callbackResult);
 				}
 			}
 		});
@@ -167,13 +166,13 @@ public class JobCompleteHelper {
 		if (log.getHandleMsg()!=null) {
 			handleMsg.append(log.getHandleMsg()).append("<br>");
 		}
-		if (handleCallbackParam.getExecuteResult().getMsg() != null) {
-			handleMsg.append(handleCallbackParam.getExecuteResult().getMsg());
+		if (handleCallbackParam.getHandleMsg() != null) {
+			handleMsg.append(handleCallbackParam.getHandleMsg());
 		}
 
 		// success, save log
 		log.setHandleTime(new Date());
-		log.setHandleCode(handleCallbackParam.getExecuteResult().getCode());
+		log.setHandleCode(handleCallbackParam.getHandleCode());
 		log.setHandleMsg(handleMsg.toString());
 		XxlJobCompleter.updateHandleInfoAndFinish(log);
 

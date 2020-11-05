@@ -14,7 +14,6 @@
         <module>xxl-job-executor-sample-frameless</module>
         <module>xxl-job-executor-sample-springboot</module>
         <module>xxl-job-executor-sample-spring</module>
-        <module>xxl-job-executor-sample-jfinal</module>
     </modules>
 
 </project>

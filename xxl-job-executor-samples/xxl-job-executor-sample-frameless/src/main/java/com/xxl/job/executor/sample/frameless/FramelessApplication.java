@@ -1,6 +1,6 @@
-package com.xuxueli.executor.sample.frameless;
+package com.xxl.job.executor.sample.frameless;
 
-import com.xuxueli.executor.sample.frameless.config.FrameLessXxlJobConfig;
+import com.xxl.job.executor.sample.frameless.config.FrameLessXxlJobConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

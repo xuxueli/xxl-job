@@ -374,6 +374,12 @@ $(function() {
         $("#addModal .form input[name='schedule_conf_CRON']").show().siblings().remove();
         $("#addModal .form input[name='schedule_conf_CRON']").cronGen({});
 
+		// 》init scheduleType
+		$("#updateModal .form select[name=scheduleType]").change();
+
+		// 》init glueType
+		$("#updateModal .form select[name=glueType]").change();
+
 		$('#addModal').modal({backdrop: false, keyboard: false}).modal('show');
 	});
 	var addModalValidate = $("#addModal .form").validate({

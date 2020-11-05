@@ -4,10 +4,10 @@ import com.xxl.job.core.biz.AdminBiz;
 import com.xxl.job.core.biz.model.HandleCallbackParam;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.context.XxlJobContext;
+import com.xxl.job.core.context.XxlJobHelper;
 import com.xxl.job.core.enums.RegistryConfig;
 import com.xxl.job.core.executor.XxlJobExecutor;
 import com.xxl.job.core.log.XxlJobFileAppender;
-import com.xxl.job.core.log.XxlJobLogger;
 import com.xxl.job.core.util.FileUtil;
 import com.xxl.job.core.util.JdkSerializeTool;
 import org.slf4j.Logger;
@@ -190,10 +190,11 @@ public class TriggerCallbackThread {
             String logFileName = XxlJobFileAppender.makeLogFileName(new Date(callbackParam.getLogDateTim()), callbackParam.getLogId());
             XxlJobContext.setXxlJobContext(new XxlJobContext(
                     -1,
+                    null,
                     logFileName,
                     -1,
                     -1));
-            XxlJobLogger.log(logContent);
+            XxlJobHelper.log(logContent);
         }
     }
 
