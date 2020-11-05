@@ -118,10 +118,16 @@ $(function() {
                                     start_stop_div = '<li><a href="javascript:void(0);" class="job_operate" _type="job_resume" >'+ I18n.jobinfo_opt_start +'</a></li>\n';
                                 }
 
+                                // job_next_time_html
+								var job_next_time_html = '';
+								if (row.scheduleType == 'CRON' || row.scheduleType == 'FIX_RATE') {
+									job_next_time_html = '<li><a href="javascript:void(0);" class="job_next_time" >' + I18n.jobinfo_opt_next_time + '</a></li>\n';
+								}
+
                                 // log url
                                 var logHref = base_url +'/joblog?jobId='+ row.id;
 
-                                // log url
+                                // code url
                                 var codeBtn = "";
                                 if ('BEAN' != row.glueType) {
                                     var codeUrl = base_url +'/jobcode?jobId='+ row.id;
@@ -143,7 +149,7 @@ $(function() {
                                     '       <li><a href="javascript:void(0);" class="job_trigger" >'+ I18n.jobinfo_opt_run +'</a></li>\n' +
                                     '       <li><a href="'+ logHref +'">'+ I18n.jobinfo_opt_log +'</a></li>\n' +
                                     '       <li><a href="javascript:void(0);" class="job_registryinfo" >' + I18n.jobinfo_opt_registryinfo + '</a></li>\n' +
-                                    '       <li><a href="javascript:void(0);" class="job_next_time" >' + I18n.jobinfo_opt_next_time + '</a></li>\n' +
+									job_next_time_html +
                                     '       <li class="divider"></li>\n' +
                                     codeBtn +
                                     start_stop_div +
@@ -329,17 +335,16 @@ $(function() {
         var id = $(this).parents('ul').attr("_id");
         var row = tableData['key'+id];
 
-        var jobCron = row.jobCron;
-
         $.ajax({
             type : 'POST',
             url : base_url + "/jobinfo/nextTriggerTime",
             data : {
-                "cron" : jobCron
+                "scheduleType" : row.scheduleType,
+				"scheduleConf" : row.scheduleConf
             },
             dataType : "json",
             success : function(data){
-            	
+
             	if (data.code != 200) {
                     layer.open({
                         title: I18n.jobinfo_opt_next_time ,
@@ -585,9 +590,6 @@ $(function() {
 				required : true,
 				maxlength: 50
 			},
-			jobCron : {
-				required : true
-			},
 			author : {
 				required : true
 			}
@@ -595,9 +597,6 @@ $(function() {
 		messages : {
 			jobDesc : {
                 required : I18n.system_please_input + I18n.jobinfo_field_jobdesc
-			},
-			jobCron : {
-				required : I18n.system_please_input + "Cron"
 			},
 			author : {
 				required : I18n.system_please_input + I18n.jobinfo_field_author

@@ -641,7 +641,8 @@
             type : 'GET',
             url : base_url + "/jobinfo/nextTriggerTime",
             data : {
-                "cron" : inputElement.val(),
+                "scheduleType" : 'CRON',
+                "scheduleConf" : inputElement.val()
             },
             dataType : "json",
             success : function(data){
