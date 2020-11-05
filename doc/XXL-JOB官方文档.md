@@ -853,17 +853,16 @@ Bean模式任务，支持基于方法的开发方式，每个任务对应一个�
 
 #### 步骤一：执行器项目中，开发Job方法：
 
-    1、在Spring Bean实例中，开发Job方法，方式格式要求为 "public ReturnT<String> execute(String param)"
-    2、为Job方法添加注解 "@XxlJob(value="自定义jobhandler名称", init = "JobHandler初始化方法", destroy = "JobHandler销毁方法")"，注解value值对应的是调度中心新建任务的JobHandler属性的值。
-    3、执行日志：需要通过 "XxlJobLogger.log" 打印执行日志；
+    1、任务开发：在Spring Bean实例中，开发Job方法；
+    2、注解配置：为Job方法添加注解 "@XxlJob(value="自定义jobhandler名称", init = "JobHandler初始化方法", destroy = "JobHandler销毁方法")"，注解value值对应的是调度中心新建任务的JobHandler属性的值。
+    3、执行日志：需要通过 "XxlJobHelper.log" 打印执行日志；
+    4、任务结果：默认任务结果为 "成功" 状态，不需要主动设置；如有诉求，比如设置任务结果为失败，可以通过 "XxlJobHelper.handleFail/handleSuccess" 自主设置任务结果；
     
 ```
 // 可参考Sample示例执行器中的 "com.xxl.job.executor.service.jobhandler.SampleXxlJob" ，如下：
 @XxlJob("demoJobHandler")
-public ReturnT<String> execute(String param) {
-
-    XxlJobLogger.log("hello world.");
-    return ReturnT.SUCCESS;
+public void demoJobHandler() throws Exception {
+    XxlJobHelper.log("XXL-JOB, Hello World.");
 }
 ```
 
@@ -1281,8 +1280,8 @@ XXL-JOB会为每次调度请求生成一个单独的日志文件，需要通过 
 - Java语言任务获取分片参数方式：BEAN、GLUE模式(Java)
 ```
 // 可参考Sample示例执行器中的示例任务"ShardingJobHandler"了解试用 
-int shardIndex = XxlJobContext.getXxlJobContext().getShardIndex();
-int shardTotal = XxlJobContext.getXxlJobContext().getShardTotal();
+int shardIndex = XxlJobHelper.getShardIndex();
+int shardTotal = XxlJobHelper.getShardTotal();
 ```
 - 脚本语言任务获取分片参数方式：GLUE模式(Shell)、GLUE模式(Python)、GLUE模式(Nodejs)
 ```
@@ -2057,12 +2056,12 @@ data: post-data
 - 20、修复bootstrap.min.css.map 404问题；
 - 21、执行器UI交互优化,移除冗余order属性；
 - 22、执行备注消息长度限制，修复数据超长无法存储导致导致回调失败的问题；
-注意：XxlJobSpringExecutor组件个别字段调整：“appName” 调整为 “appname” ，升级时该组件时需要注意；
+注意：XxlJobSpringExecutor组件个别字段调整：“appName” 调整为 “appname” ，升级时该组件时需要注意；   
 
 ### 7.31 版本 v2.3.0 Release Notes[迭代中]
 - 1、【新增】调度过期策略：调度中心错过调度时间的补偿处理策略，包括：忽略、立即补偿触发一次等；
 - 2、【新增】触发策略：除了常规Cron、API、父子任务触发方式外，新增提供 "固定间隔触发、（固定延时触发，实验中）" 新触发方式；
-- 3、【新增】新增任务辅助工具 "XxlJobHelper"，提供统一任务辅助能力，包括：任务上下文信息维护获取（任务参数、任务ID、分片参数）、日志输出、任务结果设置……等；
+- 3、【新增】新增任务辅助工具 "XxlJobHelper"：提供统一任务辅助能力，包括：任务上下文信息维护获取（任务参数、任务ID、分片参数）、日志输出、任务结果设置……等；
     - 3.1、"ShardingUtil" 组件废弃：改用 "XxlJobHelper.getShardIndex()/getShardTotal();" 获取分片参数；
     - 3.2、"XxlJobLogger" 组件废弃：改用 "XxlJobHelper.log" 进行日志输出；
 - 4、【优化】任务核心类 "IJobHandler" 的 "execute" 方法取消出入参设计。改为通过 "XxlJobHelper.getJobParam" 获取任务参数并替代方法入参，通过 "XxlJobHelper.handleSuccess/handleFail" 设置任务结果并替代方法出参； 
@@ -2091,7 +2090,7 @@ data: post-data
 - 23、【修复】执行器注册表字段优化，解决执行器注册节点过多导致注册信息存储和更新失败的问题；
 - 24、【修复】轮训路由策略优化，修复小概率下并发问题；
 - 25、【修复】页面redirect跳转后https变为http问题修复；
-- 26、【修复】执行器日志清理优化，修复小概率下日志文件为空导致清理异常问题；
+- 26、【修复】执行器日志清理优化，修复小概率下日志文件为空导致清理异常问题；      
 
 
 ### 7.32 版本 v2.4.0 Release Notes[规划中]
