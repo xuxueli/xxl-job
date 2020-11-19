@@ -2066,7 +2066,14 @@ data: post-data
 - 3、【新增】新增任务辅助工具 "XxlJobHelper"：提供统一任务辅助能力，包括：任务上下文信息维护获取（任务参数、任务ID、分片参数）、日志输出、任务结果设置……等；
     - 3.1、"ShardingUtil" 组件废弃：改用 "XxlJobHelper.getShardIndex()/getShardTotal();" 获取分片参数；
     - 3.2、"XxlJobLogger" 组件废弃：改用 "XxlJobHelper.log" 进行日志输出；
-- 4、【优化】任务核心类 "IJobHandler" 的 "execute" 方法取消出入参设计。改为通过 "XxlJobHelper.getJobParam" 获取任务参数并替代方法入参，通过 "XxlJobHelper.handleSuccess/handleFail" 设置任务结果并替代方法出参； 
+- 4、【优化】任务核心类 "IJobHandler" 的 "execute" 方法取消出入参设计。改为通过 "XxlJobHelper.getJobParam" 获取任务参数并替代方法入参，通过 "XxlJobHelper.handleSuccess/handleFail" 设置任务结果并替代方法出参，示例代码如下；
+```
+@XxlJob("demoJobHandler")
+public void execute() {
+  String param = XxlJobHelper.getJobParam();    // 获取参数
+  XxlJobHelper.handleSuccess();                 // 设置任务结果
+}
+``` 
 - 4、【优化】Cron编辑器增强：Cron编辑器修改cron时可实时查看最近运行时间;
 - 5、【优化】执行器示例项目规范整理；
 - 6、【优化】任务调度生命周期重构：调度（schedule）、触发(trigger)、执行（handle）、回调(callback)、结束（complete）；
