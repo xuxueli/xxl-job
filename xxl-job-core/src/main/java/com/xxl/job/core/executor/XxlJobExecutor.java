@@ -159,10 +159,12 @@ public class XxlJobExecutor  {
 
     private void stopEmbedServer() {
         // stop provider factory
-        try {
-            embedServer.stop();
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
+        if (embedServer != null) {
+            try {
+                embedServer.stop();
+            } catch (Exception e) {
+                logger.error(e.getMessage(), e);
+            }
         }
     }
 
