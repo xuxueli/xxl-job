@@ -8,22 +8,23 @@ import com.xxl.job.core.handler.IJobHandler;
  *
  * @author xuxueli 2016-5-19 21:05:45
  */
-public class GlueJobHandler extends IJobHandler {
+public class GlueJobHandler implements IJobHandler {
+    private final long glueUpdateTime;
+    private final IJobHandler jobHandler;
 
-	private long glueUpdatetime;
-	private IJobHandler jobHandler;
-	public GlueJobHandler(IJobHandler jobHandler, long glueUpdatetime) {
-		this.jobHandler = jobHandler;
-		this.glueUpdatetime = glueUpdatetime;
-	}
-	public long getGlueUpdatetime() {
-		return glueUpdatetime;
-	}
+    public GlueJobHandler(IJobHandler jobHandler, long glueUpdateTime) {
+        this.jobHandler = jobHandler;
+        this.glueUpdateTime = glueUpdateTime;
+    }
 
-	@Override
-	public void execute() throws Exception {
-		XxlJobHelper.log("----------- glue.version:"+ glueUpdatetime +" -----------");
-		jobHandler.execute();
-	}
+    public long getGlueUpdateTime() {
+        return glueUpdateTime;
+    }
+
+    @Override
+    public void execute() throws Exception {
+        XxlJobHelper.log("----------- glue.version:" + glueUpdateTime + " -----------");
+        jobHandler.execute();
+    }
 
 }

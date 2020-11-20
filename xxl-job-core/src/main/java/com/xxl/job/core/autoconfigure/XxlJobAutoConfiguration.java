@@ -28,8 +28,6 @@ public class XxlJobAutoConfiguration {
         xxlJobSpringExecutor.setLogPath(prop.getExecutor().getLogPath());
         xxlJobSpringExecutor.setLogRetentionDays(prop.getExecutor().getLogRetentionDays());
         xxlJobSpringExecutor.setIntegratedSpringBoot(prop.getExecutor().getIntegratedSpringBoot());
-
         return xxlJobSpringExecutor;
-
     }
 }

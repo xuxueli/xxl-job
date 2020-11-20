@@ -33,11 +33,7 @@ public class XxlJobRemotingUtil {
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
-        connection.setHostnameVerifier(new HostnameVerifier() {
-            public boolean verify(String hostname, SSLSession session) {
-                return true;
-            }
-        });
+        connection.setHostnameVerifier((hostname, session) -> true);
     }
     private static final TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager() {
         public java.security.cert.X509Certificate[] getAcceptedIssuers() {
@@ -128,13 +124,11 @@ public class XxlJobRemotingUtil {
 
             // parse returnT
             try {
-                ReturnT returnT = GsonTool.fromJson(resultJson, ReturnT.class, returnTargClassOfT);
-                return returnT;
+                return GsonTool.fromJson(resultJson, ReturnT.class, returnTargClassOfT);
             } catch (Exception e) {
                 logger.error("xxl-rpc remoting (url="+url+") response content invalid("+ resultJson +").", e);
                 return new ReturnT<String>(ReturnT.FAIL_CODE, "xxl-rpc remoting (url="+url+") response content invalid("+ resultJson +").");
             }
-
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             return new ReturnT<String>(ReturnT.FAIL_CODE, "xxl-rpc remoting error("+ e.getMessage() +"), for url : " + url);

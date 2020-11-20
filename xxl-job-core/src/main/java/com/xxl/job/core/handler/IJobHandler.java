@@ -5,34 +5,27 @@ package com.xxl.job.core.handler;
  *
  * @author xuxueli 2015-12-19 19:06:38
  */
-public abstract class IJobHandler {
+public interface IJobHandler {
 
+    /**
+     * execute handler, invoked when executor receives a scheduling request
+     *
+     * @throws Exception
+     */
+    void execute() throws Exception;
 
-	/**
-	 * execute handler, invoked when executor receives a scheduling request
-	 *
-	 * @throws Exception
-	 */
-	public abstract void execute() throws Exception;
+    /**
+     * init handler, invoked when JobThread init
+     */
+    default void init() throws Exception {
+        // do something
+    }
 
-
-	/*@Deprecated
-	public abstract ReturnT<String> execute(String param) throws Exception;*/
-
-	/**
-	 * init handler, invoked when JobThread init
-	 */
-	public void init() throws Exception {
-		// do something
-	}
-
-
-	/**
-	 * destroy handler, invoked when JobThread destroy
-	 */
-	public void destroy() throws Exception {
-		// do something
-	}
-
+    /**
+     * destroy handler, invoked when JobThread destroy
+     */
+    default void destroy() throws Exception {
+        // do something
+    }
 
 }
