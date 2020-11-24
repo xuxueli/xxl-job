@@ -15,7 +15,7 @@ import com.xxl.job.core.biz.model.KillParam;
 import com.xxl.job.core.biz.model.LogParam;
 import com.xxl.job.core.biz.model.LogResult;
 import com.xxl.job.core.biz.model.ReturnT;
-import com.xxl.job.core.util.DateUtil;
+import net.dreamlu.mica.core.utils.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -83,7 +84,7 @@ public class JobLogController {
 		List<XxlJobInfo> list = xxlJobInfoDao.getJobsByGroup(jobGroup);
 		return new ReturnT<List<XxlJobInfo>>(list);
 	}
-	
+
 	@RequestMapping("/pageList")
 	@ResponseBody
 	public Map<String, Object> pageList(HttpServletRequest request,
@@ -93,10 +94,10 @@ public class JobLogController {
 
 		// valid permission
 		JobInfoController.validPermission(request, jobGroup);	// 仅管理员支持查询全部；普通用户仅支持查询有权限的 jobGroup
-		
+
 		// parse param
-		Date triggerTimeStart = null;
-		Date triggerTimeEnd = null;
+		LocalDateTime triggerTimeStart = null;
+		LocalDateTime triggerTimeEnd = null;
 		if (filterTime!=null && filterTime.trim().length()>0) {
 			String[] temp = filterTime.split(" - ");
 			if (temp.length == 2) {
@@ -104,11 +105,11 @@ public class JobLogController {
 				triggerTimeEnd = DateUtil.parseDateTime(temp[1]);
 			}
 		}
-		
+
 		// page query
 		List<XxlJobLog> list = xxlJobLogDao.pageList(start, length, jobGroup, jobId, triggerTimeStart, triggerTimeEnd, logStatus);
 		int list_count = xxlJobLogDao.pageListCount(start, length, jobGroup, jobId, triggerTimeStart, triggerTimeEnd, logStatus);
-		
+
 		// package result
 		Map<String, Object> maps = new HashMap<String, Object>();
 	    maps.put("recordsTotal", list_count);		// 总记录数
@@ -194,17 +195,16 @@ public class JobLogController {
 	@RequestMapping("/clearLog")
 	@ResponseBody
 	public ReturnT<String> clearLog(int jobGroup, int jobId, int type){
-
 		Date clearBeforeTime = null;
 		int clearBeforeNum = 0;
 		if (type == 1) {
-			clearBeforeTime = DateUtil.addMonths(new Date(), -1);	// 清理一个月之前日志数据
+			clearBeforeTime = DateUtil.plusMonths(new Date(), -1);	// 清理一个月之前日志数据
 		} else if (type == 2) {
-			clearBeforeTime = DateUtil.addMonths(new Date(), -3);	// 清理三个月之前日志数据
+			clearBeforeTime = DateUtil.plusMonths(new Date(), -3);	// 清理三个月之前日志数据
 		} else if (type == 3) {
-			clearBeforeTime = DateUtil.addMonths(new Date(), -6);	// 清理六个月之前日志数据
+			clearBeforeTime = DateUtil.plusMonths(new Date(), -6);	// 清理六个月之前日志数据
 		} else if (type == 4) {
-			clearBeforeTime = DateUtil.addYears(new Date(), -1);	// 清理一年之前日志数据
+			clearBeforeTime = DateUtil.plusYears(new Date(), -1);	// 清理一年之前日志数据
 		} else if (type == 5) {
 			clearBeforeNum = 1000;		// 清理一千条以前日志数据
 		} else if (type == 6) {
@@ -216,7 +216,7 @@ public class JobLogController {
 		} else if (type == 9) {
 			clearBeforeNum = 0;			// 清理所有日志数据
 		} else {
-			return new ReturnT<String>(ReturnT.FAIL_CODE, I18nUtil.getString("joblog_clean_type_unvalid"));
+			return new ReturnT<>(ReturnT.FAIL_CODE, I18nUtil.getString("joblog_clean_type_unvalid"));
 		}
 
 		List<Long> logIds = null;

@@ -1,7 +1,7 @@
 package com.xxl.job.core.context;
 
 import com.xxl.job.core.log.XxlJobFileAppender;
-import com.xxl.job.core.util.DateUtil;
+import net.dreamlu.mica.core.utils.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.helpers.FormattingTuple;
@@ -9,6 +9,7 @@ import org.slf4j.helpers.MessageFormatter;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -144,7 +145,7 @@ public class XxlJobHelper {
         StackTraceElement callInfo = stackTraceElements[1];*/
 
         StringBuilder stringBuilder = new StringBuilder()
-                .append(DateUtil.formatDateTime(new Date())).append(" ")
+                .append(DateUtil.formatDateTime(LocalDateTime.now())).append(" ")
                 .append("[").append(callInfo.getClassName()).append("#").append(callInfo.getMethodName()).append("]").append("-")
                 .append("[").append(callInfo.getLineNumber()).append("]").append("-")
                 .append("[").append(Thread.currentThread().getName()).append("]").append(" ")
