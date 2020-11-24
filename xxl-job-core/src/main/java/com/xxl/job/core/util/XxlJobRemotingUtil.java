@@ -1,6 +1,8 @@
 package com.xxl.job.core.util;
 
+import com.fasterxml.jackson.databind.JavaType;
 import com.xxl.job.core.biz.model.ReturnT;
+import net.dreamlu.mica.core.utils.JsonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,9 +12,9 @@ import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-import java.util.Map;
 
 /**
  * @author xuxueli 2018-11-25 00:55:31
@@ -20,7 +22,6 @@ import java.util.Map;
 public class XxlJobRemotingUtil {
     private static Logger logger = LoggerFactory.getLogger(XxlJobRemotingUtil.class);
     public static final String XXL_JOB_ACCESS_TOKEN = "XXL-JOB-ACCESS-TOKEN";
-
 
     // trust-https start
     private static void trustAllHosts(HttpsURLConnection connection) {
@@ -35,17 +36,19 @@ public class XxlJobRemotingUtil {
         }
         connection.setHostnameVerifier((hostname, session) -> true);
     }
+
     private static final TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager() {
         public java.security.cert.X509Certificate[] getAcceptedIssuers() {
             return new java.security.cert.X509Certificate[]{};
         }
+
         public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
         }
+
         public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
         }
     }};
     // trust-https end
-
 
     /**
      * post
@@ -54,10 +57,10 @@ public class XxlJobRemotingUtil {
      * @param accessToken
      * @param timeout
      * @param requestObj
-     * @param returnTargClassOfT
+     * @param returnClassOfT
      * @return
      */
-    public static ReturnT postBody(String url, String accessToken, int timeout, Object requestObj, Class returnTargClassOfT) {
+    public static ReturnT postBody(String url, String accessToken, int timeout, Object requestObj, Class<?> returnClassOfT) {
         HttpURLConnection connection = null;
         BufferedReader bufferedReader = null;
         try {
@@ -83,7 +86,7 @@ public class XxlJobRemotingUtil {
             connection.setRequestProperty("Content-Type", "application/json;charset=UTF-8");
             connection.setRequestProperty("Accept-Charset", "application/json;charset=UTF-8");
 
-            if(accessToken!=null && accessToken.trim().length()>0){
+            if (accessToken != null && accessToken.trim().length() > 0) {
                 connection.setRequestProperty(XXL_JOB_ACCESS_TOKEN, accessToken);
             }
 
@@ -92,29 +95,20 @@ public class XxlJobRemotingUtil {
 
             // write requestBody
             if (requestObj != null) {
-                String requestBody = GsonTool.toJson(requestObj);
-
                 DataOutputStream dataOutputStream = new DataOutputStream(connection.getOutputStream());
-                dataOutputStream.write(requestBody.getBytes("UTF-8"));
+                dataOutputStream.write(JsonUtil.toJsonAsBytes(requestObj));
                 dataOutputStream.flush();
                 dataOutputStream.close();
             }
 
-            /*byte[] requestBodyBytes = requestBody.getBytes("UTF-8");
-            connection.setRequestProperty("Content-Length", String.valueOf(requestBodyBytes.length));
-            OutputStream outwritestream = connection.getOutputStream();
-            outwritestream.write(requestBodyBytes);
-            outwritestream.flush();
-            outwritestream.close();*/
-
             // valid StatusCode
             int statusCode = connection.getResponseCode();
             if (statusCode != 200) {
-                return new ReturnT<String>(ReturnT.FAIL_CODE, "xxl-rpc remoting fail, StatusCode("+ statusCode +") invalid. for url : " + url);
+                return new ReturnT<String>(ReturnT.FAIL_CODE, "xxl-rpc remoting fail, StatusCode(" + statusCode + ") invalid. for url : " + url);
             }
 
             // result
-            bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
+            bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8));
             StringBuilder result = new StringBuilder();
             String line;
             while ((line = bufferedReader.readLine()) != null) {
@@ -124,14 +118,17 @@ public class XxlJobRemotingUtil {
 
             // parse returnT
             try {
-                return GsonTool.fromJson(resultJson, ReturnT.class, returnTargClassOfT);
+                JavaType javaType = JsonUtil.getInstance()
+                        .getTypeFactory()
+                        .constructParametricType(ReturnT.class, returnClassOfT);
+                return JsonUtil.readValue(resultJson, javaType);
             } catch (Exception e) {
-                logger.error("xxl-rpc remoting (url="+url+") response content invalid("+ resultJson +").", e);
-                return new ReturnT<String>(ReturnT.FAIL_CODE, "xxl-rpc remoting (url="+url+") response content invalid("+ resultJson +").");
+                logger.error("xxl-rpc remoting (url=" + url + ") response content invalid(" + resultJson + ").", e);
+                return new ReturnT<String>(ReturnT.FAIL_CODE, "xxl-rpc remoting (url=" + url + ") response content invalid(" + resultJson + ").");
             }
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-            return new ReturnT<String>(ReturnT.FAIL_CODE, "xxl-rpc remoting error("+ e.getMessage() +"), for url : " + url);
+            return new ReturnT<String>(ReturnT.FAIL_CODE, "xxl-rpc remoting error(" + e.getMessage() + "), for url : " + url);
         } finally {
             try {
                 if (bufferedReader != null) {

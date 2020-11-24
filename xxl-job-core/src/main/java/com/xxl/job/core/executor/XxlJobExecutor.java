@@ -4,7 +4,6 @@ import com.xxl.job.core.biz.AdminBiz;
 import com.xxl.job.core.biz.client.AdminBizClient;
 import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.log.XxlJobFileAppender;
-import com.xxl.job.core.server.EmbedServer;
 import com.xxl.job.core.thread.JobLogFileCleanThread;
 import com.xxl.job.core.thread.JobThread;
 import com.xxl.job.core.thread.TriggerCallbackThread;
@@ -82,9 +81,6 @@ public class XxlJobExecutor  {
         initEmbedServer(address, ip, port, appname, accessToken);
     }
     public void destroy(){
-        // destory executor-server
-        stopEmbedServer();
-
         // destory jobThreadRepository
         if (jobThreadRepository.size() > 0) {
             for (Map.Entry<Integer, JobThread> item: jobThreadRepository.entrySet()) {
@@ -102,13 +98,11 @@ public class XxlJobExecutor  {
         }
         jobHandlerRepository.clear();
 
-
         // destory JobLogFileCleanThread
         JobLogFileCleanThread.getInstance().toStop();
 
         // destory TriggerCallbackThread
         TriggerCallbackThread.getInstance().toStop();
-
     }
 
 
@@ -133,9 +127,6 @@ public class XxlJobExecutor  {
         return adminBizList;
     }
 
-    // ---------------------- executor-server (rpc provider) ----------------------
-    private EmbedServer embedServer = null;
-
     private void initEmbedServer(String address, String ip, int port, String appname, String accessToken) throws Exception {
         // fill ip port
         port = port>0?port: NetUtil.findAvailablePort(9999);
@@ -149,27 +140,7 @@ public class XxlJobExecutor  {
             address = address.replace("{server_ip}", ip);
 
         }
-        embedServer = new EmbedServer();
-        if (integratedSpringBoot) {
-            embedServer.startRegistry(appname, address);
-            return;
-        }
-        // start
-        embedServer.start(address, port, appname, accessToken);
     }
-
-    private void stopEmbedServer() {
-        if (integratedSpringBoot) {
-            return;
-        }
-        // stop provider factory
-        try {
-            embedServer.stop();
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-        }
-    }
-
 
     // ---------------------- job handler repository ----------------------
     private static ConcurrentMap<String, IJobHandler> jobHandlerRepository = new ConcurrentHashMap<String, IJobHandler>();
@@ -180,7 +151,6 @@ public class XxlJobExecutor  {
         logger.info(">>>>>>>>>>> xxl-job register jobhandler success, name:{}, jobHandler:{}", name, jobHandler);
         return jobHandlerRepository.put(name, jobHandler);
     }
-
 
     // ---------------------- job thread repository ----------------------
     private static ConcurrentMap<Integer, JobThread> jobThreadRepository = new ConcurrentHashMap<Integer, JobThread>();

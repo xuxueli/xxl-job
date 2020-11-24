@@ -1,4 +1,4 @@
-package com.xxl.job.core;
+package com.xxl.job.core.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -23,7 +23,7 @@ public class XxlJobProperties {
         private String accessToken;
         private String logPath;
         private Integer logRetentionDays = 30;
-        private boolean integratedSpringBoot;
+        private Boolean integratedSpringBoot;
         private String address;
     }
 }

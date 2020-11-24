@@ -1,6 +1,5 @@
-package com.xxl.job.core.autoconfigure;
+package com.xxl.job.core.config;
 
-import com.xxl.job.core.XxlJobProperties;
 import com.xxl.job.core.endpoint.ExecuctorEndpoint;
 import com.xxl.job.core.executor.impl.XxlJobSpringExecutor;
 import lombok.extern.slf4j.Slf4j;
@@ -9,11 +8,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
-
-@Configuration
-@EnableConfigurationProperties({XxlJobProperties.class})
 @Slf4j
+@Configuration(proxyBeanMethods = false)
 @Import({ExecuctorEndpoint.class})
+@EnableConfigurationProperties({XxlJobProperties.class})
 public class XxlJobAutoConfiguration {
 
     @Bean(initMethod = "start", destroyMethod = "destroy")

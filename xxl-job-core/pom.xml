@@ -14,14 +14,16 @@
 	<url>https://www.xuxueli.com/</url>
 
 	<dependencies>
-		<!-- ********************** plugin ********************** -->
+		<dependency>
+			<groupId>net.dreamlu</groupId>
+			<artifactId>mica-core</artifactId>
+		</dependency>
 		<!-- groovy-all -->
 		<dependency>
 			<groupId>org.codehaus.groovy</groupId>
 			<artifactId>groovy</artifactId>
 			<version>${groovy.version}</version>
 		</dependency>
-
 		<!-- spring-context -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -29,7 +31,6 @@
 			<version>${spring.version}</version>
 			<scope>provided</scope>
 		</dependency>
-
 		<!-- ********************** base ********************** -->
 		<!-- slf4j -->
 		<dependency>
@@ -70,13 +71,6 @@
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<version>1.18.8</version>
-			<scope>provided</scope>
-		</dependency>
-		<!-- javax.annotation-api -->
-		<dependency>
-			<groupId>javax.annotation</groupId>
-			<artifactId>javax.annotation-api</artifactId>
-			<version>${javax.annotation-api.version}</version>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>
