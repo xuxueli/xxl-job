@@ -24,6 +24,13 @@
             <artifactId>slf4j-log4j12</artifactId>
             <version>${slf4j-api.version}</version>
         </dependency>
+        <!-- junit -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
 
         <!-- xxl-job-core -->
         <dependency>
