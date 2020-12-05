@@ -27,6 +27,13 @@
 
 	<!-- pace -->
 	<link rel="stylesheet" href="${request.contextPath}/static/adminlte/bower_components/PACE/themes/blue/pace-theme-flash.css">
+	<link rel="stylesheet" href="${request.contextPath}/static/adminlte/bower_components/select2/css/select2.min.css" />
+
+	<style>
+		.row-pd-sm {
+			padding: 5px 0;
+		}
+	</style>
 
 	<#-- i18n -->
 	<#global I18n = I18nUtil.getMultString()?eval />
@@ -44,6 +51,8 @@
 	<script src="${request.contextPath}/static/adminlte/dist/js/adminlte.min.js"></script>
 	<!-- jquery.slimscroll -->
 	<script src="${request.contextPath}/static/adminlte/bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+	<!-- select2 -->
+	<script src="${request.contextPath}/static/adminlte/bower_components/select2/js/select2.min.js"></script>
 
     <!-- pace -->
     <script src="${request.contextPath}/static/adminlte/bower_components/PACE/pace.min.js"></script>
