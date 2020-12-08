@@ -12,26 +12,28 @@ import java.util.List;
 @Mapper
 public interface XxlJobGroupDao {
 
-    public List<XxlJobGroup> findAll();
+    List<XxlJobGroup> findAll();
 
-    public List<XxlJobGroup> findByAddressType(@Param("addressType") int addressType);
+    List<XxlJobGroup> findByAddressType(@Param("addressType") int addressType);
 
-    public int save(XxlJobGroup xxlJobGroup);
+    XxlJobGroup findByAppName(@Param("appName") String appName);
 
-    public int update(XxlJobGroup xxlJobGroup);
+    int save(XxlJobGroup xxlJobGroup);
 
-    public int remove(@Param("id") int id);
+    int update(XxlJobGroup xxlJobGroup);
 
-    public XxlJobGroup load(@Param("id") int id);
+    int remove(@Param("id") int id);
 
-    public List<XxlJobGroup> pageList(@Param("offset") int offset,
-                                      @Param("pagesize") int pagesize,
-                                      @Param("appname") String appname,
-                                      @Param("title") String title);
+    XxlJobGroup load(@Param("id") int id);
 
-    public int pageListCount(@Param("offset") int offset,
-                             @Param("pagesize") int pagesize,
-                             @Param("appname") String appname,
-                             @Param("title") String title);
+    List<XxlJobGroup> pageList(@Param("offset") int offset,
+                               @Param("pagesize") int pagesize,
+                               @Param("appname") String appname,
+                               @Param("title") String title);
+
+    int pageListCount(@Param("offset") int offset,
+                      @Param("pagesize") int pagesize,
+                      @Param("appname") String appname,
+                      @Param("title") String title);
 
 }

@@ -1,6 +1,7 @@
 package com.xxl.job.core.biz;
 
 import com.xxl.job.core.biz.model.HandleCallbackParam;
+import com.xxl.job.core.biz.model.JobGroupParam;
 import com.xxl.job.core.biz.model.RegistryParam;
 import com.xxl.job.core.biz.model.ReturnT;
 
@@ -43,5 +44,13 @@ public interface AdminBiz {
 
     // ---------------------- biz (custome) ----------------------
     // group、job ... manage
+
+    /**
+     * registryGroup
+     *
+     * @param param JobGroupParam
+     * @return ReturnT
+     */
+    ReturnT<String> registryGroup(JobGroupParam param);
 
 }
