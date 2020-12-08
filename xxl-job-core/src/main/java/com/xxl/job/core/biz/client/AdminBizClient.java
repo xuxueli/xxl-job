@@ -2,6 +2,7 @@ package com.xxl.job.core.biz.client;
 
 import com.xxl.job.core.biz.AdminBiz;
 import com.xxl.job.core.biz.model.HandleCallbackParam;
+import com.xxl.job.core.biz.model.JobGroupParam;
 import com.xxl.job.core.biz.model.RegistryParam;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.util.XxlJobRemotingUtil;
@@ -45,6 +46,11 @@ public class AdminBizClient implements AdminBiz {
     @Override
     public ReturnT<String> registryRemove(RegistryParam registryParam) {
         return XxlJobRemotingUtil.postBody(addressUrl + "api/registryRemove", accessToken, timeout, registryParam, String.class);
+    }
+
+    @Override
+    public ReturnT<String> registryGroup(JobGroupParam groupParam) {
+        return XxlJobRemotingUtil.postBody(addressUrl + "api/registryGroup", accessToken, timeout, groupParam, String.class);
     }
 
 }
