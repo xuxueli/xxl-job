@@ -2,6 +2,7 @@ package com.xxl.job.core.util;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.xxl.job.core.biz.model.ReturnT;
+import net.dreamlu.mica.core.ssl.DisableValidationTrustManager;
 import net.dreamlu.mica.core.utils.JsonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,8 +14,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
 
 /**
  * @author xuxueli 2018-11-25 00:55:31
@@ -27,27 +26,16 @@ public class XxlJobRemotingUtil {
     private static void trustAllHosts(HttpsURLConnection connection) {
         try {
             SSLContext sc = SSLContext.getInstance("TLS");
-            sc.init(null, trustAllCerts, new java.security.SecureRandom());
+            X509TrustManager disabledTrustManager = DisableValidationTrustManager.INSTANCE;
+            TrustManager[] trustManagers = new TrustManager[]{disabledTrustManager};
+            sc.init(null, trustManagers, new java.security.SecureRandom());
             SSLSocketFactory newFactory = sc.getSocketFactory();
-
             connection.setSSLSocketFactory(newFactory);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
         connection.setHostnameVerifier((hostname, session) -> true);
     }
-
-    private static final TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager() {
-        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-            return new java.security.cert.X509Certificate[]{};
-        }
-
-        public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-        }
-
-        public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-        }
-    }};
     // trust-https end
 
     /**
