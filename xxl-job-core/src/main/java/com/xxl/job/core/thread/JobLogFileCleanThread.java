@@ -34,71 +34,68 @@ public class JobLogFileCleanThread {
             return;
         }
 
-        localThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (!toStop) {
-                    try {
-                        // clean log dir, over logRetentionDays
-                        File[] childDirs = new File(XxlJobFileAppender.getLogPath()).listFiles();
-                        if (childDirs!=null && childDirs.length>0) {
+        localThread = new Thread(() -> {
+            while (!toStop) {
+                try {
+                    // clean log dir, over logRetentionDays
+                    File[] childDirs = new File(XxlJobFileAppender.getLogPath()).listFiles();
+                    if (childDirs!=null && childDirs.length>0) {
 
-                            // today
-                            Calendar todayCal = Calendar.getInstance();
-                            todayCal.set(Calendar.HOUR_OF_DAY,0);
-                            todayCal.set(Calendar.MINUTE,0);
-                            todayCal.set(Calendar.SECOND,0);
-                            todayCal.set(Calendar.MILLISECOND,0);
+                        // today
+                        Calendar todayCal = Calendar.getInstance();
+                        todayCal.set(Calendar.HOUR_OF_DAY,0);
+                        todayCal.set(Calendar.MINUTE,0);
+                        todayCal.set(Calendar.SECOND,0);
+                        todayCal.set(Calendar.MILLISECOND,0);
 
-                            Date todayDate = todayCal.getTime();
+                        Date todayDate = todayCal.getTime();
 
-                            for (File childFile: childDirs) {
+                        for (File childFile: childDirs) {
 
-                                // valid
-                                if (!childFile.isDirectory()) {
-                                    continue;
-                                }
-                                if (!childFile.getName().contains("-")) {
-                                    continue;
-                                }
-
-                                // file create date
-                                Date logFileCreateDate = null;
-                                try {
-                                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                                    logFileCreateDate = simpleDateFormat.parse(childFile.getName());
-                                } catch (ParseException e) {
-                                    logger.error(e.getMessage(), e);
-                                }
-                                if (logFileCreateDate == null) {
-                                    continue;
-                                }
-
-                                if ((todayDate.getTime()-logFileCreateDate.getTime()) >= logRetentionDays * (24 * 60 * 60 * 1000) ) {
-                                    FileUtil.deleteRecursively(childFile);
-                                }
-
+                            // valid
+                            if (!childFile.isDirectory()) {
+                                continue;
                             }
-                        }
+                            if (!childFile.getName().contains("-")) {
+                                continue;
+                            }
 
-                    } catch (Exception e) {
-                        if (!toStop) {
-                            logger.error(e.getMessage(), e);
-                        }
+                            // file create date
+                            Date logFileCreateDate = null;
+                            try {
+                                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                                logFileCreateDate = simpleDateFormat.parse(childFile.getName());
+                            } catch (ParseException e) {
+                                logger.error(e.getMessage(), e);
+                            }
+                            if (logFileCreateDate == null) {
+                                continue;
+                            }
 
+                            if ((todayDate.getTime()-logFileCreateDate.getTime()) >= logRetentionDays * (24 * 60 * 60 * 1000) ) {
+                                FileUtil.deleteRecursively(childFile);
+                            }
+
+                        }
                     }
 
-                    try {
-                        TimeUnit.DAYS.sleep(1);
-                    } catch (InterruptedException e) {
-                        if (!toStop) {
-                            logger.error(e.getMessage(), e);
-                        }
+                } catch (Exception e) {
+                    if (!toStop) {
+                        logger.error(e.getMessage(), e);
+                    }
+
+                }
+
+                try {
+                    TimeUnit.DAYS.sleep(1);
+                } catch (InterruptedException e) {
+                    if (!toStop) {
+                        logger.error(e.getMessage(), e);
                     }
                 }
-                logger.info(">>>>>>>>>>> xxl-job, executor JobLogFileCleanThread thread destory.");
-
             }
+            logger.info(">>>>>>>>>>> xxl-job, executor JobLogFileCleanThread thread destory.");
+
         });
         localThread.setDaemon(true);
         localThread.setName("xxl-job, executor JobLogFileCleanThread");

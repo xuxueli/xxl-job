@@ -48,7 +48,7 @@ public class XxlJobRemotingUtil {
      * @param returnClassOfT
      * @return
      */
-    public static ReturnT postBody(String url, String accessToken, int timeout, Object requestObj, Class<?> returnClassOfT) {
+    public static ReturnT<String> postBody(String url, String accessToken, int timeout, Object requestObj, Class<?> returnClassOfT) {
         HttpURLConnection connection = null;
         BufferedReader bufferedReader = null;
         try {
