@@ -9,12 +9,12 @@ import com.xxl.job.core.biz.model.RegistryParam;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.util.XxlJobRemotingUtil;
 import net.dreamlu.mica.core.utils.JsonUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
@@ -25,7 +25,7 @@ import java.util.List;
 @RequestMapping("/api")
 public class JobApiController {
 
-    @Resource
+    @Autowired
     private AdminBiz adminBiz;
 
     /**
@@ -37,7 +37,9 @@ public class JobApiController {
      */
     @RequestMapping("/{uri}")
     @PermissionLimit(limit = false)
-    public ReturnT<String> api(HttpServletRequest request, @PathVariable("uri") String uri, @RequestBody(required = false) String data) {
+    public ReturnT<String> api(HttpServletRequest request,
+                               @PathVariable("uri") String uri,
+                               @RequestBody(required = false) String data) {
         // valid
         if (!"POST".equalsIgnoreCase(request.getMethod())) {
             return new ReturnT<>(ReturnT.FAIL_CODE, "invalid request, HttpMethod not support.");

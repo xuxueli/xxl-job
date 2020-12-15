@@ -9,6 +9,9 @@ import com.xxl.job.admin.core.util.I18nUtil;
  */
 public enum TriggerTypeEnum {
 
+    /**
+     * TriggerType
+     */
     MANUAL(I18nUtil.getString("jobconf_trigger_type_manual")),
     CRON(I18nUtil.getString("jobconf_trigger_type_cron")),
     RETRY(I18nUtil.getString("jobconf_trigger_type_retry")),
@@ -16,10 +19,12 @@ public enum TriggerTypeEnum {
     API(I18nUtil.getString("jobconf_trigger_type_api")),
     MISFIRE(I18nUtil.getString("jobconf_trigger_type_misfire"));
 
-    private TriggerTypeEnum(String title){
+    TriggerTypeEnum(String title) {
         this.title = title;
     }
+
     private String title;
+
     public String getTitle() {
         return title;
     }

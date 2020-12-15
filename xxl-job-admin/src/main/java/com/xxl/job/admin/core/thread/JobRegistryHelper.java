@@ -41,7 +41,7 @@ public class JobRegistryHelper {
 				10,
 				30L,
 				TimeUnit.SECONDS,
-				new LinkedBlockingQueue<Runnable>(2000),
+				new LinkedBlockingQueue<>(2000),
 				r -> new Thread(r, "xxl-job, admin JobRegistryMonitorHelper-registryOrRemoveThreadPool-" + r.hashCode()),
 				(r, executor) -> {
 					r.run();
@@ -63,7 +63,7 @@ public class JobRegistryHelper {
 						}
 
 						// fresh online address (admin/executor)
-						HashMap<String, List<String>> appAddressMap = new HashMap<String, List<String>>();
+						HashMap<String, List<String>> appAddressMap = new HashMap<>();
 						List<XxlJobRegistry> list = XxlJobAdminConfig.getAdminConfig().getXxlJobRegistryDao().findAll(RegistryConfig.DEAD_TIMEOUT, new Date());
 						if (list != null) {
 							for (XxlJobRegistry item: list) {
@@ -71,7 +71,7 @@ public class JobRegistryHelper {
 									String appname = item.getRegistryKey();
 									List<String> registryList = appAddressMap.get(appname);
 									if (registryList == null) {
-										registryList = new ArrayList<String>();
+										registryList = new ArrayList<>();
 									}
 
 									if (!registryList.contains(item.getRegistryValue())) {

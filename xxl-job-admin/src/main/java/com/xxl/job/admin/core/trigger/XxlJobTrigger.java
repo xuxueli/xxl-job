@@ -202,12 +202,12 @@ public class XxlJobTrigger {
             runResult = new ReturnT<>(ReturnT.FAIL_CODE, Exceptions.getStackTraceAsString(e));
         }
 
-        StringBuilder runResultSB = new StringBuilder(I18nUtil.getString("jobconf_trigger_run") + "：");
-        runResultSB.append("<br>address：").append(address);
-        runResultSB.append("<br>code：").append(runResult.getCode());
-        runResultSB.append("<br>msg：").append(runResult.getMsg());
+        StringBuilder builder = new StringBuilder(I18nUtil.getString("jobconf_trigger_run") + "：");
+        builder.append("<br>address：").append(address);
+        builder.append("<br>code：").append(runResult.getCode());
+        builder.append("<br>msg：").append(runResult.getMsg());
 
-        runResult.setMsg(runResultSB.toString());
+        runResult.setMsg(builder.toString());
         return runResult;
     }
 

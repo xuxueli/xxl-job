@@ -20,8 +20,7 @@ public class FtlUtil {
     public static TemplateHashModel generateStaticModel(String packageName) {
         try {
             TemplateHashModel staticModels = wrapper.getStaticModels();
-            TemplateHashModel fileStatics = (TemplateHashModel) staticModels.get(packageName);
-            return fileStatics;
+            return (TemplateHashModel) staticModels.get(packageName);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }

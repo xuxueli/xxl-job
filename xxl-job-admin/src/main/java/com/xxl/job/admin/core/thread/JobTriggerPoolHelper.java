@@ -24,32 +24,22 @@ public class JobTriggerPoolHelper {
     private ThreadPoolExecutor fastTriggerPool = null;
     private ThreadPoolExecutor slowTriggerPool = null;
 
-    public void start(){
+    public void start() {
         fastTriggerPool = new ThreadPoolExecutor(
                 10,
                 XxlJobAdminConfig.getAdminConfig().getTriggerPoolFastMax(),
                 60L,
                 TimeUnit.SECONDS,
-                new LinkedBlockingQueue<Runnable>(1000),
-                new ThreadFactory() {
-                    @Override
-                    public Thread newThread(Runnable r) {
-                        return new Thread(r, "xxl-job, admin JobTriggerPoolHelper-fastTriggerPool-" + r.hashCode());
-                    }
-                });
+                new LinkedBlockingQueue<>(1000),
+                r -> new Thread(r, "xxl-job, admin JobTriggerPoolHelper-fastTriggerPool-" + r.hashCode()));
 
         slowTriggerPool = new ThreadPoolExecutor(
                 10,
                 XxlJobAdminConfig.getAdminConfig().getTriggerPoolSlowMax(),
                 60L,
                 TimeUnit.SECONDS,
-                new LinkedBlockingQueue<Runnable>(2000),
-                new ThreadFactory() {
-                    @Override
-                    public Thread newThread(Runnable r) {
-                        return new Thread(r, "xxl-job, admin JobTriggerPoolHelper-slowTriggerPool-" + r.hashCode());
-                    }
-                });
+                new LinkedBlockingQueue<>(2000),
+                r -> new Thread(r, "xxl-job, admin JobTriggerPoolHelper-slowTriggerPool-" + r.hashCode()));
     }
 
 
@@ -62,7 +52,7 @@ public class JobTriggerPoolHelper {
 
 
     // job timeout count
-    private volatile long minTim = System.currentTimeMillis()/60000;     // ms > min
+    private volatile long minTim = System.currentTimeMillis() / 60000;     // ms > min
     private volatile ConcurrentMap<Integer, AtomicInteger> jobTimeoutCountMap = new ConcurrentHashMap<>();
 
 
@@ -79,46 +69,42 @@ public class JobTriggerPoolHelper {
         // choose thread pool
         ThreadPoolExecutor triggerPool_ = fastTriggerPool;
         AtomicInteger jobTimeoutCount = jobTimeoutCountMap.get(jobId);
-        if (jobTimeoutCount!=null && jobTimeoutCount.get() > 10) {      // job-timeout 10 times in 1 min
+        // job-timeout 10 times in 1 min
+        if (jobTimeoutCount != null && jobTimeoutCount.get() > 10) {
             triggerPool_ = slowTriggerPool;
         }
 
         // trigger
-        triggerPool_.execute(new Runnable() {
-            @Override
-            public void run() {
+        triggerPool_.execute(() -> {
+            long start = System.currentTimeMillis();
 
-                long start = System.currentTimeMillis();
+            try {
+                // do trigger
+                XxlJobTrigger.trigger(jobId, triggerType, failRetryCount, executorShardingParam, executorParam, addressList);
+            } catch (Exception e) {
+                logger.error(e.getMessage(), e);
+            } finally {
 
-                try {
-                    // do trigger
-                    XxlJobTrigger.trigger(jobId, triggerType, failRetryCount, executorShardingParam, executorParam, addressList);
-                } catch (Exception e) {
-                    logger.error(e.getMessage(), e);
-                } finally {
+                // check timeout-count-map
+                long minTimNow = System.currentTimeMillis() / 60000;
+                if (minTim != minTimNow) {
+                    minTim = minTimNow;
+                    jobTimeoutCountMap.clear();
+                }
 
-                    // check timeout-count-map
-                    long minTim_now = System.currentTimeMillis()/60000;
-                    if (minTim != minTim_now) {
-                        minTim = minTim_now;
-                        jobTimeoutCountMap.clear();
+                // incr timeout-count-map
+                long cost = System.currentTimeMillis() - start;
+                if (cost > 500) {       // ob-timeout threshold 500ms
+                    AtomicInteger timeoutCount = jobTimeoutCountMap.putIfAbsent(jobId, new AtomicInteger(1));
+                    if (timeoutCount != null) {
+                        timeoutCount.incrementAndGet();
                     }
-
-                    // incr timeout-count-map
-                    long cost = System.currentTimeMillis()-start;
-                    if (cost > 500) {       // ob-timeout threshold 500ms
-                        AtomicInteger timeoutCount = jobTimeoutCountMap.putIfAbsent(jobId, new AtomicInteger(1));
-                        if (timeoutCount != null) {
-                            timeoutCount.incrementAndGet();
-                        }
-                    }
-
                 }
 
             }
+
         });
     }
-
 
 
     // ---------------------- helper ----------------------
@@ -128,6 +114,7 @@ public class JobTriggerPoolHelper {
     public static void toStart() {
         helper.start();
     }
+
     public static void toStop() {
         helper.stop();
     }
@@ -135,13 +122,11 @@ public class JobTriggerPoolHelper {
     /**
      * @param jobId
      * @param triggerType
-     * @param failRetryCount
-     * 			>=0: use this param
-     * 			<0: use param from job info config
+     * @param failRetryCount        >=0: use this param
+     *                              <0: use param from job info config
      * @param executorShardingParam
-     * @param executorParam
-     *          null: use job param
-     *          not null: cover job param
+     * @param executorParam         null: use job param
+     *                              not null: cover job param
      */
     public static void trigger(int jobId, TriggerTypeEnum triggerType, int failRetryCount, String executorShardingParam, String executorParam, String addressList) {
         helper.addTrigger(jobId, triggerType, failRetryCount, executorShardingParam, executorParam, addressList);

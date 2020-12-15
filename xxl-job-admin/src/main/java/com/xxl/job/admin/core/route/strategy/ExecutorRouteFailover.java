@@ -35,7 +35,6 @@ public class ExecutorRouteFailover extends ExecutorRouter {
 
             // beat success
             if (beatResult.getCode() == ReturnT.SUCCESS_CODE) {
-
                 beatResult.setMsg(beatResultSB.toString());
                 beatResult.setContent(address);
                 return beatResult;

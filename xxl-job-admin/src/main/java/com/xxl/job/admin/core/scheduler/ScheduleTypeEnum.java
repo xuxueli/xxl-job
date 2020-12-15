@@ -7,6 +7,9 @@ import com.xxl.job.admin.core.util.I18nUtil;
  */
 public enum ScheduleTypeEnum {
 
+    /**
+     * none
+     */
     NONE(I18nUtil.getString("schedule_type_none")),
 
     /**
@@ -34,8 +37,8 @@ public enum ScheduleTypeEnum {
         return title;
     }
 
-    public static ScheduleTypeEnum match(String name, ScheduleTypeEnum defaultItem){
-        for (ScheduleTypeEnum item: ScheduleTypeEnum.values()) {
+    public static ScheduleTypeEnum match(String name, ScheduleTypeEnum defaultItem) {
+        for (ScheduleTypeEnum item : ScheduleTypeEnum.values()) {
             if (item.name().equals(name)) {
                 return item;
             }

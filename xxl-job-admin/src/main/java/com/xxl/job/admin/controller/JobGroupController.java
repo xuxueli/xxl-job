@@ -8,13 +8,13 @@ import com.xxl.job.admin.dao.XxlJobInfoDao;
 import com.xxl.job.admin.dao.XxlJobRegistryDao;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.enums.RegistryConfig;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
@@ -26,15 +26,15 @@ import java.util.*;
 @RequestMapping("/jobgroup")
 public class JobGroupController {
 
-	@Resource
+	@Autowired
 	public XxlJobInfoDao xxlJobInfoDao;
-	@Resource
+	@Autowired
 	public XxlJobGroupDao xxlJobGroupDao;
-	@Resource
+	@Autowired
 	private XxlJobRegistryDao xxlJobRegistryDao;
 
-	@RequestMapping
-	public String index(Model model) {
+	@GetMapping
+	public String index() {
 		return "jobgroup/jobgroup.index";
 	}
 
