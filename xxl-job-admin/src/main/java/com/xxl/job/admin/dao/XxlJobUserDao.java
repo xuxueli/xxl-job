@@ -3,6 +3,7 @@ package com.xxl.job.admin.dao;
 import com.xxl.job.admin.core.model.XxlJobUser;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+
 import java.util.List;
 
 /**
@@ -25,7 +26,7 @@ public interface XxlJobUserDao {
 	public int save(XxlJobUser xxlJobUser);
 
 	public int update(XxlJobUser xxlJobUser);
-	
+
 	public int delete(@Param("id") int id);
 
 }
