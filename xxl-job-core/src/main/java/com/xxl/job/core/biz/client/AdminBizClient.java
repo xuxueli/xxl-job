@@ -15,23 +15,18 @@ import java.util.List;
  * @author xuxueli 2017-07-28 22:14:52
  */
 public class AdminBizClient implements AdminBiz {
-
-    public AdminBizClient() {
-    }
+    private String addressUrl;
+    private final String accessToken;
+    private final int timeout = 3;
 
     public AdminBizClient(String addressUrl, String accessToken) {
         this.addressUrl = addressUrl;
         this.accessToken = accessToken;
-
         // valid
         if (!this.addressUrl.endsWith("/")) {
             this.addressUrl = this.addressUrl + "/";
         }
     }
-
-    private String addressUrl;
-    private String accessToken;
-    private int timeout = 3;
 
     @Override
     public ReturnT<String> callback(List<HandleCallbackParam> callbackParamList) {

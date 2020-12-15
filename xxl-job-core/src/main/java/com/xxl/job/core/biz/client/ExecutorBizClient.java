@@ -10,9 +10,9 @@ import com.xxl.job.core.util.XxlJobRemotingUtil;
  * @author xuxueli 2017-07-28 22:14:52
  */
 public class ExecutorBizClient implements ExecutorBiz {
-
-    public ExecutorBizClient() {
-    }
+    private String addressUrl;
+    private final String accessToken;
+    private final int timeout = 3;
 
     public ExecutorBizClient(String addressUrl, String accessToken) {
         this.addressUrl = addressUrl;
@@ -23,11 +23,6 @@ public class ExecutorBizClient implements ExecutorBiz {
             this.addressUrl = this.addressUrl + "/";
         }
     }
-
-    private String addressUrl;
-    private String accessToken;
-    private int timeout = 3;
-
 
     @Override
     public ReturnT<String> beat() {
