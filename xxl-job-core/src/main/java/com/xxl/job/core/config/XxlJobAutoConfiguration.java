@@ -1,8 +1,10 @@
 package com.xxl.job.core.config;
 
+import com.xxl.job.core.biz.AdminAddressesResolver;
 import com.xxl.job.core.endpoint.ExecuctorEndpoint;
 import com.xxl.job.core.executor.impl.XxlJobSpringExecutor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -18,13 +20,14 @@ import org.springframework.context.annotation.Import;
 })
 public class XxlJobAutoConfiguration {
 
-    @Bean(initMethod = "start", destroyMethod = "destroy")
+    @Bean
     public XxlJobSpringExecutor xxlJobSpringExecutor(ServerProperties serverProperties,
-                                                     XxlJobProperties xxlJobProperties) {
+                                                     XxlJobProperties xxlJobProperties,
+                                                     ObjectProvider<AdminAddressesResolver> objectProvider) {
         XxlJobProperties.AdminProperties admin = xxlJobProperties.getAdmin();
         XxlJobProperties.ExecutorProperties executor = xxlJobProperties.getExecutor();
         XxlJobSpringExecutor xxlJobSpringExecutor = new XxlJobSpringExecutor();
-        xxlJobSpringExecutor.setAdminAddresses(xxlJobProperties.getAdmin().getAddresses());
+        xxlJobSpringExecutor.setAdminAddresses(admin.getAddresses());
         xxlJobSpringExecutor.setAppname(executor.getAppname());
         xxlJobSpringExecutor.setAddress(executor.getAddress());
         xxlJobSpringExecutor.setIp(executor.getIp());
