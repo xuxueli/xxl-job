@@ -1,14 +1,12 @@
 package com.xxl.job.core.endpoint;
 
 import com.xxl.job.core.biz.ExecutorBiz;
-import com.xxl.job.core.biz.impl.ExecutorBizImpl;
 import com.xxl.job.core.biz.model.IdleBeatParam;
 import com.xxl.job.core.biz.model.KillParam;
 import com.xxl.job.core.biz.model.LogParam;
 import com.xxl.job.core.biz.model.TriggerParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.actuate.endpoint.web.annotation.RestControllerEndpoint;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
