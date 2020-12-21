@@ -22,7 +22,7 @@ public class XxlJobProperties {
     @Getter
     @Setter
     public static class ExecutorProperties {
-        private String appname;
+        private String appName;
         private String ip;
         private String logPath;
         private Integer logRetentionDays = 30;
