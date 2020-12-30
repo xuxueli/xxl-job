@@ -281,7 +281,7 @@ public class JobScheduleHelper {
     private void refreshNextValidTime(XxlJobInfo jobInfo, Date fromTime) throws Exception {
         Date nextValidTime = generateNextValidTime(jobInfo, fromTime);
         if (nextValidTime != null) {
-            jobInfo.setTriggerLastTime(jobInfo.getTriggerNextTime());
+            jobInfo.setTriggerLastTime(fromTime.getTime());
             jobInfo.setTriggerNextTime(nextValidTime.getTime());
         } else {
             jobInfo.setTriggerStatus(0);
