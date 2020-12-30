@@ -222,16 +222,16 @@ public class JobScheduleHelper {
             @Override
             public void run() {
 
-                // align second
-                try {
-                    TimeUnit.MILLISECONDS.sleep(1000 - System.currentTimeMillis()%1000 );
-                } catch (InterruptedException e) {
-                    if (!ringThreadToStop) {
-                        logger.error(e.getMessage(), e);
-                    }
-                }
-
                 while (!ringThreadToStop) {
+
+                    // align second
+                    try {
+                        TimeUnit.MILLISECONDS.sleep(1000 - System.currentTimeMillis() % 1000);
+                    } catch (InterruptedException e) {
+                        if (!ringThreadToStop) {
+                            logger.error(e.getMessage(), e);
+                        }
+                    }
 
                     try {
                         // second data
@@ -258,15 +258,6 @@ public class JobScheduleHelper {
                     } catch (Exception e) {
                         if (!ringThreadToStop) {
                             logger.error(">>>>>>>>>>> xxl-job, JobScheduleHelper#ringThread error:{}", e);
-                        }
-                    }
-
-                    // next second, align second
-                    try {
-                        TimeUnit.MILLISECONDS.sleep(1000 - System.currentTimeMillis()%1000);
-                    } catch (InterruptedException e) {
-                        if (!ringThreadToStop) {
-                            logger.error(e.getMessage(), e);
                         }
                     }
                 }
