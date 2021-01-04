@@ -67,6 +67,9 @@ public class XxlJobAdminConfig implements InitializingBean, DisposableBean {
     @Value("${xxl.job.logretentiondays}")
     private int logretentiondays;
 
+    @Value("${xxl.job.httpurlconnection.timeout}")
+    private int timeout;
+
     // dao, service
 
     @Resource
@@ -121,6 +124,14 @@ public class XxlJobAdminConfig implements InitializingBean, DisposableBean {
             return -1;  // Limit greater than or equal to 7, otherwise close
         }
         return logretentiondays;
+    }
+
+    /**
+     * httpconnection timeout seconds
+     *
+     **/
+    public int getTimeout(){
+        return timeout;
     }
 
     public XxlJobLogDao getXxlJobLogDao() {

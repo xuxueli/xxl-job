@@ -14,6 +14,10 @@ public class ExecutorBizClient implements ExecutorBiz {
     public ExecutorBizClient() {
     }
     public ExecutorBizClient(String addressUrl, String accessToken) {
+        this(addressUrl, accessToken, 3);
+    }
+
+    public ExecutorBizClient(String addressUrl, String accessToken, int timeout) {
         this.addressUrl = addressUrl;
         this.accessToken = accessToken;
 
@@ -21,11 +25,17 @@ public class ExecutorBizClient implements ExecutorBiz {
         if (!this.addressUrl.endsWith("/")) {
             this.addressUrl = this.addressUrl + "/";
         }
+
+        if (timeout > 0) {
+            this.timeout = timeout;
+        } else {
+            this.timeout = 3;
+        }
     }
 
     private String addressUrl ;
     private String accessToken;
-    private int timeout = 3;
+    private int timeout;
 
 
     @Override
