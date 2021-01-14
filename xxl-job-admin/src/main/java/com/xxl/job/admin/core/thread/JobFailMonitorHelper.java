@@ -80,7 +80,7 @@ public class JobFailMonitorHelper {
 								} else {
 									newAlarmStatus = 1;
 								}
-
+								failAlarmWebHook(info);
 								XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().updateAlarmStatus(failLogId, -1, newAlarmStatus);
 							}
 						}
@@ -195,7 +195,16 @@ public class JobFailMonitorHelper {
 		// TODO, custom alarm strategy, such as sms
 
 
+
+
 		return alarmResult;
+	}
+
+	private void failAlarmWebHook(XxlJobInfo info) {
+		if (info != null) {
+			XxlJobGroup group = XxlJobAdminConfig.getAdminConfig().getXxlJobGroupDao().load(Integer.valueOf(info.getJobGroup()));
+			XxlJobAdminConfig.getAdminConfig().invokeWebHook(group!=null?group.getTitle():"null", info.getId()+"", info.getJobDesc());
+		}
 	}
 
 }
