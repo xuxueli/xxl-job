@@ -8,7 +8,12 @@ import com.xxl.job.core.biz.AdminBiz;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
 
@@ -46,6 +51,15 @@ public class XxlJobAdminConfig implements InitializingBean{
     @Value("${spring.mail.username}")
     private String emailUserName;
 
+
+    @Value("${web_hook.url}")
+    private String webHookUrl;
+
+    @Value("${web_hook.method}")
+    private String webHookMethod;
+
+    @Value("${web_hook.data}")
+    private String webHookData;
     // dao, service
 
     @Resource
@@ -105,4 +119,39 @@ public class XxlJobAdminConfig implements InitializingBean{
         return mailSender;
     }
 
+    public void invokeWebHook(String... params) {
+        if (webHookUrl==null || webHookUrl.isEmpty() || webHookMethod == null || webHookMethod.isEmpty()) {
+            return;
+        }
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
+        if ("POST".equalsIgnoreCase(webHookMethod)) {
+            String data = (webHookData==null || webHookData.isEmpty())? "{}" : format(webHookData, params);
+            HttpEntity<String> entity = new HttpEntity<>(data, headers);
+            restTemplate().postForObject(webHookUrl, entity, String.class);
+        }
+        else if ("GET".equalsIgnoreCase(webHookMethod)) {
+            restTemplate().getForObject(webHookUrl, String.class, params);
+        }
+    }
+
+    private RestTemplate restTemplate() {
+        SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
+        requestFactory.setConnectTimeout(1000);
+        requestFactory.setReadTimeout(1000);
+       return new RestTemplate(requestFactory);
+    }
+
+    private String format(String data, String... params) {
+        if (params == null || params.length <= 0) {
+            return data;
+        }
+        for (int i =0 ; i < params.length; i++) {
+            data = data.replaceFirst("\\{"+i+"\\}", params[i]);
+        }
+        return data;
+    }
+
+
 }
+
