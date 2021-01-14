@@ -1,5 +1,6 @@
 package com.xxl.job.core.executor;
 
+import com.xxl.job.core.biz.AdminAddressesResolver;
 import com.xxl.job.core.biz.AdminBiz;
 import com.xxl.job.core.biz.client.AdminBizClient;
 import com.xxl.job.core.biz.model.JobGroupParam;
@@ -28,6 +29,7 @@ public class XxlJobExecutor {
 
     // ---------------------- param ----------------------
     private String adminAddresses;
+    private AdminAddressesResolver addressesResolver;
     private String accessToken;
     private String appname;
     private String address;
@@ -38,6 +40,10 @@ public class XxlJobExecutor {
 
     public void setAdminAddresses(String adminAddresses) {
         this.adminAddresses = adminAddresses;
+    }
+
+    public void setAddressesResolver(AdminAddressesResolver addressesResolver) {
+        this.addressesResolver = addressesResolver;
     }
 
     public void setAccessToken(String accessToken) {
@@ -71,7 +77,6 @@ public class XxlJobExecutor {
 
     // ---------------------- start + stop ----------------------
     public void start() throws Exception {
-
         // init logpath
         XxlJobFileAppender.initLogPath(logPath);
 
@@ -125,7 +130,7 @@ public class XxlJobExecutor {
         if (adminAddresses != null && adminAddresses.trim().length() > 0) {
             for (String address : adminAddresses.trim().split(",")) {
                 if (address != null && address.trim().length() > 0) {
-                    AdminBiz adminBiz = new AdminBizClient(address.trim(), accessToken);
+                    AdminBiz adminBiz = new AdminBizClient(address.trim(), accessToken, addressesResolver);
                     if (adminBizList == null) {
                         adminBizList = new ArrayList<>();
                     }

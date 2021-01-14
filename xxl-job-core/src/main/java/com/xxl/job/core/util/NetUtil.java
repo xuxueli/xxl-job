@@ -1,5 +1,6 @@
 package com.xxl.job.core.util;
 
+import net.dreamlu.mica.core.utils.IoUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,7 +48,7 @@ public class NetUtil {
      * @return
      */
     public static boolean isPortUsed(int port) {
-        boolean used = false;
+        boolean used;
         ServerSocket serverSocket = null;
         try {
             serverSocket = new ServerSocket(port);
@@ -56,13 +57,7 @@ public class NetUtil {
             logger.info(">>>>>>>>>>> xxl-rpc, port[{}] is in use.", port);
             used = true;
         } finally {
-            if (serverSocket != null) {
-                try {
-                    serverSocket.close();
-                } catch (IOException e) {
-                    logger.info("");
-                }
-            }
+            IoUtil.closeQuietly(serverSocket);
         }
         return used;
     }

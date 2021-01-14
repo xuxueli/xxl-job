@@ -2,6 +2,7 @@ package com.xxl.job.core.config;
 
 import com.xxl.job.core.biz.AdminAddressesResolver;
 import com.xxl.job.core.biz.ExecutorBiz;
+import com.xxl.job.core.biz.impl.DefaultAdminAddressesResolver;
 import com.xxl.job.core.biz.impl.ExecutorBizImpl;
 import com.xxl.job.core.endpoint.ExecutorEndpoint;
 import com.xxl.job.core.executor.impl.XxlJobSpringExecutor;
@@ -37,9 +38,12 @@ public class XxlJobAutoConfiguration {
                                                      XxlJobProperties xxlJobProperties,
                                                      ObjectProvider<AdminAddressesResolver> objectProvider) {
         XxlJobProperties.AdminProperties admin = xxlJobProperties.getAdmin();
+        String adminAddresses = admin.getAddresses();
         XxlJobProperties.ExecutorProperties executor = xxlJobProperties.getExecutor();
         XxlJobSpringExecutor xxlJobSpringExecutor = new XxlJobSpringExecutor();
-        xxlJobSpringExecutor.setAdminAddresses(admin.getAddresses());
+        AdminAddressesResolver addressesResolver = objectProvider.getIfAvailable(() -> new DefaultAdminAddressesResolver(adminAddresses));
+        xxlJobSpringExecutor.setAdminAddresses(adminAddresses);
+        xxlJobSpringExecutor.setAddressesResolver(addressesResolver);
         xxlJobSpringExecutor.setAppname(executor.getAppName());
         xxlJobSpringExecutor.setAddress(executor.getAddress());
         xxlJobSpringExecutor.setIp(executor.getIp());

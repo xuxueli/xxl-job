@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
  * @author L.cm
  */
 @RequiredArgsConstructor
-@RestControllerEndpoint(id = "xxl-job")
+@RestControllerEndpoint(id = "jobs")
 public class ExecutorEndpoint {
     private final ExecutorBiz executorBiz;
 
@@ -44,4 +44,5 @@ public class ExecutorEndpoint {
     public void log(@RequestBody LogParam param) {
         executorBiz.log(param);
     }
+
 }

@@ -1,5 +1,6 @@
 package com.xxl.job.core.biz.client;
 
+import com.xxl.job.core.biz.AdminAddressesResolver;
 import com.xxl.job.core.biz.AdminBiz;
 import com.xxl.job.core.biz.model.HandleCallbackParam;
 import com.xxl.job.core.biz.model.JobGroupParam;
@@ -8,6 +9,7 @@ import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.util.XxlJobRemotingUtil;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * admin api test
@@ -15,21 +17,24 @@ import java.util.List;
  * @author xuxueli 2017-07-28 22:14:52
  */
 public class AdminBizClient implements AdminBiz {
-    private String addressUrl;
+    private final String addressUrl;
+    private final AdminAddressesResolver addressesResolver;
     private final String accessToken;
     private final int timeout = 3;
 
-    public AdminBizClient(String addressUrl, String accessToken) {
+    public AdminBizClient(String addressUrl,
+                          String accessToken,
+                          AdminAddressesResolver addressesResolver) {
         this.addressUrl = addressUrl;
         this.accessToken = accessToken;
-        // valid
-        if (!this.addressUrl.endsWith("/")) {
-            this.addressUrl = this.addressUrl + "/";
-        }
+        this.addressesResolver = addressesResolver;
     }
 
     @Override
     public ReturnT<String> callback(List<HandleCallbackParam> callbackParamList) {
+        Set<String> resolver = addressesResolver.resolver(addressUrl);
+
+
         return XxlJobRemotingUtil.postBody(addressUrl + "api/callback", accessToken, timeout, callbackParamList, String.class);
     }
 

@@ -14,11 +14,12 @@ public class DefaultAdminAddressesResolver implements AdminAddressesResolver {
     private final Set<String> adminList;
 
     public DefaultAdminAddressesResolver(String adminAddresses) {
-        this.adminList = StringUtil.commaDelimitedListToSet(adminAddresses);
+        this.adminList = AdminAddressesResolver.fixUrl(StringUtil.commaDelimitedListToSet(adminAddresses));
     }
 
     @Override
     public Set<String> resolver(String addresses) {
         return adminList;
     }
+
 }
