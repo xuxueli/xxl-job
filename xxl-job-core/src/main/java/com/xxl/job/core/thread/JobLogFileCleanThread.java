@@ -26,7 +26,7 @@ public class JobLogFileCleanThread {
     }
 
     private Thread localThread;
-    private volatile boolean toStop = false;
+    private volatile boolean toStop;
     public void start(final long logRetentionDays){
 
         // limit min value
@@ -34,6 +34,8 @@ public class JobLogFileCleanThread {
             return;
         }
 
+        toStop = false;
+        
         localThread = new Thread(new Runnable() {
             @Override
             public void run() {
