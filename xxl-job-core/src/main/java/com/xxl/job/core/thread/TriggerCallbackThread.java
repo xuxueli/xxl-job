@@ -45,7 +45,7 @@ public class TriggerCallbackThread {
      */
     private Thread triggerCallbackThread;
     private Thread triggerRetryCallbackThread;
-    private volatile boolean toStop = false;
+    private volatile boolean toStop;
     public void start() {
 
         // valid
@@ -54,6 +54,8 @@ public class TriggerCallbackThread {
             return;
         }
 
+        toStop = false;
+        
         // callback
         triggerCallbackThread = new Thread(new Runnable() {
 
