@@ -1,0 +1,36 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.xuxueli</groupId>
+		<artifactId>xxl-job-extension</artifactId>
+		<version>2.2.0</version>
+	</parent>
+	<artifactId>job-auto-register</artifactId>
+	<packaging>jar</packaging>
+	<name>${project.artifactId}</name>
+	<description>A distributed task scheduling framework.</description>
+	<url>https://www.xuxueli.com/</url>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.xuxueli</groupId>
+			<artifactId>xxl-job-core</artifactId>
+			<version>2.2.0</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.xuxueli</groupId>
+			<artifactId>xxl-job-admin</artifactId>
+			<version>2.2.0</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.12</version>
+			<scope>compile</scope>
+		</dependency>
+	</dependencies>
+
+</project>
