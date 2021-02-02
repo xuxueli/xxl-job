@@ -30,7 +30,8 @@ public class IpUtil {
     // ---------------------- valid ----------------------
 
     private static InetAddress toValidAddress(InetAddress address) {
-        if (address == null || address.isLoopbackAddress()) {
+        if (address == null || address.isLoopbackAddress()
+            || address.isAnyLocalAddress() || address.isLinkLocalAddress()) {
             return null;
         }
         if (address instanceof Inet6Address) {
