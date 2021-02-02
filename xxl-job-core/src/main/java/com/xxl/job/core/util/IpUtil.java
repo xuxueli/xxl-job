@@ -30,6 +30,9 @@ public class IpUtil {
     // ---------------------- valid ----------------------
 
     private static InetAddress toValidAddress(InetAddress address) {
+        if (address == null || address.isLoopbackAddress()) {
+            return null;
+        }
         if (address instanceof Inet6Address) {
             Inet6Address v6Address = (Inet6Address) address;
             if (isPreferIPV6Address()) {
@@ -53,9 +56,6 @@ public class IpUtil {
      * @return
      */
     private static boolean isValidV4Address(InetAddress address) {
-        if (address == null || address.isLoopbackAddress()) {
-            return false;
-        }
         String name = address.getHostAddress();
         boolean result = (name != null
                 && IP_PATTERN.matcher(name).matches()
