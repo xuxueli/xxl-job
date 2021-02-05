@@ -58,7 +58,6 @@ public class TaskContext implements ApplicationContextAware {
 					String jobHandler = classSimpleName + "." + methodName;
 					jobTask.setJobHandler(jobHandler);
 					// 因为没有默认值设置不了，所以增加默认值
-					jobTask.setCron("0 0 0 1 1 ?");
 					if(convertor != null) {
 						convertor.accept(value, jobTask);
 					}

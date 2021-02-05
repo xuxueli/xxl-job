@@ -13,6 +13,7 @@ import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 /**
  * @author lesl
@@ -66,18 +67,30 @@ public class JobAutoRegisterService {
 	}
 
 	private void createTaskJob(int groupId, JobTask jobTask) {
+		boolean isEmptyCron = StringUtils.isEmpty(jobTask.getCron());
 		XxlJobInfo xxlJobInfo = new XxlJobInfo();
 		xxlJobInfo.setJobGroup(groupId);
 		xxlJobInfo.setJobCron(jobTask.getCron());
+		// 如果cron为空则
+		if (isEmptyCron) {
+			xxlJobInfo.setJobCron("0 0 0 1 1 ?");
+		}
 		xxlJobInfo.setJobDesc(jobTask.getJobHandler());
-		xxlJobInfo.setExecutorRouteStrategy("FIRST");
+		// 默认使用轮询的方式
+		xxlJobInfo.setExecutorRouteStrategy("ROUND");
 		xxlJobInfo.setExecutorBlockStrategy("SERIAL_EXECUTION");
 		xxlJobInfo.setExecutorHandler(jobTask.getJobHandler());
 		xxlJobInfo.setAuthor("无");
 		xxlJobInfo.setGlueType("BEAN");
 		ReturnT<String> addResult = xxlJobService.add(xxlJobInfo);
-		if(addResult.getCode() != ReturnT.SUCCESS_CODE){
+		if (addResult.getCode() != ReturnT.SUCCESS_CODE) {
 			log.error("add task job failed, {}", addResult.getMsg());
+		}
+		// 如果cron 不为空，则直接启动
+		if(!isEmptyCron) {
+			xxlJobInfo = getTaskJobHandler(groupId, jobTask.getJobHandler());
+			assert xxlJobInfo != null;
+			xxlJobService.start(xxlJobInfo.getId());
 		}
 	}
 
@@ -85,7 +98,7 @@ public class JobAutoRegisterService {
 	public void createTaskIfAbsent(int groupId, JobAutoRegisterParam param) {
 		param.getJobTasks().forEach(jobTask -> {
 			XxlJobInfo taskJobHandler = getTaskJobHandler(groupId, jobTask.getJobHandler());
-			if(taskJobHandler == null){
+			if (taskJobHandler == null) {
 				createTaskJob(groupId, jobTask);
 			}
 		});
