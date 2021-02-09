@@ -257,17 +257,17 @@
 				AND t.handle_code = 0
 				AND t.trigger_time <![CDATA[ <= ]]> #{losedTime}
 				AND t2.id IS NULL;
-		/*
-		SELECT t.id
-		FROM xxl_job_log AS t
-		WHERE t.trigger_code = 200
-			and t.handle_code = 0
-			and t.trigger_time <![CDATA[ <= ]]> #{losedTime}
-			and t.executor_address not in (
-				SELECT t2.registry_value
-				FROM xxl_job_registry AS t2
-			)
-		*/
 	</select>
+	<!--
+	SELECT t.id
+	FROM xxl_job_log AS t
+	WHERE t.trigger_code = 200
+		and t.handle_code = 0
+		and t.trigger_time <![CDATA[ <= ]]> #{losedTime}
+		and t.executor_address not in (
+			SELECT t2.registry_value
+			FROM xxl_job_registry AS t2
+		)
+	-->
 
 </mapper>
