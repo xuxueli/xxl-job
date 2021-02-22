@@ -27,12 +27,13 @@ import java.util.concurrent.*;
  *
  * @author xuxueli 2020-04-11 21:25
  */
-public class EmbedServer {
+public class EmbedServer  implements AbstractServer{
     private static final Logger logger = LoggerFactory.getLogger(EmbedServer.class);
 
     private ExecutorBiz executorBiz;
     private Thread thread;
 
+    @Override
     public void start(final String address, final int port, final String appname, final String accessToken) {
         executorBiz = new ExecutorBizImpl();
         thread = new Thread(new Runnable() {
@@ -114,6 +115,7 @@ public class EmbedServer {
         thread.start();
     }
 
+    @Override
     public void stop() throws Exception {
         // destroy server thread
         if (thread!=null && thread.isAlive()) {
@@ -250,17 +252,7 @@ public class EmbedServer {
         }
     }
 
-    // ---------------------- registry ----------------------
 
-    public void startRegistry(final String appname, final String address) {
-        // start registry
-        ExecutorRegistryThread.getInstance().start(appname, address);
-    }
-
-    public void stopRegistry() {
-        // stop registry
-        ExecutorRegistryThread.getInstance().toStop();
-    }
 
 
 }
