@@ -23,14 +23,14 @@
 		t.update_time
 	</sql>
 	
-	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobLogGlue" useGeneratedKeys="true" keyProperty="id" >
+	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobLogGlue">
 		INSERT INTO xxl_job_logglue (
-			`job_id`,
-			`glue_type`,
-			`glue_source`,
-			`glue_remark`,
-			`add_time`, 
-			`update_time`
+			job_id,
+			glue_type,
+			glue_source,
+			glue_remark,
+			add_time, 
+			update_time
 		) VALUES (
 			#{jobId},
 			#{glueType},
@@ -38,15 +38,15 @@
 			#{glueRemark},
 			#{addTime},
 			#{updateTime}
-		);
-		<!--<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
-			SELECT LAST_INSERT_ID() 
-		</selectKey>-->
+		)
+		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+			select seq_xxl_job_logglue.currval from dual
+		</selectKey>
 	</insert>
 	
 	<select id="findByJobId" parameterType="java.lang.Integer" resultMap="XxlJobLogGlue">
 		SELECT <include refid="Base_Column_List" />
-		FROM xxl_job_logglue AS t
+		FROM xxl_job_logglue t
 		WHERE t.job_id = #{jobId}
 		ORDER BY id DESC
 	</select>
@@ -55,17 +55,18 @@
 		DELETE FROM xxl_job_logglue
 		WHERE id NOT in(
 			SELECT id FROM(
-				SELECT id FROM xxl_job_logglue
-				WHERE `job_id` = #{jobId}
-				ORDER BY update_time desc
-				LIMIT 0, #{limit}
+				SELECT * FROM(
+					SELECT id FROM xxl_job_logglue
+					WHERE job_id = #{jobId}
+					ORDER BY update_time desc
+				) WHERE ROWNUM &lt;= #{limit}
 			) t1
-		) AND `job_id` = #{jobId}
+		) AND job_id = #{jobId}
 	</delete>
 	
 	<delete id="deleteByJobId" parameterType="java.lang.Integer" >
 		DELETE FROM xxl_job_logglue
-		WHERE `job_id` = #{jobId}
+		WHERE job_id = #{jobId}
 	</delete>
 	
 </mapper>
