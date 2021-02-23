@@ -65,6 +65,12 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<version>${mysql-connector-java.version}</version>
 		</dependency>
+		<!-- oracle -->
+		<dependency>
+			<groupId>com.oracle.database.jdbc</groupId>
+			<artifactId>ojdbc6</artifactId>
+			<version>${oracle-jdbc.version}</version>
+		</dependency>
 
 		<!-- xxl-job-core -->
 		<dependency>

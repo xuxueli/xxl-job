@@ -53,8 +53,9 @@ public class UserController {
                                         String username, int role) {
 
         // page list
-        List<XxlJobUser> list = xxlJobUserDao.pageList(start, length, username, role);
-        int list_count = xxlJobUserDao.pageListCount(start, length, username, role);
+		int end = start + length;
+        List<XxlJobUser> list = xxlJobUserDao.pageList(start, end, username, role);
+        int list_count = xxlJobUserDao.pageListCount(start, end, username, role);
 
         // filter
         if (list!=null && list.size()>0) {

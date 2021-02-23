@@ -65,16 +65,14 @@
 		t.trigger_next_time
 	</sql>
 
-	<select id="pageList" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
-		SELECT <include refid="Base_Column_List" />
-		FROM xxl_job_info AS t
+	<sql id="PageListClause">
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
 			<if test="jobGroup gt 0">
 				AND t.job_group = #{jobGroup}
 			</if>
-            <if test="triggerStatus gte 0">
-                AND t.trigger_status = #{triggerStatus}
-            </if>
+			<if test="triggerStatus gte 0">
+				AND t.trigger_status = #{triggerStatus}
+			</if>
 			<if test="jobDesc != null and jobDesc != ''">
 				AND t.job_desc like CONCAT(CONCAT('%', #{jobDesc}), '%')
 			</if>
@@ -85,33 +83,27 @@
 				AND t.author like CONCAT(CONCAT('%', #{author}), '%')
 			</if>
 		</trim>
-		ORDER BY id DESC
-		LIMIT #{offset}, #{pagesize}
+	</sql>
+	<select id="pageList" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
+		SELECT * FROM (
+			SELECT ROWNUM rn, T1.* FROM (
+				SELECT <include refid="Base_Column_List" />
+				FROM xxl_job_info t
+				<include refid="PageListClause"/>
+				ORDER BY id DESC
+			) T1
+			WHERE ROWNUM &lt;= #{end}
+		) T2
+		WHERE T2.rn &gt;= #{offset}
 	</select>
 
 	<select id="pageListCount" parameterType="java.util.HashMap" resultType="int">
 		SELECT count(1)
-		FROM xxl_job_info AS t
-		<trim prefix="WHERE" prefixOverrides="AND | OR" >
-			<if test="jobGroup gt 0">
-				AND t.job_group = #{jobGroup}
-			</if>
-            <if test="triggerStatus gte 0">
-                AND t.trigger_status = #{triggerStatus}
-            </if>
-			<if test="jobDesc != null and jobDesc != ''">
-				AND t.job_desc like CONCAT(CONCAT('%', #{jobDesc}), '%')
-			</if>
-			<if test="executorHandler != null and executorHandler != ''">
-				AND t.executor_handler like CONCAT(CONCAT('%', #{executorHandler}), '%')
-			</if>
-			<if test="author != null and author != ''">
-				AND t.author like CONCAT(CONCAT('%', #{author}), '%')
-			</if>
-		</trim>
+		FROM xxl_job_info t
+		<include refid="PageListClause"/>
 	</select>
 
-	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobInfo" useGeneratedKeys="true" keyProperty="id" >
+	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobInfo">
 		INSERT INTO xxl_job_info (
 			job_group,
 			job_desc,
@@ -160,41 +152,40 @@
 			#{triggerStatus},
 			#{triggerLastTime},
 			#{triggerNextTime}
-		);
-		<!--<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
-			SELECT LAST_INSERT_ID()
-			/*SELECT @@IDENTITY AS id*/
-		</selectKey>-->
+		)
+		<selectKey keyProperty="id" resultType="int" order="AFTER">
+			select seq_xxl_job_info.currval from dual
+		</selectKey>
 	</insert>
 
 	<select id="loadById" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
 		SELECT <include refid="Base_Column_List" />
-		FROM xxl_job_info AS t
+		FROM xxl_job_info t
 		WHERE t.id = #{id}
 	</select>
 
 	<update id="update" parameterType="com.xxl.job.admin.core.model.XxlJobInfo" >
 		UPDATE xxl_job_info
 		SET
-			job_group = #{jobGroup},
-			job_desc = #{jobDesc},
+			job_group = #{jobGroup, javaType=int, jdbcType=NUMERIC},
+			job_desc = #{jobDesc, javaType=String, jdbcType=VARCHAR},
 			update_time = #{updateTime},
-			author = #{author},
-			alarm_email = #{alarmEmail},
-			schedule_type = #{scheduleType},
-			schedule_conf = #{scheduleConf},
-			misfire_strategy = #{misfireStrategy},
-			executor_route_strategy = #{executorRouteStrategy},
-			executor_handler = #{executorHandler},
-			executor_param = #{executorParam},
-			executor_block_strategy = #{executorBlockStrategy},
+			author = #{author, javaType=String, jdbcType=VARCHAR},
+			alarm_email = #{alarmEmail, javaType=String, jdbcType=VARCHAR},
+			schedule_type = #{scheduleType, javaType=String, jdbcType=VARCHAR},
+			schedule_conf = #{scheduleConf, javaType=String, jdbcType=VARCHAR},
+			misfire_strategy = #{misfireStrategy, javaType=String, jdbcType=VARCHAR},
+			executor_route_strategy = #{executorRouteStrategy, javaType=String, jdbcType=VARCHAR},
+			executor_handler = #{executorHandler, javaType=String, jdbcType=VARCHAR},
+			executor_param = #{executorParam, javaType=String, jdbcType=VARCHAR},
+			executor_block_strategy = #{executorBlockStrategy, javaType=String, jdbcType=VARCHAR},
 			executor_timeout = ${executorTimeout},
 			executor_fail_retry_count = ${executorFailRetryCount},
-			glue_type = #{glueType},
-			glue_source = #{glueSource},
-			glue_remark = #{glueRemark},
+			glue_type = #{glueType, javaType=String, jdbcType=VARCHAR},
+			glue_source = #{glueSource, javaType=String, jdbcType=CLOB},
+			glue_remark = #{glueRemark, javaType=String, jdbcType=VARCHAR},
 			glue_updatetime = #{glueUpdatetime},
-			child_jobid = #{childJobId},
+			child_jobid = #{childJobId, javaType=String, jdbcType=VARCHAR},
 			trigger_status = #{triggerStatus},
 			trigger_last_time = #{triggerLastTime},
 			trigger_next_time = #{triggerNextTime}
@@ -209,7 +200,7 @@
 
 	<select id="getJobsByGroup" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
 		SELECT <include refid="Base_Column_List" />
-		FROM xxl_job_info AS t
+		FROM xxl_job_info t
 		WHERE t.job_group = #{jobGroup}
 	</select>
 
@@ -220,12 +211,14 @@
 
 
 	<select id="scheduleJobQuery" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
-		SELECT <include refid="Base_Column_List" />
-		FROM xxl_job_info AS t
-		WHERE t.trigger_status = 1
-			and t.trigger_next_time <![CDATA[ <= ]]> #{maxNextTime}
-		ORDER BY id ASC
-		LIMIT #{pagesize}
+		SELECT T1.* FROM (
+			SELECT <include refid="Base_Column_List" />
+			FROM xxl_job_info t
+			WHERE t.trigger_status = 1
+				and t.trigger_next_time <![CDATA[ <= ]]> #{maxNextTime}
+			ORDER BY id ASC
+		) T1
+		WHERE ROWNUM <![CDATA[ <= ]]> #{pagesize}
 	</select>
 
 	<update id="scheduleUpdate" parameterType="com.xxl.job.admin.core.model.XxlJobInfo"  >

@@ -46,8 +46,9 @@ public class JobGroupController {
 										String appname, String title) {
 
 		// page query
-		List<XxlJobGroup> list = xxlJobGroupDao.pageList(start, length, appname, title);
-		int list_count = xxlJobGroupDao.pageListCount(start, length, appname, title);
+		int end = start + length;
+		List<XxlJobGroup> list = xxlJobGroupDao.pageList(start, end, appname, title);
+		int list_count = xxlJobGroupDao.pageListCount(start, end, appname, title);
 
 		// package result
 		Map<String, Object> maps = new HashMap<String, Object>();
