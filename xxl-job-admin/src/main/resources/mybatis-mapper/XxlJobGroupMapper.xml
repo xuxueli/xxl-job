@@ -88,4 +88,41 @@
 		</trim>
 	</select>
 
+	<select id="pageListByPermission" parameterType="java.util.HashMap" resultMap="XxlJobGroup">
+		SELECT
+		<include refid="Base_Column_List"/>
+		FROM xxl_job_group AS t
+		<trim prefix="WHERE" prefixOverrides="AND | OR">
+			<if test="appname != null and appname != ''">
+				AND t.app_name like CONCAT(CONCAT('%', #{appname}), '%')
+			</if>
+			<if test="title != null and title != ''">
+				AND t.title like CONCAT(CONCAT('%', #{title}), '%')
+			</if>
+			and id in
+			<foreach item="item" collection="permissions" index="index" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</trim>
+		ORDER BY t.app_name, t.title, t.id ASC
+		LIMIT #{offset}, #{pagesize}
+	</select>
+
+	<select id="pageListCountByPermission" parameterType="java.util.HashMap" resultType="int">
+		SELECT count(1)
+		FROM xxl_job_group AS t
+		<trim prefix="WHERE" prefixOverrides="AND | OR">
+			<if test="appname != null and appname != ''">
+				AND t.app_name like CONCAT(CONCAT('%', #{appname}), '%')
+			</if>
+			<if test="title != null and title != ''">
+				AND t.title like CONCAT(CONCAT('%', #{title}), '%')
+			</if>
+			and id in
+			<foreach item="item" collection="permissions" index="index" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</trim>
+	</select>
+
 </mapper>

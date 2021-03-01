@@ -2,10 +2,12 @@ package com.xxl.job.admin.controller;
 
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobRegistry;
+import com.xxl.job.admin.core.model.XxlJobUser;
 import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.admin.dao.XxlJobGroupDao;
 import com.xxl.job.admin.dao.XxlJobInfoDao;
 import com.xxl.job.admin.dao.XxlJobRegistryDao;
+import com.xxl.job.admin.service.LoginService;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.enums.RegistryConfig;
 import org.springframework.stereotype.Controller;
@@ -44,16 +46,24 @@ public class JobGroupController {
 										@RequestParam(required = false, defaultValue = "0") int start,
 										@RequestParam(required = false, defaultValue = "10") int length,
 										String appname, String title) {
-
-		// page query
-		List<XxlJobGroup> list = xxlJobGroupDao.pageList(start, length, appname, title);
-		int list_count = xxlJobGroupDao.pageListCount(start, length, appname, title);
-
-		// package result
+		XxlJobUser user = (XxlJobUser) request.getAttribute(LoginService.LOGIN_IDENTITY_KEY);
 		Map<String, Object> maps = new HashMap<String, Object>();
-		maps.put("recordsTotal", list_count);		// 总记录数
-		maps.put("recordsFiltered", list_count);	// 过滤后的总记录数
-		maps.put("data", list);  					// 分页列表
+		if (user.getRole() == 0) {
+			// page query by permission
+			List<String> permissions = new ArrayList<>(Arrays.asList(user.getPermission().split(",")));
+			List<XxlJobGroup> list = xxlJobGroupDao.pageListByPermission(start, length, appname, title, permissions);
+			int list_count = xxlJobGroupDao.pageListCountByPermission(start, length, appname, title, permissions);
+			maps.put("recordsTotal", list_count);
+			maps.put("recordsFiltered", list_count);
+			maps.put("data", list);
+		} else {
+			// page query
+			List<XxlJobGroup> list = xxlJobGroupDao.pageList(start, length, appname, title);
+			int list_count = xxlJobGroupDao.pageListCount(start, length, appname, title);
+			maps.put("recordsTotal", list_count);
+			maps.put("recordsFiltered", list_count);
+			maps.put("data", list);
+		}
 		return maps;
 	}
 

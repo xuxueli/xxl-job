@@ -34,4 +34,15 @@ public interface XxlJobGroupDao {
                              @Param("appname") String appname,
                              @Param("title") String title);
 
+    public List<XxlJobGroup> pageListByPermission(@Param("offset") int offset,
+            @Param("pagesize") int pagesize,
+            @Param("appname") String appname,
+            @Param("title") String title,
+            @Param("permissions") List<String> permissions);
+
+    public int pageListCountByPermission(@Param("offset") int offset,
+            @Param("pagesize") int pagesize,
+            @Param("appname") String appname,
+            @Param("title") String title,
+            @Param("permissions") List<String> permissions);
 }
