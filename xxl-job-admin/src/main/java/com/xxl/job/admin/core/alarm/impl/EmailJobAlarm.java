@@ -4,7 +4,7 @@ import com.xxl.job.admin.core.alarm.JobAlarm;
 import com.xxl.job.admin.core.conf.XxlJobAdminConfig;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
-import com.xxl.job.admin.core.model.Xxl;
+import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.core.biz.model.ReturnT;
 import org.slf4j.Logger;
@@ -32,7 +32,7 @@ public class EmailJobAlarm implements JobAlarm {
      *
      * @param jobLog
      */
-    public boolean doAlarm(XxlJobInfo info, Xxl jobLog){
+    public boolean doAlarm(XxlJobInfo info, XxlJobLog jobLog){
         boolean alarmResult = true;
 
         // send monitor email

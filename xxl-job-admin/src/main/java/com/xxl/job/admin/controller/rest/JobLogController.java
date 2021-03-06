@@ -3,7 +3,7 @@ package com.xxl.job.admin.controller.rest;
 import com.xxl.job.admin.controller.JobInfoController;
 import com.xxl.job.admin.core.complete.XxlJobCompleter;
 import com.xxl.job.admin.core.model.XxlJobInfo;
-import com.xxl.job.admin.core.model.Xxl;
+import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.admin.core.scheduler.XxlJobScheduler;
 import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.admin.dao.XxlJobGroupDao;
@@ -54,13 +54,13 @@ public class JobLogController {
 
     @GetMapping("")
     @ResponseBody
-    public ReturnT<PageInfo<Xxl>> list(HttpServletRequest request,
-                                       @RequestParam(required = false, defaultValue = "1") int current,
-                                       @RequestParam(required = false, defaultValue = "10") int pageSize,
-                                       @RequestParam(required = false, defaultValue = "0") int jobGroup,
-                                       @RequestParam(required = false, defaultValue = "0") int jobId,
-                                       @RequestParam(required = false, defaultValue = "-1") int logStatus,
-                                       String[] filterTime) {
+    public ReturnT<PageInfo<XxlJobLog>> list(HttpServletRequest request,
+                                             @RequestParam(required = false, defaultValue = "1") int current,
+                                             @RequestParam(required = false, defaultValue = "10") int pageSize,
+                                             @RequestParam(required = false, defaultValue = "0") int jobGroup,
+                                             @RequestParam(required = false, defaultValue = "0") int jobId,
+                                             @RequestParam(required = false, defaultValue = "-1") int logStatus,
+                                             String[] filterTime) {
 
         int start = (current - 1) * pageSize;
         // valid permission
@@ -82,11 +82,11 @@ public class JobLogController {
         }
 
         // page query
-        List<Xxl> list = xxlJobLogDao.pageList(start, pageSize, jobGroup, jobId, triggerTimeStart, triggerTimeEnd, logStatus);
+        List<XxlJobLog> list = xxlJobLogDao.pageList(start, pageSize, jobGroup, jobId, triggerTimeStart, triggerTimeEnd, logStatus);
         int listCount = xxlJobLogDao.pageListCount(start, pageSize, jobGroup, jobId, triggerTimeStart, triggerTimeEnd, logStatus);
 
-        final PageInfo<Xxl> pageInfo = new PageInfo<>(list, listCount, current, pageSize);
-        final ReturnT<PageInfo<Xxl>> ret = new ReturnT<>(pageInfo);
+        final PageInfo<XxlJobLog> pageInfo = new PageInfo<>(list, listCount, current, pageSize);
+        final ReturnT<PageInfo<XxlJobLog>> ret = new ReturnT<>(pageInfo);
 
         return ret;
     }
@@ -99,12 +99,12 @@ public class JobLogController {
      */
     @GetMapping("/{id}")
     @ResponseBody
-    public ReturnT<Xxl> get(@PathVariable int id) {
-        Xxl jobLog = xxlJobLogDao.load(id);
+    public ReturnT<XxlJobLog> get(@PathVariable int id) {
+        XxlJobLog jobLog = xxlJobLogDao.load(id);
         if (jobLog == null) {
             throw new RuntimeException(I18nUtil.getString("joblog_logid_unvalid"));
         }
-        return new ReturnT<Xxl>(jobLog);
+        return new ReturnT<XxlJobLog>(jobLog);
     }
 
     @RequestMapping("/logDetailCat")
@@ -116,7 +116,7 @@ public class JobLogController {
 
             // is end
             if (logResult.getContent() != null && logResult.getContent().getFromLineNum() > logResult.getContent().getToLineNum()) {
-                Xxl jobLog = xxlJobLogDao.load(logId);
+                XxlJobLog jobLog = xxlJobLogDao.load(logId);
                 if (jobLog.getHandleCode() > 0) {
                     logResult.getContent().setEnd(true);
                 }
@@ -139,7 +139,7 @@ public class JobLogController {
     @ResponseBody
     public ReturnT<String> delete(@PathVariable int id) {
         // base check
-        Xxl log = xxlJobLogDao.load(id);
+        XxlJobLog log = xxlJobLogDao.load(id);
         XxlJobInfo jobInfo = xxlJobInfoDao.loadById(log.getJobId());
         if (jobInfo == null) {
             return new ReturnT<String>(500, I18nUtil.getString("jobinfo_glue_jobid_unvalid"));

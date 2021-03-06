@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class XxlJobGroupDaoTest {
+public class XxlJobLogJobGroupDaoTest {
 
     @Resource
     private XxlJobGroupDao xxlJobGroupDao;

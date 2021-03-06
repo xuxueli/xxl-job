@@ -1,6 +1,6 @@
 package com.xxl.job.admin.dao;
 
-import com.xxl.job.admin.core.model.Xxl;
+import com.xxl.job.admin.core.model.XxlJobLog;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -9,22 +9,22 @@ import java.util.Date;
 import java.util.List;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class XxlJobLogDaoTest {
+public class XxlJobLogJobLogDaoTest {
 
     @Resource
     private XxlJobLogDao xxlJobLogDao;
 
     @Test
     public void test(){
-        List<Xxl> list = xxlJobLogDao.pageList(0, 10, 1, 1, null, null, 1);
+        List<XxlJobLog> list = xxlJobLogDao.pageList(0, 10, 1, 1, null, null, 1);
         int list_count = xxlJobLogDao.pageListCount(0, 10, 1, 1, null, null, 1);
 
-        Xxl log = new Xxl();
+        XxlJobLog log = new XxlJobLog();
         log.setJobGroup(1);
         log.setJobId(1);
 
         long ret1 = xxlJobLogDao.save(log);
-        Xxl dto = xxlJobLogDao.load(log.getId());
+        XxlJobLog dto = xxlJobLogDao.load(log.getId());
 
         log.setTriggerTime(new Date());
         log.setTriggerCode(1);
