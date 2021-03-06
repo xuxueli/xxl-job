@@ -7,3 +7,4 @@ target/
 .gitattributes
 applogs/
 .settings
+.metals
