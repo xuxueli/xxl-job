@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
-	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.xxl.job.admin.dao.XxlJobGroupDao">
-	
+
 	<resultMap id="XxlJobGroup" type="com.xxl.job.admin.core.model.XxlJobGroup" >
 		<result column="id" property="id" />
-	    <result column="app_name" property="appname" />
-	    <result column="title" property="title" />
+		<result column="app_name" property="appname" />
+		<result column="title" property="title" />
 		<result column="address_type" property="addressType" />
 		<result column="address_list" property="addressList" />
 		<result column="update_time" property="updateTime" />
@@ -24,13 +24,14 @@
 	<select id="findAll" resultMap="XxlJobGroup">
 		SELECT <include refid="Base_Column_List" />
 		FROM xxl_job_group AS t
+		WHERE t.is_del = 0
 		ORDER BY t.app_name, t.title, t.id ASC
 	</select>
 
 	<select id="findByAddressType" parameterType="java.lang.Integer" resultMap="XxlJobGroup">
 		SELECT <include refid="Base_Column_List" />
 		FROM xxl_job_group AS t
-		WHERE t.address_type = #{addressType}
+		WHERE t.address_type = #{addressType} AND t.is_del = 0
 		ORDER BY t.app_name, t.title, t.id ASC
 	</select>
 
@@ -50,7 +51,8 @@
 	</update>
 
 	<delete id="remove" parameterType="java.lang.Integer" >
-		DELETE FROM xxl_job_group
+		UPDATE xxl_job_group
+		SET is_del = 1
 		WHERE id = #{id}
 	</delete>
 
@@ -70,6 +72,7 @@
 			<if test="title != null and title != ''">
 				AND t.title like CONCAT(CONCAT('%', #{title}), '%')
 			</if>
+			AND t.is_del = 0
 		</trim>
 		ORDER BY t.app_name, t.title, t.id ASC
 		LIMIT #{offset}, #{pagesize}
@@ -85,6 +88,7 @@
 			<if test="title != null and title != ''">
 				AND t.title like CONCAT(CONCAT('%', #{title}), '%')
 			</if>
+			AND t.is_del = 0
 		</trim>
 	</select>
 

@@ -32,6 +32,7 @@ CREATE TABLE `xxl_job_info` (
   `trigger_status` tinyint(4) NOT NULL DEFAULT '0' COMMENT '调度状态：0-停止，1-运行',
   `trigger_last_time` bigint(13) NOT NULL DEFAULT '0' COMMENT '上次调度时间',
   `trigger_next_time` bigint(13) NOT NULL DEFAULT '0' COMMENT '下次调度时间',
+  `is_del`  bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除(0：否，1：是)',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -95,6 +96,7 @@ CREATE TABLE `xxl_job_group` (
   `address_type` tinyint(4) NOT NULL DEFAULT '0' COMMENT '执行器地址类型：0=自动注册、1=手动录入',
   `address_list` text COMMENT '执行器地址列表，多地址逗号分隔',
   `update_time` datetime DEFAULT NULL,
+  `is_del`  bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除(0：否，1：是)',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -111,6 +113,18 @@ CREATE TABLE `xxl_job_user` (
 CREATE TABLE `xxl_job_lock` (
   `lock_name` varchar(50) NOT NULL COMMENT '锁名称',
   PRIMARY KEY (`lock_name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `xxl_job_oplog` (
+   `id` bigint(20) NOT NULL AUTO_INCREMENT,
+   `log_type` varchar(100) DEFAULT NULL COMMENT '日志类型',
+   `description` varchar(200) DEFAULT NULL COMMENT '描述',
+   `oldVal` text COMMENT '旧值',
+   `newVal` text COMMENT '新值',
+   `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+   `create_user` varchar(100) DEFAULT NULL COMMENT '创建用户',
+   PRIMARY KEY (`id`),
+   KEY `i_create_time` (`create_time`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO `xxl_job_group`(`id`, `app_name`, `title`, `address_type`, `address_list`, `update_time`) VALUES (1, 'xxl-job-executor-sample', '示例执行器', 0, NULL, '2018-11-03 22:21:31' );

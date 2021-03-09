@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xxl.job.admin.dao.XxlJobOpLogDao">
+
+	<resultMap id="XxlJobOpLog" type="com.xxl.job.admin.core.model.XxlJobOpLog" >
+		<result column="id" property="id" />
+		<result column="log_type" property="logType" />
+	    <result column="description" property="description" />
+	    <result column="oldVal" property="oldVal" />
+	    <result column="newVal" property="newVal" />
+		<result column="create_user" property="createUser" />
+		<result column="create_time" property="createTime" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		t.id,
+		t.log_type,
+		t.description,
+		t.oldVal,
+		t.newVal,
+		t.create_user,
+		t.create_time
+	</sql>
+
+	<select id="pageList" parameterType="java.util.HashMap" resultMap="XxlJobOpLog">
+		SELECT <include refid="Base_Column_List" />
+		FROM xxl_job_oplog AS t
+		<trim prefix="WHERE" prefixOverrides="AND | OR" >
+			<if test="log_type != null and log_type != ''">
+				AND t.log_type like CONCAT(CONCAT('%', #{logType}), '%')
+			</if>
+			<if test="description != null and description != ''">
+				AND t.description like CONCAT(CONCAT('%', #{description}), '%')
+			</if>
+			<if test="create_user != null and create_user != ''">
+				AND t.create_user like CONCAT(CONCAT('%', #{createUser}), '%')
+			</if>
+		</trim>
+		ORDER BY id desc
+		LIMIT #{offset}, #{pagesize}
+	</select>
+
+	<select id="pageListCount" parameterType="java.util.HashMap" resultType="int">
+		SELECT count(1)
+		FROM xxl_job_oplog AS t
+		<trim prefix="WHERE" prefixOverrides="AND | OR" >
+			<if test="description != null and description != ''">
+				AND t.description like CONCAT(CONCAT('%', #{description}), '%')
+			</if>
+			<if test="log_type != null and log_type != ''">
+				AND t.log_type like CONCAT(CONCAT('%', #{logType}), '%')
+			</if>
+			<if test="create_user != null and create_user != ''">
+				AND t.create_user like CONCAT(CONCAT('%', #{createUser}), '%')
+			</if>
+		</trim>
+	</select>
+
+	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobOpLog" useGeneratedKeys="true" keyProperty="id" >
+		INSERT INTO xxl_job_oplog (
+			log_type,
+			description,
+			oldVal,
+			newVal,
+			create_user,
+			create_time
+		) VALUES (
+			#{logType},
+			#{description},
+			#{oldVal},
+			#{newVal},
+			#{createUser},
+			now()
+		);
+	</insert>
+
+
+</mapper>
