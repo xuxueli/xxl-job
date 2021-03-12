@@ -30,7 +30,7 @@ public class JobTriggerPoolHelper {
                 XxlJobAdminConfig.getAdminConfig().getTriggerPoolFastMax(),
                 60L,
                 TimeUnit.SECONDS,
-                new LinkedBlockingQueue<Runnable>(1000),
+                new LinkedBlockingQueue<Runnable>(6500),
                 new ThreadFactory() {
                     @Override
                     public Thread newThread(Runnable r) {
@@ -43,7 +43,7 @@ public class JobTriggerPoolHelper {
                 XxlJobAdminConfig.getAdminConfig().getTriggerPoolSlowMax(),
                 60L,
                 TimeUnit.SECONDS,
-                new LinkedBlockingQueue<Runnable>(2000),
+                new LinkedBlockingQueue<Runnable>(7500),
                 new ThreadFactory() {
                     @Override
                     public Thread newThread(Runnable r) {
