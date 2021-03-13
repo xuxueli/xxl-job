@@ -154,7 +154,7 @@ public class XxlJobExecutor  {
 
         // start
         embedServer = new EmbedServer();
-        embedServer.start(address, port, appname, accessToken);
+        embedServer.start(address, ip, port, appname, accessToken);
     }
 
     private void stopEmbedServer() {
