@@ -91,7 +91,7 @@ public class EmbedServer {
                     // wait util stop
                     future.channel().closeFuture().sync();
 
-                } catch (InterruptedException e) {
+                } catch (Exception e) {
                     if (e instanceof InterruptedException) {
                         logger.info(">>>>>>>>>>> xxl-job remoting server stop.");
                     } else {
