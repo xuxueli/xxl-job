@@ -33,7 +33,7 @@ public class XxlJobExecutor  {
     private String ip;
     private int port;
     private String logPath;
-    private int logRetentionDays;
+    private int logRetentionDays;//日志保存天数
 
     public void setAdminAddresses(String adminAddresses) {
         this.adminAddresses = adminAddresses;
@@ -65,13 +65,13 @@ public class XxlJobExecutor  {
     public void start() throws Exception {
 
         // init logpath
-        XxlJobFileAppender.initLogPath(logPath);
+        XxlJobFileAppender.initLogPath(logPath);//初始化日志文件
 
         // init invoker, admin-client
-        initAdminBizList(adminAddresses, accessToken);
+        initAdminBizList(adminAddresses, accessToken); //初始化admin路径存储集合
 
 
-        // init JobLogFileCleanThread
+        // init JobLogFileCleanThread  主要清除过期日志
         JobLogFileCleanThread.getInstance().start(logRetentionDays);
 
         // init TriggerCallbackThread
@@ -81,7 +81,7 @@ public class XxlJobExecutor  {
         initEmbedServer(address, ip, port, appname, accessToken);
     }
     public void destroy(){
-        // destory executor-server
+        // destory executor-server  //销毁服务,会向server销毁注册信息
         stopEmbedServer();
 
         // destory jobThreadRepository
@@ -112,7 +112,7 @@ public class XxlJobExecutor  {
 
 
     // ---------------------- admin-client (rpc invoker) ----------------------
-    private static List<AdminBiz> adminBizList;
+    private static List<AdminBiz> adminBizList;  //初始化admin路径和token,存储该集合
     private void initAdminBizList(String adminAddresses, String accessToken) throws Exception {
         if (adminAddresses!=null && adminAddresses.trim().length()>0) {
             for (String address: adminAddresses.trim().split(",")) {
@@ -170,7 +170,7 @@ public class XxlJobExecutor  {
 
 
     // ---------------------- job handler repository ----------------------
-    private static ConcurrentMap<String, IJobHandler> jobHandlerRepository = new ConcurrentHashMap<String, IJobHandler>();
+    private static ConcurrentMap<String, IJobHandler> jobHandlerRepository = new ConcurrentHashMap<String, IJobHandler>();  //保存调度器名，以及调度器方法
     public static IJobHandler loadJobHandler(String name){
         return jobHandlerRepository.get(name);
     }
@@ -186,7 +186,7 @@ public class XxlJobExecutor  {
         JobThread newJobThread = new JobThread(jobId, handler);
         newJobThread.start();
         logger.info(">>>>>>>>>>> xxl-job regist JobThread success, jobId:{}, handler:{}", new Object[]{jobId, handler});
-
+        //存储jobId与绑定工作的线程
         JobThread oldJobThread = jobThreadRepository.put(jobId, newJobThread);	// putIfAbsent | oh my god, map's put method return the old value!!!
         if (oldJobThread != null) {
             oldJobThread.toStop(removeOldReason);

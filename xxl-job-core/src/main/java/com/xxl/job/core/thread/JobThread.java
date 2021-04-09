@@ -95,7 +95,7 @@ public class JobThread extends Thread{
 
     	// init
     	try {
-			handler.init();
+			handler.init();//执行初始化任务
 		} catch (Throwable e) {
     		logger.error(e.getMessage(), e);
 		}
@@ -114,7 +114,7 @@ public class JobThread extends Thread{
 					idleTimes = 0;
 					triggerLogIdSet.remove(triggerParam.getLogId());
 
-					// log filename, like "logPath/yyyy-MM-dd/9999.log"
+					// log filename, like "logPath/yyyy-MM-dd/9999.log"  写入log文件
 					String logFileName = XxlJobFileAppender.makeLogFileName(new Date(triggerParam.getLogDateTime()), triggerParam.getLogId());
 					XxlJobContext xxlJobContext = new XxlJobContext(
 							triggerParam.getJobId(),
@@ -128,7 +128,7 @@ public class JobThread extends Thread{
 
 					// execute
 					XxlJobHelper.log("<br>----------- xxl-job job execute start -----------<br>----------- Param:" + xxlJobContext.getJobParam());
-
+					//设置了超时就异步线程处理
 					if (triggerParam.getExecutorTimeout() > 0) {
 						// limit timeout
 						Thread futureThread = null;
@@ -159,7 +159,7 @@ public class JobThread extends Thread{
 							futureThread.interrupt();
 						}
 					} else {
-						// just execute
+						// just execute  没设置超时时间，则立刻执行触发器
 						handler.execute();
 					}
 

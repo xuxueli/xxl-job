@@ -33,7 +33,7 @@ public class JobLogReportHelper {
             @Override
             public void run() {
 
-                // last clean log time
+                // last clean log time   记录上次清除日志时间
                 long lastCleanLogTime = 0;
 
 

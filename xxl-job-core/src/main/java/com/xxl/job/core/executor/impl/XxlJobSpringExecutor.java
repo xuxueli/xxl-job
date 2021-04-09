@@ -34,7 +34,7 @@ public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationC
         // init JobHandler Repository
         /*initJobHandlerRepository(applicationContext);*/
 
-        // init JobHandler Repository (for method)
+        // init JobHandler Repository (for method)   初始化调度器资源管理器
         initJobHandlerMethodRepository(applicationContext);
 
         // refresh GlueFactory
@@ -83,11 +83,11 @@ public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationC
         }
         // init job handler from method
         String[] beanDefinitionNames = applicationContext.getBeanNamesForType(Object.class, false, true);
-        for (String beanDefinitionName : beanDefinitionNames) {
+        for (String beanDefinitionName : beanDefinitionNames) {//遍历每个容器对象
             Object bean = applicationContext.getBean(beanDefinitionName);
 
             Map<Method, XxlJob> annotatedMethods = null;   // referred to ：org.springframework.context.event.EventListenerMethodProcessor.processBean
-            try {
+            try { //获取每个注解XxlJob方法
                 annotatedMethods = MethodIntrospector.selectMethods(bean.getClass(),
                         new MethodIntrospector.MetadataLookup<XxlJob>() {
                             @Override
@@ -101,7 +101,7 @@ public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationC
             if (annotatedMethods==null || annotatedMethods.isEmpty()) {
                 continue;
             }
-
+            //遍历标记了XxlJob注解的方法
             for (Map.Entry<Method, XxlJob> methodXxlJobEntry : annotatedMethods.entrySet()) {
                 Method executeMethod = methodXxlJobEntry.getKey();
                 XxlJob xxlJob = methodXxlJobEntry.getValue();
@@ -134,7 +134,7 @@ public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationC
                 Method destroyMethod = null;
 
                 if (xxlJob.init().trim().length() > 0) {
-                    try {
+                    try {  //获取XxlJob标记的方法,配置的init方法
                         initMethod = bean.getClass().getDeclaredMethod(xxlJob.init());
                         initMethod.setAccessible(true);
                     } catch (NoSuchMethodException e) {
@@ -142,7 +142,7 @@ public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationC
                     }
                 }
                 if (xxlJob.destroy().trim().length() > 0) {
-                    try {
+                    try {//获取XxlJob标记的方法,配置的destroy方法
                         destroyMethod = bean.getClass().getDeclaredMethod(xxlJob.destroy());
                         destroyMethod.setAccessible(true);
                     } catch (NoSuchMethodException e) {

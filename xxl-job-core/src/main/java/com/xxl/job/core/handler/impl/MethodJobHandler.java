@@ -9,10 +9,10 @@ import java.lang.reflect.Method;
  */
 public class MethodJobHandler extends IJobHandler {
 
-    private final Object target;
-    private final Method method;
-    private Method initMethod;
-    private Method destroyMethod;
+    private final Object target;  //目标对象
+    private final Method method;    //调度器方法
+    private Method initMethod;      //初始方法
+    private Method destroyMethod;     //销毁方法
 
     public MethodJobHandler(Object target, Method method, Method initMethod, Method destroyMethod) {
         this.target = target;
