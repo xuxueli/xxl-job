@@ -72,6 +72,10 @@ public class ScriptJobHandler extends IJobHandler {
 
         // script params：0=param、1=分片序号、2=分片总数
         String[] scriptParams = new String[3];
+        // 防止 XxlJobHelper.getJobParam() 为null，造成NPE
+        if (XxlJobHelper.getJobParam() == null) {
+            scriptParams[0] = "";
+        }
         scriptParams[0] = XxlJobHelper.getJobParam();
         scriptParams[1] = String.valueOf(XxlJobContext.getXxlJobContext().getShardIndex());
         scriptParams[2] = String.valueOf(XxlJobContext.getXxlJobContext().getShardTotal());
