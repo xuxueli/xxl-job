@@ -27,15 +27,15 @@ public class XxlJobCompleter {
      */
     public static int updateHandleInfoAndFinish(XxlJobLog xxlJobLog) {
 
-        // finish
+        // finish 若父任务正常结束，则终止子任务,以及设置Childmsg
         finishJob(xxlJobLog);
 
-        // text最大64kb 避免长度过长
+        // text最大64kb 避免长度过长 截断超过长度限制字符
         if (xxlJobLog.getHandleMsg().length() > 15000) {
             xxlJobLog.setHandleMsg( xxlJobLog.getHandleMsg().substring(0, 15000) );
         }
 
-        // fresh handle
+        // fresh handle 更新超时joblog
         return XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().updateHandleInfo(xxlJobLog);
     }
 
@@ -57,6 +57,7 @@ public class XxlJobCompleter {
                     int childJobId = (childJobIds[i]!=null && childJobIds[i].trim().length()>0 && isNumeric(childJobIds[i]))?Integer.valueOf(childJobIds[i]):-1;
                     if (childJobId > 0) {
 
+                        //触发子任务
                         JobTriggerPoolHelper.trigger(childJobId, TriggerTypeEnum.PARENT, -1, null, null, null);
                         ReturnT<String> triggerChildResult = ReturnT.SUCCESS;
 
