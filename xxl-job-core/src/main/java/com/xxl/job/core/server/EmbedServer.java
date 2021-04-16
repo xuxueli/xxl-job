@@ -80,7 +80,7 @@ public class EmbedServer {
                             })
                             .childOption(ChannelOption.SO_KEEPALIVE, true);
 
-                    // bind
+                    // bind 异步绑定port上
                     ChannelFuture future = bootstrap.bind(port).sync();
 
                     logger.info(">>>>>>>>>>> xxl-job remoting server start success, nettype = {}, port = {}", EmbedServer.class, port);

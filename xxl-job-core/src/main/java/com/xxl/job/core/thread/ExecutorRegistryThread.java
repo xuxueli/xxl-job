@@ -25,11 +25,11 @@ public class ExecutorRegistryThread {
     private volatile boolean toStop = false;
     public void start(final String appname, final String address){
 
-        // valid
+        // valid appname不允许为null
         if (appname==null || appname.trim().length()==0) {
             logger.warn(">>>>>>>>>>> xxl-job, executor registry config fail, appname is null.");
             return;
-        }
+        }//服务端地址不能为null
         if (XxlJobExecutor.getAdminBizList() == null) {
             logger.warn(">>>>>>>>>>> xxl-job, executor registry config fail, adminAddresses is null.");
             return;
@@ -45,8 +45,8 @@ public class ExecutorRegistryThread {
                         RegistryParam registryParam = new RegistryParam(RegistryConfig.RegistType.EXECUTOR.name(), appname, address);
                         for (AdminBiz adminBiz: XxlJobExecutor.getAdminBizList()) {
                             try {
-                                ReturnT<String> registryResult = adminBiz.registry(registryParam); //向server注册服务
-                                if (registryResult!=null && ReturnT.SUCCESS_CODE == registryResult.getCode()) {
+                                ReturnT<String> registryResult = adminBiz.registry(registryParam); //向server注册服务(http请求),注册内容appname,当前服务监听地址
+                                if (registryResult!=null && ReturnT.SUCCESS_CODE == registryResult.getCode()) { //访问成功
                                     registryResult = ReturnT.SUCCESS;
                                     logger.debug(">>>>>>>>>>> xxl-job registry success, registryParam:{}, registryResult:{}", new Object[]{registryParam, registryResult});
                                     break;
@@ -66,7 +66,7 @@ public class ExecutorRegistryThread {
                     }
 
                     try {
-                        if (!toStop) {
+                        if (!toStop) { //心跳时间30秒
                             TimeUnit.SECONDS.sleep(RegistryConfig.BEAT_TIMEOUT);
                         }
                     } catch (InterruptedException e) {

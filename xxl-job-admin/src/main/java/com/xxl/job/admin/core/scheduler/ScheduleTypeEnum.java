@@ -3,24 +3,24 @@ package com.xxl.job.admin.core.scheduler;
 import com.xxl.job.admin.core.util.I18nUtil;
 
 /**
- * @author xuxueli 2020-10-29 21:11:23
+ * @author xuxueli 2020-10-29 21:11:23  调度类型
  */
 public enum ScheduleTypeEnum {
 
-    NONE(I18nUtil.getString("schedule_type_none")),
+    NONE(I18nUtil.getString("schedule_type_none")),  //该类型不会主动触发调度；
 
     /**
      * schedule by cron
      */
-    CRON(I18nUtil.getString("schedule_type_cron")),
+    CRON(I18nUtil.getString("schedule_type_cron")),   //该类型将会通过CRON，触发任务调度；
 
     /**
      * schedule by fixed rate (in seconds)
      */
-    FIX_RATE(I18nUtil.getString("schedule_type_fix_rate")),
+    FIX_RATE(I18nUtil.getString("schedule_type_fix_rate")),//固定速度：该类型将会以固定速度，触发任务调度；按照固定的间隔时间，周期性触发；
 
     /**
-     * schedule by fix delay (in seconds)， after the last time
+     * schedule by fix delay (in seconds)， after the last time //固定延迟：该类型将会以固定延迟，触发任务调度；按照固定的延迟时间，从上次调度结束后开始计算延迟时间，到达延迟时间后触发下次调度；
      */
     /*FIX_DELAY(I18nUtil.getString("schedule_type_fix_delay"))*/;
 

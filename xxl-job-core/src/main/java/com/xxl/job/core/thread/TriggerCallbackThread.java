@@ -48,7 +48,7 @@ public class TriggerCallbackThread {
     private volatile boolean toStop = false;
     public void start() {
 
-        // valid
+        // valid 是否有配置admin路径
         if (XxlJobExecutor.getAdminBizList() == null) {
             logger.warn(">>>>>>>>>>> xxl-job, executor callback config fail, adminAddresses is null.");
             return;
