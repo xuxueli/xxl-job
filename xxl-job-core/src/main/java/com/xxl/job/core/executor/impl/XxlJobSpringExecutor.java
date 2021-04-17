@@ -37,11 +37,12 @@ public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationC
         // init JobHandler Repository (for method)   初始化调度器资源管理器
         initJobHandlerMethodRepository(applicationContext);
 
-        // refresh GlueFactory
+        // refresh GlueFactory 刷新GlueFactory
         GlueFactory.refreshInstance(1);
 
         // super start
         try {
+            //启动
             super.start();
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -109,11 +110,11 @@ public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationC
                     continue;
                 }
 
-                String name = xxlJob.value();
+                String name = xxlJob.value();//获取配置xxjob的触发器名称
                 if (name.trim().length() == 0) {
                     throw new RuntimeException("xxl-job method-jobhandler name invalid, for[" + bean.getClass() + "#" + executeMethod.getName() + "] .");
                 }
-                if (loadJobHandler(name) != null) {
+                if (loadJobHandler(name) != null) { //工作处理资源库是否有相同命名
                     throw new RuntimeException("xxl-job jobhandler[" + name + "] naming conflicts.");
                 }
 
@@ -127,7 +128,7 @@ public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationC
                             "The correct method format like \" public ReturnT<String> execute(String param) \" .");
                 }*/
 
-                executeMethod.setAccessible(true);
+                executeMethod.setAccessible(true);//设置可访问,设置后可通过反射调用私有方法
 
                 // init and destory
                 Method initMethod = null;
@@ -150,7 +151,7 @@ public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationC
                     }
                 }
 
-                // registry jobhandler
+                // registry jobhandler 将xxljob配置的jobname作为key，对象,反射的执行,初始,销毁方法作为value注册jobHandlerRepository中
                 registJobHandler(name, new MethodJobHandler(bean, executeMethod, initMethod, destroyMethod));
             }
         }

@@ -21,7 +21,7 @@ public class AdminBizClient implements AdminBiz {
         this.addressUrl = addressUrl;
         this.accessToken = accessToken;
 
-        // valid
+        // valid 若链接地址末尾不是/结尾,则添加/结尾
         if (!this.addressUrl.endsWith("/")) {
             this.addressUrl = this.addressUrl + "/";
         }

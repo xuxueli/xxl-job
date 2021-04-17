@@ -32,6 +32,7 @@ public class JobRegistryHelper {
 	public void start(){
 
 		// for registry or remove
+		//初始化注册或者删除线程池
 		registryOrRemoveThreadPool = new ThreadPoolExecutor(
 				2,
 				10,
@@ -44,6 +45,7 @@ public class JobRegistryHelper {
 						return new Thread(r, "xxl-job, admin JobRegistryMonitorHelper-registryOrRemoveThreadPool-" + r.hashCode());
 					}
 				},
+				//注意:这里的拒绝策略就是再次执行...^_^'''
 				new RejectedExecutionHandler() {
 					@Override
 					public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
@@ -68,13 +70,13 @@ public class JobRegistryHelper {
 								XxlJobAdminConfig.getAdminConfig().getXxlJobRegistryDao().removeDead(ids);
 							}
 
-							// fresh online address (admin/executor) 获取所有在线机器
+							// fresh online address (admin/executor) 获取所有在线机器,注册表: 见"xxl_job_registry"表, "执行器" 在进行任务注册时将会周期性维护一条注册记录，即机器地址和AppName的绑定关系; "调度中心" 从而可以动态感知每个AppName在线的机器列表;
 							HashMap<String, List<String>> appAddressMap = new HashMap<String, List<String>>();  //维护注册表注册key和注册value
 							List<XxlJobRegistry> list = XxlJobAdminConfig.getAdminConfig().getXxlJobRegistryDao().findAll(RegistryConfig.DEAD_TIMEOUT, new Date());
 							if (list != null) {
-								for (XxlJobRegistry item: list) {
+								for (XxlJobRegistry item: list) {//将注册类型为EXECUTOR的XxlJobRegistry集合改装成appname=>设置触发器的ip地址
 									if (RegistryConfig.RegistType.EXECUTOR.name().equals(item.getRegistryGroup())) {
-										String appname = item.getRegistryKey();
+										String appname = item.getRegistryKey();//AppName: 每个执行器机器集群的唯一标示, 任务注册以 "执行器" 为最小粒度进行注册; 每个任务通过其绑定的执行器可感知对应的执行器机器列表;
 										List<String> registryList = appAddressMap.get(appname);
 										if (registryList == null) {
 											registryList = new ArrayList<String>();
@@ -88,10 +90,10 @@ public class JobRegistryHelper {
 								}
 							}
 
-							// fresh group address    刷新执行器信息
+							// fresh group address    更新xxl_job_group执行器地址列表
 							for (XxlJobGroup group: groupList) {
 								List<String> registryList = appAddressMap.get(group.getAppname());
-								String addressListStr = null;
+								String addressListStr = null;//将所有配置触发器的ip地址，使用,拼接
 								if (registryList!=null && !registryList.isEmpty()) {
 									Collections.sort(registryList);
 									StringBuilder addressListSB = new StringBuilder();
@@ -101,8 +103,8 @@ public class JobRegistryHelper {
 									addressListStr = addressListSB.toString();
 									addressListStr = addressListStr.substring(0, addressListStr.length()-1);
 								}
-								group.setAddressList(addressListStr);
-								group.setUpdateTime(new Date());
+								group.setAddressList(addressListStr);//更新设置了触发器的ip地址
+								group.setUpdateTime(new Date());//更新修改时间
 
 								XxlJobAdminConfig.getAdminConfig().getXxlJobGroupDao().update(group);
 							}
@@ -148,7 +150,7 @@ public class JobRegistryHelper {
 
 	public ReturnT<String> registry(RegistryParam registryParam) {
 
-		// valid
+		// valid  校验
 		if (!StringUtils.hasText(registryParam.getRegistryGroup())
 				|| !StringUtils.hasText(registryParam.getRegistryKey())
 				|| !StringUtils.hasText(registryParam.getRegistryValue())) {
@@ -158,12 +160,12 @@ public class JobRegistryHelper {
 		// async execute 异步注册
 		registryOrRemoveThreadPool.execute(new Runnable() {
 			@Override
-			public void run() { //直接修改
+			public void run() { //更新修改时间
 				int ret = XxlJobAdminConfig.getAdminConfig().getXxlJobRegistryDao().registryUpdate(registryParam.getRegistryGroup(), registryParam.getRegistryKey(), registryParam.getRegistryValue(), new Date());
 				if (ret < 1) {//说明暂未数据,才新增
 					XxlJobAdminConfig.getAdminConfig().getXxlJobRegistryDao().registrySave(registryParam.getRegistryGroup(), registryParam.getRegistryKey(), registryParam.getRegistryValue(), new Date());
 
-					// fresh
+					// fresh  空实现
 					freshGroupRegistryInfo(registryParam);
 				}
 			}
