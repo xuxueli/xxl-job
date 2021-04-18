@@ -79,9 +79,9 @@ public class JobTriggerPoolHelper {
                            final String executorParam,
                            final String addressList) {
 
-        // choose thread pool
+        // choose thread pool  获取线程池
         ThreadPoolExecutor triggerPool_ = fastTriggerPool;
-        AtomicInteger jobTimeoutCount = jobTimeoutCountMap.get(jobId);
+        AtomicInteger jobTimeoutCount = jobTimeoutCountMap.get(jobId);//获取超时次数
         //一分钟内超时10次，则采用慢触发器执行
         if (jobTimeoutCount!=null && jobTimeoutCount.get() > 10) {      // job-timeout 10 times in 1 min
             triggerPool_ = slowTriggerPool;
