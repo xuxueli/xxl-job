@@ -81,7 +81,8 @@ public class JobTriggerPoolHelper {
 
         // choose thread pool  获取线程池
         ThreadPoolExecutor triggerPool_ = fastTriggerPool;
-        AtomicInteger jobTimeoutCount = jobTimeoutCountMap.get(jobId);//获取超时次数
+        //获取超时次数
+        AtomicInteger jobTimeoutCount = jobTimeoutCountMap.get(jobId);
         //一分钟内超时10次，则采用慢触发器执行
         if (jobTimeoutCount!=null && jobTimeoutCount.get() > 10) {      // job-timeout 10 times in 1 min
             triggerPool_ = slowTriggerPool;
@@ -101,16 +102,17 @@ public class JobTriggerPoolHelper {
                     logger.error(e.getMessage(), e);
                 } finally {
 
-                    // check timeout-count-map
+                    // check timeout-count-map  更新成为下一分钟
                     long minTim_now = System.currentTimeMillis()/60000;
                     if (minTim != minTim_now) {
-                        minTim = minTim_now;
+                        minTim = minTim_now; //当达到下一分钟则清除超时任务
                         jobTimeoutCountMap.clear();
                     }
 
                     // incr timeout-count-map
                     long cost = System.currentTimeMillis()-start;
                     if (cost > 500) {       // ob-timeout threshold 500ms
+                        //执行时间超过500ms,则记录执行次数
                         AtomicInteger timeoutCount = jobTimeoutCountMap.putIfAbsent(jobId, new AtomicInteger(1));
                         if (timeoutCount != null) {
                             timeoutCount.incrementAndGet();

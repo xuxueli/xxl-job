@@ -55,37 +55,40 @@ public class XxlJobTrigger {
             return;
         }
         if (executorParam != null) {
-            jobInfo.setExecutorParam(executorParam);  //设置任务参数
+            //设置任务参数
+            jobInfo.setExecutorParam(executorParam);
         }
-        int finalFailRetryCount = failRetryCount>=0?failRetryCount:jobInfo.getExecutorFailRetryCount();//获取失败重试次数
-        XxlJobGroup group = XxlJobAdminConfig.getAdminConfig().getXxlJobGroupDao().load(jobInfo.getJobGroup());//获取job分组信息
+        //获取失败重试次数
+        int finalFailRetryCount = failRetryCount>=0?failRetryCount:jobInfo.getExecutorFailRetryCount();
+        //获取job分组信息
+        XxlJobGroup group = XxlJobAdminConfig.getAdminConfig().getXxlJobGroupDao().load(jobInfo.getJobGroup());
 
-        // cover addressList
+        // cover addressList  设置地址集合
         if (addressList!=null && addressList.trim().length()>0) {
             group.setAddressType(1);
             group.setAddressList(addressList.trim());
         }
 
-        // sharding param
+        // sharding param  拆分executorParam任务参数,填入shardingParam数组
         int[] shardingParam = null;
         if (executorShardingParam!=null){
-            String[] shardingArr = executorShardingParam.split("/");
+            String[] shardingArr = executorParam.split("/");
             if (shardingArr.length==2 && isNumeric(shardingArr[0]) && isNumeric(shardingArr[1])) {
                 shardingParam = new int[2];
                 shardingParam[0] = Integer.valueOf(shardingArr[0]);
                 shardingParam[1] = Integer.valueOf(shardingArr[1]);
             }
-        }
+        } //如果路由策略是分片广播模式，同时注册地址不为空
         if (ExecutorRouteStrategyEnum.SHARDING_BROADCAST==ExecutorRouteStrategyEnum.match(jobInfo.getExecutorRouteStrategy(), null)
                 && group.getRegistryList()!=null && !group.getRegistryList().isEmpty()
                 && shardingParam==null) {
-            for (int i = 0; i < group.getRegistryList().size(); i++) {
+            for (int i = 0; i < group.getRegistryList().size(); i++) {  //遍历执行每个注册地址，集群广播
                 processTrigger(group, jobInfo, finalFailRetryCount, triggerType, i, group.getRegistryList().size());
             }
         } else {
-            if (shardingParam == null) {
+            if (shardingParam == null) {  //当shardingParam为空，设置默认值,分别标识
                 shardingParam = new int[]{0, 1};
-            }
+            } //执行触发器
             processTrigger(group, jobInfo, finalFailRetryCount, triggerType, shardingParam[0], shardingParam[1]);
         }
 
@@ -112,7 +115,8 @@ public class XxlJobTrigger {
 
         // param  获取阻塞处理策略
         ExecutorBlockStrategyEnum blockStrategy = ExecutorBlockStrategyEnum.match(jobInfo.getExecutorBlockStrategy(), ExecutorBlockStrategyEnum.SERIAL_EXECUTION);  // block strategy
-        ExecutorRouteStrategyEnum executorRouteStrategyEnum = ExecutorRouteStrategyEnum.match(jobInfo.getExecutorRouteStrategy(), null);    // route strategy 获取路由策略
+        // route strategy 获取路由策略,默认first
+        ExecutorRouteStrategyEnum executorRouteStrategyEnum = ExecutorRouteStrategyEnum.match(jobInfo.getExecutorRouteStrategy(), null);
         String shardingParam = (ExecutorRouteStrategyEnum.SHARDING_BROADCAST==executorRouteStrategyEnum)?String.valueOf(index).concat("/").concat(String.valueOf(total)):null;
 
         // 1、save log-id 保存执行日志
@@ -141,14 +145,15 @@ public class XxlJobTrigger {
         // 3、init address  获取触发器执行地址
         String address = null;
         ReturnT<String> routeAddressResult = null;
-        if (group.getRegistryList()!=null && !group.getRegistryList().isEmpty()) {
+        if (group.getRegistryList()!=null && !group.getRegistryList().isEmpty()) {  //如果是集群广播模式
             if (ExecutorRouteStrategyEnum.SHARDING_BROADCAST == executorRouteStrategyEnum) {
-                if (index < group.getRegistryList().size()) {
+                if (index < group.getRegistryList().size()) {  //查询匹配地址执行
                     address = group.getRegistryList().get(index);
-                } else {
+                } else { //超过size,则默认执行第一个.
                     address = group.getRegistryList().get(0);
                 }
             } else {
+                //根据设置的路由策略,执行路由器,获取返回结果   ,这里用到了策略模式
                 routeAddressResult = executorRouteStrategyEnum.getRouter().route(triggerParam, group.getRegistryList());
                 if (routeAddressResult.getCode() == ReturnT.SUCCESS_CODE) {
                     address = routeAddressResult.getContent();
@@ -160,9 +165,9 @@ public class XxlJobTrigger {
 
         // 4、trigger remote executor
         ReturnT<String> triggerResult = null;
-        if (address != null) {
+        if (address != null) { //这里真正的执行触发器
             triggerResult = runExecutor(triggerParam, address);
-        } else {
+        } else {//获取不到执行地址直接返回
             triggerResult = new ReturnT<String>(ReturnT.FAIL_CODE, null);
         }
 
@@ -191,8 +196,8 @@ public class XxlJobTrigger {
         jobLog.setExecutorShardingParam(shardingParam);
         jobLog.setExecutorFailRetryCount(finalFailRetryCount);
         //jobLog.setTriggerTime();
-        jobLog.setTriggerCode(triggerResult.getCode());
-        jobLog.setTriggerMsg(triggerMsgSb.toString());
+        jobLog.setTriggerCode(triggerResult.getCode());//设置执行触发器返回值
+        jobLog.setTriggerMsg(triggerMsgSb.toString());//设置返回结果信息
         XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().updateTriggerInfo(jobLog);
 
         logger.debug(">>>>>>>>>>> xxl-job trigger end, jobId:{}", jobLog.getId());
@@ -207,13 +212,13 @@ public class XxlJobTrigger {
     public static ReturnT<String> runExecutor(TriggerParam triggerParam, String address){
         ReturnT<String> runResult = null;
         try {
-            ExecutorBiz executorBiz = XxlJobScheduler.getExecutorBiz(address);//获取业务执行器仓库
+            ExecutorBiz executorBiz = XxlJobScheduler.getExecutorBiz(address);//获取业务执行器地址,就执行器地址后面拼接token
             runResult = executorBiz.run(triggerParam);
         } catch (Exception e) {
             logger.error(">>>>>>>>>>> xxl-job trigger error, please check if the executor[{}] is running.", address, e);
             runResult = new ReturnT<String>(ReturnT.FAIL_CODE, ThrowableUtil.toString(e));
         }
-
+        //返回结果设置msg
         StringBuffer runResultSB = new StringBuffer(I18nUtil.getString("jobconf_trigger_run") + "：");
         runResultSB.append("<br>address：").append(address);
         runResultSB.append("<br>code：").append(runResult.getCode());

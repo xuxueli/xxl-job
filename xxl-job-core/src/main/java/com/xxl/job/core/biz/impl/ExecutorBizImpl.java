@@ -47,17 +47,17 @@ public class ExecutorBizImpl implements ExecutorBiz {
     public ReturnT<String> run(TriggerParam triggerParam) {
         // load old：jobHandler + jobThread
         JobThread jobThread = XxlJobExecutor.loadJobThread(triggerParam.getJobId());//获取job绑定线程
-        IJobHandler jobHandler = jobThread!=null?jobThread.getHandler():null;
+        IJobHandler jobHandler = jobThread!=null?jobThread.getHandler():null;//获取作业处理器
         String removeOldReason = null;
 
         // valid：jobHandler + jobThread
-        GlueTypeEnum glueTypeEnum = GlueTypeEnum.match(triggerParam.getGlueType());
-        if (GlueTypeEnum.BEAN == glueTypeEnum) {
+        GlueTypeEnum glueTypeEnum = GlueTypeEnum.match(triggerParam.getGlueType());//获取任务运行模式
+        if (GlueTypeEnum.BEAN == glueTypeEnum) {//任务以JobHandler方式维护在执行器端；需要结合 "JobHandler" 属性匹配执行器中任务；
 
             // new jobhandler  获取job处理器
             IJobHandler newJobHandler = XxlJobExecutor.loadJobHandler(triggerParam.getExecutorHandler());
 
-            // valid old jobThread
+            // valid old jobThread 如果job处理器不一样,则kill旧处理器绑定的线程
             if (jobThread!=null && jobHandler != newJobHandler) {
                 // change handler, need kill old thread
                 removeOldReason = "change jobhandler or glue type, and terminate the old job thread.";
@@ -67,9 +67,9 @@ public class ExecutorBizImpl implements ExecutorBiz {
             }
 
             // valid handler
-            if (jobHandler == null) {
+            if (jobHandler == null) {  //执行到这儿,要么新旧处理器不一致,要么没有绑定过任何线程
                 jobHandler = newJobHandler;
-                if (jobHandler == null) {
+                if (jobHandler == null) { //返回没找到job处理器
                     return new ReturnT<String>(ReturnT.FAIL_CODE, "job handler [" + triggerParam.getExecutorHandler() + "] not found.");
                 }
             }
@@ -119,7 +119,7 @@ public class ExecutorBizImpl implements ExecutorBiz {
         }
 
         // executor block strategy
-        if (jobThread != null) {
+        if (jobThread != null) {  //获取任务阻塞策略
             ExecutorBlockStrategyEnum blockStrategy = ExecutorBlockStrategyEnum.match(triggerParam.getExecutorBlockStrategy(), null);
             if (ExecutorBlockStrategyEnum.DISCARD_LATER == blockStrategy) {
                 // discard when running

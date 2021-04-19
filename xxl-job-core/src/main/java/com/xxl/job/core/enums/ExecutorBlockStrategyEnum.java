@@ -1,7 +1,7 @@
 package com.xxl.job.core.enums;
 
 /**
- * Created by xuxueli on 17/5/9.
+ * Created by xuxueli on 17/5/9.  任务阻塞策略
  */
 public enum ExecutorBlockStrategyEnum {
 

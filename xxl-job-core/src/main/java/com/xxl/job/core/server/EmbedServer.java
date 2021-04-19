@@ -152,10 +152,10 @@ public class EmbedServer {
 
             // request parse
             //final byte[] requestBytes = ByteBufUtil.getBytes(msg.content());    // byteBuf.toString(io.netty.util.CharsetUtil.UTF_8);
-            String requestData = msg.content().toString(CharsetUtil.UTF_8);
-            String uri = msg.uri();
-            HttpMethod httpMethod = msg.method();
-            boolean keepAlive = HttpUtil.isKeepAlive(msg);
+            String requestData = msg.content().toString(CharsetUtil.UTF_8);//解析请求数据
+            String uri = msg.uri();//获取uri,后面通过uri来处理不同的请求
+            HttpMethod httpMethod = msg.method();//获取请求方式,Post/Get
+            boolean keepAlive = HttpUtil.isKeepAlive(msg);//保持长连接
             String accessTokenReq = msg.headers().get(XxlJobRemotingUtil.XXL_JOB_ACCESS_TOKEN);
 
             // invoke
@@ -176,13 +176,13 @@ public class EmbedServer {
 
         private Object process(HttpMethod httpMethod, String uri, String requestData, String accessTokenReq) {
 
-            // valid
+            // valid 不是POST直接返回异常
             if (HttpMethod.POST != httpMethod) {
                 return new ReturnT<String>(ReturnT.FAIL_CODE, "invalid request, HttpMethod not support.");
             }
-            if (uri==null || uri.trim().length()==0) {
+            if (uri==null || uri.trim().length()==0) { //校验uri
                 return new ReturnT<String>(ReturnT.FAIL_CODE, "invalid request, uri-mapping empty.");
-            }
+            }//校验token是否正确
             if (accessToken!=null
                     && accessToken.trim().length()>0
                     && !accessToken.equals(accessTokenReq)) {
@@ -197,7 +197,7 @@ public class EmbedServer {
                     IdleBeatParam idleBeatParam = GsonTool.fromJson(requestData, IdleBeatParam.class);
                     return executorBiz.idleBeat(idleBeatParam);
                 } else if ("/run".equals(uri)) { //执行触发器
-                    TriggerParam triggerParam = GsonTool.fromJson(requestData, TriggerParam.class);
+                    TriggerParam triggerParam = GsonTool.fromJson(requestData, TriggerParam.class);//请求参数解析成TriggerParam
                     return executorBiz.run(triggerParam);
                 } else if ("/kill".equals(uri)) {
                     KillParam killParam = GsonTool.fromJson(requestData, KillParam.class);
