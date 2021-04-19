@@ -206,8 +206,7 @@ public class XxlJobExecutor  {
         return null;
     }
     public static JobThread loadJobThread(int jobId){
-        JobThread jobThread = jobThreadRepository.get(jobId);
-        return jobThread;
+        return jobThreadRepository.get(jobId);
     }
 
 }

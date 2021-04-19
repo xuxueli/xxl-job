@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -30,6 +29,7 @@ public class XxlJobSimpleExecutor extends XxlJobExecutor {
     }
 
 
+    @Override
     public void start() {
 
         // init JobHandler Repository (for method)
@@ -43,6 +43,7 @@ public class XxlJobSimpleExecutor extends XxlJobExecutor {
         }
     }
 
+    @Override
     public void destroy() {
         super.destroy();
     }
