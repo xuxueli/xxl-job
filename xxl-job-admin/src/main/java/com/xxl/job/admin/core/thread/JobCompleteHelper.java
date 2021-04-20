@@ -153,12 +153,14 @@ public class JobCompleteHelper {
 	}
 
 	private ReturnT<String> callback(HandleCallbackParam handleCallbackParam) {
-		// valid log item
+		// valid log item  加载log
 		XxlJobLog log = XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().load(handleCallbackParam.getLogId());
 		if (log == null) {
+			//日志没找到返回异常
 			return new ReturnT<String>(ReturnT.FAIL_CODE, "log item not found.");
 		}
 		if (log.getHandleCode() > 0) {
+			//说明重复执行
 			return new ReturnT<String>(ReturnT.FAIL_CODE, "log repeate callback.");     // avoid repeat callback, trigger child job etc
 		}
 
@@ -171,8 +173,9 @@ public class JobCompleteHelper {
 			handleMsg.append(handleCallbackParam.getHandleMsg());
 		}
 
-		// success, save log
+		// success, save log  更改
 		log.setHandleTime(new Date());
+		//更改处理状态,200正常,500错误
 		log.setHandleCode(handleCallbackParam.getHandleCode());
 		log.setHandleMsg(handleMsg.toString());
 		XxlJobCompleter.updateHandleInfoAndFinish(log);

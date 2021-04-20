@@ -165,7 +165,7 @@ public class EmbedServer {
                     // do invoke
                     Object responseObj = process(httpMethod, uri, requestData, accessTokenReq);
 
-                    // to json
+                    // to json  响应结果转json
                     String responseJson = GsonTool.toJson(responseObj);
 
                     // write response
@@ -223,6 +223,7 @@ public class EmbedServer {
             response.headers().set(HttpHeaderNames.CONTENT_TYPE, "text/html;charset=UTF-8");       // HttpHeaderValues.TEXT_PLAIN.toString()
             response.headers().set(HttpHeaderNames.CONTENT_LENGTH, response.content().readableBytes());
             if (keepAlive) {
+                //响应头设置长连接
                 response.headers().set(HttpHeaderNames.CONNECTION, HttpHeaderValues.KEEP_ALIVE);
             }
             ctx.writeAndFlush(response);
