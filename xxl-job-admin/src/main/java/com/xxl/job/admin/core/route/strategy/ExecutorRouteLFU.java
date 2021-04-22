@@ -22,26 +22,32 @@ public class ExecutorRouteLFU extends ExecutorRouter {
 
     public String route(int jobId, List<String> addressList) {
 
-        // cache clear
+        // cache clear  超过一天，则清除缓存
         if (System.currentTimeMillis() > CACHE_VALID_TIME) {
             jobLfuMap.clear();
             CACHE_VALID_TIME = System.currentTimeMillis() + 1000*60*60*24;
         }
 
         // lfu item init
-        HashMap<String, Integer> lfuItemMap = jobLfuMap.get(jobId);     // Key排序可以用TreeMap+构造入参Compare；Value排序暂时只能通过ArrayList；
+        // Key排序可以用TreeMap+构造入参Compare；Value排序暂时只能通过ArrayList；
+        HashMap<String, Integer> lfuItemMap = jobLfuMap.get(jobId);
         if (lfuItemMap == null) {
+            //说明第一次进来,则新建
             lfuItemMap = new HashMap<String, Integer>();
-            jobLfuMap.putIfAbsent(jobId, lfuItemMap);   // 避免重复覆盖
+            // 避免重复覆盖
+            jobLfuMap.putIfAbsent(jobId, lfuItemMap);
         }
 
         // put new
+        //存储新的地址,同时随机设置访问次数,缓解第一次访问第一个元素的压力
         for (String address: addressList) {
             if (!lfuItemMap.containsKey(address) || lfuItemMap.get(address) >1000000 ) {
-                lfuItemMap.put(address, new Random().nextInt(addressList.size()));  // 初始化时主动Random一次，缓解首次压力
+                // 初始化时主动Random一次，缓解首次压力
+                lfuItemMap.put(address, new Random().nextInt(addressList.size()));
             }
         }
         // remove old
+        //删除不存在的address
         List<String> delKeys = new ArrayList<>();
         for (String existKey: lfuItemMap.keySet()) {
             if (!addressList.contains(existKey)) {
@@ -55,6 +61,7 @@ public class ExecutorRouteLFU extends ExecutorRouter {
         }
 
         // load least userd count address
+        //排序次数,降序排序
         List<Map.Entry<String, Integer>> lfuItemList = new ArrayList<Map.Entry<String, Integer>>(lfuItemMap.entrySet());
         Collections.sort(lfuItemList, new Comparator<Map.Entry<String, Integer>>() {
             @Override
@@ -63,8 +70,10 @@ public class ExecutorRouteLFU extends ExecutorRouter {
             }
         });
 
+        //获取最少访问次数的元素
         Map.Entry<String, Integer> addressItem = lfuItemList.get(0);
         String minAddress = addressItem.getKey();
+        //访问次数+1
         addressItem.setValue(addressItem.getValue() + 1);
 
         return addressItem.getKey();

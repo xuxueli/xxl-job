@@ -74,7 +74,7 @@ public class XxlJobExecutor  {
         // init JobLogFileCleanThread  清除过期日志
         JobLogFileCleanThread.getInstance().start(logRetentionDays);
 
-        // init TriggerCallbackThread
+        // init TriggerCallbackThread 回调调度中心任务执行状态
         TriggerCallbackThread.getInstance().start();
 
         // init executor-server 执行内嵌服务

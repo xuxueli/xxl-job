@@ -78,15 +78,18 @@ public class XxlJobTrigger {
                 shardingParam[0] = Integer.valueOf(shardingArr[0]);
                 shardingParam[1] = Integer.valueOf(shardingArr[1]);
             }
-        } //如果路由策略是分片广播模式，同时注册地址不为空
+        }
+        //如果路由策略是分片广播模式，同时注册地址不为空
         if (ExecutorRouteStrategyEnum.SHARDING_BROADCAST==ExecutorRouteStrategyEnum.match(jobInfo.getExecutorRouteStrategy(), null)
                 && group.getRegistryList()!=null && !group.getRegistryList().isEmpty()
                 && shardingParam==null) {
-            for (int i = 0; i < group.getRegistryList().size(); i++) {  //遍历执行每个注册地址，集群广播
+            //遍历执行每个注册地址，集群广播
+            for (int i = 0; i < group.getRegistryList().size(); i++) {
                 processTrigger(group, jobInfo, finalFailRetryCount, triggerType, i, group.getRegistryList().size());
             }
         } else {
-            if (shardingParam == null) {  //当shardingParam为空，设置默认值,分别标识
+            //当shardingParam为空，设置默认值,分别标识
+            if (shardingParam == null) {
                 shardingParam = new int[]{0, 1};
             } //执行触发器
             processTrigger(group, jobInfo, finalFailRetryCount, triggerType, shardingParam[0], shardingParam[1]);
@@ -145,9 +148,11 @@ public class XxlJobTrigger {
         // 3、init address  获取触发器执行地址
         String address = null;
         ReturnT<String> routeAddressResult = null;
-        if (group.getRegistryList()!=null && !group.getRegistryList().isEmpty()) {  //如果是集群广播模式
+        //如果是集群广播模式
+        if (group.getRegistryList()!=null && !group.getRegistryList().isEmpty()) {
             if (ExecutorRouteStrategyEnum.SHARDING_BROADCAST == executorRouteStrategyEnum) {
-                if (index < group.getRegistryList().size()) {  //查询匹配地址执行
+                //查询匹配地址执行
+                if (index < group.getRegistryList().size()) {
                     address = group.getRegistryList().get(index);
                 } else { //超过size,则默认执行第一个.
                     address = group.getRegistryList().get(0);
@@ -165,7 +170,8 @@ public class XxlJobTrigger {
 
         // 4、trigger remote executor
         ReturnT<String> triggerResult = null;
-        if (address != null) { //这里真正的执行触发器
+        //这里真正的执行触发器
+        if (address != null) {
             triggerResult = runExecutor(triggerParam, address);
         } else {//获取不到执行地址直接返回
             triggerResult = new ReturnT<String>(ReturnT.FAIL_CODE, null);
@@ -196,8 +202,10 @@ public class XxlJobTrigger {
         jobLog.setExecutorShardingParam(shardingParam);
         jobLog.setExecutorFailRetryCount(finalFailRetryCount);
         //jobLog.setTriggerTime();
-        jobLog.setTriggerCode(triggerResult.getCode());//设置执行触发器返回值
-        jobLog.setTriggerMsg(triggerMsgSb.toString());//设置返回结果信息
+        //设置执行触发器返回值
+        jobLog.setTriggerCode(triggerResult.getCode());
+        //设置返回结果信息
+        jobLog.setTriggerMsg(triggerMsgSb.toString());
         XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().updateTriggerInfo(jobLog);
 
         logger.debug(">>>>>>>>>>> xxl-job trigger end, jobId:{}", jobLog.getId());

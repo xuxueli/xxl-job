@@ -20,14 +20,17 @@ public class ExecutorRouteRound extends ExecutorRouter {
 
     private static int count(int jobId) {
         // cache clear
+        //当超过缓存时间，则清除缓存,这里存储内存中
         if (System.currentTimeMillis() > CACHE_VALID_TIME) {
             routeCountEachJob.clear();
+            //缓存有效时间一天
             CACHE_VALID_TIME = System.currentTimeMillis() + 1000*60*60*24;
         }
 
         AtomicInteger count = routeCountEachJob.get(jobId);
         if (count == null || count.get() > 1000000) {
             // 初始化时主动Random一次，缓解首次压力
+            // 将首次寻址分担到每个addressList上
             count = new AtomicInteger(new Random().nextInt(100));
         } else {
             // count++
