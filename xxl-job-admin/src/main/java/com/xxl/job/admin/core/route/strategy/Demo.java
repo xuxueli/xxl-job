@@ -1,5 +1,6 @@
 package com.xxl.job.admin.core.route.strategy;
 
+import com.xxl.job.admin.core.conf.XxlJobAdminConfig;
 import com.xxl.job.admin.core.route.ExecutorRouter;
 import com.xxl.job.core.biz.model.TriggerParam;
 
@@ -13,8 +14,10 @@ import java.util.List;
  * @Created by wangchao
  */
 public class Demo {
-    public static void main(String[] args) {
-        ExecutorRouter executorRoute = new ExecutorRouteLRU();
+    public static void main(String[] args) throws Exception {
+        ExecutorRouter executorRoute = new ExecutorRouteConsistentHash();
+        new XxlJobAdminConfig().afterPropertiesSet();
+
         TriggerParam triggerParam = new TriggerParam();
         triggerParam.setJobId(1);
         List<String> addressList = new ArrayList<String>() {

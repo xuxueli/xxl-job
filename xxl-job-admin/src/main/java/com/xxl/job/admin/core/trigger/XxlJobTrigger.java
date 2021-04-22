@@ -173,7 +173,8 @@ public class XxlJobTrigger {
         //这里真正的执行触发器
         if (address != null) {
             triggerResult = runExecutor(triggerParam, address);
-        } else {//获取不到执行地址直接返回
+        } else {
+            //获取不到执行地址直接返回
             triggerResult = new ReturnT<String>(ReturnT.FAIL_CODE, null);
         }
 
@@ -220,7 +221,8 @@ public class XxlJobTrigger {
     public static ReturnT<String> runExecutor(TriggerParam triggerParam, String address){
         ReturnT<String> runResult = null;
         try {
-            ExecutorBiz executorBiz = XxlJobScheduler.getExecutorBiz(address);//获取业务执行器地址,就执行器地址后面拼接token
+            //获取业务执行器地址,就执行器地址后面拼接token
+            ExecutorBiz executorBiz = XxlJobScheduler.getExecutorBiz(address);
             runResult = executorBiz.run(triggerParam);
         } catch (Exception e) {
             logger.error(">>>>>>>>>>> xxl-job trigger error, please check if the executor[{}] is running.", address, e);

@@ -18,13 +18,16 @@ public class ExecutorRouteFailover extends ExecutorRouter {
     public ReturnT<String> route(TriggerParam triggerParam, List<String> addressList) {
 
         StringBuffer beatResultSB = new StringBuffer();
+        //遍历配置的每个地址
         for (String address : addressList) {
             // beat
             ReturnT<String> beatResult = null;
-            try {
+            try {//获取executor-client
                 ExecutorBiz executorBiz = XxlJobScheduler.getExecutorBiz(address);
+                //检测心跳
                 beatResult = executorBiz.beat();
             } catch (Exception e) {
+                //检测异常直接封装返回
                 logger.error(e.getMessage(), e);
                 beatResult = new ReturnT<String>(ReturnT.FAIL_CODE, ""+e );
             }
@@ -36,7 +39,7 @@ public class ExecutorRouteFailover extends ExecutorRouter {
 
             // beat success
             if (beatResult.getCode() == ReturnT.SUCCESS_CODE) {
-
+                //设置访问client请求结果,以及地址返回
                 beatResult.setMsg(beatResultSB.toString());
                 beatResult.setContent(address);
                 return beatResult;

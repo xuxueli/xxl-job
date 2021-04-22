@@ -18,11 +18,14 @@ public class ExecutorRouteBusyover extends ExecutorRouter {
     @Override
     public ReturnT<String> route(TriggerParam triggerParam, List<String> addressList) {
         StringBuffer idleBeatResultSB = new StringBuffer();
+        //遍历每个地址
         for (String address : addressList) {
             // beat
             ReturnT<String> idleBeatResult = null;
             try {
+                //缓存获取ExecutorBiz
                 ExecutorBiz executorBiz = XxlJobScheduler.getExecutorBiz(address);
+                //访问客户端是否空闲
                 idleBeatResult = executorBiz.idleBeat(new IdleBeatParam(triggerParam.getJobId()));
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);

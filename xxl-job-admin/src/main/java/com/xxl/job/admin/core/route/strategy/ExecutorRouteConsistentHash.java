@@ -61,6 +61,8 @@ public class ExecutorRouteConsistentHash extends ExecutorRouter {
         // ------A1------A2-------A3------
         // -----------J1------------------
         TreeMap<Long, String> addressRing = new TreeMap<Long, String>();
+        //针对每个地址生成100个随机hash值,然后利用treeMap会对key排序的特性
+        //hash100次存储
         for (String address: addressList) {
             for (int i = 0; i < VIRTUAL_NODE_NUM; i++) {
                 long addressHash = hash("SHARD-" + address + "-NODE-" + i);
@@ -68,11 +70,15 @@ public class ExecutorRouteConsistentHash extends ExecutorRouter {
             }
         }
 
+        //对jobId构建hash
         long jobHash = hash(String.valueOf(jobId));
+        //选出hash值>jobHash的map
         SortedMap<Long, String> lastRing = addressRing.tailMap(jobHash);
+        //若不为空选出第一个>jobHash的地址
         if (!lastRing.isEmpty()) {
             return lastRing.get(lastRing.firstKey());
         }
+        //若jobHash最大,没选出map,则选出第一个
         return addressRing.firstEntry().getValue();
     }
 
