@@ -152,10 +152,14 @@ public class EmbedServer {
 
             // request parse
             //final byte[] requestBytes = ByteBufUtil.getBytes(msg.content());    // byteBuf.toString(io.netty.util.CharsetUtil.UTF_8);
-            String requestData = msg.content().toString(CharsetUtil.UTF_8);//解析请求数据
-            String uri = msg.uri();//获取uri,后面通过uri来处理不同的请求
-            HttpMethod httpMethod = msg.method();//获取请求方式,Post/Get
-            boolean keepAlive = HttpUtil.isKeepAlive(msg);//保持长连接
+            //解析请求数据
+            String requestData = msg.content().toString(CharsetUtil.UTF_8);
+            //获取uri,后面通过uri来处理不同的请求
+            String uri = msg.uri();
+            //获取请求方式,Post/Get
+            HttpMethod httpMethod = msg.method();
+            //保持长连接
+            boolean keepAlive = HttpUtil.isKeepAlive(msg);
             String accessTokenReq = msg.headers().get(XxlJobRemotingUtil.XXL_JOB_ACCESS_TOKEN);
 
             // invoke

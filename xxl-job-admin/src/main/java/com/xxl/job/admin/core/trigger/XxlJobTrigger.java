@@ -154,7 +154,8 @@ public class XxlJobTrigger {
                 //查询匹配地址执行
                 if (index < group.getRegistryList().size()) {
                     address = group.getRegistryList().get(index);
-                } else { //超过size,则默认执行第一个.
+                } else {
+                    //超过size,则默认执行第一个.
                     address = group.getRegistryList().get(0);
                 }
             } else {

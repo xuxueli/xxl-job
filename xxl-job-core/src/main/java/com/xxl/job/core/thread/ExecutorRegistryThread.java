@@ -43,10 +43,13 @@ public class ExecutorRegistryThread {
                 while (!toStop) {
                     try {
                         RegistryParam registryParam = new RegistryParam(RegistryConfig.RegistType.EXECUTOR.name(), appname, address);
+                        //遍历配置的每个调度中心地址
                         for (AdminBiz adminBiz: XxlJobExecutor.getAdminBizList()) {
                             try {
-                                ReturnT<String> registryResult = adminBiz.registry(registryParam); //向server注册服务(http请求),注册内容appname,当前服务监听地址
-                                if (registryResult!=null && ReturnT.SUCCESS_CODE == registryResult.getCode()) { //访问成功
+                                //向server注册服务(http请求),注册内容appname,当前服务监听地址
+                                ReturnT<String> registryResult = adminBiz.registry(registryParam);
+                                //访问成功
+                                if (registryResult!=null && ReturnT.SUCCESS_CODE == registryResult.getCode()) {
                                     registryResult = ReturnT.SUCCESS;
                                     logger.debug(">>>>>>>>>>> xxl-job registry success, registryParam:{}, registryResult:{}", new Object[]{registryParam, registryResult});
                                     break;

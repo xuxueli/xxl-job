@@ -160,11 +160,12 @@ public class JobRegistryHelper {
 		// async execute 异步注册
 		registryOrRemoveThreadPool.execute(new Runnable() {
 			@Override
-			public void run() { //更新修改时间
+			public void run() {
+				//更新修改时间
 				int ret = XxlJobAdminConfig.getAdminConfig().getXxlJobRegistryDao().registryUpdate(registryParam.getRegistryGroup(), registryParam.getRegistryKey(), registryParam.getRegistryValue(), new Date());
-				if (ret < 1) {//说明暂未数据,才新增
+				if (ret < 1) {
+					//说明暂未数据,才新增
 					XxlJobAdminConfig.getAdminConfig().getXxlJobRegistryDao().registrySave(registryParam.getRegistryGroup(), registryParam.getRegistryKey(), registryParam.getRegistryValue(), new Date());
-
 					// fresh  空实现
 					freshGroupRegistryInfo(registryParam);
 				}

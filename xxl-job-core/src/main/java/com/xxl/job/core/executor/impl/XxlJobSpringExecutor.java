@@ -88,7 +88,8 @@ public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationC
             Object bean = applicationContext.getBean(beanDefinitionName);
 
             Map<Method, XxlJob> annotatedMethods = null;   // referred to ：org.springframework.context.event.EventListenerMethodProcessor.processBean
-            try { //获取每个注解XxlJob方法
+            try {
+                //获取每个注解XxlJob方法
                 annotatedMethods = MethodIntrospector.selectMethods(bean.getClass(),
                         new MethodIntrospector.MetadataLookup<XxlJob>() {
                             @Override
@@ -110,11 +111,13 @@ public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationC
                     continue;
                 }
 
-                String name = xxlJob.value();//获取配置xxjob的触发器名称
+                //获取配置xxjob的触发器名称
+                String name = xxlJob.value();
                 if (name.trim().length() == 0) {
                     throw new RuntimeException("xxl-job method-jobhandler name invalid, for[" + bean.getClass() + "#" + executeMethod.getName() + "] .");
                 }
-                if (loadJobHandler(name) != null) { //工作处理资源库是否有相同命名
+                //工作处理资源库是否有相同命名
+                if (loadJobHandler(name) != null) {
                     throw new RuntimeException("xxl-job jobhandler[" + name + "] naming conflicts.");
                 }
 
@@ -128,7 +131,8 @@ public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationC
                             "The correct method format like \" public ReturnT<String> execute(String param) \" .");
                 }*/
 
-                executeMethod.setAccessible(true);//设置可访问,设置后可通过反射调用私有方法
+                //设置可访问,设置后可通过反射调用私有方法
+                executeMethod.setAccessible(true);
 
                 // init and destory
                 Method initMethod = null;
