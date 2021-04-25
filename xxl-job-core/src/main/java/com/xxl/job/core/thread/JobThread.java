@@ -95,13 +95,15 @@ public class JobThread extends Thread{
 
     	// init
     	try {
-			handler.init();//执行初始化任务
+			//执行初始化任务
+			handler.init();
 		} catch (Throwable e) {
     		logger.error(e.getMessage(), e);
 		}
 
 		// execute
 		while(!toStop){
+			//标记任务没在运行
 			running = false;
 			//统计空闲执行次数
 			idleTimes++;
@@ -112,13 +114,14 @@ public class JobThread extends Thread{
 				//获取触发器任务
 				triggerParam = triggerQueue.poll(3L, TimeUnit.SECONDS);
 				if (triggerParam!=null) {
+					//标记任务处于运行态
 					running = true;
 					//空闲次数重置
 					idleTimes = 0;
 					//删除logId主要用来判断是否重复执行
 					triggerLogIdSet.remove(triggerParam.getLogId());
 
-					// log filename, like "logPath/yyyy-MM-dd/9999.log"  写入log文件
+					// log filename, like "logPath/yyyy-MM-dd/9999.log"   创建log文件
 					String logFileName = XxlJobFileAppender.makeLogFileName(new Date(triggerParam.getLogDateTime()), triggerParam.getLogId());
 					XxlJobContext xxlJobContext = new XxlJobContext(
 							triggerParam.getJobId(),

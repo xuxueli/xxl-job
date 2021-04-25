@@ -200,8 +200,10 @@ public class EmbedServer {
                 } else if ("/idleBeat".equals(uri)) {
                     IdleBeatParam idleBeatParam = GsonTool.fromJson(requestData, IdleBeatParam.class);
                     return executorBiz.idleBeat(idleBeatParam);
-                } else if ("/run".equals(uri)) { //执行触发器
-                    TriggerParam triggerParam = GsonTool.fromJson(requestData, TriggerParam.class);//请求参数解析成TriggerParam
+                } else if ("/run".equals(uri)) {
+                    //执行触发器
+                    //请求参数解析成TriggerParam
+                    TriggerParam triggerParam = GsonTool.fromJson(requestData, TriggerParam.class);
                     return executorBiz.run(triggerParam);
                 } else if ("/kill".equals(uri)) {
                     KillParam killParam = GsonTool.fromJson(requestData, KillParam.class);
