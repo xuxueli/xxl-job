@@ -8,6 +8,7 @@
 
 		<result column="job_group" property="jobGroup" />
 		<result column="job_id" property="jobId" />
+		<result column="job_desc" property="jobDesc" />
 
 		<result column="executor_address" property="executorAddress" />
 		<result column="executor_handler" property="executorHandler" />
@@ -43,10 +44,31 @@
 		t.handle_msg,
 		t.alarm_status
 	</sql>
+
+	<sql id="Log_Page_Column_List">
+		t.id,
+		t.job_group,
+		t.job_id,
+		t.executor_address,
+		t.executor_handler,
+		t.executor_param,
+		t.executor_sharding_param,
+		t.executor_fail_retry_count,
+		t.trigger_time,
+		t.trigger_code,
+		t.trigger_msg,
+		t.handle_time,
+		t.handle_code,
+		t.handle_msg,
+		t.alarm_status,
+		t2.job_desc
+	</sql>
 	
 	<select id="pageList" resultMap="XxlJobLog">
-		SELECT <include refid="Base_Column_List" />
+		SELECT <include refid="Log_Page_Column_List" />
 		FROM xxl_job_log AS t
+		JOIN xxl_job_info as t2
+			on t2.id = t.job_id
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
 			<if test="jobId==0 and jobGroup gt 0">
 				AND t.job_group = #{jobGroup}
