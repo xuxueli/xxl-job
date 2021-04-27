@@ -22,7 +22,13 @@ public class TriggerParam implements Serializable{
     private String glueSource;
     private long glueUpdatetime;
 
+    /**
+     * 1、分片任务场景：10个执行器的集群来处理10w条数据，每台机器只需要处理1w条数据，耗时降低10倍；
+     * 2、广播任务场景：广播执行器机器运行shell脚本、广播集群节点进行缓存更新等
+     */
+    //当前分片序号(从0开始)，执行器集群列表中当前执行器的序号；
     private int broadcastIndex;
+    //总分片数，执行器集群的总机器数量；
     private int broadcastTotal;
 
 

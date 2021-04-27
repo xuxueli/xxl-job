@@ -83,7 +83,8 @@ public class JobScheduleHelper {
                             for (XxlJobInfo jobInfo: scheduleList) {
 
                                 // time-ring jump
-                                if (nowTime > jobInfo.getTriggerNextTime() + PRE_READ_MS) {  //触发器过期时间>5s
+                                if (nowTime > jobInfo.getTriggerNextTime() + PRE_READ_MS) {
+                                    //触发器过期时间>5s
                                     // 2.1、trigger-expire > 5s：pass && make next-trigger-time
                                     logger.warn(">>>>>>>>>>> xxl-job, schedule misfire, jobId = " + jobInfo.getId());
 
@@ -92,7 +93,8 @@ public class JobScheduleHelper {
 //                                    - 忽略：调度过期后，忽略过期的任务，从当前时间开始重新计算下次触发时间；
 //                                    - 立即执行一次：调度过期后，立即执行一次，并从当前时间开始重新计算下次触发时间；
                                     MisfireStrategyEnum misfireStrategyEnum = MisfireStrategyEnum.match(jobInfo.getMisfireStrategy(), MisfireStrategyEnum.DO_NOTHING);
-                                    if (MisfireStrategyEnum.FIRE_ONCE_NOW == misfireStrategyEnum) { //若过期策略为FIRE_ONCE_NOW,则立即执行一次
+                                    if (MisfireStrategyEnum.FIRE_ONCE_NOW == misfireStrategyEnum) {
+                                        //若过期策略为FIRE_ONCE_NOW,则立即执行一次
                                         // FIRE_ONCE_NOW 》 trigger //执行触发器
                                         JobTriggerPoolHelper.trigger(jobInfo.getId(), TriggerTypeEnum.MISFIRE, -1, null, null, null);
                                         logger.debug(">>>>>>>>>>> xxl-job, schedule push trigger : jobId = " + jobInfo.getId() );
@@ -101,7 +103,8 @@ public class JobScheduleHelper {
                                     // 2、fresh next  更新下次执行时间
                                     refreshNextValidTime(jobInfo, new Date());
 
-                                } else if (nowTime > jobInfo.getTriggerNextTime()) { //触发器过期时间<5s
+                                } else if (nowTime > jobInfo.getTriggerNextTime()) {
+                                    //触发器过期时间<5s
                                     // 2.2、trigger-expire < 5s：direct-trigger && make next-trigger-time
 
                                     // 1、trigger //执行触发器
@@ -274,11 +277,14 @@ public class JobScheduleHelper {
     }
 
     private void refreshNextValidTime(XxlJobInfo jobInfo, Date fromTime) throws Exception {
-        Date nextValidTime = generateNextValidTime(jobInfo, fromTime);//获取下次执行时间
-        if (nextValidTime != null) {//更新上次和下次执行时间
+        //获取下次执行时间
+        Date nextValidTime = generateNextValidTime(jobInfo, fromTime);
+        //更新上次和下次执行时间
+        if (nextValidTime != null) {
             jobInfo.setTriggerLastTime(jobInfo.getTriggerNextTime());
             jobInfo.setTriggerNextTime(nextValidTime.getTime());
-        } else {//没有匹配到调度类型,则清除执行时间,并设置执行状态停止
+        } else {
+            //没有匹配到调度类型,则清除执行时间,并设置执行状态停止
             jobInfo.setTriggerStatus(0);
             jobInfo.setTriggerLastTime(0);
             jobInfo.setTriggerNextTime(0);
@@ -360,11 +366,15 @@ public class JobScheduleHelper {
 
     // ---------------------- tools ----------------------
     public static Date generateNextValidTime(XxlJobInfo jobInfo, Date fromTime) throws Exception {
-        ScheduleTypeEnum scheduleTypeEnum = ScheduleTypeEnum.match(jobInfo.getScheduleType(), null);//匹配调度类型
-        if (ScheduleTypeEnum.CRON == scheduleTypeEnum) {//通过CRON，触发任务调度；
-            Date nextValidTime = new CronExpression(jobInfo.getScheduleConf()).getNextValidTimeAfter(fromTime);//通过cron表达式,获取下一次执行时间
+        //匹配调度类型
+        ScheduleTypeEnum scheduleTypeEnum = ScheduleTypeEnum.match(jobInfo.getScheduleType(), null);
+        if (ScheduleTypeEnum.CRON == scheduleTypeEnum) {
+            //通过CRON，触发任务调度；
+            //通过cron表达式,获取下一次执行时间
+            Date nextValidTime = new CronExpression(jobInfo.getScheduleConf()).getNextValidTimeAfter(fromTime);
             return nextValidTime;
-        } else if (ScheduleTypeEnum.FIX_RATE == scheduleTypeEnum /*|| ScheduleTypeEnum.FIX_DELAY == scheduleTypeEnum*/) {//以固定速度，触发任务调度；按照固定的间隔时间，周期性触发；
+        } else if (ScheduleTypeEnum.FIX_RATE == scheduleTypeEnum /*|| ScheduleTypeEnum.FIX_DELAY == scheduleTypeEnum*/) {
+            //以固定速度，触发任务调度；按照固定的间隔时间，周期性触发；
             return new Date(fromTime.getTime() + Integer.valueOf(jobInfo.getScheduleConf())*1000 );
         }//没有匹配到调度类型,则null
         return null;

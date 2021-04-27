@@ -9,8 +9,11 @@ import com.xxl.job.admin.core.util.I18nUtil;
  */
 public enum TriggerTypeEnum {
 
-    MANUAL(I18nUtil.getString("jobconf_trigger_type_manual")),//手动触发
+    //手动触发
+    MANUAL(I18nUtil.getString("jobconf_trigger_type_manual")),
+    //CRON
     CRON(I18nUtil.getString("jobconf_trigger_type_cron")),
+    //重试
     RETRY(I18nUtil.getString("jobconf_trigger_type_retry")),
     PARENT(I18nUtil.getString("jobconf_trigger_type_parent")),
     API(I18nUtil.getString("jobconf_trigger_type_api")),

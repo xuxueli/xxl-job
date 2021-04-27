@@ -7,20 +7,23 @@ import com.xxl.job.admin.core.util.I18nUtil;
  */
 public enum ScheduleTypeEnum {
 
-    NONE(I18nUtil.getString("schedule_type_none")),  //该类型不会主动触发调度；
+    //该类型不会主动触发调度；
+    NONE(I18nUtil.getString("schedule_type_none")),
 
     /**
      * schedule by cron
      */
-    CRON(I18nUtil.getString("schedule_type_cron")),   //该类型将会通过CRON，触发任务调度；
+    //该类型将会通过CRON，触发任务调度；
+    CRON(I18nUtil.getString("schedule_type_cron")),
 
     /**
      * schedule by fixed rate (in seconds)
      */
-    FIX_RATE(I18nUtil.getString("schedule_type_fix_rate")),//固定速度：该类型将会以固定速度，触发任务调度；按照固定的间隔时间，周期性触发；
+    //固定速度：该类型将会以固定速度，触发任务调度；按照固定的间隔时间，周期性触发；
+    FIX_RATE(I18nUtil.getString("schedule_type_fix_rate")),
 
     /**
-     * schedule by fix delay (in seconds)， after the last time //固定延迟：该类型将会以固定延迟，触发任务调度；按照固定的延迟时间，从上次调度结束后开始计算延迟时间，到达延迟时间后触发下次调度；
+     * schedule by fix delay (in seconds)， after the last time 固定延迟：该类型将会以固定延迟，触发任务调度；按照固定的延迟时间，从上次调度结束后开始计算延迟时间，到达延迟时间后触发下次调度；
      */
     /*FIX_DELAY(I18nUtil.getString("schedule_type_fix_delay"))*/;
 
