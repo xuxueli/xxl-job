@@ -10,6 +10,7 @@ import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Arrays;
@@ -249,5 +250,21 @@ public class SampleXxlJob {
         logger.info("destory");
     }
 
+    public static void main(String[] args) throws Exception {
+//        Class clazz = Class.forName("com.xxl.job.executor.service.jobhandler.SampleXxlJob");
+//        Class clazz =   new SampleXxlJob().getClass();
+//        Class clazz = SampleXxlJob.class.getClass();  这里是直接获取Class类
+        Class clazz = SampleXxlJob.class;
+        Method method = clazz.getDeclaredMethod("init",int.class);
 
+        method.setAccessible(true);
+
+        Class<?>[] paramTypes = method.getParameterTypes();
+        if (paramTypes.length > 0) {
+            method.invoke(new SampleXxlJob(), new Object[paramTypes.length]);       // method-param can not be primitive-types
+        } else {
+            method.invoke(new SampleXxlJob());
+        }
+
+    }
 }

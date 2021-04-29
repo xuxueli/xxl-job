@@ -126,12 +126,14 @@ public class JobInfoController {
 	@RequestMapping("/stop")
 	@ResponseBody
 	public ReturnT<String> pause(int id) {
+		//停止定时器
 		return xxlJobService.stop(id);
 	}
 	
 	@RequestMapping("/start")
 	@ResponseBody
 	public ReturnT<String> start(int id) {
+		//启动定时器
 		return xxlJobService.start(id);
 	}
 

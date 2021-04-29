@@ -63,8 +63,10 @@ public class JobFailMonitorHelper {
 
 								// 2、fail alarm monitor 失败警告监视器
 								int newAlarmStatus = 0;		// 告警状态：0-默认、-1=锁定状态、1-无需告警、2-告警成功、3-告警失败
-								if (info!=null && info.getAlarmEmail()!=null && info.getAlarmEmail().trim().length()>0) {//若设置报警邮箱，则执行报警
-									boolean alarmResult = XxlJobAdminConfig.getAdminConfig().getJobAlarmer().alarm(info, log);  //发送警报
+								if (info!=null && info.getAlarmEmail()!=null && info.getAlarmEmail().trim().length()>0) {
+									//若设置报警邮箱，则执行报警
+									//从spring容器中获取注册JobAlarm类,遍历发送警报
+									boolean alarmResult = XxlJobAdminConfig.getAdminConfig().getJobAlarmer().alarm(info, log);
 									newAlarmStatus = alarmResult?2:3; //获取警报执行状态
 								} else {//没设置报警邮箱，则更改状态为不需要告警
 									newAlarmStatus = 1;

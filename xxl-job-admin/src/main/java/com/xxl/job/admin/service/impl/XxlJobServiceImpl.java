@@ -305,6 +305,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 		XxlJobInfo xxlJobInfo = xxlJobInfoDao.loadById(id);
 
 		// valid
+		//校验类型,若为不主动触发,直接返回
 		ScheduleTypeEnum scheduleTypeEnum = ScheduleTypeEnum.match(xxlJobInfo.getScheduleType(), ScheduleTypeEnum.NONE);
 		if (ScheduleTypeEnum.NONE == scheduleTypeEnum) {
 			return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("schedule_type_none_limit_start")) );
@@ -313,6 +314,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 		// next trigger time (5s后生效，避开预读周期)
 		long nextTriggerTime = 0;
 		try {
+			//设置执行时间为5秒后
 			Date nextValidTime = JobScheduleHelper.generateNextValidTime(xxlJobInfo, new Date(System.currentTimeMillis() + JobScheduleHelper.PRE_READ_MS));
 			if (nextValidTime == null) {
 				return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("schedule_type")+I18nUtil.getString("system_unvalid")) );
@@ -322,7 +324,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 			logger.error(e.getMessage(), e);
 			return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("schedule_type")+I18nUtil.getString("system_unvalid")) );
 		}
-
+		//设置状态为启动
 		xxlJobInfo.setTriggerStatus(1);
 		xxlJobInfo.setTriggerLastTime(0);
 		xxlJobInfo.setTriggerNextTime(nextTriggerTime);
@@ -336,7 +338,9 @@ public class XxlJobServiceImpl implements XxlJobService {
 	public ReturnT<String> stop(int id) {
         XxlJobInfo xxlJobInfo = xxlJobInfoDao.loadById(id);
 
+        //更新执行器状态
 		xxlJobInfo.setTriggerStatus(0);
+		//初始化执行时间和下次执行时间
 		xxlJobInfo.setTriggerLastTime(0);
 		xxlJobInfo.setTriggerNextTime(0);
 

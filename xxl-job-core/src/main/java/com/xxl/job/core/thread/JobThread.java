@@ -145,6 +145,7 @@ public class JobThread extends Thread{
 								public Boolean call() throws Exception {
 
 									// init job context
+									//便于jobhandler获取数据
 									XxlJobContext.setXxlJobContext(xxlJobContext);
 
 									handler.execute();
