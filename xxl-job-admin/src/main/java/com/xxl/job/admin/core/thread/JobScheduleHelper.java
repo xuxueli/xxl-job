@@ -77,7 +77,7 @@ public class JobScheduleHelper {
 
                         // 1、pre read
                         long nowTime = System.currentTimeMillis();
-                        List<XxlJobInfo> scheduleList = XxlJobAdminConfig.getAdminConfig().getXxlJobInfoDao().scheduleJobQuery(nowTime + PRE_READ_MS, preReadCount);
+                        List<XxlJobInfo> scheduleList = XxlJobAdminConfig.getAdminConfig().getXxlJobInfoDao().scheduleJobQuery(nowTime + PRE_READ_MS, preReadCount, new Date(nowTime));
                         if (scheduleList!=null && scheduleList.size()>0) {
                             // 2、push time-ring
                             for (XxlJobInfo jobInfo: scheduleList) {
@@ -357,13 +357,33 @@ public class JobScheduleHelper {
     // ---------------------- tools ----------------------
     public static Date generateNextValidTime(XxlJobInfo jobInfo, Date fromTime) throws Exception {
         ScheduleTypeEnum scheduleTypeEnum = ScheduleTypeEnum.match(jobInfo.getScheduleType(), null);
-        if (ScheduleTypeEnum.CRON == scheduleTypeEnum) {
-            Date nextValidTime = new CronExpression(jobInfo.getScheduleConf()).getNextValidTimeAfter(fromTime);
-            return nextValidTime;
-        } else if (ScheduleTypeEnum.FIX_RATE == scheduleTypeEnum /*|| ScheduleTypeEnum.FIX_DELAY == scheduleTypeEnum*/) {
-            return new Date(fromTime.getTime() + Integer.valueOf(jobInfo.getScheduleConf())*1000 );
+        final Date beginTime = jobInfo.getBeginTime();
+        if (beginTime != null && beginTime.compareTo(fromTime) > 0) {
+            // 时间在设定的开始时间之前，用设定的开始时间
+            if (ScheduleTypeEnum.CRON == scheduleTypeEnum) {
+                // CRON调度时，开始时间很可能是第1次调度，往前1毫秒
+                fromTime = new Date(beginTime.getTime() - 1);
+            } else if (ScheduleTypeEnum.FIX_RATE == scheduleTypeEnum /*|| ScheduleTypeEnum.FIX_DELAY == scheduleTypeEnum*/) {
+                // 固定速度时，第1次执行时间为 设定的开始时间，往前1个周期
+                fromTime = new Date(beginTime.getTime() - Integer.valueOf(jobInfo.getScheduleConf())*1000 );
+            } else {
+                // 其他情况暂时没有，用开始时间
+                fromTime = beginTime;
+            }
         }
-        return null;
+        Date nextValidTime;
+        if (ScheduleTypeEnum.CRON == scheduleTypeEnum) {
+            nextValidTime = new CronExpression(jobInfo.getScheduleConf()).getNextValidTimeAfter(fromTime);
+        } else if (ScheduleTypeEnum.FIX_RATE == scheduleTypeEnum /*|| ScheduleTypeEnum.FIX_DELAY == scheduleTypeEnum*/) {
+            nextValidTime = new Date(fromTime.getTime() + Integer.valueOf(jobInfo.getScheduleConf())*1000 );
+        } else {
+            return null;
+        }
+        if (jobInfo.getEndTime() == null || nextValidTime.compareTo(jobInfo.getEndTime()) <= 0) {
+            return nextValidTime;
+        } else {
+            return null;
+        }
     }
 
 }

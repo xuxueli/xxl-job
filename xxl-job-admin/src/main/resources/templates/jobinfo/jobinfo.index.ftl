@@ -5,6 +5,8 @@
 	<@netCommon.commonStyle />
 	<!-- DataTables -->
   	<link rel="stylesheet" href="${request.contextPath}/static/adminlte/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+  	<!-- daterangepicker -->
+  	<link rel="stylesheet" href="${request.contextPath}/static/adminlte/bower_components/bootstrap-daterangepicker/daterangepicker.css">
     <title>${I18n.admin_name}</title>
 </head>
 <body class="hold-transition skin-blue sidebar-mini <#if cookieMap?exists && cookieMap["xxljob_adminlte_settings"]?exists && "off" == cookieMap["xxljob_adminlte_settings"].value >sidebar-collapse</#if>">
@@ -138,6 +140,12 @@
 
                     <br>
                     <p style="margin: 0 0 10px;text-align: left;border-bottom: 1px solid #e5e5e5;color: gray;">${I18n.jobinfo_conf_schedule}</p>    <#-- 调度 -->
+                    <div class="form-group">
+                        <label for="beginTime" class="col-sm-2 control-label">${I18n.jobinfo_field_beginTime}</label>
+                        <div class="col-sm-4"><input type="text" class="form-control" name="beginTime" placeholder="${I18n.system_please_input}${I18n.jobinfo_field_beginTime}" maxlength="50" ></div>
+                        <label for="endTime" class="col-sm-2 control-label">${I18n.jobinfo_field_endTime}</label>
+                        <div class="col-sm-4"><input type="text" class="form-control" name="endTime" placeholder="${I18n.system_please_input}${I18n.jobinfo_field_endTime}" maxlength="100" ></div>
+                    </div>
                     <div class="form-group">
                         <label for="firstname" class="col-sm-2 control-label">${I18n.schedule_type}<font color="red">*</font></label>
                         <div class="col-sm-4">
@@ -384,6 +392,12 @@ exit 0
                     <br>
                     <p style="margin: 0 0 10px;text-align: left;border-bottom: 1px solid #e5e5e5;color: gray;">${I18n.jobinfo_conf_schedule}</p>    <#-- 调度配置 -->
                     <div class="form-group">
+                        <label for="beginTime" class="col-sm-2 control-label">${I18n.jobinfo_field_beginTime}</label>
+                        <div class="col-sm-4"><input type="text" class="form-control" name="beginTime" placeholder="${I18n.system_please_input}${I18n.jobinfo_field_beginTime}" maxlength="50" ></div>
+                        <label for="endTime" class="col-sm-2 control-label">${I18n.jobinfo_field_endTime}</label>
+                        <div class="col-sm-4"><input type="text" class="form-control" name="endTime" placeholder="${I18n.system_please_input}${I18n.jobinfo_field_endTime}" maxlength="100" ></div>
+                    </div>
+                    <div class="form-group">
                         <label for="firstname" class="col-sm-2 control-label">${I18n.schedule_type}<font color="red">*</font></label>
                         <div class="col-sm-4">
                             <select class="form-control scheduleType" name="scheduleType" >
@@ -533,6 +547,8 @@ exit 0
 <script src="${request.contextPath}/static/adminlte/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
 <!-- moment -->
 <script src="${request.contextPath}/static/adminlte/bower_components/moment/moment.min.js"></script>
+<!-- daterangepicker -->
+<script src="${request.contextPath}/static/adminlte/bower_components/bootstrap-daterangepicker/daterangepicker.js"></script>
 <#-- cronGen -->
 <script src="${request.contextPath}/static/plugins/cronGen/cronGen<#if I18n.admin_i18n?default('')?length gt 0 >_${I18n.admin_i18n}</#if>.js"></script>
 <script src="${request.contextPath}/static/js/jobinfo.index.1.js"></script>
