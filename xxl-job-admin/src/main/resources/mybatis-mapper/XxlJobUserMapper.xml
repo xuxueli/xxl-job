@@ -31,7 +31,12 @@
 			</if>
 		</trim>
 		ORDER BY username ASC
-		LIMIT #{offset}, #{pagesize}
+		<if test="_databaseId == 'mysql'">
+			LIMIT #{offset}, #{pagesize}
+		</if>
+		<if test="_databaseId == 'postgresql'">
+			LIMIT #{pagesize} OFFSET #{offset}
+		</if>
 	</select>
 
 	<select id="pageListCount" parameterType="java.util.HashMap" resultType="int">
