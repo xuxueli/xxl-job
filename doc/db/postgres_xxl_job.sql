@@ -51,15 +51,6 @@ COMMENT ON COLUMN xxl_job_info.trigger_status IS '调度状态：0-停止，1-�
 COMMENT ON COLUMN xxl_job_info.trigger_last_time IS '上次调度时间';
 COMMENT ON COLUMN xxl_job_info.trigger_next_time IS '下次调度时间';
 -- ----------------------------
--- Records of xxl_job_info
--- ----------------------------
-BEGIN;
-INSERT INTO xxl_job_info
-VALUES (1, 1, '测试任务1', '2018-11-03 22:21:31', '2018-11-03 22:21:31', 'XXL', '', 'CRON', '0 0 0 * * ? *', 'DO_NOTHING',
-        'FIRST', 'demoJobHandler', '', 'SERIAL_EXECUTION', 0, 0, 'BEAN', '', 'GLUE代码初始化', '2018-11-03 22:21:31', '', 0,
-        0, 0);
-COMMIT;
--- ----------------------------
 -- Table structure for xxl_job_log
 -- ----------------------------
 DROP TABLE IF EXISTS xxl_job_log;
@@ -97,15 +88,6 @@ COMMENT ON COLUMN xxl_job_log.handle_code IS '执行-状态';
 COMMENT ON COLUMN xxl_job_log.handle_msg IS '执行-日志';
 COMMENT ON COLUMN xxl_job_log.alarm_status IS '告警状态：0-默认、1-无需告警、2-告警成功、3-告警失败';
 -- ----------------------------
--- Records of xxl_job_log
--- ----------------------------
-BEGIN;
-INSERT INTO xxl_job_log
-VALUES (1, 1, 1, NULL, 'demoJobHandler', '', NULL, 0, '2021-05-06 14:49:09', 500,
-        '任务触发类型：手动触发<br>调度机器：172.25.34.162<br>执行器-注册方式：自动注册<br>执行器-地址列表：null<br>路由策略：第一个<br>阻塞处理策略：单机串行<br>任务超时时间：0<br>失败重试次数：0<br><br><span style=color:#00c0ef; > >>>>>>>>>>>触发调度<<<<<<<<<<< </span><br>调度失败：执行器地址为空<br><br>',
-        NULL, 0, NULL, 1);
-COMMIT;
--- ----------------------------
 -- Table structure for xxl_job_log_report
 -- ----------------------------
 DROP TABLE IF EXISTS xxl_job_log_report;
@@ -123,17 +105,6 @@ COMMENT ON COLUMN xxl_job_log_report.trigger_day IS '调度-时间';
 COMMENT ON COLUMN xxl_job_log_report.running_count IS '运行中-日志数量';
 COMMENT ON COLUMN xxl_job_log_report.suc_count IS '执行成功-日志数量';
 COMMENT ON COLUMN xxl_job_log_report.fail_count IS '执行失败-日志数量';
--- ----------------------------
--- Records of xxl_job_log_report
--- ----------------------------
-BEGIN;
-INSERT INTO xxl_job_log_report
-VALUES (1, '2021-05-06 00:00:00', 0, 0, 1, NULL);
-INSERT INTO xxl_job_log_report
-VALUES (2, '2021-05-05 00:00:00', 0, 0, 0, NULL);
-INSERT INTO xxl_job_log_report
-VALUES (3, '2021-05-04 00:00:00', 0, 0, 0, NULL);
-COMMIT;
 -- ----------------------------
 -- Table structure for xxl_job_logglue
 -- ----------------------------
@@ -185,13 +156,6 @@ COMMENT ON COLUMN xxl_job_group.title IS '执行器名称';
 COMMENT ON COLUMN xxl_job_group.address_type IS '执行器地址类型：0=自动注册、1=手动录入';
 COMMENT ON COLUMN xxl_job_group.address_list IS '执行器地址列表，多地址逗号分隔';
 -- ----------------------------
--- Records of xxl_job_group
--- ----------------------------
-BEGIN;
-INSERT INTO xxl_job_group
-VALUES (1, 'xxl-job-executor-sample', '示例执行器', 0, NULL, '2021-05-06 14:50:01');
-COMMIT;
--- ----------------------------
 -- Table structure for xxl_job_user
 -- ----------------------------
 DROP TABLE IF EXISTS xxl_job_user;
@@ -209,13 +173,6 @@ COMMENT ON COLUMN xxl_job_user.password IS '密码';
 COMMENT ON COLUMN xxl_job_user.role IS '角色：0-普通用户、1-管理员';
 COMMENT ON COLUMN xxl_job_user.permission IS '权限：执行器ID列表，多个逗号分割';
 -- ----------------------------
--- Records of xxl_job_user
--- ----------------------------
-BEGIN;
-INSERT INTO xxl_job_user
-VALUES (1, 'admin', 'e10adc3949ba59abbe56e057f20f883e', 1, NULL);
-COMMIT;
--- ----------------------------
 -- Table structure for xxl_job_lock
 -- ----------------------------
 DROP TABLE IF EXISTS xxl_job_lock;
@@ -225,13 +182,6 @@ CREATE TABLE xxl_job_lock
 )
 ;
 COMMENT ON COLUMN xxl_job_lock.lock_name IS '锁名称';
--- ----------------------------
--- Records of xxl_job_lock
--- ----------------------------
-BEGIN;
-INSERT INTO xxl_job_lock
-VALUES ('schedule_lock');
-COMMIT;
 -- ----------------------------
 -- Primary Key structure for table xxl_job_group
 -- ----------------------------
@@ -289,3 +239,29 @@ CREATE INDEX i_username ON xxl_job_user USING btree (username);
 -- ----------------------------
 ALTER TABLE xxl_job_user
     ADD PRIMARY KEY (id);
+
+-- ----------------------------
+-- Records of xxl_job_group
+-- ----------------------------
+BEGIN;
+INSERT INTO xxl_job_group
+VALUES (nextval('xxl_job_group_id_seq'::regclass), 'xxl-job-executor-sample', '示例执行器', 0, NULL, '2021-05-06 14:50:01');
+-- ----------------------------
+-- Records of xxl_job_info
+-- ----------------------------
+INSERT INTO xxl_job_info
+VALUES (nextval('xxl_job_info_id_seq'::regclass), 1, '测试任务1', '2018-11-03 22:21:31', '2018-11-03 22:21:31', 'XXL', '',
+        'CRON', '0 0 0 * * ? *', 'DO_NOTHING',
+        'FIRST', 'demoJobHandler', '', 'SERIAL_EXECUTION', 0, 0, 'BEAN', '', 'GLUE代码初始化', '2018-11-03 22:21:31', '', 0,
+        0, 0);
+-- ----------------------------
+-- Records of xxl_job_user
+-- ----------------------------
+INSERT INTO xxl_job_user
+VALUES (nextval('xxl_job_user_id_seq'::regclass), 'admin', 'e10adc3949ba59abbe56e057f20f883e', 1, NULL);
+-- ----------------------------
+-- Records of xxl_job_lock
+-- ----------------------------
+INSERT INTO xxl_job_lock
+VALUES ('schedule_lock');
+COMMIT;
