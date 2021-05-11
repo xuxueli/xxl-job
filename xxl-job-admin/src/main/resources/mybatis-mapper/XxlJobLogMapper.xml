@@ -247,12 +247,13 @@
 		)
 		</if>
 		<if test="_databaseId == 'postgresql'">
-		WHERE
-			(trigger_code !=0 AND handle_code !=0 )
-			OR
-			(trigger_code !=200 AND handle_code !=0 )
-			OR
-			(handle_code != 200)
+		WHERE NOT EXISTS (
+			SELECT 1 WHERE (
+				(trigger_code in (0, 200) and handle_code = 0)
+				OR
+				(handle_code = 200)
+			)
+		)
 		</if>
 		AND alarm_status = 0
 		ORDER BY id ASC
