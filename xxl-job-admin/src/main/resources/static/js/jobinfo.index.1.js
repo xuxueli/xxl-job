@@ -67,7 +67,7 @@ $(function() {
 						"render": function ( data, type, row ) {
 							var glueTypeTitle = findGlueTypeTitle(row.glueType);
                             if (row.executorHandler) {
-                                return glueTypeTitle +"：" + row.executorHandler;
+                                return glueTypeTitle +": " + row.executorHandler;
                             } else {
                                 return glueTypeTitle;
                             }
