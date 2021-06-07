@@ -1,8 +1,8 @@
 package com.xxl.job.admin.controller;
 
 import com.xxl.job.admin.service.LoginService;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.util.LinkedMultiValueMap;
@@ -16,7 +16,7 @@ public class JobInfoControllerTest extends AbstractSpringMvcTest {
 
   private Cookie cookie;
 
-  @Before
+  @BeforeEach
   public void login() throws Exception {
     MvcResult ret = mockMvc.perform(
         post("/login")
@@ -31,6 +31,7 @@ public class JobInfoControllerTest extends AbstractSpringMvcTest {
   public void testAdd() throws Exception {
     MultiValueMap<String, String> parameters = new LinkedMultiValueMap<String, String>();
     parameters.add("jobGroup", "1");
+    parameters.add("triggerStatus", "-1");
 
     MvcResult ret = mockMvc.perform(
         post("/jobinfo/pageList")

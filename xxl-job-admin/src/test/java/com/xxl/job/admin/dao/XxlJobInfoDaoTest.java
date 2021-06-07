@@ -1,18 +1,15 @@
 package com.xxl.job.admin.dao;
 
 import com.xxl.job.admin.core.model.XxlJobInfo;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import com.xxl.job.admin.core.scheduler.MisfireStrategyEnum;
+import com.xxl.job.admin.core.scheduler.ScheduleTypeEnum;
+import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
 
-@RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class XxlJobInfoDaoTest {
 	
@@ -34,10 +31,12 @@ public class XxlJobInfoDaoTest {
 	public void save_load(){
 		XxlJobInfo info = new XxlJobInfo();
 		info.setJobGroup(1);
-		info.setJobCron("jobCron");
 		info.setJobDesc("desc");
 		info.setAuthor("setAuthor");
 		info.setAlarmEmail("setAlarmEmail");
+		info.setScheduleType(ScheduleTypeEnum.FIX_RATE.name());
+		info.setScheduleConf(String.valueOf(33));
+		info.setMisfireStrategy(MisfireStrategyEnum.DO_NOTHING.name());
 		info.setExecutorRouteStrategy("setExecutorRouteStrategy");
 		info.setExecutorHandler("setExecutorHandler");
 		info.setExecutorParam("setExecutorParam");
@@ -47,10 +46,16 @@ public class XxlJobInfoDaoTest {
 		info.setGlueRemark("setGlueRemark");
 		info.setChildJobId("1");
 
+		info.setAddTime(new Date());
+		info.setUpdateTime(new Date());
+		info.setGlueUpdatetime(new Date());
+
 		int count = xxlJobInfoDao.save(info);
 
 		XxlJobInfo info2 = xxlJobInfoDao.loadById(info.getId());
-		info2.setJobCron("jobCron2");
+		info.setScheduleType(ScheduleTypeEnum.FIX_RATE.name());
+		info.setScheduleConf(String.valueOf(44));
+		info.setMisfireStrategy(MisfireStrategyEnum.FIRE_ONCE_NOW.name());
 		info2.setJobDesc("desc2");
 		info2.setAuthor("setAuthor2");
 		info2.setAlarmEmail("setAlarmEmail2");
@@ -64,6 +69,7 @@ public class XxlJobInfoDaoTest {
 		info2.setGlueUpdatetime(new Date());
 		info2.setChildJobId("1");
 
+		info2.setUpdateTime(new Date());
 		int item2 = xxlJobInfoDao.update(info2);
 
 		xxlJobInfoDao.delete(info2.getId());
