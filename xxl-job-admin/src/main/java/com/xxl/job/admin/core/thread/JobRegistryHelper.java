@@ -19,7 +19,7 @@ import java.util.concurrent.*;
  */
 public class JobRegistryHelper {
 	private static Logger logger = LoggerFactory.getLogger(JobRegistryHelper.class);
-
+	private JobRegistryHelper(){}
 	private static JobRegistryHelper instance = new JobRegistryHelper();
 	public static JobRegistryHelper getInstance(){
 		return instance;

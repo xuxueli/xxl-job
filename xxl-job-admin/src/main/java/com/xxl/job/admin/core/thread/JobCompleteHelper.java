@@ -21,7 +21,7 @@ import java.util.concurrent.*;
  */
 public class JobCompleteHelper {
 	private static Logger logger = LoggerFactory.getLogger(JobCompleteHelper.class);
-	
+	private JobCompleteHelper(){}
 	private static JobCompleteHelper instance = new JobCompleteHelper();
 	public static JobCompleteHelper getInstance(){
 		return instance;

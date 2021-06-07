@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class JobScheduleHelper {
     private static Logger logger = LoggerFactory.getLogger(JobScheduleHelper.class);
-
+    private JobScheduleHelper(){}
     private static JobScheduleHelper instance = new JobScheduleHelper();
     public static JobScheduleHelper getInstance(){
         return instance;

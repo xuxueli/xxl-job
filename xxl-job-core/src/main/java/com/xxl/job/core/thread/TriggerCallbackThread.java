@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class TriggerCallbackThread {
     private static Logger logger = LoggerFactory.getLogger(TriggerCallbackThread.class);
-
+    private TriggerCallbackThread(){}
     private static TriggerCallbackThread instance = new TriggerCallbackThread();
     public static TriggerCallbackThread getInstance(){
         return instance;

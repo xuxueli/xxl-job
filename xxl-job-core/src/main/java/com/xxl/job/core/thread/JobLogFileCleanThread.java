@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class JobLogFileCleanThread {
     private static Logger logger = LoggerFactory.getLogger(JobLogFileCleanThread.class);
-
+    private JobLogFileCleanThread(){}
     private static JobLogFileCleanThread instance = new JobLogFileCleanThread();
     public static JobLogFileCleanThread getInstance(){
         return instance;

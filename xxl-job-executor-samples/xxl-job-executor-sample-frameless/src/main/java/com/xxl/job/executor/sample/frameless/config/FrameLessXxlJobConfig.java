@@ -16,7 +16,7 @@ import java.util.Properties;
 public class FrameLessXxlJobConfig {
     private static Logger logger = LoggerFactory.getLogger(FrameLessXxlJobConfig.class);
 
-
+    private FrameLessXxlJobConfig(){}
     private static FrameLessXxlJobConfig instance = new FrameLessXxlJobConfig();
     public static FrameLessXxlJobConfig getInstance() {
         return instance;
