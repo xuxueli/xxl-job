@@ -379,7 +379,10 @@ public class JobScheduleHelper {
         } else {
             return null;
         }
-        if (jobInfo.getEndTime() == null || nextValidTime.compareTo(jobInfo.getEndTime()) <= 0) {
+
+        if (nextValidTime == null) {
+            return null;
+        } else if (jobInfo.getEndTime() == null || nextValidTime.compareTo(jobInfo.getEndTime()) <= 0) {
             return nextValidTime;
         } else {
             return null;
