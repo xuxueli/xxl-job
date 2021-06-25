@@ -109,7 +109,7 @@ public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationC
                     continue;
                 }
 
-                String name = xxlJob.value();
+                String name = applicationContext.getEnvironment().resolvePlaceholders(xxlJob.value());
                 if (name.trim().length() == 0) {
                     throw new RuntimeException("xxl-job method-jobhandler name invalid, for[" + bean.getClass() + "#" + executeMethod.getName() + "] .");
                 }
