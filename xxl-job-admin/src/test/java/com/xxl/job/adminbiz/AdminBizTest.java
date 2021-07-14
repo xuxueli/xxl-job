@@ -5,12 +5,14 @@ import com.xxl.job.core.biz.client.AdminBizClient;
 import com.xxl.job.core.biz.model.HandleCallbackParam;
 import com.xxl.job.core.biz.model.RegistryParam;
 import com.xxl.job.core.biz.model.ReturnT;
+import com.xxl.job.core.context.XxlJobContext;
 import com.xxl.job.core.enums.RegistryConfig;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * admin api test
@@ -30,13 +32,13 @@ public class AdminBizTest {
 
         HandleCallbackParam param = new HandleCallbackParam();
         param.setLogId(1);
-        param.setExecuteResult(ReturnT.SUCCESS);
+        param.setHandleCode(XxlJobContext.HANDLE_COCE_SUCCESS);
 
         List<HandleCallbackParam> callbackParamList = Arrays.asList(param);
 
         ReturnT<String> returnT = adminBiz.callback(callbackParamList);
 
-        Assert.assertTrue(returnT.getCode() == ReturnT.SUCCESS_CODE);
+        assertTrue(returnT.getCode() == ReturnT.SUCCESS_CODE);
     }
 
     /**
@@ -51,7 +53,7 @@ public class AdminBizTest {
         RegistryParam registryParam = new RegistryParam(RegistryConfig.RegistType.EXECUTOR.name(), "xxl-job-executor-example", "127.0.0.1:9999");
         ReturnT<String> returnT = adminBiz.registry(registryParam);
 
-        Assert.assertTrue(returnT.getCode() == ReturnT.SUCCESS_CODE);
+        assertTrue(returnT.getCode() == ReturnT.SUCCESS_CODE);
     }
 
     /**
@@ -66,7 +68,7 @@ public class AdminBizTest {
         RegistryParam registryParam = new RegistryParam(RegistryConfig.RegistType.EXECUTOR.name(), "xxl-job-executor-example", "127.0.0.1:9999");
         ReturnT<String> returnT = adminBiz.registryRemove(registryParam);
 
-        Assert.assertTrue(returnT.getCode() == ReturnT.SUCCESS_CODE);
+        assertTrue(returnT.getCode() == ReturnT.SUCCESS_CODE);
 
     }
 

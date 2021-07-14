@@ -68,13 +68,23 @@ public class JobGroupController {
 		if (xxlJobGroup.getAppname().length()<4 || xxlJobGroup.getAppname().length()>64) {
 			return new ReturnT<String>(500, I18nUtil.getString("jobgroup_field_appname_length") );
 		}
+		if (xxlJobGroup.getAppname().contains(">") || xxlJobGroup.getAppname().contains("<")) {
+			return new ReturnT<String>(500, "AppName"+I18nUtil.getString("system_unvalid") );
+		}
 		if (xxlJobGroup.getTitle()==null || xxlJobGroup.getTitle().trim().length()==0) {
 			return new ReturnT<String>(500, (I18nUtil.getString("system_please_input") + I18nUtil.getString("jobgroup_field_title")) );
+		}
+		if (xxlJobGroup.getTitle().contains(">") || xxlJobGroup.getTitle().contains("<")) {
+			return new ReturnT<String>(500, I18nUtil.getString("jobgroup_field_title")+I18nUtil.getString("system_unvalid") );
 		}
 		if (xxlJobGroup.getAddressType()!=0) {
 			if (xxlJobGroup.getAddressList()==null || xxlJobGroup.getAddressList().trim().length()==0) {
 				return new ReturnT<String>(500, I18nUtil.getString("jobgroup_field_addressType_limit") );
 			}
+			if (xxlJobGroup.getAddressList().contains(">") || xxlJobGroup.getAddressList().contains("<")) {
+				return new ReturnT<String>(500, I18nUtil.getString("jobgroup_field_registryList")+I18nUtil.getString("system_unvalid") );
+			}
+
 			String[] addresss = xxlJobGroup.getAddressList().split(",");
 			for (String item: addresss) {
 				if (item==null || item.trim().length()==0) {
@@ -82,6 +92,9 @@ public class JobGroupController {
 				}
 			}
 		}
+
+		// process
+		xxlJobGroup.setUpdateTime(new Date());
 
 		int ret = xxlJobGroupDao.save(xxlJobGroup);
 		return (ret>0)?ReturnT.SUCCESS:ReturnT.FAIL;
@@ -125,6 +138,9 @@ public class JobGroupController {
 				}
 			}
 		}
+
+		// process
+		xxlJobGroup.setUpdateTime(new Date());
 
 		int ret = xxlJobGroupDao.update(xxlJobGroup);
 		return (ret>0)?ReturnT.SUCCESS:ReturnT.FAIL;

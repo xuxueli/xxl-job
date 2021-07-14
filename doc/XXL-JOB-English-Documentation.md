@@ -397,9 +397,8 @@ Source code is organized by maven,unzip it and structure is as follows:
     xxl-job-admin：schedule admin center
     xxl-job-core：public common dependent library
     xxl-job-executor：executor Sample(Select appropriate version of executor,Can be used directly,You can also refer to it and transform existing projects into executors）
-        ：xxl-job-executor-sample-spring：Spring version，executors managed by Spring，general and recommend;
+        ：xxl-job-executor-sample-spring：Spring version，executors managed by Spring，general and recommend;
         ：xxl-job-executor-sample-springboot：Springboot version，executors managed by Springboot;
-        ：xxl-job-executor-sample-jfinal：JFinal version，executors managed by JFinal;
 	
 ### 2.3 Configure and delploy "Schedule Center"	
 

@@ -11,13 +11,15 @@ public class HandleCallbackParam implements Serializable {
     private long logId;
     private long logDateTim;
 
-    private ReturnT<String> executeResult;
+    private int handleCode;
+    private String handleMsg;
 
     public HandleCallbackParam(){}
-    public HandleCallbackParam(long logId, long logDateTim, ReturnT<String> executeResult) {
+    public HandleCallbackParam(long logId, long logDateTim, int handleCode, String handleMsg) {
         this.logId = logId;
         this.logDateTim = logDateTim;
-        this.executeResult = executeResult;
+        this.handleCode = handleCode;
+        this.handleMsg = handleMsg;
     }
 
     public long getLogId() {
@@ -36,12 +38,20 @@ public class HandleCallbackParam implements Serializable {
         this.logDateTim = logDateTim;
     }
 
-    public ReturnT<String> getExecuteResult() {
-        return executeResult;
+    public int getHandleCode() {
+        return handleCode;
     }
 
-    public void setExecuteResult(ReturnT<String> executeResult) {
-        this.executeResult = executeResult;
+    public void setHandleCode(int handleCode) {
+        this.handleCode = handleCode;
+    }
+
+    public String getHandleMsg() {
+        return handleMsg;
+    }
+
+    public void setHandleMsg(String handleMsg) {
+        this.handleMsg = handleMsg;
     }
 
     @Override
@@ -49,7 +59,8 @@ public class HandleCallbackParam implements Serializable {
         return "HandleCallbackParam{" +
                 "logId=" + logId +
                 ", logDateTim=" + logDateTim +
-                ", executeResult=" + executeResult +
+                ", handleCode=" + handleCode +
+                ", handleMsg='" + handleMsg + '\'' +
                 '}';
     }
 
