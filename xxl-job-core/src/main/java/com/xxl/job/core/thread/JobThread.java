@@ -31,6 +31,10 @@ public class JobThread extends Thread{
 	private IJobHandler handler;
 	private LinkedBlockingQueue<TriggerParam> triggerQueue;
 	private Set<Long> triggerLogIdSet;		// avoid repeat trigger for the same TRIGGER_LOG_ID
+	private static final ExecutorService timeoutExecutorService = new ThreadPoolExecutor(0,
+			Integer.MAX_VALUE, // maximumPoolSize is Integer.MAX_VALUE, for perform tasks on time. But cost is may be oom.
+			60L, TimeUnit.SECONDS, // idle thread will be kill
+			new SynchronousQueue<>());
 
 	private volatile boolean toStop = false;
 	private String stopReason;
@@ -130,24 +134,17 @@ public class JobThread extends Thread{
 					XxlJobHelper.log("<br>----------- xxl-job job execute start -----------<br>----------- Param:" + xxlJobContext.getJobParam());
 
 					if (triggerParam.getExecutorTimeout() > 0) {
-						// limit timeout
-						Thread futureThread = null;
+						Future<Boolean> future = null;
 						try {
-							FutureTask<Boolean> futureTask = new FutureTask<Boolean>(new Callable<Boolean>() {
-								@Override
-								public Boolean call() throws Exception {
-
-									// init job context
-									XxlJobContext.setXxlJobContext(xxlJobContext);
-
-									handler.execute();
-									return true;
-								}
+							future = timeoutExecutorService.submit(() -> {
+								// init job context
+								XxlJobContext.setXxlJobContext(xxlJobContext);
+								// execute
+								handler.execute();
+								return true;
 							});
-							futureThread = new Thread(futureTask);
-							futureThread.start();
 
-							Boolean tempResult = futureTask.get(triggerParam.getExecutorTimeout(), TimeUnit.SECONDS);
+							Boolean tempResult = future.get(triggerParam.getExecutorTimeout(), TimeUnit.SECONDS);
 						} catch (TimeoutException e) {
 
 							XxlJobHelper.log("<br>----------- xxl-job job execute timeout");
@@ -156,7 +153,10 @@ public class JobThread extends Thread{
 							// handle result
 							XxlJobHelper.handleTimeout("job execute timeout ");
 						} finally {
-							futureThread.interrupt();
+							if (future != null && !future.isDone()) {
+								// ensure that the task is terminated
+								future.cancel(true);
+							}
 						}
 					} else {
 						// just execute
