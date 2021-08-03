@@ -38,11 +38,11 @@ public class ExecutorRegistryThread {
         registryThread = new Thread(new Runnable() {
             @Override
             public void run() {
-
+                
+                RegistryParam registryParam = new RegistryParam(RegistryConfig.RegistType.EXECUTOR.name(), appname, address);
                 // registry
                 while (!toStop) {
                     try {
-                        RegistryParam registryParam = new RegistryParam(RegistryConfig.RegistType.EXECUTOR.name(), appname, address);
                         for (AdminBiz adminBiz: XxlJobExecutor.getAdminBizList()) {
                             try {
                                 ReturnT<String> registryResult = adminBiz.registry(registryParam);
@@ -78,7 +78,6 @@ public class ExecutorRegistryThread {
 
                 // registry remove
                 try {
-                    RegistryParam registryParam = new RegistryParam(RegistryConfig.RegistType.EXECUTOR.name(), appname, address);
                     for (AdminBiz adminBiz: XxlJobExecutor.getAdminBizList()) {
                         try {
                             ReturnT<String> registryResult = adminBiz.registryRemove(registryParam);
