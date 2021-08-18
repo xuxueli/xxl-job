@@ -52,7 +52,7 @@ public class EmbedServer {
                         new ThreadFactory() {
                             @Override
                             public Thread newThread(Runnable r) {
-                                return new Thread(r, "xxl-rpc, EmbedServer bizThreadPool-" + r.hashCode());
+                                return new Thread(r, "xxl-job, EmbedServer bizThreadPool-" + r.hashCode());
                             }
                         },
                         new RejectedExecutionHandler() {

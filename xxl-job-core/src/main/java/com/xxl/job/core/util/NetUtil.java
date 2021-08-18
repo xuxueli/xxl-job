@@ -53,7 +53,7 @@ public class NetUtil {
             serverSocket = new ServerSocket(port);
             used = false;
         } catch (IOException e) {
-            logger.info(">>>>>>>>>>> xxl-rpc, port[{}] is in use.", port);
+            logger.info(">>>>>>>>>>> xxl-job, port[{}] is in use.", port);
             used = true;
         } finally {
             if (serverSocket != null) {
