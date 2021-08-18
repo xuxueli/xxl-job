@@ -8,9 +8,9 @@ package com.xxl.job.core.context;
  */
 public class XxlJobContext {
 
-    public static final int HANDLE_COCE_SUCCESS = 200;
-    public static final int HANDLE_COCE_FAIL = 500;
-    public static final int HANDLE_COCE_TIMEOUT = 502;
+    public static final int HANDLE_CODE_SUCCESS = 200;
+    public static final int HANDLE_CODE_FAIL = 500;
+    public static final int HANDLE_CODE_TIMEOUT = 502;
 
     // ---------------------- base info ----------------------
 
@@ -68,7 +68,7 @@ public class XxlJobContext {
         this.shardIndex = shardIndex;
         this.shardTotal = shardTotal;
 
-        this.handleCode = HANDLE_COCE_SUCCESS;  // default success
+        this.handleCode = HANDLE_CODE_SUCCESS;  // default success
     }
 
     public long getJobId() {
