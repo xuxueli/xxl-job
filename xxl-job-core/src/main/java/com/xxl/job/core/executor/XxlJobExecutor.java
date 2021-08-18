@@ -84,10 +84,10 @@ public class XxlJobExecutor  {
         initEmbedServer(address, ip, port, appname, accessToken);
     }
     public void destroy(){
-        // destory executor-server
+        // destroy executor-server
         stopEmbedServer();
 
-        // destory jobThreadRepository
+        // destroy jobThreadRepository
         if (jobThreadRepository.size() > 0) {
             for (Map.Entry<Integer, JobThread> item: jobThreadRepository.entrySet()) {
                 JobThread oldJobThread = removeJobThread(item.getKey(), "web container destroy and kill the job.");
@@ -105,55 +105,11 @@ public class XxlJobExecutor  {
         jobHandlerRepository.clear();
 
 
-        // destory JobLogFileCleanThread
+        // destroy JobLogFileCleanThread
         JobLogFileCleanThread.getInstance().toStop();
 
-        // destory TriggerCallbackThread
+        // destroy TriggerCallbackThread
         TriggerCallbackThread.getInstance().toStop();
-
-    }
-
-    protected void registerJobHandler(XxlJob xxlJob, Object bean, Method executeMethod){
-        if (xxlJob == null) {
-            return;
-        }
-
-        String name = xxlJob.value();
-        //make and simplify the variables since they'll be called several times later
-        Class<?> clazz = bean.getClass();
-        String methodName = executeMethod.getName();
-        if (name.trim().length() == 0) {
-            throw new RuntimeException("xxl-job method-jobhandler name invalid, for[" + clazz + "#" + methodName + "] .");
-        }
-        if (loadJobHandler(name) != null) {
-            throw new RuntimeException("xxl-job jobhandler[" + name + "] naming conflicts.");
-        }
-
-        executeMethod.setAccessible(true);
-
-        // init and destroy
-        Method initMethod = null;
-        Method destroyMethod = null;
-
-        if (xxlJob.init().trim().length() > 0) {
-            try {
-                initMethod = clazz.getDeclaredMethod(xxlJob.init());
-                initMethod.setAccessible(true);
-            } catch (NoSuchMethodException e) {
-                throw new RuntimeException("xxl-job method-jobhandler initMethod invalid, for[" + clazz + "#" + methodName + "] .");
-            }
-        }
-        if (xxlJob.destroy().trim().length() > 0) {
-            try {
-                destroyMethod = clazz.getDeclaredMethod(xxlJob.destroy());
-                destroyMethod.setAccessible(true);
-            } catch (NoSuchMethodException e) {
-                throw new RuntimeException("xxl-job method-jobhandler destroyMethod invalid, for[" + clazz + "#" + methodName + "] .");
-            }
-        }
-
-        // registry jobhandler
-        registJobHandler(name, new MethodJobHandler(bean, executeMethod, initMethod, destroyMethod));
 
     }
 
@@ -224,6 +180,59 @@ public class XxlJobExecutor  {
     public static IJobHandler registJobHandler(String name, IJobHandler jobHandler){
         logger.info(">>>>>>>>>>> xxl-job register jobhandler success, name:{}, jobHandler:{}", name, jobHandler);
         return jobHandlerRepository.put(name, jobHandler);
+    }
+    protected void registJobHandler(XxlJob xxlJob, Object bean, Method executeMethod){
+        if (xxlJob == null) {
+            return;
+        }
+
+        String name = xxlJob.value();
+        //make and simplify the variables since they'll be called several times later
+        Class<?> clazz = bean.getClass();
+        String methodName = executeMethod.getName();
+        if (name.trim().length() == 0) {
+            throw new RuntimeException("xxl-job method-jobhandler name invalid, for[" + clazz + "#" + methodName + "] .");
+        }
+        if (loadJobHandler(name) != null) {
+            throw new RuntimeException("xxl-job jobhandler[" + name + "] naming conflicts.");
+        }
+
+        // execute method
+        /*if (!(method.getParameterTypes().length == 1 && method.getParameterTypes()[0].isAssignableFrom(String.class))) {
+            throw new RuntimeException("xxl-job method-jobhandler param-classtype invalid, for[" + bean.getClass() + "#" + method.getName() + "] , " +
+                    "The correct method format like \" public ReturnT<String> execute(String param) \" .");
+        }
+        if (!method.getReturnType().isAssignableFrom(ReturnT.class)) {
+            throw new RuntimeException("xxl-job method-jobhandler return-classtype invalid, for[" + bean.getClass() + "#" + method.getName() + "] , " +
+                    "The correct method format like \" public ReturnT<String> execute(String param) \" .");
+        }*/
+
+        executeMethod.setAccessible(true);
+
+        // init and destroy
+        Method initMethod = null;
+        Method destroyMethod = null;
+
+        if (xxlJob.init().trim().length() > 0) {
+            try {
+                initMethod = clazz.getDeclaredMethod(xxlJob.init());
+                initMethod.setAccessible(true);
+            } catch (NoSuchMethodException e) {
+                throw new RuntimeException("xxl-job method-jobhandler initMethod invalid, for[" + clazz + "#" + methodName + "] .");
+            }
+        }
+        if (xxlJob.destroy().trim().length() > 0) {
+            try {
+                destroyMethod = clazz.getDeclaredMethod(xxlJob.destroy());
+                destroyMethod.setAccessible(true);
+            } catch (NoSuchMethodException e) {
+                throw new RuntimeException("xxl-job method-jobhandler destroyMethod invalid, for[" + clazz + "#" + methodName + "] .");
+            }
+        }
+
+        // registry jobhandler
+        registJobHandler(name, new MethodJobHandler(bean, executeMethod, initMethod, destroyMethod));
+
     }
 
 

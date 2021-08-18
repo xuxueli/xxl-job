@@ -96,7 +96,7 @@ public class JobLogFileCleanThread {
                         }
                     }
                 }
-                logger.info(">>>>>>>>>>> xxl-job, executor JobLogFileCleanThread thread destory.");
+                logger.info(">>>>>>>>>>> xxl-job, executor JobLogFileCleanThread thread destroy.");
 
             }
         });

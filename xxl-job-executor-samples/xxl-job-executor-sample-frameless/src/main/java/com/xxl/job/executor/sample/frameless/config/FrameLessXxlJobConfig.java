@@ -56,9 +56,9 @@ public class FrameLessXxlJobConfig {
     }
 
     /**
-     * destory
+     * destroy
      */
-    public void destoryXxlJobExecutor() {
+    public void destroyXxlJobExecutor() {
         if (xxlJobExecutor != null) {
             xxlJobExecutor.destroy();
         }

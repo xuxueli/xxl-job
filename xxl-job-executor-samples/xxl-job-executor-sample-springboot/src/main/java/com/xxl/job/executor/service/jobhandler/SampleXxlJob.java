@@ -245,28 +245,8 @@ public class SampleXxlJob {
     public void init(){
         logger.info("init");
     }
-
     public void destroy(){
         logger.info("destroy");
-    }
-
-    /**
-     * 6、生命周期任务示例：任务初始化与销毁时，支持private方法（但不推荐）；
-     */
-    @XxlJob(value = "demoJobHandler3", init = "initForDemoJobHandler3", destroy = "destroyForDemoJobHandler3")
-    public void demoJobHandler3() throws Exception {
-        XxlJobHelper.log("XXL-JOB, Hello World.");
-    }
-
-    private void initForDemoJobHandler3(){
-        logger.info("initForDemoJobHandler3");
-    }
-
-    /**
-     * 演示private方法也可以被访问且执行
-     */
-    public void destroyForDemoJobHandler3(){
-        logger.info("destroyForDemoJobHandler3");
     }
 
 

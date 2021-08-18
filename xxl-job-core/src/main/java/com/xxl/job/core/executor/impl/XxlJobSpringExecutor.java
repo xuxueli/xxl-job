@@ -105,7 +105,8 @@ public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationC
             for (Map.Entry<Method, XxlJob> methodXxlJobEntry : annotatedMethods.entrySet()) {
                 Method executeMethod = methodXxlJobEntry.getKey();
                 XxlJob xxlJob = methodXxlJobEntry.getValue();
-                registerJobHandler(xxlJob, bean, executeMethod);
+                // regist
+                registJobHandler(xxlJob, bean, executeMethod);
             }
         }
     }
@@ -115,7 +116,7 @@ public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationC
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
+        XxlJobSpringExecutor.applicationContext = applicationContext;
     }
 
     public static ApplicationContext getApplicationContext() {

@@ -30,6 +30,7 @@ public class XxlJobSimpleExecutor extends XxlJobExecutor {
     }
 
 
+    @Override
     public void start() {
 
         // init JobHandler Repository (for method)
@@ -43,6 +44,7 @@ public class XxlJobSimpleExecutor extends XxlJobExecutor {
         }
     }
 
+    @Override
     public void destroy() {
         super.destroy();
     }
@@ -62,7 +64,8 @@ public class XxlJobSimpleExecutor extends XxlJobExecutor {
             }
             for (Method executeMethod : methods) {
                 XxlJob xxlJob = executeMethod.getAnnotation(XxlJob.class);
-                registerJobHandler(xxlJob, bean, executeMethod);
+                // registry
+                registJobHandler(xxlJob, bean, executeMethod);
             }
 
         }

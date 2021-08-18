@@ -102,7 +102,7 @@ public class ExecutorRegistryThread {
                         logger.error(e.getMessage(), e);
                     }
                 }
-                logger.info(">>>>>>>>>>> xxl-job, executor registry thread destory.");
+                logger.info(">>>>>>>>>>> xxl-job, executor registry thread destroy.");
 
             }
         });
