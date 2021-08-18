@@ -177,7 +177,7 @@ public class XxlJobHelper {
      * @return
      */
     public static boolean handleSuccess(){
-        return handleResult(XxlJobContext.HANDLE_COCE_SUCCESS, null);
+        return handleResult(XxlJobContext.HANDLE_CODE_SUCCESS, null);
     }
 
     /**
@@ -187,7 +187,7 @@ public class XxlJobHelper {
      * @return
      */
     public static boolean handleSuccess(String handleMsg) {
-        return handleResult(XxlJobContext.HANDLE_COCE_SUCCESS, handleMsg);
+        return handleResult(XxlJobContext.HANDLE_CODE_SUCCESS, handleMsg);
     }
 
     /**
@@ -196,7 +196,7 @@ public class XxlJobHelper {
      * @return
      */
     public static boolean handleFail(){
-        return handleResult(XxlJobContext.HANDLE_COCE_FAIL, null);
+        return handleResult(XxlJobContext.HANDLE_CODE_FAIL, null);
     }
 
     /**
@@ -206,7 +206,7 @@ public class XxlJobHelper {
      * @return
      */
     public static boolean handleFail(String handleMsg) {
-        return handleResult(XxlJobContext.HANDLE_COCE_FAIL, handleMsg);
+        return handleResult(XxlJobContext.HANDLE_CODE_FAIL, handleMsg);
     }
 
     /**
@@ -215,7 +215,7 @@ public class XxlJobHelper {
      * @return
      */
     public static boolean handleTimeout(){
-        return handleResult(XxlJobContext.HANDLE_COCE_TIMEOUT, null);
+        return handleResult(XxlJobContext.HANDLE_CODE_TIMEOUT, null);
     }
 
     /**
@@ -225,7 +225,7 @@ public class XxlJobHelper {
      * @return
      */
     public static boolean handleTimeout(String handleMsg){
-        return handleResult(XxlJobContext.HANDLE_COCE_TIMEOUT, handleMsg);
+        return handleResult(XxlJobContext.HANDLE_CODE_TIMEOUT, handleMsg);
     }
 
     /**

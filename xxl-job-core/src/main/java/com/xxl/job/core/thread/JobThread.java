@@ -215,7 +215,7 @@ public class JobThread extends Thread{
                         TriggerCallbackThread.pushCallBack(new HandleCallbackParam(
                         		triggerParam.getLogId(),
 								triggerParam.getLogDateTime(),
-								XxlJobContext.HANDLE_COCE_FAIL,
+								XxlJobContext.HANDLE_CODE_FAIL,
 								stopReason + " [job running, killed]" )
 						);
                     }
@@ -231,7 +231,7 @@ public class JobThread extends Thread{
 				TriggerCallbackThread.pushCallBack(new HandleCallbackParam(
 						triggerParam.getLogId(),
 						triggerParam.getLogDateTime(),
-						XxlJobContext.HANDLE_COCE_FAIL,
+						XxlJobContext.HANDLE_CODE_FAIL,
 						stopReason + " [job not executed, in the job queue, killed.]")
 				);
 			}
