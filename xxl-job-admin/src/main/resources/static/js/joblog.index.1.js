@@ -29,10 +29,12 @@ $(function() {
 			},
 		});
 	});
+
 	if ($("#jobGroup").attr("paramVal")){
 		$("#jobGroup").find("option[value='" + $("#jobGroup").attr("paramVal") + "']").attr("selected",true);
-        $("#jobGroup").change();
 	}
+
+	$("#jobGroup").change();
 
 	// filter Time
     var rangesConf = {};
