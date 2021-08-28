@@ -1,0 +1,39 @@
+
+server:
+  port: 9000
+# 注册中心
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:8761/eureka/
+
+
+spring:
+  application:
+    name: xxl-job-gateway
+  cloud:
+    gateway:
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials Vary, RETAIN_UNIQUE
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowed-origins: "*"
+            allowed-methods: "*"
+            allowed-headers: "*"
+      locator:
+        enabled: true
+      routes:
+        # xxl-job的定时回调任务功能
+        - id: xxl-job-task
+          uri: lb://xxl-job-task
+          predicates:
+            - Path=/api/task/**
+          filters:
+            # 去掉请求前辍
+            - name: StripPrefix
+              args:
+                parts: 2
+
