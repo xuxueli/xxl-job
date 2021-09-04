@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
  * @author xuxueli 2019-11-22
  */
 public class JobLogReportHelper {
-    private static Logger logger = LoggerFactory.getLogger(JobLogReportHelper.class);
+    private static final Logger logger = LoggerFactory.getLogger(JobLogReportHelper.class);
 
     private static JobLogReportHelper instance = new JobLogReportHelper();
     public static JobLogReportHelper getInstance(){
@@ -70,9 +70,9 @@ public class JobLogReportHelper {
 
                             Map<String, Object> triggerCountMap = XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().findLogReport(todayFrom, todayTo);
                             if (triggerCountMap!=null && triggerCountMap.size()>0) {
-                                int triggerDayCount = triggerCountMap.containsKey("triggerDayCount")?Integer.valueOf(String.valueOf(triggerCountMap.get("triggerDayCount"))):0;
-                                int triggerDayCountRunning = triggerCountMap.containsKey("triggerDayCountRunning")?Integer.valueOf(String.valueOf(triggerCountMap.get("triggerDayCountRunning"))):0;
-                                int triggerDayCountSuc = triggerCountMap.containsKey("triggerDayCountSuc")?Integer.valueOf(String.valueOf(triggerCountMap.get("triggerDayCountSuc"))):0;
+                                int triggerDayCount = triggerCountMap.containsKey("triggerDayCount")?Integer.parseInt(String.valueOf(triggerCountMap.get("triggerDayCount"))):0;
+                                int triggerDayCountRunning = triggerCountMap.containsKey("triggerDayCountRunning")?Integer.parseInt(String.valueOf(triggerCountMap.get("triggerDayCountRunning"))):0;
+                                int triggerDayCountSuc = triggerCountMap.containsKey("triggerDayCountSuc")?Integer.parseInt(String.valueOf(triggerCountMap.get("triggerDayCountSuc"))):0;
                                 int triggerDayCountFail = triggerDayCount - triggerDayCountRunning - triggerDayCountSuc;
 
                                 xxlJobLogReport.setRunningCount(triggerDayCountRunning);
@@ -89,7 +89,7 @@ public class JobLogReportHelper {
 
                     } catch (Exception e) {
                         if (!toStop) {
-                            logger.error(">>>>>>>>>>> xxl-job, job log report thread error:{}", e);
+                            logger.error(">>>>>>>>>>> xxl-job, job log report thread error:", e);
                         }
                     }
 

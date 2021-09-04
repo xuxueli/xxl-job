@@ -14,36 +14,36 @@ import java.util.List;
 @Mapper
 public interface XxlJobInfoDao {
 
-	public List<XxlJobInfo> pageList(@Param("offset") int offset,
-									 @Param("pagesize") int pagesize,
-									 @Param("jobGroup") int jobGroup,
-									 @Param("triggerStatus") int triggerStatus,
-									 @Param("jobDesc") String jobDesc,
-									 @Param("executorHandler") String executorHandler,
-									 @Param("author") String author);
-	public int pageListCount(@Param("offset") int offset,
-							 @Param("pagesize") int pagesize,
-							 @Param("jobGroup") int jobGroup,
-							 @Param("triggerStatus") int triggerStatus,
-							 @Param("jobDesc") String jobDesc,
-							 @Param("executorHandler") String executorHandler,
-							 @Param("author") String author);
+	List<XxlJobInfo> pageList(@Param("offset") int offset,
+								 @Param("pagesize") int pagesize,
+								 @Param("jobGroup") int jobGroup,
+								 @Param("triggerStatus") int triggerStatus,
+								 @Param("jobDesc") String jobDesc,
+								 @Param("executorHandler") String executorHandler,
+								 @Param("author") String author);
+	int pageListCount(@Param("offset") int offset,
+						 @Param("pagesize") int pagesize,
+						 @Param("jobGroup") int jobGroup,
+						 @Param("triggerStatus") int triggerStatus,
+						 @Param("jobDesc") String jobDesc,
+						 @Param("executorHandler") String executorHandler,
+						 @Param("author") String author);
 	
-	public int save(XxlJobInfo info);
+	int save(XxlJobInfo info);
 
-	public XxlJobInfo loadById(@Param("id") int id);
+	XxlJobInfo loadById(@Param("id") int id);
 	
-	public int update(XxlJobInfo xxlJobInfo);
+	int update(XxlJobInfo xxlJobInfo);
 	
-	public int delete(@Param("id") long id);
+	int delete(@Param("id") long id);
 
-	public List<XxlJobInfo> getJobsByGroup(@Param("jobGroup") int jobGroup);
+	List<XxlJobInfo> getJobsByGroup(@Param("jobGroup") int jobGroup);
 
-	public int findAllCount();
+	int findAllCount();
 
-	public List<XxlJobInfo> scheduleJobQuery(@Param("maxNextTime") long maxNextTime, @Param("pagesize") int pagesize );
+	List<XxlJobInfo> scheduleJobQuery(@Param("maxNextTime") long maxNextTime, @Param("pagesize") int pagesize );
 
-	public int scheduleUpdate(XxlJobInfo xxlJobInfo);
+	int scheduleUpdate(XxlJobInfo xxlJobInfo);
 
 
 }

@@ -72,8 +72,8 @@ public class XxlJobTrigger {
             String[] shardingArr = executorShardingParam.split("/");
             if (shardingArr.length==2 && isNumeric(shardingArr[0]) && isNumeric(shardingArr[1])) {
                 shardingParam = new int[2];
-                shardingParam[0] = Integer.valueOf(shardingArr[0]);
-                shardingParam[1] = Integer.valueOf(shardingArr[1]);
+                shardingParam[0] = Integer.parseInt(shardingArr[0]);
+                shardingParam[1] = Integer.parseInt(shardingArr[1]);
             }
         }
         if (ExecutorRouteStrategyEnum.SHARDING_BROADCAST==ExecutorRouteStrategyEnum.match(jobInfo.getExecutorRouteStrategy(), null)
@@ -93,7 +93,7 @@ public class XxlJobTrigger {
 
     private static boolean isNumeric(String str){
         try {
-            int result = Integer.valueOf(str);
+            Integer.parseInt(str);
             return true;
         } catch (NumberFormatException e) {
             return false;
@@ -155,7 +155,7 @@ public class XxlJobTrigger {
                 }
             }
         } else {
-            routeAddressResult = new ReturnT<String>(ReturnT.FAIL_CODE, I18nUtil.getString("jobconf_trigger_address_empty"));
+            routeAddressResult = new ReturnT<>(ReturnT.FAIL_CODE, I18nUtil.getString("jobconf_trigger_address_empty"));
         }
 
         // 4、trigger remote executor
@@ -163,11 +163,11 @@ public class XxlJobTrigger {
         if (address != null) {
             triggerResult = runExecutor(triggerParam, address);
         } else {
-            triggerResult = new ReturnT<String>(ReturnT.FAIL_CODE, null);
+            triggerResult = new ReturnT<>(ReturnT.FAIL_CODE, null);
         }
 
         // 5、collection trigger info
-        StringBuffer triggerMsgSb = new StringBuffer();
+        StringBuilder triggerMsgSb = new StringBuilder();
         triggerMsgSb.append(I18nUtil.getString("jobconf_trigger_type")).append("：").append(triggerType.getTitle());
         triggerMsgSb.append("<br>").append(I18nUtil.getString("jobconf_trigger_admin_adress")).append("：").append(IpUtil.getIp());
         triggerMsgSb.append("<br>").append(I18nUtil.getString("jobconf_trigger_exe_regtype")).append("：")
@@ -211,10 +211,10 @@ public class XxlJobTrigger {
             runResult = executorBiz.run(triggerParam);
         } catch (Exception e) {
             logger.error(">>>>>>>>>>> xxl-job trigger error, please check if the executor[{}] is running.", address, e);
-            runResult = new ReturnT<String>(ReturnT.FAIL_CODE, ThrowableUtil.toString(e));
+            runResult = new ReturnT<>(ReturnT.FAIL_CODE, ThrowableUtil.toString(e));
         }
 
-        StringBuffer runResultSB = new StringBuffer(I18nUtil.getString("jobconf_trigger_run") + "：");
+        StringBuilder runResultSB = new StringBuilder(I18nUtil.getString("jobconf_trigger_run") + "：");
         runResultSB.append("<br>address：").append(address);
         runResultSB.append("<br>code：").append(runResult.getCode());
         runResultSB.append("<br>msg：").append(runResult.getMsg());
