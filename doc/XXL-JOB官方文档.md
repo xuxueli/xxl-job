@@ -1492,9 +1492,8 @@ Header：
     [{
         "logId":1,              // 本次调度日志ID
         "logDateTim":0,         // 本次调度日志时间
-        "executeResult":{
-            "code": 200,        // 200 表示任务执行正常，500表示失败
-            "msg": null
+        "handleCode":200,       // 200 表示任务执行正常，500表示失败
+        "handleMsg": null
         }
     }]
 
