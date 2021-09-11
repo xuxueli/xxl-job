@@ -25,6 +25,15 @@ public class TriggerParam implements Serializable{
     private int broadcastIndex;
     private int broadcastTotal;
 
+    private String triggerType;
+
+    public String getTriggerType() {
+        return triggerType;
+    }
+
+    public void setTriggerType(String triggerType) {
+        this.triggerType = triggerType;
+    }
 
     public int getJobId() {
         return jobId;
