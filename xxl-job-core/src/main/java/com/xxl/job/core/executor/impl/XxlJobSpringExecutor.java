@@ -2,8 +2,8 @@ package com.xxl.job.core.executor.impl;
 
 import com.xxl.job.core.executor.XxlJobExecutor;
 import com.xxl.job.core.glue.GlueFactory;
+import com.xxl.job.core.handler.annotation.XXlContainer;
 import com.xxl.job.core.handler.annotation.XxlJob;
-import com.xxl.job.core.handler.impl.MethodJobHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -25,7 +25,6 @@ import java.util.Map;
  */
 public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationContextAware, SmartInitializingSingleton, DisposableBean {
     private static final Logger logger = LoggerFactory.getLogger(XxlJobSpringExecutor.class);
-
 
     // start
     @Override
@@ -77,12 +76,24 @@ public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationC
         }
     }*/
 
+    private String[] getXXlJobBeanNames(ApplicationContext applicationContext) {
+        if (!isForceLoad()) {
+            String[] xxlContainerBeanNames = applicationContext.getBeanNamesForAnnotation(XXlContainer.class);
+            if (xxlContainerBeanNames.length > 0) {
+                logger.info("getXXlJobBeanNames from XXlContainer annotation,bean size :" + xxlContainerBeanNames.length);
+                return xxlContainerBeanNames;
+            }
+        }
+        logger.info("getXXlJobBeanNames without annotation");
+        return applicationContext.getBeanNamesForType(Object.class, false, true);
+    }
+
     private void initJobHandlerMethodRepository(ApplicationContext applicationContext) {
         if (applicationContext == null) {
             return;
         }
         // init job handler from method
-        String[] beanDefinitionNames = applicationContext.getBeanNamesForType(Object.class, false, true);
+        String[] beanDefinitionNames = getXXlJobBeanNames(applicationContext);
         for (String beanDefinitionName : beanDefinitionNames) {
             Object bean = applicationContext.getBean(beanDefinitionName);
 

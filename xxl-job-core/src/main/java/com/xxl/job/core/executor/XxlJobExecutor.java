@@ -37,6 +37,7 @@ public class XxlJobExecutor  {
     private int port;
     private String logPath;
     private int logRetentionDays;
+    private boolean forceLoad;
 
     public void setAdminAddresses(String adminAddresses) {
         this.adminAddresses = adminAddresses;
@@ -63,6 +64,13 @@ public class XxlJobExecutor  {
         this.logRetentionDays = logRetentionDays;
     }
 
+    public void setForceLoad(boolean forceLoad) {
+        this.forceLoad = forceLoad;
+    }
+
+    public boolean isForceLoad() {
+        return forceLoad;
+    }
 
     // ---------------------- start + stop ----------------------
     public void start() throws Exception {
@@ -265,5 +273,4 @@ public class XxlJobExecutor  {
         JobThread jobThread = jobThreadRepository.get(jobId);
         return jobThread;
     }
-
 }
