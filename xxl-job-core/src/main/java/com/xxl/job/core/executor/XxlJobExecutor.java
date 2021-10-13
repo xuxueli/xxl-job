@@ -21,12 +21,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by xuxueli on 2016/3/2 21:14.
  */
 public class XxlJobExecutor  {
     private static final Logger logger = LoggerFactory.getLogger(XxlJobExecutor.class);
+
+    private static final AtomicInteger startCount = new AtomicInteger(0);
+
 
     // ---------------------- param ----------------------
     private String adminAddresses;
@@ -66,7 +70,10 @@ public class XxlJobExecutor  {
 
     // ---------------------- start + stop ----------------------
     public void start() throws Exception {
-
+        if (startCount.get() > 0) {
+            logger.warn("jobExecutor is Running");
+            return;
+        }
         // init logpath
         XxlJobFileAppender.initLogPath(logPath);
 
@@ -158,6 +165,7 @@ public class XxlJobExecutor  {
         // start
         embedServer = new EmbedServer();
         embedServer.start(address, port, appname, accessToken);
+        startCount.incrementAndGet();
     }
 
     private void stopEmbedServer() {
