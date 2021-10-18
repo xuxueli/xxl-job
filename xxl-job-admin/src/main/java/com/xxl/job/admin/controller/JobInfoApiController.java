@@ -3,6 +3,8 @@ package com.xxl.job.admin.controller;
 import com.xxl.job.admin.controller.annotation.PermissionLimit;
 import com.xxl.job.admin.core.conf.XxlJobAdminConfig;
 import com.xxl.job.admin.core.model.XxlJobInfo;
+import com.xxl.job.admin.core.thread.JobTriggerPoolHelper;
+import com.xxl.job.admin.core.trigger.TriggerTypeEnum;
 import com.xxl.job.admin.service.XxlJobService;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.util.XxlJobRemotingUtil;
@@ -83,6 +85,24 @@ public class JobInfoApiController {
             return checkResult;
         }
         return xxlJobService.remove(jobId);
+    }
+
+    @ResponseBody
+    @RequestMapping("/trigger")
+    @PermissionLimit(limit = false)
+    public ReturnT<String> trigger(HttpServletRequest request, @RequestBody XxlJobInfo xxlJobInfo) {
+        ReturnT checkResult = validAccessToken(request);
+        if (checkResult != null) {
+            return checkResult;
+        }
+        int id = xxlJobInfo.getId();
+        String executorParam = xxlJobInfo.getExecutorParam();
+        if (executorParam == null) {
+            executorParam = "";
+        }
+        String addressList = "";
+        JobTriggerPoolHelper.trigger(id, TriggerTypeEnum.MANUAL, -1, null, executorParam, addressList);
+        return ReturnT.SUCCESS;
     }
 
     public ReturnT validAccessToken(HttpServletRequest request) {
