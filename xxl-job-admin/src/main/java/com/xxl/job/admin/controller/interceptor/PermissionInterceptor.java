@@ -1,65 +1,27 @@
 package com.xxl.job.admin.controller.interceptor;
 
-import com.xxl.job.admin.controller.annotation.PermessionLimit;
-import com.xxl.job.admin.core.conf.XxlJobAdminConfig;
-import com.xxl.job.admin.core.util.CookieUtil;
-import org.apache.commons.codec.digest.DigestUtils;
+import com.xxl.job.admin.controller.annotation.PermissionLimit;
+import com.xxl.job.admin.core.model.XxlJobUser;
+import com.xxl.job.admin.core.util.I18nUtil;
+import com.xxl.job.admin.service.LoginService;
+import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.math.BigInteger;
 
 /**
- * 权限拦截, 简易版
+ * 权限拦截
  *
  * @author xuxueli 2015-12-12 18:09:04
  */
+@Component
 public class PermissionInterceptor extends HandlerInterceptorAdapter {
 
-
-	public static final String LOGIN_IDENTITY_KEY = "XXL_JOB_LOGIN_IDENTITY";
-	public static final String LOGIN_IDENTITY_TOKEN;
-    static {
-        String username = XxlJobAdminConfig.getAdminConfig().getLoginUsername();
-        String password = XxlJobAdminConfig.getAdminConfig().getLoginPassword();
-
-        // login token
-        String tokenTmp = DigestUtils.md5Hex(username + "_" + password);
-		tokenTmp = new BigInteger(1, tokenTmp.getBytes()).toString(16);
-
-		LOGIN_IDENTITY_TOKEN = tokenTmp;
-    }
-
-
-
-	public static boolean login(HttpServletResponse response, String username, String password, boolean ifRemember){
-
-    	// login token
-		String tokenTmp = DigestUtils.md5Hex(username + "_" + password);
-		tokenTmp = new BigInteger(1, tokenTmp.getBytes()).toString(16);
-
-		if (!LOGIN_IDENTITY_TOKEN.equals(tokenTmp)){
-			return false;
-		}
-
-		// do login
-		CookieUtil.set(response, LOGIN_IDENTITY_KEY, LOGIN_IDENTITY_TOKEN, ifRemember);
-		return true;
-	}
-	public static void logout(HttpServletRequest request, HttpServletResponse response){
-		CookieUtil.remove(request, response, LOGIN_IDENTITY_KEY);
-	}
-	public static boolean ifLogin(HttpServletRequest request){
-		String indentityInfo = CookieUtil.getValue(request, LOGIN_IDENTITY_KEY);
-		if (indentityInfo==null || !LOGIN_IDENTITY_TOKEN.equals(indentityInfo.trim())) {
-			return false;
-		}
-		return true;
-	}
-
-
+	@Resource
+	private LoginService loginService;
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -67,17 +29,30 @@ public class PermissionInterceptor extends HandlerInterceptorAdapter {
 		if (!(handler instanceof HandlerMethod)) {
 			return super.preHandle(request, response, handler);
 		}
-		
-		if (!ifLogin(request)) {
-			HandlerMethod method = (HandlerMethod)handler;
-			PermessionLimit permission = method.getMethodAnnotation(PermessionLimit.class);
-			if (permission == null || permission.limit()) {
-				response.sendRedirect(request.getContextPath() + "/toLogin");
-				//request.getRequestDispatcher("/toLogin").forward(request, response);
+
+		// if need login
+		boolean needLogin = true;
+		boolean needAdminuser = false;
+		HandlerMethod method = (HandlerMethod)handler;
+		PermissionLimit permission = method.getMethodAnnotation(PermissionLimit.class);
+		if (permission!=null) {
+			needLogin = permission.limit();
+			needAdminuser = permission.adminuser();
+		}
+
+		if (needLogin) {
+			XxlJobUser loginUser = loginService.ifLogin(request, response);
+			if (loginUser == null) {
+				response.setStatus(302);
+				response.setHeader("location", request.getContextPath()+"/toLogin");
 				return false;
 			}
+			if (needAdminuser && loginUser.getRole()!=1) {
+				throw new RuntimeException(I18nUtil.getString("system_permission_limit"));
+			}
+			request.setAttribute(LoginService.LOGIN_IDENTITY_KEY, loginUser);
 		}
-		
+
 		return super.preHandle(request, response, handler);
 	}
 	

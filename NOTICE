@@ -10,19 +10,12 @@ Spring:
   * HOMEPAGE:
     * http://www.springsource.org
 
-Jetty:
+Netty:
 
   * LICENSE:
     * http://www.apache.org/licenses/LICENSE-2.0 (Apache License 2.0)
   * HOMEPAGE:
-    * http://jetty.mortbay.org
-
-HttpClient:
-
-  * LICENSE:
-    * http://www.apache.org/licenses/LICENSE-2.0 (Apache License 2.0)
-  * HOMEPAGE:
-    * http://hc.apache.org
+    * https://github.com/netty/netty
 
 Hessian:
 
@@ -37,10 +30,3 @@ SLF4J:
     * http://www.apache.org/licenses/LICENSE-2.0 (Apache License 2.0)
   * HOMEPAGE:
     * http://www.slf4j.org
-
-Log4j:
-
-  * LICENSE:
-    * http://www.apache.org/licenses/LICENSE-2.0 (Apache License 2.0)
-  * HOMEPAGE:
-    * http://log4j.apache.org

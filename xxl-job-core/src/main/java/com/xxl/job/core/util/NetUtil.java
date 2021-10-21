@@ -37,7 +37,7 @@ public class NetUtil {
                 portTmp--;
             }
         }
-        throw new IllegalStateException("no available port.");
+        throw new RuntimeException("no available port.");
     }
 
     /**
@@ -53,7 +53,7 @@ public class NetUtil {
             serverSocket = new ServerSocket(port);
             used = false;
         } catch (IOException e) {
-            logger.debug(">>>>>>>>>>> xxl-job, port[{}] is in use.", port);
+            logger.info(">>>>>>>>>>> xxl-job, port[{}] is in use.", port);
             used = true;
         } finally {
             if (serverSocket != null) {

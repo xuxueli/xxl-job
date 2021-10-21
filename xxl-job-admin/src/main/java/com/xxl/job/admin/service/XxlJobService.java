@@ -22,10 +22,10 @@ public interface XxlJobService {
 	 * @param jobGroup
 	 * @param jobDesc
 	 * @param executorHandler
-	 * @param filterTime
+	 * @param author
 	 * @return
 	 */
-	public Map<String, Object> pageList(int start, int length, int jobGroup, String jobDesc, String executorHandler, String filterTime);
+	public Map<String, Object> pageList(int start, int length, int jobGroup, int triggerStatus, String jobDesc, String executorHandler, String author);
 
 	/**
 	 * add job
@@ -45,35 +45,27 @@ public interface XxlJobService {
 
 	/**
 	 * remove job
-	 *
+	 * 	 *
 	 * @param id
 	 * @return
 	 */
 	public ReturnT<String> remove(int id);
 
 	/**
-	 * pause job
+	 * start job
 	 *
 	 * @param id
 	 * @return
 	 */
-	public ReturnT<String> pause(int id);
+	public ReturnT<String> start(int id);
 
 	/**
-	 * resume job
+	 * stop job
 	 *
 	 * @param id
 	 * @return
 	 */
-	public ReturnT<String> resume(int id);
-
-	/**
-	 * trigger job
-	 *
-	 * @param id
-	 * @return
-	 */
-	public ReturnT<String> triggerJob(int id);
+	public ReturnT<String> stop(int id);
 
 	/**
 	 * dashboard info

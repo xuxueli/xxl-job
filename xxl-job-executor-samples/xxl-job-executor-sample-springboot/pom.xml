@@ -6,19 +6,16 @@
     <parent>
         <groupId>com.xuxueli</groupId>
         <artifactId>xxl-job-executor-samples</artifactId>
-        <version>1.9.2-SNAPSHOT</version>
+        <version>2.3.1-SNAPSHOT</version>
     </parent>
     <artifactId>xxl-job-executor-sample-springboot</artifactId>
     <packaging>jar</packaging>
 
     <name>${project.artifactId}</name>
     <description>Example executor project for spring boot.</description>
-    <url>http://www.xuxueli.com/</url>
+    <url>https://www.xuxueli.com/</url>
 
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <java.version>1.7</java.version>
     </properties>
 
     <dependencyManagement>
@@ -31,29 +28,6 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-
-            <!-- jetty -->
-            <dependency>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-server</artifactId>
-                <version>${jetty-server.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-util</artifactId>
-                <version>${jetty-server.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-http</artifactId>
-                <version>${jetty-server.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-io</artifactId>
-                <version>${jetty-server.version}</version>
-            </dependency>
-
         </dependencies>
     </dependencyManagement>
 
@@ -84,6 +58,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring-boot.version}</version>
                 <executions>
                     <execution>
                         <goals>

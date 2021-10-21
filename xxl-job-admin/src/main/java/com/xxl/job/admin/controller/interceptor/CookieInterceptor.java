@@ -2,7 +2,7 @@ package com.xxl.job.admin.controller.interceptor;
 
 import com.xxl.job.admin.core.util.FtlUtil;
 import com.xxl.job.admin.core.util.I18nUtil;
-import org.apache.commons.lang3.ArrayUtils;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
@@ -16,6 +16,7 @@ import java.util.HashMap;
  *
  * @author xuxueli 2015-12-12 18:09:04
  */
+@Component
 public class CookieInterceptor extends HandlerInterceptorAdapter {
 
 	@Override
@@ -23,7 +24,7 @@ public class CookieInterceptor extends HandlerInterceptorAdapter {
 			ModelAndView modelAndView) throws Exception {
 
 		// cookie
-		if (modelAndView!=null && ArrayUtils.isNotEmpty(request.getCookies())) {
+		if (modelAndView!=null && request.getCookies()!=null && request.getCookies().length>0) {
 			HashMap<String, Cookie> cookieMap = new HashMap<String, Cookie>();
 			for (Cookie ck : request.getCookies()) {
 				cookieMap.put(ck.getName(), ck);

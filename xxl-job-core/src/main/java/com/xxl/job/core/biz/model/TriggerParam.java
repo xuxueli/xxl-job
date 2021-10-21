@@ -13,9 +13,10 @@ public class TriggerParam implements Serializable{
     private String executorHandler;
     private String executorParams;
     private String executorBlockStrategy;
+    private int executorTimeout;
 
-    private int logId;
-    private long logDateTim;
+    private long logId;
+    private long logDateTime;
 
     private String glueType;
     private String glueSource;
@@ -23,6 +24,7 @@ public class TriggerParam implements Serializable{
 
     private int broadcastIndex;
     private int broadcastTotal;
+
 
     public int getJobId() {
         return jobId;
@@ -56,20 +58,28 @@ public class TriggerParam implements Serializable{
         this.executorBlockStrategy = executorBlockStrategy;
     }
 
-    public int getLogId() {
+    public int getExecutorTimeout() {
+        return executorTimeout;
+    }
+
+    public void setExecutorTimeout(int executorTimeout) {
+        this.executorTimeout = executorTimeout;
+    }
+
+    public long getLogId() {
         return logId;
     }
 
-    public void setLogId(int logId) {
+    public void setLogId(long logId) {
         this.logId = logId;
     }
 
-    public long getLogDateTim() {
-        return logDateTim;
+    public long getLogDateTime() {
+        return logDateTime;
     }
 
-    public void setLogDateTim(long logDateTim) {
-        this.logDateTim = logDateTim;
+    public void setLogDateTime(long logDateTime) {
+        this.logDateTime = logDateTime;
     }
 
     public String getGlueType() {
@@ -112,6 +122,7 @@ public class TriggerParam implements Serializable{
         this.broadcastTotal = broadcastTotal;
     }
 
+
     @Override
     public String toString() {
         return "TriggerParam{" +
@@ -119,8 +130,9 @@ public class TriggerParam implements Serializable{
                 ", executorHandler='" + executorHandler + '\'' +
                 ", executorParams='" + executorParams + '\'' +
                 ", executorBlockStrategy='" + executorBlockStrategy + '\'' +
+                ", executorTimeout=" + executorTimeout +
                 ", logId=" + logId +
-                ", logDateTim=" + logDateTim +
+                ", logDateTime=" + logDateTime +
                 ", glueType='" + glueType + '\'' +
                 ", glueSource='" + glueSource + '\'' +
                 ", glueUpdatetime=" + glueUpdatetime +

@@ -1,11 +1,9 @@
 package com.xxl.job.admin.controller;
 
-import com.xxl.job.admin.controller.annotation.PermessionLimit;
-import com.xxl.job.admin.controller.interceptor.PermissionInterceptor;
-import com.xxl.job.admin.core.util.I18nUtil;
+import com.xxl.job.admin.controller.annotation.PermissionLimit;
+import com.xxl.job.admin.service.LoginService;
 import com.xxl.job.admin.service.XxlJobService;
 import com.xxl.job.core.biz.model.ReturnT;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +12,8 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -31,6 +31,9 @@ public class IndexController {
 
 	@Resource
 	private XxlJobService xxlJobService;
+	@Resource
+	private LoginService loginService;
+
 
 	@RequestMapping("/")
 	public String index(Model model) {
@@ -49,45 +52,28 @@ public class IndexController {
     }
 	
 	@RequestMapping("/toLogin")
-	@PermessionLimit(limit=false)
-	public String toLogin(Model model, HttpServletRequest request) {
-		if (PermissionInterceptor.ifLogin(request)) {
-			return "redirect:/";
+	@PermissionLimit(limit=false)
+	public ModelAndView toLogin(HttpServletRequest request, HttpServletResponse response,ModelAndView modelAndView) {
+		if (loginService.ifLogin(request, response) != null) {
+			modelAndView.setView(new RedirectView("/",true,false));
+			return modelAndView;
 		}
-		return "login";
+		return new ModelAndView("login");
 	}
 	
 	@RequestMapping(value="login", method=RequestMethod.POST)
 	@ResponseBody
-	@PermessionLimit(limit=false)
+	@PermissionLimit(limit=false)
 	public ReturnT<String> loginDo(HttpServletRequest request, HttpServletResponse response, String userName, String password, String ifRemember){
-		// valid
-		if (PermissionInterceptor.ifLogin(request)) {
-			return ReturnT.SUCCESS;
-		}
-
-		// param
-		if (StringUtils.isBlank(userName) || StringUtils.isBlank(password)){
-			return new ReturnT<String>(500, I18nUtil.getString("login_param_empty"));
-		}
-		boolean ifRem = (StringUtils.isNotBlank(ifRemember) && "on".equals(ifRemember))?true:false;
-
-		// do login
-		boolean loginRet = PermissionInterceptor.login(response, userName, password, ifRem);
-		if (!loginRet) {
-			return new ReturnT<String>(500, I18nUtil.getString("login_param_unvalid"));
-		}
-		return ReturnT.SUCCESS;
+		boolean ifRem = (ifRemember!=null && ifRemember.trim().length()>0 && "on".equals(ifRemember))?true:false;
+		return loginService.login(request, response, userName, password, ifRem);
 	}
 	
 	@RequestMapping(value="logout", method=RequestMethod.POST)
 	@ResponseBody
-	@PermessionLimit(limit=false)
+	@PermissionLimit(limit=false)
 	public ReturnT<String> logout(HttpServletRequest request, HttpServletResponse response){
-		if (PermissionInterceptor.ifLogin(request)) {
-			PermissionInterceptor.logout(request, response);
-		}
-		return ReturnT.SUCCESS;
+		return loginService.logout(request, response);
 	}
 	
 	@RequestMapping("/help")

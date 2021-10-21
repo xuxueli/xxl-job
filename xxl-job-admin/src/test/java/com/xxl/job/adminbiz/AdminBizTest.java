@@ -1,12 +1,18 @@
 package com.xxl.job.adminbiz;
 
 import com.xxl.job.core.biz.AdminBiz;
+import com.xxl.job.core.biz.client.AdminBizClient;
+import com.xxl.job.core.biz.model.HandleCallbackParam;
 import com.xxl.job.core.biz.model.RegistryParam;
 import com.xxl.job.core.biz.model.ReturnT;
+import com.xxl.job.core.context.XxlJobContext;
 import com.xxl.job.core.enums.RegistryConfig;
-import com.xxl.job.core.rpc.netcom.NetComClientProxy;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import java.util.Arrays;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * admin api test
@@ -16,8 +22,24 @@ import org.junit.Test;
 public class AdminBizTest {
 
     // admin-client
-    private static String addressUrl = "http://127.0.0.1:8080/xxl-job-admin".concat(AdminBiz.MAPPING);
+    private static String addressUrl = "http://127.0.0.1:8080/xxl-job-admin/";
     private static String accessToken = null;
+
+
+    @Test
+    public void callback() throws Exception {
+        AdminBiz adminBiz = new AdminBizClient(addressUrl, accessToken);
+
+        HandleCallbackParam param = new HandleCallbackParam();
+        param.setLogId(1);
+        param.setHandleCode(XxlJobContext.HANDLE_CODE_SUCCESS);
+
+        List<HandleCallbackParam> callbackParamList = Arrays.asList(param);
+
+        ReturnT<String> returnT = adminBiz.callback(callbackParamList);
+
+        assertTrue(returnT.getCode() == ReturnT.SUCCESS_CODE);
+    }
 
     /**
      * registry executor
@@ -25,13 +47,13 @@ public class AdminBizTest {
      * @throws Exception
      */
     @Test
-    public void registryTest() throws Exception {
-        AdminBiz adminBiz = (AdminBiz) new NetComClientProxy(AdminBiz.class, addressUrl, accessToken).getObject();
+    public void registry() throws Exception {
+        AdminBiz adminBiz = new AdminBizClient(addressUrl, accessToken);
 
-        // test executor registry
         RegistryParam registryParam = new RegistryParam(RegistryConfig.RegistType.EXECUTOR.name(), "xxl-job-executor-example", "127.0.0.1:9999");
         ReturnT<String> returnT = adminBiz.registry(registryParam);
-        Assert.assertTrue(returnT.getCode() == ReturnT.SUCCESS_CODE);
+
+        assertTrue(returnT.getCode() == ReturnT.SUCCESS_CODE);
     }
 
     /**
@@ -41,26 +63,13 @@ public class AdminBizTest {
      */
     @Test
     public void registryRemove() throws Exception {
-        AdminBiz adminBiz = (AdminBiz) new NetComClientProxy(AdminBiz.class, addressUrl, accessToken).getObject();
+        AdminBiz adminBiz = new AdminBizClient(addressUrl, accessToken);
 
-        // test executor registry remove
         RegistryParam registryParam = new RegistryParam(RegistryConfig.RegistType.EXECUTOR.name(), "xxl-job-executor-example", "127.0.0.1:9999");
         ReturnT<String> returnT = adminBiz.registryRemove(registryParam);
-        Assert.assertTrue(returnT.getCode() == ReturnT.SUCCESS_CODE);
-    }
 
-    /**
-     * trigger job for once
-     *
-     * @throws Exception
-     */
-    @Test
-    public void triggerJob() throws Exception {
-        AdminBiz adminBiz = (AdminBiz) new NetComClientProxy(AdminBiz.class, addressUrl, accessToken).getObject();
+        assertTrue(returnT.getCode() == ReturnT.SUCCESS_CODE);
 
-        int jobId = 1;
-        ReturnT<String> returnT = adminBiz.triggerJob(jobId);
-        Assert.assertTrue(returnT.getCode() == ReturnT.SUCCESS_CODE);
     }
 
 }

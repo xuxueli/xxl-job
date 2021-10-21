@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
  *
  * @author xuxueli 2017-12-29 16:23:43
  */
-public class JobLogFileCleanThread extends Thread {
+public class JobLogFileCleanThread {
     private static Logger logger = LoggerFactory.getLogger(JobLogFileCleanThread.class);
 
     private static JobLogFileCleanThread instance = new JobLogFileCleanThread();
@@ -82,20 +82,26 @@ public class JobLogFileCleanThread extends Thread {
                         }
 
                     } catch (Exception e) {
-                        logger.error(e.getMessage(), e);
+                        if (!toStop) {
+                            logger.error(e.getMessage(), e);
+                        }
+
                     }
 
                     try {
                         TimeUnit.DAYS.sleep(1);
                     } catch (InterruptedException e) {
-                        logger.error(e.getMessage(), e);
+                        if (!toStop) {
+                            logger.error(e.getMessage(), e);
+                        }
                     }
                 }
-                logger.info(">>>>>>>>>>> xxl-job, executor JobLogFileCleanThread thread destory.");
+                logger.info(">>>>>>>>>>> xxl-job, executor JobLogFileCleanThread thread destroy.");
 
             }
         });
         localThread.setDaemon(true);
+        localThread.setName("xxl-job, executor JobLogFileCleanThread");
         localThread.start();
     }
 

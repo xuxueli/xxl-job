@@ -8,36 +8,60 @@ import java.io.Serializable;
 public class HandleCallbackParam implements Serializable {
     private static final long serialVersionUID = 42L;
 
-    private int logId;
-    private ReturnT<String> executeResult;
+    private long logId;
+    private long logDateTim;
+
+    private int handleCode;
+    private String handleMsg;
 
     public HandleCallbackParam(){}
-    public HandleCallbackParam(int logId, ReturnT<String> executeResult) {
+    public HandleCallbackParam(long logId, long logDateTim, int handleCode, String handleMsg) {
         this.logId = logId;
-        this.executeResult = executeResult;
+        this.logDateTim = logDateTim;
+        this.handleCode = handleCode;
+        this.handleMsg = handleMsg;
     }
 
-    public int getLogId() {
+    public long getLogId() {
         return logId;
     }
 
-    public void setLogId(int logId) {
+    public void setLogId(long logId) {
         this.logId = logId;
     }
 
-    public ReturnT<String> getExecuteResult() {
-        return executeResult;
+    public long getLogDateTim() {
+        return logDateTim;
     }
 
-    public void setExecuteResult(ReturnT<String> executeResult) {
-        this.executeResult = executeResult;
+    public void setLogDateTim(long logDateTim) {
+        this.logDateTim = logDateTim;
+    }
+
+    public int getHandleCode() {
+        return handleCode;
+    }
+
+    public void setHandleCode(int handleCode) {
+        this.handleCode = handleCode;
+    }
+
+    public String getHandleMsg() {
+        return handleMsg;
+    }
+
+    public void setHandleMsg(String handleMsg) {
+        this.handleMsg = handleMsg;
     }
 
     @Override
     public String toString() {
         return "HandleCallbackParam{" +
                 "logId=" + logId +
-                ", executeResult=" + executeResult +
+                ", logDateTim=" + logDateTim +
+                ", handleCode=" + handleCode +
+                ", handleMsg='" + handleMsg + '\'' +
                 '}';
     }
+
 }

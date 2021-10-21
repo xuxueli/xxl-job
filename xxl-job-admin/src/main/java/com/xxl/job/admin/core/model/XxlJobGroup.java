@@ -1,9 +1,8 @@
 package com.xxl.job.admin.core.model;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -12,16 +11,16 @@ import java.util.List;
 public class XxlJobGroup {
 
     private int id;
-    private String appName;
+    private String appname;
     private String title;
-    private int order;
-    private int addressType;    // 执行器地址类型：0=自动注册、1=手动录入
-    private String addressList;    // 执行器地址列表，多地址逗号分隔(手动录入)
+    private int addressType;        // 执行器地址类型：0=自动注册、1=手动录入
+    private String addressList;     // 执行器地址列表，多地址逗号分隔(手动录入)
+    private Date updateTime;
 
     // registry list
     private List<String> registryList;  // 执行器地址列表(系统注册)
     public List<String> getRegistryList() {
-        if (StringUtils.isNotBlank(addressList)) {
+        if (addressList!=null && addressList.trim().length()>0) {
             registryList = new ArrayList<String>(Arrays.asList(addressList.split(",")));
         }
         return registryList;
@@ -35,12 +34,12 @@ public class XxlJobGroup {
         this.id = id;
     }
 
-    public String getAppName() {
-        return appName;
+    public String getAppname() {
+        return appname;
     }
 
-    public void setAppName(String appName) {
-        this.appName = appName;
+    public void setAppname(String appname) {
+        this.appname = appname;
     }
 
     public String getTitle() {
@@ -49,14 +48,6 @@ public class XxlJobGroup {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public int getOrder() {
-        return order;
-    }
-
-    public void setOrder(int order) {
-        this.order = order;
     }
 
     public int getAddressType() {
@@ -69,6 +60,14 @@ public class XxlJobGroup {
 
     public String getAddressList() {
         return addressList;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 
     public void setAddressList(String addressList) {

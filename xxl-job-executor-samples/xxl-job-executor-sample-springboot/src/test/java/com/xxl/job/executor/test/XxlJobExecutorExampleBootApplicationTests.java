@@ -1,17 +1,14 @@
 package com.xxl.job.executor.test;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 
-/*@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = Application.class)
-@WebAppConfiguration*/
-/*@RunWith(SpringRunner.class)
-@SpringBootTest(classes = Application.class ,webEnvironment= SpringBootTest.WebEnvironment.DEFINED_PORT)*/
+@SpringBootTest
 public class XxlJobExecutorExampleBootApplicationTests {
 
 	@Test
 	public void test() {
-
+		System.out.println(11);
 	}
 
 }

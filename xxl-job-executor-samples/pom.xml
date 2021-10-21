@@ -5,16 +5,14 @@
     <parent>
         <groupId>com.xuxueli</groupId>
         <artifactId>xxl-job</artifactId>
-        <version>1.9.2-SNAPSHOT</version>
+        <version>2.3.1-SNAPSHOT</version>
     </parent>
     <artifactId>xxl-job-executor-samples</artifactId>
     <packaging>pom</packaging>
 
     <modules>
-        <module>xxl-job-executor-sample-spring</module>
+        <module>xxl-job-executor-sample-frameless</module>
         <module>xxl-job-executor-sample-springboot</module>
-        <module>xxl-job-executor-sample-jfinal</module>
-        <module>xxl-job-executor-sample-nutz</module>
     </modules>
 
 </project>
