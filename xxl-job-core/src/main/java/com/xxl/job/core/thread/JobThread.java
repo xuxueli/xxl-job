@@ -30,7 +30,7 @@ public class JobThread extends Thread{
 	private int jobId;
 	private IJobHandler handler;
 	private LinkedBlockingQueue<TriggerParam> triggerQueue;
-	private Set<Long> triggerLogIdSet;		// avoid repeat trigger for the same TRIGGER_LOG_ID
+	private Set<String> triggerLogIdSet;		// avoid repeat trigger for the same TRIGGER_LOG_ID
 
 	private volatile boolean toStop = false;
 	private String stopReason;
@@ -43,7 +43,7 @@ public class JobThread extends Thread{
 		this.jobId = jobId;
 		this.handler = handler;
 		this.triggerQueue = new LinkedBlockingQueue<TriggerParam>();
-		this.triggerLogIdSet = Collections.synchronizedSet(new HashSet<Long>());
+		this.triggerLogIdSet = Collections.synchronizedSet(new HashSet<String>());
 
 		// assign job thread name
 		this.setName("xxl-job, JobThread-"+jobId+"-"+System.currentTimeMillis());
@@ -60,14 +60,18 @@ public class JobThread extends Thread{
      */
 	public ReturnT<String> pushTriggerQueue(TriggerParam triggerParam) {
 		// avoid repeat
-		if (triggerLogIdSet.contains(triggerParam.getLogId())) {
+		if (triggerLogIdSet.contains(getJobHash(triggerParam))) {
 			logger.info(">>>>>>>>>>> repeate trigger job, logId:{}", triggerParam.getLogId());
 			return new ReturnT<String>(ReturnT.FAIL_CODE, "repeate trigger job, logId:" + triggerParam.getLogId());
 		}
 
-		triggerLogIdSet.add(triggerParam.getLogId());
+		triggerLogIdSet.add(getJobHash(triggerParam));
 		triggerQueue.add(triggerParam);
         return ReturnT.SUCCESS;
+	}
+
+	private String getJobHash(TriggerParam triggerParam){
+		return triggerParam.getJobId()+"-"+triggerParam.getLogDateTime();
 	}
 
     /**
@@ -115,7 +119,7 @@ public class JobThread extends Thread{
 				if (triggerParam!=null) {
 					running = true;
 					idleTimes = 0;
-					triggerLogIdSet.remove(triggerParam.getLogId());
+					triggerLogIdSet.remove(getJobHash(triggerParam));
 
 					// log filename, like "logPath/yyyy-MM-dd/9999.log"
 					String logFileName = XxlJobFileAppender.makeLogFileName(new Date(triggerParam.getLogDateTime()), triggerParam.getLogId());
