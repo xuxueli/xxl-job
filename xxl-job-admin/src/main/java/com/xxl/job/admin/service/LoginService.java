@@ -62,7 +62,7 @@ public class LoginService {
 
         // do login
         CookieUtil.set(response, LOGIN_IDENTITY_KEY, loginToken, ifRemember);
-        return ReturnT.SUCCESS;
+        return new ReturnT((Object)loginToken);
     }
 
     /**
