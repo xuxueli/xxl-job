@@ -35,4 +35,6 @@ public interface XxlJobRegistryDao {
                           @Param("registryKey") String registryKey,
                           @Param("registryValue") String registryValue);
 
+    List<XxlJobRegistry> findByRegistryKey(@Param("registryKey") String registryKey);
+
 }
