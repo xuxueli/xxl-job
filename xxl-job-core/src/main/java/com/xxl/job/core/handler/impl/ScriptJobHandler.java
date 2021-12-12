@@ -71,7 +71,7 @@ public class ScriptJobHandler extends IJobHandler {
         String logFileName = XxlJobContext.getXxlJobContext().getJobLogFileName();
 
         // script params：0=param、1=分片序号、2=分片总数、3=任务执行日志文件名称
-        String[] scriptParams = new String[3];
+        String[] scriptParams = new String[4];
         scriptParams[0] = XxlJobHelper.getJobParam();
         scriptParams[1] = String.valueOf(XxlJobContext.getXxlJobContext().getShardIndex());
         scriptParams[2] = String.valueOf(XxlJobContext.getXxlJobContext().getShardTotal());
