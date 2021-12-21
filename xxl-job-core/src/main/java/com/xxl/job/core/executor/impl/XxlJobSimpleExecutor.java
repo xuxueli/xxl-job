@@ -30,14 +30,14 @@ public class XxlJobSimpleExecutor extends XxlJobExecutor {
     }
 
 
-    public void start() {
+    public void inintStart() {
 
         // init JobHandler Repository (for method)
         initJobHandlerMethodRepository(xxlJobBeanList);
 
         // super start
         try {
-            super.start();
+            super.initStart();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

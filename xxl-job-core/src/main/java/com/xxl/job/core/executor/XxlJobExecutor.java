@@ -59,10 +59,16 @@ public class XxlJobExecutor  {
     public void setLogRetentionDays(int logRetentionDays) {
         this.logRetentionDays = logRetentionDays;
     }
+    public void setAppName(String appName) {
+        this.appname = appName;
+    }
 
 
     // ---------------------- start + stop ----------------------
-    public void start() throws Exception {
+    public void start() throws Exception {}
+
+    // ---------------------- start + stop ----------------------
+    public void initStart() throws Exception {
 
         // init logpath
         XxlJobFileAppender.initLogPath(logPath);
@@ -94,6 +100,7 @@ public class XxlJobExecutor  {
                         oldJobThread.join();
                     } catch (InterruptedException e) {
                         logger.error(">>>>>>>>>>> xxl-job, JobThread destroy(join) error, jobId:{}", item.getKey(), e);
+                        Thread.currentThread().interrupt();
                     }
                 }
             }
