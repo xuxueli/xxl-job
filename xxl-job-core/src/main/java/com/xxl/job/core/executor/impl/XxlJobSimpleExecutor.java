@@ -30,7 +30,7 @@ public class XxlJobSimpleExecutor extends XxlJobExecutor {
     }
 
 
-    public void inintStart() {
+    public void initStart() {
 
         // init JobHandler Repository (for method)
         initJobHandlerMethodRepository(xxlJobBeanList);

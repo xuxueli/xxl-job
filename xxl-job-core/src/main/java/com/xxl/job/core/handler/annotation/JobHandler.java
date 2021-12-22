@@ -9,7 +9,7 @@ import java.lang.annotation.*;
  *
  * @author jhb 2021-12-21 15:50:13
  */
-@Target({ElementType.METHOD})
+@Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 public @interface JobHandler {

@@ -44,7 +44,7 @@ public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationC
 
         // super start
         try {
-            super.start();
+            super.initStart();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

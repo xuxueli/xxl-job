@@ -65,7 +65,9 @@ public class XxlJobExecutor  {
 
 
     // ---------------------- start + stop ----------------------
-    public void start() throws Exception {}
+    public void start() throws Exception {
+        // 为了兼容老版本
+    }
 
     // ---------------------- start + stop ----------------------
     public void initStart() throws Exception {
