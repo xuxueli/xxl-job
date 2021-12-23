@@ -243,7 +243,7 @@ public class TriggerCallbackThread {
         }
 
         // load and clear file, retry
-        List<HandleCallbackParam> callbackParamList = new ArrayList<>();
+        List<List<HandleCallbackParam>> callbackParamList = new ArrayList<>();
         do {
             callbackParamList.clear();
             for (File callbaclLogFile: callbackLogPath.listFiles()) {
@@ -254,9 +254,9 @@ public class TriggerCallbackThread {
                     continue;
                 }
 
-                callbackParamList.addAll((List<HandleCallbackParam>) JdkSerializeTool.deserialize(callbackParamList_bytes, List.class));
+                callbackParamList.add((List<HandleCallbackParam>) JdkSerializeTool.deserialize(callbackParamList_bytes, List.class));
             }
-            doCallback(callbackParamList);
+            callbackParamList.forEach( p -> doCallback(p));
         } while (!callbackParamList.isEmpty());
 
     }
