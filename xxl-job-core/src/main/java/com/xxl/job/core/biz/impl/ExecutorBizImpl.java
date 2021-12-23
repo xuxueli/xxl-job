@@ -70,7 +70,9 @@ public class ExecutorBizImpl implements ExecutorBiz {
             }
 
             // valid handler
-            //执行到这儿,要么新旧处理器不一致,要么没有绑定过任何线程
+            //执行到这儿
+            // 1：没有绑定过任何线程
+            // 2：可能是空闲执行次数超过30次,且队列没任务,则会删除该线程。从而从线程为null，获取handler则为null。com.xxl.job.core.executor.XxlJobExecutor.removeJobThread
             if (jobHandler == null) {
                 jobHandler = newJobHandler;
                 //没找到处理器,直接返回异常

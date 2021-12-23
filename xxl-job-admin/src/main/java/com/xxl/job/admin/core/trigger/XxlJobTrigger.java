@@ -65,6 +65,7 @@ public class XxlJobTrigger {
 
         // cover addressList  设置地址集合
         if (addressList!=null && addressList.trim().length()>0) {
+            //1默认手动注册
             group.setAddressType(1);
             group.setAddressList(addressList.trim());
         }
@@ -116,7 +117,7 @@ public class XxlJobTrigger {
      */
     private static void processTrigger(XxlJobGroup group, XxlJobInfo jobInfo, int finalFailRetryCount, TriggerTypeEnum triggerType, int index, int total){
 
-        // param  获取阻塞处理策略
+        // param  获取阻塞处理策略，默认单机串行
         ExecutorBlockStrategyEnum blockStrategy = ExecutorBlockStrategyEnum.match(jobInfo.getExecutorBlockStrategy(), ExecutorBlockStrategyEnum.SERIAL_EXECUTION);  // block strategy
         // route strategy 获取路由策略,默认first
         ExecutorRouteStrategyEnum executorRouteStrategyEnum = ExecutorRouteStrategyEnum.match(jobInfo.getExecutorRouteStrategy(), null);
@@ -159,7 +160,7 @@ public class XxlJobTrigger {
                     address = group.getRegistryList().get(0);
                 }
             } else {
-                //根据设置的路由策略,执行路由器,获取返回结果   ,这里用到了策略模式
+                //根据设置的路由策略,执行路由器,获取返回执行地址   ,这里用到了策略模式
                 routeAddressResult = executorRouteStrategyEnum.getRouter().route(triggerParam, group.getRegistryList());
                 if (routeAddressResult.getCode() == ReturnT.SUCCESS_CODE) {
                     address = routeAddressResult.getContent();
