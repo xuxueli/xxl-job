@@ -161,6 +161,9 @@ public class TriggerCallbackThread {
      * @param callbackParamList
      */
     private void doCallback(List<HandleCallbackParam> callbackParamList){
+        if (callbackParamList.isEmpty()) {
+            return;
+        }
         boolean callbackRet = false;
         // callback, will retry if error
         for (AdminBiz adminBiz: XxlJobExecutor.getAdminBizList()) {
@@ -240,20 +243,21 @@ public class TriggerCallbackThread {
         }
 
         // load and clear file, retry
-        for (File callbaclLogFile: callbackLogPath.listFiles()) {
-            byte[] callbackParamList_bytes = FileUtil.readFileContent(callbaclLogFile);
-
-            // avoid empty file
-            if(callbackParamList_bytes == null || callbackParamList_bytes.length < 1){
+        List<HandleCallbackParam> callbackParamList = new ArrayList<>();
+        do {
+            callbackParamList.clear();
+            for (File callbaclLogFile: callbackLogPath.listFiles()) {
+                byte[] callbackParamList_bytes = FileUtil.readFileContent(callbaclLogFile);
                 callbaclLogFile.delete();
-                continue;
+                // avoid empty file
+                if(callbackParamList_bytes == null || callbackParamList_bytes.length < 1){
+                    continue;
+                }
+
+                callbackParamList.addAll((List<HandleCallbackParam>) JdkSerializeTool.deserialize(callbackParamList_bytes, List.class));
             }
-
-            List<HandleCallbackParam> callbackParamList = (List<HandleCallbackParam>) JdkSerializeTool.deserialize(callbackParamList_bytes, List.class);
-
-            callbaclLogFile.delete();
             doCallback(callbackParamList);
-        }
+        } while (!callbackParamList.isEmpty());
 
     }
 
