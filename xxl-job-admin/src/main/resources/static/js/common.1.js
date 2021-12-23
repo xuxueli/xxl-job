@@ -152,5 +152,94 @@ $(function(){
         updatePwdModalValidate.resetForm();
         $("#updatePwdModal .form .form-group").removeClass("has-error");
     });
-	
+
 });
+
+// 初始化web导出导入事件
+function initWebExportImport(){
+    // 所需标签
+    let allDataCheckTag = $("#allDataCheckTag");
+    let dataCheckTag = $('[name=dataCheckTag]:checkbox');
+    // 全选全不选
+    allDataCheckTag.prop("checked",false);
+    allDataCheckTag.click(function() {
+        if(this.checked){
+            dataCheckTag.prop("checked",true);
+        }else{
+            dataCheckTag.prop("checked",false);
+        }
+    })
+    //检测是否全选的函数
+    dataCheckTag.click(function(){
+        let len = dataCheckTag.length;
+        let count = 0;
+        dataCheckTag.each(function(){
+            if($(this).prop("checked")===true){
+                count++;
+            }
+        })
+        if(count===len){
+            allDataCheckTag.prop("checked",true);
+        }else{
+            allDataCheckTag.prop("checked",false);
+        }
+    })
+}
+// 导出点击
+function webExport(){
+    let exportArr = [];
+    let dataCheckTag = $('[name=dataCheckTag]:checkbox');
+    dataCheckTag.each(function(){
+        if($(this).prop("checked")===true){
+            let row = tableData['key'+$(this).val()];
+            // 删除无用字段
+            delete row['id'];
+            delete row['addTime'];
+            delete row['updateTime'];
+            delete row['glueUpdatetime'];
+            delete row['triggerStatus'];
+            delete row['triggerLastTime'];
+            delete row['triggerNextTime'];
+            delete row['registryList'];
+            exportArr.push(row);
+        }
+    })
+    $('#webExportTextArea').val(JSON.stringify(exportArr));
+    $('#webExportModal').modal({backdrop: false, keyboard: false}).modal('show');
+}
+// 导入点击
+function webImport(){
+    $('#webImportTextArea').val('');
+    $('#webImportModal').modal({backdrop: false, keyboard: false}).modal('show');
+}
+// 执行web导入
+function doWebImport(){
+    let importJsonStr = $('#webImportTextArea').val();
+    let importArr = [];
+    try {
+        importArr = JSON.parse(importJsonStr);
+    } catch (e){
+        layer.open({
+            title: I18n.system_tips,
+            btn: [ I18n.system_ok ],
+            content: (I18n.system_unvalid  ),
+            icon: '2'
+        });
+    }
+    if(importArr.length<1){
+        return;
+    }
+    importArr.forEach(function (importObj) {
+        $.post(base_url + importApiUrl,  $.param(importObj));
+    });
+    layer.open({
+        title: I18n.system_tips ,
+        btn: [ I18n.system_ok ],
+        content: I18n.system_add_suc ,
+        icon: '1',
+        end: function(layero, index){
+            dataTableObj.fnDraw();
+            $('#webImportModal').modal('hide');
+        }
+    });
+}

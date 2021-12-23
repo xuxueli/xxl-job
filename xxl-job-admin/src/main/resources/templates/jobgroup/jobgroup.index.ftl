@@ -44,14 +44,24 @@
                     <button class="btn btn-block btn-success add" type="button">${I18n.jobinfo_field_add}</button>
                 </div>
             </div>
-			
-			<div class="row">
+            <div class="row">
+                <div class="col-xs-1">
+                    <button class="btn btn-block btn-info" onclick="webExport()" type="button">${I18n.export}</button>
+                </div>
+                <div class="col-xs-1">
+                    <button class="btn btn-block btn-success" onclick="webImport()" type="button">${I18n.import}</button>
+                </div>
+                <div class="col-xs-10"></div>
+            </div>
+
+            <div class="row">
 				<div class="col-xs-12">
 					<div class="box">
 			            <div class="box-body">
 			              	<table id="jobgroup_list" class="table table-bordered table-striped display" width="100%" >
 				                <thead>
 					            	<tr>
+                                        <th><input type="checkbox" id="allDataCheckTag"></th>
                                         <th name="id" >ID</th>
                                         <th name="appname" >AppName</th>
                                         <th name="title" >${I18n.jobgroup_field_title}</th>

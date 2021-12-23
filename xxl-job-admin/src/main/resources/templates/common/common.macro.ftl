@@ -60,6 +60,10 @@
     <script>
 		var base_url = '${request.contextPath}';
         var I18n = ${I18nUtil.getMultString()};
+		// 导入的api地址
+		let importApiUrl = "";
+		// 当前分页表格对象
+		let dataTableObj;
 	</script>
 
 </#macro>
@@ -115,6 +119,58 @@
 						<div class="form-group">
 							<div class="col-sm-offset-3 col-sm-6">
 								<button type="submit" class="btn btn-primary"  >${I18n.system_save}</button>
+								<button type="button" class="btn btn-default" data-dismiss="modal">${I18n.system_cancel}</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- web导出.模态框 -->
+	<div class="modal fade" id="webExportModal" tabindex="-1" role="dialog"  aria-hidden="true">
+		<div class="modal-dialog ">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" >${I18n.export}JSON</h4>
+				</div>
+				<div class="modal-body">
+					<form class="form-horizontal form" role="form" >
+						<div class="form-group">
+							<label for="webExportTextArea" class="col-sm-2 control-label"></label>
+							<textarea class="textarea form-control" readonly name="" id="webExportTextArea" rows="10" style="width: 98%;margin: 0 auto;">
+
+							</textarea>
+						</div>
+						<hr>
+						<div class="form-group">
+							<div class="col-sm-12">
+								<button type="button" class="btn btn-default" data-dismiss="modal">${I18n.system_close}</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- web导入.模态框 -->
+	<div class="modal fade" id="webImportModal" tabindex="-1" role="dialog"  aria-hidden="true">
+		<div class="modal-dialog ">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" >${I18n.import}JSON</h4>
+				</div>
+				<div class="modal-body">
+					<form class="form-horizontal form" role="form" >
+						<div class="form-group">
+							<label for="webImportTextArea" class="col-sm-2 control-label"></label>
+							<textarea class="textarea form-control" placeholder="${I18n.import_placeholder}" name="" id="webImportTextArea" rows="10" style="width: 98%;margin: 0 auto;"></textarea>
+						</div>
+						<hr>
+						<div class="form-group">
+							<div class="col-sm-offset-3 col-sm-6">
+								<button type="button" class="btn btn-primary" onclick="doWebImport()" >${I18n.import}</button>
 								<button type="button" class="btn btn-default" data-dismiss="modal">${I18n.system_cancel}</button>
 							</div>
 						</div>
