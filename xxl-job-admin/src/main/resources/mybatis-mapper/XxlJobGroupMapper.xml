@@ -23,29 +23,29 @@
 
 	<select id="findAll" resultMap="XxlJobGroup">
 		SELECT <include refid="Base_Column_List" />
-		FROM xxl_job_group AS t
+		FROM xxl_job_group t
 		ORDER BY t.app_name, t.title, t.id ASC
 	</select>
 
 	<select id="findByAddressType" parameterType="java.lang.Integer" resultMap="XxlJobGroup">
 		SELECT <include refid="Base_Column_List" />
-		FROM xxl_job_group AS t
+		FROM xxl_job_group t
 		WHERE t.address_type = #{addressType}
 		ORDER BY t.app_name, t.title, t.id ASC
 	</select>
 
-	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobGroup" useGeneratedKeys="true" keyProperty="id" >
-		INSERT INTO xxl_job_group ( `app_name`, `title`, `address_type`, `address_list`, `update_time`)
-		values ( #{appname}, #{title}, #{addressType}, #{addressList}, #{updateTime} );
+	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobGroup" >
+		INSERT INTO xxl_job_group ( app_name, title, address_type, address_list, update_time)
+		values ( #{appname}, #{title}, #{addressType}, #{addressList,jdbcType=VARCHAR}, #{updateTime} )
 	</insert>
 
 	<update id="update" parameterType="com.xxl.job.admin.core.model.XxlJobGroup" >
 		UPDATE xxl_job_group
-		SET `app_name` = #{appname},
-			`title` = #{title},
-			`address_type` = #{addressType},
-			`address_list` = #{addressList},
-			`update_time` = #{updateTime}
+		SET app_name = #{appname},
+			title = #{title},
+			address_type = #{addressType},
+			address_list = #{addressList,jdbcType=VARCHAR},
+			update_time = #{updateTime}
 		WHERE id = #{id}
 	</update>
 
@@ -56,13 +56,13 @@
 
 	<select id="load" parameterType="java.lang.Integer" resultMap="XxlJobGroup">
 		SELECT <include refid="Base_Column_List" />
-		FROM xxl_job_group AS t
+		FROM xxl_job_group t
 		WHERE t.id = #{id}
 	</select>
 
-	<select id="pageList" parameterType="java.util.HashMap" resultMap="XxlJobGroup">
-		SELECT <include refid="Base_Column_List" />
-		FROM xxl_job_group AS t
+	<sql id="pageListSql">
+	SELECT <include refid="Base_Column_List" />
+		FROM xxl_job_group t
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
 			<if test="appname != null and appname != ''">
 				AND t.app_name like CONCAT(CONCAT('%', #{appname}), '%')
@@ -72,12 +72,21 @@
 			</if>
 		</trim>
 		ORDER BY t.app_name, t.title, t.id ASC
+	</sql>
+
+	<select id="pageList" parameterType="java.util.HashMap" resultMap="XxlJobGroup" databaseId="mysql">
+		<include refid="pageListSql"/>
 		LIMIT #{offset}, #{pagesize}
+	</select>
+	<select id="pageList" parameterType="java.util.HashMap" resultMap="XxlJobGroup" databaseId="oracle">
+		SELECT * FROM (SELECT ROWNUM AS rowno, t.* FROM  (
+		<include refid="pageListSql"/>
+		) t where ROWNUM <![CDATA[ <= ]]> #{pagesize}) a WHERE a.rowno <![CDATA[ >= ]]> #{offset}
 	</select>
 
 	<select id="pageListCount" parameterType="java.util.HashMap" resultType="int">
 		SELECT count(1)
-		FROM xxl_job_group AS t
+		FROM xxl_job_group t
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
 			<if test="appname != null and appname != ''">
 				AND t.app_name like CONCAT(CONCAT('%', #{appname}), '%')

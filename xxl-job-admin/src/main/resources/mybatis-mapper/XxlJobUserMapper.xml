@@ -18,10 +18,9 @@
 		t.role,
 		t.permission
 	</sql>
-
-	<select id="pageList" parameterType="java.util.HashMap" resultMap="XxlJobUser">
+	<sql id="pageListSql">
 		SELECT <include refid="Base_Column_List" />
-		FROM xxl_job_user AS t
+		FROM xxl_job_user t
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
 			<if test="username != null and username != ''">
 				AND t.username like CONCAT(CONCAT('%', #{username}), '%')
@@ -31,12 +30,20 @@
 			</if>
 		</trim>
 		ORDER BY username ASC
+	</sql>
+	<select id="pageList" parameterType="java.util.HashMap" resultMap="XxlJobUser" databaseId="mysql">
+		<include refid="pageListSql"/>
 		LIMIT #{offset}, #{pagesize}
+	</select>
+	<select id="pageList" parameterType="java.util.HashMap" resultMap="XxlJobUser" databaseId="oracle">
+		SELECT * FROM (SELECT ROWNUM AS rowno, t.* FROM  (
+		<include refid="pageListSql"/>
+		) t where ROWNUM <![CDATA[ <= ]]> #{pagesize}) a WHERE a.rowno <![CDATA[ >= ]]> #{offset}
 	</select>
 
 	<select id="pageListCount" parameterType="java.util.HashMap" resultType="int">
 		SELECT count(1)
-		FROM xxl_job_user AS t
+		FROM xxl_job_user t
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
 			<if test="username != null and username != ''">
 				AND t.username like CONCAT(CONCAT('%', #{username}), '%')
@@ -49,11 +56,11 @@
 
 	<select id="loadByUserName" parameterType="java.util.HashMap" resultMap="XxlJobUser">
 		SELECT <include refid="Base_Column_List" />
-		FROM xxl_job_user AS t
+		FROM xxl_job_user t
 		WHERE t.username = #{username}
 	</select>
 
-	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobUser" useGeneratedKeys="true" keyProperty="id" >
+	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobUser" >
 		INSERT INTO xxl_job_user (
 			username,
 			password,
@@ -64,7 +71,7 @@
 			#{password},
 			#{role},
 			#{permission}
-		);
+		)
 	</insert>
 
 	<update id="update" parameterType="com.xxl.job.admin.core.model.XxlJobUser" >

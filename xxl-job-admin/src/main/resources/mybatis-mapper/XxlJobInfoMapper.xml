@@ -64,10 +64,9 @@
 		t.trigger_last_time,
 		t.trigger_next_time
 	</sql>
-
-	<select id="pageList" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
+	<sql id="pageListSql">
 		SELECT <include refid="Base_Column_List" />
-		FROM xxl_job_info AS t
+		FROM xxl_job_info t
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
 			<if test="jobGroup gt 0">
 				AND t.job_group = #{jobGroup}
@@ -86,12 +85,21 @@
 			</if>
 		</trim>
 		ORDER BY id DESC
+	</sql>
+	<select id="pageList" parameterType="java.util.HashMap" resultMap="XxlJobInfo" databaseId="mysql">
+		<include refid="pageListSql"/>
 		LIMIT #{offset}, #{pagesize}
+	</select>
+
+	<select id="pageList" parameterType="java.util.HashMap" resultMap="XxlJobInfo" databaseId="oracle">
+		SELECT * FROM (SELECT ROWNUM AS rowno, t.* FROM  (
+			<include refid="pageListSql"/>
+		) t where ROWNUM <![CDATA[ <= ]]> #{pagesize}) a WHERE a.rowno <![CDATA[ >= ]]> #{offset}
 	</select>
 
 	<select id="pageListCount" parameterType="java.util.HashMap" resultType="int">
 		SELECT count(1)
-		FROM xxl_job_info AS t
+		FROM xxl_job_info t
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
 			<if test="jobGroup gt 0">
 				AND t.job_group = #{jobGroup}
@@ -111,7 +119,7 @@
 		</trim>
 	</select>
 
-	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobInfo" useGeneratedKeys="true" keyProperty="id" >
+	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobInfo" >
 		INSERT INTO xxl_job_info (
 			job_group,
 			job_desc,
@@ -153,23 +161,23 @@
 			#{executorTimeout},
 			#{executorFailRetryCount},
 			#{glueType},
-			#{glueSource},
+			#{glueSource,jdbcType=VARCHAR},
 			#{glueRemark},
 			#{glueUpdatetime},
 			#{childJobId},
 			#{triggerStatus},
 			#{triggerLastTime},
 			#{triggerNextTime}
-		);
+		)
 		<!--<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
 			SELECT LAST_INSERT_ID()
-			/*SELECT @@IDENTITY AS id*/
+			/*SELECT @@IDENTITY id*/
 		</selectKey>-->
 	</insert>
 
 	<select id="loadById" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
 		SELECT <include refid="Base_Column_List" />
-		FROM xxl_job_info AS t
+		FROM xxl_job_info t
 		WHERE t.id = #{id}
 	</select>
 
@@ -191,7 +199,7 @@
 			executor_timeout = ${executorTimeout},
 			executor_fail_retry_count = ${executorFailRetryCount},
 			glue_type = #{glueType},
-			glue_source = #{glueSource},
+			glue_source = #{glueSource,jdbcType=VARCHAR},
 			glue_remark = #{glueRemark},
 			glue_updatetime = #{glueUpdatetime},
 			child_jobid = #{childJobId},
@@ -209,7 +217,7 @@
 
 	<select id="getJobsByGroup" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
 		SELECT <include refid="Base_Column_List" />
-		FROM xxl_job_info AS t
+		FROM xxl_job_info t
 		WHERE t.job_group = #{jobGroup}
 	</select>
 
@@ -218,15 +226,25 @@
 		FROM xxl_job_info
 	</select>
 
-
-	<select id="scheduleJobQuery" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
+	<sql id="scheduleJobQuerySql">
 		SELECT <include refid="Base_Column_List" />
-		FROM xxl_job_info AS t
+		FROM xxl_job_info t
 		WHERE t.trigger_status = 1
 			and t.trigger_next_time <![CDATA[ <= ]]> #{maxNextTime}
 		ORDER BY id ASC
+	</sql>
+	<select id="scheduleJobQuery" parameterType="java.util.HashMap" resultMap="XxlJobInfo" databaseId="mysql">
+		<include refid="scheduleJobQuerySql"/>
 		LIMIT #{pagesize}
 	</select>
+
+
+	<select id="scheduleJobQuery" parameterType="java.util.HashMap" resultMap="XxlJobInfo" databaseId="oracle">
+		select * from (
+			<include refid="scheduleJobQuerySql"/>
+		) where rownum <![CDATA[ <= ]]> #{pagesize}
+	</select>
+
 
 	<update id="scheduleUpdate" parameterType="com.xxl.job.admin.core.model.XxlJobInfo"  >
 		UPDATE xxl_job_info
