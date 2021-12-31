@@ -39,7 +39,7 @@ import java.util.*;
 @Controller
 @RequestMapping("/jobinfo")
 public class JobInfoController {
-	private static Logger logger = LoggerFactory.getLogger(JobInfoController.class);
+	private static final Logger logger = LoggerFactory.getLogger(JobInfoController.class);
 
 	@Resource
 	private XxlJobGroupDao xxlJobGroupDao;

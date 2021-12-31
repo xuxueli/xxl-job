@@ -19,7 +19,7 @@ import java.io.IOException;
  * @author xuxueli 2015-9-25 18:02:56
  */
 public class JacksonUtil {
-	private static Logger logger = LoggerFactory.getLogger(JacksonUtil.class);
+	private static final Logger logger = LoggerFactory.getLogger(JacksonUtil.class);
 
     private final static ObjectMapper objectMapper = new ObjectMapper();
     public static ObjectMapper getInstance() {

@@ -20,7 +20,7 @@ import java.util.Properties;
  * @author xuxueli 2018-01-17 20:39:06
  */
 public class I18nUtil {
-    private static Logger logger = LoggerFactory.getLogger(I18nUtil.class);
+    private static final Logger logger = LoggerFactory.getLogger(I18nUtil.class);
 
     private static Properties prop = null;
     public static Properties loadI18nProp(){

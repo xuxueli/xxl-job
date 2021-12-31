@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
  * @author xuxueli 2018-01-17 20:37:48
  */
 public class FtlUtil {
-    private static Logger logger = LoggerFactory.getLogger(FtlUtil.class);
+    private static final Logger logger = LoggerFactory.getLogger(FtlUtil.class);
 
     private static BeansWrapper wrapper = new BeansWrapperBuilder(Configuration.DEFAULT_INCOMPATIBLE_IMPROVEMENTS).build();     //BeansWrapper.getDefaultInstance();
 

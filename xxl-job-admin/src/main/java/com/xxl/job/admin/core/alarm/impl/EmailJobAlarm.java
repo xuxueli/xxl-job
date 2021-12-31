@@ -25,7 +25,7 @@ import java.util.Set;
  */
 @Component
 public class EmailJobAlarm implements JobAlarm {
-    private static Logger logger = LoggerFactory.getLogger(EmailJobAlarm.class);
+    private static final Logger logger = LoggerFactory.getLogger(EmailJobAlarm.class);
 
     /**
      * fail alarm
