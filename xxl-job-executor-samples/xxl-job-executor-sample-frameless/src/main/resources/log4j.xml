@@ -10,7 +10,7 @@
 	</appender>
 	
     <appender name="FILE" class="org.apache.log4j.DailyRollingFileAppender">
-        <param name="file" value="/data/applogs/xxl-job/xxl-job-executor-sample-frameless.log"/>
+        <param name="file" value="data/applogs/xxl-job/xxl-job-executor-sample-frameless.log"/>
         <param name="append" value="true"/>
         <param name="encoding" value="UTF-8"/>
         <layout class="org.apache.log4j.PatternLayout">
