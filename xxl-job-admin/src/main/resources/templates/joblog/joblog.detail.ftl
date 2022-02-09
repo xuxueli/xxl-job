@@ -65,6 +65,7 @@
     var executorAddress = '${executorAddress!}';
     var triggerTime = '${triggerTime?c}';
     var logId = '${logId}';
+    var jobGroupId = '${jobGroupId}';
 </script>
 <script src="${request.contextPath}/static/js/joblog.detail.1.js"></script>
 

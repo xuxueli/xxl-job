@@ -132,18 +132,39 @@ public class JobLogController {
         model.addAttribute("executorAddress", jobLog.getExecutorAddress());
         model.addAttribute("triggerTime", jobLog.getTriggerTime().getTime());
         model.addAttribute("logId", jobLog.getId());
+        model.addAttribute("jobGroupId", jobLog.getJobGroup());
 		return "joblog/joblog.detail";
 	}
 
 	@RequestMapping("/logDetailCat")
 	@ResponseBody
-	public ReturnT<LogResult> logDetailCat(String executorAddress, long triggerTime, long logId, int fromLineNum){
+	public ReturnT<LogResult> logDetailCat(int jobGroupId, long triggerTime, long logId, int fromLineNum){
 		try {
-			ExecutorBiz executorBiz = XxlJobScheduler.getExecutorBiz(executorAddress);
-			ReturnT<LogResult> logResult = executorBiz.log(new LogParam(triggerTime, logId, fromLineNum));
+			XxlJobGroup jobGroup = xxlJobGroupDao.load(jobGroupId);
+			if (jobGroup == null) {
+				throw new RuntimeException(I18nUtil.getString("jobgroup_id_unvalid"));
+			}
+			String[] addrList = jobGroup.getAddressList().split(",");
+			ExecutorBiz executorBiz = null;
+			ReturnT<LogResult> logResult = null;
+			if (addrList.length > 1) {
+				for (String s : addrList) {
+					executorBiz = XxlJobScheduler.getExecutorBiz(s);
+					if (executorBiz.beat().getCode() != ReturnT.FAIL_CODE) {
+						logResult = executorBiz.log(new LogParam(triggerTime, logId, fromLineNum));
+						break;
+					}
+				}
+			} else {
+				executorBiz = XxlJobScheduler.getExecutorBiz(addrList[0]);
+				logResult = executorBiz.log(new LogParam(triggerTime, logId, fromLineNum));
+			}
+			if (logResult == null) {
+				throw new RuntimeException(I18nUtil.getString("jobgroup_empty"));
+			}
 
 			// is end
-            if (logResult.getContent()!=null && logResult.getContent().getFromLineNum() > logResult.getContent().getToLineNum()) {
+			if (logResult.getContent()!=null && logResult.getContent().getFromLineNum() > logResult.getContent().getToLineNum()) {
                 XxlJobLog jobLog = xxlJobLogDao.load(logId);
                 if (jobLog.getHandleCode() > 0) {
                     logResult.getContent().setEnd(true);
