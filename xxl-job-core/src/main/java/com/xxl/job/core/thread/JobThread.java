@@ -38,6 +38,7 @@ public class JobThread extends Thread{
     private boolean running = false;    // if running job
 	private int idleTimes = 0;			// idel times
 
+    private ThreadPoolExecutor futureTaskExecutor;    //futureTask execute thread pool
 
 	public JobThread(int jobId, IJobHandler handler) {
 		this.jobId = jobId;
@@ -132,39 +133,38 @@ public class JobThread extends Thread{
 					// execute
 					XxlJobHelper.log("<br>----------- xxl-job job execute start -----------<br>----------- Param:" + xxlJobContext.getJobParam());
 
-					if (triggerParam.getExecutorTimeout() > 0) {
-						// limit timeout
-						Thread futureThread = null;
-						try {
-							FutureTask<Boolean> futureTask = new FutureTask<Boolean>(new Callable<Boolean>() {
-								@Override
-								public Boolean call() throws Exception {
+                    if (triggerParam.getExecutorTimeout() > 0) {
+                        // limit timeout
+                        FutureTask<Boolean> futureTask = new FutureTask<Boolean>(new Callable<Boolean>() {
+                            @Override
+                            public Boolean call() throws Exception {
 
-									// init job context
-									XxlJobContext.setXxlJobContext(xxlJobContext);
+                                // init job context
+                                XxlJobContext.setXxlJobContext(xxlJobContext);
 
-									handler.execute();
-									return true;
-								}
-							});
-							futureThread = new Thread(futureTask);
-							futureThread.start();
+                                handler.execute();
+                                return true;
+                            }
+                        });
 
-							Boolean tempResult = futureTask.get(triggerParam.getExecutorTimeout(), TimeUnit.SECONDS);
-						} catch (TimeoutException e) {
+                        runFutureTask(futureTask);
+                        try {
+                            Boolean tempResult = futureTask.get(triggerParam.getExecutorTimeout(), TimeUnit.SECONDS);
+                        } catch (TimeoutException e) {
 
 							XxlJobHelper.log("<br>----------- xxl-job job execute timeout");
 							XxlJobHelper.log(e);
 
-							// handle result
-							XxlJobHelper.handleTimeout("job execute timeout ");
-						} finally {
-							futureThread.interrupt();
-						}
-					} else {
-						// just execute
-						handler.execute();
-					}
+                            // handle result
+                            XxlJobHelper.handleTimeout("job execute timeout ");
+                        } finally {
+                            // No matter whether it is done or not, it can be cancelled directly
+                            futureTask.cancel(true);
+                        }
+                    } else {
+                        // just execute
+                        handler.execute();
+                    }
 
 					// valid execute handle data
 					if (XxlJobContext.getXxlJobContext().getHandleCode() <= 0) {
@@ -247,6 +247,17 @@ public class JobThread extends Thread{
 			logger.error(e.getMessage(), e);
 		}
 
-		logger.info(">>>>>>>>>>> xxl-job JobThread stoped, hashCode:{}", Thread.currentThread());
-	}
+        logger.info(">>>>>>>>>>> xxl-job JobThread stoped, hashCode:{}", Thread.currentThread());
+    }
+
+    private void runFutureTask(FutureTask<?> task) {
+        if (futureTaskExecutor == null) {
+            futureTaskExecutor =
+                    new ThreadPoolExecutor(0, 3,
+                            60L, TimeUnit.SECONDS,
+                            new SynchronousQueue<Runnable>(),
+                            r -> new Thread(r, "xxl-job, JobFutureExecutor-" + jobId));
+        }
+        futureTaskExecutor.execute(task);
+    }
 }
