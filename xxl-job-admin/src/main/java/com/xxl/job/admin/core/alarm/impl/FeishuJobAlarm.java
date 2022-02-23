@@ -22,15 +22,18 @@ public class FeishuJobAlarm extends BaseAlarm implements JobAlarm {
      */
     @Override
     public boolean doAlarm(XxlJobInfo info, XxlJobLog jobLog) {
-        if (info != null && info.getAlarmType() == AlarmTypeEnum.FEI_SHU.getAlarmType() &&
-                info.getAlarmUrl() != null && info.getAlarmUrl().trim().length() > 0) {
-            String content = parseContent(info, jobLog);
-            FeiShuTextMsgReq textMsgReq = new FeiShuTextMsgReq();
-            textMsgReq.withTitle(getTitle());
-            textMsgReq.withContent(content);
-            return  sendToAll(jobLog,info,textMsgReq.toJson());
-        }
-        return true;
+
+        String content = parseContent(info, jobLog);
+        FeiShuTextMsgReq textMsgReq = new FeiShuTextMsgReq();
+        textMsgReq.withTitle(getTitle());
+        textMsgReq.withContent(content);
+        return sendToAll(jobLog, info, textMsgReq.toJson());
+
     }
 
+    @Override
+    public boolean accept(XxlJobInfo info) {
+        return info != null && info.getAlarmType() == AlarmTypeEnum.FEI_SHU.getAlarmType() &&
+                info.getAlarmUrl() != null && info.getAlarmUrl().trim().length() > 0;
+    }
 }

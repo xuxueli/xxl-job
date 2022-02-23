@@ -29,4 +29,10 @@ public class WebHookJobAlarm  extends  BaseAlarm implements JobAlarm {
         }
         return true;
     }
+
+    @Override
+    public boolean accept(XxlJobInfo info) {
+        return info != null && info.getAlarmType() == AlarmTypeEnum.WEBHOOK.getAlarmType() &&
+                info.getAlarmUrl() != null && info.getAlarmUrl().trim().length() > 0;
+    }
 }

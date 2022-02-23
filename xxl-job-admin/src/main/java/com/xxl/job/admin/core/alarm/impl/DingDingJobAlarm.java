@@ -22,16 +22,15 @@ public class DingDingJobAlarm extends BaseAlarm implements JobAlarm {
      */
     @Override
     public boolean doAlarm(XxlJobInfo info, XxlJobLog jobLog) {
+        String content = parseContent(info, jobLog);
+        DingDingTextMsgReq dingDingTextMsgReq = new DingDingTextMsgReq();
+        dingDingTextMsgReq.withContent(content);
+        return sendToAll(jobLog, info, dingDingTextMsgReq.toJson());
+    }
 
-
-        if (info != null && info.getAlarmType() == AlarmTypeEnum.DING_DING.getAlarmType() &&
-                info.getAlarmUrl() != null && info.getAlarmUrl().trim().length() > 0) {
-
-            String content = parseContent(info, jobLog);
-            DingDingTextMsgReq dingDingTextMsgReq = new DingDingTextMsgReq();
-            dingDingTextMsgReq.withContent(content);
-            return sendToAll(jobLog, info, dingDingTextMsgReq.toJson());
-        }
-        return true;
+    @Override
+    public boolean accept(XxlJobInfo info) {
+        return  (info != null && info.getAlarmType() == AlarmTypeEnum.DING_DING.getAlarmType() &&
+                info.getAlarmUrl() != null && info.getAlarmUrl().trim().length() > 0) ;
     }
 }

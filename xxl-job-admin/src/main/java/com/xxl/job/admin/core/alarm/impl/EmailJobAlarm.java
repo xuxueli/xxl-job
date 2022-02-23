@@ -85,6 +85,12 @@ public class EmailJobAlarm implements JobAlarm {
         return alarmResult;
     }
 
+    @Override
+    public boolean accept(XxlJobInfo info) {
+        return  info!=null && info.getAlarmType() == AlarmTypeEnum.EMAIL.getAlarmType() &&
+                info.getAlarmUrl()!=null && info.getAlarmUrl().trim().length()>0;
+    }
+
     /**
      * load email job alarm template
      *
