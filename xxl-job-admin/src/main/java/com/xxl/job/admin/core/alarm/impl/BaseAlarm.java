@@ -35,7 +35,7 @@ public class BaseAlarm {
         HttpEntity<String> entity = new HttpEntity<>(json, headers);
         ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, entity, String.class);
         String body = responseEntity.getBody();
-        log.info("sendRobot={}", body);
+        log.info("sendRobot  url={} body={}", url, body);
         return responseEntity.getStatusCode() == HttpStatus.OK;
     }
 
@@ -94,7 +94,7 @@ public class BaseAlarm {
     public boolean sendToAll(XxlJobLog jobLog, XxlJobInfo info, String json) {
         Set<String> urlList = new HashSet<String>(Arrays.asList(info.getAlarmUrl().split(",")));
         for (String webHookUrl : urlList) {
-            // make mail
+            // send message
             try {
                 sendMsg(webHookUrl, json);
             } catch (Exception e) {
