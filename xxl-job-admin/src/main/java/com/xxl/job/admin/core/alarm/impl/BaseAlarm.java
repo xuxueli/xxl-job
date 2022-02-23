@@ -111,6 +111,7 @@ public class BaseAlarm {
         webHookMsg.setJobDesc(info.getJobDesc());
         webHookMsg.setJobId(jobLog.getJobId());
         webHookMsg.setTriggerMsg(jobLog.getTriggerMsg());
+        webHookMsg.setTriggerCode(jobLog.getTriggerCode());
         webHookMsg.setHandleMsg(jobLog.getHandleMsg());
         webHookMsg.setId(jobLog.getId());
         webHookMsg.setAlarmStatus(jobLog.getAlarmStatus());
