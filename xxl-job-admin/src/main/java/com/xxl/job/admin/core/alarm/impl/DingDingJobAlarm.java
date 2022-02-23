@@ -32,6 +32,6 @@ public class DingDingJobAlarm extends BaseAlarm implements JobAlarm {
             dingDingTextMsgReq.withContent(content);
             return sendToAll(jobLog, info, dingDingTextMsgReq.toJson());
         }
-        return false;
+        return true;
     }
 }

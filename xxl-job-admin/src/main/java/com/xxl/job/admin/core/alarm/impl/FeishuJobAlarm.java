@@ -29,7 +29,7 @@ public class FeishuJobAlarm extends BaseAlarm implements JobAlarm {
             textMsgReq.withContent(content);
             return  sendToAll(jobLog,info,textMsgReq.toJson());
         }
-        return false;
+        return true;
     }
 
 }

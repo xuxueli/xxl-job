@@ -18,9 +18,6 @@ import org.springframework.web.client.RestTemplate;
 @Component
 public class WebChatJobAlarm  extends BaseAlarm implements JobAlarm {
 
-    private RestTemplate restTemplate;
-    private static Logger log = LoggerFactory.getLogger(WebChatJobAlarm.class);
-
     /**
      * fail alarm
      *
@@ -28,7 +25,6 @@ public class WebChatJobAlarm  extends BaseAlarm implements JobAlarm {
      */
     @Override
     public boolean doAlarm(XxlJobInfo info, XxlJobLog jobLog) {
-        restTemplate = new RestTemplate();
 
         if (info != null && info.getAlarmType() == AlarmTypeEnum.ENT_WECHAT.getAlarmType() &&
                 info.getAlarmUrl() != null && info.getAlarmUrl().trim().length() > 0) {
@@ -37,7 +33,7 @@ public class WebChatJobAlarm  extends BaseAlarm implements JobAlarm {
             textMsgReq.withContent(content);
             return sendToAll(jobLog, info, textMsgReq.toJson());
         }
-        return false;
+        return true;
     }
 
 }

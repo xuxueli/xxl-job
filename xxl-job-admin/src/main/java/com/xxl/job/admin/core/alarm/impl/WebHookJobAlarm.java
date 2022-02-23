@@ -27,6 +27,6 @@ public class WebHookJobAlarm  extends  BaseAlarm implements JobAlarm {
             WebHookMsg webHookMsg = parseWebHookMsg(info, jobLog);
             return sendToAll(jobLog, info, webHookMsg.toJson());
         }
-        return false;
+        return true;
     }
 }

@@ -24,7 +24,7 @@ public class BaseAlarm {
     private static Logger log = LoggerFactory.getLogger(BaseAlarm.class);
     private static RestTemplate restTemplate = new RestTemplate();
 
-    private static String br = "\r\n";
+    private static String br = "\n";
 
     public boolean sendMsg(String url, String json) {
         //创建请求头
@@ -61,7 +61,7 @@ public class BaseAlarm {
         content = content.replace("<span style=\"color:#00c0ef;\" >", "");
         content = content.replace("</span>", "");
 
-        return content;
+        return content.trim();
     }
 
     /**
@@ -75,7 +75,7 @@ public class BaseAlarm {
                 I18nUtil.getString("jobinfo_field_id") + ":{1}" + br +
                 I18nUtil.getString("jobinfo_field_jobdesc") + ":{2}" + br +
                 I18nUtil.getString("jobconf_monitor_alarm_title") + ":" + I18nUtil.getString("jobconf_monitor_alarm_type") + br +
-                I18nUtil.getString("jobconf_monitor_alarm_content") + ":{3}" + br;
+                I18nUtil.getString("jobconf_monitor_alarm_content") + ":{3}" ;
         return mailBodyTemplate;
     }
 
