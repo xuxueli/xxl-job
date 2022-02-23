@@ -10,11 +10,9 @@ import com.xxl.job.core.biz.model.ReturnT;
 import groovy.util.logging.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.ReactiveTypeDescriptor;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
-import javax.swing.border.TitledBorder;
 import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.HashSet;
