@@ -10,9 +10,11 @@ import com.xxl.job.core.biz.model.ReturnT;
 import groovy.util.logging.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.ReactiveTypeDescriptor;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
+import javax.swing.border.TitledBorder;
 import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -25,6 +27,8 @@ public class BaseAlarm {
     private static RestTemplate restTemplate = new RestTemplate();
 
     private static String br = "\n";
+
+    private String title;
 
     public boolean sendMsg(String url, String json) {
         //创建请求头
@@ -51,17 +55,21 @@ public class BaseAlarm {
         // email info
         XxlJobGroup group = XxlJobAdminConfig.getAdminConfig().getXxlJobGroupDao().load(Integer.valueOf(info.getJobGroup()));
         //String personal = I18nUtil.getString("admin_name_full");
-        String title = I18nUtil.getString("jobconf_monitor");
+         title = I18nUtil.getString("jobconf_monitor");
         String content = MessageFormat.format(loadJobAlarmTemplate(),
                 group != null ? group.getTitle() : "null",
                 info.getId(),
                 info.getJobDesc(),
                 alarmContent);
-        content = content.replace("<br>", "\n");
-        content = content.replace("<span style=\"color:#00c0ef;\" >", "");
-        content = content.replace("</span>", "");
-
+        content = content.replaceAll("<br><br>", "\n");
+        content = content.replaceAll("<span style=\"color:#00c0ef;\" >", "");
+        content = content.replaceAll("</span>", "");
+        content = content.replaceAll("<br>", "\n");
         return content.trim();
+    }
+
+    public  String  getTitle(){
+        return title;
     }
 
     /**

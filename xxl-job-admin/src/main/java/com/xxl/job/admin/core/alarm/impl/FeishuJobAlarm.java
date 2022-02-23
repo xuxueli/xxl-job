@@ -26,6 +26,7 @@ public class FeishuJobAlarm extends BaseAlarm implements JobAlarm {
                 info.getAlarmUrl() != null && info.getAlarmUrl().trim().length() > 0) {
             String content = parseContent(info, jobLog);
             FeiShuTextMsgReq textMsgReq = new FeiShuTextMsgReq();
+            textMsgReq.withTitle(getTitle());
             textMsgReq.withContent(content);
             return  sendToAll(jobLog,info,textMsgReq.toJson());
         }
