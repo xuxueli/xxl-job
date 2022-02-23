@@ -11,10 +11,26 @@ public enum AlarmTypeEnum {
      */
     EMAIL(1,I18nUtil.getString("jobinfo_field_email")),
 
+
+    /**
+     * 企业微信
+     */
+    ENT_WECHAT(2,I18nUtil.getString("jobinfo_field_entwechat")),
+
+    /**
+     * 飞书
+     */
+    FEI_SHU(3,I18nUtil.getString("jobinfo_field_feishu")),
+
+    /**
+     * 叮叮
+     */
+    DING_DING(4,I18nUtil.getString("jobinfo_field_dingding")),
+
     /**
      * webhook
      */
-    WEBHOOK(2,I18nUtil.getString("jobinfo_field_webhook"));
+    WEBHOOK(5,I18nUtil.getString("jobinfo_field_webhook"));
 
 
 

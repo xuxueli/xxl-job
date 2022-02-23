@@ -2,18 +2,18 @@ package com.xxl.job.admin.core.alarm.impl;
 
 import com.xxl.job.admin.core.alarm.AlarmTypeEnum;
 import com.xxl.job.admin.core.alarm.JobAlarm;
-import com.xxl.job.admin.core.alarm.msg.WebHookMsg;
+import com.xxl.job.admin.core.alarm.msg.DingDingTextMsgReq;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
 import org.springframework.stereotype.Component;
 
 /**
- * job alarm by webhook
+ * job alarm by ding ding
  *
  * @author hcmyfs@163.com 2022-02-20
  */
 @Component
-public class WebHookJobAlarm  extends  BaseAlarm implements JobAlarm {
+public class DingDingJobAlarm extends BaseAlarm implements JobAlarm {
 
     /**
      * fail alarm
@@ -22,10 +22,15 @@ public class WebHookJobAlarm  extends  BaseAlarm implements JobAlarm {
      */
     @Override
     public boolean doAlarm(XxlJobInfo info, XxlJobLog jobLog) {
-        if (info != null && info.getAlarmType() == AlarmTypeEnum.WEBHOOK.getAlarmType() &&
+
+
+        if (info != null && info.getAlarmType() == AlarmTypeEnum.DING_DING.getAlarmType() &&
                 info.getAlarmUrl() != null && info.getAlarmUrl().trim().length() > 0) {
-            WebHookMsg webHookMsg = parseWebHookMsg(info, jobLog);
-            return sendToAll(jobLog, info, webHookMsg.toJson());
+
+            String content = parseContent(info, jobLog);
+            DingDingTextMsgReq dingDingTextMsgReq = new DingDingTextMsgReq();
+            dingDingTextMsgReq.withContent(content);
+            return sendToAll(jobLog, info, dingDingTextMsgReq.toJson());
         }
         return false;
     }

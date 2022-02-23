@@ -2,18 +2,18 @@ package com.xxl.job.admin.core.alarm.impl;
 
 import com.xxl.job.admin.core.alarm.AlarmTypeEnum;
 import com.xxl.job.admin.core.alarm.JobAlarm;
-import com.xxl.job.admin.core.alarm.msg.WebHookMsg;
+import com.xxl.job.admin.core.alarm.msg.FeiShuTextMsgReq;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
 import org.springframework.stereotype.Component;
 
 /**
- * job alarm by webhook
+ * job alarm by feishu
  *
  * @author hcmyfs@163.com 2022-02-20
  */
 @Component
-public class WebHookJobAlarm  extends  BaseAlarm implements JobAlarm {
+public class FeishuJobAlarm extends BaseAlarm implements JobAlarm {
 
     /**
      * fail alarm
@@ -22,11 +22,14 @@ public class WebHookJobAlarm  extends  BaseAlarm implements JobAlarm {
      */
     @Override
     public boolean doAlarm(XxlJobInfo info, XxlJobLog jobLog) {
-        if (info != null && info.getAlarmType() == AlarmTypeEnum.WEBHOOK.getAlarmType() &&
+        if (info != null && info.getAlarmType() == AlarmTypeEnum.FEI_SHU.getAlarmType() &&
                 info.getAlarmUrl() != null && info.getAlarmUrl().trim().length() > 0) {
-            WebHookMsg webHookMsg = parseWebHookMsg(info, jobLog);
-            return sendToAll(jobLog, info, webHookMsg.toJson());
+            String content = parseContent(info, jobLog);
+            FeiShuTextMsgReq textMsgReq = new FeiShuTextMsgReq();
+            textMsgReq.withContent(content);
+            return  sendToAll(jobLog,info,textMsgReq.toJson());
         }
         return false;
     }
+
 }

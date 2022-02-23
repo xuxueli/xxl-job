@@ -2,6 +2,7 @@ package com.xxl.job.admin.core.alarm.msg;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.xxl.job.admin.core.util.JacksonUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,26 +13,26 @@ import java.util.Map;
 /**
  * 飞书消息
  */
-public class FeiShuTextMsgReq {
+public class FeiShuTextMsgReq extends BaseMsg {
 
-    public  FeiShuTextMsgReq() {
+    public FeiShuTextMsgReq() {
         List<Map<String, Object>> elements = new ArrayList<>();
         Map<String, Boolean> config = new HashMap<>();
         config.put("wide_screen_mode", true);
         card.put("config", config);
-        card.put("elements",elements);
+        card.put("elements", elements);
         text.put("tag", "markdown");
         elements.add(text);
     }
 
 
-    private Map<String,Object> card=new HashMap<>();
+    private Map<String, Object> card = new HashMap<>();
 
     @JsonIgnore
-    private Map<String,Object> text=new HashMap<>();
+    private Map<String, Object> text = new HashMap<>();
 
     @JsonProperty(value = "msg_type")
-    private  String msgType="interactive";
+    private String msgType = "interactive";
 
     /**
      * 设置用户
@@ -58,5 +59,10 @@ public class FeiShuTextMsgReq {
 
     public void setCard(Map<String, Object> card) {
         this.card = card;
+    }
+
+    @Override
+    public String toJson() {
+        return JacksonUtil.writeValueAsString(this);
     }
 }
