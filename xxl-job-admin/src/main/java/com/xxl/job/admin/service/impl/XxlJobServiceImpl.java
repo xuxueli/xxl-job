@@ -279,11 +279,9 @@ public class XxlJobServiceImpl implements XxlJobService {
 		exists_jobInfo.setExecutorFailRetryCount(jobInfo.getExecutorFailRetryCount());
 		exists_jobInfo.setChildJobId(jobInfo.getChildJobId());
 		exists_jobInfo.setTriggerNextTime(nextTriggerTime);
-
+		exists_jobInfo.setAlarmType(jobInfo.getAlarmType());
 		exists_jobInfo.setUpdateTime(new Date());
 		xxlJobInfoDao.update(exists_jobInfo);
-
-
 		return ReturnT.SUCCESS;
 	}
 
