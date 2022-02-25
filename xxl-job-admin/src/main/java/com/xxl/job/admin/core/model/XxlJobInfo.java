@@ -1,6 +1,7 @@
 package com.xxl.job.admin.core.model;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * xxl-job info
@@ -42,6 +43,15 @@ public class XxlJobInfo {
 	private long triggerLastTime;	// 上次调度时间
 	private long triggerNextTime;	// 下次调度时间
 
+	private List<XxlJobAlarm> alarmConfigList;
+
+	public List<XxlJobAlarm> getAlarmConfigList() {
+		return alarmConfigList;
+	}
+
+	public void setAlarmConfigList(List<XxlJobAlarm> alarmConfigList) {
+		this.alarmConfigList = alarmConfigList;
+	}
 
 	public int getId() {
 		return id;

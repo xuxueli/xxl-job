@@ -14,7 +14,8 @@
 		<module>xxl-job-core</module>
 		<module>xxl-job-admin</module>
 		<module>xxl-job-executor-samples</module>
-    </modules>
+		<module>xxl-job-alarm</module>
+	</modules>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -36,6 +37,11 @@
 		<slf4j-api.version>1.7.30</slf4j-api.version>
 		<junit-jupiter.version>5.7.1</junit-jupiter.version>
 		<javax.annotation-api.version>1.3.2</javax.annotation-api.version>
+
+		<httpclient.version>4.4.1</httpclient.version>
+		<commons-lang3.version>3.12.0</commons-lang3.version>
+		<jackson-databind.version>2.11.4</jackson-databind.version>
+		<commons-email.version>1.5</commons-email.version>
 
 		<groovy.version>3.0.8</groovy.version>
 

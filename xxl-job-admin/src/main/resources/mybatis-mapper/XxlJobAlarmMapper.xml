@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xxl.job.admin.dao.XxlJobAlarmDao">
+
+	<resultMap id="XxlJobAlarm" type="com.xxl.job.admin.core.model.XxlJobAlarm" >
+			<result column="id" property="id" />
+
+			<result column="job_id" property="jobId" />
+	    <result column="alarm_type" property="alarmType" />
+
+	    <result column="alarm_target" property="alarmTarget" />
+	    <result column="alarm_config" property="alarmConfig" />
+
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		t.id,
+		t.job_id,
+		t.alarm_type,
+		t.alarm_target,
+		t.alarm_config
+	</sql>
+
+	<select id="findByJobId" parameterType="java.util.HashMap" resultMap="XxlJobAlarm">
+		SELECT <include refid="Base_Column_List" />
+		FROM xxl_job_alarm AS t
+		WHERE t.job_id = #{jobId}
+	</select>
+
+	<delete id="deleteByJobId" parameterType="java.util.HashMap">
+		DELETE FROM xxl_job_alarm WHERE job_id = #{jobId}
+	</delete>
+
+	<insert id="batchSave" parameterType="java.util.List">
+		INSERT INTO xxl_job_alarm (id, job_id, alarm_type, alarm_target, alarm_config)
+		VALUES
+		<foreach collection="dataList" item="item" separator=",">
+			(null, #{item.jobId}, #{item.alarmType}, #{item.alarmTarget}, #{item.alarmConfig})
+		</foreach>
+	</insert>
+</mapper>

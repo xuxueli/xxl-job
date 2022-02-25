@@ -1,3 +1,5 @@
+var alarmConfigIndex = 0;
+var mode = 'UpdateModel';
 $(function() {
 
 	// init date tables
@@ -382,6 +384,14 @@ $(function() {
 		// 》init scheduleType
 		$("#updateModal .form select[name=scheduleType]").change();
 
+		mode = 'AddModel';
+
+		alarmConfigIndex = 0;
+
+		if (alarmPluginList != null && alarmPluginList.length > 0) {
+			$("#alarmConfig" + mode).html(appendAlarmConfig(null));
+		}
+
 		// 》init glueType
 		$("#updateModal .form select[name=glueType]").change();
 
@@ -542,6 +552,24 @@ $(function() {
 		$("#updateModal .form input[name='jobDesc']").val( row.jobDesc );
 		$("#updateModal .form input[name='author']").val( row.author );
 		$("#updateModal .form input[name='alarmEmail']").val( row.alarmEmail );
+
+		mode = 'UpdateModel';
+
+		alarmConfigIndex = 0;
+
+		if (alarmPluginList != null && alarmPluginList.length > 0) {
+			var alarmConfigList = row.alarmConfigList;
+			var html = "";
+			if (alarmConfigList != null && alarmConfigList.length > 0) {
+				for (i in alarmConfigList) {
+					html += appendAlarmConfig(alarmConfigList[i]);
+				}
+			}
+			html += appendAlarmConfig(null);
+			$("#alarmConfig" + mode).html(html);
+		}
+
+
 
 		// fill trigger
 		$('#updateModal .form select[name=scheduleType] option[value='+ row.scheduleType +']').prop('selected', true);
@@ -737,3 +765,44 @@ $(function() {
 	});
 
 });
+
+function alarmTypeOnChange() {
+	var alarmTypeSelectors = $(".alarmType" + mode)
+	if (alarmTypeSelectors === null || alarmTypeSelectors.length === 0) {
+		$("#alarmConfig" + mode).append(appendAlarmConfig(null));
+		return
+	}
+	if (alarmTypeSelectors.find("option:selected").text().search('--') === -1) {
+		$("#alarmConfig" + mode).append(appendAlarmConfig(null));
+	}
+}
+
+
+function appendAlarmConfig(alarmConfig) {
+	var html = "";
+	html += "<label for=\"firstname\" class=\"col-sm-2 control-label\">" + I18n.jobinfo_field_alarmtype + "<font color=\"red\">*</font></label>";
+	html += "<div class=\"col-sm-4\">";
+	html += "<select class=\"form-control alarmType" + mode + "\" name=\"alarmConfigList[" + alarmConfigIndex + "].alarmType\" onchange='alarmTypeOnChange()'>";
+	html += alarmConfig === null ? "<option value=\"\" selected>--</option>" : "<option value=\"\">--</option>";
+	for (i in alarmPluginList) {
+		if (alarmConfig === null) {
+			html += "<option value=\"" + alarmPluginList[i] + "\" >" + alarmPluginList[i] + "</option>";
+		} else {
+			html += "<option value=\"" + alarmPluginList[i] + "\" " + (alarmConfig.alarmType === alarmPluginList[i] ? " selected " : "") + ">" + alarmPluginList[i] + "</option>";
+		}
+	}
+	html += "</select>";
+	html += "</div>";
+	html += "<div class=\"form-group\">";
+	html += "<label for=\"lastname\" class=\"col-sm-2 control-label\">" + I18n.jobinfo_field_alarmtarget + "<font color=\"black\">*</font></label>";
+	html += "<div class=\"col-sm-4\"><input type=\"text\" class=\"form-control\" name=\"alarmConfigList[" + alarmConfigIndex + "].alarmTarget\" placeholder=\""+ I18n.jobinfo_field_alarmtarget_placeholder + "\" maxlength=\"100\" value='" + (alarmConfig === null ? '' : alarmConfig.alarmTarget) + "' ></div>";
+	html += "</div>";
+	html += "<div class=\"form-group\">";
+	html += "<label for=\"firstname\" class=\"col-sm-2 control-label\">" + I18n.jobinfo_field_alarmconfig + "<font color=\"black\">*</font></label>";
+	html += "<div class=\"col-sm-10\">";
+	html += "<textarea class=\"textarea form-control\" name=\"alarmConfigList[" + alarmConfigIndex +"].alarmConfig\" placeholder=\"" + I18n.system_please_input + I18n.jobinfo_field_alarmconfig + "\" maxlength=\"512\" style=\"height: 63px; line-height: 1.2;\">" + (alarmConfig === null ? '' : (alarmConfig.alarmConfig === null ? '' : alarmConfig.alarmConfig)) + "</textarea>";
+	html += "</div>";
+	html += "</div>";
+	alarmConfigIndex++;
+	return html
+}

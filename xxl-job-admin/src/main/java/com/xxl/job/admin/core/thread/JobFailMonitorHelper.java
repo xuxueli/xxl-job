@@ -1,6 +1,7 @@
 package com.xxl.job.admin.core.thread;
 
 import com.xxl.job.admin.core.conf.XxlJobAdminConfig;
+import com.xxl.job.admin.core.model.XxlJobAlarm;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.admin.core.trigger.TriggerTypeEnum;
@@ -61,7 +62,8 @@ public class JobFailMonitorHelper {
 								// 2、fail alarm monitor
 								int newAlarmStatus = 0;		// 告警状态：0-默认、-1=锁定状态、1-无需告警、2-告警成功、3-告警失败
 								if (info != null) {
-									boolean alarmResult = XxlJobAdminConfig.getAdminConfig().getJobAlarmer().alarm(info, log);
+									List<XxlJobAlarm> jobAlarmList = XxlJobAdminConfig.getAdminConfig().getXxlJobAlarmDao().findByJobId(info.getId());
+									boolean alarmResult = XxlJobAdminConfig.getAdminConfig().getJobAlarmer().alarm(info, jobAlarmList, log);
 									newAlarmStatus = alarmResult?2:3;
 								} else {
 									newAlarmStatus = 1;
