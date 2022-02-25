@@ -146,9 +146,9 @@ public class JobLogController {
             ReturnT<LogResult> logResult = catLog(executorAddress, triggerTime, logId, fromLineNum);
             if (logResult.getCode() != ReturnT.SUCCESS_CODE) {
                 logger.warn("使用原始执行器地址[ip={}],获取日志[logId={}]失败.", executorAddress, logId);
-                ReturnT<LogResult> logResultReturnT = catLogUseExecutorGroup(triggerTime, logId, fromLineNum);
-                if (logResultReturnT != null) {
-                    return logResultReturnT;
+                ReturnT<LogResult> result = catLogUseExecutorGroup(triggerTime, logId, fromLineNum);
+                if (result != null && result.getCode() == ReturnT.SUCCESS_CODE) {
+                    return result;
                 }
             }
             return logResult;
@@ -174,7 +174,13 @@ public class JobLogController {
                                                  .collect(Collectors.toList());
         for (String executorAddress : addressList) {
             try {
-                return catLog(executorAddress, triggerTime, logId, fromLineNum);
+                ReturnT<LogResult> result = catLog(executorAddress, triggerTime, logId, fromLineNum);
+                if (result.getCode() == ReturnT.SUCCESS_CODE) {
+                    if (logger.isDebugEnabled()) {
+                        logger.debug("读取日志成功.logId={},执行器ip={}", logId, executorAddress);
+                    }
+                    return result;
+                }
             } catch (Exception exception) {
                 logger.warn("扫描执行器组尝试获取日志-从执行器[ip={}]中,获取不到日志logId={}.", executorAddress, logId, exception);
             }
