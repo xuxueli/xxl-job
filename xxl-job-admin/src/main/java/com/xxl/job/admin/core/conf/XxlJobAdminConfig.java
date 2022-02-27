@@ -6,7 +6,6 @@ import com.xxl.job.admin.dao.*;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -82,8 +81,6 @@ public class XxlJobAdminConfig implements InitializingBean, DisposableBean {
     @Resource
     private XxlJobAlarmDao xxlJobAlarmDao;
     @Resource
-    private JavaMailSender mailSender;
-    @Resource
     private DataSource dataSource;
     @Resource
     private JobAlarmer jobAlarmer;
@@ -147,10 +144,6 @@ public class XxlJobAdminConfig implements InitializingBean, DisposableBean {
 
     public XxlJobAlarmDao getXxlJobAlarmDao() {
         return xxlJobAlarmDao;
-    }
-
-    public JavaMailSender getMailSender() {
-        return mailSender;
     }
 
     public DataSource getDataSource() {
