@@ -41,12 +41,6 @@
       <artifactId>spring-boot-starter-freemarker</artifactId>
     </dependency>
 
-    <!-- mail-starter -->
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-mail</artifactId>
-    </dependency>
-
     <!-- starter-actuator -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -94,6 +88,11 @@
       <version>${project.parent.version}</version>
     </dependency>
 
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>${commons-lang3.version}</version>
+    </dependency>
   </dependencies>
 
   <build>
