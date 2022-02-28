@@ -7,7 +7,7 @@ package com.xxl.job.alarm.http;
  */
 public final class HttpConstants {
 
-    public static final String HTTP_HEADERS = "alarm.htp.headers";
+    public static final String HTTP_HEADERS = "alarm.http.headers";
 
     private HttpConstants() {
         throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
