@@ -1,5 +1,6 @@
 package com.xxl.job.alarm.dingtalk;
 
+import com.xxl.job.alarm.AlarmConstants;
 import com.xxl.job.alarm.util.JSONUtils;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
@@ -49,7 +50,7 @@ public final class DingtalkSender {
         url = config.getProperty(DingtalkConstants.DINGTALK_WEBHOOK);
         keyword = config.getProperty(DingtalkConstants.DINGTALK_KEYWORD);
         secret = config.getProperty(DingtalkConstants.DINGTALK_SECRET);
-        atMobiles = config.getProperty(DingtalkConstants.DINGTALK_AT_MOBILES);
+        atMobiles = config.getProperty(AlarmConstants.ALARM_TARGET);
         atUserIds = config.getProperty(DingtalkConstants.DINGTALK_AT_USERIDS);
         atAll = Boolean.parseBoolean(config.getProperty(DingtalkConstants.DINGTALK_AT_ALL));
     }
