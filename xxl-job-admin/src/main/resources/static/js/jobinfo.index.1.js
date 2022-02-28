@@ -726,6 +726,23 @@ $(function() {
 		$("#addModal .form input[name='author']").val( row.author );
 		$("#addModal .form input[name='alarmEmail']").val( row.alarmEmail );
 
+
+		mode = 'AddModel';
+
+		alarmConfigIndex = 0;
+
+		if (alarmPluginList != null && alarmPluginList.length > 0) {
+			var html = '';
+			if (row.alarmConfigList != null && row.alarmConfigList.length > 0) {
+				var alarmConfigList = row.alarmConfigList;
+				for (i in alarmConfigList) {
+					html += appendAlarmConfig(alarmConfigList[i]);
+				}
+			}
+			html += appendAlarmConfig(null);
+			$("#alarmConfig" + mode).html(html);
+		}
+
 		// fill trigger
 		$('#addModal .form select[name=scheduleType] option[value='+ row.scheduleType +']').prop('selected', true);
 		$("#addModal .form input[name='scheduleConf']").val( row.scheduleConf );
