@@ -74,11 +74,12 @@ public class HttpSender {
                 String resp = EntityUtils.toString(entity, DEFAULT_CHARSET);
                 if (!Objects.equals(resp, SUCCESS)) {
                     logger.warn("Http send msg {} success, but return error {}", message, resp);
+                    return false;
                 }
             } catch (Exception e) {
                 logger.error("Http send msg :{} failed", message, e);
             }
         }
-        return false;
+        return true;
     }
 }
