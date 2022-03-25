@@ -39,6 +39,10 @@ public class XxlJobGroupDaoTest {
         int ret2 = xxlJobGroupDao.update(group2);
 
         int ret3 = xxlJobGroupDao.remove(group.getId());
+
+        List<XxlJobGroup> pageListResult = xxlJobGroupDao.pageList(1, 10, "setAppName3", "setTitle3");
+
+        int pageListCountResult = xxlJobGroupDao.pageListCount(1, 10, "setAppName3", "setTitle3");
     }
 
 }
