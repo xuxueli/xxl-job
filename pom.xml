@@ -24,6 +24,8 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<maven.test.skip>true</maven.test.skip>
 
+		<servlet-api.version>3.1.0</servlet-api.version>
+
 		<netty-all.version>4.1.63.Final</netty-all.version>
 		<gson.version>2.8.6</gson.version>
 
