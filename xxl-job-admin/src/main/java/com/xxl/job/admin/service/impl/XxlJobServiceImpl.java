@@ -7,10 +7,13 @@ import com.xxl.job.admin.core.model.XxlJobLogReport;
 import com.xxl.job.admin.core.route.ExecutorRouteStrategyEnum;
 import com.xxl.job.admin.core.scheduler.MisfireStrategyEnum;
 import com.xxl.job.admin.core.scheduler.ScheduleTypeEnum;
+import com.xxl.job.admin.core.scheduler.XxlJobScheduler;
 import com.xxl.job.admin.core.thread.JobScheduleHelper;
 import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.admin.dao.*;
 import com.xxl.job.admin.service.XxlJobService;
+import com.xxl.job.core.biz.ExecutorBiz;
+import com.xxl.job.core.biz.model.InterruptParam;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
 import com.xxl.job.core.glue.GlueTypeEnum;
@@ -429,6 +432,24 @@ public class XxlJobServiceImpl implements XxlJobService {
 		result.put("triggerCountFailTotal", triggerCountFailTotal);
 
 		return new ReturnT<Map<String, Object>>(result);
+	}
+
+	@Override
+	public ReturnT<String> interrupt(int id) {
+		XxlJobInfo jobInfo = xxlJobInfoDao.loadById(id);
+		if (jobInfo == null) {
+			return new ReturnT<String>(500, I18nUtil.getString("jobinfo_glue_jobid_unvalid"));
+		}
+		XxlJobGroup jobGroup = xxlJobGroupDao.load(jobInfo.getJobGroup());
+		ReturnT<String> runResult;
+		try {
+			ExecutorBiz executorBiz = XxlJobScheduler.getExecutorBiz(jobGroup.getAddressList());
+			runResult = executorBiz.interrupt(new InterruptParam(jobInfo.getId()));
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			runResult = new ReturnT<String>(500, e.getMessage());
+		}
+		return runResult;
 	}
 
 }

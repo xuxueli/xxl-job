@@ -205,6 +205,9 @@ public class EmbedServer {
                 } else if ("/log".equals(uri)) {
                     LogParam logParam = GsonTool.fromJson(requestData, LogParam.class);
                     return executorBiz.log(logParam);
+                } else if ("/interrupt".equals(uri)) {
+                    InterruptParam interruptParam = GsonTool.fromJson(requestData, InterruptParam.class);
+                    return executorBiz.interrupt(interruptParam);
                 } else {
                     return new ReturnT<String>(ReturnT.FAIL_CODE, "invalid request, uri-mapping("+ uri +") not found.");
                 }

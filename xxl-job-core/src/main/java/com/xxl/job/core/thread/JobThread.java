@@ -37,7 +37,7 @@ public class JobThread extends Thread{
 
     private boolean running = false;    // if running job
 	private int idleTimes = 0;			// idel times
-
+	private volatile boolean abortRunningTask = false;
 
 	public JobThread(int jobId, IJobHandler handler) {
 		this.jobId = jobId;
@@ -85,6 +85,11 @@ public class JobThread extends Thread{
 		this.stopReason = stopReason;
 	}
 
+	public void abortRunning() {
+		this.abortRunningTask = true;
+		this.interrupt();
+	}
+
     /**
      * is running job
      * @return
@@ -95,7 +100,6 @@ public class JobThread extends Thread{
 
     @Override
 	public void run() {
-
     	// init
     	try {
 			handler.init();
@@ -107,93 +111,19 @@ public class JobThread extends Thread{
 		while(!toStop){
 			running = false;
 			idleTimes++;
-
-            TriggerParam triggerParam = null;
+			TriggerParam triggerParam = null;
             try {
 				// to check toStop signal, we need cycle, so wo cannot use queue.take(), instand of poll(timeout)
 				triggerParam = triggerQueue.poll(3L, TimeUnit.SECONDS);
-				if (triggerParam!=null) {
-					running = true;
-					idleTimes = 0;
-					triggerLogIdSet.remove(triggerParam.getLogId());
-
-					// log filename, like "logPath/yyyy-MM-dd/9999.log"
-					String logFileName = XxlJobFileAppender.makeLogFileName(new Date(triggerParam.getLogDateTime()), triggerParam.getLogId());
-					XxlJobContext xxlJobContext = new XxlJobContext(
-							triggerParam.getJobId(),
-							triggerParam.getExecutorParams(),
-							logFileName,
-							triggerParam.getBroadcastIndex(),
-							triggerParam.getBroadcastTotal());
-
-					// init job context
-					XxlJobContext.setXxlJobContext(xxlJobContext);
-
-					// execute
-					XxlJobHelper.log("<br>----------- xxl-job job execute start -----------<br>----------- Param:" + xxlJobContext.getJobParam());
-
-					if (triggerParam.getExecutorTimeout() > 0) {
-						// limit timeout
-						Thread futureThread = null;
-						try {
-							FutureTask<Boolean> futureTask = new FutureTask<Boolean>(new Callable<Boolean>() {
-								@Override
-								public Boolean call() throws Exception {
-
-									// init job context
-									XxlJobContext.setXxlJobContext(xxlJobContext);
-
-									handler.execute();
-									return true;
-								}
-							});
-							futureThread = new Thread(futureTask);
-							futureThread.start();
-
-							Boolean tempResult = futureTask.get(triggerParam.getExecutorTimeout(), TimeUnit.SECONDS);
-						} catch (TimeoutException e) {
-
-							XxlJobHelper.log("<br>----------- xxl-job job execute timeout");
-							XxlJobHelper.log(e);
-
-							// handle result
-							XxlJobHelper.handleTimeout("job execute timeout ");
-						} finally {
-							futureThread.interrupt();
-						}
-					} else {
-						// just execute
-						handler.execute();
-					}
-
-					// valid execute handle data
-					if (XxlJobContext.getXxlJobContext().getHandleCode() <= 0) {
-						XxlJobHelper.handleFail("job handle result lost.");
-					} else {
-						String tempHandleMsg = XxlJobContext.getXxlJobContext().getHandleMsg();
-						tempHandleMsg = (tempHandleMsg!=null&&tempHandleMsg.length()>50000)
-								?tempHandleMsg.substring(0, 50000).concat("...")
-								:tempHandleMsg;
-						XxlJobContext.getXxlJobContext().setHandleMsg(tempHandleMsg);
-					}
-					XxlJobHelper.log("<br>----------- xxl-job job execute end(finish) -----------<br>----------- Result: handleCode="
-							+ XxlJobContext.getXxlJobContext().getHandleCode()
-							+ ", handleMsg = "
-							+ XxlJobContext.getXxlJobContext().getHandleMsg()
-					);
-
-				} else {
-					if (idleTimes > 30) {
-						if(triggerQueue.size() == 0) {	// avoid concurrent trigger causes jobId-lost
-							XxlJobExecutor.removeJobThread(jobId, "excutor idel times over limit.");
-						}
-					}
-				}
+				doTrigger(triggerParam);
 			} catch (Throwable e) {
+            	e.printStackTrace();
 				if (toStop) {
 					XxlJobHelper.log("<br>----------- JobThread toStop, stopReason:" + stopReason);
 				}
-
+				if (abortRunningTask) {
+					XxlJobHelper.log("<br>----------- JobThread aborted manually");
+				}
 				// handle result
 				StringWriter stringWriter = new StringWriter();
 				e.printStackTrace(new PrintWriter(stringWriter));
@@ -222,6 +152,9 @@ public class JobThread extends Thread{
 								stopReason + " [job running, killed]" )
 						);
                     }
+                    if (abortRunningTask) {
+                    	abortRunningTask = false;
+					}
                 }
             }
         }
@@ -248,5 +181,89 @@ public class JobThread extends Thread{
 		}
 
 		logger.info(">>>>>>>>>>> xxl-job JobThread stoped, hashCode:{}", Thread.currentThread());
+	}
+
+	/**
+	 * trigger one task
+	 *
+	 * @param triggerParam task info
+	 * @throws Exception Exception, may throws InterruptException if interrupted manually
+	 */
+	private void doTrigger(TriggerParam triggerParam) throws Exception {
+		if (triggerParam != null) {
+			running = true;
+			idleTimes = 0;
+			triggerLogIdSet.remove(triggerParam.getLogId());
+
+			// log filename, like "logPath/yyyy-MM-dd/9999.log"
+			String logFileName = XxlJobFileAppender.makeLogFileName(new Date(triggerParam.getLogDateTime()), triggerParam.getLogId());
+			XxlJobContext xxlJobContext = new XxlJobContext(
+					triggerParam.getJobId(),
+					triggerParam.getExecutorParams(),
+					logFileName,
+					triggerParam.getBroadcastIndex(),
+					triggerParam.getBroadcastTotal());
+
+			// init job context
+			XxlJobContext.setXxlJobContext(xxlJobContext);
+
+			// execute
+			XxlJobHelper.log("<br>----------- xxl-job job execute start -----------<br>----------- Param:" + xxlJobContext.getJobParam());
+
+			if (triggerParam.getExecutorTimeout() > 0) {
+				// limit timeout
+				Thread futureThread = null;
+				try {
+					FutureTask<Boolean> futureTask = new FutureTask<Boolean>(new Callable<Boolean>() {
+						@Override
+						public Boolean call() throws Exception {
+
+							// init job context
+							XxlJobContext.setXxlJobContext(xxlJobContext);
+
+							handler.execute();
+							return true;
+						}
+					});
+					futureThread = new Thread(futureTask);
+					futureThread.start();
+
+					Boolean tempResult = futureTask.get(triggerParam.getExecutorTimeout(), TimeUnit.SECONDS);
+				} catch (TimeoutException e) {
+					XxlJobHelper.log("<br>----------- xxl-job job execute timeout");
+					XxlJobHelper.log(e);
+					// handle result
+					XxlJobHelper.handleTimeout("job execute timeout ");
+				} finally {
+					futureThread.interrupt();
+				}
+			} else {
+				// just execute
+				handler.execute();
+			}
+
+			// valid execute handle data
+			if (XxlJobContext.getXxlJobContext().getHandleCode() <= 0) {
+				XxlJobHelper.handleFail("job handle result lost.");
+			} else {
+				String tempHandleMsg = XxlJobContext.getXxlJobContext().getHandleMsg();
+				tempHandleMsg = (tempHandleMsg!=null&&tempHandleMsg.length()>50000)
+						?tempHandleMsg.substring(0, 50000).concat("...")
+						:tempHandleMsg;
+				XxlJobContext.getXxlJobContext().setHandleMsg(tempHandleMsg);
+			}
+			XxlJobHelper.log("<br>----------- xxl-job job execute end(finish) -----------<br>----------- Result: handleCode="
+					+ XxlJobContext.getXxlJobContext().getHandleCode()
+					+ ", handleMsg = "
+					+ XxlJobContext.getXxlJobContext().getHandleMsg()
+			);
+
+		} else {
+			if (idleTimes > 30) {
+				if(triggerQueue.size() == 0) {	// avoid concurrent trigger causes jobId-lost
+					XxlJobExecutor.removeJobThread(jobId, "excutor idel times over limit.");
+				}
+			}
+		}
 	}
 }

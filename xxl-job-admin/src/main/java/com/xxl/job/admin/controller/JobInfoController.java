@@ -130,6 +130,12 @@ public class JobInfoController {
 	public ReturnT<String> pause(int id) {
 		return xxlJobService.stop(id);
 	}
+
+	@RequestMapping("/interrupt")
+	@ResponseBody
+	public ReturnT<String> interrupt(int id) {
+		return xxlJobService.interrupt(id);
+	}
 	
 	@RequestMapping("/start")
 	@ResponseBody
