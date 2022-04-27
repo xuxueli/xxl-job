@@ -119,6 +119,8 @@ public class ExecutorRegistryThread {
             registryThread.interrupt();
             try {
                 registryThread.join();
+                //reset
+                toStop=false;
             } catch (InterruptedException e) {
                 logger.error(e.getMessage(), e);
             }

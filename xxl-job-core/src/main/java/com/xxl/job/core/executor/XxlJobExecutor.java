@@ -165,6 +165,8 @@ public class XxlJobExecutor  {
         if (embedServer != null) {
             try {
                 embedServer.stop();
+                //reset
+                adminBizList=null;
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);
             }
