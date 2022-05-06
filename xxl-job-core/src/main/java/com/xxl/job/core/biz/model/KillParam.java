@@ -10,6 +10,7 @@ public class KillParam implements Serializable {
 
     public KillParam() {
     }
+
     public KillParam(int jobId) {
         this.jobId = jobId;
     }

@@ -3,7 +3,6 @@ package com.xxl.job.core.executor.impl;
 import com.xxl.job.core.executor.XxlJobExecutor;
 import com.xxl.job.core.glue.GlueFactory;
 import com.xxl.job.core.handler.annotation.XxlJob;
-import com.xxl.job.core.handler.impl.MethodJobHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -98,7 +97,7 @@ public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationC
             } catch (Throwable ex) {
                 logger.error("xxl-job method-jobhandler resolve error for bean[" + beanDefinitionName + "].", ex);
             }
-            if (annotatedMethods==null || annotatedMethods.isEmpty()) {
+            if (annotatedMethods == null || annotatedMethods.isEmpty()) {
                 continue;
             }
 

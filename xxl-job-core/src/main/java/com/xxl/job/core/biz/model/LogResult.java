@@ -10,6 +10,7 @@ public class LogResult implements Serializable {
 
     public LogResult() {
     }
+
     public LogResult(int fromLineNum, int toLineNum, String logContent, boolean isEnd) {
         this.fromLineNum = fromLineNum;
         this.toLineNum = toLineNum;

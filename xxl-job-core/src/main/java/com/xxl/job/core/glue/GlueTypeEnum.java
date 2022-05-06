@@ -41,8 +41,8 @@ public enum GlueTypeEnum {
         return suffix;
     }
 
-    public static GlueTypeEnum match(String name){
-        for (GlueTypeEnum item: GlueTypeEnum.values()) {
+    public static GlueTypeEnum match(String name) {
+        for (GlueTypeEnum item : GlueTypeEnum.values()) {
             if (item.name().equals(name)) {
                 return item;
             }

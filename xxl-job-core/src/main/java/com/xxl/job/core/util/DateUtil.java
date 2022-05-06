@@ -25,13 +25,14 @@ public class DateUtil {
     private static final String DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
     private static final ThreadLocal<Map<String, DateFormat>> dateFormatThreadLocal = new ThreadLocal<Map<String, DateFormat>>();
+
     private static DateFormat getDateFormat(String pattern) {
-        if (pattern==null || pattern.trim().length()==0) {
+        if (pattern == null || pattern.trim().length() == 0) {
             throw new IllegalArgumentException("pattern cannot be empty.");
         }
 
         Map<String, DateFormat> dateFormatMap = dateFormatThreadLocal.get();
-        if(dateFormatMap!=null && dateFormatMap.containsKey(pattern)){
+        if (dateFormatMap != null && dateFormatMap.containsKey(pattern)) {
             return dateFormatMap.get(pattern);
         }
 
@@ -87,7 +88,7 @@ public class DateUtil {
      * @return
      * @throws ParseException
      */
-    public static Date parseDate(String dateString){
+    public static Date parseDate(String dateString) {
         return parse(dateString, DATE_FORMAT);
     }
 
