@@ -10,9 +10,9 @@ import java.util.concurrent.ConcurrentMap;
 
 /**
  * 单个JOB对应的每个执行器，使用频率最低的优先被选举
- *      a(*)、LFU(Least Frequently Used)：最不经常使用，频率/次数
- *      b、LRU(Least Recently Used)：最近最久未使用，时间
- *
+ * a(*)、LFU(Least Frequently Used)：最不经常使用，频率/次数
+ * b、LRU(Least Recently Used)：最近最久未使用，时间
+ * <p>
  * Created by xuxueli on 17/3/10.
  */
 public class ExecutorRouteLFU extends ExecutorRouter {
@@ -20,12 +20,21 @@ public class ExecutorRouteLFU extends ExecutorRouter {
     private static ConcurrentMap<Integer, HashMap<String, Integer>> jobLfuMap = new ConcurrentHashMap<Integer, HashMap<String, Integer>>();
     private static long CACHE_VALID_TIME = 0;
 
+
+    @Override
+    //note 根据任务在每个节点执行的频率选择任务，每次选择执行频率最低的机器执行，每过24H重置所有频率
+    public ReturnT<String> route(TriggerParam triggerParam, List<String> addressList) {
+        String address = route(triggerParam.getJobId(), addressList);
+        return new ReturnT<String>(address);
+    }
+
     public String route(int jobId, List<String> addressList) {
 
         // cache clear
+        //note 每次过24H就清空缓存
         if (System.currentTimeMillis() > CACHE_VALID_TIME) {
             jobLfuMap.clear();
-            CACHE_VALID_TIME = System.currentTimeMillis() + 1000*60*60*24;
+            CACHE_VALID_TIME = System.currentTimeMillis() + 1000 * 60 * 60 * 24;
         }
 
         // lfu item init
@@ -36,25 +45,29 @@ public class ExecutorRouteLFU extends ExecutorRouter {
         }
 
         // put new
-        for (String address: addressList) {
-            if (!lfuItemMap.containsKey(address) || lfuItemMap.get(address) >1000000 ) {
+        for (String address : addressList) {
+            //note 缓存中不包含 或者执行次数大于 1000000 要随机一下
+            if (!lfuItemMap.containsKey(address) || lfuItemMap.get(address) > 1000000) {
                 lfuItemMap.put(address, new Random().nextInt(addressList.size()));  // 初始化时主动Random一次，缓解首次压力
             }
         }
         // remove old
+        //note 在LFU中 剔除已经失效的节点（不在传入的addressList中的节点）
         List<String> delKeys = new ArrayList<>();
-        for (String existKey: lfuItemMap.keySet()) {
+        for (String existKey : lfuItemMap.keySet()) {
             if (!addressList.contains(existKey)) {
                 delKeys.add(existKey);
             }
         }
         if (delKeys.size() > 0) {
-            for (String delKey: delKeys) {
+            for (String delKey : delKeys) {
                 lfuItemMap.remove(delKey);
             }
         }
 
         // load least userd count address
+        //note 根据任务在不同机器上的执行次数 （任务A： ip1-> 100次  ip2->200次  ip3-> 105次）
+        //note 找出执行次数最小的节点
         List<Map.Entry<String, Integer>> lfuItemList = new ArrayList<Map.Entry<String, Integer>>(lfuItemMap.entrySet());
         Collections.sort(lfuItemList, new Comparator<Map.Entry<String, Integer>>() {
             @Override
@@ -67,13 +80,10 @@ public class ExecutorRouteLFU extends ExecutorRouter {
         String minAddress = addressItem.getKey();
         addressItem.setValue(addressItem.getValue() + 1);
 
+        //note 返回执行次数最小的节点
         return addressItem.getKey();
     }
 
-    @Override
-    public ReturnT<String> route(TriggerParam triggerParam, List<String> addressList) {
-        String address = route(triggerParam.getJobId(), addressList);
-        return new ReturnT<String>(address);
-    }
+
 
 }

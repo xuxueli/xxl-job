@@ -13,16 +13,28 @@ import java.util.TreeMap;
 
 /**
  * 分组下机器地址相同，不同JOB均匀散列在不同机器上，保证分组下机器分配JOB平均；且每个JOB固定调度其中一台机器；
- *      a、virtual node：解决不均衡问题
- *      b、hash method replace hashCode：String的hashCode可能重复，需要进一步扩大hashCode的取值范围
+ * a、virtual node：解决不均衡问题
+ * b、hash method replace hashCode：String的hashCode可能重复，需要进一步扩大hashCode的取值范围
  * Created by xuxueli on 17/3/10.
  */
 public class ExecutorRouteConsistentHash extends ExecutorRouter {
 
+    //虚拟节点的数量
     private static int VIRTUAL_NODE_NUM = 100;
+
+
+    //note 根据 虚拟节点+hash散列的方式（类似于 环形哈希一致性算法 支持动态增加节点）
+    // 在节点数量固定不变的情况下，任务将固定执行
+    @Override
+    public ReturnT<String> route(TriggerParam triggerParam, List<String> addressList) {
+        //根据hash算法 计算出地址
+        String address = hashJob(triggerParam.getJobId(), addressList);
+        return new ReturnT<String>(address);
+    }
 
     /**
      * get hash code on 2^32 ring (md5散列的方式计算hash值)
+     *
      * @param key
      * @return
      */
@@ -61,7 +73,9 @@ public class ExecutorRouteConsistentHash extends ExecutorRouter {
         // ------A1------A2-------A3------
         // -----------J1------------------
         TreeMap<Long, String> addressRing = new TreeMap<Long, String>();
-        for (String address: addressList) {
+        for (String address : addressList) {
+
+            //将实际的地址 创建100个虚拟key 但都指向相同的 address
             for (int i = 0; i < VIRTUAL_NODE_NUM; i++) {
                 long addressHash = hash("SHARD-" + address + "-NODE-" + i);
                 addressRing.put(addressHash, address);
@@ -69,17 +83,13 @@ public class ExecutorRouteConsistentHash extends ExecutorRouter {
         }
 
         long jobHash = hash(String.valueOf(jobId));
+        //查找比jobhash后面（大）的地址集合 中的第一个
         SortedMap<Long, String> lastRing = addressRing.tailMap(jobHash);
         if (!lastRing.isEmpty()) {
             return lastRing.get(lastRing.firstKey());
         }
+        //如果没有比jobhash大的就返回最小的数据
         return addressRing.firstEntry().getValue();
-    }
-
-    @Override
-    public ReturnT<String> route(TriggerParam triggerParam, List<String> addressList) {
-        String address = hashJob(triggerParam.getJobId(), addressList);
-        return new ReturnT<String>(address);
     }
 
 }
