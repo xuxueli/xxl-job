@@ -88,7 +88,7 @@ public class XxlJobLogService extends ServiceImpl<XxlJobLogMapper, XxlJobLog> {
         return map;
     }
 
-    public List<Integer> findClearLogIds(@Param("jobGroup") int jobGroup,
+    public List<Long> findClearLogIds(@Param("jobGroup") int jobGroup,
                                       @Param("jobId") int jobId,
                                       @Param("clearBeforeTime") Date clearBeforeTime,
                                       @Param("clearBeforeNum") int clearBeforeNum,
@@ -116,7 +116,7 @@ public class XxlJobLogService extends ServiceImpl<XxlJobLogMapper, XxlJobLog> {
             idqw.orderByDesc(" trigger_time");
             idqw.last(" limit 0," + clearBeforeNum);
             List<XxlJobLog> idlist = list(idqw);
-            List<Integer> collect = idlist.stream().map(XxlJobLog::getId).collect(Collectors.toList());
+            List<Long> collect = idlist.stream().map(XxlJobLog::getId).collect(Collectors.toList());
             lambda.notIn(XxlJobLog::getId, collect);
         }
         queryWrapper.orderByAsc("id");
@@ -124,13 +124,13 @@ public class XxlJobLogService extends ServiceImpl<XxlJobLogMapper, XxlJobLog> {
         return list(queryWrapper).stream().map(XxlJobLog::getId).collect(Collectors.toList());
     }
 
-    public boolean clearLog(@Param("logIds") List<Integer> logIds) {
+    public boolean clearLog(@Param("logIds") List<Long> logIds) {
         QueryWrapper<XxlJobLog> queryWrapper = new QueryWrapper<>();
         queryWrapper.lambda().in(XxlJobLog::getId, logIds);
         return remove(queryWrapper);
     }
 
-    public List<Integer> findFailJobLogIds(@Param("pagesize") int pagesize) {
+    public List<Long> findFailJobLogIds(@Param("pagesize") int pagesize) {
         QueryWrapper<XxlJobLog> queryWrapper = new QueryWrapper<>();
         queryWrapper.lambda().eq(XxlJobLog::getAlarmStatus, 0)
                 .notIn(XxlJobLog::getTriggerCode, 0, 200)
@@ -152,7 +152,7 @@ public class XxlJobLogService extends ServiceImpl<XxlJobLogMapper, XxlJobLog> {
         return update(xxlJobLog, queryWrapper);
     }
 
-    public List<Integer> findLostJobIds(@Param("losedTime") Date losedTime) {
+    public List<Long> findLostJobIds(@Param("losedTime") Date losedTime) {
         List<XxlJobRegistry> registrs = xxlJobRegistryService.list();
         Set<String> address = registrs.stream().map(XxlJobRegistry::getRegistryValue).collect(Collectors.toSet());
         QueryWrapper<XxlJobLog> queryWrapper = new QueryWrapper<>();

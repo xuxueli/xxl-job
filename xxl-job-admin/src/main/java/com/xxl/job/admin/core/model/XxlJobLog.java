@@ -16,7 +16,7 @@ import java.util.Date;
 @TableName("xxl_job_log")
 public class XxlJobLog {
     @TableId(type = IdType.AUTO)
-    private Integer id;
+    private Long id;
 
     // job info
     private Integer jobGroup;
