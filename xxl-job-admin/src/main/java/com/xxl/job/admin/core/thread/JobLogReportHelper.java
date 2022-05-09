@@ -109,7 +109,7 @@ public class JobLogReportHelper {
                         Date clearBeforeTime = expiredDay.getTime();
 
                         // clean expired log
-                        List<Long> logIds = null;
+                        List<Integer> logIds = null;
                         do {
                             logIds = XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().findClearLogIds(0, 0, clearBeforeTime, 0, 1000);
                             if (logIds != null && logIds.size() > 0) {

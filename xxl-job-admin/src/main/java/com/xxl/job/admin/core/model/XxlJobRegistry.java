@@ -14,7 +14,7 @@ import java.util.Date;
 @TableName("xxl_job_registry")
 public class XxlJobRegistry {
     @TableId(type = IdType.AUTO)
-    private int id;
+    private Integer id;
     private String registryGroup;
     private String registryKey;
     private String registryValue;

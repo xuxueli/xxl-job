@@ -16,8 +16,8 @@ import java.util.Date;
 @TableName("xxl_job_logglue")
 public class XxlJobLogGlue {
     @TableId(type = IdType.AUTO)
-    private int id;
-    private int jobId;                // 任务主键ID
+    private Integer id;
+    private Integer jobId;                // 任务主键ID
     private String glueType;        // GLUE类型	#com.xxl.job.core.glue.GlueTypeEnum
     private String glueSource;
     private String glueRemark;

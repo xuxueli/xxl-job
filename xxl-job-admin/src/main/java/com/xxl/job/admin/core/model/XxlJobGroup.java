@@ -18,7 +18,7 @@ import java.util.List;
 @TableName("xxl_job_group")
 public class XxlJobGroup {
     @TableId(type = IdType.AUTO)
-    private int id;
+    private Integer id;
 
     private String appName;
     private String title;

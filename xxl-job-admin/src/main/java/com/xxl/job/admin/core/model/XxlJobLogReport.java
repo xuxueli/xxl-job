@@ -11,7 +11,7 @@ import java.util.Date;
 @TableName("xxl_job_log_report")
 public class XxlJobLogReport {
     @TableId(type = IdType.AUTO)
-    private int id;
+    private Integer id;
 
     private Date triggerDay;
 

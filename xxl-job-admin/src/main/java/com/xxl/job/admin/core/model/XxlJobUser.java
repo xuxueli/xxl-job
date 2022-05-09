@@ -13,7 +13,7 @@ import org.springframework.util.StringUtils;
 @TableName("xxl_job_user")
 public class XxlJobUser {
     @TableId(type = IdType.AUTO)
-    private int id;
+    private Integer id;
     private String username;        // 账号
     private String password;        // 密码
     private int role;                // 角色：0-普通用户、1-管理员

@@ -222,7 +222,7 @@ public class JobLogController {
             return new ReturnT<String>(ReturnT.FAIL_CODE, I18nUtil.getString("joblog_clean_type_unvalid"));
         }
 
-        List<Long> logIds = null;
+        List<Integer> logIds = null;
         do {
             logIds = xxlJobLogService.findClearLogIds(jobGroup, jobId, clearBeforeTime, clearBeforeNum, 1000);
             if (logIds != null && logIds.size() > 0) {

@@ -16,9 +16,9 @@ import java.util.Date;
 @TableName("xxl_job_info")
 public class XxlJobInfo {
     @TableId(type = IdType.AUTO)
-    private int id;                // 主键ID
+    private Integer id;                // 主键ID
 
-    private int jobGroup;        // 执行器主键ID
+    private Integer jobGroup;        // 执行器主键ID
     private String jobDesc;
 
     private Date addTime;

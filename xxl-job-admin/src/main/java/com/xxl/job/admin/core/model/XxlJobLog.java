@@ -16,11 +16,11 @@ import java.util.Date;
 @TableName("xxl_job_log")
 public class XxlJobLog {
     @TableId(type = IdType.AUTO)
-    private long id;
+    private Integer id;
 
     // job info
-    private int jobGroup;
-    private int jobId;
+    private Integer jobGroup;
+    private Integer jobId;
 
     // execute info
     private String executorAddress;
