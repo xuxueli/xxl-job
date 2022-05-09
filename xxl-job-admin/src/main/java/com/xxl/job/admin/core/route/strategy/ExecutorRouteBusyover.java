@@ -1,7 +1,7 @@
 package com.xxl.job.admin.core.route.strategy;
 
-import com.xxl.job.admin.core.scheduler.XxlJobScheduler;
 import com.xxl.job.admin.core.route.ExecutorRouter;
+import com.xxl.job.admin.core.scheduler.XxlJobScheduler;
 import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.core.biz.ExecutorBiz;
 import com.xxl.job.core.biz.model.IdleBeatParam;
@@ -26,9 +26,9 @@ public class ExecutorRouteBusyover extends ExecutorRouter {
                 idleBeatResult = executorBiz.idleBeat(new IdleBeatParam(triggerParam.getJobId()));
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);
-                idleBeatResult = new ReturnT<String>(ReturnT.FAIL_CODE, ""+e );
+                idleBeatResult = new ReturnT<String>(ReturnT.FAIL_CODE, "" + e);
             }
-            idleBeatResultSB.append( (idleBeatResultSB.length()>0)?"<br><br>":"")
+            idleBeatResultSB.append((idleBeatResultSB.length() > 0) ? "<br><br>" : "")
                     .append(I18nUtil.getString("jobconf_idleBeat") + "：")
                     .append("<br>address：").append(address)
                     .append("<br>code：").append(idleBeatResult.getCode())

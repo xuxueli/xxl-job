@@ -277,7 +277,7 @@ $(function() {
 		var row = tableData['key'+id];
 
 		$("#updateModal .form input[name='id']").val( row.id );
-		$("#updateModal .form input[name='appname']").val( row.appname );
+		$("#updateModal .form input[name='appname']").val( row.appName );
 		$("#updateModal .form input[name='title']").val( row.title );
 
 		// 注册方式
