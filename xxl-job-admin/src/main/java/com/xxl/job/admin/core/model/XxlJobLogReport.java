@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class XxlJobLogReport {
 
-    private int id;
+    private long id;
 
     private Date triggerDay;
 
@@ -12,7 +12,7 @@ public class XxlJobLogReport {
     private int sucCount;
     private int failCount;
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 

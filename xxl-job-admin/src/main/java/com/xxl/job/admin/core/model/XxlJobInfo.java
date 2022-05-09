@@ -9,9 +9,9 @@ import java.util.Date;
  */
 public class XxlJobInfo {
 	
-	private int id;				// 主键ID
+	private long id;				// 主键ID
 	
-	private int jobGroup;		// 执行器主键ID
+	private long jobGroup;		// 执行器主键ID
 	private String jobDesc;
 	
 	private Date addTime;
@@ -43,7 +43,7 @@ public class XxlJobInfo {
 	private long triggerNextTime;	// 下次调度时间
 
 
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
@@ -51,11 +51,11 @@ public class XxlJobInfo {
 		this.id = id;
 	}
 
-	public int getJobGroup() {
+	public long getJobGroup() {
 		return jobGroup;
 	}
 
-	public void setJobGroup(int jobGroup) {
+	public void setJobGroup(long jobGroup) {
 		this.jobGroup = jobGroup;
 	}
 

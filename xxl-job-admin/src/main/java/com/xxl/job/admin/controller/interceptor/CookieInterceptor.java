@@ -3,8 +3,8 @@ package com.xxl.job.admin.controller.interceptor;
 import com.xxl.job.admin.core.util.FtlUtil;
 import com.xxl.job.admin.core.util.I18nUtil;
 import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -17,7 +17,7 @@ import java.util.HashMap;
  * @author xuxueli 2015-12-12 18:09:04
  */
 @Component
-public class CookieInterceptor extends HandlerInterceptorAdapter {
+public class CookieInterceptor implements HandlerInterceptor {
 
 	@Override
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
@@ -37,7 +37,6 @@ public class CookieInterceptor extends HandlerInterceptorAdapter {
 			modelAndView.addObject("I18nUtil", FtlUtil.generateStaticModel(I18nUtil.class.getName()));
 		}
 		
-		super.postHandle(request, response, handler, modelAndView);
 	}
 	
 }

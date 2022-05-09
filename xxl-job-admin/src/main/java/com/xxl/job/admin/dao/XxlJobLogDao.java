@@ -39,13 +39,13 @@ public interface XxlJobLogDao {
 
 	public int updateHandleInfo(XxlJobLog xxlJobLog);
 	
-	public int delete(@Param("jobId") int jobId);
+	public int delete(@Param("jobId") long jobId);
 
 	public Map<String, Object> findLogReport(@Param("from") Date from,
 											 @Param("to") Date to);
 
-	public List<Long> findClearLogIds(@Param("jobGroup") int jobGroup,
-									  @Param("jobId") int jobId,
+	public List<Long> findClearLogIds(@Param("jobGroup") long jobGroup,
+									  @Param("jobId") long jobId,
 									  @Param("clearBeforeTime") Date clearBeforeTime,
 									  @Param("clearBeforeNum") int clearBeforeNum,
 									  @Param("pagesize") int pagesize);

@@ -91,7 +91,7 @@ public class JobInfoController {
 		}
 		return jobGroupList;
 	}
-	public static void validPermission(HttpServletRequest request, int jobGroup) {
+	public static void validPermission(HttpServletRequest request, long jobGroup) {
 		XxlJobUser loginUser = (XxlJobUser) request.getAttribute(LoginService.LOGIN_IDENTITY_KEY);
 		if (!loginUser.validPermission(jobGroup)) {
 			throw new RuntimeException(I18nUtil.getString("system_permission_limit") + "[username="+ loginUser.getUsername() +"]");
