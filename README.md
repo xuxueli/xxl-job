@@ -1,5 +1,9 @@
 # xxl-job
 
-## xxl-job 适配mysql 人大金仓数据库
+使用mybatis-plus 改写
 
-使用了mybatis-plus 适配 mysql 和人大金仓数据库 kingbase ESv8
+## xxl-job 适配数据库
+
+1. mysql
+2. kingbase esv8 (人大金仓)
+3. dm(达梦)

@@ -91,7 +91,12 @@
 			<artifactId>kingbase8</artifactId>
 			<version>8.6.1</version>
 		</dependency>
-
+		<!-- https://mvnrepository.com/artifact/com.dm/DmJdbcDriver18 -->
+		<dependency>
+			<groupId>com.dm</groupId>
+			<artifactId>DmJdbcDriver18</artifactId>
+			<version>1.8</version>
+		</dependency>
 	</dependencies>
 
 	<build>

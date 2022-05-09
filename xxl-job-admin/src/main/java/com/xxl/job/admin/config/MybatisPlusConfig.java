@@ -27,6 +27,8 @@ public class MybatisPlusConfig {
             interceptor.addInnerInterceptor(new PaginationInnerInterceptor((DbType.KINGBASE_ES)));
         } else if (dbType.equals(DbTypeConstant.MYSQL)) {
             interceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.MYSQL));
+        } else if (dbType.equals(DbTypeConstant.DM)) {
+            interceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.DM));
         }
         return interceptor;
     }
