@@ -140,7 +140,7 @@ import java.util.Map;
 /**
  * SpringApplication工具类
  *
- * @author RLP
+ * @author lgh
  */
 @Component
 public class SpringContextUtil implements ApplicationContextAware {
