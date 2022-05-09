@@ -55,7 +55,7 @@ public class XxlJobLogService extends ServiceImpl<XxlJobLogMapper, XxlJobLog> {
                     .eq(XxlJobLog::getHandleCode, 0);
         }
         queryWrapper.orderByDesc(" trigger_time");
-        IPage<XxlJobLog> page = new Page<>(offset, pagesize);
+        IPage<XxlJobLog> page = new Page<>(offset / pagesize + 1, pagesize);
         return this.page(page, queryWrapper);
     }
 
@@ -114,14 +114,19 @@ public class XxlJobLogService extends ServiceImpl<XxlJobLogMapper, XxlJobLog> {
                 lambda2.eq(XxlJobLog::getJobId, jobId);
             }
             idqw.orderByDesc(" trigger_time");
-            idqw.last(" limit 0," + clearBeforeNum);
-            List<XxlJobLog> idlist = list(idqw);
+            IPage<XxlJobLog> iPage = new Page<>(0, clearBeforeNum);
+//            idqw.last(" limit 0," + clearBeforeNum);
+            iPage = page(iPage, idqw);
+            List<XxlJobLog> idlist = iPage.getRecords();
             List<Long> collect = idlist.stream().map(XxlJobLog::getId).collect(Collectors.toList());
             lambda.notIn(XxlJobLog::getId, collect);
         }
         queryWrapper.orderByAsc("id");
-        queryWrapper.last(" limit " + pagesize);
-        return list(queryWrapper).stream().map(XxlJobLog::getId).collect(Collectors.toList());
+        IPage<XxlJobLog> iPage = new Page<>(0, pagesize);
+//        queryWrapper.last(" limit " + pagesize);
+        iPage = page(iPage, queryWrapper);
+        List<XxlJobLog> ilist = iPage.getRecords();
+        return ilist.stream().map(XxlJobLog::getId).collect(Collectors.toList());
     }
 
     public boolean clearLog(@Param("logIds") List<Long> logIds) {
@@ -136,8 +141,10 @@ public class XxlJobLogService extends ServiceImpl<XxlJobLogMapper, XxlJobLog> {
                 .notIn(XxlJobLog::getTriggerCode, 0, 200)
                 .notIn(XxlJobLog::getHandleCode, 0, 200);
         queryWrapper.orderByAsc("id");
-        queryWrapper.last(" limit " + pagesize);
-        List<XxlJobLog> ilist = list(queryWrapper);
+        IPage<XxlJobLog> iPage = new Page<>(0, pagesize);
+        iPage = page(iPage, queryWrapper);
+//        queryWrapper.last(" limit " + pagesize);
+        List<XxlJobLog> ilist = iPage.getRecords();
         return ilist.stream().map(XxlJobLog::getId).collect(Collectors.toList());
     }
 

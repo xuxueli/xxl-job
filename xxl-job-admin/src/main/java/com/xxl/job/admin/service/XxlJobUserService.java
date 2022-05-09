@@ -30,7 +30,7 @@ public class XxlJobUserService extends ServiceImpl<XxlJobUserMapper, XxlJobUser>
             lambda.like(XxlJobUser::getUsername, username);
         }
         queryWrapper.orderByAsc(" username");
-        IPage<XxlJobUser> page = new Page<>(offset, pagesize);
+        IPage<XxlJobUser> page = new Page<>(offset / pagesize + 1, pagesize);
         return page(page, queryWrapper);
     }
 

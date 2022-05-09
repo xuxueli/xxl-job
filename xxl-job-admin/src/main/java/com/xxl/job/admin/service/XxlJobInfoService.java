@@ -43,7 +43,7 @@ public class XxlJobInfoService extends ServiceImpl<XxlJobInfoMapper, XxlJobInfo>
             lambda.like(XxlJobInfo::getAuthor, author);
         }
         queryWrapper.orderByDesc("id");
-        IPage<XxlJobInfo> iPage = new Page<>(offset, pageSize);
+        IPage<XxlJobInfo> iPage = new Page<>(offset / pageSize + 1, pageSize);
         return this.page(iPage, queryWrapper);
     }
 
@@ -57,7 +57,9 @@ public class XxlJobInfoService extends ServiceImpl<XxlJobInfoMapper, XxlJobInfo>
         QueryWrapper<XxlJobInfo> queryWrapper = new QueryWrapper<>();
         queryWrapper.lambda().eq(XxlJobInfo::getTriggerStatus, 1).le(XxlJobInfo::getTriggerNextTime, maxNextTime);
         queryWrapper.orderByAsc("id");
-        queryWrapper.last("  limit " + pagesize);
-        return this.list(queryWrapper);
+        IPage<XxlJobInfo> iPage = new Page<>(0, pagesize);
+//        queryWrapper.last("  limit " + pagesize);
+        iPage = page(iPage, queryWrapper);
+        return iPage.getRecords();
     }
 }

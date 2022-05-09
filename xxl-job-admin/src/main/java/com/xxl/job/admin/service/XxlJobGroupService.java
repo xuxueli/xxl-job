@@ -34,7 +34,7 @@ public class XxlJobGroupService extends ServiceImpl<XxlJobGroupMapper, XxlJobGro
             lambda.like(XxlJobGroup::getTitle, title);
         }
         queryWrapper.orderByDesc("app_name", "title", "id");
-        IPage<XxlJobGroup> iPage = new Page<>(start, pageSize);
+        IPage<XxlJobGroup> iPage = new Page<>(start / pageSize + 1, pageSize);
         return this.page(iPage, queryWrapper);
     }
 

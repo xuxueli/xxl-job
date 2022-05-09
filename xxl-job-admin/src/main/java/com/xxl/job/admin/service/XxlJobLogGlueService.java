@@ -1,6 +1,8 @@
 package com.xxl.job.admin.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xxl.job.admin.core.model.XxlJobLogGlue;
 import com.xxl.job.admin.dao.XxlJobLogGlueMapper;
@@ -27,8 +29,9 @@ public class XxlJobLogGlueService extends ServiceImpl<XxlJobLogGlueMapper, XxlJo
         QueryWrapper<XxlJobLogGlue> queryWrapper = new QueryWrapper<>();
         queryWrapper.lambda().eq(XxlJobLogGlue::getJobId, jobId);
         queryWrapper.orderByDesc("update_time");
-        queryWrapper.last(" limit 0," + limit);
-        List<XxlJobLogGlue> removeList = this.list(queryWrapper);
+        IPage<XxlJobLogGlue> iPage = new Page<>(0, limit);
+        iPage = page(iPage, queryWrapper);
+        List<XxlJobLogGlue> removeList = iPage.getRecords();
         Set<Integer> removeId = removeList.stream().map(XxlJobLogGlue::getId).collect(Collectors.toSet());
         queryWrapper = new QueryWrapper<>();
         queryWrapper.lambda().eq(XxlJobLogGlue::getJobId, jobId)
