@@ -776,7 +776,7 @@ docker run -e PARAMS="--spring.datasource.url=jdbc:mysql://127.0.0.1:3306/xxl_jo
 
 执行器配置，配置内容说明：
 
-    ### 调度中心部署跟地址 [选填]：如调度中心集群部署存在多个地址则用逗号分隔。执行器将会使用该地址进行"执行器心跳注册"和"任务结果回调"；为空则关闭自动注册；
+    ### 调度中心部署根地址 [选填]：如调度中心集群部署存在多个地址则用逗号分隔。执行器将会使用该地址进行"执行器心跳注册"和"任务结果回调"；为空则关闭自动注册；
     xxl.job.admin.addresses=http://127.0.0.1:8080/xxl-job-admin
     
     ### 执行器通讯TOKEN [选填]：非空时启用；
@@ -1514,7 +1514,7 @@ API服务请求参考代码：com.xxl.job.adminbiz.AdminBizTest
 
 ------
 
-地址格式：{调度中心跟地址}/callback
+地址格式：{调度中心根地址}/api/callback
 
 Header：
     XXL-JOB-ACCESS-TOKEN : {请求令牌}
@@ -1542,7 +1542,7 @@ Header：
 
 ------
 
-地址格式：{调度中心跟地址}/registry
+地址格式：{调度中心根地址}/api/registry
 
 Header：
     XXL-JOB-ACCESS-TOKEN : {请求令牌}
@@ -1567,7 +1567,7 @@ Header：
 
 ------
 
-地址格式：{调度中心跟地址}/registryRemove
+地址格式：{调度中心根地址}/api/registryRemove
 
 Header：
     XXL-JOB-ACCESS-TOKEN : {请求令牌}
@@ -1597,7 +1597,7 @@ API服务请求参考代码：com.xxl.job.executorbiz.ExecutorBizTest
 
 ------
 
-地址格式：{执行器内嵌服务跟地址}/beat
+地址格式：{执行器内嵌服务根地址}/beat
 
 Header：
     XXL-JOB-ACCESS-TOKEN : {请求令牌}
@@ -1617,7 +1617,7 @@ Header：
 
 ------
 
-地址格式：{执行器内嵌服务跟地址}/idleBeat
+地址格式：{执行器内嵌服务根地址}/idleBeat
 
 Header：
     XXL-JOB-ACCESS-TOKEN : {请求令牌}
@@ -1640,7 +1640,7 @@ Header：
 
 ------
 
-地址格式：{执行器内嵌服务跟地址}/run
+地址格式：{执行器内嵌服务根地址}/run
 
 Header：
     XXL-JOB-ACCESS-TOKEN : {请求令牌}
@@ -1674,7 +1674,7 @@ Header：
 
 ------
 
-地址格式：{执行器内嵌服务跟地址}/kill
+地址格式：{执行器内嵌服务根地址}/kill
 
 Header：
     XXL-JOB-ACCESS-TOKEN : {请求令牌}
@@ -1698,7 +1698,7 @@ Header：
 
 ------
 
-地址格式：{执行器内嵌服务跟地址}/log
+地址格式：{执行器内嵌服务根地址}/log
 
 Header：
     XXL-JOB-ACCESS-TOKEN : {请求令牌}

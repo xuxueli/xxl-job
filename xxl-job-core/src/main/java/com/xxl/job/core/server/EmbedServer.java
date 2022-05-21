@@ -36,10 +36,8 @@ public class EmbedServer {
     public void start(final String address, final int port, final String appname, final String accessToken) {
         executorBiz = new ExecutorBizImpl();
         thread = new Thread(new Runnable() {
-
             @Override
             public void run() {
-
                 // param
                 EventLoopGroup bossGroup = new NioEventLoopGroup();
                 EventLoopGroup workerGroup = new NioEventLoopGroup();
@@ -61,8 +59,6 @@ public class EmbedServer {
                                 throw new RuntimeException("xxl-job, EmbedServer bizThreadPool is EXHAUSTED!");
                             }
                         });
-
-
                 try {
                     // start server
                     ServerBootstrap bootstrap = new ServerBootstrap();
@@ -92,11 +88,9 @@ public class EmbedServer {
                     future.channel().closeFuture().sync();
 
                 } catch (InterruptedException e) {
-                    if (e instanceof InterruptedException) {
-                        logger.info(">>>>>>>>>>> xxl-job remoting server stop.");
-                    } else {
-                        logger.error(">>>>>>>>>>> xxl-job remoting server error.", e);
-                    }
+                    logger.info(">>>>>>>>>>> xxl-job remoting server stop.");
+                } catch (Exception e) {
+                    logger.error(">>>>>>>>>>> xxl-job remoting server error.", e);
                 } finally {
                     // stop
                     try {
@@ -106,17 +100,15 @@ public class EmbedServer {
                         logger.error(e.getMessage(), e);
                     }
                 }
-
             }
-
         });
-        thread.setDaemon(true);	// daemon, service jvm, user thread leave >>> daemon leave >>> jvm leave
+        thread.setDaemon(true);    // daemon, service jvm, user thread leave >>> daemon leave >>> jvm leave
         thread.start();
     }
 
     public void stop() throws Exception {
         // destroy server thread
-        if (thread!=null && thread.isAlive()) {
+        if (thread != null && thread.isAlive()) {
             thread.interrupt();
         }
 
@@ -130,7 +122,7 @@ public class EmbedServer {
 
     /**
      * netty_http
-     *
+     * <p>
      * Copy from : https://github.com/xuxueli/xxl-rpc
      *
      * @author xuxueli 2015-11-24 22:25:15
@@ -141,6 +133,7 @@ public class EmbedServer {
         private ExecutorBiz executorBiz;
         private String accessToken;
         private ThreadPoolExecutor bizThreadPool;
+
         public EmbedHttpServerHandler(ExecutorBiz executorBiz, String accessToken, ThreadPoolExecutor bizThreadPool) {
             this.executorBiz = executorBiz;
             this.accessToken = accessToken;
@@ -149,7 +142,6 @@ public class EmbedServer {
 
         @Override
         protected void channelRead0(final ChannelHandlerContext ctx, FullHttpRequest msg) throws Exception {
-
             // request parse
             //final byte[] requestBytes = ByteBufUtil.getBytes(msg.content());    // byteBuf.toString(io.netty.util.CharsetUtil.UTF_8);
             String requestData = msg.content().toString(CharsetUtil.UTF_8);
@@ -175,38 +167,38 @@ public class EmbedServer {
         }
 
         private Object process(HttpMethod httpMethod, String uri, String requestData, String accessTokenReq) {
-
             // valid
             if (HttpMethod.POST != httpMethod) {
                 return new ReturnT<String>(ReturnT.FAIL_CODE, "invalid request, HttpMethod not support.");
             }
-            if (uri==null || uri.trim().length()==0) {
+            if (uri == null || uri.trim().length() == 0) {
                 return new ReturnT<String>(ReturnT.FAIL_CODE, "invalid request, uri-mapping empty.");
             }
-            if (accessToken!=null
-                    && accessToken.trim().length()>0
+            if (accessToken != null
+                    && accessToken.trim().length() > 0
                     && !accessToken.equals(accessTokenReq)) {
                 return new ReturnT<String>(ReturnT.FAIL_CODE, "The access token is wrong.");
             }
 
             // services mapping
             try {
-                if ("/beat".equals(uri)) {
-                    return executorBiz.beat();
-                } else if ("/idleBeat".equals(uri)) {
-                    IdleBeatParam idleBeatParam = GsonTool.fromJson(requestData, IdleBeatParam.class);
-                    return executorBiz.idleBeat(idleBeatParam);
-                } else if ("/run".equals(uri)) {
-                    TriggerParam triggerParam = GsonTool.fromJson(requestData, TriggerParam.class);
-                    return executorBiz.run(triggerParam);
-                } else if ("/kill".equals(uri)) {
-                    KillParam killParam = GsonTool.fromJson(requestData, KillParam.class);
-                    return executorBiz.kill(killParam);
-                } else if ("/log".equals(uri)) {
-                    LogParam logParam = GsonTool.fromJson(requestData, LogParam.class);
-                    return executorBiz.log(logParam);
-                } else {
-                    return new ReturnT<String>(ReturnT.FAIL_CODE, "invalid request, uri-mapping("+ uri +") not found.");
+                switch (uri) {
+                    case "/beat":
+                        return executorBiz.beat();
+                    case "/idleBeat":
+                        IdleBeatParam idleBeatParam = GsonTool.fromJson(requestData, IdleBeatParam.class);
+                        return executorBiz.idleBeat(idleBeatParam);
+                    case "/run":
+                        TriggerParam triggerParam = GsonTool.fromJson(requestData, TriggerParam.class);
+                        return executorBiz.run(triggerParam);
+                    case "/kill":
+                        KillParam killParam = GsonTool.fromJson(requestData, KillParam.class);
+                        return executorBiz.kill(killParam);
+                    case "/log":
+                        LogParam logParam = GsonTool.fromJson(requestData, LogParam.class);
+                        return executorBiz.log(logParam);
+                    default:
+                        return new ReturnT<String>(ReturnT.FAIL_CODE, "invalid request, uri-mapping(" + uri + ") not found.");
                 }
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);
@@ -261,6 +253,4 @@ public class EmbedServer {
         // stop registry
         ExecutorRegistryThread.getInstance().toStop();
     }
-
-
 }
