@@ -72,7 +72,31 @@
 			<artifactId>xxl-job-core</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
-
+		<!-- https://mvnrepository.com/artifact/com.baomidou/mybatis-plus-boot-starter -->
+		<dependency>
+			<groupId>com.baomidou</groupId>
+			<artifactId>mybatis-plus-boot-starter</artifactId>
+			<version>3.5.1</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.24</version>
+			<scope>provided</scope>
+		</dependency>
+		<!--kingbase8-->
+		<dependency>
+			<groupId>com.kingbase</groupId>
+			<artifactId>kingbase8</artifactId>
+			<version>8.6.1</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.dm/DmJdbcDriver18 -->
+		<dependency>
+			<groupId>com.dm</groupId>
+			<artifactId>DmJdbcDriver18</artifactId>
+			<version>1.8</version>
+		</dependency>
 	</dependencies>
 
 	<build>

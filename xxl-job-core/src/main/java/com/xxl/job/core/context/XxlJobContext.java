@@ -47,11 +47,10 @@ public class XxlJobContext {
 
     /**
      * handleCode：The result status of job execution
-     *
-     *      200 : success
-     *      500 : fail
-     *      502 : timeout
-     *
+     * <p>
+     * 200 : success
+     * 500 : fail
+     * 502 : timeout
      */
     private int handleCode;
 
@@ -111,11 +110,11 @@ public class XxlJobContext {
 
     private static InheritableThreadLocal<XxlJobContext> contextHolder = new InheritableThreadLocal<XxlJobContext>(); // support for child thread of job handler)
 
-    public static void setXxlJobContext(XxlJobContext xxlJobContext){
+    public static void setXxlJobContext(XxlJobContext xxlJobContext) {
         contextHolder.set(xxlJobContext);
     }
 
-    public static XxlJobContext getXxlJobContext(){
+    public static XxlJobContext getXxlJobContext() {
         return contextHolder.get();
     }
 

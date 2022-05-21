@@ -34,20 +34,20 @@ public class MethodJobHandler extends IJobHandler {
 
     @Override
     public void init() throws Exception {
-        if(initMethod != null) {
+        if (initMethod != null) {
             initMethod.invoke(target);
         }
     }
 
     @Override
     public void destroy() throws Exception {
-        if(destroyMethod != null) {
+        if (destroyMethod != null) {
             destroyMethod.invoke(target);
         }
     }
 
     @Override
     public String toString() {
-        return super.toString()+"["+ target.getClass() + "#" + method.getName() +"]";
+        return super.toString() + "[" + target.getClass() + "#" + method.getName() + "]";
     }
 }

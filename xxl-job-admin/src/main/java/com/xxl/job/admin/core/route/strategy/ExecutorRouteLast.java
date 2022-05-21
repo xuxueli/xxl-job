@@ -13,7 +13,7 @@ public class ExecutorRouteLast extends ExecutorRouter {
 
     @Override
     public ReturnT<String> route(TriggerParam triggerParam, List<String> addressList) {
-        return new ReturnT<String>(addressList.get(addressList.size()-1));
+        return new ReturnT<String>(addressList.get(addressList.size() - 1));
     }
 
 }

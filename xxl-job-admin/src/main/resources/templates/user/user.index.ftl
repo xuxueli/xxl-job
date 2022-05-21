@@ -108,7 +108,7 @@
                         <div class="col-sm-10">
 							<#if groupList?exists && groupList?size gt 0>
 								<#list groupList as item>
-                                    <input type="checkbox" name="permission" value="${item.id}" />${item.title}(${item.appname})<br>
+                                    <input type="checkbox" name="permission" value="${item.id}" />${item.title}(${item.appName})<br>
 								</#list>
 							</#if>
                         </div>
@@ -158,7 +158,7 @@
                         <div class="col-sm-10">
 						<#if groupList?exists && groupList?size gt 0>
 							<#list groupList as item>
-                                <input type="checkbox" name="permission" value="${item.id}" />${item.title}(${item.appname})<br>
+                                <input type="checkbox" name="permission" value="${item.id}" />${item.title}(${item.appName})<br>
 							</#list>
 						</#if>
                         </div>

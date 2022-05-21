@@ -19,7 +19,7 @@ public class ScriptJobHandler extends IJobHandler {
     private String gluesource;
     private GlueTypeEnum glueType;
 
-    public ScriptJobHandler(int jobId, long glueUpdatetime, String gluesource, GlueTypeEnum glueType){
+    public ScriptJobHandler(int jobId, long glueUpdatetime, String gluesource, GlueTypeEnum glueType) {
         this.jobId = jobId;
         this.glueUpdatetime = glueUpdatetime;
         this.gluesource = gluesource;
@@ -29,9 +29,9 @@ public class ScriptJobHandler extends IJobHandler {
         File glueSrcPath = new File(XxlJobFileAppender.getGlueSrcPath());
         if (glueSrcPath.exists()) {
             File[] glueSrcFileList = glueSrcPath.listFiles();
-            if (glueSrcFileList!=null && glueSrcFileList.length>0) {
+            if (glueSrcFileList != null && glueSrcFileList.length > 0) {
                 for (File glueSrcFileItem : glueSrcFileList) {
-                    if (glueSrcFileItem.getName().startsWith(String.valueOf(jobId)+"_")) {
+                    if (glueSrcFileItem.getName().startsWith(String.valueOf(jobId) + "_")) {
                         glueSrcFileItem.delete();
                     }
                 }
@@ -48,7 +48,7 @@ public class ScriptJobHandler extends IJobHandler {
     public void execute() throws Exception {
 
         if (!glueType.isScript()) {
-            XxlJobHelper.handleFail("glueType["+ glueType +"] invalid.");
+            XxlJobHelper.handleFail("glueType[" + glueType + "] invalid.");
             return;
         }
 
@@ -77,15 +77,15 @@ public class ScriptJobHandler extends IJobHandler {
         scriptParams[2] = String.valueOf(XxlJobContext.getXxlJobContext().getShardTotal());
 
         // invoke
-        XxlJobHelper.log("----------- script file:"+ scriptFileName +" -----------");
+        XxlJobHelper.log("----------- script file:" + scriptFileName + " -----------");
         int exitValue = ScriptUtil.execToFile(cmd, scriptFileName, logFileName, scriptParams);
 
         if (exitValue == 0) {
             XxlJobHelper.handleSuccess();
             return;
         } else {
-            XxlJobHelper.handleFail("script exit value("+exitValue+") is failed");
-            return ;
+            XxlJobHelper.handleFail("script exit value(" + exitValue + ") is failed");
+            return;
         }
 
     }
