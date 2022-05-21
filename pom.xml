@@ -27,11 +27,11 @@
 		<netty-all.version>4.1.63.Final</netty-all.version>
 		<gson.version>2.9.0</gson.version>
 
-		<spring.version>5.3.19</spring.version>
-		<spring-boot.version>2.6.6</spring-boot.version>
+		<spring.version>5.3.20</spring.version>
+		<spring-boot.version>2.6.7</spring-boot.version>
 
 		<mybatis-spring-boot-starter.version>2.2.2</mybatis-spring-boot-starter.version>
-		<mysql-connector-java.version>8.0.28</mysql-connector-java.version>
+		<mysql-connector-java.version>8.0.29</mysql-connector-java.version>
 
 		<slf4j-api.version>1.7.36</slf4j-api.version>
 		<junit-jupiter.version>5.8.2</junit-jupiter.version>
@@ -40,9 +40,8 @@
 		<groovy.version>3.0.10</groovy.version>
 
 		<maven-source-plugin.version>3.2.1</maven-source-plugin.version>
-		<maven-javadoc-plugin.version>3.3.2</maven-javadoc-plugin.version>
-		<maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
-		<maven-war-plugin.version>3.3.2</maven-war-plugin.version>
+		<maven-javadoc-plugin.version>3.4.0</maven-javadoc-plugin.version>
+		<maven-gpg-plugin.version>3.0.1</maven-gpg-plugin.version>
 	</properties>
 
 	<build>
