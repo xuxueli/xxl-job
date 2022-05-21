@@ -83,6 +83,7 @@ public class XxlJobExecutor  {
         // init executor-server
         initEmbedServer(address, ip, port, appname, accessToken);
     }
+
     public void destroy(){
         // destroy executor-server
         stopEmbedServer();
@@ -131,6 +132,7 @@ public class XxlJobExecutor  {
             }
         }
     }
+
     public static List<AdminBiz> getAdminBizList(){
         return adminBizList;
     }
@@ -251,6 +253,7 @@ public class XxlJobExecutor  {
 
         return newJobThread;
     }
+
     public static JobThread removeJobThread(int jobId, String removeOldReason){
         JobThread oldJobThread = jobThreadRepository.remove(jobId);
         if (oldJobThread != null) {
@@ -261,9 +264,8 @@ public class XxlJobExecutor  {
         }
         return null;
     }
-    public static JobThread loadJobThread(int jobId){
-        JobThread jobThread = jobThreadRepository.get(jobId);
-        return jobThread;
-    }
 
+    public static JobThread loadJobThread(int jobId){
+        return jobThreadRepository.get(jobId);
+    }
 }
