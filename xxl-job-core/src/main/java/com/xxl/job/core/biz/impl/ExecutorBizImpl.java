@@ -161,6 +161,16 @@ public class ExecutorBizImpl implements ExecutorBiz {
     }
 
     @Override
+    public ReturnT<String> interrupt(InterruptParam interruptParam) {
+        JobThread jobThread = XxlJobExecutor.loadJobThread(interruptParam.getJobId());
+        if (jobThread != null) {
+            XxlJobExecutor.abortRunningTask(interruptParam.getJobId());
+            return ReturnT.SUCCESS;
+        }
+        return new ReturnT<String>(ReturnT.SUCCESS_CODE, "job thread already interrupted.");
+    }
+
+    @Override
     public ReturnT<LogResult> log(LogParam logParam) {
         // log filename: logPath/yyyy-MM-dd/9999.log
         String logFileName = XxlJobFileAppender.makeLogFileName(new Date(logParam.getLogDateTim()), logParam.getLogId());

@@ -261,6 +261,16 @@ public class XxlJobExecutor  {
         }
         return null;
     }
+
+    public static void abortRunningTask(int jobId) {
+        JobThread jobThread = jobThreadRepository.get(jobId);
+        try {
+            jobThread.abortRunning();
+        } catch (Exception e) {
+            logger.error("exception occurs while aborting running task, ", e);
+        }
+    }
+
     public static JobThread loadJobThread(int jobId){
         JobThread jobThread = jobThreadRepository.get(jobId);
         return jobThread;

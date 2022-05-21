@@ -49,6 +49,11 @@ public class ExecutorBizClient implements ExecutorBiz {
     }
 
     @Override
+    public ReturnT<String> interrupt(InterruptParam interruptParam) {
+        return XxlJobRemotingUtil.postBody(addressUrl + "interrupt", accessToken, timeout, interruptParam, String.class);
+    }
+
+    @Override
     public ReturnT<LogResult> log(LogParam logParam) {
         return XxlJobRemotingUtil.postBody(addressUrl + "log", accessToken, timeout, logParam, LogResult.class);
     }

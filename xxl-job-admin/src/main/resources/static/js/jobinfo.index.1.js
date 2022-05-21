@@ -117,6 +117,7 @@ $(function() {
                                 } else {
                                     start_stop_div = '<li><a href="javascript:void(0);" class="job_operate" _type="job_resume" >'+ I18n.jobinfo_opt_start +'</a></li>\n';
                                 }
+								start_stop_div += '<li><a href="javascript:void(0);" class="job_operate" _type="job_interrupt" >'+ I18n.jobinfo_opt_interrupt +'</a></li>\n';
 
                                 // job_next_time_html
 								var job_next_time_html = '';
@@ -223,6 +224,10 @@ $(function() {
 		} else if ("job_del" == type) {
 			typeName = I18n.system_opt_del ;
 			url = base_url + "/jobinfo/remove";
+			needFresh = true;
+		} else if ("job_interrupt" == type) {
+			typeName = I18n.jobinfo_opt_interrupt ;
+			url = base_url + "/jobinfo/interrupt";
 			needFresh = true;
 		} else {
 			return;
