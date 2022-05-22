@@ -3,7 +3,7 @@ package com.xxl.job.core.executor.impl;
 import com.xxl.job.core.executor.XxlJobExecutor;
 import com.xxl.job.core.glue.GlueFactory;
 import com.xxl.job.core.handler.annotation.XxlJob;
-import com.xxl.job.core.handler.impl.MethodJobHandler;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -17,7 +17,6 @@ import org.springframework.core.annotation.AnnotatedElementUtils;
 import java.lang.reflect.Method;
 import java.util.Map;
 
-
 /**
  * xxl-job executor (for spring)
  *
@@ -26,6 +25,16 @@ import java.util.Map;
 public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationContextAware, SmartInitializingSingleton, DisposableBean {
     private static final Logger logger = LoggerFactory.getLogger(XxlJobSpringExecutor.class);
 
+    private boolean lazyInitHandler = false;
+
+    /**
+     * 设置是否懒加载 job-handler bean
+     *
+     * @param lazyInitHandler 是否懒加载
+     */
+    public void setLazyInitHandler(boolean lazyInitHandler) {
+        this.lazyInitHandler = lazyInitHandler;
+    }
 
     // start
     @Override
@@ -84,29 +93,38 @@ public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationC
         // init job handler from method
         String[] beanDefinitionNames = applicationContext.getBeanNamesForType(Object.class, false, true);
         for (String beanDefinitionName : beanDefinitionNames) {
-            Object bean = applicationContext.getBean(beanDefinitionName);
-
+            // getType 防止过早初始化Bean造成的启动时间过长的问题
+            Class<?> handlerClass = applicationContext.getType(beanDefinitionName);
+            if (handlerClass == null) {
+                continue;
+            }
             Map<Method, XxlJob> annotatedMethods = null;   // referred to ：org.springframework.context.event.EventListenerMethodProcessor.processBean
             try {
-                annotatedMethods = MethodIntrospector.selectMethods(bean.getClass(),
-                        new MethodIntrospector.MetadataLookup<XxlJob>() {
-                            @Override
-                            public XxlJob inspect(Method method) {
-                                return AnnotatedElementUtils.findMergedAnnotation(method, XxlJob.class);
-                            }
-                        });
-            } catch (Throwable ex) {
-                logger.error("xxl-job method-jobhandler resolve error for bean[" + beanDefinitionName + "].", ex);
+                annotatedMethods = MethodIntrospector.selectMethods(handlerClass,
+                        (MethodIntrospector.MetadataLookup<XxlJob>) method
+                                -> AnnotatedElementUtils.findMergedAnnotation(method, XxlJob.class));
             }
-            if (annotatedMethods==null || annotatedMethods.isEmpty()) {
+            catch (Throwable ex) {
+                logger.error("xxl-job method-job-handler resolve error for bean[{}].", beanDefinitionName, ex);
+            }
+
+            if (annotatedMethods == null || annotatedMethods.isEmpty()) {
                 continue;
             }
 
             for (Map.Entry<Method, XxlJob> methodXxlJobEntry : annotatedMethods.entrySet()) {
                 Method executeMethod = methodXxlJobEntry.getKey();
                 XxlJob xxlJob = methodXxlJobEntry.getValue();
-                // regist
-                registJobHandler(xxlJob, bean, executeMethod);
+                if (lazyInitHandler) {
+                    // register job handler
+                    registerJobHandler(xxlJob, handlerClass, executeMethod, (initMethod, destroyMethod) ->
+                            new SpringMethodJobHandler(beanDefinitionName,
+                                    handlerClass, applicationContext, executeMethod, initMethod, destroyMethod)
+                    );
+                }
+                else {
+                    registJobHandler(xxlJob, applicationContext.getBean(beanDefinitionName), executeMethod);
+                }
             }
         }
     }

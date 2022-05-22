@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.function.BiFunction;
 
 /**
  * Created by xuxueli on 2016/3/2 21:14.
@@ -183,31 +184,28 @@ public class XxlJobExecutor  {
         logger.info(">>>>>>>>>>> xxl-job register jobhandler success, name:{}, jobHandler:{}", name, jobHandler);
         return jobHandlerRepository.put(name, jobHandler);
     }
-    protected void registJobHandler(XxlJob xxlJob, Object bean, Method executeMethod){
+
+    protected void registJobHandler(XxlJob xxlJob, Object bean, Method executeMethod) {
+        registerJobHandler(xxlJob, bean.getClass(), executeMethod,
+                (initMethod, destroyMethod) -> new MethodJobHandler(bean, executeMethod, initMethod, destroyMethod));
+    }
+
+    protected void registerJobHandler(XxlJob xxlJob, Class<?> handlerClass,
+            Method executeMethod, BiFunction<Method, Method, IJobHandler> jobHandlerCallback) {
         if (xxlJob == null) {
             return;
         }
 
         String name = xxlJob.value();
         //make and simplify the variables since they'll be called several times later
-        Class<?> clazz = bean.getClass();
         String methodName = executeMethod.getName();
         if (name.trim().length() == 0) {
-            throw new RuntimeException("xxl-job method-jobhandler name invalid, for[" + clazz + "#" + methodName + "] .");
+            throw new RuntimeException(
+                    "xxl-job method-jobhandler name invalid, for[" + handlerClass + "#" + methodName + "] .");
         }
         if (loadJobHandler(name) != null) {
             throw new RuntimeException("xxl-job jobhandler[" + name + "] naming conflicts.");
         }
-
-        // execute method
-        /*if (!(method.getParameterTypes().length == 1 && method.getParameterTypes()[0].isAssignableFrom(String.class))) {
-            throw new RuntimeException("xxl-job method-jobhandler param-classtype invalid, for[" + bean.getClass() + "#" + method.getName() + "] , " +
-                    "The correct method format like \" public ReturnT<String> execute(String param) \" .");
-        }
-        if (!method.getReturnType().isAssignableFrom(ReturnT.class)) {
-            throw new RuntimeException("xxl-job method-jobhandler return-classtype invalid, for[" + bean.getClass() + "#" + method.getName() + "] , " +
-                    "The correct method format like \" public ReturnT<String> execute(String param) \" .");
-        }*/
 
         executeMethod.setAccessible(true);
 
@@ -217,24 +215,28 @@ public class XxlJobExecutor  {
 
         if (xxlJob.init().trim().length() > 0) {
             try {
-                initMethod = clazz.getDeclaredMethod(xxlJob.init());
+                initMethod = handlerClass.getDeclaredMethod(xxlJob.init());
                 initMethod.setAccessible(true);
-            } catch (NoSuchMethodException e) {
-                throw new RuntimeException("xxl-job method-jobhandler initMethod invalid, for[" + clazz + "#" + methodName + "] .");
+            }
+            catch (NoSuchMethodException e) {
+                throw new RuntimeException(
+                        "xxl-job method-jobhandler initMethod invalid, for[" + handlerClass + "#" + methodName + "] .");
             }
         }
         if (xxlJob.destroy().trim().length() > 0) {
             try {
-                destroyMethod = clazz.getDeclaredMethod(xxlJob.destroy());
+                destroyMethod = handlerClass.getDeclaredMethod(xxlJob.destroy());
                 destroyMethod.setAccessible(true);
-            } catch (NoSuchMethodException e) {
-                throw new RuntimeException("xxl-job method-jobhandler destroyMethod invalid, for[" + clazz + "#" + methodName + "] .");
+            }
+            catch (NoSuchMethodException e) {
+                throw new RuntimeException(
+                        "xxl-job method-jobhandler destroyMethod invalid, for[" + handlerClass + "#" + methodName + "] .");
             }
         }
 
-        // registry jobhandler
-        registJobHandler(name, new MethodJobHandler(bean, executeMethod, initMethod, destroyMethod));
-
+        // register job-handler
+        IJobHandler jobHandler = jobHandlerCallback.apply(initMethod, destroyMethod);
+        registJobHandler(name, jobHandler);
     }
 
 
