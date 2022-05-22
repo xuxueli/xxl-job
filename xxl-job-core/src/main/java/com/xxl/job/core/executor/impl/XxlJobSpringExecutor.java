@@ -25,6 +25,16 @@ import java.util.Map;
 public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationContextAware, SmartInitializingSingleton, DisposableBean {
     private static final Logger logger = LoggerFactory.getLogger(XxlJobSpringExecutor.class);
 
+    private boolean lazyInitHandler = false;
+
+    /**
+     * 设置是否懒加载 job-handler bean
+     *
+     * @param lazyInitHandler 是否懒加载
+     */
+    public void setLazyInitHandler(boolean lazyInitHandler) {
+        this.lazyInitHandler = lazyInitHandler;
+    }
 
     // start
     @Override
@@ -105,11 +115,16 @@ public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationC
             for (Map.Entry<Method, XxlJob> methodXxlJobEntry : annotatedMethods.entrySet()) {
                 Method executeMethod = methodXxlJobEntry.getKey();
                 XxlJob xxlJob = methodXxlJobEntry.getValue();
-                // register job handler
-                registerJobHandler(xxlJob, handlerClass, executeMethod, (initMethod, destroyMethod) ->
-                        new SpringMethodJobHandler(beanDefinitionName,
-                                handlerClass, applicationContext, executeMethod, initMethod, destroyMethod)
-                );
+                if (lazyInitHandler) {
+                    // register job handler
+                    registerJobHandler(xxlJob, handlerClass, executeMethod, (initMethod, destroyMethod) ->
+                            new SpringMethodJobHandler(beanDefinitionName,
+                                    handlerClass, applicationContext, executeMethod, initMethod, destroyMethod)
+                    );
+                }
+                else {
+                    registJobHandler(xxlJob, applicationContext.getBean(beanDefinitionName), executeMethod);
+                }
             }
         }
     }
