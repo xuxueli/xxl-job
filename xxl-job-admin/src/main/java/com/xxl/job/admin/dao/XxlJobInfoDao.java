@@ -46,6 +46,8 @@ public interface XxlJobInfoDao {
 
 	public int findAllCount();
 
+	public List<XxlJobInfo> findAll();
+
 	public List<XxlJobInfo> scheduleJobQuery(@Param("maxNextTime") long maxNextTime, @Param("pagesize") int pagesize );
 
 	public int scheduleUpdate(XxlJobInfo xxlJobInfo);

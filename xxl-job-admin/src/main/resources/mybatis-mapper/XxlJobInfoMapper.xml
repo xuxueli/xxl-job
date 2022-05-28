@@ -230,6 +230,11 @@
 		FROM xxl_job_info
 	</select>
 
+	<select id="findAll" resultMap="XxlJobInfo">
+		SELECT <include refid="Base_Column_List" />
+		FROM xxl_job_info AS t
+	</select>
+
 
 	<select id="scheduleJobQuery" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
 		SELECT <include refid="Base_Column_List" />
