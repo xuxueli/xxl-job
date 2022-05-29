@@ -85,4 +85,6 @@ public interface XxlJobService {
 
 
 	public Map<String,Object> findAll();
+
+	ReturnT<String> updateRelation(String parentKey, String childKey);
 }

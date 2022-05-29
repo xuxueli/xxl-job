@@ -39,6 +39,8 @@ public interface XxlJobInfoDao {
 	public XxlJobInfo loadById(@Param("id") int id);
 	
 	public int update(XxlJobInfo xxlJobInfo);
+
+	public int updateRelation(XxlJobInfo xxlJobInfo);
 	
 	public int delete(@Param("id") long id);
 

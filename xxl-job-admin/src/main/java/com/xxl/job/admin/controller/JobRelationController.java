@@ -14,12 +14,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Administrator
@@ -68,16 +70,17 @@ public class JobRelationController {
 
     /**
      * 新增job顺序关系，实质是更新现有job的 child_jobid字段
-     * @param jobInfoList
+     * @param map
      * @return
      */
-    @RequestMapping(value = "/add")
-    public ReturnT<String> addRelation(List<XxlJobInfo> jobInfoList){
+    @ResponseBody
+    @RequestMapping(value = "/update")
+    public ReturnT<String> addRelation(@RequestParam Map<String, String> map){
         List<ReturnT<String>> result = new ArrayList<>();
-        jobInfoList.forEach(jobInfo->{
-            ReturnT<String> update = xxlJobService.update(jobInfo);
+        map.forEach((parentKey, childKey)->{
+            ReturnT<String> update = xxlJobService.updateRelation(parentKey, childKey);
             result.add(update);
-            LOGGER.info("更新任务依赖顺序{}，current job id = {}， child job id = {}", update, jobInfo.getId(), jobInfo.getChildJobId());
+            LOGGER.info("更新任务依赖顺序{}，current job id = {}， child job id = {}", update, parentKey, childKey);
         });
         return result.stream().allMatch(ReturnT.SUCCESS :: equals) ? ReturnT.SUCCESS : ReturnT.FAIL;
     }

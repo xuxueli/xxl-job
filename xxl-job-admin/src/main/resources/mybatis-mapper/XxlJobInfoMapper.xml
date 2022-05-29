@@ -213,6 +213,13 @@
 		WHERE id = #{id}
 	</update>
 
+	<update id="updateRelation" parameterType="com.xxl.job.admin.core.model.XxlJobInfo" >
+		UPDATE xxl_job_info
+		SET
+		child_jobid = #{childJobId}
+		WHERE id = #{id}
+	</update>
+
 	<delete id="delete" parameterType="java.util.HashMap">
 		DELETE
 		FROM xxl_job_info

@@ -42,10 +42,10 @@
                     <button class="btn  btn-success" id="newRelationBtn">${I18n.system_newRelation}</button>
                 </div>
                 <div class="col-xs-1">
-                    <button class="btn btn-default" if="truncateRelationBtn">${I18n.system_truncateRelation}</button>
+                    <button class="btn btn-default" id="truncateRelationBtn">${I18n.system_truncateRelation}</button>
                 </div>
                 <div class="col-xs-1">
-                    <button class="btn btn-info" if="saveRelationBtn">${I18n.system_save}</button>
+                    <button class="btn btn-info" id="saveRelationBtn">${I18n.system_save}</button>
                 </div>
           	</div>
 	    </section>

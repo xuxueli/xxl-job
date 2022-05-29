@@ -445,5 +445,14 @@ public class XxlJobServiceImpl implements XxlJobService {
 		return maps;
 	}
 
+	@Override
+	public ReturnT<String> updateRelation(String parentKey, String childKey) {
+		XxlJobInfo xxlJobInfo = new XxlJobInfo();
+		xxlJobInfo.setId(Integer.parseInt(parentKey));
+		xxlJobInfo.setChildJobId(childKey);
+		xxlJobInfoDao.updateRelation(xxlJobInfo);
+		return ReturnT.SUCCESS;
+	}
+
 
 }
