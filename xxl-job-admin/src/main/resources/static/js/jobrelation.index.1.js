@@ -4,20 +4,17 @@
 
 
     $('#newRelationBtn').on('click', function(){
-        // var lastSelect = list.lastElementChild;
-        var lastSelect = list.getElementsByTagName('select')[0];
-        if(lastSelect == null){
-            window.location.reload();
-        }else{
-            lastSelect = list.lastElementChild;
-        }
+        var lastSelect = list.lastElementChild;
         var newSelect = lastSelect.cloneNode(true);
         list.appendChild(newSelect);
     });
 
     $('#truncateRelationBtn').on('click', function(){
         var selectArray = list.getElementsByTagName('select');
-        list.removeChild(selectArray[selectArray.length - 1]);
+        if(selectArray.length > 1){
+            list.removeChild(selectArray[selectArray.length - 1]);
+        }
+        
     });
 
     $('#saveRelationBtn').on('click', function(){
