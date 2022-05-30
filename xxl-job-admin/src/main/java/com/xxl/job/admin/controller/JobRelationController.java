@@ -1,5 +1,6 @@
 package com.xxl.job.admin.controller;
 
+import com.xxl.job.admin.controller.annotation.PermissionLimit;
 import com.xxl.job.admin.core.exception.XxlJobException;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobUser;
@@ -27,7 +28,7 @@ import java.util.Map;
  * @author Administrator
  */
 @Controller
-@RequestMapping(value = "/jobrelation")
+@RequestMapping
 public class JobRelationController {
     public static final Logger LOGGER = LoggerFactory.getLogger(JobRelationController.class);
 
@@ -35,7 +36,7 @@ public class JobRelationController {
     private XxlJobService xxlJobService;
     @Resource
     private XxlJobInfoDao xxlJobInfoDao;
-    @RequestMapping
+    @RequestMapping(value = "/jobrelation")
     public String index(HttpServletRequest request, Model model, @RequestParam(required = false, defaultValue = "-1") int jobInfoId) {
         List<XxlJobInfo> allInfo = xxlJobInfoDao.findAll();
         List<XxlJobInfo> JobInfoList = filterJobInfoByRole(request, allInfo);
@@ -74,7 +75,7 @@ public class JobRelationController {
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "/update")
+    @RequestMapping(value = "/jobrelation/update")
     public ReturnT<String> addRelation(@RequestParam Map<String, String> map){
         List<ReturnT<String>> result = new ArrayList<>();
         map.forEach((parentKey, childKey)->{
@@ -83,6 +84,13 @@ public class JobRelationController {
             LOGGER.info("更新任务依赖顺序{}，current job id = {}， child job id = {}", update, parentKey, childKey);
         });
         return result.stream().allMatch(ReturnT.SUCCESS :: equals) ? ReturnT.SUCCESS : ReturnT.FAIL;
+    }
+
+    @PermissionLimit(limit = false)
+    @ResponseBody
+    @RequestMapping(value = "/jobrelation/findAllRelation")
+    public Map<String, Object> findAllRelation(@RequestParam(required = false, defaultValue = "-1") int jobInfoId) {
+        return xxlJobService.findAllRelation(jobInfoId);
     }
 
 }

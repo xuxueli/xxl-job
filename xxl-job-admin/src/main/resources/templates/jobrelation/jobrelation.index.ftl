@@ -42,11 +42,62 @@
                     <button class="btn  btn-success" id="newRelationBtn">${I18n.system_newRelation}</button>
                 </div>
                 <div class="col-xs-1">
-                    <button class="btn btn-default" id="truncateRelationBtn">${I18n.system_truncateRelation}</button>
+                    <button class="btn btn-default" id="truncateSelectBtn">${I18n.system_truncateSelect}</button>
                 </div>
                 <div class="col-xs-1">
                     <button class="btn btn-info" id="saveRelationBtn">${I18n.system_save}</button>
                 </div>
+
+                <!-- 右侧任务描述 + 该任务现有关系查询-->
+                <div class="col-xs-5">
+				    <div class="row">
+				        <div class="col-xs-8" id="jobList" >
+                            <div class="input-info">
+                                <span class="input-group-addon">${I18n.jobinfo_field_jobdesc}</span>
+                            </div>
+                            <select class="form-control" id="jobInfoId" >
+                                <#list JobInfoList as info>
+                                    <option value="${info.id}" <#if jobInfoId==info.id>selected</#if> >${info.jobDesc}</option>
+                                </#list>
+                            </select>
+                        </div>
+                        <div class="col-xs-2">
+                            <button class="btn  btn-info" id="currentRelationSearchBtn">${I18n.system_search}</button>
+                        </div>
+                        <div class="col-xs-1">
+                            <button class="btn  btn-default" id="truncateRelationBtn">${I18n.system_truncateRelation}</button>
+                        </div>
+				    </div>
+
+				    <div class="row">
+                        <div class="input-info">
+                            <span class="input-group-addon">${I18n.jobrelation_current_relation}</span>
+                        </div>
+                        <div class="box">
+                            <#--<div class="box-header hide">
+                                <h3 class="box-title">调度列表</h3>
+                            </div>-->
+                            <div class="box-body" >
+                                <table id="relation_list" class="table table-bordered table-striped" width="100%" >
+                                    <thead>
+                                        <tr>
+                                            <th name="id" >${I18n.jobinfo_field_id}</th>
+                                            <th name="jobDesc" >${I18n.jobinfo_field_jobdesc}</th>
+                                            <!--<th name="jobGroup" >${I18n.jobinfo_field_jobgroup}</th>-->
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                    <tfoot></tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+
+
           	</div>
 	    </section>
 	</div>

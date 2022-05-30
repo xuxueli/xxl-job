@@ -18,6 +18,7 @@ import com.xxl.job.core.util.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.text.MessageFormat;
@@ -454,5 +455,54 @@ public class XxlJobServiceImpl implements XxlJobService {
 		return ReturnT.SUCCESS;
 	}
 
+	@Override
+	public Map<String, Object> findAllRelation(int jobInfoId) {
+		XxlJobInfo rootJob = loadRootJob(jobInfoId);
+
+		Map<String, List<Object>> jobRelationTree = loadChild(rootJob);
+
+		Map<String, Object> maps = new HashMap<>(3);
+		// 总记录数
+		maps.put("recordsTotal", jobRelationTree.size());
+		// 所有记录列表
+		maps.put("data", jobRelationTree);
+		return maps;
+	}
+
+	/**
+	 * 上溯至任务链的起始节点
+	 * @param childId 任务id
+	 * @return XxlJobInfo
+	 */
+	private XxlJobInfo loadRootJob(int childId){
+		XxlJobInfo toReturn;
+		toReturn =xxlJobInfoDao.findParentByChildId(childId);
+		if (toReturn != null){
+			toReturn = loadRootJob(toReturn.getId());
+		}else {
+			toReturn = xxlJobInfoDao.loadById(childId);
+		}
+		return toReturn;
+	}
+
+	/**
+	 * 加载rootJob的下游所有子任务
+	 */
+	private Map<String, List<Object>> loadChild(XxlJobInfo parentJob){
+		Map<String, List<Object>> childMap = new HashMap<>();
+		if (StringUtils.hasText(parentJob.getChildJobId())){
+			String[] idArray = parentJob.getChildJobId().split(",");
+			List<Object> childList = new ArrayList<>();
+			for (String id : idArray){
+				XxlJobInfo child = xxlJobInfoDao.loadById(Integer.parseInt(id));
+				childList.add(loadChild(child));
+			}
+			childMap.put(parentJob.getJobDesc(), childList);
+
+		}else {
+			childMap.put(parentJob.getJobDesc(), null);
+		}
+		return childMap;
+	}
 
 }

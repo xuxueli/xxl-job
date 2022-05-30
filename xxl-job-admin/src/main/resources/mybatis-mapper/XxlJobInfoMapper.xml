@@ -117,8 +117,9 @@
 			<if test="jobGroup gt 0">
 				AND t.job_group = #{jobGroup}
 			</if>
+<!--			like CONCAT(CONCAT('%', #{executorHandler}), '%') -->
 			<if test="executorHandler != null and executorHandler != ''">
-				AND t.executor_handler like CONCAT(CONCAT('%', #{executorHandler}), '%')
+				AND t.executor_handler = #{executorHandler}
 			</if>
 		</trim>
 	</select>
@@ -260,5 +261,11 @@
 			trigger_status = #{triggerStatus}
 		WHERE id = #{id}
 	</update>
+
+	<select id="findParentByChildId" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
+		SELECT <include refid="Base_Column_List" />
+		FROM xxl_job_info AS t
+		WHERE t.child_jobid = #{childId}
+	</select>
 
 </mapper>

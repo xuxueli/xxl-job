@@ -55,4 +55,5 @@ public interface XxlJobInfoDao {
 	public int scheduleUpdate(XxlJobInfo xxlJobInfo);
 
 
+	public XxlJobInfo findParentByChildId(@Param("childId") int childId);
 }

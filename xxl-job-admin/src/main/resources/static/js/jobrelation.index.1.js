@@ -9,12 +9,11 @@
         list.appendChild(newSelect);
     });
 
-    $('#truncateRelationBtn').on('click', function(){
+    $('#truncateSelectBtn').on('click', function(){
         var selectArray = list.getElementsByTagName('select');
         if(selectArray.length > 1){
             list.removeChild(selectArray[selectArray.length - 1]);
         }
-        
     });
 
     $('#saveRelationBtn').on('click', function(){
@@ -28,7 +27,6 @@
             var childJobId = selectArray[num + 1].options[childIndex].value;
             map[parentJobId] = childJobId;
         }
-        alert(JSON.stringify(map));
         $.post(base_url + "/jobrelation/update", map, function(data, status) {
             if (data.code == "200") {
                 layer.open({
@@ -52,3 +50,35 @@
         });
         
     });
+
+    $('#currentRelationSearchBtn').on('click', function(){
+        var relationList = document.getElementById("jobList");
+        var lastSelect = relationList.lastElementChild;
+        var optionIndex = lastSelect.selectedIndex;
+        var jobId = lastSelect.options[optionIndex].value;
+        relationTable(jobId);
+    });
+
+
+function relationTable(jobId){
+    $("#relation_list").dataTable({
+		"deferRender": true,
+		"processing" : true,
+	    "serverSide": true,
+		"ajax": {
+			url: base_url + "/jobrelation/findAllRelation",
+			type:"post",
+	        data : jobId
+	    },
+	    "searching": false,
+	    "ordering": false,
+	    //"scrollX": true,	// scroll x，close self-adaption
+	    "columns": [
+	                {
+	                	"data": 'jobDesc',
+						"visible" : true,
+						"width":'60%'
+					}
+	            ]
+	});
+}
