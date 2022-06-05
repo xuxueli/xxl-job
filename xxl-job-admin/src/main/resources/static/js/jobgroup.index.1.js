@@ -23,7 +23,7 @@ $(function() {
 		"columns": [
 			{
 				"data": 'id',
-				"visible" : false
+				"visible" : true
 			},
 			{
 				"data": 'appname',
