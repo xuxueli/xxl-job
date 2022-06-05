@@ -456,17 +456,16 @@ public class XxlJobServiceImpl implements XxlJobService {
 	}
 
 	@Override
-	public Map<String, Object> findAllRelation(int jobInfoId) {
+	public Map<String, List<Object>> findAllRelation(int jobInfoId) {
 		XxlJobInfo rootJob = loadRootJob(jobInfoId);
 
-		Map<String, List<Object>> jobRelationTree = loadChild(rootJob);
+//		Map<String, List<Object>> jobRelationTree = loadChild(rootJob);
+		return loadChild(rootJob);
 
-		Map<String, Object> maps = new HashMap<>(3);
-		// 总记录数
-		maps.put("recordsTotal", jobRelationTree.size());
-		// 所有记录列表
-		maps.put("data", jobRelationTree);
-		return maps;
+//		Map<String, Object> maps = new HashMap<>(3);
+//		// 所有记录列表
+//		maps.put("data", jobRelationTree);
+//		return maps;
 	}
 
 	/**

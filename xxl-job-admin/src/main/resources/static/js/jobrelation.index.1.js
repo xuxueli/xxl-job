@@ -4,9 +4,10 @@
 
 
     $('#newRelationBtn').on('click', function(){
-        var lastSelect = list.lastElementChild;
-        var newSelect = lastSelect.cloneNode(true);
-        list.appendChild(newSelect);
+        var relationTree = document.createTreeWalker("relationTree");
+        // var lastSelect = list.lastElementChild;
+        // var newSelect = lastSelect.cloneNode(true);
+        list.appendChild(relationTree);
     });
 
     $('#truncateSelectBtn').on('click', function(){

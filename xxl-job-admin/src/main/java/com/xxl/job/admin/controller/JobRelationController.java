@@ -89,7 +89,7 @@ public class JobRelationController {
     @PermissionLimit(limit = false)
     @ResponseBody
     @RequestMapping(value = "/jobrelation/findAllRelation")
-    public Map<String, Object> findAllRelation(@RequestParam(required = false, defaultValue = "-1") int jobInfoId) {
+    public Map<String, List<Object>> findAllRelation(@RequestParam(required = false, defaultValue = "-1") int jobInfoId) {
         return xxlJobService.findAllRelation(jobInfoId);
     }
 
