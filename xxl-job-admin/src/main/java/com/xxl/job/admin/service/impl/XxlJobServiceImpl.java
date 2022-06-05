@@ -18,6 +18,7 @@ import com.xxl.job.core.util.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.text.MessageFormat;
@@ -431,4 +432,16 @@ public class XxlJobServiceImpl implements XxlJobService {
 		return new ReturnT<Map<String, Object>>(result);
 	}
 
+	@Transactional
+	@Override
+	public ReturnT<String> addAndStart(XxlJobInfo jobInfo) {
+		ReturnT<String> result = add(jobInfo);
+		if (result.getCode() == 200) {
+			ReturnT<String> startResult = start(Integer.valueOf(result.getContent()));
+			if (startResult.getCode() != 200) {
+				throw new RuntimeException("add job fail ");
+			}
+		}
+		return result;
+	}
 }
