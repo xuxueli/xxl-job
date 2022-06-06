@@ -468,6 +468,25 @@ public class XxlJobServiceImpl implements XxlJobService {
 //		return maps;
 	}
 
+	@Override
+	public XxlJobInfo findAllRelationById(int jobInfoId) {
+		XxlJobInfo rootJob = loadRootJob(jobInfoId);
+		return loadRelation(rootJob);
+	}
+
+	private XxlJobInfo loadRelation(XxlJobInfo parentJob){
+		if (StringUtils.hasText(parentJob.getChildJobId())){
+			String[] idArray = parentJob.getChildJobId().split(",");
+			List<XxlJobInfo> childList = new ArrayList<>();
+			for (String id : idArray){
+				XxlJobInfo child = xxlJobInfoDao.loadById(Integer.parseInt(id));
+				childList.add(loadRelation(child));
+			}
+			parentJob.setChildList(childList);
+		}
+		return parentJob;
+	}
+
 	/**
 	 * 上溯至任务链的起始节点
 	 * @param childId 任务id

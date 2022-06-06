@@ -91,4 +91,6 @@ public interface XxlJobService {
 
 //    Map<String, Object> findAllRelation(int jobInfoId);
 	Map<String, List<Object>> findAllRelation(int jobInfoId);
+
+    XxlJobInfo findAllRelationById(int jobInfoId);
 }

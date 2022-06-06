@@ -1,6 +1,7 @@
 package com.xxl.job.admin.core.model;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * xxl-job info
@@ -41,6 +42,8 @@ public class XxlJobInfo {
 	private int triggerStatus;		// 调度状态：0-停止，1-运行
 	private long triggerLastTime;	// 上次调度时间
 	private long triggerNextTime;	// 下次调度时间
+
+	private List<XxlJobInfo> childList;
 
 
 	public int getId() {
@@ -209,6 +212,14 @@ public class XxlJobInfo {
 
 	public void setChildJobId(String childJobId) {
 		this.childJobId = childJobId;
+	}
+
+	public List<XxlJobInfo> getChildList() {
+		return childList;
+	}
+
+	public void setChildList(List<XxlJobInfo> childList) {
+		this.childList = childList;
 	}
 
 	public int getTriggerStatus() {
