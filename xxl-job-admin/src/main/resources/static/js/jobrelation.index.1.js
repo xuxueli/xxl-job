@@ -63,23 +63,75 @@
 
 function relationTable(jobId){
     var url = base_url + "/jobrelation/findAllRelationById";
-    var data = {"jobInfoId": jobId};
-    $.post(url, data, function(result){
-        if (data.code == "200") {
-            $('#relationTree').data('jstree', false).empty();
-            $('#relationTree').jstree('core', {
-                'data': result.data,
-                'multiple': false
-            }).on('ready.jstree', function(e, data){
+    var param = {"jobInfoId": jobId};
+//    $('#relationTree').jstree(true).refresh();
+    $('#relationTree').jstree({
+        "checkbox" : {
+            "keep_selected_style" : false
+        },
+        "core" : {
+          "animation" : 0,
+          "check_callback" : true,
+          "themes" : { "stripes" : true },
+          'data' : {
+            'url' : url,
+            'data' : param
+          }
+        },
+       "success" : function (resultJob) {//后台返回的参数，由于后台返回的参数jstree解析不了，
+        
+        var rootNode={"data" :{ "title": job.jobDesc},
+                        "attr" : { "id" : job.id},
+                        "state" : open,
+                        "children" : job.childList
+        };
+            
+           resolveJobRelation(resultJob, rootNode);
+           
+           return rootNode;
+       },
+        "types" : {
+          "#" : {
+            "max_children" : 5,
+            "max_depth" : 10,
+            "valid_children" : ["root"]
+          },
+          "root" : {
+            "icon" : "/static/3.3.12/assets/images/tree_icon.png",
+            "valid_children" : ["default"]
+          },
+          "default" : {
+            "valid_children" : ["default","file"]
+          },
+          "file" : {
+            "icon" : "glyphicon glyphicon-file",
+            "valid_children" : []
+          }
+        },
+        "plugins" : [
+          "contextmenu", "dnd", "search",
+          "state", "types", "wholerow"
+        ]
+      });
+}
 
-            })
-        } else {
-            layer.open({
-                title: I18n.system_tips ,
-                btn: [ I18n.system_ok ],
-                content: (data.msg || I18n.system_update_fail ),
-                icon: '2'
-            });
+function resolveJobRelation(job, rootNode){
+    
+    if(job.childList == null){//student标识是叶子节点
+        rootNode.state="closed";//此值是标识此节点是否有子节点的
+    }else {
+        var childArray = new Array();
+        for (let index = 0; index < job.childList.length; index++) {
+            const child = job.childList[index];
+            var childNode={"data" :{ "title": child.jobDesc},
+                          "attr" : { "id" : child.id},
+                          "state" : open,
+                          "children" : child.childList
+            };
+            resolveJobRelation(child, childNode);
+            childArray.push(childNode);
+            
         }
-    })
+        rootNode.children = childArray;
+    }
 }

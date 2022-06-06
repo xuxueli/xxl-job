@@ -5,6 +5,7 @@
 	<@netCommon.commonStyle />
 	<!-- DataTables -->
   	<link rel="stylesheet" href="${request.contextPath}/static/adminlte/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+  	<!--  <link rel="stylesheet" href="${request.contextPath}/static/plugins/jstree/themes/default/style.min.css"/> -->
   	<!-- daterangepicker -->
   	<link rel="stylesheet" href="${request.contextPath}/static/adminlte/bower_components/bootstrap-daterangepicker/daterangepicker.css">
     <title>${I18n.admin_name}</title>
@@ -50,7 +51,6 @@
                 -->
 
 
-                <!-- 右侧任务描述 + 该任务现有关系查询-->
                 <div class="col-xs-5">
 				    <div class="row">
 				        <div class="col-xs-8" id="jobList" >
@@ -74,7 +74,6 @@
           	</div>
           	<div class="col-xs-5">
                 <div id="relationTree">
-                    <a>哈哈哈</a>
                 </div>
           	</div>
 
@@ -90,6 +89,7 @@
 <!-- DataTables -->
 <script src="${request.contextPath}/static/adminlte/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
 <script src="${request.contextPath}/static/adminlte/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+
 <script src="${request.contextPath}/static/plugins/jstree/jstree.js"></script>
 <script src="${request.contextPath}/static/plugins/jstree/jstree.min.js"></script>
 <!-- daterangepicker -->
