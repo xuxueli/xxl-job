@@ -6,6 +6,7 @@ import com.xxl.job.admin.core.thread.LockHelper;
 import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.admin.dao.XxlJobGroupDao;
 import com.xxl.job.core.biz.model.ReturnT;
+import com.xxl.job.core.constant.Constant;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,7 +39,9 @@ public class GroupNoAuthController {
                     jobGroup.setAddressList(jobGroup.getAddressList().concat(",").concat(xxlJobGroup.getAddressList()));
                 }
                 ret = xxlJobGroupDao.update(jobGroup);
-                return (ret > 0) ? ReturnT.SUCCESS : ReturnT.FAIL;
+                ReturnT returnT = (ret > 0) ? ReturnT.SUCCESS : ReturnT.FAIL;
+                returnT.setMsg(Constant.UPDATE);
+                return returnT;
             }
             // valid
             if (xxlJobGroup.getAppname() == null || xxlJobGroup.getAppname().trim().length() == 0) {
@@ -75,7 +78,9 @@ public class GroupNoAuthController {
             // process
             xxlJobGroup.setUpdateTime(new Date());
             ret = xxlJobGroupDao.save(xxlJobGroup);
-            return (ret > 0) ? ReturnT.SUCCESS : ReturnT.FAIL;
+            ReturnT returnT = (ret > 0) ? ReturnT.SUCCESS : ReturnT.FAIL;
+            returnT.setMsg(Constant.INSERT);
+            return returnT;
         } finally {
             LockHelper.unLockGroup();
         }
