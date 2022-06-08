@@ -18,7 +18,6 @@ public class LockHelper {
     private static boolean connAutoCommit;
     private static Connection conn = null;
     private static PreparedStatement preparedStatement = null;
-    private static long nowTime = 0;
     private static long releaseTime = 0;
     private static long cycleTime = 0;
 
@@ -28,7 +27,7 @@ public class LockHelper {
      */
     public static boolean tryLockGroup(){
         boolean lockSuccess;
-        nowTime = System.currentTimeMillis();
+        long nowTime = System.currentTimeMillis();
         cycleTime = 0;
 
         do {
