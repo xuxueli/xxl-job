@@ -25,7 +25,9 @@ public class GroupNoAuthController {
     @PermissionLimit(limit = false)
     @PostMapping(value = "/group/noAuth/save")
     public ReturnT<String> save(@RequestBody XxlJobGroup xxlJobGroup) {
-        LockHelper.tryLockGroup();
+        if (!LockHelper.tryLockGroup()){
+            return ReturnT.FAIL;
+        }
         int ret = 0;
         try {
             int i = xxlJobGroupDao.pageListCount(0, 1, xxlJobGroup.getAppname(), "");
