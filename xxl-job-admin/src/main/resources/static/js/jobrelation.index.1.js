@@ -79,7 +79,7 @@ function relationTable(jobId){
           }
         },
        "success" : function (resultJob) {//后台返回的参数，由于后台返回的参数jstree解析不了，
-        
+
         var rootNode={"data" :{ "title": job.jobDesc},
                         "attr" : { "id" : job.id},
                         "state" : open,

@@ -21,6 +21,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -95,8 +96,13 @@ public class JobRelationController {
     @PermissionLimit(limit = false)
     @ResponseBody
     @RequestMapping(value = "/jobrelation/findAllRelationById")
-    public XxlJobInfo findAllRelationById(@RequestParam(required = false, defaultValue = "-1") int jobInfoId) {
-        return xxlJobService.findAllRelationById(jobInfoId);
+    public Map<String, XxlJobInfo> findAllRelationById(@RequestParam(required = false, defaultValue = "-1") int jobInfoId) {
+        XxlJobInfo relation = xxlJobService.findAllRelationById(jobInfoId);
+        Map<String, XxlJobInfo> maps = new HashMap<>(3);
+        // 总记录数
+        // 所有记录列表
+        maps.put("data", relation);
+        return maps;
     }
 
 }
