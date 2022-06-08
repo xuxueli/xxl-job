@@ -33,7 +33,7 @@ CREATE TABLE `xxl_job_info` (
   `trigger_last_time` bigint(13) NOT NULL DEFAULT '0' COMMENT '上次调度时间',
   `trigger_next_time` bigint(13) NOT NULL DEFAULT '0' COMMENT '下次调度时间',
   PRIMARY KEY (`id`),
-  UNIQUE KEY (`job_desc`),
+  UNIQUE KEY (`executor_handler`),
   INDEX (`child_jobid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
