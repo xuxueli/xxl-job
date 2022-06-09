@@ -265,6 +265,7 @@ $(function() {
         var row = tableData['key'+id];
 
         $("#jobTriggerModal .form input[name='id']").val( row.id );
+        $("#jobTriggerModal .form textarea[name='jobDesc']").val( row.jobDesc );
         $("#jobTriggerModal .form textarea[name='executorParam']").val( row.executorParam );
 
         $('#jobTriggerModal').modal({backdrop: false, keyboard: false}).modal('show');
