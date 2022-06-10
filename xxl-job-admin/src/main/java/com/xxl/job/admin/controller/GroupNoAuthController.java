@@ -37,8 +37,9 @@ public class GroupNoAuthController {
                 if (!contains) {
                     jobGroup.setAddressList(jobGroup.getAddressList().concat(",").concat(xxlJobGroup.getAddressList()));
                     ret = xxlJobGroupDao.update(jobGroup);
+                    return (ret > 0) ? ReturnT.SUCCESS : ReturnT.FAIL;
                 }
-                return (ret > 0) ? ReturnT.SUCCESS : ReturnT.FAIL;
+                return ReturnT.SUCCESS;
             }
             // valid
             if (xxlJobGroup.getAppname() == null || xxlJobGroup.getAppname().trim().length() == 0) {
