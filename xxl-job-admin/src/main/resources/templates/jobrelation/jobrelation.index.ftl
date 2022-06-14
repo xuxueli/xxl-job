@@ -41,6 +41,7 @@
             </div>
             <div class="row">
                 <div class="col-xs-5">
+                    <h3>${I18n.jobrelation_tree}</h3>
                     <div id="relationTree">
                     </div>
                 </div>
@@ -58,7 +59,7 @@
 <script src="${request.contextPath}/static/adminlte/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
 <script src="${request.contextPath}/static/adminlte/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
 <#-- echarts -->
-<script src="${request.contextPath}/static/plugins/echarts/echarts.common.min.js"></script>
+<script src="${request.contextPath}/static/plugins/echarts/echarts.js"></script>
 
 <!-- daterangepicker -->
 <script src="${request.contextPath}/static/adminlte/bower_components/moment/moment.min.js"></script>
