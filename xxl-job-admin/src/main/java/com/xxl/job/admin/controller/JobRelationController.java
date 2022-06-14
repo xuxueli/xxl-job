@@ -89,16 +89,23 @@ public class JobRelationController {
 
     @PermissionLimit(limit = false)
     @ResponseBody
-    @RequestMapping(value = "/jobrelation/findAllRelation")
-    public Map<String, List<Object>> findAllRelation(@RequestParam(required = false, defaultValue = "-1") int jobInfoId) {
-        return xxlJobService.findAllRelation(jobInfoId);
-    }
-    @PermissionLimit(limit = false)
-    @ResponseBody
     @RequestMapping(value = "/jobrelation/findAllRelationById")
     public Map<String, XxlJobInfo> findAllRelationById(@RequestParam(required = false, defaultValue = "-1") int jobInfoId) {
         XxlJobInfo relation = xxlJobService.findAllRelationById(jobInfoId);
         Map<String, XxlJobInfo> maps = new HashMap<>(3);
+        // 总记录数
+        // 所有记录列表
+        maps.put("data", relation);
+        return maps;
+    }
+
+    @PermissionLimit(limit = false)
+    @ResponseBody
+    @RequestMapping(value = "/jobrelation/findAllRelationByDesc")
+    public Map<String, XxlJobInfo> findAllRelationByDesc(@RequestParam(required = false, defaultValue = "") String jobDesc) {
+        XxlJobInfo jobInfo = xxlJobInfoDao.loadByDesc(jobDesc);
+        XxlJobInfo relation = xxlJobService.findAllRelationById(jobInfo.getId());
+        Map<String, XxlJobInfo> maps = new HashMap<>(2);
         // 总记录数
         // 所有记录列表
         maps.put("data", relation);

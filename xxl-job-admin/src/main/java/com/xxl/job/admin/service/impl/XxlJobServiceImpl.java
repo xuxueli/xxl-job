@@ -456,19 +456,6 @@ public class XxlJobServiceImpl implements XxlJobService {
 	}
 
 	@Override
-	public Map<String, List<Object>> findAllRelation(int jobInfoId) {
-		XxlJobInfo rootJob = loadRootJob(jobInfoId);
-
-//		Map<String, List<Object>> jobRelationTree = loadChild(rootJob);
-		return loadChild(rootJob);
-
-//		Map<String, Object> maps = new HashMap<>(3);
-//		// 所有记录列表
-//		maps.put("data", jobRelationTree);
-//		return maps;
-	}
-
-	@Override
 	public XxlJobInfo findAllRelationById(int jobInfoId) {
 		XxlJobInfo rootJob = loadRootJob(jobInfoId);
 		return loadRelation(rootJob);
@@ -480,9 +467,10 @@ public class XxlJobServiceImpl implements XxlJobService {
 			List<XxlJobInfo> childList = new ArrayList<>();
 			for (String id : idArray){
 				XxlJobInfo child = xxlJobInfoDao.loadById(Integer.parseInt(id));
+				child.setName(child.getJobDesc());
 				childList.add(loadRelation(child));
 			}
-			parentJob.setChildList(childList);
+			parentJob.setChildren(childList);
 		}
 		return parentJob;
 	}
@@ -500,27 +488,8 @@ public class XxlJobServiceImpl implements XxlJobService {
 		}else {
 			toReturn = xxlJobInfoDao.loadById(childId);
 		}
+		toReturn.setName(toReturn.getJobDesc());
 		return toReturn;
-	}
-
-	/**
-	 * 加载rootJob的下游所有子任务
-	 */
-	private Map<String, List<Object>> loadChild(XxlJobInfo parentJob){
-		Map<String, List<Object>> childMap = new HashMap<>();
-		if (StringUtils.hasText(parentJob.getChildJobId())){
-			String[] idArray = parentJob.getChildJobId().split(",");
-			List<Object> childList = new ArrayList<>();
-			for (String id : idArray){
-				XxlJobInfo child = xxlJobInfoDao.loadById(Integer.parseInt(id));
-				childList.add(loadChild(child));
-			}
-			childMap.put(parentJob.getJobDesc(), childList);
-
-		}else {
-			childMap.put(parentJob.getJobDesc(), null);
-		}
-		return childMap;
 	}
 
 }

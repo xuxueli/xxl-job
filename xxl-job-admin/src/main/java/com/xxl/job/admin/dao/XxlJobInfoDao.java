@@ -56,4 +56,6 @@ public interface XxlJobInfoDao {
 
 
 	public XxlJobInfo findParentByChildId(@Param("childId") int childId);
+
+	public XxlJobInfo loadByDesc(@Param("jobDesc") String jobDesc);
 }

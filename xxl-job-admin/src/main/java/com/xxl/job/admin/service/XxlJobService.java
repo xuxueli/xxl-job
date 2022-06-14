@@ -5,7 +5,6 @@ import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.core.biz.model.ReturnT;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -88,9 +87,6 @@ public interface XxlJobService {
 	public Map<String,Object> findAll();
 
 	ReturnT<String> updateRelation(String parentKey, String childKey);
-
-//    Map<String, Object> findAllRelation(int jobInfoId);
-	Map<String, List<Object>> findAllRelation(int jobInfoId);
 
     XxlJobInfo findAllRelationById(int jobInfoId);
 }

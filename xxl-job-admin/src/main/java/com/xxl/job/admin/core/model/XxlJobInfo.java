@@ -14,7 +14,8 @@ public class XxlJobInfo {
 	
 	private int jobGroup;		// 执行器主键ID
 	private String jobDesc;
-	
+	private String name;
+
 	private Date addTime;
 	private Date updateTime;
 	
@@ -44,7 +45,7 @@ public class XxlJobInfo {
 	private long triggerLastTime;	// 上次调度时间
 	private long triggerNextTime;	// 下次调度时间
 
-	private List<XxlJobInfo> childList;
+	private List<XxlJobInfo> children;
 
 
 	public int getId() {
@@ -69,6 +70,14 @@ public class XxlJobInfo {
 
 	public void setJobDesc(String jobDesc) {
 		this.jobDesc = jobDesc;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public Date getAddTime() {
@@ -223,12 +232,12 @@ public class XxlJobInfo {
 		this.childJobId = childJobId;
 	}
 
-	public List<XxlJobInfo> getChildList() {
-		return childList;
+	public List<XxlJobInfo> getChildren() {
+		return children;
 	}
 
-	public void setChildList(List<XxlJobInfo> childList) {
-		this.childList = childList;
+	public void setChildren(List<XxlJobInfo> children) {
+		this.children = children;
 	}
 
 	public int getTriggerStatus() {

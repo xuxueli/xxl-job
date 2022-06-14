@@ -5,7 +5,6 @@
 	<@netCommon.commonStyle />
 	<!-- DataTables -->
   	<link rel="stylesheet" href="${request.contextPath}/static/adminlte/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
-  	<!--  <link rel="stylesheet" href="${request.contextPath}/static/plugins/jstree/themes/default/style.min.css"/> -->
   	<!-- daterangepicker -->
   	<link rel="stylesheet" href="${request.contextPath}/static/adminlte/bower_components/bootstrap-daterangepicker/daterangepicker.css">
     <title>${I18n.admin_name}</title>
@@ -28,55 +27,24 @@
 		<!-- Main content -->
 	    <section class="content">
 	    	<div class="row">
-	    	    <!--
-                <div class="col-xs-3" id="selectList">
-                    <div class="input-info">
-                        <span class="input-group-addon">${I18n.jobinfo_field_jobdesc}</span>
+                <div class="col-xs-2">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="jobDesc" placeholder="${I18n.system_please_input}${I18n.jobinfo_field_jobdesc}" >
                     </div>
-                    <select class="form-control" id="jobInfoId" >
-                        <#list JobInfoList as info>
-                            <option value="${info.id}" <#if jobInfoId==info.id>selected</#if> >${info.jobDesc}</option>
-                        </#list>
-                    </select>
                 </div>
                 <div class="col-xs-1">
-                    <button class="btn  btn-success" id="newRelationBtn">${I18n.system_newRelation}</button>
+                    <button class="btn btn-block btn-info" id="currentRelationSearchBtn">${I18n.system_search}</button>
                 </div>
                 <div class="col-xs-1">
-                    <button class="btn btn-default" id="truncateSelectBtn">${I18n.system_truncateSelect}</button>
+                    <button class="btn btn-block btn-success add" type="button">${I18n.jobinfo_field_add}</button>
                 </div>
-                <div class="col-xs-1">
-                    <button class="btn btn-info" id="saveRelationBtn">${I18n.system_save}</button>
-                </div>
-                -->
-
-
+            </div>
+            <div class="row">
                 <div class="col-xs-5">
-				    <div class="row">
-				        <div class="col-xs-8" id="jobList" >
-                            <div class="input-info">
-                                <span class="input-group-addon">${I18n.jobinfo_field_jobdesc}</span>
-                            </div>
-                            <select class="form-control" id="jobInfoId" >
-                                <#list JobInfoList as info>
-                                    <option value="${info.id}" <#if jobInfoId==info.id>selected</#if> >${info.jobDesc}</option>
-                                </#list>
-                            </select>
-                        </div>
-                        <div class="col-xs-2">
-                            <button class="btn  btn-info" id="currentRelationSearchBtn">${I18n.system_search}</button>
-                        </div>
-                        <div class="col-xs-1">
-                            <button class="btn  btn-default" id="truncateRelationBtn">${I18n.system_truncateRelation}</button>
-                        </div>
-				    </div>
+                    <div id="relationTree">
+                    </div>
                 </div>
           	</div>
-          	<div class="col-xs-5">
-                <div id="relationTree">
-                </div>
-          	</div>
-
 	    </section>
 	</div>
 
@@ -89,9 +57,9 @@
 <!-- DataTables -->
 <script src="${request.contextPath}/static/adminlte/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
 <script src="${request.contextPath}/static/adminlte/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+<#-- echarts -->
+<script src="${request.contextPath}/static/plugins/echarts/echarts.common.min.js"></script>
 
-<script src="${request.contextPath}/static/plugins/jstree/jstree.js"></script>
-<script src="${request.contextPath}/static/plugins/jstree/jstree.min.js"></script>
 <!-- daterangepicker -->
 <script src="${request.contextPath}/static/adminlte/bower_components/moment/moment.min.js"></script>
 <script src="${request.contextPath}/static/adminlte/bower_components/bootstrap-daterangepicker/daterangepicker.js"></script>

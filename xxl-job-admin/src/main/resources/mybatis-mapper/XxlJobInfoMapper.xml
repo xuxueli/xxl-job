@@ -267,5 +267,10 @@
 		FROM xxl_job_info AS t
 		WHERE t.child_jobid like CONCAT(CONCAT('%', #{childId}), '%')
 	</select>
+	<select id="loadByDesc" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
+		SELECT <include refid="Base_Column_List" />
+		FROM xxl_job_info AS t
+		WHERE t.job_desc = #{jobDesc}
+	</select>
 
 </mapper>
