@@ -8,12 +8,9 @@
         relationTree(jobDesc);
     });
 
-
 function relationTree(jobDesc){
     var url = base_url + "/jobrelation/findAllRelationByDesc";
     var param = {"jobDesc": jobDesc};
-    var tree = echarts.init(document.getElementById("relationTree"));
-    tree.showLoading();
     $.ajax({
         url: url,
         data: param,
@@ -21,6 +18,8 @@ function relationTree(jobDesc){
         async: false,
         dataType: 'json',
         success: function(result){
+            var tree = echarts.init(document.getElementById("relationTree"));
+            tree.showLoading();
             tree.hideLoading();
             tree.setOption(option = {
                                   tooltip: {    //提示框组件
@@ -30,7 +29,8 @@ function relationTree(jobDesc){
                                   series: [    //系列列表
                                       {
                                           type: 'tree',    //树形结构
-
+                                          orient: 'LR',
+                                          edgeShape: 'curve',
                                           data: [result.data],    //上面从flare.json中得到的数据
 
                                           top: '1%',       //距离上
@@ -38,7 +38,7 @@ function relationTree(jobDesc){
                                           bottom: '1%',    //下
                                           right: '20%',    //右的距离
 
-                                          symbolSize: 7,   //标记的大小，就是那个小圆圈，默认7
+                                          symbolSize: 20,   //标记的大小，就是那个小圆圈，默认7
 
                                           label: {         //每个节点所对应的标签的样式
                                               normal: {
