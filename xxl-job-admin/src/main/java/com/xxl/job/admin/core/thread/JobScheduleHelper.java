@@ -298,7 +298,7 @@ public class JobScheduleHelper {
                 newRingItemData.add(jobId);
                 // 如果此时并发执行了ringData.remove(ringSecond)，那么此次replace操作将失败
                 if (ringData.replace(ringSecond, ringItemData, newRingItemData)) {
-                    logger.debug(">>>>>>>>>>> xxl-job, schedule push time-ring : " + ringSecond + " = " + Arrays.asList(ringItemData) );
+                    logger.debug(">>>>>>>>>>> xxl-job, schedule push time-ring : " + ringSecond + " = " + Arrays.asList(newRingItemData) );
                     break;
                 }
             }
