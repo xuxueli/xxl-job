@@ -285,14 +285,24 @@ public class JobScheduleHelper {
 
     private void pushTimeRing(int ringSecond, int jobId){
         // push async ring
-        List<Integer> ringItemData = ringData.get(ringSecond);
-        if (ringItemData == null) {
-            ringItemData = new ArrayList<Integer>();
-            ringData.put(ringSecond, ringItemData);
+        while (true) {
+            List<Integer> ringItemData = ringData.get(ringSecond);
+            if (ringItemData == null) {
+                ringItemData = new ArrayList();
+                ringItemData.add(jobId);
+                ringData.put(ringSecond, ringItemData);
+                logger.debug(">>>>>>>>>>> xxl-job, schedule push time-ring : " + ringSecond + " = " + Arrays.asList(ringItemData) );
+                break;
+            } else {
+                List<Integer> newRingItemData = new ArrayList<>(ringItemData);
+                newRingItemData.add(jobId);
+                // 如果此时并发执行了ringData.remove(ringSecond)，那么此次replace操作将失败
+                if (ringData.replace(ringSecond, ringItemData, newRingItemData)) {
+                    logger.debug(">>>>>>>>>>> xxl-job, schedule push time-ring : " + ringSecond + " = " + Arrays.asList(ringItemData) );
+                    break;
+                }
+            }
         }
-        ringItemData.add(jobId);
-
-        logger.debug(">>>>>>>>>>> xxl-job, schedule push time-ring : " + ringSecond + " = " + Arrays.asList(ringItemData) );
     }
 
     public void toStop(){
