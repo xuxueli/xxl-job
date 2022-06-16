@@ -157,7 +157,7 @@ $(function() {
                                     '       <li><a href="javascript:void(0);" class="job_operate" _type="job_del" >'+ I18n.system_opt_del +'</a></li>\n' +
 									'       <li><a href="javascript:void(0);" class="job_copy" >'+ I18n.system_opt_copy +'</a></li>\n' +
                                     '     </ul>\n' +
-									'     <button type="button" class="btn btn-primary btn-sm" onclick=viewJob('+row.id+')>查看</button>\n' +
+									'     <button type="button" class="btn btn-primary btn-sm" onclick=viewJob('+row.id+')>'+ I18n.jobrelation_current_relation +'</button>\n' +
                                     '   </div>';
 
 	                			return html;
