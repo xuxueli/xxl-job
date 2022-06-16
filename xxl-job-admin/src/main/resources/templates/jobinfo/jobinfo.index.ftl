@@ -447,7 +447,7 @@ exit 0
                         </div>
 
                         <label for="lastname" class="col-sm-2 control-label">${I18n.jobinfo_field_childJobId}<font color="black">*</font></label>
-                        <div class="col-sm-4"><input type="text" class="form-control" name="childJobId" placeholder="${I18n.jobinfo_field_childJobId_placeholder}" maxlength="100" ></div>
+                        <div class="col-sm-4"><input type="text" onclick="listJobInfo()" readonly class="form-control" id="childJobId" name="childJobId" placeholder="点击选择子任务" maxlength="100" ></div>
                     </div>
 
                     <div class="form-group">
@@ -536,5 +536,39 @@ exit 0
 <#-- cronGen -->
 <script src="${request.contextPath}/static/plugins/cronGen/cronGen<#if I18n.admin_i18n?default('')?length gt 0 >_${I18n.admin_i18n}</#if>.js"></script>
 <script src="${request.contextPath}/static/js/jobinfo.index.1.js"></script>
+<script>
+    var base_url = '${request.contextPath}';
+    //选择子任务信息
+    function listJobInfo() {
+        var childJobId = $("#updateModal .form input[name='childJobId']").val();
+        layer.open({
+            type: 2,
+            resize: false,
+            title: '选择子任务',
+            area: ['50%', '60%'],
+            shade: 0.4,
+            maxmin: true,
+            offset: 'auto',
+            content: base_url + "/jobinfo/getListJobInfo?childJobId="+childJobId,
+            btn: ['确定', '取消'],
+            yes: function (index, layero) {
+                var opWin = top.window[layero.find('iframe')[0]['name']];
+                var childJobIdList = [];
+                childJobIdList = opWin.getChoosedtData();
+                $("#childJobId").val(childJobIdList);
+                top.layer.close(index); //关闭当前层
+            },
+            full: function () {
+                $('.layui-layer-content').css("height", "calc(100% - 42px)")
+                $('.layui-layer-iframe iframe').css("height", "100%")
+            },
+            restore: function () {
+                $('.layui-layer-content').css("height", "calc(100% - 42px)")
+                $('.layui-layer-iframe iframe').css("height", "100%")
+            }
+        });
+    }
+
+</script>
 </body>
 </html>

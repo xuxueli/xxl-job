@@ -157,6 +157,7 @@ $(function() {
                                     '       <li><a href="javascript:void(0);" class="job_operate" _type="job_del" >'+ I18n.system_opt_del +'</a></li>\n' +
 									'       <li><a href="javascript:void(0);" class="job_copy" >'+ I18n.system_opt_copy +'</a></li>\n' +
                                     '     </ul>\n' +
+									'     <button type="button" class="btn btn-primary btn-sm" onclick=viewJob('+row.id+')>查看</button>\n' +
                                     '   </div>';
 
 	                			return html;
@@ -580,6 +581,9 @@ $(function() {
 		// show
 		$('#updateModal').modal({backdrop: false, keyboard: false}).modal('show');
 	});
+
+
+
 	var updateModalValidate = $("#updateModal .form").validate({
 		errorElement : 'span',
         errorClass : 'help-block',
@@ -737,3 +741,24 @@ $(function() {
 	});
 
 });
+var base_url = '${request.contextPath}';
+function viewJob(id){
+	layer.open({
+		type: 2,
+		resize: false,
+		title: '查看详情',
+		area: ['50%', '60%'],
+		shade: 0.4,
+		maxmin: true,
+		offset: 'auto',
+		content: base_url + "/jobinfo/getJobInfoView?id="+id,
+		full: function () {
+			$('.layui-layer-content').css("height", "calc(100% - 42px)")
+			$('.layui-layer-iframe iframe').css("height", "100%")
+		},
+		restore: function () {
+			$('.layui-layer-content').css("height", "calc(100% - 42px)")
+			$('.layui-layer-iframe iframe').css("height", "100%")
+		}
+	});
+}

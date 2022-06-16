@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -71,6 +72,22 @@ public class JobInfoController {
 		return "jobinfo/jobinfo.index";
 	}
 
+	@RequestMapping(value = "/getListJobInfo", method = RequestMethod.GET)
+	public String getListJobInfo(HttpServletRequest request, Model model,String childJobId) {
+
+		// 枚举-字典
+		model.addAttribute("ExecutorRouteStrategyEnum", ExecutorRouteStrategyEnum.values());	    // 路由策略-列表
+		model.addAttribute("GlueTypeEnum", GlueTypeEnum.values());								// Glue类型-字典
+		model.addAttribute("ExecutorBlockStrategyEnum", ExecutorBlockStrategyEnum.values());	    // 阻塞处理策略-字典
+		model.addAttribute("ScheduleTypeEnum", ScheduleTypeEnum.values());	    				// 调度类型
+		model.addAttribute("MisfireStrategyEnum", MisfireStrategyEnum.values());	    			// 调度过期策略
+
+		//查
+		model.addAttribute("childJobId",childJobId);
+
+		return "jobinfo/jobinfoTop";
+	}
+
 	public static List<XxlJobGroup> filterJobGroupByRole(HttpServletRequest request, List<XxlJobGroup> jobGroupList_all){
 		List<XxlJobGroup> jobGroupList = new ArrayList<>();
 		if (jobGroupList_all!=null && jobGroupList_all.size()>0) {
@@ -91,6 +108,23 @@ public class JobInfoController {
 		}
 		return jobGroupList;
 	}
+
+	@RequestMapping(value = "/getJobInfoView", method = RequestMethod.GET)
+	public String getJobInfoView(HttpServletRequest request, Model model,String id) {
+
+		// 枚举-字典
+		model.addAttribute("ExecutorRouteStrategyEnum", ExecutorRouteStrategyEnum.values());	    // 路由策略-列表
+		model.addAttribute("GlueTypeEnum", GlueTypeEnum.values());								// Glue类型-字典
+		model.addAttribute("ExecutorBlockStrategyEnum", ExecutorBlockStrategyEnum.values());	    // 阻塞处理策略-字典
+		model.addAttribute("ScheduleTypeEnum", ScheduleTypeEnum.values());	    				// 调度类型
+		model.addAttribute("MisfireStrategyEnum", MisfireStrategyEnum.values());	    			// 调度过期策略
+
+		//查
+		model.addAttribute("id",id);
+
+		return "jobinfo/jobinfoView";
+	}
+
 	public static void validPermission(HttpServletRequest request, int jobGroup) {
 		XxlJobUser loginUser = (XxlJobUser) request.getAttribute(LoginService.LOGIN_IDENTITY_KEY);
 		if (!loginUser.validPermission(jobGroup)) {
@@ -100,11 +134,20 @@ public class JobInfoController {
 	
 	@RequestMapping("/pageList")
 	@ResponseBody
-	public Map<String, Object> pageList(@RequestParam(required = false, defaultValue = "0") int start,  
+	public Map<String, Object> pageList(@RequestParam(required = false, defaultValue = "0") int start,
 			@RequestParam(required = false, defaultValue = "10") int length,
-			int jobGroup, int triggerStatus, String jobDesc, String executorHandler, String author) {
+										int jobGroup, int triggerStatus, String jobDesc, String executorHandler, String author) {
 		
 		return xxlJobService.pageList(start, length, jobGroup, triggerStatus, jobDesc, executorHandler, author);
+	}
+
+	@RequestMapping("/pageListJobInfo")
+	@ResponseBody
+	public Map<String, Object> pageListJobInfo(@RequestParam(required = false, defaultValue = "0") int start,
+										@RequestParam(required = false, defaultValue = "10") int length, String jobDesc, String executorHandler,
+											   String childJobId) {
+
+		return xxlJobService.pageListJobInfo(start, length, jobDesc, executorHandler, childJobId);
 	}
 	
 	@RequestMapping("/add")

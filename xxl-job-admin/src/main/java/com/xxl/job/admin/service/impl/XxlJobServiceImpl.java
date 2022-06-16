@@ -59,6 +59,31 @@ public class XxlJobServiceImpl implements XxlJobService {
 	}
 
 	@Override
+	public Map<String, Object> pageListJobInfo(int start, int length, String jobDesc, String executorHandler, String childJobId) {
+		// page list
+		List<XxlJobInfo> list = xxlJobInfoDao.pageListJobInfo(start, length, jobDesc, executorHandler);
+		int list_count = xxlJobInfoDao.pageListCountJobInfo(start, length, jobDesc, executorHandler);
+		if(childJobId!=null && childJobId.trim().length()>0){
+			String[] chilStr = childJobId.split(",");
+			for (String item : chilStr) {
+				for (XxlJobInfo jobInfo: list){
+					if(item.equals(jobInfo.getId()+"")){
+						jobInfo.setIsChecked("1");
+					}
+				}
+			}
+		}
+
+
+		// package result
+		Map<String, Object> maps = new HashMap<String, Object>();
+		maps.put("recordsTotal", list_count);		// 总记录数
+		maps.put("recordsFiltered", list_count);	// 过滤后的总记录数
+		maps.put("data", list);  					// 分页列表
+		return maps;
+	}
+
+	@Override
 	public ReturnT<String> add(XxlJobInfo jobInfo) {
 
 		// valid base
@@ -482,6 +507,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 	 */
 	private XxlJobInfo loadRootJob(int childId){
 		XxlJobInfo toReturn;
+		//查询子任务id
 		toReturn =xxlJobInfoDao.findParentByChildId(childId);
 		if (toReturn != null){
 			toReturn = loadRootJob(toReturn.getId());

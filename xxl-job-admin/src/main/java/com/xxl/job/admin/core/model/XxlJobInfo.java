@@ -47,6 +47,23 @@ public class XxlJobInfo {
 
 	private List<XxlJobInfo> children;
 
+	private String isChecked;//被选中
+
+	/**
+	 * 是否有下级
+	 * @return
+	 */
+	public boolean hasChildren()
+	{
+		boolean bResult = false;
+		if(this.children != null && this.children.size() > 0)
+		{
+			bResult = true;
+		}
+
+		return bResult;
+	}
+
 
 	public int getId() {
 		return id;
@@ -262,5 +279,13 @@ public class XxlJobInfo {
 
 	public void setTriggerNextTime(long triggerNextTime) {
 		this.triggerNextTime = triggerNextTime;
+	}
+
+	public String getIsChecked() {
+		return isChecked;
+	}
+
+	public void setIsChecked(String isChecked) {
+		this.isChecked = isChecked;
 	}
 }

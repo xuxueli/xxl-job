@@ -4,11 +4,14 @@ import com.xxl.job.admin.controller.annotation.PermissionLimit;
 import com.xxl.job.admin.core.exception.XxlJobException;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobUser;
+import com.xxl.job.admin.core.util.FileTypeMapUtil;
 import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.admin.dao.XxlJobInfoDao;
 import com.xxl.job.admin.service.LoginService;
 import com.xxl.job.admin.service.XxlJobService;
 import com.xxl.job.core.biz.model.ReturnT;
+import com.xxl.job.core.util.FancyTreeNode;
+import com.xxl.job.core.util.ResponseResultInfoEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -19,11 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Administrator
@@ -90,13 +89,20 @@ public class JobRelationController {
     @PermissionLimit(limit = false)
     @ResponseBody
     @RequestMapping(value = "/jobrelation/findAllRelationById")
-    public Map<String, XxlJobInfo> findAllRelationById(@RequestParam(required = false, defaultValue = "-1") int jobInfoId) {
+    public ResponseResultInfoEntity findAllRelationById(@RequestParam(required = false, defaultValue = "-1") int jobInfoId) {
+        ResponseResultInfoEntity responseResultInfo = new ResponseResultInfoEntity("fail");
         XxlJobInfo relation = xxlJobService.findAllRelationById(jobInfoId);
-        Map<String, XxlJobInfo> maps = new HashMap<>(3);
-        // 总记录数
-        // 所有记录列表
-        maps.put("data", relation);
-        return maps;
+
+        FancyTreeNode parentNode = FileTypeMapUtil.toTreeNode(relation);
+        List<FancyTreeNode> treeNodeList = new ArrayList<FancyTreeNode>();
+        treeNodeList.add(parentNode);
+
+        //设置返回的数据
+        responseResultInfo.setData(treeNodeList);
+
+        // 设置操作结果为成功
+        responseResultInfo.setCode("success");
+        return responseResultInfo;
     }
 
     @PermissionLimit(limit = false)
