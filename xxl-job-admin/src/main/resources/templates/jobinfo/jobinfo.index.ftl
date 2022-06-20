@@ -447,7 +447,7 @@ exit 0
                         </div>
 
                         <label for="lastname" class="col-sm-2 control-label">${I18n.jobinfo_field_childJobId}<font color="black">*</font></label>
-                        <div class="col-sm-4"><input type="text" onclick="listJobInfo()" readonly class="form-control" id="childJobId" name="childJobId" placeholder="点击选择子任务" maxlength="100" ></div>
+                        <div class="col-sm-4"><input type="text" onclick="listJobInfo()" readonly class="form-control" id="childJobId" name="childJobId" placeholder="${I18n.jobrelation_click_to_select}" maxlength="100" ></div>
                     </div>
 
                     <div class="form-group">
@@ -544,13 +544,13 @@ exit 0
         layer.open({
             type: 2,
             resize: false,
-            title: '选择子任务',
+            title: '${I18n.jobrelation_select}',
             area: ['50%', '60%'],
             shade: 0.4,
             maxmin: true,
             offset: 'auto',
             content: base_url + "/jobinfo/getListJobInfo?childJobId="+childJobId,
-            btn: ['确定', '取消'],
+            btn: ['${I18n.system_ok}', '${I18n.system_cancel}'],
             yes: function (index, layero) {
                 var opWin = top.window[layero.find('iframe')[0]['name']];
                 var childJobIdList = [];
