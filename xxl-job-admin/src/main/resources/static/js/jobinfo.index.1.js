@@ -747,7 +747,7 @@ function viewJob(id){
 		type: 2,
 		resize: false,
 		title: '查看详情',
-		area: ['50%', '60%'],
+		area: ['65%', '80%'],
 		shade: 0.4,
 		maxmin: true,
 		offset: 'auto',

@@ -457,28 +457,6 @@ public class XxlJobServiceImpl implements XxlJobService {
 		return new ReturnT<Map<String, Object>>(result);
 	}
 
-	@Override
-	public Map<String, Object> findAll() {
-		List<XxlJobInfo> list = xxlJobInfoDao.findAll();
-		int list_count = xxlJobInfoDao.findAllCount();
-
-		// package result
-		Map<String, Object> maps = new HashMap<>(3);
-		// 总记录数
-		maps.put("recordsTotal", list_count);
-		// 所有记录列表
-		maps.put("data", list);
-		return maps;
-	}
-
-	@Override
-	public ReturnT<String> updateRelation(String parentKey, String childKey) {
-		XxlJobInfo xxlJobInfo = new XxlJobInfo();
-		xxlJobInfo.setId(Integer.parseInt(parentKey));
-		xxlJobInfo.setChildJobId(childKey);
-		xxlJobInfoDao.updateRelation(xxlJobInfo);
-		return ReturnT.SUCCESS;
-	}
 
 	@Override
 	public XxlJobInfo findAllRelationById(int jobInfoId) {

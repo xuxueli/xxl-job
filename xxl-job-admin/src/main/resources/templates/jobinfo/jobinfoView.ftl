@@ -23,8 +23,8 @@
 		<!-- Main content -->
 		<section class="content">
 			<input type="hidden" id="id" name="id"  value="${id!}">
-			<div class="col-xs-5">
-				<div id="treeFileType" class="fancytree-colorize-hover treeStyle">
+			<div class="col-xs-12">
+				<div id="relationTree" style="width: 100%; height: 50%;" class="info-box bg-white">
 				</div>
 			</div>
 		</section>
@@ -44,13 +44,15 @@
 <link type="text/javascript" href="${request.contextPath}/static/plugins/fancytree/fancytree-2.34/skin-bootstrap/ui.fancytree.css" rel="stylesheet" class="skinswitcher">
 <script type="text/javascript" src="${request.contextPath}/static/plugins/fancytree/fancytree-2.34/jquery.fancytree-all-deps.min.js"></script>
 <script src="${request.contextPath}/static/plugins/icsoft/ics-fancytree.js"></script>
+<script src="${request.contextPath}/static/plugins/echarts/echarts.js"></script>
+<script src="${request.contextPath}/static/js/jobrelation.index.1.js"></script>
 <script>
-	var base_url = '${request.contextPath}';
+
 	$(function() {
-		var id = $("#id").val();
-		var url = base_url + "/jobrelation/findAllRelationById?jobInfoId="+id;
-		initNaviTree("treeFileType", url, null);
-	});
+    		var id = $("#id").val();
+    		relationTree(id);
+    	});
+
 
 </script>
 </body>

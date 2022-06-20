@@ -85,10 +85,5 @@ public interface XxlJobService {
 	 */
 	public ReturnT<Map<String,Object>> chartInfo(Date startDate, Date endDate);
 
-
-	public Map<String,Object> findAll();
-
-	ReturnT<String> updateRelation(String parentKey, String childKey);
-
     XxlJobInfo findAllRelationById(int jobInfoId);
 }

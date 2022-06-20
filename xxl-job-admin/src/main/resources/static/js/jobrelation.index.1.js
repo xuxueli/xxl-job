@@ -1,17 +1,10 @@
 
-     
 
-
-    $('#currentRelationSearchBtn').on('click', function(){
-        var jobDescEl = document.getElementById("jobDesc");
-        var jobDesc = jobDescEl.value;
-        relationTree(jobDesc);
-    });
 var tree;
 
-function relationTree(jobDesc){
-    var url = base_url + "/jobrelation/findAllRelationByDesc";
-    var param = {"jobDesc": jobDesc};
+function relationTree(jobId){
+    var url = base_url + "/jobrelation/findAllRelationById";
+    var param = {"jobId": jobId};
     $.ajax({
         url: url,
         data: param,
