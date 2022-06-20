@@ -544,7 +544,7 @@ exit 0
         layer.open({
             type: 2,
             resize: false,
-            title: '${I18n.jobrelation_select}',
+            title: '${I18n.jobrelation_select_child}',
             area: ['50%', '60%'],
             shade: 0.4,
             maxmin: true,

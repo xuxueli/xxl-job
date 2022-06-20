@@ -35,15 +35,10 @@
                 <div class="col-xs-1">
                     <button class="btn btn-block btn-info" id="currentRelationSearchBtn">${I18n.system_search}</button>
                 </div>
-                <div class="col-xs-1">
-                    <button class="btn btn-block btn-success add" type="button">${I18n.jobinfo_field_add}</button>
-                </div>
             </div>
             <div class="row">
-                <div class="col-xs-5">
-                    <h3>${I18n.jobrelation_tree}</h3>
-                    <div id="relationTree">
-                    </div>
+                <h3>${I18n.jobrelation_tree}</h3>
+                <div id="relationTree" style="width: 100%; height: 50%;" class="info-box bg-white">
                 </div>
           	</div>
 	    </section>
