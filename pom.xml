@@ -12,6 +12,7 @@
 
 	<modules>
 		<module>xxl-job-core</module>
+		<module>xxl-job-spring-boot-starter-server</module>
 		<module>xxl-job-admin</module>
 		<module>xxl-job-executor-samples</module>
     </modules>
