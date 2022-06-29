@@ -1,0 +1,23 @@
+version: "3.7"
+services:
+  xxl-job2.2.1:
+    image: harbor.jkservice.org/di/xxl-job-admin:2.2.1
+    container_name: xxl-job2.2.1
+    restart: always
+    ports:
+      - 8094:8080
+    environment:
+      TZ: Asia/Shanghai
+      PARAMS: '--spring.datasource.url=jdbc:mysql://192.168.3.235:3306/xxl_job?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai" --spring.datasource.username=root --spring.datasource.password=jingkun88888888'
+    volumes:
+      - xxl-job-data2:/data/applogs
+    networks:
+      - devops-compose
+
+volumes:
+  xxl-job-data2:
+    driver: local
+
+networks:
+  devops-compose:
+    external: true

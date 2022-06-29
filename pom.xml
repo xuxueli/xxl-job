@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.xuxueli</groupId>
 	<artifactId>xxl-job</artifactId>
-	<version>2.2.0</version>
+	<version>2.2.1</version>
 	<packaging>pom</packaging>
 
 	<name>${project.artifactId}</name>
@@ -31,6 +31,7 @@
 		<spring-boot.version>2.2.6.RELEASE</spring-boot.version>
 
 		<mybatis-spring-boot-starter.version>2.1.2</mybatis-spring-boot-starter.version>
+		<mybatis.version>3.5.6</mybatis.version>
 		<mysql-connector-java.version>8.0.19</mysql-connector-java.version>
 
 		<slf4j-api.version>1.7.30</slf4j-api.version>
