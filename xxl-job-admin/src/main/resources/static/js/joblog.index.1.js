@@ -3,11 +3,12 @@ $(function() {
 	// jobGroup change, job list init and select
 	$("#jobGroup").on("change", function () {
 		var jobGroup = $(this).children('option:selected').val();
+		var jobId = $("#jobGroup").attr("jobIdParamVal");
 		$.ajax({
 			type : 'POST',
             async: false,   // async, avoid js invoke pagelist before jobId data init
 			url : base_url + '/joblog/getJobsByGroup',
-			data : {"jobGroup":jobGroup},
+			data : {"jobGroup":jobGroup,"jobId":jobId},
 			dataType : "json",
 			success : function(data){
 				if (data.code == 200) {

@@ -211,6 +211,11 @@
 		SELECT <include refid="Base_Column_List" />
 		FROM xxl_job_info AS t
 		WHERE t.job_group = #{jobGroup}
+		<if test="jobId != null and jobId != ''">
+			and t.id = #{jobId}
+		</if>
+		order by id desc
+		limit 0,100;
 	</select>
 
 	<select id="findAllCount" resultType="int">

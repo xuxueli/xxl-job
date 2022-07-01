@@ -79,8 +79,8 @@ public class JobLogController {
 
 	@RequestMapping("/getJobsByGroup")
 	@ResponseBody
-	public ReturnT<List<XxlJobInfo>> getJobsByGroup(int jobGroup){
-		List<XxlJobInfo> list = xxlJobInfoDao.getJobsByGroup(jobGroup);
+	public ReturnT<List<XxlJobInfo>> getJobsByGroup(int jobGroup ,@RequestParam(value = "jobId", required = false) Integer jobId){
+		List<XxlJobInfo> list = xxlJobInfoDao.getJobsByGroup(jobGroup ,jobId);
 		return new ReturnT<List<XxlJobInfo>>(list);
 	}
 	
