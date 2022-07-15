@@ -48,6 +48,20 @@ public class XxlJobHelper {
         return xxlJobContext.getJobParam();
     }
 
+    /**
+     * current JobTriggerTime
+     *
+     * @return
+     */
+    public static Long getJobTriggerTime() {
+        XxlJobContext xxlJobContext = XxlJobContext.getXxlJobContext();
+        if (xxlJobContext == null) {
+            return null;
+        }
+
+        return xxlJobContext.getJobTriggerTime();
+    }
+
     // ---------------------- for log ----------------------
 
     /**
