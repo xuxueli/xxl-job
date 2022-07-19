@@ -233,6 +233,7 @@ public class JobScheduleHelper {
 
                     // align second
                     try {
+                        //对齐秒
                         TimeUnit.MILLISECONDS.sleep(1000 - System.currentTimeMillis() % 1000);
                     } catch (InterruptedException e) {
                         if (!ringThreadToStop) {
