@@ -22,6 +22,7 @@ public class XxlJobInfo {
 
 	private String scheduleType;			// 调度类型
 	private String scheduleConf;			// 调度配置，值含义取决于调度类型
+	private String scheduleTargetTimeZone;  // 调度目标时区，UTC
 	private String misfireStrategy;			// 调度过期策略
 
 	private String executorRouteStrategy;	// 执行器路由策略
@@ -41,6 +42,8 @@ public class XxlJobInfo {
 	private int triggerStatus;		// 调度状态：0-停止，1-运行
 	private long triggerLastTime;	// 上次调度时间
 	private long triggerNextTime;	// 下次调度时间
+	private String triggerLastTargetTimeZone;	// 上次目标时区
+	private String triggerNextTargetTimeZone;	// 下次目标时区
 
 
 	public int getId() {
@@ -113,6 +116,14 @@ public class XxlJobInfo {
 
 	public void setScheduleConf(String scheduleConf) {
 		this.scheduleConf = scheduleConf;
+	}
+
+	public String getScheduleTargetTimeZone() {
+		return scheduleTargetTimeZone;
+	}
+
+	public void setScheduleTargetTimeZone(String scheduleTargetTimeZone) {
+		this.scheduleTargetTimeZone = scheduleTargetTimeZone;
 	}
 
 	public String getMisfireStrategy() {
@@ -233,5 +244,21 @@ public class XxlJobInfo {
 
 	public void setTriggerNextTime(long triggerNextTime) {
 		this.triggerNextTime = triggerNextTime;
+	}
+
+	public String getTriggerLastTargetTimeZone() {
+		return triggerLastTargetTimeZone;
+	}
+
+	public void setTriggerLastTargetTimeZone(String triggerLastTargetTimeZone) {
+		this.triggerLastTargetTimeZone = triggerLastTargetTimeZone;
+	}
+
+	public String getTriggerNextTargetTimeZone() {
+		return triggerNextTargetTimeZone;
+	}
+
+	public void setTriggerNextTargetTimeZone(String triggerNextTargetTimeZone) {
+		this.triggerNextTargetTimeZone = triggerNextTargetTimeZone;
 	}
 }
