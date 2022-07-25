@@ -165,6 +165,25 @@
                         </div>
                     </div>
 
+                    <div class="form-group schedule_target_timezone">
+                        <label for="firstname" class="col-sm-2 control-label">${I18n.schedule_target_timezone}<font color="red">*</font></label>
+                        <div class="col-sm-10">
+                            <input hidden name="defaultTimeZone" value="${defaultTimeZone}">
+                            <input hidden name="scheduleTargetTimeZone">
+                            <#list ScheduleTimeZoneEnum as item>
+                                <label style="margin-right: 10px">
+                                    <input type="checkbox" class="checkboxScheduleTargetTimeZone" value="${item.name}" <#if item.name == defaultTimeZone >checked</#if>>
+                                    ${item.title}
+                                </label>
+                            </#list>
+                            <br/>
+                            <label>
+                                <input type="checkbox" class="allCheckboxScheduleTargetTimeZone">
+                                ${I18n.system_all}
+                            </label>
+                        </div>
+                    </div>
+
                     <br>
                     <p style="margin: 0 0 10px;text-align: left;border-bottom: 1px solid #e5e5e5;color: gray;">${I18n.jobinfo_conf_job}</p>    <#-- 任务配置 -->
 
@@ -407,6 +426,25 @@ exit 0
                         <div class="schedule_conf schedule_conf_FIX_DELAY" style="display: none" >
                             <label for="lastname" class="col-sm-2 control-label">${I18n.schedule_type_fix_delay}<font color="red">*</font></label>
                             <div class="col-sm-4"><input type="text" class="form-control" name="schedule_conf_FIX_DELAY" placeholder="${I18n.system_please_input} （ Second ）" maxlength="10" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" ></div>
+                        </div>
+                    </div>
+
+                    <div class="form-group schedule_target_timezone">
+                        <label for="firstname" class="col-sm-2 control-label">${I18n.schedule_target_timezone}<font color="red">*</font></label>
+                        <div class="col-sm-10">
+                            <input hidden name="defaultTimeZone" value="${defaultTimeZone}">
+                            <input hidden name="scheduleTargetTimeZone">
+                            <#list ScheduleTimeZoneEnum as item>
+                                <label style="margin-right: 10px">
+                                    <input type="checkbox" class="checkboxScheduleTargetTimeZone" value="${item.name}">
+                                    ${item.title}
+                                </label>
+                            </#list>
+                            <br/>
+                            <label>
+                                <input type="checkbox" class="allCheckboxScheduleTargetTimeZone">
+                                ${I18n.system_all}
+                            </label>
                         </div>
                     </div>
 

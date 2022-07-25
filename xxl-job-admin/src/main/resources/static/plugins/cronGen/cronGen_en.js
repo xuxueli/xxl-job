@@ -1,5 +1,6 @@
 ﻿(function ($) {
     // var resultsName = "";
+    var scheduleTargetTimeZoneElement;
     var inputElement;
     var displayElement;
     $.fn.extend({
@@ -347,6 +348,7 @@
 
             inputElement = that;
             displayElement = $i;
+            scheduleTargetTimeZoneElement = $(this).parents("form").find($("input[name=scheduleTargetTimeZone]"));
 
             $b.popover({
                 html: true,
@@ -642,7 +644,8 @@
             url : base_url + "/jobinfo/nextTriggerTime",
             data : {
                 "scheduleType" : 'CRON',
-                "scheduleConf" : inputElement.val()
+                "scheduleConf" : inputElement.val(),
+                "scheduleTargetTimeZone": scheduleTargetTimeZoneElement.val()
             },
             dataType : "json",
             success : function(data){

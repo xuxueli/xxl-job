@@ -113,8 +113,22 @@ $(function() {
 					},
 					{ "data": 'jobGroup', "visible" : false},
 					{
+						"data": 'planTriggerTime',
+						"width":'10%',
+						"render": function ( data, type, row ) {
+							return data?(moment(data).valueOf() > 0?moment(data).format("YYYY-MM-DD HH:mm:ss"):I18n.system_empty):I18n.system_empty;
+						}
+					},
+					{
+						"data": 'planTargetTimeZone',
+						"width":'10%',
+						"render": function ( data, type, row ) {
+							return data?(data.length > 30 ?'<a class="logTips" href="javascript:;" >'+ I18n.system_show +'<span style="display:none;">'+ data +'</span></a>': data):I18n.system_empty;
+						}
+					},
+					{
 						"data": 'triggerTime',
-                        "width":'20%',
+                        "width":'10%',
 						"render": function ( data, type, row ) {
 							return data?moment(data).format("YYYY-MM-DD HH:mm:ss"):"";
 						}
@@ -143,7 +157,7 @@ $(function() {
 					},
 	                { 
 	                	"data": 'handleTime',
-                        "width":'20%',
+                        "width":'10%',
 	                	"render": function ( data, type, row ) {
 	                		return data?moment(data).format("YYYY-MM-DD HH:mm:ss"):"";
 	                	}

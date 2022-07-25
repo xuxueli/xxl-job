@@ -1,5 +1,5 @@
 #
-# XXL-JOB v2.3.1
+# XXL-JOB v2.3.1-multiple-timezone
 # Copyright (c) 2015-present, xuxueli.
 
 CREATE database if NOT EXISTS `xxl_job` default character set utf8mb4 collate utf8mb4_unicode_ci;
@@ -17,6 +17,7 @@ CREATE TABLE `xxl_job_info` (
   `alarm_email` varchar(255) DEFAULT NULL COMMENT '报警邮件',
   `schedule_type` varchar(50) NOT NULL DEFAULT 'NONE' COMMENT '调度类型',
   `schedule_conf` varchar(128) DEFAULT NULL COMMENT '调度配置，值含义取决于调度类型',
+  `schedule_target_timezone` varchar(512) DEFAULT NULL COMMENT '调度目标时区',
   `misfire_strategy` varchar(50) NOT NULL DEFAULT 'DO_NOTHING' COMMENT '调度过期策略',
   `executor_route_strategy` varchar(50) DEFAULT NULL COMMENT '执行器路由策略',
   `executor_handler` varchar(255) DEFAULT NULL COMMENT '执行器任务handler',
@@ -32,6 +33,8 @@ CREATE TABLE `xxl_job_info` (
   `trigger_status` tinyint(4) NOT NULL DEFAULT '0' COMMENT '调度状态：0-停止，1-运行',
   `trigger_last_time` bigint(13) NOT NULL DEFAULT '0' COMMENT '上次调度时间',
   `trigger_next_time` bigint(13) NOT NULL DEFAULT '0' COMMENT '下次调度时间',
+  `trigger_last_target_timezone` varchar(512) DEFAULT NULL COMMENT '上次调度目标时区，多个逗号分隔',
+  `trigger_next_target_timezone` varchar(512) DEFAULT NULL COMMENT '下次调度目标时区，多个逗号分隔',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -44,6 +47,8 @@ CREATE TABLE `xxl_job_log` (
   `executor_param` varchar(512) DEFAULT NULL COMMENT '执行器任务参数',
   `executor_sharding_param` varchar(20) DEFAULT NULL COMMENT '执行器任务分片参数，格式如 1/2',
   `executor_fail_retry_count` int(11) NOT NULL DEFAULT '0' COMMENT '失败重试次数',
+  `plan_trigger_time` datetime DEFAULT NULL COMMENT '计划调度时间',
+  `plan_target_timezone` varchar(512) DEFAULT NULL COMMENT '计划目标时区',
   `trigger_time` datetime DEFAULT NULL COMMENT '调度-时间',
   `trigger_code` int(11) NOT NULL COMMENT '调度-结果',
   `trigger_msg` text COMMENT '调度-日志',

@@ -192,7 +192,7 @@ public class TriggerCallbackThread {
                     -1,
                     null,
                     logFileName,
-                    -1,
+                    callbackParam.getPlanTriggerTime(), callbackParam.getPlanTargetTimeZone(), callbackParam.getLogDateTim(), -1,
                     -1));
             XxlJobHelper.log(logContent);
         }

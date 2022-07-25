@@ -1,6 +1,6 @@
 package com.xxl.job.admin.controller;
 
-import com.xxl.job.admin.core.cron.CronExpression;
+import com.xxl.job.admin.core.conf.XxlJobAdminConfig;
 import com.xxl.job.admin.core.exception.XxlJobException;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
@@ -29,7 +29,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.text.ParseException;
 import java.util.*;
 
 /**
@@ -54,6 +53,7 @@ public class JobInfoController {
 		model.addAttribute("GlueTypeEnum", GlueTypeEnum.values());								// Glue类型-字典
 		model.addAttribute("ExecutorBlockStrategyEnum", ExecutorBlockStrategyEnum.values());	    // 阻塞处理策略-字典
 		model.addAttribute("ScheduleTypeEnum", ScheduleTypeEnum.values());	    				// 调度类型
+		model.addAttribute("ScheduleTimeZoneEnum", XxlJobAdminConfig.getAdminConfig().getAllTimeZoneEnum());	 // 调度时区
 		model.addAttribute("MisfireStrategyEnum", MisfireStrategyEnum.values());	    			// 调度过期策略
 
 		// 执行器列表
@@ -67,6 +67,8 @@ public class JobInfoController {
 
 		model.addAttribute("JobGroupList", jobGroupList);
 		model.addAttribute("jobGroup", jobGroup);
+
+		model.addAttribute("defaultTimeZone", XxlJobAdminConfig.getAdminConfig().getDefaultTimeZone());
 
 		return "jobinfo/jobinfo.index";
 	}
@@ -146,17 +148,18 @@ public class JobInfoController {
 			executorParam = "";
 		}
 
-		JobTriggerPoolHelper.trigger(id, TriggerTypeEnum.MANUAL, -1, null, executorParam, addressList);
+		JobTriggerPoolHelper.trigger(id, TriggerTypeEnum.MANUAL, -1, null, executorParam, addressList, null, null);
 		return ReturnT.SUCCESS;
 	}
 
 	@RequestMapping("/nextTriggerTime")
 	@ResponseBody
-	public ReturnT<List<String>> nextTriggerTime(String scheduleType, String scheduleConf) {
+	public ReturnT<List<String>> nextTriggerTime(String scheduleType, String scheduleConf, String scheduleTargetTimeZone) {
 
 		XxlJobInfo paramXxlJobInfo = new XxlJobInfo();
 		paramXxlJobInfo.setScheduleType(scheduleType);
 		paramXxlJobInfo.setScheduleConf(scheduleConf);
+		paramXxlJobInfo.setScheduleTargetTimeZone(scheduleTargetTimeZone);
 
 		List<String> result = new ArrayList<>();
 		try {

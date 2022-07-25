@@ -11,13 +11,18 @@ public class HandleCallbackParam implements Serializable {
     private long logId;
     private long logDateTim;
 
+    private Long planTriggerTime;
+    private String planTargetTimeZone;
+
     private int handleCode;
     private String handleMsg;
 
     public HandleCallbackParam(){}
-    public HandleCallbackParam(long logId, long logDateTim, int handleCode, String handleMsg) {
+    public HandleCallbackParam(long logId, long logDateTim, Long planTriggerTime, String planTargetTimeZone, int handleCode, String handleMsg) {
         this.logId = logId;
         this.logDateTim = logDateTim;
+        this.planTriggerTime = planTriggerTime;
+        this.planTargetTimeZone = planTargetTimeZone;
         this.handleCode = handleCode;
         this.handleMsg = handleMsg;
     }
@@ -36,6 +41,14 @@ public class HandleCallbackParam implements Serializable {
 
     public void setLogDateTim(long logDateTim) {
         this.logDateTim = logDateTim;
+    }
+
+    public Long getPlanTriggerTime() {
+        return planTriggerTime;
+    }
+
+    public String getPlanTargetTimeZone() {
+        return planTargetTimeZone;
     }
 
     public int getHandleCode() {
@@ -59,6 +72,8 @@ public class HandleCallbackParam implements Serializable {
         return "HandleCallbackParam{" +
                 "logId=" + logId +
                 ", logDateTim=" + logDateTim +
+                ", planTriggerTime=" + planTriggerTime +
+                ", planTargetTimeZone=" + planTargetTimeZone +
                 ", handleCode=" + handleCode +
                 ", handleMsg='" + handleMsg + '\'' +
                 '}';

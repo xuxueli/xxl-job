@@ -31,6 +31,12 @@ public class XxlJobContext {
      */
     private final String jobLogFileName;
 
+    private final Long jobLogPlanTriggerTime;
+
+    private final String jobLogPlanTargetTimeZone;
+
+    private final Long jobLogTriggerTime;
+
     // ---------------------- for shard ----------------------
 
     /**
@@ -61,10 +67,13 @@ public class XxlJobContext {
     private String handleMsg;
 
 
-    public XxlJobContext(long jobId, String jobParam, String jobLogFileName, int shardIndex, int shardTotal) {
+    public XxlJobContext(long jobId, String jobParam, String jobLogFileName, Long jobLogPlanTriggerTime, String jobLogPlanTargetTimeZone, Long jobLogTriggerTime, int shardIndex, int shardTotal) {
         this.jobId = jobId;
         this.jobParam = jobParam;
         this.jobLogFileName = jobLogFileName;
+        this.jobLogPlanTriggerTime = jobLogPlanTriggerTime;
+        this.jobLogPlanTargetTimeZone = jobLogPlanTargetTimeZone;
+        this.jobLogTriggerTime = jobLogTriggerTime;
         this.shardIndex = shardIndex;
         this.shardTotal = shardTotal;
 
@@ -81,6 +90,18 @@ public class XxlJobContext {
 
     public String getJobLogFileName() {
         return jobLogFileName;
+    }
+
+    public Long getJobLogPlanTriggerTime() {
+        return jobLogPlanTriggerTime;
+    }
+
+    public String getJobLogPlanTargetTimeZone() {
+        return jobLogPlanTargetTimeZone;
+    }
+
+    public Long getJobLogTriggerTime() {
+        return jobLogTriggerTime;
     }
 
     public int getShardIndex() {

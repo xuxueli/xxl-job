@@ -20,7 +20,11 @@ public class XxlJobLog {
 	private String executorParam;
 	private String executorShardingParam;
 	private int executorFailRetryCount;
-	
+
+	// plan info
+	private Date planTriggerTime;
+	private String planTargetTimeZone;
+
 	// trigger info
 	private Date triggerTime;
 	private int triggerCode;
@@ -104,6 +108,22 @@ public class XxlJobLog {
 
 	public void setTriggerTime(Date triggerTime) {
 		this.triggerTime = triggerTime;
+	}
+
+	public Date getPlanTriggerTime() {
+		return planTriggerTime;
+	}
+
+	public void setPlanTriggerTime(Date planTriggerTime) {
+		this.planTriggerTime = planTriggerTime;
+	}
+
+	public String getPlanTargetTimeZone() {
+		return planTargetTimeZone;
+	}
+
+	public void setPlanTargetTimeZone(String planTargetTimeZone) {
+		this.planTargetTimeZone = planTargetTimeZone;
 	}
 
 	public int getTriggerCode() {

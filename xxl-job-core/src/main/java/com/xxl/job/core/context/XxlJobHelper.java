@@ -64,6 +64,49 @@ public class XxlJobHelper {
         return xxlJobContext.getJobLogFileName();
     }
 
+    /**
+     * current JobLogPlanTriggerTime
+     *
+     * @return
+     */
+    public static Long getJobLogPlanTriggerTime() {
+        XxlJobContext xxlJobContext = XxlJobContext.getXxlJobContext();
+        if (xxlJobContext == null) {
+            return null;
+        }
+
+        return xxlJobContext.getJobLogPlanTriggerTime();
+    }
+
+    /**
+     * current JobLogPlanTriggerTargetTimeZone
+     *
+     * @return
+     */
+    public static String getJobLogPlanTargetTimeZone() {
+        XxlJobContext xxlJobContext = XxlJobContext.getXxlJobContext();
+        if (xxlJobContext == null) {
+            return null;
+        }
+
+        return xxlJobContext.getJobLogPlanTargetTimeZone();
+    }
+
+
+    /**
+     * current JobLogTriggerTime
+     *
+     * @return
+     */
+    public static Long getJobLogTriggerTime() {
+        XxlJobContext xxlJobContext = XxlJobContext.getXxlJobContext();
+        if (xxlJobContext == null) {
+            return null;
+        }
+
+        return xxlJobContext.getJobLogTriggerTime();
+    }
+
     // ---------------------- for shard ----------------------
 
     /**

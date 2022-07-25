@@ -91,6 +91,8 @@
 										<#--<th name="executorAddress" >执行器地址</th>
 										<th name="glueType" >运行模式</th>
                                       	<th name="executorParam" >任务参数</th>-->
+                                        <th name="planTriggerTime" >${I18n.joblog_field_planTriggerTime}</th>
+                                        <th name="planTargetTimeZone" >${I18n.joblog_field_planTargetTimeZone}</th>
                                         <th name="triggerTime" >${I18n.joblog_field_triggerTime}</th>
                                         <th name="triggerCode" >${I18n.joblog_field_triggerCode}</th>
                                         <th name="triggerMsg" >${I18n.joblog_field_triggerMsg}</th>
