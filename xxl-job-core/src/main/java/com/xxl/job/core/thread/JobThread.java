@@ -123,6 +123,9 @@ public class JobThread extends Thread{
 							triggerParam.getJobId(),
 							triggerParam.getExecutorParams(),
 							logFileName,
+							triggerParam.getPlanTime(),
+							triggerParam.getPlanTargetTimeZone(),
+							triggerParam.getLogDateTime(),
 							triggerParam.getBroadcastIndex(),
 							triggerParam.getBroadcastTotal());
 
@@ -210,6 +213,8 @@ public class JobThread extends Thread{
                         TriggerCallbackThread.pushCallBack(new HandleCallbackParam(
                         		triggerParam.getLogId(),
 								triggerParam.getLogDateTime(),
+								triggerParam.getPlanTime(),
+								triggerParam.getPlanTargetTimeZone(),
 								XxlJobContext.getXxlJobContext().getHandleCode(),
 								XxlJobContext.getXxlJobContext().getHandleMsg() )
 						);
@@ -218,6 +223,8 @@ public class JobThread extends Thread{
                         TriggerCallbackThread.pushCallBack(new HandleCallbackParam(
                         		triggerParam.getLogId(),
 								triggerParam.getLogDateTime(),
+								triggerParam.getPlanTime(),
+								triggerParam.getPlanTargetTimeZone(),
 								XxlJobContext.HANDLE_CODE_FAIL,
 								stopReason + " [job running, killed]" )
 						);
@@ -234,6 +241,8 @@ public class JobThread extends Thread{
 				TriggerCallbackThread.pushCallBack(new HandleCallbackParam(
 						triggerParam.getLogId(),
 						triggerParam.getLogDateTime(),
+						triggerParam.getPlanTime(),
+						triggerParam.getPlanTargetTimeZone(),
 						XxlJobContext.HANDLE_CODE_FAIL,
 						stopReason + " [job not executed, in the job queue, killed.]")
 				);

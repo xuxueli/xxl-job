@@ -340,7 +340,8 @@ $(function() {
             url : base_url + "/jobinfo/nextTriggerTime",
             data : {
                 "scheduleType" : row.scheduleType,
-				"scheduleConf" : row.scheduleConf
+				"scheduleConf" : row.scheduleConf,
+				"scheduleTargetTimeZone": row.scheduleTargetTimeZone
             },
             dataType : "json",
             success : function(data){
@@ -381,6 +382,9 @@ $(function() {
 
 		// 》init scheduleType
 		$("#updateModal .form select[name=scheduleType]").change();
+
+		// init scheduleTargetTimeZone
+		$("#addModal .form .checkboxScheduleTargetTimeZone").change();
 
 		// 》init glueType
 		$("#updateModal .form select[name=glueType]").change();
@@ -495,6 +499,47 @@ $(function() {
 		$(this).parents("form").find(".schedule_conf").hide();
 		$(this).parents("form").find(".schedule_conf_" + scheduleType).show();
 
+		if(scheduleType === "CRON"){
+			$(this).parents("form").find(".schedule_target_timezone").show();
+		}else {
+			$(this).parents("form").find(".schedule_target_timezone").hide();
+		}
+	});
+
+	//scheduleTargetTimeZone change
+	$(".checkboxScheduleTargetTimeZone").change(function () {
+		var checked = $(this).is(':checked');
+		var value = $(this).val();
+
+		var scheduleTargetTimeZoneElem = $(this).parents("form").find("input[name='scheduleTargetTimeZone']");
+		var targetTimeZone = scheduleTargetTimeZoneElem.val();
+		var timeZoneArr = targetTimeZone ? targetTimeZone.split(",") : []
+		if(!checked){
+			timeZoneArr = timeZoneArr.filter(data => data !== value)
+		}else if(!timeZoneArr.includes(value)) {
+			timeZoneArr.push(value);
+		}
+		scheduleTargetTimeZoneElem.val(timeZoneArr.join());
+
+		$(this).parents("form").find(".allCheckboxScheduleTargetTimeZone").prop("checked", timeZoneArr.length === $(this).parents("form").find(".checkboxScheduleTargetTimeZone").length );
+	});
+
+	//allCheckboxScheduleTargetTimeZone change
+	$(".allCheckboxScheduleTargetTimeZone").change(function (){
+		var checked = $(this).is(':checked');
+		var scheduleTargetTimeZoneElem = $(this).parents("form").find("input[name='scheduleTargetTimeZone']");
+
+		if(checked){
+			var timeZone = []
+			$(this).parents("form").find(".checkboxScheduleTargetTimeZone").each(function (){
+				timeZone.push($(this).val())
+				$(this).prop("checked",true)
+			});
+			scheduleTargetTimeZoneElem.val(timeZone.join())
+		}else {
+			$(this).parents("form").find(".checkboxScheduleTargetTimeZone").prop("checked", false)
+			scheduleTargetTimeZoneElem.val("");
+		}
 	});
 
     // glueType change
@@ -556,6 +601,18 @@ $(function() {
 
 		// 》init scheduleType
 		$("#updateModal .form select[name=scheduleType]").change();
+
+		// fill scheduleTargetTimeZone
+		var defaultTimeZone = $("#updateModal .form input[name='defaultTimeZone']").val();
+		var targetTimeZone = row.scheduleTargetTimeZone || defaultTimeZone
+		var targetTimeZones = targetTimeZone.split(",");
+		var checkboxScheduleTargetTimeZoneElement = $("#updateModal .form .checkboxScheduleTargetTimeZone");
+		checkboxScheduleTargetTimeZoneElement.each(function (){
+			$(this).prop('checked', targetTimeZones.includes($(this).val()))
+		})
+
+		// init scheduleTargetTimeZone
+		checkboxScheduleTargetTimeZoneElement.change();
 
 		// fill job
 		$('#updateModal .form select[name=glueType] option[value='+ row.glueType +']').prop('selected', true);
@@ -711,6 +768,19 @@ $(function() {
 
 		// 》init scheduleType
 		$("#addModal .form select[name=scheduleType]").change();
+
+
+		// fill scheduleTargetTimeZone scheduleGlobal
+		var defaultTimeZone = $("#addModal .form input[name='defaultTimeZone']").val();
+		var targetTimeZone = row.scheduleTargetTimeZone || defaultTimeZone
+		var targetTimeZones = targetTimeZone.split(",");
+		var checkboxScheduleTargetTimeZoneElement = $("#addModal .form .checkboxScheduleTargetTimeZone");
+		checkboxScheduleTargetTimeZoneElement.each(function (){
+			$(this).prop('checked', targetTimeZones.includes($(this).val()))
+		})
+
+		// init scheduleTargetTimeZone
+		checkboxScheduleTargetTimeZoneElement.change();
 
 		// fill job
 		$('#addModal .form select[name=glueType] option[value='+ row.glueType +']').prop('selected', true);

@@ -11,7 +11,8 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import javax.sql.DataSource;
-import java.util.Arrays;
+import java.time.Instant;
+import java.util.*;
 
 /**
  * xxl-job config
@@ -67,6 +68,12 @@ public class XxlJobAdminConfig implements InitializingBean, DisposableBean {
     @Value("${xxl.job.logretentiondays}")
     private int logretentiondays;
 
+    @Value("#{'${xxl.job.timezone.offset}'.split(',')}")
+    private List<String> timeZoneOffsetList;
+
+    @Value("#{'${xxl.job.timezone.desc}'.split(',')}")
+    private List<String> timeZoneDescList;
+
     // dao, service
 
     @Resource
@@ -121,6 +128,30 @@ public class XxlJobAdminConfig implements InitializingBean, DisposableBean {
             return -1;  // Limit greater than or equal to 7, otherwise close
         }
         return logretentiondays;
+    }
+
+    public List<Map<String, Object>> getAllTimeZoneEnum() {
+        List<Map<String, Object>> res = new ArrayList<>();
+
+        for (int i = 0; i < timeZoneOffsetList.size(); i++) {
+            String timeZone = timeZoneOffsetList.get(i);
+            Map<String, Object> data = new HashMap<>();
+            if (i < timeZoneDescList.size()) {
+                data.put("title", timeZoneDescList.get(i));
+            } else {
+                data.put("title", timeZone);
+            }
+
+            data.put("name", timeZone);
+            data.put("ordinal", i);
+            res.add(data);
+        }
+
+        return res;
+    }
+
+    public String getDefaultTimeZone() {
+        return TimeZone.getDefault().toZoneId().getRules().getOffset(Instant.now()).getId();
     }
 
     public XxlJobLogDao getXxlJobLogDao() {

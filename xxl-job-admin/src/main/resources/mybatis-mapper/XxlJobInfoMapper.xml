@@ -17,6 +17,7 @@
 
 		<result column="schedule_type" property="scheduleType" />
 		<result column="schedule_conf" property="scheduleConf" />
+		<result column="schedule_target_timezone" property="scheduleTargetTimeZone" />
 		<result column="misfire_strategy" property="misfireStrategy" />
 
 		<result column="executor_route_strategy" property="executorRouteStrategy" />
@@ -36,6 +37,8 @@
 		<result column="trigger_status" property="triggerStatus" />
 		<result column="trigger_last_time" property="triggerLastTime" />
 		<result column="trigger_next_time" property="triggerNextTime" />
+		<result column="trigger_last_target_timezone" property="triggerLastTargetTimeZone" />
+		<result column="trigger_next_target_timezone" property="triggerNextTargetTimeZone" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -48,6 +51,7 @@
 		t.alarm_email,
 		t.schedule_type,
 		t.schedule_conf,
+		t.schedule_target_timezone,
 		t.misfire_strategy,
 		t.executor_route_strategy,
 		t.executor_handler,
@@ -62,7 +66,9 @@
 		t.child_jobid,
 		t.trigger_status,
 		t.trigger_last_time,
-		t.trigger_next_time
+		t.trigger_next_time,
+		t.trigger_last_target_timezone,
+		t.trigger_next_target_timezone
 	</sql>
 
 	<select id="pageList" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
@@ -121,6 +127,7 @@
 			alarm_email,
 			schedule_type,
 			schedule_conf,
+			schedule_target_timezone,
 			misfire_strategy,
             executor_route_strategy,
 			executor_handler,
@@ -135,7 +142,9 @@
 			child_jobid,
 			trigger_status,
 			trigger_last_time,
-			trigger_next_time
+			trigger_next_time,
+			trigger_last_target_timezone,
+			trigger_next_target_timezone
 		) VALUES (
 			#{jobGroup},
 			#{jobDesc},
@@ -145,6 +154,7 @@
 			#{alarmEmail},
 			#{scheduleType},
 			#{scheduleConf},
+			#{scheduleTargetTimeZone},
 			#{misfireStrategy},
 			#{executorRouteStrategy},
 			#{executorHandler},
@@ -159,7 +169,9 @@
 			#{childJobId},
 			#{triggerStatus},
 			#{triggerLastTime},
-			#{triggerNextTime}
+			#{triggerNextTime},
+			#{triggerLastTargetTimeZone},
+			#{triggerNextTargetTimeZone}
 		);
 		<!--<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
 			SELECT LAST_INSERT_ID()
@@ -183,6 +195,7 @@
 			alarm_email = #{alarmEmail},
 			schedule_type = #{scheduleType},
 			schedule_conf = #{scheduleConf},
+			schedule_target_timezone = #{scheduleTargetTimeZone},
 			misfire_strategy = #{misfireStrategy},
 			executor_route_strategy = #{executorRouteStrategy},
 			executor_handler = #{executorHandler},
@@ -197,7 +210,9 @@
 			child_jobid = #{childJobId},
 			trigger_status = #{triggerStatus},
 			trigger_last_time = #{triggerLastTime},
-			trigger_next_time = #{triggerNextTime}
+			trigger_next_time = #{triggerNextTime},
+			trigger_last_target_timezone = #{triggerLastTargetTimeZone},
+			trigger_next_target_timezone = #{triggerNextTargetTimeZone}
 		WHERE id = #{id}
 	</update>
 
@@ -233,6 +248,8 @@
 		SET
 			trigger_last_time = #{triggerLastTime},
 			trigger_next_time = #{triggerNextTime},
+			trigger_last_target_timezone = #{triggerLastTargetTimeZone},
+			trigger_next_target_timezone = #{triggerNextTargetTimeZone},
 			trigger_status = #{triggerStatus}
 		WHERE id = #{id}
 	</update>

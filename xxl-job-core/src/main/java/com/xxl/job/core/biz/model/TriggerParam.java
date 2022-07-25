@@ -18,6 +18,9 @@ public class TriggerParam implements Serializable{
     private long logId;
     private long logDateTime;
 
+    private Long planTime;
+    private String planTargetTimeZone;
+
     private String glueType;
     private String glueSource;
     private long glueUpdatetime;
@@ -82,6 +85,22 @@ public class TriggerParam implements Serializable{
         this.logDateTime = logDateTime;
     }
 
+    public Long getPlanTime() {
+        return planTime;
+    }
+
+    public void setPlanTime(Long planTime) {
+        this.planTime = planTime;
+    }
+
+    public String getPlanTargetTimeZone() {
+        return planTargetTimeZone;
+    }
+
+    public void setPlanTargetTimeZone(String planTargetTimeZone) {
+        this.planTargetTimeZone = planTargetTimeZone;
+    }
+
     public String getGlueType() {
         return glueType;
     }
@@ -133,6 +152,8 @@ public class TriggerParam implements Serializable{
                 ", executorTimeout=" + executorTimeout +
                 ", logId=" + logId +
                 ", logDateTime=" + logDateTime +
+                ", planTime=" + planTime +
+                ", planTargetTimeZone=" + planTargetTimeZone +
                 ", glueType='" + glueType + '\'' +
                 ", glueSource='" + glueSource + '\'' +
                 ", glueUpdatetime=" + glueUpdatetime +

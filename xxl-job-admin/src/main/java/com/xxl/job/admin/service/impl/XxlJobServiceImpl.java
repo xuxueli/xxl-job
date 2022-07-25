@@ -250,7 +250,9 @@ public class XxlJobServiceImpl implements XxlJobService {
 
 		// next trigger time (5s后生效，避开预读周期)
 		long nextTriggerTime = exists_jobInfo.getTriggerNextTime();
-		boolean scheduleDataNotChanged = jobInfo.getScheduleType().equals(exists_jobInfo.getScheduleType()) && jobInfo.getScheduleConf().equals(exists_jobInfo.getScheduleConf());
+		String nextTriggerTargetTimeZone = exists_jobInfo.getTriggerNextTargetTimeZone();
+		boolean scheduleTargetTimeZoneEqual = exists_jobInfo.getScheduleTargetTimeZone() != null && jobInfo.getScheduleTargetTimeZone() != null && exists_jobInfo.getScheduleTargetTimeZone().equals(jobInfo.getScheduleTargetTimeZone());
+		boolean scheduleDataNotChanged = jobInfo.getScheduleType().equals(exists_jobInfo.getScheduleType()) && jobInfo.getScheduleConf().equals(exists_jobInfo.getScheduleConf()) && scheduleTargetTimeZoneEqual;
 		if (exists_jobInfo.getTriggerStatus() == 1 && !scheduleDataNotChanged) {
 			try {
 				Date nextValidTime = JobScheduleHelper.generateNextValidTime(jobInfo, new Date(System.currentTimeMillis() + JobScheduleHelper.PRE_READ_MS));
@@ -258,6 +260,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 					return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("schedule_type")+I18nUtil.getString("system_unvalid")) );
 				}
 				nextTriggerTime = nextValidTime.getTime();
+				nextTriggerTargetTimeZone = JobScheduleHelper.generateNextValidTargetTimeZone(jobInfo, new Date(System.currentTimeMillis() + JobScheduleHelper.PRE_READ_MS));
 			} catch (Exception e) {
 				logger.error(e.getMessage(), e);
 				return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("schedule_type")+I18nUtil.getString("system_unvalid")) );
@@ -270,6 +273,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 		exists_jobInfo.setAlarmEmail(jobInfo.getAlarmEmail());
 		exists_jobInfo.setScheduleType(jobInfo.getScheduleType());
 		exists_jobInfo.setScheduleConf(jobInfo.getScheduleConf());
+		exists_jobInfo.setScheduleTargetTimeZone(jobInfo.getScheduleTargetTimeZone());
 		exists_jobInfo.setMisfireStrategy(jobInfo.getMisfireStrategy());
 		exists_jobInfo.setExecutorRouteStrategy(jobInfo.getExecutorRouteStrategy());
 		exists_jobInfo.setExecutorHandler(jobInfo.getExecutorHandler());
@@ -279,6 +283,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 		exists_jobInfo.setExecutorFailRetryCount(jobInfo.getExecutorFailRetryCount());
 		exists_jobInfo.setChildJobId(jobInfo.getChildJobId());
 		exists_jobInfo.setTriggerNextTime(nextTriggerTime);
+		exists_jobInfo.setTriggerNextTargetTimeZone(nextTriggerTargetTimeZone);
 
 		exists_jobInfo.setUpdateTime(new Date());
         xxlJobInfoDao.update(exists_jobInfo);
@@ -312,12 +317,14 @@ public class XxlJobServiceImpl implements XxlJobService {
 
 		// next trigger time (5s后生效，避开预读周期)
 		long nextTriggerTime = 0;
+		String nextTriggerTimeZone;
 		try {
 			Date nextValidTime = JobScheduleHelper.generateNextValidTime(xxlJobInfo, new Date(System.currentTimeMillis() + JobScheduleHelper.PRE_READ_MS));
 			if (nextValidTime == null) {
 				return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("schedule_type")+I18nUtil.getString("system_unvalid")) );
 			}
 			nextTriggerTime = nextValidTime.getTime();
+			nextTriggerTimeZone = JobScheduleHelper.generateNextValidTargetTimeZone(xxlJobInfo, new Date(System.currentTimeMillis() + JobScheduleHelper.PRE_READ_MS));
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("schedule_type")+I18nUtil.getString("system_unvalid")) );
@@ -326,6 +333,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 		xxlJobInfo.setTriggerStatus(1);
 		xxlJobInfo.setTriggerLastTime(0);
 		xxlJobInfo.setTriggerNextTime(nextTriggerTime);
+		xxlJobInfo.setTriggerNextTargetTimeZone(nextTriggerTimeZone);
 
 		xxlJobInfo.setUpdateTime(new Date());
 		xxlJobInfoDao.update(xxlJobInfo);
@@ -339,6 +347,8 @@ public class XxlJobServiceImpl implements XxlJobService {
 		xxlJobInfo.setTriggerStatus(0);
 		xxlJobInfo.setTriggerLastTime(0);
 		xxlJobInfo.setTriggerNextTime(0);
+		xxlJobInfo.setTriggerLastTargetTimeZone(null);
+		xxlJobInfo.setTriggerNextTargetTimeZone(null);
 
 		xxlJobInfo.setUpdateTime(new Date());
 		xxlJobInfoDao.update(xxlJobInfo);

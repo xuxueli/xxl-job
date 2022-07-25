@@ -14,7 +14,10 @@
 	    <result column="executor_param" property="executorParam" />
 		<result column="executor_sharding_param" property="executorShardingParam" />
 		<result column="executor_fail_retry_count" property="executorFailRetryCount" />
-	    
+
+		<result column="plan_trigger_time" property="planTriggerTime" />
+		<result column="plan_target_timezone" property="planTargetTimeZone" />
+
 	    <result column="trigger_time" property="triggerTime" />
 	    <result column="trigger_code" property="triggerCode" />
 	    <result column="trigger_msg" property="triggerMsg" />
@@ -35,6 +38,8 @@
 		t.executor_param,
 		t.executor_sharding_param,
 		t.executor_fail_retry_count,
+		t.plan_trigger_time,
+		t.plan_target_timezone,
 		t.trigger_time,
 		t.trigger_code,
 		t.trigger_msg,
@@ -121,12 +126,16 @@
 		INSERT INTO xxl_job_log (
 			`job_group`,
 			`job_id`,
+			`plan_trigger_time`,
+			`plan_target_timezone`,
 			`trigger_time`,
 			`trigger_code`,
 			`handle_code`
 		) VALUES (
 			#{jobGroup},
 			#{jobId},
+			#{planTriggerTime},
+			#{planTargetTimeZone},
 			#{triggerTime},
 			#{triggerCode},
 			#{handleCode}
@@ -139,6 +148,8 @@
 	<update id="updateTriggerInfo" >
 		UPDATE xxl_job_log
 		SET
+			`plan_trigger_time`= #{planTriggerTime},
+			`plan_target_timezone`= #{planTargetTimeZone},
 			`trigger_time`= #{triggerTime},
 			`trigger_code`= #{triggerCode},
 			`trigger_msg`= #{triggerMsg},
@@ -152,8 +163,8 @@
 
 	<update id="updateHandleInfo">
 		UPDATE xxl_job_log
-		SET 
-			`handle_time`= #{handleTime}, 
+		SET
+			`handle_time`= #{handleTime},
 			`handle_code`= #{handleCode},
 			`handle_msg`= #{handleMsg}
 		WHERE `id`= #{id}
