@@ -21,7 +21,7 @@ import java.util.concurrent.*;
  */
 public class JobCompleteHelper {
 	private static Logger logger = LoggerFactory.getLogger(JobCompleteHelper.class);
-	
+
 	private static JobCompleteHelper instance = new JobCompleteHelper();
 	public static JobCompleteHelper getInstance(){
 		return instance;
@@ -175,6 +175,9 @@ public class JobCompleteHelper {
 		log.setHandleCode(handleCallbackParam.getHandleCode());
 		log.setHandleMsg(handleMsg.toString());
 		XxlJobCompleter.updateHandleInfoAndFinish(log);
+
+		// Handle the fix delay
+		JobScheduleHelper.generateFixDelayNextValidTime(log.getJobId(), log.getHandleTime());
 
 		return ReturnT.SUCCESS;
 	}
