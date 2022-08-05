@@ -278,11 +278,8 @@ public class JobScheduleHelper {
             jobInfo.setTriggerLastTime(jobInfo.getTriggerNextTime());
             jobInfo.setTriggerNextTime(nextValidTime.getTime());
         } else {
-            jobInfo.setTriggerStatus(0);
             jobInfo.setTriggerLastTime(0);
             jobInfo.setTriggerNextTime(0);
-            logger.warn(">>>>>>>>>>> xxl-job, refreshNextValidTime fail for job: jobId={}, scheduleType={}, scheduleConf={}",
-                    jobInfo.getId(), jobInfo.getScheduleType(), jobInfo.getScheduleConf());
             // Fix delay next trigger time is on the way, can not disable trigger status.
             if (ScheduleTypeEnum.FIX_DELAY != scheduleTypeEnum) {
                 jobInfo.setTriggerStatus(0);
