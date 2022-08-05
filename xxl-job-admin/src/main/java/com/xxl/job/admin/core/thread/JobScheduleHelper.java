@@ -286,7 +286,7 @@ public class JobScheduleHelper {
                 logger.warn(">>>>>>>>>>> xxl-job, refreshNextValidTime fail for job: jobId={}, scheduleType={}, scheduleConf={}",
                         jobInfo.getId(), jobInfo.getScheduleType(), jobInfo.getScheduleConf());
             }else {
-                // For the sake of misfire all them time.
+                // For the sake of misfire all the time.
                 // Set the trigger next time: 9999-12-31 23:59:59
                 jobInfo.setTriggerNextTime(253402271939000L);
             }
