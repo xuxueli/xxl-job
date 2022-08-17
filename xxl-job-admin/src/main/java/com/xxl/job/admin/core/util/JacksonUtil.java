@@ -12,10 +12,10 @@ import java.io.IOException;
 
 /**
  * Jackson util
- * 
+ *
  * 1、obj need private and set/get；
  * 2、do not support inner class；
- * 
+ *
  * @author xuxueli 2015-9-25 18:02:56
  */
 public class JacksonUtil {
@@ -28,7 +28,7 @@ public class JacksonUtil {
 
     /**
      * bean、array、List、Map --> json
-     * 
+     *
      * @param obj
      * @return json string
      * @throws Exception
@@ -48,7 +48,7 @@ public class JacksonUtil {
 
     /**
      * string --> bean、Map、List(array)
-     * 
+     *
      * @param jsonStr
      * @param clazz
      * @return obj
@@ -61,7 +61,7 @@ public class JacksonUtil {
 			logger.error(e.getMessage(), e);
 		} catch (JsonMappingException e) {
 			logger.error(e.getMessage(), e);
-		} catch (IOException e) {
+		} catch (IOException | IllegalArgumentException e) {
 			logger.error(e.getMessage(), e);
 		}
     	return null;
