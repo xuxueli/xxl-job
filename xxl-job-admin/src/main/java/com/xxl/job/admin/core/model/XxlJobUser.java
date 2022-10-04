@@ -1,16 +1,40 @@
 package com.xxl.job.admin.core.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Index;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.Comment;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.util.StringUtils;
 
 /**
  * @author xuxueli 2019-05-04 16:43:12
  */
+@Entity
+@Table(name = "xxl_job_user", indexes = { @Index(name = "i_username", columnList = "username") })
 public class XxlJobUser {
 	
+	@Id
+	@GeneratedValue(generator = "generator")
+	@GenericGenerator(name = "generator", strategy = "native", parameters = {
+			@org.hibernate.annotations.Parameter(name = "sequence_name", value = "s_xxl_job_user") })
+	@Column(name = "id", nullable = false, unique = true)
 	private int id;
+	@Column(name="username", length = 50, nullable = false)
+	@Comment("账号")
 	private String username;		// 账号
+	@Column(name="password", length = 50, nullable = false)
+	@Comment("密码")
 	private String password;		// 密码
+	@Column(name="role", nullable = false)
+	@Comment("角色：0-普通用户、1-管理员")
 	private int role;				// 角色：0-普通用户、1-管理员
+	@Column(name="permission", length = 255)
+	@Comment("权限：执行器ID列表，多个逗号分割")
 	private String permission;	// 权限：执行器ID列表，多个逗号分割
 
 	public int getId() {

@@ -47,7 +47,11 @@ public class JobCodeController {
 
 		// Glue类型-字典
 		model.addAttribute("GlueTypeEnum", GlueTypeEnum.values());
-
+		
+		// 增加判断，解决二次编辑时前端异常的问题（部分数据库会将0长字符串值为null）
+		if (jobInfo.getGlueSource() == null) {
+			jobInfo.setGlueSource("");
+		}
 		model.addAttribute("jobInfo", jobInfo);
 		model.addAttribute("jobLogGlues", jobLogGlues);
 		return "jobcode/jobcode.index";
