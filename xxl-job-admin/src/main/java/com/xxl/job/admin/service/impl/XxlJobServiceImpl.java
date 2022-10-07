@@ -3,6 +3,7 @@ package com.xxl.job.admin.service.impl;
 import com.xxl.job.admin.core.cron.CronExpression;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
+import com.xxl.job.admin.core.model.XxlJobInfoImport;
 import com.xxl.job.admin.core.model.XxlJobLogReport;
 import com.xxl.job.admin.core.route.ExecutorRouteStrategyEnum;
 import com.xxl.job.admin.core.scheduler.MisfireStrategyEnum;
@@ -15,13 +16,17 @@ import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
 import com.xxl.job.core.glue.GlueTypeEnum;
 import com.xxl.job.core.util.DateUtil;
+import com.xxl.job.core.util.GsonTool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * core job action for xxl-job
@@ -41,14 +46,14 @@ public class XxlJobServiceImpl implements XxlJobService {
 	private XxlJobLogGlueDao xxlJobLogGlueDao;
 	@Resource
 	private XxlJobLogReportDao xxlJobLogReportDao;
-	
+
 	@Override
 	public Map<String, Object> pageList(int start, int length, int jobGroup, int triggerStatus, String jobDesc, String executorHandler, String author) {
 
 		// page list
 		List<XxlJobInfo> list = xxlJobInfoDao.pageList(start, length, jobGroup, triggerStatus, jobDesc, executorHandler, author);
 		int list_count = xxlJobInfoDao.pageListCount(start, length, jobGroup, triggerStatus, jobDesc, executorHandler, author);
-		
+
 		// package result
 		Map<String, Object> maps = new HashMap<String, Object>();
 	    maps.put("recordsTotal", list_count);		// 总记录数
@@ -429,6 +434,83 @@ public class XxlJobServiceImpl implements XxlJobService {
 		result.put("triggerCountFailTotal", triggerCountFailTotal);
 
 		return new ReturnT<Map<String, Object>>(result);
+	}
+
+	@Override
+	public Map<String, Object> export(int start, int length, int jobGroup, int triggerStatus, String jobDesc, String executorHandler, String author) {
+		Map<String, Object> exportJob = new HashMap<>(16);
+		int total = xxlJobInfoDao.pageListCount(start, length, jobGroup, triggerStatus, jobDesc, executorHandler, author);
+		if (total <= 0) {
+			return exportJob;
+		}
+		List<XxlJobInfo> exportJobList = new ArrayList<>(total);
+		int pageCount = total % length == 0 ? total / length : total / length + 1;
+		for (int i = 0; i < pageCount; i++) {
+			start = i == 0 ? 0 : length * i + 1;
+			List<XxlJobInfo> xxlJobInfos = xxlJobInfoDao.pageList(start, length, jobGroup, triggerStatus, jobDesc, executorHandler, author);
+			exportJobList.addAll(xxlJobInfos);
+		}
+		Set<Integer> jobGroupIds = exportJobList.stream().map(XxlJobInfo::getJobGroup).collect(Collectors.toSet());
+		List<XxlJobGroup> jobGroups = xxlJobGroupDao.loadByIds(jobGroupIds);
+		exportJob.put("jobGroups", jobGroups);
+		exportJob.put("jobInfos", exportJobList);
+		return exportJob;
+	}
+
+	@Override
+	public ReturnT<String> jobImport(MultipartFile file, String importStrategy) {
+		String filename = file.getOriginalFilename();
+		if (filename == null || !filename.endsWith(".json")) {
+			return new ReturnT<>(ReturnT.FAIL_CODE, I18nUtil.getString("job_info_import_valid"));
+		}
+		String context = "{}";
+		try {
+			context = new String(file.getBytes());
+		} catch (IOException e) {
+			logger.error(e.getMessage(), e);
+		}
+		XxlJobInfoImport xxlJobInfoImport = GsonTool.fromJson(context, XxlJobInfoImport.class);
+		List<XxlJobGroup> jobGroups = xxlJobInfoImport.getJobGroups();
+		List<XxlJobInfo> jobInfos = xxlJobInfoImport.getJobInfos();
+		if (jobGroups == null || jobGroups.isEmpty()) {
+			return new ReturnT<>(ReturnT.FAIL_CODE, "jobGroups" + I18nUtil.getString("system_not_found"));
+		}
+		if (jobInfos == null || jobInfos.isEmpty()) {
+			return new ReturnT<>(ReturnT.FAIL_CODE, "jobInfos" + I18nUtil.getString("system_not_found"));
+		}
+
+		if ("overwrite".equals(importStrategy)) {
+			xxlJobGroupDao.removeAll();
+			for (XxlJobGroup jobGroup : jobGroups) {
+				xxlJobGroupDao.saveWithId(jobGroup);
+			}
+			xxlJobInfoDao.deleteAll();
+			for (XxlJobInfo jobInfo : jobInfos) {
+				xxlJobInfoDao.saveWithId(jobInfo);
+			}
+		} else {
+			for (XxlJobGroup jobGroup : jobGroups) {
+				jobGroup.setUpdateTime(new Date());
+				XxlJobGroup group = xxlJobGroupDao.load(jobGroup.getId());
+				if (group == null) {
+					xxlJobGroupDao.save(jobGroup);
+				} else {
+					xxlJobGroupDao.update(jobGroup);
+				}
+			}
+			for (XxlJobInfo jobInfo : jobInfos) {
+				jobInfo.setUpdateTime(new Date());
+				jobInfo.setGlueUpdatetime(new Date());
+				XxlJobInfo xxlJobInfo = xxlJobInfoDao.loadById(jobInfo.getId());
+				if (xxlJobInfo == null) {
+					jobInfo.setAddTime(new Date());
+					xxlJobInfoDao.save(jobInfo);
+				} else {
+					xxlJobInfoDao.update(jobInfo);
+				}
+			}
+		}
+		return ReturnT.SUCCESS;
 	}
 
 }

@@ -1,6 +1,5 @@
 package com.xxl.job.admin.controller;
 
-import com.xxl.job.admin.core.cron.CronExpression;
 import com.xxl.job.admin.core.exception.XxlJobException;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
@@ -19,6 +18,8 @@ import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
 import com.xxl.job.core.glue.GlueTypeEnum;
 import com.xxl.job.core.util.DateUtil;
+import com.xxl.job.core.util.GsonTool;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -26,11 +27,20 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
-import java.text.ParseException;
-import java.util.*;
+import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * index controller
@@ -45,7 +55,7 @@ public class JobInfoController {
 	private XxlJobGroupDao xxlJobGroupDao;
 	@Resource
 	private XxlJobService xxlJobService;
-	
+
 	@RequestMapping
 	public String index(HttpServletRequest request, Model model, @RequestParam(required = false, defaultValue = "-1") int jobGroup) {
 
@@ -97,46 +107,78 @@ public class JobInfoController {
 			throw new RuntimeException(I18nUtil.getString("system_permission_limit") + "[username="+ loginUser.getUsername() +"]");
 		}
 	}
-	
+
 	@RequestMapping("/pageList")
 	@ResponseBody
-	public Map<String, Object> pageList(@RequestParam(required = false, defaultValue = "0") int start,  
+	public Map<String, Object> pageList(@RequestParam(required = false, defaultValue = "0") int start,
 			@RequestParam(required = false, defaultValue = "10") int length,
 			int jobGroup, int triggerStatus, String jobDesc, String executorHandler, String author) {
-		
+
 		return xxlJobService.pageList(start, length, jobGroup, triggerStatus, jobDesc, executorHandler, author);
 	}
-	
+
+	@RequestMapping("/export")
+	@ResponseBody
+	public void export(HttpServletResponse response, @RequestParam(required = false, defaultValue = "0") int start,
+					   @RequestParam(required = false, defaultValue = "100") int length,
+					   int jobGroup, int triggerStatus, String jobDesc, String executorHandler, String author) {
+
+		Map<String, Object> export = xxlJobService.export(start, length, jobGroup, triggerStatus, jobDesc, executorHandler, author);
+		String exportJson = GsonTool.toJson(export);
+		try(ServletOutputStream outputStream = response.getOutputStream()) {
+			response.setCharacterEncoding("utf-8");
+			response.setHeader("Content-disposition", "attachment;filename=jobInfos.json");
+			IOUtils.copyLarge(new ByteArrayInputStream(exportJson.getBytes(StandardCharsets.UTF_8)), outputStream);
+		} catch (IOException e) {
+			// reset response
+			response.reset();
+			response.setContentType("application/json");
+			response.setCharacterEncoding("utf-8");
+			ReturnT<String> returnT = new ReturnT<>(ReturnT.FAIL_CODE, (I18nUtil.getString("system_api_error")));
+			try {
+				response.getWriter().println(GsonTool.toJson(returnT));
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
+		}
+	}
+
+	@RequestMapping("/import")
+	@ResponseBody
+	public ReturnT<String> jobImport(MultipartFile file, String importStrategy) {
+		return xxlJobService.jobImport(file, importStrategy);
+	}
+
 	@RequestMapping("/add")
 	@ResponseBody
 	public ReturnT<String> add(XxlJobInfo jobInfo) {
 		return xxlJobService.add(jobInfo);
 	}
-	
+
 	@RequestMapping("/update")
 	@ResponseBody
 	public ReturnT<String> update(XxlJobInfo jobInfo) {
 		return xxlJobService.update(jobInfo);
 	}
-	
+
 	@RequestMapping("/remove")
 	@ResponseBody
 	public ReturnT<String> remove(int id) {
 		return xxlJobService.remove(id);
 	}
-	
+
 	@RequestMapping("/stop")
 	@ResponseBody
 	public ReturnT<String> pause(int id) {
 		return xxlJobService.stop(id);
 	}
-	
+
 	@RequestMapping("/start")
 	@ResponseBody
 	public ReturnT<String> start(int id) {
 		return xxlJobService.start(id);
 	}
-	
+
 	@RequestMapping("/trigger")
 	@ResponseBody
 	//@PermissionLimit(limit = false)
@@ -176,5 +218,5 @@ public class JobInfoController {
 		return new ReturnT<List<String>>(result);
 
 	}
-	
+
 }
