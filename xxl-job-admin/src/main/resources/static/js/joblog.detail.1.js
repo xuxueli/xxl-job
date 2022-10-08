@@ -25,7 +25,7 @@ $(function() {
             async: false,   // sync, make log ordered
             url : base_url + '/joblog/logDetailCat',
             data : {
-                "executorAddress":executorAddress,
+                "jobGroupId": jobGroupId,
                 "triggerTime":triggerTime,
                 "logId":logId,
                 "fromLineNum":fromLineNum
