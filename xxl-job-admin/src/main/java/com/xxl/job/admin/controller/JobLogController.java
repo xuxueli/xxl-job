@@ -20,16 +20,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * index controller
@@ -139,23 +143,75 @@ public class JobLogController {
 	@ResponseBody
 	public ReturnT<LogResult> logDetailCat(String executorAddress, long triggerTime, long logId, int fromLineNum){
 		try {
-			ExecutorBiz executorBiz = XxlJobScheduler.getExecutorBiz(executorAddress);
-			ReturnT<LogResult> logResult = executorBiz.log(new LogParam(triggerTime, logId, fromLineNum));
-
-			// is end
-            if (logResult.getContent()!=null && logResult.getContent().getFromLineNum() > logResult.getContent().getToLineNum()) {
-                XxlJobLog jobLog = xxlJobLogDao.load(logId);
-                if (jobLog.getHandleCode() > 0) {
-                    logResult.getContent().setEnd(true);
+            ReturnT<LogResult> logResult = catLog(executorAddress, triggerTime, logId, fromLineNum);
+            if (logResult.getCode() != ReturnT.SUCCESS_CODE) {
+                logger.warn("使用原始执行器地址[ip={}],获取日志[logId={}]失败.", executorAddress, logId);
+                ReturnT<LogResult> result = catLogUseExecutorGroup(triggerTime, logId, fromLineNum);
+                if (result != null && result.getCode() == ReturnT.SUCCESS_CODE) {
+                    return result;
                 }
             }
-
-			return logResult;
-		} catch (Exception e) {
+            return logResult;
+        } catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			return new ReturnT<LogResult>(ReturnT.FAIL_CODE, e.getMessage());
 		}
 	}
+
+    /**
+     * 通过 executorAddress 原执行器地址查询不到日志文件.则扫描所有执行器组中的执行器ip.尝试获取log.
+     *
+     * @param triggerTime 日志触发时间
+     * @param logId       日志id
+     * @param fromLineNum 从第几行开始查询日志
+     * @return
+     */
+    private ReturnT<LogResult> catLogUseExecutorGroup(long triggerTime, long logId, int fromLineNum) {
+        List<String> addressList = xxlJobGroupDao.pageList(0, 100, null, null)
+                                                 .stream()
+                                                 .filter(jobGroup -> StringUtils.hasText(jobGroup.getAddressList()))
+                                                 .flatMap(jobGroup -> Arrays.stream(jobGroup.getAddressList().split(",")))
+                                                 .collect(Collectors.toList());
+        for (String executorAddress : addressList) {
+            try {
+                ReturnT<LogResult> result = catLog(executorAddress, triggerTime, logId, fromLineNum);
+                if (result.getCode() == ReturnT.SUCCESS_CODE) {
+                    if (logger.isDebugEnabled()) {
+                        logger.debug("读取日志成功.logId={},执行器ip={}", logId, executorAddress);
+                    }
+                    return result;
+                }
+            } catch (Exception exception) {
+                logger.warn("扫描执行器组尝试获取日志-从执行器[ip={}]中,获取不到日志logId={}.", executorAddress, logId, exception);
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 去指定的执行器上,读取日志
+     *
+     * @param executorAddress 执行器ip地址   格式:  http://127.0.0.1:8080/
+     * @param triggerTime     执行时间
+     * @param logId           日志logid
+     * @param fromLineNum     从第几行开始查询日志
+     * @return
+     * @throws Exception
+     */
+    private ReturnT<LogResult> catLog(String executorAddress, long triggerTime, long logId, int fromLineNum) throws Exception {
+        ExecutorBiz executorBiz = XxlJobScheduler.getExecutorBiz(executorAddress);
+        ReturnT<LogResult> logResult = executorBiz.log(new LogParam(triggerTime, logId, fromLineNum));
+
+        // is end
+        if (logResult.getContent()!=null && logResult.getContent().getFromLineNum() > logResult.getContent().getToLineNum()) {
+            XxlJobLog jobLog = xxlJobLogDao.load(logId);
+            if (jobLog.getHandleCode() > 0) {
+                logResult.getContent().setEnd(true);
+            }
+        }
+
+        return logResult;
+    }
 
 	@RequestMapping("/logKill")
 	@ResponseBody
