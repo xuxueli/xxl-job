@@ -50,7 +50,7 @@ public class SampleXxlJob {
      * 2、分片广播任务
      */
     @XxlJob("shardingJobHandler")
-    public void shardingJobHandler() throws Exception {
+    public void shardingJobHandler() {
 
         // 分片参数
         int shardIndex = XxlJobHelper.getShardIndex();
