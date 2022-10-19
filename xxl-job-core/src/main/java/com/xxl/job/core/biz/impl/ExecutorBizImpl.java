@@ -22,6 +22,12 @@ import java.util.Date;
 public class ExecutorBizImpl implements ExecutorBiz {
     private static Logger logger = LoggerFactory.getLogger(ExecutorBizImpl.class);
 
+    private XxlJobExecutor xxlJobExecutor;
+
+    public ExecutorBizImpl(XxlJobExecutor xxlJobExecutor) {
+        this.xxlJobExecutor = xxlJobExecutor;
+    }
+
     @Override
     public ReturnT<String> beat() {
         return ReturnT.SUCCESS;
@@ -32,7 +38,7 @@ public class ExecutorBizImpl implements ExecutorBiz {
 
         // isRunningOrHasQueue
         boolean isRunningOrHasQueue = false;
-        JobThread jobThread = XxlJobExecutor.loadJobThread(idleBeatParam.getJobId());
+        JobThread jobThread = xxlJobExecutor.loadJobThread(idleBeatParam.getJobId());
         if (jobThread != null && jobThread.isRunningOrHasQueue()) {
             isRunningOrHasQueue = true;
         }
@@ -46,7 +52,7 @@ public class ExecutorBizImpl implements ExecutorBiz {
     @Override
     public ReturnT<String> run(TriggerParam triggerParam) {
         // load old：jobHandler + jobThread
-        JobThread jobThread = XxlJobExecutor.loadJobThread(triggerParam.getJobId());
+        JobThread jobThread = xxlJobExecutor.loadJobThread(triggerParam.getJobId());
         IJobHandler jobHandler = jobThread!=null?jobThread.getHandler():null;
         String removeOldReason = null;
 
@@ -140,7 +146,7 @@ public class ExecutorBizImpl implements ExecutorBiz {
 
         // replace thread (new or exists invalid)
         if (jobThread == null) {
-            jobThread = XxlJobExecutor.registJobThread(triggerParam.getJobId(), jobHandler, removeOldReason);
+            jobThread = xxlJobExecutor.registJobThread(triggerParam.getJobId(), jobHandler, removeOldReason);
         }
 
         // push data to queue
@@ -151,9 +157,9 @@ public class ExecutorBizImpl implements ExecutorBiz {
     @Override
     public ReturnT<String> kill(KillParam killParam) {
         // kill handlerThread, and create new one
-        JobThread jobThread = XxlJobExecutor.loadJobThread(killParam.getJobId());
+        JobThread jobThread = xxlJobExecutor.loadJobThread(killParam.getJobId());
         if (jobThread != null) {
-            XxlJobExecutor.removeJobThread(killParam.getJobId(), "scheduling center kill job.");
+            xxlJobExecutor.removeJobThread(killParam.getJobId(), "scheduling center kill job.");
             return ReturnT.SUCCESS;
         }
 
