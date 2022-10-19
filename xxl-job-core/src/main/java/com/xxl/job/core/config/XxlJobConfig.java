@@ -9,8 +9,6 @@ import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.SmartInitializingSingleton;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
@@ -30,8 +28,6 @@ import java.util.Map;
  * @author xuxueli 2017-04-28
  */
 @Configuration
-// @PropertySource("classpath:application.properties")
-// @EnableAutoConfiguration
 public class XxlJobConfig  implements SmartInitializingSingleton, ApplicationContextAware, DisposableBean, InitializingBean {
     private Logger logger = LoggerFactory.getLogger(XxlJobConfig.class);
 

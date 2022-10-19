@@ -43,14 +43,6 @@
 			<scope>provided</scope>
 		</dependency>
 
-		<!-- spring-boot-autoconfigure -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-autoconfigure</artifactId>
-			<version>2.7.2</version>
-			<scope>compile</scope>
-		</dependency>
-
 		<!-- ********************** base ********************** -->
 		<!-- slf4j -->
 		<dependency>
