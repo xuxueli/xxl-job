@@ -1,11 +1,14 @@
 package com.xxl.job.admin.controller;
 
+import com.xxl.job.admin.core.exception.XxlJobException;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobRegistry;
+import com.xxl.job.admin.core.model.XxlJobUser;
 import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.admin.dao.XxlJobGroupDao;
 import com.xxl.job.admin.dao.XxlJobInfoDao;
 import com.xxl.job.admin.dao.XxlJobRegistryDao;
+import com.xxl.job.admin.service.LoginService;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.enums.RegistryConfig;
 import org.springframework.stereotype.Controller;
@@ -34,7 +37,17 @@ public class JobGroupController {
 	private XxlJobRegistryDao xxlJobRegistryDao;
 
 	@RequestMapping
-	public String index(Model model) {
+	public String index(HttpServletRequest request,Model model) {
+		// 执行器列表
+		List<XxlJobGroup> jobGroupList_all =  xxlJobGroupDao.findAll();
+
+		// filter group
+		XxlJobUser loginUser = (XxlJobUser) request.getAttribute(LoginService.LOGIN_IDENTITY_KEY);
+		List<XxlJobGroup> jobGroupList = JobInfoController.filterJobGroupByRole(loginUser, jobGroupList_all);
+		if (jobGroupList.isEmpty() && loginUser.getRole() != 1) {
+			throw new XxlJobException(I18nUtil.getString("jobgroup_empty"));
+		}
+		model.addAttribute("JobGroupList", jobGroupList);
 		return "jobgroup/jobgroup.index";
 	}
 
