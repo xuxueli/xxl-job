@@ -33,11 +33,19 @@ public class JdkSerializeTool {
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         } finally {
-            try {
-                oos.close();
-                baos.close();
-            } catch (IOException e) {
-                logger.error(e.getMessage(), e);
+            if (oos != null) {
+                try {
+                    oos.close();
+                } catch (IOException e) {
+                    logger.error(e.getMessage(), e);
+                }
+            }
+            if (baos != null) {
+                try {
+                    baos.close();
+                } catch (IOException e) {
+                    logger.error(e.getMessage(), e);
+                }
             }
         }
         return null;
@@ -62,11 +70,19 @@ public class JdkSerializeTool {
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         } finally {
-            try {
-                ois.close();
-                bais.close();
-            } catch (IOException e) {
-                logger.error(e.getMessage(), e);
+            if (ois != null) {
+                try {
+                    ois.close();
+                } catch (IOException e) {
+                    logger.error(e.getMessage(), e);
+                }
+            }
+            if (bais != null) {
+                try {
+                    bais.close();
+                } catch (IOException e) {
+                    logger.error(e.getMessage(), e);
+                }
             }
         }
         return null;
