@@ -96,6 +96,7 @@ public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationC
                 DefaultListableBeanFactory abstractBeanFactory= (DefaultListableBeanFactory) autowireCapableBeanFactory;
                 BeanDefinition mergedBeanDefinition = abstractBeanFactory.getBeanDefinition(beanDefinitionName);
                 if(mergedBeanDefinition.isLazyInit()){
+                    logger.debug("xxl-job annotation scan, skip Lazy Bean:{}", beanDefinitionName);
                     continue;
                 }
             }
