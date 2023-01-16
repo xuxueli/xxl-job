@@ -6,10 +6,7 @@ import com.xxl.job.core.handler.annotation.XxlJob;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.BeanFactoryAware;
-import org.springframework.beans.factory.DisposableBean;
-import org.springframework.beans.factory.SmartInitializingSingleton;
+import org.springframework.beans.factory.*;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.AbstractBeanFactory;
@@ -95,7 +92,13 @@ public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationC
             AutowireCapableBeanFactory autowireCapableBeanFactory = applicationContext.getAutowireCapableBeanFactory();
             if(autowireCapableBeanFactory instanceof DefaultListableBeanFactory){
                 DefaultListableBeanFactory abstractBeanFactory= (DefaultListableBeanFactory) autowireCapableBeanFactory;
-                BeanDefinition mergedBeanDefinition = abstractBeanFactory.getBeanDefinition(beanDefinitionName);
+                BeanDefinition mergedBeanDefinition;
+                try {
+                    mergedBeanDefinition = abstractBeanFactory.getBeanDefinition(beanDefinitionName);
+                }catch (NoSuchBeanDefinitionException exception){
+                    logger.debug("xxl-job annotation scan, skip BeanDefinition Bean:{}", beanDefinitionName);
+                    continue;
+                }
                 if(mergedBeanDefinition.isLazyInit()){
                     logger.debug("xxl-job annotation scan, skip Lazy Bean:{}", beanDefinitionName);
                     continue;
