@@ -104,7 +104,7 @@ public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationC
                     continue;
                 }else{
                     try {
-                        annotatedMethods = MethodIntrospector.selectMethods(mergedBeanDefinition.getClass(),
+                        annotatedMethods = MethodIntrospector.selectMethods(Class.forName(mergedBeanDefinition.getBeanClassName()),
                                 new MethodIntrospector.MetadataLookup<XxlJob>() {
                                     @Override
                                     public XxlJob inspect(Method method) {
