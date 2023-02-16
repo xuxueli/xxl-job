@@ -3,6 +3,7 @@ package com.xxl.job.admin.controller;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobRegistry;
 import com.xxl.job.admin.core.util.I18nUtil;
+import com.xxl.job.admin.core.util.IdGenerator;
 import com.xxl.job.admin.dao.XxlJobGroupDao;
 import com.xxl.job.admin.dao.XxlJobInfoDao;
 import com.xxl.job.admin.dao.XxlJobRegistryDao;
@@ -95,6 +96,7 @@ public class JobGroupController {
 
 		// process
 		xxlJobGroup.setUpdateTime(new Date());
+		xxlJobGroup.setId(IdGenerator.getId());
 
 		int ret = xxlJobGroupDao.save(xxlJobGroup);
 		return (ret>0)?ReturnT.SUCCESS:ReturnT.FAIL;
@@ -170,7 +172,7 @@ public class JobGroupController {
 
 	@RequestMapping("/remove")
 	@ResponseBody
-	public ReturnT<String> remove(int id){
+	public ReturnT<String> remove(long id){
 
 		// valid
 		int count = xxlJobInfoDao.pageListCount(0, 10, id, -1,  null, null, null);
@@ -189,7 +191,7 @@ public class JobGroupController {
 
 	@RequestMapping("/loadById")
 	@ResponseBody
-	public ReturnT<XxlJobGroup> loadById(int id){
+	public ReturnT<XxlJobGroup> loadById(long id){
 		XxlJobGroup jobGroup = xxlJobGroupDao.load(id);
 		return jobGroup!=null?new ReturnT<XxlJobGroup>(jobGroup):new ReturnT<XxlJobGroup>(ReturnT.FAIL_CODE, null);
 	}
