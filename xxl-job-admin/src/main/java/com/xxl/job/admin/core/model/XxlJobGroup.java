@@ -1,5 +1,8 @@
 package com.xxl.job.admin.core.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -10,7 +13,8 @@ import java.util.List;
  */
 public class XxlJobGroup {
 
-    private int id;
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long id;
     private String appname;
     private String title;
     private int addressType;        // 执行器地址类型：0=自动注册、1=手动录入
@@ -26,11 +30,11 @@ public class XxlJobGroup {
         return registryList;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

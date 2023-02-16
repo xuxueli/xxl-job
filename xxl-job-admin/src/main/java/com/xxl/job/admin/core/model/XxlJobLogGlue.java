@@ -1,5 +1,8 @@
 package com.xxl.job.admin.core.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+
 import java.util.Date;
 
 /**
@@ -7,28 +10,30 @@ import java.util.Date;
  * @author xuxueli 2016-5-19 17:57:46
  */
 public class XxlJobLogGlue {
-	
-	private int id;
-	private int jobId;				// 任务主键ID
+
+	@JsonSerialize(using = ToStringSerializer.class)
+	private Long id;
+	@JsonSerialize(using = ToStringSerializer.class)
+	private Long jobId;				// 任务主键ID
 	private String glueType;		// GLUE类型	#com.xxl.job.core.glue.GlueTypeEnum
 	private String glueSource;
 	private String glueRemark;
 	private Date addTime;
 	private Date updateTime;
 
-	public int getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
-	public int getJobId() {
+	public Long getJobId() {
 		return jobId;
 	}
 
-	public void setJobId(int jobId) {
+	public void setJobId(Long jobId) {
 		this.jobId = jobId;
 	}
 

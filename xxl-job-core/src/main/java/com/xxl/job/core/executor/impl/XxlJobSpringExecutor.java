@@ -3,6 +3,7 @@ package com.xxl.job.core.executor.impl;
 import com.xxl.job.core.executor.XxlJobExecutor;
 import com.xxl.job.core.glue.GlueFactory;
 import com.xxl.job.core.handler.annotation.XxlJob;
+import com.xxl.job.core.handler.impl.MethodJobHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -10,7 +11,6 @@ import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.SmartInitializingSingleton;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.core.MethodIntrospector;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 
@@ -84,18 +84,8 @@ public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationC
         // init job handler from method
         String[] beanDefinitionNames = applicationContext.getBeanNamesForType(Object.class, false, true);
         for (String beanDefinitionName : beanDefinitionNames) {
+            Object bean = applicationContext.getBean(beanDefinitionName);
 
-            // get bean
-            Object bean = null;
-            Lazy onBean = applicationContext.findAnnotationOnBean(beanDefinitionName, Lazy.class);
-            if (onBean!=null){
-                logger.debug("xxl-job annotation scan, skip @Lazy Bean:{}", beanDefinitionName);
-                continue;
-            }else {
-                bean = applicationContext.getBean(beanDefinitionName);
-            }
-
-            // filter method
             Map<Method, XxlJob> annotatedMethods = null;   // referred to ：org.springframework.context.event.EventListenerMethodProcessor.processBean
             try {
                 annotatedMethods = MethodIntrospector.selectMethods(bean.getClass(),
@@ -112,14 +102,12 @@ public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationC
                 continue;
             }
 
-            // generate and regist method job handler
             for (Map.Entry<Method, XxlJob> methodXxlJobEntry : annotatedMethods.entrySet()) {
                 Method executeMethod = methodXxlJobEntry.getKey();
                 XxlJob xxlJob = methodXxlJobEntry.getValue();
                 // regist
                 registJobHandler(xxlJob, bean, executeMethod);
             }
-
         }
     }
 
@@ -134,14 +122,5 @@ public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationC
     public static ApplicationContext getApplicationContext() {
         return applicationContext;
     }
-
-    /*
-    BeanDefinitionRegistryPostProcessor
-    registry.getBeanDefine()
-    @Override
-    public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
-        this.registry = registry;
-    }
-    * */
 
 }

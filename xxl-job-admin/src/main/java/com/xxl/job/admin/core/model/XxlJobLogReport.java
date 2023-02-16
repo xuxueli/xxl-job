@@ -1,10 +1,14 @@
 package com.xxl.job.admin.core.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+
 import java.util.Date;
 
 public class XxlJobLogReport {
 
-    private int id;
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long id;
 
     private Date triggerDay;
 
@@ -12,11 +16,11 @@ public class XxlJobLogReport {
     private int sucCount;
     private int failCount;
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

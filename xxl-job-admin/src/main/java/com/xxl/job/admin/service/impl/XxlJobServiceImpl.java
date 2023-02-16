@@ -9,6 +9,7 @@ import com.xxl.job.admin.core.scheduler.MisfireStrategyEnum;
 import com.xxl.job.admin.core.scheduler.ScheduleTypeEnum;
 import com.xxl.job.admin.core.thread.JobScheduleHelper;
 import com.xxl.job.admin.core.util.I18nUtil;
+import com.xxl.job.admin.core.util.IdGenerator;
 import com.xxl.job.admin.dao.*;
 import com.xxl.job.admin.service.XxlJobService;
 import com.xxl.job.core.biz.model.ReturnT;
@@ -43,7 +44,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 	private XxlJobLogReportDao xxlJobLogReportDao;
 	
 	@Override
-	public Map<String, Object> pageList(int start, int length, int jobGroup, int triggerStatus, String jobDesc, String executorHandler, String author) {
+	public Map<String, Object> pageList(int start, int length, long jobGroup, int triggerStatus, String jobDesc, String executorHandler, String author) {
 
 		// page list
 		List<XxlJobInfo> list = xxlJobInfoDao.pageList(start, length, jobGroup, triggerStatus, jobDesc, executorHandler, author);
@@ -148,6 +149,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 		jobInfo.setAddTime(new Date());
 		jobInfo.setUpdateTime(new Date());
 		jobInfo.setGlueUpdatetime(new Date());
+		jobInfo.setId(IdGenerator.getId());
 		xxlJobInfoDao.save(jobInfo);
 		if (jobInfo.getId() < 1) {
 			return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("jobinfo_field_add")+I18nUtil.getString("system_fail")) );
@@ -288,7 +290,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 	}
 
 	@Override
-	public ReturnT<String> remove(int id) {
+	public ReturnT<String> remove(long id) {
 		XxlJobInfo xxlJobInfo = xxlJobInfoDao.loadById(id);
 		if (xxlJobInfo == null) {
 			return ReturnT.SUCCESS;
@@ -301,7 +303,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 	}
 
 	@Override
-	public ReturnT<String> start(int id) {
+	public ReturnT<String> start(long id) {
 		XxlJobInfo xxlJobInfo = xxlJobInfoDao.loadById(id);
 
 		// valid
@@ -333,7 +335,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 	}
 
 	@Override
-	public ReturnT<String> stop(int id) {
+	public ReturnT<String> stop(long id) {
         XxlJobInfo xxlJobInfo = xxlJobInfoDao.loadById(id);
 
 		xxlJobInfo.setTriggerStatus(0);

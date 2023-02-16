@@ -1,23 +1,26 @@
 package com.xxl.job.admin.core.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import org.springframework.util.StringUtils;
 
 /**
  * @author xuxueli 2019-05-04 16:43:12
  */
 public class XxlJobUser {
-	
-	private int id;
+
+	@JsonSerialize(using = ToStringSerializer.class)
+	private Long id;
 	private String username;		// 账号
 	private String password;		// 密码
 	private int role;				// 角色：0-普通用户、1-管理员
 	private String permission;	// 权限：执行器ID列表，多个逗号分割
 
-	public int getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -54,7 +57,7 @@ public class XxlJobUser {
 	}
 
 	// plugin
-	public boolean validPermission(int jobGroup){
+	public boolean validPermission(long jobGroup){
 		if (this.role == 1) {
 			return true;
 		} else {

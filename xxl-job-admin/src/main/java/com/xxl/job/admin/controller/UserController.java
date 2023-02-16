@@ -4,6 +4,7 @@ import com.xxl.job.admin.controller.annotation.PermissionLimit;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobUser;
 import com.xxl.job.admin.core.util.I18nUtil;
+import com.xxl.job.admin.core.util.IdGenerator;
 import com.xxl.job.admin.dao.XxlJobGroupDao;
 import com.xxl.job.admin.dao.XxlJobUserDao;
 import com.xxl.job.admin.service.LoginService;
@@ -102,6 +103,7 @@ public class UserController {
         }
 
         // write
+        xxlJobUser.setId(IdGenerator.getId());
         xxlJobUserDao.save(xxlJobUser);
         return ReturnT.SUCCESS;
     }
@@ -137,7 +139,7 @@ public class UserController {
     @RequestMapping("/remove")
     @ResponseBody
     @PermissionLimit(adminuser = true)
-    public ReturnT<String> remove(HttpServletRequest request, int id) {
+    public ReturnT<String> remove(HttpServletRequest request, long id) {
 
         // avoid opt login seft
         XxlJobUser loginUser = (XxlJobUser) request.getAttribute(LoginService.LOGIN_IDENTITY_KEY);

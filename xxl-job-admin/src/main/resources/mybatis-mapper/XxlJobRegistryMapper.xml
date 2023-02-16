@@ -19,13 +19,13 @@
 		t.update_time
 	</sql>
 
-	<select id="findDead" parameterType="java.util.HashMap" resultType="java.lang.Integer" >
+	<select id="findDead" parameterType="java.util.HashMap" resultType="java.lang.Long" >
 		SELECT t.id
 		FROM xxl_job_registry AS t
-		WHERE t.update_time <![CDATA[ < ]]> DATE_ADD(#{nowTime},INTERVAL -#{timeout} SECOND)
+		WHERE t.update_time <![CDATA[ < ]]> (SELECT NOW() + INTERVAL '-90 SECOND')
 	</select>
 	
-	<delete id="removeDead" parameterType="java.lang.Integer" >
+	<delete id="removeDead" parameterType="java.lang.Long" >
 		DELETE FROM xxl_job_registry
 		WHERE id in
 		<foreach collection="ids" item="item" open="(" close=")" separator="," >
@@ -36,20 +36,20 @@
 	<select id="findAll" parameterType="java.util.HashMap" resultMap="XxlJobRegistry">
 		SELECT <include refid="Base_Column_List" />
 		FROM xxl_job_registry AS t
-		WHERE t.update_time <![CDATA[ > ]]> DATE_ADD(#{nowTime},INTERVAL -#{timeout} SECOND)
+		WHERE t.update_time <![CDATA[ > ]]> (SELECT NOW() + INTERVAL '-90 SECOND')
 	</select>
 
     <update id="registryUpdate" >
         UPDATE xxl_job_registry
-        SET `update_time` = #{updateTime}
-        WHERE `registry_group` = #{registryGroup}
-          AND `registry_key` = #{registryKey}
-          AND `registry_value` = #{registryValue}
+        SET update_time = #{updateTime}
+        WHERE registry_group = #{registryGroup}
+          AND registry_key = #{registryKey}
+          AND registry_value = #{registryValue}
     </update>
 
     <insert id="registrySave" >
-        INSERT INTO xxl_job_registry( `registry_group` , `registry_key` , `registry_value`, `update_time`)
-        VALUES( #{registryGroup}  , #{registryKey} , #{registryValue}, #{updateTime})
+        INSERT INTO xxl_job_registry(id, registry_group , registry_key , registry_value, update_time)
+        VALUES(#{id}, #{registryGroup}  , #{registryKey} , #{registryValue}, #{updateTime})
     </insert>
 
 	<delete id="registryDelete" >

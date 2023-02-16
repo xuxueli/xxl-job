@@ -1,5 +1,8 @@
 package com.xxl.job.admin.core.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+
 import java.util.Date;
 
 /**
@@ -7,12 +10,15 @@ import java.util.Date;
  * @author xuxueli  2015-12-19 23:19:09
  */
 public class XxlJobLog {
-	
-	private long id;
+
+	@JsonSerialize(using = ToStringSerializer.class)
+	private Long id;
 	
 	// job info
-	private int jobGroup;
-	private int jobId;
+	@JsonSerialize(using = ToStringSerializer.class)
+	private Long jobGroup;
+	@JsonSerialize(using = ToStringSerializer.class)
+	private Long jobId;
 
 	// execute info
 	private String executorAddress;
@@ -34,27 +40,27 @@ public class XxlJobLog {
 	// alarm info
 	private int alarmStatus;
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
-	public int getJobGroup() {
+	public Long getJobGroup() {
 		return jobGroup;
 	}
 
-	public void setJobGroup(int jobGroup) {
+	public void setJobGroup(Long jobGroup) {
 		this.jobGroup = jobGroup;
 	}
 
-	public int getJobId() {
+	public Long getJobId() {
 		return jobId;
 	}
 
-	public void setJobId(int jobId) {
+	public void setJobId(Long jobId) {
 		this.jobId = jobId;
 	}
 

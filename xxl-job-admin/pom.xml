@@ -66,6 +66,12 @@
 			<version>${mysql-connector-java.version}</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>${postgresql-connector-java.version}</version>
+		</dependency>
+
 		<!-- xxl-job-core -->
 		<dependency>
 			<groupId>com.xuxueli</groupId>
