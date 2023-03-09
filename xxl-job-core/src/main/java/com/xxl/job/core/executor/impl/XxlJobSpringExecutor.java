@@ -104,13 +104,14 @@ public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationC
                     continue;
                 }else{
                     try {
-                        annotatedMethods = MethodIntrospector.selectMethods(Class.forName(mergedBeanDefinition.getBeanClassName()),
-                                new MethodIntrospector.MetadataLookup<XxlJob>() {
-                                    @Override
-                                    public XxlJob inspect(Method method) {
-                                        return AnnotatedElementUtils.findMergedAnnotation(method, XxlJob.class);
-                                    }
-                                });
+                        if(null==mergedBeanDefinition.getBeanClassName()){
+                            continue;
+                        }
+                        logger.info("xxl job {}",mergedBeanDefinition.getBeanClassName());
+                        Class<?> aClass = Class.forName(mergedBeanDefinition.getBeanClassName());
+                        annotatedMethods = MethodIntrospector.selectMethods(aClass,
+                                (MethodIntrospector.MetadataLookup<XxlJob>) method ->
+                                        AnnotatedElementUtils.findMergedAnnotation(method, XxlJob.class));
                     } catch (Throwable ex) {
                         logger.error("xxl-job method-jobhandler resolve error for bean[" + beanDefinitionName + "].", ex);
                     }
