@@ -129,6 +129,7 @@ public class TriggerCallbackThread {
             }
         });
         triggerRetryCallbackThread.setDaemon(true);
+        triggerRetryCallbackThread.setName("xxl-job, retry TriggerCallbackThread");
         triggerRetryCallbackThread.start();
 
     }
@@ -216,7 +217,7 @@ public class TriggerCallbackThread {
         File callbackLogFile = new File(failCallbackFileName.replace("{x}", String.valueOf(System.currentTimeMillis())));
         if (callbackLogFile.exists()) {
             for (int i = 0; i < 100; i++) {
-                callbackLogFile = new File(failCallbackFileName.replace("{x}", String.valueOf(System.currentTimeMillis()).concat("-").concat(String.valueOf(i)) ));
+                callbackLogFile = new File(failCallbackFileName.replace("{x}", String.valueOf(System.currentTimeMillis()).concat("-").concat(String.valueOf(i))));
                 if (!callbackLogFile.exists()) {
                     break;
                 }
@@ -240,18 +241,18 @@ public class TriggerCallbackThread {
         }
 
         // load and clear file, retry
-        for (File callbaclLogFile: callbackLogPath.listFiles()) {
-            byte[] callbackParamList_bytes = FileUtil.readFileContent(callbaclLogFile);
+        for (File callbackLogFile : callbackLogPath.listFiles()) {
+            byte[] callbackParamList_bytes = FileUtil.readFileContent(callbackLogFile);
 
             // avoid empty file
-            if(callbackParamList_bytes == null || callbackParamList_bytes.length < 1){
-                callbaclLogFile.delete();
+            if (callbackParamList_bytes == null || callbackParamList_bytes.length < 1) {
+                callbackLogFile.delete();
                 continue;
             }
 
             List<HandleCallbackParam> callbackParamList = (List<HandleCallbackParam>) JdkSerializeTool.deserialize(callbackParamList_bytes, List.class);
 
-            callbaclLogFile.delete();
+            callbackLogFile.delete();
             doCallback(callbackParamList);
         }
 
