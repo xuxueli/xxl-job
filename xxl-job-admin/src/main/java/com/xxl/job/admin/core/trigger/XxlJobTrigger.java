@@ -4,6 +4,7 @@ import com.xxl.job.admin.core.conf.XxlJobAdminConfig;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
+import com.xxl.job.admin.core.model.XxlJobRegistry;
 import com.xxl.job.admin.core.route.ExecutorRouteStrategyEnum;
 import com.xxl.job.admin.core.scheduler.XxlJobScheduler;
 import com.xxl.job.admin.core.util.I18nUtil;
@@ -17,6 +18,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * xxl-job trigger
@@ -142,6 +145,10 @@ public class XxlJobTrigger {
         String address = null;
         ReturnT<String> routeAddressResult = null;
         if (group.getRegistryList()!=null && !group.getRegistryList().isEmpty()) {
+            /*使用registry中的地址替换到group的地址，修复调用的延迟执行器移除延迟*/
+            List<XxlJobRegistry> registryList = XxlJobAdminConfig.getAdminConfig().getXxlJobRegistryDao().findByRegistryKey(group.getAppname());
+            String addressList = registryList.stream().map(r -> r.getRegistryValue()).collect(Collectors.joining(","));
+            address = addressList;
             if (ExecutorRouteStrategyEnum.SHARDING_BROADCAST == executorRouteStrategyEnum) {
                 if (index < group.getRegistryList().size()) {
                     address = group.getRegistryList().get(index);

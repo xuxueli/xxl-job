@@ -59,4 +59,11 @@
 			AND registry_value = #{registryValue}
 	</delete>
 
+	<select id="findByRegistryKey" parameterType="java.util.HashMap" resultMap="XxlJobRegistry">
+		SELECT <include refid="Base_Column_List" />
+		FROM channel_job_registry AS t
+		WHERE
+		t.registry_key=#{registryKey}
+	</select>
+
 </mapper>
