@@ -57,6 +57,7 @@ public class ScriptUtil {
         FileOutputStream fileOutputStream = null;
         Thread inputThread = null;
         Thread errThread = null;
+        Process p = null;
         try {
             // file
             fileOutputStream = new FileOutputStream(logFile, true);
@@ -74,6 +75,9 @@ public class ScriptUtil {
 
             // process-exec
             final Process process = Runtime.getRuntime().exec(cmdarrayFinal);
+            p = process;
+
+            XxlJobHelper.log("start a process, PID:{}", ProcessUtil.getPid(process));
 
             // log-thread
             final FileOutputStream finalFileOutputStream = fileOutputStream;
@@ -110,6 +114,12 @@ public class ScriptUtil {
             return exitValue;
         } catch (Exception e) {
             XxlJobHelper.log(e);
+
+            if (p != null && p.isAlive()) {
+                boolean signaled = ProcessUtil.destroyProcess(p);
+                XxlJobHelper.log(signaled ? "destroy process success !!!" : "destroy process failed !!!");
+            }
+
             return -1;
         } finally {
             if (fileOutputStream != null) {

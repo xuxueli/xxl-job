@@ -40,6 +40,8 @@
 
 		<groovy.version>3.0.10</groovy.version>
 
+		<jna.version>5.11.0</jna.version>
+
 		<maven-source-plugin.version>3.2.1</maven-source-plugin.version>
 		<maven-javadoc-plugin.version>3.4.0</maven-javadoc-plugin.version>
 		<maven-gpg-plugin.version>3.0.1</maven-gpg-plugin.version>
