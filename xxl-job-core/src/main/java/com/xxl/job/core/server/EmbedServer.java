@@ -18,7 +18,10 @@ import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.util.CharsetUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import java.util.concurrent.*;
 
 /**
@@ -32,7 +35,7 @@ public class EmbedServer {
     private ExecutorBiz executorBiz;
     private Thread thread;
 
-    public void start(final String address, final int port, final String appname, final String accessToken) {
+    public void start(final String address, final String ip, final int port, final String appname, final String accessToken) {
         executorBiz = new ExecutorBizImpl();
         thread = new Thread(new Runnable() {
             @Override
@@ -76,7 +79,13 @@ public class EmbedServer {
                             .childOption(ChannelOption.SO_KEEPALIVE, true);
 
                     // bind
-                    ChannelFuture future = bootstrap.bind(port).sync();
+                    ChannelFuture future;
+                    if(StringUtils.hasLength(ip)) {
+                        InetSocketAddress inetSocketAddress = new InetSocketAddress(ip, port);
+                        future = bootstrap.bind(inetSocketAddress).sync();
+                    }else {
+                        future = bootstrap.bind(port).sync();
+                    }
 
                     logger.info(">>>>>>>>>>> xxl-job remoting server start success, nettype = {}, port = {}", EmbedServer.class, port);
 
