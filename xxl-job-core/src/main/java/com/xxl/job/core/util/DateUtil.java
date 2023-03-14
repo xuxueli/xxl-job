@@ -6,10 +6,7 @@ import org.slf4j.LoggerFactory;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * date util
@@ -120,6 +117,16 @@ public class DateUtil {
         }
     }
 
+    public static Date timeStampToDate(long timeStamp, String format) {
+        Date date = new Date(timeStamp);
+        if (Objects.equals(format, "")) {
+            format = "yyyy-MM-dd HH:mm:ss";
+        }
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
+        String dateString = simpleDateFormat.format(date);
+        Date newDate = DateUtil.parse(dateString, format);
+        return newDate;
+    }
 
     // ---------------------- add date ----------------------
 
