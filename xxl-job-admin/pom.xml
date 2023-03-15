@@ -75,6 +75,17 @@
 
 	</dependencies>
 
+	<repositories>
+		<repository>
+		<id>github</id>
+			<url>https://maven.pkg.github.com/ximplez/magican</url>
+			<snapshots>
+				<enabled>true</enabled>
+				<updatePolicy>always</updatePolicy>
+			</snapshots>
+		</repository>
+	</repositories>
+
 	<build>
 		<plugins>
 			<plugin>

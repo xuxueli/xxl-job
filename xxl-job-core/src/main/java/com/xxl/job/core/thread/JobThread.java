@@ -47,7 +47,7 @@ public class JobThread extends Thread{
 		this.triggerLogIdSet = Collections.synchronizedSet(new HashSet<Long>(triggerQueueSize));
 
 		// assign job thread name
-		this.setName("xxl-job, JobThread-"+jobId+"-"+System.currentTimeMillis());
+		this.setName("xxl-job# JobThread-"+jobId+"-"+System.currentTimeMillis());
 	}
 	public IJobHandler getHandler() {
 		return handler;
@@ -259,7 +259,7 @@ public class JobThread extends Thread{
     private void runFutureTask(FutureTask<?> task) {
         if (futureTaskExecutor == null) {
             futureTaskExecutor =
-                    new ThreadPoolExecutor(0, 3,
+                    new ThreadPoolExecutor(1, 3,
                             60L, TimeUnit.SECONDS,
                             new SynchronousQueue<Runnable>(),
                             r -> new Thread(r, "xxl-job, JobFutureExecutor-" + jobId));
