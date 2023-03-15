@@ -107,7 +107,6 @@ public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationC
                         if(null==mergedBeanDefinition.getBeanClassName()){
                             continue;
                         }
-                        logger.info("xxl job {}",mergedBeanDefinition.getBeanClassName());
                         Class<?> aClass = Class.forName(mergedBeanDefinition.getBeanClassName());
                         annotatedMethods = MethodIntrospector.selectMethods(aClass,
                                 (MethodIntrospector.MetadataLookup<XxlJob>) method ->

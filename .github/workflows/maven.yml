@@ -13,8 +13,7 @@ on:
 env:
   #  仓库地址
   # Use docker.io for Docker Hub if empty
-  REGISTRY_TX: ccr.ccs.tencentyun.com
-  REGISTRY_GITHUB: ghcr.io
+  REGISTRY: ${{ vars.REGISTRY }}
   # github.repository as <account>/<repo>
   #  {用户名}/{仓库名}
   IMAGE_NAME: ${{ github.repository }}
@@ -27,8 +26,7 @@ jobs:
     # 运行环境
     runs-on: ubuntu-latest
     outputs:
-      tx-tag: ${{ steps.meta-tx.outputs.tags }}
-      github-tag: ${{ steps.meta-github.outputs.tags }}
+      image-tag: ${{ steps.meta-image.outputs.tags }}
     # 运行步骤
     steps:
       - uses: actions/checkout@v2
@@ -67,32 +65,32 @@ jobs:
 
       # Login against a Docker registry except on PR
       # https://github.com/docker/login-action
-      - name: Log into registry tencentyun
+      - name: Log into registry
         if: github.event_name != 'pull_request'
         uses: docker/login-action@v1.14.1
         with:
-          registry: ${{ env.REGISTRY_TX }}
-          username: ${{ secrets.TX_DOCKER_USERNAME }}
-          password: ${{ secrets.TX_DOCKER_PASSWORD }}
+          registry: ${{ env.REGISTRY }}
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
       # Extract metadata (tags, labels) for Docker
       # https://github.com/docker/metadata-action
       - name: Extract Docker metadata
-        id: meta-tx
+        id: meta-image
         uses: docker/metadata-action@v3.6.2
         with:
-          images: ${{ env.REGISTRY_TX }}/${{ env.IMAGE_NAME }}
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
       - name: Build and push Docker image
-        id: build-and-push-tx
+        id: build-and-push
         uses: docker/build-push-action@v2.10.0
         with:
-          context: ./xxl-job-admin
+          context: ${{ vars.DOCKER_FILE_CONTEXT }}
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.meta-tx.outputs.tags }}
-          labels: ${{ steps.meta-tx.outputs.labels }}
+          tags: ${{ steps.meta-image.outputs.tags }}
+          labels: ${{ steps.meta-image.outputs.labels }}
           build-args: |
             - BUILD_ENV=${{ env.BUILD_ENV }}
 
