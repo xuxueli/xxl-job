@@ -30,11 +30,6 @@ jobs:
     # 运行步骤
     steps:
       - uses: actions/checkout@v2
-      - name: test run cmd
-        if: ${{ env.TEST_BUILD }}
-        run: |
-          echo "BUILD_ENV=dev" >> $GITHUB_ENV
-
       - name: Set up JDK 17
         uses: actions/setup-java@v3.0.0
         with:
@@ -82,7 +77,7 @@ jobs:
         id: meta-image
         uses: docker/metadata-action@v3.6.2
         with:
-          images: ${{ env.IMAGE_NAME }}
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
