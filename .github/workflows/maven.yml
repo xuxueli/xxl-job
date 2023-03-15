@@ -1,17 +1,124 @@
-name: Java CI
+name: Release Docker
 
-on: [push]
+# 触发条件
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - 'dev/**'
+      - 'release/**'
+    tags:
+      - 'v**'
+
+env:
+  #  仓库地址
+  # Use docker.io for Docker Hub if empty
+  REGISTRY_TX: ccr.ccs.tencentyun.com
+  REGISTRY_GITHUB: ghcr.io
+  # github.repository as <account>/<repo>
+  #  {用户名}/{仓库名}
+  IMAGE_NAME: ${{ github.repository }}
+  #  是否为测试分支
+  TEST_BUILD: contains(${{ github.ref }}, 'refs/heads/dev')
+
 
 jobs:
   build:
-
+    # 运行环境
     runs-on: ubuntu-latest
-
+    outputs:
+      tx-tag: ${{ steps.meta-tx.outputs.tags }}
+      github-tag: ${{ steps.meta-github.outputs.tags }}
+    # 运行步骤
     steps:
-    - uses: actions/checkout@v1
-    - name: Set up JDK 1.8
-      uses: actions/setup-java@v1
-      with:
-        java-version: 1.8
-    - name: Build with Maven
-      run: mvn -B package --file pom.xml
+      - uses: actions/checkout@v2
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3.0.0
+        with:
+          java-version: '17'
+          distribution: 'adopt'
+          server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
+          settings-path: ${{ github.workspace }} # location for the settings.xml file
+          cache: 'maven'
+
+      # 设置环境变量
+      - name: test run cmd
+        if: ${{ !env.TEST_BUILD }}
+        run: |
+          echo "BUILD_ENV=dev" >> $GITHUB_ENV
+      - name: prod run cmd
+        if: ${{ env.TEST_BUILD }}
+        run: |
+          echo "BUILD_ENV=prod" >> $GITHUB_ENV
+
+      # 项目打包
+      - name: Build with Maven
+        run: mvn --batch-mode -P ${{ env.BUILD_ENV }} -B package --file pom.xml -s ${{ github.workspace }}/.github/workflows/maven-settings.xml -Dmaven.test.skip=true
+        env:
+          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+
+      # Workaround: https://github.com/docker/build-push-action/issues/461
+      - name: Setup Docker buildx
+        uses: docker/setup-buildx-action@v1.6.0
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1.2.0
+
+      ############### tencentyun image ###############
+
+      # Login against a Docker registry except on PR
+      # https://github.com/docker/login-action
+      - name: Log into registry tencentyun
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v1.14.1
+        with:
+          registry: ${{ env.REGISTRY_TX }}
+          username: ${{ secrets.TX_DOCKER_USERNAME }}
+          password: ${{ secrets.TX_DOCKER_PASSWORD }}
+
+      # Extract metadata (tags, labels) for Docker
+      # https://github.com/docker/metadata-action
+      - name: Extract Docker metadata
+        id: meta-tx
+        uses: docker/metadata-action@v3.6.2
+        with:
+          images: ${{ env.REGISTRY_TX }}/${{ env.IMAGE_NAME }}
+
+      # Build and push Docker image with Buildx (don't push on PR)
+      # https://github.com/docker/build-push-action
+      - name: Build and push Docker image
+        id: build-and-push-tx
+        uses: docker/build-push-action@v2.10.0
+        with:
+          context: ./xxl-job-admin
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta-tx.outputs.tags }}
+          labels: ${{ steps.meta-tx.outputs.labels }}
+          build-args: |
+            - BUILD_ENV=${{ env.BUILD_ENV }}
+
+  deploy:
+    needs: build
+
+    # 运行环境
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    # 运行步骤
+    steps:
+      - uses: actions/checkout@v2
+      # 部署服务器
+      - name: deploy
+        uses: appleboy/ssh-action@master
+        env:
+          WORKDIR: ${{ github.workspace }}
+          BUILD_ENV: ${{ env.BUILD_ENV }}
+        with:
+          host: ${{ secrets.HOST }}
+          port: ${{ secrets.PORT }}
+          username: ${{ secrets.HOST_USERNAME }}
+          envs: WORKDIR,BUILD_ENV
+          key: ${{ secrets.HOST_SSHKEY }}
+          script: |
+            ${{ vars.DEPLOY_SCRIPT }}
