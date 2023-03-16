@@ -121,6 +121,6 @@ jobs:
               echo `apt install wget`
               echo `wget -O ${{ github.repository_owner }}_docker_run.sh ${{ vars.DEPLOY_SCRIPT }}`
             fi
-            echo `sh ./${{ github.repository }}_docker_run.sh -i $IMAGE_NAME -e BUILD_ENV -u DOCKER_USERNAME -p DOCKER_PASSWORD -a DOCKER_RUN_ARGS`
+            echo `sh ./${{ github.repository_owner }}_docker_run.sh -i $IMAGE_NAME -e BUILD_ENV -u DOCKER_USERNAME -p DOCKER_PASSWORD -a DOCKER_RUN_ARGS`
             
             
