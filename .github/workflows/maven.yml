@@ -17,8 +17,6 @@ env:
   # github.repository as <account>/<repo>
   #  {用户名}/{仓库名}
   IMAGE_NAME: ${{ github.repository }}
-  #  是否为测试分支
-  TEST_BUILD: contains(${{ github.ref_name }}, 'dev')
 
 
 jobs:
@@ -42,10 +40,6 @@ jobs:
       # 设置环境变量
       - name: default prod
         run: echo "BUILD_ENV=prod" >> $GITHUB_ENV
-      - name: test run cmd
-        if: ${{ env.TEST_BUILD }}
-        run: |
-          echo "BUILD_ENV=dev" >> $GITHUB_ENV
 
       # 项目打包
       - name: Build with Maven
@@ -83,7 +77,7 @@ jobs:
       # https://github.com/docker/build-push-action
       - name: Build and push Docker image
         id: build-and-push
-        uses: docker/build-push-action@v2.10.0
+        uses: docker/build-push-action@v4
         with:
           context: ${{ vars.DOCKER_FILE_CONTEXT }}
           push: ${{ github.event_name != 'pull_request' }}
@@ -120,12 +114,13 @@ jobs:
           envs: IMAGE_NAME,BUILD_ENV,DOCKER_USERNAME,DOCKER_PASSWORD,DOCKER_RUN_ARGS
           key: ${{ secrets.HOST_SSHKEY }}
           script: |
-            if [[ -e "${{ github.repository }}_docker_run.sh" ]] ;then
+            if [[ -e "./${{ github.repository }}_docker_run.sh" ]] ;then
               echo "执行脚本已存在"
             else
               echo "执行脚本不存在，开始写入..."
-              echo `echo ${{ vars.DEPLOY_SCRIPT }} > ${{ github.repository }}_docker_run.sh`
+              echo `apt install wget`
+              echo `wget -O ./${{ github.repository }}_docker_run.sh ${{ vars.DEPLOY_SCRIPT }}`
             fi
-            echo `sh ${{ github.repository }}_docker_run.sh -i $IMAGE_NAME -e BUILD_ENV -u DOCKER_USERNAME -p DOCKER_PASSWORD -a DOCKER_RUN_ARGS`
+            echo `sh ./${{ github.repository }}_docker_run.sh -i $IMAGE_NAME -e BUILD_ENV -u DOCKER_USERNAME -p DOCKER_PASSWORD -a DOCKER_RUN_ARGS`
             
             
