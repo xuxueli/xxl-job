@@ -106,7 +106,7 @@ jobs:
           IMAGE_NAME: ${{ needs.build.outputs.image-tag }}
           BUILD_ENV: ${{ env.BUILD_ENV }}
           DOCKER_USERNAME: ${{ vars.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          DOCKER_PASSWORD: ${{ vars.DOCKER_PASSWORD_PATH }}
           DOCKER_RUN_ARGS: ${{ vars.DOCKER_RUN_ARGS }}
         with:
           host: ${{ secrets.HOST }}
