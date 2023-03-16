@@ -64,7 +64,7 @@ jobs:
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ vars.DOCKER_USERNAME }}
-          password: ${{ vars.DOCKER_PASSWORD }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
       # Extract metadata (tags, labels) for Docker
       # https://github.com/docker/metadata-action
@@ -106,7 +106,7 @@ jobs:
           IMAGE_NAME: ${{ needs.build.outputs.image-tag }}
           BUILD_ENV: ${{ env.BUILD_ENV }}
           DOCKER_USERNAME: ${{ vars.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ vars.DOCKER_PASSWORD }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
           DOCKER_RUN_ARGS: ${{ vars.DOCKER_RUN_ARGS }}
         with:
           host: ${{ secrets.HOST }}
