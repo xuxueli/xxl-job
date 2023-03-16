@@ -113,7 +113,7 @@ jobs:
           host: ${{ secrets.HOST }}
           port: ${{ secrets.PORT }}
           username: ${{ secrets.HOST_USERNAME }}
-          envs: IMAGE_NAME,BUILD_ENV,DOCKER_USERNAME,DOCKER_PASSWORD,DOCKER_RUN_ARGS
+          envs: IMAGE_NAME,BUILD_ENV,DOCKER_USERNAME,DOCKER_PASSWORD,$DOCKER_SEC_RUN_ARGS
           key: ${{ secrets.HOST_SSHKEY }}
           script: |
             echo "i=$IMAGE_NAME e=$BUILD_ENV u=$DOCKER_USERNAME p=$DOCKER_PASSWORD s=$DOCKER_SEC_RUN_ARGS"
