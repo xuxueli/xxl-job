@@ -103,7 +103,7 @@ jobs:
       - name: deploy
         uses: appleboy/ssh-action@master
         env:
-          IMAGE_NAME: ${{ needs.build.outputs.image-tag.tags }}
+          IMAGE_NAME: ${{ jobs.build.outputs.image-tag.tags }}
           BUILD_ENV: ${{ env.BUILD_ENV }}
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
