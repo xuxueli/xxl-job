@@ -1,5 +1,8 @@
 package com.xxl.job.core.handler.annotation;
 
+import com.xxl.job.core.converter.Converter;
+import com.xxl.job.core.converter.JsonConverter;
+
 import java.lang.annotation.*;
 
 /**
@@ -26,5 +29,10 @@ public @interface XxlJob {
      * destroy handler, invoked when JobThread destroy
      */
     String destroy() default "";
+
+    /**
+     * Converter to param
+     */
+    Class<? extends Converter> converter() default JsonConverter.class;
 
 }

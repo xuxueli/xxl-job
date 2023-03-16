@@ -8,7 +8,7 @@ ARG BUILD_ENV=prod
 ARG APP_ID=xxl-job-admin
 # 构建的时候设置环境变量
 ENV PARAMS=""
-ENV LOG_PATH=/home/applogs/${APP_ID} VM_LOG="" GC_PARAM=""
+ENV LOG_PATH=/log VM_LOG="" GC_PARAM=""
 # 设置虚拟机日志命令参数
 ENV VM_LOG=${VM_LOG}" -Xloggc:${LOG_PATH}/${APP_ID}.gc.log.$(date +%Y%m%d%H%M)"
 ENV VM_LOG=${VM_LOG}" -XX:ErrorFile=${LOG_PATH}/${APP_ID}.vmerr.log.$(date +%Y%m%d%H%M)"

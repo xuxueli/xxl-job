@@ -2,6 +2,8 @@ package com.xxl.job.core.executor;
 
 import com.xxl.job.core.biz.AdminBiz;
 import com.xxl.job.core.biz.client.AdminBizClient;
+import com.xxl.job.core.converter.Converter;
+import com.xxl.job.core.converter.JsonConverter;
 import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.handler.annotation.XxlJob;
 import com.xxl.job.core.handler.impl.MethodJobHandler;
@@ -197,11 +199,19 @@ public class XxlJobExecutor  {
         }
 
         String name = xxlJob.value();
+        Class<? extends Converter> converterClazz = xxlJob.converter();
         //make and simplify the variables since they'll be called several times later
         Class<?> clazz = bean.getClass();
         String methodName = executeMethod.getName();
+        Class<?>[] parameterTypes = executeMethod.getParameterTypes();
         if (name.trim().length() == 0) {
             throw new RuntimeException("xxl-job method-jobhandler name invalid, for[" + clazz + "#" + methodName + "] .");
+        }
+        if (parameterTypes.length >= 2) {
+            throw new IllegalArgumentException("xxl-job method-jobhandler only no-arg or one-arg methods may be annotated with @XxlJob, for[" + clazz + "#" + methodName + "] .");
+        }
+        if (!Converter.class.isAssignableFrom(converterClazz)) {
+            throw new IllegalArgumentException(String.format("%s should be assignable from com.xxl.job.core.converter.Converter<T>", converterClazz.getName()));
         }
         if (loadJobHandler(name) != null) {
             throw new RuntimeException("xxl-job jobhandler[" + name + "] naming conflicts.");
@@ -239,9 +249,22 @@ public class XxlJobExecutor  {
                 throw new RuntimeException("xxl-job method-jobhandler destroyMethod invalid, for[" + clazz + "#" + methodName + "] .");
             }
         }
+        Converter converter;
+        try {
+            converter = converterClazz.newInstance();
+        } catch (Exception e) {
+            throw new RuntimeException("create converter error", e);
+        }
+        if (parameterTypes.length > 0) {
+            Class<?> parameterType = parameterTypes[0];
+            if (converter instanceof JsonConverter) {
+                JsonConverter jsonConverter = (JsonConverter)converter;
+                jsonConverter.setToType(parameterType);
+            }
+        }
 
         // registry jobhandler
-        registJobHandler(name, new MethodJobHandler(bean, executeMethod, initMethod, destroyMethod));
+        registJobHandler(name, new MethodJobHandler(bean, executeMethod, converter, initMethod, destroyMethod));
 
     }
 

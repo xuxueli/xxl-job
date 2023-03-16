@@ -56,7 +56,7 @@ public class ExecutorBizTest {
         final TriggerParam triggerParam = new TriggerParam();
         triggerParam.setJobId(1);
         triggerParam.setExecutorHandler("demoJobHandler");
-        triggerParam.setExecutorParams(null);
+        triggerParam.setExecutorParams("param:{\"a\":123,\"b\":[\"hhh\"],\"c\":{\"d\":\"qqqq\"}}");
         triggerParam.setExecutorBlockStrategy(ExecutorBlockStrategyEnum.COVER_EARLY.name());
         triggerParam.setGlueType(GlueTypeEnum.BEAN.name());
         triggerParam.setGlueSource(null);
