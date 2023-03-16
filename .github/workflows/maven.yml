@@ -115,7 +115,7 @@ jobs:
           envs: IMAGE_NAME,BUILD_ENV,DOCKER_USERNAME,DOCKER_PASSWORD,DOCKER_RUN_ARGS
           key: ${{ secrets.HOST_SSHKEY }}
           script: |
-            echo "${{ needs.build.outputs.image-tag }}"
+            echo "${{ toJSON(needs.build.outputs) }}"
             echo "${{ needs.build.outputs.tags }}"
             echo "i=$IMAGE_NAME e=$BUILD_ENV u=$DOCKER_USERNAME p=$DOCKER_PASSWORD a=$DOCKER_RUN_ARGS"
             if [[ -e "${{ github.repository_owner }}_docker_run.sh" ]] ;then
