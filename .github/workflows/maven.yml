@@ -103,7 +103,7 @@ jobs:
       - name: deploy
         uses: appleboy/ssh-action@master
         env:
-          IMAGE_NAME: ${{ needs.build.outputs.image-tag.tags }}
+          IMAGE_NAME: ${{ needs.build.outputs.image-tag }}
           BUILD_ENV: ${{ env.BUILD_ENV }}
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
@@ -115,8 +115,6 @@ jobs:
           envs: IMAGE_NAME,BUILD_ENV,DOCKER_USERNAME,DOCKER_PASSWORD,DOCKER_RUN_ARGS
           key: ${{ secrets.HOST_SSHKEY }}
           script: |
-            echo "${{ toJSON(needs.build.outputs) }}"
-            echo "${{ needs.build.outputs.tags }}"
             echo "i=$IMAGE_NAME e=$BUILD_ENV u=$DOCKER_USERNAME p=$DOCKER_PASSWORD a=$DOCKER_RUN_ARGS"
             if [[ -e "${{ github.repository_owner }}_docker_run.sh" ]] ;then
               echo "执行脚本已存在"
