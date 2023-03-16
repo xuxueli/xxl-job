@@ -102,12 +102,14 @@ jobs:
       # 部署服务器
       - name: deploy
         uses: appleboy/ssh-action@master
+        # 传递给脚本的环境变量，不能用secrets
         env:
           IMAGE_NAME: ${{ needs.build.outputs.image-tag }}
           BUILD_ENV: ${{ env.BUILD_ENV }}
           DOCKER_USERNAME: ${{ vars.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ vars.DOCKER_PASSWORD_PATH }}
           DOCKER_RUN_ARGS: ${{ vars.DOCKER_RUN_ARGS }}
+          DOCKER_SEC_RUN_ARGS: ${{ vars.DOCKER_SEC_RUN_ARGS }}
         with:
           host: ${{ secrets.HOST }}
           port: ${{ secrets.PORT }}
@@ -123,6 +125,6 @@ jobs:
               echo `apt install wget`
               echo `wget -O ${{ github.repository_owner }}_docker_run.sh ${{ vars.DEPLOY_SCRIPT }}`
             fi
-            echo `sh ./${{ github.repository_owner }}_docker_run.sh -i $IMAGE_NAME -e $BUILD_ENV -u $DOCKER_USERNAME -p $DOCKER_PASSWORD -a $DOCKER_RUN_ARGS`
+            echo `sh ./${{ github.repository_owner }}_docker_run.sh -i $IMAGE_NAME -e $BUILD_ENV -u $DOCKER_USERNAME -p $DOCKER_PASSWORD -a $DOCKER_RUN_ARGS -s $DOCKER_SEC_RUN_ARGS`
             
             
