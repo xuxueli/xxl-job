@@ -5,4 +5,4 @@
 target/
 .DS_Store
 .gitattributes
-applogs/
+log
