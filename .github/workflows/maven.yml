@@ -108,15 +108,15 @@ jobs:
           BUILD_ENV: ${{ env.BUILD_ENV }}
           DOCKER_USERNAME: ${{ vars.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ vars.DOCKER_PASSWORD_PATH }}
-          DOCKER_SEC_RUN_ARGS: ${{ vars.DOCKER_SEC_RUN_ARGS }}
+          DOCKER_RUN_ARGS: ${{ vars.DOCKER_RUN_ARGS }}
         with:
           host: ${{ secrets.HOST }}
           port: ${{ secrets.PORT }}
           username: ${{ secrets.HOST_USERNAME }}
-          envs: IMAGE_NAME,BUILD_ENV,DOCKER_USERNAME,DOCKER_PASSWORD,DOCKER_SEC_RUN_ARGS
+          envs: IMAGE_NAME,BUILD_ENV,DOCKER_USERNAME,DOCKER_PASSWORD,DOCKER_RUN_ARGS
           key: ${{ secrets.HOST_SSHKEY }}
           script: |
-            echo "i=$IMAGE_NAME e=$BUILD_ENV u=$DOCKER_USERNAME p=$DOCKER_PASSWORD s=$DOCKER_SEC_RUN_ARGS"
+            echo "i=$IMAGE_NAME e=$BUILD_ENV u=$DOCKER_USERNAME p=$DOCKER_PASSWORD s=$DOCKER_RUN_ARGS"
             if [[ -e "${{ github.repository_owner }}_docker_run.sh" ]] ;then
               echo "执行脚本已存在"
             else
@@ -124,6 +124,6 @@ jobs:
               echo `apt install wget`
               echo `wget -O ${{ github.repository_owner }}_docker_run.sh ${{ vars.DEPLOY_SCRIPT }}`
             fi
-            echo `sh ./${{ github.repository_owner }}_docker_run.sh -i $IMAGE_NAME -e $BUILD_ENV -u $DOCKER_USERNAME -p $DOCKER_PASSWORD -s $DOCKER_SEC_RUN_ARGS`
+            echo `sh ./${{ github.repository_owner }}_docker_run.sh -i $IMAGE_NAME -e $BUILD_ENV -u $DOCKER_USERNAME -p $DOCKER_PASSWORD -s $DOCKER_RUN_ARGS`
             
             
