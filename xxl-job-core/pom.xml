@@ -18,8 +18,8 @@
 		<!-- ********************** embed server: netty + gson ********************** -->
 		<dependency>
 			<groupId>io.netty</groupId>
-			<artifactId>netty-all</artifactId>
-			<version>${netty-all.version}</version>
+			<artifactId>netty-codec-http</artifactId>
+			<version>${netty.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
