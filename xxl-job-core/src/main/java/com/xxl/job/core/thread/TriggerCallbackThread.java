@@ -72,9 +72,8 @@ public class TriggerCallbackThread {
                             callbackParamList.add(callback);
 
                             // callback, will retry if error
-                            if (callbackParamList!=null && callbackParamList.size()>0) {
-                                doCallback(callbackParamList);
-                            }
+                            // callbackParamList has a value forever
+                            doCallback(callbackParamList);
                         }
                     } catch (Exception e) {
                         if (!toStop) {
@@ -87,7 +86,7 @@ public class TriggerCallbackThread {
                 try {
                     List<HandleCallbackParam> callbackParamList = new ArrayList<HandleCallbackParam>();
                     int drainToNum = getInstance().callBackQueue.drainTo(callbackParamList);
-                    if (callbackParamList!=null && callbackParamList.size()>0) {
+                    if (!callbackParamList.isEmpty()) {
                         doCallback(callbackParamList);
                     }
                 } catch (Exception e) {
@@ -234,6 +233,7 @@ public class TriggerCallbackThread {
         }
         if (callbackLogPath.isFile()) {
             callbackLogPath.delete();
+            return;
         }
         if (!(callbackLogPath.isDirectory() && callbackLogPath.list()!=null && callbackLogPath.list().length>0)) {
             return;
