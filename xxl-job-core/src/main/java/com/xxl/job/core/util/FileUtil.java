@@ -71,8 +71,6 @@ public class FileUtil {
 
         try (final FileInputStream in = new FileInputStream(file)) {
             in.read(filecontent);
-            in.close();
-
             return filecontent;
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
