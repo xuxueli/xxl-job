@@ -56,32 +56,20 @@ public class FileUtil {
         }
 
         // append file content
-        FileOutputStream fos = null;
-        try {
-            fos = new FileOutputStream(file);
+        try (final FileOutputStream fos = new FileOutputStream(file)) {
             fos.write(data);
             fos.flush();
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-        } finally {
-            if (fos != null) {
-                try {
-                    fos.close();
-                } catch (IOException e) {
-                    logger.error(e.getMessage(), e);
-                }
-            }
         }
 
     }
 
     public static byte[] readFileContent(File file) {
-        Long filelength = file.length();
-        byte[] filecontent = new byte[filelength.intValue()];
+        long filelength = file.length();
+        byte[] filecontent = new byte[(int) filelength];
 
-        FileInputStream in = null;
-        try {
-            in = new FileInputStream(file);
+        try (final FileInputStream in = new FileInputStream(file)) {
             in.read(filecontent);
             in.close();
 
@@ -89,14 +77,6 @@ public class FileUtil {
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             return null;
-        } finally {
-            if (in != null) {
-                try {
-                    in.close();
-                } catch (IOException e) {
-                    logger.error(e.getMessage(), e);
-                }
-            }
         }
     }
 

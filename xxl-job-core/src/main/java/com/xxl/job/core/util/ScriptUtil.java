@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,17 +29,10 @@ public class ScriptUtil {
      */
     public static void markScriptFile(String scriptFileName, String content) throws IOException {
         // make file,   filePath/gluesource/666-123456789.py
-        FileOutputStream fileOutputStream = null;
-        try {
-            fileOutputStream = new FileOutputStream(scriptFileName);
-            fileOutputStream.write(content.getBytes("UTF-8"));
-            fileOutputStream.close();
+        try (final FileOutputStream fileOutputStream = new FileOutputStream(scriptFileName)) {
+            fileOutputStream.write(content.getBytes(StandardCharsets.UTF_8));
         } catch (Exception e) {
             throw e;
-        }finally{
-            if(fileOutputStream != null){
-                fileOutputStream.close();
-            }
         }
     }
 
