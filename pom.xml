@@ -42,6 +42,8 @@
 		<maven-source-plugin.version>3.2.1</maven-source-plugin.version>
 		<maven-javadoc-plugin.version>3.5.0</maven-javadoc-plugin.version>
 		<maven-gpg-plugin.version>3.0.1</maven-gpg-plugin.version>
+
+		<httpclient.version>4.4.1</httpclient.version>
 	</properties>
 
 	<build>
