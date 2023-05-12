@@ -34,6 +34,7 @@ public class JobLogFileCleanThread {
             return;
         }
 
+        toStop = false;
         localThread = new Thread(new Runnable() {
             @Override
             public void run() {

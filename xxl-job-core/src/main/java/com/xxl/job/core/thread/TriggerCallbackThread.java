@@ -54,6 +54,7 @@ public class TriggerCallbackThread {
             return;
         }
 
+        toStop = false;
         // callback
         triggerCallbackThread = new Thread(new Runnable() {
 
