@@ -31,6 +31,12 @@
 	<#-- i18n -->
 	<#global I18n = I18nUtil.getMultString()?eval />
 
+	<style>
+		.gap-top-8 {
+			margin-top: 8px;
+		}
+	</style>
+
 </#macro>
 
 <#macro commonScript>
@@ -61,10 +67,12 @@
 		var base_url = '${request.contextPath}';
         var I18n = ${I18nUtil.getMultString()};
 	</script>
-
 </#macro>
 
 <#macro commonHeader>
+	<script type="text/javascript">
+		var XXLJOB_USER_ROLE = ${Request['XXL_JOB_LOGIN_IDENTITY'].role};
+	</script>
 	<header class="main-header">
 		<a href="${request.contextPath}/" class="logo">
 			<span class="logo-mini"><b>XXL</b></span>

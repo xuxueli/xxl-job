@@ -59,15 +59,15 @@
                         <input type="text" class="form-control" id="author" placeholder="${I18n.system_please_input}${I18n.jobinfo_field_author}" >
                     </div>
                 </div>
-	            <div class="col-xs-1">
-	            	<button class="btn btn-block btn-info" id="searchBtn">${I18n.system_search}</button>
-	            </div>
-	            <div class="col-xs-1">
-	            	<button class="btn btn-block btn-success add" type="button">${I18n.jobinfo_field_add}</button>
+	            <div class="col-xs-2">
+	            	<button class="btn btn-info" id="searchBtn">${I18n.system_search}</button>
+                    <#if Request["XXL_JOB_LOGIN_IDENTITY"].role != 2>
+                    <button class="btn btn-success add" type="button">${I18n.jobinfo_field_add}</button>
+                    </#if>
 	            </div>
           	</div>
 	    	
-			<div class="row">
+			<div class="row gap-top-8">
 				<div class="col-xs-12">
 					<div class="box">
 			            <#--<div class="box-header hide">
