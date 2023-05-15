@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.xxl.job.admin.dao.XxlJobLogReportDao">
-	
+
 	<resultMap id="XxlJobLogReport" type="com.xxl.job.admin.core.model.XxlJobLogReport" >
 		<result column="id" property="id" />
 	    <result column="trigger_day" property="triggerDay" />
@@ -18,7 +18,7 @@
 		t.suc_count,
 		t.fail_count
 	</sql>
-	
+
 	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobLogReport" useGeneratedKeys="true" keyProperty="id" >
 		INSERT INTO xxl_job_log_report (
 			`trigger_day`,
@@ -32,11 +32,28 @@
 			#{failCount}
 		);
 		<!--<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
-			SELECT LAST_INSERT_ID() 
+			SELECT LAST_INSERT_ID()
 		</selectKey>-->
 	</insert>
 
-	<update id="update" >
+    <insert id="insertUpdate" parameterType="com.xxl.job.admin.core.model.XxlJobLogReport" useGeneratedKeys="true"
+            keyProperty="id">
+        INSERT INTO xxl_job_log_report (`trigger_day`,
+                                        `running_count`,
+                                        `suc_count`,
+                                        `fail_count`)
+        VALUES (#{triggerDay},
+                #{runningCount},
+                #{sucCount},
+                #{failCount}) ON DUPLICATE KEY
+        UPDATE
+            `running_count` = #{runningCount},
+            `suc_count` = #{sucCount},
+            `fail_count` = #{failCount},
+            `update_time` = now()
+    </insert>
+
+    <update id="update" >
         UPDATE xxl_job_log_report
         SET `running_count` = #{runningCount},
         	`suc_count` = #{sucCount},
