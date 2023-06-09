@@ -22,7 +22,8 @@ CodeMirror.defineMode('shell', function() {
 
   var commonAtoms = ["true", "false"];
   var commonKeywords = ["if", "then", "do", "else", "elif", "while", "until", "for", "in", "esac", "fi",
-    "fin", "fil", "done", "exit", "set", "unset", "export", "function"];
+    "fin", "fil", "done", "exit", "set", "unset", "export", "function", "setenv", "set", "foreach", "breaksw",
+    "switch", "case", "default"];
   var commonCommands = ["ab", "awk", "bash", "beep", "cat", "cc", "cd", "chown", "chmod", "chroot", "clear",
     "cp", "curl", "cut", "diff", "echo", "find", "gawk", "gcc", "get", "git", "grep", "hg", "kill", "killall",
     "ln", "ls", "make", "mkdir", "openssl", "mv", "nc", "nl", "node", "npm", "ping", "ps", "restart", "rm",

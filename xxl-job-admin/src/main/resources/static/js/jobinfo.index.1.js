@@ -525,7 +525,10 @@ $(function() {
 			$("#addModal .form textarea[name='glueSource']").val( $("#addModal .form .glueSource_nodejs").val() );
 		} else if ('GLUE_POWERSHELL'==glueType){
             $("#addModal .form textarea[name='glueSource']").val( $("#addModal .form .glueSource_powershell").val() );
-        } else {
+		} else if ('GLUE_TCSH'==glueType) {
+			$("#addModal .form textarea[name='glueSource']").val( $("#addModal .form .glueSource_tcsh_shell").val() );
+		} 
+		else {
             $("#addModal .form textarea[name='glueSource']").val("");
 		}
 	});
