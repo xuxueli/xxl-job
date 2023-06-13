@@ -39,6 +39,13 @@
 		WHERE t.update_time <![CDATA[ > ]]> DATE_ADD(#{nowTime},INTERVAL -#{timeout} SECOND)
 	</select>
 
+	<select id="findRegistryValueList" resultType="java.lang.String">
+		SELECT registry_value
+		FROM xxl_job_registry AS t
+		WHERE t.registry_key = #{appName}
+		  and t.update_time <![CDATA[ > ]]> DATE_ADD(#{nowTime},INTERVAL -#{timeout} SECOND)
+	</select>
+
     <update id="registryUpdate" >
         UPDATE xxl_job_registry
         SET `update_time` = #{updateTime}

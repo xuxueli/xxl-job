@@ -2,6 +2,8 @@ package com.xxl.job.core.biz;
 
 import com.xxl.job.core.biz.model.*;
 
+import java.util.List;
+
 /**
  * Created by xuxueli on 17/3/1.
  */
@@ -41,5 +43,12 @@ public interface ExecutorBiz {
      * @return
      */
     public ReturnT<LogResult> log(LogParam logParam);
+
+    /**
+     * 分片调度
+     * @param triggerParam
+     * @return
+     */
+    public ReturnT<List<String>> runShard(TriggerParam triggerParam);
 
 }
