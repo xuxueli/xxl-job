@@ -75,7 +75,7 @@
 			</if>
 		</trim>
 		ORDER BY t.trigger_time DESC
-		LIMIT #{offset}, #{pagesize}
+		LIMIT #{pagesize} OFFSET #{offset}
 	</select>
 	
 	<select id="pageListCount" resultType="int">
@@ -119,11 +119,11 @@
 	
 	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobLog" useGeneratedKeys="true" keyProperty="id" >
 		INSERT INTO xxl_job_log (
-			`job_group`,
-			`job_id`,
-			`trigger_time`,
-			`trigger_code`,
-			`handle_code`
+			job_group,
+			job_id,
+			trigger_time,
+			trigger_code,
+			handle_code
 		) VALUES (
 			#{jobGroup},
 			#{jobId},
@@ -139,24 +139,24 @@
 	<update id="updateTriggerInfo" >
 		UPDATE xxl_job_log
 		SET
-			`trigger_time`= #{triggerTime},
-			`trigger_code`= #{triggerCode},
-			`trigger_msg`= #{triggerMsg},
-			`executor_address`= #{executorAddress},
-			`executor_handler`=#{executorHandler},
-			`executor_param`= #{executorParam},
-			`executor_sharding_param`= #{executorShardingParam},
-			`executor_fail_retry_count`= #{executorFailRetryCount}
-		WHERE `id`= #{id}
+			trigger_time= #{triggerTime},
+			trigger_code= #{triggerCode},
+			trigger_msg= #{triggerMsg},
+			executor_address= #{executorAddress},
+			executor_handler=#{executorHandler},
+			executor_param= #{executorParam},
+			executor_sharding_param= #{executorShardingParam},
+			executor_fail_retry_count= #{executorFailRetryCount}
+		WHERE id= #{id}
 	</update>
 
 	<update id="updateHandleInfo">
 		UPDATE xxl_job_log
 		SET 
-			`handle_time`= #{handleTime}, 
-			`handle_code`= #{handleCode},
-			`handle_msg`= #{handleMsg}
-		WHERE `id`= #{id}
+			handle_time= #{handleTime},
+			handle_code= #{handleCode},
+			handle_msg= #{handleMsg}
+		WHERE id= #{id}
 	</update>
 	
 	<delete id="delete" >
@@ -228,13 +228,13 @@
 	</delete>
 
 	<select id="findFailJobLogIds" resultType="long" >
-		SELECT id FROM `xxl_job_log`
-		WHERE !(
+		SELECT id FROM xxl_job_log
+		WHERE (
 			(trigger_code in (0, 200) and handle_code = 0)
 			OR
 			(handle_code = 200)
-		)
-		AND `alarm_status` = 0
+		) = false
+		AND alarm_status = 0
 		ORDER BY id ASC
 		LIMIT #{pagesize}
 	</select>
@@ -242,8 +242,8 @@
 	<update id="updateAlarmStatus" >
 		UPDATE xxl_job_log
 		SET
-			`alarm_status` = #{newAlarmStatus}
-		WHERE `id`= #{logId} AND `alarm_status` = #{oldAlarmStatus}
+			alarm_status = #{newAlarmStatus}
+		WHERE id= #{logId} AND alarm_status = #{oldAlarmStatus}
 	</update>
 
 	<select id="findLostJobIds" resultType="long" >
