@@ -40,6 +40,9 @@ public class XxlJobConfig {
     @Value("${xxl.job.executor.logretentiondays}")
     private int logRetentionDays;
 
+    @Value("${xxl.job.executor.ignoreinterfaces:}")
+    private String ignoreInterfaces;
+
 
     @Bean
     public XxlJobSpringExecutor xxlJobExecutor() {
@@ -53,6 +56,7 @@ public class XxlJobConfig {
         xxlJobSpringExecutor.setAccessToken(accessToken);
         xxlJobSpringExecutor.setLogPath(logPath);
         xxlJobSpringExecutor.setLogRetentionDays(logRetentionDays);
+        xxlJobSpringExecutor.setIgnoreInterfaces(ignoreInterfaces);
 
         return xxlJobSpringExecutor;
     }

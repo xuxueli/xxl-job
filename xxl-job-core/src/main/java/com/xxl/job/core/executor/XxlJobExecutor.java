@@ -37,6 +37,7 @@ public class XxlJobExecutor  {
     private int port;
     private String logPath;
     private int logRetentionDays;
+    private String ignoreInterfaces;
 
     public void setAdminAddresses(String adminAddresses) {
         this.adminAddresses = adminAddresses;
@@ -62,6 +63,7 @@ public class XxlJobExecutor  {
     public void setLogRetentionDays(int logRetentionDays) {
         this.logRetentionDays = logRetentionDays;
     }
+    public void setIgnoreInterfaces(String ignoreInterfaces) {this.ignoreInterfaces = ignoreInterfaces;}
 
 
     // ---------------------- start + stop ----------------------
@@ -81,7 +83,7 @@ public class XxlJobExecutor  {
         TriggerCallbackThread.getInstance().start();
 
         // init executor-server
-        initEmbedServer(address, ip, port, appname, accessToken);
+        initEmbedServer(address, ip, port, appname, accessToken, ignoreInterfaces);
     }
 
     public void destroy(){
@@ -140,11 +142,18 @@ public class XxlJobExecutor  {
     // ---------------------- executor-server (rpc provider) ----------------------
     private EmbedServer embedServer = null;
 
-    private void initEmbedServer(String address, String ip, int port, String appname, String accessToken) throws Exception {
+    private void initEmbedServer(String address, String ip, int port, String appname, String accessToken, String ignoreInterfaces) throws Exception {
 
         // fill ip port
         port = port>0?port: NetUtil.findAvailablePort(9999);
-        ip = (ip!=null&&ip.trim().length()>0)?ip: IpUtil.getIp();
+        if (ip == null || ip.trim().length() == 0) {
+            if (ignoreInterfaces != null && ignoreInterfaces.trim().length() > 0) {
+                String[] iif = ignoreInterfaces.split(",");
+                ip = IpUtil.getIp(iif);
+            } else {
+                ip = IpUtil.getIp();
+            }
+        }
 
         // generate address
         if (address==null || address.trim().length()==0) {
