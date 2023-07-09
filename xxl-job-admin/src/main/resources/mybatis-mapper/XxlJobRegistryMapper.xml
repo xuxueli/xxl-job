@@ -22,7 +22,16 @@
 	<select id="findDead" parameterType="java.util.HashMap" resultType="java.lang.Integer" >
 		SELECT t.id
 		FROM xxl_job_registry AS t
-		WHERE t.update_time <![CDATA[ < ]]> DATE_ADD(#{nowTime},INTERVAL -#{timeout} SECOND)
+
+		<if test="_databaseId=='mysql'">
+			WHERE t.update_time <![CDATA[ < ]]> DATE_ADD(#{nowTime},INTERVAL -#{timeout} SECOND)
+		</if>
+		<if test="_databaseId=='dm'">
+			WHERE t.update_time <![CDATA[ < ]]>   (sysdate-(CONCAT(#{timeout}, '.0')/24/60/60))
+		</if>
+		<if test="_databaseId=='kingBase'">
+			WHERE t.update_time <![CDATA[ < ]]> date '${nowTime}' - INTERVAL '${timeout} second'
+		</if>
 	</select>
 	
 	<delete id="removeDead" parameterType="java.lang.Integer" >
@@ -36,19 +45,27 @@
 	<select id="findAll" parameterType="java.util.HashMap" resultMap="XxlJobRegistry">
 		SELECT <include refid="Base_Column_List" />
 		FROM xxl_job_registry AS t
-		WHERE t.update_time <![CDATA[ > ]]> DATE_ADD(#{nowTime},INTERVAL -#{timeout} SECOND)
+		<if test="_databaseId=='mysql'">
+			WHERE t.update_time <![CDATA[ > ]]> DATE_ADD(#{nowTime},INTERVAL -#{timeout} SECOND)
+		</if>
+		<if test="_databaseId=='dm'">
+			WHERE t.update_time <![CDATA[ > ]]>  (sysdate-(CONCAT(#{timeout}, '.0')/24/60/60))
+		</if>
+		<if test="_databaseId=='kingBase'">
+			WHERE t.update_time <![CDATA[ > ]]> date '${nowTime}' - INTERVAL '${timeout} second'
+		</if>
 	</select>
 
     <update id="registryUpdate" >
         UPDATE xxl_job_registry
-        SET `update_time` = #{updateTime}
-        WHERE `registry_group` = #{registryGroup}
-          AND `registry_key` = #{registryKey}
-          AND `registry_value` = #{registryValue}
+        SET update_time = #{updateTime}
+        WHERE registry_group = #{registryGroup}
+          AND registry_key = #{registryKey}
+          AND registry_value = #{registryValue}
     </update>
 
     <insert id="registrySave" >
-        INSERT INTO xxl_job_registry( `registry_group` , `registry_key` , `registry_value`, `update_time`)
+        INSERT INTO xxl_job_registry( registry_group , registry_key , registry_value, update_time)
         VALUES( #{registryGroup}  , #{registryKey} , #{registryValue}, #{updateTime})
     </insert>
 

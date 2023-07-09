@@ -8,7 +8,11 @@
 	</parent>
 	<artifactId>xxl-job-admin</artifactId>
 	<packaging>jar</packaging>
-
+	<properties>
+		<spring-boot.version>2.5.6</spring-boot.version>
+		<dm.connector.java.version>1.0.0</dm.connector.java.version>
+		<maven.deploy.skip>true</maven.deploy.skip>
+	</properties>
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -71,6 +75,23 @@
 			<groupId>com.xuxueli</groupId>
 			<artifactId>xxl-job-core</artifactId>
 			<version>${project.parent.version}</version>
+		</dependency>
+		<!--DM -->
+		<dependency>
+			<groupId>Dm7Dictionary</groupId>
+			<artifactId>Dm7Dictionary</artifactId>
+			<version>${dm.connector.java.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>Dm7JdbcDriver18</groupId>
+			<artifactId>Dm7JdbcDriver18</artifactId>
+			<version>${dm.connector.java.version}</version>
+		</dependency>
+		<!--kingBaseES-->
+		<dependency>
+			<groupId>com.kingbase</groupId>
+			<artifactId>kingbase8</artifactId>
+			<version>8.6.0</version>
 		</dependency>
 
 	</dependencies>
