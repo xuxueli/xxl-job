@@ -58,5 +58,8 @@
 			SUM(fail_count) fail_count
 		FROM xxl_job_log_report AS t
 	</select>
+	<select id="countLogReport" resultType="java.lang.Integer">
+		select count(*) from xxl_job_log_report where `trigger_day` = #{triggerDay}
+	</select>
 
 </mapper>

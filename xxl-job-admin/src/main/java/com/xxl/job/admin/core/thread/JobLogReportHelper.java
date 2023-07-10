@@ -83,7 +83,11 @@ public class JobLogReportHelper {
                             // do refresh
                             int ret = XxlJobAdminConfig.getAdminConfig().getXxlJobLogReportDao().update(xxlJobLogReport);
                             if (ret < 1) {
-                                XxlJobAdminConfig.getAdminConfig().getXxlJobLogReportDao().save(xxlJobLogReport);
+                                //query if triggerDay exist
+                                int cnt = XxlJobAdminConfig.getAdminConfig().getXxlJobLogReportDao().countLogReport(xxlJobLogReport.getTriggerDay());
+                                if(cnt == 0){
+                                    XxlJobAdminConfig.getAdminConfig().getXxlJobLogReportDao().save(xxlJobLogReport);
+                                }
                             }
                         }
 

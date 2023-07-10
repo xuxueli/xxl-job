@@ -23,4 +23,5 @@ public interface XxlJobLogReportDao {
 
 	public XxlJobLogReport queryLogReportTotal();
 
+    public int countLogReport(Date triggerDay);
 }
