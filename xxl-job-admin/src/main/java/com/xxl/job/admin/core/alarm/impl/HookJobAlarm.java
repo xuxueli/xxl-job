@@ -6,7 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
 import com.xxl.job.admin.core.alarm.JobAlarm;
 import com.xxl.job.admin.core.conf.XxlJobAdminConfig;
@@ -43,9 +42,11 @@ public class HookJobAlarm implements JobAlarm {
     public boolean doAlarm(XxlJobInfo info, XxlJobLog jobLog){
         boolean alarmResult = true;
         String alarmHookType = info.getAlarmHookType();
+        logger.info("alarmHookType:{}", alarmHookType);
         if(enable==true){
             switch(alarmHookType){
                 case "telegram":
+                    logger.info("send telegram message");
                     sendTelegramMessage(info, jobLog);
                 break;
             }
