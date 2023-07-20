@@ -269,7 +269,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 		exists_jobInfo.setAuthor(jobInfo.getAuthor());
 		exists_jobInfo.setAlarmEmail(jobInfo.getAlarmEmail());
 		exists_jobInfo.setAlarmHookType(jobInfo.getAlarmHookType());
-		exists_jobInfo.setAlramHookUrl(jobInfo.getAlramHookUrl());
+		exists_jobInfo.setAlarmHookUrl(jobInfo.getAlarmHookUrl());
 		exists_jobInfo.setScheduleType(jobInfo.getScheduleType());
 		exists_jobInfo.setScheduleConf(jobInfo.getScheduleConf());
 		exists_jobInfo.setMisfireStrategy(jobInfo.getMisfireStrategy());

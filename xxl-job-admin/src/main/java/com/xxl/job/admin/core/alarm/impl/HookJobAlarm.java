@@ -56,8 +56,8 @@ public class HookJobAlarm implements JobAlarm {
     }
 
     private void sendTelegramMessage(XxlJobInfo info, XxlJobLog jobLog){
-        
-        String url = info.getAlramHookUrl();
+
+        String url = info.getAlarmHookUrl();
 
         if(url!=null && url.trim().length()!=0){
             // alarmContent
@@ -77,7 +77,7 @@ public class HookJobAlarm implements JobAlarm {
                         alarmContent);
             TelegramRequest requestBody = new TelegramRequest(content, "HTML");
 
-            RemotingUtil.postBody(info.getAlramHookUrl(), timeout, requestBody);
+            RemotingUtil.postBody(url, timeout, requestBody);
         }
         
     }
