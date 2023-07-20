@@ -19,7 +19,7 @@ import com.xxl.job.core.biz.model.ReturnT;
 
 
 /**
- * job alarm by email
+ * job alarm by webhook
  *
  * @author xuxueli 2020-01-19
  */
@@ -29,6 +29,9 @@ public class HookJobAlarm implements JobAlarm {
 
     @Value("${xxl.job.alarm.hook.enable}")
     private boolean enable;
+    
+    @Value("${xxl.job.alarm.hook.msgHead}")
+    private String msgHead="";
 
     @Value("${xxl.job.alarm.hook.timeout}")
     private int timeout;
@@ -42,11 +45,9 @@ public class HookJobAlarm implements JobAlarm {
     public boolean doAlarm(XxlJobInfo info, XxlJobLog jobLog){
         boolean alarmResult = true;
         String alarmHookType = info.getAlarmHookType();
-        logger.info("alarmHookType:{}", alarmHookType);
-        if(enable==true){
+        if(enable){
             switch(alarmHookType){
                 case "telegram":
-                    logger.info("send telegram message");
                     sendTelegramMessage(info, jobLog);
                 break;
             }
@@ -62,39 +63,42 @@ public class HookJobAlarm implements JobAlarm {
 
         if(url!=null && url.trim().length()!=0){
             // alarmContent
-            String alarmContent = "Alarm Job LogId=" + jobLog.getId();
+            String alarmContent = "  Alarm Job LogId=" + jobLog.getId() + "\n\n";
             if (jobLog.getTriggerCode() != ReturnT.SUCCESS_CODE) {
-                alarmContent += "<b>TriggerMsg=</b>" + jobLog.getTriggerMsg() + "\n";
+                alarmContent += "  <b>TriggerMsg=</b>\n    " + 
+                    jobLog.getTriggerMsg().replaceAll("<br>", "\n    ").replaceAll("\\<.*?\\>", "") + "\n";
             }
             if (jobLog.getHandleCode()>0 && jobLog.getHandleCode() != ReturnT.SUCCESS_CODE) {
-                alarmContent += "<b>HandleCode=</b>" + jobLog.getHandleMsg() + "\n";
+                alarmContent += "  <b>HandleCode=</b>\n    " + 
+                    jobLog.getHandleMsg().replaceAll("<br>", "\n    ").replaceAll("\\<.*?\\>", "");
             }
 
             XxlJobGroup group = XxlJobAdminConfig.getAdminConfig().getXxlJobGroupDao().load(Integer.valueOf(info.getJobGroup()));
             String content = MessageFormat.format(loadTelebotJobAlarmTemplate(),
+                        msgHead!=null?msgHead:"",
                         group!=null?group.getTitle():"null",
                         info.getId(),
                         info.getJobDesc(),
                         alarmContent);
             TelegramRequest requestBody = new TelegramRequest(content, "HTML");
-
             RemotingUtil.postBody(url, timeout, requestBody);
         }
         
     }
 
     /**
-     * load email job alarm template
+     * load telebot job alarm template
      *
      * @return
      */
     private static final String loadTelebotJobAlarmTemplate(){
-        String mailBodyTemplate = "<b>" + I18nUtil.getString("jobconf_monitor_detail") + "</b>\n"  +
-                "<b>"+ I18nUtil.getString("jobinfo_field_jobgroup") +":</b>{0}\n" +
-                "<b>"+ I18nUtil.getString("jobinfo_field_id") +":</b>{1}\n" +
-                "<b>"+ I18nUtil.getString("jobinfo_field_jobdesc") +":</b>{2}\n" +
+        String mailBodyTemplate = 
+                "<code><b>{0}" + I18nUtil.getString("jobconf_monitor_detail") + "</b>\n"  +
+                "<b>"+ I18nUtil.getString("jobinfo_field_jobgroup") +":</b>{1}\n" +
+                "<b>"+ I18nUtil.getString("jobinfo_field_id") +":</b>{2}\n" +
+                "<b>"+ I18nUtil.getString("jobinfo_field_jobdesc") +":</b>{3}\n" +
                 "<b>"+ I18nUtil.getString("jobconf_monitor_alarm_title") +":</b>"+ I18nUtil.getString("jobconf_monitor_alarm_type") +"\n" +
-                "<b>"+ I18nUtil.getString("jobconf_monitor_alarm_content") +":</b>\n{3}";
+                "<b>"+ I18nUtil.getString("jobconf_monitor_alarm_content") +":</b>\n{4}</code>";
 
         return mailBodyTemplate;
     }

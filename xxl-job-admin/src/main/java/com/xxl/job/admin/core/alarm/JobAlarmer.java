@@ -47,7 +47,6 @@ public class JobAlarmer implements ApplicationContextAware, InitializingBean {
         if (jobAlarmList!=null && jobAlarmList.size()>0) {
             result = true;  // success means all-success
             for (JobAlarm alarm: jobAlarmList) {
-                logger.info(">>>>>>>>>>> xxl-job, JobAlarmer alarm handler {}, jobId:{}", alarm.getClass().getName(), info.getId());
                 boolean resultItem = false;
                 try {
                     resultItem = alarm.doAlarm(info, jobLog);
