@@ -14,6 +14,8 @@
 
 	    <result column="author" property="author" />
 	    <result column="alarm_email" property="alarmEmail" />
+		<result column="alarm_hook_type" property="alarmHookType" />
+		<result column="alarm_hook_url" property="alarmHookUrl" />
 
 		<result column="schedule_type" property="scheduleType" />
 		<result column="schedule_conf" property="scheduleConf" />
@@ -46,6 +48,8 @@
 		t.update_time,
 		t.author,
 		t.alarm_email,
+		t.alarm_hook_type,
+		t.alarm_hook_url,
 		t.schedule_type,
 		t.schedule_conf,
 		t.misfire_strategy,
@@ -119,6 +123,8 @@
 			update_time,
 			author,
 			alarm_email,
+			alarm_hook_type,
+			alarm_hook_url,
 			schedule_type,
 			schedule_conf,
 			misfire_strategy,
@@ -143,6 +149,8 @@
 			#{updateTime},
 			#{author},
 			#{alarmEmail},
+			#{alarmHookType},
+			#{alarmHookUrl},
 			#{scheduleType},
 			#{scheduleConf},
 			#{misfireStrategy},
@@ -181,6 +189,8 @@
 			update_time = #{updateTime},
 			author = #{author},
 			alarm_email = #{alarmEmail},
+			alarm_hook_type = #{alarmHookType},
+			alarm_hook_url = #{alarmHookUrl},
 			schedule_type = #{scheduleType},
 			schedule_conf = #{scheduleConf},
 			misfire_strategy = #{misfireStrategy},

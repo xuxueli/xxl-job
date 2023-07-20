@@ -20,6 +20,9 @@ public class XxlJobInfo {
 	private String author;		// 负责人
 	private String alarmEmail;	// 报警邮件
 
+	private String alarmHookType;
+	private String alramHookUrl;
+
 	private String scheduleType;			// 调度类型
 	private String scheduleConf;			// 调度配置，值含义取决于调度类型
 	private String misfireStrategy;			// 调度过期策略
@@ -233,5 +236,19 @@ public class XxlJobInfo {
 
 	public void setTriggerNextTime(long triggerNextTime) {
 		this.triggerNextTime = triggerNextTime;
+	}
+	public String getAlarmHookType() {
+		return alarmHookType;
+	}
+
+	public void setAlarmHookType(String alarmType) {
+		this.alarmHookType = alarmType;
+	}
+	public String getAlramHookUrl() {
+		return alramHookUrl;
+	}
+
+	public void setAlramHookUrl(String alramHook) {
+		this.alramHookUrl = alramHook;
 	}
 }
