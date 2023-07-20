@@ -21,7 +21,7 @@ public class XxlJobInfo {
 	private String alarmEmail;	// 报警邮件
 
 	private String alarmHookType;
-	private String alramHookUrl;
+	private String alarmHookUrl;
 
 	private String scheduleType;			// 调度类型
 	private String scheduleConf;			// 调度配置，值含义取决于调度类型
@@ -237,18 +237,20 @@ public class XxlJobInfo {
 	public void setTriggerNextTime(long triggerNextTime) {
 		this.triggerNextTime = triggerNextTime;
 	}
+
 	public String getAlarmHookType() {
 		return alarmHookType;
 	}
 
-	public void setAlarmHookType(String alarmType) {
-		this.alarmHookType = alarmType;
-	}
-	public String getAlramHookUrl() {
-		return alramHookUrl;
+	public void setAlarmHookType(String alarmHookType) {
+		this.alarmHookType = alarmHookType;
 	}
 
-	public void setAlramHookUrl(String alramHook) {
-		this.alramHookUrl = alramHook;
+	public String getAlarmHookUrl() {
+		return alarmHookUrl;
+	}
+
+	public void setAlarmHookUrl(String alarmHookUrl) {
+		this.alarmHookUrl = alarmHookUrl;
 	}
 }
