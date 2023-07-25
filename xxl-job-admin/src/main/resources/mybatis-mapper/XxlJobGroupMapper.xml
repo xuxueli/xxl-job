@@ -88,4 +88,10 @@
 		</trim>
 	</select>
 
+	<select id="findOneByAppname" resultMap="XxlJobGroup">
+		SELECT <include refid="Base_Column_List" />
+		FROM xxl_job_group AS t
+		WHERE t.app_name = #{appname}
+	</select>
+
 </mapper>

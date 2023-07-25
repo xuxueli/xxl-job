@@ -3,6 +3,7 @@ package com.xxl.job.admin.core.thread;
 import com.xxl.job.admin.core.conf.XxlJobAdminConfig;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobRegistry;
+import com.xxl.job.admin.dao.XxlJobGroupDao;
 import com.xxl.job.core.biz.model.RegistryParam;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.enums.RegistryConfig;
@@ -162,9 +163,37 @@ public class JobRegistryHelper {
 				int ret = XxlJobAdminConfig.getAdminConfig().getXxlJobRegistryDao().registryUpdate(registryParam.getRegistryGroup(), registryParam.getRegistryKey(), registryParam.getRegistryValue(), new Date());
 				if (ret < 1) {
 					XxlJobAdminConfig.getAdminConfig().getXxlJobRegistryDao().registrySave(registryParam.getRegistryGroup(), registryParam.getRegistryKey(), registryParam.getRegistryValue(), new Date());
-
-					// fresh
-					freshGroupRegistryInfo(registryParam);
+					// after add registry
+					XxlJobGroupDao xxlJobGroupDao = XxlJobAdminConfig.getAdminConfig().getXxlJobGroupDao();
+					XxlJobGroup group =  xxlJobGroupDao.findOneByAppname(registryParam.getRegistryKey());
+					if (null == group) {
+						// add group
+						group = new XxlJobGroup();
+						group.setAppname(registryParam.getRegistryKey());
+						group.setTitle(registryParam.getRegistryKey());
+						group.setAddressType(0);
+						group.setAddressList(registryParam.getRegistryValue());
+						group.setUpdateTime(new Date());
+						xxlJobGroupDao.save(group);
+					} else {
+						// update group address_list and update_time
+						if (null == group.getAddressList()) {
+							group.setAddressList(registryParam.getRegistryValue());
+						} else {
+							group.setAddressList(group.getAddressList().concat(",").concat(registryParam.getRegistryValue()));
+						}
+						group.setUpdateTime(new Date());
+						xxlJobGroupDao.update(group);
+					}
+				} else {
+					// after update registry
+					XxlJobGroupDao xxlJobGroupDao = XxlJobAdminConfig.getAdminConfig().getXxlJobGroupDao();
+					XxlJobGroup group =  xxlJobGroupDao.findOneByAppname(registryParam.getRegistryKey());
+					if (null == group) {
+						throw new RuntimeException("after update registry, update group failed, because group is not found");
+					}
+					group.setUpdateTime(new Date());
+					xxlJobGroupDao.update(group);
 				}
 			}
 		});
