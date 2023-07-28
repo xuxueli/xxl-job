@@ -101,11 +101,13 @@ public class JobRegistryHelper {
 									}
 									addressListStr = addressListSB.toString();
 									addressListStr = addressListStr.substring(0, addressListStr.length()-1);
+									group.setAddressList(addressListStr);
+									group.setUpdateTime(new Date());
+									XxlJobAdminConfig.getAdminConfig().getXxlJobGroupDao().update(group);
+								} else {
+									// executor group can be destroyed when the last executor is destroyed
+									XxlJobAdminConfig.getAdminConfig().getXxlJobGroupDao().remove(group.getId());
 								}
-								group.setAddressList(addressListStr);
-								group.setUpdateTime(new Date());
-
-								XxlJobAdminConfig.getAdminConfig().getXxlJobGroupDao().update(group);
 							}
 						}
 					} catch (Exception e) {
