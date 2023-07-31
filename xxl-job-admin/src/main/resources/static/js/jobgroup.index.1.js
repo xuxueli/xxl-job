@@ -198,12 +198,12 @@ $(function() {
 		rules : {
 			appname : {
 				required : true,
-				rangelength:[4,64],
+				rangelength:[4,30],
 				myValid01 : true
 			},
 			title : {
 				required : true,
-				rangelength:[4, 12]
+				rangelength:[4, 50]
 			}
 		},
 		messages : {
@@ -295,12 +295,12 @@ $(function() {
 		rules : {
 			appname : {
 				required : true,
-				rangelength:[4,64],
+				rangelength:[4,30],
 				myValid01 : true
 			},
 			title : {
 				required : true,
-				rangelength:[4, 12]
+				rangelength:[4, 50]
 			}
 		},
 		messages : {
