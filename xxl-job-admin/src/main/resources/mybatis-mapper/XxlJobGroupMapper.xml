@@ -34,6 +34,24 @@
 		ORDER BY t.app_name, t.title, t.id ASC
 	</select>
 
+	<select id="countByAppNameNotId" parameterType="java.util.HashMap" resultType="Integer">
+		select count(1)
+		FROM xxl_job_group AS t
+		WHERE t.app_name = #{appName}
+		<if test="id != null">
+			AND t.id != #{id}
+		</if>
+	</select>
+
+	<select id="countByTitleNotId" parameterType="java.util.HashMap" resultType="Integer">
+		select count(1)
+		FROM xxl_job_group AS t
+		WHERE t.title = #{title}
+		<if test="id != null">
+			AND t.id != #{id}
+		</if>
+	</select>
+
 	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobGroup" useGeneratedKeys="true" keyProperty="id" >
 		INSERT INTO xxl_job_group ( `app_name`, `title`, `address_type`, `address_list`, `update_time`)
 		values ( #{appname}, #{title}, #{addressType}, #{addressList}, #{updateTime} );
