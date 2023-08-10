@@ -35,13 +35,6 @@
 			<version>${groovy.version}</version>
 		</dependency>
 
-		<!-- spring-context -->
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-context</artifactId>
-			<version>${spring.version}</version>
-			<scope>provided</scope>
-		</dependency>
 
 		<!-- ********************** base ********************** -->
 		<!-- slf4j -->
@@ -51,12 +44,33 @@
 			<version>${slf4j-api.version}</version>
 		</dependency>
 
-		<!-- javax.annotation-api -->
+		<!-- jakarta.annotation-api -->
 		<dependency>
-			<groupId>javax.annotation</groupId>
-			<artifactId>javax.annotation-api</artifactId>
-			<version>${javax.annotation-api.version}</version>
+			<groupId>jakarta.servlet</groupId>
+			<artifactId>jakarta.servlet-api</artifactId>
+			<version>${jakarta.servlet-api.version}</version>
 			<scope>provided</scope>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/jakarta.annotation/jakarta.annotation-api -->
+
+		<dependency>
+			<groupId>jakarta.annotation</groupId>
+			<artifactId>jakarta.annotation-api</artifactId>
+			<version>${jakarta.annotation-api.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-beans</artifactId>
+			<version>${spring.version}</version>
+			<scope>compile</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>${spring.version}</version>
+			<scope>compile</scope>
 		</dependency>
 
 	</dependencies>
