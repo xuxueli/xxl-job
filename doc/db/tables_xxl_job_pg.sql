@@ -95,7 +95,10 @@ COMMENT ON COLUMN xxl_job_log.handle_time IS '执行-时间';
 COMMENT ON COLUMN xxl_job_log.handle_code IS '执行-状态';
 COMMENT ON COLUMN xxl_job_log.handle_msg IS '执行-日志';
 COMMENT ON COLUMN xxl_job_log.alarm_status IS '告警状态：0-默认、1-无需告警、2-告警成功、3-告警失败';
-
+create index xxl_job_log_handle_code_index
+    on xxl_job_log (handle_code);
+create index xxl_job_log_trigger_time_index
+    on xxl_job_log (trigger_time);
 
 -- 创建 xxl_job_log_report 表
 CREATE TABLE xxl_job_log_report
@@ -150,6 +153,8 @@ COMMENT ON COLUMN xxl_job_registry.registry_group IS '注册分组';
 COMMENT ON COLUMN xxl_job_registry.registry_key IS '注册键';
 COMMENT ON COLUMN xxl_job_registry.registry_value IS '注册值';
 COMMENT ON COLUMN xxl_job_registry.update_time IS '更新时间';
+create index xxl_job_registry_g_k_v_uindex
+    on xxl_job_registry (registry_group, registry_key, registry_value);
 
 -- 创建 xxl_job_group 表
 CREATE TABLE xxl_job_group
