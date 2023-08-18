@@ -40,7 +40,8 @@
         UPDATE xxl_job_log_report
         SET `running_count` = #{runningCount},
         	`suc_count` = #{sucCount},
-        	`fail_count` = #{failCount}
+        	`fail_count` = #{failCount},
+		    `update_time` = #{updateTime}
         WHERE `trigger_day` = #{triggerDay}
     </update>
 

@@ -12,6 +12,8 @@ public class XxlJobLogReport {
     private int sucCount;
     private int failCount;
 
+    private Date updateTime;
+
     public int getId() {
         return id;
     }
@@ -50,5 +52,13 @@ public class XxlJobLogReport {
 
     public void setFailCount(int failCount) {
         this.failCount = failCount;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }
