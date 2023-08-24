@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xxl.job.admin.mapper.JobInfoMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.xxl.job.admin.common.pojo.entity.JobInfo">
+        <id column="ID" property="id"/>
+        <result column="GROUP_ID" property="groupId"/>
+        <result column="NAME" property="name"/>
+        <result column="AUTHOR" property="author"/>
+        <result column="ALARM_EMAIL" property="alarmEmail"/>
+        <result column="SCHEDULE_TYPE" property="scheduleType"/>
+        <result column="SCHEDULE_CONF" property="scheduleConf"/>
+        <result column="MISFIRE_STRATEGY" property="misfireStrategy"/>
+        <result column="EXECUTOR_ROUTE_STRATEGY" property="executorRouteStrategy"/>
+        <result column="EXECUTOR_HANDLER" property="executorHandler"/>
+        <result column="EXECUTOR_PARAM" property="executorParam"/>
+        <result column="EXECUTOR_BLOCK_STRATEGY" property="executorBlockStrategy"/>
+        <result column="EXECUTOR_TIMEOUT" property="executorTimeout"/>
+        <result column="EXECUTOR_FAIL_RETRY_COUNT" property="executorFailRetryCount"/>
+        <result column="GLUE_TYPE" property="glueType"/>
+        <result column="GLUE_SOURCE" property="glueSource"/>
+        <result column="GLUE_DESCRIPTION" property="glueDescription"/>
+        <result column="GLUE_UPDATED_TIME" property="glueUpdatedTime"/>
+        <result column="CHILD_JOB_ID" property="childJobId"/>
+        <result column="TRIGGER_STATUS" property="triggerStatus"/>
+        <result column="TRIGGER_LAST_TIME" property="triggerLastTime"/>
+        <result column="TRIGGER_NEXT_TIME" property="triggerNextTime"/>
+        <result column="CREATED_USER" property="createdUser"/>
+        <result column="CREATED_TIME" property="createdTime"/>
+        <result column="UPDATED_USER" property="updatedUser"/>
+        <result column="UPDATED_TIME" property="updatedTime"/>
+        <result column="DESCRIPTION" property="description"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        ID,
+        GROUP_ID,
+        "NAME",
+        AUTHOR,
+        ALARM_EMAIL,
+        SCHEDULE_TYPE,
+        SCHEDULE_CONF,
+        MISFIRE_STRATEGY,
+        EXECUTOR_ROUTE_STRATEGY,
+        EXECUTOR_HANDLER,
+        EXECUTOR_PARAM,
+        EXECUTOR_BLOCK_STRATEGY,
+        EXECUTOR_TIMEOUT,
+        EXECUTOR_FAIL_RETRY_COUNT,
+        GLUE_TYPE,
+        GLUE_SOURCE,
+        GLUE_DESCRIPTION,
+        GLUE_UPDATED_TIME,
+        CHILD_JOB_ID,
+        TRIGGER_STATUS,
+        TRIGGER_LAST_TIME,
+        TRIGGER_NEXT_TIME,
+        CREATED_USER,
+        CREATED_TIME,
+        UPDATED_USER,
+        UPDATED_TIME,
+        DESCRIPTION
+    </sql>
+
+    <select id="queryJobByGroupId" resultMap="BaseResultMap">
+        select
+            <include refid="Base_Column_List"/>
+        from XXL_JOB_INFO
+        where GROUP_ID = #{groupId,jdbcType=BIGINT}
+    </select>
+
+    <select id="findAllCount" resultType="java.lang.Long">
+        SELECT count(1)
+        FROM XXL_JOB_INFO
+    </select>
+
+    <select id="queryJobInfoByTriggerNextTime" resultMap="BaseResultMap">
+        SELECT
+            <include refid="Base_Column_List"/>
+        FROM XXL_JOB_INFO
+        WHERE TRIGGER_STATUS = 1
+        and TRIGGER_NEXT_TIME <![CDATA[ <= ]]> #{maxNextTime,jdbcType=BIGINT}
+        ORDER BY ID ASC
+        LIMIT #{pageSize}
+    </select>
+
+    <update id="updateTriggerTimeById">
+        UPDATE XXL_JOB_INFO
+        SET TRIGGER_LAST_TIME = #{triggerLastTime,jdbcType=BIGINT},
+        TRIGGER_NEXT_TIME = #{triggerNextTime,jdbcType=BIGINT},
+        TRIGGER_STATUS = #{triggerStatus,jdbcType=INTEGER},
+        UPDATED_TIME = #{updatedTime,jdbcType=BIGINT}
+        WHERE ID = #{id,jdbcType=BIGINT}
+    </update>
+
+    <select id="queryJobInfoByName" resultMap="BaseResultMap">
+        SELECT
+            <include refid="Base_Column_List"/>
+        FROM XXL_JOB_INFO
+        where "NAME" = #{name,jdbcType=VARCHAR}
+    </select>
+
+    <select id="queryJobInfo" resultMap="BaseResultMap">
+        SELECT
+            <include refid="Base_Column_List"/>
+        FROM XXL_JOB_INFO
+        <where>
+            <if test="groupId != null">
+                and GROUP_ID = #{groupId,jdbcType=BIGINT}
+            </if>
+            <if test="name != null and name != ''">
+                and "NAME" like concat(concat('%', #{name,jdbcType=VARCHAR}), '%')
+            </if>
+            <if test="author != null and author != ''">
+                and AUTHOR like concat(concat('%', #{author,jdbcType=VARCHAR}), '%')
+            </if>
+            <if test="executorHandler != null and executorHandler != ''">
+                and EXECUTOR_HANDLER = #{executorHandler,jdbcType=VARCHAR}
+            </if>
+            <if test="scheduleType != null and scheduleType != ''">
+                and SCHEDULE_TYPE = #{scheduleType,jdbcType=VARCHAR}
+            </if>
+            <if test="triggerStatus != null">
+                and TRIGGER_STATUS = #{triggerStatus,jdbcType=INTEGER}
+            </if>
+        </where>
+    </select>
+
+    <update id="updateStatusById">
+        UPDATE XXL_JOB_INFO
+        SET TRIGGER_STATUS = #{status,jdbcType=INTEGER}
+        WHERE ID = #{id,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateGlueById">
+        UPDATE XXL_JOB_INFO
+        SET GLUE_TYPE = #{glueType,jdbcType=VARCHAR},
+        GLUE_SOURCE = #{glueSource,jdbcType=VARCHAR},
+        GLUE_DESCRIPTION = #{glueDescription,jdbcType=VARCHAR},
+        GLUE_UPDATED_TIME = #{glueUpdatedTime,jdbcType=BIGINT},
+        UPDATED_TIME = #{updatedTime,jdbcType=BIGINT}
+        WHERE ID = #{id,jdbcType=BIGINT}
+    </update>
+</mapper>

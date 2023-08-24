@@ -1,0 +1,27 @@
+server:
+  port: 10200
+
+spring:
+
+  # mysql 配置
+  datasource:
+    url: jdbc:mysql://localhost:3306/xxl_job?useUnicode=true&characterEncoding=UTF-8&useSSL=false
+    username: root
+    password: 123456
+
+email:
+  host: smtp.qq.com
+  port: 25
+  username: xxx@qq.com
+  password: xxx
+  name: xxx@qq.com
+
+xxl:
+  job:
+    admin:
+      trigger-pool-fast-max: 200
+      trigger-pool-slow-max: 100
+      log-retention-day: 7
+
+
+

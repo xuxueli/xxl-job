@@ -1,0 +1,112 @@
+logging:
+  config: classpath:logback/logback-${spring.profiles.active}.xml
+
+spring:
+  profiles:
+    active: dev
+
+  sql:
+    init:
+      encoding: UTF-8
+      mode: always
+#      schema-locations:
+#        - classpath:sql/orders.sql
+
+  # mysql 配置
+  datasource:
+    # 数据源/连接池类型
+    type: com.alibaba.druid.pool.DruidDataSource
+    # 数据库驱动名称
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    druid:
+      # 定义初始连接数
+      initialSize: 50
+      # 定义最小空闲 minIdle=1
+      minIdle: 3
+      # 定义最大连接数
+      maxActive: 500
+      # 配置获取连接等待超时的时间
+      maxWait: 60000
+      # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+      timeBetweenEvictionRunsMillis: 60000
+      # 配置一个连接在池中最小生存的时间，单位是毫秒
+      minEvictableIdleTimeMillis: 30000
+      # 验证使用的SQL语句
+      validationQuery: select 'x'
+      # 指明连接是否被空闲连接回收器(如果有)进行检验.如果检测失败,则连接将被从池中去除.
+      testWhileIdle: true
+      # 借出连接时不要测试，否则很影响性能
+      testOnBorrow: false
+      # 归还连接时执行validationQuery检测连接是否有效，做了这个配置会降低性能
+      testOnReturn: false
+      # 打开PSCache，并且指定每个连接上PSCache的大小
+      poolPreparedStatements: true
+      # 指定每个连接上PSCache的大小
+      maxPoolPreparedStatementPerConnectionSize: 20
+      # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+      filters: stat,wall,slf4j
+      # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
+      connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+      db-type: mysql
+
+# mybatis-plus 配置
+mybatis-plus:
+  global-config:
+    db-config:
+      # 主键ID 生成策略
+      id-type: assign_id
+  configuration:
+    # 是否开启自动驼峰命名规则（camel case）映射
+    map-underscore-to-camel-case: true
+  mapper-locations: classpath*:/mappers/**/*.xml
+
+pagehelper:
+  helperDialect: mysql
+  reasonable: false
+  supportMethodsArguments: true
+  params: count=countSql
+
+knife4j:
+  enable: true
+  openapi:
+    title: xxj-job管理端
+    description: "xxj-job管理端接口文档"
+    email: 852203465@qq.com
+    concat: 贾荣
+    url: https://github.com/xuxueli
+    version: v1.0
+    license: Apache License, Version 2.0
+    license-url: https://www.apache.org/licenses/LICENSE-2.0.html
+    terms-of-service-url: https://www.apache.org/licenses/LICENSE-2.0.html
+    group:
+      default:
+        group-name: default
+        api-rule: package
+        api-rule-resources:
+          - com.xxl.job.admin.controller
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

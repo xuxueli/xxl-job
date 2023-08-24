@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xxl.job.admin.mapper.RegistryMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.xxl.job.admin.common.pojo.entity.Registry">
+        <id column="ID" property="id"/>
+        <result column="REGISTRY_GROUP" property="registryGroup"/>
+        <result column="REGISTRY_KEY" property="registryKey"/>
+        <result column="REGISTRY_VALUE" property="registryValue"/>
+        <result column="UPDATED_TIME" property="updatedTime"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        ID,
+        REGISTRY_GROUP,
+        REGISTRY_KEY,
+        REGISTRY_VALUE,
+        UPDATED_TIME
+    </sql>
+
+    <select id="findDeadRegistryByUpdatedTime" resultType="java.lang.Long">
+        SELECT
+            ID
+        FROM XXL_JOB_REGISTRY
+        WHERE UPDATED_TIME <![CDATA[ < ]]> #{nowTime,jdbcType=BIGINT}
+    </select>
+
+    <delete id="deleteDeadRegistryByIds">
+        DELETE FROM XXL_JOB_REGISTRY
+        WHERE ID in
+        <foreach collection="ids" item="item" open="(" close=")" separator="," >
+            #{item,jdbcType=BIGINT}
+        </foreach>
+    </delete>
+
+    <select id="findAll" resultMap="BaseResultMap">
+        SELECT
+            <include refid="Base_Column_List" />
+        FROM XXL_JOB_REGISTRY
+        WHERE UPDATED_TIME <![CDATA[ > ]]> #{nowTime,jdbcType=BIGINT}
+    </select>
+
+    <update id="updateRegistry" >
+        UPDATE XXL_JOB_REGISTRY
+        SET UPDATED_TIME = #{updateTime,jdbcType=BIGINT}
+        WHERE REGISTRY_GROUP = #{registryGroup,jdbcType=VARCHAR}
+        AND REGISTRY_KEY = #{registryKey,jdbcType=VARCHAR}
+        AND REGISTRY_VALUE = #{registryValue,jdbcType=VARCHAR}
+    </update>
+
+    <delete id="deleteRegistry" >
+        DELETE FROM XXL_JOB_REGISTRY
+        WHERE REGISTRY_GROUP = #{registryGroup,jdbcType=VARCHAR}
+        AND REGISTRY_KEY = #{registryKey,jdbcType=VARCHAR}
+        AND REGISTRY_VALUE = #{registryValue,jdbcType=VARCHAR}
+    </delete>
+
+    <select id="findRegistry" resultMap="BaseResultMap">
+        select
+            <include refid="Base_Column_List"/>
+        from XXL_JOB_REGISTRY
+        WHERE REGISTRY_GROUP = #{registryGroup,jdbcType=VARCHAR}
+        AND REGISTRY_KEY = #{registryKey,jdbcType=VARCHAR}
+        AND REGISTRY_VALUE = #{registryValue,jdbcType=VARCHAR}
+    </select>
+</mapper>

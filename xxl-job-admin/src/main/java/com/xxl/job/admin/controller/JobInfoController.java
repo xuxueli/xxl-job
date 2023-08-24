@@ -1,180 +1,138 @@
 package com.xxl.job.admin.controller;
 
-import com.xxl.job.admin.core.cron.CronExpression;
-import com.xxl.job.admin.core.exception.XxlJobException;
-import com.xxl.job.admin.core.model.XxlJobGroup;
-import com.xxl.job.admin.core.model.XxlJobInfo;
-import com.xxl.job.admin.core.model.XxlJobUser;
-import com.xxl.job.admin.core.route.ExecutorRouteStrategyEnum;
-import com.xxl.job.admin.core.scheduler.MisfireStrategyEnum;
-import com.xxl.job.admin.core.scheduler.ScheduleTypeEnum;
-import com.xxl.job.admin.core.thread.JobScheduleHelper;
-import com.xxl.job.admin.core.thread.JobTriggerPoolHelper;
-import com.xxl.job.admin.core.trigger.TriggerTypeEnum;
-import com.xxl.job.admin.core.util.I18nUtil;
-import com.xxl.job.admin.dao.XxlJobGroupDao;
-import com.xxl.job.admin.service.LoginService;
-import com.xxl.job.admin.service.XxlJobService;
-import com.xxl.job.core.biz.model.ReturnT;
-import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
-import com.xxl.job.core.glue.GlueTypeEnum;
-import com.xxl.job.core.util.DateUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import cn.hutool.extra.validation.ValidationUtil;
+import com.xxl.job.admin.common.pojo.dto.JobInfoDTO;
+import com.xxl.job.admin.common.pojo.dto.JobInfoFilterDTO;
+import com.xxl.job.admin.common.pojo.dto.TriggerJobDTO;
+import com.xxl.job.admin.common.pojo.vo.JobInfoVO;
+import com.xxl.job.admin.common.pojo.vo.PageVO;
+import com.xxl.job.admin.service.JobInfoService;
+import com.xxl.job.core.pojo.vo.ResponseVO;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import java.text.ParseException;
-import java.util.*;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
- * index controller
- * @author xuxueli 2015-12-19 16:13:16
+ * <p>
+ * 任务信息 前端控制器
+ * </p>
+ *
+ * @author Rong.Jia
+ * @since 2023-05-13
  */
-@Controller
-@RequestMapping("/jobinfo")
-public class JobInfoController {
-	private static Logger logger = LoggerFactory.getLogger(JobInfoController.class);
+@Slf4j
+@Validated
+@RestController
+@Api(tags = "任务管理")
+@RequestMapping("/job")
+public class JobInfoController extends AbstractController {
 
-	@Resource
-	private XxlJobGroupDao xxlJobGroupDao;
-	@Resource
-	private XxlJobService xxlJobService;
-	
-	@RequestMapping
-	public String index(HttpServletRequest request, Model model, @RequestParam(required = false, defaultValue = "-1") int jobGroup) {
+    @Autowired
+    private JobInfoService jobInfoService;
 
-		// 枚举-字典
-		model.addAttribute("ExecutorRouteStrategyEnum", ExecutorRouteStrategyEnum.values());	    // 路由策略-列表
-		model.addAttribute("GlueTypeEnum", GlueTypeEnum.values());								// Glue类型-字典
-		model.addAttribute("ExecutorBlockStrategyEnum", ExecutorBlockStrategyEnum.values());	    // 阻塞处理策略-字典
-		model.addAttribute("ScheduleTypeEnum", ScheduleTypeEnum.values());	    				// 调度类型
-		model.addAttribute("MisfireStrategyEnum", MisfireStrategyEnum.values());	    			// 调度过期策略
+    @ApiOperation("添加任务")
+    @PostMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseVO<JobInfoVO> saveJobInfo(@Validated @RequestBody JobInfoDTO jobInfoDTO) {
+        log.info("saveJobInfo {}", jobInfoDTO.toString());
+        jobInfoDTO.setCreatedUser(getAccount());
+        return ResponseVO.success(jobInfoService.saveJobInfo(jobInfoDTO));
+    }
 
-		// 执行器列表
-		List<XxlJobGroup> jobGroupList_all =  xxlJobGroupDao.findAll();
+    @ApiOperation("修改任务")
+    @PutMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseVO<JobInfoVO> updateJobInfo(@Validated @RequestBody JobInfoDTO jobInfoDTO) {
+        log.info("updateJobInfo {}", jobInfoDTO.toString());
+        jobInfoDTO.setUpdatedUser(getAccount());
+        return ResponseVO.success(jobInfoService.updateJobInfo(jobInfoDTO));
+    }
 
-		// filter group
-		List<XxlJobGroup> jobGroupList = filterJobGroupByRole(request, jobGroupList_all);
-		if (jobGroupList==null || jobGroupList.size()==0) {
-			throw new XxlJobException(I18nUtil.getString("jobgroup_empty"));
-		}
+    @ApiOperation("查询任务")
+    @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseVO<PageVO<JobInfoVO>> queryJobInfo(@Validated JobInfoFilterDTO filterDTO) {
+        log.info("queryJobInfo {}", filterDTO.toString());
+        ValidationUtil.validate(filterDTO);
+        return ResponseVO.success(jobInfoService.page(filterDTO));
+    }
 
-		model.addAttribute("JobGroupList", jobGroupList);
-		model.addAttribute("jobGroup", jobGroup);
+    @ApiOperation("删除任务")
+    @DeleteMapping(value = "/{jobId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "path", name = "jobId", dataTypeClass = Long.class, value = "任务id", required = true),
+    })
+    public ResponseVO<Void> deleteJobInfo(@PathVariable("jobId") @NotNull(message = "任务ID不能为空") Long jobId) {
+        log.info("deleteJobInfo {}", jobId);
+        jobInfoService.delete(jobId);
+        return ResponseVO.success();
+    }
 
-		return "jobinfo/jobinfo.index";
-	}
+    @ApiOperation("根据ID查询任务")
+    @GetMapping(value = "/{jobId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "path", name = "jobId", dataTypeClass = Long.class, value = "任务id", required = true),
+    })
+    public ResponseVO<JobInfoVO> findJobInfoById(@PathVariable("jobId") @NotNull(message = "任务ID不能为空") Long jobId) {
+        log.info("findJobInfoById {}", jobId);
+        return ResponseVO.success(jobInfoService.queryById(jobId));
+    }
 
-	public static List<XxlJobGroup> filterJobGroupByRole(HttpServletRequest request, List<XxlJobGroup> jobGroupList_all){
-		List<XxlJobGroup> jobGroupList = new ArrayList<>();
-		if (jobGroupList_all!=null && jobGroupList_all.size()>0) {
-			XxlJobUser loginUser = (XxlJobUser) request.getAttribute(LoginService.LOGIN_IDENTITY_KEY);
-			if (loginUser.getRole() == 1) {
-				jobGroupList = jobGroupList_all;
-			} else {
-				List<String> groupIdStrs = new ArrayList<>();
-				if (loginUser.getPermission()!=null && loginUser.getPermission().trim().length()>0) {
-					groupIdStrs = Arrays.asList(loginUser.getPermission().trim().split(","));
-				}
-				for (XxlJobGroup groupItem:jobGroupList_all) {
-					if (groupIdStrs.contains(String.valueOf(groupItem.getId()))) {
-						jobGroupList.add(groupItem);
-					}
-				}
-			}
-		}
-		return jobGroupList;
-	}
-	public static void validPermission(HttpServletRequest request, int jobGroup) {
-		XxlJobUser loginUser = (XxlJobUser) request.getAttribute(LoginService.LOGIN_IDENTITY_KEY);
-		if (!loginUser.validPermission(jobGroup)) {
-			throw new RuntimeException(I18nUtil.getString("system_permission_limit") + "[username="+ loginUser.getUsername() +"]");
-		}
-	}
-	
-	@RequestMapping("/pageList")
-	@ResponseBody
-	public Map<String, Object> pageList(@RequestParam(required = false, defaultValue = "0") int start,  
-			@RequestParam(required = false, defaultValue = "10") int length,
-			int jobGroup, int triggerStatus, String jobDesc, String executorHandler, String author) {
-		
-		return xxlJobService.pageList(start, length, jobGroup, triggerStatus, jobDesc, executorHandler, author);
-	}
-	
-	@RequestMapping("/add")
-	@ResponseBody
-	public ReturnT<String> add(XxlJobInfo jobInfo) {
-		return xxlJobService.add(jobInfo);
-	}
-	
-	@RequestMapping("/update")
-	@ResponseBody
-	public ReturnT<String> update(XxlJobInfo jobInfo) {
-		return xxlJobService.update(jobInfo);
-	}
-	
-	@RequestMapping("/remove")
-	@ResponseBody
-	public ReturnT<String> remove(int id) {
-		return xxlJobService.remove(id);
-	}
-	
-	@RequestMapping("/stop")
-	@ResponseBody
-	public ReturnT<String> pause(int id) {
-		return xxlJobService.stop(id);
-	}
-	
-	@RequestMapping("/start")
-	@ResponseBody
-	public ReturnT<String> start(int id) {
-		return xxlJobService.start(id);
-	}
-	
-	@RequestMapping("/trigger")
-	@ResponseBody
-	//@PermissionLimit(limit = false)
-	public ReturnT<String> triggerJob(int id, String executorParam, String addressList) {
-		// force cover job param
-		if (executorParam == null) {
-			executorParam = "";
-		}
+    @ApiOperation("停止任务")
+    @PatchMapping(value = "/stop/{jobId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "path", name = "jobId", dataTypeClass = Long.class, value = "任务id", required = true),
+    })
+    public ResponseVO<Void> stopJob(@PathVariable("jobId") @NotNull(message = "任务ID不能为空") Long jobId) {
+        log.info("stopJob {}", jobId);
+        jobInfoService.stopJob(jobId);
+        return ResponseVO.success();
+    }
 
-		JobTriggerPoolHelper.trigger(id, TriggerTypeEnum.MANUAL, -1, null, executorParam, addressList);
-		return ReturnT.SUCCESS;
-	}
+    @ApiOperation("启动任务")
+    @PatchMapping(value = "/start/{jobId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "path", name = "jobId", dataTypeClass = Long.class, value = "任务id", required = true),
+    })
+    public ResponseVO<Void> startJob(@PathVariable("jobId") @NotNull(message = "任务ID不能为空") Long jobId) {
+        log.info("startJob {}", jobId);
+        jobInfoService.startJob(jobId);
+        return ResponseVO.success();
+    }
 
-	@RequestMapping("/nextTriggerTime")
-	@ResponseBody
-	public ReturnT<List<String>> nextTriggerTime(String scheduleType, String scheduleConf) {
+    @ApiOperation("手动执行一次任务")
+    @PatchMapping(value = "/trigger", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseVO<Void> triggerJob(@RequestBody @Valid TriggerJobDTO triggerJobDTO) {
+        log.info("triggerJob {}", triggerJobDTO.toString());
+        jobInfoService.triggerJob(triggerJobDTO);
+        return ResponseVO.success();
+    }
 
-		XxlJobInfo paramXxlJobInfo = new XxlJobInfo();
-		paramXxlJobInfo.setScheduleType(scheduleType);
-		paramXxlJobInfo.setScheduleConf(scheduleConf);
+    @ApiOperation("获取下次执行时间")
+    @GetMapping(value = "/next-trigger/{jobId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "path", name = "jobId", dataTypeClass = Long.class, value = "任务id", required = true),
+    })
+    public ResponseVO<List<String>> nextTriggerTime(@PathVariable("jobId") @NotNull(message = "任务ID不能为空") Long jobId) {
+        log.info("nextTriggerTime {}", jobId);
+        return ResponseVO.success(jobInfoService.nextTriggerTime(jobId));
+    }
 
-		List<String> result = new ArrayList<>();
-		try {
-			Date lastTime = new Date();
-			for (int i = 0; i < 5; i++) {
-				lastTime = JobScheduleHelper.generateNextValidTime(paramXxlJobInfo, lastTime);
-				if (lastTime != null) {
-					result.add(DateUtil.formatDateTime(lastTime));
-				} else {
-					break;
-				}
-			}
-		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
-			return new ReturnT<List<String>>(ReturnT.FAIL_CODE, (I18nUtil.getString("schedule_type")+I18nUtil.getString("system_unvalid")) + e.getMessage());
-		}
-		return new ReturnT<List<String>>(result);
 
-	}
-	
+
+
+
+
+
+
+
+
+
 }

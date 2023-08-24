@@ -1,0 +1,55 @@
+server:
+  port: 12100
+
+xxl:
+  job:
+    executor:
+      enabled: true
+      admin:
+        addresses: localhost:10200
+      executor:
+        host: localhost
+        port: 12100
+        app-name: mes-web-api-service
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

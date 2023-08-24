@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xxl.job.admin.mapper.JobLogMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.xxl.job.admin.common.pojo.entity.JobLog">
+        <id column="ID" property="id"/>
+        <result column="GROUP_ID" property="groupId"/>
+        <result column="JOB_ID" property="jobId"/>
+        <result column="EXECUTOR_ADDRESS" property="executorAddress"/>
+        <result column="EXECUTOR_HANDLER" property="executorHandler"/>
+        <result column="EXECUTOR_PARAM" property="executorParam"/>
+        <result column="EXECUTOR_SHARDING_PARAM" property="executorShardingParam"/>
+        <result column="EXECUTOR_FAIL_RETRY_COUNT" property="executorFailRetryCount"/>
+        <result column="TRIGGER_TIME" property="triggerTime"/>
+        <result column="TRIGGER_CODE" property="triggerCode"/>
+        <result column="TRIGGER_MESSAGE" property="triggerMessage"/>
+        <result column="HANDLE_TIME" property="handleTime"/>
+        <result column="HANDLE_CODE" property="handleCode"/>
+        <result column="HANDLE_MESSAGE" property="handleMessage"/>
+        <result column="ALARM_STATUS" property="alarmStatus"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        ID,
+        GROUP_ID,
+        JOB_ID,
+        EXECUTOR_ADDRESS,
+        EXECUTOR_HANDLER,
+        EXECUTOR_PARAM,
+        EXECUTOR_SHARDING_PARAM,
+        EXECUTOR_FAIL_RETRY_COUNT,
+        TRIGGER_TIME,
+        TRIGGER_CODE,
+        TRIGGER_MESSAGE,
+        HANDLE_TIME,
+        HANDLE_CODE,
+        HANDLE_MESSAGE,
+        ALARM_STATUS
+    </sql>
+
+    <update id="updateTriggerInfo">
+        UPDATE XXL_JOB_LOG
+        SET
+        TRIGGER_TIME = #{triggerTime,jdbcType=BIGINT},
+        TRIGGER_CODE= #{triggerCode,jdbcType=INTEGER},
+        TRIGGER_MESSAGE= #{triggerMessage,jdbcType=VARCHAR},
+        EXECUTOR_ADDRESS= #{executorAddress,jdbcType=VARCHAR},
+        EXECUTOR_HANDLER = #{executorHandler,jdbcType=VARCHAR},
+        EXECUTOR_PARAM= #{executorParam,jdbcType=VARCHAR},
+        EXECUTOR_SHARDING_PARAM= #{executorShardingParam,jdbcType=VARCHAR},
+        EXECUTOR_FAIL_RETRY_COUNT= #{executorFailRetryCount,jdbcType=INTEGER}
+        WHERE ID= #{id,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateHandleInfo">
+        UPDATE XXL_JOB_LOG
+        SET
+        HANDLE_TIME= #{handleTime,jdbcType=BIGINT},
+        HANDLE_CODE= #{handleCode,jdbcType=INTEGER},
+        HANDLE_MESSAGE= #{handleMessage,jdbcType=VARCHAR}
+        WHERE ID= #{id,jdbcType=BIGINT}
+    </update>
+
+    <delete id="deleteLogByJobId">
+        delete from XXL_JOB_LOG
+        WHERE JOB_ID = #{jobId,jdbcType=BIGINT}
+    </delete>
+
+    <select id="queryLogReportByTriggerTime" resultType="com.xxl.job.admin.common.pojo.bo.JobLogReportBO">
+        SELECT
+            COUNT(HANDLE_CODE) triggerDayCount,
+            SUM(CASE WHEN (TRIGGER_CODE in (0, 200) and handle_code = 0) then 1 else 0 end) as triggerDayCountRunning,
+            SUM(CASE WHEN HANDLE_CODE = 0 then 1 else 0 end) as triggerDayCountSuc
+        FROM XXL_JOB_LOG
+        WHERE TRIGGER_TIME BETWEEN #{from,jdbcType=BIGINT} and #{to,jdbcType=BIGINT}
+    </select>
+
+    <select id="queryClearLogIds" resultType="java.lang.Long">
+        SELECT id FROM XXL_JOB_LOG
+        <where>
+            <if test="groupId != null and groupId gt 0">
+                AND GROUP_ID = #{groupId,jdbcType=BIGINT}
+            </if>
+            <if test="jobId != null and jobId gt 0">
+                AND JOB_ID = #{jobId,jdbcType=BIGINT}
+            </if>
+            <if test="clearBeforeTime != null">
+                AND TRIGGER_TIME <![CDATA[ <= ]]> #{clearBeforeTime}
+            </if>
+            <if test="clearBeforeNum gt 0">
+                AND id NOT in(
+                SELECT id FROM(
+                SELECT id FROM XXL_JOB_LOG t
+                <where>
+                    <if test="groupId != null and groupId gt 0">
+                        AND t.GROUP_ID = #{groupId,jdbcType=BIGINT}
+                    </if>
+                    <if test="jobId != null and jobId gt 0">
+                        AND t.JOB_ID = #{jobId,jdbcType=BIGINT}
+                    </if>
+                </where>
+                ORDER BY t.TRIGGER_TIME desc
+                LIMIT 0, #{clearBeforeNum}
+                ) t1
+                )
+            </if>
+        </where>
+        order by ID asc
+        LIMIT #{pageSize}
+    </select>
+
+    <delete id="clearLog">
+        delete from XXL_JOB_LOG
+        WHERE ID in
+        <foreach collection="logIds" item="item" open="(" close=")" separator="," >
+            #{item,jdbcType=BIGINT}
+        </foreach>
+    </delete>
+
+    <select id="findFailJobLogIds" resultType="long" >
+        SELECT ID FROM XXL_JOB_LOG
+        WHERE not (
+        (TRIGGER_CODE in (0, 200) and HANDLE_CODE = 0)
+        OR
+        (HANDLE_CODE = 0)
+        )
+        AND ALARM_STATUS = 0
+        ORDER BY ID ASC
+        LIMIT #{pageSize}
+    </select>
+
+    <update id="updateAlarmStatus" >
+        UPDATE XXL_JOB_LOG
+        SET
+        ALARM_STATUS = #{newAlarmStatus,jdbcType=INTEGER}
+        WHERE ID= #{logId,jdbcType=BIGINT} AND ALARM_STATUS = #{oldAlarmStatus,jdbcType=INTEGER}
+    </update>
+
+    <select id="queryLostJobIds" resultType="long" >
+        SELECT
+            t.ID
+        FROM
+            XXL_JOB_LOG t,XXL_JOB_REGISTRY t2
+        WHERE
+            t.EXECUTOR_ADDRESS = t2.REGISTRY_VALUE
+            and t.TRIGGER_CODE = 0
+            AND t.HANDLE_CODE = 0
+            AND t.TRIGGER_TIME <![CDATA[ <= ]]> #{loseTime,jdbcType=BIGINT}
+            AND t2.ID IS NULL
+    </select>
+
+    <select id="queryJobLog" resultMap="BaseResultMap">
+        select
+            <include refid="Base_Column_List"/>
+        from XXL_JOB_LOG
+        <where>
+            <if test="groupId != null">
+                and GROUP_ID = #{groupId,jdbcType=BIGINT}
+            </if>
+            <if test="jobId != null">
+                and JOB_ID = #{jobId,jdbcType=BIGINT}
+            </if>
+            <if test="startTime != null">
+                AND TRIGGER_TIME <![CDATA[ >= ]]> #{startTime,jdbcType=BIGINT}
+            </if>
+            <if test="endTime != null">
+                AND TRIGGER_TIME <![CDATA[ <= ]]> #{endTime,jdbcType=BIGINT}
+            </if>
+            <if test="status != null">
+                <if test="status == 1" >
+                    AND HANDLE_CODE = 0
+                </if>
+                <if test="status == 2" >
+                    AND (
+                    TRIGGER_CODE NOT IN (0, -1) OR
+                    HANDLE_CODE NOT IN (0, -1)
+                    )
+                </if>
+                <if test="status == 3" >
+                    AND TRIGGER_CODE = 0
+                    AND HANDLE_CODE = -1
+                </if>
+            </if>
+
+        </where>
+    </select>
+</mapper>

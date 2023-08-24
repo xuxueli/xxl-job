@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xxl.job.admin.mapper.LogReportMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.xxl.job.admin.common.pojo.entity.LogReport">
+        <id column="ID" property="id"/>
+        <result column="TRIGGER_DAY" property="triggerDay"/>
+        <result column="RUNNING_COUNT" property="runningCount"/>
+        <result column="SUC_COUNT" property="sucCount"/>
+        <result column="FAIL_COUNT" property="failCount"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        ID,
+        TRIGGER_DAY,
+        RUNNING_COUNT,
+        SUC_COUNT,
+        FAIL_COUNT
+    </sql>
+
+    <select id="queryLogReportByTriggerDay" resultMap="BaseResultMap">
+        SELECT
+            <include refid="Base_Column_List" />
+        FROM XXL_JOB_LOG_REPORT
+        WHERE TRIGGER_DAY between #{triggerDayFrom,jdbcType=BIGINT} and #{triggerDayTo,jdbcType=BIGINT}
+        ORDER BY TRIGGER_DAY ASC
+    </select>
+
+    <select id="queryAll" resultMap="BaseResultMap">
+        SELECT
+            SUM(RUNNING_COUNT) running_count,
+            SUM(SUC_COUNT) suc_count,
+            SUM(FAIL_COUNT) fail_count
+        FROM XXL_JOB_LOG_REPORT
+    </select>
+
+    <select id="queryLogReportByDay" resultMap="BaseResultMap">
+        SELECT
+            <include refid="Base_Column_List" />
+        FROM XXL_JOB_LOG_REPORT
+        where TRIGGER_DAY = #{day,jdbcType=BIGINT}
+    </select>
+</mapper>

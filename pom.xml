@@ -1,55 +1,24 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+
 	<groupId>com.xuxueli</groupId>
 	<artifactId>xxl-job</artifactId>
-	<version>2.4.0-SNAPSHOT</version>
+	<version>2.5.0</version>
 	<packaging>pom</packaging>
 
 	<name>${project.artifactId}</name>
 	<description>A distributed task scheduling framework.</description>
 	<url>https://www.xuxueli.com/</url>
 
-	<modules>
-		<module>xxl-job-core</module>
-		<module>xxl-job-admin</module>
-		<module>xxl-job-executor-samples</module>
-		<module>xxl-job-spring-boot-starter</module>
-	</modules>
-
 	<properties>
+		<skipTests>true</skipTests>
+		<java.version>1.8</java.version>
+		<maven.compiler.source>8</maven.compiler.source>
+		<maven.compiler.target>8</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<maven.compiler.encoding>UTF-8</maven.compiler.encoding>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
-		<maven.test.skip>true</maven.test.skip>
-
-		<netty-all.version>4.1.63.Final</netty-all.version>
-		<gson.version>2.9.0</gson.version>
-
-		<spring.version>5.3.20</spring.version>
-		<spring-boot.version>2.6.7</spring-boot.version>
-
-		<mybatis-spring-boot-starter.version>2.2.2</mybatis-spring-boot-starter.version>
-		<mysql-connector-java.version>8.0.29</mysql-connector-java.version>
-
-		<slf4j-api.version>1.7.36</slf4j-api.version>
-		<junit-jupiter.version>5.8.2</junit-jupiter.version>
-		<javax.annotation-api.version>1.3.2</javax.annotation-api.version>
-
-		<groovy.version>3.0.10</groovy.version>
-
-		<maven-source-plugin.version>3.2.1</maven-source-plugin.version>
-		<maven-javadoc-plugin.version>3.4.0</maven-javadoc-plugin.version>
-		<maven-gpg-plugin.version>3.0.1</maven-gpg-plugin.version>
 	</properties>
-
-	<build>
-		<plugins>
-		</plugins>
-	</build>
-
 
 	<licenses>
 		<license>
@@ -60,9 +29,9 @@
 
 	<scm>
 		<tag>master</tag>
-		<url>https://github.com/xuxueli/xxl-job.git</url>
-		<connection>scm:git:https://github.com/xuxueli/xxl-job.git</connection>
-		<developerConnection>scm:git:git@github.com:xuxueli/xxl-job.git</developerConnection>
+		<url>https://github.com/a852203465/xxl-job.git</url>
+		<connection>scm:git:https://github.com/a852203465/xxl-job.git</connection>
+		<developerConnection>scm:git:git@github.com:a852203465/xxl-job.git</developerConnection>
 	</scm>
 	<developers>
 		<developer>
@@ -71,7 +40,124 @@
 			<email>931591021@qq.com</email>
 			<url>https://github.com/xuxueli</url>
 		</developer>
+		<developer>
+			<id>rong.jia</id>
+			<name>rong.jia</name>
+			<email>852203465@qq.com</email>
+			<url>https://github.com/a852203465</url>
+		</developer>
 	</developers>
+
+	<modules>
+		<module>xxl-job-core</module>
+		<module>xxl-job-admin</module>
+		<module>xxl-job-executor</module>
+		<module>xxl-job-executor-samples</module>
+	</modules>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-configuration-processor</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-autoconfigure</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+		</dependency>
+	</dependencies>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-dependencies</artifactId>
+				<version>2.5.11</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>cn.hutool</groupId>
+				<artifactId>hutool-all</artifactId>
+				<version>5.7.22</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.alibaba</groupId>
+				<artifactId>fastjson</artifactId>
+				<version>2.0.32</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.alibaba</groupId>
+				<artifactId>druid-spring-boot-starter</artifactId>
+				<version>1.2.16</version>
+			</dependency>
+
+			<dependency>
+				<groupId>cn.zhxu</groupId>
+				<artifactId>okhttps-fastjson</artifactId>
+				<version>4.0.1</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.apache.groovy</groupId>
+				<artifactId>groovy</artifactId>
+				<version>4.0.10</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.baomidou</groupId>
+				<artifactId>mybatis-plus-boot-starter</artifactId>
+				<version>3.4.3.4</version>
+			</dependency>
+			<dependency>
+				<groupId>com.baomidou</groupId>
+				<artifactId>mybatis-plus-generator</artifactId>
+				<version>3.5.1</version>
+			</dependency>
+			<dependency>
+				<groupId>org.freemarker</groupId>
+				<artifactId>freemarker</artifactId>
+				<version>2.3.31</version>
+			</dependency>
+			<dependency>
+				<groupId>com.github.pagehelper</groupId>
+				<artifactId>pagehelper-spring-boot-starter</artifactId>
+				<version>1.4.1</version>
+			</dependency>
+			<dependency>
+				<groupId>com.github.xiaoymin</groupId>
+				<artifactId>knife4j-openapi2-spring-boot-starter</artifactId>
+				<version>4.1.0</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-email</artifactId>
+				<version>1.5</version>
+			</dependency>
+
+
+		</dependencies>
+	</dependencyManagement>
 
 	<profiles>
 
@@ -83,7 +169,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-source-plugin</artifactId>
-						<version>${maven-source-plugin.version}</version>
+						<version>3.2.1</version>
 						<executions>
 							<execution>
 								<phase>package</phase>
@@ -97,7 +183,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-javadoc-plugin</artifactId>
-						<version>${maven-javadoc-plugin.version}</version>
+						<version>3.5.0</version>
 						<executions>
 							<execution>
 								<phase>package</phase>
@@ -114,7 +200,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
-                        <version>${maven-gpg-plugin.version}</version>
+                        <version>1.6</version>
 						<configuration>
 							<useAgent>false</useAgent>
 						</configuration>
@@ -141,5 +227,54 @@
 			</distributionManagement>
 		</profile>
 	</profiles>
+
+	<build>
+		<finalName>${project.name}</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.1</version>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+					<encoding>UTF-8</encoding>
+					<fork>true</fork>
+					<compilerArgument>-XDignore.symbol.file</compilerArgument>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>3.2.0</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.22.2</version>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
+
+			<!-- 打包源码插件 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>3.2.1</version>
+				<configuration>
+					<attach>true</attach>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+		</plugins>
+	</build>
 
 </project>

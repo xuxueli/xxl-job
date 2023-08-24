@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xxl.job.admin.mapper.JobGroupMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.xxl.job.admin.common.pojo.entity.JobGroup">
+        <id column="ID" property="id"/>
+        <result column="APP_NAME" property="appName"/>
+        <result column="TITLE" property="title"/>
+        <result column="ADDRESS_TYPE" property="addressType"/>
+        <result column="ADDRESS_LIST" property="addressList"/>
+        <result column="CREATED_USER" property="createdUser"/>
+        <result column="CREATED_TIME" property="createdTime"/>
+        <result column="UPDATED_USER" property="updatedUser"/>
+        <result column="UPDATED_TIME" property="updatedTime"/>
+        <result column="DESCRIPTION" property="description"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        ID,
+        APP_NAME,
+        TITLE,
+        ADDRESS_TYPE,
+        ADDRESS_LIST,
+        CREATED_USER,
+        CREATED_TIME,
+        UPDATED_USER,
+        UPDATED_TIME,
+        DESCRIPTION
+    </sql>
+
+    <select id="queryJobGroup" resultMap="BaseResultMap">
+        select
+            <include refid="Base_Column_List"/>
+        from XXL_JOB_GROUP
+        <where>
+            <if test="appName != null and appName != ''">
+                and APP_NAME like concat(concat('%', #{appName,jdbcType=VARCHAR}), '%')
+            </if>
+            <if test="addressType != null">
+                and ADDRESS_TYPE = #{addressType,jdbcType=INTEGER}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryJobGroupByAppName" resultMap="BaseResultMap">
+        select
+            <include refid="Base_Column_List"/>
+        from XXL_JOB_GROUP
+        where APP_NAME = #{appName,jdbcType=VARCHAR}
+    </select>
+
+    <select id="queryJobGroupByAddressType" resultMap="BaseResultMap">
+        SELECT
+            <include refid="Base_Column_List"/>
+        FROM XXL_JOB_GROUP
+        WHERE ADDRESS_TYPE = #{addressType,jdbcType=INTEGER}
+    </select>
+</mapper>

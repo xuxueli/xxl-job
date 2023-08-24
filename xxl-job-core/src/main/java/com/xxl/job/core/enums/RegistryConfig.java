@@ -1,13 +1,25 @@
 package com.xxl.job.core.enums;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
 /**
- * Created by xuxueli on 17/5/10.
+ * 注册配置
+ *
+ * @author Rong.Jia
+ * @date 2023/05/15
  */
-public class RegistryConfig {
+@Getter
+@AllArgsConstructor
+public enum RegistryConfig {
 
-    public static final int BEAT_TIMEOUT = 30;
-    public static final int DEAD_TIMEOUT = BEAT_TIMEOUT * 3;
+    BEAT_TIMEOUT(30),
+    DEAD_TIMEOUT(BEAT_TIMEOUT.value * 3),
 
-    public enum RegistType{ EXECUTOR, ADMIN }
+
+    ;
+
+
+    private final Integer value;
 
 }
