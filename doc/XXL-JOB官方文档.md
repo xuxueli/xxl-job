@@ -719,7 +719,7 @@ XXL-JOB是一个分布式任务调度平台，其核心设计目标是开发迅�
 
 "调度数据库初始化SQL脚本" 位置为:
 
-    /xxl-job/doc/db/tables_xxl_job.sql
+    /xxl-job/doc/db/xxl_job.sql
 
 调度中心支持集群部署，集群情况下各节点务必连接同一个mysql实例;
 

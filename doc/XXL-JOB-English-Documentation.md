@@ -385,7 +385,7 @@ Please download project source code，get db scripts and execute, it will genera
 
 The relative path of db scripts is as follows:
 
-    /xxl-job/doc/db/tables_xxl_job.sql
+    /xxl-job/doc/db/xxl_job.sql
 
 The xxl-job-admin can be deployed as a cluster,all nodes of the cluster must connect to the same mysql instance.
 
