@@ -320,6 +320,10 @@ public class TriggerThreadPool extends AbstractThreadListener implements Ordered
         ResponseVO responseVO = null;
         try {
             responseVO = executorClient.run(address, triggerParam);
+            if (ObjectUtil.isEmpty(responseVO.getCode())) {
+                responseVO.setCode(500);
+                responseVO.setMessage("客户端机器未启用执行器......");
+            }
         } catch (Exception e) {
             log.error(">>>>>>>>>>> xxl-job trigger error, please check if the executor[{}] is running. [{}]", address, e.getMessage());
             responseVO = ResponseVO.error(ExceptionUtil.getMessage(e));
