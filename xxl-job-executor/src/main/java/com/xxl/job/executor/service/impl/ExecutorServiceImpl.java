@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
 import com.xxl.job.core.enums.GlueTypeEnum;
+import com.xxl.job.core.enums.KettleLogLevel;
 import com.xxl.job.core.pojo.dto.IdleBeatParam;
 import com.xxl.job.core.pojo.dto.KillParam;
 import com.xxl.job.core.pojo.dto.LogParam;
@@ -13,6 +14,7 @@ import com.xxl.job.core.pojo.vo.ResponseVO;
 import com.xxl.job.executor.factory.glue.GlueProcessor;
 import com.xxl.job.executor.factory.handler.GlueJobHandler;
 import com.xxl.job.executor.factory.handler.JobHandler;
+import com.xxl.job.executor.factory.handler.KettleKtrJobHandler;
 import com.xxl.job.executor.factory.handler.ScriptJobHandler;
 import com.xxl.job.executor.factory.repository.XxlJobRepository;
 import com.xxl.job.executor.factory.thread.JobThread;
@@ -131,6 +133,25 @@ public class ExecutorServiceImpl implements ExecutorService {
             }catch (Exception e) {
                 log.error("{}, ", GlueTypeEnum.GLUE_GROOVY_CLASS.name(), e);
             }
+        } else if (glueTypeEnum.equals(GlueTypeEnum.KETTLE_KTR)) {
+
+            // valid old jobThread
+            if (ObjectUtil.isNotNull(jobThread) && !(jobThread.getHandler() instanceof KettleKtrJobHandler)) {
+                removeOldReason = "change job or kettle ktr, and terminate the old job thread.";
+
+                jobThread = null;
+                jobHandler = null;
+            }
+
+            // valid handler
+            if (ObjectUtil.isEmpty(jobHandler)) {
+                jobHandler = new KettleKtrJobHandler(triggerParam.getJobId(),triggerParam.getJobName(),
+                        triggerParam.getKtrs().get(0), KettleLogLevel.match(triggerParam.getKettleLogLevel()));
+            }
+
+        } else if (glueTypeEnum.equals(GlueTypeEnum.KETTLE_KJB)) {
+            log.info("kettle(kjb) {}", triggerParam.toString());
+
         } else if (glueTypeEnum.isScript()) {
 
             // valid old jobThread

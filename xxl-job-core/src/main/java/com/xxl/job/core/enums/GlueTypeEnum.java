@@ -43,8 +43,10 @@ public enum GlueTypeEnum {
     GLUE_POWERSHELL("GLUE(PowerShell)", true, "powershell", ".ps1"),
 
     // kettle
-    KETTLE("kettle", false, null, ".ktr"),
+    KETTLE_KTR("kettle(ktr)", false, null, ".ktr"),
 
+    // kettle
+    KETTLE_KJB("kettle(kjb)", false, null, ".kjb"),
 
 
 
