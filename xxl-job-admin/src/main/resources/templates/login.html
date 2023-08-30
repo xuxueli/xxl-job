@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>软件license管理系统</title>
+    <link rel="stylesheet" type="text/css" href="css/login.css">
+
+    <script type="text/javascript" src="plugins/jquery-3.7.0.min.js"></script>
+    <script src="plugins/layui-v2.8.11/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="plugins/lodash.js"></script>
+    <script type="text/javascript" src="js/utils.js"></script>
+    <script type="text/javascript" src="js/request.js"></script>
+    <script type="text/javascript" src="js/login.js"></script>
+</head>
+
+<body>
+<div id="wrapper" class="login-page">
+    <div id="login_form" class="form">
+        <form class="register-form">
+            <input type="text" placeholder="账号" id="r_account"/>
+            <input type="text" placeholder="姓名" id="r_name"/>
+            <input type="password" placeholder="密码" id="r_password"/>
+            <input type="text" placeholder="电子邮件" id="r_email"/>
+            <button id="create">创建账户</button>
+            <p class="message">已经有了一个账户? <a href="#">立刻登录</a></p>
+        </form>
+        <form class="login-form">
+            <h2>管理登录</h2>
+            <input type="text" placeholder="账号" id="account"/>
+            <input type="password" placeholder="密码" id="password"/>
+            <button id="login">登　录</button>
+            <p class="message">还没有账户? <a href="#">立刻创建</a></p>
+        </form>
+    </div>
+</div>
+
+
+</body>
+</html>

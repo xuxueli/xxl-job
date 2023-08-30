@@ -43,7 +43,7 @@
     </select>
 
     <insert id="insert">
-        REPLACE into ETL_LOG_REPORT ('ID', 'TRIGGER_DAY', 'RUNNING_COUNT','SUC_COUNT','FAIL_COUNT')
+        REPLACE INTO XXL_JOB_LOG_REPORT (`ID`, `TRIGGER_DAY`, `RUNNING_COUNT`,`SUC_COUNT`,`FAIL_COUNT`)
         values (#{id}, #{triggerDay}, #{runningCount,jdbcType=BIGINT},
         #{sucCount,jdbcType=BIGINT}, #{failCount, jdbcType=BIGINT})
     </insert>

@@ -49,6 +49,14 @@ spring:
       connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
       db-type: mysql
 
+  thymeleaf:
+    enabled: true
+    cache: false
+    mode: HTML
+    prefix: classpath:/templates/
+    suffix: .html
+    encoding: UTF-8
+
 # mybatis-plus 配置
 mybatis-plus:
   global-config:

@@ -1,0 +1,213 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>任务调度中心</title>
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+
+    <link rel="stylesheet" href="css/font.css">
+    <link rel="stylesheet" href="css/xadmin.css">
+    <link rel="stylesheet" href="plugins/layui-v2.8.11/css/layui.css">
+
+    <script src="plugins/jquery-3.7.0.min.js"></script>
+    <script src="plugins/layui-v2.8.11/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="js/xadmin.js"></script>
+    <script type="text/javascript" src="plugins/lodash.js"></script>
+    <script type="text/javascript" src="js/utils.js"></script>
+    <script type="text/javascript" src="js/request.js"></script>
+    <script type="text/javascript" src="js/index.js"></script>
+
+</head>
+<body>
+<!-- 顶部开始 -->
+<div class="container">
+    <div class="logo"><a href="index">任务调度中心</a></div>
+    <div class="left_open">
+        <i title="展开左侧栏" class="iconfont">&#xe699;</i>
+    </div>
+
+    <!--顶部右侧-->
+    <ul class="layui-nav right" lay-filter="">
+        <li class="layui-nav-item">
+            <a id="current" href="javascript:;"></a>
+            <dl class="layui-nav-child">
+                <dd><a onClick="x_admin_show('个人信息','http://www.baidu.com')">个人信息</a></dd>
+                <dd><a onClick='updatePwd()'>修改密码</a></dd>
+                <dd><a onClick="logout()">切换帐号</a></dd>
+                <dd><a onClick="logout()">退出</a></dd>
+            </dl>
+        </li>
+        <li class="layui-nav-item to-index"><a _href="welcome">前台首页</a></li>
+    </ul>
+
+</div>
+<!-- 顶部结束 -->
+
+<!-- 中部开始 -->
+<!-- 左侧菜单开始 -->
+<div class="left-nav">
+    <div id="side-nav">
+        <ul id="nav">
+            <li>
+                <a href="javascript:;">
+                    <i class="iconfont">&#xe6eb;</i>
+                    <cite>主页</cite>
+                    <i class="iconfont nav_right">&#xe6a7;</i>
+                </a>
+                <ul class="sub-menu">
+                    <li>
+                        <a _href="welcome">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>运行报表</cite>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="javascript:;">
+                    <i class="iconfont">&#xe69e;</i>
+                    <cite>任务调度管理</cite>
+                    <i class="iconfont nav_right">&#xe6a7;</i>
+                </a>
+                <ul class="sub-menu">
+                    <li>
+                        <a _href="page-jobGroup">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>执行器管理</cite>
+                        </a>
+                    </li>
+                    <li>
+                        <a _href="page-project">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>任务管理</cite>
+                        </a>
+                    </li>
+                    <li>
+                        <a _href="page-license">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>调度日志管理</cite>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="javascript:;">
+                    <i class="iconfont">&#xe726;</i>
+                    <cite>管理员管理</cite>
+                    <i class="iconfont nav_right">&#xe6a7;</i>
+                </a>
+                <ul class="sub-menu">
+                    <li>
+                        <a _href="page-userInfo">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>管理员列表</cite>
+                        </a>
+                    </li>
+                    <!--<li>
+                        <a _href="html/admin-role.html">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>角色管理</cite>
+                        </a>
+                    </li>
+                    <li>
+                        <a _href="html/admin-rule.html">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>权限管理</cite>
+                        </a>
+                    </li>-->
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>
+<!-- <div class="x-slide_left"></div> -->
+<!-- 左侧菜单结束 -->
+
+<!-- 右侧主体开始 -->
+<div class="page-content">
+    <div class="layui-tab tab" lay-filter="xbs_tab" lay-allowclose="false">
+        <ul class="layui-tab-title">
+            <li class="home"><i class="layui-icon">&#xe68e;</i>我的桌面</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">
+                <iframe src='welcome' frameborder="0" scrolling="yes" class="x-iframe"></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="page-content-bg"></div>
+<!-- 右侧主体结束 -->
+<!-- 中部结束 -->
+
+<div id="update-pwd-form" style="display: none">
+    <form class="layui-form" lay-filter="layui-update-pwd-form">
+        <div class="layui-form-item">
+            <label for="update-pwd-account" class="layui-form-label">
+                <span class="x-red">*</span>账号
+            </label>
+            <div class="layui-input-inline">
+                <input type="text" id="update-pwd-account" disabled name="account" required lay-verify="required|account" autocomplete="off" lay-vertype="tips"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="update-oldPwd-password" class="layui-form-label">
+                <span class="x-red">*</span>原密码
+            </label>
+            <div class="layui-input-inline">
+                <input type="password" id="update-oldPwd-password" name="oldPwd" required lay-verify="required|password" autocomplete="off" lay-vertype="tips"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="update-newPwd-password" class="layui-form-label">
+                <span class="x-red">*</span>新密码
+            </label>
+            <div class="layui-input-inline">
+                <input type="password" id="update-newPwd-password" name="newPwd" required lay-verify="required|password" autocomplete="off" lay-vertype="tips"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="update-confirmPwd-password" class="layui-form-label">
+                <span class="x-red">*</span>确认密码
+            </label>
+            <div class="layui-input-inline">
+                <input type="password" id="update-confirmPwd-password" name="confirmPwd" required lay-verify="required|password" autocomplete="off" lay-vertype="tips"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label for="updatePwd" class="layui-form-label"></label>
+            <button id="updatePwd" class="layui-btn" lay-filter="updatePwd" lay-submit="">提交</button>
+        </div>
+    </form>
+</div>
+
+
+<!-- 底部开始 -->
+<!--<div class="footer">
+    <div class="copyrights">Copyright ©2019 L-admin v2.3 All Rights Reserved</div>
+</div>-->
+<!-- 底部结束 -->
+<style>
+    /*.footer .copyrights {
+        text-indent: -9999px;
+        height: 0;
+        line-height: 0;
+        font-size: 0;
+        overflow: hidden;
+    }*/
+</style>
+<!--<div class="copyrights" id="links20210126">-->
+<!--    Collect from <a href="http://www.cssmoban.com/" title="网站模板">模板之家</a>-->
+<!--    <a href="https://www.chazidian.com/" title="查字典">查字典</a>-->
+<!--</div>-->
+</body>
+</html>

@@ -181,4 +181,30 @@ CREATE TABLE IF NOT EXISTS `xxl_job_registry`  (
 -- Records of xxl_job_registry
 -- ----------------------------
 
+-- ----------------------------
+-- Table structure for xxl_job_user_info
+-- ----------------------------
+# DROP TABLE IF EXISTS `xxl_job_user_info`;
+CREATE TABLE IF NOT EXISTS `xxl_job_user_info`  (
+    `id` bigint NOT NULL COMMENT '主键',
+    `account` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '账号',
+    `password` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '密码',
+    `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '姓名',
+    `mail` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '邮箱',
+    `sex` int NULL DEFAULT NULL COMMENT '性别  男：0，女：1',
+    `telephone` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '手机号码',
+    `status` int NULL DEFAULT 1 COMMENT '账号状态, (0->已过期，1->启用，-1->禁用 )',
+    `created_user` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '创建人',
+    `created_time` bigint NULL DEFAULT NULL COMMENT '创建时间',
+    `updated_user` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '更新人',
+    `updated_time` bigint NULL DEFAULT NULL COMMENT '更新时间',
+    `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '描述',
+    PRIMARY KEY (`id`) USING BTREE,
+    UNIQUE INDEX `unique_index_account`(`account` ASC) USING BTREE COMMENT '唯一索引'
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '用户' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of xxl_job_user_info
+-- ----------------------------
+
 SET FOREIGN_KEY_CHECKS = 1;

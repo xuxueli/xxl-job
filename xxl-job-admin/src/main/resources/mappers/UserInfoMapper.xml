@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xxl.job.admin.mapper.UserInfoMapper">
+    <resultMap id="BaseResultMap" type="com.xxl.job.admin.common.pojo.entity.UserInfo">
+        <id column="id" property="id"/>
+        <result column="account" property="account"/>
+        <result column="password" property="password"/>
+        <result column="name" property="name"/>
+        <result column="mail" property="mail"/>
+        <result column="sex" property="sex"/>
+        <result column="telephone" property="telephone"/>
+        <result column="status" property="status"/>
+        <result column="created_user" property="createdUser"/>
+        <result column="created_time" property="createdTime"/>
+        <result column="updated_user" property="updatedUser"/>
+        <result column="updated_time" property="updatedTime"/>
+        <result column="description" property="description"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id,
+        account,
+        `password`,
+        `name`,
+        mail,
+        sex,
+        telephone,
+        `status`,
+        created_user,
+        created_time,
+        updated_user,
+        updated_time,
+        description
+    </sql>
+
+    <select id="findUserInfoByAccount" resultMap="BaseResultMap">
+        select
+            <include refid="Base_Column_List"/>
+        from xxl_job_user_info
+        where account = #{account,jdbcType=VARCHAR}
+    </select>
+
+    <select id="findUserInfo" resultMap="BaseResultMap">
+        select
+            <include refid="Base_Column_List"/>
+        from xxl_job_user_info
+        <where>
+            <if test="account != null and account != ''">
+                and account like concat('%', #{account,jdbcType=VARCHAR}, '%')
+            </if>
+            <if test="name != null and name != ''">
+                and name like concat('%', #{name,jdbcType=VARCHAR}, '%')
+            </if>
+            <if test="mail != null and mail != ''">
+                and mail like concat('%', #{mail,jdbcType=VARCHAR}, '%')
+            </if>
+            <if test="telephone != null and telephone != ''">
+                and telephone like concat('%', #{telephone,jdbcType=VARCHAR}, '%')
+            </if>
+            <if test="sex != null">
+                and sex = #{sex,jdbcType=INTEGER}
+            </if>
+            <if test="startTime != null">
+                and created_time <![CDATA[ >= ]]> #{startTime,jdbcType=BIGINT}
+            </if>
+            <if test="endTime != null">
+                and created_time <![CDATA[ <= ]]> #{endTime,jdbcType=BIGINT}
+            </if>
+        </where>
+    </select>
+
+    <update id="updatePasswordById">
+        update xxl_job_user_info
+        set password = #{password,jdbcType=VARCHAR}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateStatusById">
+        update xxl_job_user_info
+        set status = #{status,jdbcType=INTEGER}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+</mapper>

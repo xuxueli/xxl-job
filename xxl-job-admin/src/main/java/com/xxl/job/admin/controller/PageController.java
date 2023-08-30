@@ -1,7 +1,9 @@
 package com.xxl.job.admin.controller;
 
+import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
  * 页面控制器，用于页面转发
@@ -10,9 +12,44 @@ import org.springframework.stereotype.Controller;
  * @date 2023/06/01
  */
 @Slf4j
+@Api(hidden = true)
 @Controller
 public class PageController {
 
+    @RequestMapping("index")
+    public String index() {
+        return "index";
+    }
+
+    @RequestMapping("welcome")
+    public String welcome() {
+        return "welcome";
+    }
+
+    @RequestMapping({"/", "/login"})
+    public String login() {
+        return "login";
+    }
+
+    @RequestMapping("page-jobGroup")
+    public String keystore() {
+        return "jobGroup";
+    }
+
+    @RequestMapping("page-project")
+    public String project() {
+        return "project";
+    }
+
+    @RequestMapping("page-license")
+    public String license() {
+        return "license";
+    }
+
+    @RequestMapping("page-userInfo")
+    public String userInfo() {
+        return "userInfo";
+    }
 
 
 

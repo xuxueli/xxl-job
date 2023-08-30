@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>秘钥库管理</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
+
+    <link rel="stylesheet" href="css/font.css">
+    <link rel="stylesheet" href="css/xadmin.css">
+    <link rel="stylesheet" href="plugins/layui-v2.8.11/css/layui.css">
+
+    <script src="plugins/jquery-3.7.0.min.js"></script>
+    <script src="plugins/layui-v2.8.11/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="js/xadmin.js"></script>
+    <script type="text/javascript" src="plugins/lodash.js"></script>
+    <script type="text/javascript" src="js/utils.js"></script>
+    <script type="text/javascript" src="js/request.js"></script>
+    <script type="text/javascript" src="js/jobGroup.js"></script>
+
+</head>
+
+<body>
+<div class="x-body">
+    <div class="layui-row">
+        <div class="layui-form layui-col-md12 x-so">
+            <div class="layui-input-inline">
+                <label class="layui-label">名称</label>
+                <input type="text" id="name" name="name" placeholder="请输入名称" autocomplete="off" class="layui-input">
+            </div>
+            <div class="layui-input-inline">
+                <label class="layui-label">AppName</label>
+                <input type="text" id="appName" name="name" placeholder="请输入AppName" autocomplete="off" class="layui-input">
+            </div>
+            <div class="layui-input-inline">
+                <label class="layui-label">创建时间</label>
+                <input type="text" class="layui-input" placeholder="开始时间" name="start" id="start">
+                <input type="text" class="layui-input" placeholder="结束时间" name="end" id="end">
+            </div>
+            <div class="layui-input-inline" style="float: right">
+                <button type="button" title="查询" class="layui-btn" onclick="search()"><i class="layui-icon">&#xe615;</i></button>
+                <button type="button" title="清空" class="layui-btn layui-btn-danger" onclick="clean()"><i class="layui-icon">&#xe788;</i></button>
+            </div>
+        </div>
+    </div>
+
+    <xblock>
+        <button class="layui-btn" onclick="add()"><i class="layui-icon"></i>添加</button>
+        <button class="layui-btn layui-btn-danger" onclick="delAll()"><i class="layui-icon"></i>批量删除</button>
+    </xblock>
+    <table class="layui-hide" id="table-data"></table>
+    <div id="page"></div>
+</div>
+
+<div id="add-form" style="display: none">
+    <form class="layui-form" lay-filter="layui-add-form">
+        <div class="layui-form-item">
+            <label for="key-appName" class="layui-form-label">
+                <span class="x-red">*</span>AppName
+            </label>
+            <div class="layui-input-inline">
+                <input type="text" id="key-appName" name="appName" placeholder="请输入AppName"
+                       required lay-verify="required|appName" autocomplete="off" lay-vertype="tips"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="key-title" class="layui-form-label">
+                <span class="x-red">*</span>名称
+            </label>
+            <div class="layui-input-inline">
+                <input type="text" id="key-title" name="title" required placeholder="请输入名称"
+                       lay-verify="required|title" autocomplete="off" lay-vertype="tips"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label for="radio-addressType" class="layui-form-label">
+                <span class="x-red">*</span>注册方式
+            </label>
+            <div id="radio-addressType" class="layui-input-inline">
+                <input type="radio" name="addressType" value="0" lay-filter="addressType-radio-filter" title="自动注册" checked>
+                <input type="radio" name="addressType" value="1" lay-filter="addressType-radio-filter" title="手动录入">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="key-addressList" class="layui-form-label">
+                <span class="x-red">*</span>机器地址
+            </label>
+            <div class="layui-input-block">
+                <textarea id="key-addressList" placeholder="请输入执行器地址列表，多地址逗号分隔" name="addressList"
+                          class="layui-textarea" readonly="readonly"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label for="description" class="layui-form-label">描述</label>
+            <div class="layui-input-block">
+                <textarea placeholder="请输入内容" id="description" name="description" class="layui-textarea"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="add" class="layui-form-label"></label>
+            <button id="add" class="layui-btn" lay-filter="add" lay-submit="">提交</button>
+        </div>
+    </form>
+</div>
+
+<div id="update-form" style="display: none">
+    <form class="layui-form" lay-filter="layui-update-form">
+        <div class="layui-form-item">
+            <label for="update-name" class="layui-form-label">
+                <span class="x-red">*</span>名称
+            </label>
+            <div class="layui-input-inline">
+                <input type="text" id="update-name" name="name" required lay-verify="required|name" autocomplete="off" lay-vertype="tips"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="update-validity" class="layui-form-label">
+                <span class="x-red">*</span>证书有效期
+            </label>
+            <div class="layui-input-inline">
+                <input type="text" id="update-validity" name="validity" required lay-verify="required|validity" lay-vertype="tips"
+                       placeholder="单位：年" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="update-password" class="layui-form-label">
+                <span class="x-red">*</span>密码
+            </label>
+            <div class="layui-input-inline">
+                <input type="text" id="update-password" name="password" required lay-verify="required|password" lay-vertype="tips"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label for="update-description" class="layui-form-label">描述</label>
+            <div class="layui-input-block">
+                <textarea placeholder="请输入内容" id="update-description" name="description"
+                          class="layui-textarea"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="update" class="layui-form-label"></label>
+            <button id="update" class="layui-btn" lay-filter="update" lay-submit="">提交</button>
+        </div>
+    </form>
+</div>
+
+</body>
+
+</html>
+
