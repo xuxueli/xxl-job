@@ -41,7 +41,13 @@ public interface LogReportMapper extends BaseMapper<LogReport> {
      */
     LogReport queryLogReportByDay(@Param("day") Long day);
 
-
+    /**
+     * 插入新
+     *
+     * @param logReport 日志报告
+     */
+    @Override
+    int insert(LogReport logReport);
 
 
 
