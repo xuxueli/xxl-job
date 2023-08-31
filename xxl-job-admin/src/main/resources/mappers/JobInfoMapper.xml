@@ -36,7 +36,7 @@
     <sql id="Base_Column_List">
         ID,
         GROUP_ID,
-        "NAME",
+        NAME,
         AUTHOR,
         ALARM_EMAIL,
         SCHEDULE_TYPE,
@@ -98,7 +98,7 @@
         SELECT
             <include refid="Base_Column_List"/>
         FROM XXL_JOB_INFO
-        where "NAME" = #{name,jdbcType=VARCHAR}
+        where NAME = #{name,jdbcType=VARCHAR}
     </select>
 
     <select id="queryJobInfo" resultMap="BaseResultMap">
@@ -110,7 +110,7 @@
                 and GROUP_ID = #{groupId,jdbcType=BIGINT}
             </if>
             <if test="name != null and name != ''">
-                and "NAME" like concat(concat('%', #{name,jdbcType=VARCHAR}), '%')
+                and NAME like concat(concat('%', #{name,jdbcType=VARCHAR}), '%')
             </if>
             <if test="author != null and author != ''">
                 and AUTHOR like concat(concat('%', #{author,jdbcType=VARCHAR}), '%')

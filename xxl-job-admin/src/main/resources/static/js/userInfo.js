@@ -135,7 +135,7 @@ function createTable(records) {
 function resetPwd(data) {
     layer.confirm('<div><span>"确认要重置吗？"</span><span class="x-red">, 默认密码: ABCabc123456</span></div>',
         function (index) {
-            patchPath("/userInfo", data.account);
+            patchPath("/userInfo/" + data.account);
             layer.close(index);
             search();
         });

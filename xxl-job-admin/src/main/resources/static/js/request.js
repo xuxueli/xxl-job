@@ -79,11 +79,11 @@ function delPath(url, param) {
     return data;
 }
 
-function patchPath(url, param) {
+function patchPath(url) {
     let data;
     $.ajax({
         method: "PATCH",
-        url: url + "/" + param,
+        url: url,
         async: false,
         contentType: 'application/json',
         success: function(res) {

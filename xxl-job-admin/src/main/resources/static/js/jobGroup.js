@@ -73,18 +73,6 @@ function createTable(records) {
 }
 
 /**
- * 重新生成秘钥
- * @param data
- */
-function regenerate(data) {
-    layer.confirm('确认重新生成秘钥吗？', function (index) {
-        patchPath("/keystore", data.id);
-        layer.close(index);
-        search();
-    });
-}
-
-/**
  * 查询数据
  */
 function search() {

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>任务管理</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
+
+    <link rel="stylesheet" href="css/font.css">
+    <link rel="stylesheet" href="css/xadmin.css">
+<!--    <link rel="stylesheet" href="plugins/loading/okLoading.css">-->
+    <link rel="stylesheet" href="plugins/layui-v2.8.11/css/layui.css">
+
+    <script type="text/javascript" src="plugins/jquery-3.7.0.min.js"></script>
+<!--    <script type="text/javascript" src="plugins/loading/okLoading.js"></script>-->
+    <script type="text/javascript" src="plugins/layui-v2.8.11/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="js/xadmin.js"></script>
+    <script type="text/javascript" src="plugins/lodash.js"></script>
+    <script type="text/javascript" src="js/utils.js"></script>
+    <script type="text/javascript" src="js/request.js"></script>
+    <script type="text/javascript" src="js/jobInfo.js"></script>
+
+</head>
+
+<body>
+<div class="x-body">
+    <div class="layui-row">
+        <div class="layui-form layui-col-md12 x-so">
+            <div class="layui-inline">
+                <label for="select-jobGroup" class="layui-input-label">执行器</label>
+                <div class="layui-input-inline">
+                    <select lay-search="" id="select-jobGroup" lay-filter="jobGroup-selected">
+                        <option value="">请选择或搜索</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-input-inline">
+                <label class="layui-input-label">名称</label>
+                <input type="text" id="name" placeholder="请输入名称" autocomplete="off" class="layui-input">
+            </div>
+
+            <div class="layui-inline">
+                <label for="select-status" class="layui-input-label">状态</label>
+                <div class="layui-input-inline">
+                    <select lay-search="" id="select-status" lay-filter="status-selected">
+                        <option value="">请选择或搜索</option>
+                        <option value="1">运行</option>
+                        <option value="0">停止</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-input-inline">
+                <label class="layui-input-label">JobHandler</label>
+                <input type="text" id="executorHandler" placeholder="请输入JobHandler" autocomplete="off" class="layui-input">
+            </div>
+            <div class="layui-input-inline">
+                <label class="layui-input-label">负责人</label>
+                <input type="text" id="author" placeholder="请输入负责人" autocomplete="off" class="layui-input">
+            </div>
+
+            <div class="layui-input-inline" style="float: right">
+                <button type="button" title="查询" class="layui-btn" onclick="search()"><i class="layui-icon">&#xe615;</i></button>
+                <button type="button" title="清空" class="layui-btn layui-btn-danger" onclick="clean()"><i class="layui-icon">&#xe788;</i></button>
+            </div>
+        </div>
+    </div>
+
+    <xblock>
+        <button class="layui-btn" onclick="add()"><i class="layui-icon"></i>添加</button>
+        <button class="layui-btn layui-btn-danger" onclick="delAll()"><i class="layui-icon"></i>批量删除</button>
+    </xblock>
+    <table class="layui-hide" id="table-data"></table>
+    <div id="page"></div>
+</div>
+
+<div id="add-form" style="display: none">
+    <form class="layui-form" lay-filter="layui-add-form">
+        <div class="layui-form-item">
+            <div class="layui-form-inline">
+                <label for="add-keystore" class="layui-form-label">
+                    <span class="x-red">*</span>秘钥库
+                </label>
+                <div class="layui-input-inline">
+                    <select lay-search="" id="add-keystore" name="keystoreId" required lay-verify="required|keystoreId" lay-filter="keystore-selected">
+                        <option value="">请选择或搜索</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="add-name" class="layui-form-label">
+                <span class="x-red">*</span>名称
+            </label>
+            <div class="layui-input-inline">
+                <input type="text" id="add-name" name="name" required lay-verify="required|name" autocomplete="off" lay-vertype="tips"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="add-company" class="layui-form-label">
+                <span class="x-red">*</span>公司
+            </label>
+            <div class="layui-input-inline">
+                <input type="text" id="add-company" name="company" required lay-verify="required|company" autocomplete="off" lay-vertype="tips"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="add-contact" class="layui-form-label">联系人</label>
+            <div class="layui-input-inline">
+                <input type="text" id="add-contact" name="contact" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="add-telephone" class="layui-form-label">联系电话</label>
+            <div class="layui-input-inline">
+                <input type="text" id="add-telephone" name="telephone" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label for="add-description" class="layui-form-label">描述</label>
+            <div class="layui-input-block">
+                <textarea placeholder="请输入内容" id="add-description" name="description" class="layui-textarea"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="add" class="layui-form-label"></label>
+            <button id="add" class="layui-btn" lay-filter="add" lay-submit="">提交</button>
+        </div>
+    </form>
+</div>
+
+<div id="update-form" style="display: none">
+    <form class="layui-form" lay-filter="layui-update-form">
+        <div class="layui-form-item">
+            <div class="layui-form-inline">
+                <label for="update-keystore" class="layui-form-label">
+                    <span class="x-red">*</span>秘钥库
+                </label>
+                <div class="layui-input-inline">
+                    <select lay-search="" disabled id="update-keystore" name="keystoreId" required lay-verify="required|keystoreId" lay-filter="keystore-selected">
+                        <option value="">请选择或搜索</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="update-name" class="layui-form-label">
+                <span class="x-red">*</span>名称
+            </label>
+            <div class="layui-input-inline">
+                <input type="text" id="update-name" name="name" required lay-verify="required|name" autocomplete="off" lay-vertype="tips"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="update-company" class="layui-form-label">
+                <span class="x-red">*</span>公司
+            </label>
+            <div class="layui-input-inline">
+                <input type="text" id="update-company" name="company" required lay-verify="required|company" autocomplete="off" lay-vertype="tips"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="update-contact" class="layui-form-label">联系人</label>
+            <div class="layui-input-inline">
+                <input type="text" id="update-contact" name="contact" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="update-telephone" class="layui-form-label">联系电话</label>
+            <div class="layui-input-inline">
+                <input type="text" id="update-telephone" name="telephone" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label for="update-description" class="layui-form-label">描述</label>
+            <div class="layui-input-block">
+                <textarea placeholder="请输入内容" id="update-description" name="description" class="layui-textarea"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="update" class="layui-form-label"></label>
+            <button id="update" class="layui-btn" lay-filter="update" lay-submit="">提交</button>
+        </div>
+    </form>
+</div>
+
+</body>
+
+</html>
+

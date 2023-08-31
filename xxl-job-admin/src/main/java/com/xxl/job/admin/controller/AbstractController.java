@@ -1,7 +1,5 @@
 package com.xxl.job.admin.controller;
 
-import com.xxl.job.admin.common.utils.AuthUtils;
-
 /**
  * 基本控制器
  *
@@ -11,7 +9,7 @@ import com.xxl.job.admin.common.utils.AuthUtils;
 public class AbstractController {
 
     protected String getAccount(){
-        return AuthUtils.getCurrentUser();
+        return null;
     }
 
 

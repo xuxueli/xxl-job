@@ -32,6 +32,33 @@ public class WebMvcConfig implements WebMvcConfigurer {
         converters.add(fastJsonHttpMessageConverter);
     }
 
+//    @Override
+//    public void addInterceptors(InterceptorRegistry registry) {
+//        HandlerInterceptor interceptor = new LoginInterceptor();
+//        List<String> patterns = new ArrayList<>();
+//        patterns.add("*.js");
+//        patterns.add("*.css");
+//        patterns.add("/fonts/**");
+//        patterns.add("/css/**");
+//        patterns.add("/js/**");
+//        patterns.add("/favicon.ico");
+//        patterns.add("/plugins/**");
+//        patterns.add("/images/**");
+//        patterns.add("/login");
+//        patterns.add("/register");
+//        patterns.add("/auth/**");
+//        patterns.add("/error");
+//        patterns.add("/swagger/**");
+//        patterns.add("/swagger-ui.html");
+//        patterns.add("/doc.html");
+//        patterns.add("/webjars/**");
+//        patterns.add("/v2/**");
+//        patterns.add("/**/v2/api-docs");
+//        patterns.add("/swagger-resources/**");
+//
+//        registry.addInterceptor(interceptor).excludePathPatterns(patterns).addPathPatterns("/**");
+//    }
+
     /**
      * 对get,form 去除字符串前后空格
      */

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class PageController {
 
-    @RequestMapping("index")
+    @RequestMapping("/index")
     public String index() {
         return "index";
     }
@@ -36,9 +36,9 @@ public class PageController {
         return "jobGroup";
     }
 
-    @RequestMapping("page-project")
+    @RequestMapping("page-jobInfo")
     public String project() {
-        return "project";
+        return "jobInfo";
     }
 
     @RequestMapping("page-license")
