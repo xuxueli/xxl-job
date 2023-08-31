@@ -1,5 +1,4 @@
 $(function () {
-    $('#sysDate').text(nowDate());
     let account = sessionStorage.getItem('currentUser');
     $("#current").text(account);
 
@@ -13,6 +12,7 @@ $(function () {
         $("#project").text(home.projectTotal);
         $("#license").text(home.licenseTotal);
     }
+    okLoading.close(layui.jquery);
 })
 
 

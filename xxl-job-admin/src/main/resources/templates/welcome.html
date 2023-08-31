@@ -10,10 +10,14 @@
 
     <link rel="stylesheet" href="css/font.css">
     <link rel="stylesheet" href="css/xadmin.css">
+    <link rel="stylesheet" href="plugins/loading/okLoading.css">
     <link rel="stylesheet" href="plugins/layui-v2.8.11/css/layui.css">
+    <link rel="stylesheet" href="plugins/bootstrap/css/bootstrap.css" media="all">
 
-    <script src="plugins/jquery-3.7.0.min.js"></script>
-    <script src="plugins/layui-v2.8.11/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="plugins/jquery-3.7.0.min.js"></script>
+    <script type="text/javascript" src="plugins/bootstrap/js/bootstrap.min.js" media="all"></script>
+    <script type="text/javascript" src="plugins/loading/okLoading.js"></script>
+    <script type="text/javascript" src="plugins/layui-v2.8.11/layui.js" charset="utf-8"></script>
     <script type="text/javascript" src="js/xadmin.js"></script>
     <script type="text/javascript" src="plugins/lodash.js"></script>
     <script type="text/javascript" src="js/utils.js"></script>
@@ -23,141 +27,68 @@
 </head>
 <body>
 <div class="x-body layui-anim layui-anim-up">
+
     <blockquote class="layui-elem-quote">欢迎管理员：
-        <span id="current" class="x-red"></span>！当前时间:
-        <span class="x-black" id="sysDate"></span>
+        <span id="current" class="x-red"></span>！
     </blockquote>
-    <fieldset class="layui-elem-field">
-        <legend>数据统计</legend>
-        <div class="layui-field-box">
-            <div class="layui-col-md12">
-                <div class="layui-card">
-                    <div class="layui-card-body">
-                        <div class="layui-carousel x-admin-carousel x-admin-backlog" lay-anim="" lay-indicator="inside"
-                             lay-arrow="none" style="width: 100%; height: 90px;">
-                            <div carousel-item="">
-                                <ul class="layui-row layui-col-space10 layui-this">
-                                    <li class="layui-col-xs2">
-                                        <a href="javascript:;" class="x-admin-backlog-body">
-                                            <h3>总数</h3>
-                                            <p>
-                                                <cite id="total"></cite>
-                                            </p>
-                                        </a>
-                                    </li>
-                                    <li class="layui-col-xs2">
-                                        <a href="javascript:;" class="x-admin-backlog-body">
-                                            <h3>用户数</h3>
-                                            <p>
-                                                <cite id="user"></cite>
-                                            </p>
-                                        </a>
-                                    </li>
-                                    <li class="layui-col-xs2">
-                                        <a href="javascript:;" class="x-admin-backlog-body">
-                                            <h3>秘钥库数</h3>
-                                            <p>
-                                                <cite id="keystore"></cite>
-                                            </p>
-                                        </a>
-                                    </li>
-                                    <li class="layui-col-xs2">
-                                        <a href="javascript:;" class="x-admin-backlog-body">
-                                            <h3>项目数</h3>
-                                            <p>
-                                                <cite id="project"></cite>
-                                            </p>
-                                        </a>
-                                    </li>
-                                    <li class="layui-col-xs2">
-                                        <a href="javascript:;" class="x-admin-backlog-body">
-                                            <h3>许可证数</h3>
-                                            <p>
-                                                <cite id="license"></cite>
-                                            </p>
-                                        </a>
-                                    </li>
-                                    <li class="layui-col-xs2">
-                                        <a href="javascript:;" class="x-admin-backlog-body">
-                                            <h3>总数</h3>
-                                            <p>
-                                                <cite id="total2"></cite>
-                                            </p>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
+
+    <div class="row">
+        <div class="col-xs-6 col-sm-4 col-md-3">
+            <section class="panel">
+                <div class="symbol bgcolor-blue"> <i class=" iconfont icon-dashaxiaoqudizhi01"></i>
                 </div>
-            </div>
+                <div class="value tab-menu" bind="1">
+                    <a href="javascript:;" data-url="user-info.html" data-parent="true" data-title="总栋数"><i class="iconfont " data-icon=""></i>
+                        <h1>45</h1>
+                    </a>
+
+                    <a href="javascript:;" data-url="user-info.html" data-parent="true" data-title="总栋数"> <i class="iconfont " data-icon=""></i><span>总栋数</span></a>
+
+                </div>
+            </section>
         </div>
-    </fieldset>
-    <fieldset class="layui-elem-field">
-        <legend>系统通知</legend>
-        <div class="layui-field-box">
-            <table class="layui-table" lay-skin="line">
-                <tbody>
-                <tr>
-                    <td>
-                        <a class="x-a" href="/" target="_blank">license管理端上线了</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <a class="x-a" href="/" target="_blank">交流qq:(852203465)</a>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+        <div class="col-xs-6 col-sm-4 col-md-3">
+            <section class="panel">
+                <div class="symbol bgcolor-commred"> <i class="iconfont icon-lvhuaxiaoqu"></i>
+                </div>
+                <div class="value tab-menu" bind="1">
+                    <a href="javascript:;" data-url="user-info.html" data-parent="true" data-title="总户数"> <i class="iconfont " data-icon=""></i>
+                        <h1>600</h1>
+                    </a>
+
+                    <a href="javascript:;" data-url="user-info.html" data-parent="true" data-title="总户数"> <i class="iconfont " data-icon=""></i><span>总户数</span></a>
+
+                </div>
+            </section>
         </div>
-    </fieldset>
-    <fieldset class="layui-elem-field">
-        <legend>系统信息</legend>
-        <div class="layui-field-box">
-            <table class="layui-table">
-                <tbody>
-                <tr>
-                    <th>系统版本</th>
-                    <td>1.0</td>
-                </tr>
-                <tr>
-                    <th>操作系统</th>
-                    <td>WINNT/Linux</td>
-                </tr>
-                <tr>
-                    <th>运行环境</th>
-                    <td>Apache Tomcat/9.0.55</td>
-                </tr>
-                <tr>
-                    <th>JAVA版本</th>
-                    <td>1.8</td>
-                </tr>
-                <tr>
-                    <th>MYSQL版本</th>
-                    <td>8</td>
-                </tr>
-                </tbody>
-            </table>
+
+        <div class="col-xs-6 col-sm-4 col-md-3">
+            <section class="panel">
+                <div class="symbol bgcolor-dark-green"> <i class="iconfont icon-yezhuxian"></i>
+                </div>
+                <div class="value tab-menu" bind="1">
+                    <a href="javascript:;" data-url="user-info.html" data-parent="true" data-title="总人数"> <i class="iconfont " data-icon=""></i>
+                        <h1>8310</h1>
+                    </a>
+                    <a href="javascript:;" data-url="user-info.html" data-parent="true" data-title="总人数"> <i class="iconfont " data-icon=""></i><span>总人数</span></a>
+                </div>
+            </section>
         </div>
-    </fieldset>
-    <fieldset class="layui-elem-field">
-        <legend>开发团队</legend>
-        <div class="layui-field-box">
-            <table class="layui-table">
-                <tbody>
-                <tr>
-                    <th>版权所有</th>
-                    <td><a href="http://#/" class='x-a' target="_blank">访问官网</a></td>
-                </tr>
-                <tr>
-                    <th>开发者</th>
-                    <td>852203465@qq.com</td>
-                </tr>
-                </tbody>
-            </table>
+
+        <div class="col-xs-6 col-sm-4 col-md-3">
+            <section class="panel">
+                <div class="symbol bgcolor-yellow-green"> <i class="layui-icon" style="top: 3px;">&#xe613;</i>
+                </div>
+                <div class="value tab-menu" bind="1">
+                    <a href="javascript:;" data-url="user-info.html" data-parent="true" data-title="租户数量"> <i class="iconfont " data-icon=""></i>
+                        <h1>1314</h1>
+                    </a>
+                    <a href="javascript:;" data-url="user-info.html" data-parent="true" data-title="租户数量"> <i class="iconfont " data-icon=""></i><span>租户数量</span></a>
+                </div>
+            </section>
         </div>
-    </fieldset>
+
+    </div>
 </div>
 
 </body>

@@ -138,10 +138,6 @@ $(function () {
             let title = $(this).find('cite').html();
             let index  = $('.left-nav #nav li').index($(this));
 
-            let loading = layer.load(1, {
-                shade: [0.8,'#fff']
-            });
-
             for (let i = 0; i <$('.x-iframe').length; i++) {
                 if($('.x-iframe').eq(i).attr('tab-id') == index + 1){
 
@@ -156,24 +152,16 @@ $(function () {
 
                     tab.tabChange(index + 1);
                     event.stopPropagation();
-                    close(loading);
                     return;
                 }
             }
             tab.tabAdd(title, url,index + 1);
             tab.tabChange(index + 1);
-            close(loading);
         }
         event.stopPropagation();
     })
     
 })
-
-function close(loading) {
-    setTimeout(function () {
-        layer.close(loading);
-    }, 300);
-}
 
 function getCateId(cateId) {
     

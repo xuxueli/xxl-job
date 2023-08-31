@@ -522,6 +522,7 @@ table th, table td {
 
 .footer{
     position: fixed;
+    height: 50px;
     bottom: 0px;
     width: 100%;
     background-color: #323436;
@@ -589,5 +590,12 @@ table th, table td {
     margin-top: 5px !important;
 }
 
-
+.layui-nav #time {
+    margin-right: 50px;
+    font-size: 16px;
+    color: rgba(255,255,255,.7);
+    position: absolute;
+    left: -220px;
+    top: 0
+}
 

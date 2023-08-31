@@ -2,6 +2,7 @@ $(function () {
     initDate('#start');
     initDate('#end');
     search();
+    okLoading.close(layui.jquery);
 })
 
 /**
