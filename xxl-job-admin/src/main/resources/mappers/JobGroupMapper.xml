@@ -34,6 +34,9 @@
             <include refid="Base_Column_List"/>
         from XXL_JOB_GROUP
         <where>
+            <if test="title != null and title != ''">
+                and TITLE like concat(concat('%', #{title,jdbcType=VARCHAR}), '%')
+            </if>
             <if test="appName != null and appName != ''">
                 and APP_NAME like concat(concat('%', #{appName,jdbcType=VARCHAR}), '%')
             </if>

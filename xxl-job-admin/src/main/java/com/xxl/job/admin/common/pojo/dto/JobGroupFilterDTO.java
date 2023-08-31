@@ -23,6 +23,12 @@ public class JobGroupFilterDTO extends PageDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
+     * 名称
+     */
+    @ApiModelProperty(value = "名称")
+    private String title;
+
+    /**
      * 执行器AppName
      */
     @ApiModelProperty(value = "执行器AppName")

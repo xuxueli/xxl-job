@@ -44,6 +44,13 @@ public interface BaseService<E, S, T> extends IService<E> {
     Boolean delete(Serializable id);
 
     /**
+     * 删除多个
+     *
+     * @param ids ID
+     */
+    void delete(List<? extends Serializable> ids);
+
+    /**
      * 根据ID查询
      *
      * @param id ID

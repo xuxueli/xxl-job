@@ -18,6 +18,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * <p>
@@ -71,6 +72,14 @@ public class JobGroupController extends AbstractController {
     public ResponseVO<Void> deleteJobGroup(@PathVariable("id") @NotNull(message = "任务组ID不能为空") Long id) {
         log.info("deleteJobGroup {}", id);
         jobGroupService.delete(id);
+        return ResponseVO.success();
+    }
+
+    @ApiOperation("批量删除任务组")
+    @DeleteMapping(value = "/batch", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseVO<Void> deleteJobGroups(@RequestBody @Validated List<Long> ids) {
+        log.info("deleteJobGroups {}", ids);
+        jobGroupService.delete(ids);
         return ResponseVO.success();
     }
 

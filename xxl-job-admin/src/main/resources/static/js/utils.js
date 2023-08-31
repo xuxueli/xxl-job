@@ -110,7 +110,14 @@ function initDate(divId) {
     });
 }
 
-
+/**
+ * 字符串转数组
+ * @param str 字符串
+ * @returns {Array} 数组
+ */
+function str2List(str) {
+    return _.split(str, ',');
+}
 
 
 

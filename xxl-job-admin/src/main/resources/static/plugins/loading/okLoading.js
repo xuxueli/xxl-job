@@ -3,6 +3,10 @@ var ok_load_options = {
 	content: "正在拼命加载中..."
 };
 !function (content, options) {
+	handler(content, options);
+}();
+
+function handler(content, options) {
 	function templateFun(options) {
 		return `<div class="ok-loading">
 	    <div class="loader">
@@ -39,7 +43,8 @@ var ok_load_options = {
 	ok_load_options = headerInit(content, options);
 	var template = templateFun(ok_load_options);
 	document.writeln(template);
-}();
+}
+
 
 var okLoading = {
 	close: function ($, time, dom) {
@@ -61,6 +66,9 @@ var okLoading = {
 				}, 800);
 			}, time);
 		}
+	},
+	load: function () {
+		handler('正在拼命加载中...', ok_load_options);
 	}
 };
 

@@ -30,12 +30,12 @@
     <div class="layui-row">
         <div class="layui-form layui-col-md12 x-so">
             <div class="layui-input-inline">
-                <label class="layui-label">名称</label>
-                <input type="text" id="name" name="name" placeholder="请输入名称" autocomplete="off" class="layui-input">
+                <label class="layui-label">AppName</label>
+                <input type="text" id="appName" name="appName" placeholder="请输入AppName" autocomplete="off" class="layui-input">
             </div>
             <div class="layui-input-inline">
-                <label class="layui-label">AppName</label>
-                <input type="text" id="appName" name="name" placeholder="请输入AppName" autocomplete="off" class="layui-input">
+                <label class="layui-label">名称</label>
+                <input type="text" id="title" name="title" placeholder="请输入名称" autocomplete="off" class="layui-input">
             </div>
             <div class="layui-input-inline">
                 <label class="layui-label">创建时间</label>
@@ -79,7 +79,6 @@
                        class="layui-input">
             </div>
         </div>
-
         <div class="layui-form-item">
             <label for="radio-addressType" class="layui-form-label">
                 <span class="x-red">*</span>注册方式
@@ -94,7 +93,7 @@
                 <span class="x-red">*</span>机器地址
             </label>
             <div class="layui-input-block">
-                <textarea id="key-addressList" placeholder="请输入执行器地址列表，多地址逗号分隔" name="addressList"
+                <textarea id="key-addressList" placeholder="请输入执行器地址列表，多地址逗号分隔" name="addresses"
                           class="layui-textarea" readonly="readonly"></textarea>
             </div>
         </div>
@@ -114,37 +113,47 @@
 <div id="update-form" style="display: none">
     <form class="layui-form" lay-filter="layui-update-form">
         <div class="layui-form-item">
-            <label for="update-name" class="layui-form-label">
-                <span class="x-red">*</span>名称
+            <label for="update-appName" class="layui-form-label">
+                <span class="x-red">*</span>AppName
             </label>
             <div class="layui-input-inline">
-                <input type="text" id="update-name" name="name" required lay-verify="required|name" autocomplete="off" lay-vertype="tips"
+                <input type="text" id="update-appName" name="appName" placeholder="请输入AppName"
+                       required lay-verify="required|appName" autocomplete="off" lay-vertype="tips"
                        class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
-            <label for="update-validity" class="layui-form-label">
-                <span class="x-red">*</span>证书有效期
+            <label for="update-title" class="layui-form-label">
+                <span class="x-red">*</span>名称
             </label>
             <div class="layui-input-inline">
-                <input type="text" id="update-validity" name="validity" required lay-verify="required|validity" lay-vertype="tips"
-                       placeholder="单位：年" autocomplete="off" class="layui-input">
+                <input type="text" id="update-title" name="title" required placeholder="请输入名称"
+                       lay-verify="required|title" autocomplete="off" lay-vertype="tips"
+                       class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
-            <label for="update-password" class="layui-form-label">
-                <span class="x-red">*</span>密码
+            <label for="update-addressType" class="layui-form-label">
+                <span class="x-red">*</span>注册方式
             </label>
-            <div class="layui-input-inline">
-                <input type="text" id="update-password" name="password" required lay-verify="required|password" lay-vertype="tips"
-                       autocomplete="off" class="layui-input">
+            <div id="update-addressType" class="layui-input-inline">
+                <input type="radio" name="addressType" value="0" lay-filter="addressType-radio-filter" title="自动注册" checked>
+                <input type="radio" name="addressType" value="1" lay-filter="addressType-radio-filter" title="手动录入">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="update-addressList" class="layui-form-label">
+                <span class="x-red">*</span>机器地址
+            </label>
+            <div class="layui-input-block">
+                <textarea id="update-addressList" placeholder="请输入执行器地址列表，多地址逗号分隔" name="addresses"
+                          class="layui-textarea" readonly="readonly"></textarea>
             </div>
         </div>
         <div class="layui-form-item layui-form-text">
             <label for="update-description" class="layui-form-label">描述</label>
             <div class="layui-input-block">
-                <textarea placeholder="请输入内容" id="update-description" name="description"
-                          class="layui-textarea"></textarea>
+                <textarea placeholder="请输入内容" id="update-description" name="description" class="layui-textarea"></textarea>
             </div>
         </div>
         <div class="layui-form-item">

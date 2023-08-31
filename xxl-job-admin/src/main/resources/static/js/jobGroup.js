@@ -38,6 +38,13 @@ function createTable(records) {
                     }
                 },
                 {field: 'addresses', title: 'OnLine 机器地址'},
+                {field: 'createdUser', width: 100 ,title: '添加人'},
+                {
+                    field: 'createdTime', title: '添加时间', sort: true,
+                    templet: function (row) {
+                        return ts2Time(row.createdTime)
+                    }
+                },
                 {
                     fixed: 'right', width: 140, title: '操作', toolbar: '<div class="td-manage">\n' +
                         '              <a class="layui-btn layui-btn-radius layui-btn-sm layui-bg-blue" lay-event="update" >编辑\n' +
@@ -53,19 +60,6 @@ function createTable(records) {
             page: false, // 是否显示分页
         });
 
-        from.on('radio(addressType-radio-filter)', function(data){
-            var elem = data.elem;
-            var value = elem.value;
-            if (value == 0) {
-                $('#key-addressList').css("background-color", "#eee");
-                $('#key-addressList').attr("readonly","readonly");
-                $('#key-addressList').val("");
-            } else {
-                $('#key-addressList').css("background-color", "white");
-                $('#key-addressList').removeAttr("readonly");
-            }
-        });
-
         table.on('tool(table-data)', function (obj) {
             let data = obj.data;
             let layEvent = obj.event;
@@ -76,25 +70,6 @@ function createTable(records) {
             }
         });
     });
-}
-
-/**
- * 下载秘钥
- * @param data
- * @param flag
- */
-function downloadKey(data, flag) {
-    let a = document.createElement("a");
-    let objectUrl = window.URL.createObjectURL(new Blob([getPath("/keystore/" + data.id + "/" + flag)]));
-    if (flag) {
-        a.download = 'privateKeys.keystore';
-    }else {
-        a.download = 'publicCerts.keystore';
-    }
-    a.href = objectUrl;
-    a.click();
-    window.URL.revokeObjectURL(objectUrl);
-    a.remove();
 }
 
 /**
@@ -124,7 +99,7 @@ function search() {
  */
 function deleteData(obj) {
     layer.confirm('确认要删除吗？', function (index) {
-        delPath("/keystore", obj.id);
+        delPath("/group", obj.id);
         layer.close(index);
         search();
     });
@@ -139,14 +114,14 @@ function deleteData(obj) {
 function pageSearch(currentPage, pageSize) {
     let start = date2Timestamp($("#start").val());
     let end = date2Timestamp($("#end").val());
-    let name = $("#name").val();
+    let title = $("#title").val();
     let appName = $("#appName").val();
     let pageDTO = {
         'currentPage': currentPage,
         'pageSize': pageSize,
         'startTime': start,
         'endTime': end,
-        'name': name,
+        'title': title,
         'appName': appName
     };
     return get("/group", pageDTO);
@@ -191,8 +166,6 @@ function loadPage(total) {
             }
         });
     });
-
-
 }
 
 /**
@@ -200,6 +173,7 @@ function loadPage(total) {
  */
 function add() {
     var form = layui.form;
+
     layer.open({
         type: 1,
         area: [($(window).width() * 0.7) + 'px', ($(window).height() - 200) + 'px'],
@@ -207,24 +181,37 @@ function add() {
         shadeClose: true,
         shade: 0.4,
         maxmin: true,
-        title: '新增秘钥库',
+        title: '新增执行器',
         content: $('#add-form'),
         success: function (index) {
-            // 对弹层中的表单进行初始化渲染
+            setAddressReadonly(form, '#key-addressList');
             form.render();
+        }
+    });
 
-            validate(form);
+    validate(form);
+    form.on('submit(add)', function (data) {
+        let field = data.field;
+        let res = post("/group", field);
+        if (!isSuccess(res.code)) {
+            error(res.message);
+            return false;
+        }
+        return true;
+    });
+}
 
-            // 表单提交事件
-            form.on('submit(add)', function (data) {
-                let field = data.field;
-                let res = post("/keystore", field);
-                if (!isSuccess(res.code)) {
-                    error(res.message);
-                    return false;
-                }
-                return true;
-            });
+function setAddressReadonly(from, divId) {
+    from.on('radio(addressType-radio-filter)', function(data){
+        var elem = data.elem;
+        var value = elem.value;
+        if (value == 0) {
+            $(divId).css("background-color", "#eee");
+            $(divId).attr("readonly","readonly");
+            $(divId).val("");
+        } else {
+            $(divId).css("background-color", "white");
+            $(divId).removeAttr("readonly");
         }
     });
 }
@@ -237,19 +224,22 @@ function update(data) {
     layer.open({
         type: 1,
         area: [($(window).width() * 0.7) + 'px', ($(window).height() - 200) + 'px'],
-        fix: false, //不固定
+        fix: false,
         shadeClose: true,
         shade: 0.4,
         maxmin: true,
-        title: '修改秘钥库',
+        title: '修改执行器',
         content: $('#update-form'),
         success: function () {
+            setAddressReadonly(form, '#update-addressList');
             form.val("layui-update-form", {
-                "name": data.name,
-                "validity": data.validity,
-                "password": data.password,
+                "appName": data.appName,
+                "title": data.title,
+                "addressType": data.addressType,
+                "addresses": data.addresses,
                 "description": data.description,
             });
+            form.render();
         }
     });
 
@@ -257,7 +247,8 @@ function update(data) {
     form.on('submit(update)', function (new_obj) {
         let field = new_obj.field;
         field.id = data.id;
-        let res = put("/keystore", field);
+        field.addresses = str2List(field.addresses);
+        let res = put("/group", field);
         if (!isSuccess(res.code)) {
             error(res.message);
             return false;
@@ -271,20 +262,15 @@ function update(data) {
  * @param form 表单对象
  */
 function validate(form) {
-// 自定义验证规则，如下以验证用户名和密码为例
     form.verify({
-        // 函数写法
-        // 参数 value 为表单的值；参数 item 为表单的 DOM 对象
-        name: function (value, item) {
-            if (!new RegExp("^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$").test(value)) {
-                return '名称不能有特殊字符';
-            }
+        appName: function (value, item) {
+            if (/(^_)|(__)|(_+$)/.test(value)) return 'AppName首尾不能出现 _ 下划线';
+            if (/^\d+$/.test(value)) return 'AppName不能全为数字';
+        },
+        title: function (value, item) {
             if (/(^_)|(__)|(_+$)/.test(value)) return '名称首尾不能出现 _ 下划线';
             if (/^\d+$/.test(value)) return '名称不能全为数字';
         },
-        // 数组中两个成员值分别代表：[正则表达式、正则匹配不符时的提示文字]
-        password: [/(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,}$/, '密码必须由字母和数字组成的至少6个字符组成'],
-        validity: [/^\d+$/, '有效期只能是数字且是整数']
     });
 }
 
@@ -294,7 +280,8 @@ function validate(form) {
 function clean() {
     $("#start").val('');
     $("#end").val('');
-    $("#name").val('');
+    $("#title").val('');
+    $("#appName").val('');
     search();
 }
 

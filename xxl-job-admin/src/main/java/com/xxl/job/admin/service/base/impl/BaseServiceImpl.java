@@ -15,6 +15,7 @@ import com.xxl.job.admin.common.pojo.vo.PageVO;
 import com.xxl.job.admin.common.utils.PageableUtils;
 import com.xxl.job.admin.common.utils.PropertyUtils;
 import com.xxl.job.admin.service.base.BaseService;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -54,9 +55,18 @@ public class BaseServiceImpl<M extends BaseMapper<E>, E, S, T> extends ServiceIm
     }
 
     @Override
+    @Transactional(rollbackFor = RuntimeException.class)
     public Boolean delete(Serializable id) {
         if (ObjectUtil.isNotEmpty(id)) return this.removeById(id);
         return Boolean.FALSE;
+    }
+
+    @Override
+    @Transactional(rollbackFor = RuntimeException.class)
+    public void delete(List<? extends Serializable> ids) {
+        if (CollectionUtil.isNotEmpty(ids)) {
+            ids.forEach(a -> delete(a));
+        }
     }
 
     @Override
