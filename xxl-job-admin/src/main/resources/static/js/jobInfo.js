@@ -175,33 +175,34 @@ function pageSearch(currentPage, pageSize) {
  * 新增
  */
 function add() {
-    searchJobGroup('#add-keystore')
+    searchJobGroup('#add-group')
         .then(res => {
             var form = layui.form;
             layer.open({
                 type: 1,
-                area: [($(window).width() * 0.7) + 'px', ($(window).height() - 200) + 'px'],
+                area: [($(window).width() * 0.9) + 'px', ($(window).height() - 100) + 'px'],
                 fix: false, //不固定
                 shadeClose: true,
                 shade: 0.4,
                 maxmin: true,
-                title: '新增项目',
+                title: '新增任务',
                 content: $('#add-form'),
                 success: function (index) {
                     form.render();
-                    validate(form);
-
-                    // 表单提交事件
-                    form.on('submit(add)', function (data) {
-                        let field = data.field;
-                        let res = post("/project", field);
-                        if (!isSuccess(res.code)) {
-                            error(res.message);
-                            return false;
-                        }
-                        return true;
-                    });
                 }
+            });
+
+            validate(form);
+
+            // 表单提交事件
+            form.on('submit(add)', function (data) {
+                let field = data.field;
+                let res = post("/job", field);
+                if (!isSuccess(res.code)) {
+                    message.error(res.message);
+                    return false;
+                }
+                return true;
             });
         })
 }

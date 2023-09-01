@@ -24,6 +24,21 @@
     <script type="text/javascript" src="js/request.js"></script>
     <script type="text/javascript" src="js/jobInfo.js"></script>
 
+    <style>
+        .layui-form-item .layui-input-inline {
+            float: left;
+            width: 300px !important;
+            margin-right: 10px;
+        }
+
+        #cron-button {
+            background-color: #c2c2c2;
+            height: auto;
+            flex: 1;
+        }
+
+    </style>
+
 </head>
 
 <body>
@@ -80,34 +95,73 @@
 <div id="add-form" style="display: none">
     <form class="layui-form" lay-filter="layui-add-form">
         <div class="layui-form-item">
-            <div class="layui-form-inline">
-                <label for="add-keystore" class="layui-form-label">
-                    <span class="x-red">*</span>秘钥库
+            <div class="layui-inline">
+                <label for="add-group" class="layui-form-label">
+                    <span class="x-red">*</span>所属执行器
                 </label>
                 <div class="layui-input-inline">
-                    <select lay-search="" id="add-keystore" name="keystoreId" required lay-verify="required|keystoreId" lay-filter="keystore-selected">
+                    <select lay-search="" id="add-group" name="groupId" required lay-verify="required|groupId" lay-filter="group-selected">
                         <option value="">请选择或搜索</option>
                     </select>
                 </div>
             </div>
-        </div>
-        <div class="layui-form-item">
-            <label for="add-name" class="layui-form-label">
-                <span class="x-red">*</span>名称
-            </label>
-            <div class="layui-input-inline">
-                <input type="text" id="add-name" name="name" required lay-verify="required|name" autocomplete="off" lay-vertype="tips"
-                       class="layui-input">
+
+            <div class="layui-inline">
+                <label for="add-name" class="layui-form-label">
+                    <span class="x-red">*</span>任务名
+                </label>
+                <div class="layui-input-inline">
+                    <input type="text" id="add-name" name="name" required lay-verify="required|name" autocomplete="off" lay-vertype="tips"
+                           class="layui-input">
+                </div>
             </div>
         </div>
         <div class="layui-form-item">
-            <label for="add-company" class="layui-form-label">
-                <span class="x-red">*</span>公司
-            </label>
-            <div class="layui-input-inline">
-                <input type="text" id="add-company" name="company" required lay-verify="required|company" autocomplete="off" lay-vertype="tips"
-                       class="layui-input">
+            <div class="layui-inline">
+                <label for="add-author" class="layui-form-label">
+                    <span class="x-red">*</span>负责人
+                </label>
+                <div class="layui-input-inline">
+                    <input type="text" id="add-author" name="author" required lay-verify="required|author" autocomplete="off" lay-vertype="tips"
+                           class="layui-input">
+                </div>
             </div>
+
+            <div class="layui-inline">
+                <label for="add-email" class="layui-form-label">报警邮件</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="add-email" name="alarmEmail" autocomplete="off" lay-vertype="tips" class="layui-input">
+
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label for="add-schedule-type" class="layui-form-label">
+                    <span class="x-red">*</span>调度类型
+                </label>
+                <div class="layui-input-inline">
+                    <select lay-search="" id="add-schedule-type" name="scheduleType" required lay-verify="required|scheduleType" lay-filter="scheduleType-selected">
+                        <option value="NONE">无</option>
+                        <option value="CRON" selected>CRON</option>
+                        <option value="FIX_RATE">固定速度</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <label for="add-cron" class="layui-form-label">
+                    <span class="x-red">*</span>Cron
+                </label>
+                <div class="layui-input-inline" style="display: flex;height: 100%;">
+                    <input type="text" class="layui-input" id="add-cron" autocomplete="off"/>
+                    <button id="cron-button" type="button" class="layui-btn layui-btn-sm layui-btn-danger" style="background-color: #c2c2c2">
+                        <i class="layui-icon layui-icon-edit"></i>
+                    </button>
+                </div>
+            </div>
+
+
         </div>
         <div class="layui-form-item">
             <label for="add-contact" class="layui-form-label">联系人</label>
