@@ -182,7 +182,7 @@ function add() {
         let field = data.field;
         let res = post("/group", field);
         if (!isSuccess(res.code)) {
-            error(res.message);
+            message.error(res.message);
             return false;
         }
         return true;
@@ -238,7 +238,7 @@ function update(data) {
         field.addresses = str2List(field.addresses);
         let res = put("/group", field);
         if (!isSuccess(res.code)) {
-            error(res.message);
+            message.error(res.message);
             return false;
         }
         return true;

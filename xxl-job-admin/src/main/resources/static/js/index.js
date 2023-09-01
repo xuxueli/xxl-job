@@ -55,12 +55,12 @@ function updatePwd() {
     form.on('submit(updatePwd)', function (new_obj) {
         let field = new_obj.field;
         if (_.isEqual(field.oldPwd, field.newPwd)) {
-            error("新旧密码不能一致");
+            message.error("新旧密码不能一致");
             return false;
         }
 
         if (!_.isEqual(field.newPwd, field.confirmPwd)) {
-            error("两次输入不一致");
+            message.error("两次输入不一致");
             return false;
         }
 
@@ -72,7 +72,7 @@ function updatePwd() {
 
         let res = patchBody("/userInfo/pwd", param);
         if (!isSuccess(res.code)) {
-            error(res.message);
+            message.error(res.message);
             return false;
         }
         return true;

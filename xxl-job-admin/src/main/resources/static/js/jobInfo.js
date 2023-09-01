@@ -66,17 +66,18 @@ function createTable(records) {
                     }
                 },
                 {
-                    field: 'triggerStatus', title: '状态', minWidth: 200, templet: function (row) {
-                        if (row.triggerStatus == 1) {
-                            return '<span">RUNNING</span>';
+                    field: 'triggerStatus', title: '状态', width: 100, templet: function (row) {
+                        let jobId = row.id;
+                        if (row.triggerStatus == 0) {
+                            return "<input type='checkbox'  jobId = '" + jobId + "' lay-filter='trigger-status-filter' lay-skin='switch' lay-text='ON|OFF'>"
                         } else {
-                            return '<span">STOP</span>';
+                            return "<input type='checkbox'  jobId = '" + jobId + "'  lay-filter='trigger-status-filter' lay-skin='switch' lay-text='ON|OFF' checked>"
                         }
                     }
                 },
                 {field: 'author', title: '负责人'},
                 {
-                    fixed: 'right', width: 130, title: '操作', toolbar: '<div class="td-manage">\n' +
+                    fixed: 'right', width: 200, title: '操作', toolbar: '<div class="td-manage">\n' +
                         '              <a class="layui-btn layui-btn-radius layui-btn-sm layui-bg-blue" lay-event="update" >编辑\n' +
                         '              </a>\n' +
                         '              <a class="layui-btn layui-btn-radius layui-btn-sm layui-bg-red" lay-event="delete">删除\n' +
@@ -92,7 +93,7 @@ function createTable(records) {
 
         // 状态 - 开关操作
         form.on('switch(trigger-status-filter)', function(row) {
-            updateStatus(this.value, row.elem.checked);
+            updateStatus(row.elem.attributes['jobId'].nodeValue, row.elem.checked);
         });
 
         table.on('tool(table-data)', function (obj) {
@@ -113,13 +114,11 @@ function createTable(records) {
  * @param status 状态
  */
 function updateStatus(id, status) {
-    console.log(id, status);
     if (status) {
         patchPath('/job/start/' + id);
     }else {
         patchPath('/job/stop/' + id);
     }
-
     pageSearch(1, 50);
 }
 
