@@ -1,7 +1,6 @@
 $(function () {
     searchJobGroup('#select-jobGroup');
     search();
-    okLoading.close(layui.jquery);
 })
 
 /**

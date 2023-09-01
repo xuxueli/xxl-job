@@ -1,6 +1,5 @@
 $(function () {
     search();
-    okLoading.close(layui.jquery);
 })
 
 /**

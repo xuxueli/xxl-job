@@ -12,7 +12,6 @@ $(function () {
         $("#project").text(home.projectTotal);
         $("#license").text(home.licenseTotal);
     }
-    okLoading.close(layui.jquery);
 })
 
 
