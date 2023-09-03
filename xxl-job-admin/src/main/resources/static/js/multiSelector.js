@@ -50,10 +50,15 @@ var multiSelector = (function () {
         return values;
     }
 
+    function destroy() {
+        select = null;
+    }
+
     return {
         init: init,
         update: update,
         getValue: getValue,
+        destroy: destroy
     }
 
 })();

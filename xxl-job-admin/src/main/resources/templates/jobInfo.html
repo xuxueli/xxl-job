@@ -12,15 +12,26 @@
     <link rel="stylesheet" href="css/font.css">
     <link rel="stylesheet" href="css/xadmin.css">
     <link rel="stylesheet" href="plugins/layui-v2.8.11/css/layui.css">
-<!--    <link rel="stylesheet" href="plugins/loading/okLoading.css">-->
+    <link rel="stylesheet" href="plugins/codemirror/lib/codemirror.css">
+    <link rel="stylesheet" href="plugins/codemirror/theme/dracula.css">
+    <link rel="stylesheet" href="plugins/codemirror/addon/hint/show-hint.css">
 
     <script type="text/javascript" src="plugins/jquery-3.7.0.min.js"></script>
     <script type="text/javascript" src="plugins/layui-v2.8.11/layui.js"></script>
     <script type="text/javascript" src="js/layui-ext.js"></script>
     <script type="text/javascript" src="plugins/xm-select/xm-select.js" charset="utf-8"></script>
     <script type="text/javascript" src="js/multiSelector.js" charset="utf-8"></script>
-
-    <!--    <script type="text/javascript" src="plugins/loading/okLoading.js"></script>-->
+    <script type="text/javascript" src="plugins/codemirror/lib/codemirror.js"></script>
+    <script type="text/javascript" src="plugins/codemirror/addon/hint/show-hint.js"></script>
+    <script type="text/javascript" src="plugins/codemirror/addon/hint/anyword-hint.js"></script>
+    <script type="text/javascript" src="plugins/codemirror/language/clike.js"></script>
+    <script type="text/javascript" src="plugins/codemirror/language/shell.js"></script>
+    <script type="text/javascript" src="plugins/codemirror/language/python.js"></script>
+    <script type="text/javascript" src="plugins/codemirror/language/php.js"></script>
+    <script type="text/javascript" src="plugins/codemirror/language/javascript.js"></script>
+    <script type="text/javascript" src="plugins/codemirror/language/powershell.js"></script>
+    <script type="text/javascript" src="plugins/codemirror/language/css.js"></script>
+    <script type="text/javascript" src="js/codeEditor.js"></script>
     <script type="text/javascript" src="js/xadmin.js"></script>
     <script type="text/javascript" src="plugins/lodash.js"></script>
     <script type="text/javascript" src="js/message.js"></script>
@@ -377,6 +388,20 @@
             <button id="trigger-job" class="layui-btn" lay-filter="triggerJob" lay-submit="">提交</button>
         </div>
     </form>
+</div>
+
+<div id="code-edit" style="display: none">
+    <div id='box'>
+        <textarea id="code"></textarea>
+    </div>
+    <div>
+        <!--    <button class="button" id="codeEidtFormPostSubmit" onclick="submit()">提交</button>-->
+        <form id='codeEidtFormPost'>
+            <input type="text" name="editValues" id="editValues">
+            <input type="text" name="fileName" id="fileName">
+            <input type="text" name="encoding" id="encoding">
+        </form>
+    </div>
 </div>
 
 </body>
