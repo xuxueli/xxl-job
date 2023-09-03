@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WEB IDE</title>
+
+    <link rel="stylesheet" href="plugins/codemirror/lib/codemirror.css">
+    <link rel="stylesheet" href="plugins/codemirror/theme/dracula.css">
+    <link rel="stylesheet" href="plugins/codemirror/addon/hint/show-hint.css">
+
+    <script type="text/javascript" src="plugins/jquery-3.7.0.min.js"></script>
+    <script type="text/javascript" src="plugins/codemirror/lib/codemirror.js"></script>
+    <script type="text/javascript" src="plugins/codemirror/addon/hint/show-hint.js"></script>
+    <script type="text/javascript" src="plugins/codemirror/addon/hint/anyword-hint.js"></script>
+    <script type="text/javascript" src="plugins/codemirror/language/clike.js"></script>
+    <script type="text/javascript" src="plugins/codemirror/language/shell.js"></script>
+    <script type="text/javascript" src="plugins/codemirror/language/python.js"></script>
+    <script type="text/javascript" src="plugins/codemirror/language/php.js"></script>
+    <script type="text/javascript" src="plugins/codemirror/language/javascript.js"></script>
+    <script type="text/javascript" src="plugins/codemirror/language/powershell.js"></script>
+    <script type="text/javascript" src="plugins/codemirror/language/css.js"></script>
+    <script type="text/javascript" src="plugins/lodash.js"></script>
+    <script type="text/javascript" src="js/request.js"></script>
+    <script type="text/javascript" src="js/webide.js"></script>
+
+</head>
+<body>
+<div id='box' style="display: none">
+    <textarea id="code"></textarea>
+</div>
+<div style="display: none">
+<!--    <button class="button" id="codeEidtFormPostSubmit" onclick="submit()">提交</button>-->
+    <form id='codeEidtFormPost'>
+        <input type="text" name="editValues" id="editValues">
+        <input type="text" name="fileName" id="fileName">
+        <input type="text" name="encoding" id="encoding">
+    </form>
+</div>
+</body>
+</html>

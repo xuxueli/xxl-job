@@ -451,9 +451,23 @@ function change(title, oldData) {
 
         if (_.eq('BEAN', value)) {
             $("#glue-conf-Handler").show();
-        } else if (!_.eq('BEAN', value)) {
+            $("#glue-source").hide();
+            $('#glue-kettle').hide();
+        } else if (!_.eq('BEAN', value)
+            && !_.eq('KETTLE_KTR', value)
+            && !_.eq('KETTLE_KJB', value)) {
+            $("#glue-source").show();
             $("#glue-conf-Handler").hide();
+            $('#glue-kettle').hide();
+        }else if (_.eq('KETTLE_KTR', value || _.eq('KETTLE_KJB', value))) {
+            $('#glue-kettle').show();
+            $("#glue-conf-Handler").hide();
+            $("#glue-source").hide();
         }
+    });
+
+    layui.$('#for-glue-source').on('click', function(){
+        openWebIde(form.val('layui-key-form'));
     });
 
     validate(form);
@@ -500,6 +514,45 @@ function change(title, oldData) {
             return false;
         }
         return true;
+    });
+}
+
+/**
+ * 打开WEB IDE
+ */
+function openWebIde(data) {
+    console.log(data);
+
+    if (_.isEmpty(data.groupId)) {
+        message.warning("请先选择执行器");
+        return;
+    }
+
+    if (_.isEmpty(data.name)) {
+        message.warning("请先填写任务名");
+        return;
+    }
+
+    glueType = data.glueType;
+    jobId = data.id;
+    let form = layui.form;
+    let glueType = findGlueTypeTitle(data.glueType);
+    let title = '【' + glueType + '】 ' + data.name;
+
+    layer.open({
+        type: 2,
+        title: title,
+        shadeClose: false,
+        shade: 0.8,
+        btn: ['保存', '关闭'],
+        area: ['91%', '800px'],
+        content: '/webide',
+        success: function (index) {
+            form.render();
+        },
+        cancel: function (index, layero, that) {
+            return true;
+        },
     });
 }
 

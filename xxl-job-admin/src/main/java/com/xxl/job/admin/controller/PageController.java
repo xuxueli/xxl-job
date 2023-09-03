@@ -4,6 +4,10 @@ import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * 页面控制器，用于页面转发
@@ -51,7 +55,12 @@ public class PageController {
         return "userInfo";
     }
 
-
+    @RequestMapping("webide")
+    public void webide(@RequestParam("glueType") String glueType,
+                         @RequestParam(name = "jobId", defaultValue = "-1")Long jobId,
+                         HttpServletResponse response) throws IOException {
+        response.sendRedirect("/webide?glueType=" + glueType + "&jobId=" + jobId);
+    }
 
 
 
