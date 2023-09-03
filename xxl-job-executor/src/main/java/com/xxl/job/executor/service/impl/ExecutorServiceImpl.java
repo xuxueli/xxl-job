@@ -1,6 +1,5 @@
 package com.xxl.job.executor.service.impl;
 
-import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
 import com.xxl.job.core.enums.GlueTypeEnum;
@@ -19,7 +18,6 @@ import com.xxl.job.executor.factory.handler.ScriptJobHandler;
 import com.xxl.job.executor.factory.repository.XxlJobRepository;
 import com.xxl.job.executor.factory.thread.JobThread;
 import com.xxl.job.executor.service.ExecutorService;
-import com.xxl.job.executor.service.GlueGroovyClass;
 import com.xxl.job.executor.utils.JobLogUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +25,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-import java.util.Map;
 
 /**
  * 执行器service实现类
@@ -101,7 +98,7 @@ public class ExecutorServiceImpl implements ExecutorService {
                 }
             }
 
-        } else if (GlueTypeEnum.GLUE_GROOVY_SRC.equals(glueTypeEnum)) {
+        } else if (GlueTypeEnum.GLUE_GROOVY.equals(glueTypeEnum)) {
 
             // valid old jobThread
             if (ObjectUtil.isNotNull(jobThread)
@@ -124,7 +121,7 @@ public class ExecutorServiceImpl implements ExecutorService {
                     return ResponseVO.error(e.getMessage());
                 }
             }
-        } else if (GlueTypeEnum.GLUE_GROOVY_CLASS.equals(glueTypeEnum)) {
+        } /*else if (GlueTypeEnum.GLUE_GROOVY_CLASS.equals(glueTypeEnum)) {
             try {
                 Map<String, GlueGroovyClass> beansOfType = applicationContext.getBeansOfType(GlueGroovyClass.class);
                 if (CollectionUtil.isNotEmpty(beansOfType)) {
@@ -133,7 +130,7 @@ public class ExecutorServiceImpl implements ExecutorService {
             }catch (Exception e) {
                 log.error("{}, ", GlueTypeEnum.GLUE_GROOVY_CLASS.name(), e);
             }
-        } else if (glueTypeEnum.equals(GlueTypeEnum.KETTLE_KTR)) {
+        } */else if (glueTypeEnum.equals(GlueTypeEnum.KETTLE_KTR)) {
 
             // valid old jobThread
             if (ObjectUtil.isNotNull(jobThread) && !(jobThread.getHandler() instanceof KettleKtrJobHandler)) {

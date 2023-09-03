@@ -41,9 +41,9 @@ public class PageController {
         return "jobInfo";
     }
 
-    @RequestMapping("page-license")
+    @RequestMapping("page-jobLog")
     public String license() {
-        return "license";
+        return "jobLog";
     }
 
     @RequestMapping("page-userInfo")

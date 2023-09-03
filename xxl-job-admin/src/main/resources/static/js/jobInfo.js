@@ -8,7 +8,7 @@ $(function () {
  */
 function searchJobGroup(divId) {
     return new Promise(resolve => {
-        let page = get("/group", {'currentPage': -1,});
+        let page = http.get("/group", {'currentPage': -1,});
         layui.use(['form'], function () {
             let form = layui.form;
             $.each(page.records, function (index, item) {
@@ -37,6 +37,7 @@ function search() {
 function createTable(records) {
     layui.use('table', function () {
         var table = layui.table;
+        var dropdown = layui.dropdown;
         var form = layui.form;
         // 已知数据渲染
         table.render({
@@ -57,7 +58,7 @@ function createTable(records) {
                 },
                 {
                     title: '运行模式', templet: function (row) {
-                        let runModel = row.glueType;
+                        let runModel = findGlueTypeTitle(row.glueType);
                         if (!_.isNull(row.executorHandler)) {
                             runModel = runModel + ": " + row.executorHandler;
                         }
@@ -76,11 +77,14 @@ function createTable(records) {
                 },
                 {field: 'author', title: '负责人'},
                 {
-                    fixed: 'right', width: 200, title: '操作', toolbar: '<div class="td-manage">\n' +
+                    fixed: 'right', width: 210, title: '操作', toolbar: '<div class="layui-clear-space">\n' +
                         '              <a class="layui-btn layui-btn-radius layui-btn-sm layui-bg-blue" lay-event="update" >编辑\n' +
                         '              </a>\n' +
                         '              <a class="layui-btn layui-btn-radius layui-btn-sm layui-bg-red" lay-event="delete">删除\n' +
                         '              </a>\n' +
+                        '               <a class="layui-btn layui-btn-radius layui-btn-sm" style="background-color: #31bdec" lay-event="moreOperate">\n' +
+                        '               更多<i class="layui-icon layui-icon-down"></i>\n' +
+                        '               </a>\n' +
                         '            </div>'
                 }
             ]],
@@ -90,8 +94,7 @@ function createTable(records) {
             page: false, // 是否显示分页
         });
 
-        // 状态 - 开关操作
-        form.on('switch(trigger-status-filter)', function(row) {
+        form.on('switch(trigger-status-filter)', function (row) {
             updateStatus(row.elem.attributes['jobId'].nodeValue, row.elem.checked);
         });
 
@@ -99,11 +102,192 @@ function createTable(records) {
             let data = obj.data;
             let layEvent = obj.event;
             if ("update" === layEvent) {
-                update(data);
+                change("修改任务", data);
             } else if ("delete" === layEvent) {
                 deleteData(data);
+            }else if ("moreOperate" === layEvent) {
+
+                let dropdownArr = [
+                    {
+                        id: 'copy',
+                        templet: '<span style="color: #FFFFFF">复制</span>',
+                    },
+                    {
+                        id: 'exeOnce',
+                        templet: '<span style="color: #FFFFFF">执行一次</span>',
+                    },
+                    {
+                        id: 'jobLog',
+                        // templet: '<span style="color: #FFFFFF">查询日志</span>',
+                        templet: '<li><a _href="page-log?jobId='+ data.id +'"><span style="color: #FFFFFF">查询日志</span></a></li>\n',
+                    },
+                    {
+                        id: 'registerNode',
+                        templet: '<span style="color: #FFFFFF">注册节点</span>',
+                    },
+                    {
+                        id: 'nextExeTime',
+                        templet: '<span style="color: #FFFFFF">下次执行时间</span>',
+                    }
+                ]
+
+                if (!_.eq('BEAN',data.glueType) && !_.eq('KETTLE_KTR',data.glueType) && !_.eq('KETTLE_KJB',data.glueType)) {
+                    dropdownArr.push({id: 'glueIde', templet: '<li><a href="page-glue-log?jobId='+ data.id +'" target="_blank" ><span style="color: #FFFFFF">GLUE IDE</span></a></li>'})
+                }
+
+                dropdown.render({
+                    elem: this, // 触发事件的 DOM 对象
+                    show: true, // 外部事件触发即显示
+                    className: 'site-dropdown',
+                    data: dropdownArr,
+                    click: function(menuDate, othis){
+                        var menu = menuDate.id;
+                        if (_.eq("registerNode", menu)) {
+                            showRegisterNode(data);
+                        }else if (_.eq("nextExeTime", menu)) {
+                            showNextExeTime(data);
+                        }else if (_.eq("exeOnce", menu)) {
+                            exeOnce(data);
+                        }else if (_.eq("copy", menu)) {
+                            let newDate = _.cloneDeep(data);
+                            newDate.id = null;
+                            change("新增任务", newDate);
+                        }else if (_.eq("jobLog", menu)) {
+                            showJobLog();
+                        }
+                    },
+                    align: 'right', // 右对齐弹出
+                    style: 'box-shadow: 1px 1px 10px rgb(0 0 0 / 12%);' // 设置额外样式
+                })
             }
         });
+    });
+}
+
+/**
+ * 查询模式类型
+ * @param glueType 模式类型
+ * @returns {string} 显示值
+ */
+function findGlueTypeTitle(glueType) {
+    if (_.eq('BEAN', glueType)) {
+        return 'BEAN';
+    }else if (_.eq('GLUE_GROOVY', glueType)) {
+        return 'GLUE(Java)';
+    }else if (_.eq('GLUE_SHELL', glueType)) {
+        return 'GLUE(Shell)';
+    }else if (_.eq('GLUE_PYTHON', glueType)) {
+        return 'GLUE(Python)';
+    }else if (_.eq('GLUE_PHP', glueType)) {
+        return 'GLUE(PHP)';
+    }else if (_.eq('GLUE_NODEJS', glueType)) {
+        return 'GLUE(Nodejs)';
+    }else if (_.eq('GLUE_POWERSHELL', glueType)) {
+        return 'GLUE(PowerShell)';
+    }else if (_.eq('KETTLE_KTR', glueType)) {
+        return 'kettle(ktr)';
+    }else if (_.eq('KETTLE_KJB', glueType)) {
+        return 'kettle(kjb)';
+    }else {
+        return 'BEAN';
+    }
+}
+
+/**
+ * 显示任务日志
+ */
+function showJobLog() {
+    console.log("查询日志");
+
+}
+
+/**
+ * 执行一次
+ * @param oldData 数据
+ */
+function exeOnce(oldData) {
+    let form = layui.form;
+    layer.open({
+        type: 1,
+        area: [($(window).width() * 0.7) + 'px', ($(window).height() - 300) + 'px'],
+        fix: false, //不固定
+        shadeClose: true,
+        shade: 0.4,
+        maxmin: true,
+        title: "执行一次",
+        content: $('#trigger-job-form'),
+        success: function (index) {
+            form.render();
+        },
+        cancel: function (index, layero, that) {
+            $("#trigger-job--form-form")[0].reset();
+            form.render();
+            return true;
+        },
+    });
+
+    form.on('submit(triggerJob)', function (data) {
+        let field = data.field;
+
+        let addresses = null;
+        if (!_.isEmpty(field.addresses)) {
+            addresses = _.split(field.addresses, ",");
+        }
+
+        let param = {
+            "jobInfoId": oldData.id,
+            "executorParam": _.isEmpty(data.executorParam) ? null : data.executorParam,
+            "addresses": addresses,
+        }
+
+        let res = http.patchBody("/job/trigger", param);
+        if (!isSuccess(res.code)) {
+            message.error(res.message);
+            return false;
+        }
+        return true;
+    });
+}
+
+/**
+ * 显示下次执行时间
+ * @param data 数据
+ */
+function showNextExeTime(data) {
+    let result = http.getPath("/job/next-trigger/" + data.id);
+    if (!_.isEmpty(result)) {
+        let html = '<div style="text-align: center; font-size: 20px">';
+        for (let value of result) {
+            html += '<span class="badge bg-green">' + value + '</span><br>';
+        }
+        html += '</div>';
+
+        layer.alert(html, {
+            title: '下次执行时间',
+            skin: 'layui-layer-molv',
+            area: ['400px', 'auto'],
+        });
+    }
+}
+
+/**
+ * 显示注册节点
+ * @param data 数据
+ */
+function showRegisterNode(data) {
+    let html = '<div style="text-align: center; font-size: 20px">';
+    let registryList = data.jobGroup.addresses;
+    if (!_.isEmpty(registryList)) {
+        for (let index in registryList) {
+            html += '<span class="badge bg-green">' + registryList[index] + '</span><br>';
+        }
+    }
+    html += '</div>';
+
+    layer.alert(html, {
+        title: '注册节点',
+        skin: 'layui-layer-molv',
+        area: ['400px', 'auto'],
     });
 }
 
@@ -114,9 +298,9 @@ function createTable(records) {
  */
 function updateStatus(id, status) {
     if (status) {
-        patchPath('/job/start/' + id);
-    }else {
-        patchPath('/job/stop/' + id);
+        http.patchPath('/job/start/' + id);
+    } else {
+        http.patchPath('/job/stop/' + id);
     }
     pageSearch(1, 50);
 }
@@ -168,84 +352,185 @@ function pageSearch(currentPage, pageSize) {
         'author': author,
         'triggerStatus': status,
     };
-    return get("/job", pageDTO);
+    return http.get("/job", pageDTO);
 }
 
 /**
- * 新增
+ * 修改，新增公共方法
+ * @param title 标题
+ * @param oldData 回显数据(修改时使用)
  */
-function add() {
-    searchJobGroup('#add-group')
-        .then(res => {
-            var form = layui.form;
-            layer.open({
-                type: 1,
-                area: [($(window).width() * 0.9) + 'px', ($(window).height() - 100) + 'px'],
-                fix: false, //不固定
-                shadeClose: true,
-                shade: 0.4,
-                maxmin: true,
-                title: '新增任务',
-                content: $('#add-form'),
-                success: function (index) {
+function change(title, oldData) {
+    let form = layui.form;
+    layer.open({
+        type: 1,
+        area: [($(window).width() * 0.8) + 'px', ($(window).height() - 50) + 'px'],
+        fix: false, //不固定
+        shadeClose: true,
+        shade: 0.4,
+        maxmin: true,
+        title: title,
+        content: $('#key-form'),
+        success: function (index) {
+            searchJobGroup("#add-group")
+                .then(res => {
+                    if (!_.isEmpty(oldData)) {
+                        var scheduleType = oldData.scheduleType;
+                        if (_.eq('CRON', scheduleType)) {
+                            $("#schedule-conf-cron").show();
+                            $("#schedule-conf-fixdelay").hide();
+                        } else if (_.eq('NONE', scheduleType)) {
+                            $("#schedule-conf-cron").hide();
+                            $("#schedule-conf-fixdelay").hide();
+                        } else if (_.eq('FIX_RATE', scheduleType)) {
+                            $("#schedule-conf-cron").hide();
+                            $("#schedule-conf-fixdelay").show();
+                        }
+                        var glueType = oldData.glueType;
+                        if (_.eq('BEAN', glueType)) {
+                            $("#glue-conf-Handler").show();
+                        } else if (!_.eq('BEAN', glueType)) {
+                            $("#glue-conf-Handler").hide();
+                        }
+
+                        form.val("layui-key-form", {
+                            "groupId": oldData.jobGroup.id,
+                            "name": oldData.name,
+                            "author": oldData.author,
+                            "alarmEmail": oldData.alarmEmail,
+                            "scheduleType": oldData.scheduleType,
+                            "misfireStrategy": oldData.misfireStrategy,
+                            "scheduleConfCron": oldData.scheduleConf,
+                            "scheduleConfFixDelay": oldData.scheduleConf,
+                            "executorRouteStrategy": oldData.executorRouteStrategy,
+                            "executorHandler": oldData.executorHandler,
+                            "executorParam": oldData.executorParam,
+                            "executorBlockStrategy": oldData.executorBlockStrategy,
+                            "executorTimeout": oldData.executorTimeout,
+                            "executorFailRetryCount": oldData.executorFailRetryCount,
+                            "glueType": oldData.glueType,
+                            "triggerStatus": oldData.triggerStatus,
+                            "telephone": oldData.telephone,
+                            "description": oldData.description,
+                        });
+                    }
                     form.render();
-                }
-            });
+                });
+            initJobInfo(_.isEmpty(oldData) ? null : oldData.childJobIds);
+        },
+        cancel: function (index, layero, that) {
+            $('#add-group').empty();
+            $('#add-child-jobIds').empty();
+            $("#key-form-form")[0].reset();
+            form.render();
+            return true;
+        },
+    });
 
-            validate(form);
+    form.on('select(schedule-type-selected-filter)', function (data) {
+        var elem = data.elem; // 获得 select 原始 DOM 对象
+        var value = data.value; // 获得被选中的值
+        var othis = data.othis; // 获得 select 元素被替换后的 jQuery 对象
 
-            // 表单提交事件
-            form.on('submit(add)', function (data) {
-                let field = data.field;
-                let res = post("/job", field);
-                if (!isSuccess(res.code)) {
-                    message.error(res.message);
-                    return false;
-                }
-                return true;
-            });
-        })
+        if (_.eq('CRON', value)) {
+            $("#schedule-conf-cron").show();
+            $("#schedule-conf-fixdelay").hide();
+        } else if (_.eq('NONE', value)) {
+            $("#schedule-conf-cron").hide();
+            $("#schedule-conf-fixdelay").hide();
+        } else if (_.eq('FIX_RATE', value)) {
+            $("#schedule-conf-cron").hide();
+            $("#schedule-conf-fixdelay").show();
+        }
+    });
+
+    form.on('select(glue-type-selected-filter)', function (data) {
+        var elem = data.elem; // 获得 select 原始 DOM 对象
+        var value = data.value; // 获得被选中的值
+        var othis = data.othis; // 获得 select 元素被替换后的 jQuery 对象
+
+        if (_.eq('BEAN', value)) {
+            $("#glue-conf-Handler").show();
+        } else if (!_.eq('BEAN', value)) {
+            $("#glue-conf-Handler").hide();
+        }
+    });
+
+    validate(form);
+    form.on('submit(submit)', function (data) {
+
+        let field = data.field;
+        let scheduleType = $("#add-schedule-type").find("option:selected").val();
+        if (_.eq('CRON', scheduleType)) {
+            field.scheduleConf = field.scheduleConfCron;
+        } else if (_.eq('NONE', scheduleType)) {
+            field.scheduleConf = null;
+        } else if (_.eq('FIX_RATE', scheduleType)) {
+            field.scheduleConf = field.scheduleConfFixDelay;
+        }
+
+        if ((_.eq('NONE', scheduleType) || _.eq('FIX_RATE', scheduleType)) && _.isEmpty(field.scheduleConf)) {
+            message.warning("调度配置不能为空");
+            return false;
+        }
+
+        var dep = xmSelect.get('#key-child-jobIds', true).getValue();
+        let childJobIds = [];
+        if (!_.isEmpty(dep)) {
+            for (let childJobsKey of dep) {
+                childJobIds.push(childJobsKey.value);
+            }
+        }
+        field.childJobIds = childJobIds;
+        let glueType = $("#add-glue-type").find("option:selected").val();
+        if (_.eq('BEAN', glueType) && _.isEmpty(field.executorHandler)) {
+            message.warning("JobHandler不能为空");
+            return false;
+        } else {
+            if (_.isEmpty(field.executorHandler)) field.executorHandler = null;
+        }
+        if (!_.isEmpty(oldData.id)) field.id = oldData.id;
+
+        delete field.scheduleConfCron;
+        delete field.scheduleConfFixDelay;
+
+        let res = (_.isEmpty(oldData) || _.isEmpty(oldData.id)) ? http.post("/job", field) : http.put("/job", field);
+        if (!isSuccess(res.code)) {
+            message.error(res.message);
+            return false;
+        }
+        return true;
+    });
 }
 
 /**
- * 修改
+ * 任务下拉
  */
-function update(data) {
-    searchKeystore('#update-keystore').then(res => {
-        let form = layui.form;
-        layer.open({
-            type: 1,
-            area: [($(window).width() * 0.7) + 'px', ($(window).height() - 200) + 'px'],
-            fix: false, //不固定
-            shadeClose: true,
-            shade: 0.4,
-            maxmin: true,
-            title: '修改项目',
-            content: $('#update-form'),
-            success: function (index) {
-                form.val("layui-update-form", {
-                    "keystoreId": data.keystore.id,
-                    "name": data.name,
-                    "company": data.company,
-                    "contact": data.contact,
-                    "telephone": data.telephone,
-                    "description": data.description,
-                });
-                form.render("select");
-            }
+function initJobInfo(oldVal) {
+    let jobInfos = http.get("/job", {'currentPage': -1,}).records;
+    let val = [];
+
+    for (let jobInfo of jobInfos) {
+        if(!_.isEmpty(oldVal) && _.includes(oldVal, jobInfo.id)){
+            val.push({name:jobInfo.name, value:jobInfo.id, selected: true, disabled: false});
+        }else {
+            val.push({name:jobInfo.name, value:jobInfo.id, selected: false, disabled: false});
+        }
+    }
+
+    multiSelector.init('#key-child-jobIds', 'childJobIds', val);
+    layui.use(['cron'], function () {
+        var $ = layui.$;
+        var cron = layui.cron;
+        cron.render({
+            elem: "#for-schedule-conf-cron",
+            value: $("#for-schedule-conf-cron").val(),
+            done: function (cronStr) {
+                $("#for-schedule-conf-cron").val(cronStr);
+            },
         });
-        validate(form);
-        form.on('submit(update)', function (new_obj) {
-            let field = new_obj.field;
-            field.id = data.id;
-            let res = put("/project", field);
-            if (!isSuccess(res.code)) {
-                error(res.message);
-                return false;
-            }
-            return true;
-        });
-    })
+    });
+
 }
 
 /**
@@ -254,19 +539,30 @@ function update(data) {
  */
 function validate(form) {
     form.verify({
-        name: function (value, item) {
-            if (/(^_)|(__)|(_+$)/.test(value)) return '名称首尾不能出现 _ 下划线';
-            if (/^\d+$/.test(value)) return '名称不能全为数字';
-        },
-        company: function (value, item) {
-            if (/(^_)|(__)|(_+$)/.test(value)) return '公司名首尾不能出现 _ 下划线';
-            if (/^\d+$/.test(value)) return '公司名不能全为数字';
-        },
-        keystoreId: function (value, item) {
+        groupId: function (value, item) {
             if (_.isNil(value) || _.isEmpty(value)) {
-                return '秘钥库不能为空';
+                return '执行器不能为空';
             }
         },
+        name: function (value, item) {
+            if (/(^_)|(__)|(_+$)/.test(value)) return '任务名首尾不能出现 _ 下划线';
+            if (/^\d+$/.test(value)) return '任务名不能全为数字';
+        },
+        author: function (value, item) {
+            if (/(^_)|(__)|(_+$)/.test(value)) return '负责人首尾不能出现 _ 下划线';
+            if (/^\d+$/.test(value)) return '负责人不能全为数字';
+        },
+        triggerStatus: function (value, item) {
+            if (_.isNil(value) || _.isEmpty(value)) return '是否生效不能为空';
+            if (!_.isNumber(_.toNumber(value))) return '是否生效只能是数字';
+        },
+        scheduleType: function (value, item) {
+            if (_.isNil(value) || _.isEmpty(value)) return '调度类型不能为空';
+        },
+        glueType: function (value, item) {
+            if (_.isNil(value) || _.isEmpty(value)) return '运行模式不能为空';
+        },
+
     });
 }
 
@@ -281,7 +577,7 @@ function delAll() {
             ids.push(a.id);
         })
         layer.confirm('确认要删除吗？', function (index) {
-            delBody("/project/batch", ids);
+            http.delBody("/job/batch", ids);
             layer.close(index);
             search();
         });
@@ -294,7 +590,7 @@ function delAll() {
  */
 function deleteData(obj) {
     layer.confirm('确认要删除吗？', function (index) {
-        delPath("/project", obj.id);
+        http.delPath("/job/" + obj.id);
         layer.close(index);
         search();
     });
@@ -304,13 +600,15 @@ function deleteData(obj) {
  * 清空条件
  */
 function clean() {
-    $("#start").val('');
-    $("#end").val('');
-    $("#name").val('');
-    $("#subject").val('');
-    $("#company").val('');
-    $("#contact").val('');
-    $("#select-keystore option[value='']").prop("selected", true);
+    $("#select-jobGroup option[value='']").prop("selected", true);
+    $("#select-status option[value='']").prop("selected", true);
+    $("#executorHandler").val('');
+    $("#author").val('');
+
+    layui.use('form', function(){
+        var form = layui.form;
+        form.render();
+    });
     search();
 }
 

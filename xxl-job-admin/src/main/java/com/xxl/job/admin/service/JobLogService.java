@@ -85,13 +85,13 @@ public interface JobLogService extends BaseService<JobLog, JobLog, JobLogVO> {
      * 查询清除日志id
      *
      * @param groupId         任务组ID
-     * @param jobId           任务ID
+     * @param jobIds           任务ID
      * @param clearBeforeTime 清除时间之前的
      * @param clearBeforeNum  清除数量之前的
      * @param pageSize        数量
      * @return {@link List}<{@link Long}>
      */
-    List<Long> queryClearLogIds(Long groupId, Long jobId, Long clearBeforeTime, Long clearBeforeNum, Integer pageSize);
+    List<Long> queryClearLogIds(Long groupId, List<Long> jobIds, Long clearBeforeTime, Long clearBeforeNum, Integer pageSize);
 
     /**
      * 清除日志

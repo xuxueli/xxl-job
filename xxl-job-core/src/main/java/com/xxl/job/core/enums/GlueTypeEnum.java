@@ -22,7 +22,7 @@ public enum GlueTypeEnum {
     BEAN("BEAN", false, null, null),
 
     // Java-src
-    GLUE_GROOVY_SRC("GLUE(Java-src)", false, null, null),
+    GLUE_GROOVY("GLUE(Java)", false, null, null),
 
     // Java-class
     GLUE_GROOVY_CLASS("GLUE(Java-class)", false, null, null),

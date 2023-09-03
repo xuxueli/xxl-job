@@ -68,11 +68,11 @@ public class FailMonitorThread extends AbstractThreadListener implements Ordered
                             if (lockRet < 1) continue;
 
                             JobLogVO jobLogVO = jobLogService.queryById(failLogId);
-                            JobInfoVO info = jobInfoService.queryById(jobLogVO.getJobId());
+                            JobInfoVO info = jobLogVO.getJob();
 
                             // 1、fail retry monitor
                             if (jobLogVO.getExecutorFailRetryCount() > 0) {
-                                jobTriggerThreadPool.addTrigger(jobLogVO.getJobId(), TriggerTypeEnum.RETRY,
+                                jobTriggerThreadPool.addTrigger(info.getId(), TriggerTypeEnum.RETRY,
                                         (jobLogVO.getExecutorFailRetryCount() - 1), jobLogVO.getExecutorShardingParam(),
                                         jobLogVO.getExecutorParam(), Collections.emptyList());
                                 String retryMessage = "<br><br><span style=\"color:#F39C12;\" > >>>>>>>>>>>失败重试触发<<<<<<<<<<< </span><br>";

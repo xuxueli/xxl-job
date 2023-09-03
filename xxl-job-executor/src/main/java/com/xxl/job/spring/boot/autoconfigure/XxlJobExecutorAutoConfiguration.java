@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @EnableConfigurationProperties(XxlJobExecutorProperties.class)
 @ComponentScan("com.xxl.job.executor")
-@ConditionalOnProperty(prefix = "xxl.job.executor", name = "enabled", havingValue = "true")
+@ConditionalOnProperty(prefix = "xxl.job", name = "enabled", havingValue = "true")
 public class XxlJobExecutorAutoConfiguration {
 
 

@@ -15241,8 +15241,8 @@
          * @example
          *
          * // Avoid throwing errors for invalid selectors.
-         * var elements = _.attempt(function(selector) {
-         *   return document.querySelectorAll(selector);
+         * var elements = _.attempt(function(multiSelector) {
+         *   return document.querySelectorAll(multiSelector);
          * }, '>_>');
          *
          * if (_.isError(elements)) {

@@ -17,6 +17,7 @@ import com.xxl.job.admin.common.pojo.vo.JobLogReportVO;
 import com.xxl.job.admin.common.pojo.vo.JobLogVO;
 import com.xxl.job.admin.mapper.JobLogMapper;
 import com.xxl.job.admin.service.ExecutorClient;
+import com.xxl.job.admin.service.JobGroupService;
 import com.xxl.job.admin.service.JobInfoService;
 import com.xxl.job.admin.service.JobLogService;
 import com.xxl.job.admin.service.base.impl.BaseServiceImpl;
@@ -56,6 +57,9 @@ public class JobLogServiceImpl extends BaseServiceImpl<JobLogMapper, JobLog, Job
 
     @Autowired
     private JobInfoService jobInfoService;
+
+    @Autowired
+    private JobGroupService jobGroupService;
 
     @Autowired
     private TriggerThreadPool jobTriggerThreadPool;
@@ -131,8 +135,11 @@ public class JobLogServiceImpl extends BaseServiceImpl<JobLogMapper, JobLog, Job
     }
 
     @Override
-    public List<Long> queryClearLogIds(Long groupId, Long jobId, Long clearBeforeTime, Long clearBeforeNum, Integer pageSize) {
-        return jobLogMapper.queryClearLogIds(groupId, jobId, clearBeforeTime, clearBeforeNum, pageSize);
+    public List<Long> queryClearLogIds(Long groupId,List<Long> jobIds, Long clearBeforeTime, Long clearBeforeNum, Integer pageSize) {
+        if (CollectionUtil.isNotEmpty(jobIds) && jobIds.stream().anyMatch(a -> ObjectUtil.equals(NumberConstant.A_NEGATIVE.longValue(), a))) {
+            jobIds.clear();
+        }
+        return jobLogMapper.queryClearLogIds(groupId, jobIds, clearBeforeTime, clearBeforeNum, pageSize);
     }
 
     @Override
@@ -180,6 +187,16 @@ public class JobLogServiceImpl extends BaseServiceImpl<JobLogMapper, JobLog, Job
     }
 
     @Override
+    public JobLogVO objectConversion(JobLog jobLog) {
+        JobLogVO jobLogVO = super.objectConversion(jobLog);
+        if (ObjectUtil.isNotNull(jobLogVO)) {
+            jobLogVO.setJob(jobInfoService.queryById(jobLog.getJobId()));
+            jobLogVO.setGroup(jobGroupService.queryById(jobLog.getGroupId()));
+        }
+        return jobLogVO;
+    }
+
+    @Override
     public void cleanJobLog(JobLogCleanDTO jobLogCleanDTO) {
         Integer type = jobLogCleanDTO.getType();
         Date clearBeforeTime = null;
@@ -208,7 +225,7 @@ public class JobLogServiceImpl extends BaseServiceImpl<JobLogMapper, JobLog, Job
 
         List<Long> logIds = null;
         do {
-            logIds = this.queryClearLogIds(jobLogCleanDTO.getGroupId(), jobLogCleanDTO.getJobId(),
+            logIds = this.queryClearLogIds(jobLogCleanDTO.getGroupId(), jobLogCleanDTO.getJobIds(),
                     clearBeforeTime.getTime(), Convert.toLong(clearBeforeNum), 1000);
             if (CollectionUtil.isNotEmpty(logIds)) {
                 clearLog(logIds);

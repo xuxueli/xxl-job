@@ -2,7 +2,7 @@ $(function () {
     let account = sessionStorage.getItem('currentUser');
     $("#current").text(account);
 
-    let home = get("/home");
+    let home = http.get("/home");
     if (!_.isEmpty(home)) {
         let total = Number(home.keystoreTotal) + Number(home.projectTotal) + Number(home.licenseTotal) + Number(home.userInfoTotal);
         $("#total").text(total);

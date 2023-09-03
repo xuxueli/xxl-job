@@ -53,14 +53,14 @@ public interface JobLogMapper extends BaseMapper<JobLog> {
      * 查询清除日志id
      *
      * @param groupId        任务组ID
-     * @param jobId           任务ID
+     * @param jobIds           任务ID
      * @param clearBeforeTime 清除时间之前的
      * @param clearBeforeNum  清除数量之前的
      * @param pageSize        页大小
      * @return {@link List}<{@link Long}>
      */
     List<Long> queryClearLogIds(@Param("groupId") Long groupId,
-                                      @Param("jobId") Long jobId,
+                                      @Param("jobIds") List<Long> jobIds,
                                       @Param("clearBeforeTime") Long clearBeforeTime,
                                       @Param("clearBeforeNum") Long clearBeforeNum,
                                       @Param("pageSize") Integer pageSize);

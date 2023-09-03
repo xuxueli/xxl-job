@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 任务日志过滤查询DTO
@@ -25,17 +26,16 @@ public class JobLogFilterDTO extends PageDTO implements Serializable {
     private Long groupId;
 
     /**
-     * 任务ID
+     * 任务ID集合
      */
-    @ApiModelProperty("任务ID")
-    private Long jobId;
+    @ApiModelProperty("任务ID集合")
+    private List<Long> jobIds;
 
     /**
      * 状态，成功：1，失败：2，运行中：3
      */
     @ApiModelProperty("状态，成功：1，失败：2，运行中：3")
     private Integer status;
-
 
 
 

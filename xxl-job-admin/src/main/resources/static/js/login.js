@@ -34,7 +34,7 @@ function checkLogin() {
         "password": password,
     }
 
-    let res = post("/auth/login", login);
+    let res = http.post("/auth/login", login);
     if (isSuccess(res.code)) {
         message.info('恭喜你, 登录成功');
         $("#account").val("");
@@ -83,7 +83,7 @@ function checkRegister() {
         "name": name,
     }
 
-    let res = post("/auth/register", login);
+    let res = http.post("/auth/register", login);
     if (isSuccess(res.code)) {
         message.info('恭喜你, 注册成功');
         $("#r_account").val('');

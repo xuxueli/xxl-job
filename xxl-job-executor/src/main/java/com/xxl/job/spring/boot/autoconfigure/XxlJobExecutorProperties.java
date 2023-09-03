@@ -12,7 +12,7 @@ import java.util.List;
  * @date 2023/01/11
  */
 @Data
-@ConfigurationProperties(prefix = "xxl.job.executor")
+@ConfigurationProperties(prefix = "xxl.job")
 public class XxlJobExecutorProperties {
 
     /**

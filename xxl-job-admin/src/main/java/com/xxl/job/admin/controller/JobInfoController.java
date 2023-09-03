@@ -125,7 +125,13 @@ public class JobInfoController extends AbstractController {
         return ResponseVO.success(jobInfoService.nextTriggerTime(jobId));
     }
 
-
+    @ApiOperation("批量删除任务")
+    @DeleteMapping(value = "/batch", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseVO<Void> deleteJobInfos(@RequestBody @Validated List<Long> ids) {
+        log.info("deleteJobInfos {}", ids);
+        jobInfoService.delete(ids);
+        return ResponseVO.success();
+    }
 
 
 

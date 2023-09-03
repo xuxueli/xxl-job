@@ -1,0 +1,197 @@
+/**
+ @ Name：layui.cron Cron表达式解析器
+ @ Author：贝哥哥
+ @ License：MIT
+ */
+
+
+/* 样式加载完毕的标识 */
+html #layuicss-cron {
+	display: none;
+	position: absolute;
+	width: 1989px;
+}
+
+/* 初始化 */
+.layui-cron * {
+	margin: 0;
+	padding: 0;
+}
+
+/* 主体结构 */
+.layui-cron,
+.layui-cron * {
+	box-sizing: border-box;
+}
+
+.layui-cron {
+	position: absolute;
+	z-index: 66666666;
+	margin: 5px 0;
+	border-radius: 2px;
+	font-size: 14px;
+	-webkit-animation-duration: 0.2s;
+	animation-duration: 0.2s;
+	-webkit-animation-fill-mode: both;
+	animation-fill-mode: both;
+}
+
+/* .layui-cron-main{width: 272px;} */
+.layui-cron-header *,
+.layui-cron-content .btn {
+	transition-duration: .3s;
+	-webkit-transition-duration: .3s;
+}
+
+/* 微微往下滑入 */
+@keyframes cron-downbit {
+	0% {
+		opacity: 0.3;
+		transform: translate3d(0, -5px, 0);
+	}
+
+	100% {
+		opacity: 1;
+		transform: translate3d(0, 0, 0);
+	}
+}
+
+
+.layui-cron{animation-name: cron-downbit;}
+.layui-cron-static{ position: relative; z-index: 0; display: inline-block; margin: 0; -webkit-animation: none; animation: none;}
+
+
+/* 主体结构 */
+.layui-cron-content{position: relative; padding: 10px; -moz-user-select: none; -webkit-user-select: none; -ms-user-select: none;}
+
+
+/* 底部结构 */
+.layui-cron-footer{position: relative; height: 46px; line-height: 26px; padding: 10px 20px;border-top: 1px solid whitesmoke;}
+.layui-cron-footer span{margin-right: 15px; display: inline-block; cursor: pointer; font-size: 12px;}
+.layui-cron-footer span:hover{color: #5FB878;}
+.cron-footer-btns{position: absolute; right: 10px; top: 10px;}
+.cron-footer-btns span{height: 26px; line-height: 26px; margin: 0 0 0 -1px; padding: 0 10px; border: 1px solid #C9C9C9; background-color: #fff;  white-space: nowrap; vertical-align: top; border-radius: 2px;}
+
+
+/* 提示 */
+.layui-cron-hint{position: absolute; top: 115px; left: 50%; width: 250px; margin-left: -125px; line-height: 20px; padding: 15px; text-align: center; font-size: 12px; color: #FF5722;}
+
+
+/* 默认简约主题 */
+.layui-cron, .layui-cron-hint{border: 1px solid #d2d2d2; box-shadow: 0 2px 4px rgba(0,0,0,.12); background-color: #fff; color: #666;}
+.layui-cron-content{border-top: none 0; border-bottom: none 0;}
+
+/* tab */
+.layui-cron .layui-tab-card{
+	border: none;
+	box-shadow: none;
+}
+
+.layui-cron .layui-tab-card > .layui-tab-title li{
+	min-width: 70px;
+	margin-left: 0;
+	margin-right: 0;
+}
+.layui-cron .layui-tab-content{
+	padding: 10px;
+	/*height: 230px;*/
+	overflow-y: scroll;
+}
+
+/* form */
+.layui-cron .cron-input-mid {
+    display: inline-block;
+    vertical-align: middle;
+    background-color: #e5e5e5;
+    padding: 0 12px;
+    height: 28px;
+    line-height: 28px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+.layui-cron .cron-input {
+    display: inline-block;
+    vertical-align: middle;
+    padding: 0 8px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    height: 28px;
+    line-height: 28px;
+    box-sizing: border-box;
+    width: 48px;
+    text-align: right;
+    -webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
+    -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
+}
+
+/* 谷歌 */
+.layui-cron input::-webkit-outer-spin-button,
+.layui-cron input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+ 
+/* 火狐 */
+.layui-cron input[type="number"]{
+  -moz-appearance: textfield;
+}
+
+.layui-cron .cron-input:focus {
+    outline: 0;
+    border: 1px solid #01AAED;
+    box-shadow: inset 0 1px 1px rgb(0 0 0 / 8%), 0 0 4px 0px #01aaed;
+    translate: 1s;
+}
+.layui-cron .cron-tips {
+    color: grey;
+    line-height: 28px;
+    height: 28px;
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 5px;
+}
+
+.layui-cron .layui-form-radio{
+	margin-right: 10px;
+}
+
+.layui-cron .cron-row{
+	display: flex;
+	align-items: center;
+}
+.layui-cron .cron-row+.cron-row{
+	margin-top: 10px;
+}
+
+.layui-cron .cron-grid{
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	width: 480px;
+	padding-left: 10px;
+	padding-top: 4px;
+}
+
+.layui-cron .cron-grid .layui-form-checkbox{
+	padding-left: 22px;
+	margin-bottom: 4px;
+}
+.layui-cron .cron-grid .layui-form-checkbox[lay-skin="primary"] span{
+	padding-right: 13px;
+	min-width: 29px;
+}
+
+/* 提示 */
+.layui-cron-hint{position: absolute; top: 115px; left: 50%; width: 250px; margin-left: -125px; line-height: 20px; padding: 15px; text-align: center; font-size: 12px; color: #FF5722;}
+
+.layui-cron-run-hint{
+	max-height: 104px;
+	overflow-y: scroll;
+	padding: 10px;
+	padding-top: 0;
+}
+.cron-run-list+.cron-run-list{
+	margin-top: 4px;
+}

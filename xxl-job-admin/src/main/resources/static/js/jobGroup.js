@@ -86,7 +86,7 @@ function search() {
  */
 function deleteData(obj) {
     layer.confirm('确认要删除吗？', function (index) {
-        delPath("/group", obj.id);
+        http.delPath("/group/" + obj.id);
         layer.close(index);
         search();
     });
@@ -111,7 +111,7 @@ function pageSearch(currentPage, pageSize) {
         'title': title,
         'appName': appName
     };
-    return get("/group", pageDTO);
+    return http.get("/group", pageDTO);
 }
 
 /**
@@ -125,7 +125,7 @@ function delAll() {
             ids.push(a.id);
         })
         layer.confirm('确认要删除吗？', function (index) {
-            delBody("/group/batch", ids);
+            http.delBody("/group/batch", ids);
             layer.close(index);
             search();
         });
@@ -173,13 +173,18 @@ function add() {
         success: function (index) {
             setAddressReadonly(form, '#key-addressList');
             form.render();
-        }
+        },
+        cancel: function(index, layero, that){
+            $("#add-form-form")[0].reset();
+            form.render();
+            return true;
+        },
     });
 
     validate(form);
     form.on('submit(add)', function (data) {
         let field = data.field;
-        let res = post("/group", field);
+        let res = http.post("/group", field);
         if (!isSuccess(res.code)) {
             message.error(res.message);
             return false;
@@ -227,7 +232,12 @@ function update(data) {
                 "description": data.description,
             });
             form.render();
-        }
+        },
+        cancel: function(index, layero, that){
+            $("#update-form-form")[0].reset();
+            form.render();
+            return true;
+        },
     });
 
     validate(form);
@@ -235,7 +245,7 @@ function update(data) {
         let field = new_obj.field;
         field.id = data.id;
         field.addresses = str2List(field.addresses);
-        let res = put("/group", field);
+        let res = http.put("/group", field);
         if (!isSuccess(res.code)) {
             message.error(res.message);
             return false;

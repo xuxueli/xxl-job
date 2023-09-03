@@ -82,8 +82,11 @@
             <if test="groupId != null and groupId gt 0">
                 AND GROUP_ID = #{groupId,jdbcType=BIGINT}
             </if>
-            <if test="jobId != null and jobId gt 0">
-                AND JOB_ID = #{jobId,jdbcType=BIGINT}
+            <if test="jobIds != null and jobIds.size() != 0">
+                and JOB_ID in
+                <foreach collection="jobIds" separator="," open="(" item="item" index="index" close=")">
+                    #{item,jdbcType=BIGINT}
+                </foreach>
             </if>
             <if test="clearBeforeTime != null">
                 AND TRIGGER_TIME <![CDATA[ <= ]]> #{clearBeforeTime}
@@ -158,8 +161,11 @@
             <if test="groupId != null">
                 and GROUP_ID = #{groupId,jdbcType=BIGINT}
             </if>
-            <if test="jobId != null">
-                and JOB_ID = #{jobId,jdbcType=BIGINT}
+            <if test="jobIds != null and jobIds.size() != 0">
+                and JOB_ID in
+                <foreach collection="jobIds" close=")" index="index" item="item" open="(" separator=",">
+                    #{item,jdbcType=BIGINT}
+                </foreach>
             </if>
             <if test="startTime != null">
                 AND TRIGGER_TIME <![CDATA[ >= ]]> #{startTime,jdbcType=BIGINT}

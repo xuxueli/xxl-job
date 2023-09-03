@@ -5,7 +5,6 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.xxl.job.admin.common.constants.NumberConstant;
@@ -256,7 +255,7 @@ public class JobInfoServiceImpl extends BaseServiceImpl<JobInfoMapper, JobInfo, 
             Assert.notNull(this.getById(childJobId),
                     ResponseEnum.THE_CHILD_TASK_DOES_NOT_EXIST_OR_HAS_BEEN_DELETED.getMessage());
         }
-        return ArrayUtil.join(childJobIds, StrUtil.COMMA);
+        return CollectionUtil.join(childJobIds, StrUtil.COMMA);
     }
 
     /**

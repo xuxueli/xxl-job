@@ -6,6 +6,7 @@ import lombok.Data;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 工作日志清理DTO
@@ -20,16 +21,16 @@ public class JobLogCleanDTO implements Serializable {
     private static final long serialVersionUID = -2585132736165743607L;
 
     /**
-     * 执行器ID
+     * 执行器ID, -1: 全部
      */
-    @ApiModelProperty(value = "执行器ID")
+    @ApiModelProperty(value = "执行器ID, -1: 全部")
     private Long groupId;
 
     /**
-     * 任务ID
+     * 任务ID, -1: 全部
      */
-    @ApiModelProperty(value = "任务ID")
-    private Long jobId;
+    @ApiModelProperty(value = "任务ID, -1: 全部")
+    private List<Long> jobIds;
 
     /**
      * 清理方式

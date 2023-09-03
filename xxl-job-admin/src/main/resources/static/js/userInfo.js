@@ -18,17 +18,18 @@ function add() {
         content: $('#add-form'),
         success: function (index) {
             form.render();
-            validate(form);
-            form.on('submit(add)', function (data) {
-                let field = data.field;
-                let res = post("/userInfo", field);
-                if (!isSuccess(res.code)) {
-                    error(res.message);
-                    return false;
-                }
-                return true;
-            });
         }
+    });
+
+    validate(form);
+    form.on('submit(add)', function (data) {
+        let field = data.field;
+        let res = http.post("/userInfo", field);
+        if (!isSuccess(res.code)) {
+            message.error(res.message);
+            return false;
+        }
+        return true;
     });
 }
 
@@ -134,7 +135,7 @@ function createTable(records) {
 function resetPwd(data) {
     layer.confirm('<div><span>"确认要重置吗？"</span><span class="x-red">, 默认密码: ABCabc123456</span></div>',
         function (index) {
-            patchPath("/userInfo/" + data.account);
+            http.patchPath("/userInfo/" + data.account);
             layer.close(index);
             search();
         });
@@ -166,12 +167,12 @@ function updatePwd(data) {
     form.on('submit(updatePwd)', function (new_obj) {
         let field = new_obj.field;
         if (_.isEqual(field.oldPwd, field.newPwd)) {
-            error("新旧密码不能一致");
+            message.error("新旧密码不能一致");
             return false;
         }
 
         if (!_.isEqual(field.newPwd, field.confirmPwd)) {
-            error("两次输入不一致");
+            message.error("两次输入不一致");
             return false;
         }
 
@@ -181,9 +182,9 @@ function updatePwd(data) {
             "newPwd": field.newPwd,
         }
 
-        let res = patchBody("/userInfo/pwd", param);
+        let res = http.patchBody("/userInfo/pwd", param);
         if (!isSuccess(res.code)) {
-            error(res.message);
+            message.error(res.message);
             return false;
         }
         return true;
@@ -235,7 +236,7 @@ function pageSearch(currentPage, pageSize) {
         'sex': sex,
         'telephone': telephone,
     };
-    return get("/userInfo", pageDTO);
+    return http.get("/userInfo", pageDTO);
 }
 
 /**
@@ -269,9 +270,9 @@ function update(data) {
     form.on('submit(update)', function (new_obj) {
         let field = new_obj.field;
         field.id = data.id;
-        let res = put("/userInfo", field);
+        let res = http.put("/userInfo", field);
         if (!isSuccess(res.code)) {
-            error(res.message);
+            message.error(res.message);
             return false;
         }
         return true;
@@ -315,7 +316,7 @@ function delAll() {
             ids.push(a.id);
         })
         layer.confirm('确认要删除吗？', function (index) {
-            delBody("/userInfo/batch", ids);
+            http.delBody("/userInfo/batch", ids);
             layer.close(index);
             search();
         });
@@ -328,7 +329,7 @@ function delAll() {
  */
 function deleteData(obj) {
     layer.confirm('确认要删除吗？', function (index) {
-        delPath("/userInfo", obj.id);
+        http.delPath("/userInfo/" + obj.id);
         layer.close(index);
         search();
     });

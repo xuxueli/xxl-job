@@ -70,7 +70,7 @@ function updatePwd() {
             "newPwd": field.newPwd,
         }
 
-        let res = patchBody("/userInfo/pwd", param);
+        let res = http.patchBody("/userInfo/pwd", param);
         if (!isSuccess(res.code)) {
             message.error(res.message);
             return false;
@@ -110,7 +110,7 @@ function validate(form) {
  */
 function logout() {
     sessionStorage.removeItem('currentUser');
-    get("/auth/logout");
+    http.get("/auth/logout");
     $(location).attr('href', 'login');
 }
 

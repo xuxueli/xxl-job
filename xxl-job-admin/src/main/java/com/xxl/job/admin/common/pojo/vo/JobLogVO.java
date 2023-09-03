@@ -29,14 +29,14 @@ public class JobLogVO implements Serializable {
     /**
      * 任务组主键ID
      */
-    @ApiModelProperty("任务组主键ID")
-    private Long groupId;
+    @ApiModelProperty("执行器")
+    private JobGroupVO group;
 
     /**
-     * 任务主键ID
+     * 任务
      */
-    @ApiModelProperty("任务主键ID")
-    private Long jobId;
+    @ApiModelProperty("任务")
+    private JobInfoVO job;
 
     /**
      * 执行器地址，本次执行的地址

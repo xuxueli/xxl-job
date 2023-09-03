@@ -99,6 +99,13 @@ public class JobInfoDTO extends Base implements Serializable {
     private String executorBlockStrategy;
 
     /**
+     * 调度状态：0-停止，1-运行
+     */
+    @NotNull(message = "调度状态 不能为空")
+    @ApiModelProperty(value = "调度状态：0-停止，1-运行", required = true)
+    private Integer triggerStatus;
+
+    /**
      * 任务执行超时时间，单位秒
      */
     @ApiModelProperty(value = "任务执行超时时间，单位秒")

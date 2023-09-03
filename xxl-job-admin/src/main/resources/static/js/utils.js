@@ -20,7 +20,7 @@ function ts2Time(timestamp) {
 
 function date2Timestamp(date) {
     if (!_.isNil(date) && !_.isEmpty(date)) {
-        return new Date(date).getTime();
+        return new Date(date).valueOf();
     }
     return null;
 }
@@ -59,14 +59,31 @@ function nowDate() {
     return year + "-" + month + "-" + day + " " + hour + sign2 + minutes + sign2 + seconds;
 }
 
-function initDate(divId) {
-    layui.use('laydate', function () {
-        let layDate = layui.laydate;
-        layDate.render({
-            type: 'datetime',
-            elem: divId,
+/**
+ * 初始化Date组件
+ * @param divId ID
+ * @param initValue 初始值
+ */
+function initDate(divId, initValue) {
+    return new Promise(resolve => {
+        layui.use('laydate', function () {
+            let layDate = layui.laydate;
+            if (_.isEmpty(initValue)) {
+                layDate.render({
+                    type: 'datetime',
+                    elem: divId,
+                });
+            }else {
+                layDate.render({
+                    type: 'datetime',
+                    elem: divId,
+                    value: initValue,
+                    isInitValue: true,
+                });
+            }
+            resolve(true);
         });
-    });
+    })
 }
 
 /**

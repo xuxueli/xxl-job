@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>调度日志</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
+
+    <link rel="stylesheet" href="css/font.css">
+    <link rel="stylesheet" href="css/xadmin.css">
+    <link rel="stylesheet" href="plugins/layui-v2.8.11/css/layui.css">
+    <!--    <link rel="stylesheet" href="plugins/loading/okLoading.css">-->
+
+    <script type="text/javascript" src="plugins/jquery-3.7.0.min.js"></script>
+    <script type="text/javascript" src="plugins/layui-v2.8.11/layui.js"></script>
+    <script type="text/javascript" src="js/layui-ext.js"></script>
+    <script type="text/javascript" src="plugins/xm-select/xm-select.js" charset="utf-8"></script>
+    <script type="text/javascript" src="js/multiSelector.js" charset="utf-8"></script>
+
+    <!--    <script type="text/javascript" src="plugins/loading/okLoading.js"></script>-->
+    <script type="text/javascript" src="js/xadmin.js"></script>
+    <script type="text/javascript" src="plugins/lodash.js"></script>
+    <script type="text/javascript" src="js/message.js"></script>
+    <script type="text/javascript" src="js/utils.js"></script>
+    <script type="text/javascript" src="js/request.js"></script>
+    <script type="text/javascript" src="js/jobLog.js"></script>
+
+    <style>
+        #select-jobInfo {
+            width: 180px;
+        }
+
+    </style>
+
+</head>
+<body>
+<div class="x-body">
+    <div class="layui-row">
+        <div class="layui-form layui-col-md12 x-so">
+            <div class="layui-inline">
+                <label for="select-jobGroup" class="layui-input-label">执行器</label>
+                <div class="layui-input-inline">
+                    <select lay-search="" id="select-jobGroup" lay-filter="jobGroup-selected">
+                        <option value="">请选择或搜索</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <label for="select-jobInfo" class="layui-input-label">任务</label>
+                <div class="layui-input-inline">
+                    <div id="select-jobInfo"></div>
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <label for="select-status" class="layui-input-label">状态</label>
+                <div class="layui-input-inline">
+                    <select id="select-status" lay-filter="status-selected">
+                        <option value="">请选择</option>
+                        <option value="1">成功</option>
+                        <option value="2">失败</option>
+                        <option value="3">进行中</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="layui-input-inline">
+                <label class="layui-label">调度时间</label>
+                <input type="text" class="layui-input" placeholder="开始时间" name="start" id="start">
+                <input type="text" class="layui-input" placeholder="结束时间" name="end" id="end">
+            </div>
+
+            <div class="layui-input-inline" style="float: right">
+                <button type="button" title="查询" class="layui-btn" onclick="search()"><i class="layui-icon">&#xe615;</i></button>
+                <button type="button" title="清空" class="layui-btn layui-btn-danger" onclick="clean()"><i class="layui-icon">&#xe788;</i></button>
+                <button type="button" title="清理日志" class="layui-btn layui-btn-primary layui-border-green" onclick="manualClearLog()"><i class="layui-icon">&#xeb2e;</i></button>
+            </div>
+        </div>
+    </div>
+
+    <xblock>
+<!--        <button class="layui-btn" onclick="change('新增任务', '')"><i class="layui-icon"></i>添加</button>-->
+<!--        <button class="layui-btn layui-btn-danger" onclick="delAll()"><i class="layui-icon"></i>批量删除</button>-->
+    </xblock>
+    <table class="layui-hide" id="table-data"></table>
+    <div id="page"></div>
+</div>
+
+<div id="clean-log-form" style="display: none">
+    <form id="clean-log-form-form" class="layui-form" lay-filter="layui-clean-log-form-filter">
+        <div class="layui-form-item">
+            <label for="clean-group" class="layui-form-label">所属执行器</label>
+            <div class="layui-input-inline">
+                <select lay-search="" id="clean-group" name="groupId" lay-filter="clean-group-selected">
+                    <option value="" selected>全部</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label for="clean-jobIds" class="layui-form-label">任务</label>
+            <div class="layui-input-inline">
+                <div id="clean-jobIds"></div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label for="clear-mode" class="layui-form-label">清理方式</label>
+            <div class="layui-input-inline">
+                <select id="clear-mode" name="type" required lay-verify="required|type" lay-filter="type-selected">
+                    <option value="1">清理一个月之前日志数据</option>
+                    <option value="2">清理三个月之前日志数据</option>
+                    <option value="3">清理六个月之前日志数据</option>
+                    <option value="4">清理一年之前日志数据</option>
+                    <option value="5">清理一千条以前日志数据</option>
+                    <option value="6">清理一万条以前日志数据</option>
+                    <option value="7">清理三万条以前日志数据</option>
+                    <option value="8">清理十万条以前日志数据</option>
+                    <option value="9">清理所有日志数据</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="clear-jobLog" class="layui-form-label"></label>
+            <button id="clear-jobLog" class="layui-btn" lay-filter="clearLog" lay-submit="">提交</button>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>

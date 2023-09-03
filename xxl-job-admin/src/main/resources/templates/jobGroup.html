@@ -16,6 +16,7 @@
 
     <script type="text/javascript" src="plugins/jquery-3.7.0.min.js"></script>
     <script type="text/javascript" src="plugins/layui-v2.8.11/layui.js"></script>
+    <script type="text/javascript" src="js/layui-ext.js"></script>
 <!--    <script type="text/javascript" src="plugins/loading/okLoading.js"></script>-->
     <script type="text/javascript" src="js/xadmin.js"></script>
     <script type="text/javascript" src="plugins/lodash.js"></script>
@@ -59,7 +60,7 @@
 </div>
 
 <div id="add-form" style="display: none">
-    <form class="layui-form" lay-filter="layui-add-form">
+    <form id="add-form-form" class="layui-form" lay-filter="layui-add-form">
         <div class="layui-form-item">
             <label for="key-appName" class="layui-form-label">
                 <span class="x-red">*</span>AppName
@@ -112,7 +113,7 @@
 </div>
 
 <div id="update-form" style="display: none">
-    <form class="layui-form" lay-filter="layui-update-form">
+    <form id="update-form-form" class="layui-form" lay-filter="layui-update-form">
         <div class="layui-form-item">
             <label for="update-appName" class="layui-form-label">
                 <span class="x-red">*</span>AppName

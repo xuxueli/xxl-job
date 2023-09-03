@@ -1,8 +1,5 @@
 var message = (function () {
     var notice;
-    layui.config({
-        base: 'plugins/notice/'
-    })
     layui.use(['notice'], function () {
         notice = layui.notice;
         // 初始化配置，同一样式只需要配置一次，非必须初始化，有默认配置
