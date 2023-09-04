@@ -1,6 +1,7 @@
 $(function (){
     let account = sessionStorage.getItem('currentUser');
     $("#current").text(account);
+    $('#copyright-end').text(new Date().getFullYear());
 })
 
 function getTime(){

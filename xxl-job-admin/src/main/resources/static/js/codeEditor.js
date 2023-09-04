@@ -13,7 +13,7 @@ var CodeEditor = (function () {
             //自动换行
             lineWrapping: false,
             foldGutter: true,
-            value: initValue,
+            value: null,
             gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
             //全屏模式
             fullScreen: false,
@@ -26,9 +26,9 @@ var CodeEditor = (function () {
                 },
             }
         });
-        // editor.setValue(defaultGlueSource);
         let htmlWidth = document.body.clientWidth;
         editor.setSize(htmlWidth, 680);
+        editor.setValue(initValue);
     }
 
     function setValue(value) {

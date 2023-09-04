@@ -59,7 +59,7 @@ function createTable(records) {
                 {
                     title: '运行模式', templet: function (row) {
                         let runModel = findGlueTypeTitle(row.glueType);
-                        if (!_.isNull(row.executorHandler)) {
+                        if (!_.isEmpty(row.executorHandler)) {
                             runModel = runModel + ": " + row.executorHandler;
                         }
                         return runModel;
@@ -468,7 +468,7 @@ function change(title, oldData) {
     });
 
     layui.$('#for-glue-source').on('click', function(){
-        openWebIde(form.val('layui-key-form'));
+        openWebIde(form, form.val('layui-key-form'));
     });
 
     validate(form);
@@ -501,9 +501,19 @@ function change(title, oldData) {
         if (_.eq('BEAN', glueType) && _.isEmpty(field.executorHandler)) {
             message.warning("JobHandler不能为空");
             return false;
-        } else {
-            if (_.isEmpty(field.executorHandler)) field.executorHandler = null;
+        } else if (!_.eq('KETTLE_KTR', glueType) && !_.eq('KETTLE_KJB', glueType)) {
+            if (_.isEmpty(field.glueSource)) {
+                message.warning("执行代码不能为空");
+                return false;
+            }
+            if (_.isEmpty(field.glueDescription)) {
+                message.warning("执行代码描述不能为空");
+                return false;
+            }
+        }else {
+
         }
+
         if (!_.isEmpty(oldData.id)) field.id = oldData.id;
 
         delete field.scheduleConfCron;
@@ -521,8 +531,7 @@ function change(title, oldData) {
 /**
  * 打开WEB IDE
  */
-function openWebIde(data) {
-    console.log(data);
+function openWebIde(form, data) {
 
     if (_.isEmpty(data.groupId)) {
         message.warning("请先选择执行器");
@@ -534,13 +543,12 @@ function openWebIde(data) {
         return;
     }
 
-    let form = layui.form;
+    let defaultGlueSource = getDefaultGlueSource(data.glueType);
+    let codeMirrorMode = getCodeMirrorMode(data.glueType);
+    let defaultGlueRemark = getDefaultGlueRemark();
+
     let glueType = findGlueTypeTitle(data.glueType);
     let title = '【' + glueType + '】 ' + data.name;
-
-    let defaultGlueSource = getDefaultGlueSource(glueType);
-    let codeMirrorMode = getCodeMirrorMode(glueType);
-    let defaultGlueRemark = getDefaultGlueRemark();
 
     layer.open({
         type: 1,
@@ -548,13 +556,20 @@ function openWebIde(data) {
         shadeClose: false,
         shade: 0.8,
         btn: ['保存', '关闭'],
+        btn1: function (index, layero, that) {
+            form.val('layui-key-form', {
+                "glueSource": CodeEditor.getValue(),
+                'glueDescription': defaultGlueRemark,
+            })
+            layer.close(index);
+        },
         area: ['91%', '800px'],
         content: $("#code-edit"),
         success: function (index) {
             CodeEditor.init('box', 'code', codeMirrorMode, defaultGlueSource);
-            form.render();
         },
         cancel: function (index, layero, that) {
+            layer.close(index);
             return true;
         },
     });
@@ -589,14 +604,13 @@ function getCodeMirrorMode(glueType) {
  * @returns {string} 显示值
  */
 function getDefaultGlueSource(glueType) {
-    let value = '';
     if (_.eq('GLUE_GROOVY', glueType)) {
-        value = 'package com.xxl.job.service.handler;\n' +
+        return 'package com.xxl.job.service.handler;\n' +
             '\n' +
             'import com.xxl.job.core.context.XxlJobHelper;\n' +
-            'import com.xxl.job.core.handler.IJobHandler;\n' +
+            'import com.xxl.job.core.handler.JobHandler;\n' +
             '\n' +
-            'public class DemoGlueJobHandler extends IJobHandler {\n' +
+            'public class DemoGlueJobHandler extends JobHandler {\n' +
             '\n' +
             '\t@Override\n' +
             '\tpublic void execute() throws Exception {\n' +
@@ -605,7 +619,7 @@ function getDefaultGlueSource(glueType) {
             '\n' +
             '}';
     }else if (_.eq('GLUE_SHELL', glueType)) {
-        value = '#!/bin/bash\n' +
+        return '#!/bin/bash\n' +
             'echo "xxl-job: hello shell"\n' +
             '\n' +
             'echo "${I18n.jobinfo_script_location}：$0"\n' +
@@ -622,7 +636,7 @@ function getDefaultGlueSource(glueType) {
             'echo "Good bye!"\n' +
             'exit 0';
     }else if (_.eq('GLUE_PYTHON', glueType)) {
-        value = '#!/usr/bin/python\n' +
+        return '#!/usr/bin/python\n' +
             '# -*- coding: UTF-8 -*-\n' +
             'import time\n' +
             'import sys\n' +
@@ -686,7 +700,7 @@ function getDefaultGlueSource(glueType) {
             'Write-Host "Good bye!"\n' +
             'exit 0';
     }
-    return value;
+    return '';
 }
 
 /**

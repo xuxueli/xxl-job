@@ -50,6 +50,19 @@
             flex: 1;
         }
 
+        .dialog-code-wrap {
+            height: 100%;
+            width: 100%;
+        }
+
+        .dialog-code-wrap .CodeMirror-scroll {
+            margin-right: 0;
+        }
+
+        .dialog-code-wrap .CodeMirror-line {
+            margin-left: 12px !important;
+        }
+
     </style>
 
 </head>
@@ -246,6 +259,8 @@
                 <div class="layui-input-inline">
                     <button type="button" id="for-glue-source" class="layui-btn layui-btn-primary layui-border layui-btn-fluid">打开WEB IDE</button>
                 </div>
+                <textarea id="glue-source-code" name="glueSource" style="display: none" class="layui-textarea"></textarea>
+                <textarea id="glue-description" name="glueDescription" style="display: none" class="layui-textarea"></textarea>
             </div>
 
             <div class="layui-inline" id="glue-kettle" style="display: none">
@@ -256,9 +271,6 @@
                     <div id="for-glue-kettle"></div>
                 </div>
             </div>
-
-
-
 
 <!--            <div class="layui-inline" id="glue-conf-upload-file" style="display: none">-->
 <!--                <label for="for-glue-conf-upload-file" class="layui-form-label">-->
@@ -396,11 +408,11 @@
     </div>
     <div>
         <!--    <button class="button" id="codeEidtFormPostSubmit" onclick="submit()">提交</button>-->
-        <form id='codeEidtFormPost'>
-            <input type="text" name="editValues" id="editValues">
-            <input type="text" name="fileName" id="fileName">
-            <input type="text" name="encoding" id="encoding">
-        </form>
+<!--        <form id='codeEidtFormPost'>-->
+<!--            <input type="text" name="editValues" id="editValues">-->
+<!--            <input type="text" name="fileName" id="fileName">-->
+<!--            <input type="text" name="encoding" id="encoding">-->
+<!--        </form>-->
     </div>
 </div>
 

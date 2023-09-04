@@ -26,6 +26,20 @@
     <script type="text/javascript" src="js/request.js"></script>
     <script type="text/javascript" src="js/index.js"></script>
 
+    <style>
+        /*.footer {*/
+        /*    z-index: 1;*/
+        /*}*/
+        .footer .copyrights {
+            text-indent: -9999px;
+            height: 0;
+            line-height: 0;
+            font-size: 16px;
+            overflow: hidden;
+            color: #FFFFFF;
+        }
+    </style>
+
 </head>
 <body>
 <!-- 顶部开始 -->
@@ -201,7 +215,8 @@
     <div class="copyrights">
         Powered by <b>XXL-JOB</b> 2.5.0
         <div class="pull-right hidden-xs">
-            <strong>Copyright &copy; 2015-${.now?string('yyyy')} &nbsp;
+            <strong>Copyright &copy; 2015-
+                <span id="copyright-end"></span>
                 <a href="https://github.com/a852203465/xxl-job" target="_blank" >github</a>
             </strong>
         </div>
