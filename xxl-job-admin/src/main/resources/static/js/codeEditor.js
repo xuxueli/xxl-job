@@ -39,7 +39,7 @@ var CodeEditor = (function () {
     }
 
     function destroy() {
-        editor.setValue(null);
+        editor.setValue('');
         editor.clearHistory();
     }
 

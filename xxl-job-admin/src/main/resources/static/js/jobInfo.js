@@ -132,7 +132,7 @@ function createTable(records) {
                 ]
 
                 if (!_.eq('BEAN',data.glueType) && !_.eq('KETTLE_KTR',data.glueType) && !_.eq('KETTLE_KJB',data.glueType)) {
-                    dropdownArr.push({id: 'glueIde', templet: '<li><a href="page-glue-log?jobId='+ data.id +'" target="_blank" ><span style="color: #FFFFFF">GLUE IDE</span></a></li>'})
+                    dropdownArr.push({id: 'glueIde', templet: '<span style="color: #FFFFFF">GLUE IDE</span>'})
                 }
 
                 dropdown.render({
@@ -154,6 +154,8 @@ function createTable(records) {
                             change("新增任务", newDate);
                         }else if (_.eq("jobLog", menu)) {
                             showJobLog();
+                        }else if (_.eq('glueIde', menu)) {
+                            openWebIde(data, true);
                         }
                     },
                     align: 'right', // 右对齐弹出
@@ -376,7 +378,7 @@ function change(title, oldData) {
                 .then(res => {
                     if (!_.isEmpty(oldData)) {
                         scheduleTypeSelect(oldData.scheduleType);
-                        glueTypeSelect(oldData.glueType);
+                        glueTypeSelect(oldData.glueType, true);
 
                         form.val("layui-key-form", {
                             "groupId": oldData.jobGroup.id,
@@ -423,11 +425,11 @@ function change(title, oldData) {
         var elem = data.elem; // 获得 select 原始 DOM 对象
         var value = data.value; // 获得被选中的值
         var othis = data.othis; // 获得 select 元素被替换后的 jQuery 对象
-        glueTypeSelect(value);
+        glueTypeSelect(value, !_.isEmpty(oldData) ? true : false);
     });
 
     layui.$('#for-glue-source').on('click', function(){
-        openWebIde(form, form.val('layui-key-form'));
+        openWebIde(form.val('layui-key-form'), false);
     });
 
     validate(form);
@@ -492,15 +494,20 @@ function change(title, oldData) {
 /**
  * 运行模式选择器
  * @param glueType 运行模式
+ * @param isUpdate 是否是修改
  */
-function glueTypeSelect(glueType) {
+function glueTypeSelect(glueType, isUpdate) {
     if (_.eq('BEAN', glueType)) {
         $("#glue-conf-Handler").show();
         $("#glue-source").hide();
         $('#glue-kettle').hide();
     } else if (!_.eq('KETTLE_KTR', glueType)
         && !_.eq('KETTLE_KJB', glueType)) {
-        $("#glue-source").show();
+        if (isUpdate) {
+            $("#glue-source").hide();
+        }else {
+            $("#glue-source").show();
+        }
         $("#glue-conf-Handler").hide();
         $('#glue-kettle').hide();
     }else if (_.eq('KETTLE_KTR', glueType || _.eq('KETTLE_KJB', glueType))) {
@@ -530,9 +537,11 @@ function scheduleTypeSelect(scheduleType) {
 
 /**
  * 打开WEB IDE
+ * @param data 数据
+ * @param isUpdate 是否是修改
  */
-function openWebIde(form, data) {
-
+function openWebIde(data, isUpdate) {
+    var form = layui.form;
     if (_.isEmpty(data.groupId)) {
         message.warning("请先选择执行器");
         return;
@@ -545,8 +554,6 @@ function openWebIde(form, data) {
 
     let defaultGlueSource = getDefaultGlueSource(data.glueType);
     let codeMirrorMode = getCodeMirrorMode(data.glueType);
-    let defaultGlueRemark = getDefaultGlueRemark();
-
     let glueType = findGlueTypeTitle(data.glueType);
     let title = '【' + glueType + '】 ' + data.name;
 
@@ -561,19 +568,28 @@ function openWebIde(form, data) {
                 "glueSource": CodeEditor.getValue(),
                 'glueDescription': $('#for-glue-description').val(),
             })
+            CodeEditor.setValue('');
+            $("#code-edit-form")[0].reset();
+            form.render();
             layer.close(index);
         },
         btn2: function (index, layero, that) {
+            CodeEditor.setValue('');
+            $("#code-edit-form")[0].reset();
+            form.render();
             layer.close(index);
         },
         area: ['91%', '800px'],
         content: $("#code-edit"),
         success: function (index) {
             CodeEditor.init('box', 'code', codeMirrorMode, defaultGlueSource);
+            form.render();
         },
         cancel: function (index, layero, that) {
+            CodeEditor.setValue('');
+            $("#code-edit-form")[0].reset();
+            form.render();
             layer.close(index);
-            return true;
         },
     });
 }
@@ -625,10 +641,10 @@ function getDefaultGlueSource(glueType) {
         return '#!/bin/bash\n' +
             'echo "xxl-job: hello shell"\n' +
             '\n' +
-            'echo "${I18n.jobinfo_script_location}：$0"\n' +
-            'echo "${I18n.jobinfo_field_executorparam}：$1"\n' +
-            'echo "${I18n.jobinfo_shard_index} = $2"\n' +
-            'echo "${I18n.jobinfo_shard_total} = $3"\n' +
+            'echo "脚本位置：$0"\n' +
+            'echo "任务参数：$1"\n' +
+            'echo "分片序号 = $2"\n' +
+            'echo "分片总数 = $3"\n' +
             '<#--echo "参数数量：$#"\n' +
             'for param in $*\n' +
             'do\n' +
@@ -704,14 +720,6 @@ function getDefaultGlueSource(glueType) {
             'exit 0';
     }
     return '';
-}
-
-/**
- * 获取glue默认描述
- * @returns {string}
- */
-function getDefaultGlueRemark() {
-    return 'GLUE代码初始化';
 }
 
 /**
