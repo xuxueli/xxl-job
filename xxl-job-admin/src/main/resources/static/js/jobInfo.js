@@ -77,7 +77,7 @@ function createTable(records) {
                 },
                 {field: 'author', title: '负责人'},
                 {
-                    fixed: 'right', width: 210, title: '操作', toolbar: '<div class="layui-clear-space">\n' +
+                    fixed: 'right', width: 220, title: '操作', toolbar: '<div class="layui-clear-space">\n' +
                         '              <a class="layui-btn layui-btn-radius layui-btn-sm layui-bg-blue" lay-event="update" >编辑\n' +
                         '              </a>\n' +
                         '              <a class="layui-btn layui-btn-radius layui-btn-sm layui-bg-red" lay-event="delete">删除\n' +
@@ -389,8 +389,18 @@ function change(title, oldData) {
                         var glueType = oldData.glueType;
                         if (_.eq('BEAN', glueType)) {
                             $("#glue-conf-Handler").show();
-                        } else if (!_.eq('BEAN', glueType)) {
+                            $("#glue-source").hide();
+                            $('#glue-kettle').hide();
+                        } else if (!_.eq('KETTLE_KTR', glueType)
+                            && !_.eq('KETTLE_KJB', glueType)) {
+                            $("#glue-source").show();
                             $("#glue-conf-Handler").hide();
+                            $('#glue-kettle').hide();
+                        }else if (_.eq('KETTLE_KTR', glueType || _.eq('KETTLE_KJB', glueType))) {
+                            $('#glue-kettle').show();
+                            $("#glue-conf-Handler").hide();
+                            $("#glue-source").hide();
+                            multiSelector.init('#for-glue-kettle', 'kettleId', []);
                         }
 
                         form.val("layui-key-form", {
@@ -453,8 +463,7 @@ function change(title, oldData) {
             $("#glue-conf-Handler").show();
             $("#glue-source").hide();
             $('#glue-kettle').hide();
-        } else if (!_.eq('BEAN', value)
-            && !_.eq('KETTLE_KTR', value)
+        } else if (!_.eq('KETTLE_KTR', value)
             && !_.eq('KETTLE_KJB', value)) {
             $("#glue-source").show();
             $("#glue-conf-Handler").hide();
