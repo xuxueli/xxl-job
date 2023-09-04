@@ -375,33 +375,8 @@ function change(title, oldData) {
             searchJobGroup("#add-group")
                 .then(res => {
                     if (!_.isEmpty(oldData)) {
-                        var scheduleType = oldData.scheduleType;
-                        if (_.eq('CRON', scheduleType)) {
-                            $("#schedule-conf-cron").show();
-                            $("#schedule-conf-fixdelay").hide();
-                        } else if (_.eq('NONE', scheduleType)) {
-                            $("#schedule-conf-cron").hide();
-                            $("#schedule-conf-fixdelay").hide();
-                        } else if (_.eq('FIX_RATE', scheduleType)) {
-                            $("#schedule-conf-cron").hide();
-                            $("#schedule-conf-fixdelay").show();
-                        }
-                        var glueType = oldData.glueType;
-                        if (_.eq('BEAN', glueType)) {
-                            $("#glue-conf-Handler").show();
-                            $("#glue-source").hide();
-                            $('#glue-kettle').hide();
-                        } else if (!_.eq('KETTLE_KTR', glueType)
-                            && !_.eq('KETTLE_KJB', glueType)) {
-                            $("#glue-source").show();
-                            $("#glue-conf-Handler").hide();
-                            $('#glue-kettle').hide();
-                        }else if (_.eq('KETTLE_KTR', glueType || _.eq('KETTLE_KJB', glueType))) {
-                            $('#glue-kettle').show();
-                            $("#glue-conf-Handler").hide();
-                            $("#glue-source").hide();
-                            multiSelector.init('#for-glue-kettle', 'kettleId', []);
-                        }
+                        scheduleTypeSelect(oldData.scheduleType);
+                        glueTypeSelect(oldData.glueType);
 
                         form.val("layui-key-form", {
                             "groupId": oldData.jobGroup.id,
@@ -441,39 +416,14 @@ function change(title, oldData) {
         var elem = data.elem; // 获得 select 原始 DOM 对象
         var value = data.value; // 获得被选中的值
         var othis = data.othis; // 获得 select 元素被替换后的 jQuery 对象
-
-        if (_.eq('CRON', value)) {
-            $("#schedule-conf-cron").show();
-            $("#schedule-conf-fixdelay").hide();
-        } else if (_.eq('NONE', value)) {
-            $("#schedule-conf-cron").hide();
-            $("#schedule-conf-fixdelay").hide();
-        } else if (_.eq('FIX_RATE', value)) {
-            $("#schedule-conf-cron").hide();
-            $("#schedule-conf-fixdelay").show();
-        }
+        scheduleTypeSelect(value);
     });
 
     form.on('select(glue-type-selected-filter)', function (data) {
         var elem = data.elem; // 获得 select 原始 DOM 对象
         var value = data.value; // 获得被选中的值
         var othis = data.othis; // 获得 select 元素被替换后的 jQuery 对象
-
-        if (_.eq('BEAN', value)) {
-            $("#glue-conf-Handler").show();
-            $("#glue-source").hide();
-            $('#glue-kettle').hide();
-        } else if (!_.eq('KETTLE_KTR', value)
-            && !_.eq('KETTLE_KJB', value)) {
-            $("#glue-source").show();
-            $("#glue-conf-Handler").hide();
-            $('#glue-kettle').hide();
-        }else if (_.eq('KETTLE_KTR', value || _.eq('KETTLE_KJB', value))) {
-            $('#glue-kettle').show();
-            $("#glue-conf-Handler").hide();
-            $("#glue-source").hide();
-            multiSelector.init('#for-glue-kettle', 'kettleId', []);
-        }
+        glueTypeSelect(value);
     });
 
     layui.$('#for-glue-source').on('click', function(){
@@ -528,13 +478,54 @@ function change(title, oldData) {
         delete field.scheduleConfCron;
         delete field.scheduleConfFixDelay;
 
-        let res = (_.isEmpty(oldData) || _.isEmpty(oldData.id)) ? http.post("/job", field) : http.put("/job", field);
+        let res = (_.isEmpty(oldData) || _.isEmpty(oldData.id))
+            ? http.post("/job", field)
+            : http.put("/job", field);
         if (!isSuccess(res.code)) {
             message.error(res.message);
             return false;
         }
         return true;
     });
+}
+
+/**
+ * 运行模式选择器
+ * @param glueType 运行模式
+ */
+function glueTypeSelect(glueType) {
+    if (_.eq('BEAN', glueType)) {
+        $("#glue-conf-Handler").show();
+        $("#glue-source").hide();
+        $('#glue-kettle').hide();
+    } else if (!_.eq('KETTLE_KTR', glueType)
+        && !_.eq('KETTLE_KJB', glueType)) {
+        $("#glue-source").show();
+        $("#glue-conf-Handler").hide();
+        $('#glue-kettle').hide();
+    }else if (_.eq('KETTLE_KTR', glueType || _.eq('KETTLE_KJB', glueType))) {
+        $('#glue-kettle').show();
+        $("#glue-conf-Handler").hide();
+        $("#glue-source").hide();
+        multiSelector.init('#for-glue-kettle', 'kettleId', []);
+    }
+}
+
+/**
+ * 调度类型 选择器
+ * @param scheduleType 调度类型
+ */
+function scheduleTypeSelect(scheduleType) {
+    if (_.eq('CRON', scheduleType)) {
+        $("#schedule-conf-cron").show();
+        $("#schedule-conf-fixdelay").hide();
+    } else if (_.eq('NONE', scheduleType)) {
+        $("#schedule-conf-cron").hide();
+        $("#schedule-conf-fixdelay").hide();
+    } else if (_.eq('FIX_RATE', scheduleType)) {
+        $("#schedule-conf-cron").hide();
+        $("#schedule-conf-fixdelay").show();
+    }
 }
 
 /**
@@ -568,8 +559,11 @@ function openWebIde(form, data) {
         btn1: function (index, layero, that) {
             form.val('layui-key-form', {
                 "glueSource": CodeEditor.getValue(),
-                'glueDescription': defaultGlueRemark,
+                'glueDescription': $('#for-glue-description').val(),
             })
+            layer.close(index);
+        },
+        btn2: function (index, layero, that) {
             layer.close(index);
         },
         area: ['91%', '800px'],

@@ -14,7 +14,7 @@ var CodeEditor = (function () {
             lineWrapping: false,
             foldGutter: true,
             value: null,
-            gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
+            gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter", 'CodeMirror-lint-markers'],
             //全屏模式
             fullScreen: false,
             //括号匹配
@@ -26,8 +26,7 @@ var CodeEditor = (function () {
                 },
             }
         });
-        let htmlWidth = document.body.clientWidth;
-        editor.setSize(htmlWidth, 680);
+        editor.setSize('auto', 680);
         editor.setValue(initValue);
     }
 
@@ -39,10 +38,16 @@ var CodeEditor = (function () {
         return editor.getValue();
     }
 
+    function destroy() {
+        editor.setValue(null);
+        editor.clearHistory();
+    }
+
     return {
         init: init,
         setValue: setValue,
         getValue: getValue,
+        destroy: destroy,
     }
 
 

@@ -63,6 +63,15 @@
             margin-left: 12px !important;
         }
 
+        #item-glue-description {
+            margin-top: 5px !important;
+            margin-bottom: 5px !important;
+        }
+
+        #item-glue-description .layui-form-label {
+            width: auto !important;
+        }
+
     </style>
 
 </head>
@@ -402,18 +411,42 @@
     </form>
 </div>
 
+<!--<div id="glue-source-form" style="display: none">-->
+<!--    <form id="glue-source-form-form" class="layui-form" lay-filter="layui-glue-source-form">-->
+<!--        <div class="layui-form-item">-->
+<!--            <label for="for-glue-description" class="layui-form-label">-->
+<!--                <span class="x-red">*</span>源码备注-->
+<!--            </label>-->
+<!--            <div class="layui-input-block">-->
+<!--                <textarea id="for-glue-description" placeholder="请输入本次执行的机器地址，为空则从执行器获取" name="glueDescription"-->
+<!--                          class="layui-textarea"></textarea>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        <div class="layui-form-item">-->
+<!--            <label for="for-submit-glue-description" class="layui-form-label"></label>-->
+<!--            <button id="for-submit-glue-description" class="layui-btn" lay-filter="glueSourceSubmit" lay-submit="">提交</button>-->
+<!--        </div>-->
+<!--    </form>-->
+<!--</div>-->
+
+<!--glue 代码编辑-->
 <div id="code-edit" style="display: none">
-    <div id='box'>
-        <textarea id="code"></textarea>
-    </div>
-    <div>
-        <!--    <button class="button" id="codeEidtFormPostSubmit" onclick="submit()">提交</button>-->
-<!--        <form id='codeEidtFormPost'>-->
-<!--            <input type="text" name="editValues" id="editValues">-->
-<!--            <input type="text" name="fileName" id="fileName">-->
-<!--            <input type="text" name="encoding" id="encoding">-->
-<!--        </form>-->
-    </div>
+    <form id="code-edit-form" class="layui-form" lay-filter="layui-code-edit-form">
+        <div class="layui-form-item" style="margin-bottom: 1px;">
+            <div id='box'>
+                <textarea id="code"></textarea>
+            </div>
+        </div>
+
+        <div class="layui-form-item" id="item-glue-description">
+            <label for="for-glue-description" class="layui-form-label">
+                <span class="x-red">*</span>源码备注
+            </label>
+            <div class="layui-input-inline" style="width: 90% !important;">
+                <input type="text" id="for-glue-description" class="layui-input" required lay-verify="required" name="glueDescription" value="GLUE代码初始化" placeholder="请输入源码备注" autocomplete="off"/>
+            </div>
+        </div>
+    </form>
 </div>
 
 </body>
