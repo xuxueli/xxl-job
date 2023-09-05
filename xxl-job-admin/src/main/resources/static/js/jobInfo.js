@@ -155,7 +155,7 @@ function createTable(records) {
                         }else if (_.eq("jobLog", menu)) {
                             showJobLog();
                         }else if (_.eq('glueIde', menu)) {
-                            openWebIde(data, true);
+                            updateJobInfoWebIde(data);
                         }
                     },
                     align: 'right', // 右对齐弹出
@@ -164,6 +164,104 @@ function createTable(records) {
             }
         });
     });
+}
+
+/**
+ * 编辑 jobcode
+ * @param data 数据
+ */
+function updateJobInfoWebIde(data) {
+    var dropdown = layui.dropdown;
+    var form = layui.form;
+
+    let defaultGlueSource = getDefaultGlueSource(data.glueType);
+    let codeMirrorMode = getCodeMirrorMode(data.glueType);
+    let glueType = findGlueTypeTitle(data.glueType);
+    let title = '【' + glueType + '】 ' + data.name;
+
+    layer.open({
+        type: 1,
+        title: title,
+        shadeClose: false,
+        shade: 0.8,
+        btn: ['保存', '关闭'],
+        btn1: function (index, layero, that) {
+            // CodeEditor.setValue('');
+            $("#code-edit-double-form")[0].reset();
+            dropdown.close('codeDoubleMoreOperate');
+            layer.close(index);
+        },
+        btn2: function (index, layero, that) {
+            CodeEditor.setValue('');
+            $("#code-edit-double-form")[0].reset();
+            dropdown.close('codeDoubleMoreOperate');
+            layer.close(index);
+        },
+        area: ['91%', '800px'],
+        content: $("#code-double-edit"),
+        success: function (index) {
+            form.val('layui-code-double-edit-form', {
+                'glueDescription': data.glueDescription,
+            });
+            updateJobInfoWebIdeDropdown(data);
+            CodeEditor.init('code-double-box', 'code-double-code', codeMirrorMode, defaultGlueSource);
+            form.render();
+        },
+        cancel: function (index, layero, that) {
+            CodeEditor.setValue('');
+            $("#code-edit-double-form")[0].reset();
+            dropdown.close('codeDoubleMoreOperate');
+            // form.render();
+            layer.close(index);
+        },
+    });
+
+
+}
+
+
+function updateJobInfoWebIdeDropdown(data) {
+    var dropdown = layui.dropdown;
+    var form = layui.form;
+    let resArr = http.getPath('/glue-log/job/' + data.id);
+    if (_.isEmpty(resArr)) return;
+    let showDatas = [{'id': data.id, 'jobId': data.id,
+        'glueSource': data.glueSource,
+        'glueDescription': data.glueDescription}];
+    let dropdownArr = [{
+        id: data.id,
+        templet: '<span style="color: #FFFFFF">' + data.glueDescription + '</span>',
+    }];
+    for (let res of resArr) {
+        dropdownArr.push({
+            id: res.id,
+            templet: '<span style="color: #FFFFFF">' + res.description + '</span>',
+        });
+        showDatas.push({'id': res.id, 'jobId': data.id, 'glueSource': res.glueSource,
+            'glueDescription': res.description});
+    }
+    console.log("dropdownArr", dropdownArr);
+    console.log("showDatas", showDatas)
+    dropdown.render({
+        elem: '#codeDoubleMoreOperate', // 触发事件的 DOM 对象
+        show: true, // 外部事件触发即显示
+        className: 'site-dropdown',
+        data: dropdownArr,
+        click: function(menuDate, othis){
+            var menu = menuDate.id;
+            for (let showData of showDatas) {
+                if (_.eq(showData.id, menu)) {
+                    CodeEditor.init('code-double-box', 'code-double-code',
+                        getCodeMirrorMode(data.glueType), showData.glueSource);
+                    form.val('layui-code-double-edit-form', {
+                        'glueDescription': showData.glueDescription,
+                    });
+                }
+            }
+        },
+        align: 'right', // 右对齐弹出
+        style: 'box-shadow: 1px 1px 10px rgb(0 0 0 / 12%);' // 设置额外样式
+    })
 }
 
 /**

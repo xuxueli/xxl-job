@@ -68,10 +68,6 @@
             margin-bottom: 5px !important;
         }
 
-        #item-glue-description .layui-form-label {
-            width: auto !important;
-        }
-
     </style>
 
 </head>
@@ -105,7 +101,8 @@
             </div>
             <div class="layui-input-inline">
                 <label class="layui-input-label">JobHandler</label>
-                <input type="text" id="executorHandler" placeholder="请输入JobHandler" autocomplete="off" class="layui-input">
+                <input type="text" id="executorHandler" placeholder="请输入JobHandler" autocomplete="off"
+                       class="layui-input">
             </div>
             <div class="layui-input-inline">
                 <label class="layui-input-label">负责人</label>
@@ -113,8 +110,10 @@
             </div>
 
             <div class="layui-input-inline" style="float: right">
-                <button type="button" title="查询" class="layui-btn" onclick="search()"><i class="layui-icon">&#xe615;</i></button>
-                <button type="button" title="清空" class="layui-btn layui-btn-danger" onclick="clean()"><i class="layui-icon">&#xe788;</i></button>
+                <button type="button" title="查询" class="layui-btn" onclick="search()"><i class="layui-icon">&#xe615;</i>
+                </button>
+                <button type="button" title="清空" class="layui-btn layui-btn-danger" onclick="clean()"><i
+                        class="layui-icon">&#xe788;</i></button>
             </div>
         </div>
     </div>
@@ -139,7 +138,8 @@
                     <span class="x-red">*</span>所属执行器
                 </label>
                 <div class="layui-input-inline">
-                    <select lay-search="" id="add-group" name="groupId" required lay-verify="required|groupId" lay-filter="group-selected">
+                    <select lay-search="" id="add-group" name="groupId" required lay-verify="required|groupId"
+                            lay-filter="group-selected">
                         <option value="">请选择或搜索</option>
                     </select>
                 </div>
@@ -149,7 +149,8 @@
                     <span class="x-red">*</span>任务名
                 </label>
                 <div class="layui-input-inline">
-                    <input type="text" id="add-name" name="name" required lay-verify="required|name" autocomplete="off" lay-vertype="tips"
+                    <input type="text" id="add-name" name="name" required lay-verify="required|name" autocomplete="off"
+                           lay-vertype="tips"
                            class="layui-input" placeholder="请输入任务名">
                 </div>
             </div>
@@ -160,7 +161,8 @@
                     <span class="x-red">*</span>负责人
                 </label>
                 <div class="layui-input-inline">
-                    <input type="text" id="add-author" name="author" required lay-verify="required|author" autocomplete="off" lay-vertype="tips"
+                    <input type="text" id="add-author" name="author" required lay-verify="required|author"
+                           autocomplete="off" lay-vertype="tips"
                            class="layui-input" placeholder="请输入负责人">
                 </div>
             </div>
@@ -169,7 +171,8 @@
                     <span class="x-red">*</span>是否立即生效
                 </label>
                 <div class="layui-input-inline">
-                    <select lay-search="" id="add-select-status" name="triggerStatus" required lay-verify="required|triggerStatus" lay-filter="trigger-status-selected-filter">
+                    <select lay-search="" id="add-select-status" name="triggerStatus" required
+                            lay-verify="required|triggerStatus" lay-filter="trigger-status-selected-filter">
                         <option value="0" selected>否</option>
                         <option value="1">是</option>
                     </select>
@@ -181,7 +184,8 @@
             <div class="layui-inline">
                 <label for="add-email" class="layui-form-label">报警邮件</label>
                 <div class="layui-input-inline">
-                    <input type="text" id="add-email" name="alarmEmail" autocomplete="off" placeholder="请输入报警邮件，多个邮件地址则逗号分隔"
+                    <input type="text" id="add-email" name="alarmEmail" autocomplete="off"
+                           placeholder="请输入报警邮件，多个邮件地址则逗号分隔"
                            lay-vertype="tips" class="layui-input">
                 </div>
             </div>
@@ -197,7 +201,8 @@
                     <span class="x-red">*</span>调度类型
                 </label>
                 <div class="layui-input-inline">
-                    <select lay-search="" id="add-schedule-type" name="scheduleType" required lay-verify="required|scheduleType" lay-filter="schedule-type-selected-filter">
+                    <select lay-search="" id="add-schedule-type" name="scheduleType" required
+                            lay-verify="required|scheduleType" lay-filter="schedule-type-selected-filter">
                         <option value="NONE">无</option>
                         <option value="CRON" selected>CRON</option>
                         <option value="FIX_RATE">固定速度</option>
@@ -208,12 +213,13 @@
                 <label for="for-schedule-conf-cron" class="layui-form-label">
                     <span class="x-red">*</span>CRON
                 </label>
-<!--                style="display: flex; height: 100%;"-->
+                <!--                style="display: flex; height: 100%;"-->
                 <div class="layui-input-inline">
-                    <input type="text" id="for-schedule-conf-cron" class="layui-input" name="scheduleConfCron" placeholder="cron表达式..." autocomplete="off"/>
-<!--                    <button id="cron-button" onclick="initCron()" type="button" class="layui-btn layui-btn-sm layui-btn-danger" style="background-color: #c2c2c2">-->
-<!--                        <i class="layui-icon layui-icon-edit"></i>-->
-<!--                    </button>-->
+                    <input type="text" id="for-schedule-conf-cron" class="layui-input" name="scheduleConfCron"
+                           placeholder="cron表达式..." autocomplete="off"/>
+                    <!--                    <button id="cron-button" onclick="initCron()" type="button" class="layui-btn layui-btn-sm layui-btn-danger" style="background-color: #c2c2c2">-->
+                    <!--                        <i class="layui-icon layui-icon-edit"></i>-->
+                    <!--                    </button>-->
                 </div>
             </div>
 
@@ -223,7 +229,8 @@
                 </label>
                 <div class="layui-input-inline" id="for-schedule-conf-fixdelay">
                     <input type="number" class="layui-input" name="scheduleConfFixDelay" autocomplete="off"
-                           onkeyup="value=value.match(/^-?[0-9]\d*$/)||value.match(/-?/)" lay-vertype="tips" placeholder="请输入 (Second)"/>
+                           onkeyup="value=value.match(/^-?[0-9]\d*$/)||value.match(/-?/)" lay-vertype="tips"
+                           placeholder="请输入 (Second)"/>
                 </div>
             </div>
 
@@ -239,7 +246,8 @@
                     <span class="x-red">*</span>运行模式
                 </label>
                 <div class="layui-input-inline">
-                    <select lay-search="" id="add-glue-type" name="glueType" required lay-verify="required|glueType" lay-filter="glue-type-selected-filter">
+                    <select lay-search="" id="add-glue-type" name="glueType" required lay-verify="required|glueType"
+                            lay-filter="glue-type-selected-filter">
                         <option value="BEAN" selected>BEAN</option>
                         <option value="GLUE_GROOVY">GLUE(Java)</option>
                         <option value="GLUE_SHELL">GLUE(Shell)</option>
@@ -257,7 +265,8 @@
                     <span class="x-red">*</span>JobHandler
                 </label>
                 <div class="layui-input-inline">
-                    <input type="text" id="for-glue-conf" class="layui-input" name="executorHandler" placeholder="请输入JobHandler" autocomplete="off"/>
+                    <input type="text" id="for-glue-conf" class="layui-input" name="executorHandler"
+                           placeholder="请输入JobHandler" autocomplete="off"/>
                 </div>
             </div>
 
@@ -266,10 +275,14 @@
                     <span class="x-red">*</span>WEB IDE
                 </label>
                 <div class="layui-input-inline">
-                    <button type="button" id="for-glue-source" class="layui-btn layui-btn-primary layui-border layui-btn-fluid">打开WEB IDE</button>
+                    <button type="button" id="for-glue-source"
+                            class="layui-btn layui-btn-primary layui-border layui-btn-fluid">打开WEB IDE
+                    </button>
                 </div>
-                <textarea id="glue-source-code" name="glueSource" style="display: none" class="layui-textarea"></textarea>
-                <textarea id="glue-description" name="glueDescription" style="display: none" class="layui-textarea"></textarea>
+                <textarea id="glue-source-code" name="glueSource" style="display: none"
+                          class="layui-textarea"></textarea>
+                <textarea id="glue-description" name="glueDescription" style="display: none"
+                          class="layui-textarea"></textarea>
             </div>
 
             <div class="layui-inline" id="glue-kettle" style="display: none">
@@ -281,19 +294,20 @@
                 </div>
             </div>
 
-<!--            <div class="layui-inline" id="glue-conf-upload-file" style="display: none">-->
-<!--                <label for="for-glue-conf-upload-file" class="layui-form-label">-->
-<!--                    <span class="x-red">*</span>kettle文件-->
-<!--                </label>-->
-<!--                <div class="layui-input-inline" id="for-glue-conf-upload-file">-->
-<!--                    <input type="text" class="layui-input" name="scheduleConf" autocomplete="off" placeholder="请输入 (Second)"/>-->
-<!--                </div>-->
-<!--            </div>-->
+            <!--            <div class="layui-inline" id="glue-conf-upload-file" style="display: none">-->
+            <!--                <label for="for-glue-conf-upload-file" class="layui-form-label">-->
+            <!--                    <span class="x-red">*</span>kettle文件-->
+            <!--                </label>-->
+            <!--                <div class="layui-input-inline" id="for-glue-conf-upload-file">-->
+            <!--                    <input type="text" class="layui-input" name="scheduleConf" autocomplete="off" placeholder="请输入 (Second)"/>-->
+            <!--                </div>-->
+            <!--            </div>-->
         </div>
         <div class="layui-form-item layui-form-text">
             <label for="add-executorParam" class="layui-form-label">任务参数</label>
             <div class="layui-input-block">
-                <textarea placeholder="请输入任务参数" id="add-executorParam" name="executorParam" class="layui-textarea"></textarea>
+                <textarea placeholder="请输入任务参数" id="add-executorParam" name="executorParam"
+                          class="layui-textarea"></textarea>
             </div>
         </div>
 
@@ -305,7 +319,8 @@
             <div class="layui-inline">
                 <label for="add-route-strategy" class="layui-form-label">路由策略</label>
                 <div class="layui-input-inline">
-                    <select lay-search="" id="add-route-strategy" name="executorRouteStrategy" required lay-verify="required|executorRouteStrategy" lay-filter="glue-type-selected-filter">
+                    <select lay-search="" id="add-route-strategy" name="executorRouteStrategy" required
+                            lay-verify="required|executorRouteStrategy" lay-filter="glue-type-selected-filter">
                         <option value="FIRST" selected>第一个</option>
                         <option value="LAST">最后一个</option>
                         <option value="ROUND">轮询</option>
@@ -332,7 +347,8 @@
             <div class="layui-inline">
                 <label for="add-misfire-strategy" class="layui-form-label">调度过期策略</label>
                 <div class="layui-input-inline">
-                    <select lay-search="" id="add-misfire-strategy" name="misfireStrategy" required lay-verify="required|misfireStrategy" lay-filter="misfire-strategy-selected-filter">
+                    <select lay-search="" id="add-misfire-strategy" name="misfireStrategy" required
+                            lay-verify="required|misfireStrategy" lay-filter="misfire-strategy-selected-filter">
                         <option value="DO_NOTHING" selected>忽略</option>
                         <option value="FIRE_ONCE_NOW">立即执行一次</option>
                     </select>
@@ -342,7 +358,8 @@
             <div class="layui-inline">
                 <label for="add-block-strategy" class="layui-form-label">阻塞处理策略</label>
                 <div class="layui-input-inline">
-                    <select lay-search="" id="add-block-strategy" name="executorBlockStrategy" required lay-verify="required|executorBlockStrategy" lay-filter="block-strategy-selected-filter">
+                    <select lay-search="" id="add-block-strategy" name="executorBlockStrategy" required
+                            lay-verify="required|executorBlockStrategy" lay-filter="block-strategy-selected-filter">
                         <option value="SERIAL_EXECUTION" selected>单机串行</option>
                         <option value="DISCARD_LATER">丢弃后续调度</option>
                         <option value="COVER_EARLY">覆盖之前调度</option>
@@ -411,24 +428,6 @@
     </form>
 </div>
 
-<!--<div id="glue-source-form" style="display: none">-->
-<!--    <form id="glue-source-form-form" class="layui-form" lay-filter="layui-glue-source-form">-->
-<!--        <div class="layui-form-item">-->
-<!--            <label for="for-glue-description" class="layui-form-label">-->
-<!--                <span class="x-red">*</span>源码备注-->
-<!--            </label>-->
-<!--            <div class="layui-input-block">-->
-<!--                <textarea id="for-glue-description" placeholder="请输入本次执行的机器地址，为空则从执行器获取" name="glueDescription"-->
-<!--                          class="layui-textarea"></textarea>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--        <div class="layui-form-item">-->
-<!--            <label for="for-submit-glue-description" class="layui-form-label"></label>-->
-<!--            <button id="for-submit-glue-description" class="layui-btn" lay-filter="glueSourceSubmit" lay-submit="">提交</button>-->
-<!--        </div>-->
-<!--    </form>-->
-<!--</div>-->
-
 <!--glue 代码编辑-->
 <div id="code-edit" style="display: none">
     <form id="code-edit-form" class="layui-form" lay-filter="layui-code-edit-form">
@@ -439,15 +438,49 @@
         </div>
 
         <div class="layui-form-item" id="item-glue-description">
-            <label for="for-glue-description" class="layui-form-label">
+            <label for="for-glue-description" class="layui-form-label" style="width: auto !important">
                 <span class="x-red">*</span>源码备注
             </label>
             <div class="layui-input-inline" style="width: 90% !important;">
-                <input type="text" id="for-glue-description" class="layui-input" required lay-verify="required" name="glueDescription" value="GLUE代码初始化" placeholder="请输入源码备注" autocomplete="off"/>
+                <input type="text" id="for-glue-description" class="layui-input" required lay-verify="required"
+                       name="glueDescription" value="GLUE代码初始化" placeholder="请输入源码备注" autocomplete="off"/>
             </div>
         </div>
     </form>
 </div>
+
+<!--glue 代码编辑-->
+<div id="code-double-edit" style="display: none">
+    <form id="code-edit-double-form" class="layui-form" lay-filter="layui-code-double-edit-form">
+        <div class="layui-form-item" style="margin-bottom: 5px;">
+            <div class="layui-inline">
+                <label for="for-code-double-glue-description" class="layui-form-label" style="width: auto !important">
+                    <span class="x-red">*</span>源码备注
+                </label>
+                <div class="layui-input-inline" style="width: 900px !important;">
+                    <input type="text" id="for-code-double-glue-description" class="layui-input" required
+                           lay-verify="required"
+                           name="glueDescription" placeholder="请输入源码备注" autocomplete="off"/>
+                </div>
+            </div>
+
+            <div class="layui-inline" style="float: right;">
+                <div class="layui-input-inline" style="margin-left: 5px; width: 100px !important;">
+                    <a class="layui-btn layui-btn-radius layui-btn-normal" style="background-color: #31bdec" id="codeDoubleMoreOperate">
+                        版本回溯<i class="layui-icon layui-icon-down"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item" style="margin-bottom: 1px;">
+            <div id='code-double-box'>
+                <textarea id="code-double-code" name="code"></textarea>
+            </div>
+        </div>
+    </form>
+</div>
+
 
 </body>
 
