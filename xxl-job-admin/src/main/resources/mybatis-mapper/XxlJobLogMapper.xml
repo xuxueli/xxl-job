@@ -210,7 +210,7 @@
 					</if>
 				</trim>
 				ORDER BY t.trigger_time desc
-				LIMIT 0, #{clearBeforeNum}
+				LIMIT 0 OFFSET #{clearBeforeNum}
 				) t1
 				)
 			</if>

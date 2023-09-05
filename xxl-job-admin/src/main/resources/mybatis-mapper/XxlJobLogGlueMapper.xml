@@ -58,7 +58,7 @@
 				SELECT id FROM xxl_job_logglue
 				WHERE job_id = #{jobId}
 				ORDER BY update_time desc
-				LIMIT 0, #{limit}
+				LIMIT 0 OFFSET #{limit}
 			) t1
 		) AND job_id = #{jobId}
 	</delete>
