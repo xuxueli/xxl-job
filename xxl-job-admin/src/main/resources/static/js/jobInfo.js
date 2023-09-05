@@ -184,18 +184,18 @@ function updateJobInfoWebIde(data) {
         title: title,
         shadeClose: false,
         shade: 0.8,
-        btn: ['保存', '关闭'],
+        btn: ['提交'],
         btn1: function (index, layero, that) {
-            // CodeEditor.setValue('');
+            let value = form.val('layui-code-double-edit-form');
+            let isSus = saveGlueCode(data.id, data.glueType, CodeEditor.getValue(), value.glueDescription);
             $("#code-edit-double-form")[0].reset();
             dropdown.close('codeDoubleMoreOperate');
-            layer.close(index);
-        },
-        btn2: function (index, layero, that) {
-            CodeEditor.setValue('');
-            $("#code-edit-double-form")[0].reset();
-            dropdown.close('codeDoubleMoreOperate');
-            layer.close(index);
+            if (isSus) {
+                search();
+                layer.close(index);
+            }else {
+                return false;
+            }
         },
         area: ['91%', '800px'],
         content: $("#code-double-edit"),
@@ -215,10 +215,29 @@ function updateJobInfoWebIde(data) {
             layer.close(index);
         },
     });
-
-
 }
 
+/**
+ * 保存glue code
+ * @param jobId 任务ID
+ * @param glueSource 类型
+ * @param glueSource 源码
+ * @param glueDescription 源码描述
+ */
+function saveGlueCode(jobId, glueType, glueSource, glueDescription) {
+    let param = {
+        "jobId": jobId,
+        "glueType": glueType,
+        "glueSource": glueSource,
+        "description": glueDescription,
+    }
+    let res = http.post("/glue-log", param);
+    if (!isSuccess(res.code)) {
+        message.error(res.message);
+        return false;
+    }
+    return true;
+}
 
 function updateJobInfoWebIdeDropdown(data) {
     var dropdown = layui.dropdown;
@@ -240,8 +259,6 @@ function updateJobInfoWebIdeDropdown(data) {
         showDatas.push({'id': res.id, 'jobId': data.id, 'glueSource': res.glueSource,
             'glueDescription': res.description});
     }
-    console.log("dropdownArr", dropdownArr);
-    console.log("showDatas", showDatas)
     dropdown.render({
         elem: '#codeDoubleMoreOperate', // 触发事件的 DOM 对象
         show: true, // 外部事件触发即显示
@@ -660,18 +677,12 @@ function openWebIde(data, isUpdate) {
         title: title,
         shadeClose: false,
         shade: 0.8,
-        btn: ['保存', '关闭'],
+        btn: ['提交'],
         btn1: function (index, layero, that) {
             form.val('layui-key-form', {
                 "glueSource": CodeEditor.getValue(),
                 'glueDescription': $('#for-glue-description').val(),
             })
-            CodeEditor.setValue('');
-            $("#code-edit-form")[0].reset();
-            form.render();
-            layer.close(index);
-        },
-        btn2: function (index, layero, that) {
             CodeEditor.setValue('');
             $("#code-edit-form")[0].reset();
             form.render();
