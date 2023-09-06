@@ -24,7 +24,8 @@
 		FROM xxl_job_user AS t
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
 			<if test="username != null and username != ''">
-				AND t.username like CONCAT(CONCAT('%', #{username}), '%')
+				<bind name="username" value="'%'+ username + '%'"/>
+				AND t.username like #{username}
 			</if>
 			<if test="role gt -1">
 				AND t.role = #{role}
@@ -39,7 +40,8 @@
 		FROM xxl_job_user AS t
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
 			<if test="username != null and username != ''">
-				AND t.username like CONCAT(CONCAT('%', #{username}), '%')
+				<bind name="username" value="'%'+ username + '%'"/>
+				AND t.username like #{username}
 			</if>
 			<if test="role gt -1">
 				AND t.role = #{role}
