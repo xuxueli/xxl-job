@@ -291,7 +291,7 @@ public class TriggerThreadPool extends AbstractThreadListener implements Ordered
 
         triggerMsgSb.append("<br><br><span style=\"color:#00c0ef;\" > >>>>>>>>>>>触发调度<<<<<<<<<<< </span><br>")
                 .append((ObjectUtil.isNotEmpty(routeAddressResult) && StrUtil.isNotBlank(routeAddressResult.getMessage())) ? routeAddressResult.getMessage() + "<br><br>" : "")
-                .append(StrUtil.isNotBlank(triggerResult.getMessage()) ? triggerResult.getMessage() : StrUtil.EMPTY);
+                .append(StrUtil.isNotBlank(triggerResult.getMessage()) ? triggerResult.getMessage() : "未知问题,联系工作人员排除");
 
         // 6、save log trigger-info
         TriggerLogDTO triggerLogDTO = new TriggerLogDTO();
@@ -317,12 +317,15 @@ public class TriggerThreadPool extends AbstractThreadListener implements Ordered
      * @return {@link ResponseVO}
      */
     private ResponseVO runExecutor(String address, TriggerParam triggerParam){
-        ResponseVO responseVO = null;
+        ResponseVO responseVO = ResponseVO.error();
         try {
             responseVO = executorClient.run(address, triggerParam);
-            if (ObjectUtil.isEmpty(responseVO.getCode())) {
+            if (ObjectUtil.isNull(responseVO)) {
+                responseVO = ResponseVO.error();
+            }
+            if (ObjectUtil.isAllEmpty(responseVO.getCode())) {
                 responseVO.setCode(500);
-                responseVO.setMessage("客户端机器未启用执行器......");
+                responseVO.setMessage((StrUtil.isBlank(responseVO.getMessage()) ? "" : responseVO.getMessage() + ",") + "客户端机器未启用执行器......");
             }
         } catch (Exception e) {
             log.error(">>>>>>>>>>> xxl-job trigger error, please check if the executor[{}] is running. [{}]", address, e.getMessage());
