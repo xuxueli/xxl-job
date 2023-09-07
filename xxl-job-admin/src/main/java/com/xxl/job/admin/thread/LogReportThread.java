@@ -52,6 +52,8 @@ public class LogReportThread extends AbstractThreadListener implements Ordered {
 
         logThread = new Thread(() -> {
 
+            log.info(">>>>>>>>>>> xxl-job, job log report thread start...");
+
             // last clean log time
             long lastCleanLogTime = 0;
 
@@ -90,7 +92,7 @@ public class LogReportThread extends AbstractThreadListener implements Ordered {
 
                 } catch (Exception e) {
                     if (!toStop) {
-                        log.error(">>>>>>>>>>> xxl-job, job log report thread error:{}", e);
+                        log.error(">>>>>>>>>>> xxl-job, job log report thread error: ", e);
                     }
                 }
 

@@ -69,6 +69,9 @@ public class RegistryThread extends AbstractThreadListener implements Ordered {
 		registryMonitorThread = new Thread(new Runnable() {
 			@Override
 			public void run() {
+
+				log.info(">>>>>>>>>>> xxl-job, job registry monitor thread start...");
+
 				while (!toStop) {
 					try {
 						// auto registry group
@@ -115,14 +118,14 @@ public class RegistryThread extends AbstractThreadListener implements Ordered {
 						}
 					} catch (Exception e) {
 						if (!toStop) {
-							log.error(">>>>>>>>>>> xxl-job, job registry monitor thread error:{}", e);
+							log.error(">>>>>>>>>>> xxl-job, job registry monitor thread error: ", e);
 						}
 					}
 					try {
 						TimeUnit.SECONDS.sleep(RegistryConfig.BEAT_TIMEOUT.getValue());
 					} catch (InterruptedException e) {
 						if (!toStop) {
-							log.error(">>>>>>>>>>> xxl-job, job registry monitor thread error:{}", e);
+							log.error(">>>>>>>>>>> xxl-job, job registry monitor thread error: ", e);
 						}
 					}
 				}

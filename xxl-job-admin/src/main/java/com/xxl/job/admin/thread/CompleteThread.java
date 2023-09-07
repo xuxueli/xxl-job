@@ -68,6 +68,8 @@ public class CompleteThread extends AbstractThreadListener implements Ordered {
                 }
             }
 
+            log.info(">>>>>>>>>>> xxl-job, LosedMonitor start...");
+
             // monitor
             while (!toStop) {
                 try {
@@ -85,7 +87,7 @@ public class CompleteThread extends AbstractThreadListener implements Ordered {
                     }
                 } catch (Exception e) {
                     if (!toStop) {
-                        log.error(">>>>>>>>>>> xxl-job, job fail monitor thread error:{}", e);
+                        log.error(">>>>>>>>>>> xxl-job, job fail monitor thread error: ", e);
                     }
                 }
 

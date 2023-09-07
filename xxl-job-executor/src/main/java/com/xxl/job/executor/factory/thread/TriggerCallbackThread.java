@@ -55,6 +55,9 @@ public class TriggerCallbackThread extends BaseTaskThread {
 
         // callback
         triggerCallbackThread = newThread(() -> {
+
+            log.info(">>>>>>>>>>> xxl-job, executor callback thread running.");
+
             // normal callback
             while (!toStop) {
                 try {
@@ -93,6 +96,9 @@ public class TriggerCallbackThread extends BaseTaskThread {
 
         // retry
         triggerRetryCallbackThread = newThread(() -> {
+
+            log.info(">>>>>>>>>>> xxl-job, executor retry callback thread running.");
+
             while (!toStop) {
                 try {
                     retryFailCallbackFile();

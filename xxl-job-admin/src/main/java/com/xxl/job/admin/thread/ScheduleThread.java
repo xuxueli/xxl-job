@@ -253,6 +253,8 @@ public class ScheduleThread extends AbstractThreadListener implements Ordered {
             @Override
             public void run() {
 
+                log.info(">>>>>>>>>>> xxl-job, JobScheduleHelper#ringThread start...");
+
                 while (!ringThreadToStop) {
 
                     // align second

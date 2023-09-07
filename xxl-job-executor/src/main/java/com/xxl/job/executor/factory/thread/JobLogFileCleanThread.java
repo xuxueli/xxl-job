@@ -32,6 +32,9 @@ public class JobLogFileCleanThread extends BaseTaskThread {
     public void start() {
 
         localThread = newThread(() -> {
+
+            log.info(">>>>>>>>>>> xxl-job, executor JobLogFileCleanThread thread running.");
+
             while (!toStop) {
                 try {
                     // clean log dir, over logRetentionDays

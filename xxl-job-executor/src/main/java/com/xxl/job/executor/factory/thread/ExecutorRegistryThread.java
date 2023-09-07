@@ -26,6 +26,9 @@ public class ExecutorRegistryThread extends BaseTaskThread {
     @Override
     public void start(){
         registryThread = newThread(() -> {
+
+            log.info(">>>>>>>>>>> xxl-job, executor registry thread running.");
+
             while (!toStop) {
                 adminClient.registry();
 
