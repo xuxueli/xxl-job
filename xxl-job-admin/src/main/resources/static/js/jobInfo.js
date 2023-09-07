@@ -208,7 +208,7 @@ function updateJobInfoWebIde(data) {
             form.render();
         },
         cancel: function (index, layero, that) {
-            CodeEditor.setValue('');
+            CodeEditor.destroy();
             $("#code-edit-double-form")[0].reset();
             dropdown.close('codeDoubleMoreOperate');
             // form.render();
@@ -268,8 +268,7 @@ function updateJobInfoWebIdeDropdown(data) {
             var menu = menuDate.id;
             for (let showData of showDatas) {
                 if (_.eq(showData.id, menu)) {
-                    CodeEditor.init('code-double-box', 'code-double-code',
-                        getCodeMirrorMode(data.glueType), showData.glueSource);
+                    CodeEditor.setValue(showData.glueSource);
                     form.val('layui-code-double-edit-form', {
                         'glueDescription': showData.glueDescription,
                     });
