@@ -116,11 +116,11 @@ function createTable(records) {
                         id: 'exeOnce',
                         templet: '<span style="color: #FFFFFF">执行一次</span>',
                     },
-                    {
-                        id: 'jobLog',
-                        // templet: '<span style="color: #FFFFFF">查询日志</span>',
-                        templet: '<li><a _href="page-jobLog?jobId='+ data.id +'"><span style="color: #FFFFFF">查询日志</span></a></li>\n',
-                    },
+                    // {
+                    //     id: 'jobLog',
+                    //     // templet: '<span style="color: #FFFFFF">查询日志</span>',
+                    //     templet: '<li><a _href="page-jobLog?jobId='+ data.id +'"><span style="color: #FFFFFF">查询日志</span></a></li>\n',
+                    // },
                     {
                         id: 'registerNode',
                         templet: '<span style="color: #FFFFFF">注册节点</span>',
@@ -171,20 +171,6 @@ function createTable(records) {
  */
 function showJobLog() {
     console.log("查询日志");
-    // parent.window.['page-jobLog'].变量 = 想要赋的值
-
-    // tab.tabAdd("调度日志", "page-jobLog", 3)
-    // tab.tabChange(3);
-
-    var tabs = document.getElementsByClassName("layui-tab-content");
-
-
-
-
-
-
-
-
 }
 
 /**
