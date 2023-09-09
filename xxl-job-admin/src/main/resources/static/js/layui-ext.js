@@ -1,6 +1,6 @@
 (function () {
     layui.config({
-        base: "../plugins/",
+        base: "plugins/",
     })
         .extend({
             cron: "cron/cron",

@@ -51,7 +51,7 @@ function pageSearch(currentPage, pageSize) {
         'endTime': end,
         'status': status,
     };
-    return http.get("/log", pageDTO);
+    return http.get("log", pageDTO);
 }
 
 /**
@@ -190,7 +190,7 @@ function createTable(records) {
  * 查询执行日志
  */
 function findExeLog(data) {
-    var res = http.getPath('/log/cat/' + data.id + "/" + 1);
+    var res = http.getPath('log/cat/' + data.id + "/" + 1);
     var str = '<span style="color: green;">[Load Log Finish]</span>';
     if (!_.isEmpty(res)) {
         str = res.logContent + "<br>" + str;
@@ -231,7 +231,7 @@ function manualClearLog() {
     form.on('submit(clearLog)', function (data) {
         let field = data.field;
         field.jobIds = multiSelector.getValue();
-        let res = http.delBody('/log/clean', field);
+        let res = http.delBody('log/clean', field);
         if (!isSuccess(res.code)) {
             message.error(res.message);
             return false;
@@ -288,7 +288,7 @@ function loadPage(total) {
  */
 function searchJobGroup(divId) {
     return new Promise(resolve => {
-        let page = http.get("/group", {'currentPage': -1,});
+        let page = http.get("group", {'currentPage': -1,});
         layui.use(['form'], function () {
             let form = layui.form;
             $.each(page.records, function (index, item) {

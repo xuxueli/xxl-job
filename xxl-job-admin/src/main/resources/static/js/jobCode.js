@@ -64,7 +64,7 @@ function saveGlueCode(jobId, glueType, glueSource, glueDescription) {
         "glueSource": glueSource,
         "description": glueDescription,
     }
-    let res = http.post("/glue-log", param);
+    let res = http.post("glue-log", param);
     if (!isSuccess(res.code)) {
         message.error(res.message);
         return false;
@@ -79,7 +79,7 @@ function saveGlueCode(jobId, glueType, glueSource, glueDescription) {
 function updateJobInfoWebIdeDropdown(data) {
     var dropdown = layui.dropdown;
     var form = layui.form;
-    let resArr = http.getPath('/glue-log/job/' + data.id);
+    let resArr = http.getPath('glue-log/job/' + data.id);
     if (_.isEmpty(resArr)) return;
     let showDatas = [{'id': data.id, 'jobId': data.id,
         'glueSource': data.glueSource,

@@ -8,7 +8,7 @@ $(function () {
  */
 function searchJobGroup(divId) {
     return new Promise(resolve => {
-        let page = http.get("/group", {'currentPage': -1,});
+        let page = http.get("group", {'currentPage': -1,});
         layui.use(['form'], function () {
             let form = layui.form;
             $.each(page.records, function (index, item) {
@@ -215,7 +215,7 @@ function exeOnce(oldData) {
             "addresses": addresses,
         }
 
-        let res = http.patchBody("/job/trigger", param);
+        let res = http.patchBody("job/trigger", param);
         if (!isSuccess(res.code)) {
             message.error(res.message);
             return false;
@@ -229,7 +229,7 @@ function exeOnce(oldData) {
  * @param data 数据
  */
 function showNextExeTime(data) {
-    let result = http.getPath("/job/next-trigger/" + data.id);
+    let result = http.getPath("job/next-trigger/" + data.id);
     if (!_.isEmpty(result)) {
         let html = '<div style="text-align: center; font-size: 20px">';
         for (let value of result) {
@@ -273,9 +273,9 @@ function showRegisterNode(data) {
  */
 function updateStatus(id, status) {
     if (status) {
-        http.patchPath('/job/start/' + id);
+        http.patchPath('job/start/' + id);
     } else {
-        http.patchPath('/job/stop/' + id);
+        http.patchPath('job/stop/' + id);
     }
     pageSearch(1, 50);
 }
@@ -327,7 +327,7 @@ function pageSearch(currentPage, pageSize) {
         'author': author,
         'triggerStatus': status,
     };
-    return http.get("/job", pageDTO);
+    return http.get("job", pageDTO);
 }
 
 /**
@@ -454,8 +454,8 @@ function change(title, oldData) {
         delete field.scheduleConfFixDelay;
 
         let res = (_.isEmpty(oldData) || _.isEmpty(oldData.id))
-            ? http.post("/job", field)
-            : http.put("/job", field);
+            ? http.post("job", field)
+            : http.put("job", field);
         if (!isSuccess(res.code)) {
             message.error(res.message);
             return false;
@@ -535,7 +535,7 @@ function getCodeMirrorMode(glueType) {
  * 任务下拉
  */
 function initJobInfo(oldVal) {
-    let jobInfos = http.get("/job", {'currentPage': -1,}).records;
+    let jobInfos = http.get("job", {'currentPage': -1,}).records;
     let val = [];
 
     for (let jobInfo of jobInfos) {
@@ -605,7 +605,7 @@ function delAll() {
             ids.push(a.id);
         })
         layer.confirm('确认要删除吗？', function (index) {
-            http.delBody("/job/batch", ids);
+            http.delBody("job/batch", ids);
             layer.close(index);
             search();
         });
@@ -618,7 +618,7 @@ function delAll() {
  */
 function deleteData(obj) {
     layer.confirm('确认要删除吗？', function (index) {
-        http.delPath("/job/" + obj.id);
+        http.delPath("job/" + obj.id);
         layer.close(index);
         search();
     });

@@ -86,7 +86,7 @@ function search() {
  */
 function deleteData(obj) {
     layer.confirm('确认要删除吗？', function (index) {
-        http.delPath("/group/" + obj.id);
+        http.delPath("group/" + obj.id);
         layer.close(index);
         search();
     });
@@ -111,7 +111,7 @@ function pageSearch(currentPage, pageSize) {
         'title': title,
         'appName': appName
     };
-    return http.get("/group", pageDTO);
+    return http.get("group", pageDTO);
 }
 
 /**
@@ -125,7 +125,7 @@ function delAll() {
             ids.push(a.id);
         })
         layer.confirm('确认要删除吗？', function (index) {
-            http.delBody("/group/batch", ids);
+            http.delBody("group/batch", ids);
             layer.close(index);
             search();
         });
@@ -184,7 +184,7 @@ function add() {
     validate(form);
     form.on('submit(add)', function (data) {
         let field = data.field;
-        let res = http.post("/group", field);
+        let res = http.post("group", field);
         if (!isSuccess(res.code)) {
             message.error(res.message);
             return false;
@@ -245,7 +245,7 @@ function update(data) {
         let field = new_obj.field;
         field.id = data.id;
         field.addresses = str2List(field.addresses);
-        let res = http.put("/group", field);
+        let res = http.put("group", field);
         if (!isSuccess(res.code)) {
             message.error(res.message);
             return false;

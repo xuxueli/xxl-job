@@ -1,6 +1,9 @@
 server:
   port: 8080
 
+  servlet:
+    context-path: ${CONTEXT_PATH:/}
+
 spring:
 
   # mysql 配置
