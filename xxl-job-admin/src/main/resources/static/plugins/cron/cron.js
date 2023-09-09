@@ -77,7 +77,7 @@ layui.define(['lay', 'element', 'form'], function(exports){ //假如该组件依
 	,tabs:[{key:'seconds',range:'0-59'},{key:'minutes',range:'0-59'},{key:'hours',range:'0-23'},{key:'days',range:'1-31'},{key:'months',range:'1-12'},{key:'weeks',range:'1-7'},{key:'years'}]
 	,defaultCron: {seconds:"*",minutes:"*",hours:"*",days:"*", months:"*", weeks:"?", years:""}
     ,trigger: "click" //呼出控件的事件
-	,btns: ['confirm'] //右下角显示的按钮，会按照数组顺序排列
+	,btns: ['run', 'confirm'] //右下角显示的按钮，会按照数组顺序排列
 	,position: null //控件定位方式定位, 默认absolute，支持：fixed/absolute/static
 	,zIndex: null //控件层叠顺序
 	,show: false //是否直接显示，如果设置 true，则默认直接显示控件

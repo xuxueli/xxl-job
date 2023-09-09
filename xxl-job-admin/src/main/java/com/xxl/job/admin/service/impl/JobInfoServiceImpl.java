@@ -243,6 +243,19 @@ public class JobInfoServiceImpl extends BaseServiceImpl<JobInfoMapper, JobInfo, 
         return result;
     }
 
+    @Override
+    public List<String> cronLatestExecutionTime(String cron) {
+        List<String> result = new ArrayList<>();
+        Date lastTime = DateUtil.date();
+        for (int i = 0; i < 5; i++) {
+            lastTime = CronUtils.generateNextValidTime(ScheduleTypeEnum.CRON.name(), cron, lastTime);
+            if (ObjectUtil.isNotNull(lastTime)) {
+                result.add(DateUtil.formatDateTime(lastTime));
+            }
+        }
+        return result;
+    }
+
     /**
      * 获取子任务id
      *

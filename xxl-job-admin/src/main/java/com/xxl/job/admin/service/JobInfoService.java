@@ -115,7 +115,12 @@ public interface JobInfoService extends BaseService<JobInfo, JobInfo, JobInfoVO>
      */
     List<String> nextTriggerTime(Long id);
 
-
+    /**
+     * 根据CRON表达式获取最近执行时间
+     * @param cron CRON表达式
+     * @return {@link List}<{@link String}>
+     */
+    List<String> cronLatestExecutionTime(String cron);
 
 
 

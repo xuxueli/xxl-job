@@ -19,6 +19,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -132,6 +133,28 @@ public class JobInfoController extends AbstractController {
         jobInfoService.delete(ids);
         return ResponseVO.success();
     }
+
+    @ApiOperation("根据CRON表达式获取最近执行时间")
+    @GetMapping(value = "/cron", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "cron", dataTypeClass = String.class, value = "CRON表达式", required = true),
+    })
+    public ResponseVO<List<String>> cronLatestExecutionTime(@RequestParam("cron") @NotBlank(message = "CRON表达式不能为空") String cron) {
+        log.info("cronLatestExecutionTime {}", cron);
+        return ResponseVO.success(jobInfoService.cronLatestExecutionTime(cron));
+    }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

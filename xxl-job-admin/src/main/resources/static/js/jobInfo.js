@@ -552,6 +552,7 @@ function initJobInfo(oldVal) {
         var cron = layui.cron;
         cron.render({
             elem: "#for-schedule-conf-cron",
+            run: 'job/cron',
             value: $("#for-schedule-conf-cron").val(),
             done: function (cronStr) {
                 $("#for-schedule-conf-cron").val(cronStr);

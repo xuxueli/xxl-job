@@ -11,7 +11,6 @@ import org.springframework.format.support.FormattingConversionService;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.web.bind.support.ConfigurableWebBindingInitializer;
 import org.springframework.web.servlet.DispatcherServlet;
-import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -57,6 +56,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
         patterns.add("/v2/**");
         patterns.add("/**/v2/api-docs");
         patterns.add("/swagger-resources/**");
+        patterns.add("/admin/**");
+        patterns.add("/job/cron");
 
         registry.addInterceptor(loginInterceptor()).excludePathPatterns(patterns).addPathPatterns("/**");
     }
