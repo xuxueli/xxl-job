@@ -17,6 +17,7 @@ import com.xxl.job.admin.mapper.LogReportMapper;
 import com.xxl.job.admin.service.JobGroupService;
 import com.xxl.job.admin.service.JobInfoService;
 import com.xxl.job.admin.service.LogReportService;
+import com.xxl.job.admin.service.UserInfoService;
 import com.xxl.job.admin.service.base.impl.BaseServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +49,9 @@ public class LogReportServiceImpl extends BaseServiceImpl<LogReportMapper, LogRe
 
     @Autowired
     private JobGroupService jobGroupService;
+
+    @Autowired
+    private UserInfoService userInfoService;
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
@@ -146,6 +150,7 @@ public class LogReportServiceImpl extends BaseServiceImpl<LogReportMapper, LogRe
         dashboardInfoVO.setJobLogCount(jobLogCount);
         dashboardInfoVO.setJobLogSuccessCount(jobLogSuccessCount);
         dashboardInfoVO.setExecutorCount(executorAddressSet.size());
+        dashboardInfoVO.setUserInfoCount(userInfoService.count());
 
         return dashboardInfoVO;
     }

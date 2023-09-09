@@ -777,3 +777,185 @@ table th, table td {
 .site-dropdown::-webkit-scrollbar-thumb:vertical:active {
     background-color: rgba(0, 0, 0, .38);
 }
+
+.console .data-body .w-img {
+    width: 60px;
+    height: 60px
+}
+
+.console .data-body .w-img img {
+    width: 100%;
+    height: 100%
+}
+
+.console .line-home-a {
+    height: 60px
+}
+
+.console .data-body .media-cont .tit {
+    font-size: 16px;
+    padding-bottom: 5px
+}
+
+.console .data-body .media-cont .num {
+    font-size: 24px;
+    line-height: 22px
+}
+
+.console .data-body .media-cont {
+    -ms-flex-align: center !important;
+    align-items: center !important;
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto
+}
+
+.console .data-body {
+    display: flex;
+    padding: 20px;
+    padding-bottom: 0;
+    color: #333
+}
+
+.console .map-body {
+    height: 360px
+}
+
+.console .map-month {
+    height: 360px
+}
+
+.console .home .layui-card {
+    -webkit-box-shadow: 0 0 20px rgba(0, 0, 0, .08);
+    box-shadow: 0 0 20px rgba(0, 0, 0, .08);
+    border-radius: 5px
+}
+
+.console .home .layui-card {
+    -webkit-box-shadow: 0 0 20px rgba(0, 0, 0, .08);
+    box-shadow: 0 0 20px rgba(0, 0, 0, .08);
+    border-radius: 5px
+}
+
+.console .x-card-body {
+    padding: 20px;
+    position: relative;
+    width: 100%;
+    box-sizing: border-box
+}
+
+.console .x-card-body .stat-text {
+    color: #455a64;
+    font-size: 24px;
+    padding-bottom: 5px
+}
+
+.console .x-card-body .stat-heading {
+    color: #99abb4
+}
+
+.console .x-card-body .img-box {
+    display: inline-block;
+    vertical-align: middle;
+    padding-right: 20px
+}
+
+.console .x-card-body .img-box img {
+    width: 60px
+}
+
+.console .x-card-body .cart-r {
+    display: inline-block;
+    vertical-align: middle
+}
+
+.console .progress-box {
+    margin-bottom: 20px;
+    display: flex
+}
+
+.console .progress-box .por-title {
+    font-weight: 600;
+    color: #868e96;
+    padding-bottom: 5px
+}
+
+.console .progress-box .por-txt {
+    font-size: 13px;
+    padding-bottom: 5px
+}
+
+.console .progress-box .pro-head {
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    display: inline-block;
+    vertical-align: middle;
+    float: left;
+    overflow: hidden;
+    padding-right: 20px
+}
+
+.console .progress-box .pro-head img {
+    background: #bea8ab;
+    width: 100%;
+    height: 100%;
+    border-radius: 100%
+}
+
+.console .progress-box .pro-data {
+    display: inline-block;
+    vertical-align: middle;
+    flex: 1
+}
+
+.console .x-card-body .stat-text {
+    color: #455a64;
+    font-size: 24px;
+    padding-bottom: 5px
+}
+
+.console .x-card-body .stat-heading {
+    color: #99abb4
+}
+
+.console .x-card-body .img-box {
+    display: inline-block;
+    vertical-align: middle
+}
+
+.console .x-card-body .img-box img {
+    width: 60px
+}
+
+.console .x-card-body .cart-r {
+    display: inline-block;
+    vertical-align: middle;
+    padding-left: 20px
+}
+
+.x-card-title {
+    color: #212529;
+    font-size: 16px;
+    padding-bottom: 20px;
+    font-weight: bolder
+}
+
+
+@media screen and (max-width: 750px) {
+    .ok-in-hide-md {
+        display: none !important
+    }
+}
+
+@media screen and (max-width: 548px) {
+    .ok-in-hide-xs, [x-pc-in-show] {
+        display: none !important
+    }
+}
+
+
+
+
+
+
+

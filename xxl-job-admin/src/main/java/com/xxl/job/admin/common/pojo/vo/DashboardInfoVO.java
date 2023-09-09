@@ -35,5 +35,10 @@ public class DashboardInfoVO implements Serializable {
      */
     private Integer executorCount;
 
+    /**
+     * 用户数量
+     */
+    private Long userInfoCount;
+
 
 }

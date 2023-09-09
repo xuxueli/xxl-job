@@ -5,7 +5,7 @@
         .extend({
             cron: "cron/cron",
             notice: "notice/notice",
-
+            countUp: 'countUp',
 
 
         })

@@ -37,8 +37,8 @@ public class LogReportController extends AbstractController {
     @Autowired
     private LogReportService logReportService;
 
-    @ApiOperation("查询运行报表")
-    @GetMapping(value = "/run/{start}/{end}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation("查询调度报表")
+    @GetMapping(value = "/trigger/{start}/{end}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "path", name = "start", dataTypeClass = Long.class, value = "开始时间", required = true),
             @ApiImplicitParam(paramType = "path", name = "end", dataTypeClass = Long.class, value = "结束时间", required = true),
@@ -49,8 +49,8 @@ public class LogReportController extends AbstractController {
         return ResponseVO.success(logReportService.chartInfo(start, end));
     }
 
-    @ApiOperation("查询调度报表")
-    @GetMapping(value = "/trigger", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation("查询运行报表")
+    @GetMapping(value = "/run", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseVO<DashboardInfoVO> dashboardInfo() {
         log.info("dashboardInfo {}", System.currentTimeMillis());
         return ResponseVO.success(logReportService.dashboardInfo());

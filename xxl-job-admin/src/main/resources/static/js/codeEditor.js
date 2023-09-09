@@ -1,6 +1,6 @@
 var CodeEditor = (function () {
     var editor;
-    function init(displayDivId, textareaDivId, mode, initValue) {
+    function init(displayDivId, textareaDivId, mode) {
         document.getElementById(displayDivId).style.display = 'block';
         editor = CodeMirror.fromTextArea(document.getElementById(textareaDivId), {
             mode: mode,
@@ -27,7 +27,6 @@ var CodeEditor = (function () {
             }
         });
         editor.setSize('auto', 680);
-        editor.setValue(initValue);
     }
 
     function setValue(value) {

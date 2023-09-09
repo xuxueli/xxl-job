@@ -11,87 +11,139 @@
     <link rel="stylesheet" href="css/font.css">
     <link rel="stylesheet" href="css/xadmin.css">
     <link rel="stylesheet" href="plugins/layui-v2.8.11/css/layui.css">
-<!--    <link rel="stylesheet" href="plugins/loading/okLoading.css">-->
     <link rel="stylesheet" href="plugins/bootstrap/css/bootstrap.css" media="all">
 
     <script type="text/javascript" src="plugins/jquery-3.7.0.min.js"></script>
     <script type="text/javascript" src="plugins/bootstrap/js/bootstrap.min.js" media="all"></script>
-<!--    <script type="text/javascript" src="plugins/loading/okLoading.js"></script>-->
     <script type="text/javascript" src="plugins/layui-v2.8.11/layui.js" charset="utf-8"></script>
     <script type="text/javascript" src="js/layui-ext.js"></script>
+    <script type="text/javascript" src="plugins/echarts/echarts.min.js"></script>
+    <script type="text/javascript" src="plugins/echarts/echarts.themez.js"></script>
     <script type="text/javascript" src="js/xadmin.js"></script>
     <script type="text/javascript" src="plugins/lodash.js"></script>
+    <script type="text/javascript" src="plugins/moment.js"></script>
     <script type="text/javascript" src="js/message.js"></script>
     <script type="text/javascript" src="js/utils.js"></script>
     <script type="text/javascript" src="js/request.js"></script>
     <script type="text/javascript" src="js/welcome.js"></script>
 
 </head>
-<body>
-<div class="x-body layui-anim layui-anim-up">
+<body class="console x-body-scroll">
+<div class="x-body">
+    <div class="row">
+        <h3 style="margin: 0; font-size: 24px;">运行报表</h3>
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-xs6 layui-col-md3">
+                <div class="x-card layui-card">
+                    <div class="x-card-body p0 clearfix cart-data">
+                        <div class="data-body">
+                            <div class="media-cont">
+                                <p class="tit">任务数量</p>
+                                <h5 class="jobNumber">0</h5>
+                            </div>
+                            <div class="w-img" x-pc-in-show>
+                                <img src="images/home-1.png" alt="任务数量"/>
+                            </div>
+                        </div>
+                        <div id="jobInfoNumber" class="line-home-a"></div>
+                    </div>
+                </div>
+            </div>
 
-    <blockquote class="layui-elem-quote">欢迎管理员：
-        <span id="current" class="x-red"></span>！
-    </blockquote>
+            <div class="layui-col-xs6 layui-col-md3">
+                <div class="x-card layui-card">
+                    <div class="x-card-body p0 clearfix cart-data">
+                        <div class="data-body">
+                            <div class="media-cont">
+                                <p class="tit">调度次数</p>
+                                <h5 class="jobLogCount">0</h5>
+                            </div>
+                            <div class="w-img" x-pc-in-show>
+                                <img src="images/home-2.png" alt="调度次数"/>
+                            </div>
+                        </div>
+                        <div id="jobInfoLogCount" class="line-home-a"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-col-xs6 layui-col-md3">
+                <div class="x-card layui-card">
+                    <div class="x-card-body p0 clearfix cart-data">
+                        <div class="data-body">
+                            <div class="media-cont">
+                                <p class="tit">执行器数量</p>
+                                <h5 class="executorCount">0</h5>
+                            </div>
+                            <div class="w-img" x-pc-in-show>
+                                <img src="images/home-3.png" alt="执行器数量"/>
+                            </div>
+                        </div>
+                        <div id="executorCountId" class="line-home-a"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-col-xs6 layui-col-md3">
+                <div class="x-card layui-card">
+                    <div class="x-card-body p0 clearfix cart-data">
+                        <div class="data-body">
+                            <div class="media-cont">
+                                <p class="tit">用户数量</p>
+                                <h5 class="userInfoCount">0</h5>
+                            </div>
+                            <div class="w-img" x-pc-in-show>
+                                <img src="images/home-4.png" alt="用户数量"/>
+                            </div>
+                        </div>
+                        <div id="userInfoNumberId" class="line-home-a"></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
 
     <div class="row">
-        <div class="col-xs-6 col-sm-4 col-md-3">
-            <section class="panel">
-                <div class="symbol bgcolor-blue"> <i class=" iconfont icon-dashaxiaoqudizhi01"></i>
-                </div>
-                <div class="value tab-menu" bind="1">
-                    <a href="javascript:;" data-url="user-info.html" data-parent="true" data-title="总栋数"><i class="iconfont " data-icon=""></i>
-                        <h1>45</h1>
-                    </a>
+        <h3 style="margin: 0; font-size: 24px;">调度报表</h3>
 
-                    <a href="javascript:;" data-url="user-info.html" data-parent="true" data-title="总栋数"> <i class="iconfont " data-icon=""></i><span>总栋数</span></a>
-
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-md8">
+                <div class="layui-card">
+                    <div class="layui-card-header">
+                        <div class="x-card-title">今日调度分布图</div>
+                    </div>
+                    <div class="x-card-body map-body">
+                        <div style="height: 100%;" id="todayScheduleMap"></div>
+                    </div>
                 </div>
-            </section>
-        </div>
-        <div class="col-xs-6 col-sm-4 col-md-3">
-            <section class="panel">
-                <div class="symbol bgcolor-commred"> <i class="iconfont icon-lvhuaxiaoqu"></i>
-                </div>
-                <div class="value tab-menu" bind="1">
-                    <a href="javascript:;" data-url="user-info.html" data-parent="true" data-title="总户数"> <i class="iconfont " data-icon=""></i>
-                        <h1>600</h1>
-                    </a>
+            </div>
 
-                    <a href="javascript:;" data-url="user-info.html" data-parent="true" data-title="总户数"> <i class="iconfont " data-icon=""></i><span>总户数</span></a>
-
+            <div class="layui-col-md4">
+                <div class="layui-card">
+                    <div class="layui-card-header">
+                        <div class="x-card-title">本周调度比例图</div>
+                    </div>
+                    <div class="x-card-body map-body">
+                        <div style="height: 100%;" id="weekScheduleScaleChart"></div>
+                    </div>
                 </div>
-            </section>
+            </div>
         </div>
 
-        <div class="col-xs-6 col-sm-4 col-md-3">
-            <section class="panel">
-                <div class="symbol bgcolor-dark-green"> <i class="iconfont icon-yezhuxian"></i>
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-md12">
+                <div class="layui-card">
+                    <div class="layui-card-header">
+                        <div class="x-card-title">本月调度分布图</div>
+                    </div>
+                    <div class="x-card-body clearfix">
+                        <div class="map-month" id="monthScheduleMap"></div>
+                    </div>
                 </div>
-                <div class="value tab-menu" bind="1">
-                    <a href="javascript:;" data-url="user-info.html" data-parent="true" data-title="总人数"> <i class="iconfont " data-icon=""></i>
-                        <h1>8310</h1>
-                    </a>
-                    <a href="javascript:;" data-url="user-info.html" data-parent="true" data-title="总人数"> <i class="iconfont " data-icon=""></i><span>总人数</span></a>
-                </div>
-            </section>
+            </div>
         </div>
-
-        <div class="col-xs-6 col-sm-4 col-md-3">
-            <section class="panel">
-                <div class="symbol bgcolor-yellow-green"> <i class="layui-icon" style="top: 3px;">&#xe613;</i>
-                </div>
-                <div class="value tab-menu" bind="1">
-                    <a href="javascript:;" data-url="user-info.html" data-parent="true" data-title="租户数量"> <i class="iconfont " data-icon=""></i>
-                        <h1>1314</h1>
-                    </a>
-                    <a href="javascript:;" data-url="user-info.html" data-parent="true" data-title="租户数量"> <i class="iconfont " data-icon=""></i><span>租户数量</span></a>
-                </div>
-            </section>
-        </div>
-
     </div>
 </div>
-
 </body>
 </html>
