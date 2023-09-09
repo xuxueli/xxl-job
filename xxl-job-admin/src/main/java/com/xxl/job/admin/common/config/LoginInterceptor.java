@@ -36,10 +36,7 @@ public class LoginInterceptor implements HandlerInterceptor {
         String authorization = request.getHeader(AuthConstant.AUTHORIZATION_HEADER);
         String parameter = request.getParameter(AuthConstant.AUTHORIZATION_HEADER);
 
-        if (request.getHeader("Accept").contains("html")) {
-            return true;
-        }
-
+        if (request.getHeader("Accept").contains("html"))  return true;
         response.setContentType("text/json;charset=UTF-8");
         response.setCharacterEncoding("UTF-8");
 

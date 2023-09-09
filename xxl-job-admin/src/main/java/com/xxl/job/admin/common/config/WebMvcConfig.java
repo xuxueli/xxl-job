@@ -12,6 +12,7 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.web.bind.support.ConfigurableWebBindingInitializer;
 import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.ArrayList;
@@ -35,10 +36,18 @@ public class WebMvcConfig implements WebMvcConfigurer {
     }
 
     @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/templates/**")
+                .addResourceLocations("classpath:/templates/");
+        registry.addResourceHandler("/static/**")
+                .addResourceLocations("classpath:/static/");
+    }
+
+    @Override
     public void addInterceptors(InterceptorRegistry registry) {
         List<String> patterns = new ArrayList<>();
-        patterns.add("*.js");
-        patterns.add("*.css");
+        patterns.add("/**/*.js");
+        patterns.add("/**/*.css");
         patterns.add("/fonts/**");
         patterns.add("/css/**");
         patterns.add("/js/**");
@@ -58,6 +67,11 @@ public class WebMvcConfig implements WebMvcConfigurer {
         patterns.add("/swagger-resources/**");
         patterns.add("/admin/**");
         patterns.add("/job/cron");
+        patterns.add("/static/**");
+        patterns.add("/templates/**");
+        patterns.add("/**/*.html");
+        patterns.add("/**/*.icon");
+
 
         registry.addInterceptor(loginInterceptor()).excludePathPatterns(patterns).addPathPatterns("/**");
     }
