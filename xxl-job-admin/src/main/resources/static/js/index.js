@@ -111,6 +111,7 @@ function validate(form) {
  */
 function logout() {
     sessionStorage.removeItem('currentUser');
+    sessionStorage.removeItem('Authorization');
     http.get("auth/logout");
     $(location).attr('href', 'login');
 }

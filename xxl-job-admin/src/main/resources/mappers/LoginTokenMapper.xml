@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xxl.job.admin.mapper.LoginTokenMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.xxl.job.admin.common.pojo.entity.LoginToken">
+        <id column="ID" property="id"/>
+        <id column="TOKEN" property="token"/>
+        <id column="ACCOUNT" property="account"/>
+        <id column="EFFECTIVE_DURATION" property="effectiveDuration"/>
+        <id column="LOGIN_TIME" property="loginTime"/>
+        <id column="UPDATED_TIME" property="updatedTime"/>
+
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        ID,
+        TOKEN,
+        ACCOUNT,
+        EFFECTIVE_DURATION,
+        LOGIN_TIME,
+        UPDATED_TIME
+    </sql>
+
+    <select id="findLoginTokenByToken" resultMap="BaseResultMap">
+        select
+            <include refid="Base_Column_List"/>
+        from xxl_job_login_token
+        where TOKEN = #{token,jdbcType=VARCHAR}
+    </select>
+
+    <insert id="insert">
+        REPLACE INTO
+        xxl_job_login_token
+            (`ID`, `TOKEN`, `ACCOUNT`,`EFFECTIVE_DURATION`,`LOGIN_TIME`,`UPDATED_TIME`)
+        values
+        (
+            #{id,jdbcType=BIGINT},
+            #{token,jdbcType=VARCHAR},
+            #{account,jdbcType=VARCHAR},
+            #{effectiveDuration,jdbcType=INTEGER},
+            #{loginTime,jdbcType=BIGINT},
+            #{updatedTime,jdbcType=BIGINT}
+        )
+    </insert>
+
+    <update id="updateLoginTokenByToken">
+        UPDATE xxl_job_login_token
+        SET UPDATED_TIME = #{updatedTime,jdbcType=BIGINT} WHERE TOKEN = #{token,jdbcType=VARCHAR}
+    </update>
+</mapper>

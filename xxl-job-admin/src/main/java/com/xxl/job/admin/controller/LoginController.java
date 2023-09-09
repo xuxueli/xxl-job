@@ -13,7 +13,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 登录控制器
@@ -33,9 +33,9 @@ public class LoginController {
 
     @ApiOperation("登录")
     @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseVO<Void> login(@Validated @RequestBody LoginDTO loginDTO, HttpSession session) {
+    public ResponseVO<Void> login(@Validated @RequestBody LoginDTO loginDTO, HttpServletResponse response) {
         log.debug("login {}", loginDTO.toString());
-        loginService.login(loginDTO, session);
+        loginService.login(loginDTO, response);
         return ResponseVO.success();
     }
 

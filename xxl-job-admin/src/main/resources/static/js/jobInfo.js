@@ -171,6 +171,19 @@ function createTable(records) {
  */
 function showJobLog() {
     console.log("查询日志");
+    // parent.window.['page-jobLog'].变量 = 想要赋的值
+
+    // tab.tabAdd("调度日志", "page-jobLog", 3)
+    // tab.tabChange(3);
+
+    var tabs = document.getElementsByClassName("layui-tab-content");
+
+
+
+
+
+
+
 
 }
 

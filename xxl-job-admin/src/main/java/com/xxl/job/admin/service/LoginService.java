@@ -4,7 +4,7 @@ import com.xxl.job.admin.common.pojo.dto.LoginDTO;
 import com.xxl.job.admin.common.pojo.dto.RegisterDTO;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 登录服务
@@ -18,9 +18,9 @@ public interface LoginService {
      * 登录
      *
      * @param loginDTO 登录DTO
-     * @param session session对象
+     * @param response response对象
      */
-    void login(LoginDTO loginDTO, HttpSession session);
+    void login(LoginDTO loginDTO, HttpServletResponse response);
 
     /**
      * 注册

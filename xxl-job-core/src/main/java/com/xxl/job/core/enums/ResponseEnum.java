@@ -29,6 +29,13 @@ public enum ResponseEnum {
     // 参数不正确
     PARAMETER_ERROR(1, "参数不正确"),
 
+    UNAUTHORIZED(401, "无权访问(未授权)"),
+    AUTHORIZATION_EXPIRES(401, "授权过期, 请求重新登录"),
+    NOT_LOGGED_IN(401, "未登录，或者授权过期"),
+    ANONYMOUS_SUBJECT_UNAUTHORIZED(401, "无权访问:当前用户是匿名用户，请先登录"),
+    AUTHENTICATION_FAILED(401, "身份验证未通过"),
+    MISSING_TOKEN_AUTHENTICATION_FAILED(401, "缺失令牌,鉴权失败"),
+
     // 未找到
     NOT_FOUND(404, "请求接口不存在"),
 
@@ -71,6 +78,13 @@ public enum ResponseEnum {
     USER_NAME_OR_PASSWORD_ERRORS_GREATER_THAN_5_TIMES(4001, "用户名或密码错误次数大于5次,账户已锁定, 请10分钟后再次访问"),
     THE_ACCOUNT_DOES_NOT_EXIST_PLEASE_CHANGE_THE_ACCOUNT_TO_LOGIN(4004, "账号不存在，请更换账号登录"),
     THE_ACCOUNT_OR_PASSWORD_IS_INCORRECT(4009, "账号或密码不正确"),
+    ACCOUNT_AUTHORIZATION_EXPIRED(4002, "账号授权过期"),
+    ACCOUNT_LOGIN_IS_PROHIBITED(4003, "账号禁止登录"),
+    PROHIBIT_THE_LOGIN(4005, "禁止登录"),
+    NO_PERMISSIONS(4006, "暂无权限， 请联系管理员"),
+    THE_ROLE_IDS_DOES_NOT_EXIST_PLEASE_CHANGE_THE_ACCOUNT_TO_LOGIN(4007, "角色不存在，请联系管理员分配角色"),
+    ACCOUNT_AUTOMATIC_LOGOUT(4008, "账号已自动退出登录，无需再次退出登录"),
+    THE_ACCOUNT_IS_NOT_EXISTS(4010, "账号不存在"),
 
     THE_TASK_GROUP_ALREADY_EXISTS(5002, "任务组已存在"),
     THE_TASK_GROUP_DOES_NOT_EXIST_OR_HAS_BEEN_DELETED(5003, "任务组不存在或已删除"),

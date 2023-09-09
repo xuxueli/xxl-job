@@ -34,20 +34,31 @@ function checkLogin() {
         "password": password,
     }
 
-    let res = http.post("auth/login", login);
-    if (isSuccess(res.code)) {
-        message.info('恭喜你, 登录成功');
-        $("#account").val("");
-        $("#password").val("");
-        sessionStorage.setItem('currentUser', account);
-        $(location).attr('href', 'index');
-    }else {
-        message.error(res.message);
-        $("#login_form").removeClass('shake_effect');
-        setTimeout(function () {
-            $("#login_form").addClass('shake_effect')
-        }, 1);
-    }
+    // let res = http.post("auth/login", login);
+
+    $.ajax({
+        url: "auth/login",
+        method: "POST",
+        async: false,
+        contentType: 'application/json',
+        data: JSON.stringify(login),
+        success: function(res, status, xhr) {
+            if (isSuccess(res.code)) {
+                message.info('恭喜你, 登录成功');
+                $("#account").val("");
+                $("#password").val("");
+                sessionStorage.setItem('currentUser', account);
+                sessionStorage.setItem('Authorization', xhr.getResponseHeader('Authorization'));
+                $(location).attr('href', 'index');
+            }else {
+                message.error(res.message);
+                $("#login_form").removeClass('shake_effect');
+                setTimeout(function () {
+                    $("#login_form").addClass('shake_effect')
+                }, 1);
+            }
+        },
+    });
 }
 
 function checkRegister() {
