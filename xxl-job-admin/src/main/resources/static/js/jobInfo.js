@@ -119,7 +119,7 @@ function createTable(records) {
                     {
                         id: 'jobLog',
                         // templet: '<span style="color: #FFFFFF">查询日志</span>',
-                        templet: '<li><a _href="page-log?jobId='+ data.id +'"><span style="color: #FFFFFF">查询日志</span></a></li>\n',
+                        templet: '<li><a _href="page-jobLog?jobId='+ data.id +'"><span style="color: #FFFFFF">查询日志</span></a></li>\n',
                     },
                     {
                         id: 'registerNode',
@@ -165,8 +165,6 @@ function createTable(records) {
         });
     });
 }
-
-
 
 /**
  * 显示任务日志
@@ -351,7 +349,7 @@ function change(title, oldData) {
                 .then(res => {
                     if (!_.isEmpty(oldData)) {
                         scheduleTypeSelect(oldData.scheduleType);
-                        glueTypeSelect(oldData.glueType, true);
+                        glueTypeSelect(oldData.glueType, !_.isEmpty(oldData));
 
                         form.val("layui-key-form", {
                             "groupId": oldData.jobGroup.id,
@@ -373,6 +371,9 @@ function change(title, oldData) {
                             "telephone": oldData.telephone,
                             "description": oldData.description,
                         });
+                    }else {
+                        scheduleTypeSelect("CRON");
+                        glueTypeSelect("BEAN", false);
                     }
                     form.render();
                 });
@@ -398,7 +399,7 @@ function change(title, oldData) {
         var elem = data.elem; // 获得 select 原始 DOM 对象
         var value = data.value; // 获得被选中的值
         var othis = data.othis; // 获得 select 元素被替换后的 jQuery 对象
-        glueTypeSelect(value, !_.isEmpty(oldData) ? true : false);
+        glueTypeSelect(value, !_.isEmpty(oldData));
     });
 
     layui.$('#for-glue-source').on('click', function(){

@@ -6,7 +6,6 @@ function updateJobInfoWebIde(data) {
     var dropdown = layui.dropdown;
     var form = layui.form;
 
-    let defaultGlueSource = getDefaultGlueSource(data.glueType);
     let codeMirrorMode = getCodeMirrorMode(data.glueType);
     let glueType = findGlueTypeTitle(data.glueType);
     let title = '【' + glueType + '】 ' + data.name;
@@ -24,6 +23,7 @@ function updateJobInfoWebIde(data) {
             dropdown.close('codeDoubleMoreOperate');
             if (isSus) {
                 search();
+                CodeEditor.destroy();
                 layer.close(index);
             }else {
                 return false;
@@ -35,16 +35,16 @@ function updateJobInfoWebIde(data) {
             form.val('layui-code-double-edit-form', {
                 'glueDescription': data.glueDescription,
             });
-            updateJobInfoWebIdeDropdown(data);
             CodeEditor.init('code-double-box', 'code-double-code', codeMirrorMode);
-            CodeEditor.setValue(defaultGlueSource);
+            CodeEditor.setValue(data.glueSource);
+            updateJobInfoWebIdeDropdown(data);
             form.render();
         },
         cancel: function (index, layero, that) {
             CodeEditor.destroy();
             $("#code-edit-double-form")[0].reset();
             dropdown.close('codeDoubleMoreOperate');
-            // form.render();
+            form.render();
             layer.close(index);
         },
     });
@@ -73,7 +73,7 @@ function saveGlueCode(jobId, glueType, glueSource, glueDescription) {
 }
 
 /**
- *
+ * 修改任务信息 webide 下拉菜单
  * @param data
  */
 function updateJobInfoWebIdeDropdown(data) {
@@ -179,7 +179,7 @@ function openWebIde(data, isUpdate) {
                 "glueSource": CodeEditor.getValue(),
                 'glueDescription': $('#for-glue-description').val(),
             })
-            CodeEditor.setValue('');
+            CodeEditor.destroy();
             $("#code-edit-form")[0].reset();
             form.render();
             layer.close(index);
@@ -192,7 +192,7 @@ function openWebIde(data, isUpdate) {
             form.render();
         },
         cancel: function (index, layero, that) {
-            CodeEditor.setValue('');
+            CodeEditor.destroy();
             $("#code-edit-form")[0].reset();
             form.render();
             layer.close(index);

@@ -40,6 +40,7 @@ var CodeEditor = (function () {
     function destroy() {
         editor.setValue('');
         editor.clearHistory();
+        editor.toTextArea();
     }
 
     return {
@@ -51,7 +52,6 @@ var CodeEditor = (function () {
 
 
 })();
-
 
 
 
