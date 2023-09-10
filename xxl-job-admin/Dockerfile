@@ -1,7 +1,7 @@
 FROM openjdk:8-jre-slim
 
 # MAINTAINER
-MAINTAINER rong.jia@xdcplus.com
+MAINTAINER 852203465@qq.com
 
 RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 RUN echo 'Asia/Shanghai' >/etc/timezone
