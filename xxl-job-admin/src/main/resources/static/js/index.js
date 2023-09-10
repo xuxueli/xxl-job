@@ -1,6 +1,6 @@
 $(function (){
     let account = sessionStorage.getItem('currentUser');
-    $("#current").text(account);
+    $("#current").text("欢迎你: " + account);
     $('#copyright-end').text(new Date().getFullYear());
 })
 

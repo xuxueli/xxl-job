@@ -2,11 +2,18 @@
 	width: 420px;
 	padding: 8% 0 0;
 	margin: auto;
+
+	height: auto;
+	text-align: center;
+	background: #00000090;
+
 }
 .form {
 	position: relative;
 	z-index: 1;
-	background: #fff;
+	/*background: #fff;*/
+
+	background: #00000090;
 	max-width: 400px;
 	margin: 0 auto 100px;
 	padding: 40px 40px 50px;
@@ -16,7 +23,10 @@
 .form input {
 	font-family: "Roboto", sans-serif;
 	outline: 0;
-	background: #f2f2f2;
+	/*background: #f2f2f2;*/
+
+	background: #00000090;
+	color: #fff;
 	width: 100%;
 	border: 0;
 	margin: 0 0 15px;
@@ -28,11 +38,14 @@
 	font-family: "Microsoft YaHei", "Roboto", sans-serif;
 	text-transform: uppercase;
 	outline: 0;
-	background: #0dc316;
+	/*background: #0dc316;*/
 	width: 100%;
 	border: 0;
 	padding: 15px;
 	color: #FFFFFF;
+
+	background: #00000090;
+
 	font-size: 15px;
 	-webkit-transition: all 0.3 ease;
 	transition: all 0.3 ease;
@@ -86,9 +99,32 @@
 .container .info span .fa {
 	color: #EF3B3A;
 }
-.login-form h2{ font-size:24px; color:#212121; font-weight:600; text-align:left;}
+
+.login-form h2{
+	font-size:24px;
+	/*color:#212121; */
+	font-weight:600;
+	color: #fff;
+	text-align:left;
+}
+
+.register-form h2{
+	font-size:24px;
+	/*color:#212121; */
+	font-weight:600;
+	color: #fff;
+	text-align:left;
+}
+
 body {
-	background: #20222A; /* fallback for old browsers */
+
+	background: url('../images/login-1.jpeg');
+	/*background: url('login-3.jpeg');*/
+	/*background: url('login-2.jpeg');*/
+	background-repeat: no-repeat;
+	background-size: 100% auto;
+
+	/*background: #20222A; !* fallback for old browsers *!*/
 	font-family: "microsoft", sans-serif;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
@@ -131,5 +167,11 @@ p.center {
 	color: #888;
 	font-family: "Microsoft YaHei";
 }
-/* CSS Document */
+
+.login-box-msg {
+	color: #fff;
+}
+
+
+
 

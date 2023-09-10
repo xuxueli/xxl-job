@@ -207,4 +207,35 @@ CREATE TABLE IF NOT EXISTS `xxl_job_user_info`  (
 -- Records of xxl_job_user_info
 -- ----------------------------
 
+-- ----------------------------
+-- Table structure for xxl_job_login_token
+-- ----------------------------
+# DROP TABLE IF EXISTS `xxl_job_login_token`;
+CREATE TABLE IF NOT EXISTS `xxl_job_login_token`  (
+    `ID` bigint UNSIGNED NOT NULL COMMENT '主键',
+    `TOKEN` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '登录令牌',
+    `ACCOUNT` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '账号',
+    `EFFECTIVE_DURATION` int NOT NULL COMMENT '有效时长(单位：秒)',
+    `LOGIN_TIME` bigint NOT NULL COMMENT '登录时间',
+    `UPDATED_TIME` bigint NOT NULL COMMENT '更新时间',
+    PRIMARY KEY (`ID`) USING BTREE,
+    UNIQUE INDEX `idx_unique`(`TOKEN` ASC) USING BTREE COMMENT '唯一索引'
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '登录信息' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of xxl_job_login_token
+-- ----------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
 SET FOREIGN_KEY_CHECKS = 1;

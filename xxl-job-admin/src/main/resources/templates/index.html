@@ -8,21 +8,21 @@
     <meta name="viewport"
           content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
     <meta http-equiv="Cache-Control" content="no-siteapp"/>
-    <link rel="icon" th:href="@{/favicon.ico}" />
-    <link rel="stylesheet" th:href="@{/css/font.css}">
-    <link rel="stylesheet" th:href="@{/css/xadmin.css}">
-    <link rel="stylesheet" th:href="@{/plugins/layui-v2.8.11/css/layui.css}">
+    <link rel="icon" th:href="@{favicon.ico}" />
+    <link rel="stylesheet" th:href="@{css/font.css}">
+    <link rel="stylesheet" th:href="@{css/xadmin.css}">
+    <link rel="stylesheet" th:href="@{plugins/layui-v2.8.11/css/layui.css}">
 
-    <script type="text/javascript" th:src="@{/plugins/jquery-3.7.0.min.js}"></script>
-    <script type="text/javascript" th:src="@{/plugins/layui-v2.8.11/layui.js}"></script>
-    <script type="text/javascript" th:src="@{/js/layui-ext.js}"></script>
+    <script type="text/javascript" th:src="@{plugins/jquery-3.7.0.min.js}"></script>
+    <script type="text/javascript" th:src="@{plugins/layui-v2.8.11/layui.js}"></script>
+    <script type="text/javascript" th:src="@{js/layui-ext.js}"></script>
 
-    <script type="text/javascript" th:src="@{/js/xadmin.js}"></script>
-    <script type="text/javascript" th:src="@{/plugins/lodash.js}"></script>
-    <script type="text/javascript" th:src="@{/js/message.js}"></script>
-    <script type="text/javascript" th:src="@{/js/utils.js}"></script>
-    <script type="text/javascript" th:src="@{/js/request.js}"></script>
-    <script type="text/javascript" th:src="@{/js/index.js}"></script>
+    <script type="text/javascript" th:src="@{js/xadmin.js}"></script>
+    <script type="text/javascript" th:src="@{plugins/lodash.js}"></script>
+    <script type="text/javascript" th:src="@{js/message.js}"></script>
+    <script type="text/javascript" th:src="@{js/utils.js}"></script>
+    <script type="text/javascript" th:src="@{js/request.js}"></script>
+    <script type="text/javascript" th:src="@{js/index.js}"></script>
 
     <style>
         /*.footer {*/
@@ -42,7 +42,9 @@
 <body>
 <!-- 顶部开始 -->
 <div class="container">
-    <div class="logo"><a href="index">任务调度中心</a></div>
+    <div class="logo">
+        <a href="index">任务调度中心</a>
+    </div>
     <div class="left_open">
         <i title="展开左侧栏" class="iconfont">&#xe699;</i>
     </div>
@@ -58,7 +60,7 @@
                 <dd><a onClick="logout()">退出</a></dd>
             </dl>
         </li>
-        <li class="layui-nav-item to-index"><a _href="welcome">前台首页</a></li>
+<!--        <li class="layui-nav-item to-index"><a _href="welcome">前台首页</a></li>-->
     </ul>
 
 </div>
