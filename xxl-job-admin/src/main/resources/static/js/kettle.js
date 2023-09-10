@@ -226,6 +226,8 @@ function add() {
         elem: '.file-class-accept', // 绑定多个元素
         url: '', // 此处配置你自己的上传接口即可
         accept: 'file', // 普通文件
+        multiple: false,
+        auto: false,
         done: function(res){
             layer.msg('上传成功');
             console.log(res);
@@ -236,6 +238,8 @@ function add() {
         elem: '.guide-kjb-class-accept', // 绑定多个元素
         url: '', // 此处配置你自己的上传接口即可
         accept: 'file', // 普通文件
+        multiple: false,
+        auto: false,
         done: function(res){
             layer.msg('上传成功');
             console.log(res);
@@ -246,12 +250,13 @@ function add() {
     validate(form);
     form.on('submit(add)', function (data) {
         let field = data.field;
-        let res = http.post("group", field);
-        if (!isSuccess(res.code)) {
-            message.error(res.message);
-            return false;
-        }
-        return true;
+        // let res = http.post("group", field);
+        // if (!isSuccess(res.code)) {
+        //     message.error(res.message);
+        //     return false;
+        // }
+        console.log("field", field);
+        return false;
     });
 }
 
