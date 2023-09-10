@@ -34,6 +34,11 @@ public interface LoginTokenMapper extends BaseMapper<LoginToken> {
      */
     void updateLoginTokenByToken(@Param("token") String token, @Param("updatedTime") Long updatedTime);
 
+    /**
+     * 删除登录令牌
+     * @param token token
+     */
+    void deleteLoginTokenByToken(@Param("token") String token);
 
 
 }

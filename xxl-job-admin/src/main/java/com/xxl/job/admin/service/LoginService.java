@@ -19,8 +19,9 @@ public interface LoginService {
      *
      * @param loginDTO 登录DTO
      * @param response response对象
+     * @param request request对象
      */
-    void login(LoginDTO loginDTO, HttpServletResponse response);
+    void login(LoginDTO loginDTO, HttpServletRequest request, HttpServletResponse response);
 
     /**
      * 注册

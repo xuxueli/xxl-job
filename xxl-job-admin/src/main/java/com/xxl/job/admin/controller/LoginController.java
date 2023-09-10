@@ -33,9 +33,9 @@ public class LoginController {
 
     @ApiOperation("登录")
     @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseVO<Void> login(@Validated @RequestBody LoginDTO loginDTO, HttpServletResponse response) {
+    public ResponseVO<Void> login(@Validated @RequestBody LoginDTO loginDTO, HttpServletRequest request, HttpServletResponse response) {
         log.debug("login {}", loginDTO.toString());
-        loginService.login(loginDTO, response);
+        loginService.login(loginDTO, request, response);
         return ResponseVO.success();
     }
 

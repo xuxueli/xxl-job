@@ -48,4 +48,9 @@
         UPDATE xxl_job_login_token
         SET UPDATED_TIME = #{updatedTime,jdbcType=BIGINT} WHERE TOKEN = #{token,jdbcType=VARCHAR}
     </update>
+
+    <delete id="deleteLoginTokenByToken">
+        DELETE FROM xxl_job_login_token
+        WHERE TOKEN = #{token,jdbcType=VARCHAR}
+    </delete>
 </mapper>

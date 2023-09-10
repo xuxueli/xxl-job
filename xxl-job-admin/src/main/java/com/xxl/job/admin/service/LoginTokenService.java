@@ -33,6 +33,11 @@ public interface LoginTokenService extends IService<LoginToken> {
      */
     void updateLoginTokenByToken(String token);
 
+    /**
+     * 删除登录令牌
+     * @param token token
+     */
+    void deleteLoginTokenByToken(String token);
 
 
 

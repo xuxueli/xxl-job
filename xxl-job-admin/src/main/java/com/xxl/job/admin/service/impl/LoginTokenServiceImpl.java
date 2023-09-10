@@ -53,4 +53,13 @@ public class LoginTokenServiceImpl extends ServiceImpl<LoginTokenMapper, LoginTo
             log.error("【{}】更新时间异常, 跳过", token, e);
         }
     }
+
+    @Override
+    @Transactional(rollbackFor = RuntimeException.class)
+    public void deleteLoginTokenByToken(String token) {
+        LoginToken loginToken = loginTokenMapper.findLoginTokenByToken(token);
+        if (ObjectUtil.isNotNull(loginToken)) {
+            loginTokenMapper.deleteLoginTokenByToken(token);
+        }
+    }
 }

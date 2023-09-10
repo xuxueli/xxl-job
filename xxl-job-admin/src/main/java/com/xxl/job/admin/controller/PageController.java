@@ -16,37 +16,37 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class PageController {
 
-    @RequestMapping("/index.html")
+    @RequestMapping("/index")
     public String index() {
         return "index";
     }
 
-    @RequestMapping("welcome.html")
+    @RequestMapping("welcome")
     public String welcome() {
         return "welcome";
     }
 
-    @RequestMapping({"/", "/login"})
+    @RequestMapping({"/", "/login", })
     public String login() {
         return "login";
     }
 
-    @RequestMapping("page-jobGroup.html")
+    @RequestMapping("page-jobGroup")
     public String keystore() {
         return "jobGroup";
     }
 
-    @RequestMapping("page-jobInfo.html")
+    @RequestMapping("page-jobInfo")
     public String project() {
         return "jobInfo";
     }
 
-    @RequestMapping("page-jobLog.html")
+    @RequestMapping("page-jobLog")
     public String license() {
         return "jobLog";
     }
 
-    @RequestMapping("page-userInfo.html")
+    @RequestMapping("page-userInfo")
     public String userInfo() {
         return "userInfo";
     }

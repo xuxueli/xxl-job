@@ -1,9 +1,6 @@
 package com.xxl.job.admin.common.utils;
 
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.jwt.JWTUtil;
-import com.xxl.job.admin.common.constants.AuthConstant;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -25,19 +22,7 @@ public class AuthUtils {
      * @return {@link String}
      */
     public static String getCurrentUser() {
-        String authorization = getRequest().getHeader(AuthConstant.AUTHORIZATION_HEADER);
-        String parameter = getRequest().getParameter(AuthConstant.AUTHORIZATION_HEADER);
-
-        if (StrUtil.isAllEmpty(authorization, parameter)) {
-            try {
-                getResponse().sendRedirect("/login");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        String token = StrUtil.isBlank(authorization) ? parameter : authorization;
-        Object account = JWTUtil.parseToken(token).getPayload("account");
+        Object account = getRequest().getSession().getAttribute("account");
         if (ObjectUtil.isNull(account)) {
             try {
                 getResponse().sendRedirect("/login");
