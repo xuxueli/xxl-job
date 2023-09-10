@@ -23,7 +23,7 @@ import java.util.Date;
 public class JobLogUtils {
 
 	private static String logBasePath = (StrUtil.endWith(SystemUtil.get(SystemUtil.USER_DIR), "/")
-			? SystemUtil.get(SystemUtil.USER_DIR) :  SystemUtil.get(SystemUtil.USER_DIR) + "/") + "logs/xxl/job-handler";
+			? SystemUtil.get(SystemUtil.USER_DIR) :  SystemUtil.get(SystemUtil.USER_DIR) + "/") + "logs/xxl-job/job-handler";
 	private static String glueSrcPath = logBasePath.concat("/glue-source");
 
 	public static void initLogPath(String logPath){
