@@ -51,7 +51,10 @@ public class PageController {
         return "userInfo";
     }
 
-
+    @RequestMapping("page-kettle")
+    public String kettle() {
+        return "kettle";
+    }
 
 
 

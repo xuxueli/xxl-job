@@ -114,9 +114,9 @@ public enum ResponseEnum {
     SYSTEM_ADMINISTRATOR_CANNOT_DELETE(5015, "系统管理员不能删除"),
     THE_CURRENT_LOGIN_USER_CANNOT_BE_DELETED(5016, "当前登录用户不可删除"),
 
-
-
-
+    THE_KETTLE_ALREADY_EXISTS(5028, "kettle信息已存在"),
+    THE_KETTLE_DOES_NOT_EXIST(5029, "kettle信息不存在或已删除"),
+    THE_KJB_BOOT_FILE_CANNOT_BE_EMPTY(5030, "kjb引导文件不能为空"),
 
 
 

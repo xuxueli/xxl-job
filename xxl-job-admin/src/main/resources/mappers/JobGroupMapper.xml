@@ -47,7 +47,7 @@
                 and CREATED_TIME <![CDATA[ >= ]]> #{startTime,jdbcType=BIGINT}
             </if>
             <if test="endTime != null">
-                and CREATED_TIME <![CDATA[ <= ]]> #{startTime,jdbcType=BIGINT}
+                and CREATED_TIME <![CDATA[ <= ]]> #{endTime,jdbcType=BIGINT}
             </if>
         </where>
     </select>
