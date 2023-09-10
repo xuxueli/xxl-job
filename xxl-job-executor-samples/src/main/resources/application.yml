@@ -3,15 +3,13 @@ server:
 
 xxl:
   job:
+    enabled: true
+    admin:
+      addresses: localhost:10200
     executor:
-      enabled: true
-      admin:
-        addresses: localhost:10200
-      executor:
-        host: localhost
-        port: 12100
-        app-name: mes-web-api-service
-
+      host: localhost
+      port: 12100
+      app-name: mes-web-api-service
 
 
 

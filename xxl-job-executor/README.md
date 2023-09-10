@@ -38,23 +38,6 @@ public class JobTest {
 }
 ```
 
-## 2. GLUE(Java-class)使用说明
-```java
-
-import com.xxl.job.executor.service.GlueGroovyClass;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
-
-@Slf4j
-@Component
-public class DefaultGlueGroovyClass implements GlueGroovyClass {
-
-    @Override
-    public void execute(Long jobId) {
-
-    }
-}
-```
 
 
 
