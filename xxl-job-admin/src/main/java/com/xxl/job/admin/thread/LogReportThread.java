@@ -81,7 +81,7 @@ public class LogReportThread extends AbstractThreadListener implements Ordered {
                             Long triggerDayCount = jobLogReportVO.getTriggerDayCount();
                             Long triggerDayCountRunning = jobLogReportVO.getTriggerDayCountRunning();
                             Long triggerDayCountSuc = jobLogReportVO.getTriggerDayCountSuc();
-                            Long triggerDayCountFail = triggerDayCount - triggerDayCountRunning - triggerDayCountSuc;
+                            Long triggerDayCountFail = jobLogReportVO.getTriggerDayCountFail();
 
                             logReportDTO.setRunningCount(triggerDayCountRunning);
                             logReportDTO.setSucCount(triggerDayCountSuc);

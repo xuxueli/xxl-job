@@ -101,8 +101,10 @@ function initScheduleTodayChart() {
  * 初始化周比例图
  */
 function initScheduleWeekChart() {
-    var startWeek = moment().startOf('week').add(1,'day').format('x');
-    var endWeek = moment().endOf('week').add(1,'day').format('x');
+    var now = new Date();
+    let weekOfDay = moment(now).format('E');
+    let startWeek = moment(now).subtract(weekOfDay-1, 'days').startOf('day').format("x");
+    let endWeek = moment(now).subtract(weekOfDay-7, 'days').endOf('day').format("x");
     let weekDashboardInfo = http.getPath("log-report/trigger/" + startWeek + "/" + endWeek);
     if (!_.isEmpty(weekDashboardInfo)) {
         var weekScheduleScaleChartOption = {

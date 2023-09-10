@@ -2,6 +2,7 @@ package com.xxl.job.admin.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -25,7 +26,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -106,8 +106,9 @@ public class LogReportServiceImpl extends BaseServiceImpl<LogReportMapper, LogRe
                 triggerCountFailTotal += triggerDayCountFail;
             }
         } else {
-            for (int i = -6; i <= 0; i++) {
-                triggerDayList.add(DateUtil.formatDate(DateUtil.offsetDay(new Date(), i)));
+            List<DateTime> dateTimes = DateUtil.rangeToList(DateUtil.date(start), DateUtil.date(end), DateField.DAY_OF_MONTH);
+            for (DateTime dateTime : dateTimes) {
+                triggerDayList.add(DateUtil.formatDate(dateTime));
                 triggerDayCountRunningList.add(NumberConstant.ZERO.longValue());
                 triggerDayCountSucList.add(NumberConstant.ZERO.longValue());
                 triggerDayCountFailList.add(NumberConstant.ZERO.longValue());

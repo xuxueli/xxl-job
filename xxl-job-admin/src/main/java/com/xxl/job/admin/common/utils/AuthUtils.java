@@ -28,12 +28,9 @@ public class AuthUtils {
         String authorization = getRequest().getHeader(AuthConstant.AUTHORIZATION_HEADER);
         String parameter = getRequest().getParameter(AuthConstant.AUTHORIZATION_HEADER);
 
-        if (getRequest().getHeader("Accept").contains("html")) {
-            return null;
-        }
         if (StrUtil.isAllEmpty(authorization, parameter)) {
             try {
-                getResponse().sendRedirect("login");
+                getResponse().sendRedirect("/login");
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -43,7 +40,7 @@ public class AuthUtils {
         Object account = JWTUtil.parseToken(token).getPayload("account");
         if (ObjectUtil.isNull(account)) {
             try {
-                getResponse().sendRedirect("login");
+                getResponse().sendRedirect("/login");
             } catch (IOException e) {
                 e.printStackTrace();
             }

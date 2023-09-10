@@ -36,7 +36,7 @@ public class AdminApiController extends AbstractController {
     @ApiOperation("回调")
     @PostMapping(value = "/callback", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseVO<Void> callback(@Validated @RequestBody List<HandleCallbackParam> handleCallbackParams) {
-        log.info("callback {}", handleCallbackParams.toString());
+        log.debug("callback {}", handleCallbackParams.toString());
         adminApiService.callback(handleCallbackParams);
         return ResponseVO.success();
     }
@@ -44,7 +44,7 @@ public class AdminApiController extends AbstractController {
     @ApiOperation("注册")
     @PostMapping(value = "/registry", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseVO<Void> registry(@Validated @RequestBody RegistryParam registryParam) {
-        log.info("registry {}", registryParam.toString());
+        log.debug("registry {}", registryParam.toString());
         adminApiService.registry(registryParam);
         return ResponseVO.success();
     }
@@ -52,7 +52,7 @@ public class AdminApiController extends AbstractController {
     @ApiOperation("取消注册")
     @PostMapping(value = "/unRegistry", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseVO<Void> unRegistry(@Validated @RequestBody RegistryParam registryParam) {
-        log.info("unRegistry {}", registryParam.toString());
+        log.debug("unRegistry {}", registryParam.toString());
         adminApiService.unRegistry(registryParam);
         return ResponseVO.success();
     }

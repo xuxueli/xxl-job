@@ -25,7 +25,7 @@ public class LoginInterceptor implements HandlerInterceptor {
     private LoginTokenService loginTokenService;
 
     /**
-     * 检测全局session对象中是否有account数据，有则放行，没有则重定向到登陆界面
+     * 检测全局Header对象中是否有account数据，有则放行，没有则重定向到登陆界面
      * @param request 请求对象
      * @param response 响应对象
      * @param handler   处理器（url+Controller：映射）
@@ -36,20 +36,19 @@ public class LoginInterceptor implements HandlerInterceptor {
         String authorization = request.getHeader(AuthConstant.AUTHORIZATION_HEADER);
         String parameter = request.getParameter(AuthConstant.AUTHORIZATION_HEADER);
 
-        if (request.getHeader("Accept").contains("html"))  return true;
         response.setContentType("text/json;charset=UTF-8");
         response.setCharacterEncoding("UTF-8");
 
         if (StrUtil.isAllEmpty(authorization, parameter)) {
-            log.error("缺失令牌,鉴权失败");
-            response.sendRedirect("login");
+            log.error(request.getRequestURI() + ": 缺失令牌,鉴权失败");
+            response.sendRedirect("/login");
             return false;
         }
         String token = StrUtil.isBlank(authorization) ? parameter : authorization;
         LoginToken loginToken = loginTokenService.findLoginTokenByToken(token);
         if (ObjectUtil.isEmpty(loginToken)) {
-            log.error("未登录，或者授权过期");
-            response.sendRedirect("login");
+            log.error(request.getRequestURI() + ": 未登录，或者授权过期");
+            response.sendRedirect("/login");
             return false;
         }
 

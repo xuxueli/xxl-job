@@ -49,7 +49,7 @@ function checkLogin() {
                 $("#password").val("");
                 sessionStorage.setItem('currentUser', account);
                 sessionStorage.setItem('Authorization', xhr.getResponseHeader('Authorization'));
-                $(location).attr('href', 'index');
+                $(location).attr('href', 'index.html');
             }else {
                 message.error(res.message);
                 $("#login_form").removeClass('shake_effect');

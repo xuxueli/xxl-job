@@ -30,6 +30,11 @@ public class JobLogReportVO implements Serializable {
      */
     private Long triggerDayCountSuc;
 
+    /**
+     * 触发失败的数量
+     */
+    private Long triggerDayCountFail;
+
     public Long getTriggerDayCount() {
         return triggerDayCount == null ? 0L : triggerDayCount;
     }
@@ -40,5 +45,9 @@ public class JobLogReportVO implements Serializable {
 
     public Long getTriggerDayCountSuc() {
         return triggerDayCountSuc == null ? 0L : triggerDayCountSuc;
+    }
+
+    public Long getTriggerDayCountFail() {
+        return triggerDayCountFail == null ? 0L : triggerDayCountFail;
     }
 }

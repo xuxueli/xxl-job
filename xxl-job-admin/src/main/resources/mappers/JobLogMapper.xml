@@ -69,9 +69,10 @@
 
     <select id="queryLogReportByTriggerTime" resultType="com.xxl.job.admin.common.pojo.bo.JobLogReportBO">
         SELECT
-            COUNT(HANDLE_CODE) triggerDayCount,
-            SUM(CASE WHEN (TRIGGER_CODE in (0, 200) and handle_code = 0) then 1 else 0 end) as triggerDayCountRunning,
-            SUM(CASE WHEN HANDLE_CODE = 0 then 1 else 0 end) as triggerDayCountSuc
+            COUNT( HANDLE_CODE ) trigger_day_count,
+            SUM( CASE WHEN ( TRIGGER_CODE IN ( 0, 200 ) AND handle_code = 0 ) THEN 1 ELSE 0 END ) AS trigger_day_count_running,
+            SUM( CASE WHEN HANDLE_CODE = 0 THEN 1 ELSE 0 END ) AS trigger_day_count_suc,
+            SUM( CASE WHEN ( trigger_code != 0 OR handle_code != 0 ) THEN 1 ELSE 0 END ) AS trigger_day_count_fail
         FROM XXL_JOB_LOG
         WHERE TRIGGER_TIME BETWEEN #{from,jdbcType=BIGINT} and #{to,jdbcType=BIGINT}
     </select>
@@ -99,8 +100,11 @@
                     <if test="groupId != null and groupId gt 0">
                         AND t.GROUP_ID = #{groupId,jdbcType=BIGINT}
                     </if>
-                    <if test="jobId != null and jobId gt 0">
-                        AND t.JOB_ID = #{jobId,jdbcType=BIGINT}
+                    <if test="jobIds != null and jobIds.size() != 0">
+                        and t.JOB_ID in
+                        <foreach collection="jobIds" close=")" index="index" item="item" open="(" separator=",">
+                            #{item,jdbcType=BIGINT}
+                        </foreach>
                     </if>
                 </where>
                 ORDER BY t.TRIGGER_TIME desc

@@ -28,4 +28,9 @@ public class JobLogReportBO implements Serializable {
      */
     private Long triggerDayCountSuc;
 
+    /**
+     * 触发失败的数量
+     */
+    private Long triggerDayCountFail;
+
 }

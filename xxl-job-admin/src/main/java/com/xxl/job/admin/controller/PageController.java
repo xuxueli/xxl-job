@@ -16,12 +16,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class PageController {
 
-    @RequestMapping("/index")
+    @RequestMapping("/index.html")
     public String index() {
         return "index";
     }
 
-    @RequestMapping("welcome")
+    @RequestMapping("welcome.html")
     public String welcome() {
         return "welcome";
     }
@@ -31,22 +31,22 @@ public class PageController {
         return "login";
     }
 
-    @RequestMapping("page-jobGroup")
+    @RequestMapping("page-jobGroup.html")
     public String keystore() {
         return "jobGroup";
     }
 
-    @RequestMapping("page-jobInfo")
+    @RequestMapping("page-jobInfo.html")
     public String project() {
         return "jobInfo";
     }
 
-    @RequestMapping("page-jobLog")
+    @RequestMapping("page-jobLog.html")
     public String license() {
         return "jobLog";
     }
 
-    @RequestMapping("page-userInfo")
+    @RequestMapping("page-userInfo.html")
     public String userInfo() {
         return "userInfo";
     }
