@@ -232,7 +232,9 @@ CREATE TABLE IF NOT EXISTS `xxl_job_login_token`  (
 # DROP TABLE IF EXISTS `xxl_job_kettle_info`;
 CREATE TABLE IF NOT EXISTS `xxl_job_kettle_info`  (
     `id` bigint UNSIGNED NOT NULL COMMENT ' 主键',
-    `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '名称',
+    `series` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '系列',
+    `code` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '编码',
+    `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '名称',
     `type` enum('KTR','KJB') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'KTR' COMMENT '模型类型(ktr,kjb)',
     `kettle_file` longblob NOT NULL COMMENT 'kettle文件',
     `guide_kjb` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT 'kjb引导文件，模型类型为kjb有效',
@@ -246,8 +248,9 @@ CREATE TABLE IF NOT EXISTS `xxl_job_kettle_info`  (
     `updated_time` bigint NULL DEFAULT NULL COMMENT '更新时间',
     `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '描述',
     PRIMARY KEY (`id`) USING BTREE,
-    UNIQUE INDEX `idx_unique`(`name` ASC, `version` ASC) USING BTREE COMMENT '唯一索引'
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = 'kettle信息' ROW_FORMAT = Dynamic;
+    UNIQUE INDEX `idx_unique`(`name` ASC, `version` ASC) USING BTREE COMMENT '唯一索引',
+    UNIQUE INDEX `idx_code`(`code` ASC) USING BTREE COMMENT '编码索引'
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = 'kettle信息' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of xxl_job_kettle_info

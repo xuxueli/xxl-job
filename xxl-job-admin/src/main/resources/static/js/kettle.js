@@ -23,7 +23,7 @@ function createTable(records) {
                     toolbar: '<div class="layui-unselect layui-form-checkbox" lay-skin="primary"><i class="layui-icon" onclick="delAll()">&#xe605;</i></div> '
                 },
                 {field: 'name', title: '名称'},
-                {field: 'version', width: 100, title: '版本'},
+                {field: 'version', width: 60, title: '版本'},
                 {
                     field: 'type', title: '类型', width: 100,
                     templet: function (row) {
@@ -37,7 +37,7 @@ function createTable(records) {
                 },
                 {field: 'fileName', title: '文件名'},
                 {
-                    field: 'logLevel', title: '日志级别', sort: true,
+                    field: 'logLevel', title: '日志级别', width: 100,
                     templet: function (row) {
                         var logLevel = row.logLevel;
                         if (_.eq('NOTHING', logLevel)) {
@@ -53,13 +53,13 @@ function createTable(records) {
                         } else if (_.eq('DEBUG', logLevel)) {
                             return '调试';
                         } else if (_.eq('ROWLEVEL', logLevel)) {
-                            return '行级日志(非常详细)';
+                            return '行级日志';
                         }
                         return '基本日志';
                     }
                 },
                 {
-                    field: 'status', title: '状态', width: 100, templet: function (row) {
+                    field: 'status', title: '状态', width: 90, templet: function (row) {
                         let kettleId = row.id;
                         if (row.status == 0) {
                             return "<input type='checkbox'  kettleId = '" + kettleId + "' lay-filter='kettle-status-filter' lay-skin='switch' lay-text='ON|OFF'>"
@@ -77,8 +77,10 @@ function createTable(records) {
                 //     }
                 // },
                 {
-                    fixed: 'right', width: 160, title: '操作', toolbar: '<div class="td-manage">\n' +
+                    fixed: 'right', width: 240, title: '操作', toolbar: '<div class="td-manage">\n' +
                         '              <a class="layui-btn layui-btn-radius layui-btn-sm layui-bg-blue" lay-event="update" >版本升级\n' +
+                        '              </a>\n' +
+                        '              <a class="layui-btn layui-btn-radius layui-btn-sm layui-btn-primary" lay-event="download" >下载文件\n' +
                         '              </a>\n' +
                         '              <a class="layui-btn layui-btn-radius layui-btn-sm layui-bg-red" lay-event="delete">删除\n' +
                         '              </a>\n' +
@@ -102,9 +104,19 @@ function createTable(records) {
                 update(data);
             } else if ("delete" === layEvent) {
                 deleteData(data);
+            }else if ("download" === layEvent) {
+                download(data);
             }
         });
     });
+}
+
+/**
+ * 下载
+ * @param data 数据
+ */
+function download(data) {
+    window.open("/kettle-info/download/" + data.id, "_blank")
 }
 
 /**
@@ -157,7 +169,9 @@ function pageSearch(currentPage, pageSize) {
 
     let start = date2Timestamp($("#start").val());
     let end = date2Timestamp($("#end").val());
-
+    if (!_.isNull(end)) {
+        end = end + 999;
+    }
     let pageDTO = {
         'currentPage': currentPage,
         'pageSize': pageSize,
@@ -183,7 +197,7 @@ function delAll() {
             ids.push(a.id);
         })
         layer.confirm('确认要删除吗？', function (index) {
-            http.delBody("group/batch", ids);
+            http.delBody("kettle-info/batch", ids);
             layer.close(index);
             search();
         });
@@ -228,7 +242,7 @@ function add() {
         title: '新增模型',
         content: $('#add-kettle'),
         success: function (index) {
-            typeSelect("KTR");
+            typeSelect("#guide-kjb", "KTR");
             form.render();
         },
         cancel: function (index, layero, that) {
@@ -238,12 +252,7 @@ function add() {
         },
     });
 
-    form.on('select(add-type-filter)', function (data) {
-        var elem = data.elem; // 获得 select 原始 DOM 对象
-        var value = data.value; // 获得被选中的值
-        var othis = data.othis; // 获得 select 元素被替换后的 jQuery 对象
-        typeSelect(value);
-    });
+    changeTypeFilter(form, "add-type-filter", "#guide-kjb");
 
     validate(form);
     form.on('submit(add)', function (data) {
@@ -253,8 +262,8 @@ function add() {
             formData.append(key, field[key]);
         }
         formData.set("file", document.getElementById('model-upload').files[0]);
-        var kjbFile = document.getElementById('guide-kjb-upload').files[0]
         if (_.eq("KJB", field.type)) {
+            var kjbFile = document.getElementById('guide-kjb-upload').files[0]
             if (_.isNil(kjbFile) || _.isNull(kjbFile)) {
                 message.warning("KJB引导文件不能为空");
                 return false;
@@ -271,97 +280,68 @@ function add() {
     });
 }
 
-function finishSelect() {
-    var content = '', files = [];
-    if (document.getElementById('model-upload').files === undefined) {
-        files[0] = {
-            'name': document.getElementById('model-upload') && document.getElementById('model-upload').value
-        };
-    } else {
-        files = document.getElementById('model-upload').files;
-    }
-
-    for (var i = 0; i < files.length; i++) {
-        content += files[i].name.split("\\").pop() + ', ';
-    }
-
-    if (content !== '') {
-        document.getElementById('viewfile').value = content.replace(/\, $/g, '');
-    } else {
-        document.getElementById('viewfile').value = '';
-    }
-}
-function finishKjbSelect() {
-    var content = '', files = [];
-    if (document.getElementById('guide-kjb-upload').files === undefined) {
-        files[0] = {
-            'name': document.getElementById('guide-kjb-upload') && document.getElementById('guide-kjb-upload').value
-        };
-    } else {
-        files = document.getElementById('guide-kjb-upload').files;
-    }
-
-    for (var i = 0; i < files.length; i++) {
-        content += files[i].name.split("\\").pop() + ', ';
-    }
-
-    if (content !== '') {
-        document.getElementById('viewGuideKjbFile').value = content.replace(/\, $/g, '');
-    } else {
-        document.getElementById('viewGuideKjbFile').value = '';
-    }
-}
-
-/**
- * 类型选择器
- * @param type 类型
- */
-function typeSelect(type) {
-    if (_.eq('KTR', type)) {
-        $("#guide-kjb").hide();
-    } else if (_.eq('KJB', type)) {
-        $("#guide-kjb").show();
-    }
-}
-
 /**
  * 修改
  */
 function update(data) {
-    let form = layui.form;
+    var form = layui.form;
     layer.open({
         type: 1,
         area: [($(window).width() * 0.7) + 'px', ($(window).height() - 200) + 'px'],
-        fix: false,
+        fix: false, //不固定
         shadeClose: true,
         shade: 0.4,
         maxmin: true,
-        title: '修改执行器',
-        content: $('#update-form'),
-        success: function () {
-            setAddressReadonly(form, '#update-addressList');
-            form.val("layui-update-form", {
-                "appName": data.appName,
-                "title": data.title,
-                "addressType": data.addressType,
-                "addresses": data.addresses,
-                "description": data.description,
+        title: '模型版本升级',
+        content: $('#update-kettle'),
+        success: function (index) {
+            form.val("layui-update-kettle-form", {
+                "name": data.name,
+                "type": data.type,
+                "file": data.fileName,
+                "guideKjb": data.guideKjb,
+                "logLevel": data.logLevel,
+                "status": data.status,
             });
+            $('#update-name').attr('readonly', true);
+            $('#update-type').attr("disabled", "disabled");
+            typeSelect("#update-guide-kjb", data.type);
             form.render();
         },
         cancel: function (index, layero, that) {
-            $("#update-form-form")[0].reset();
+            $("#update-kettle-form")[0].reset();
             form.render();
             return true;
         },
     });
 
+    changeTypeFilter(form, "update-type-filter", "#update-guide-kjb");
+
     validate(form);
-    form.on('submit(update)', function (new_obj) {
-        let field = new_obj.field;
-        field.id = data.id;
-        field.addresses = str2List(field.addresses);
-        let res = http.put("group", field);
+    form.on('submit(update)', function (data) {
+        let field = data.field;
+        let formData = new FormData();
+        for(let key in field) {
+            formData.append(key, field[key]);
+        }
+
+        formData.delete("file");
+        var file = document.getElementById('update-model-upload').files[0];
+        if (!_.isNil(file) && !_.isNull(file)) {
+            formData.append("file", file);
+        }
+
+        if (_.eq("KJB", field.type)) {
+            var kjbFile = document.getElementById('update-guide-kjb-upload').files[0]
+            if (_.isNil(kjbFile) || _.isNull(kjbFile)) {
+                message.warning("KJB引导文件不能为空");
+                return false;
+            }else if (!_.isNil(kjbFile)) {
+                field.guideKjb = kjbFile.name;
+            }
+        }
+
+        let res = http.postFormData("kettle-info", formData);
         if (!isSuccess(res.code)) {
             message.error(res.message);
             return false;
@@ -370,19 +350,74 @@ function update(data) {
     });
 }
 
+function finishSelect(upload, viewFile) {
+    console.log(upload, viewFile);
+    var content = '', files = [];
+    if (document.getElementById(upload).files === undefined) {
+        files[0] = {
+            'name': document.getElementById(upload) && document.getElementById(upload).value
+        };
+    } else {
+        files = document.getElementById(upload).files;
+    }
+
+    for (var i = 0; i < files.length; i++) {
+        content += files[i].name.split("\\").pop() + ', ';
+    }
+
+    if (content !== '') {
+        document.getElementById(viewFile).value = content.replace(/\, $/g, '');
+    } else {
+        document.getElementById(viewFile).value = '';
+    }
+}
+
+/**
+ * 监听类型
+ * @param form 表单对象
+ * @param divId 标签ID
+ */
+function changeTypeFilter(form, divId, guide) {
+    form.on('select(' + divId + ')', function (data) {
+        var elem = data.elem; // 获得 select 原始 DOM 对象
+        var value = data.value; // 获得被选中的值
+        var othis = data.othis; // 获得 select 元素被替换后的 jQuery 对象
+        typeSelect(guide, value);
+    });
+}
+
+/**
+ * 类型选择器
+ * @param type 类型
+ */
+function typeSelect(guide, type) {
+    if (_.eq('KTR', type)) {
+        $(guide).hide();
+    } else if (_.eq('KJB', type)) {
+        $(guide).show();
+    }
+}
+
 /**
  * 校验字段
  * @param form 表单对象
  */
 function validate(form) {
     form.verify({
-        appName: function (value, item) {
-            if (/(^_)|(__)|(_+$)/.test(value)) return 'AppName首尾不能出现 _ 下划线';
-            if (/^\d+$/.test(value)) return 'AppName不能全为数字';
+        name: function (value, item) {
+            if(_.isEmpty(value)) return "名称不能为空";
         },
-        title: function (value, item) {
-            if (/(^_)|(__)|(_+$)/.test(value)) return '名称首尾不能出现 _ 下划线';
-            if (/^\d+$/.test(value)) return '名称不能全为数字';
+        type: function (value, item) {
+            if(_.isEmpty(value)) return "类型不能为空";
+        },
+        status: function (value, item) {
+            if(_.isEmpty(value)) return "状态不能为空";
+        },
+        logLevel: function (value, item) {
+            if(_.isEmpty(value)) return "日志级别不能为空";
+        },
+        file: function (value, item) {
+            if(_.isEmpty(value)) return "模型文件不能为空";
         },
     });
 }

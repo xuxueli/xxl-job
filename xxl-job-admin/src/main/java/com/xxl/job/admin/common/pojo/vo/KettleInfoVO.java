@@ -73,5 +73,18 @@ public class KettleInfoVO extends Base implements Serializable {
     @ApiModelProperty(value = "状态, 1: 启用, 0:禁用")
     private Integer status;
 
+    /**
+     * 系列
+     */
+    @ApiModelProperty("系列")
+    private String series;
+
+    /**
+     * 编码
+     */
+    @ApiModelProperty("编码")
+    private String code;
+
+
 
 }

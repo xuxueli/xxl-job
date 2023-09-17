@@ -17,6 +17,8 @@ import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -97,6 +99,15 @@ public class KettleInfoController extends AbstractController {
         return ResponseVO.success();
     }
 
+    @ApiOperation("下载文件")
+    @GetMapping(value = "/download/{id}")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "path", name = "id", dataTypeClass = Long.class, value = "主键ID", required = true),
+    })
+    public void download(@PathVariable("id") @NotNull(message = "主键ID 不能为空") Long id, HttpServletRequest request, HttpServletResponse response) {
+        log.info("download {}", id);
+        kettleInfoService.download(id, request, response);
+    }
 
 
 

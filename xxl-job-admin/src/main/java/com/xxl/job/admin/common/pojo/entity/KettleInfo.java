@@ -25,6 +25,16 @@ public class KettleInfo implements Serializable {
     private Long id;
 
     /**
+     * 系列
+     */
+    private String series;
+
+    /**
+     * 编码
+     */
+    private String code;
+
+    /**
      * 名称
      */
     private String name;

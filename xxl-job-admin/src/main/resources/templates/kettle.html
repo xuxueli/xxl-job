@@ -15,6 +15,7 @@
 
     <script type="text/javascript" th:src="@{plugins/jquery-3.7.0.min.js}"></script>
     <script type="text/javascript" th:src="@{plugins/layui-v2.8.11/layui.js}"></script>
+    <script type="text/javascript" th:src="@{plugins/moment.js}"></script>
     <script type="text/javascript" th:src="@{js/layui-ext.js}"></script>
     <script type="text/javascript" th:src="@{js/xadmin.js}"></script>
     <script type="text/javascript" th:src="@{plugins/lodash.js}"></script>
@@ -134,7 +135,7 @@
                         <option value="BASIC">基本日志</option>
                         <option value="DETAILED">详细日志</option>
                         <option value="DEBUG">调试</option>
-                        <option value="ROWLEVEL">行级日志(非常详细)</option>
+                        <option value="ROWLEVEL">行级日志</option>
                     </select>
                 </div>
             </div>
@@ -177,7 +178,7 @@
                 <span class="x-red">*</span>类型
             </label>
             <div class="layui-input-inline">
-                <select id="add-type" name="type" lay-filter="add-type-filter">
+                <select id="add-type" name="type" required lay-verify="required|type" lay-filter="add-type-filter">
                     <option value="KTR" selected>转换模型</option>
                     <option value="KJB">作业模型</option>
                 </select>
@@ -193,9 +194,9 @@
                     <div class="upload-file" id="add-files">
                         <div class="upload-file-line">
                             <span class="upload-file-span">
-                                <input name="file" type="text" id="viewfile" disabled="disabled" class="input-style"/>
-                                <input type="file" style="display: none;" onchange="finishSelect()" class="file"
-                                       id="model-upload" accept=".kjb,.ktr,.tar.gz,.zip"/>
+                                <input name="file" type="text" id="viewfile" required lay-verify="required|file" disabled="disabled" class="input-style"/>
+                                <input type="file" style="display: none;" onchange="finishSelect('model-upload', 'viewfile')" class="file"
+                                       id="model-upload" accept=".ktr,.tar.gz,.zip"/>
                             </span>
                             <label for="model-upload" class="file_pre">浏览...</label>
                         </div>
@@ -211,17 +212,12 @@
                     <div class="upload-file-line">
                             <span class="upload-file-span">
                                 <input name="guideKjb" type="text" id="viewGuideKjbFile" disabled="disabled" class="input-style"/>
-                                <input type="file" style="display: none;" onchange="finishKjbSelect()" class="file" id="guide-kjb-upload" accept=".kjb"/>
+                                <input type="file" style="display: none;" onchange="finishSelect('guide-kjb-upload', 'viewGuideKjbFile')"
+                                       class="file" id="guide-kjb-upload" accept=".kjb"/>
                             </span>
                         <label for="guide-kjb-upload" class="file_pre">请选择引导文件</label>
                     </div>
                 </div>
-
-
-<!--                <div class="layui-input-inline" style="width: 300px !important;">-->
-<!--                    <input type="text" id="for-add-guide-kjb" name="guideKjb" placeholder="请输入kjb引导文件名"-->
-<!--                           autocomplete="off" lay-vertype="tips" class="layui-input">-->
-<!--                </div>-->
             </div>
         </div>
 
@@ -230,7 +226,7 @@
                 <span class="x-red">*</span>状态
             </label>
             <div class="layui-input-inline">
-                <select id="add-status" name="status" lay-filter="add-status-filter">
+                <select id="add-status" name="status" required lay-verify="required|status" lay-filter="add-status-filter">
                     <option value="1" selected>启用</option>
                     <option value="0">禁用</option>
                 </select>
@@ -242,14 +238,14 @@
                 <span class="x-red">*</span>日志级别
             </label>
             <div class="layui-input-inline">
-                <select id="add-log-level" name="logLevel" lay-filter="add-log-level-filter">
+                <select id="add-log-level" name="logLevel" required lay-verify="required|logLevel" lay-filter="add-log-level-filter">
                     <option value="BASIC" selected>基本日志</option>
                     <option value="NOTHING">没有日志</option>
                     <option value="ERROR">错误日志</option>
                     <option value="MINIMAL">最小日志</option>
                     <option value="DETAILED">详细日志</option>
                     <option value="DEBUG">调试</option>
-                    <option value="ROWLEVEL">行级日志(非常详细)</option>
+                    <option value="ROWLEVEL">行级日志</option>
                 </select>
             </div>
         </div>
@@ -267,46 +263,95 @@
     </form>
 </div>
 
-<div id="update-form" style="display: none">
-    <form id="update-form-form" class="layui-form" lay-filter="layui-update-form">
+<div id="update-kettle" style="display: none">
+    <form id="update-kettle-form" class="layui-form" lay-filter="layui-update-kettle-form">
         <div class="layui-form-item">
-            <label for="update-appName" class="layui-form-label">
-                <span class="x-red">*</span>AppName
-            </label>
-            <div class="layui-input-inline">
-                <input type="text" id="update-appName" name="appName" placeholder="请输入AppName"
-                       required lay-verify="required|appName" autocomplete="off" lay-vertype="tips"
-                       class="layui-input">
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label for="update-title" class="layui-form-label">
+            <label for="update-name" class="layui-form-label">
                 <span class="x-red">*</span>名称
             </label>
             <div class="layui-input-inline">
-                <input type="text" id="update-title" name="title" required placeholder="请输入名称"
-                       lay-verify="required|title" autocomplete="off" lay-vertype="tips"
-                       class="layui-input">
+                <input type="text" id="update-name" name="name" placeholder="请输入名称"
+                       required lay-verify="required|name" autocomplete="off" lay-vertype="tips" class="layui-input">
             </div>
         </div>
+
         <div class="layui-form-item">
-            <label for="update-addressType" class="layui-form-label">
-                <span class="x-red">*</span>注册方式
+            <label for="update-type" class="layui-form-label">
+                <span class="x-red">*</span>类型
             </label>
-            <div id="update-addressType" class="layui-input-inline">
-                <input type="radio" name="addressType" value="0" lay-filter="addressType-radio-filter" title="自动注册" checked>
-                <input type="radio" name="addressType" value="1" lay-filter="addressType-radio-filter" title="手动录入">
+            <div class="layui-input-inline">
+                <select id="update-type" required lay-verify="required|type" name="type" lay-filter="update-type-filter">
+                    <option value="KTR" selected>转换模型</option>
+                    <option value="KJB">作业模型</option>
+                </select>
             </div>
         </div>
+
         <div class="layui-form-item">
-            <label for="update-addressList" class="layui-form-label">
-                <span class="x-red">*</span>机器地址
-            </label>
-            <div class="layui-input-block">
-                <textarea id="update-addressList" placeholder="请输入执行器地址列表，多地址逗号分隔" name="addresses"
-                          class="layui-textarea" readonly="readonly"></textarea>
+            <div class="layui-inline">
+                <label for="update-files" class="layui-form-label">
+                    <span class="x-red">*</span>模型文件
+                </label>
+                <div class="layui-input-inline" style="width: auto !important;">
+                    <div class="upload-file" id="update-files">
+                        <div class="upload-file-line">
+                            <span class="upload-file-span">
+                                <input name="file" type="text" required lay-verify="required|file" id="update-view-file" disabled="disabled" class="input-style"/>
+                                <input type="file" style="display: none;" onchange="finishSelect('update-model-upload', 'update-view-file')" class="file"
+                                       id="update-model-upload" accept=".ktr,.tar.gz,.zip"/>
+                            </span>
+                            <label for="update-model-upload" class="file_pre">浏览</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-inline" id="update-guide-kjb" style="display: none">
+                <label for="for-update-guide-kjb" class="layui-form-label">
+                    <span class="x-red">*</span>kjb引导文件
+                </label>
+                <div class="upload-file" id="for-update-guide-kjb">
+                    <div class="upload-file-line">
+                            <span class="upload-file-span">
+                                <input name="guideKjb" type="text" id="update-view-guide-kjb-file" disabled="disabled" class="input-style"/>
+                                <input type="file" style="display: none;" onchange="finishSelect('update-guide-kjb-upload', 'update-view-guide-kjb-file')"
+                                       class="file" id="update-guide-kjb-upload" accept=".kjb"/>
+                            </span>
+                        <label for="update-guide-kjb-upload" class="file_pre">请选择引导文件</label>
+                    </div>
+                </div>
             </div>
         </div>
+
+        <div class="layui-form-item">
+            <label for="update-status" class="layui-form-label">
+                <span class="x-red">*</span>状态
+            </label>
+            <div class="layui-input-inline">
+                <select id="update-status" required lay-verify="required|status" name="status" lay-filter="update-status-filter">
+                    <option value="1" selected>启用</option>
+                    <option value="0">禁用</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label for="update-log-level" class="layui-form-label">
+                <span class="x-red">*</span>日志级别
+            </label>
+            <div class="layui-input-inline">
+                <select id="update-log-level" required lay-verify="required|logLevel" name="logLevel" lay-filter="update-log-level-filter">
+                    <option value="BASIC" selected>基本日志</option>
+                    <option value="NOTHING">没有日志</option>
+                    <option value="ERROR">错误日志</option>
+                    <option value="MINIMAL">最小日志</option>
+                    <option value="DETAILED">详细日志</option>
+                    <option value="DEBUG">调试</option>
+                    <option value="ROWLEVEL">行级日志</option>
+                </select>
+            </div>
+        </div>
+
         <div class="layui-form-item layui-form-text">
             <label for="update-description" class="layui-form-label">描述</label>
             <div class="layui-input-block">
@@ -314,8 +359,8 @@
             </div>
         </div>
         <div class="layui-form-item">
-            <label for="update" class="layui-form-label"></label>
-            <button id="update" class="layui-btn" lay-filter="update" lay-submit="">提交</button>
+            <label for="for-update" class="layui-form-label"></label>
+            <button id="for-update" class="layui-btn" lay-filter="update" lay-submit="">提交</button>
         </div>
     </form>
 </div>

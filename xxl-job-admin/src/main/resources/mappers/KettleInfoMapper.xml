@@ -4,6 +4,8 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.xxl.job.admin.common.pojo.entity.KettleInfo">
         <id column="id" property="id"/>
+        <result column="series" property="series"/>
+        <result column="code" property="code"/>
         <result column="name" property="name"/>
         <result column="type" property="type"/>
         <result column="kettle_file" property="kettleFile"/>
@@ -22,6 +24,8 @@
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id,
+        series,
+        code,
         name,
         type,
         kettle_file,
@@ -45,12 +49,17 @@
         and version = #{version,jdbcType=VARCHAR}
     </select>
 
-    <select id="findMaxVersionByName" resultType="java.lang.String">
-        select
-            max(version)
-        from xxl_job_kettle_info
-        where name = #{name,jdbcType=VARCHAR}
-        group by name
+    <select id="findMaxVersionByName" resultType="com.xxl.job.admin.common.pojo.bo.KettleMaxVersionBO">
+        SELECT
+            series,
+            name,
+            max( version ) as max_version
+        FROM
+            xxl_job_kettle_info
+        WHERE
+            NAME = #{name,jdbcType=VARCHAR}
+        GROUP BY
+            series, name
     </select>
 
     <select id="findKettle" resultMap="BaseResultMap">
@@ -77,5 +86,19 @@
                 and created_time <![CDATA[ <= ]]> #{endTime,jdbcType=BIGINT}
             </if>
         </where>
+    </select>
+
+    <select id="findKettleByCode" resultMap="BaseResultMap">
+        select
+            <include refid="Base_Column_List"/>
+        from xxl_job_kettle_info
+        where code = #{code,jdbcType=VARCHAR}
+    </select>
+
+    <select id="findKettleBySeries" resultMap="BaseResultMap">
+        select
+            <include refid="Base_Column_List"/>
+        from xxl_job_kettle_info
+        where series = #{series,jdbcType=VARCHAR}
     </select>
 </mapper>
