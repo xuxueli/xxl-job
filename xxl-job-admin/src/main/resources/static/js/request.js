@@ -35,6 +35,22 @@ var http = (function () {
         return data;
     }
 
+    function postFormData(url, formData) {
+        let data;
+        $.ajax({
+            method: "POST",
+            url: url,
+            async: false,
+            processData: false,  // 不处理数据
+            contentType: false,   // 不设置内容类型
+            data: formData,
+            success: function(res) {
+                data = res;
+            }
+        });
+        return data;
+    }
+
     function put(url, params) {
         let data;
         $.ajax({
@@ -139,6 +155,7 @@ var http = (function () {
         patchPath: patchPath,
         patchBody: patchBody,
         delBody: delBody,
+        postFormData: postFormData,
     }
 })();
 

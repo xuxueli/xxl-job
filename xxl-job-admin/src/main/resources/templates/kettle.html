@@ -36,6 +36,58 @@
             width: 150px !important;
         }
 
+        .upload-file {
+            margin: 0 auto;
+            /*width: 100%;*/
+            overflow: hidden;
+            padding: 5px 0;
+        }
+
+        .upload-file-line {
+            position: relative;
+            margin: 0 auto;
+            width: 300px;
+            text-align: left
+        }
+
+        .upload-file-line span.upload-file-span {
+            float: left;
+            padding-top: 2px;
+        }
+
+        .file {
+            position: absolute;
+            left: 0;
+            width: 250px;
+            top: 0;
+            height: 28px;
+            filter: alpha(opacity=0);
+            opacity: 0;
+            cursor: pointer
+        }
+
+        .file_pre {
+            float: left;
+            margin-left: 8px;
+            z-index: 1;
+            width: 66px;
+            height: 28px;
+            line-height: 28px;
+            background: url("images/liulan.gif") no-repeat 0 0;
+            text-indent: -9999px;
+            cursor: pointer
+        }
+
+        .input-style {
+            border: 1px solid #BEBEBE;
+            width: 170px;
+            float: left;
+            height: 23px;
+            line-height: 23px;
+            background: #FFF;
+            z-index: 99
+        }
+
     </style>
 
 </head>
@@ -54,8 +106,8 @@
                 <div class="layui-input-inline" id="select-type-inline">
                     <select id="select-type" lay-filter="select-type-filter">
                         <option value="">请选择</option>
-                        <option value="KTR">ktr</option>
-                        <option value="KJB">kjb</option>
+                        <option value="KTR">转换模型</option>
+                        <option value="KJB">作业模型</option>
                     </select>
                 </div>
             </div>
@@ -125,9 +177,9 @@
                 <span class="x-red">*</span>类型
             </label>
             <div class="layui-input-inline">
-                <select id="add-type" lay-filter="add-type-filter">
-                    <option value="KTR">ktr</option>
-                    <option value="KJB">kjb</option>
+                <select id="add-type" name="type" lay-filter="add-type-filter">
+                    <option value="KTR" selected>转换模型</option>
+                    <option value="KJB">作业模型</option>
                 </select>
             </div>
         </div>
@@ -138,23 +190,38 @@
                     <span class="x-red">*</span>模型文件
                 </label>
                 <div class="layui-input-inline" style="width: auto !important;">
-                    <button type="button" id="add-files" class="layui-btn file-class-accept" lay-options="{accept: 'file'}">
-                        <i class="layui-icon layui-icon-upload"></i>
-                        上传文件
-                    </button>
+                    <div class="upload-file" id="add-files">
+                        <div class="upload-file-line">
+                            <span class="upload-file-span">
+                                <input name="file" type="text" id="viewfile" disabled="disabled" class="input-style"/>
+                                <input type="file" style="display: none;" onchange="finishSelect()" class="file"
+                                       id="model-upload" accept=".kjb,.ktr,.tar.gz,.zip"/>
+                            </span>
+                            <label for="model-upload" class="file_pre">浏览...</label>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="layui-inline">
-                <label for="add-guide-kjb" class="layui-form-label">
-                    <span class="x-red">*</span>kjb模型文件
+            <div class="layui-inline" id="guide-kjb" style="display: none">
+                <label for="for-add-guide-kjb" class="layui-form-label">
+                    <span class="x-red">*</span>kjb引导文件
                 </label>
-                <div class="layui-input-inline" style="width: auto !important;">
-                    <button type="button" id="add-guide-kjb" class="layui-btn guide-kjb-class-accept" lay-options="{accept: 'file'}">
-                        <i class="layui-icon layui-icon-upload"></i>
-                        选择kjb模型文件
-                    </button>
+                <div class="upload-file" id="for-add-guide-kjb">
+                    <div class="upload-file-line">
+                            <span class="upload-file-span">
+                                <input name="guideKjb" type="text" id="viewGuideKjbFile" disabled="disabled" class="input-style"/>
+                                <input type="file" style="display: none;" onchange="finishKjbSelect()" class="file" id="guide-kjb-upload" accept=".kjb"/>
+                            </span>
+                        <label for="guide-kjb-upload" class="file_pre">请选择引导文件</label>
+                    </div>
                 </div>
+
+
+<!--                <div class="layui-input-inline" style="width: 300px !important;">-->
+<!--                    <input type="text" id="for-add-guide-kjb" name="guideKjb" placeholder="请输入kjb引导文件名"-->
+<!--                           autocomplete="off" lay-vertype="tips" class="layui-input">-->
+<!--                </div>-->
             </div>
         </div>
 
@@ -163,7 +230,7 @@
                 <span class="x-red">*</span>状态
             </label>
             <div class="layui-input-inline">
-                <select id="add-status" lay-filter="add-status-filter">
+                <select id="add-status" name="status" lay-filter="add-status-filter">
                     <option value="1" selected>启用</option>
                     <option value="0">禁用</option>
                 </select>
@@ -175,7 +242,7 @@
                 <span class="x-red">*</span>日志级别
             </label>
             <div class="layui-input-inline">
-                <select id="add-log-level" lay-filter="add-log-level-filter">
+                <select id="add-log-level" name="logLevel" lay-filter="add-log-level-filter">
                     <option value="BASIC" selected>基本日志</option>
                     <option value="NOTHING">没有日志</option>
                     <option value="ERROR">错误日志</option>

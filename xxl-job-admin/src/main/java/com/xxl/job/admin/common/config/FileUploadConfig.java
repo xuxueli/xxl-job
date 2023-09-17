@@ -20,7 +20,7 @@ import java.io.File;
  */
 @Data
 @Configuration
-@ConfigurationProperties(prefix = "xdc.multipart")
+@ConfigurationProperties(prefix = "multipart")
 public class FileUploadConfig {
 
     private static final String TMP_DIR = System.getProperty("user.dir") + "/data/tmp";
@@ -41,19 +41,19 @@ public class FileUploadConfig {
     private Boolean isProjectRoot = Boolean.TRUE;
 
     /**
-     * 文件大小限制，单位：M 默认： 10M
+     * 文件大小限制，单位：M 默认： 1024M
      */
-    private Long maxFileSize = 10L;
+    private Long maxFileSize = 1024L;
 
     /**
      * 设置总上传数据总大小，单位：M 默认： 10M
      */
-    private Long maxRequestSize = 10L;
+    private Long maxRequestSize = 1024L;
 
     /**
-     * 设置磁盘写入的限制，单位：M 默认： 20M
+     * 设置磁盘写入的限制，单位：M 默认： 512M
      */
-    private Long fileSizeThreshold = 20L;
+    private Long fileSizeThreshold = 512L;
 
     @Bean
     public MultipartConfigElement multipartConfigElement() {

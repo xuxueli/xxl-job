@@ -49,6 +49,7 @@
         select
             max(version)
         from xxl_job_kettle_info
+        where name = #{name,jdbcType=VARCHAR}
         group by name
     </select>
 
