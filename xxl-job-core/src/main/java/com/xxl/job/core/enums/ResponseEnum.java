@@ -67,7 +67,7 @@ public enum ResponseEnum {
     THE_CODE_CANNOT_BE_EMPTY(1010, "CODE不能为空"),
     LACK_OF_PARAMETER(1011, "缺少必要参数，请检查"),
     FILE_UPLOAD_EXCEPTION(1012, "文件上传异常 【%s】"),
-    FILE_DOES_NOT_EXIST(1013, "文件不存在"),
+    FILE_DOES_NOT_EXIST(1013, "文件不存在, 请检查"),
     THE_PARAMETER_TYPE_IS_INCORRECT(1014, "参数类型不正确"),
 
 
@@ -117,10 +117,10 @@ public enum ResponseEnum {
     THE_KETTLE_ALREADY_EXISTS(5028, "kettle信息已存在"),
     THE_KETTLE_DOES_NOT_EXIST(5029, "kettle信息不存在或已删除"),
     THE_KJB_BOOT_FILE_CANNOT_BE_EMPTY(5030, "kjb引导文件不能为空"),
-
-
-
-
+    FILE_RELATIVE_PATH_PROCESSING_EXCEPTION(5031, "文件相对路径处理异常, 请检查格式是否正确"),
+    THE_FILES_IN_THE_COMPRESSED_PACKAGE_ARE_EMPTY(5032, "压缩包内文件为空,请检查"),
+    THERE_IS_NO_KJB_FILE_IN_THE_ZIP_PACKAGE(5033, "压缩包内没有'kjb'文件,请检查"),
+    THE_FILE_RECOMPRESSED_PACKAGE_IS_ABNORMAL_PROCEDURE(5034, "文件重新打压缩包异常"),
 
 
 

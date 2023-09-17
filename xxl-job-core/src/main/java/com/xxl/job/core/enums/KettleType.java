@@ -12,6 +12,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum KettleType {
 
+    // ktr,kjb
     KTR,KJB
 
 }

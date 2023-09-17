@@ -77,6 +77,11 @@
 			<artifactId>knife4j-openapi2-spring-boot-starter</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>org.dom4j</groupId>
+			<artifactId>dom4j</artifactId>
+		</dependency>
+
 
 	</dependencies>
 

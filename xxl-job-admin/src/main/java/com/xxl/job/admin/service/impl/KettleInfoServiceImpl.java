@@ -1,11 +1,13 @@
 package com.xxl.job.admin.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.util.IdUtil;
-import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.*;
+import com.xxl.job.admin.common.constants.FileConstant;
 import com.xxl.job.admin.common.exceptions.XxlJobAdminException;
 import com.xxl.job.admin.common.pojo.bo.KettleMaxVersionBO;
 import com.xxl.job.admin.common.pojo.dto.KettleInfoDTO;
@@ -21,6 +23,11 @@ import com.xxl.job.admin.service.base.impl.BaseServiceImpl;
 import com.xxl.job.core.enums.KettleType;
 import com.xxl.job.core.enums.ResponseEnum;
 import lombok.extern.slf4j.Slf4j;
+import org.dom4j.Document;
+import org.dom4j.Element;
+import org.dom4j.io.OutputFormat;
+import org.dom4j.io.SAXReader;
+import org.dom4j.io.XMLWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +35,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.Serializable;
 import java.net.URLEncoder;
 import java.util.List;
@@ -83,7 +92,7 @@ public class KettleInfoServiceImpl extends BaseServiceImpl<KettleInfoMapper, Ket
 
         MultipartFile file = kettleInfoDTO.getFile();
         if (ObjectUtil.isNotNull(file) && !file.isEmpty()) {
-            kettleInfo.setKettleFile(getBytes(file));
+            kettleInfo.setKettleFile(setRelativePath(file));
             kettleInfo.setFileName(file.getOriginalFilename());
         }else {
             KettleInfo lastVersion = kettleInfoMapper.findKettleByNameAndVersion(kettleMaxVersionBO.getName(), kettleMaxVersionBO.getMaxVersion());
@@ -131,6 +140,92 @@ public class KettleInfoServiceImpl extends BaseServiceImpl<KettleInfoMapper, Ket
                 log.error("文件 {} : 下载异常 {}", kettleInfo.getFileName(), e.getMessage());
                 throw new XxlJobAdminException(ResponseEnum.ERROR.getCode(), String.format("文件 【%s】 下载异常!, 请重试", kettleInfo.getFileName()));
             }
+        }
+    }
+
+    /**
+     * 设置相对路径
+     * @param multipartFile 文件
+     * @return {@link byte[]}
+     */
+    private byte[] setRelativePath(MultipartFile multipartFile) {
+        Assert.isFalse(ObjectUtil.isNull(multipartFile) || multipartFile.isEmpty(), ResponseEnum.FILE_DOES_NOT_EXIST.getMessage());
+        String originalFilename = multipartFile.getOriginalFilename();
+        if (originalFilename.endsWith(FileConstant.ZIP_FILE_SUFFIX)) {
+            File unzip = null;
+            try {
+                unzip = ZipUtil.unzip(multipartFile.getInputStream(),
+                        new File(FileConstant.TMP_DIR + StrUtil.SLASH + IdUtil.fastSimpleUUID()), CharsetUtil.defaultCharset());
+            }catch (Exception e) {
+                log.error("文件读取异常 {}", e.getMessage());
+                throw new XxlJobAdminException(ResponseEnum.FILE_DOES_NOT_EXIST);
+            }
+
+            List<File> files = FileUtil.loopFiles(unzip, File::isFile);
+
+            if (CollectionUtil.isEmpty(files)) {
+                log.error("压缩包内文件为空, 请检查");
+                throw new XxlJobAdminException(ResponseEnum.THE_FILES_IN_THE_COMPRESSED_PACKAGE_ARE_EMPTY);
+            }
+
+            if (files.stream().noneMatch(a -> StrUtil.equalsIgnoreCase(KettleType.KJB.name(), FileUtil.extName(a)))) {
+                log.error("压缩包内没有'kjb'文件, 请检查");
+                throw new XxlJobAdminException(ResponseEnum.THERE_IS_NO_KJB_FILE_IN_THE_ZIP_PACKAGE);
+            }
+
+            String newDir = FileConstant.TMP_DIR + FileUtil.FILE_SEPARATOR + IdUtil.fastSimpleUUID();
+            FileUtil.mkdir(newDir);
+
+            for (File file : files) {
+                if (StrUtil.equalsIgnoreCase(KettleType.KJB.name(), FileUtil.extName(file))) {
+                    try {
+                        Document doc = new SAXReader().read(file);
+                        Element rootElement = doc.getRootElement();
+                        List<Element> entries = rootElement.elements("entries");
+
+                        for (Element entry : entries) {
+                            List<Element> elements = entry.elements("entry");
+                            for (Element element : elements) {
+                                List<Element> filenames = element.elements("filename");
+                                for (Element filename : filenames) {
+                                    String text = filename.getText();
+                                    String newText = "${Internal.Entry.Current.Directory}" +
+                                            StrUtil.sub(text, StrUtil.lastIndexOfIgnoreCase(text, StrUtil.SLASH), text.length());
+                                    filename.setText(newText);
+                                }
+                            }
+                        }
+
+                        FileOutputStream out =new FileOutputStream(newDir + StrUtil.SLASH + file.getName());
+                        OutputFormat format = OutputFormat.createPrettyPrint();
+                        format.setEncoding(CharsetUtil.UTF_8);
+                        XMLWriter writer=new XMLWriter(out, format);
+                        writer.write(doc);
+                        writer.close();
+                    }catch (Exception e) {
+                        log.error("文件相对路径处理异常 {}", e.getMessage());
+                        throw new XxlJobAdminException(ResponseEnum.FILE_RELATIVE_PATH_PROCESSING_EXCEPTION);
+                    }
+                }else {
+                    FileUtil.move(file, new File(newDir + StrUtil.SLASH + file.getName()), Boolean.TRUE);
+                }
+            }
+
+            File zip = null;
+            try {
+                zip = ZipUtil.zip(new File(newDir + FileConstant.ZIP_FILE_SUFFIX), Boolean.FALSE, new File(newDir));
+            }catch (Exception e) {
+                log.error("文件重新打压缩包异常 {}", e.getMessage());
+                throw new XxlJobAdminException(ResponseEnum.THE_FILE_RECOMPRESSED_PACKAGE_IS_ABNORMAL_PROCEDURE);
+            }
+
+            byte[] bytes = FileUtil.readBytes(zip);
+            FileUtil.del(zip);
+            FileUtil.del(unzip);
+            FileUtil.del(newDir);
+            return bytes;
+        }else {
+            return getBytes(multipartFile);
         }
     }
 
