@@ -116,7 +116,7 @@ function createTable(records) {
  * @param data 数据
  */
 function download(data) {
-    window.open("/kettle-info/download/" + data.id, "_blank")
+    window.open("kettle-info/download/" + data.id, "_blank")
 }
 
 /**
