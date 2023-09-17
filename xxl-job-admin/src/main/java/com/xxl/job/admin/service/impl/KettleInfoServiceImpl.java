@@ -220,9 +220,11 @@ public class KettleInfoServiceImpl extends BaseServiceImpl<KettleInfoMapper, Ket
             }
 
             byte[] bytes = FileUtil.readBytes(zip);
-            FileUtil.del(zip);
-            FileUtil.del(unzip);
-            FileUtil.del(newDir);
+            try {
+                FileUtil.del(zip);
+                FileUtil.del(unzip);
+                FileUtil.del(newDir);
+            }catch (Exception ignored){}
             return bytes;
         }else {
             return getBytes(multipartFile);
