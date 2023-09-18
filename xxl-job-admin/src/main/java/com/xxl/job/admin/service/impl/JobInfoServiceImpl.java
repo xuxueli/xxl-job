@@ -114,7 +114,6 @@ public class JobInfoServiceImpl extends BaseServiceImpl<JobInfoMapper, JobInfo, 
         BeanUtil.copyProperties(jobInfoDTO, jobInfo);
         jobInfo.setChildJobId(childJobIds);
         jobInfo.setCreatedTime(DateUtil.current());
-        jobInfo.setTriggerStatus(NumberConstant.ZERO);
         jobInfo.setGlueUpdatedTime(DateUtil.current());
         this.saveOrUpdate(jobInfo);
         return this.objectConversion(jobInfo);
@@ -245,6 +244,8 @@ public class JobInfoServiceImpl extends BaseServiceImpl<JobInfoMapper, JobInfo, 
 
     @Override
     public List<String> cronLatestExecutionTime(String cron) {
+        Assert.notBlank(cron, ResponseEnum.THE_CRON_EXPRESSION_CANNOT_BE_EMPTY.getMessage());
+        cron = StrUtil.replaceIgnoreCase(cron, StrUtil.BACKSLASH, StrUtil.EMPTY);
         List<String> result = new ArrayList<>();
         Date lastTime = DateUtil.date();
         for (int i = 0; i < 5; i++) {

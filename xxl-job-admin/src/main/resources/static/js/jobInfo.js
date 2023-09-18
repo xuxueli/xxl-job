@@ -435,7 +435,8 @@ function change(title, oldData) {
         if (_.eq('BEAN', glueType) && _.isEmpty(field.executorHandler)) {
             message.warning("JobHandler不能为空");
             return false;
-        } else if (!_.eq('KETTLE_KTR', glueType) && !_.eq('KETTLE_KJB', glueType)) {
+        } else if (!_.eq('BEAN', glueType) && !_.eq('KETTLE_KTR', glueType)
+            && !_.eq('KETTLE_KJB', glueType)) {
             if (_.isEmpty(field.glueSource)) {
                 message.warning("执行代码不能为空");
                 return false;

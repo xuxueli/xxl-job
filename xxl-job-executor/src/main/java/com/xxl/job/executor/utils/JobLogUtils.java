@@ -24,7 +24,7 @@ public class JobLogUtils {
 
 	private static String logBasePath = (StrUtil.endWith(SystemUtil.get(SystemUtil.USER_DIR), "/")
 			? SystemUtil.get(SystemUtil.USER_DIR) :  SystemUtil.get(SystemUtil.USER_DIR) + "/") + "logs/xxl-job/job-handler";
-	private static String glueSrcPath = logBasePath.concat("/glue-source");
+	private static String glueSrcPath = logBasePath.concat("/glueSource");
 
 	public static void initLogPath(String logPath){
 		if (StrUtil.isNotBlank(logPath)) {
@@ -34,7 +34,7 @@ public class JobLogUtils {
 		FileUtil.mkdir(logPathDir);
 		logBasePath = logPathDir.getPath();
 
-		File glueBaseDir = new File(logPathDir, "glue-source");
+		File glueBaseDir = new File(logPathDir, "glueSource");
 		FileUtil.mkdir(glueBaseDir);
 		glueSrcPath = glueBaseDir.getPath();
 	}

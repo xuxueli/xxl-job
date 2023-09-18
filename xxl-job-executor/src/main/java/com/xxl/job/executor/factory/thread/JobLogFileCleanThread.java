@@ -3,6 +3,7 @@ package com.xxl.job.executor.factory.thread;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.thread.ThreadUtil;
+import cn.hutool.core.util.ObjectUtil;
 import com.xxl.job.executor.utils.JobLogUtils;
 import com.xxl.job.spring.boot.autoconfigure.XxlJobExecutorProperties;
 import lombok.extern.slf4j.Slf4j;
@@ -61,7 +62,16 @@ public class JobLogFileCleanThread extends BaseTaskThread {
                             }
 
                             // file create date
-                            Date logFileCreateDate = DateUtil.parseDate(childFile.getName());
+                            Date logFileCreateDate = null;
+                            try {
+                                logFileCreateDate = DateUtil.parseDate(childFile.getName());
+                            }catch (Exception e) {
+                                log.error(e.getMessage(), e);
+                            }
+
+                            if (ObjectUtil.isNull(logFileCreateDate)) {
+                                continue;
+                            }
 
                             if ((todayDate.getTime() - logFileCreateDate.getTime()) >= xxlJobExecutorProperties.getExecutor().getLogRetentionDays() * (24 * 60 * 60 * 1000)) {
                                 FileUtil.del(childFile);

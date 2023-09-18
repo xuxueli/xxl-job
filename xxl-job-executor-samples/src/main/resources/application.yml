@@ -5,7 +5,7 @@ xxl:
   job:
     enabled: true
     admin:
-      addresses: localhost:10200
+      addresses: localhost:3000
     executor:
       host: localhost
       port: 12100
