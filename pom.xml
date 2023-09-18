@@ -232,6 +232,44 @@
 				</repository>
 			</distributionManagement>
 		</profile>
+
+		<profile>
+			<id>pentaho</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<repositories>
+				<repository>
+					<id>pentaho-public</id>
+					<name>Pentaho Public</name>
+					<url>https://repo.orl.eng.hitachivantara.com/artifactory/pnt-mvn/</url>
+					<releases>
+						<enabled>true</enabled>
+						<updatePolicy>always</updatePolicy>
+					</releases>
+					<snapshots>
+						<enabled>true</enabled>
+						<updatePolicy>always</updatePolicy>
+					</snapshots>
+				</repository>
+			</repositories>
+			<pluginRepositories>
+				<pluginRepository>
+					<id>pentaho-public</id>
+					<name>Pentaho Public</name>
+					<url>https://repo.orl.eng.hitachivantara.com/artifactory/pnt-mvn/</url>
+					<releases>
+						<enabled>true</enabled>
+						<updatePolicy>always</updatePolicy>
+					</releases>
+					<snapshots>
+						<enabled>true</enabled>
+						<updatePolicy>always</updatePolicy>
+					</snapshots>
+				</pluginRepository>
+			</pluginRepositories>
+		</profile>
+
 	</profiles>
 
 	<build>

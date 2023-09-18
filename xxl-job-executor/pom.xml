@@ -16,15 +16,16 @@
     <description>xxl-job执行器</description>
 
     <properties>
+        <kettle.version>8.3.0.0-371</kettle.version>
     </properties>
 
-    <repositories>
-        <repository>
-            <id>pentaho-kettle</id>
-            <name>pentaho-kettle仓库</name>
-            <url>https://repo.orl.eng.hitachivantara.com/artifactory/pnt-mvn/</url>
-        </repository>
-    </repositories>
+<!--    <repositories>-->
+<!--        <repository>-->
+<!--            <id>pentaho-kettle</id>-->
+<!--            <name>pentaho-kettle仓库</name>-->
+<!--            <url>https://repo.orl.eng.hitachivantara.com/artifactory/pnt-mvn/</url>-->
+<!--        </repository>-->
+<!--    </repositories>-->
 
     <dependencies>
         <dependency>
@@ -62,7 +63,7 @@
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.2</version>
+            <version>2.13.0</version>
         </dependency>
         <dependency>
             <groupId>commons-lang</groupId>
@@ -72,24 +73,24 @@
         <dependency>
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
-            <version>1.1.3</version>
+            <version>1.2</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-vfs2</artifactId>
-            <version>2.2</version>
+            <version>2.9.0</version>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>17.0</version>
+            <version>32.1.2-jre</version>
         </dependency>
 
         <dependency>
             <groupId>org.javassist</groupId>
             <artifactId>javassist</artifactId>
-            <version>3.20.0-GA</version>
+            <version>3.29.2-GA</version>
         </dependency>
 
         <dependency>
@@ -107,44 +108,50 @@
         <dependency>
             <groupId>pentaho-kettle</groupId>
             <artifactId>kettle-core</artifactId>
-            <version>8.3.0.0-371</version>
+            <version>${kettle.version}</version>
         </dependency>
 
         <dependency>
             <groupId>pentaho-kettle</groupId>
             <artifactId>kettle-dbdialog</artifactId>
-            <version>8.3.0.0-371</version>
+            <version>${kettle.version}</version>
         </dependency>
         <dependency>
             <groupId>pentaho-kettle</groupId>
             <artifactId>kettle-engine</artifactId>
-            <version>8.3.0.0-371</version>
+            <version>${kettle.version}</version>
         </dependency>
         <dependency>
             <groupId>pentaho</groupId>
             <artifactId>metastore</artifactId>
-            <version>8.3.0.0-371</version>
+            <version>${kettle.version}</version>
         </dependency>
         <dependency>
             <groupId>pentaho</groupId>
             <artifactId>pentaho-vfs-browser</artifactId>
-            <version>8.3.0.0-371</version>
+            <version>${kettle.version}</version>
         </dependency>
         <dependency>
             <groupId>org.pentaho.di.plugins</groupId>
             <artifactId>kettle-log4j-core</artifactId>
-            <version>8.3.0.0-371</version>
+            <version>${kettle.version}</version>
         </dependency>
         <dependency>
             <groupId>pentaho-kettle</groupId>
             <artifactId>kettle-ui-swt</artifactId>
-            <version>8.3.0.0-371</version>
+            <version>${kettle.version}</version>
         </dependency>
         <dependency>
             <groupId>org.pentaho.di.plugins</groupId>
             <artifactId>kettle-sap-plugin-core</artifactId>
-            <version>8.3.0.0-371</version>
+            <version>${kettle.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.pentaho.di.plugins</groupId>
+            <artifactId>kettle-json-plugin-core</artifactId>
+            <version>${kettle.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
@@ -171,7 +178,6 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.7.7</version>
         </dependency>
 
         <dependency>
@@ -183,12 +189,11 @@
         <dependency>
             <groupId>org.codehaus.janino</groupId>
             <artifactId>janino</artifactId>
-            <version>2.5.16</version>
         </dependency>
         <dependency>
-            <groupId>org.eclipse.birt.runtime.3_7_1</groupId>
+            <groupId>org.eclipse.birt.runtime</groupId>
             <artifactId>org.mozilla.javascript</artifactId>
-            <version>1.7.2</version>
+            <version>1.7.5.v201504281450</version>
         </dependency>
 
     </dependencies>
