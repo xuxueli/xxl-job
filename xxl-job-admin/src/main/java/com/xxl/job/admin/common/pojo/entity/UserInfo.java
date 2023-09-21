@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 用户信息
@@ -65,7 +66,7 @@ public class UserInfo implements Serializable {
     /**
      * 创建时间
      */
-    private Long createdTime;
+    private Date createdTime;
 
     /**
      * 更新人
@@ -75,7 +76,7 @@ public class UserInfo implements Serializable {
     /**
      * 更新时间
      */
-    private Long updatedTime;
+    private Date updatedTime;
 
     /**
      * 描述

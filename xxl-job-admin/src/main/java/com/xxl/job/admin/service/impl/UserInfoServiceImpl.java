@@ -98,7 +98,7 @@ public class UserInfoServiceImpl extends BaseServiceImpl<UserInfoMapper, UserInf
         copyOptions.setIgnoreError(Boolean.TRUE);
 
         BeanUtil.copyProperties(userInfoDTO, userInfo, copyOptions);
-        userInfo.setCreatedTime(DateUtil.current());
+        userInfo.setCreatedTime(DateUtil.date());
         userInfo.setPassword(DigestUtil.bcrypt(userInfoDTO.getPassword()));
         userInfo.setStatus(NumberConstant.ONE);
         this.saveOrUpdate(userInfo);
@@ -116,7 +116,7 @@ public class UserInfoServiceImpl extends BaseServiceImpl<UserInfoMapper, UserInf
         }
 
         BeanUtil.copyProperties(userInfoDTO, userInfo);
-        userInfo.setUpdatedTime(DateUtil.current());
+        userInfo.setUpdatedTime(DateUtil.date());
         this.saveOrUpdate(userInfo);
     }
 

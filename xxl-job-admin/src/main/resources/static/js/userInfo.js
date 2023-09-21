@@ -91,12 +91,7 @@ function createTable(records) {
                     }
                 },
                 {field: 'createdUser', title: '添加人'},
-                {
-                    field: 'createdTime', title: '添加时间', sort: true,
-                    templet: function (row) {
-                        return ts2Time(row.createdTime);
-                    }
-                },
+                {field: 'createdTime', title: '添加时间'},
                 {
                     fixed: 'right', width: 300, title: '操作', toolbar: '<div class="td-manage">\n' +
                         '              <a class="layui-btn layui-btn-radius layui-btn-sm layui-bg-blue" lay-event="update" >编辑\n' +
@@ -286,7 +281,7 @@ function update(data) {
 function validate(form) {
     form.verify({
         account: function (value, item) {
-            if (!new RegExp("^[a-zA-Z0-9_\\s·]+$").test(value)) {
+            if (!new RegExp("^[a-zA-Z0-9_.\\-\\s·]+$").test(value)) {
                 return '账号只能由字母,数字,_ 组成';
             }
             if (/(^_)|(__)|(_+$)/.test(value)) return '账号首尾不能出现 _ 下划线';
