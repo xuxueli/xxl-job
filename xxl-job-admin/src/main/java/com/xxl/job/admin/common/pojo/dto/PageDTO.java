@@ -48,20 +48,18 @@ public class PageDTO implements Serializable {
     private String orderField;
 
     /**
-     * 开始时间
+     * 开始时间, 格式 yyyy-MM-dd hh:mm:ss
      */
-    @ApiModelProperty(" 开始时间")
-    @Min(value = 0,message = "开始时间必须大于0")
-    private Long startTime;
+    @ApiModelProperty("开始时间, 格式 yyyy-MM-dd hh:mm:ss")
+    private String startTime;
 
     /**
-     * 结束时间
+     * 结束时间, 格式 yyyy-MM-dd hh:mm:ss
      */
-    @ApiModelProperty(" 结束时间")
-    @Min(value = 0,message = "结束时间必须大于0")
-    private Long endTime;
+    @ApiModelProperty("结束时间, 格式 yyyy-MM-dd hh:mm:ss")
+    private String endTime;
 
     public Integer getCurrentPage() {
-        return ObjectUtil.isNull(currentPage) ? 0 : currentPage;
+        return ObjectUtil.isNull(currentPage) ? 1 : currentPage;
     }
 }

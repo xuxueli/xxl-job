@@ -72,7 +72,7 @@ public class JobGroupServiceImpl extends BaseServiceImpl<JobGroupMapper, JobGrou
         Assert.isNull(jobGroup, ResponseEnum.THE_TASK_GROUP_ALREADY_EXISTS.getMessage());
         jobGroup = new JobGroup();
         BeanUtil.copyProperties(jobGroupDTO, jobGroup);
-        jobGroup.setCreatedTime(DateUtil.current());
+        jobGroup.setCreatedTime(DateUtil.date());
         jobGroup.setAddressList(joinAddresses(jobGroupDTO.getAddressType(), jobGroupDTO.getAppName(), jobGroupDTO.getAddresses()));
         this.saveOrUpdate(jobGroup);
     }
@@ -87,7 +87,7 @@ public class JobGroupServiceImpl extends BaseServiceImpl<JobGroupMapper, JobGrou
                     ResponseEnum.THE_TASK_GROUP_ALREADY_EXISTS.getMessage());
         }
         BeanUtil.copyProperties(jobGroupDTO, jobGroup);
-        jobGroup.setUpdatedTime(DateUtil.current());
+        jobGroup.setUpdatedTime(DateUtil.date());
         jobGroup.setAddressList(joinAddresses(jobGroupDTO.getAddressType(), jobGroupDTO.getAppName(), jobGroupDTO.getAddresses()));
         this.saveOrUpdate(jobGroup);
     }

@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 公共属性父类
@@ -44,13 +45,13 @@ public class Base implements Serializable {
      * 添加时间
      */
     @ApiModelProperty("添加时间")
-    protected Long createdTime;
+    protected Date createdTime;
 
     /**
      * 修改时间
      */
     @ApiModelProperty("修改时间")
-    protected Long updatedTime;
+    protected Date updatedTime;
 
 
 }

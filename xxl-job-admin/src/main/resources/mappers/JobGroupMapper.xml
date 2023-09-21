@@ -43,11 +43,11 @@
             <if test="addressType != null">
                 and ADDRESS_TYPE = #{addressType,jdbcType=INTEGER}
             </if>
-            <if test="startTime != null">
-                and CREATED_TIME <![CDATA[ >= ]]> #{startTime,jdbcType=BIGINT}
+            <if test="startTime != null and startTime != ''">
+                and CREATED_TIME <![CDATA[ >= ]]> #{startTime,jdbcType=VARCHAR}
             </if>
-            <if test="endTime != null">
-                and CREATED_TIME <![CDATA[ <= ]]> #{endTime,jdbcType=BIGINT}
+            <if test="endTime != null and endTime != ''">
+                and CREATED_TIME <![CDATA[ <= ]]> #{endTime,jdbcType=VARCHAR}
             </if>
         </where>
     </select>

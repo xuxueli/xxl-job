@@ -38,12 +38,7 @@ function createTable(records) {
                 },
                 {field: 'addresses', title: 'OnLine 机器地址'},
                 {field: 'createdUser', width: 100 ,title: '添加人'},
-                {
-                    field: 'createdTime', title: '添加时间', sort: true,
-                    templet: function (row) {
-                        return ts2Time(row.createdTime)
-                    }
-                },
+                {field: 'createdTime', title: '添加时间'},
                 {
                     fixed: 'right', width: 140, title: '操作', toolbar: '<div class="td-manage">\n' +
                         '              <a class="layui-btn layui-btn-radius layui-btn-sm layui-bg-blue" lay-event="update" >编辑\n' +
@@ -99,8 +94,8 @@ function deleteData(obj) {
  * @returns {*} 分页数据
  */
 function pageSearch(currentPage, pageSize) {
-    let start = date2Timestamp($("#start").val());
-    let end = date2Timestamp($("#end").val());
+    let start = $("#start").val();
+    let end = $("#end").val();
     let title = $("#title").val();
     let appName = $("#appName").val();
     let pageDTO = {
