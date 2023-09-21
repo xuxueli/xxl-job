@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -124,7 +125,7 @@ public class JobInfoVO extends Base implements Serializable {
      * GLUE更新时间
      */
     @ApiModelProperty("GLUE更新时间")
-    private Long glueUpdatedTime;
+    private Date glueUpdatedTime;
 
     /**
      * 子任务ID
@@ -142,13 +143,13 @@ public class JobInfoVO extends Base implements Serializable {
      * 上次调度时间
      */
     @ApiModelProperty("上次调度时间")
-    private Long triggerLastTime;
+    private Date triggerLastTime;
 
     /**
      * 下次调度时间
      */
     @ApiModelProperty("下次调度时间")
-    private Long triggerNextTime;
+    private Date triggerNextTime;
 
 
 }

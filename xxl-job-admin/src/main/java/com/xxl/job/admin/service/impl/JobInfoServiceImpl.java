@@ -170,19 +170,21 @@ public class JobInfoServiceImpl extends BaseServiceImpl<JobInfoMapper, JobInfo, 
     @Transactional(rollbackFor = RuntimeException.class)
     public void updateGlueById(Long id, String glueType, String glueSource, String glueDescription) {
         Assert.notNull(id, ResponseEnum.THE_ID_CANNOT_BE_EMPTY.getMessage());
-        jobInfoMapper.updateGlueById(id, glueType, glueSource, glueDescription, DateUtil.current(), DateUtil.current());
+        jobInfoMapper.updateGlueById(id, glueType, glueSource, glueDescription,
+                DateUtil.formatDateTime(DateUtil.date()), DateUtil.formatDateTime(DateUtil.date()));
     }
 
     @Override
-    public List<JobInfoVO> queryJobInfoByTriggerNextTime(long maxNextTime, Integer pageSize) {
-        return this.objectConversion(jobInfoMapper.queryJobInfoByTriggerNextTime(maxNextTime, pageSize));
+    public List<JobInfoVO> queryJobInfoByTriggerNextTime(Date maxNextTime, Integer pageSize) {
+        return this.objectConversion(jobInfoMapper.queryJobInfoByTriggerNextTime(DateUtil.formatDateTime(maxNextTime), pageSize));
     }
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    public void updateTriggerTimeById(Long id, Long triggerLastTime, Long triggerNextTime, Integer triggerStatus) {
+    public void updateTriggerTimeById(Long id, Date triggerLastTime, Date triggerNextTime, Integer triggerStatus) {
         if (ObjectUtil.isNotNull(this.getById(id))) {
-            jobInfoMapper.updateTriggerTimeById(id, triggerLastTime, triggerNextTime, triggerStatus, DateUtil.current());
+            jobInfoMapper.updateTriggerTimeById(id, DateUtil.formatDateTime(triggerLastTime), DateUtil.formatDateTime(triggerNextTime),
+                    triggerStatus, DateUtil.formatDateTime(DateUtil.date()));
         }
     }
 
@@ -196,7 +198,7 @@ public class JobInfoServiceImpl extends BaseServiceImpl<JobInfoMapper, JobInfo, 
     public void stopJob(Long id) {
         Assert.notNull(id, ResponseEnum.THE_ID_CANNOT_BE_EMPTY.getMessage());
         Assert.notNull(this.getById(id), ResponseEnum.THE_TASK_DOES_NOT_EXIST_OR_HAS_BEEN_DELETED.getMessage());
-        this.updateTriggerTimeById(id, NumberConstant.ZERO.longValue(), NumberConstant.ZERO.longValue() , NumberConstant.ZERO);
+        this.updateTriggerTimeById(id, DateUtil.date(1), DateUtil.date(1), NumberConstant.ZERO);
     }
 
     @Override
@@ -213,8 +215,7 @@ public class JobInfoServiceImpl extends BaseServiceImpl<JobInfoMapper, JobInfo, 
         Date nextValidTime = CronUtils.generateNextValidTime(jobInfo.getScheduleType(), jobInfo.getScheduleConf(),
                 new Date(System.currentTimeMillis() + ScheduleThread.PRE_READ_MS));
         Assert.notNull(nextValidTime, ResponseEnum.THE_CRON_EXPRESSION_FORMAT_IS_INCORRECT.getMessage());
-        long nextTriggerTime = nextValidTime.getTime();
-        this.updateTriggerTimeById(id, NumberConstant.ZERO.longValue(), nextTriggerTime, NumberConstant.ONE);
+        this.updateTriggerTimeById(id, DateUtil.date(1), nextValidTime, NumberConstant.ONE);
     }
 
     @Override

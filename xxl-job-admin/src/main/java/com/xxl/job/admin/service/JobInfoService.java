@@ -6,6 +6,7 @@ import com.xxl.job.admin.common.pojo.entity.JobInfo;
 import com.xxl.job.admin.common.pojo.vo.JobInfoVO;
 import com.xxl.job.admin.service.base.BaseService;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -63,21 +64,21 @@ public interface JobInfoService extends BaseService<JobInfo, JobInfo, JobInfoVO>
     /**
      * 根据下次调度时间查询任务
      *
-     * @param maxNextTime 下次调度时间
+     * @param maxNextTime 下次调度时间 yyyy-MM-dd hh:mm:ss
      * @param pageSize 数量
      * @return {@link List}<{@link JobInfoVO}>
      */
-    List<JobInfoVO> queryJobInfoByTriggerNextTime(long maxNextTime, Integer pageSize);
+    List<JobInfoVO> queryJobInfoByTriggerNextTime(Date maxNextTime, Integer pageSize);
 
     /**
      * 根据ID修改调度时间和状态
      *
      * @param id              ID
-     * @param triggerLastTime 上次触发
-     * @param triggerNextTime 下次触发
+     * @param triggerLastTime 上次触发 yyyy-MM-dd hh:mm:ss
+     * @param triggerNextTime 下次触发 yyyy-MM-dd hh:mm:ss
      * @param triggerStatus   触发状态
      */
-    void updateTriggerTimeById(Long id, Long triggerLastTime, Long triggerNextTime, Integer triggerStatus);
+    void updateTriggerTimeById(Long id, Date triggerLastTime, Date triggerNextTime, Integer triggerStatus);
 
     /**
      * 查询所有数

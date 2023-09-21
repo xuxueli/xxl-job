@@ -80,17 +80,17 @@
             <include refid="Base_Column_List"/>
         FROM XXL_JOB_INFO
         WHERE TRIGGER_STATUS = 1
-        and TRIGGER_NEXT_TIME <![CDATA[ <= ]]> #{maxNextTime,jdbcType=BIGINT}
+        and TRIGGER_NEXT_TIME <![CDATA[ <= ]]> #{maxNextTime,jdbcType=VARCHAR}
         ORDER BY ID ASC
         LIMIT #{pageSize}
     </select>
 
     <update id="updateTriggerTimeById">
         UPDATE XXL_JOB_INFO
-        SET TRIGGER_LAST_TIME = #{triggerLastTime,jdbcType=BIGINT},
-        TRIGGER_NEXT_TIME = #{triggerNextTime,jdbcType=BIGINT},
+        SET TRIGGER_LAST_TIME = #{triggerLastTime,jdbcType=VARCHAR},
+        TRIGGER_NEXT_TIME = #{triggerNextTime,jdbcType=VARCHAR},
         TRIGGER_STATUS = #{triggerStatus,jdbcType=INTEGER},
-        UPDATED_TIME = #{updatedTime,jdbcType=BIGINT}
+        UPDATED_TIME = #{updatedTime,jdbcType=VARCHAR}
         WHERE ID = #{id,jdbcType=BIGINT}
     </update>
 
@@ -138,8 +138,8 @@
         SET GLUE_TYPE = #{glueType,jdbcType=VARCHAR},
         GLUE_SOURCE = #{glueSource,jdbcType=VARCHAR},
         GLUE_DESCRIPTION = #{glueDescription,jdbcType=VARCHAR},
-        GLUE_UPDATED_TIME = #{glueUpdatedTime,jdbcType=BIGINT},
-        UPDATED_TIME = #{updatedTime,jdbcType=BIGINT}
+        GLUE_UPDATED_TIME = #{glueUpdatedTime,jdbcType=VARCHAR},
+        UPDATED_TIME = #{updatedTime,jdbcType=VARCHAR}
         WHERE ID = #{id,jdbcType=BIGINT}
     </update>
 </mapper>

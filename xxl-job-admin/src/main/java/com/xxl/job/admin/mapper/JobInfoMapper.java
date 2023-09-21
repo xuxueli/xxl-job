@@ -35,25 +35,25 @@ public interface JobInfoMapper extends BaseMapper<JobInfo> {
     /**
      * 根据下次调度时间查询任务
      *
-     * @param maxNextTime 下次调度时间
+     * @param maxNextTime 下次调度时间 yyyy-MM-dd hh:mm:ss
      * @param pageSize 数量
      * @return {@link List}<{@link JobInfo}>
      */
-    List<JobInfo> queryJobInfoByTriggerNextTime(@Param("maxNextTime") Long maxNextTime, @Param("pageSize") Integer pageSize);
+    List<JobInfo> queryJobInfoByTriggerNextTime(@Param("maxNextTime") String maxNextTime, @Param("pageSize") Integer pageSize);
 
     /**
      * 根据ID修改调度时间和状态
      *
      * @param id              ID
-     * @param triggerLastTime 上次触发
-     * @param triggerNextTime 下次触发
+     * @param triggerLastTime 上次触发 yyyy-MM-dd hh:mm:ss
+     * @param triggerNextTime 下次触发 yyyy-MM-dd hh:mm:ss
      * @param triggerStatus   触发状态
-     * @param updatedTime 修改时间
+     * @param updatedTime 修改时间 yyyy-MM-dd hh:mm:ss
      */
-    void updateTriggerTimeById(@Param("id") Long id, @Param("triggerLastTime") Long triggerLastTime,
-                               @Param("triggerNextTime") Long triggerNextTime,
+    void updateTriggerTimeById(@Param("id") Long id, @Param("triggerLastTime") String triggerLastTime,
+                               @Param("triggerNextTime") String triggerNextTime,
                                @Param("triggerStatus") Integer triggerStatus,
-                               @Param("updatedTime") Long updatedTime);
+                               @Param("updatedTime") String updatedTime);
 
     /**
      * 查询任务信息根据名字
@@ -86,12 +86,12 @@ public interface JobInfoMapper extends BaseMapper<JobInfo> {
      * @param glueSource      GLUE源代码
      * @param glueType        glue 类型
      * @param glueDescription GLUE描述
-     * @param glueUpdatedTime GLUE更新时间
-     * @param updatedTime     更新时间
+     * @param glueUpdatedTime GLUE更新时间 yyyy-MM-dd hh:mm:ss
+     * @param updatedTime     更新时间 yyyy-MM-dd hh:mm:ss
      */
     void updateGlueById(@Param("id") Long id, @Param("glueType") String glueType,
                         @Param("glueSource") String glueSource, @Param("glueDescription") String glueDescription,
-                        @Param("glueUpdatedTime") Long glueUpdatedTime, @Param("updatedTime") Long updatedTime);
+                        @Param("glueUpdatedTime") String glueUpdatedTime, @Param("updatedTime") String updatedTime);
 
 
 

@@ -104,13 +104,13 @@ public class ScheduleThread extends AbstractThreadListener implements Ordered {
 
                         // 1、pre read
                         long nowTime = System.currentTimeMillis();
-                        List<JobInfoVO> scheduleList = jobInfoService.queryJobInfoByTriggerNextTime(nowTime + PRE_READ_MS, preReadCount);
+                        List<JobInfoVO> scheduleList = jobInfoService.queryJobInfoByTriggerNextTime(DateUtil.date(nowTime + PRE_READ_MS), preReadCount);
                         if (CollectionUtil.isNotEmpty(scheduleList)) {
                             // 2、push time-ring
                             for (JobInfoVO jobInfo : scheduleList) {
 
                                 // time-ring jump
-                                if (nowTime > jobInfo.getTriggerNextTime() + PRE_READ_MS) {
+                                if (nowTime > jobInfo.getTriggerNextTime().getTime() + PRE_READ_MS) {
                                     // 2.1、trigger-expire > 5s：pass && make next-trigger-time
                                     log.warn(">>>>>>>>>>> xxl-job, schedule misfire, jobId = " + jobInfo.getId());
 
@@ -126,7 +126,7 @@ public class ScheduleThread extends AbstractThreadListener implements Ordered {
                                     // 2、fresh next
                                     refreshNextValidTime(jobInfo, DateUtil.date());
 
-                                } else if (nowTime > jobInfo.getTriggerNextTime()) {
+                                } else if (nowTime > jobInfo.getTriggerNextTime().getTime()) {
                                     // 2.2、trigger-expire < 5s：direct-trigger && make next-trigger-time
 
                                     // 1、trigger
@@ -139,16 +139,16 @@ public class ScheduleThread extends AbstractThreadListener implements Ordered {
                                     refreshNextValidTime(jobInfo, DateUtil.date());
 
                                     // next-trigger-time in 5s, pre-read again
-                                    if (jobInfo.getTriggerStatus() == 1 && nowTime + PRE_READ_MS > jobInfo.getTriggerNextTime()) {
+                                    if (jobInfo.getTriggerStatus() == 1 && nowTime + PRE_READ_MS > jobInfo.getTriggerNextTime().getTime()) {
 
                                         // 1、make ring second
-                                        int ringSecond = (int) ((jobInfo.getTriggerNextTime() / 1000) % 60);
+                                        int ringSecond = (int) ((jobInfo.getTriggerNextTime().getTime() / 1000) % 60);
 
                                         // 2、push time ring
                                         pushTimeRing(ringSecond, jobInfo.getId());
 
                                         // 3、fresh next
-                                        refreshNextValidTime(jobInfo, new Date(jobInfo.getTriggerNextTime()));
+                                        refreshNextValidTime(jobInfo, jobInfo.getTriggerNextTime());
 
                                     }
 
@@ -156,13 +156,13 @@ public class ScheduleThread extends AbstractThreadListener implements Ordered {
                                     // 2.3、trigger-pre-read：time-ring trigger && make next-trigger-time
 
                                     // 1、make ring second
-                                    int ringSecond = (int) ((jobInfo.getTriggerNextTime() / 1000) % 60);
+                                    int ringSecond = (int) ((jobInfo.getTriggerNextTime().getTime() / 1000) % 60);
 
                                     // 2、push time ring
                                     pushTimeRing(ringSecond, jobInfo.getId());
 
                                     // 3、fresh next
-                                    refreshNextValidTime(jobInfo, new Date(jobInfo.getTriggerNextTime()));
+                                    refreshNextValidTime(jobInfo, jobInfo.getTriggerNextTime());
 
                                 }
 
@@ -368,11 +368,11 @@ public class ScheduleThread extends AbstractThreadListener implements Ordered {
         Date nextValidTime = CronUtils.generateNextValidTime(jobInfo.getScheduleType(), jobInfo.getScheduleConf(), fromTime);
         if (nextValidTime != null) {
             jobInfo.setTriggerLastTime(jobInfo.getTriggerNextTime());
-            jobInfo.setTriggerNextTime(nextValidTime.getTime());
+            jobInfo.setTriggerNextTime(nextValidTime);
         } else {
             jobInfo.setTriggerStatus(0);
-            jobInfo.setTriggerLastTime(0L);
-            jobInfo.setTriggerNextTime(0L);
+            jobInfo.setTriggerLastTime(DateUtil.date(1));
+            jobInfo.setTriggerNextTime(DateUtil.date(1));
             log.warn(">>>>>>>>>>> xxl-job, refreshNextValidTime fail for job: jobId={}, scheduleType={}, scheduleConf={}",
                     jobInfo.getId(), jobInfo.getScheduleType(), jobInfo.getScheduleConf());
         }
