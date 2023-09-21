@@ -1,5 +1,6 @@
 package com.xxl.job.admin.controller;
 
+import cn.hutool.core.date.DateUtil;
 import com.xxl.job.admin.common.pojo.vo.ChartInfoVO;
 import com.xxl.job.admin.common.pojo.vo.DashboardInfoVO;
 import com.xxl.job.admin.service.LogReportService;
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 
 /**
  * <p>
@@ -40,13 +41,13 @@ public class LogReportController extends AbstractController {
     @ApiOperation("查询调度报表")
     @GetMapping(value = "/trigger/{start}/{end}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "path", name = "start", dataTypeClass = Long.class, value = "开始时间", required = true),
-            @ApiImplicitParam(paramType = "path", name = "end", dataTypeClass = Long.class, value = "结束时间", required = true),
+            @ApiImplicitParam(paramType = "path", name = "start", dataTypeClass = String.class, value = "开始时间", required = true),
+            @ApiImplicitParam(paramType = "path", name = "end", dataTypeClass = String.class, value = "结束时间", required = true),
     })
-    public ResponseVO<ChartInfoVO> chartInfo(@PathVariable("start") @NotNull(message = "开始时间不能为空") Long start,
-                                             @PathVariable("end") @NotNull(message = "结束时间不能为空") Long end) {
+    public ResponseVO<ChartInfoVO> chartInfo(@PathVariable("start") @NotBlank(message = "开始时间不能为空") String start,
+                                             @PathVariable("end") @NotBlank(message = "结束时间不能为空") String end) {
         log.info("chartInfo {}, {}", start, end);
-        return ResponseVO.success(logReportService.chartInfo(start, end));
+        return ResponseVO.success(logReportService.chartInfo(DateUtil.parseDate(start), DateUtil.parseDate(end)));
     }
 
     @ApiOperation("查询运行报表")

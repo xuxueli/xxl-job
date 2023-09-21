@@ -22,7 +22,7 @@ public class LogReportVO implements Serializable {
      * 调度-时间
      */
     @ApiModelProperty(value = "调度-时间(天)")
-    private Long triggerDay;
+    private String triggerDay;
 
     /**
      * 运行中-日志数量

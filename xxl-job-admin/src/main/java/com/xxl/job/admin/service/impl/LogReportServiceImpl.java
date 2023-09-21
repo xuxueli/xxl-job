@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -56,27 +57,26 @@ public class LogReportServiceImpl extends BaseServiceImpl<LogReportMapper, LogRe
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
     public void syncLogReport(LogReportDTO logReportDTO) {
-        DateTime dateTime = DateUtil.beginOfDay(DateUtil.date(logReportDTO.getTriggerDay()));
-        LogReport logReport = logReportMapper.queryLogReportByDay(dateTime.getTime());
+        LogReport logReport = logReportMapper.queryLogReportByDay(DateUtil.formatDate(logReportDTO.getTriggerDay()));
         if (ObjectUtil.isEmpty(logReport)) logReport = new LogReport();
         BeanUtil.copyProperties(logReportDTO, logReport, QueryConstant.ID);
         this.saveOrUpdate(logReport);
     }
 
     @Override
-    public List<LogReportVO> queryLogReportByTriggerDay(Long from, Long to) {
-        return this.objectConversion(logReportMapper.queryLogReportByTriggerDay(from, to));
+    public List<LogReportVO> queryLogReportByTriggerDay(Date from, Date to) {
+        return this.objectConversion(logReportMapper.queryLogReportByTriggerDay(DateUtil.formatDate(from), DateUtil.formatDate(to)));
     }
 
     @Override
-    public LogReportVO queryLogReportByDay(Long day) {
-        return this.objectConversion(logReportMapper.queryLogReportByDay(day));
+    public LogReportVO queryLogReportByDay(Date day) {
+        return this.objectConversion(logReportMapper.queryLogReportByDay(DateUtil.formatDate(day)));
     }
 
     @Override
-    public ChartInfoVO chartInfo(Long start, Long end) {
-        start = DateUtil.beginOfDay(DateUtil.date(start)).getTime();
-        end = DateUtil.endOfDay(DateUtil.date(end)).getTime();
+    public ChartInfoVO chartInfo(Date start, Date end) {
+        start = DateUtil.beginOfDay(start);
+        end = DateUtil.endOfDay(end);
 
         List<String> triggerDayList = new ArrayList<>();
         List<Long> triggerDayCountRunningList = new ArrayList<>();
@@ -87,11 +87,11 @@ public class LogReportServiceImpl extends BaseServiceImpl<LogReportMapper, LogRe
         Long triggerCountSucTotal = NumberConstant.ZERO.longValue();
         Long triggerCountFailTotal = NumberConstant.ZERO.longValue();
 
-        List<LogReport> logReports = logReportMapper.queryLogReportByTriggerDay(start, end);
+        List<LogReport> logReports = logReportMapper.queryLogReportByTriggerDay(DateUtil.formatDate(start), DateUtil.formatDate(end));
 
         if (CollectionUtil.isNotEmpty(logReports)) {
             for (LogReport item : logReports) {
-                String day = DateUtil.formatDate(DateUtil.date(item.getTriggerDay()));
+                String day = DateUtil.formatDate(item.getTriggerDay());
                 Long triggerDayCountRunning = item.getRunningCount();
                 Long triggerDayCountSuc = item.getSucCount();
                 Long triggerDayCountFail = item.getFailCount();

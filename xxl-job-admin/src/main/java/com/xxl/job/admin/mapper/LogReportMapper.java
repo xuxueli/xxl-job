@@ -19,12 +19,12 @@ public interface LogReportMapper extends BaseMapper<LogReport> {
     /**
      * 根据出发时间查询日志报告
      *
-     * @param triggerDayFrom 触发开始时间, 天
-     * @param triggerDayTo   触发结束时间, 天
+     * @param triggerDayFrom 触发开始时间, 天 yyyy-MM-dd
+     * @param triggerDayTo   触发结束时间, 天 yyyy-MM-dd
      * @return {@link List}<{@link LogReport}>
      */
-    List<LogReport> queryLogReportByTriggerDay(@Param("triggerDayFrom") Long triggerDayFrom,
-                                          @Param("triggerDayTo") Long triggerDayTo);
+    List<LogReport> queryLogReportByTriggerDay(@Param("triggerDayFrom") String triggerDayFrom,
+                                          @Param("triggerDayTo") String triggerDayTo);
 
     /**
      * 查询所有
@@ -36,10 +36,10 @@ public interface LogReportMapper extends BaseMapper<LogReport> {
     /**
      * 查询日志报告根据一天
      *
-     * @param day 一天
+     * @param day 一天 yyyy-MM-dd
      * @return {@link LogReport}
      */
-    LogReport queryLogReportByDay(@Param("day") Long day);
+    LogReport queryLogReportByDay(@Param("day") String day);
 
     /**
      * 插入新

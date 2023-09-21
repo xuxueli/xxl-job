@@ -6,6 +6,7 @@ import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 日志报告DTO
@@ -24,7 +25,7 @@ public class LogReportDTO implements Serializable {
      */
     @NotBlank(message = "调度时间 不能为空")
     @ApiModelProperty(value = "调度-时间(天)", required = true)
-    private Long triggerDay;
+    private Date triggerDay;
 
     /**
      * 运行中-日志数量

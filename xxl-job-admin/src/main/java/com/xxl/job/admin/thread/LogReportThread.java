@@ -70,7 +70,7 @@ public class LogReportThread extends AbstractThreadListener implements Ordered {
 
                         // refresh log-report every minute
                         LogReportDTO logReportDTO = new LogReportDTO();
-                        logReportDTO.setTriggerDay(from.getTime());
+                        logReportDTO.setTriggerDay(from);
                         logReportDTO.setRunningCount(NumberConstant.ZERO.longValue());
                         logReportDTO.setSucCount(NumberConstant.ZERO.longValue());
                         logReportDTO.setFailCount(NumberConstant.ZERO.longValue());

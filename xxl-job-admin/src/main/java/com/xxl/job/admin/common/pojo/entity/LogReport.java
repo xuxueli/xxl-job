@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * <p>
@@ -27,7 +28,7 @@ public class LogReport implements Serializable {
     /**
      * 调度-时间
      */
-    private Long triggerDay;
+    private Date triggerDay;
 
     /**
      * 运行中-日志数量

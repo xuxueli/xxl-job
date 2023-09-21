@@ -79,8 +79,8 @@ function initDataTrendChart() {
  */
 function initScheduleTodayChart() {
 
-    var start = moment().startOf('day').format('x');
-    var end = moment().endOf('day').format('x');
+    var start = moment().startOf('day').format('YYYY-MM-DD');
+    var end = moment().endOf('day').format('YYYY-MM-DD');
 
     let dashboardInfo = http.getPath("log-report/trigger/" + start + "/" + end);
     if (!_.isEmpty(dashboardInfo)) {
@@ -103,8 +103,8 @@ function initScheduleTodayChart() {
 function initScheduleWeekChart() {
     var now = new Date();
     let weekOfDay = moment(now).format('E');
-    let startWeek = moment(now).subtract(weekOfDay-1, 'days').startOf('day').format("x");
-    let endWeek = moment(now).subtract(weekOfDay-7, 'days').endOf('day').format("x");
+    let startWeek = moment(now).subtract(weekOfDay-1, 'days').startOf('day').format('YYYY-MM-DD');
+    let endWeek = moment(now).subtract(weekOfDay-7, 'days').endOf('day').format('YYYY-MM-DD');
     let weekDashboardInfo = http.getPath("log-report/trigger/" + startWeek + "/" + endWeek);
     if (!_.isEmpty(weekDashboardInfo)) {
         var weekScheduleScaleChartOption = {
@@ -138,8 +138,8 @@ function initScheduleWeekChart() {
  */
 function initScheduleMonthChart() {
 
-    var start = moment().startOf('month').format('x');
-    var end = moment().endOf('month').format('x');
+    var start = moment().startOf('month').format('YYYY-MM-DD');
+    var end = moment().endOf('month').format('YYYY-MM-DD');
     let dashboardInfo = http.getPath("log-report/trigger/" + start + "/" + end);
     if (!_.isEmpty(dashboardInfo)) {
         var monthScheduleChartOption = {

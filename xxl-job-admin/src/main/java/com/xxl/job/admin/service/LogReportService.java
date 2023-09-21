@@ -7,6 +7,7 @@ import com.xxl.job.admin.common.pojo.vo.DashboardInfoVO;
 import com.xxl.job.admin.common.pojo.vo.LogReportVO;
 import com.xxl.job.admin.service.base.BaseService;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -33,7 +34,7 @@ public interface LogReportService extends BaseService<LogReport, LogReport, LogR
      * @param triggerDayTo   触发结束时间, 天
      * @return {@link List}<{@link LogReportVO}>
      */
-    List<LogReportVO> queryLogReportByTriggerDay(Long triggerDayFrom, Long triggerDayTo);
+    List<LogReportVO> queryLogReportByTriggerDay(Date triggerDayFrom, Date triggerDayTo);
 
     /**
      * 查询日志报告根据一天
@@ -41,7 +42,7 @@ public interface LogReportService extends BaseService<LogReport, LogReport, LogR
      * @param day 一天
      * @return {@link LogReportVO}
      */
-    LogReportVO queryLogReportByDay(Long day);
+    LogReportVO queryLogReportByDay(Date day);
 
     /**
      * 仪表盘信息
@@ -53,11 +54,11 @@ public interface LogReportService extends BaseService<LogReport, LogReport, LogR
     /**
      * 图表信息
      *
-     * @param start 开始日期
-     * @param end   结束日期
+     * @param start 开始日期 yyyy-MM-dd
+     * @param end   结束日期 yyyy-MM-dd
      * @return {@link ChartInfoVO}
      */
-    ChartInfoVO chartInfo(Long start, Long end);
+    ChartInfoVO chartInfo(Date start, Date end);
 
 
 

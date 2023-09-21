@@ -23,7 +23,7 @@
         SELECT
             <include refid="Base_Column_List" />
         FROM XXL_JOB_LOG_REPORT
-        WHERE TRIGGER_DAY between #{triggerDayFrom,jdbcType=BIGINT} and #{triggerDayTo,jdbcType=BIGINT}
+        WHERE TRIGGER_DAY between #{triggerDayFrom, jdbcType=VARCHAR} and #{triggerDayTo, jdbcType=VARCHAR}
         ORDER BY TRIGGER_DAY ASC
     </select>
 
@@ -39,7 +39,7 @@
         SELECT
             <include refid="Base_Column_List" />
         FROM XXL_JOB_LOG_REPORT
-        where TRIGGER_DAY = #{day,jdbcType=BIGINT}
+        where TRIGGER_DAY = #{day}
     </select>
 
     <insert id="insert">
