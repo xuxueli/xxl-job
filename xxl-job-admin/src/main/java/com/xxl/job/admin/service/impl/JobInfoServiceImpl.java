@@ -113,8 +113,8 @@ public class JobInfoServiceImpl extends BaseServiceImpl<JobInfoMapper, JobInfo, 
         jobInfo = new JobInfo();
         BeanUtil.copyProperties(jobInfoDTO, jobInfo);
         jobInfo.setChildJobId(childJobIds);
-        jobInfo.setCreatedTime(DateUtil.current());
-        jobInfo.setGlueUpdatedTime(DateUtil.current());
+        jobInfo.setCreatedTime(DateUtil.date());
+        jobInfo.setGlueUpdatedTime(DateUtil.date());
         this.saveOrUpdate(jobInfo);
         return this.objectConversion(jobInfo);
     }
@@ -133,18 +133,18 @@ public class JobInfoServiceImpl extends BaseServiceImpl<JobInfoMapper, JobInfo, 
 
         String childJobIds = getChildJobIds(jobInfoDTO.getChildJobIds());
 
-        Long nextTriggerTime = jobInfo.getTriggerNextTime();
+        Date nextTriggerTime = jobInfo.getTriggerNextTime();
         boolean scheduleDataNotChanged = StrUtil.equals(jobInfo.getScheduleType(), jobInfoDTO.getScheduleType())
                 && StrUtil.equals(jobInfo.getScheduleConf(), jobInfoDTO.getScheduleConf());
         if (ObjectUtil.equals(NumberConstant.ONE, jobInfo.getTriggerStatus()) && !scheduleDataNotChanged) {
             Date nextValidTime = CronUtils.generateNextValidTime(jobInfoDTO.getScheduleType(), jobInfoDTO.getScheduleConf(),
                     new Date(System.currentTimeMillis() + ScheduleThread.PRE_READ_MS));
             Assert.notNull(nextValidTime, ResponseEnum.THE_CRON_EXPRESSION_FORMAT_IS_INCORRECT.getMessage());
-            nextTriggerTime = nextValidTime.getTime();
+            nextTriggerTime = nextValidTime;
         }
 
         BeanUtil.copyProperties(jobInfoDTO, jobInfo);
-        jobInfo.setUpdatedTime(DateUtil.current());
+        jobInfo.setUpdatedTime(DateUtil.date());
         jobInfo.setTriggerNextTime(nextTriggerTime);
         jobInfo.setChildJobId(childJobIds);
 

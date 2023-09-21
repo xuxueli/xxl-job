@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * <p>
@@ -107,7 +108,7 @@ public class JobInfo implements Serializable {
     /**
      * GLUE更新时间
      */
-    private Long glueUpdatedTime;
+    private Date glueUpdatedTime;
 
     /**
      * 子任务ID，多个逗号分隔
@@ -122,12 +123,12 @@ public class JobInfo implements Serializable {
     /**
      * 上次调度时间
      */
-    private Long triggerLastTime;
+    private Date triggerLastTime;
 
     /**
      * 下次调度时间
      */
-    private Long triggerNextTime;
+    private Date triggerNextTime;
 
     /**
      * 创建人
@@ -137,7 +138,7 @@ public class JobInfo implements Serializable {
     /**
      * 创建时间
      */
-    private Long createdTime;
+    private Date createdTime;
 
     /**
      * 更新人
@@ -147,7 +148,7 @@ public class JobInfo implements Serializable {
     /**
      * 更新时间
      */
-    private Long updatedTime;
+    private Date updatedTime;
 
     /**
      * 描述

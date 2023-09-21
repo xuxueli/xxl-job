@@ -19,10 +19,10 @@ public interface RegistryMapper extends BaseMapper<Registry> {
     /**
      * 查询死注册表根据更新时间
      *
-     * @param nowTime 现在时间
+     * @param nowTime 现在时间 yyyy-MM-dd hh:mm:ss
      * @return {@link List}<{@link Long}> 注册主键
      */
-    List<Long> findDeadRegistryByUpdatedTime(@Param("nowTime") Long nowTime);
+    List<Long> findDeadRegistryByUpdatedTime(@Param("nowTime") String nowTime);
 
     /**
      * 删除死注册表根据id
@@ -34,10 +34,10 @@ public interface RegistryMapper extends BaseMapper<Registry> {
     /**
      * 查询所有
      *
-     * @param nowTime 现在时间
+     * @param nowTime 现在时间 yyyy-MM-dd hh:mm:ss
      * @return {@link List}<{@link Registry}>
      */
-    List<Registry> findAll(@Param("nowTime") Long nowTime);
+    List<Registry> findAll(@Param("nowTime") String nowTime);
 
     /**
      * 注册表更新
@@ -45,12 +45,12 @@ public interface RegistryMapper extends BaseMapper<Registry> {
      * @param registryGroup 注册组
      * @param registryKey   注册表键
      * @param registryValue 注册表值
-     * @param updateTime    更新时间
+     * @param updateTime    更新时间 yyyy-MM-dd hh:mm:ss
      */
     void updateRegistry(@Param("registryGroup") String registryGroup,
                               @Param("registryKey") String registryKey,
                               @Param("registryValue") String registryValue,
-                              @Param("updateTime") Long updateTime);
+                              @Param("updateTime") String updateTime);
 
     /**
      * 注册表删除

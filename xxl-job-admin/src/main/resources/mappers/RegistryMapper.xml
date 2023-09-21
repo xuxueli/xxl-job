@@ -23,7 +23,7 @@
         SELECT
             ID
         FROM XXL_JOB_REGISTRY
-        WHERE UPDATED_TIME <![CDATA[ < ]]> #{nowTime,jdbcType=BIGINT}
+        WHERE UPDATED_TIME <![CDATA[ < ]]> #{nowTime,jdbcType=VARCHAR}
     </select>
 
     <delete id="deleteDeadRegistryByIds">
@@ -38,12 +38,12 @@
         SELECT
             <include refid="Base_Column_List" />
         FROM XXL_JOB_REGISTRY
-        WHERE UPDATED_TIME <![CDATA[ > ]]> #{nowTime,jdbcType=BIGINT}
+        WHERE UPDATED_TIME <![CDATA[ > ]]> #{nowTime,jdbcType=VARCHAR}
     </select>
 
     <update id="updateRegistry" >
         UPDATE XXL_JOB_REGISTRY
-        SET UPDATED_TIME = #{updateTime,jdbcType=BIGINT}
+        SET UPDATED_TIME = #{updateTime,jdbcType=VARCHAR}
         WHERE REGISTRY_GROUP = #{registryGroup,jdbcType=VARCHAR}
         AND REGISTRY_KEY = #{registryKey,jdbcType=VARCHAR}
         AND REGISTRY_VALUE = #{registryValue,jdbcType=VARCHAR}

@@ -3,6 +3,7 @@ package com.xxl.job.admin.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.xxl.job.admin.common.pojo.entity.Registry;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -21,7 +22,7 @@ public interface RegistryService extends IService<Registry> {
      * @param nowTime 现在时间
      * @return {@link List}<{@link Long}>
      */
-    List<Long> findDeadRegistryByUpdatedTime(Long nowTime);
+    List<Long> findDeadRegistryByUpdatedTime(Date nowTime);
 
     /**
      * 删除死注册表根据id
@@ -36,7 +37,7 @@ public interface RegistryService extends IService<Registry> {
      * @param nowTime 现在时间
      * @return {@link List}<{@link Registry}>
      */
-    List<Registry> findAll(Long nowTime);
+    List<Registry> findAll(Date nowTime);
 
     /**
      * 注册表更新
@@ -46,7 +47,7 @@ public interface RegistryService extends IService<Registry> {
      * @param registryValue 注册表值
      * @param updateTime    更新时间
      */
-    void updateRegistry(String registryGroup, String registryKey, String registryValue, Long updateTime);
+    void updateRegistry(String registryGroup, String registryKey, String registryValue, Date updateTime);
 
     /**
      * 注册表删除

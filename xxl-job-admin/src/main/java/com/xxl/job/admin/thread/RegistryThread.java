@@ -80,7 +80,7 @@ public class RegistryThread extends AbstractThreadListener implements Ordered {
 
 							// remove dead address (admin/executor)
 							List<Long> ids = registryService.findDeadRegistryByUpdatedTime(DateUtil.offsetSecond(DateUtil.date(),
-									RegistryConfig.DEAD_TIMEOUT.getValue() * NumberConstant.A_NEGATIVE).getTime());
+									RegistryConfig.DEAD_TIMEOUT.getValue() * NumberConstant.A_NEGATIVE));
 							if (CollectionUtil.isNotEmpty(ids)) {
 								registryService.deleteDeadRegistryByIds(ids);
 							}
@@ -89,7 +89,7 @@ public class RegistryThread extends AbstractThreadListener implements Ordered {
 							HashMap<String, List<String>> appAddressMap = MapUtil.newHashMap();
 
 							List<Registry> registries = registryService.findAll(DateUtil.offsetSecond(DateUtil.date(),
-									RegistryConfig.DEAD_TIMEOUT.getValue() * NumberConstant.A_NEGATIVE).getTime());
+									RegistryConfig.DEAD_TIMEOUT.getValue() * NumberConstant.A_NEGATIVE));
 							if (CollectionUtil.isNotEmpty(registries)) {
 								for (Registry registry: registries) {
 									if (RegistryType.EXECUTOR.name().equals(registry.getRegistryGroup())) {

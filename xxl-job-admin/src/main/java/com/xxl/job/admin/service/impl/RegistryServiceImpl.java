@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -30,8 +31,8 @@ public class RegistryServiceImpl extends ServiceImpl<RegistryMapper, Registry> i
     private RegistryMapper registryMapper;
 
     @Override
-    public List<Long> findDeadRegistryByUpdatedTime(Long nowTime) {
-        return registryMapper.findDeadRegistryByUpdatedTime(nowTime);
+    public List<Long> findDeadRegistryByUpdatedTime(Date nowTime) {
+        return registryMapper.findDeadRegistryByUpdatedTime(DateUtil.formatDateTime(nowTime));
     }
 
     @Override
@@ -42,14 +43,14 @@ public class RegistryServiceImpl extends ServiceImpl<RegistryMapper, Registry> i
     }
 
     @Override
-    public List<Registry> findAll(Long nowTime) {
-        return registryMapper.findAll(nowTime);
+    public List<Registry> findAll(Date nowTime) {
+        return registryMapper.findAll(DateUtil.formatDateTime(nowTime));
     }
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    public void updateRegistry(String registryGroup, String registryKey, String registryValue, Long updateTime) {
-        registryMapper.updateRegistry(registryGroup, registryKey, registryValue, updateTime);
+    public void updateRegistry(String registryGroup, String registryKey, String registryValue, Date updateTime) {
+        registryMapper.updateRegistry(registryGroup, registryKey, registryValue, DateUtil.formatDateTime(updateTime));
     }
 
     @Override

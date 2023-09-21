@@ -137,7 +137,7 @@ public class JobGroupServiceImpl extends BaseServiceImpl<JobGroupMapper, JobGrou
                     ResponseEnum.THE_ACTUATOR_ADDRESS_CANNOT_BE_EMPTY.getMessage());
         } else {
             List<Registry> registries = registryService.findAll(DateUtil.offsetSecond(DateUtil.date(),
-                    RegistryConfig.DEAD_TIMEOUT.getValue() * NumberConstant.A_NEGATIVE).getTime());
+                    RegistryConfig.DEAD_TIMEOUT.getValue() * NumberConstant.A_NEGATIVE));
             if (CollectionUtil.isNotEmpty(registries)) {
                 List<String> registryValues = registries.stream()
                         .filter(a -> RegistryType.EXECUTOR.name().equals(a.getRegistryGroup())
