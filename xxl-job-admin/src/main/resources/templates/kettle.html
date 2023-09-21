@@ -37,56 +37,39 @@
             width: 150px !important;
         }
 
-        .upload-file {
-            margin: 0 auto;
-            /*width: 100%;*/
-            overflow: hidden;
-            padding: 5px 0;
-        }
-
-        .upload-file-line {
+        .upload-file{
             position: relative;
-            margin: 0 auto;
-            width: 300px;
-            text-align: left
+            width: 280px;
+            padding: 10px 15px;
+            border: 1px solid rgb(119, 154, 80);
+            border-radius: 5px;
+            background-color: rgb(66, 215, 142);
+            color: #333333;
+            font-size: 14px;
+            text-align: center;
+            overflow: hidden;
         }
 
-        .upload-file-line span.upload-file-span {
-            float: left;
-            padding-top: 2px;
+        .upload-file span{ //单行显示
+        text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
         }
 
-        .file {
-            position: absolute;
-            left: 0;
-            width: 250px;
-            top: 0;
-            height: 28px;
-            filter: alpha(opacity=0);
-            opacity: 0;
-            cursor: pointer
+        .upload-file:hover{ //简单的hover效果
+        font-size: 15px;
+            border-color: rgb(39, 226, 81);
         }
 
-        .file_pre {
-            float: left;
-            margin-left: 8px;
-            z-index: 1;
-            width: 66px;
-            height: 28px;
-            line-height: 28px;
-            background: url("images/liulan.gif") no-repeat 0 0;
-            text-indent: -9999px;
-            cursor: pointer
-        }
-
-        .input-style {
-            border: 1px solid #BEBEBE;
-            width: 170px;
-            float: left;
-            height: 23px;
-            line-height: 23px;
-            background: #FFF;
-            z-index: 99
+        .upload-file input[type='file']{
+            height: 100%;
+            width: 100%;
+            position: absolute; //设置为绝对定位，不会影响到其余元素
+        top: 0;
+            right: 0;
+            opacity: 0;   //透明度为0
+        filter: alpha(opacity=0);
+            cursor: pointer;
         }
 
     </style>
@@ -192,14 +175,9 @@
                 </label>
                 <div class="layui-input-inline" style="width: auto !important;">
                     <div class="upload-file" id="add-files">
-                        <div class="upload-file-line">
-                            <span class="upload-file-span">
-                                <input name="file" type="text" id="viewfile" required lay-verify="required|file" disabled="disabled" class="input-style"/>
-                                <input type="file" style="display: none;" onchange="finishSelect('model-upload', 'viewfile')" class="file"
-                                       id="model-upload" accept=".ktr,.zip"/>
-                            </span>
-                            <label for="model-upload" class="file_pre">浏览...</label>
-                        </div>
+                        <input type="file" name="file" id="add-file" class="input-file"
+                               required lay-verify="required|file" onchange="finishSelect('add-file', 'add-tip')" accept=".ktr,.zip">
+                        <span class="tip" id="add-tip">点击上传文件</span>
                     </div>
                 </div>
             </div>
@@ -208,14 +186,11 @@
                 <label for="for-add-guide-kjb" class="layui-form-label">
                     <span class="x-red">*</span>kjb引导文件
                 </label>
-                <div class="upload-file" id="for-add-guide-kjb">
-                    <div class="upload-file-line">
-                            <span class="upload-file-span">
-                                <input name="guideKjb" type="text" id="viewGuideKjbFile" disabled="disabled" class="input-style"/>
-                                <input type="file" style="display: none;" onchange="finishSelect('guide-kjb-upload', 'viewGuideKjbFile')"
-                                       class="file" id="guide-kjb-upload" accept=".kjb"/>
-                            </span>
-                        <label for="guide-kjb-upload" class="file_pre">请选择引导文件</label>
+                <div class="layui-input-inline" style="width: auto !important;">
+                    <div class="upload-file" id="for-add-guide-kjb">
+                        <input type="file" id="add-guide-kjb" name="guideKjb" class="input-file"
+                               onchange="finishSelect('add-guide-kjb', 'add-guide-kjb-tip')" accept=".kjb">
+                        <span class="tip" id="add-guide-kjb-tip">请选择引导文件</span>
                     </div>
                 </div>
             </div>
@@ -294,14 +269,9 @@
                 </label>
                 <div class="layui-input-inline" style="width: auto !important;">
                     <div class="upload-file" id="update-files">
-                        <div class="upload-file-line">
-                            <span class="upload-file-span">
-                                <input name="file" type="text" required lay-verify="required|file" id="update-view-file" disabled="disabled" class="input-style"/>
-                                <input type="file" style="display: none;" onchange="finishSelect('update-model-upload', 'update-view-file')" class="file"
-                                       id="update-model-upload" accept=".ktr,.zip"/>
-                            </span>
-                            <label for="update-model-upload" class="file_pre">浏览</label>
-                        </div>
+                        <input type="file" name="file" id="update-file" class="input-file"
+                               required lay-verify="required|file" onchange="finishSelect('update-file', 'update-tip')" accept=".ktr,.zip">
+                        <span class="tip" id="update-tip">点击上传文件</span>
                     </div>
                 </div>
             </div>
@@ -310,14 +280,12 @@
                 <label for="for-update-guide-kjb" class="layui-form-label">
                     <span class="x-red">*</span>kjb引导文件
                 </label>
-                <div class="upload-file" id="for-update-guide-kjb">
-                    <div class="upload-file-line">
-                            <span class="upload-file-span">
-                                <input name="guideKjb" type="text" id="update-view-guide-kjb-file" disabled="disabled" class="input-style"/>
-                                <input type="file" style="display: none;" onchange="finishSelect('update-guide-kjb-upload', 'update-view-guide-kjb-file')"
-                                       class="file" id="update-guide-kjb-upload" accept=".kjb"/>
-                            </span>
-                        <label for="update-guide-kjb-upload" class="file_pre">请选择引导文件</label>
+
+                <div class="layui-input-inline" id="for-update-guide-kjb" style="width: auto !important;">
+                    <div class="upload-file" id="guideKjb-files">
+                        <input type="file" name="guideKjb" id="guideKjb-file" class="input-file"
+                               onchange="finishSelect('guideKjb-file', 'guideKjb-tip')" accept=".kjb">
+                        <span class="tip" id="guideKjb-tip">请选择引导文件</span>
                     </div>
                 </div>
             </div>

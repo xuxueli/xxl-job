@@ -261,9 +261,10 @@ function add() {
         for(let key in field) {
             formData.append(key, field[key]);
         }
-        formData.set("file", document.getElementById('model-upload').files[0]);
+        formData.set("file", document.getElementById('add-file').files[0]);
         if (_.eq("KJB", field.type)) {
-            var kjbFile = document.getElementById('guide-kjb-upload').files[0]
+            var kjbFile = document.getElementById('add-guide-kjb').files[0];
+
             if (_.isNil(kjbFile) || _.isNull(kjbFile)) {
                 message.warning("KJB引导文件不能为空");
                 return false;
@@ -298,8 +299,8 @@ function update(data) {
             form.val("layui-update-kettle-form", {
                 "name": data.name,
                 "type": data.type,
-                "file": data.fileName,
-                "guideKjb": data.guideKjb,
+                // "file": data.fileName,
+                // "guideKjb": data.guideKjb,
                 "logLevel": data.logLevel,
                 "status": data.status,
             });
@@ -326,13 +327,13 @@ function update(data) {
         }
 
         formData.delete("file");
-        var file = document.getElementById('update-model-upload').files[0];
+        var file = document.getElementById('update-file').files[0];
         if (!_.isNil(file) && !_.isNull(file)) {
             formData.append("file", file);
         }
 
         if (_.eq("KJB", field.type)) {
-            var kjbFile = document.getElementById('update-guide-kjb-upload').files[0]
+            var kjbFile = document.getElementById('guideKjb-file').files[0]
             if (_.isNil(kjbFile) || _.isNull(kjbFile)) {
                 message.warning("KJB引导文件不能为空");
                 return false;
@@ -350,25 +351,14 @@ function update(data) {
     });
 }
 
-function finishSelect(upload, viewFile) {
-    console.log(upload, viewFile);
-    var content = '', files = [];
-    if (document.getElementById(upload).files === undefined) {
-        files[0] = {
-            'name': document.getElementById(upload) && document.getElementById(upload).value
-        };
-    } else {
-        files = document.getElementById(upload).files;
-    }
+function finishSelect(file, tip) {
+    var tipSelector = document.getElementById(tip);
+    var fileInput = document.getElementById(file).files;
 
-    for (var i = 0; i < files.length; i++) {
-        content += files[i].name.split("\\").pop() + ', ';
-    }
-
-    if (content !== '') {
-        document.getElementById(viewFile).value = content.replace(/\, $/g, '');
-    } else {
-        document.getElementById(viewFile).value = '';
+    if(fileInput.length === 1){
+        tipSelector.textContent = fileInput[0].name.replace(/\, $/g, '');
+    }else {
+        tipSelector.textContent = '已选择 ' + fileInput.length + ' 个文件';
     }
 }
 

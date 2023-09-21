@@ -89,6 +89,7 @@ public class KettleInfoServiceImpl extends BaseServiceImpl<KettleInfoMapper, Ket
 
         KettleInfo kettleInfo = new KettleInfo();
         BeanUtil.copyProperties(kettleInfoDTO, kettleInfo);
+        kettleInfo.setGuideKjb(FileUtil.getName(kettleInfoDTO.getGuideKjb()));
 
         MultipartFile file = kettleInfoDTO.getFile();
         if (ObjectUtil.isNotNull(file) && !file.isEmpty()) {
