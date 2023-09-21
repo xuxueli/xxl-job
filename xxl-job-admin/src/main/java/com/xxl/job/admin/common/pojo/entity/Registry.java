@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * <p>
@@ -42,7 +43,7 @@ public class Registry implements Serializable {
     /**
      * 修改时间
      */
-    private Long updatedTime;
+    private Date updatedTime;
 
 
 }

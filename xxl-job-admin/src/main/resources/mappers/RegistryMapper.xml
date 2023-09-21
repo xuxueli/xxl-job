@@ -64,4 +64,14 @@
         AND REGISTRY_KEY = #{registryKey,jdbcType=VARCHAR}
         AND REGISTRY_VALUE = #{registryValue,jdbcType=VARCHAR}
     </select>
+    <insert id="insert">
+        REPLACE INTO XXL_JOB_REGISTRY
+        (`ID`,
+        `REGISTRY_GROUP`,
+        `REGISTRY_KEY`,
+        `REGISTRY_VALUE`,
+        `UPDATED_TIME`)
+        values (#{id}, #{registryGroup}, #{registryKey},
+        #{registryValue}, #{updatedTime})
+    </insert>
 </mapper>

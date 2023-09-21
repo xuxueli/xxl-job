@@ -75,4 +75,13 @@ public interface RegistryMapper extends BaseMapper<Registry> {
                         @Param("registryKey") String registryKey,
                         @Param("registryValue") String registryValue);
 
+    /**
+     * 插入新
+     *
+     * @param registry 注册信息
+     */
+    @Override
+    int insert(Registry registry);
+
+
 }

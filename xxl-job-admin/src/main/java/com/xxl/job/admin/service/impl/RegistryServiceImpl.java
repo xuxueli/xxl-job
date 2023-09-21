@@ -66,7 +66,7 @@ public class RegistryServiceImpl extends ServiceImpl<RegistryMapper, Registry> i
         registry.setRegistryGroup(registryGroup);
         registry.setRegistryKey(registryKey);
         registry.setRegistryValue(registryValue);
-        registry.setUpdatedTime(DateUtil.current());
+        registry.setUpdatedTime(DateUtil.date());
         this.saveOrUpdate(registry);
     }
 }
