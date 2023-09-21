@@ -79,11 +79,11 @@
             <if test="status != null">
                 and status = #{status,jdbcType=INTEGER}
             </if>
-            <if test="startTime != null">
-                and created_time <![CDATA[ >= ]]> #{startTime,jdbcType=BIGINT}
+            <if test="startTime != null and startTime != ''">
+                and created_time <![CDATA[ >= ]]> #{startTime,jdbcType=VARCHAR}
             </if>
-            <if test="endTime != null">
-                and created_time <![CDATA[ <= ]]> #{endTime,jdbcType=BIGINT}
+            <if test="endTime != null and endTime != ''">
+                and created_time <![CDATA[ <= ]]> #{endTime,jdbcType=VARCHAR}
             </if>
         </where>
     </select>

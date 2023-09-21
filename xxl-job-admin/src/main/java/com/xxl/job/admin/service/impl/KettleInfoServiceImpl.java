@@ -111,7 +111,7 @@ public class KettleInfoServiceImpl extends BaseServiceImpl<KettleInfoMapper, Ket
         kettleInfo.setVersion(version);
         kettleInfo.setSeries(series);
         kettleInfo.setCode(IdUtil.fastSimpleUUID());
-        kettleInfo.setCreatedTime(DateUtil.current());
+        kettleInfo.setCreatedTime(DateUtil.date());
         this.save(kettleInfo);
     }
 
@@ -121,7 +121,7 @@ public class KettleInfoServiceImpl extends BaseServiceImpl<KettleInfoMapper, Ket
         Assert.notNull(id, ResponseEnum.THE_ID_CANNOT_BE_EMPTY.getMessage());
         KettleInfo kettleInfo = this.getById(id);
         Assert.notNull(kettleInfo, ResponseEnum.THE_KETTLE_DOES_NOT_EXIST.getMessage());
-        kettleInfo.setUpdatedTime(DateUtil.current());
+        kettleInfo.setUpdatedTime(DateUtil.date());
         kettleInfo.setUpdatedUser(AuthUtils.getCurrentUser());
         kettleInfo.setStatus(status);
         this.updateById(kettleInfo);

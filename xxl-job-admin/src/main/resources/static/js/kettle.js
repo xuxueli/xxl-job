@@ -71,10 +71,7 @@ function createTable(records) {
                 {field: 'guideKjb', title: 'kjb引导文件'},
                 // {field: 'createdUser', width: 100 ,title: '添加人'},
                 // {
-                //     field: 'createdTime', title: '添加时间', sort: true,
-                //     templet: function (row) {
-                //         return ts2Time(row.createdTime)
-                //     }
+                //     field: 'createdTime', title: '添加时间'
                 // },
                 {
                     fixed: 'right', width: 240, title: '操作', toolbar: '<div class="td-manage">\n' +
@@ -166,12 +163,8 @@ function pageSearch(currentPage, pageSize) {
     let status = $("#select-status").find("option:selected").val();
     let logLevel = $("#select-log-level").find("option:selected").val();
     let name = $("#name").val();
-
-    let start = date2Timestamp($("#start").val());
-    let end = date2Timestamp($("#end").val());
-    if (!_.isNull(end)) {
-        end = end + 999;
-    }
+    let start = $("#start").val();
+    let end = $("#end").val();
     let pageDTO = {
         'currentPage': currentPage,
         'pageSize': pageSize,
