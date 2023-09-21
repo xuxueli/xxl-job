@@ -13,8 +13,6 @@ $(function () {
             return r[2];
         return null; // 返回参数值
     }
-
-
 })
 
 /**
@@ -27,9 +25,9 @@ function init() {
             cascadeJobInfo('jobGroup-selected', "#key-jobIds");
         })
 
-    initDate('#start', ts2Time(new Date(new Date().setHours(0, 0, 0, 0)).valueOf()))
+    initDate('#start', moment().startOf('days').format('YYYY-MM-DD HH:mm:ss'))
         .then(res => {
-            initDate('#end', ts2Time(new Date(new Date().setHours(23, 59, 59, 999)).valueOf()))
+            initDate('#end', moment().endOf('days').format('YYYY-MM-DD HH:mm:ss'))
                 .then(res => search());
         })
 }
@@ -53,9 +51,8 @@ function pageSearch(currentPage, pageSize) {
     let groupId = $("#select-jobGroup").find("option:selected").val();
     let status = $("#select-status").find("option:selected").val();
     let jobInfoIds = multiSelector.getValue();
-
-    let start = date2Timestamp($("#start").val());
-    let end = date2Timestamp($("#end").val()) + 999;
+    let start = $("#start").val();
+    let end = $("#end").val();
 
     let pageDTO = {
         'currentPage': currentPage,
@@ -100,11 +97,9 @@ function createTable(records) {
                     }
                 },
                 {
+                    field: "triggerTime",
                     title: '调度时间',
                     width: 180,
-                    templet: function (row) {
-                        return ts2Time(row.triggerTime);
-                    }
                 },
                 {
                     title: '调度结果',
@@ -130,11 +125,9 @@ function createTable(records) {
                     }
                 },
                 {
+                    field: "handleTime",
                     title: '执行时间',
                     width: 180,
-                    templet: function (row) {
-                        return ts2Time(row.handleTime);
-                    }
                 },
                 {
                     title: '执行结果',
@@ -220,7 +213,7 @@ function manualClearLog() {
     let form = layui.form;
     layer.open({
         type: 1,
-        area: [($(window).width() * 0.7) + 'px', ($(window).height() - 500) + 'px'],
+        area: [($(window).width() * 0.7) + 'px', ($(window).height() - 200) + 'px'],
         fix: false, //不固定
         shadeClose: true,
         shade: 0.4,
@@ -359,8 +352,8 @@ function clean() {
     multiSelector.update([]);
     $("#start").val('');
     $("#end").val('');
-    initDate('#start', ts2Time(new Date(new Date().setHours(0, 0, 0, 0)).valueOf()));
-    initDate('#end', ts2Time(new Date(new Date().setHours(23, 59, 59, 999)).valueOf()));
+    initDate('#start', moment().startOf('days').format('YYYY-MM-DD HH:mm:ss'));
+    initDate('#end', moment().endOf('days').format('YYYY-MM-DD HH:mm:ss'));
 
     layui.use('form', function () {
         var form = layui.form;

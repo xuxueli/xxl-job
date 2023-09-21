@@ -9,6 +9,8 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.xxl.job.admin.common.constants.NumberConstant;
 import com.xxl.job.admin.common.enums.TriggerTypeEnum;
+import com.xxl.job.admin.common.pojo.dao.HandleLogDAO;
+import com.xxl.job.admin.common.pojo.dao.TriggerLogDAO;
 import com.xxl.job.admin.common.pojo.dto.*;
 import com.xxl.job.admin.common.pojo.entity.JobLog;
 import com.xxl.job.admin.common.pojo.query.JobLogQuery;
@@ -81,8 +83,8 @@ public class JobLogServiceImpl extends BaseServiceImpl<JobLogMapper, JobLog, Job
     }
 
     @Override
-    public List<Long> queryLostJobIds(Long loseTime) {
-        return jobLogMapper.queryLostJobIds(loseTime);
+    public List<Long> queryLostJobIds(Date loseTime) {
+        return jobLogMapper.queryLostJobIds(DateUtil.formatDateTime(loseTime));
     }
 
     @Override
@@ -100,19 +102,28 @@ public class JobLogServiceImpl extends BaseServiceImpl<JobLogMapper, JobLog, Job
     @Transactional(rollbackFor = RuntimeException.class)
     public void updateTriggerInfo(TriggerLogDTO triggerLogDTO) {
         JobLog jobLog = this.getById(triggerLogDTO.getId());
-        if (ObjectUtil.isEmpty(jobLog)) return;
-        BeanUtil.copyProperties(triggerLogDTO, jobLog);
-        jobLogMapper.updateTriggerInfo(jobLog);
+        if (ObjectUtil.isNotNull(jobLog)) {
+            CopyOptions copyOptions = CopyOptions.create();
+            copyOptions.setIgnoreError(Boolean.TRUE);
+            TriggerLogDAO triggerLogDAO = new TriggerLogDAO();
+            BeanUtil.copyProperties(triggerLogDTO, triggerLogDAO, copyOptions);
+            triggerLogDAO.setTriggerTime(DateUtil.formatDateTime(DateUtil.date(triggerLogDTO.getTriggerTime())));
+            jobLogMapper.updateTriggerInfo(triggerLogDAO);
+        }
     }
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
     public void updateHandleInfo(HandleLogDTO handleLogDTO) {
         JobLog jobLog = this.getById(handleLogDTO.getId());
-        if (ObjectUtil.isEmpty(jobLog)) return;
-        BeanUtil.copyProperties(handleLogDTO, jobLog);
-        jobLog.setHandleMessage(finishJob(jobLog));
-        jobLogMapper.updateHandleInfo(jobLog);
+        if (ObjectUtil.isNotNull(jobLog)) {
+            CopyOptions copyOptions = CopyOptions.create();
+            copyOptions.setIgnoreError(Boolean.TRUE);
+            HandleLogDAO handleLogDAO = new HandleLogDAO();
+            BeanUtil.copyProperties(handleLogDTO, handleLogDAO, copyOptions);
+            handleLogDAO.setHandleTime(DateUtil.formatDateTime(DateUtil.date(handleLogDTO.getHandleTime())));
+            jobLogMapper.updateHandleInfo(handleLogDAO);
+        }
     }
 
     @Override
@@ -130,16 +141,16 @@ public class JobLogServiceImpl extends BaseServiceImpl<JobLogMapper, JobLog, Job
     }
 
     @Override
-    public JobLogReportVO queryLogReportByTriggerTime(Long from, Long to) {
-        return BeanUtil.copyProperties(jobLogMapper.queryLogReportByTriggerTime(from, to), JobLogReportVO.class);
+    public JobLogReportVO queryLogReportByTriggerTime(Date from, Date to) {
+        return BeanUtil.copyProperties(jobLogMapper.queryLogReportByTriggerTime(DateUtil.formatDateTime(from), DateUtil.formatDateTime(to)), JobLogReportVO.class);
     }
 
     @Override
-    public List<Long> queryClearLogIds(Long groupId,List<Long> jobIds, Long clearBeforeTime, Long clearBeforeNum, Integer pageSize) {
+    public List<Long> queryClearLogIds(Long groupId,List<Long> jobIds, Date clearBeforeTime, Long clearBeforeNum, Integer pageSize) {
         if (CollectionUtil.isNotEmpty(jobIds) && jobIds.stream().anyMatch(a -> ObjectUtil.equals(NumberConstant.A_NEGATIVE.longValue(), a))) {
             jobIds.clear();
         }
-        return jobLogMapper.queryClearLogIds(groupId, jobIds, clearBeforeTime, clearBeforeNum, pageSize);
+        return jobLogMapper.queryClearLogIds(groupId, jobIds, DateUtil.formatDateTime(clearBeforeTime), clearBeforeNum, pageSize);
     }
 
     @Override
@@ -157,7 +168,7 @@ public class JobLogServiceImpl extends BaseServiceImpl<JobLogMapper, JobLog, Job
     @Override
     public LogResult catJobLog(Long logId, Integer fromLineNum) {
         JobLog jobLog = this.getById(logId);
-        LogParam logParam = new LogParam(jobLog.getTriggerTime(), logId, fromLineNum);
+        LogParam logParam = new LogParam(jobLog.getTriggerTime().getTime(), logId, fromLineNum);
         LogResult logResult = executorClient.log(jobLog.getExecutorAddress(), logParam);
         if (ObjectUtil.isNotNull(logResult)
                 && logResult.getFromLineNum() > logResult.getToLineNum() && jobLog.getHandleCode() > 0) {
@@ -177,7 +188,7 @@ public class JobLogServiceImpl extends BaseServiceImpl<JobLogMapper, JobLog, Job
                    jobLog.setHandleCode(ResponseEnum.ERROR.getCode());
                    jobLog.setHandleMessage("人为操作，主动终止 :" + responseVO.getMessage());
                    jobLog.setHandleMessage(finishJob(jobLog));
-                   jobLog.setHandleTime(DateUtil.current());
+                   jobLog.setHandleTime(DateUtil.date());
                    this.saveOrUpdate(jobLog);
                }
            }catch (Exception e) {
@@ -225,8 +236,7 @@ public class JobLogServiceImpl extends BaseServiceImpl<JobLogMapper, JobLog, Job
 
         List<Long> logIds = null;
         do {
-            logIds = this.queryClearLogIds(jobLogCleanDTO.getGroupId(), jobLogCleanDTO.getJobIds(),
-                    clearBeforeTime.getTime(), Convert.toLong(clearBeforeNum), 1000);
+            logIds = this.queryClearLogIds(jobLogCleanDTO.getGroupId(), jobLogCleanDTO.getJobIds(), clearBeforeTime, Convert.toLong(clearBeforeNum), 1000);
             if (CollectionUtil.isNotEmpty(logIds)) {
                 clearLog(logIds);
             }

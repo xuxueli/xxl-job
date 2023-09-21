@@ -42,7 +42,7 @@
     <update id="updateTriggerInfo">
         UPDATE XXL_JOB_LOG
         SET
-        TRIGGER_TIME = #{triggerTime,jdbcType=BIGINT},
+        TRIGGER_TIME = #{triggerTime,jdbcType=VARCHAR},
         TRIGGER_CODE= #{triggerCode,jdbcType=INTEGER},
         TRIGGER_MESSAGE= #{triggerMessage,jdbcType=VARCHAR},
         EXECUTOR_ADDRESS= #{executorAddress,jdbcType=VARCHAR},
@@ -56,7 +56,7 @@
     <update id="updateHandleInfo">
         UPDATE XXL_JOB_LOG
         SET
-        HANDLE_TIME= #{handleTime,jdbcType=BIGINT},
+        HANDLE_TIME= #{handleTime,jdbcType=VARCHAR},
         HANDLE_CODE= #{handleCode,jdbcType=INTEGER},
         HANDLE_MESSAGE= #{handleMessage,jdbcType=VARCHAR}
         WHERE ID= #{id,jdbcType=BIGINT}
@@ -74,7 +74,7 @@
             SUM( CASE WHEN HANDLE_CODE = 0 THEN 1 ELSE 0 END ) AS trigger_day_count_suc,
             SUM( CASE WHEN ( trigger_code != 0 OR handle_code != 0 ) THEN 1 ELSE 0 END ) AS trigger_day_count_fail
         FROM XXL_JOB_LOG
-        WHERE TRIGGER_TIME BETWEEN #{from,jdbcType=BIGINT} and #{to,jdbcType=BIGINT}
+        WHERE TRIGGER_TIME BETWEEN #{from,jdbcType=VARCHAR} and #{to,jdbcType=VARCHAR}
     </select>
 
     <select id="queryClearLogIds" resultType="java.lang.Long">
@@ -153,7 +153,7 @@
             t.EXECUTOR_ADDRESS = t2.REGISTRY_VALUE
             and t.TRIGGER_CODE = 0
             AND t.HANDLE_CODE = 0
-            AND t.TRIGGER_TIME <![CDATA[ <= ]]> #{loseTime,jdbcType=BIGINT}
+            AND t.TRIGGER_TIME <![CDATA[ <= ]]> #{loseTime,jdbcType=VARCHAR}
             AND t2.ID IS NULL
     </select>
 
@@ -171,11 +171,11 @@
                     #{item,jdbcType=BIGINT}
                 </foreach>
             </if>
-            <if test="startTime != null">
-                AND TRIGGER_TIME <![CDATA[ >= ]]> #{startTime,jdbcType=BIGINT}
+            <if test="startTime != null and startTime != ''">
+                AND TRIGGER_TIME <![CDATA[ >= ]]> #{startTime,jdbcType=VARCHAR}
             </if>
-            <if test="endTime != null">
-                AND TRIGGER_TIME <![CDATA[ <= ]]> #{endTime,jdbcType=BIGINT}
+            <if test="endTime != null and endTime != ''">
+                AND TRIGGER_TIME <![CDATA[ <= ]]> #{endTime,jdbcType=VARCHAR}
             </if>
             <if test="status != null">
                 <if test="status == 1" >

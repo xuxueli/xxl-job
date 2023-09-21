@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * <p>
@@ -62,7 +63,7 @@ public class JobLog implements Serializable {
     /**
      * 调度-时间
      */
-    private Long triggerTime;
+    private Date triggerTime;
 
     /**
      * 调度-结果 (-1: 无效, 0:成功, 其他:失败)
@@ -77,7 +78,7 @@ public class JobLog implements Serializable {
     /**
      * 执行-时间
      */
-    private Long handleTime;
+    private Date handleTime;
 
     /**
      * 执行-状态(-1: 运行中,0:成功,其他:失败)

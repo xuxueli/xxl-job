@@ -11,6 +11,7 @@ import com.xxl.job.admin.service.base.BaseService;
 import com.xxl.job.core.pojo.vo.LogResult;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -29,7 +30,7 @@ public interface JobLogService extends BaseService<JobLog, JobLog, JobLogVO> {
      * @param loseTime 浪费时间
      * @return {@link List}<{@link Long}>
      */
-    List<Long> queryLostJobIds(Long loseTime);
+    List<Long> queryLostJobIds(Date loseTime);
 
     /**
      * 同步任务日志
@@ -78,8 +79,7 @@ public interface JobLogService extends BaseService<JobLog, JobLog, JobLogVO> {
      * @param to   结束时间
      * @return {@link JobLogReportVO}
      */
-    JobLogReportVO queryLogReportByTriggerTime(@Param("from") Long from,
-                                               @Param("to") Long to);
+    JobLogReportVO queryLogReportByTriggerTime(@Param("from") Date from, @Param("to") Date to);
 
     /**
      * 查询清除日志id
@@ -91,7 +91,7 @@ public interface JobLogService extends BaseService<JobLog, JobLog, JobLogVO> {
      * @param pageSize        数量
      * @return {@link List}<{@link Long}>
      */
-    List<Long> queryClearLogIds(Long groupId, List<Long> jobIds, Long clearBeforeTime, Long clearBeforeNum, Integer pageSize);
+    List<Long> queryClearLogIds(Long groupId, List<Long> jobIds, Date clearBeforeTime, Long clearBeforeNum, Integer pageSize);
 
     /**
      * 清除日志

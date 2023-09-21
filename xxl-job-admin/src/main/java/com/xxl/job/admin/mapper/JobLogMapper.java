@@ -2,6 +2,8 @@ package com.xxl.job.admin.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.xxl.job.admin.common.pojo.bo.JobLogReportBO;
+import com.xxl.job.admin.common.pojo.dao.HandleLogDAO;
+import com.xxl.job.admin.common.pojo.dao.TriggerLogDAO;
 import com.xxl.job.admin.common.pojo.entity.JobLog;
 import com.xxl.job.admin.common.pojo.query.JobLogQuery;
 import org.apache.ibatis.annotations.Param;
@@ -21,16 +23,16 @@ public interface JobLogMapper extends BaseMapper<JobLog> {
     /**
      * 更新触发器信息
      *
-     * @param jobLog 日志
+     * @param triggerLog 日志
      */
-    void updateTriggerInfo(JobLog jobLog);
+    void updateTriggerInfo(TriggerLogDAO triggerLog);
 
     /**
      * 更新处理信息
      *
-     * @param jobLog 日志
+     * @param handleLog 日志
      */
-    void updateHandleInfo(JobLog jobLog);
+    void updateHandleInfo(HandleLogDAO handleLog);
 
     /**
      * 删除日志根据任务id
@@ -42,26 +44,26 @@ public interface JobLogMapper extends BaseMapper<JobLog> {
     /**
      * 查询日志报告根据触发时间
      *
-     * @param from 开始时间
-     * @param to   结束时间
+     * @param from 开始时间 yyyy-MM-dd hh:mm:ss
+     * @param to   结束时间 yyyy-MM-dd hh:mm:ss
      * @return {@link JobLogReportBO}
      */
-    JobLogReportBO queryLogReportByTriggerTime(@Param("from") Long from,
-                                               @Param("to") Long to);
+    JobLogReportBO queryLogReportByTriggerTime(@Param("from") String from,
+                                               @Param("to") String to);
 
     /**
      * 查询清除日志id
      *
      * @param groupId        任务组ID
      * @param jobIds           任务ID
-     * @param clearBeforeTime 清除时间之前的
+     * @param clearBeforeTime 清除时间之前的 yyyy-MM-dd hh:mm:ss
      * @param clearBeforeNum  清除数量之前的
      * @param pageSize        页大小
      * @return {@link List}<{@link Long}>
      */
     List<Long> queryClearLogIds(@Param("groupId") Long groupId,
                                       @Param("jobIds") List<Long> jobIds,
-                                      @Param("clearBeforeTime") Long clearBeforeTime,
+                                      @Param("clearBeforeTime") String clearBeforeTime,
                                       @Param("clearBeforeNum") Long clearBeforeNum,
                                       @Param("pageSize") Integer pageSize);
 
@@ -95,10 +97,10 @@ public interface JobLogMapper extends BaseMapper<JobLog> {
     /**
      * 查询取消注册的任务的日志ID
      *
-     * @param loseTime 浪费时间
+     * @param loseTime 浪费时间 yyyy-MM-dd hh:mm:ss
      * @return {@link List}<{@link Long}>
      */
-    List<Long> queryLostJobIds(@Param("loseTime") Long loseTime);
+    List<Long> queryLostJobIds(@Param("loseTime") String loseTime);
 
     /**
      * 查询任务日志

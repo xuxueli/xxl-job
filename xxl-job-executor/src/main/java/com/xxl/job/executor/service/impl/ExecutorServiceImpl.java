@@ -213,7 +213,7 @@ public class ExecutorServiceImpl implements ExecutorService {
     @Override
     public ResponseVO<LogResult> log(LogParam logParam) {
         // log filename: logPath/yyyy-MM-dd/9999.log
-        String logFileName = JobLogUtils.makeLogFileName(new Date(logParam.getLogDateTim()), logParam.getLogId());
+        String logFileName = JobLogUtils.makeLogFileName(new Date(logParam.getLogDateTime()), logParam.getLogId());
 
         LogResult logResult = JobLogUtils.readLog(logFileName, logParam.getFromLineNum());
         return ResponseVO.success(logResult);

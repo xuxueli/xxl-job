@@ -1,0 +1,10 @@
+2023-09-21 23:15:02 [com.xxl.job.executor.factory.thread.JobThread#run]-[153]-[xxl-job, JobThread-1703761104032391169-1695309129712] <br>----------- xxl-job job execute start -----------<br>----------- Param:
+2023-09-21 23:15:02 [com.xxl.job.executor.factory.thread.JobThread#run]-[192]-[xxl-job, JobThread-1703761104032391169-1695309129712] <br>----------- xxl-job job execute end(finish) -----------<br>----------- Result: handleCode=0, handleMsg = null
+2023-09-21 23:15:02 [com.xxl.job.executor.factory.thread.TriggerCallbackThread#callbackLog]-[172]-[xxl-job, executor TriggerCallbackThread] <br>----------- xxl-job job callback finish.
+2023-09-21 23:15:03 [com.xxl.job.executor.factory.thread.JobThread#run]-[207]-[xxl-job, JobThread-1703761104032391169-1695309129712] <br>----------- JobThread toStop, stopReason:web container destroy and kill the job.
+2023-09-21 23:15:03 [com.xxl.job.executor.factory.thread.JobThread#run]-[217]-[xxl-job, JobThread-1703761104032391169-1695309129712] <br>----------- JobThread Exception:java.lang.InterruptedException
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.reportInterruptAfterWait(AbstractQueuedSynchronizer.java:2014)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:2088)
+	at java.util.concurrent.LinkedBlockingQueue.poll(LinkedBlockingQueue.java:467)
+	at com.xxl.job.executor.factory.thread.JobThread.run(JobThread.java:134)
+<br>----------- xxl-job job execute end(error) -----------

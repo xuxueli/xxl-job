@@ -76,7 +76,7 @@ public class LogReportThread extends AbstractThreadListener implements Ordered {
                         logReportDTO.setFailCount(NumberConstant.ZERO.longValue());
 
 
-                        JobLogReportVO jobLogReportVO = jobLogService.queryLogReportByTriggerTime(from.getTime(), to.getTime());
+                        JobLogReportVO jobLogReportVO = jobLogService.queryLogReportByTriggerTime(from, to);
                         if (ObjectUtil.isNotEmpty(jobLogReportVO)) {
                             Long triggerDayCount = jobLogReportVO.getTriggerDayCount();
                             Long triggerDayCountRunning = jobLogReportVO.getTriggerDayCountRunning();
@@ -105,8 +105,7 @@ public class LogReportThread extends AbstractThreadListener implements Ordered {
                     // clean expired log
                     List<Long> logIds = null;
                     do {
-                        logIds = jobLogService.queryClearLogIds(null, null,
-                                clearBeforeTime.getTime(), NumberConstant.ZERO.longValue(), 1000);
+                        logIds = jobLogService.queryClearLogIds(null, null, clearBeforeTime, NumberConstant.ZERO.longValue(), 1000);
                         if (CollectionUtil.isNotEmpty(logIds)) {
                             jobLogService.clearLog(logIds);
                         }

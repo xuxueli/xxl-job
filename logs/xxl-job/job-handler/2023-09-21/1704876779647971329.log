@@ -1,0 +1,3 @@
+2023-09-21 23:14:34 [com.xxl.job.executor.factory.thread.JobThread#run]-[153]-[xxl-job, JobThread-1703761104032391169-1695309129712] <br>----------- xxl-job job execute start -----------<br>----------- Param:
+2023-09-21 23:14:34 [com.xxl.job.executor.factory.thread.JobThread#run]-[192]-[xxl-job, JobThread-1703761104032391169-1695309129712] <br>----------- xxl-job job execute end(finish) -----------<br>----------- Result: handleCode=0, handleMsg = null
+2023-09-21 23:14:34 [com.xxl.job.executor.factory.thread.TriggerCallbackThread#callbackLog]-[172]-[xxl-job, executor TriggerCallbackThread] <br>----------- xxl-job job callback finish.

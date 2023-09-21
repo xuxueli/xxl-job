@@ -74,7 +74,7 @@ public class CompleteThread extends AbstractThreadListener implements Ordered {
             while (!toStop) {
                 try {
                     // 任务结果丢失处理：调度记录停留在 "运行中" 状态超过10min，且对应执行器心跳注册失败不在线，则将本地调度主动标记失败；
-                    List<Long> lostJobIds = jobLogService.queryLostJobIds(DateUtil.offsetMinute(DateUtil.date(), -10).getTime());
+                    List<Long> lostJobIds = jobLogService.queryLostJobIds(DateUtil.offsetMinute(DateUtil.date(), -10));
                     if (CollectionUtil.isNotEmpty(lostJobIds)) {
                         for (Long logId : lostJobIds) {
                             HandleLogDTO handleLogDTO = new HandleLogDTO();

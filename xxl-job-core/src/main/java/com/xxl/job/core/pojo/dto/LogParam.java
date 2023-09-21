@@ -17,7 +17,7 @@ public class LogParam implements Serializable {
 
     private static final long serialVersionUID = 42L;
 
-    private long logDateTim;
+    private long logDateTime;
     private long logId;
     private int fromLineNum;
 
