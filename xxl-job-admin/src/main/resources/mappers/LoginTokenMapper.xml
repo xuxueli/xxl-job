@@ -40,7 +40,7 @@
             #{account,jdbcType=VARCHAR},
             #{effectiveDuration,jdbcType=INTEGER},
             #{loginTime,jdbcType=BIGINT},
-            #{updatedTime,jdbcType=BIGINT}
+            #{updatedTime}
         )
     </insert>
 

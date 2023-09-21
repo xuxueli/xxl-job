@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 登录令牌
@@ -39,12 +40,12 @@ public class LoginToken implements Serializable {
     /**
      * 登录时间
      */
-    private Long loginTime;
+    private Date loginTime;
 
     /**
      * 更新时间
      */
-    private Long updatedTime;
+    private Date updatedTime;
 
 
 

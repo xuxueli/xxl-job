@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -43,8 +44,8 @@ public class LoginMonitorThread extends AbstractThreadListener implements Ordere
                         Long now = DateUtil.current();
                         for (LoginToken loginToken : loginTokens) {
                             Integer effectiveDuration = loginToken.getEffectiveDuration();
-                            Long updatedTime = loginToken.getUpdatedTime();
-                            if (TimeUnit.MILLISECONDS.toSeconds(now - updatedTime) > effectiveDuration) {
+                            Date updatedTime = loginToken.getUpdatedTime();
+                            if (TimeUnit.MILLISECONDS.toSeconds(now - updatedTime.getTime()) > effectiveDuration) {
                                 loginTokenService.removeById(loginToken.getId());
                             }
                         }

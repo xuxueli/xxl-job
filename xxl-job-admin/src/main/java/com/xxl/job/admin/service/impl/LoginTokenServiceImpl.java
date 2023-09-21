@@ -32,8 +32,8 @@ public class LoginTokenServiceImpl extends ServiceImpl<LoginTokenMapper, LoginTo
         tokenByToken.setToken(token);
         tokenByToken.setAccount(account);
         tokenByToken.setEffectiveDuration(duration);
-        tokenByToken.setLoginTime(DateUtil.current());
-        tokenByToken.setUpdatedTime(DateUtil.current());
+        tokenByToken.setLoginTime(DateUtil.date());
+        tokenByToken.setUpdatedTime(DateUtil.date());
         this.save(tokenByToken);
     }
 
@@ -47,7 +47,7 @@ public class LoginTokenServiceImpl extends ServiceImpl<LoginTokenMapper, LoginTo
         try {
             LoginToken loginToken = loginTokenMapper.findLoginTokenByToken(token);
             if (ObjectUtil.isNotNull(loginToken)) {
-                loginTokenMapper.updateLoginTokenByToken(token, DateUtil.current());
+                loginTokenMapper.updateLoginTokenByToken(token, DateUtil.formatDateTime(DateUtil.date()));
             }
         }catch (Exception e) {
             log.error("【{}】更新时间异常, 跳过", token, e);
