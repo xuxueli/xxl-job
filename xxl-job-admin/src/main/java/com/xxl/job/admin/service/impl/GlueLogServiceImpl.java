@@ -46,7 +46,7 @@ public class GlueLogServiceImpl extends BaseServiceImpl<GlueLogMapper, GlueLog, 
 
         GlueLog glueLog = new GlueLog();
         BeanUtil.copyProperties(glueLogDTO, glueLog);
-        glueLog.setCreatedTime(DateUtil.current());
+        glueLog.setCreatedTime(DateUtil.date());
         glueLog.setDescription(jobInfoVO.getGlueDescription());
 
         this.save(glueLog);

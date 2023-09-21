@@ -287,7 +287,7 @@ function validate(form) {
             if (/(^_)|(__)|(_+$)/.test(value)) return '账号首尾不能出现 _ 下划线';
         },
         name: function (value, item) {
-            if (!new RegExp("^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$").test(value)) {
+            if (!new RegExp("^[a-zA-Z0-9_.\\-\u4e00-\u9fa5\\s·]+$").test(value)) {
                 return '姓名不能有特殊字符';
             }
             if (/(^_)|(__)|(_+$)/.test(value)) return '姓名首尾不能出现 _ 下划线';
