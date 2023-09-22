@@ -123,9 +123,7 @@ public class JobInfoServiceImpl extends BaseServiceImpl<JobInfoMapper, JobInfo, 
             Assert.notNull(nextValidTime, ResponseEnum.THE_CRON_EXPRESSION_FORMAT_IS_INCORRECT.getMessage());
             nextTriggerTime = nextValidTime;
         }
-        jobInfo.setTriggerLastTime(DateUtil.date(1));
         jobInfo.setTriggerNextTime(nextTriggerTime);
-
         this.saveOrUpdate(jobInfo);
         return this.objectConversion(jobInfo);
     }
