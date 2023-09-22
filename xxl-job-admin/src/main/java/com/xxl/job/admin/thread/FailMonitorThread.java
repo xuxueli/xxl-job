@@ -3,6 +3,7 @@ package com.xxl.job.admin.thread;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 import com.xxl.job.admin.common.enums.TriggerTypeEnum;
 import com.xxl.job.admin.common.pojo.dto.TriggerLogDTO;
 import com.xxl.job.admin.common.pojo.vo.JobInfoVO;
@@ -16,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -76,7 +76,7 @@ public class FailMonitorThread extends AbstractThreadListener implements Ordered
                             if (jobLogVO.getExecutorFailRetryCount() > 0) {
                                 jobTriggerThreadPool.addTrigger(info.getId(), TriggerTypeEnum.RETRY,
                                         (jobLogVO.getExecutorFailRetryCount() - 1), jobLogVO.getExecutorShardingParam(),
-                                        jobLogVO.getExecutorParam(), Collections.emptyList());
+                                        jobLogVO.getExecutorParam(), StrUtil.EMPTY);
                                 String retryMessage = "<br><br><span style=\"color:#F39C12;\" > >>>>>>>>>>>失败重试触发<<<<<<<<<<< </span><br>";
                                 jobLogVO.setTriggerMessage(jobLogVO.getTriggerMessage() + retryMessage);
 

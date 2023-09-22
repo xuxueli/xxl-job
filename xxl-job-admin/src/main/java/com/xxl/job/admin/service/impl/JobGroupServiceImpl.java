@@ -29,7 +29,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -118,7 +118,7 @@ public class JobGroupServiceImpl extends BaseServiceImpl<JobGroupMapper, JobGrou
     public JobGroupVO objectConversion(JobGroup jobGroup) {
         JobGroupVO jobGroupVO = super.objectConversion(jobGroup);
         if (ObjectUtil.isNotEmpty(jobGroupVO)) {
-            jobGroupVO.setAddresses(StrUtil.split(jobGroup.getAddressList(), StrUtil.COMMA));
+            jobGroupVO.setAddresses(jobGroup.getAddressList());
         }
         return jobGroupVO;
     }
@@ -131,10 +131,11 @@ public class JobGroupServiceImpl extends BaseServiceImpl<JobGroupMapper, JobGrou
      * @param addresses 地址
      * @return {@link String}
      */
-    private String joinAddresses(Integer type, String appName, List<String> addresses) {
+    private String joinAddresses(Integer type, String appName, String addresses) {
+        Set<String> addressSet = new LinkedHashSet<>();
         if (ObjectUtil.equals(NumberConstant.ONE, type)) {
-            Assert.isFalse(CollectionUtil.isEmpty(addresses),
-                    ResponseEnum.THE_ACTUATOR_ADDRESS_CANNOT_BE_EMPTY.getMessage());
+            Assert.isFalse(StrUtil.isBlank(addresses), ResponseEnum.THE_ACTUATOR_ADDRESS_CANNOT_BE_EMPTY.getMessage());
+            addressSet.addAll(StrUtil.split(addresses, StrUtil.COMMA));
         } else {
             List<Registry> registries = registryService.findAll(DateUtil.offsetSecond(DateUtil.date(),
                     RegistryConfig.DEAD_TIMEOUT.getValue() * NumberConstant.A_NEGATIVE));
@@ -148,15 +149,15 @@ public class JobGroupServiceImpl extends BaseServiceImpl<JobGroupMapper, JobGrou
 
                 registryValues.forEach(a -> {
                     if (StrUtil.contains(a, StrUtil.COMMA)) {
-                        addresses.addAll(StrUtil.split(a, StrUtil.COMMA));
+                        addressSet.addAll(StrUtil.split(a, StrUtil.COMMA));
                     } else {
-                        addresses.add(a);
+                        addressSet.add(a);
                     }
                 });
             }
         }
-        if (CollectionUtil.isEmpty(addresses)) return null;
-        return CollectionUtil.join(CollectionUtil.newHashSet(addresses), StrUtil.COMMA);
+        if (CollectionUtil.isEmpty(addressSet)) return null;
+        return CollectionUtil.join(addressSet, StrUtil.COMMA);
     }
 
 }

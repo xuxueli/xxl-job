@@ -6,6 +6,7 @@ import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 import com.xxl.job.admin.common.constants.NumberConstant;
 import com.xxl.job.admin.common.constants.QueryConstant;
 import com.xxl.job.admin.common.pojo.dto.LogReportDTO;
@@ -143,7 +144,11 @@ public class LogReportServiceImpl extends BaseServiceImpl<LogReportMapper, LogRe
         Set<String> executorAddressSet = CollectionUtil.newHashSet();
         List<JobGroupVO> jobGroups = jobGroupService.findAll();
         if (CollectionUtil.isNotEmpty(jobGroups)) {
-            jobGroups.forEach(a -> executorAddressSet.addAll(a.getAddresses()));
+            jobGroups.forEach(a -> {
+                if (StrUtil.isNotBlank(a.getAddresses())) {
+                    executorAddressSet.addAll(StrUtil.split(a.getAddresses(), StrUtil.COMMA));
+                }
+            });
         }
 
         DashboardInfoVO dashboardInfoVO = new DashboardInfoVO();

@@ -35,7 +35,7 @@ public class TriggerJobDTO implements Serializable {
      * 机器地址(为空：自动从执行器中获取)
      */
     @ApiModelProperty(value = "机器地址(为空：自动从执行器中获取)")
-    private List<String> addresses;
+    private String addresses;
 
 
 

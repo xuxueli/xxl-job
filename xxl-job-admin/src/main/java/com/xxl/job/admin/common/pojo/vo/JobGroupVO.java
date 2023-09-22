@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * <p>
@@ -44,7 +43,7 @@ public class JobGroupVO extends Base implements Serializable {
      * 执行器地址列表
      */
     @ApiModelProperty("执行器地址列表")
-    private List<String> addresses;
+    private String addresses;
 
 
 

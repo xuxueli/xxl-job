@@ -250,8 +250,9 @@ function showRegisterNode(data) {
     let html = '<div style="text-align: center; font-size: 20px">';
     let registryList = data.jobGroup.addresses;
     if (!_.isEmpty(registryList)) {
-        for (let index in registryList) {
-            html += '<span class="badge bg-green">' + registryList[index] + '</span><br>';
+        let registries = _.split(registryList, ",");
+        for (let index in registries) {
+            html += '<span class="badge bg-green">' + registries[index] + '</span><br>';
         }
     }
     html += '</div>';

@@ -1,7 +1,6 @@
 package com.xxl.job.admin.thread;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.exceptions.ExceptionUtil;
 import cn.hutool.core.net.NetUtil;
@@ -116,7 +115,7 @@ public class TriggerThreadPool extends AbstractThreadListener implements Ordered
                            final int failRetryCount,
                            final String executorShardingParam,
                            final String executorParam,
-                           final List<String> addresses) {
+                           final String addresses) {
 
         // choose thread pool
         ThreadPoolExecutor triggerPool = fastTriggerPool;
@@ -171,7 +170,7 @@ public class TriggerThreadPool extends AbstractThreadListener implements Ordered
      * @param addresses             地址
      */
     private void trigger(Long jobId, TriggerTypeEnum triggerType, int failRetryCount,
-                         String executorShardingParam, String executorParam, List<String> addresses) {
+                         String executorShardingParam, String executorParam, String addresses) {
 
         // load data
         JobInfoVO jobInfo = jobInfoService.queryById(jobId);
@@ -187,7 +186,7 @@ public class TriggerThreadPool extends AbstractThreadListener implements Ordered
         JobGroupVO group = jobInfo.getJobGroup();
 
         // cover addressList
-        if (CollectionUtil.isNotEmpty(addresses)) {
+        if (StrUtil.isNotBlank(addresses)) {
             group.setAddressType(NumberConstant.ONE);
             group.setAddresses(addresses);
         }
@@ -204,9 +203,10 @@ public class TriggerThreadPool extends AbstractThreadListener implements Ordered
         }
 
         if (ExecutorRouteStrategyEnum.SHARDING_BROADCAST.equals(ExecutorRouteStrategyEnum.match(jobInfo.getExecutorRouteStrategy()))
-                && CollectionUtil.isNotEmpty(group.getAddresses()) && ArrayUtil.isEmpty(shardingParam)) {
-            for (int i = 0; i < group.getAddresses().size(); i++) {
-                processTrigger(group, jobInfo, finalFailRetryCount, triggerType, i, group.getAddresses().size());
+                && StrUtil.isNotBlank(group.getAddresses()) && ArrayUtil.isEmpty(shardingParam)) {
+            List<String> addressList = StrUtil.split(group.getAddresses(), StrUtil.COMMA);
+            for (int i = 0; i < addressList.size(); i++) {
+                processTrigger(group, jobInfo, finalFailRetryCount, triggerType, i, addressList.size());
             }
         } else {
             if (ArrayUtil.isEmpty(shardingParam)) {
@@ -256,8 +256,8 @@ public class TriggerThreadPool extends AbstractThreadListener implements Ordered
         // 3、init address
         String address = null;
         ResponseEnum routeAddressResult = null;
-        if (CollectionUtil.isNotEmpty(group.getAddresses())) {
-            List<String> addresses = group.getAddresses();
+        if (StrUtil.isNotBlank(group.getAddresses())) {
+            List<String> addresses = StrUtil.split(group.getAddresses(), StrUtil.COMMA);
             if (ExecutorRouteStrategyEnum.SHARDING_BROADCAST.equals(executorRouteStrategyEnum)) {
                 address = index < addresses.size() ? addresses.get(index) :  addresses.get(NumberConstant.ZERO);
             } else {
@@ -280,7 +280,7 @@ public class TriggerThreadPool extends AbstractThreadListener implements Ordered
         triggerMsgSb.append("<br>").append("调度机器").append("：").append(NetUtil.getLocalhostStr());
         triggerMsgSb.append("<br>").append("执行器-注册方式").append("：")
                 .append((ObjectUtil.equals(NumberConstant.ZERO, group.getAddressType())) ? "自动注册" : "手动录入");
-        triggerMsgSb.append("<br>").append("执行器-地址列表").append("：").append(JSON.toJSONString(group.getAddresses()));
+        triggerMsgSb.append("<br>").append("执行器-地址列表").append("：").append(JSON.toJSONString(StrUtil.split(group.getAddresses(), StrUtil.COMMA)));
         triggerMsgSb.append("<br>").append("路由策略").append("：").append(executorRouteStrategyEnum.getValue());
         if (StrUtil.isNotBlank(shardingParam)) {
             triggerMsgSb.append("(" + shardingParam + ")");

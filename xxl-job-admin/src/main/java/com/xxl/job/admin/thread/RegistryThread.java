@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.StrUtil;
 import com.xxl.job.admin.common.constants.NumberConstant;
 import com.xxl.job.admin.common.pojo.dto.JobGroupDTO;
 import com.xxl.job.admin.common.pojo.entity.Registry;
@@ -111,7 +112,7 @@ public class RegistryThread extends AbstractThreadListener implements Ordered {
 								List<String> registryList = appAddressMap.get(group.getAppName());
 								if (CollectionUtil.isNotEmpty(registryList)) {
 									JobGroupDTO jobGroupDTO = BeanUtil.copyProperties(group, JobGroupDTO.class);
-									jobGroupDTO.setAddresses(registryList);
+									jobGroupDTO.setAddresses(CollectionUtil.join(registryList, StrUtil.COMMA));
 									jobGroupService.updateJobGroup(jobGroupDTO);
 								}
 							}

@@ -9,7 +9,6 @@ import lombok.EqualsAndHashCode;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * <p>
@@ -51,6 +50,6 @@ public class JobGroupDTO extends Base implements Serializable {
      * 执行器地址列表
      */
     @ApiModelProperty("执行器地址列表 (地址类型->1 不能为空)")
-    private List<String> addresses;
+    private String addresses;
 
 }
