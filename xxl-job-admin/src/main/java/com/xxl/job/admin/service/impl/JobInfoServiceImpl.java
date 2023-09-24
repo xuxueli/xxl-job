@@ -19,10 +19,7 @@ import com.xxl.job.admin.common.pojo.query.JobInfoQuery;
 import com.xxl.job.admin.common.pojo.vo.JobInfoVO;
 import com.xxl.job.admin.common.utils.CronUtils;
 import com.xxl.job.admin.mapper.JobInfoMapper;
-import com.xxl.job.admin.service.GlueLogService;
-import com.xxl.job.admin.service.JobGroupService;
-import com.xxl.job.admin.service.JobInfoService;
-import com.xxl.job.admin.service.JobLogService;
+import com.xxl.job.admin.service.*;
 import com.xxl.job.admin.service.base.impl.BaseServiceImpl;
 import com.xxl.job.admin.thread.ScheduleThread;
 import com.xxl.job.admin.thread.TriggerThreadPool;
@@ -68,6 +65,9 @@ public class JobInfoServiceImpl extends BaseServiceImpl<JobInfoMapper, JobInfo, 
     @Autowired
     private TriggerThreadPool jobTriggerThreadPool;
 
+    @Autowired
+    private KettleInfoService kettleInfoService;
+
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
     public Boolean delete(Serializable id) {
@@ -99,6 +99,10 @@ public class JobInfoServiceImpl extends BaseServiceImpl<JobInfoMapper, JobInfo, 
             Optional.ofNullable(jobInfo.getChildJobId())
                     .ifPresent(a -> jobInfoVO.setChildJobIds(StrUtil.split(a, StrUtil.COMMA).stream()
                             .map(Convert::toLong).collect(Collectors.toList())));
+
+            Optional.ofNullable(jobInfo.getKettleId())
+                    .ifPresent(a -> jobInfoVO.setKettleInfo(kettleInfoService.queryById(a)));
+
         }
         return jobInfoVO;
     }
@@ -310,6 +314,12 @@ public class JobInfoServiceImpl extends BaseServiceImpl<JobInfoMapper, JobInfo, 
         if (GlueTypeEnum.BEAN.equals(glueTypeEnum) && StrUtil.isBlank(jobInfoDTO.getExecutorHandler())) {
             throw new XxlJobAdminException(ResponseEnum.TASK_HANDLER_CANNOT_BE_EMPTY);
         }
+
+        if ((GlueTypeEnum.KETTLE_KJB.equals(glueTypeEnum) || GlueTypeEnum.KETTLE_KTR.equals(glueTypeEnum))
+                && ObjectUtil.isNull(jobInfoDTO.getKettleId())) {
+            throw new XxlJobAdminException(ResponseEnum.KETTLE_CANNOT_BE_EMPTY);
+        }
+
         // 》fix "\r" in shell
         if (GlueTypeEnum.GLUE_SHELL.equals(glueTypeEnum) && StrUtil.isNotBlank(jobInfoDTO.getGlueSource())) {
             jobInfoDTO.setGlueSource(jobInfoDTO.getGlueSource().replaceAll("\r", ""));

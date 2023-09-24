@@ -1,6 +1,6 @@
 var multiSelector = (function () {
     var select;
-    function init(divId, name, data) {
+    function init(divId, name, data, isRadio = false) {
         layui.use(['xmSelect'], function () {
             var xmSelect = layui.xmSelect;
             select = xmSelect.render({
@@ -12,7 +12,7 @@ var multiSelector = (function () {
                 searchTips: '请在此搜索',
                 paging: true,    //是否开启自定义分页
                 pageSize: 20,    //分页条数
-                radio: false, //是否开启单选模式,默认false
+                radio: isRadio, //是否开启单选模式,默认false
                 repeat: false,    //是否开启重复性模式,默认false
                 clickClose: false,    //是否点击选项后自动关闭下拉框,默认false
                 max: 0,  //设置多选选中上限  0-不限制
@@ -29,6 +29,10 @@ var multiSelector = (function () {
                 // }
             });
         });
+    }
+
+    function initSingle(divId, name, data) {
+        init(divId, name, data, true);
     }
 
     function update(data, oldValue) {
@@ -50,9 +54,9 @@ var multiSelector = (function () {
         return values;
     }
 
-
     return {
         init: init,
+        initSingle: initSingle,
         update: update,
         getValue: getValue,
     }

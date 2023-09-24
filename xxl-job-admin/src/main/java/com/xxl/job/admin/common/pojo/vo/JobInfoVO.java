@@ -32,6 +32,12 @@ public class JobInfoVO extends Base implements Serializable {
     private JobGroupVO jobGroup;
 
     /**
+     * kettle信息
+     */
+    @ApiModelProperty("kettle信息")
+    private KettleInfoVO kettleInfo;
+
+    /**
      * 任务名
      */
     @ApiModelProperty("任务名")

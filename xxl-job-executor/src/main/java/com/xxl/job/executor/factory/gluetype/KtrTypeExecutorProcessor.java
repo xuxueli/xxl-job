@@ -44,7 +44,7 @@ public class KtrTypeExecutorProcessor extends AbstractGlueTypeExecutorProcessor 
         // valid handler
         if (ObjectUtil.isNull(jobHandler)) {
            triggerHolder.setHandler(new KettleKtrJobHandler(triggerParam.getJobId(),triggerParam.getJobName(),
-                   triggerParam.getKtrs().get(0), KettleLogLevel.match(triggerParam.getKettleLogLevel())));
+                   triggerParam.getKettleFile(), KettleLogLevel.match(triggerParam.getKettleLogLevel())));
         }
         return ResponseVO.success(triggerHolder);
     }

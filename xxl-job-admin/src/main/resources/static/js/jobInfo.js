@@ -299,8 +299,6 @@ function loadPage(total) {
             }
         });
     });
-
-
 }
 
 /**
@@ -345,11 +343,13 @@ function change(title, oldData) {
         title: title,
         content: $('#key-form'),
         success: function (index) {
+            initChildJobIds(oldData);
+            initJobCron();
             searchJobGroup("#add-group")
                 .then(res => {
                     if (!_.isEmpty(oldData)) {
                         scheduleTypeSelect(oldData.scheduleType);
-                        glueTypeSelect(oldData.glueType, !_.isEmpty(oldData));
+                        glueTypeSelect(oldData.glueType, oldData);
 
                         form.val("layui-key-form", {
                             "groupId": oldData.jobGroup.id,
@@ -373,11 +373,10 @@ function change(title, oldData) {
                         });
                     }else {
                         scheduleTypeSelect("CRON");
-                        glueTypeSelect("BEAN", false);
+                        glueTypeSelect("BEAN", null);
                     }
                     form.render();
                 });
-            initJobInfo(_.isEmpty(oldData) ? null : oldData.childJobIds);
         },
         cancel: function (index, layero, that) {
             $('#add-group').empty();
@@ -399,7 +398,7 @@ function change(title, oldData) {
         var elem = data.elem; // 获得 select 原始 DOM 对象
         var value = data.value; // 获得被选中的值
         var othis = data.othis; // 获得 select 元素被替换后的 jQuery 对象
-        glueTypeSelect(value, !_.isEmpty(oldData));
+        glueTypeSelect(value, oldData);
     });
 
     layui.$('#for-glue-source').on('click', function(){
@@ -419,8 +418,9 @@ function change(title, oldData) {
             field.scheduleConf = field.scheduleConfFixDelay;
         }
 
-        if ((_.eq('NONE', scheduleType) || _.eq('FIX_RATE', scheduleType)) && _.isEmpty(field.scheduleConf)) {
-            message.warning("调度配置不能为空");
+        if ((_.eq('NONE', scheduleType) || _.eq('FIX_RATE', scheduleType))
+            && _.isEmpty(field.scheduleConf)) {
+            message.error("调度配置不能为空");
             return false;
         }
 
@@ -433,21 +433,25 @@ function change(title, oldData) {
         }
         field.childJobIds = childJobIds;
         let glueType = $("#add-glue-type").find("option:selected").val();
-        if (_.eq('BEAN', glueType) && _.isEmpty(field.executorHandler)) {
-            message.warning("JobHandler不能为空");
-            return false;
-        } else if (!_.eq('BEAN', glueType) && !_.eq('KETTLE_KTR', glueType)
-            && !_.eq('KETTLE_KJB', glueType)) {
-            if (_.isEmpty(field.glueSource)) {
-                message.warning("执行代码不能为空");
+        if (_.eq('BEAN', glueType)) {
+            if (_.isEmpty(field.executorHandler)) {
+                message.error("JobHandler不能为空");
                 return false;
             }
-            if (_.isEmpty(field.glueDescription)) {
-                message.warning("执行代码描述不能为空");
+        } else if ((_.eq('KETTLE_KTR', glueType) || _.eq('KETTLE_KJB', glueType))) {
+            if (_.isEmpty(field.kettleId)) {
+                message.error("kettle模型不能为空");
                 return false;
             }
         }else {
-
+            if (_.isEmpty(field.glueSource)) {
+                message.error("执行代码不能为空");
+                return false;
+            }
+            if (_.isEmpty(field.glueDescription)) {
+                message.error("执行代码描述不能为空");
+                return false;
+            }
         }
 
         if (!_.isEmpty(oldData.id)) field.id = oldData.id;
@@ -467,29 +471,45 @@ function change(title, oldData) {
 }
 
 /**
+ * 初始化 kettle选择框
+ * @param oldVal
+ * @param type 类型, ktr,kjb
+ */
+function initKettleSelect(oldVal, type) {
+    let kettleInfos = http.get("kettle-info", {'currentPage': -1, 'type': type}).records;
+    let val = [];
+
+    for (let kettle of kettleInfos) {
+        if(!_.isEmpty(oldVal) && !_.isEmpty(oldVal.kettleInfo) && _.includes(oldVal.kettleInfo.id, kettle.id)){
+            val.push({name: kettle.name + '/' + kettle.version, value: kettle.id, selected: true, disabled: false});
+        }else {
+            val.push({name: kettle.name + '/' + kettle.version, value: kettle.id, selected: false, disabled: false});
+        }
+    }
+    multiSelector.initSingle('#for-glue-kettle', 'kettleId', val);
+}
+
+/**
  * 运行模式选择器
  * @param glueType 运行模式
- * @param isUpdate 是否是修改
+ * @param oldData 原数据
  */
-function glueTypeSelect(glueType, isUpdate) {
+function glueTypeSelect(glueType, oldData) {
     if (_.eq('BEAN', glueType)) {
         $("#glue-conf-Handler").show();
         $("#glue-source").hide();
         $('#glue-kettle').hide();
-    } else if (!_.eq('KETTLE_KTR', glueType)
-        && !_.eq('KETTLE_KJB', glueType)) {
-        if (isUpdate) {
-            $("#glue-source").hide();
-        }else {
-            $("#glue-source").show();
-        }
-        $("#glue-conf-Handler").hide();
-        $('#glue-kettle').hide();
-    }else if (_.eq('KETTLE_KTR', glueType || _.eq('KETTLE_KJB', glueType))) {
+    }else if (_.eq('KETTLE_KTR', glueType) || _.eq('KETTLE_KJB', glueType)) {
+        let type = _.eq('KETTLE_KTR', glueType) ? 'ktr' : 'kjb';
         $('#glue-kettle').show();
         $("#glue-conf-Handler").hide();
         $("#glue-source").hide();
-        multiSelector.init('#for-glue-kettle', 'kettleId', []);
+        initKettleSelect(oldData, type);
+    }else {
+        if (!_.isEmpty(oldData)) $("#glue-source").hide();
+        else $("#glue-source").show();
+        $("#glue-conf-Handler").hide();
+        $('#glue-kettle').hide();
     }
 }
 
@@ -534,21 +554,29 @@ function getCodeMirrorMode(glueType) {
 }
 
 /**
- * 任务下拉
+ * 初始化子任务下拉
+ * @param oldData 旧数据
  */
-function initJobInfo(oldVal) {
+function initChildJobIds(oldData) {
     let jobInfos = http.get("job", {'currentPage': -1,}).records;
     let val = [];
 
     for (let jobInfo of jobInfos) {
-        if(!_.isEmpty(oldVal) && _.includes(oldVal, jobInfo.id)){
+        if (!_.isEmpty(oldData) && _.eq(oldData.id, jobInfo.id)) continue;
+
+        if (!_.isEmpty(oldData) && !_.isEmpty(oldData.childJobIds) && _.includes(oldData.childJobIds, jobInfo.id)) {
             val.push({name:jobInfo.name, value:jobInfo.id, selected: true, disabled: false});
         }else {
             val.push({name:jobInfo.name, value:jobInfo.id, selected: false, disabled: false});
         }
     }
-
     multiSelector.init('#key-child-jobIds', 'childJobIds', val);
+}
+
+/**
+ * 初始化CRON框
+ */
+function initJobCron() {
     layui.use(['cron'], function () {
         var $ = layui.$;
         var cron = layui.cron;
@@ -561,7 +589,6 @@ function initJobInfo(oldVal) {
             },
         });
     });
-
 }
 
 /**

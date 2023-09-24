@@ -22,6 +22,7 @@
         <result column="GLUE_DESCRIPTION" property="glueDescription"/>
         <result column="GLUE_UPDATED_TIME" property="glueUpdatedTime"/>
         <result column="CHILD_JOB_ID" property="childJobId"/>
+        <result column="KETTLE_ID" property="kettleId"/>
         <result column="TRIGGER_STATUS" property="triggerStatus"/>
         <result column="TRIGGER_LAST_TIME" property="triggerLastTime"/>
         <result column="TRIGGER_NEXT_TIME" property="triggerNextTime"/>
@@ -53,6 +54,7 @@
         GLUE_DESCRIPTION,
         GLUE_UPDATED_TIME,
         CHILD_JOB_ID,
+        KETTLE_ID,
         TRIGGER_STATUS,
         TRIGGER_LAST_TIME,
         TRIGGER_NEXT_TIME,

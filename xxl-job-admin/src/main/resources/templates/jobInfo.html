@@ -214,13 +214,9 @@
                 <label for="for-schedule-conf-cron" class="layui-form-label">
                     <span class="x-red">*</span>CRON
                 </label>
-                <!--                style="display: flex; height: 100%;"-->
                 <div class="layui-input-inline">
                     <input type="text" id="for-schedule-conf-cron" class="layui-input" name="scheduleConfCron"
                            placeholder="cron表达式..." autocomplete="off"/>
-                    <!--                    <button id="cron-button" onclick="initCron()" type="button" class="layui-btn layui-btn-sm layui-btn-danger" style="background-color: #c2c2c2">-->
-                    <!--                        <i class="layui-icon layui-icon-edit"></i>-->
-                    <!--                    </button>-->
                 </div>
             </div>
 
@@ -280,10 +276,8 @@
                             class="layui-btn layui-btn-primary layui-border layui-btn-fluid">打开WEB IDE
                     </button>
                 </div>
-                <textarea id="glue-source-code" name="glueSource" style="display: none"
-                          class="layui-textarea"></textarea>
-                <textarea id="glue-description" name="glueDescription" style="display: none"
-                          class="layui-textarea"></textarea>
+                <textarea id="glue-source-code" name="glueSource" style="display: none" class="layui-textarea"></textarea>
+                <textarea id="glue-description" name="glueDescription" style="display: none" class="layui-textarea"></textarea>
             </div>
 
             <div class="layui-inline" id="glue-kettle" style="display: none">
@@ -295,14 +289,6 @@
                 </div>
             </div>
 
-            <!--            <div class="layui-inline" id="glue-conf-upload-file" style="display: none">-->
-            <!--                <label for="for-glue-conf-upload-file" class="layui-form-label">-->
-            <!--                    <span class="x-red">*</span>kettle文件-->
-            <!--                </label>-->
-            <!--                <div class="layui-input-inline" id="for-glue-conf-upload-file">-->
-            <!--                    <input type="text" class="layui-input" name="scheduleConf" autocomplete="off" placeholder="请输入 (Second)"/>-->
-            <!--                </div>-->
-            <!--            </div>-->
         </div>
         <div class="layui-form-item layui-form-text">
             <label for="add-executorParam" class="layui-form-label">任务参数</label>
@@ -320,7 +306,7 @@
             <div class="layui-inline">
                 <label for="add-route-strategy" class="layui-form-label">路由策略</label>
                 <div class="layui-input-inline">
-                    <select lay-search="" id="add-route-strategy" name="executorRouteStrategy" required
+                    <select id="add-route-strategy" name="executorRouteStrategy" required
                             lay-verify="required|executorRouteStrategy" lay-filter="glue-type-selected-filter">
                         <option value="FIRST" selected>第一个</option>
                         <option value="LAST">最后一个</option>
@@ -348,7 +334,7 @@
             <div class="layui-inline">
                 <label for="add-misfire-strategy" class="layui-form-label">调度过期策略</label>
                 <div class="layui-input-inline">
-                    <select lay-search="" id="add-misfire-strategy" name="misfireStrategy" required
+                    <select id="add-misfire-strategy" name="misfireStrategy" required
                             lay-verify="required|misfireStrategy" lay-filter="misfire-strategy-selected-filter">
                         <option value="DO_NOTHING" selected>忽略</option>
                         <option value="FIRE_ONCE_NOW">立即执行一次</option>
@@ -359,7 +345,7 @@
             <div class="layui-inline">
                 <label for="add-block-strategy" class="layui-form-label">阻塞处理策略</label>
                 <div class="layui-input-inline">
-                    <select lay-search="" id="add-block-strategy" name="executorBlockStrategy" required
+                    <select id="add-block-strategy" name="executorBlockStrategy" required
                             lay-verify="required|executorBlockStrategy" lay-filter="block-strategy-selected-filter">
                         <option value="SERIAL_EXECUTION" selected>单机串行</option>
                         <option value="DISCARD_LATER">丢弃后续调度</option>

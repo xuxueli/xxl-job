@@ -3,7 +3,6 @@ package com.xxl.job.core.pojo.dto;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * 触发参数
@@ -33,14 +32,19 @@ public class TriggerParam implements Serializable{
     private int broadcastTotal;
 
     /**
-     * kettle kjb 文件
+     * 模型类型(ktr,kjb)
      */
-    private byte[] kjb;
+    private String type;
 
     /**
-     * kettle ktr 文件
+     * kettle文件
      */
-    private List<byte[]> ktrs;
+    private byte[] kettleFile;
+
+    /**
+     * kjb引导文件，模型类型为kjb有效
+     */
+    private String guideKjb;
 
     /**
      * kettle 日志级别(NOTHING:没有日志,ERROR:错误日志,MINIMAL:最小日志,BASIC:基本日志,

@@ -122,6 +122,7 @@ public enum ResponseEnum {
     THERE_IS_NO_KJB_FILE_IN_THE_ZIP_PACKAGE(5033, "压缩包内没有'kjb'文件,请检查"),
     THE_FILE_RECOMPRESSED_PACKAGE_IS_ABNORMAL_PROCEDURE(5034, "文件重新打压缩包异常"),
     THE_CRON_EXPRESSION_CANNOT_BE_EMPTY(5035, "CRON表达式不能为空"),
+    KETTLE_CANNOT_BE_EMPTY(5036, "kettle模型不能为空"),
 
 
 

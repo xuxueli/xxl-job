@@ -116,6 +116,11 @@ public class JobInfo implements Serializable {
     private String childJobId;
 
     /**
+     * kettle信息ID
+     */
+    private Long kettleId;
+
+    /**
      * 调度状态：0-停止，1-运行
      */
     private Integer triggerStatus;

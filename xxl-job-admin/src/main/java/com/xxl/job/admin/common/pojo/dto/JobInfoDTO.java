@@ -34,6 +34,12 @@ public class JobInfoDTO extends Base implements Serializable {
     private Long groupId;
 
     /**
+     * kettle主键ID
+     */
+    @ApiModelProperty("kettle主键ID")
+    private Long kettleId;
+
+    /**
      * 任务名
      */
     @NotBlank(message = "任务名 不能为空")
