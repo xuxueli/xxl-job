@@ -77,7 +77,7 @@ public class JobThread extends Thread {
      * @param triggerParam 触发参数
      * @return {@link ResponseVO}
      */
-    public ResponseVO pushTriggerQueue(TriggerParam triggerParam) {
+    public ResponseVO<Void> pushTriggerQueue(TriggerParam triggerParam) {
         // avoid repeat
         if (triggerLogIdSet.contains(triggerParam.getLogId())) {
             log.info(">>>>>>>>>>> repeate trigger job, logId:{}", triggerParam.getLogId());
@@ -95,7 +95,8 @@ public class JobThread extends Thread {
      * @param stopReason 停止原因
      */
     public void toStop(String stopReason) {
-        /**
+
+        /*
          * Thread.interrupt只支持终止线程的阻塞状态(wait、join、sleep)，
          * 在阻塞出抛出InterruptedException异常,但是并不会终止运行的线程本身；
          * 所以需要注意，此处彻底销毁本线程，需要通过共享变量方式；

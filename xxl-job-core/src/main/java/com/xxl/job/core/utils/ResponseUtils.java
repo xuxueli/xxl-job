@@ -21,6 +21,19 @@ public class ResponseUtils {
      * 获取响应
      *
      * @param response 响应
+     * @return {@link T}
+     */
+    public static <T> T getResponse(ResponseVO<T> response) {
+        if (Validator.equal(0, response.getCode())) {
+            return response.getData();
+        }
+        return null;
+    }
+
+    /**
+     * 获取响应
+     *
+     * @param response 响应
      * @param clazz    clazz 类型
      * @return {@link T}
      */

@@ -31,25 +31,25 @@ public class XxlJobExecutorController {
     private ExecutorService executorService;
 
     @GetMapping(value = "/beat", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseVO beat() {
+    public ResponseVO<Void> beat() {
         log.debug("接收到beat请求");
         return executorService.beat();
     }
 
     @GetMapping(value = "/idleBeat", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseVO idleBeat(@Valid IdleBeatParam param) {
+    public ResponseVO<Void> idleBeat(@Valid IdleBeatParam param) {
         log.debug("接收到idleBeat请求，{}", param.toString());
         return executorService.idleBeat(param);
     }
 
     @PostMapping(value = "/run", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseVO run(@RequestBody @Valid TriggerParam param) {
+    public ResponseVO<Void> run(@RequestBody @Valid TriggerParam param) {
         log.debug("接收到run请求，{}", param.toString());
         return executorService.run(param);
     }
 
     @DeleteMapping(value = "/kill", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseVO kill(@RequestBody @Valid KillParam param) {
+    public ResponseVO<Void> kill(@RequestBody @Valid KillParam param) {
         log.debug("接收到kill请求，{}", param.toString());
         return executorService.kill(param);
     }

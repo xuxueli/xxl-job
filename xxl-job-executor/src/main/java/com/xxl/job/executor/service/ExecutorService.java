@@ -20,7 +20,7 @@ public interface ExecutorService {
      *
      * @return {@link ResponseVO}
      */
-    ResponseVO beat();
+    ResponseVO<Void> beat();
 
     /**
      * idle beat
@@ -28,7 +28,7 @@ public interface ExecutorService {
      * @param idleBeatParam 闲置击败参数
      * @return {@link ResponseVO}
      */
-    ResponseVO idleBeat(IdleBeatParam idleBeatParam);
+    ResponseVO<Void> idleBeat(IdleBeatParam idleBeatParam);
 
     /**
      * 运行
@@ -36,7 +36,7 @@ public interface ExecutorService {
      * @param triggerParam 触发参数
      * @return {@link ResponseVO}
      */
-    ResponseVO run(TriggerParam triggerParam);
+    ResponseVO<Void> run(TriggerParam triggerParam);
 
     /**
      * kill
@@ -44,7 +44,7 @@ public interface ExecutorService {
      * @param killParam 杀死参数
      * @return {@link ResponseVO}
      */
-    ResponseVO kill(KillParam killParam);
+    ResponseVO<Void> kill(KillParam killParam);
 
     /**
      * 日志
