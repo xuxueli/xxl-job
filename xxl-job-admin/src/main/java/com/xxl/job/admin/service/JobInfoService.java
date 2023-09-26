@@ -1,6 +1,7 @@
 package com.xxl.job.admin.service;
 
 import com.xxl.job.admin.common.pojo.dto.JobInfoDTO;
+import com.xxl.job.admin.common.pojo.dto.JobKettleDTO;
 import com.xxl.job.admin.common.pojo.dto.TriggerJobDTO;
 import com.xxl.job.admin.common.pojo.entity.JobInfo;
 import com.xxl.job.admin.common.pojo.vo.JobInfoVO;
@@ -122,6 +123,23 @@ public interface JobInfoService extends BaseService<JobInfo, JobInfo, JobInfoVO>
      * @return {@link List}<{@link String}>
      */
     List<String> cronLatestExecutionTime(String cron);
+
+    /**
+     *  根据任务ID修改 Kettle模型ID
+     *
+     * @param jobKettleDTO 任务参数DTO
+     */
+    void updateKettleByJobInfoId(JobKettleDTO jobKettleDTO);
+
+    /**
+     * 根据kettle模型ID是否存在任务信息
+     *
+     * @param kettleId kettle模型ID
+     * @return {@link Boolean}
+     */
+    Boolean existJobInfoByKettleId(Long kettleId);
+
+
 
 
 

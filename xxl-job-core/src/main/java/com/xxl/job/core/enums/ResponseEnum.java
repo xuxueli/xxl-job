@@ -123,7 +123,7 @@ public enum ResponseEnum {
     THE_FILE_RECOMPRESSED_PACKAGE_IS_ABNORMAL_PROCEDURE(5034, "文件重新打压缩包异常"),
     THE_CRON_EXPRESSION_CANNOT_BE_EMPTY(5035, "CRON表达式不能为空"),
     KETTLE_CANNOT_BE_EMPTY(5036, "kettle模型不能为空"),
-
+    THE_TASK_IS_BOUND_TO_THE_MODEL(5037, "任务已绑定该模型,不可删除"),
 
 
 

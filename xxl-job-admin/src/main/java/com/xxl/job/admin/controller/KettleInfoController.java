@@ -109,7 +109,15 @@ public class KettleInfoController extends AbstractController {
         kettleInfoService.download(id, request, response);
     }
 
-
+    @ApiOperation("根据ID查询更高版本的模型")
+    @GetMapping(value = "/advanced-version/{id}")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "path", name = "id", dataTypeClass = Long.class, value = "主键ID", required = true),
+    })
+    public ResponseVO<List<KettleInfoVO>> findKettleAdvancedVersionById(@PathVariable("id") @NotNull(message = "主键ID 不能为空") Long id) {
+        log.info("findKettleAdvancedVersionById {}", id);
+        return ResponseVO.success(kettleInfoService.findKettleAdvancedVersionById(id));
+    }
 
 
 

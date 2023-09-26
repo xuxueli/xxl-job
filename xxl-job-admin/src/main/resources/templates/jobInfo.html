@@ -45,6 +45,10 @@
             width: 405px !important;
         }
 
+        #select-status-inline .layui-unselect  .layui-select-title .layui-input {
+            width: 100px !important;
+        }
+
         #cron-button {
             background-color: #c2c2c2;
             height: auto;
@@ -85,6 +89,14 @@
                     </select>
                 </div>
             </div>
+            <div class="layui-inline">
+                <label for="select-kettle" class="layui-input-label">kettle模型</label>
+                <div class="layui-input-inline">
+                    <select lay-search="" id="select-kettle" lay-filter="kettle-selected">
+                        <option value="">请选择或搜索</option>
+                    </select>
+                </div>
+            </div>
             <div class="layui-input-inline">
                 <label class="layui-input-label">名称</label>
                 <input type="text" id="name" placeholder="请输入名称" autocomplete="off" class="layui-input">
@@ -92,9 +104,9 @@
 
             <div class="layui-inline">
                 <label for="select-status" class="layui-input-label">状态</label>
-                <div class="layui-input-inline">
-                    <select lay-search="" id="select-status" lay-filter="status-selected">
-                        <option value="">请选择或搜索</option>
+                <div class="layui-input-inline" id="select-status-inline">
+                    <select id="select-status" lay-filter="status-selected">
+                        <option value="">请选择</option>
                         <option value="1">运行</option>
                         <option value="0">停止</option>
                     </select>
@@ -121,6 +133,7 @@
 
     <xblock>
         <button class="layui-btn" onclick="change('新增任务', '')"><i class="layui-icon"></i>添加</button>
+        <button class="layui-btn  layui-btn-normal" onclick="upgradeAll()"><i class="layui-icon"></i>批量升级模型</button>
         <button class="layui-btn layui-btn-danger" onclick="delAll()"><i class="layui-icon"></i>批量删除</button>
     </xblock>
     <table class="layui-hide" id="table-data"></table>
@@ -468,6 +481,23 @@
     </form>
 </div>
 
+<div id="kettle-upgrade" style="display: none">
+    <form id="kettle-upgrade-form" class="layui-form" lay-filter="layui-kettle-upgrade-form">
+        <div class="layui-form-item layui-form-text">
+            <label for="for-kettle" class="layui-form-label">
+                <span class="x-red">*</span>kettle模型
+            </label>
+            <div class="layui-input-inline">
+                <select lay-search="" id="for-kettle" name="kettleId" required lay-verify="required|kettleId" lay-filter="kettle-selected">
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="kettle-upgrade-submit" class="layui-form-label"></label>
+            <button id="kettle-upgrade-submit" class="layui-btn" lay-filter="kettle-upgrade" lay-submit="">提交</button>
+        </div>
+    </form>
+</div>
 
 </body>
 

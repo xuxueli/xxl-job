@@ -7,6 +7,7 @@ import com.xxl.job.admin.service.base.BaseService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * <p>
@@ -39,6 +40,22 @@ public interface KettleInfoService extends BaseService<KettleInfo, KettleInfo, K
      * @param response 响应
      */
     void download(Long id, HttpServletRequest request, HttpServletResponse response);
+
+    /**
+     * 根据ID查询更高版本的模型
+     *
+     * @param id 主键
+     * @return {@link List}<{@link KettleInfoVO}>
+     */
+    List<KettleInfoVO> findKettleAdvancedVersionById(Long id);
+
+
+
+
+
+
+
+
 
 
 

@@ -3,6 +3,7 @@ package com.xxl.job.admin.controller;
 import cn.hutool.extra.validation.ValidationUtil;
 import com.xxl.job.admin.common.pojo.dto.JobInfoDTO;
 import com.xxl.job.admin.common.pojo.dto.JobInfoFilterDTO;
+import com.xxl.job.admin.common.pojo.dto.JobKettleDTO;
 import com.xxl.job.admin.common.pojo.dto.TriggerJobDTO;
 import com.xxl.job.admin.common.pojo.vo.JobInfoVO;
 import com.xxl.job.admin.common.pojo.vo.PageVO;
@@ -144,7 +145,13 @@ public class JobInfoController extends AbstractController {
         return ResponseVO.success(jobInfoService.cronLatestExecutionTime(cron));
     }
 
-
+    @ApiOperation("修改kettle模型")
+    @PutMapping(value = "/kettle", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseVO<Void> updateKettleByJobInfoId(@Validated @RequestBody JobKettleDTO jobKettleDTO) {
+        log.info("updateKettleByJobInfoId {}", jobKettleDTO.toString());
+        jobInfoService.updateKettleByJobInfoId(jobKettleDTO);
+        return ResponseVO.success();
+    }
 
 
 

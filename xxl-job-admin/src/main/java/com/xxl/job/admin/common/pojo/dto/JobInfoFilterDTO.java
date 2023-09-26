@@ -65,4 +65,8 @@ public class JobInfoFilterDTO extends PageDTO implements Serializable {
     private Integer triggerStatus;
 
 
+
+
+
+
 }

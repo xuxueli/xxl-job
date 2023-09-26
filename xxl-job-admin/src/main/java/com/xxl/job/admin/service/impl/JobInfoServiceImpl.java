@@ -12,6 +12,7 @@ import com.xxl.job.admin.common.enums.ScheduleTypeEnum;
 import com.xxl.job.admin.common.enums.TriggerTypeEnum;
 import com.xxl.job.admin.common.exceptions.XxlJobAdminException;
 import com.xxl.job.admin.common.pojo.dto.JobInfoDTO;
+import com.xxl.job.admin.common.pojo.dto.JobKettleDTO;
 import com.xxl.job.admin.common.pojo.dto.PageDTO;
 import com.xxl.job.admin.common.pojo.dto.TriggerJobDTO;
 import com.xxl.job.admin.common.pojo.entity.JobInfo;
@@ -272,6 +273,27 @@ public class JobInfoServiceImpl extends BaseServiceImpl<JobInfoMapper, JobInfo, 
             }
         }
         return result;
+    }
+
+    @Override
+    @Transactional(rollbackFor = RuntimeException.class)
+    public void updateKettleByJobInfoId(JobKettleDTO jobKettleDTO) {
+        Long kettleId = jobKettleDTO.getKettleId();
+        List<Long> jobIds = jobKettleDTO.getJobIds();
+
+        if (CollectionUtil.isNotEmpty(jobIds)) {
+            Assert.notNull(kettleInfoService.queryById(kettleId), ResponseEnum.THE_KETTLE_DOES_NOT_EXIST.getMessage());
+            List<Long> ids = jobIds.stream()
+                    .filter(a -> ObjectUtil.isNotNull(this.getById(a)))
+                    .collect(Collectors.toList());
+            jobInfoMapper.updateKettleByIds(ids, kettleId);
+        }
+    }
+
+    @Override
+    public Boolean existJobInfoByKettleId(Long kettleId) {
+        Assert.notNull(kettleId, ResponseEnum.THE_ID_CANNOT_BE_EMPTY.getMessage());
+        return CollectionUtil.isNotEmpty(jobInfoMapper.findJobInfoByKettleId(kettleId));
     }
 
     /**

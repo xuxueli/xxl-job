@@ -2,12 +2,15 @@ package com.xxl.job.admin.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.comparator.VersionComparator;
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.*;
 import com.xxl.job.admin.common.constants.FileConstant;
+import com.xxl.job.admin.common.constants.NumberConstant;
 import com.xxl.job.admin.common.exceptions.XxlJobAdminException;
 import com.xxl.job.admin.common.pojo.bo.KettleMaxVersionBO;
 import com.xxl.job.admin.common.pojo.dto.KettleInfoDTO;
@@ -18,6 +21,7 @@ import com.xxl.job.admin.common.pojo.vo.KettleInfoVO;
 import com.xxl.job.admin.common.utils.AuthUtils;
 import com.xxl.job.admin.common.utils.VersionUtils;
 import com.xxl.job.admin.mapper.KettleInfoMapper;
+import com.xxl.job.admin.service.JobInfoService;
 import com.xxl.job.admin.service.KettleInfoService;
 import com.xxl.job.admin.service.base.impl.BaseServiceImpl;
 import com.xxl.job.core.enums.KettleType;
@@ -39,7 +43,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.Serializable;
 import java.net.URLEncoder;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -58,10 +64,21 @@ public class KettleInfoServiceImpl extends BaseServiceImpl<KettleInfoMapper, Ket
     @Autowired
     private KettleInfoMapper kettleInfoMapper;
 
+    @Autowired
+    private JobInfoService jobInfoService;
+
     @Override
     public KettleInfoVO queryById(Serializable id) {
         Assert.notNull(id, ResponseEnum.THE_ID_CANNOT_BE_EMPTY.getMessage());
         return this.objectConversion(this.getById(id));
+    }
+
+    @Override
+    public Boolean delete(Serializable id) {
+        Assert.notNull(id, ResponseEnum.THE_ID_CANNOT_BE_EMPTY.getMessage());
+        Assert.isFalse(jobInfoService.existJobInfoByKettleId(Convert.toLong(id)),
+                ResponseEnum.THE_TASK_IS_BOUND_TO_THE_MODEL.getMessage());
+        return super.delete(id);
     }
 
     @Override
@@ -142,6 +159,22 @@ public class KettleInfoServiceImpl extends BaseServiceImpl<KettleInfoMapper, Ket
                 throw new XxlJobAdminException(ResponseEnum.ERROR.getCode(), String.format("文件 【%s】 下载异常!, 请重试", kettleInfo.getFileName()));
             }
         }
+    }
+
+    @Override
+    public List<KettleInfoVO> findKettleAdvancedVersionById(Long id) {
+        Assert.notNull(id, ResponseEnum.THE_ID_CANNOT_BE_EMPTY.getMessage());
+        KettleInfo kettleInfo = this.getById(id);
+        Assert.notNull(kettleInfo, ResponseEnum.THE_KETTLE_DOES_NOT_EXIST.getMessage());
+
+        List<KettleInfo> kettleInfos = kettleInfoMapper.findKettleBySeries(kettleInfo.getSeries());
+        if (CollectionUtil.isNotEmpty(kettleInfos)) {
+            return kettleInfos.stream()
+                    .filter(a -> VersionComparator.INSTANCE.compare(a.getVersion(), kettleInfo.getVersion()) > NumberConstant.ZERO)
+                    .map(this::objectConversion)
+                    .collect(Collectors.toList());
+        }
+        return Collections.emptyList();
     }
 
     /**

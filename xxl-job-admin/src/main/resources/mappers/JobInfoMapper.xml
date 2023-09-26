@@ -126,6 +126,9 @@
             <if test="triggerStatus != null">
                 and TRIGGER_STATUS = #{triggerStatus,jdbcType=INTEGER}
             </if>
+            <if test="kettleId != null">
+                and KETTLE_ID = #{kettleId,jdbcType=BIGINT}
+            </if>
         </where>
     </select>
 
@@ -144,4 +147,22 @@
         UPDATED_TIME = #{updatedTime,jdbcType=VARCHAR}
         WHERE ID = #{id,jdbcType=BIGINT}
     </update>
+
+    <update id="updateKettleByIds">
+        UPDATE XXL_JOB_INFO
+        set KETTLE_ID = #{kettleId,jdbcType=BIGINT}
+        <where>
+            id in
+            <foreach collection="ids" close=")" index="index" item="item" open="(" separator=",">
+                #{item,jdbcType=BIGINT}
+            </foreach>
+        </where>
+    </update>
+
+    <select id="findJobInfoByKettleId" resultMap="BaseResultMap">
+        select
+            <include refid="Base_Column_List"/>
+        from XXL_JOB_INFO
+        where KETTLE_ID = #{kettleId,jdbcType=BIGINT}
+    </select>
 </mapper>

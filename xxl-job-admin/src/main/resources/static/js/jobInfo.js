@@ -1,5 +1,6 @@
 $(function () {
     searchJobGroup('#select-jobGroup');
+    searchKettle("#select-kettle");
     search();
 })
 
@@ -131,7 +132,9 @@ function createTable(records) {
                     }
                 ]
 
-                if (!_.eq('BEAN',data.glueType) && !_.eq('KETTLE_KTR',data.glueType) && !_.eq('KETTLE_KJB',data.glueType)) {
+                if (_.eq('KETTLE_KTR',data.glueType) || _.eq('KETTLE_KJB',data.glueType)) {
+                    dropdownArr.push({id: 'upgradeKettle', templet: '<span style="color: #FFFFFF">模型版本升级</span>'})
+                }else if (!_.eq('BEAN',data.glueType)) {
                     dropdownArr.push({id: 'glueIde', templet: '<span style="color: #FFFFFF">GLUE IDE</span>'})
                 }
 
@@ -156,6 +159,8 @@ function createTable(records) {
                             showJobLog();
                         }else if (_.eq('glueIde', menu)) {
                             updateJobInfoWebIde(data);
+                        }else if (_.eq('upgradeKettle', menu)) {
+                            upgradeKettle(data);
                         }
                     },
                     align: 'right', // 右对齐弹出
@@ -164,6 +169,135 @@ function createTable(records) {
             }
         });
     });
+}
+
+/**
+ * kettle模型版本升级
+ * @param srcData
+ */
+function upgradeKettle(srcData) {
+    let form = layui.form;
+    layer.open({
+        type: 1,
+        area: [($(window).width() * 0.4) + 'px', ($(window).height() - 300) + 'px'],
+        fix: false, //不固定
+        shadeClose: true,
+        shade: 0.4,
+        maxmin: true,
+        title: "kettle模型升级",
+        content: $('#kettle-upgrade'),
+        success: function (index) {
+            initKettleAdvancedVersion(srcData, "#for-kettle")
+                .then( res => {
+                    form.render();
+                })
+        },
+        cancel: function (index, layero, that) {
+            $("#kettle-upgrade-form")[0].reset();
+            $('#for-kettle').empty();
+            form.render();
+            return true;
+        },
+    });
+
+    form.on('submit(kettle-upgrade)', function (data) {
+        let field = data.field;
+        let param = {
+            "jobIds": [srcData.id],
+            "kettleId": field.kettleId,
+        }
+        let res = http.put("job/kettle", param);
+        if (!isSuccess(res.code)) {
+            message.error(res.message);
+            return false;
+        }
+        return true;
+    });
+}
+
+/**
+ * 升级所有
+ */
+function upgradeAll() {
+    var datas = layui.table.checkStatus('table-data').data;
+    if (!_.isNil(datas) && !_.isEmpty(datas)) {
+        let ids = [];
+        datas.forEach(a => {
+            ids.push(a.id);
+        })
+
+        let form = layui.form;
+        layer.open({
+            type: 1,
+            area: [($(window).width() * 0.4) + 'px', ($(window).height() - 300) + 'px'],
+            fix: false, //不固定
+            shadeClose: true,
+            shade: 0.4,
+            maxmin: true,
+            title: "kettle模型升级",
+            content: $('#kettle-upgrade'),
+            success: function (index) {
+                initKettleAdvancedVersion(datas[0], "#for-kettle")
+                    .then( res => {
+                        form.render();
+                    })
+            },
+            cancel: function (index, layero, that) {
+                $("#kettle-upgrade-form")[0].reset();
+                $('#for-kettle').empty();
+                form.render();
+                return true;
+            },
+        });
+
+        form.on('submit(kettle-upgrade)', function (data) {
+            let field = data.field;
+            let param = {
+                "jobIds": ids,
+                "kettleId": field.kettleId,
+            }
+            let res = http.put("job/kettle", param);
+            if (!isSuccess(res.code)) {
+                message.error(res.message);
+                return false;
+            }
+            return true;
+        });
+    }
+}
+
+function searchKettle(divId) {
+    return new Promise(resolve => {
+        let page = http.get("kettle-info", {'currentPage': -1,});
+        layui.use(['form'], function () {
+            let form = layui.form;
+            $.each(page.records, function (index, item) {
+                let option = new Option(item.name + "/" + item.version, item.id);
+                $(divId).append(option);
+            });
+            form.render("select");
+            resolve(true)
+        });
+    })
+}
+
+function initKettleAdvancedVersion(data, divId) {
+    return new Promise(resolve => {
+        if (_.isNull(data) || _.isNull(data.kettleInfo)) {
+            resolve(false);
+        }
+        let kettleId = data.kettleInfo.id;
+        let kettleInfos = http.getPath("kettle-info/advanced-version/" + kettleId);
+        layui.use(['form'], function () {
+            let form = layui.form;
+            $.each(kettleInfos, function (index, item) {
+                let option = new Option(item.name + "/" + item.version, item.id);
+                $(divId).append(option);
+            });
+            form.render("select");
+            resolve(true)
+        });
+    })
 }
 
 /**
@@ -313,6 +447,7 @@ function pageSearch(currentPage, pageSize) {
     let status = $("#select-status").find("option:selected").val();
     let executorHandler = $("#executorHandler").val();
     let author = $("#author").val();
+    let kettleId = $("#select-kettle").find("option:selected").val();
 
     let pageDTO = {
         'currentPage': currentPage,
@@ -322,6 +457,7 @@ function pageSearch(currentPage, pageSize) {
         'executorHandler': executorHandler,
         'author': author,
         'triggerStatus': status,
+        "kettleId": kettleId,
     };
     return http.get("job", pageDTO);
 }
@@ -660,6 +796,7 @@ function deleteData(obj) {
 function clean() {
     $("#select-jobGroup option[value='']").prop("selected", true);
     $("#select-status option[value='']").prop("selected", true);
+    $("#select-kettle option[value='']").prop("selected", true);
     $("#executorHandler").val('');
     $("#author").val('');
 

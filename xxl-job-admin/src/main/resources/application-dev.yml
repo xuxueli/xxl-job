@@ -8,7 +8,7 @@ spring:
 
   # mysql 配置
   datasource:
-    url: jdbc:mysql://localhost:3306/xxl_job?useUnicode=true&characterEncoding=UTF-8&useSSL=false
+    url: jdbc:mysql://localhost:3306/xxl_job?useUnicode=true&characterEncoding=UTF-8&allowPublicKeyRetrieval=true&useSSL=false
     username: root
     password: 123456
 

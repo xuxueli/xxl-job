@@ -93,8 +93,21 @@ public interface JobInfoMapper extends BaseMapper<JobInfo> {
                         @Param("glueSource") String glueSource, @Param("glueDescription") String glueDescription,
                         @Param("glueUpdatedTime") String glueUpdatedTime, @Param("updatedTime") String updatedTime);
 
+    /**
+     * 根据ID集合修改Kettle模型ID
+     *
+     * @param ids      ID集合
+     * @param kettleId Kettle模型ID
+     */
+    void updateKettleByIds(@Param("ids") List<Long> ids, @Param("kettleId") Long kettleId);
 
-
+    /**
+     * 根据 kettle模型ID查询任务信息
+     *
+     * @param kettleId kettle模型ID
+     * @return {@link List}<{@link JobInfo}>
+     */
+    List<JobInfo> findJobInfoByKettleId(@Param("kettleId") Long kettleId);
 
 
 
