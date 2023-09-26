@@ -65,7 +65,7 @@ public class JobLogController {
 		if (jobId > 0) {
 			XxlJobInfo jobInfo = xxlJobInfoDao.loadById(jobId);
 			if (jobInfo == null) {
-				throw new RuntimeException(I18nUtil.getString("jobinfo_field_id") + I18nUtil.getString("system_unvalid"));
+				throw new RuntimeException(I18nUtil.getString("jobinfo_field_id") + I18nUtil.getString("system_invalid"));
 			}
 
 			model.addAttribute("jobInfo", jobInfo);
@@ -124,7 +124,7 @@ public class JobLogController {
 		ReturnT<String> logStatue = ReturnT.SUCCESS;
 		XxlJobLog jobLog = xxlJobLogDao.load(id);
 		if (jobLog == null) {
-            throw new RuntimeException(I18nUtil.getString("joblog_logid_unvalid"));
+            throw new RuntimeException(I18nUtil.getString("joblog_logid_invalid"));
 		}
 
         model.addAttribute("triggerCode", jobLog.getTriggerCode());
@@ -140,7 +140,7 @@ public class JobLogController {
 			// valid
 			XxlJobLog jobLog = xxlJobLogDao.load(logId);	// todo, need to improve performance
 			if (jobLog == null) {
-				return new ReturnT<LogResult>(ReturnT.FAIL_CODE, I18nUtil.getString("joblog_logid_unvalid"));
+				return new ReturnT<LogResult>(ReturnT.FAIL_CODE, I18nUtil.getString("joblog_logid_invalid"));
 			}
 
 			// log cat
@@ -168,7 +168,7 @@ public class JobLogController {
 		XxlJobLog log = xxlJobLogDao.load(id);
 		XxlJobInfo jobInfo = xxlJobInfoDao.loadById(log.getJobId());
 		if (jobInfo==null) {
-			return new ReturnT<String>(500, I18nUtil.getString("jobinfo_glue_jobid_unvalid"));
+			return new ReturnT<String>(500, I18nUtil.getString("jobinfo_glue_jobid_invalid"));
 		}
 		if (ReturnT.SUCCESS_CODE != log.getTriggerCode()) {
 			return new ReturnT<String>(500, I18nUtil.getString("joblog_kill_log_limit"));
@@ -220,7 +220,7 @@ public class JobLogController {
 		} else if (type == 9) {
 			clearBeforeNum = 0;			// 清理所有日志数据
 		} else {
-			return new ReturnT<String>(ReturnT.FAIL_CODE, I18nUtil.getString("joblog_clean_type_unvalid"));
+			return new ReturnT<String>(ReturnT.FAIL_CODE, I18nUtil.getString("joblog_clean_type_invalid"));
 		}
 
 		List<Long> logIds = null;
