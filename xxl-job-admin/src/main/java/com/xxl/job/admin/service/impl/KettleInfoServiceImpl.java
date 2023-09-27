@@ -18,7 +18,6 @@ import com.xxl.job.admin.common.pojo.dto.PageDTO;
 import com.xxl.job.admin.common.pojo.entity.KettleInfo;
 import com.xxl.job.admin.common.pojo.query.KettleInfoQuery;
 import com.xxl.job.admin.common.pojo.vo.KettleInfoVO;
-import com.xxl.job.admin.common.utils.AuthUtils;
 import com.xxl.job.admin.common.utils.VersionUtils;
 import com.xxl.job.admin.mapper.KettleInfoMapper;
 import com.xxl.job.admin.service.JobInfoService;
@@ -66,6 +65,15 @@ public class KettleInfoServiceImpl extends BaseServiceImpl<KettleInfoMapper, Ket
 
     @Autowired
     private JobInfoService jobInfoService;
+
+    @Override
+    public KettleInfoVO objectConversion(KettleInfo kettleInfo) {
+        KettleInfoVO kettleInfoVO = super.objectConversion(kettleInfo);
+        if (ObjectUtil.isNotNull(kettleInfoVO)) {
+            kettleInfoVO.setFile(kettleInfo.getKettleFile());
+        }
+        return kettleInfoVO;
+    }
 
     @Override
     public KettleInfoVO queryById(Serializable id) {

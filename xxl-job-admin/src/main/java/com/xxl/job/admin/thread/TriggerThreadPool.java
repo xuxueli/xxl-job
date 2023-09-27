@@ -17,6 +17,7 @@ import com.xxl.job.admin.common.pojo.dto.JobLogDTO;
 import com.xxl.job.admin.common.pojo.dto.TriggerLogDTO;
 import com.xxl.job.admin.common.pojo.vo.JobGroupVO;
 import com.xxl.job.admin.common.pojo.vo.JobInfoVO;
+import com.xxl.job.admin.common.pojo.vo.KettleInfoVO;
 import com.xxl.job.admin.service.ExecutorClient;
 import com.xxl.job.admin.service.JobInfoService;
 import com.xxl.job.admin.service.JobLogService;
@@ -252,6 +253,14 @@ public class TriggerThreadPool extends AbstractThreadListener implements Ordered
         triggerParam.setLogDateTime(jobLogDTO.getTriggerTime());
         triggerParam.setBroadcastIndex(index);
         triggerParam.setBroadcastTotal(total);
+
+        KettleInfoVO kettleInfo = jobInfo.getKettleInfo();
+        if (ObjectUtil.isNotNull(kettleInfo)) {
+            triggerParam.setType(kettleInfo.getType());
+            triggerParam.setKettleFile(kettleInfo.getFile());
+            triggerParam.setGuideKjb(kettleInfo.getGuideKjb());
+            triggerParam.setKettleLogLevel(kettleInfo.getLogLevel());
+        }
 
         // 3、init address
         String address = null;

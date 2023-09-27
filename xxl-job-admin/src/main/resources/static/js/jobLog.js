@@ -261,7 +261,7 @@ function showMessage(title, message) {
         layer.alert(html, {
             title: title,
             skin: 'layui-layer-molv',
-            area: ['800px', 'auto'],
+            area: ['800px', '800px'],
         });
     }
 }
