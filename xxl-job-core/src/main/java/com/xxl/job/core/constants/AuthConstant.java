@@ -1,4 +1,4 @@
-package com.xxl.job.admin.common.constants;
+package com.xxl.job.core.constants;
 
 import java.util.Arrays;
 import java.util.List;

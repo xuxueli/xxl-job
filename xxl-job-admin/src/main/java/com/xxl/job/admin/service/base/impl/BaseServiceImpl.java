@@ -9,12 +9,12 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.toolkit.ReflectionKit;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageInfo;
-import com.xxl.job.admin.common.constants.NumberConstant;
 import com.xxl.job.admin.common.pojo.dto.PageDTO;
 import com.xxl.job.admin.common.pojo.vo.PageVO;
 import com.xxl.job.admin.common.utils.PageableUtils;
 import com.xxl.job.admin.common.utils.PropertyUtils;
 import com.xxl.job.admin.service.base.BaseService;
+import com.xxl.job.core.constants.NumberConstant;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;

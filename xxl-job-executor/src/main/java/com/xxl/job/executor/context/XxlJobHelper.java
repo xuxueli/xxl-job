@@ -186,7 +186,7 @@ public class XxlJobHelper {
      * @return boolean
      */
     public static boolean handleSuccess(){
-        return handleResult(ResponseEnum.SUCCESS.getCode(), null);
+        return handleResult(ResponseEnum.SUCCESS.getCode(), "处理成功");
     }
 
     /**
@@ -205,7 +205,7 @@ public class XxlJobHelper {
      * @return boolean
      */
     public static boolean handleFail(){
-        return handleResult(ResponseEnum.ERROR.getCode(), null);
+        return handleResult(ResponseEnum.ERROR.getCode(), "处理异常, 请排查");
     }
 
     /**
@@ -224,7 +224,7 @@ public class XxlJobHelper {
      * @return boolean
      */
     public static boolean handleTimeout(){
-        return handleResult(ResponseEnum.TIMEOUT.getCode(), null);
+        return handleResult(ResponseEnum.TIMEOUT.getCode(), "调用超时");
     }
 
     /**

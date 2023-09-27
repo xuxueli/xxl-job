@@ -7,7 +7,6 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
-import com.xxl.job.admin.common.constants.NumberConstant;
 import com.xxl.job.admin.common.pojo.dto.JobGroupDTO;
 import com.xxl.job.admin.common.pojo.dto.PageDTO;
 import com.xxl.job.admin.common.pojo.entity.JobGroup;
@@ -20,6 +19,7 @@ import com.xxl.job.admin.service.JobGroupService;
 import com.xxl.job.admin.service.JobInfoService;
 import com.xxl.job.admin.service.RegistryService;
 import com.xxl.job.admin.service.base.impl.BaseServiceImpl;
+import com.xxl.job.core.constants.NumberConstant;
 import com.xxl.job.core.enums.RegistryConfig;
 import com.xxl.job.core.enums.RegistryType;
 import com.xxl.job.core.enums.ResponseEnum;
@@ -29,7 +29,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**

@@ -1,4 +1,4 @@
-package com.xxl.job.admin.common.constants;
+package com.xxl.job.core.constants;
 
 /**
  *  数字常量类

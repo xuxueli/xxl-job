@@ -9,7 +9,7 @@ xxl:
     executor:
       host: localhost
       port: 12100
-      app-name: mes-web-api-service
+      app-name: kjb-exe
 
 
 
