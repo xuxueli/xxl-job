@@ -33,12 +33,12 @@ public interface JobLogService extends BaseService<JobLog, JobLog, JobLogVO> {
     List<Long> queryLostJobIds(Date loseTime);
 
     /**
-     * 同步任务日志
+     * 新增任务日志
      *
      * @param jobLogDTO 工作日志DTO
      * @return {@link Long}
      */
-    Long syncJobLog(JobLogDTO jobLogDTO);
+    Long saveJobLog(JobLogDTO jobLogDTO);
 
     /**
      * 更新触发器信息

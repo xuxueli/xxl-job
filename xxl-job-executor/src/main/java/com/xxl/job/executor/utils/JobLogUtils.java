@@ -73,15 +73,6 @@ public class JobLogUtils {
 
 		if (StrUtil.isBlank(logFileName)) return;
 		File logFile = new File(logFileName);
-//		if (!logFile.exists()) {
-//			try {
-//				FileUtil.newFile()
-//				logFile.createNewFile();
-//			} catch (IOException e) {
-//				log.error(e.getMessage(), e);
-//				return;
-//			}
-//		}
 		FileUtil.writeLines(Collections.singletonList(appendLog), logFile, CharsetUtil.UTF_8, Boolean.TRUE);
 	}
 
@@ -116,7 +107,7 @@ public class JobLogUtils {
 			while ((line = reader.readLine())!=null) {
 				toLineNum = reader.getLineNumber();		// [from, to], start as 1
 				if (toLineNum >= fromLineNum) {
-					logContentBuffer.append(line).append("\n");
+					logContentBuffer.append(line).append("\n").append("<br>");
 				}
 			}
 		} catch (IOException e) {

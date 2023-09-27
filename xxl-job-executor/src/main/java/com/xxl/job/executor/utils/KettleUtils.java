@@ -79,9 +79,9 @@ public class KettleUtils {
             String logText = appender.getBuffer(logChannelId, true).toString();
             XxlJobHelper.log("{} : {}",name, logText);
             if (trans.getErrors() > 0) {
-                String msg = "There are errors during transformation exception!(转换过程中发生异常)";
-                XxlJobHelper.log(msg);
+                XxlJobHelper.log("There are errors during transformation exception!(转换过程中发生异常)");
             }
+            appender.clear();
         }catch (Exception e) {
             XxlJobHelper.log(e);
         }finally {

@@ -240,7 +240,7 @@ public class TriggerThreadPool extends AbstractThreadListener implements Ordered
         jobLogDTO.setGroupId(jobInfo.getJobGroup().getId());
         jobLogDTO.setJobId(jobInfo.getId());
         jobLogDTO.setTriggerTime(DateUtil.current());
-        Long jobLogId = jobLogService.syncJobLog(jobLogDTO);
+        Long jobLogId = jobLogService.saveJobLog(jobLogDTO);
 
         log.debug(">>>>>>>>>>> xxl-job trigger start, jobId:{}", jobInfo.getId());
 

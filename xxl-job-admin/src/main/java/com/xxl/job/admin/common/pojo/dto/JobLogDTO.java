@@ -22,12 +22,6 @@ public class JobLogDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
-     * 主键
-     */
-    @ApiModelProperty(value = "主键")
-    private Long id;
-
-    /**
      * 任务组主键ID
      */
     @NotNull(message = "任务组主键ID 不能为空")

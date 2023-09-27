@@ -2,6 +2,7 @@ package com.xxl.job.executor.factory.thread;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 import com.xxl.job.core.enums.ResponseEnum;
 import com.xxl.job.core.pojo.dto.HandleCallbackParam;
 import com.xxl.job.core.pojo.dto.TriggerParam;
@@ -151,7 +152,8 @@ public class JobThread extends Thread {
                     XxlJobContext.setJobContext(xxlJobContext);
 
                     // execute
-                    XxlJobHelper.log("<br>----------- xxl-job job execute start -----------<br>----------- Param:" + xxlJobContext.getJobParam());
+                    XxlJobHelper.log("<br>----------- xxl-job job execute start -----------<br>----------- Param: " +
+                            (StrUtil.isBlank(xxlJobContext.getJobParam()) ? null : xxlJobContext.getJobParam()) + " -----------<br>");
 
                     if (triggerParam.getExecutorTimeout() > 0) {
                         // limit timeout

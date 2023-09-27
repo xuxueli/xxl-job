@@ -89,12 +89,10 @@ public class JobLogServiceImpl extends BaseServiceImpl<JobLogMapper, JobLog, Job
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    public Long syncJobLog(JobLogDTO jobLogDTO) {
-        JobLog jobLog = ObjectUtil.isNotNull(jobLogDTO.getId())
-                ? this.getById(jobLogDTO.getId()) : new JobLog();
-        if (ObjectUtil.isEmpty(jobLog)) jobLog = new JobLog();
-        BeanUtil.copyProperties(jobLogDTO, jobLog, CopyOptions.create().setIgnoreNullValue(Boolean.TRUE));
-        this.saveOrUpdate(jobLog);
+    public Long saveJobLog(JobLogDTO jobLogDTO) {
+        JobLog jobLog = new JobLog();
+        BeanUtil.copyProperties(jobLogDTO, jobLog);
+        this.save(jobLog);
         return jobLog.getId();
     }
 
