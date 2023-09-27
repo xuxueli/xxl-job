@@ -119,7 +119,6 @@ CREATE TABLE IF NOT EXISTS `xxl_job_kettle_info`  (
   `log_level` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '日志级别(NOTHING:没有日志,ERROR:错误日志,MINIMAL:最小日志,BASIC:基本日志,DETAILED:详细日志,DEBUG:调试,ROWLEVEL:行级日志(非常详细))',
   `file_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '文件名',
   `version` varchar(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '版本号',
-  `status` int NOT NULL DEFAULT 0 COMMENT '状态, 1: 启用, 0:禁用',
   `created_user` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '创建人',
   `created_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
   `updated_user` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '更新人',

@@ -58,16 +58,6 @@ function createTable(records) {
                         return '基本日志';
                     }
                 },
-                {
-                    field: 'status', title: '状态', width: 90, templet: function (row) {
-                        let kettleId = row.id;
-                        if (row.status == 0) {
-                            return "<input type='checkbox'  kettleId = '" + kettleId + "' lay-filter='kettle-status-filter' lay-skin='switch' lay-text='ON|OFF'>"
-                        } else {
-                            return "<input type='checkbox'  kettleId = '" + kettleId + "'  lay-filter='kettle-status-filter' lay-skin='switch' lay-text='ON|OFF' checked>"
-                        }
-                    }
-                },
                 {field: 'guideKjb', title: 'kjb引导文件'},
                 // {field: 'createdUser', width: 100 ,title: '添加人'},
                 // {
@@ -88,10 +78,6 @@ function createTable(records) {
             // skin: 'line', // 表格风格
             even: true,// 是否开启隔行背景
             page: false, // 是否显示分页
-        });
-
-        from.on('switch(kettle-status-filter)', function (row) {
-            updateStatus(row.elem.attributes['kettleId'].nodeValue, row.elem.checked);
         });
 
         table.on('tool(table-data)', function (obj) {
@@ -138,20 +124,6 @@ function deleteData(obj) {
 }
 
 /**
- * 修改状态
- * @param id 主键
- * @param status 状态
- */
-function updateStatus(id, status) {
-    if (status) {
-        http.patchPath('kettle-info/' + id + "/" + 1);
-    } else {
-        http.patchPath('kettle-info/' + id + "/" + 0);
-    }
-    pageSearch(1, 50);
-}
-
-/**
  * 分页查询
  * @param currentPage 当前页
  * @param pageSize 页大小
@@ -160,7 +132,6 @@ function updateStatus(id, status) {
 function pageSearch(currentPage, pageSize) {
 
     let type = $("#select-type").find("option:selected").val();
-    let status = $("#select-status").find("option:selected").val();
     let logLevel = $("#select-log-level").find("option:selected").val();
     let name = $("#name").val();
     let start = $("#start").val();
@@ -172,7 +143,6 @@ function pageSearch(currentPage, pageSize) {
         'endTime': end,
         'name': name,
         'type': type,
-        'status': status,
         'logLevel': logLevel,
     };
 
@@ -295,7 +265,6 @@ function update(data) {
                 // "file": data.fileName,
                 // "guideKjb": data.guideKjb,
                 "logLevel": data.logLevel,
-                "status": data.status,
             });
             $('#update-name').attr('readonly', true);
             $('#update-type').attr("disabled", "disabled");
@@ -393,9 +362,6 @@ function validate(form) {
         type: function (value, item) {
             if(_.isEmpty(value)) return "类型不能为空";
         },
-        status: function (value, item) {
-            if(_.isEmpty(value)) return "状态不能为空";
-        },
         logLevel: function (value, item) {
             if(_.isEmpty(value)) return "日志级别不能为空";
         },
@@ -413,7 +379,6 @@ function clean() {
     $("#end").val('');
     $("#name").val('');
     $("#select-type option[value='']").prop("selected", true);
-    $("#select-status option[value='']").prop("selected", true);
     $("#select-log-level option[value='']").prop("selected", true);
 
     layui.use('form', function () {

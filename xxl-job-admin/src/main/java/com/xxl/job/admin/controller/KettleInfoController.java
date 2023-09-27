@@ -86,19 +86,6 @@ public class KettleInfoController extends AbstractController {
         return ResponseVO.success(kettleInfoService.queryById(id));
     }
 
-    @ApiOperation("修改kettle状态")
-    @PatchMapping(value = "/{id}/{status}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "path", name = "id", dataTypeClass = Long.class, value = "主键ID", required = true),
-            @ApiImplicitParam(paramType = "path", name = "status", dataTypeClass = Integer.class, value = "状态, 1: 启用, 0:禁用", required = true),
-    })
-    public ResponseVO<Void> updateStatusById(@PathVariable("id") @NotNull(message = "主键ID不能为空") Long id,
-                                                     @PathVariable("status") @NotNull(message = "状态不能为空") Integer status) {
-        log.info("updateStatusById {}, {}", id, status);
-        kettleInfoService.updateStatusById(id, status);
-        return ResponseVO.success();
-    }
-
     @ApiOperation("下载文件")
     @GetMapping(value = "/download/{id}")
     @ApiImplicitParams({

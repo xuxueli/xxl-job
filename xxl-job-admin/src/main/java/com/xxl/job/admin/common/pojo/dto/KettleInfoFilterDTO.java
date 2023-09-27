@@ -42,12 +42,6 @@ public class KettleInfoFilterDTO extends PageDTO implements Serializable {
             "BASIC:基本日志,DETAILED:详细日志,DEBUG:调试,ROWLEVEL:行级日志(非常详细))")
     private String logLevel;
 
-    /**
-     * 状态, 1: 启用, 0:禁用
-     */
-    @ApiModelProperty(value = "状态, 1: 启用, 0:禁用")
-    private Integer status;
-
 
  
 

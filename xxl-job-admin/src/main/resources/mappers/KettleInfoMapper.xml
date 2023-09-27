@@ -13,7 +13,6 @@
         <result column="log_level" property="logLevel"/>
         <result column="file_name" property="fileName"/>
         <result column="version" property="version"/>
-        <result column="status" property="status"/>
         <result column="created_user" property="createdUser"/>
         <result column="created_time" property="createdTime"/>
         <result column="updated_user" property="updatedUser"/>
@@ -33,7 +32,6 @@
         log_level,
         file_name,
         version,
-        status,
         created_user,
         created_time,
         updated_user,
@@ -75,9 +73,6 @@
             </if>
             <if test="logLevel != null and logLevel != ''">
                 and log_level = #{logLevel,jdbcType=VARCHAR}
-            </if>
-            <if test="status != null">
-                and status = #{status,jdbcType=INTEGER}
             </if>
             <if test="startTime != null and startTime != ''">
                 and created_time <![CDATA[ >= ]]> #{startTime,jdbcType=VARCHAR}

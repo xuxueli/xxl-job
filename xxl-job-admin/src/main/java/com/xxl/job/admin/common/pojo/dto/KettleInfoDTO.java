@@ -61,13 +61,6 @@ public class KettleInfoDTO extends Base implements Serializable {
             "BASIC:基本日志,DETAILED:详细日志,DEBUG:调试,ROWLEVEL:行级日志(非常详细))", required = true)
     private String logLevel;
 
-    /**
-     * 状态, 1: 启用, 0:禁用
-     */
-    @NotNull(message = "状态 不能为空")
-    @ApiModelProperty(value = "状态, 1: 启用, 0:禁用", required = true)
-    private Integer status;
-
 
 
  

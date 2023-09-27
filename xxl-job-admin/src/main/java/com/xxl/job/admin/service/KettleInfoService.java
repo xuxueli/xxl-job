@@ -26,13 +26,6 @@ public interface KettleInfoService extends BaseService<KettleInfo, KettleInfo, K
     void saveKettleInfo(KettleInfoDTO kettleInfoDTO);
 
     /**
-     * 根据ID修改状态
-     * @param id 主键
-     * @param status 状态, 1: 启用, 0:禁用
-     */
-    void updateStatusById(Long id, Integer status);
-
-    /**
      * 下载文件
      *
      * @param id       主键ID

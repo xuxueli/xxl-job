@@ -133,18 +133,6 @@ public class KettleInfoServiceImpl extends BaseServiceImpl<KettleInfoMapper, Ket
     }
 
     @Override
-    @Transactional(rollbackFor = RuntimeException.class)
-    public void updateStatusById(Long id, Integer status) {
-        Assert.notNull(id, ResponseEnum.THE_ID_CANNOT_BE_EMPTY.getMessage());
-        KettleInfo kettleInfo = this.getById(id);
-        Assert.notNull(kettleInfo, ResponseEnum.THE_KETTLE_DOES_NOT_EXIST.getMessage());
-        kettleInfo.setUpdatedTime(DateUtil.date());
-        kettleInfo.setUpdatedUser(AuthUtils.getCurrentUser());
-        kettleInfo.setStatus(status);
-        this.updateById(kettleInfo);
-    }
-
-    @Override
     public void download(Long id, HttpServletRequest request, HttpServletResponse response) {
         KettleInfo kettleInfo = this.getById(id);
         if (ObjectUtil.isNotNull(kettleInfo)) {

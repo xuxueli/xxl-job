@@ -97,17 +97,6 @@
             </div>
 
             <div class="layui-inline">
-                <label for="select-status" class="layui-input-label">状态</label>
-                <div class="layui-input-inline" id="select-status-inline">
-                    <select id="select-status" lay-filter="select-status-filter">
-                        <option value="">请选择</option>
-                        <option value="1">启用</option>
-                        <option value="0">禁用</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="layui-inline">
                 <label for="select-log-level" class="layui-input-label">日志级别</label>
                 <div class="layui-input-inline" id="select-log-level-inline">
                     <select id="select-log-level" lay-filter="select-log-level-filter">
@@ -197,18 +186,6 @@
         </div>
 
         <div class="layui-form-item">
-            <label for="add-status" class="layui-form-label">
-                <span class="x-red">*</span>状态
-            </label>
-            <div class="layui-input-inline">
-                <select id="add-status" name="status" required lay-verify="required|status" lay-filter="add-status-filter">
-                    <option value="1" selected>启用</option>
-                    <option value="0">禁用</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="layui-form-item">
             <label for="add-log-level" class="layui-form-label">
                 <span class="x-red">*</span>日志级别
             </label>
@@ -288,18 +265,6 @@
                         <span class="tip" id="guideKjb-tip">请选择引导文件</span>
                     </div>
                 </div>
-            </div>
-        </div>
-
-        <div class="layui-form-item">
-            <label for="update-status" class="layui-form-label">
-                <span class="x-red">*</span>状态
-            </label>
-            <div class="layui-input-inline">
-                <select id="update-status" required lay-verify="required|status" name="status" lay-filter="update-status-filter">
-                    <option value="1" selected>启用</option>
-                    <option value="0">禁用</option>
-                </select>
             </div>
         </div>
 

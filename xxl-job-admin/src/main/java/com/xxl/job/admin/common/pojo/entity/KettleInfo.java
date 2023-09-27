@@ -72,11 +72,6 @@ public class KettleInfo implements Serializable {
     private String version;
 
     /**
-     * 状态, 1: 启用, 0:禁用
-     */
-    private Integer status;
-
-    /**
      * 创建人
      */
     private String createdUser;
