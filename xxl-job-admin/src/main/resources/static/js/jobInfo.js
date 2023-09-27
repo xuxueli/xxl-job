@@ -156,7 +156,7 @@ function createTable(records) {
                             newDate.id = null;
                             change("新增任务", newDate);
                         }else if (_.eq("jobLog", menu)) {
-                            showJobLog();
+                            showJobLog(data);
                         }else if (_.eq('glueIde', menu)) {
                             updateJobInfoWebIde(data);
                         }else if (_.eq('upgradeKettle', menu)) {
@@ -272,9 +272,10 @@ function initKettleAdvancedVersion(data, divId) {
 
 /**
  * 显示任务日志
+ * @param data 任务信息
  */
-function showJobLog() {
-    console.log("查询日志");
+function showJobLog(data) {
+    console.log("查询日志", data);
 }
 
 /**
