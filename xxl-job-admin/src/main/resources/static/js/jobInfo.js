@@ -276,6 +276,12 @@ function initKettleAdvancedVersion(data, divId) {
  */
 function showJobLog(data) {
     console.log("查询日志", data);
+
+    let param = {
+        "groupId": data.jobGroup.id,
+        "jobId": data.id,
+    }
+
 }
 
 /**
