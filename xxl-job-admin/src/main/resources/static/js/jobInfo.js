@@ -173,9 +173,20 @@ function createTable(records) {
 
 /**
  * kettle模型版本升级
- * @param srcData
+ * @param oldData
  */
-function upgradeKettle(srcData) {
+function upgradeKettle(oldData) {
+
+    let srcData = null;
+    let ids = [];
+    if (_.isArray(oldData)) {
+        oldData.forEach(a => ids.push(a.id));
+        srcData = oldData[0];
+    }else {
+        srcData = oldData;
+        ids.push(oldData.id);
+    }
+
     let form = layui.form;
     layer.open({
         type: 1,
@@ -203,7 +214,7 @@ function upgradeKettle(srcData) {
     form.on('submit(kettle-upgrade)', function (data) {
         let field = data.field;
         let param = {
-            "jobIds": [srcData.id],
+            "jobIds": ids,
             "kettleId": field.kettleId,
         }
         let res = http.put("job/kettle", param);
@@ -221,48 +232,7 @@ function upgradeKettle(srcData) {
 function upgradeAll() {
     var datas = layui.table.checkStatus('table-data').data;
     if (!_.isNil(datas) && !_.isEmpty(datas)) {
-        let ids = [];
-        datas.forEach(a => {
-            ids.push(a.id);
-        })
-
-        let form = layui.form;
-        layer.open({
-            type: 1,
-            area: [($(window).width() * 0.4) + 'px', ($(window).height() - 300) + 'px'],
-            fix: false, //不固定
-            shadeClose: true,
-            shade: 0.4,
-            maxmin: true,
-            title: "kettle模型升级",
-            content: $('#kettle-upgrade'),
-            success: function (index) {
-                initKettleAdvancedVersion(datas[0], "#for-kettle")
-                    .then( res => {
-                        form.render();
-                    })
-            },
-            cancel: function (index, layero, that) {
-                $("#kettle-upgrade-form")[0].reset();
-                $('#for-kettle').empty();
-                form.render();
-                return true;
-            },
-        });
-
-        form.on('submit(kettle-upgrade)', function (data) {
-            let field = data.field;
-            let param = {
-                "jobIds": ids,
-                "kettleId": field.kettleId,
-            }
-            let res = http.put("job/kettle", param);
-            if (!isSuccess(res.code)) {
-                message.error(res.message);
-                return false;
-            }
-            return true;
-        });
+        upgradeKettle(datas);
     }
 }
 
@@ -574,11 +544,17 @@ function change(title, oldData) {
                 message.error("JobHandler不能为空");
                 return false;
             }
+            delete field.glueSource;
+            delete field.glueDescription;
+            delete field.kettleId;
         } else if ((_.eq('KETTLE_KTR', glueType) || _.eq('KETTLE_KJB', glueType))) {
             if (_.isEmpty(field.kettleId)) {
                 message.error("kettle模型不能为空");
                 return false;
             }
+            delete field.glueSource;
+            delete field.glueDescription;
+            delete field.executorHandler;
         }else {
             if (_.isEmpty(field.glueSource)) {
                 message.error("执行代码不能为空");
@@ -588,6 +564,8 @@ function change(title, oldData) {
                 message.error("执行代码描述不能为空");
                 return false;
             }
+            delete field.executorHandler;
+            delete field.kettleId;
         }
 
         if (!_.isEmpty(oldData.id)) field.id = oldData.id;
