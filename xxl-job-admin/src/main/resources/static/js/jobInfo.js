@@ -117,11 +117,11 @@ function createTable(records) {
                         id: 'exeOnce',
                         templet: '<span style="color: #FFFFFF">执行一次</span>',
                     },
-                    // {
-                    //     id: 'jobLog',
-                    //     // templet: '<span style="color: #FFFFFF">查询日志</span>',
-                    //     templet: '<li><a _href="page-jobLog?jobId='+ data.id +'"><span style="color: #FFFFFF">查询日志</span></a></li>\n',
-                    // },
+                    {
+                        id: 'jobLog',
+                        templet: '<span style="color: #FFFFFF">查询日志</span>',
+                        // templet: '<li><a _href="page-jobLog?jobId='+ data.id +'"><span style="color: #FFFFFF">查询日志</span></a></li>',
+                    },
                     {
                         id: 'registerNode',
                         templet: '<span style="color: #FFFFFF">注册节点</span>',
