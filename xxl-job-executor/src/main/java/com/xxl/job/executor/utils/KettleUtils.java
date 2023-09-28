@@ -149,6 +149,12 @@ public class KettleUtils {
             in = new ByteArrayInputStream(zip);
             zipFile = ZipUtil.unzip(in, new File(FileConstant.TMP_DIR + StrUtil.SLASH + IdUtil.fastSimpleUUID()), CharsetUtil.CHARSET_UTF_8);
             List<File> kjb = FileUtil.loopFiles(zipFile, pathname -> pathname.isFile() && StrUtil.equals(guideKjb, pathname.getName()));
+
+            if (CollectionUtil.isEmpty(kjb)) {
+                XxlJobHelper.log("The kjb boot file [{}] does not exist in the kjb package", guideKjb);
+                return;
+            }
+
             File file = kjb.get(NumberConstant.ZERO);
             initEnv();
             JobMeta jobMeta = new JobMeta(file.getPath(), null, null);
