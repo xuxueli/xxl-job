@@ -54,46 +54,6 @@
         </dependency>
 
         <dependency>
-            <groupId>commons-codec</groupId>
-            <artifactId>commons-codec</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>2.13.0</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
-            <version>2.6</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-            <version>1.2</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>32.1.2-jre</version>
-        </dependency>
-        <dependency>
-            <groupId>org.javassist</groupId>
-            <artifactId>javassist</artifactId>
-            <version>3.29.2-GA</version>
-        </dependency>
-        <dependency>
-            <groupId>rhino</groupId>
-            <artifactId>js</artifactId>
-            <version>1.7R2</version>
-        </dependency>
-        <dependency>
-            <groupId>com.jcraft</groupId>
-            <artifactId>jsch</artifactId>
-            <version>0.1.55</version>
-        </dependency>
-
-        <dependency>
             <groupId>pentaho-kettle</groupId>
             <artifactId>kettle-core</artifactId>
             <version>${kettle.version}</version>
@@ -300,6 +260,16 @@
             <artifactId>pentaho-cassandra-plugin-package</artifactId>
             <version>${kettle.plugins.version}</version>
             <type>pom</type>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-log4j12</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>log4j</groupId>
+                    <artifactId>log4j</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.pentaho</groupId>
@@ -311,6 +281,24 @@
             <artifactId>pentaho-big-data-plugin</artifactId>
             <version>${kettle.plugins.version}</version>
             <type>pom</type>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-reload4j</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.karaf</groupId>
+                    <artifactId>org.apache.karaf.client</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.ops4j.pax.logging</groupId>
+                    <artifactId>pax-logging-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.ops4j.pax.logging</groupId>
+                    <artifactId>pax-logging-service</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>pentaho</groupId>
