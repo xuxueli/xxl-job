@@ -17,6 +17,7 @@
 
     <properties>
         <kettle.version>8.3.0.0-371</kettle.version>
+        <kettle.plugins.version>8.3.0.0-371</kettle.plugins.version>
     </properties>
 
 <!--    <repositories>-->
@@ -38,18 +39,15 @@
             <groupId>cn.zhxu</groupId>
             <artifactId>okhttps-fastjson</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
             <scope>provided</scope>
         </dependency>
-
         <dependency>
             <groupId>org.apache.groovy</groupId>
             <artifactId>groovy</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
@@ -59,7 +57,6 @@
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
         </dependency>
-
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
@@ -75,30 +72,21 @@
             <artifactId>commons-logging</artifactId>
             <version>1.2</version>
         </dependency>
-
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-vfs2</artifactId>
-            <version>2.9.0</version>
-        </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>32.1.2-jre</version>
         </dependency>
-
         <dependency>
             <groupId>org.javassist</groupId>
             <artifactId>javassist</artifactId>
             <version>3.29.2-GA</version>
         </dependency>
-
         <dependency>
             <groupId>rhino</groupId>
             <artifactId>js</artifactId>
             <version>1.7R2</version>
         </dependency>
-
         <dependency>
             <groupId>com.jcraft</groupId>
             <artifactId>jsch</artifactId>
@@ -110,7 +98,6 @@
             <artifactId>kettle-core</artifactId>
             <version>${kettle.version}</version>
         </dependency>
-
         <dependency>
             <groupId>pentaho-kettle</groupId>
             <artifactId>kettle-dbdialog</artifactId>
@@ -119,6 +106,11 @@
         <dependency>
             <groupId>pentaho-kettle</groupId>
             <artifactId>kettle-engine</artifactId>
+            <version>${kettle.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>pentaho-kettle</groupId>
+            <artifactId>kettle-ui-swt</artifactId>
             <version>${kettle.version}</version>
         </dependency>
         <dependency>
@@ -131,26 +123,202 @@
             <artifactId>pentaho-vfs-browser</artifactId>
             <version>${kettle.version}</version>
         </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.pentaho.di.plugins</groupId>-->
+<!--            <artifactId>pentaho-streaming-mqtt-plugin</artifactId>-->
+<!--            <version>9.4.0.0-343</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.pentaho.di.plugins</groupId>-->
+<!--            <artifactId>rss-plugins-impl</artifactId>-->
+<!--            <version>9.4.0.0-343</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.pentaho.di.plugins</groupId>-->
+<!--            <artifactId>ivw-bulk-loader-plugins-impl</artifactId>-->
+<!--            <version>9.4.0.0-343</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.pentaho.di.plugins</groupId>-->
+<!--            <artifactId>pentaho-metastore-locator-core</artifactId>-->
+<!--            <version>9.4.0.0-343</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.pentaho.di.plugins</groupId>-->
+<!--            <artifactId>terafast-bulk-loader-plugins-impl</artifactId>-->
+<!--            <version>9.4.0.0-343</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.pentaho.di.plugins</groupId>-->
+<!--            <artifactId>mondrianinput-impl</artifactId>-->
+<!--            <version>9.4.0.0-343</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.pentaho.di.plugins</groupId>-->
+<!--            <artifactId>pentaho-streaming-jms-plugin</artifactId>-->
+<!--            <version>9.4.0.0-343</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.pentaho.di.plugins</groupId>-->
+<!--            <artifactId>ldap-plugins-impl</artifactId>-->
+<!--            <version>9.4.0.0-343</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.pentaho.di.plugins</groupId>-->
+<!--            <artifactId>yaml-input-plugins-impl</artifactId>-->
+<!--            <version>9.4.0.0-343</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.pentaho.di.plugins</groupId>-->
+<!--            <artifactId>edi2xml-plugins-impl</artifactId>-->
+<!--            <version>9.4.0.0-343</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.pentaho.di.plugins</groupId>-->
+<!--            <artifactId>kettle-openerp-plugin-core</artifactId>-->
+<!--            <version>9.4.0.0-343</version>-->
+<!--        </dependency>-->
+
+        <!-- kettle客户端plugins start-->
+        <dependency>
+            <groupId>org.pentaho.di.plugins</groupId>
+            <artifactId>elasticsearch-bulk-insert-core</artifactId>
+            <version>${kettle.plugins.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.pentaho.di.plugins</groupId>
+            <artifactId>gp-bulk-loader-core</artifactId>
+            <version>${kettle.plugins.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.pentaho.di.plugins</groupId>
             <artifactId>kettle-log4j-core</artifactId>
-            <version>${kettle.version}</version>
+            <version>${kettle.plugins.version}</version>
         </dependency>
         <dependency>
-            <groupId>pentaho-kettle</groupId>
-            <artifactId>kettle-ui-swt</artifactId>
-            <version>${kettle.version}</version>
+            <groupId>org.pentaho.di.plugins</groupId>
+            <artifactId>kettle-drools5-core</artifactId>
+            <version>${kettle.plugins.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.pentaho.di.plugins</groupId>
+            <artifactId>kettle-dummy-plugin-core</artifactId>
+            <version>${kettle.plugins.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.pentaho.di.plugins</groupId>
+            <artifactId>kettle-gpload-plugin-core</artifactId>
+            <version>${kettle.plugins.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.pentaho.di.plugins</groupId>
+            <artifactId>kettle-hl7-plugin</artifactId>
+            <version>${kettle.plugins.version}</version>
+            <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>org.pentaho.di.plugins</groupId>
+            <artifactId>kettle-json-plugin</artifactId>
+            <version>${kettle.plugins.version}</version>
+            <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>org.pentaho.di.plugins</groupId>
+            <artifactId>kettle-palo-plugin</artifactId>
+            <version>${kettle.plugins.version}</version>
+            <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>org.pentaho.di.plugins</groupId>
+            <artifactId>kettle-s3csvinput-plugin-core</artifactId>
+            <version>${kettle.plugins.version}</version>
         </dependency>
         <dependency>
             <groupId>org.pentaho.di.plugins</groupId>
             <artifactId>kettle-sap-plugin-core</artifactId>
-            <version>${kettle.version}</version>
+            <version>${kettle.plugins.version}</version>
         </dependency>
         <dependency>
             <groupId>org.pentaho.di.plugins</groupId>
-            <artifactId>kettle-json-plugin-core</artifactId>
-            <version>${kettle.version}</version>
+            <artifactId>kettle-shapefilereader-plugin-core</artifactId>
+            <version>${kettle.plugins.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.pentaho.di.plugins</groupId>
+            <artifactId>kettle-version-checker</artifactId>
+            <version>${kettle.plugins.version}</version>
+            <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>org.pentaho.di.plugins</groupId>
+            <artifactId>lucid-db-streaming-loader-plugin-core</artifactId>
+            <version>${kettle.plugins.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.pentaho.di.plugins</groupId>
+            <artifactId>ms-access-plugins-impl</artifactId>
+            <version>${kettle.plugins.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.pentaho.di.plugins</groupId>
+            <artifactId>pdi-core-plugins-impl</artifactId>
+            <version>${kettle.plugins.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.pentaho.di.plugins</groupId>
+            <artifactId>pdi-google-analytics-plugin</artifactId>
+            <version>${kettle.plugins.version}</version>
+            <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>org.pentaho.di.plugins</groupId>
+            <artifactId>pdi-pur-plugin-core</artifactId>
+            <version>${kettle.plugins.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.pentaho.di.plugins</groupId>
+            <artifactId>pdi-salesforce-core</artifactId>
+            <version>${kettle.plugins.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.pentaho.di.plugins</groupId>
+            <artifactId>pdi-teradata-tpt-plugin-core</artifactId>
+            <version>${kettle.plugins.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.pentaho.di.plugins</groupId>
+            <artifactId>pdi-xml-plugin-core</artifactId>
+            <version>${kettle.plugins.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.pentaho.di.plugins</groupId>
+            <artifactId>pentaho-googledrive-vfs-core</artifactId>
+            <version>${kettle.plugins.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.pentaho</groupId>
+            <artifactId>pentaho-cassandra-plugin-package</artifactId>
+            <version>${kettle.plugins.version}</version>
+            <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>org.pentaho</groupId>
+            <artifactId>vertica-bulkloader-core</artifactId>
+            <version>${kettle.plugins.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>pentaho</groupId>
+            <artifactId>pentaho-big-data-plugin</artifactId>
+            <version>${kettle.plugins.version}</version>
+            <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>pentaho</groupId>
+            <artifactId>pdi-platform-utils-plugin-core</artifactId>
+            <version>${kettle.plugins.version}</version>
+        </dependency>
+
+        <!-- kettle客户端plugins end-->
 
         <dependency>
             <groupId>mysql</groupId>
