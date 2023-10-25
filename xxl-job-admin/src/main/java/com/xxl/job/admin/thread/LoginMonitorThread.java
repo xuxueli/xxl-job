@@ -41,7 +41,7 @@ public class LoginMonitorThread extends AbstractThreadListener implements Ordere
                 try {
                     List<LoginToken> loginTokens = loginTokenService.list();
                     if (CollectionUtil.isNotEmpty(loginTokens)) {
-                        Long now = DateUtil.current();
+                        long now = DateUtil.current();
                         for (LoginToken loginToken : loginTokens) {
                             Integer effectiveDuration = loginToken.getEffectiveDuration();
                             Date updatedTime = loginToken.getUpdatedTime();
@@ -57,7 +57,7 @@ public class LoginMonitorThread extends AbstractThreadListener implements Ordere
                 }
 
                 try {
-                    TimeUnit.SECONDS.sleep(10);
+                    TimeUnit.SECONDS.sleep(2);
                 } catch (Exception e) {
                     if (!toStop) {
                         log.error(e.getMessage(), e);

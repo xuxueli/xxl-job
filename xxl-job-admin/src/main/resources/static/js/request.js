@@ -1,9 +1,6 @@
 var http = (function () {
     $.ajaxSetup({
         async: false,
-        // headers: {
-        //     'Authorization': sessionStorage.getItem('Authorization'),
-        // }
     });
 
     function get(url, params) {

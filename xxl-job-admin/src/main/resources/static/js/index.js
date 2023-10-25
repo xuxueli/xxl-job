@@ -1,6 +1,6 @@
 $(function (){
     let account = sessionStorage.getItem('currentUser');
-    $("#current").text("欢迎你: " + account);
+    $("#current").text("欢迎你 " + account);
     $('#copyright-end').text(new Date().getFullYear());
 })
 
@@ -111,8 +111,8 @@ function validate(form) {
  */
 function logout() {
     sessionStorage.removeItem('currentUser');
-    sessionStorage.removeItem('Authorization');
     http.get("auth/logout");
+    $.cookie('AUTHORIZATION', null);
     $(location).attr('href', 'login');
 }
 

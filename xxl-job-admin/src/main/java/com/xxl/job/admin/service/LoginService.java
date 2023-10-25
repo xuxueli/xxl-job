@@ -34,8 +34,9 @@ public interface LoginService {
      * 注销
      *
      * @param request 请求
+     * @param response 响应
      */
-    void logout(HttpServletRequest request);
+    void logout(HttpServletRequest request, HttpServletResponse response);
 
 
 }

@@ -49,8 +49,9 @@ public class LoginController {
 
     @ApiOperation("登出")
     @GetMapping(value = "/logout", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseVO<Void> logout(HttpServletRequest request) {
-        loginService.logout(request);
+    public ResponseVO<Void> logout(HttpServletRequest request, HttpServletResponse response) {
+        log.debug("logout {}", System.currentTimeMillis());
+        loginService.logout(request, response);
         return ResponseVO.success();
     }
 

@@ -48,6 +48,7 @@ function checkLogin() {
                 $("#account").val("");
                 $("#password").val("");
                 sessionStorage.setItem('currentUser', account);
+                $.cookie("AUTHORIZATION", xhr.getResponseHeader('Authorization'));
                 $(location).attr('href', 'index');
             }else {
                 message.error(res.message);
