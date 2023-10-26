@@ -41,12 +41,12 @@ public class LoginInterceptor implements HandlerInterceptor {
             Cookie newCookie = new Cookie(AuthConstant.AUTHORIZATION_HEADER.toUpperCase(), StrUtil.EMPTY);
             newCookie.setMaxAge(0);
             response.addCookie(newCookie);
-            response.sendRedirect("/login");
+            response.sendRedirect("login");
             return false;
         }else {
             LoginToken loginToken = loginTokenService.findLoginTokenByToken(cookie.getValue());
             if (ObjectUtil.isNull(loginToken)) {
-                response.sendRedirect("/login");
+                response.sendRedirect("login");
                 return false;
             }
         }

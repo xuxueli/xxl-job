@@ -31,7 +31,7 @@ public class AuthUtils {
         Cookie cookie =getCookie();
         if (ObjectUtil.isNull(cookie)) {
             try {
-                getResponse().sendRedirect("/login");
+                getResponse().sendRedirect("login");
             } catch (IOException e) {
                 log.error("getCurrentUser {}", e.getMessage());
             }
