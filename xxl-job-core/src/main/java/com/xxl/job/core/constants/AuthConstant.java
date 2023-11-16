@@ -63,7 +63,7 @@ public class AuthConstant {
     /**
      * HTTP Authorization header, equal to <code>Authorization</code>
      */
-    public static final String AUTHORIZATION_HEADER = "Authorization";
+    public static final String AUTHORIZATION_HEADER = "Xxl_Job_Authorization";
 
     /**
      * HTTP Authentication header, equal to <code>WWW-Authenticate</code>

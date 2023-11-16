@@ -1,5 +1,6 @@
 package com.xxl.job.admin.common.utils;
 
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.jwt.JWTUtil;
 import com.xxl.job.core.constants.AuthConstant;
@@ -48,8 +49,11 @@ public class AuthUtils {
     }
 
     public static Cookie getCookie() {
-        return Arrays.stream(getRequest().getCookies())
-                .filter(a -> a.getName().equals(AuthConstant.AUTHORIZATION_HEADER.toUpperCase())).findAny().orElse(null);
+        Cookie[] cookies = getRequest().getCookies();
+        if (ArrayUtil.isEmpty(cookies)) return null;
+        return Arrays.stream(cookies)
+                .filter(a -> a.getName().equals(AuthConstant.AUTHORIZATION_HEADER.toUpperCase()))
+                .findAny().orElse(null);
     }
 
 }

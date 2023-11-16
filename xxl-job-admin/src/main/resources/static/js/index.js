@@ -112,7 +112,7 @@ function validate(form) {
 function logout() {
     sessionStorage.removeItem('currentUser');
     http.get("auth/logout");
-    $.cookie('AUTHORIZATION', null);
+    $.cookie('XXL_JOB_AUTHORIZATION', null);
     $(location).attr('href', 'login');
 }
 
