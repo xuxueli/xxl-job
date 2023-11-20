@@ -16,12 +16,11 @@ import java.util.Properties;
 public class FrameLessXxlJobConfig {
     private static Logger logger = LoggerFactory.getLogger(FrameLessXxlJobConfig.class);
 
-
     private static FrameLessXxlJobConfig instance = new FrameLessXxlJobConfig();
+
     public static FrameLessXxlJobConfig getInstance() {
         return instance;
     }
-
 
     private XxlJobSimpleExecutor xxlJobExecutor = null;
 
@@ -29,20 +28,59 @@ public class FrameLessXxlJobConfig {
      * init
      */
     public void initXxlJobExecutor() {
-
         // load executor prop
         Properties xxlJobProp = loadProperties("xxl-job-executor.properties");
 
         // init executor
         xxlJobExecutor = new XxlJobSimpleExecutor();
-        xxlJobExecutor.setAdminAddresses(xxlJobProp.getProperty("xxl.job.admin.addresses"));
-        xxlJobExecutor.setAccessToken(xxlJobProp.getProperty("xxl.job.accessToken"));
-        xxlJobExecutor.setAppname(xxlJobProp.getProperty("xxl.job.executor.appname"));
-        xxlJobExecutor.setAddress(xxlJobProp.getProperty("xxl.job.executor.address"));
-        xxlJobExecutor.setIp(xxlJobProp.getProperty("xxl.job.executor.ip"));
-        xxlJobExecutor.setPort(Integer.valueOf(xxlJobProp.getProperty("xxl.job.executor.port")));
-        xxlJobExecutor.setLogPath(xxlJobProp.getProperty("xxl.job.executor.logpath"));
-        xxlJobExecutor.setLogRetentionDays(Integer.valueOf(xxlJobProp.getProperty("xxl.job.executor.logretentiondays")));
+
+        String envAppname = System.getenv("XXL_JOB_EXECUTOR_APPNAME");
+        if (envAppname == null) {
+            envAppname = xxlJobProp.getProperty("xxl.job.executor.appname");
+        }
+        xxlJobExecutor.setAppname(envAppname);
+
+        String envPort = System.getenv("XXL_JOB_EXECUTOR_PORT");
+        if (envPort == null) {
+            envPort = xxlJobProp.getProperty("xxl.job.executor.port");
+        }
+        xxlJobExecutor.setPort(Integer.valueOf(envPort));
+
+        String envAdminAddresses = System.getenv("XXL_JOB_ADMIN_ADDRESSES");
+        if (envAdminAddresses == null) {
+            envAdminAddresses = xxlJobProp.getProperty("xxl.job.admin.addresses");
+        }
+        xxlJobExecutor.setAdminAddresses(envAdminAddresses);
+
+        String accessToken = System.getenv("XXL_JOB_ACCESS_TOKEN");
+        if (accessToken == null) {
+            accessToken = xxlJobProp.getProperty("xxl.job.accessToken");
+        }
+        xxlJobExecutor.setAccessToken(accessToken);
+
+        String envAddress = System.getenv("XXL_JOB_EXECUTOR_ADDRESS");
+        if (envAddress == null) {
+            envAddress = xxlJobProp.getProperty("xxl.job.executor.address");
+        }
+        xxlJobExecutor.setAddress(envAddress);
+
+        String envIp = System.getenv("XXL_JOB_EXECUTOR_IP");
+        if (envIp == null) {
+            envIp = xxlJobProp.getProperty("xxl.job.executor.ip");
+        }
+        xxlJobExecutor.setIp(envIp);
+
+        String envLogPath = System.getenv("XXL_JOB_EXECUTOR_LOGPATH");
+        if (envLogPath == null) {
+            envLogPath = xxlJobProp.getProperty("xxl.job.executor.logpath");
+        }
+        xxlJobExecutor.setLogPath(envLogPath);
+
+        String envLogRetentionDays = System.getenv("XXL_JOB_EXECUTOR_LOGRETENTIONDAYS");
+        if (envLogRetentionDays == null) {
+            envLogRetentionDays = xxlJobProp.getProperty("xxl.job.executor.logretentiondays");
+        }
+        xxlJobExecutor.setLogRetentionDays(Integer.valueOf(envLogRetentionDays));
 
         // registry job bean
         xxlJobExecutor.setXxlJobBeanList(Arrays.asList(new SampleXxlJob()));
@@ -64,13 +102,12 @@ public class FrameLessXxlJobConfig {
         }
     }
 
-
     public static Properties loadProperties(String propertyFileName) {
         InputStreamReader in = null;
         try {
             ClassLoader loder = Thread.currentThread().getContextClassLoader();
 
-            in = new InputStreamReader(loder.getResourceAsStream(propertyFileName), "UTF-8");;
+            in = new InputStreamReader(loder.getResourceAsStream(propertyFileName), "UTF-8");
             if (in != null) {
                 Properties prop = new Properties();
                 prop.load(in);
