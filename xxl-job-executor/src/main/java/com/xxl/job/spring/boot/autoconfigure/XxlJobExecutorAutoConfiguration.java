@@ -7,7 +7,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * xxl-job调度器 自动配置
+ * xxl-job执行器 自动配置
  *
  * @author Rong.Jia
  * @date 2023/05/12

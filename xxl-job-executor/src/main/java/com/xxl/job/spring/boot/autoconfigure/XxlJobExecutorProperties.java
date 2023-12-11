@@ -6,7 +6,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import java.util.List;
 
 /**
- * xxl-job调度器属性
+ * xxl-job执行器属性
  *
  * @author Rong.Jia
  * @date 2023/01/11
@@ -37,16 +37,6 @@ public class XxlJobExecutorProperties {
          * 调度中心部署跟地址 [必填]
          */
         private List<String> addresses;
-
-        /**
-         * 用户名
-         */
-        private String username = "admin";
-
-        /**
-         * 密码
-         */
-        private String password = "123456";
 
     }
 

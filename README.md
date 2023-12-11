@@ -52,8 +52,6 @@ xxl:
   enabled: true # 必须为true，否则不生效        
   admin:
     addresses: localhost:8080 # 调度中心部署跟地址 [必填]，允许多个
-    username: admin # 管理端账号，默认：admin
-    password: 123456 # 管理端密码，默认：123456
   executor:
     app-name: sms-service # 执行器AppName[必填]:执行器心跳注册分组依据
     host: 10.30.123.132 # 执行器IP[选填]:默认为空表示自动获取IP,多网卡时可手动设置指定IP,该IP不会绑定Host仅作为通讯实用.地址信息用于'执行器注册'和'调度中心请求并触发任务'.
@@ -72,7 +70,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class JobTest {
 
-    @Job(value = "JobTest")  // value: JobHandler内容
+    @XxlJob(value = "JobTest")  // value: JobHandler内容
     public void jobTest() {
         String jobParam = XxlJobHelper.getJobParam();
         log.info("---------xxlJobTest定时任务执行成功-------- {}", jobParam);
@@ -87,7 +85,7 @@ public class JobTest {
 @Component
 public class JobTest {
 
-    @Job(value = "JobTest") // value: JobHandler内容
+    @XxlJob(value = "JobTest") // value: JobHandler内容
     public void jobTest(JobInfoDTO data) {
         log.info("---------xxlJobTest定时任务执行成功 参数传递-------- {}", data);
     }
