@@ -160,6 +160,9 @@ public class JobCompleteHelper {
 		if (log.getHandleCode() > 0) {
 			return new ReturnT<String>(ReturnT.FAIL_CODE, "log repeate callback.");     // avoid repeat callback, trigger child job etc
 		}
+		if (log.getTriggerTime().getTime() != handleCallbackParam.getLogDateTim()) {
+            		return new ReturnT<String>(ReturnT.FAIL_CODE, "log item is incompatible with current Admin.");
+        	}
 
 		// handle msg
 		StringBuffer handleMsg = new StringBuffer();
