@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>com.xuxueli</groupId>
 		<artifactId>xxl-job</artifactId>
-		<version>2.4.1-SNAPSHOT</version>
+		<version>2.4.1</version>
 	</parent>
 	<artifactId>xxl-job-core</artifactId>
 	<packaging>jar</packaging>
@@ -29,19 +29,19 @@
 
 		<!-- ********************** plugin ********************** -->
 		<!-- groovy-all -->
-		<dependency>
-			<groupId>org.apache.groovy</groupId>
-			<artifactId>groovy</artifactId>
-			<version>${groovy.version}</version>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>org.apache.groovy</groupId>-->
+<!--			<artifactId>groovy</artifactId>-->
+<!--			<version>${groovy.version}</version>-->
+<!--		</dependency>-->
 
 		<!-- spring-context -->
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-context</artifactId>
-			<version>${spring.version}</version>
-			<scope>provided</scope>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>org.springframework</groupId>-->
+<!--			<artifactId>spring-context</artifactId>-->
+<!--			<version>${spring.version}</version>-->
+<!--			<scope>provided</scope>-->
+<!--		</dependency>-->
 
 		<!-- ********************** base ********************** -->
 		<!-- slf4j -->
@@ -52,12 +52,12 @@
 		</dependency>
 
 		<!-- javax.annotation-api -->
-		<dependency>
-			<groupId>javax.annotation</groupId>
-			<artifactId>javax.annotation-api</artifactId>
-			<version>${javax.annotation-api.version}</version>
-			<scope>provided</scope>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>javax.annotation</groupId>-->
+<!--			<artifactId>javax.annotation-api</artifactId>-->
+<!--			<version>${javax.annotation-api.version}</version>-->
+<!--			<scope>provided</scope>-->
+<!--		</dependency>-->
 
 	</dependencies>
 

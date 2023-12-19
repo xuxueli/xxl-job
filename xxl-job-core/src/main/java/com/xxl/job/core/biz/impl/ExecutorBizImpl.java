@@ -4,7 +4,7 @@ import com.xxl.job.core.biz.ExecutorBiz;
 import com.xxl.job.core.biz.model.*;
 import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
 import com.xxl.job.core.executor.XxlJobExecutor;
-import com.xxl.job.core.glue.GlueFactory;
+//import com.xxl.job.core.glue.GlueFactory;
 import com.xxl.job.core.glue.GlueTypeEnum;
 import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.handler.impl.GlueJobHandler;
@@ -88,15 +88,15 @@ public class ExecutorBizImpl implements ExecutorBiz {
             }
 
             // valid handler
-            if (jobHandler == null) {
-                try {
-                    IJobHandler originJobHandler = GlueFactory.getInstance().loadNewInstance(triggerParam.getGlueSource());
-                    jobHandler = new GlueJobHandler(originJobHandler, triggerParam.getGlueUpdatetime());
-                } catch (Exception e) {
-                    logger.error(e.getMessage(), e);
-                    return new ReturnT<String>(ReturnT.FAIL_CODE, e.getMessage());
-                }
-            }
+//            if (jobHandler == null) {
+//                try {
+//                    IJobHandler originJobHandler = GlueFactory.getInstance().loadNewInstance(triggerParam.getGlueSource());
+//                    jobHandler = new GlueJobHandler(originJobHandler, triggerParam.getGlueUpdatetime());
+//                } catch (Exception e) {
+//                    logger.error(e.getMessage(), e);
+//                    return new ReturnT<String>(ReturnT.FAIL_CODE, e.getMessage());
+//                }
+//            }
         } else if (glueTypeEnum!=null && glueTypeEnum.isScript()) {
 
             // valid old jobThread
