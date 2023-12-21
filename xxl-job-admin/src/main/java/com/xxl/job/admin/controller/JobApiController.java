@@ -77,12 +77,13 @@ public class JobApiController {
     @PostMapping("/job/trigger")
     @ResponseBody
     @PermissionLimit(limit = false)
-    public ReturnT<String> triggerJob(HttpServletRequest request, TriggerSimpleParam triggerParam) {
+    public ReturnT<String> triggerJob(HttpServletRequest request, @RequestBody(required = false) String data) {
         if (XxlJobAdminConfig.getAdminConfig().getAccessToken() != null
                 && !XxlJobAdminConfig.getAdminConfig().getAccessToken().trim().isEmpty()
                 && !XxlJobAdminConfig.getAdminConfig().getAccessToken().equals(request.getHeader(XxlJobRemotingUtil.XXL_JOB_ACCESS_TOKEN))) {
             return new ReturnT<>(ReturnT.FAIL_CODE, "The access token is wrong.");
         }
+        TriggerSimpleParam triggerParam = GsonTool.fromJson(data, TriggerSimpleParam.class);
         // force cover job param
         if (triggerParam.getExecutorParams() == null) {
             triggerParam.setExecutorParams("");
@@ -95,24 +96,26 @@ public class JobApiController {
     @PostMapping("/job/add")
     @ResponseBody
     @PermissionLimit(limit = false)
-    public ReturnT<String> addJob(HttpServletRequest request, XxlJobInfo jobInfo) {
+    public ReturnT<String> addJob(HttpServletRequest request, @RequestBody(required = false) String data) {
         if (XxlJobAdminConfig.getAdminConfig().getAccessToken() != null
                 && !XxlJobAdminConfig.getAdminConfig().getAccessToken().trim().isEmpty()
                 && !XxlJobAdminConfig.getAdminConfig().getAccessToken().equals(request.getHeader(XxlJobRemotingUtil.XXL_JOB_ACCESS_TOKEN))) {
             return new ReturnT<>(ReturnT.FAIL_CODE, "The access token is wrong.");
         }
+        XxlJobInfo jobInfo = GsonTool.fromJson(data, XxlJobInfo.class);
         return xxlJobService.add(jobInfo);
     }
 
     @PostMapping("/job/update")
     @ResponseBody
     @PermissionLimit(limit = false)
-    public ReturnT<String> updateJob(HttpServletRequest request, XxlJobInfo jobInfo) {
+    public ReturnT<String> updateJob(HttpServletRequest request, @RequestBody(required = false) String data) {
         if (XxlJobAdminConfig.getAdminConfig().getAccessToken() != null
                 && !XxlJobAdminConfig.getAdminConfig().getAccessToken().trim().isEmpty()
                 && !XxlJobAdminConfig.getAdminConfig().getAccessToken().equals(request.getHeader(XxlJobRemotingUtil.XXL_JOB_ACCESS_TOKEN))) {
             return new ReturnT<>(ReturnT.FAIL_CODE, "The access token is wrong.");
         }
+        XxlJobInfo jobInfo = GsonTool.fromJson(data, XxlJobInfo.class);
         return xxlJobService.update(jobInfo);
     }
 
