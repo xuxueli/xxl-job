@@ -283,16 +283,14 @@ public class JobScheduleHelper {
         }
     }
 
-    private void pushTimeRing(int ringSecond, int jobId){
+    private void pushTimeRing(int ringSecond, int jobId) {
         // push async ring
-        List<Integer> ringItemData = ringData.get(ringSecond);
-        if (ringItemData == null) {
-            ringItemData = new ArrayList<Integer>();
-            ringData.put(ringSecond, ringItemData);
-        }
-        ringItemData.add(jobId);
+        List<Integer> ringItemData = ringData.merge(ringSecond, Collections.singletonList(jobId), (oldV, newV) -> {
+            oldV.addAll(newV);
+            return oldV;
+        });
 
-        logger.debug(">>>>>>>>>>> xxl-job, schedule push time-ring : " + ringSecond + " = " + Arrays.asList(ringItemData) );
+        logger.debug(">>>>>>>>>>> xxl-job, schedule push time-ring : " + ringSecond + " = " + ringItemData);
     }
 
     public void toStop(){
