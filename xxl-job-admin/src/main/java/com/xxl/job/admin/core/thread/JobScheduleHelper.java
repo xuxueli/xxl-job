@@ -285,7 +285,9 @@ public class JobScheduleHelper {
 
     private void pushTimeRing(int ringSecond, int jobId) {
         // push async ring
-        List<Integer> ringItemData = ringData.merge(ringSecond, Collections.singletonList(jobId), (oldV, newV) -> {
+        List<Integer> newValueList = new ArrayList<>();
+        newValueList.add(jobId);
+        List<Integer> ringItemData = ringData.merge(ringSecond, newValueList, (oldV, newV) -> {
             oldV.addAll(newV);
             return oldV;
         });
