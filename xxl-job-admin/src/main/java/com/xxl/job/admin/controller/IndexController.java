@@ -1,6 +1,7 @@
 package com.xxl.job.admin.controller;
 
 import com.xxl.job.admin.controller.annotation.PermissionLimit;
+import com.xxl.job.admin.core.model.XxlJobUser;
 import com.xxl.job.admin.service.LoginService;
 import com.xxl.job.admin.service.XxlJobService;
 import com.xxl.job.core.biz.model.ReturnT;
@@ -36,11 +37,12 @@ public class IndexController {
 
 
 	@RequestMapping("/")
-	public String index(Model model) {
+	public String index(Model model, HttpServletRequest request) {
 
+		XxlJobUser loginUser = (XxlJobUser) request.getAttribute(LoginService.LOGIN_IDENTITY_KEY);
 		Map<String, Object> dashboardMap = xxlJobService.dashboardInfo();
+		dashboardMap.put("user", loginUser);
 		model.addAllAttributes(dashboardMap);
-
 		return "index";
 	}
 
@@ -58,6 +60,7 @@ public class IndexController {
 			modelAndView.setView(new RedirectView("/",true,false));
 			return modelAndView;
 		}
+
 		return new ModelAndView("login");
 	}
 	
@@ -77,12 +80,13 @@ public class IndexController {
 	}
 	
 	@RequestMapping("/help")
-	public String help() {
+	public String help(HttpServletRequest request, Model model) {
 
 		/*if (!PermissionInterceptor.ifLogin(request)) {
 			return "redirect:/toLogin";
 		}*/
 
+		model.addAttribute("user", (XxlJobUser) request.getAttribute(LoginService.LOGIN_IDENTITY_KEY));
 		return "help";
 	}
 

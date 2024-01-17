@@ -65,6 +65,7 @@ public class JobInfoController {
 
 		model.addAttribute("JobGroupList", jobGroupList);
 		model.addAttribute("jobGroup", jobGroup);
+		model.addAttribute("user", (XxlJobUser) request.getAttribute(LoginService.LOGIN_IDENTITY_KEY));
 
 		return "jobinfo/jobinfo.index";
 	}

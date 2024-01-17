@@ -36,11 +36,13 @@ public class UserController {
 
     @RequestMapping
     @PermissionLimit(adminuser = true)
-    public String index(Model model) {
+    public String index(Model model, HttpServletRequest request) {
 
         // 执行器列表
         List<XxlJobGroup> groupList = xxlJobGroupDao.findAll();
         model.addAttribute("groupList", groupList);
+        model.addAttribute("user", (XxlJobUser) request.getAttribute(LoginService.LOGIN_IDENTITY_KEY));
+
 
         return "user/user.index";
     }
