@@ -59,12 +59,7 @@
 			<artifactId>mybatis-spring-boot-starter</artifactId>
 			<version>${mybatis-spring-boot-starter.version}</version>
 		</dependency>
-		<!-- mysql -->
-		<dependency>
-			<groupId>com.mysql</groupId>
-			<artifactId>mysql-connector-j</artifactId>
-			<version>${mysql-connector-j.version}</version>
-		</dependency>
+
 
 		<!-- xxl-job-core -->
 		<dependency>
@@ -85,6 +80,12 @@
             <scope>compile</scope>
         </dependency>
 
+		<!-- postgresql -->
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>42.6.0</version>
+		</dependency>
     </dependencies>
 
 	<build>

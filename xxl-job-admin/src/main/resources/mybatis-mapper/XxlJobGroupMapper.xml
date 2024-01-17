@@ -35,17 +35,17 @@
 	</select>
 
 	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobGroup" useGeneratedKeys="true" keyProperty="id" >
-		INSERT INTO xxl_job_group ( `app_name`, `title`, `address_type`, `address_list`, `update_time`)
+		INSERT INTO xxl_job_group ( app_name, title, address_type, address_list, update_time)
 		values ( #{appname}, #{title}, #{addressType}, #{addressList}, #{updateTime} );
 	</insert>
 
 	<update id="update" parameterType="com.xxl.job.admin.core.model.XxlJobGroup" >
 		UPDATE xxl_job_group
-		SET `app_name` = #{appname},
-			`title` = #{title},
-			`address_type` = #{addressType},
-			`address_list` = #{addressList},
-			`update_time` = #{updateTime}
+		SET app_name = #{appname},
+			title = #{title},
+			address_type = #{addressType},
+			address_list = #{addressList},
+			update_time = #{updateTime}
 		WHERE id = #{id}
 	</update>
 
@@ -72,7 +72,7 @@
 			</if>
 		</trim>
 		ORDER BY t.app_name, t.title, t.id ASC
-		LIMIT #{offset}, #{pagesize}
+		LIMIT #{pagesize} OFFSET #{offset}
 	</select>
 
 	<select id="pageListCount" parameterType="java.util.HashMap" resultType="int">

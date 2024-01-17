@@ -1,7 +1,7 @@
 package com.xxl.job.executor.sample.frameless.config;
 
-import com.xxl.job.executor.sample.frameless.jobhandler.SampleXxlJob;
 import com.xxl.job.core.executor.impl.XxlJobSimpleExecutor;
+import com.xxl.job.executor.sample.frameless.jobhandler.SampleXxlJob;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
