@@ -69,16 +69,15 @@
 	              	</div>
 	            </div>
 
-                <div class="col-xs-1">
-                    <button class="btn btn-block btn-info" id="searchBtn">${I18n.system_search}</button>
+                <div class="col-xs-2">
+                    <button class="btn btn-info" id="searchBtn">${I18n.system_search}</button>
+                    <#if Request["XXL_JOB_LOGIN_IDENTITY"].role != 2>
+                    <button class="btn btn-default" id="clearLog">${I18n.joblog_clean}</button>
+                    </#if>
                 </div>
-
-	            <div class="col-xs-1">
-                    <button class="btn btn-block btn-default" id="clearLog">${I18n.joblog_clean}</button>
-	            </div>
           	</div>
 			
-			<div class="row">
+			<div class="row gap-top-8">
 				<div class="col-xs-12">
 					<div class="box">
 			            <#--<div class="box-header hide"><h3 class="box-title">调度日志</h3></div>-->

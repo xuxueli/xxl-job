@@ -146,19 +146,25 @@ $(function() {
                                     '       <span class="sr-only">Toggle Dropdown</span>\n' +
                                     '     </button>\n' +
                                     '     <ul class="dropdown-menu" role="menu" _id="'+ row.id +'" >\n' +
-                                    '       <li><a href="javascript:void(0);" class="job_trigger" >'+ I18n.jobinfo_opt_run +'</a></li>\n' +
                                     '       <li><a href="'+ logHref +'">'+ I18n.jobinfo_opt_log +'</a></li>\n' +
-                                    '       <li><a href="javascript:void(0);" class="job_registryinfo" >' + I18n.jobinfo_opt_registryinfo + '</a></li>\n' +
-									job_next_time_html +
-                                    '       <li class="divider"></li>\n' +
-                                    codeBtn +
-                                    start_stop_div +
-                                    '       <li><a href="javascript:void(0);" class="update" >'+ I18n.system_opt_edit +'</a></li>\n' +
-                                    '       <li><a href="javascript:void(0);" class="job_operate" _type="job_del" >'+ I18n.system_opt_del +'</a></li>\n' +
-									'       <li><a href="javascript:void(0);" class="job_copy" >'+ I18n.system_opt_copy +'</a></li>\n' +
-                                    '     </ul>\n' +
-                                    '   </div>';
+                                    '       <li><a href="javascript:void(0);" class="job_registryinfo" >' + I18n.jobinfo_opt_registryinfo + '</a></li>\n' + job_next_time_html;
 
+								if (XXLJOB_USER_ROLE != 2) {
+									html += '       <li><a href="javascript:void(0);" class="job_trigger" >' + I18n.jobinfo_opt_run + '</a></li>\n';
+								}
+
+								html += '       <li class="divider"></li>\n';
+								html += codeBtn;
+
+								if (XXLJOB_USER_ROLE != 2) {
+									html += start_stop_div +
+										'       <li><a href="javascript:void(0);" class="update" >'+ I18n.system_opt_edit +'</a></li>\n' +
+										'       <li><a href="javascript:void(0);" class="job_operate" _type="job_del" >'+ I18n.system_opt_del +'</a></li>\n' +
+										'       <li><a href="javascript:void(0);" class="job_copy" >'+ I18n.system_opt_copy +'</a></li>\n';
+								} else {
+									html += '     </ul>\n' +
+											'   </div>';
+								}
 	                			return html;
 							};
 	                	}
