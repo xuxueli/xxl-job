@@ -20,9 +20,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.util.HtmlUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -153,6 +155,13 @@ public class JobLogController {
                     logResult.getContent().setEnd(true);
                 }
             }
+
+			// fix xss
+			if (logResult.getContent()!=null && StringUtils.hasText(logResult.getContent().getLogContent())) {
+				String newLogContent = logResult.getContent().getLogContent();
+				newLogContent = HtmlUtils.htmlEscape(newLogContent, "UTF-8");
+				logResult.getContent().setLogContent(newLogContent);
+			}
 
 			return logResult;
 		} catch (Exception e) {
