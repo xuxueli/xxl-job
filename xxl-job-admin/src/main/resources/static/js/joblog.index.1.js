@@ -30,7 +30,7 @@ $(function() {
 		});
 	});
 	if ($("#jobGroup").attr("paramVal")){
-		$("#jobGroup").find("option[value='" + $("#jobGroup").attr("paramVal") + "']").attr("selected",true);
+		$("#jobGroup").find("option[value='" + $("#jobGroup").attr("paramVal") + "']").prop("selected",true);
         $("#jobGroup").change();
 	}
 
