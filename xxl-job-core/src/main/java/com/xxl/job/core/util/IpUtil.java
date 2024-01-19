@@ -146,6 +146,55 @@ public class IpUtil {
         return localAddress;
     }
 
+    private static InetAddress getLocalAddress0(String[] ignoredInterfaces) {
+        InetAddress localAddress = null;
+        try {
+            localAddress = InetAddress.getLocalHost();
+            InetAddress addressItem = toValidAddress(localAddress);
+            if (addressItem != null) {
+                return addressItem;
+            }
+        } catch (Throwable e) {
+            logger.error(e.getMessage(), e);
+        }
+
+        try {
+            Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
+            if (null == interfaces) {
+                return localAddress;
+            }
+            while (interfaces.hasMoreElements()) {
+                try {
+                    NetworkInterface network = interfaces.nextElement();
+                    if (network.isLoopback() || network.isVirtual() || !network.isUp() || ignoreInterface(network.getDisplayName(),ignoredInterfaces)) {
+                        continue;
+                    }
+                    Enumeration<InetAddress> addresses = network.getInetAddresses();
+                    while (addresses.hasMoreElements()) {
+                        try {
+                            InetAddress addressItem = toValidAddress(addresses.nextElement());
+                            if (addressItem != null) {
+                                try {
+                                    if(addressItem.isReachable(100)){
+                                        return addressItem;
+                                    }
+                                } catch (IOException e) {
+                                    // ignore
+                                }
+                            }
+                        } catch (Throwable e) {
+                            logger.error(e.getMessage(), e);
+                        }
+                    }
+                } catch (Throwable e) {
+                    logger.error(e.getMessage(), e);
+                }
+            }
+        } catch (Throwable e) {
+            logger.error(e.getMessage(), e);
+        }
+        return localAddress;
+    }
 
     // ---------------------- tool ----------------------
 
@@ -170,6 +219,19 @@ public class IpUtil {
      */
     public static String getIp(){
         return getLocalAddress().getHostAddress();
+    }
+
+    /**
+     * get ip address
+     * @param ignoredInterfaces example docker0 veth*
+     * @return String
+     */
+    public static String getIp(String[] ignoredInterfaces) {
+        InetAddress address = getLocalAddress0(ignoredInterfaces);
+        if (address != null) {
+            return address.getHostAddress();
+        }
+        return null;
     }
 
     /**
@@ -199,5 +261,15 @@ public class IpUtil {
         return new Object[]{host, port};
     }
 
-
+   static boolean ignoreInterface(String interfaceName,String[] interfaces) {
+        if (interfaces != null) {
+            for (String regex : interfaces) {
+                if (interfaceName.matches(regex)) {
+                    logger.trace("Ignoring interface: " + interfaceName);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }
