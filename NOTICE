@@ -17,12 +17,12 @@ Netty:
   * HOMEPAGE:
     * https://github.com/netty/netty
 
-Hessian:
+Mybatis:
 
   * LICENSE:
     * http://www.apache.org/licenses/LICENSE-2.0 (Apache License 2.0)
   * HOMEPAGE:
-    * http://hessian.caucho.com
+    * https://mybatis.org/mybatis-3/
 
 SLF4J:
 
