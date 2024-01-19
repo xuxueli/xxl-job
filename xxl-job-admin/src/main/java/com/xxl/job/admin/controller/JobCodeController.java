@@ -36,10 +36,10 @@ public class JobCodeController {
 		List<XxlJobLogGlue> jobLogGlues = xxlJobLogGlueDao.findByJobId(jobId);
 
 		if (jobInfo == null) {
-			throw new RuntimeException(I18nUtil.getString("jobinfo_glue_jobid_unvalid"));
+			throw new RuntimeException(I18nUtil.getString("jobinfo_glue_jobid_invalid"));
 		}
 		if (GlueTypeEnum.BEAN == GlueTypeEnum.match(jobInfo.getGlueType())) {
-			throw new RuntimeException(I18nUtil.getString("jobinfo_glue_gluetype_unvalid"));
+			throw new RuntimeException(I18nUtil.getString("jobinfo_glue_gluetype_invalid"));
 		}
 
 		// valid permission
@@ -65,7 +65,7 @@ public class JobCodeController {
 		}
 		XxlJobInfo exists_jobInfo = xxlJobInfoDao.loadById(id);
 		if (exists_jobInfo == null) {
-			return new ReturnT<String>(500, I18nUtil.getString("jobinfo_glue_jobid_unvalid"));
+			return new ReturnT<String>(500, I18nUtil.getString("jobinfo_glue_jobid_invalid"));
 		}
 		
 		// update new code
