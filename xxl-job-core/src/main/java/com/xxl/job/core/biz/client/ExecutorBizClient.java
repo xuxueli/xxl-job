@@ -4,6 +4,8 @@ import com.xxl.job.core.biz.ExecutorBiz;
 import com.xxl.job.core.biz.model.*;
 import com.xxl.job.core.util.XxlJobRemotingUtil;
 
+import java.util.List;
+
 /**
  * admin api test
  *
@@ -53,4 +55,9 @@ public class ExecutorBizClient implements ExecutorBiz {
         return XxlJobRemotingUtil.postBody(addressUrl + "log", accessToken, timeout, logParam, LogResult.class);
     }
 
+
+    @Override
+    public ReturnT<List<String>> runShard(TriggerParam triggerParam) {
+        return XxlJobRemotingUtil.postBody(addressUrl + "runShard", accessToken, timeout, triggerParam, List.class);
+    }
 }

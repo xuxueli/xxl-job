@@ -35,4 +35,14 @@ public interface XxlJobRegistryDao {
                           @Param("registryKey") String registryKey,
                           @Param("registryValue") String registryValue);
 
+    /**
+     * 查询该执行器对应的可用节点
+     * @param timeout
+     * @param nowTime
+     * @param appName
+     * @return
+     */
+    List<String> findRegistryValueList(@Param("timeout") int timeout,
+                                       @Param("nowTime") Date nowTime,@Param("appName") String appName);
+
 }
