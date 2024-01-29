@@ -8,17 +8,18 @@ import java.util.Date;
  * @author xuxueli  2016-1-12 18:25:49
  */
 public class XxlJobInfo {
-	
+
 	private int id;				// 主键ID
-	
+
 	private int jobGroup;		// 执行器主键ID
 	private String jobDesc;
-	
+
 	private Date addTime;
 	private Date updateTime;
-	
+
 	private String author;		// 负责人
-	private String alarmEmail;	// 报警邮件
+	private String alarmUrl;	// 报警邮件
+	private Integer alarmType;//告警类型 1-邮件 2-webhook
 
 	private String scheduleType;			// 调度类型
 	private String scheduleConf;			// 调度配置，值含义取决于调度类型
@@ -30,7 +31,7 @@ public class XxlJobInfo {
 	private String executorBlockStrategy;	// 阻塞处理策略
 	private int executorTimeout;     		// 任务执行超时时间，单位秒
 	private int executorFailRetryCount;		// 失败重试次数
-	
+
 	private String glueType;		// GLUE类型	#com.xxl.job.core.glue.GlueTypeEnum
 	private String glueSource;		// GLUE源代码
 	private String glueRemark;		// GLUE备注
@@ -91,12 +92,20 @@ public class XxlJobInfo {
 		this.author = author;
 	}
 
-	public String getAlarmEmail() {
-		return alarmEmail;
+	public String getAlarmUrl() {
+		return alarmUrl;
 	}
 
-	public void setAlarmEmail(String alarmEmail) {
-		this.alarmEmail = alarmEmail;
+	public void setAlarmUrl(String alarmUrl) {
+		this.alarmUrl = alarmUrl;
+	}
+
+	public Integer getAlarmType() {
+		return alarmType;
+	}
+
+	public void setAlarmType(Integer alarmType) {
+		this.alarmType = alarmType;
 	}
 
 	public String getScheduleType() {

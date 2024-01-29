@@ -55,6 +55,12 @@ public class JobFailMonitorHelper {
 									JobTriggerPoolHelper.trigger(log.getJobId(), TriggerTypeEnum.RETRY, (log.getExecutorFailRetryCount()-1), log.getExecutorShardingParam(), log.getExecutorParam(), null);
 									String retryMsg = "<br><br><span style=\"color:#F39C12;\" > >>>>>>>>>>>"+ I18nUtil.getString("jobconf_trigger_type_retry") +"<<<<<<<<<<< </span><br>";
 									log.setTriggerMsg(log.getTriggerMsg() + retryMsg);
+									
+									// 执行-日志 长度超过TEXT 65,535 bytes ~64kb ，会出现无法更新executorFailRetryCount数据，
+									// 造成一直调度，死循环问题
+									if(log.getTriggerMsg()!=null && log.getTriggerMsg().length()>60000){
+										log.setTriggerMsg(log.getTriggerMsg().substring(0, 60000).concat("..."));
+								      }
 									XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().updateTriggerInfo(log);
 								}
 
