@@ -237,4 +237,64 @@
 		WHERE id = #{id}
 	</update>
 
+	<delete id="deleteAll">
+		DELETE
+		FROM xxl_job_info
+		WHERE id is not null
+	</delete>
+
+	<insert id="saveWithId" parameterType="com.xxl.job.admin.core.model.XxlJobInfo">
+		INSERT INTO xxl_job_info (
+			id,
+			job_group,
+			job_desc,
+			add_time,
+			update_time,
+			author,
+			alarm_email,
+			schedule_type,
+			schedule_conf,
+			misfire_strategy,
+			executor_route_strategy,
+			executor_handler,
+			executor_param,
+			executor_block_strategy,
+			executor_timeout,
+			executor_fail_retry_count,
+			glue_type,
+			glue_source,
+			glue_remark,
+			glue_updatetime,
+			child_jobid,
+			trigger_status,
+			trigger_last_time,
+			trigger_next_time
+		) VALUES (
+					 #{id},
+					 #{jobGroup},
+					 #{jobDesc},
+					 #{addTime},
+					 #{updateTime},
+					 #{author},
+					 #{alarmEmail},
+					 #{scheduleType},
+					 #{scheduleConf},
+					 #{misfireStrategy},
+					 #{executorRouteStrategy},
+					 #{executorHandler},
+					 #{executorParam},
+					 #{executorBlockStrategy},
+					 #{executorTimeout},
+					 #{executorFailRetryCount},
+					 #{glueType},
+					 #{glueSource},
+					 #{glueRemark},
+					 #{glueUpdatetime},
+					 #{childJobId},
+					 #{triggerStatus},
+					 #{triggerLastTime},
+					 #{triggerNextTime}
+				 );
+	</insert>
+
 </mapper>

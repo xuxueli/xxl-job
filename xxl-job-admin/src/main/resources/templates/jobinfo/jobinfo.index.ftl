@@ -13,22 +13,23 @@
 	<@netCommon.commonHeader />
 	<!-- left -->
 	<@netCommon.commonLeft "jobinfo" />
-	
+
 	<!-- Content Wrapper. Contains page content -->
 	<div class="content-wrapper">
 		<!-- Content Header (Page header) -->
 		<section class="content-header">
 			<h1>${I18n.jobinfo_name}</h1>
 		</section>
-		
+
 		<!-- Main content -->
 	    <section class="content">
-	    
+
 	    	<div class="row">
 	    		<div class="col-xs-3">
 	              	<div class="input-group">
 	                	<span class="input-group-addon">${I18n.jobinfo_field_jobgroup}</span>
                 		<select class="form-control" id="jobGroup" >
+                            <option value="-1" >${I18n.system_all}</option>
                 			<#list JobGroupList as group>
                 				<option value="${group.id}" <#if jobGroup==group.id>selected</#if> >${group.title}</option>
                 			</#list>
@@ -54,19 +55,29 @@
                         <input type="text" class="form-control" id="executorHandler" placeholder="${I18n.system_please_input}JobHandler" >
                     </div>
                 </div>
-                <div class="col-xs-2">
+                <div class="col-xs-1">
                     <div class="input-group">
                         <input type="text" class="form-control" id="author" placeholder="${I18n.system_please_input}${I18n.jobinfo_field_author}" >
                     </div>
                 </div>
-	            <div class="col-xs-1">
-	            	<button class="btn btn-block btn-info" id="searchBtn">${I18n.system_search}</button>
+                <div class="col-xs-2">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <button class="btn btn-info" id="searchBtn">${I18n.system_search}</button>
+                        </div>
+                        <div class="col-xs-3">
+                            <button class="btn btn-success add" type="button">${I18n.jobinfo_field_add}</button>
+                        </div>
+                        <div class="col-xs-3">
+                            <button class="btn btn-info" id="import" type="button">${I18n.job_info_import}</button>
+                        </div>
+                        <div class="col-xs-3">
+                            <button class="btn btn-success" id="export" type="button">${I18n.job_info_export}</button>
+                        </div>
 	            </div>
-	            <div class="col-xs-1">
-	            	<button class="btn btn-block btn-success add" type="button">${I18n.jobinfo_field_add}</button>
 	            </div>
           	</div>
-	    	
+
 			<div class="row">
 				<div class="col-xs-12">
 					<div class="box">
@@ -100,7 +111,7 @@
 			</div>
 	    </section>
 	</div>
-	
+
 	<!-- footer -->
 	<@netCommon.commonFooter />
 </div>
@@ -519,6 +530,46 @@ exit 0
                             <button type="button" class="btn btn-primary ok" >${I18n.system_save}</button>
                             <button type="button" class="btn btn-default" data-dismiss="modal">${I18n.system_cancel}</button>
                             <input type="hidden" name="id" >
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<#--Import-->
+<div class="modal fade" id="importModal" tabindex="-1" role="dialog"  aria-hidden="true">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" >${I18n.job_info_import}</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal form" role="form" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="file" class="col-sm-2 control-label">${I18n.job_info_import_file}<span
+                                    style="color: red; ">*</span></label>
+                        <div class="col-sm-10">
+                            <input class="form-control" id="file" name="file" type="file" placeholder=""/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="importStrategy" class="col-sm-2 control-label">${I18n.job_info_import_strategy}<span
+                                    style="color: red; ">*</span></label>
+
+                        <div class="col-sm-10">
+                            <select class="form-control" name="importStrategy" id="importStrategy">
+                                <option value="merge" >${I18n.job_info_import_merge}</option>
+                                <option value="overwrite" >${I18n.job_info_import_overwrite}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="form-group">
+                        <div class="col-sm-offset-3 col-sm-6">
+                            <button type="button" class="btn btn-primary import" >${I18n.job_info_import}</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">${I18n.system_cancel}</button>
                         </div>
                     </div>
                 </form>

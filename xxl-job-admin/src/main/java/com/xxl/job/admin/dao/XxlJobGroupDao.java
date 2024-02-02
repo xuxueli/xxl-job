@@ -4,6 +4,7 @@ import com.xxl.job.admin.core.model.XxlJobGroup;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -34,4 +35,26 @@ public interface XxlJobGroupDao {
                              @Param("appname") String appname,
                              @Param("title") String title);
 
+    /**
+     * load batch by ids
+     *
+     * @param jobGroupIds
+     * @return
+     */
+    List<XxlJobGroup> loadByIds(@Param("jobGroupIds") Collection<Integer> jobGroupIds);
+
+    /**
+     * removeAll
+     *
+     * @return
+     */
+    int removeAll();
+
+    /**
+     * saveWithId
+     *
+     * @param jobGroup
+     * @return
+     */
+    int saveWithId(XxlJobGroup jobGroup);
 }

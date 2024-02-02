@@ -736,4 +736,73 @@ $(function() {
 		$('#addModal').modal({backdrop: false, keyboard: false}).modal('show');
 	});
 
+	// export
+	$("#export").click(function () {
+		$.ajax({
+			type : 'POST',
+			url : base_url + "/jobinfo/export",
+			data : {
+				jobGroup : $('#jobGroup').val(),
+				triggerStatus : $('#triggerStatus').val(),
+				jobDesc : $('#jobDesc').val(),
+				executorHandler : $('#executorHandler').val(),
+				author : $('#author').val()
+			},
+			responseType: 'blob',
+			success : function(data){
+				if (data.code !== 500) {
+					let url = window.URL.createObjectURL(new Blob([data]));
+					let link = document.createElement('a')
+					link.style.display = 'none'
+					link.href = url
+					link.setAttribute('download', 'jobInfos.json')
+					document.body.appendChild(link)
+					link.click()
+					window.URL.revokeObjectURL(url)
+					document.body.removeChild(link)
+				} else {
+					layer.msg(data.msg || I18n.job_info_export + I18n.system_fail);
+				}
+			}
+		});
+	})
+
+	// import
+	$("#import").click(function(){
+
+		$('#importModal').modal({backdrop: false, keyboard: false}).modal('show');
+	});
+
+	$("#importModal").on('hide.bs.modal', function () {
+		$("#importModal .form")[0].reset();
+	});
+
+	$("#importModal .import").on('click',function() {
+		$.ajax({
+			type : 'POST',
+			url : base_url + "/jobinfo/import",
+			data : new FormData($("#importModal .form")[0]),
+			contentType: false,
+			processData: false,
+			success : function(data){
+				if (data.code === 200) {
+					$('#importModal').modal('hide');
+					layer.open({
+						title: I18n.system_tips ,
+						btn: [ I18n.system_ok ],
+						content: I18n.system_success ,
+						icon: '1'
+					});
+					jobTable.fnDraw();
+				} else {
+					layer.open({
+						title: I18n.system_tips ,
+						btn: [ I18n.system_ok ],
+						content: (data.msg || I18n.system_fail ),
+						icon: '2'
+					});
+				}
+			}
+		});
+	});
 });
