@@ -478,7 +478,7 @@ The concret content of configuration file as follows:
     xxl.job.executor.port=9999
     
     ### xxl-job log path：runtime log path of the job instance
-    xxl.job.executor.logpath=/data/applogs/xxl-job/jobhandler/
+    xxl.job.executor.logpath=data/applogs/xxl-job/jobhandler/
     
     ### xxl-job, access token：xxl-job access token,enabled if it not blank
     xxl.job.accessToken=

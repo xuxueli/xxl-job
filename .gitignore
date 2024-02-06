@@ -3,5 +3,9 @@
 .project
 *.iml
 target/
+out/
+
 .DS_Store
 .gitattributes
+
+data/
