@@ -20,6 +20,8 @@ public class XxlJobInfo {
 	private String author;		// 负责人
 	private String alarmEmail;	// 报警邮件
 
+	private String alarmTel;	// 报警手机
+
 	private String scheduleType;			// 调度类型
 	private String scheduleConf;			// 调度配置，值含义取决于调度类型
 	private String misfireStrategy;			// 调度过期策略
@@ -42,6 +44,13 @@ public class XxlJobInfo {
 	private long triggerLastTime;	// 上次调度时间
 	private long triggerNextTime;	// 下次调度时间
 
+	public String getAlarmTel() {
+		return alarmTel;
+	}
+
+	public void setAlarmTel(String alarmTel) {
+		this.alarmTel = alarmTel;
+	}
 
 	public int getId() {
 		return id;

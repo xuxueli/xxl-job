@@ -14,6 +14,7 @@
 
 	    <result column="author" property="author" />
 	    <result column="alarm_email" property="alarmEmail" />
+	    <result column="alarm_tel" property="alarmTel" />
 
 		<result column="schedule_type" property="scheduleType" />
 		<result column="schedule_conf" property="scheduleConf" />
@@ -46,6 +47,7 @@
 		t.update_time,
 		t.author,
 		t.alarm_email,
+		t.alarm_tel,
 		t.schedule_type,
 		t.schedule_conf,
 		t.misfire_strategy,
@@ -119,6 +121,7 @@
 			update_time,
 			author,
 			alarm_email,
+			alarm_tel,
 			schedule_type,
 			schedule_conf,
 			misfire_strategy,
@@ -143,6 +146,7 @@
 			#{updateTime},
 			#{author},
 			#{alarmEmail},
+			#{alarmTel},
 			#{scheduleType},
 			#{scheduleConf},
 			#{misfireStrategy},
@@ -181,6 +185,7 @@
 			update_time = #{updateTime},
 			author = #{author},
 			alarm_email = #{alarmEmail},
+			alarm_tel = #{alarmTel},
 			schedule_type = #{scheduleType},
 			schedule_conf = #{scheduleConf},
 			misfire_strategy = #{misfireStrategy},
