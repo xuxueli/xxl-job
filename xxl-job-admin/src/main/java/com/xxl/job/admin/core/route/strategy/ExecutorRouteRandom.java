@@ -15,6 +15,7 @@ public class ExecutorRouteRandom extends ExecutorRouter {
     private static Random localRandom = new Random();
 
     @Override
+    //note random随机
     public ReturnT<String> route(TriggerParam triggerParam, List<String> addressList) {
         String address = addressList.get(localRandom.nextInt(addressList.size()));
         return new ReturnT<String>(address);

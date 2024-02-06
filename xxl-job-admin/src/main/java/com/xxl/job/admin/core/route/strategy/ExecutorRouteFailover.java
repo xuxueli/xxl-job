@@ -15,6 +15,7 @@ import java.util.List;
 public class ExecutorRouteFailover extends ExecutorRouter {
 
     @Override
+    //note 心跳  轮询所有节点，返回第一个有心跳的节点地址
     public ReturnT<String> route(TriggerParam triggerParam, List<String> addressList) {
 
         StringBuffer beatResultSB = new StringBuffer();
@@ -23,6 +24,7 @@ public class ExecutorRouteFailover extends ExecutorRouter {
             ReturnT<String> beatResult = null;
             try {
                 ExecutorBiz executorBiz = XxlJobScheduler.getExecutorBiz(address);
+                //心跳
                 beatResult = executorBiz.beat();
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);
