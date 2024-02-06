@@ -176,11 +176,11 @@ $(function() {
         messages : {
             username : {
             	required : I18n.system_please_input + I18n.user_username,
-                rangelength: I18n.system_lengh_limit + "[4-20]"
+                rangelength: I18n.system_length_limit + "[4-20]"
             },
             password : {
                 required : I18n.system_please_input + I18n.user_password,
-                rangelength: I18n.system_lengh_limit + "[4-20]"
+                rangelength: I18n.system_length_limit + "[4-20]"
             }
         },
 		highlight : function(element) {  
