@@ -36,6 +36,13 @@ public interface XxlJobService {
 	public ReturnT<String> add(XxlJobInfo jobInfo);
 
 	/**
+	 *  add job , if add success run job
+	 * @param jobInfo
+	 * @return
+	 */
+	ReturnT<String> addAndStart(XxlJobInfo jobInfo);
+
+	/**
 	 * update job
 	 *
 	 * @param jobInfo
