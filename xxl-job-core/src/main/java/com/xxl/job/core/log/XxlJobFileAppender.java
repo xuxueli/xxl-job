@@ -5,6 +5,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -73,11 +75,10 @@ public class XxlJobFileAppender {
 		}
 
 		// filePath/yyyy-MM-dd/9999.log
-		String logFileName = logFilePath.getPath()
+		return logFilePath.getPath()
 				.concat(File.separator)
 				.concat(String.valueOf(logId))
 				.concat(".log");
-		return logFileName;
 	}
 
 	/**
@@ -108,25 +109,15 @@ public class XxlJobFileAppender {
 			appendLog = "";
 		}
 		appendLog += "\r\n";
-		
+
 		// append file content
-		FileOutputStream fos = null;
-		try {
-			fos = new FileOutputStream(logFile, true);
-			fos.write(appendLog.getBytes("utf-8"));
+		try (final FileOutputStream fos = new FileOutputStream(logFile, true)) {
+			fos.write(appendLog.getBytes(StandardCharsets.UTF_8));
 			fos.flush();
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
-		} finally {
-			if (fos != null) {
-				try {
-					fos.close();
-				} catch (IOException e) {
-					logger.error(e.getMessage(), e);
-				}
-			}
 		}
-		
+
 	}
 
 	/**
@@ -147,36 +138,27 @@ public class XxlJobFileAppender {
             return new LogResult(fromLineNum, 0, "readLog fail, logFile not exists", true);
 		}
 
-		// read file
-		StringBuffer logContentBuffer = new StringBuffer();
-		int toLineNum = 0;
-		LineNumberReader reader = null;
-		try {
-			//reader = new LineNumberReader(new FileReader(logFile));
-			reader = new LineNumberReader(new InputStreamReader(new FileInputStream(logFile), "utf-8"));
-			String line = null;
+        // read file
+        StringBuilder logContentBuffer = new StringBuilder();
+        int toLineNum = 0;
 
-			while ((line = reader.readLine())!=null) {
-				toLineNum = reader.getLineNumber();		// [from, to], start as 1
-				if (toLineNum >= fromLineNum) {
-					logContentBuffer.append(line).append("\n");
-				}
-			}
-		} catch (IOException e) {
-			logger.error(e.getMessage(), e);
-		} finally {
-			if (reader != null) {
-				try {
-					reader.close();
-				} catch (IOException e) {
-					logger.error(e.getMessage(), e);
-				}
-			}
-		}
+        // Use `Files.newInputStream` to replace the original `new FileInputStream`
+        // https://stackoverflow.com/questions/16977251/java-on-mac-os-filenotfound-if-path-contatins-non-latin-characters/17481204#17481204
+        try (final LineNumberReader reader = new LineNumberReader(new InputStreamReader(Files.newInputStream(logFile.toPath()), StandardCharsets.UTF_8))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                // [from, to], start as 1
+                toLineNum = reader.getLineNumber();
+                if (toLineNum >= fromLineNum) {
+                    logContentBuffer.append(line).append("\n");
+                }
+            }
+        } catch (IOException e) {
+            logger.error(e.getMessage(), e);
+        }
 
 		// result
-		LogResult logResult = new LogResult(fromLineNum, toLineNum, logContentBuffer.toString(), false);
-		return logResult;
+		return new LogResult(fromLineNum, toLineNum, logContentBuffer.toString(), false);
 
 		/*
         // it will return the number of characters actually skipped
@@ -186,35 +168,27 @@ public class XxlJobFileAppender {
         */
 	}
 
-	/**
-	 * read log data
-	 * @param logFile
-	 * @return log line content
-	 */
-	public static String readLines(File logFile){
-		BufferedReader reader = null;
-		try {
-			reader = new BufferedReader(new InputStreamReader(new FileInputStream(logFile), "utf-8"));
-			if (reader != null) {
-				StringBuilder sb = new StringBuilder();
-				String line = null;
-				while ((line = reader.readLine()) != null) {
-					sb.append(line).append("\n");
-				}
-				return sb.toString();
-			}
-		} catch (IOException e) {
-			logger.error(e.getMessage(), e);
-		} finally {
-			if (reader != null) {
-				try {
-					reader.close();
-				} catch (IOException e) {
-					logger.error(e.getMessage(), e);
-				}
-			}
-		}
-		return null;
-	}
+    /**
+     * read log data
+     *
+     * @param logFile
+     * @return log line content
+     */
+    public static String readLines(File logFile) {
+        // Use `Files.newInputStream` to replace the original `new FileInputStream`
+        // https://stackoverflow.com/questions/16977251/java-on-mac-os-filenotfound-if-path-contatins-non-latin-characters/17481204#17481204
+        try (final BufferedReader reader = new BufferedReader(new InputStreamReader(Files.newInputStream(logFile.toPath()), StandardCharsets.UTF_8))) {
+            final StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                sb.append(line).append("\n");
+            }
+            return sb.toString();
+        } catch (IOException e) {
+            logger.error(e.getMessage(), e);
+        }
+
+        return null;
+    }
 
 }
