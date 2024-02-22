@@ -5,9 +5,12 @@ import com.xxl.job.admin.core.scheduler.XxlJobScheduler;
 import com.xxl.job.admin.dao.*;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.TransactionDefinition;
 
 import javax.annotation.Resource;
 import javax.sql.DataSource;
@@ -21,6 +24,26 @@ import java.util.Arrays;
 
 @Component
 public class XxlJobAdminConfig implements InitializingBean, DisposableBean {
+    @Autowired
+    DataSourceTransactionManager dataSourceTransactionManager;
+
+    @Autowired
+    TransactionDefinition transactionDefinition;
+
+    @Resource
+    private XxlJobLockDao xxlJobLockDao;
+
+    public DataSourceTransactionManager getDataSourceTransactionManager() {
+        return dataSourceTransactionManager;
+    }
+
+    public TransactionDefinition getTransactionDefinition() {
+        return transactionDefinition;
+    }
+
+    public XxlJobLockDao getXxlJobLockDao() {
+        return xxlJobLockDao;
+    }
 
     private static XxlJobAdminConfig adminConfig = null;
     public static XxlJobAdminConfig getAdminConfig() {

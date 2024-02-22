@@ -8,6 +8,9 @@ import com.xxl.job.admin.core.scheduler.ScheduleTypeEnum;
 import com.xxl.job.admin.core.trigger.TriggerTypeEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionStatus;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -53,7 +56,9 @@ public class JobScheduleHelper {
 
                 // pre-read count: treadpool-size * trigger-qps (each trigger cost 50ms, qps = 1000/50 = 20)
                 int preReadCount = (XxlJobAdminConfig.getAdminConfig().getTriggerPoolFastMax() + XxlJobAdminConfig.getAdminConfig().getTriggerPoolSlowMax()) * 20;
-
+                DataSourceTransactionManager transactionManager = XxlJobAdminConfig.getAdminConfig().getDataSourceTransactionManager();
+                TransactionDefinition definition = XxlJobAdminConfig.getAdminConfig().getTransactionDefinition();
+                TransactionStatus transactionStatus = null;
                 while (!scheduleThreadToStop) {
 
                     // Scan Job
@@ -66,12 +71,8 @@ public class JobScheduleHelper {
                     boolean preReadSuc = true;
                     try {
 
-                        conn = XxlJobAdminConfig.getAdminConfig().getDataSource().getConnection();
-                        connAutoCommit = conn.getAutoCommit();
-                        conn.setAutoCommit(false);
-
-                        preparedStatement = conn.prepareStatement(  "select * from xxl_job_lock where lock_name = 'schedule_lock' for update" );
-                        preparedStatement.execute();
+                        transactionStatus = transactionManager.getTransaction(definition);
+                        XxlJobAdminConfig.getAdminConfig().getXxlJobLockDao().lock();
 
                         // tx start
 
@@ -155,40 +156,15 @@ public class JobScheduleHelper {
                             logger.error(">>>>>>>>>>> xxl-job, JobScheduleHelper#scheduleThread error:{}", e);
                         }
                     } finally {
-
-                        // commit
-                        if (conn != null) {
+                        try {
+                            transactionManager.commit(transactionStatus);
+                        }catch (Exception e){
+                            logger.error(e.getMessage(), e);
                             try {
-                                conn.commit();
-                            } catch (SQLException e) {
-                                if (!scheduleThreadToStop) {
-                                    logger.error(e.getMessage(), e);
-                                }
-                            }
-                            try {
-                                conn.setAutoCommit(connAutoCommit);
-                            } catch (SQLException e) {
-                                if (!scheduleThreadToStop) {
-                                    logger.error(e.getMessage(), e);
-                                }
-                            }
-                            try {
-                                conn.close();
-                            } catch (SQLException e) {
-                                if (!scheduleThreadToStop) {
-                                    logger.error(e.getMessage(), e);
-                                }
-                            }
-                        }
-
-                        // close PreparedStatement
-                        if (null != preparedStatement) {
-                            try {
-                                preparedStatement.close();
-                            } catch (SQLException e) {
-                                if (!scheduleThreadToStop) {
-                                    logger.error(e.getMessage(), e);
-                                }
+                                transactionManager.rollback(transactionStatus);
+                            }catch (Exception e1){
+                                logger.error(e.getMessage(), e);
+                                e1.printStackTrace();
                             }
                         }
                     }
