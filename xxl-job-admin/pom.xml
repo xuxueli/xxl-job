@@ -73,6 +73,12 @@
 			<version>${project.parent.version}</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-core</artifactId>
+			<version>7.9.1</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>

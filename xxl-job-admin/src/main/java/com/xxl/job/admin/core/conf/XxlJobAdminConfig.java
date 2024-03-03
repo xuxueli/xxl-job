@@ -6,6 +6,7 @@ import com.xxl.job.admin.dao.*;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 
@@ -18,7 +19,7 @@ import java.util.Arrays;
  *
  * @author xuxueli 2017-04-28
  */
-
+@DependsOn("flywayInitializer")
 @Component
 public class XxlJobAdminConfig implements InitializingBean, DisposableBean {
 
