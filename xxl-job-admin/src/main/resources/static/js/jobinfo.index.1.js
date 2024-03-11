@@ -629,14 +629,14 @@ $(function() {
 
 			// process schedule_conf
 			var scheduleType = $("#updateModal .form select[name='scheduleType']").val();
-			var scheduleConf;
-			if (scheduleType == 'CRON') {
-				scheduleConf = $("#updateModal .form input[name='cronGen_display']").val();
-			} else if (scheduleType == 'FIX_RATE') {
-				scheduleConf = $("#updateModal .form input[name='schedule_conf_FIX_RATE']").val();
-			} else if (scheduleType == 'FIX_DELAY') {
-				scheduleConf = $("#updateModal .form input[name='schedule_conf_FIX_DELAY']").val();
-			}
+            var scheduleConf;
+            if (scheduleType == 'CRON') {
+                scheduleConf = $("#updateModal .form input[name='cronGen_display']").val();
+            } else if (scheduleType == 'FIX_RATE') {
+                scheduleConf = $("#updateModal .form input[name='schedule_conf_FIX_RATE']").val();
+            } else if (scheduleType == 'FIX_DELAY') {
+                scheduleConf = $("#updateModal .form input[name='schedule_conf_FIX_DELAY']").val();
+            }
 			$("#updateModal .form input[name='scheduleConf']").val( scheduleConf );
 
 			// post
