@@ -21,6 +21,7 @@ import com.xxl.job.core.glue.GlueTypeEnum;
 import com.xxl.job.core.util.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -152,9 +153,13 @@ public class JobInfoController {
 
 	@RequestMapping("/nextTriggerTime")
 	@ResponseBody
-	public ReturnT<List<String>> nextTriggerTime(String scheduleType, String scheduleConf) {
+	public ReturnT<List<String>> nextTriggerTime(String scheduleType, String scheduleConf,
+												 @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date beginTime,
+												 @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date endTime) {
 
 		XxlJobInfo paramXxlJobInfo = new XxlJobInfo();
+		paramXxlJobInfo.setBeginTime(beginTime);
+		paramXxlJobInfo.setEndTime(endTime);
 		paramXxlJobInfo.setScheduleType(scheduleType);
 		paramXxlJobInfo.setScheduleConf(scheduleConf);
 

@@ -4,6 +4,7 @@ import com.xxl.job.admin.core.model.XxlJobInfo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -41,7 +42,7 @@ public interface XxlJobInfoDao {
 
 	public int findAllCount();
 
-	public List<XxlJobInfo> scheduleJobQuery(@Param("maxNextTime") long maxNextTime, @Param("pagesize") int pagesize );
+	public List<XxlJobInfo> scheduleJobQuery(@Param("maxNextTime") long maxNextTime, @Param("pagesize") int pagesize, @Param("nowTime") Date nowTime );
 
 	public int scheduleUpdate(XxlJobInfo xxlJobInfo);
 
