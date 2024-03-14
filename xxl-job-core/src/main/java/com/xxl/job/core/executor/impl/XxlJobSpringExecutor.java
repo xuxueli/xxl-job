@@ -16,6 +16,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.core.MethodIntrospector;
 import org.springframework.core.annotation.AnnotatedElementUtils;
+import org.springframework.util.ClassUtils;
 
 import java.lang.reflect.Method;
 import java.util.Map;
@@ -108,7 +109,7 @@ public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationC
                             continue;
                         }
                         logger.info("xxl job {}",mergedBeanDefinition.getBeanClassName());
-                        Class<?> aClass = Class.forName(mergedBeanDefinition.getBeanClassName());
+                        Class<?> aClass = ClassUtils.forName(mergedBeanDefinition.getBeanClassName(), ClassUtils.getDefaultClassLoader());
                         annotatedMethods = MethodIntrospector.selectMethods(aClass,
                                 (MethodIntrospector.MetadataLookup<XxlJob>) method ->
                                         AnnotatedElementUtils.findMergedAnnotation(method, XxlJob.class));
