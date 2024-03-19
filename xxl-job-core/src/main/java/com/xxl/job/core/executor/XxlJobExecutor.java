@@ -112,6 +112,8 @@ public class XxlJobExecutor  {
         // destroy TriggerCallbackThread
         TriggerCallbackThread.getInstance().toStop();
 
+        // clear adminBizList to support restart
+        adminBizList.clear();
     }
 
 
