@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.xxl.job.admin.dao.XxlJobUserDao">
 
 	<resultMap id="XxlJobUser" type="com.xxl.job.admin.core.model.XxlJobUser" >
 		<result column="id" property="id" />
 		<result column="username" property="username" />
-	    <result column="password" property="password" />
-	    <result column="role" property="role" />
-	    <result column="permission" property="permission" />
+		<result column="password" property="password" />
+		<result column="role" property="role" />
+		<result column="permission" property="permission" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -53,6 +53,12 @@
 		WHERE t.username = #{username}
 	</select>
 
+	<select id="load" resultType="com.xxl.job.admin.core.model.XxlJobUser">
+		SELECT <include refid="Base_Column_List" />
+		FROM xxl_job_user AS t
+		WHERE t.id = #{id}
+	</select>
+
 	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobUser" useGeneratedKeys="true" keyProperty="id" >
 		INSERT INTO xxl_job_user (
 			username,
@@ -60,21 +66,21 @@
 			role,
 			permission
 		) VALUES (
-			#{username},
-			#{password},
-			#{role},
-			#{permission}
-		);
+					 #{username},
+					 #{password},
+					 #{role},
+					 #{permission}
+				 );
 	</insert>
 
 	<update id="update" parameterType="com.xxl.job.admin.core.model.XxlJobUser" >
 		UPDATE xxl_job_user
 		SET
-			<if test="password != null and password != ''">
-				password = #{password},
-			</if>
-			role = #{role},
-			permission = #{permission}
+		<if test="password != null and password != ''">
+			password = #{password},
+		</if>
+		role = #{role},
+		permission = #{permission}
 		WHERE id = #{id}
 	</update>
 

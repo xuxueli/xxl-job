@@ -7,9 +7,11 @@ import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.admin.dao.XxlJobGroupDao;
 import com.xxl.job.admin.dao.XxlJobInfoDao;
 import com.xxl.job.admin.dao.XxlJobRegistryDao;
+import com.xxl.job.admin.service.OpLogService;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.enums.RegistryConfig;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,6 +35,10 @@ public class JobGroupController {
 	public XxlJobGroupDao xxlJobGroupDao;
 	@Resource
 	private XxlJobRegistryDao xxlJobRegistryDao;
+	@Resource
+	private OpLogService opLogService;
+	@Resource
+	private TransactionTemplate transactionTemplate;
 
 	@RequestMapping
 	@PermissionLimit(adminuser = true)
@@ -100,8 +106,13 @@ public class JobGroupController {
 		// process
 		xxlJobGroup.setUpdateTime(new Date());
 
-		int ret = xxlJobGroupDao.save(xxlJobGroup);
-		return (ret>0)?ReturnT.SUCCESS:ReturnT.FAIL;
+		Boolean success = transactionTemplate.execute(status -> {
+			xxlJobGroupDao.save(xxlJobGroup);
+			opLogService.addLog("执行器管理",null,xxlJobGroup,"新增");
+			return true;
+		});
+
+		return success ? ReturnT.SUCCESS : ReturnT.FAIL;
 	}
 
 	@RequestMapping("/update")
@@ -147,8 +158,14 @@ public class JobGroupController {
 		// process
 		xxlJobGroup.setUpdateTime(new Date());
 
-		int ret = xxlJobGroupDao.update(xxlJobGroup);
-		return (ret>0)?ReturnT.SUCCESS:ReturnT.FAIL;
+		Boolean success = transactionTemplate.execute(status -> {
+			XxlJobGroup old = xxlJobGroupDao.load(xxlJobGroup.getId());
+			xxlJobGroupDao.update(xxlJobGroup);
+			opLogService.addLog("执行器管理",old,xxlJobGroup,"编辑");
+			return true;
+		});
+
+		return success ? ReturnT.SUCCESS : ReturnT.FAIL;
 	}
 
 	private List<String> findRegistryByAppName(String appnameParam){
@@ -189,8 +206,13 @@ public class JobGroupController {
 			return new ReturnT<String>(500, I18nUtil.getString("jobgroup_del_limit_1") );
 		}
 
-		int ret = xxlJobGroupDao.remove(id);
-		return (ret>0)?ReturnT.SUCCESS:ReturnT.FAIL;
+		Boolean success = transactionTemplate.execute(status -> {
+			xxlJobGroupDao.remove(id);
+			opLogService.addLog("执行器管理",xxlJobGroupDao.load(id),null,"删除");
+			return true;
+		});
+
+		return success ? ReturnT.SUCCESS : ReturnT.FAIL;
 	}
 
 	@RequestMapping("/loadById")
