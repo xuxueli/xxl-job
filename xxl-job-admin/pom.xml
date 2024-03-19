@@ -23,6 +23,14 @@
 
 	<dependencies>
 
+		<!-- https://mvnrepository.com/artifact/com.alibaba/fastjson -->
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+			<version>1.2.78</version>
+		</dependency>
+
+
 		<!-- starter-web：spring-webmvc + autoconfigure + logback + yaml + tomcat -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
