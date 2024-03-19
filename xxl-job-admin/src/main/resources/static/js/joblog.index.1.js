@@ -1,5 +1,9 @@
 $(function() {
 
+	//select2
+	$("#jobGroup").select2();
+	$("#jobId").select2();
+	$("#logStatus").select2();
 	// jobGroup change, job list init and select
 	$("#jobGroup").on("change", function () {
 		var jobGroup = $(this).children('option:selected').val();
