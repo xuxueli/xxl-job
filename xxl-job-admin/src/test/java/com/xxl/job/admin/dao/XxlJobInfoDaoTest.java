@@ -36,7 +36,8 @@ public class XxlJobInfoDaoTest {
 		info.setJobGroup(1);
 		info.setJobDesc("desc");
 		info.setAuthor("setAuthor");
-		info.setAlarmEmail("setAlarmEmail");
+		info.setAlarmType(1);
+		info.setAlarmUrl("setAlarmEmail");
 		info.setScheduleType(ScheduleTypeEnum.FIX_RATE.name());
 		info.setScheduleConf(String.valueOf(33));
 		info.setMisfireStrategy(MisfireStrategyEnum.DO_NOTHING.name());
@@ -61,7 +62,8 @@ public class XxlJobInfoDaoTest {
 		info.setMisfireStrategy(MisfireStrategyEnum.FIRE_ONCE_NOW.name());
 		info2.setJobDesc("desc2");
 		info2.setAuthor("setAuthor2");
-		info2.setAlarmEmail("setAlarmEmail2");
+		info2.setAlarmType(1);
+		info2.setAlarmUrl("setAlarmEmail2");
 		info2.setExecutorRouteStrategy("setExecutorRouteStrategy2");
 		info2.setExecutorHandler("setExecutorHandler2");
 		info2.setExecutorParam("setExecutorParam2");
