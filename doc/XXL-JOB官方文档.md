@@ -2358,7 +2358,7 @@ public void execute() {
 - 3、【修复】"CVE-2022-36157" 授权漏洞修复。 
 - 4、【修复】"CVE-2022-43183" SSRF漏洞修复。
 
-### 7.34 版本 v2.4.1 Release Notes[规划中]
+### 7.34 版本 v2.4.1 Release Notes[2024-04-17]
 - 1、【优化】多个项目依赖升级至较新稳定版本，涉及netty、groovy、springboot、mybatis等；
 - 2、【修复】"CVE-2022-43402" groovy低版本漏洞修复。
 - 3、【修复】"CVE-2024-29025" netty低版本漏洞修复。

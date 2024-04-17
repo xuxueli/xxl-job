@@ -15,4 +15,8 @@
         <module>xxl-job-executor-sample-springboot</module>
     </modules>
 
+    <properties>
+        <maven.deploy.skip>true</maven.deploy.skip>
+    </properties>
+
 </project>
