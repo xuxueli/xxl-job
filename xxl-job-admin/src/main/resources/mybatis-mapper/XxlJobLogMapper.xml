@@ -8,6 +8,7 @@
 
 		<result column="job_group" property="jobGroup" />
 		<result column="job_id" property="jobId" />
+		<result column="title" property="jobTitle" />
 
 		<result column="executor_address" property="executorAddress" />
 		<result column="executor_handler" property="executorHandler" />
@@ -18,7 +19,8 @@
 	    <result column="trigger_time" property="triggerTime" />
 	    <result column="trigger_code" property="triggerCode" />
 	    <result column="trigger_msg" property="triggerMsg" />
-	    
+		<result column="trigger_msg_feishu" property="triggerMsgFs" />
+
 	    <result column="handle_time" property="handleTime" />
 	    <result column="handle_code" property="handleCode" />
 	    <result column="handle_msg" property="handleMsg" />
@@ -30,6 +32,7 @@
 		t.id,
 		t.job_group,
 		t.job_id,
+		j.title,
 		t.executor_address,
 		t.executor_handler,
 		t.executor_param,
@@ -38,6 +41,7 @@
 		t.trigger_time,
 		t.trigger_code,
 		t.trigger_msg,
+		t.trigger_msg_feishu,
 		t.handle_time,
 		t.handle_code,
 		t.handle_msg,
@@ -47,6 +51,8 @@
 	<select id="pageList" resultMap="XxlJobLog">
 		SELECT <include refid="Base_Column_List" />
 		FROM xxl_job_log AS t
+		LEFT JOIN xxl_job_group as j
+		ON t.job_group = j.id
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
 			<if test="jobId==0 and jobGroup gt 0">
 				AND t.job_group = #{jobGroup}
@@ -113,6 +119,8 @@
 	<select id="load" parameterType="java.lang.Long" resultMap="XxlJobLog">
 		SELECT <include refid="Base_Column_List" />
 		FROM xxl_job_log AS t
+		LEFT JOIN xxl_job_group as j
+		ON t.job_group = j.id
 		WHERE t.id = #{id}
 	</select>
 
@@ -142,6 +150,7 @@
 			`trigger_time`= #{triggerTime},
 			`trigger_code`= #{triggerCode},
 			`trigger_msg`= #{triggerMsg},
+			`trigger_msg_feishu`= #{triggerMsgFs},
 			`executor_address`= #{executorAddress},
 			`executor_handler`=#{executorHandler},
 			`executor_param`= #{executorParam},

@@ -13,6 +13,7 @@ public class XxlJobLog {
 	// job info
 	private int jobGroup;
 	private int jobId;
+	private String jobTitle;
 
 	// execute info
 	private String executorAddress;
@@ -25,7 +26,8 @@ public class XxlJobLog {
 	private Date triggerTime;
 	private int triggerCode;
 	private String triggerMsg;
-	
+	private String triggerMsgFs;
+
 	// handle info
 	private Date handleTime;
 	private int handleCode;
@@ -56,6 +58,10 @@ public class XxlJobLog {
 
 	public void setJobId(int jobId) {
 		this.jobId = jobId;
+	}
+	public String getJobTitle(){return jobTitle;}
+	public  void setJobTitle(String jobTitle){
+		this.jobTitle=jobTitle;
 	}
 
 	public String getExecutorAddress() {
@@ -121,6 +127,7 @@ public class XxlJobLog {
 	public void setTriggerMsg(String triggerMsg) {
 		this.triggerMsg = triggerMsg;
 	}
+	public void setTriggerMsgFs(String triggerMsgFs){this.triggerMsgFs = triggerMsgFs;}
 
 	public Date getHandleTime() {
 		return handleTime;
@@ -141,6 +148,7 @@ public class XxlJobLog {
 	public String getHandleMsg() {
 		return handleMsg;
 	}
+	public String getTriggerMsgFs(){return triggerMsgFs;}
 
 	public void setHandleMsg(String handleMsg) {
 		this.handleMsg = handleMsg;

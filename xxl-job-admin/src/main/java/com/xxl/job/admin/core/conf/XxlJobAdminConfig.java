@@ -67,6 +67,9 @@ public class XxlJobAdminConfig implements InitializingBean, DisposableBean {
     @Value("${xxl.job.logretentiondays}")
     private int logretentiondays;
 
+    @Value("${feishu.url}")
+    private String feishurl;
+
     // dao, service
 
     @Resource
@@ -154,5 +157,7 @@ public class XxlJobAdminConfig implements InitializingBean, DisposableBean {
     public JobAlarmer getJobAlarmer() {
         return jobAlarmer;
     }
+
+    public String getFeishurl() {return feishurl;}
 
 }
