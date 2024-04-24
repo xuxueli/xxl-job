@@ -13,6 +13,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -75,7 +76,8 @@ public class SampleXxlJob {
      */
     @XxlJob("commandJobHandler")
     public void commandJobHandler() throws Exception {
-        String command = XxlJobHelper.getJobParam();
+        String[] command = Objects.requireNonNull(XxlJobHelper.getJobParam()).split("\\s+");
+
         int exitValue = -1;
 
         BufferedReader bufferedReader = null;
@@ -86,7 +88,6 @@ public class SampleXxlJob {
             processBuilder.redirectErrorStream(true);
 
             Process process = processBuilder.start();
-            //Process process = Runtime.getRuntime().exec(command);
 
             BufferedInputStream bufferedInputStream = new BufferedInputStream(process.getInputStream());
             bufferedReader = new BufferedReader(new InputStreamReader(bufferedInputStream));
