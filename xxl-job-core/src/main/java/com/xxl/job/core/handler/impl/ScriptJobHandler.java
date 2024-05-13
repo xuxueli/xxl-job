@@ -5,9 +5,13 @@ import com.xxl.job.core.context.XxlJobHelper;
 import com.xxl.job.core.glue.GlueTypeEnum;
 import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.log.XxlJobFileAppender;
+import com.xxl.job.core.util.GsonTool;
 import com.xxl.job.core.util.ScriptUtil;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by xuxueli on 17/4/27.
@@ -70,15 +74,22 @@ public class ScriptJobHandler extends IJobHandler {
         // log file
         String logFileName = XxlJobContext.getXxlJobContext().getJobLogFileName();
 
-        // script params：0=param、1=分片序号、2=分片总数
-        String[] scriptParams = new String[3];
-        scriptParams[0] = XxlJobHelper.getJobParam();
-        scriptParams[1] = String.valueOf(XxlJobContext.getXxlJobContext().getShardIndex());
-        scriptParams[2] = String.valueOf(XxlJobContext.getXxlJobContext().getShardTotal());
+        // script params：0=param eg:{"param1":"a","param2":"b"}、1=分片序号、2=分片总数
+        List<String> paramList =new ArrayList();
+        String jobParam = XxlJobHelper.getJobParam();
+        if (XxlJobHelper.getJobParam()!=null && XxlJobHelper.getJobParam().trim().length()>0) {
+            Map<String,String> paramMap = GsonTool.gsonToMap(jobParam);
+            if (paramMap != null && paramMap.size() > 0) {
+                paramList.addAll(paramMap.values());
+            }
+        }
+        paramList.add(String.valueOf(XxlJobContext.getXxlJobContext().getShardIndex()));
+        paramList.add(String.valueOf(XxlJobContext.getXxlJobContext().getShardTotal()));
+        String[] params = paramList.toArray(new String[paramList.size()]);
 
         // invoke
         XxlJobHelper.log("----------- script file:"+ scriptFileName +" -----------");
-        int exitValue = ScriptUtil.execToFile(cmd, scriptFileName, logFileName, scriptParams);
+        int exitValue = ScriptUtil.execToFile(cmd, scriptFileName, logFileName, params);
 
         if (exitValue == 0) {
             XxlJobHelper.handleSuccess();

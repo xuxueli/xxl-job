@@ -7,6 +7,7 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author xuxueli 2020-04-11 20:56:31
@@ -15,7 +16,7 @@ public class GsonTool {
 
     private static Gson gson = null;
     static {
-            gson= new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+        gson= new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
     }
 
     /**
@@ -85,4 +86,18 @@ public class GsonTool {
         );
     }
 
+    /**
+     * 转成map
+     *
+     * @param json
+     * @return
+     */
+    public static <T> Map<String, T> gsonToMap(String json) {
+        Map<String, T> map = null;
+        if (gson != null) {
+            map = gson.fromJson(json, new TypeToken<Map<String, T>>() {
+            }.getType());
+        }
+        return map;
+    }
 }
