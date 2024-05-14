@@ -887,8 +887,6 @@ docker pull xuxueli/xxl-job-admin
 - 创建容器并运行
 
 ```
-docker run -p 8080:8080 -v /tmp:/data/applogs --name xxl-job-admin  -d xuxueli/xxl-job-admin:{指定版本}
-
 /**
 * 如需自定义 mysql 等配置，可通过 "-e PARAMS" 指定，参数格式 PARAMS="--key=value  --key2=value2" ；
 * 配置项参考文件：/xxl-job/xxl-job-admin/src/main/resources/application.properties
@@ -2358,7 +2356,7 @@ public void execute() {
 - 3、【修复】"CVE-2022-36157" 授权漏洞修复。 
 - 4、【修复】"CVE-2022-43183" SSRF漏洞修复。
 
-### 7.34 版本 v2.4.1 Release Notes[规划中]
+### 7.34 版本 v2.4.1 Release Notes[2024-04-17]
 - 1、【优化】多个项目依赖升级至较新稳定版本，涉及netty、groovy、springboot、mybatis等；
 - 2、【修复】"CVE-2022-43402" groovy低版本漏洞修复。
 - 3、【修复】"CVE-2024-29025" netty低版本漏洞修复。
