@@ -4,8 +4,9 @@ import com.xxl.job.core.executor.impl.XxlJobSpringExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.*;
+import org.springframework.core.env.Environment;
+import org.springframework.core.type.AnnotatedTypeMetadata;
 
 /**
  * xxl-job config
@@ -40,8 +41,27 @@ public class XxlJobConfig {
     @Value("${xxl.job.executor.logretentiondays}")
     private int logRetentionDays;
 
+    public static class XxlCondition implements Condition {
+
+        @Override
+        public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
+
+            Environment environment = context.getEnvironment();
+            // 不配置默认开启
+            if (!environment.containsProperty("xxl.enabled")) {
+                return true;
+            }
+
+            // 配置了根据配置来设置状态
+            Boolean enable = environment.getProperty("xxl.enabled", Boolean.class);
+            return Boolean.TRUE.equals(enable);
+
+        }
+    }
+
 
     @Bean
+    @Conditional(XxlCondition.class)
     public XxlJobSpringExecutor xxlJobExecutor() {
         logger.info(">>>>>>>>>>> xxl-job config init.");
         XxlJobSpringExecutor xxlJobSpringExecutor = new XxlJobSpringExecutor();
