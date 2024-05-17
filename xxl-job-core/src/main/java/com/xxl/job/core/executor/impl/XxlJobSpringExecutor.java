@@ -26,6 +26,15 @@ import java.util.Map;
 public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationContextAware, SmartInitializingSingleton, DisposableBean {
     private static final Logger logger = LoggerFactory.getLogger(XxlJobSpringExecutor.class);
 
+    private final boolean atOnceStart;
+
+    public XxlJobSpringExecutor() {
+        this(true);
+    }
+
+    public XxlJobSpringExecutor(boolean atOnceStart) {
+        this.atOnceStart = atOnceStart;
+    }
 
     // start
     @Override
@@ -41,10 +50,12 @@ public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationC
         GlueFactory.refreshInstance(1);
 
         // super start
-        try {
-            super.start();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        if (atOnceStart) {
+            try {
+                super.start();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
