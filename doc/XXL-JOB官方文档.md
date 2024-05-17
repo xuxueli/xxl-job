@@ -1479,7 +1479,7 @@ xxl-job-admin#com.xxl.job.admin.controller.JobApiController.callback
 #### 5.5.4 执行器
 执行器实际上是一个内嵌的Server，默认端口9999（配置项：xxl.job.executor.port）。
 
-在项目启动时，执行器会通过“@JobHandler”识别Spring容器中“Bean模式任务”，以注解的value属性为key管理起来。
+在项目启动时，执行器会通过“@XxlJob”识别Spring容器中“Bean模式任务”，以注解的value属性为key管理起来。
 
 “执行器”接收到“调度中心”的调度请求时，如果任务类型为“Bean模式”，将会匹配Spring容器中的“Bean模式任务”，然后调用其execute方法，执行任务逻辑。如果任务类型为“GLUE模式”，将会加载GLue代码，实例化Java对象，注入依赖的Spring服务（注意：Glue代码中注入的Spring服务，必须存在与该“执行器”项目的Spring容器中），然后调用execute方法，执行任务逻辑。
 
