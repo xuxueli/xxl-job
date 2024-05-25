@@ -34,6 +34,8 @@ public class JobScheduleHelper {
     private volatile boolean scheduleThreadToStop = false;
     private volatile boolean ringThreadToStop = false;
     private volatile static Map<Integer, List<Integer>> ringData = new ConcurrentHashMap<>();
+    /** Map of last trigger time, keyed by job id. */
+    private volatile static Map<Integer, Long> lastTriggerTimeMap = new ConcurrentHashMap<>();
 
     public void start(){
 
@@ -271,15 +273,23 @@ public class JobScheduleHelper {
 
     private void refreshNextValidTime(XxlJobInfo jobInfo, Date fromTime) throws Exception {
         Date nextValidTime = generateNextValidTime(jobInfo, fromTime);
+        ScheduleTypeEnum scheduleTypeEnum = ScheduleTypeEnum.match(jobInfo.getScheduleType(), null);
         if (nextValidTime != null) {
             jobInfo.setTriggerLastTime(jobInfo.getTriggerNextTime());
             jobInfo.setTriggerNextTime(nextValidTime.getTime());
         } else {
-            jobInfo.setTriggerStatus(0);
             jobInfo.setTriggerLastTime(0);
             jobInfo.setTriggerNextTime(0);
-            logger.warn(">>>>>>>>>>> xxl-job, refreshNextValidTime fail for job: jobId={}, scheduleType={}, scheduleConf={}",
-                    jobInfo.getId(), jobInfo.getScheduleType(), jobInfo.getScheduleConf());
+            // Fix delay next trigger time is on the way, can not disable trigger status.
+            if (ScheduleTypeEnum.FIX_DELAY != scheduleTypeEnum) {
+                jobInfo.setTriggerStatus(0);
+                logger.warn(">>>>>>>>>>> xxl-job, refreshNextValidTime fail for job: jobId={}, scheduleType={}, scheduleConf={}",
+                        jobInfo.getId(), jobInfo.getScheduleType(), jobInfo.getScheduleConf());
+            }else {
+                // For the sake of misfire all the time.
+                // Set the trigger next time: 9999-12-31 23:59:59
+                jobInfo.setTriggerNextTime(253402271939000L);
+            }
         }
     }
 
@@ -350,20 +360,50 @@ public class JobScheduleHelper {
             }
         }
 
+        // Clear registries.
+        clearLastTriggerTimeRegistries();
+
         logger.info(">>>>>>>>>>> xxl-job, JobScheduleHelper stop");
     }
 
+    /**
+     * Clear last trigger time registries.
+     */
+    public static void clearLastTriggerTimeRegistries() {
+        lastTriggerTimeMap.clear();
+    }
 
     // ---------------------- tools ----------------------
     public static Date generateNextValidTime(XxlJobInfo jobInfo, Date fromTime) throws Exception {
         ScheduleTypeEnum scheduleTypeEnum = ScheduleTypeEnum.match(jobInfo.getScheduleType(), null);
         if (ScheduleTypeEnum.CRON == scheduleTypeEnum) {
-            Date nextValidTime = new CronExpression(jobInfo.getScheduleConf()).getNextValidTimeAfter(fromTime);
-            return nextValidTime;
-        } else if (ScheduleTypeEnum.FIX_RATE == scheduleTypeEnum /*|| ScheduleTypeEnum.FIX_DELAY == scheduleTypeEnum*/) {
-            return new Date(fromTime.getTime() + Integer.valueOf(jobInfo.getScheduleConf())*1000 );
+            return new CronExpression(jobInfo.getScheduleConf()).getNextValidTimeAfter(fromTime);
+        } else if (ScheduleTypeEnum.FIX_RATE == scheduleTypeEnum) {
+            return new Date(fromTime.getTime() + Long.parseLong(jobInfo.getScheduleConf()) * 1000);
+        } else if (ScheduleTypeEnum.FIX_DELAY == scheduleTypeEnum) {
+            // Initial as the same as FIX_RATE.
+            if (lastTriggerTimeMap.get(jobInfo.getId()) == null) {
+                return new Date(fromTime.getTime() + Long.parseLong(jobInfo.getScheduleConf()) * 1000);
+            }
         }
         return null;
+    }
+
+    /**
+     * Generate fix delay next valid time.
+     *
+     * @param jobId      job id
+     * @param handleTime handle time.
+     */
+    public static void generateFixDelayNextValidTime(Integer jobId, Date handleTime) {
+        lastTriggerTimeMap.put(jobId, handleTime.getTime());
+        XxlJobInfo jobInfo = XxlJobAdminConfig.getAdminConfig().getXxlJobInfoDao().loadById(jobId);
+        ScheduleTypeEnum scheduleTypeEnum = ScheduleTypeEnum.match(jobInfo.getScheduleType(), null);
+        if (ScheduleTypeEnum.FIX_DELAY == scheduleTypeEnum) {
+            long triggerNextTime = handleTime.getTime() + Long.parseLong(jobInfo.getScheduleConf()) * 1000;
+            jobInfo.setTriggerNextTime(triggerNextTime);
+            XxlJobAdminConfig.getAdminConfig().getXxlJobInfoDao().scheduleUpdate(jobInfo);
+        }
     }
 
 }
