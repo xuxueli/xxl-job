@@ -37,15 +37,13 @@
                         <input type="text" class="form-control" id="title" placeholder="${I18n.jobgroup_field_title}" >
                     </div>
                 </div>
-                <div class="col-xs-2">
-                    <button class="btn btn-block btn-info" id="searchBtn">${I18n.system_search}</button>
-                </div>
-                <div class="col-xs-2">
-                    <button class="btn btn-block btn-success add" type="button">${I18n.jobinfo_field_add}</button>
+                <div class="col-xs-6">
+                    <button class="btn btn-info" id="searchBtn">${I18n.system_search}</button>
+                    <button class="btn btn-success add" type="button">${I18n.jobinfo_field_add}</button>
                 </div>
             </div>
 			
-			<div class="row">
+			<div class="row gap-top-8">
 				<div class="col-xs-12">
 					<div class="box">
 			            <div class="box-body">
