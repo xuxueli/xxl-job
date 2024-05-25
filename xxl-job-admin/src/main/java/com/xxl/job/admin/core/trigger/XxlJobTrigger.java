@@ -5,6 +5,7 @@ import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.admin.core.route.ExecutorRouteStrategyEnum;
+import com.xxl.job.admin.core.route.ExecutorRouterHelper;
 import com.xxl.job.admin.core.scheduler.XxlJobScheduler;
 import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.core.biz.ExecutorBiz;
@@ -149,9 +150,11 @@ public class XxlJobTrigger {
                     address = group.getRegistryList().get(0);
                 }
             } else {
-                routeAddressResult = executorRouteStrategyEnum.getRouter().route(triggerParam, group.getRegistryList());
+                routeAddressResult = executorRouteStrategyEnum.getRouter().route(group, triggerParam, group.getRegistryList());
                 if (routeAddressResult.getCode() == ReturnT.SUCCESS_CODE) {
                     address = routeAddressResult.getContent();
+                    //以单个executor为范围，更新address的使用统计
+                    ExecutorRouterHelper.updateRouteStats(group.getAppname(), address);
                 }
             }
         } else {
