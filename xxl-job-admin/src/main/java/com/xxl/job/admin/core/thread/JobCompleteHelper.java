@@ -21,7 +21,7 @@ import java.util.concurrent.*;
  */
 public class JobCompleteHelper {
 	private static Logger logger = LoggerFactory.getLogger(JobCompleteHelper.class);
-	
+
 	private static JobCompleteHelper instance = new JobCompleteHelper();
 	public static JobCompleteHelper getInstance(){
 		return instance;
@@ -78,7 +78,7 @@ public class JobCompleteHelper {
 						Date losedTime = DateUtil.addMinutes(new Date(), -10);
 						List<Long> losedJobIds  = XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().findLostJobIds(losedTime);
 
-						if (losedJobIds!=null && losedJobIds.size()>0) {
+						if (losedJobIds!=null && !losedJobIds.isEmpty()) {
 							for (Long logId: losedJobIds) {
 
 								XxlJobLog jobLog = new XxlJobLog();

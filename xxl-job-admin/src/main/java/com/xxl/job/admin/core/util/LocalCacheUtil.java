@@ -1,5 +1,7 @@
 package com.xxl.job.admin.core.util;
 
+import org.springframework.util.StringUtils;
+
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -65,7 +67,7 @@ public class LocalCacheUtil {
         cleanTimeoutCache();
 
         // set new cache
-        if (key==null || key.trim().length()==0) {
+        if (!StringUtils.hasText(key)) {
             return false;
         }
         if (val == null) {
@@ -87,7 +89,7 @@ public class LocalCacheUtil {
      * @return
      */
     public static boolean remove(String key){
-        if (key==null || key.trim().length()==0) {
+        if (!StringUtils.hasText(key)) {
             return false;
         }
         cacheRepository.remove(key);
@@ -101,7 +103,7 @@ public class LocalCacheUtil {
      * @return
      */
     public static Object get(String key){
-        if (key==null || key.trim().length()==0) {
+        if (!StringUtils.hasText(key)) {
             return null;
         }
         LocalCacheData localCacheData = cacheRepository.get(key);

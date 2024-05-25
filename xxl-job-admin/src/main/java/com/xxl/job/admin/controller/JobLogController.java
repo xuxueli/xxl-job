@@ -10,6 +10,8 @@ import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.admin.dao.XxlJobGroupDao;
 import com.xxl.job.admin.dao.XxlJobInfoDao;
 import com.xxl.job.admin.dao.XxlJobLogDao;
+import com.xxl.job.admin.platform.DatabasePlatformType;
+import com.xxl.job.admin.platform.DatabasePlatformUtil;
 import com.xxl.job.core.biz.ExecutorBiz;
 import com.xxl.job.core.biz.model.KillParam;
 import com.xxl.job.core.biz.model.LogParam;
@@ -28,10 +30,7 @@ import org.springframework.web.util.HtmlUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * index controller
@@ -57,7 +56,7 @@ public class JobLogController {
 
 		// filter group
 		List<XxlJobGroup> jobGroupList = JobInfoController.filterJobGroupByRole(request, jobGroupList_all);
-		if (jobGroupList==null || jobGroupList.size()==0) {
+		if (jobGroupList==null || jobGroupList.isEmpty()) {
 			throw new XxlJobException(I18nUtil.getString("jobgroup_empty"));
 		}
 
@@ -85,7 +84,7 @@ public class JobLogController {
 		List<XxlJobInfo> list = xxlJobInfoDao.getJobsByGroup(jobGroup);
 		return new ReturnT<List<XxlJobInfo>>(list);
 	}
-	
+
 	@RequestMapping("/pageList")
 	@ResponseBody
 	public Map<String, Object> pageList(HttpServletRequest request,
@@ -95,22 +94,30 @@ public class JobLogController {
 
 		// valid permission
 		JobInfoController.validPermission(request, jobGroup);	// 仅管理员支持查询全部；普通用户仅支持查询有权限的 jobGroup
-		
+
 		// parse param
 		Date triggerTimeStart = null;
 		Date triggerTimeEnd = null;
-		if (filterTime!=null && filterTime.trim().length()>0) {
+		if (StringUtils.hasText(filterTime)) {
 			String[] temp = filterTime.split(" - ");
 			if (temp.length == 2) {
 				triggerTimeStart = DateUtil.parseDateTime(temp[0]);
 				triggerTimeEnd = DateUtil.parseDateTime(temp[1]);
 			}
 		}
-		
+
 		// page query
-		List<XxlJobLog> list = xxlJobLogDao.pageList(start, length, jobGroup, jobId, triggerTimeStart, triggerTimeEnd, logStatus);
-		int list_count = xxlJobLogDao.pageListCount(start, length, jobGroup, jobId, triggerTimeStart, triggerTimeEnd, logStatus);
-		
+		List<XxlJobLog> list=new ArrayList<>();
+		if(DatabasePlatformUtil.getPlatformConfig().type()== DatabasePlatformType.ORACLE) {
+			int endIndex = (start + 1) * length;
+			list = xxlJobLogDao.pageList(start, endIndex, jobGroup, jobId, triggerTimeStart, triggerTimeEnd, logStatus);
+		}else if(DatabasePlatformUtil.getPlatformConfig().type()== DatabasePlatformType.POSTGRE) {
+			list = xxlJobLogDao.pageList(start, length, jobGroup, jobId, triggerTimeStart, triggerTimeEnd, logStatus);
+		}else{
+			list = xxlJobLogDao.pageList(start, length, jobGroup, jobId, triggerTimeStart, triggerTimeEnd, logStatus);
+		}
+		int list_count = xxlJobLogDao.pageListCount( jobGroup, jobId, triggerTimeStart, triggerTimeEnd, logStatus);
+
 		// package result
 		Map<String, Object> maps = new HashMap<String, Object>();
 	    maps.put("recordsTotal", list_count);		// 总记录数
@@ -235,10 +242,10 @@ public class JobLogController {
 		List<Long> logIds = null;
 		do {
 			logIds = xxlJobLogDao.findClearLogIds(jobGroup, jobId, clearBeforeTime, clearBeforeNum, 1000);
-			if (logIds!=null && logIds.size()>0) {
+			if (logIds!=null && !logIds.isEmpty()) {
 				xxlJobLogDao.clearLog(logIds);
 			}
-		} while (logIds!=null && logIds.size()>0);
+		} while (logIds!=null && !logIds.isEmpty());
 
 		return ReturnT.SUCCESS;
 	}

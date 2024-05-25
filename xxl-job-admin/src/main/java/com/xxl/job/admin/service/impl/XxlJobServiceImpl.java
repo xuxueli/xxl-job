@@ -13,6 +13,8 @@ import com.xxl.job.admin.core.thread.JobTriggerPoolHelper;
 import com.xxl.job.admin.core.trigger.TriggerTypeEnum;
 import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.admin.dao.*;
+import com.xxl.job.admin.platform.DatabasePlatformType;
+import com.xxl.job.admin.platform.DatabasePlatformUtil;
 import com.xxl.job.admin.service.XxlJobService;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
@@ -21,6 +23,7 @@ import com.xxl.job.core.util.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.text.MessageFormat;
@@ -44,14 +47,22 @@ public class XxlJobServiceImpl implements XxlJobService {
 	private XxlJobLogGlueDao xxlJobLogGlueDao;
 	@Resource
 	private XxlJobLogReportDao xxlJobLogReportDao;
-	
+
 	@Override
 	public Map<String, Object> pageList(int start, int length, int jobGroup, int triggerStatus, String jobDesc, String executorHandler, String author) {
 
 		// page list
-		List<XxlJobInfo> list = xxlJobInfoDao.pageList(start, length, jobGroup, triggerStatus, jobDesc, executorHandler, author);
-		int list_count = xxlJobInfoDao.pageListCount(start, length, jobGroup, triggerStatus, jobDesc, executorHandler, author);
-		
+		List<XxlJobInfo> list=new ArrayList<>();
+		if(DatabasePlatformUtil.getPlatformConfig().type()== DatabasePlatformType.ORACLE){
+			int endIndex=(start+1)*length;
+			list = xxlJobInfoDao.pageList(start, endIndex, jobGroup, triggerStatus, jobDesc, executorHandler, author);
+		}else if(DatabasePlatformUtil.getPlatformConfig().type()== DatabasePlatformType.POSTGRE){
+			list = xxlJobInfoDao.pageList(start, length, jobGroup, triggerStatus, jobDesc, executorHandler, author);
+		}else{
+			list = xxlJobInfoDao.pageList(start, length, jobGroup, triggerStatus, jobDesc, executorHandler, author);
+		}
+		int list_count = xxlJobInfoDao.pageListCount(jobGroup, triggerStatus, jobDesc, executorHandler, author);
+
 		// package result
 		Map<String, Object> maps = new HashMap<String, Object>();
 	    maps.put("recordsTotal", list_count);		// 总记录数
@@ -68,10 +79,10 @@ public class XxlJobServiceImpl implements XxlJobService {
 		if (group == null) {
 			return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("system_please_choose")+I18nUtil.getString("jobinfo_field_jobgroup")) );
 		}
-		if (jobInfo.getJobDesc()==null || jobInfo.getJobDesc().trim().length()==0) {
+		if (!StringUtils.hasText(jobInfo.getJobDesc())) {
 			return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("system_please_input")+I18nUtil.getString("jobinfo_field_jobdesc")) );
 		}
-		if (jobInfo.getAuthor()==null || jobInfo.getAuthor().trim().length()==0) {
+		if (!StringUtils.hasText(jobInfo.getAuthor())) {
 			return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("system_please_input")+I18nUtil.getString("jobinfo_field_author")) );
 		}
 
@@ -102,7 +113,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 		if (GlueTypeEnum.match(jobInfo.getGlueType()) == null) {
 			return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("jobinfo_field_gluetype")+I18nUtil.getString("system_unvalid")) );
 		}
-		if (GlueTypeEnum.BEAN==GlueTypeEnum.match(jobInfo.getGlueType()) && (jobInfo.getExecutorHandler()==null || jobInfo.getExecutorHandler().trim().length()==0) ) {
+		if (GlueTypeEnum.BEAN==GlueTypeEnum.match(jobInfo.getGlueType()) && !StringUtils.hasText(jobInfo.getExecutorHandler()) ) {
 			return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("system_please_input")+"JobHandler") );
 		}
 		// 》fix "\r" in shell
@@ -122,10 +133,10 @@ public class XxlJobServiceImpl implements XxlJobService {
 		}
 
 		// 》ChildJobId valid
-		if (jobInfo.getChildJobId()!=null && jobInfo.getChildJobId().trim().length()>0) {
+		if (StringUtils.hasText(jobInfo.getChildJobId())) {
 			String[] childJobIds = jobInfo.getChildJobId().split(",");
 			for (String childJobIdItem: childJobIds) {
-				if (childJobIdItem!=null && childJobIdItem.trim().length()>0 && isNumeric(childJobIdItem)) {
+				if (StringUtils.hasText(childJobIdItem) && isNumeric(childJobIdItem)) {
 					XxlJobInfo childJobInfo = xxlJobInfoDao.loadById(Integer.parseInt(childJobIdItem));
 					if (childJobInfo==null) {
 						return new ReturnT<String>(ReturnT.FAIL_CODE,
@@ -172,10 +183,10 @@ public class XxlJobServiceImpl implements XxlJobService {
 	public ReturnT<String> update(XxlJobInfo jobInfo) {
 
 		// valid base
-		if (jobInfo.getJobDesc()==null || jobInfo.getJobDesc().trim().length()==0) {
+		if (!StringUtils.hasText(jobInfo.getJobDesc())) {
 			return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("system_please_input")+I18nUtil.getString("jobinfo_field_jobdesc")) );
 		}
-		if (jobInfo.getAuthor()==null || jobInfo.getAuthor().trim().length()==0) {
+		if (!StringUtils.hasText(jobInfo.getAuthor())) {
 			return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("system_please_input")+I18nUtil.getString("jobinfo_field_author")) );
 		}
 
@@ -214,10 +225,10 @@ public class XxlJobServiceImpl implements XxlJobService {
 		}
 
 		// 》ChildJobId valid
-		if (jobInfo.getChildJobId()!=null && jobInfo.getChildJobId().trim().length()>0) {
+		if (StringUtils.hasText(jobInfo.getChildJobId())) {
 			String[] childJobIds = jobInfo.getChildJobId().split(",");
 			for (String childJobIdItem: childJobIds) {
-				if (childJobIdItem!=null && childJobIdItem.trim().length()>0 && isNumeric(childJobIdItem)) {
+				if (StringUtils.hasText(childJobIdItem) && isNumeric(childJobIdItem)) {
 					XxlJobInfo childJobInfo = xxlJobInfoDao.loadById(Integer.parseInt(childJobIdItem));
 					if (childJobInfo==null) {
 						return new ReturnT<String>(ReturnT.FAIL_CODE,
@@ -378,7 +389,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 			return true;
 		}
 		List<String> groupIdStrs = new ArrayList<>();
-		if (loginUser.getPermission()!=null && loginUser.getPermission().trim().length()>0) {
+		if (StringUtils.hasText(loginUser.getPermission())) {
 			groupIdStrs = Arrays.asList(loginUser.getPermission().trim().split(","));
 		}
 		return groupIdStrs.contains(String.valueOf(jobGroup));
@@ -432,7 +443,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 
 		List<XxlJobLogReport> logReportList = xxlJobLogReportDao.queryLogReport(startDate, endDate);
 
-		if (logReportList!=null && logReportList.size()>0) {
+		if (logReportList!=null && !logReportList.isEmpty()) {
 			for (XxlJobLogReport item: logReportList) {
 				String day = DateUtil.formatDate(item.getTriggerDay());
 				int triggerDayCountRunning = item.getRunningCount();

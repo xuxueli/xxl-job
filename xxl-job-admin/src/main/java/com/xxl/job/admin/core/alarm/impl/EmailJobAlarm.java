@@ -9,12 +9,18 @@ import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.core.biz.model.ReturnT;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.EnvironmentAware;
+import org.springframework.core.env.Environment;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import javax.mail.internet.MimeMessage;
+import java.net.InetAddress;
 import java.text.MessageFormat;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -24,9 +30,28 @@ import java.util.Set;
  * @author xuxueli 2020-01-19
  */
 @Component
-public class EmailJobAlarm implements JobAlarm {
+public class EmailJobAlarm implements JobAlarm, EnvironmentAware {
     private static Logger logger = LoggerFactory.getLogger(EmailJobAlarm.class);
+    public static String hostIdentity;
 
+    static {
+        try {
+            InetAddress localHost = InetAddress.getLocalHost();
+            String hostAddress = localHost.getHostAddress();
+            String hostName = localHost.getHostName();
+            hostIdentity = hostName + "/" + hostAddress;
+        } catch (Exception e) {
+
+        }
+    }
+
+    @Override
+    public void setEnvironment(Environment environment) {
+        String str = environment.getProperty("xxl.job.host-identity");
+        if (!StringUtils.isEmpty(str)) {
+            hostIdentity = str;
+        }
+    }
     /**
      * fail alarm
      *
@@ -34,13 +59,25 @@ public class EmailJobAlarm implements JobAlarm {
      */
     @Override
     public boolean doAlarm(XxlJobInfo info, XxlJobLog jobLog){
+        SimpleDateFormat dateFmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         boolean alarmResult = true;
 
         // send monitor email
-        if (info!=null && info.getAlarmEmail()!=null && info.getAlarmEmail().trim().length()>0) {
+        if (info!=null && StringUtils.hasText(info.getAlarmEmail())) {
 
             // alarmContent
             String alarmContent = "Alarm Job LogId=" + jobLog.getId();
+            if (StringUtils.hasLength(hostIdentity)) {
+                alarmContent += "<br>Host Identity = " + hostIdentity;
+            }
+            Date triggerTime = jobLog.getTriggerTime();
+            if (triggerTime != null) {
+                alarmContent += "<br>Trigger Time = " + dateFmt.format(triggerTime);
+            }
+            Date handleTime = jobLog.getHandleTime();
+            if (handleTime != null) {
+                alarmContent += "<br>Handle Time = " + dateFmt.format(handleTime);
+            }
             if (jobLog.getTriggerCode() != ReturnT.SUCCESS_CODE) {
                 alarmContent += "<br>TriggerMsg=<br>" + jobLog.getTriggerMsg();
             }

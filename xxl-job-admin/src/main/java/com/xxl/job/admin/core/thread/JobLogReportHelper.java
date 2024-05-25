@@ -5,10 +5,7 @@ import com.xxl.job.admin.core.model.XxlJobLogReport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -68,8 +65,27 @@ public class JobLogReportHelper {
                             xxlJobLogReport.setSucCount(0);
                             xxlJobLogReport.setFailCount(0);
 
-                            Map<String, Object> triggerCountMap = XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().findLogReport(todayFrom, todayTo);
-                            if (triggerCountMap!=null && triggerCountMap.size()>0) {
+                            Map<String, Object> countMap = XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().findLogReport(todayFrom, todayTo);
+
+                            Map<String, Object> triggerCountMap=new HashMap<>();
+                            if(countMap!=null){
+                                String[] names={"triggerDayCount","triggerDayCountRunning","triggerDayCountSuc"};
+                                for (Map.Entry<String, Object> entry : countMap.entrySet()) {
+                                    boolean isFind=false;
+                                    for (String name : names) {
+                                        if(name.equalsIgnoreCase(entry.getKey())){
+                                            triggerCountMap.put(name,entry.getValue());
+                                            isFind=true;
+                                            break;
+                                        }
+                                    }
+                                    if(!isFind){
+                                        triggerCountMap.put(entry.getKey(), entry.getValue());
+                                    }
+                                }
+                            }
+
+                            if (triggerCountMap!=null && !triggerCountMap.isEmpty()) {
                                 int triggerDayCount = triggerCountMap.containsKey("triggerDayCount")?Integer.valueOf(String.valueOf(triggerCountMap.get("triggerDayCount"))):0;
                                 int triggerDayCountRunning = triggerCountMap.containsKey("triggerDayCountRunning")?Integer.valueOf(String.valueOf(triggerCountMap.get("triggerDayCountRunning"))):0;
                                 int triggerDayCountSuc = triggerCountMap.containsKey("triggerDayCountSuc")?Integer.valueOf(String.valueOf(triggerCountMap.get("triggerDayCountSuc"))):0;
@@ -110,10 +126,10 @@ public class JobLogReportHelper {
                         List<Long> logIds = null;
                         do {
                             logIds = XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().findClearLogIds(0, 0, clearBeforeTime, 0, 1000);
-                            if (logIds!=null && logIds.size()>0) {
+                            if (logIds!=null && !logIds.isEmpty()) {
                                 XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().clearLog(logIds);
                             }
-                        } while (logIds!=null && logIds.size()>0);
+                        } while (logIds!=null && !logIds.isEmpty());
 
                         // update clean time
                         lastCleanLogTime = System.currentTimeMillis();

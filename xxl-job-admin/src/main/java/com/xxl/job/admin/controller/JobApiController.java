@@ -9,6 +9,7 @@ import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.util.GsonTool;
 import com.xxl.job.core.util.XxlJobRemotingUtil;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,11 +45,10 @@ public class JobApiController {
         if (!"POST".equalsIgnoreCase(request.getMethod())) {
             return new ReturnT<String>(ReturnT.FAIL_CODE, "invalid request, HttpMethod not support.");
         }
-        if (uri==null || uri.trim().length()==0) {
+        if (!StringUtils.hasText(uri)) {
             return new ReturnT<String>(ReturnT.FAIL_CODE, "invalid request, uri-mapping empty.");
         }
-        if (XxlJobAdminConfig.getAdminConfig().getAccessToken()!=null
-                && XxlJobAdminConfig.getAdminConfig().getAccessToken().trim().length()>0
+        if (StringUtils.hasText(XxlJobAdminConfig.getAdminConfig().getAccessToken())
                 && !XxlJobAdminConfig.getAdminConfig().getAccessToken().equals(request.getHeader(XxlJobRemotingUtil.XXL_JOB_ACCESS_TOKEN))) {
             return new ReturnT<String>(ReturnT.FAIL_CODE, "The access token is wrong.");
         }
