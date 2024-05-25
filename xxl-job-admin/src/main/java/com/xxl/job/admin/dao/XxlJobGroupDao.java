@@ -16,6 +16,12 @@ public interface XxlJobGroupDao {
 
     public List<XxlJobGroup> findByAddressType(@Param("addressType") int addressType);
 
+    public int countByAppNameNotId(@Param("appName") String appName,
+                                   @Param("id") Integer id);
+
+    public int countByTitleNotId(@Param("title") String title,
+                                 @Param("id") Integer id);
+
     public int save(XxlJobGroup xxlJobGroup);
 
     public int update(XxlJobGroup xxlJobGroup);
