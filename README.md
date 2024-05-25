@@ -33,10 +33,9 @@
 
 
 ## Sponsor
-XXL-JOB is an open source and free project, with its ongoing development made possible entirely by the support of these awesome backers. 
-If you'd like to join them, please consider sponsor the development of this project。 [To donate](https://www.xuxueli.com/page/donate.html )
+XXL-JOB is an open source and free project, with its ongoing development made possible entirely by the support of these awesome backers.
 
-XXL-JOB 是一个开源且免费项目，其正在进行的开发完全得益于支持者的支持。如果你想加入他们，请考虑赞助这个项目的开发。[前往赞助](https://www.xuxueli.com/page/donate.html )
+XXL-JOB 是一个开源且免费项目，其正在进行的开发完全得益于支持者的支持。开源不易，[前往赞助项目开发](https://www.xuxueli.com/page/donate.html )
 
 <div>
     <a href="https://www.jetbrains.com/idea/" title="jetbrains" target="_blank" >
