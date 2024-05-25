@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class JobFailMonitorHelper {
 	private static Logger logger = LoggerFactory.getLogger(JobFailMonitorHelper.class);
-	
+
 	private static JobFailMonitorHelper instance = new JobFailMonitorHelper();
 	public static JobFailMonitorHelper getInstance(){
 		return instance;
@@ -33,12 +33,12 @@ public class JobFailMonitorHelper {
 
 			@Override
 			public void run() {
-
+				Long lastFailLogId = null;
 				// monitor
 				while (!toStop) {
 					try {
 
-						List<Long> failLogIds = XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().findFailJobLogIds(1000);
+						List<Long> failLogIds = XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().findFailJobLogIds(lastFailLogId,1000);
 						if (failLogIds!=null && !failLogIds.isEmpty()) {
 							for (long failLogId: failLogIds) {
 
@@ -68,6 +68,7 @@ public class JobFailMonitorHelper {
 								}
 
 								XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().updateAlarmStatus(failLogId, -1, newAlarmStatus);
+								lastFailLogId = failLogId;
 							}
 						}
 
