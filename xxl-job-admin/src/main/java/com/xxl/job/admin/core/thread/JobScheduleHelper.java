@@ -238,7 +238,7 @@ public class JobScheduleHelper {
                         List<Integer> ringItemData = new ArrayList<>();
                         int nowSecond = Calendar.getInstance().get(Calendar.SECOND);   // 避免处理耗时太长，跨过刻度，向前校验一个刻度；
                         for (int i = 0; i < 2; i++) {
-                            List<Integer> tmpData = ringData.remove( (nowSecond+60-i)%60 );
+                            List<Integer> tmpData = ringData.remove(nowSecond-i);
                             if (tmpData != null) {
                                 ringItemData.addAll(tmpData);
                             }
