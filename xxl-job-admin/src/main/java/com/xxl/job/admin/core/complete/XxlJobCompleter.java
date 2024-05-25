@@ -57,7 +57,7 @@ public class XxlJobCompleter {
                     int childJobId = (childJobIds[i]!=null && childJobIds[i].trim().length()>0 && isNumeric(childJobIds[i]))?Integer.valueOf(childJobIds[i]):-1;
                     if (childJobId > 0) {
 
-                        JobTriggerPoolHelper.trigger(childJobId, TriggerTypeEnum.PARENT, -1, null, null, null);
+                        JobTriggerPoolHelper.trigger(childJobId, TriggerTypeEnum.PARENT, -1, xxlJobLog.getExecutorShardingParam(), xxlJobLog.getExecutorParam(), null);
                         ReturnT<String> triggerChildResult = ReturnT.SUCCESS;
 
                         // add msg
