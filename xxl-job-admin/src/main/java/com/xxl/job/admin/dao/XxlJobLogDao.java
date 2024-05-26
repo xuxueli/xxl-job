@@ -57,6 +57,6 @@ public interface XxlJobLogDao {
 								 @Param("oldAlarmStatus") int oldAlarmStatus,
 								 @Param("newAlarmStatus") int newAlarmStatus);
 
-	public List<Long> findLostJobIds(@Param("losedTime") Date losedTime);
+	public List<Long> findLostJobIds(@Param("losedTime") Date losedTime, @Param("fromTime") Date fromTime);
 
 }
