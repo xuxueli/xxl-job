@@ -339,6 +339,8 @@ $(function() {
             type : 'POST',
             url : base_url + "/jobinfo/nextTriggerTime",
             data : {
+                "beginTime" : row.beginTime,
+                "endTime" : row.endTime,
                 "scheduleType" : row.scheduleType,
 				"scheduleConf" : row.scheduleConf
             },
@@ -544,6 +546,19 @@ $(function() {
 		$("#updateModal .form input[name='alarmEmail']").val( row.alarmEmail );
 
 		// fill trigger
+		$("#updateModal .form input[name='beginTime']").val( row.beginTime );
+		$("#updateModal .form input[name='endTime']").val( row.endTime );
+		if (row.beginTime !== undefined && row.beginTime != null) {
+            $("#updateModal .form input[name='beginTime']").data('daterangepicker').setStartDate(row.beginTime);
+		} else {
+            $("#updateModal .form input[name='beginTime']").data('daterangepicker').setStartDate(new Date());
+		}
+		if (row.endTime !== undefined && row.endTime != null) {
+            $("#updateModal .form input[name='endTime']").data('daterangepicker').setStartDate(row.endTime);
+		} else {
+            $("#updateModal .form input[name='endTime']").data('daterangepicker').setStartDate(new Date());
+		}
+
 		$('#updateModal .form select[name=scheduleType] option[value='+ row.scheduleType +']').prop('selected', true);
 		$("#updateModal .form input[name='scheduleConf']").val( row.scheduleConf );
 		if (row.scheduleType == 'CRON') {
@@ -699,6 +714,19 @@ $(function() {
 		$("#addModal .form input[name='alarmEmail']").val( row.alarmEmail );
 
 		// fill trigger
+		$("#addModal .form input[name='beginTime']").val( row.beginTime );
+		$("#addModal .form input[name='endTime']").val( row.endTime );
+		if (row.beginTime !== undefined && row.beginTime != null) {
+            $("#addModal .form input[name='beginTime']").data('daterangepicker').setStartDate(row.beginTime);
+		} else {
+            $("#addModal .form input[name='beginTime']").data('daterangepicker').setStartDate(new Date());
+		}
+		if (row.endTime !== undefined && row.endTime != null) {
+            $("#addModal .form input[name='endTime']").data('daterangepicker').setStartDate(row.endTime);
+		} else {
+            $("#addModal .form input[name='endTime']").data('daterangepicker').setStartDate(new Date());
+		}
+
 		$('#addModal .form select[name=scheduleType] option[value='+ row.scheduleType +']').prop('selected', true);
 		$("#addModal .form input[name='scheduleConf']").val( row.scheduleConf );
 		if (row.scheduleType == 'CRON') {
@@ -736,4 +764,48 @@ $(function() {
 		$('#addModal').modal({backdrop: false, keyboard: false}).modal('show');
 	});
 
+    $('input[name="beginTime"]').daterangepicker({
+        singleDatePicker: true,
+        autoUpdateInput: false,
+        timePicker: true,
+        showDropdowns: true,
+        timePicker24Hour: true,
+        locale: {
+            format: 'YYYY-MM-DD HH:mm:ss',
+            applyLabel: I18n.system_ok,
+            cancelLabel: I18n.system_clear,
+            monthNames: I18n.daterangepicker_custom_monthnames.split(','),
+            firstDay: 1
+        },
+        minYear: 1901,
+        maxYear: parseInt(moment().format('YYYY'), 10)
+    });
+    $('input[name="beginTime"]').on('apply.daterangepicker', function (ev, picker) {
+        $(this).val(picker.startDate.format('YYYY-MM-DD HH:mm:ss'));
+    });
+    $('input[name="beginTime"]').on('cancel.daterangepicker', function (ev, picker) {
+        $(this).val('');
+    });
+    $('input[name="endTime"]').daterangepicker({
+        singleDatePicker: true,
+        autoUpdateInput: false,
+        timePicker: true,
+        showDropdowns: true,
+        timePicker24Hour: true,
+        locale: {
+            format: 'YYYY-MM-DD HH:mm:ss',
+            applyLabel: I18n.system_ok,
+            cancelLabel: I18n.system_clear,
+            monthNames: I18n.daterangepicker_custom_monthnames.split(','),        // '一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'
+            firstDay: 1
+        },
+        minYear: 1901,
+        maxYear: parseInt(moment().format('YYYY'), 10)
+    });
+    $('input[name="endTime"]').on('apply.daterangepicker', function (ev, picker) {
+        $(this).val(picker.startDate.format('YYYY-MM-DD HH:mm:ss'));
+    });
+    $('input[name="endTime"]').on('cancel.daterangepicker', function (ev, picker) {
+        $(this).val('');
+    });
 });

@@ -15,6 +15,9 @@
 	    <result column="author" property="author" />
 	    <result column="alarm_email" property="alarmEmail" />
 
+	    <result column="begin_time" property="beginTime" />
+	    <result column="end_time" property="endTime" />
+
 		<result column="schedule_type" property="scheduleType" />
 		<result column="schedule_conf" property="scheduleConf" />
 		<result column="misfire_strategy" property="misfireStrategy" />
@@ -46,6 +49,8 @@
 		t.update_time,
 		t.author,
 		t.alarm_email,
+		t.begin_time,
+		t.end_time,
 		t.schedule_type,
 		t.schedule_conf,
 		t.misfire_strategy,
@@ -119,6 +124,8 @@
 			update_time,
 			author,
 			alarm_email,
+			begin_time,
+			end_time,
 			schedule_type,
 			schedule_conf,
 			misfire_strategy,
@@ -143,6 +150,8 @@
 			#{updateTime},
 			#{author},
 			#{alarmEmail},
+			#{beginTime},
+			#{endTime},
 			#{scheduleType},
 			#{scheduleConf},
 			#{misfireStrategy},
@@ -181,6 +190,8 @@
 			update_time = #{updateTime},
 			author = #{author},
 			alarm_email = #{alarmEmail},
+			begin_time = #{beginTime},
+			end_time = #{endTime},
 			schedule_type = #{scheduleType},
 			schedule_conf = #{scheduleConf},
 			misfire_strategy = #{misfireStrategy},
@@ -224,6 +235,8 @@
 		FROM xxl_job_info AS t
 		WHERE t.trigger_status = 1
 			and t.trigger_next_time <![CDATA[ <= ]]> #{maxNextTime}
+			and (t.begin_time is null || t.begin_time <![CDATA[ <= ]]> #{nowTime})
+			and (t.end_time is null || t.end_time >= #{nowTime})
 		ORDER BY id ASC
 		LIMIT #{pagesize}
 	</select>
