@@ -170,7 +170,7 @@ CREATE TABLE xxl_job_group
 (
     id           serial     NOT NULL ,
     app_name     varchar(64) NOT NULL ,
-    title        varchar(12) NOT NULL ,
+    title        varchar(64) NOT NULL ,
     address_type int4  NOT NULL DEFAULT 0 ,
     address_list text ,
     update_time  timestamp             ,
