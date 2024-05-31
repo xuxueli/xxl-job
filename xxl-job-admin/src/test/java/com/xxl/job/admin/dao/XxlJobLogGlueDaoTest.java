@@ -4,7 +4,7 @@ import com.xxl.job.admin.core.model.XxlJobLogGlue;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.Date;
 import java.util.List;
 
