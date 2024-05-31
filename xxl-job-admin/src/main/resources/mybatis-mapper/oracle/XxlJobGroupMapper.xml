@@ -98,7 +98,6 @@
 
     <select id="pageListCount" parameterType="java.util.HashMap" resultType="int">
         SELECT count(1)
-        FROM XXL_JOB_GROUP t
         <include refid="sqlPageListBody"></include>
     </select>
 
