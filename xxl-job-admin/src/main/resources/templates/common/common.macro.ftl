@@ -31,6 +31,36 @@
 	<#-- i18n -->
 	<#global I18n = I18nUtil.getMultString()?eval />
 
+	<style>
+		html{
+			background: linear-gradient(125deg, #2ceee0, #27ae60, #2980b9, #e75c3c, #8e44ad);
+			background-size: 400%;
+			animation: aniHtml 20s infinite;
+		}
+		body{
+			background: transparent !important;
+		}
+		.login-box-body{
+			backdrop-filter: blur(10px) !important;
+			-webkit-backdrop-filter: blur(10px) !important;
+			background-color: rgba(255,255,255,0.8) !important;
+			border-radius: 8px !important;
+		}
+		.login-logo a{
+			color: white !important;
+		}
+		@keyframes aniHtml {
+			0% {
+				background-position: 0% 50%;
+			}
+			50% {
+				background-position: 100% 50%;
+			}
+			100% {
+				background-position: 0% 50%;
+			}
+		}
+	</style>
 </#macro>
 
 <#macro commonScript>
