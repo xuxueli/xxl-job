@@ -57,9 +57,6 @@ public class JobGroupController {
 		{
 			int endIndex = (start + 1) * length;
 			 list=xxlJobGroupDao.pageList(start, endIndex, appname, title);
-		}else if(DatabasePlatformUtil.getPlatformConfig().type()== DatabasePlatformType.POSTGRE)
-		{
-			list=xxlJobGroupDao.pageList(start, length, appname, title);
 		}else{
 			list = xxlJobGroupDao.pageList(start, length, appname, title);
 		}

@@ -104,6 +104,17 @@
             <version>3.43.0.0</version>
         </dependency>
 
+		<dependency>
+			<groupId>com.dameng</groupId>
+			<artifactId>DmJdbcDriver18</artifactId>
+			<version>8.1.1.193</version>
+		</dependency>
+
+		<dependency>
+			<groupId>cn.com.kingbase</groupId>
+			<artifactId>kingbase8</artifactId>
+			<version>8.6.0</version>
+		</dependency>
 
         <!-- xxl-job-core -->
 		<dependency>

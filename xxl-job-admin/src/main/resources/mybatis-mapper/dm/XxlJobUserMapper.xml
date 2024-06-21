@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xxl.job.admin.dao.XxlJobUserDao">
+
+	<resultMap id="XxlJobUser" type="com.xxl.job.admin.core.model.XxlJobUser" >
+		<result column="ID" property="id" />
+		<result column="USERNAME" property="username" />
+	    <result column="PASSWORD" property="password" />
+	    <result column="ROLE" property="role" />
+	    <result column="PERMISSION" property="permission" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		t."ID",
+		t."USERNAME",
+		t."PASSWORD",
+		t."ROLE",
+		t."PERMISSION"
+	</sql>
+
+	<sql id="sqlPageListBody">
+		FROM "XXL_JOB_USER" t
+		<where>
+			<if test="username != null and username != ''">
+				AND t."USERNAME" like CONCAT(CONCAT('%', #{username}), '%')
+			</if>
+			<if test="role gt -1">
+				AND t."ROLE" = #{role}
+			</if>
+		</where>
+	</sql>
+
+	<select id="pageList" parameterType="java.util.HashMap" resultMap="XxlJobUser">
+		SELECT <include refid="Base_Column_List" />
+		<include refid="sqlPageListBody"></include>
+		ORDER BY "USERNAME" ASC
+		LIMIT #{offset}, #{pagesize}
+	</select>
+
+	<select id="pageListCount" parameterType="java.util.HashMap" resultType="int">
+		SELECT count(1)
+		<include refid="sqlPageListBody"></include>
+	</select>
+
+	<select id="loadByUserName" parameterType="java.util.HashMap" resultMap="XxlJobUser">
+		SELECT <include refid="Base_Column_List" />
+		FROM "XXL_JOB_USER" t
+		WHERE t."USERNAME" = #{username}
+	</select>
+
+	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobUser" useGeneratedKeys="true" keyProperty="id" >
+		INSERT INTO "XXL_JOB_USER" (
+			"USERNAME",
+			"PASSWORD",
+			"ROLE",
+			"PERMISSION"
+		) VALUES (
+			#{username},
+			#{password},
+			#{role},
+			#{permission}
+		)
+		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+	</insert>
+
+	<update id="update" parameterType="com.xxl.job.admin.core.model.XxlJobUser" >
+		UPDATE "XXL_JOB_USER"
+		SET
+			<if test="password != null and password != ''">
+				"PASSWORD" = #{password},
+			</if>
+			"ROLE" = #{role},
+			"PERMISSION" = #{permission}
+		WHERE "ID" = #{id}
+	</update>
+
+	<delete id="delete" parameterType="java.util.HashMap">
+		DELETE
+		FROM "XXL_JOB_USER"
+		WHERE "ID" = #{id}
+	</delete>
+
+</mapper>

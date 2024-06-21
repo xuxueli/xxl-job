@@ -9,6 +9,10 @@ public enum DatabasePlatformType {
     MYSQL("mysql"),
     ORACLE("oracle"),
     POSTGRE("postgre"),
+    GBASE("gbase"),
+    H2("h2"),
+    DM("dm"),
+    KINGBASE("kingbase"),
     UNKNOWN("unknown");
 
     private String type;

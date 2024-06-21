@@ -15,7 +15,6 @@ import com.xxl.job.admin.service.LoginService;
 import com.xxl.job.core.biz.model.ReturnT;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -63,8 +62,6 @@ public class UserController {
         if(DatabasePlatformUtil.getPlatformConfig().type()== DatabasePlatformType.ORACLE){
             int endIndex=(start+1)*length;
             list = xxlJobUserDao.pageList(start, endIndex, username, role);
-        }else if(DatabasePlatformUtil.getPlatformConfig().type()== DatabasePlatformType.POSTGRE){
-            list = xxlJobUserDao.pageList(start, length, username, role);
         }else{
             list = xxlJobUserDao.pageList(start, length, username, role);
         }

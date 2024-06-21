@@ -111,8 +111,6 @@ public class JobLogController {
 		if(DatabasePlatformUtil.getPlatformConfig().type()== DatabasePlatformType.ORACLE) {
 			int endIndex = (start + 1) * length;
 			list = xxlJobLogDao.pageList(start, endIndex, jobGroup, jobId, triggerTimeStart, triggerTimeEnd, logStatus);
-		}else if(DatabasePlatformUtil.getPlatformConfig().type()== DatabasePlatformType.POSTGRE) {
-			list = xxlJobLogDao.pageList(start, length, jobGroup, jobId, triggerTimeStart, triggerTimeEnd, logStatus);
 		}else{
 			list = xxlJobLogDao.pageList(start, length, jobGroup, jobId, triggerTimeStart, triggerTimeEnd, logStatus);
 		}

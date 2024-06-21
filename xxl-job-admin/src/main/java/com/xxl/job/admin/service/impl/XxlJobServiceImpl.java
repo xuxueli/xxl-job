@@ -56,8 +56,6 @@ public class XxlJobServiceImpl implements XxlJobService {
 		if(DatabasePlatformUtil.getPlatformConfig().type()== DatabasePlatformType.ORACLE){
 			int endIndex=(start+1)*length;
 			list = xxlJobInfoDao.pageList(start, endIndex, jobGroup, triggerStatus, jobDesc, executorHandler, author);
-		}else if(DatabasePlatformUtil.getPlatformConfig().type()== DatabasePlatformType.POSTGRE){
-			list = xxlJobInfoDao.pageList(start, length, jobGroup, triggerStatus, jobDesc, executorHandler, author);
 		}else{
 			list = xxlJobInfoDao.pageList(start, length, jobGroup, triggerStatus, jobDesc, executorHandler, author);
 		}

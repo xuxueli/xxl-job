@@ -84,8 +84,6 @@ public class JobScheduleHelper {
                         if(!isStandalone){
                             if(DatabasePlatformUtil.getPlatformConfig().type()== DatabasePlatformType.ORACLE){
                                 preparedStatement = conn.prepareStatement(  "select * from XXL_JOB_LOCK where \"LOCK_NAME\" = 'schedule_lock' for update" );
-                            }else if(DatabasePlatformUtil.getPlatformConfig().type()== DatabasePlatformType.POSTGRE){
-                                preparedStatement = conn.prepareStatement(  "select * from xxl_job_lock where lock_name = 'schedule_lock' for update" );
                             }else{
                                 preparedStatement = conn.prepareStatement(  "select * from xxl_job_lock where lock_name = 'schedule_lock' for update" );
                             }
