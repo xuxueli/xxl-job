@@ -38,6 +38,9 @@ XXL-JOB is an open source and free project, with its ongoing development made po
 XXL-JOB 是一个开源且免费项目，其正在进行的开发完全得益于支持者的支持。开源不易，[前往赞助项目开发](https://www.xuxueli.com/page/donate.html )
 
 <div>
+    <a href="https://mingdao.com/?from=xuxueli.com" title="mingdao" target="_blank" >
+        <img style="border:1px solid #dfe2e5;height:55px;vertical-align: middle;" src="https://help.mingdao.com/logo/logo.png" >
+    </a>
     <a href="https://www.jetbrains.com/idea/" title="jetbrains" target="_blank" >
         <img style="border:1px solid #dfe2e5;height:55px;vertical-align: middle;" src="https://www.xuxueli.com/page/static/images/logo_intellij.jpeg" >
     </a>
