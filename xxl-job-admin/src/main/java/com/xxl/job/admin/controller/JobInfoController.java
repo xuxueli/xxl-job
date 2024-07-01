@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -41,7 +42,7 @@ public class JobInfoController {
 	private XxlJobGroupDao xxlJobGroupDao;
 	@Resource
 	private XxlJobService xxlJobService;
-	
+
 	@RequestMapping
 	public String index(HttpServletRequest request, Model model, @RequestParam(required = false, defaultValue = "-1") int jobGroup) {
 
@@ -57,7 +58,7 @@ public class JobInfoController {
 
 		// filter group
 		List<XxlJobGroup> jobGroupList = filterJobGroupByRole(request, jobGroupList_all);
-		if (jobGroupList==null || jobGroupList.size()==0) {
+		if (jobGroupList==null || jobGroupList.isEmpty()) {
 			throw new XxlJobException(I18nUtil.getString("jobgroup_empty"));
 		}
 
@@ -69,13 +70,13 @@ public class JobInfoController {
 
 	public static List<XxlJobGroup> filterJobGroupByRole(HttpServletRequest request, List<XxlJobGroup> jobGroupList_all){
 		List<XxlJobGroup> jobGroupList = new ArrayList<>();
-		if (jobGroupList_all!=null && jobGroupList_all.size()>0) {
+		if (jobGroupList_all!=null && !jobGroupList_all.isEmpty()) {
 			XxlJobUser loginUser = (XxlJobUser) request.getAttribute(LoginService.LOGIN_IDENTITY_KEY);
 			if (loginUser.getRole() == 1) {
 				jobGroupList = jobGroupList_all;
 			} else {
 				List<String> groupIdStrs = new ArrayList<>();
-				if (loginUser.getPermission()!=null && loginUser.getPermission().trim().length()>0) {
+				if (StringUtils.hasText(loginUser.getPermission())) {
 					groupIdStrs = Arrays.asList(loginUser.getPermission().trim().split(","));
 				}
 				for (XxlJobGroup groupItem:jobGroupList_all) {
@@ -93,46 +94,46 @@ public class JobInfoController {
 			throw new RuntimeException(I18nUtil.getString("system_permission_limit") + "[username="+ loginUser.getUsername() +"]");
 		}
 	}
-	
+
 	@RequestMapping("/pageList")
 	@ResponseBody
-	public Map<String, Object> pageList(@RequestParam(required = false, defaultValue = "0") int start,  
+	public Map<String, Object> pageList(@RequestParam(required = false, defaultValue = "0") int start,
 			@RequestParam(required = false, defaultValue = "10") int length,
 			int jobGroup, int triggerStatus, String jobDesc, String executorHandler, String author) {
-		
+
 		return xxlJobService.pageList(start, length, jobGroup, triggerStatus, jobDesc, executorHandler, author);
 	}
-	
+
 	@RequestMapping("/add")
 	@ResponseBody
 	public ReturnT<String> add(XxlJobInfo jobInfo) {
 		return xxlJobService.add(jobInfo);
 	}
-	
+
 	@RequestMapping("/update")
 	@ResponseBody
 	public ReturnT<String> update(XxlJobInfo jobInfo) {
 		return xxlJobService.update(jobInfo);
 	}
-	
+
 	@RequestMapping("/remove")
 	@ResponseBody
 	public ReturnT<String> remove(int id) {
 		return xxlJobService.remove(id);
 	}
-	
+
 	@RequestMapping("/stop")
 	@ResponseBody
 	public ReturnT<String> pause(int id) {
 		return xxlJobService.stop(id);
 	}
-	
+
 	@RequestMapping("/start")
 	@ResponseBody
 	public ReturnT<String> start(int id) {
 		return xxlJobService.start(id);
 	}
-	
+
 	@RequestMapping("/trigger")
 	@ResponseBody
 	public ReturnT<String> triggerJob(HttpServletRequest request, int id, String executorParam, String addressList) {
@@ -168,5 +169,5 @@ public class JobInfoController {
 		return new ReturnT<List<String>>(result);
 
 	}
-	
+
 }

@@ -15,8 +15,7 @@ public interface XxlJobUserDao {
                                      @Param("pagesize") int pagesize,
                                      @Param("username") String username,
 									 @Param("role") int role);
-	public int pageListCount(@Param("offset") int offset,
-							 @Param("pagesize") int pagesize,
+	public int pageListCount(
 							 @Param("username") String username,
 							 @Param("role") int role);
 
@@ -25,7 +24,7 @@ public interface XxlJobUserDao {
 	public int save(XxlJobUser xxlJobUser);
 
 	public int update(XxlJobUser xxlJobUser);
-	
+
 	public int delete(@Param("id") int id);
 
 }

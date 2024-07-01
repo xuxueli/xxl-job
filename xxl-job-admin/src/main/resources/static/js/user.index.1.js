@@ -3,7 +3,7 @@ $(function() {
 	// init date tables
 	var userListTable = $("#user_list").dataTable({
 		"deferRender": true,
-		"processing" : true, 
+		"processing" : true,
 	    "serverSide": true,
 		"ajax": {
 			url: base_url + "/user/pageList",
@@ -106,7 +106,7 @@ $(function() {
 	$('#searchBtn').on('click', function(){
         userListTable.fnDraw();
 	});
-	
+
 	// job operate
 	$("#user_list").on('click', '.delete',function() {
 		var id = $(this).parent('p').attr("id");
@@ -159,9 +159,9 @@ $(function() {
 		$('#addModal').modal({backdrop: false, keyboard: false}).modal('show');
 	});
 	var addModalValidate = $("#addModal .form").validate({
-		errorElement : 'span',  
+		errorElement : 'span',
         errorClass : 'help-block',
-        focusInvalid : true,  
+        focusInvalid : true,
         rules : {
             username : {
 				required : true,
@@ -172,7 +172,7 @@ $(function() {
                 required : true,
                 rangelength:[4, 20]
             }
-        }, 
+        },
         messages : {
             username : {
             	required : I18n.system_please_input + I18n.user_username,
@@ -183,45 +183,68 @@ $(function() {
                 rangelength: I18n.system_lengh_limit + "[4-20]"
             }
         },
-		highlight : function(element) {  
-            $(element).closest('.form-group').addClass('has-error');  
+		highlight : function(element) {
+            $(element).closest('.form-group').addClass('has-error');
         },
-        success : function(label) {  
-            label.closest('.form-group').removeClass('has-error');  
-            label.remove();  
+        success : function(label) {
+            label.closest('.form-group').removeClass('has-error');
+            label.remove();
         },
-        errorPlacement : function(error, element) {  
-            element.parent('div').append(error);  
+        errorPlacement : function(error, element) {
+            element.parent('div').append(error);
         },
         submitHandler : function(form) {
+			let spkParam=new URLSearchParams()
+			let cpk=Sm2.generateKeyPairHex()
+			spkParam.set('pk',cpk.publicKey)
+			spkParam.set('sign',Sm3.sm3(spkParam.get('pk')))
+			$.post(base_url + "/spk",spkParam.toString() , function(data, status) {
+				if (data.code == "200") {
+					let publicKey=Sm2.doDecrypt(data.content,cpk.privateKey,1)
+					let sign=Sm3.sm3(publicKey)
 
-            var permissionArr = [];
-            $("#addModal .form input[name=permission]:checked").each(function(){
-                permissionArr.push($(this).val());
-            });
 
-			var paramData = {
-				"username": $("#addModal .form input[name=username]").val(),
-                "password": $("#addModal .form input[name=password]").val(),
-                "role": $("#addModal .form input[name=role]:checked").val(),
-                "permission": permissionArr.join(',')
-			};
+					var permissionArr = [];
+					$("#addModal .form input[name=permission]:checked").each(function () {
+						permissionArr.push($(this).val());
+					});
 
-        	$.post(base_url + "/user/add", paramData, function(data, status) {
-    			if (data.code == "200") {
-					$('#addModal').modal('hide');
+					var paramData = {
+						"username": $("#addModal .form input[name=username]").val(),
+						"password": $("#addModal .form input[name=password]").val(),
+						"role": $("#addModal .form input[name=role]:checked").val(),
+						"permission": permissionArr.join(',')
+					};
 
-                    layer.msg( I18n.system_add_suc );
-                    userListTable.fnDraw();
-    			} else {
+					let password = paramData.password
+					password = Sm2.doEncrypt(password, publicKey, 1)
+					paramData.password=password
+					paramData.sign=sign
+
+					$.post(base_url + "/user/add", paramData, function (data, status) {
+						if (data.code == "200") {
+							$('#addModal').modal('hide');
+
+							layer.msg(I18n.system_add_suc);
+							userListTable.fnDraw();
+						} else {
+							layer.open({
+								title: I18n.system_tips,
+								btn: [I18n.system_ok],
+								content: (data.msg || I18n.system_add_fail),
+								icon: '2'
+							});
+						}
+					});
+				} else {
 					layer.open({
-						title: I18n.system_tips ,
-                        btn: [ I18n.system_ok ],
+						title: I18n.system_tips,
+						btn: [I18n.system_ok],
 						content: (data.msg || I18n.system_add_fail),
 						icon: '2'
 					});
-    			}
-    		});
+				}
+			})
 		}
 	});
 	$("#addModal").on('hide.bs.modal', function () {
@@ -271,49 +294,72 @@ $(function() {
 		$('#updateModal').modal({backdrop: false, keyboard: false}).modal('show');
 	});
 	var updateModalValidate = $("#updateModal .form").validate({
-		errorElement : 'span',  
+		errorElement : 'span',
         errorClass : 'help-block',
         focusInvalid : true,
 		highlight : function(element) {
-            $(element).closest('.form-group').addClass('has-error');  
+            $(element).closest('.form-group').addClass('has-error');
         },
-        success : function(label) {  
-            label.closest('.form-group').removeClass('has-error');  
-            label.remove();  
+        success : function(label) {
+            label.closest('.form-group').removeClass('has-error');
+            label.remove();
         },
-        errorPlacement : function(error, element) {  
-            element.parent('div').append(error);  
+        errorPlacement : function(error, element) {
+            element.parent('div').append(error);
         },
         submitHandler : function(form) {
+			let spkParam=new URLSearchParams()
+			let cpk=Sm2.generateKeyPairHex()
+			spkParam.set('pk',cpk.publicKey)
+			spkParam.set('sign',Sm3.sm3(spkParam.get('pk')))
+			$.post(base_url + "/spk",spkParam.toString() , function(data, status) {
+				if (data.code == "200") {
+					let publicKey=Sm2.doDecrypt(data.content,cpk.privateKey,1)
+					let sign=Sm3.sm3(publicKey)
 
-            var permissionArr =[];
-            $("#updateModal .form input[name=permission]:checked").each(function(){
-                permissionArr.push($(this).val());
-            });
+					var permissionArr = [];
+					$("#updateModal .form input[name=permission]:checked").each(function () {
+						permissionArr.push($(this).val());
+					});
 
-            var paramData = {
-                "id": $("#updateModal .form input[name=id]").val(),
-                "username": $("#updateModal .form input[name=username]").val(),
-                "password": $("#updateModal .form input[name=password]").val(),
-                "role": $("#updateModal .form input[name=role]:checked").val(),
-                "permission": permissionArr.join(',')
-            };
+					var paramData = {
+						"id": $("#updateModal .form input[name=id]").val(),
+						"username": $("#updateModal .form input[name=username]").val(),
+						"password": $("#updateModal .form input[name=password]").val(),
+						"role": $("#updateModal .form input[name=role]:checked").val(),
+						"permission": permissionArr.join(',')
+					};
 
-            $.post(base_url + "/user/update", paramData, function(data, status) {
-                if (data.code == "200") {
-                    $('#updateModal').modal('hide');
+					if(paramData.password && paramData.password!=''){
+						let password = paramData.password
+						password = Sm2.doEncrypt(password, publicKey, 1)
+						paramData.password=password
+						paramData.sign=sign
+					}
+					$.post(base_url + "/user/update", paramData, function (data, status) {
+						if (data.code == "200") {
+							$('#updateModal').modal('hide');
 
-                    layer.msg( I18n.system_update_suc );
-                    userListTable.fnDraw();
-                } else {
-                    layer.open({
-                        title: I18n.system_tips ,
-                        btn: [ I18n.system_ok ],
-                        content: (data.msg || I18n.system_update_fail),
-                        icon: '2'
-                    });
-                }
-            });
+							layer.msg(I18n.system_update_suc);
+							userListTable.fnDraw();
+						} else {
+							layer.open({
+								title: I18n.system_tips,
+								btn: [I18n.system_ok],
+								content: (data.msg || I18n.system_update_fail),
+								icon: '2'
+							});
+						}
+					});
+				} else {
+					layer.open({
+						title: I18n.system_tips,
+						btn: [I18n.system_ok],
+						content: (data.msg || I18n.system_update_fail),
+						icon: '2'
+					});
+				}
+			})
 		}
 	});
 	$("#updateModal").on('hide.bs.modal', function () {

@@ -19,37 +19,33 @@
 		t.permission
 	</sql>
 
-	<select id="pageList" parameterType="java.util.HashMap" resultMap="XxlJobUser">
-		SELECT <include refid="Base_Column_List" />
-		FROM xxl_job_user AS t
-		<trim prefix="WHERE" prefixOverrides="AND | OR" >
+	<sql id="sqlPageListBody">
+		FROM xxl_job_user t
+		<where>
 			<if test="username != null and username != ''">
 				AND t.username like CONCAT(CONCAT('%', #{username}), '%')
 			</if>
 			<if test="role gt -1">
 				AND t.role = #{role}
 			</if>
-		</trim>
+		</where>
+	</sql>
+
+	<select id="pageList" parameterType="java.util.HashMap" resultMap="XxlJobUser">
+		SELECT <include refid="Base_Column_List" />
+		<include refid="sqlPageListBody"></include>
 		ORDER BY username ASC
-		LIMIT #{offset}, #{pagesize}
+		LIMIT #{offset},#{pagesize}
 	</select>
 
 	<select id="pageListCount" parameterType="java.util.HashMap" resultType="int">
 		SELECT count(1)
-		FROM xxl_job_user AS t
-		<trim prefix="WHERE" prefixOverrides="AND | OR" >
-			<if test="username != null and username != ''">
-				AND t.username like CONCAT(CONCAT('%', #{username}), '%')
-			</if>
-			<if test="role gt -1">
-				AND t.role = #{role}
-			</if>
-		</trim>
+		<include refid="sqlPageListBody"></include>
 	</select>
 
 	<select id="loadByUserName" parameterType="java.util.HashMap" resultMap="XxlJobUser">
 		SELECT <include refid="Base_Column_List" />
-		FROM xxl_job_user AS t
+		FROM xxl_job_user t
 		WHERE t.username = #{username}
 	</select>
 
@@ -64,7 +60,7 @@
 			#{password},
 			#{role},
 			#{permission}
-		);
+		)
 	</insert>
 
 	<update id="update" parameterType="com.xxl.job.admin.core.model.XxlJobUser" >

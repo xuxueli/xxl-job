@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xxl.job.admin.dao.XxlJobInfoDao">
+
+	<resultMap id="XxlJobInfo" type="com.xxl.job.admin.core.model.XxlJobInfo" >
+		<result column="ID" property="id" />
+
+		<result column="JOB_GROUP" property="jobGroup" />
+	    <result column="JOB_DESC" property="jobDesc" />
+
+	    <result column="ADD_TIME" property="addTime" />
+	    <result column="UPDATE_TIME" property="updateTime" />
+
+	    <result column="AUTHOR" property="author" />
+	    <result column="ALARM_EMAIL" property="alarmEmail" />
+
+		<result column="SCHEDULE_TYPE" property="scheduleType" />
+		<result column="SCHEDULE_CONF" property="scheduleConf" />
+		<result column="MISFIRE_STRATEGY" property="misfireStrategy" />
+
+		<result column="EXECUTOR_ROUTE_STRATEGY" property="executorRouteStrategy" />
+		<result column="EXECUTOR_HANDLER" property="executorHandler" />
+	    <result column="EXECUTOR_PARAM" property="executorParam" />
+		<result column="EXECUTOR_BLOCK_STRATEGY" property="executorBlockStrategy" />
+		<result column="EXECUTOR_TIMEOUT" property="executorTimeout" />
+		<result column="EXECUTOR_FAIL_RETRY_COUNT" property="executorFailRetryCount" />
+
+	    <result column="GLUE_TYPE" property="glueType" />
+	    <result column="GLUE_SOURCE" property="glueSource" />
+	    <result column="GLUE_REMARK" property="glueRemark" />
+		<result column="GLUE_UPDATETIME" property="glueUpdatetime" />
+
+		<result column="CHILD_JOBID" property="childJobId" />
+
+		<result column="TRIGGER_STATUS" property="triggerStatus" />
+		<result column="TRIGGER_LAST_TIME" property="triggerLastTime" />
+		<result column="TRIGGER_NEXT_TIME" property="triggerNextTime" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		t."ID",
+		t."JOB_GROUP",
+		t."JOB_DESC",
+		t."ADD_TIME",
+		t."UPDATE_TIME",
+		t."AUTHOR",
+		t."ALARM_EMAIL",
+		t."SCHEDULE_TYPE",
+		t."SCHEDULE_CONF",
+		t."MISFIRE_STRATEGY",
+		t."EXECUTOR_ROUTE_STRATEGY",
+		t."EXECUTOR_HANDLER",
+		t."EXECUTOR_PARAM",
+		t."EXECUTOR_BLOCK_STRATEGY",
+		t."EXECUTOR_TIMEOUT",
+		t."EXECUTOR_FAIL_RETRY_COUNT",
+		t."GLUE_TYPE",
+		t."GLUE_SOURCE",
+		t."GLUE_REMARK",
+		t."GLUE_UPDATETIME",
+		t."CHILD_JOBID",
+		t."TRIGGER_STATUS",
+		t."TRIGGER_LAST_TIME",
+		t."TRIGGER_NEXT_TIME"
+	</sql>
+
+	<sql id="sqlPageListBody">
+		FROM "XXL_JOB_INFO" t
+		<where>
+			<if test="jobGroup gt 0">
+				AND t."JOB_GROUP" = #{jobGroup}
+			</if>
+			<if test="triggerStatus gte 0">
+				AND t."TRIGGER_STATUS" = #{triggerStatus}
+			</if>
+			<if test="jobDesc != null and jobDesc != ''">
+				AND t."JOB_DESC" like CONCAT(CONCAT('%', #{jobDesc}), '%')
+			</if>
+			<if test="executorHandler != null and executorHandler != ''">
+				AND t."EXECUTOR_HANDLER" like CONCAT(CONCAT('%', #{executorHandler}), '%')
+			</if>
+			<if test="author != null and author != ''">
+				AND t."AUTHOR" like CONCAT(CONCAT('%', #{author}), '%')
+			</if>
+		</where>
+	</sql>
+
+	<select id="pageList" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
+		SELECT <include refid="Base_Column_List" />
+		<include refid="sqlPageListBody"></include>
+		ORDER BY "ID" DESC
+		LIMIT #{offset}, #{pagesize}
+	</select>
+
+	<select id="pageListCount" parameterType="java.util.HashMap" resultType="int">
+		SELECT count(1)
+		<include refid="sqlPageListBody"></include>
+	</select>
+
+	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobInfo" useGeneratedKeys="true" keyProperty="id" >
+		INSERT INTO "XXL_JOB_INFO" (
+			"JOB_GROUP",
+			"JOB_DESC",
+			"ADD_TIME",
+			"UPDATE_TIME",
+			"AUTHOR",
+			"ALARM_EMAIL",
+			"SCHEDULE_TYPE",
+			"SCHEDULE_CONF",
+			"MISFIRE_STRATEGY",
+            "EXECUTOR_ROUTE_STRATEGY",
+			"EXECUTOR_HANDLER",
+			"EXECUTOR_PARAM",
+			"EXECUTOR_BLOCK_STRATEGY",
+			"EXECUTOR_TIMEOUT",
+			"EXECUTOR_FAIL_RETRY_COUNT",
+			"GLUE_TYPE",
+			"GLUE_SOURCE",
+			"GLUE_REMARK",
+			"GLUE_UPDATETIME",
+			"CHILD_JOBID",
+			"TRIGGER_STATUS",
+			"TRIGGER_LAST_TIME",
+			"TRIGGER_NEXT_TIME"
+		) VALUES (
+			#{jobGroup},
+			#{jobDesc},
+			#{addTime},
+			#{updateTime},
+			#{author},
+			#{alarmEmail},
+			#{scheduleType},
+			#{scheduleConf},
+			#{misfireStrategy},
+			#{executorRouteStrategy},
+			#{executorHandler},
+			#{executorParam},
+			#{executorBlockStrategy},
+			#{executorTimeout},
+			#{executorFailRetryCount},
+			#{glueType},
+			#{glueSource},
+			#{glueRemark},
+			#{glueUpdatetime},
+			#{childJobId},
+			#{triggerStatus},
+			#{triggerLastTime},
+			#{triggerNextTime}
+		)
+		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+	</insert>
+
+	<select id="loadById" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
+		SELECT <include refid="Base_Column_List" />
+		FROM "XXL_JOB_INFO" t
+		WHERE t."ID" = #{id}
+	</select>
+
+	<update id="update" parameterType="com.xxl.job.admin.core.model.XxlJobInfo" >
+		UPDATE "XXL_JOB_INFO"
+		SET
+			"JOB_GROUP" = #{jobGroup},
+			"JOB_DESC" = #{jobDesc},
+			"UPDATE_TIME" = #{updateTime},
+			"AUTHOR" = #{author},
+			"ALARM_EMAIL" = #{alarmEmail},
+			"SCHEDULE_TYPE" = #{scheduleType},
+			"SCHEDULE_CONF" = #{scheduleConf},
+			"MISFIRE_STRATEGY" = #{misfireStrategy},
+			"EXECUTOR_ROUTE_STRATEGY" = #{executorRouteStrategy},
+			"EXECUTOR_HANDLER" = #{executorHandler},
+			"EXECUTOR_PARAM" = #{executorParam},
+			"EXECUTOR_BLOCK_STRATEGY" = #{executorBlockStrategy},
+			"EXECUTOR_TIMEOUT" = ${executorTimeout},
+			"EXECUTOR_FAIL_RETRY_COUNT" = ${executorFailRetryCount},
+			"GLUE_TYPE" = #{glueType},
+			"GLUE_SOURCE" = #{glueSource},
+			"GLUE_REMARK" = #{glueRemark},
+			"GLUE_UPDATETIME" = #{glueUpdatetime},
+			"CHILD_JOBID" = #{childJobId},
+			"TRIGGER_STATUS" = #{triggerStatus},
+			"TRIGGER_LAST_TIME" = #{triggerLastTime},
+			"TRIGGER_NEXT_TIME" = #{triggerNextTime}
+		WHERE "ID" = #{id}
+	</update>
+
+	<delete id="delete" parameterType="java.util.HashMap">
+		DELETE
+		FROM "XXL_JOB_INFO"
+		WHERE "ID" = #{id}
+	</delete>
+
+	<select id="getJobsByGroup" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
+		SELECT <include refid="Base_Column_List" />
+		FROM "XXL_JOB_INFO" t
+		WHERE t."JOB_GROUP" = #{jobGroup}
+	</select>
+
+	<select id="findAllCount" resultType="int">
+		SELECT count(1)
+		FROM "XXL_JOB_INFO"
+	</select>
+
+
+	<select id="scheduleJobQuery" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
+		SELECT <include refid="Base_Column_List" />
+		FROM "XXL_JOB_INFO" t
+		WHERE t."TRIGGER_STATUS" = 1
+			and t."TRIGGER_NEXT_TIME" &lt;= #{maxNextTime}
+		ORDER BY "ID" ASC
+		LIMIT #{pagesize}
+	</select>
+
+	<update id="scheduleUpdate" parameterType="com.xxl.job.admin.core.model.XxlJobInfo"  >
+		UPDATE "XXL_JOB_INFO"
+		SET
+			"TRIGGER_LAST_TIME" = #{triggerLastTime},
+			"TRIGGER_NEXT_TIME" = #{triggerNextTime},
+			"TRIGGER_STATUS" = #{triggerStatus}
+		WHERE "ID" = #{id}
+	</update>
+
+</mapper>

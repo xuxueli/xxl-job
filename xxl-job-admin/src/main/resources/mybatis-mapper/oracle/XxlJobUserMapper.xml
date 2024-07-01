@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xxl.job.admin.dao.XxlJobUserDao">
+
+    <resultMap id="XxlJobUser" type="com.xxl.job.admin.core.model.XxlJobUser">
+        <result column="ID" property="id"/>
+        <result column="USERNAME" property="username"/>
+        <result column="PASSWORD" property="password"/>
+        <result column="ROLE" property="role"/>
+        <result column="PERMISSION" property="permission"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        t."ID",
+		t."USERNAME",
+		t."PASSWORD",
+		t."ROLE",
+		t."PERMISSION"
+    </sql>
+
+    <sql id="sqlPageListBody">
+        FROM XXL_JOB_USER t
+        <where>
+            <if test="username != null and username != ''">
+                AND t."USERNAME" like CONCAT(CONCAT('%', #{username,jdbcType=VARCHAR}), '%')
+            </if>
+            <if test="role gt -1">
+                AND t."ROLE" = #{role,jdbcType=NUMERIC}
+            </if>
+        </where>
+    </sql>
+
+    <select id="pageList" parameterType="java.util.HashMap" resultMap="XxlJobUser">
+        SELECT *
+        FROM (SELECT TMP.*, ROWNUM ROW_ID
+        FROM (
+
+        SELECT
+        <include refid="Base_Column_List"/>
+        <include refid="sqlPageListBody"></include>
+        ORDER BY "USERNAME" ASC
+
+        ) TMP
+        WHERE ROWNUM &lt;= #{pagesize,jdbcType=NUMERIC}
+        ) TMP
+        WHERE ROW_ID &gt; #{offset,jdbcType=NUMERIC}
+    </select>
+
+    <select id="pageListCount" parameterType="java.util.HashMap" resultType="int">
+        SELECT count(1)
+        <include refid="sqlPageListBody"></include>
+    </select>
+
+    <select id="loadByUserName" parameterType="java.util.HashMap" resultMap="XxlJobUser">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM XXL_JOB_USER t
+        WHERE t."USERNAME" = #{username,jdbcType=VARCHAR}
+    </select>
+
+    <insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobUser">
+        <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Integer">
+            select SEQ_XXL_JOB_USER_ID.nextval from dual
+        </selectKey>
+        INSERT INTO XXL_JOB_USER (
+        "ID",
+        "USERNAME",
+        "PASSWORD",
+        "ROLE",
+        "PERMISSION"
+        ) VALUES (
+        #{id,jdbcType=NUMERIC},
+        #{username,jdbcType=VARCHAR},
+        #{password,jdbcType=VARCHAR},
+        #{role,jdbcType=NUMERIC},
+        #{permission,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.xxl.job.admin.core.model.XxlJobUser">
+        UPDATE XXL_JOB_USER
+        SET
+        <if test="password != null and password != ''">
+            "PASSWORD" = #{password,jdbcType=VARCHAR},
+        </if>
+        "ROLE" = #{role,jdbcType=NUMERIC},
+        "PERMISSION" = #{permission,jdbcType=VARCHAR}
+        WHERE "ID" = #{id,jdbcType=NUMERIC}
+    </update>
+
+    <delete id="delete" parameterType="java.util.HashMap">
+        DELETE
+        FROM XXL_JOB_USER
+        WHERE "ID" = #{id,jdbcType=NUMERIC}
+    </delete>
+
+</mapper>

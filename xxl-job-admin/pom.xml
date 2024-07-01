@@ -8,10 +8,9 @@
 	</parent>
 	<artifactId>xxl-job-admin</artifactId>
 	<packaging>jar</packaging>
-
-	<properties>
+    <properties>
 		<maven.deploy.skip>true</maven.deploy.skip>
-	</properties>
+    </properties>
 
 	<dependencyManagement>
 		<dependencies>
@@ -70,29 +69,92 @@
 			<version>${mysql-connector-j.version}</version>
 		</dependency>
 
-		<!-- xxl-job-core -->
+        <dependency>
+            <groupId>com.oracle.database.jdbc</groupId>
+            <artifactId>ojdbc8</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.oracle.database.nls</groupId>
+            <artifactId>orai18n</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.gbase</groupId>
+            <artifactId>gbase-connector-java</artifactId>
+            <version>8.3.81.53</version>
+            <scope>system</scope>
+            <systemPath>${pom.basedir}/lib/gbase-connector-java-8.3.81.53-build55.2.1-bin.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.7.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>2.2.224</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.xerial</groupId>
+            <artifactId>sqlite-jdbc</artifactId>
+            <version>3.43.0.0</version>
+        </dependency>
+
+		<dependency>
+			<groupId>com.dameng</groupId>
+			<artifactId>DmJdbcDriver18</artifactId>
+			<version>8.1.1.193</version>
+		</dependency>
+
+		<dependency>
+			<groupId>cn.com.kingbase</groupId>
+			<artifactId>kingbase8</artifactId>
+			<version>8.6.0</version>
+		</dependency>
+
+        <!-- xxl-job-core -->
 		<dependency>
 			<groupId>com.xuxueli</groupId>
 			<artifactId>xxl-job-core</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 
-	</dependencies>
+
+        <dependency>
+            <groupId>com.antherd</groupId>
+            <artifactId>sm-crypto</artifactId>
+            <version>0.3.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-crypto</artifactId>
+            <version>5.7.11</version>
+        </dependency>
+
+    </dependencies>
 
 	<build>
-		<plugins>
-			<plugin>
+        <plugins>
+            <plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<version>${spring-boot.version}</version>
-				<executions>
-					<execution>
-						<goals>
+				<configuration>
+					<includeSystemScope>true</includeSystemScope>
+				</configuration>
+                <executions>
+                    <execution>
+                        <goals>
 							<goal>repackage</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 			<!-- docker -->
 			<plugin>
 				<groupId>com.spotify</groupId>

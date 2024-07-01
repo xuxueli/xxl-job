@@ -48,7 +48,7 @@ public class ExecutorRouteLFU extends ExecutorRouter {
                 delKeys.add(existKey);
             }
         }
-        if (delKeys.size() > 0) {
+        if (!delKeys.isEmpty()) {
             for (String delKey: delKeys) {
                 lfuItemMap.remove(delKey);
             }
