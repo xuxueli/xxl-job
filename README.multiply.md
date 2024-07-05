@@ -99,3 +99,16 @@ xxl.job.database.platform.type=mysql
         - 像这样：
         - static/js/login.1.js
         - 搜索 "submitHandler" 或者 "generateKeyPairHex"
+
+## previews
+- login page
+- 登录页
+![img_login.png](./doc/images/img_login.png)
+
+- encrypt transport
+- 加密传输
+![img_crypto.png](./doc/images/img_crypto.png)
+
+- log page enhance
+- 日志页增强
+![img_log_page.png](./doc/images/img_log_page.png)
