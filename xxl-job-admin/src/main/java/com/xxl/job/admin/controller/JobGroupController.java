@@ -7,8 +7,8 @@ import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.admin.dao.XxlJobGroupDao;
 import com.xxl.job.admin.dao.XxlJobInfoDao;
 import com.xxl.job.admin.dao.XxlJobRegistryDao;
-import com.xxl.job.admin.platform.DatabasePlatformType;
 import com.xxl.job.admin.platform.DatabasePlatformUtil;
+import com.xxl.job.admin.platform.pageable.DatabasePageable;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.enums.RegistryConfig;
 import org.springframework.stereotype.Controller;
@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * job group controller
@@ -52,14 +53,8 @@ public class JobGroupController {
 										String appname, String title) {
 
 		// page query
-		List<XxlJobGroup> list =new ArrayList<>();
-		if(DatabasePlatformUtil.getPlatformConfig().type()== DatabasePlatformType.ORACLE)
-		{
-			int endIndex = (start + 1) * length;
-			 list=xxlJobGroupDao.pageList(start, endIndex, appname, title);
-		}else{
-			list = xxlJobGroupDao.pageList(start, length, appname, title);
-		}
+		DatabasePageable pageable = DatabasePlatformUtil.convertPageable(start, length);
+		List<XxlJobGroup> list = xxlJobGroupDao.pageList(pageable.getStart(), pageable.getLength(), appname, title);
 		int list_count = xxlJobGroupDao.pageListCount(appname, title);
 
 		// package result
@@ -163,7 +158,10 @@ public class JobGroupController {
 
 	private List<String> findRegistryByAppName(String appnameParam){
 		HashMap<String, List<String>> appAddressMap = new HashMap<String, List<String>>();
-		List<XxlJobRegistry> list = xxlJobRegistryDao.findAll(RegistryConfig.DEAD_TIMEOUT, new Date());
+		long ts = System.currentTimeMillis();
+		long deadTs = ts - TimeUnit.SECONDS.toMillis(RegistryConfig.DEAD_TIMEOUT);
+		Date deadTime=new Date(deadTs);
+		List<XxlJobRegistry> list = xxlJobRegistryDao.findAll(deadTime);
 		if (list != null) {
 			for (XxlJobRegistry item: list) {
 				if (RegistryConfig.RegistType.EXECUTOR.name().equals(item.getRegistryGroup())) {

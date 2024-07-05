@@ -24,6 +24,9 @@
 	    <result column="handle_msg" property="handleMsg" />
 
 		<result column="alarm_status" property="alarmStatus" />
+
+		<result column="job_desc" property="jobDesc" />
+		<result column="group_title" property="groupTitle" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -41,11 +44,15 @@
 		t.handle_time,
 		t.handle_code,
 		t.handle_msg,
-		t.alarm_status
+		t.alarm_status,
+		f.job_desc,
+		g.title as group_title
 	</sql>
 
 	<sql id="sqlPageListBody">
 		FROM xxl_job_log t
+		left join xxl_job_info f on t.job_id=f.id
+		left join xxl_job_group g on t.job_group = g.id
 		<where>
 			<if test="jobId==0 and jobGroup gt 0">
 				AND t.job_group = #{jobGroup}

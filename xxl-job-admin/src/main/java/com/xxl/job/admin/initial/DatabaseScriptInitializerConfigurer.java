@@ -157,7 +157,7 @@ public class DatabaseScriptInitializerConfigurer implements InstantiationAwareBe
                         stat.close();
                     } catch (Exception e) {
                         hasTable = false;
-                        log.info("test table exists exception,ignore it : "+e.getMessage(),e);
+                        log.debug("test table exists exception,ignore it : "+e.getMessage(),e);
                     }
 
                     if (hasTable) {
@@ -167,6 +167,7 @@ public class DatabaseScriptInitializerConfigurer implements InstantiationAwareBe
                 }
 
                 try {
+                    log.info("database init script running...");
                     for (String sql : sqls) {
                         Statement stat = conn.createStatement();
                         stat.executeUpdate(sql);

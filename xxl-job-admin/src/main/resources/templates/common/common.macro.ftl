@@ -41,10 +41,8 @@
 			background: transparent !important;
 		}
 		.login-box-body{
-			backdrop-filter: blur(10px) !important;
-			-webkit-backdrop-filter: blur(10px) !important;
-			background-color: rgba(255,255,255,0.8) !important;
 			border-radius: 8px !important;
+			background: linear-gradient(0deg, rgba(255,255,255,0.8), rgba(255,255,255,0.3)) !important;
 		}
 		.login-logo a{
 			color: white !important;

@@ -24,6 +24,9 @@
         <result column="HANDLE_MSG" property="handleMsg"/>
 
         <result column="ALARM_STATUS" property="alarmStatus"/>
+
+        <result column="JOB_DESC" property="jobDesc" />
+        <result column="GROUP_TITLE" property="groupTitle" />
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -41,11 +44,15 @@
 		t."HANDLE_TIME",
 		t."HANDLE_CODE",
 		t."HANDLE_MSG",
-		t."ALARM_STATUS"
+		t."ALARM_STATUS",
+		f."JOB_DESC",
+		g."TITLE" as "GROUP_TITLE"
     </sql>
 
     <sql id="sqlPageListBody">
         FROM XXL_JOB_LOG t
+        left join XXL_JOB_INFO f on t."JOB_ID"=f."ID"
+        left join XXL_JOB_GROUP g on t."JOB_GROUP" = g."ID"
         <where>
             <if test="jobId==0 and jobGroup gt 0">
                 AND t."JOB_GROUP" = #{jobGroup,jdbcType=NUMERIC}

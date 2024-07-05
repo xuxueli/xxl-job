@@ -13,8 +13,8 @@ import com.xxl.job.admin.core.thread.JobTriggerPoolHelper;
 import com.xxl.job.admin.core.trigger.TriggerTypeEnum;
 import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.admin.dao.*;
-import com.xxl.job.admin.platform.DatabasePlatformType;
 import com.xxl.job.admin.platform.DatabasePlatformUtil;
+import com.xxl.job.admin.platform.pageable.DatabasePageable;
 import com.xxl.job.admin.service.XxlJobService;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
@@ -52,13 +52,8 @@ public class XxlJobServiceImpl implements XxlJobService {
 	public Map<String, Object> pageList(int start, int length, int jobGroup, int triggerStatus, String jobDesc, String executorHandler, String author) {
 
 		// page list
-		List<XxlJobInfo> list=new ArrayList<>();
-		if(DatabasePlatformUtil.getPlatformConfig().type()== DatabasePlatformType.ORACLE){
-			int endIndex=(start+1)*length;
-			list = xxlJobInfoDao.pageList(start, endIndex, jobGroup, triggerStatus, jobDesc, executorHandler, author);
-		}else{
-			list = xxlJobInfoDao.pageList(start, length, jobGroup, triggerStatus, jobDesc, executorHandler, author);
-		}
+		DatabasePageable pageable = DatabasePlatformUtil.convertPageable(start, length);
+		List<XxlJobInfo> list = xxlJobInfoDao.pageList(pageable.getStart(), pageable.getLength(), jobGroup, triggerStatus, jobDesc, executorHandler, author);
 		int list_count = xxlJobInfoDao.pageListCount(jobGroup, triggerStatus, jobDesc, executorHandler, author);
 
 		// package result

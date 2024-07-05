@@ -6,7 +6,6 @@ import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.scheduler.MisfireStrategyEnum;
 import com.xxl.job.admin.core.scheduler.ScheduleTypeEnum;
 import com.xxl.job.admin.core.trigger.TriggerTypeEnum;
-import com.xxl.job.admin.platform.DatabasePlatformType;
 import com.xxl.job.admin.platform.DatabasePlatformUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,7 +61,7 @@ public class JobScheduleHelper {
 
                 while (!scheduleThreadToStop) {
 
-                    boolean isStandalone=DatabasePlatformUtil.getPlatformConfig().isStandalone();
+                    boolean isStandalone=DatabasePlatformUtil.isStandalone();
 
                     // Scan Job
                     long start = System.currentTimeMillis();
@@ -82,11 +81,7 @@ public class JobScheduleHelper {
                         conn.setAutoCommit(false);
 
                         if(!isStandalone){
-                            if(DatabasePlatformUtil.getPlatformConfig().type()== DatabasePlatformType.ORACLE){
-                                preparedStatement = conn.prepareStatement(  "select * from XXL_JOB_LOCK where \"LOCK_NAME\" = 'schedule_lock' for update" );
-                            }else{
-                                preparedStatement = conn.prepareStatement(  "select * from xxl_job_lock where lock_name = 'schedule_lock' for update" );
-                            }
+                            preparedStatement=DatabasePlatformUtil.getLockStatement(conn);
                             preparedStatement.execute();
                         }
 
