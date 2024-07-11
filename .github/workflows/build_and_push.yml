@@ -1,0 +1,61 @@
+# 参考：https://github.com/jwma/jump-jump/blob/master/.github/workflows/build_and_deploy.yml
+# 构建最新的容器镜像 - 推送到腾讯云仓库 - 服务器部署最新版本的镜像
+# 参数说明：
+#   - secrets.TENCENT_CLOUD_REGISTRY_USERNAME   腾讯云仓库用户名
+#   - secrets.TENCENT_CLOUD_REGISTRY_PASSWORD   腾讯云仓库用户名
+#   - secrets.FEISHU_ROBOT_WEBHOOK_URL          飞书机器人地址
+
+name: Build and deploy
+
+on:
+  release:
+    types:
+      - published
+
+env:
+  TENCENT_CLOUD_REGISTRY: halo2024.tencentcloudcr.com
+  TENCENT_CLOUD_REPOSITORY: halo2024.tencentcloudcr.com/wizard/xxl-job
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v4
+
+      - name: Get latest release
+        id: latest_release
+        uses: cardinalby/git-get-release-action@1.2.5
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          latest: true
+
+      - name: Build docker image
+        run: |
+          docker build \
+            --build-arg IMAGE_TAG=${{ steps.latest_release.outputs.tag_name }} \
+            -t $TENCENT_CLOUD_REPOSITORY:latest \
+            -t $TENCENT_CLOUD_REPOSITORY:${{ steps.latest_release.outputs.tag_name }} \
+            -f build/package/Dockerfile .
+      - name: Push docker image to tencent cloud registry
+        run: |
+          docker login \
+            --username=${{ secrets.TENCENT_CLOUD_REGISTRY_USERNAME }} \
+            --password=${{ secrets.TENCENT_CLOUD_REGISTRY_PASSWORD }} \
+            $TENCENT_CLOUD_REGISTRY
+          docker push $TENCENT_CLOUD_REPOSITORY:latest
+          docker push $TENCENT_CLOUD_REPOSITORY:${{ steps.latest_release.outputs.tag_name }}
+          docker logout
+      - name: Send feishu message
+        env:
+          ACTIONS_FEISHU_TAG: 'v1.3.1' # 替换此变量, 最新见 https://github.com/xiachufang/actions-feishu/releases
+          INPUT_WEBHOOK: "${{ secrets.FEISHU_ROBOT_WEBHOOK_URL }}"
+          INPUT_MESSAGE_TYPE: "post"
+          INPUT_TITLE: "Monolith 构建成功"
+          INPUT_CONTENT: "repo: ${{ github.repository }}\ntag: ${{ steps.latest_release.outputs.tag_name }}\nrelease_title: ${{ steps.latest_release.outputs.name }}\nrelease_url: ${{ steps.latest_release.outputs.html_url }}\nrelease_body: ${{ steps.latest_release.outputs.body }}"
+        run: |
+          wget -q https://github.com/xiachufang/actions-feishu/releases/download/v1.3.1/linux-amd64-actions-feishu.tar.gz
+          tar zxf linux-amd64-actions-feishu.tar.gz feishu
+          ./feishu

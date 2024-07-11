@@ -1,5 +1,6 @@
 package com.xxl.job.admin.core.model;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -33,6 +34,8 @@ public class XxlJobLog {
 
 	// alarm info
 	private int alarmStatus;
+
+	private LocalDateTime updateTime;
 
 	public long getId() {
 		return id;
@@ -154,4 +157,11 @@ public class XxlJobLog {
 		this.alarmStatus = alarmStatus;
 	}
 
+	public LocalDateTime getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(LocalDateTime updateTime) {
+		this.updateTime = updateTime;
+	}
 }

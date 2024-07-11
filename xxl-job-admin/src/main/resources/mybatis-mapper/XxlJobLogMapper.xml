@@ -227,14 +227,13 @@
 		</foreach>
 	</delete>
 
-	<select id="findFailJobLogIds" resultType="long" >
+	<select id="findFailJobLogIdsByUpdateTime" resultType="long" >
 		SELECT id FROM `xxl_job_log`
-		WHERE !(
-			(trigger_code in (0, 200) and handle_code = 0)
-			OR
-			(handle_code = 200)
+		WHERE (
+			trigger_code = 500 and handle_code = 0 or handle_code = 500
 		)
 		AND `alarm_status` = 0
+		AND `update_time` >= #{lastUpdateTime}
 		ORDER BY id ASC
 		LIMIT #{pagesize}
 	</select>
