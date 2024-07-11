@@ -227,7 +227,7 @@
 
 <#macro commonFooter >
 	<footer class="main-footer">
-        Powered by <b>XXL-JOB</b> ${I18n.admin_version}
+        Powered by <b>XXL-JOB</b> ${I18n.admin_version} Enhanced by <b>SGCC-NREC</b>
 		<div class="pull-right hidden-xs">
             <strong>Copyright &copy; 2015-${.now?string('yyyy')} &nbsp;
                 <a href="https://www.xuxueli.com/" target="_blank" >xuxueli</a>

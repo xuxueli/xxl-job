@@ -277,19 +277,11 @@ exit 0
 </textarea>
 <textarea class="glueSource_tcsh_shell" style="display:none;" >
 #!/bin/tcsh
-echo "xxl-job: hello shell"
+echo "Executing PCS9000 Task"
 
-echo "${I18n.jobinfo_script_location}：$0"
-echo "${I18n.jobinfo_field_executorparam}：$1"
-echo "${I18n.jobinfo_shard_index} = $2"
-echo "${I18n.jobinfo_shard_total} = $3"
-<#--echo "参数数量：$#"
-for param in $*
-do
-    echo "参数 : $param"
-    sleep 1s
-done-->
+# Task Detail Start
 
+# Task Detail End
 echo "Good bye!"
 exit 0
 </textarea>
