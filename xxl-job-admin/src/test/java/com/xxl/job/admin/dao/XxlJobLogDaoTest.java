@@ -49,4 +49,14 @@ public class XxlJobLogDaoTest {
 
     }
 
+    @Test
+    public void test2(){
+        System.out.println(12333333);
+        XxlJobLog xxlJobLog = new XxlJobLog();
+        xxlJobLog.setJobGroup(3);
+        xxlJobLog.setJobId(1);
+        xxlJobLog.setTriggerTime(new Date());
+        long ret1 = xxlJobLogDao.save(xxlJobLog);
+        System.out.println(12333333);
+    }
 }

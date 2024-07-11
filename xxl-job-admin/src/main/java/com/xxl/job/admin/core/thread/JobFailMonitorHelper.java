@@ -7,8 +7,11 @@ import com.xxl.job.admin.core.trigger.TriggerTypeEnum;
 import com.xxl.job.admin.core.util.I18nUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.CollectionUtils;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -24,6 +27,9 @@ public class JobFailMonitorHelper {
 		return instance;
 	}
 
+	private static final int sleepSeconds = 10;
+	private static LocalDateTime lastUpdateTime = null;
+
 	// ---------------------- monitor ----------------------
 
 	private Thread monitorThread;
@@ -33,14 +39,18 @@ public class JobFailMonitorHelper {
 
 			@Override
 			public void run() {
-
+				LocalDateTime now = LocalDateTime.now();
+				// 这里记录上一次处理的更新时间，如果上一次更新时间为空，则默认为当前时间减一天
+				if (Objects.isNull(lastUpdateTime)) {
+					lastUpdateTime = now.minusDays(1);
+				}
+				LocalDateTime lastHandleTime = now;
 				// monitor
 				while (!toStop) {
 					try {
-
-						List<Long> failLogIds = XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().findFailJobLogIds(1000);
+						List<Long> failLogIds = XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().findFailJobLogIdsByUpdateTime(1000, lastUpdateTime);
 						if (failLogIds!=null && !failLogIds.isEmpty()) {
-							for (long failLogId: failLogIds) {
+							for (long failLogId : failLogIds) {
 
 								// lock log
 								int lockRet = XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().updateAlarmStatus(failLogId, 0, -1);
@@ -52,25 +62,27 @@ public class JobFailMonitorHelper {
 
 								// 1、fail retry monitor
 								if (log.getExecutorFailRetryCount() > 0) {
-									JobTriggerPoolHelper.trigger(log.getJobId(), TriggerTypeEnum.RETRY, (log.getExecutorFailRetryCount()-1), log.getExecutorShardingParam(), log.getExecutorParam(), null);
-									String retryMsg = "<br><br><span style=\"color:#F39C12;\" > >>>>>>>>>>>"+ I18nUtil.getString("jobconf_trigger_type_retry") +"<<<<<<<<<<< </span><br>";
+									JobTriggerPoolHelper.trigger(log.getJobId(), TriggerTypeEnum.RETRY, (log.getExecutorFailRetryCount() - 1), log.getExecutorShardingParam(), log.getExecutorParam(), null);
+									String retryMsg = "<br><br><span style=\"color:#F39C12;\" > >>>>>>>>>>>" + I18nUtil.getString("jobconf_trigger_type_retry") + "<<<<<<<<<<< </span><br>";
 									log.setTriggerMsg(log.getTriggerMsg() + retryMsg);
 									XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().updateTriggerInfo(log);
 								}
 
 								// 2、fail alarm monitor
-								int newAlarmStatus = 0;		// 告警状态：0-默认、-1=锁定状态、1-无需告警、2-告警成功、3-告警失败
+								int newAlarmStatus = 0;        // 告警状态：0-默认、-1=锁定状态、1-无需告警、2-告警成功、3-告警失败
 								if (info != null) {
 									boolean alarmResult = XxlJobAdminConfig.getAdminConfig().getJobAlarmer().alarm(info, log);
-									newAlarmStatus = alarmResult?2:3;
+									newAlarmStatus = alarmResult ? 2 : 3;
 								} else {
 									newAlarmStatus = 1;
 								}
 
 								XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().updateAlarmStatus(failLogId, -1, newAlarmStatus);
 							}
+						} else {
+							lastUpdateTime = lastHandleTime;
+							lastHandleTime = LocalDateTime.now();
 						}
-
 					} catch (Exception e) {
 						if (!toStop) {
 							logger.error(">>>>>>>>>>> xxl-job, job fail monitor thread error:{}", e);
@@ -78,7 +90,7 @@ public class JobFailMonitorHelper {
 					}
 
                     try {
-                        TimeUnit.SECONDS.sleep(10);
+						TimeUnit.SECONDS.sleep(sleepSeconds);
                     } catch (Exception e) {
                         if (!toStop) {
                             logger.error(e.getMessage(), e);
