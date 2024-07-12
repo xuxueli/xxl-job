@@ -32,6 +32,11 @@ jobs:
         with:
           latest: true
 
+      - name: Build jar
+        working-directory: .
+        run: |
+          mvn -T 10 clean package -DskipTests -Dproguard.phase=none -U -e -pl xxl-job-admin -am
+
       - name: Build docker image
         working-directory: ./xxl-job-admin
         run: |
