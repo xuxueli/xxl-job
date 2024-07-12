@@ -5,4 +5,4 @@
 target/
 .DS_Store
 .gitattributes
-xxl-job-admin/applogs/
+*applogs/

@@ -60,7 +60,7 @@ jobs:
           ACTIONS_FEISHU_TAG: 'v1.3.1' # 替换此变量, 最新见 https://github.com/xiachufang/actions-feishu/releases
           INPUT_WEBHOOK: "${{ secrets.FEISHU_ROBOT_WEBHOOK_URL }}"
           INPUT_MESSAGE_TYPE: "post"
-          INPUT_TITLE: "Monolith 构建成功"
+          INPUT_TITLE: "xxl-job 构建成功"
           INPUT_CONTENT: "repo: ${{ github.repository }}\ntag: ${{ steps.latest_release.outputs.tag_name }}\nrelease_title: ${{ steps.latest_release.outputs.name }}\nrelease_url: ${{ steps.latest_release.outputs.html_url }}\nrelease_body: ${{ steps.latest_release.outputs.body }}"
         run: |
           wget -q https://github.com/xiachufang/actions-feishu/releases/download/v1.3.1/linux-amd64-actions-feishu.tar.gz
