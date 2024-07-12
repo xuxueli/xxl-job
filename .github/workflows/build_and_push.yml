@@ -38,7 +38,7 @@ jobs:
             --build-arg IMAGE_TAG=${{ steps.latest_release.outputs.tag_name }} \
             -t $TENCENT_CLOUD_REPOSITORY:latest \
             -t $TENCENT_CLOUD_REPOSITORY:${{ steps.latest_release.outputs.tag_name }} \
-            -f build/package/Dockerfile .
+            -f xxl-job-admin/Dockerfile .
       - name: Push docker image to tencent cloud registry
         run: |
           docker login \
