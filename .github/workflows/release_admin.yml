@@ -49,8 +49,8 @@ jobs:
         working-directory: ./xxl-job-admin
         run: |
           docker login \
-            --username=${{ secrets.TENCENT_CLOUD_REGISTRY_USERNAME }} \
-            --password=${{ secrets.TENCENT_CLOUD_REGISTRY_PASSWORD }} \
+            --username='${{ secrets.TENCENT_CLOUD_REGISTRY_USERNAME }}' \
+            --password='${{ secrets.TENCENT_CLOUD_REGISTRY_PASSWORD }}' \
             $TENCENT_CLOUD_REGISTRY
           docker push $TENCENT_CLOUD_REPOSITORY:latest
           docker push $TENCENT_CLOUD_REPOSITORY:${{ steps.latest_release.outputs.tag_name }}
