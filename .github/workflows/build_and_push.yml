@@ -33,13 +33,15 @@ jobs:
           latest: true
 
       - name: Build docker image
+        working-directory: ./xxl-job-admin
         run: |
           docker build \
             --build-arg IMAGE_TAG=${{ steps.latest_release.outputs.tag_name }} \
             -t $TENCENT_CLOUD_REPOSITORY:latest \
             -t $TENCENT_CLOUD_REPOSITORY:${{ steps.latest_release.outputs.tag_name }} \
-            -f xxl-job-admin/Dockerfile .
+            -f Dockerfile .
       - name: Push docker image to tencent cloud registry
+        working-directory: ./xxl-job-admin
         run: |
           docker login \
             --username=${{ secrets.TENCENT_CLOUD_REGISTRY_USERNAME }} \
