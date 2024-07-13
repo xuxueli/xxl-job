@@ -4,6 +4,7 @@ import com.xxl.job.admin.core.model.XxlJobLog;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -51,7 +52,7 @@ public interface XxlJobLogDao {
 									  @Param("pagesize") int pagesize);
 	public int clearLog(@Param("logIds") List<Long> logIds);
 
-	public List<Long> findFailJobLogIds(@Param("pagesize") int pagesize);
+	public List<Long> findFailJobLogIdsByUpdateTime(@Param("pagesize") int pagesize, @Param("lastUpdateTime") LocalDateTime lastUpdateTime);
 
 	public int updateAlarmStatus(@Param("logId") long logId,
 								 @Param("oldAlarmStatus") int oldAlarmStatus,
