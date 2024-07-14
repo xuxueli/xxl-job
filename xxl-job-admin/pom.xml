@@ -70,6 +70,14 @@
 			<version>${mysql-connector-j.version}</version>
 		</dependency>
 
+		<dependency>
+			<groupId>com.xugu</groupId>
+			<artifactId>xugu-jdbc</artifactId>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/src/main/resources/lib/xugu-jdbc-12.2.2.jar</systemPath>
+			<version>${xugu-connector-java.version}</version>
+		</dependency>
+
 		<!-- xxl-job-core -->
 		<dependency>
 			<groupId>com.xuxueli</groupId>
