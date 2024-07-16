@@ -1,6 +1,7 @@
 package com.xxl.job.admin.core.thread;
 
 import com.xxl.job.admin.core.conf.XxlJobAdminConfig;
+import com.xxl.job.admin.core.entity.ExecutorAddressStatic;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobRegistry;
 import com.xxl.job.core.biz.model.RegistryParam;
@@ -166,6 +167,8 @@ public class JobRegistryHelper {
 					// fresh
 					freshGroupRegistryInfo(registryParam);
 				}
+				ExecutorAddressStatic.executorAddress = registryParam.getRegistryValue();
+				logger.info("=============>registry执行日志注册地址为：" + ExecutorAddressStatic.executorAddress);
 			}
 		});
 

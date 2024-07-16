@@ -1,6 +1,7 @@
 package com.xxl.job.admin.controller;
 
 import com.xxl.job.admin.core.complete.XxlJobCompleter;
+import com.xxl.job.admin.core.entity.ExecutorAddressStatic;
 import com.xxl.job.admin.core.exception.XxlJobException;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
@@ -146,7 +147,10 @@ public class JobLogController {
 			}
 
 			// log cat
-			ExecutorBiz executorBiz = XxlJobScheduler.getExecutorBiz(jobLog.getExecutorAddress());
+			//场景：docker容器化动态部署。容器中日志存储路径挂载于宿主机，且容器当重启执行器服务时，会动态化更换随机容器，执行器ip会变更，自动获取的ip为当前执行器的docker实例ip（192.*.*.*网段）
+			// 。容器互通，但容器无法访问其他容器的192网段地址，此处查询数据库日志表执行器字段，会出现历史日志无法访问的问题。所以在此，将访问地址替换为执行器传过来的执行地址。
+			logger.info("==============>logDetailCat执行器地址为: " + ExecutorAddressStatic.executorAddress);
+			ExecutorBiz executorBiz = XxlJobScheduler.getExecutorBiz(ExecutorAddressStatic.executorAddress);
 			ReturnT<LogResult> logResult = executorBiz.log(new LogParam(jobLog.getTriggerTime().getTime(), logId, fromLineNum));
 
 			// is end
