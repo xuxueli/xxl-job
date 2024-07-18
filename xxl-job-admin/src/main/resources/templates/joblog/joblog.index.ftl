@@ -34,7 +34,7 @@
                                 <option value="0" >${I18n.system_all}</option>  <#-- 仅管理员支持查询全部；普通用户仅支持查询有权限的 jobGroup -->
                             </#if>
                 			<#list JobGroupList as group>
-                				<option value="${group.id}" >${group.title}</option>
+                				<option value="${group.id}" >[${group.id}]${group.title}</option>
                 			</#list>
 	                  	</select>
 	              	</div>

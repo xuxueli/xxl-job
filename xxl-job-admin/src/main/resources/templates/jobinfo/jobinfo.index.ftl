@@ -30,7 +30,7 @@
 	                	<span class="input-group-addon">${I18n.jobinfo_field_jobgroup}</span>
                 		<select class="form-control" id="jobGroup" >
                 			<#list JobGroupList as group>
-                				<option value="${group.id}" <#if jobGroup==group.id>selected</#if> >${group.title}</option>
+                				<option value="${group.id}" <#if jobGroup==group.id>selected</#if> >[${group.id}]${group.title}</option>
                 			</#list>
 	                  	</select>
 	              	</div>
@@ -121,7 +121,7 @@
 						<div class="col-sm-4">
 							<select class="form-control" name="jobGroup" >
 		            			<#list JobGroupList as group>
-		            				<option value="${group.id}" <#if jobGroup==group.id>selected</#if> >${group.title}</option>
+		            				<option value="${group.id}" <#if jobGroup==group.id>selected</#if> >[${group.id}]${group.title}</option>
 		            			</#list>
 		                  	</select>
 						</div>
@@ -366,7 +366,7 @@ exit 0
                         <div class="col-sm-4">
                             <select class="form-control" name="jobGroup" >
                                 <#list JobGroupList as group>
-                                    <option value="${group.id}" >${group.title}</option>
+                                    <option value="${group.id}" >[${group.id}]${group.title}</option>
                                 </#list>
                             </select>
                         </div>
