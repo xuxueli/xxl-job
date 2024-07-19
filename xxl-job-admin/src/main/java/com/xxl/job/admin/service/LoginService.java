@@ -6,6 +6,7 @@ import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.admin.core.util.JacksonUtil;
 import com.xxl.job.admin.dao.XxlJobUserDao;
 import com.xxl.job.core.biz.model.ReturnT;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.DigestUtils;
 
@@ -25,6 +26,8 @@ public class LoginService {
     @Resource
     private XxlJobUserDao xxlJobUserDao;
 
+    @Autowired
+    private LdapService ldapService;
 
     private String makeToken(XxlJobUser xxlJobUser){
         String tokenJson = JacksonUtil.writeValueAsString(xxlJobUser);
@@ -50,12 +53,26 @@ public class LoginService {
 
         // valid passowrd
         XxlJobUser xxlJobUser = xxlJobUserDao.loadByUserName(username);
-        if (xxlJobUser == null) {
-            return new ReturnT<String>(500, I18nUtil.getString("login_param_unvalid"));
-        }
-        String passwordMd5 = DigestUtils.md5DigestAsHex(password.getBytes());
-        if (!passwordMd5.equals(xxlJobUser.getPassword())) {
-            return new ReturnT<String>(500, I18nUtil.getString("login_param_unvalid"));
+
+        if (ldapService.find(username)) {
+            if (!ldapService.authenticate(username, password)) {
+                return new ReturnT<String>(500, I18nUtil.getString("login_param_unvalid"));
+            }
+            if (null == xxlJobUser) {
+                xxlJobUser = new XxlJobUser();
+                xxlJobUser.setPassword("{LDAP}");
+                xxlJobUser.setUsername(username);
+                xxlJobUser.setRole(ldapService.isAdmin(username) ? 1 : 0);
+                xxlJobUserDao.save(xxlJobUser);
+            }
+        } else {
+            if (xxlJobUser == null) {
+                return new ReturnT<String>(500, I18nUtil.getString("login_param_unvalid"));
+            }
+            String passwordMd5 = DigestUtils.md5DigestAsHex(password.getBytes());
+            if (!passwordMd5.equals(xxlJobUser.getPassword())) {
+                return new ReturnT<String>(500, I18nUtil.getString("login_param_unvalid"));
+            }
         }
 
         String loginToken = makeToken(xxlJobUser);
