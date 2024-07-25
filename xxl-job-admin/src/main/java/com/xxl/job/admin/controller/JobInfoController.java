@@ -102,7 +102,11 @@ public class JobInfoController {
 		
 		return xxlJobService.pageList(start, length, jobGroup, triggerStatus, jobDesc, executorHandler, author);
 	}
-	
+
+	@RequestMapping("/detail")
+	@ResponseBody
+	public XxlJobInfo detail(int id) { return xxlJobService.detail(id); }
+
 	@RequestMapping("/add")
 	@ResponseBody
 	public ReturnT<String> add(XxlJobInfo jobInfo) {

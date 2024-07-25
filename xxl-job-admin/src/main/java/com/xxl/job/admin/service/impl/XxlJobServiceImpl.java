@@ -61,6 +61,17 @@ public class XxlJobServiceImpl implements XxlJobService {
 	}
 
 	@Override
+	public XxlJobInfo detail(int id) {
+		XxlJobInfo task_info = xxlJobInfoDao.loadById(id);
+
+		if (task_info == null) {
+			return null;
+		} else {
+			return task_info;
+		}
+	}
+
+	@Override
 	public ReturnT<String> add(XxlJobInfo jobInfo) {
 
 		// valid base
