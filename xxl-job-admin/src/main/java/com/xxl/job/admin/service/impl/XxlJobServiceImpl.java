@@ -44,19 +44,19 @@ public class XxlJobServiceImpl implements XxlJobService {
 	private XxlJobLogGlueDao xxlJobLogGlueDao;
 	@Resource
 	private XxlJobLogReportDao xxlJobLogReportDao;
-	
+
 	@Override
 	public Map<String, Object> pageList(int start, int length, int jobGroup, int triggerStatus, String jobDesc, String executorHandler, String author) {
 
 		// page list
 		List<XxlJobInfo> list = xxlJobInfoDao.pageList(start, length, jobGroup, triggerStatus, jobDesc, executorHandler, author);
 		int list_count = xxlJobInfoDao.pageListCount(start, length, jobGroup, triggerStatus, jobDesc, executorHandler, author);
-		
+
 		// package result
 		Map<String, Object> maps = new HashMap<String, Object>();
-	    maps.put("recordsTotal", list_count);		// 总记录数
-	    maps.put("recordsFiltered", list_count);	// 过滤后的总记录数
-	    maps.put("data", list);  					// 分页列表
+		maps.put("recordsTotal", list_count);		// 总记录数
+		maps.put("recordsFiltered", list_count);	// 过滤后的总记录数
+		maps.put("data", list);  					// 分页列表
 		return maps;
 	}
 
@@ -284,7 +284,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 		exists_jobInfo.setTriggerNextTime(nextTriggerTime);
 
 		exists_jobInfo.setUpdateTime(new Date());
-        xxlJobInfoDao.update(exists_jobInfo);
+		xxlJobInfoDao.update(exists_jobInfo);
 
 
 		return ReturnT.SUCCESS;
@@ -337,7 +337,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 
 	@Override
 	public ReturnT<String> stop(int id) {
-        XxlJobInfo xxlJobInfo = xxlJobInfoDao.loadById(id);
+		XxlJobInfo xxlJobInfo = xxlJobInfoDao.loadById(id);
 
 		xxlJobInfo.setTriggerStatus(0);
 		xxlJobInfo.setTriggerLastTime(0);
@@ -470,4 +470,18 @@ public class XxlJobServiceImpl implements XxlJobService {
 		return new ReturnT<Map<String, Object>>(result);
 	}
 
+	@Override
+	public void misfireCompensation(String appName) {
+		List<XxlJobGroup> xxlJobGroups = xxlJobGroupDao.pageList(0, 100, appName, null);
+		for (XxlJobGroup group : xxlJobGroups) {
+			List<XxlJobInfo> jobList = xxlJobInfoDao.getMisfireJobsByGroup(group.getId());
+			Set<Integer> jobIdSet = new HashSet();
+			jobList.forEach(e -> jobIdSet.add(e.getId()));
+
+			for (Integer jobId : jobIdSet) {
+				JobTriggerPoolHelper.trigger(jobId, TriggerTypeEnum.MISFIRE, -1, null, null, null);
+				logger.info(">>>>>>>>>>> xxl-job misfire retry, schedule push trigger : jobId = " + jobId );
+			}
+		}
+	}
 }
