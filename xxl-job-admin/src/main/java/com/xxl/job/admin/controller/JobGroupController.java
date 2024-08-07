@@ -100,6 +100,16 @@ public class JobGroupController {
 		// process
 		xxlJobGroup.setUpdateTime(new Date());
 
+		int existCount = xxlJobGroupDao.countByAppNameNotId(xxlJobGroup.getAppname(), null);
+		if (existCount > 0) {
+			return new ReturnT<String>(500, "AppName" + I18nUtil.getString("system_already_exist"));
+		}
+
+		existCount = xxlJobGroupDao.countByTitleNotId(xxlJobGroup.getTitle(), null);
+		if (existCount > 0) {
+			return new ReturnT<String>(500, I18nUtil.getString("jobgroup_field_title") + I18nUtil.getString("system_already_exist"));
+		}
+
 		int ret = xxlJobGroupDao.save(xxlJobGroup);
 		return (ret>0)?ReturnT.SUCCESS:ReturnT.FAIL;
 	}
@@ -142,6 +152,16 @@ public class JobGroupController {
 					return new ReturnT<String>(500, I18nUtil.getString("jobgroup_field_registryList_unvalid") );
 				}
 			}
+		}
+
+		int existCount = xxlJobGroupDao.countByAppNameNotId(xxlJobGroup.getAppname(), xxlJobGroup.getId());
+		if (existCount > 0) {
+			return new ReturnT<String>(500, "AppName" + I18nUtil.getString("system_already_exist"));
+		}
+
+		existCount = xxlJobGroupDao.countByTitleNotId(xxlJobGroup.getTitle(), xxlJobGroup.getId());
+		if (existCount > 0) {
+			return new ReturnT<String>(500, I18nUtil.getString("jobgroup_field_title") + I18nUtil.getString("system_already_exist"));
 		}
 
 		// process
