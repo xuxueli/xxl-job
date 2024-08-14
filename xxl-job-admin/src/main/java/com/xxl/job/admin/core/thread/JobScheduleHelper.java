@@ -13,8 +13,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReferenceArray;
 
 /**
  * @author xuxueli 2019-05-21
@@ -33,7 +33,7 @@ public class JobScheduleHelper {
     private Thread ringThread;
     private volatile boolean scheduleThreadToStop = false;
     private volatile boolean ringThreadToStop = false;
-    private volatile static Map<Integer, List<Integer>> ringData = new ConcurrentHashMap<>();
+    private static final AtomicReferenceArray<List<Integer>> ringData = new AtomicReferenceArray<List<Integer>>(new List[60]);
 
     public void start(){
 
@@ -238,7 +238,7 @@ public class JobScheduleHelper {
                         List<Integer> ringItemData = new ArrayList<>();
                         int nowSecond = Calendar.getInstance().get(Calendar.SECOND);   // 避免处理耗时太长，跨过刻度，向前校验一个刻度；
                         for (int i = 0; i < 2; i++) {
-                            List<Integer> tmpData = ringData.remove( (nowSecond+60-i)%60 );
+                            List<Integer> tmpData = ringData.getAndSet((nowSecond + 60 - i) % 60, null); // CAS读取并置空，put时就获取不到即将被消费的list，避免并发操作同一个list
                             if (tmpData != null) {
                                 ringItemData.addAll(tmpData);
                             }
@@ -285,12 +285,12 @@ public class JobScheduleHelper {
 
     private void pushTimeRing(int ringSecond, int jobId){
         // push async ring
-        List<Integer> ringItemData = ringData.get(ringSecond);
+        List<Integer> ringItemData = ringData.getAndSet(ringSecond, null);
         if (ringItemData == null) {
             ringItemData = new ArrayList<Integer>();
-            ringData.put(ringSecond, ringItemData);
         }
         ringItemData.add(jobId);
+        ringData.set(ringSecond, ringItemData);
 
         logger.debug(">>>>>>>>>>> xxl-job, schedule push time-ring : " + ringSecond + " = " + Arrays.asList(ringItemData) );
     }
@@ -316,13 +316,11 @@ public class JobScheduleHelper {
 
         // if has ring data
         boolean hasRingData = false;
-        if (!ringData.isEmpty()) {
-            for (int second : ringData.keySet()) {
-                List<Integer> tmpData = ringData.get(second);
-                if (tmpData!=null && tmpData.size()>0) {
-                    hasRingData = true;
-                    break;
-                }
+        for (int second = 0; second < 60; second++) {
+            List<Integer> tmpData = ringData.get(second);
+            if (tmpData != null && tmpData.size() > 0) {
+                hasRingData = true;
+                break;
             }
         }
         if (hasRingData) {
@@ -340,7 +338,7 @@ public class JobScheduleHelper {
         } catch (InterruptedException e) {
             logger.error(e.getMessage(), e);
         }
-        if (ringThread.getState() != Thread.State.TERMINATED){
+        if (ringThread.getState() != Thread.State.TERMINATED) {
             // interrupt and wait
             ringThread.interrupt();
             try {
@@ -361,7 +359,7 @@ public class JobScheduleHelper {
             Date nextValidTime = new CronExpression(jobInfo.getScheduleConf()).getNextValidTimeAfter(fromTime);
             return nextValidTime;
         } else if (ScheduleTypeEnum.FIX_RATE == scheduleTypeEnum /*|| ScheduleTypeEnum.FIX_DELAY == scheduleTypeEnum*/) {
-            return new Date(fromTime.getTime() + Integer.valueOf(jobInfo.getScheduleConf())*1000 );
+            return new Date(fromTime.getTime() + Integer.valueOf(jobInfo.getScheduleConf()) * 1000);
         }
         return null;
     }
