@@ -23,20 +23,33 @@ import java.util.Map;
  *
  * @author xuxueli 2018-11-01 09:24:52
  */
-public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationContextAware, SmartInitializingSingleton, DisposableBean {
+public class XxlJobSpringExecutor extends XxlJobExecutor implements DisposableBean {
     private static final Logger logger = LoggerFactory.getLogger(XxlJobSpringExecutor.class);
 
 
     // start
+    // @Override
+    // public void afterSingletonsInstantiated() {
+    //     System.out.println("调用XxlJobSpringExecutor的afterSingletonsInstantiated");
+    //     // init JobHandler Repository
+    //     /*initJobHandlerRepository(applicationContext);*/
+    //
+    //     // init JobHandler Repository (for method)
+    //     initJobHandlerMethodRepository(applicationContext);
+    //
+    //     // refresh GlueFactory
+    //     GlueFactory.refreshInstance(1);
+    //
+    //     // super start
+    //     try {
+    //         super.start();
+    //     } catch (Exception e) {
+    //         throw new RuntimeException(e);
+    //     }
+    // }
+
     @Override
-    public void afterSingletonsInstantiated() {
-
-        // init JobHandler Repository
-        /*initJobHandlerRepository(applicationContext);*/
-
-        // init JobHandler Repository (for method)
-        initJobHandlerMethodRepository(applicationContext);
-
+    public void start() throws Exception {
         // refresh GlueFactory
         GlueFactory.refreshInstance(1);
 
@@ -77,7 +90,11 @@ public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationC
         }
     }*/
 
-    private void initJobHandlerMethodRepository(ApplicationContext applicationContext) {
+    public static void initJobHandler() {
+        initJobHandlerMethodRepository(applicationContext);
+    }
+
+    private static void initJobHandlerMethodRepository(ApplicationContext applicationContext) {
         if (applicationContext == null) {
             return;
         }
@@ -126,8 +143,7 @@ public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationC
     // ---------------------- applicationContext ----------------------
     private static ApplicationContext applicationContext;
 
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+    public static void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         XxlJobSpringExecutor.applicationContext = applicationContext;
     }
 

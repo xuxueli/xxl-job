@@ -3,6 +3,7 @@ package com.xxl.job.core.server;
 import com.xxl.job.core.biz.ExecutorBiz;
 import com.xxl.job.core.biz.impl.ExecutorBizImpl;
 import com.xxl.job.core.biz.model.*;
+import com.xxl.job.core.executor.XxlJobExecutor;
 import com.xxl.job.core.thread.ExecutorRegistryThread;
 import com.xxl.job.core.util.GsonTool;
 import com.xxl.job.core.util.ThrowableUtil;
@@ -30,11 +31,19 @@ import java.util.concurrent.*;
 public class EmbedServer {
     private static final Logger logger = LoggerFactory.getLogger(EmbedServer.class);
 
+    private XxlJobExecutor xxlJobExecutor;
+
     private ExecutorBiz executorBiz;
     private Thread thread;
 
+    private ExecutorRegistryThread registryThread = new ExecutorRegistryThread();
+
+    public EmbedServer(XxlJobExecutor xxlJobExecutor) {
+        this.xxlJobExecutor = xxlJobExecutor;
+    }
+
     public void start(final String address, final int port, final String appname, final String accessToken) {
-        executorBiz = new ExecutorBizImpl();
+        executorBiz = new ExecutorBizImpl(xxlJobExecutor);
         thread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -246,11 +255,13 @@ public class EmbedServer {
 
     public void startRegistry(final String appname, final String address) {
         // start registry
-        ExecutorRegistryThread.getInstance().start(appname, address);
+        // ExecutorRegistryThread.getInstance().start(appname, address);
+        registryThread.start(appname, address);
     }
 
     public void stopRegistry() {
         // stop registry
-        ExecutorRegistryThread.getInstance().toStop();
+        // ExecutorRegistryThread.getInstance().toStop();
+        registryThread.toStop();
     }
 }
