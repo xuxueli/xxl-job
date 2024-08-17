@@ -10,11 +10,15 @@ import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.handler.impl.GlueJobHandler;
 import com.xxl.job.core.handler.impl.ScriptJobHandler;
 import com.xxl.job.core.log.XxlJobFileAppender;
+import com.xxl.job.core.shard.SharingHandler;
+import com.xxl.job.core.shard.SpringContextUtil;
 import com.xxl.job.core.thread.JobThread;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by xuxueli on 17/3/1.
@@ -169,4 +173,25 @@ public class ExecutorBizImpl implements ExecutorBiz {
         return new ReturnT<LogResult>(logResult);
     }
 
+    @Override
+    public ReturnT<List<String>> runShard(TriggerParam triggerParam){
+        ReturnT<List<String>> returnT = new ReturnT<>();
+        // 默认调度成功 状态码为200
+
+        String executorHandler = triggerParam.getExecutorHandler();
+        SharingHandler sharingHandler = (SharingHandler) SpringContextUtil.getBean(executorHandler + "Shard");
+        // 运行模式，目前shard 只支持bean模式
+        GlueTypeEnum glueTypeEnum = GlueTypeEnum.match(triggerParam.getGlueType());
+        if (sharingHandler == null || glueTypeEnum != GlueTypeEnum.BEAN) {
+            // 没有shard 方法 或者 不是 BEAN 模式 不执行shard
+            List<String> list = new ArrayList<>();
+            list.add(triggerParam.getExecutorParams());
+            returnT.setCode(ReturnT.SUCCESS_CODE);
+            returnT.setContent(list);
+        } else {
+            returnT =  sharingHandler.executeShard(triggerParam.getExecutorParams());
+            returnT.setCode(ReturnT.SUCCESS_CODE);
+        }
+        return returnT;
+    }
 }
