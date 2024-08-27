@@ -17,7 +17,7 @@ import java.util.concurrent.ConcurrentMap;
  */
 public class ExecutorRouteLFU extends ExecutorRouter {
 
-    private static ConcurrentMap<Integer, HashMap<String, Integer>> jobLfuMap = new ConcurrentHashMap<Integer, HashMap<String, Integer>>();
+    private static ConcurrentMap<Integer, Map<String, Integer>> jobLfuMap = new ConcurrentHashMap<>();
     private static long CACHE_VALID_TIME = 0;
 
     public String route(int jobId, List<String> addressList) {
@@ -29,10 +29,12 @@ public class ExecutorRouteLFU extends ExecutorRouter {
         }
 
         // lfu item init
-        HashMap<String, Integer> lfuItemMap = jobLfuMap.get(jobId);     // Key排序可以用TreeMap+构造入参Compare；Value排序暂时只能通过ArrayList；
+        Map<String, Integer> lfuItemMap = jobLfuMap.get(jobId);     // Key排序可以用TreeMap+构造入参Compare；Value排序暂时只能通过ArrayList；
         if (lfuItemMap == null) {
-            lfuItemMap = new HashMap<String, Integer>();
-            jobLfuMap.putIfAbsent(jobId, lfuItemMap);   // 避免重复覆盖
+            synchronized (this) {
+                lfuItemMap = new ConcurrentHashMap<>();
+                jobLfuMap.putIfAbsent(jobId, lfuItemMap);   // 避免重复覆盖
+            }
         }
 
         // put new

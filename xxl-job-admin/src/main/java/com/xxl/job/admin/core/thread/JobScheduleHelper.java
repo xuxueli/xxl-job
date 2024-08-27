@@ -13,9 +13,10 @@ import org.slf4j.LoggerFactory;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -34,9 +35,9 @@ public class JobScheduleHelper {
 
     private Thread scheduleThread;
     private Thread ringThread;
-    private volatile boolean scheduleThreadToStop = false;
-    private volatile boolean ringThreadToStop = false;
-    private volatile static Map<Integer, List<Integer>> ringData = new ConcurrentHashMap<>();
+    private final AtomicBoolean scheduleThreadToStop = new AtomicBoolean(false);
+    private final AtomicBoolean ringThreadToStop = new AtomicBoolean(false);
+    private volatile static ConcurrentMap<Integer, BlockingQueue<Integer>> ringData = new ConcurrentHashMap<>();
 
     public void start(){
 
@@ -48,7 +49,7 @@ public class JobScheduleHelper {
                 try {
                     TimeUnit.MILLISECONDS.sleep(5000 - System.currentTimeMillis()%1000 );
                 } catch (InterruptedException e) {
-                    if (!scheduleThreadToStop) {
+                    if (!scheduleThreadToStop.get()) {
                         logger.error(e.getMessage(), e);
                     }
                 }
@@ -59,7 +60,7 @@ public class JobScheduleHelper {
 
                 Lock lock=new ReentrantLock();
 
-                while (!scheduleThreadToStop) {
+                while (!scheduleThreadToStop.get()) {
 
                     boolean isStandalone=DatabasePlatformUtil.isStandalone();
 
@@ -163,7 +164,7 @@ public class JobScheduleHelper {
 
 
                     } catch (Exception e) {
-                        if (!scheduleThreadToStop) {
+                        if (!scheduleThreadToStop.get()) {
                             logger.error(">>>>>>>>>>> xxl-job, JobScheduleHelper#scheduleThread error:{}", e);
                         }
                     } finally {
@@ -175,21 +176,21 @@ public class JobScheduleHelper {
                             try {
                                 conn.commit();
                             } catch (SQLException e) {
-                                if (!scheduleThreadToStop) {
+                                if (!scheduleThreadToStop.get()) {
                                     logger.error(e.getMessage(), e);
                                 }
                             }
                             try {
                                 conn.setAutoCommit(connAutoCommit);
                             } catch (SQLException e) {
-                                if (!scheduleThreadToStop) {
+                                if (!scheduleThreadToStop.get()) {
                                     logger.error(e.getMessage(), e);
                                 }
                             }
                             try {
                                 conn.close();
                             } catch (SQLException e) {
-                                if (!scheduleThreadToStop) {
+                                if (!scheduleThreadToStop.get()) {
                                     logger.error(e.getMessage(), e);
                                 }
                             }
@@ -200,7 +201,7 @@ public class JobScheduleHelper {
                             try {
                                 preparedStatement.close();
                             } catch (SQLException e) {
-                                if (!scheduleThreadToStop) {
+                                if (!scheduleThreadToStop.get()) {
                                     logger.error(e.getMessage(), e);
                                 }
                             }
@@ -215,7 +216,7 @@ public class JobScheduleHelper {
                             // pre-read period: success > scan each second; fail > skip this period;
                             TimeUnit.MILLISECONDS.sleep((preReadSuc?1000:PRE_READ_MS) - System.currentTimeMillis()%1000);
                         } catch (InterruptedException e) {
-                            if (!scheduleThreadToStop) {
+                            if (!scheduleThreadToStop.get()) {
                                 logger.error(e.getMessage(), e);
                             }
                         }
@@ -236,13 +237,13 @@ public class JobScheduleHelper {
             @Override
             public void run() {
 
-                while (!ringThreadToStop) {
+                while (!ringThreadToStop.get()) {
 
                     // align second
                     try {
                         TimeUnit.MILLISECONDS.sleep(1000 - System.currentTimeMillis() % 1000);
                     } catch (InterruptedException e) {
-                        if (!ringThreadToStop) {
+                        if (!ringThreadToStop.get()) {
                             logger.error(e.getMessage(), e);
                         }
                     }
@@ -250,9 +251,9 @@ public class JobScheduleHelper {
                     try {
                         // second data
                         List<Integer> ringItemData = new ArrayList<>();
-                        int nowSecond = Calendar.getInstance().get(Calendar.SECOND);   // 避免处理耗时太长，跨过刻度，向前校验一个刻度；
+                        int nowSecond = LocalDateTime.now().getSecond();   // 避免处理耗时太长，跨过刻度，向前校验一个刻度；
                         for (int i = 0; i < 2; i++) {
-                            List<Integer> tmpData = ringData.remove( (nowSecond+60-i)%60 );
+                            BlockingQueue<Integer> tmpData = ringData.remove( (nowSecond+60-i)%60 );
                             if (tmpData != null) {
                                 ringItemData.addAll(tmpData);
                             }
@@ -270,7 +271,7 @@ public class JobScheduleHelper {
                             ringItemData.clear();
                         }
                     } catch (Exception e) {
-                        if (!ringThreadToStop) {
+                        if (!ringThreadToStop.get()) {
                             logger.error(">>>>>>>>>>> xxl-job, JobScheduleHelper#ringThread error:{}", e);
                         }
                     }
@@ -299,10 +300,12 @@ public class JobScheduleHelper {
 
     private void pushTimeRing(int ringSecond, int jobId){
         // push async ring
-        List<Integer> ringItemData = ringData.get(ringSecond);
+        BlockingQueue<Integer> ringItemData = ringData.get(ringSecond);
         if (ringItemData == null) {
-            ringItemData = new ArrayList<Integer>();
-            ringData.put(ringSecond, ringItemData);
+            synchronized (this){
+                ringItemData = new LinkedBlockingDeque<>();
+                ringData.put(ringSecond, ringItemData);
+            }
         }
         ringItemData.add(jobId);
 
@@ -312,7 +315,7 @@ public class JobScheduleHelper {
     public void toStop(){
 
         // 1、stop schedule
-        scheduleThreadToStop = true;
+        scheduleThreadToStop.set(true);
         try {
             TimeUnit.SECONDS.sleep(1);  // wait
         } catch (InterruptedException e) {
@@ -332,7 +335,7 @@ public class JobScheduleHelper {
         boolean hasRingData = false;
         if (!ringData.isEmpty()) {
             for (int second : ringData.keySet()) {
-                List<Integer> tmpData = ringData.get(second);
+                BlockingQueue<Integer> tmpData = ringData.get(second);
                 if (tmpData!=null && !tmpData.isEmpty()) {
                     hasRingData = true;
                     break;
@@ -348,7 +351,7 @@ public class JobScheduleHelper {
         }
 
         // stop ring (wait job-in-memory stop)
-        ringThreadToStop = true;
+        ringThreadToStop.set(true);
         try {
             TimeUnit.SECONDS.sleep(1);
         } catch (InterruptedException e) {

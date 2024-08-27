@@ -5,6 +5,9 @@ import com.xxl.job.admin.core.model.XxlJobLogReport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -42,21 +45,24 @@ public class JobLogReportHelper {
                         for (int i = 0; i < 3; i++) {
 
                             // today
-                            Calendar itemDay = Calendar.getInstance();
-                            itemDay.add(Calendar.DAY_OF_MONTH, -i);
-                            itemDay.set(Calendar.HOUR_OF_DAY, 0);
-                            itemDay.set(Calendar.MINUTE, 0);
-                            itemDay.set(Calendar.SECOND, 0);
-                            itemDay.set(Calendar.MILLISECOND, 0);
+                            LocalDateTime itemDay = LocalDateTime.now().minusDays(i)
+                                    .withHour(0)
+                                    .withMinute(0)
+                                    .withSecond(0)
+                                    .withNano(0);
 
-                            Date todayFrom = itemDay.getTime();
+                            Date todayFrom = Date.from(
+                                    itemDay.atZone(ZoneId.systemDefault())
+                                    .toInstant()
+                            );
 
-                            itemDay.set(Calendar.HOUR_OF_DAY, 23);
-                            itemDay.set(Calendar.MINUTE, 59);
-                            itemDay.set(Calendar.SECOND, 59);
-                            itemDay.set(Calendar.MILLISECOND, 999);
+                            itemDay = itemDay.plusDays(1)
+                                    .minusSeconds(1);
 
-                            Date todayTo = itemDay.getTime();
+                            Date todayTo = Date.from(
+                                    itemDay.atZone(ZoneId.systemDefault())
+                                            .toInstant()
+                            );
 
                             // refresh log-report every minute
                             XxlJobLogReport xxlJobLogReport = new XxlJobLogReport();
@@ -114,13 +120,17 @@ public class JobLogReportHelper {
                             && System.currentTimeMillis() - lastCleanLogTime > 24*60*60*1000) {
 
                         // expire-time
-                        Calendar expiredDay = Calendar.getInstance();
-                        expiredDay.add(Calendar.DAY_OF_MONTH, -1 * XxlJobAdminConfig.getAdminConfig().getLogretentiondays());
-                        expiredDay.set(Calendar.HOUR_OF_DAY, 0);
-                        expiredDay.set(Calendar.MINUTE, 0);
-                        expiredDay.set(Calendar.SECOND, 0);
-                        expiredDay.set(Calendar.MILLISECOND, 0);
-                        Date clearBeforeTime = expiredDay.getTime();
+                        LocalDateTime expiredDay = LocalDateTime.now()
+                                .minusDays(1 * XxlJobAdminConfig.getAdminConfig().getLogretentiondays())
+                                .withHour(0)
+                                .withMinute(0)
+                                .withSecond(0)
+                                .withNano(0);
+
+                        Date clearBeforeTime = Date.from(
+                                expiredDay.atZone(ZoneId.systemDefault())
+                                        .toInstant()
+                        );
 
                         // clean expired log
                         List<Long> logIds = null;

@@ -7,6 +7,37 @@ $(function(){
       increaseArea: '20%' // optional
     });
 
+    setTimeout(function(){
+        let url=new URL(window.location.href)
+        let enableAnimation=url.searchParams.get('ani')
+        if(enableAnimation===null|| enableAnimation===undefined){
+            enableAnimation=localStorage.getItem('ani')
+        }else{
+            localStorage.setItem('ani',enableAnimation)
+        }
+        if('false'===enableAnimation||'0'===enableAnimation){
+            let dom=document.getElementsByTagName('html')
+            if(dom && dom.length>0){
+                dom[0].style.animation='unset'
+                dom[0].style.backgroundPosition=Math.floor(Math.random()*80+10)+'% '+Math.floor(Math.random()*80+10)+'%'
+            }
+
+            dom=document.getElementsByClassName('login-footer')
+            if(dom && dom.length>0){
+                dom[0].style.animation='unset'
+                dom[0].style.backgroundPosition=Math.floor(Math.random()*80+10)+'% '+Math.floor(Math.random()*80+10)+'%'
+            }
+        }
+    },300);
+
+
+    $("#loginForm").keypress(function(event) {
+        let keycode = event.which || event.keyCode;
+        if (keycode == '13') {
+            $("#loginForm").submit()
+        }
+    })
+
 	// login Form Valid
 	var loginFormValid = $("#loginForm").validate({
 		errorElement : 'span',

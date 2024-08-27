@@ -44,7 +44,12 @@
 		t.handle_time,
 		t.handle_code,
 		t.handle_msg,
-		t.alarm_status,
+		t.alarm_status
+	</sql>
+
+	<sql id="Base_Column_List_Page">
+		<include refid="Base_Column_List"></include>
+		,
 		f.job_desc,
 		g.title as group_title
 	</sql>
@@ -83,7 +88,7 @@
 	</sql>
 
 	<select id="pageList" resultMap="XxlJobLog">
-		SELECT <include refid="Base_Column_List" />
+		SELECT <include refid="Base_Column_List_Page" />
 		<include refid="sqlPageListBody"></include>
 		ORDER BY t.trigger_time DESC
 		LIMIT #{offset},#{pagesize}

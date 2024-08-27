@@ -44,7 +44,12 @@
 		t."HANDLE_TIME",
 		t."HANDLE_CODE",
 		t."HANDLE_MSG",
-		t."ALARM_STATUS",
+		t."ALARM_STATUS"
+    </sql>
+
+    <sql id="Base_Column_List_Page">
+        <include refid="Base_Column_List"></include>
+        ,
 		f."JOB_DESC",
 		g."TITLE" as "GROUP_TITLE"
     </sql>
@@ -88,7 +93,7 @@
         FROM (
 
         SELECT
-        <include refid="Base_Column_List"/>
+        <include refid="Base_Column_List_Page"/>
         <include refid="sqlPageListBody"></include>
         ORDER BY t."TRIGGER_TIME" DESC
 
