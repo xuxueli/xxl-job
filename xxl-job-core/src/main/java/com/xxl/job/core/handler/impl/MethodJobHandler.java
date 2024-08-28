@@ -3,7 +3,7 @@ package com.xxl.job.core.handler.impl;
 import com.xxl.job.core.context.XxlJobContext;
 import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.handler.annotation.XxlParam;
-import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
+import org.springframework.core.DefaultParameterNameDiscoverer;
 import org.springframework.core.ParameterNameDiscoverer;
 import org.springframework.util.ConcurrentLruCache;
 
@@ -17,7 +17,7 @@ import java.util.Map;
  * @author xuxueli 2019-12-11 21:12:18
  */
 public class MethodJobHandler extends IJobHandler {
-    public static ParameterNameDiscoverer nameDiscoverer=new LocalVariableTableParameterNameDiscoverer();
+    public static ParameterNameDiscoverer nameDiscoverer=new DefaultParameterNameDiscoverer();
     public static ConcurrentLruCache<Method,String[]> cacheMethodParamNames=new ConcurrentLruCache<>(1024,(method)->{
         Parameter[] parameters = method.getParameters();
         String[] paramNames=new String[parameters.length];

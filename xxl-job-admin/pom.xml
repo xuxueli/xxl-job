@@ -9,6 +9,8 @@
 	<artifactId>xxl-job-admin</artifactId>
 	<packaging>jar</packaging>
     <properties>
+		<java.version>17</java.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.deploy.skip>true</maven.deploy.skip>
     </properties>
 
@@ -135,6 +137,12 @@
             <artifactId>sm-crypto</artifactId>
 			<version>0.3.2.1-RELEASE</version>
         </dependency>
+
+		<dependency>
+			<groupId>org.openjdk.nashorn</groupId>
+			<artifactId>nashorn-core</artifactId>
+			<version>15.4</version>
+		</dependency>
 
         <dependency>
             <groupId>org.springframework.security</groupId>
