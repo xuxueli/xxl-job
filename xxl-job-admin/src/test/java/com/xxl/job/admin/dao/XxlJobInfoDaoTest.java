@@ -27,7 +27,7 @@ public class XxlJobInfoDaoTest {
 		logger.info("", list);
 		logger.info("", list_count);
 
-		List<XxlJobInfo> list2 = xxlJobInfoDao.getJobsByGroup(1);
+		List<XxlJobInfo> list2 = xxlJobInfoDao.getJobsByGroup(1, null);
 	}
 	
 	@Test
@@ -77,7 +77,7 @@ public class XxlJobInfoDaoTest {
 
 		xxlJobInfoDao.delete(info2.getId());
 
-		List<XxlJobInfo> list2 = xxlJobInfoDao.getJobsByGroup(1);
+		List<XxlJobInfo> list2 = xxlJobInfoDao.getJobsByGroup(1, null);
 
 		int ret3 = xxlJobInfoDao.findAllCount();
 
