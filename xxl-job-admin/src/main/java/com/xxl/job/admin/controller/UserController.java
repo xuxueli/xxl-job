@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import javax.script.ScriptException;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
@@ -79,7 +80,7 @@ public class UserController {
     @RequestMapping("/add")
     @ResponseBody
     @PermissionLimit(adminuser = true)
-    public ReturnT<String> add(XxlJobUser xxlJobUser) {
+    public ReturnT<String> add(XxlJobUser xxlJobUser) throws ScriptException {
         // valid password
         if (!StringUtils.hasText(xxlJobUser.getPassword())) {
             return new ReturnT<String>(ReturnT.FAIL_CODE, I18nUtil.getString("system_please_input")+I18nUtil.getString("user_password") );
@@ -121,7 +122,7 @@ public class UserController {
     @RequestMapping("/update")
     @ResponseBody
     @PermissionLimit(adminuser = true)
-    public ReturnT<String> update(HttpServletRequest request, XxlJobUser xxlJobUser) {
+    public ReturnT<String> update(HttpServletRequest request, XxlJobUser xxlJobUser) throws ScriptException {
 
         // avoid opt login seft
         XxlJobUser loginUser = (XxlJobUser) request.getAttribute(LoginService.LOGIN_IDENTITY_KEY);
@@ -169,7 +170,7 @@ public class UserController {
 
     @RequestMapping("/updatePwd")
     @ResponseBody
-    public ReturnT<String> updatePwd(HttpServletRequest request, String password,String sign){
+    public ReturnT<String> updatePwd(HttpServletRequest request, String password,String sign) throws ScriptException {
 
         // valid password
         if (!StringUtils.hasText(password)){

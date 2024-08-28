@@ -58,6 +58,61 @@
 				background-position: 0% 50%;
 			}
 		}
+		.wrapper{
+			background-color: #222d3244 !important;
+		}
+		.main-footer{
+			background: linear-gradient(28deg, #fffb, #fff3) !important;
+		}
+		.main-sidebar, .left-side{
+			background: linear-gradient(90deg,#222d3266,#222d3211) !important;
+		}
+		.main-header .logo{
+			background: linear-gradient(90deg,#367fa966,#367fa944) !important;
+		}
+		.main-header .navbar{
+			background: linear-gradient(92deg,#367fa944,#367fa911) !important;
+		}
+		.sidebar-menu>li.header {
+			background: #1a2226aa !important;
+		}
+		.sidebar-menu>li:hover>a,
+		.sidebar-menu>li.active>a,
+		.sidebar-menu>li.menu-open>a {
+			background: #1e282caa !important;
+		}
+		.content-wrapper{
+			background: linear-gradient(130deg,#ecf0f5aa,#ecf0f544) !important;
+		}
+		.box,
+		.card{
+			background: linear-gradient(179deg, #fffd, #fff1) !important;
+		}
+		.table-striped>tbody>tr:nth-of-type(odd) {
+			background-color: #fff8 !important;
+		}
+		.pagination > li >a {
+			background: #fafafa88 !important;
+		}
+		.pagination > .disable >a {
+			background: #fafafa88 !important;
+		}
+		.pagination > .active >a {
+			background: #337ab788 !important;
+		}
+		.modal-content {
+			background: linear-gradient(179deg, #ffff, #fff8) !important;
+			border-radius: 8px !important;
+		}
+		.callout-info {
+			background: linear-gradient(180deg, #00c0efee, #00c0ef11) !important;
+		}
+		.layui-layer {
+			background: linear-gradient(176deg, #fffe, #fffa) !important;
+		}
+		.layui-layer-shade {
+			opacity: 0.35 !important;
+		}
 	</style>
 </#macro>
 
@@ -90,6 +145,32 @@
         var I18n = ${I18nUtil.getMultString()};
 	</script>
 
+	<script>
+		setTimeout(function(){
+			let url=new URL(window.location.href)
+			let enableAnimation=url.searchParams.get('ani')
+			if(enableAnimation===null|| enableAnimation===undefined){
+				enableAnimation=localStorage.getItem('ani')
+			}else{
+				localStorage.setItem('ani',enableAnimation)
+			}
+			if('false'===enableAnimation||'0'===enableAnimation){
+				let dom=document.getElementsByTagName('html')
+				if(dom && dom.length>0){
+					dom[0].style.animation='unset'
+					dom[0].style.backgroundPosition=Math.floor(Math.random()*80+10)+'% '+Math.floor(Math.random()*80+10)+'%'
+				}
+
+				dom=document.getElementsByClassName('login-footer')
+				if(dom && dom.length>0){
+					dom[0].style.animation='unset'
+					dom[0].style.backgroundPosition=Math.floor(Math.random()*80+10)+'% '+Math.floor(Math.random()*80+10)+'%'
+				}
+			}
+		},300);
+
+	</script>
+
 	<script src="${request.contextPath}/static/plugins/com/antherd/sm-crypto-0.3.2/sm2.js"></script>
 	<script src="${request.contextPath}/static/plugins/com/antherd/sm-crypto-0.3.2/sm3.js"></script>
 </#macro>
@@ -114,7 +195,7 @@
 					<#-- login user -->
                     <li class="dropdown">
                         <a href="javascript:" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                            ${I18n.system_welcome} ${Request["XXL_JOB_LOGIN_IDENTITY"].username}
+                            ${I18n.system_welcome} ${loginUser.username}
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu" role="menu">
@@ -167,7 +248,7 @@
                 <li class="nav-click <#if pageName == "index">active</#if>" ><a href="${request.contextPath}/"><i class="fa fa-circle-o text-aqua"></i><span>${I18n.job_dashboard_name}</span></a></li>
 				<li class="nav-click <#if pageName == "jobinfo">active</#if>" ><a href="${request.contextPath}/jobinfo"><i class="fa fa-circle-o text-yellow"></i><span>${I18n.jobinfo_name}</span></a></li>
 				<li class="nav-click <#if pageName == "joblog">active</#if>" ><a href="${request.contextPath}/joblog"><i class="fa fa-circle-o text-green"></i><span>${I18n.joblog_name}</span></a></li>
-				<#if Request["XXL_JOB_LOGIN_IDENTITY"].role == 1>
+				<#if loginUser.role == 1>
                     <li class="nav-click <#if pageName == "jobgroup">active</#if>" ><a href="${request.contextPath}/jobgroup"><i class="fa fa-circle-o text-red"></i><span>${I18n.jobgroup_name}</span></a></li>
                     <li class="nav-click <#if pageName == "user">active</#if>" ><a href="${request.contextPath}/user"><i class="fa fa-circle-o text-purple"></i><span>${I18n.user_manage}</span></a></li>
 				</#if>

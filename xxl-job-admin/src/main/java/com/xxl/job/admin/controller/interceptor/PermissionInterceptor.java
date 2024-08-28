@@ -7,6 +7,7 @@ import com.xxl.job.admin.service.LoginService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.AsyncHandlerInterceptor;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -25,7 +26,7 @@ public class PermissionInterceptor implements AsyncHandlerInterceptor {
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-		
+
 		if (!(handler instanceof HandlerMethod)) {
 			return true;	// proceed with the next interceptor
 		}
@@ -55,5 +56,12 @@ public class PermissionInterceptor implements AsyncHandlerInterceptor {
 
 		return true;	// proceed with the next interceptor
 	}
-	
+
+	@Override
+	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+		if(modelAndView!=null){
+			XxlJobUser loginUser = loginService.ifLogin(request, response);
+			modelAndView.getModel().putIfAbsent("loginUser", loginUser);
+		}
+	}
 }

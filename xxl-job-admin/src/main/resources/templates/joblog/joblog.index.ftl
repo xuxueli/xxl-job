@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  	<#import "../common/common.macro.ftl" as netCommon>
+  	<#import "/common/common.macro.ftl" as netCommon>
 	<@netCommon.commonStyle />
 	<!-- DataTables -->
   	<link rel="stylesheet" href="${request.contextPath}/static/adminlte/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
@@ -30,7 +30,7 @@
  					<div class="input-group">
 	                	<span class="input-group-addon">${I18n.jobinfo_field_jobgroup}</span>
                 		<select class="form-control" id="jobGroup"  paramVal="<#if jobInfo?exists>${jobInfo.jobGroup}</#if>" >
-                            <#if Request["XXL_JOB_LOGIN_IDENTITY"].role == 1>
+                            <#if loginUser.role == 1>
                                 <option value="0" >${I18n.system_all}</option>  <#-- 仅管理员支持查询全部；普通用户仅支持查询有权限的 jobGroup -->
                             </#if>
                 			<#list JobGroupList as group>

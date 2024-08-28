@@ -3,18 +3,18 @@ package com.xxl.job.admin.service;
 import com.antherd.smcrypto.sm2.Keypair;
 import com.antherd.smcrypto.sm2.Sm2;
 import com.xxl.job.admin.core.model.XxlJobUser;
-import com.xxl.job.admin.security.ConcurrentLruCache;
 import com.xxl.job.admin.core.util.CookieUtil;
 import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.admin.core.util.JacksonUtil;
 import com.xxl.job.admin.dao.XxlJobUserDao;
+import com.xxl.job.admin.security.ConcurrentLruCache;
 import com.xxl.job.admin.security.SecurityContext;
 import com.xxl.job.core.biz.model.ReturnT;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
+import javax.script.ScriptException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.concurrent.TimeUnit;
@@ -36,22 +36,31 @@ public class LoginService {
     {
         Keypair pair = SecurityContext.loadStoreKeypair(KEY_PAIR_PATH, null);
         if(pair==null){
-            pair=Sm2.generateKeyPairHex();
+            try {
+                pair=Sm2.generateKeyPairHex();
+            } catch (ScriptException e) {
+                e.printStackTrace();
+            }
         }
         SecurityContext.saveStoreKeypair(KEY_PAIR_PATH,pair);
         keypair = pair;
     }
 
     private ConcurrentLruCache<String, String> cacheParseToken=new ConcurrentLruCache<>(1024, tokenHex->{
-        String tokenJson = Sm2.doDecrypt(tokenHex, keypair.getPrivateKey());
-        return tokenJson;
+        try {
+            String tokenJson = Sm2.doDecrypt(tokenHex, keypair.getPrivateKey());
+            return tokenJson;
+        } catch (ScriptException e) {
+            e.printStackTrace();
+        }
+        return null;
     });
 
     @Resource
     private XxlJobUserDao xxlJobUserDao;
 
 
-    private String[] makeToken(XxlJobUser xxlJobUser){
+    private String[] makeToken(XxlJobUser xxlJobUser) throws ScriptException {
         xxlJobUser.setPassword(null);
         String tokenJson = JacksonUtil.writeValueAsString(xxlJobUser);
         long ets=System.currentTimeMillis()+ TimeUnit.MINUTES.toMillis(LOGIN_API_TOKEN_EXPIRE_MINUTES);
@@ -91,7 +100,7 @@ public class LoginService {
     }
 
 
-    public ReturnT<String> login(HttpServletRequest request, HttpServletResponse response, String username, String password, boolean ifRemember){
+    public ReturnT<String> login(HttpServletRequest request, HttpServletResponse response, String username, String password, boolean ifRemember) throws ScriptException {
 
         // param
         if (!StringUtils.hasText(username) || !StringUtils.hasText(password)){

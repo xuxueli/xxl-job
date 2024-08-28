@@ -22,6 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import javax.annotation.Resource;
+import javax.script.ScriptException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
@@ -73,7 +74,7 @@ public class IndexController {
 	@PermissionLimit(limit=false)
 	public ReturnT<String> getServerPublicKey(HttpServletRequest request, HttpServletResponse response,
 											  String pk,
-											  String sign){
+											  String sign) throws ScriptException {
 		if(!StringUtils.hasLength(pk) || !StringUtils.hasLength(sign)){
 			return new ReturnT<String>(500, I18nUtil.getString("system_fail"));
 		}
@@ -93,7 +94,7 @@ public class IndexController {
 								   String userName,
 								   String password,
 								   String sign,
-								   String ifRemember){
+								   String ifRemember) throws ScriptException {
 		Keypair keypair = SecurityContext.getInstance().findKeypair(sign);
 		if(keypair==null){
 			return new ReturnT<String>(500, I18nUtil.getString("login_param_unvalid"));

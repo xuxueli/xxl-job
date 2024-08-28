@@ -116,6 +116,12 @@
 			<version>8.6.0</version>
 		</dependency>
 
+		<dependency>
+			<groupId>com.microsoft.sqlserver</groupId>
+			<artifactId>mssql-jdbc</artifactId>
+			<version>7.4.1.jre8</version>
+		</dependency>
+
         <!-- xxl-job-core -->
 		<dependency>
 			<groupId>com.xuxueli</groupId>
@@ -127,7 +133,7 @@
         <dependency>
             <groupId>com.antherd</groupId>
             <artifactId>sm-crypto</artifactId>
-            <version>0.3.2</version>
+			<version>0.3.2.1-RELEASE</version>
         </dependency>
 
         <dependency>

@@ -15,14 +15,14 @@ public class CookieUtil {
 	private static final int COOKIE_MAX_AGE = Integer.MAX_VALUE;
 	// 保存路径,根路径
 	private static final String COOKIE_PATH = "/";
-	
+
 	/**
 	 * 保存
 	 *
 	 * @param response
 	 * @param key
 	 * @param value
-	 * @param ifRemember 
+	 * @param ifRemember
 	 */
 	public static void set(HttpServletResponse response, String key, String value, boolean ifRemember) {
 		int age = ifRemember?COOKIE_MAX_AGE:-1;
@@ -47,7 +47,7 @@ public class CookieUtil {
 		cookie.setHttpOnly(isHttpOnly);
 		response.addCookie(cookie);
 	}
-	
+
 	/**
 	 * 查询value
 	 *
@@ -80,7 +80,7 @@ public class CookieUtil {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * 删除Cookie
 	 *
