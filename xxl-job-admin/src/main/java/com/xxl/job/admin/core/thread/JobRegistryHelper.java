@@ -8,6 +8,8 @@ import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.enums.RegistryConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.*;
@@ -162,7 +164,19 @@ public class JobRegistryHelper {
 				int ret = XxlJobAdminConfig.getAdminConfig().getXxlJobRegistryDao().registryUpdate(registryParam.getRegistryGroup(), registryParam.getRegistryKey(), registryParam.getRegistryValue(), new Date());
 				if (ret < 1) {
 					XxlJobAdminConfig.getAdminConfig().getXxlJobRegistryDao().registrySave(registryParam.getRegistryGroup(), registryParam.getRegistryKey(), registryParam.getRegistryValue(), new Date());
-
+					/**
+					 *如果已经有执行器则忽略，否则自动注册一个
+					 */
+					List<XxlJobGroup> xxlJobGroups = XxlJobAdminConfig.getAdminConfig().getXxlJobGroupDao().pageList(0, 1, registryParam.getRegistryKey(), null);
+					if (CollectionUtils.isEmpty(xxlJobGroups)) {
+						XxlJobGroup xxlJobGroup = new XxlJobGroup();
+						xxlJobGroup.setAppname(registryParam.getRegistryKey());
+						xxlJobGroup.setTitle(registryParam.getRegistryKey());
+						/*title用registerKey代替*/
+						xxlJobGroup.setAddressList(registryParam.getRegistryValue());
+						xxlJobGroup.setUpdateTime(new Date());
+						Assert.isTrue(XxlJobAdminConfig.getAdminConfig().getXxlJobGroupDao().save(xxlJobGroup) > 0, "注册失败");
+					}
 					// fresh
 					freshGroupRegistryInfo(registryParam);
 				}

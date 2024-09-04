@@ -118,5 +118,7 @@ INSERT INTO `xxl_job_info`(`id`, `job_group`, `job_desc`, `add_time`, `update_ti
 INSERT INTO `xxl_job_user`(`id`, `username`, `password`, `role`, `permission`) VALUES (1, 'admin', 'e10adc3949ba59abbe56e057f20f883e', 1, NULL);
 INSERT INTO `xxl_job_lock` ( `lock_name`) VALUES ( 'schedule_lock');
 
+alter table xxl_job_group MODIFY column `title` varchar(64);
+
 commit;
 
