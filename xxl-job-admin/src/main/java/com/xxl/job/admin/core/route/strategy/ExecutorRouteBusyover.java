@@ -16,6 +16,7 @@ import java.util.List;
 public class ExecutorRouteBusyover extends ExecutorRouter {
 
     @Override
+    //note 空闲心跳   轮询所有节点 返回第一个 空闲的节点
     public ReturnT<String> route(TriggerParam triggerParam, List<String> addressList) {
         StringBuffer idleBeatResultSB = new StringBuffer();
         for (String address : addressList) {
@@ -26,9 +27,9 @@ public class ExecutorRouteBusyover extends ExecutorRouter {
                 idleBeatResult = executorBiz.idleBeat(new IdleBeatParam(triggerParam.getJobId()));
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);
-                idleBeatResult = new ReturnT<String>(ReturnT.FAIL_CODE, ""+e );
+                idleBeatResult = new ReturnT<String>(ReturnT.FAIL_CODE, "" + e);
             }
-            idleBeatResultSB.append( (idleBeatResultSB.length()>0)?"<br><br>":"")
+            idleBeatResultSB.append((idleBeatResultSB.length() > 0) ? "<br><br>" : "")
                     .append(I18nUtil.getString("jobconf_idleBeat") + "：")
                     .append("<br>address：").append(address)
                     .append("<br>code：").append(idleBeatResult.getCode())

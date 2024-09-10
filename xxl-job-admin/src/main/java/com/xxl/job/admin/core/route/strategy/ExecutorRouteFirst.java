@@ -12,7 +12,8 @@ import java.util.List;
 public class ExecutorRouteFirst extends ExecutorRouter {
 
     @Override
-    public ReturnT<String> route(TriggerParam triggerParam, List<String> addressList){
+    //note 每次都选择第一个节点执行
+    public ReturnT<String> route(TriggerParam triggerParam, List<String> addressList) {
         return new ReturnT<String>(addressList.get(0));
     }
 

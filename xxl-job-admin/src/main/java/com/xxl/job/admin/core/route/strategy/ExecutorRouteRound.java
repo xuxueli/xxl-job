@@ -39,6 +39,8 @@ public class ExecutorRouteRound extends ExecutorRouter {
 
     @Override
     public ReturnT<String> route(TriggerParam triggerParam, List<String> addressList) {
+
+        //note 打散（避免第一次执行 全部任务都在同一台机器上） 每次+1 取余算法，后期的任务会依次在三台机器上执行
         String address = addressList.get(count(triggerParam.getJobId())%addressList.size());
         return new ReturnT<String>(address);
     }
