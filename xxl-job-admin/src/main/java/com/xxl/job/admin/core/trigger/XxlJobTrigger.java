@@ -215,6 +215,7 @@ public class XxlJobTrigger {
         }
 
         StringBuffer runResultSB = new StringBuffer(I18nUtil.getString("jobconf_trigger_run") + "：");
+        runResultSB.append("<br>jobHandler：").append(triggerParam.getExecutorHandler());
         runResultSB.append("<br>address：").append(address);
         runResultSB.append("<br>code：").append(runResult.getCode());
         runResultSB.append("<br>msg：").append(runResult.getMsg());
