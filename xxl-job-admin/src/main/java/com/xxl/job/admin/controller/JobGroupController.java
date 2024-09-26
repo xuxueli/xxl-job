@@ -7,8 +7,7 @@ import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.admin.dao.XxlJobGroupDao;
 import com.xxl.job.admin.dao.XxlJobInfoDao;
 import com.xxl.job.admin.dao.XxlJobRegistryDao;
-import com.xxl.job.admin.platform.DatabasePlatformUtil;
-import com.xxl.job.admin.platform.pageable.DatabasePageable;
+import com.xxl.job.admin.platform.pageable.data.PageDto;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.enums.RegistryConfig;
 import org.springframework.stereotype.Controller;
@@ -53,8 +52,8 @@ public class JobGroupController {
 										String appname, String title) {
 
 		// page query
-		DatabasePageable pageable = DatabasePlatformUtil.convertPageable(start, length);
-		List<XxlJobGroup> list = xxlJobGroupDao.pageList(pageable.getStart(), pageable.getLength(), appname, title);
+		PageDto page=PageDto.of(start/length+1,length);
+		List<XxlJobGroup> list = xxlJobGroupDao.pageList(page, appname, title);
 		int list_count = xxlJobGroupDao.pageListCount(appname, title);
 
 		// package result

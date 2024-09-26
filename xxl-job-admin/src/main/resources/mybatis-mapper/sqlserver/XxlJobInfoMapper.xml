@@ -90,8 +90,8 @@
 		SELECT <include refid="Base_Column_List" />
 		<include refid="sqlPageListBody"></include>
 		ORDER BY "ID" DESC
-		OFFSET #{offset} ROWS
-		FETCH NEXT #{pagesize} ROWS ONLY
+		OFFSET #{page.offsetBegin} ROWS
+		FETCH NEXT #{page.size} ROWS ONLY
 	</select>
 
 	<select id="pageListCount" parameterType="java.util.HashMap" resultType="int">

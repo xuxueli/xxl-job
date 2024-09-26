@@ -99,9 +99,9 @@
 
 
         ) TMP
-        WHERE ROWNUM &lt;= #{pagesize,jdbcType=NUMERIC}
+        WHERE ROWNUM &lt;= #{page.offsetEnd,jdbcType=NUMERIC}
         ) TMP
-        WHERE ROW_ID &gt; #{offset,jdbcType=NUMERIC}
+        WHERE ROW_ID &gt; #{page.offsetBegin,jdbcType=NUMERIC}
     </select>
 
     <select id="pageListCount" resultType="int">

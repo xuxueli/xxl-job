@@ -13,6 +13,7 @@ public enum DatabasePlatformType {
     H2("h2"),
     DM("dm"),
     KINGBASE("kingbase"),
+    SQLSERVER("sqlserver"),
     UNKNOWN("unknown");
 
     private String type;

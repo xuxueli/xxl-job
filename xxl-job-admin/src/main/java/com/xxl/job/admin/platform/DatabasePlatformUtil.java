@@ -1,10 +1,7 @@
 package com.xxl.job.admin.platform;
 
-import com.xxl.job.admin.platform.pageable.DatabasePageable;
 import com.xxl.job.admin.platform.pageable.IDatabaseLockStatementSupplier;
-import com.xxl.job.admin.platform.pageable.IDatabasePageableConverter;
 import com.xxl.job.admin.platform.pageable.impl.common.CommonLockStatementSupplier;
-import com.xxl.job.admin.platform.pageable.impl.common.OffsetLimitPageableConverter;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -24,7 +21,6 @@ import java.util.concurrent.CountDownLatch;
 @Component
 public class DatabasePlatformUtil implements ApplicationContextAware {
     private static volatile DatabasePlatformConfig platformConfig;
-    private static volatile IDatabasePageableConverter pageableConverter;
     private static volatile IDatabaseLockStatementSupplier lockStatementSupplier;
     private static volatile ApplicationContext applicationContext;
     private static CountDownLatch latch = new CountDownLatch(1);
@@ -60,24 +56,6 @@ public class DatabasePlatformUtil implements ApplicationContextAware {
         return getPlatformConfig().getType();
     }
 
-    public static IDatabasePageableConverter getPageableConverter() {
-        if (pageableConverter != null) {
-            return pageableConverter;
-        }
-        Map<String, IDatabasePageableConverter> beanMap = getApplicationContext().getBeansOfType(IDatabasePageableConverter.class);
-        for (Map.Entry<String, IDatabasePageableConverter> entry : beanMap.entrySet()) {
-            IDatabasePageableConverter value = entry.getValue();
-            if (value.supportDatabase(getDatabaseType())) {
-                pageableConverter = value;
-                break;
-            }
-        }
-        if (pageableConverter == null) {
-            pageableConverter = getApplicationContext().getBean(OffsetLimitPageableConverter.class);
-        }
-        return pageableConverter;
-    }
-
     public static IDatabaseLockStatementSupplier getLockStatementSupplier() {
         if (lockStatementSupplier != null) {
             return lockStatementSupplier;
@@ -94,11 +72,6 @@ public class DatabasePlatformUtil implements ApplicationContextAware {
             lockStatementSupplier = getApplicationContext().getBean(CommonLockStatementSupplier.class);
         }
         return lockStatementSupplier;
-    }
-
-    public static DatabasePageable convertPageable(int start, int length) {
-        IDatabasePageableConverter converter = getPageableConverter();
-        return converter.converter(start, length);
     }
 
     public static PreparedStatement getLockStatement(Connection conn) throws SQLException {

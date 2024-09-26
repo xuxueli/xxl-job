@@ -1,6 +1,7 @@
 package com.xxl.job.admin.dao;
 
 import com.xxl.job.admin.core.model.XxlJobLog;
+import com.xxl.job.admin.platform.pageable.data.PageDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -16,8 +17,7 @@ import java.util.Map;
 public interface XxlJobLogDao {
 
 	// exist jobId not use jobGroup, not exist use jobGroup
-	public List<XxlJobLog> pageList(@Param("offset") int offset,
-									@Param("pagesize") int pagesize,
+	public List<XxlJobLog> pageList(@Param("page") PageDto page,
 									@Param("jobGroup") int jobGroup,
 									@Param("jobId") int jobId,
 									@Param("triggerTimeStart") Date triggerTimeStart,

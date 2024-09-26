@@ -91,8 +91,8 @@
 		SELECT <include refid="Base_Column_List_Page" />
 		<include refid="sqlPageListBody"></include>
 		ORDER BY t.trigger_time DESC
-		LIMIT #{pagesize}
-		OFFSET #{offset}
+		LIMIT #{page.size}
+		OFFSET #{page.offsetBegin}
 	</select>
 
 	<select id="pageListCount" resultType="int">

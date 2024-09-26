@@ -90,8 +90,8 @@
 		SELECT <include refid="Base_Column_List" />
 		<include refid="sqlPageListBody"></include>
 		ORDER BY id DESC
-		LIMIT #{pagesize}
-		OFFSET #{offset}
+		LIMIT #{page.size}
+		OFFSET #{page.offsetBegin}
 	</select>
 
 	<select id="pageListCount" parameterType="java.util.HashMap" resultType="int">

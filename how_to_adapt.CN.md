@@ -101,12 +101,10 @@ spring.datasource.driver-class-name=oracle.jdbc.OracleDriver
 9. XxlJobLogMapper.xml / findFailJobLogIds
 10. XxlJobUserMapper.xml / pageList
 ```
-- 特别地, 如果分页不使用 offset+limit 模式
-- 你就需要修改或者添加你的 ***IDatabasePageableConverter*** 到 spring context 中
-- 例如： ***OffsetLimitPageableConverter*** 或 ***OraclePageableConverter***
-- 并且使用这些分页参数（size/length）在你的 mapper-xml 文件中
+- 特别地, 请根据***PageDto***定义的分页字段，选择合适的字段使用
+- 并且使用这些分页参数（number/size/...）在你的 mapper-xml 文件中
 ```shell
-1. 全局在java文件中搜索关键字 'DatabasePlatformUtil.convertPageable('
+1. 全局在java文件中搜索关键字 'PageDto.of('
 ```
 - 修改列别名， 当 returnType 是 Map 类型的时候
 - 注意下面的位置

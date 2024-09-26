@@ -1,5 +1,6 @@
 package com.xxl.job.admin.platform.pageable.impl.common;
 
+import com.xxl.job.admin.platform.DatabasePlatformType;
 import com.xxl.job.admin.platform.pageable.IDatabaseLockStatementSupplier;
 import org.springframework.stereotype.Component;
 
@@ -20,12 +21,12 @@ import java.util.Set;
 public class CommonLockStatementSupplier implements IDatabaseLockStatementSupplier {
     public static final Set<String> SUPPORT_TYPES= Collections.unmodifiableSet(
             new HashSet<>(Arrays.asList(
-                    "mysql",
-                    "postgre",
-                    "gbase",
-                    "h2",
-                    "dm",
-                    "kingbase"
+                    DatabasePlatformType.MYSQL.type(),
+                    DatabasePlatformType.POSTGRE.type(),
+                    DatabasePlatformType.GBASE.type(),
+                    DatabasePlatformType.H2.type(),
+                    DatabasePlatformType.DM.type(),
+                    DatabasePlatformType.KINGBASE.type()
             ))
     );
     @Override
