@@ -10,8 +10,7 @@ import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.admin.dao.XxlJobGroupDao;
 import com.xxl.job.admin.dao.XxlJobInfoDao;
 import com.xxl.job.admin.dao.XxlJobLogDao;
-import com.xxl.job.admin.platform.DatabasePlatformUtil;
-import com.xxl.job.admin.platform.pageable.DatabasePageable;
+import com.xxl.job.admin.platform.pageable.data.PageDto;
 import com.xxl.job.core.biz.ExecutorBiz;
 import com.xxl.job.core.biz.model.KillParam;
 import com.xxl.job.core.biz.model.LogParam;
@@ -110,8 +109,8 @@ public class JobLogController {
 		}
 
 		// page query
-		DatabasePageable pageable = DatabasePlatformUtil.convertPageable(start, length);
-		List<XxlJobLog>  list = xxlJobLogDao.pageList(pageable.getStart(), pageable.getLength(), jobGroup, jobId, triggerTimeStart, triggerTimeEnd, logStatus);
+		PageDto page=PageDto.of(start/length+1,length);
+		List<XxlJobLog>  list = xxlJobLogDao.pageList(page, jobGroup, jobId, triggerTimeStart, triggerTimeEnd, logStatus);
 		int list_count = xxlJobLogDao.pageListCount( jobGroup, jobId, triggerTimeStart, triggerTimeEnd, logStatus);
 
 		// package result

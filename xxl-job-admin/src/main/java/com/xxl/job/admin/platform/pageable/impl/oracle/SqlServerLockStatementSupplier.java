@@ -1,5 +1,6 @@
 package com.xxl.job.admin.platform.pageable.impl.oracle;
 
+import com.xxl.job.admin.platform.DatabasePlatformType;
 import com.xxl.job.admin.platform.pageable.IDatabaseLockStatementSupplier;
 import org.springframework.stereotype.Component;
 
@@ -20,7 +21,7 @@ import java.util.Set;
 public class SqlServerLockStatementSupplier implements IDatabaseLockStatementSupplier {
     public static final Set<String> SUPPORT_TYPES= Collections.unmodifiableSet(
             new HashSet<>(Arrays.asList(
-                    "sqlserver"
+                    DatabasePlatformType.SQLSERVER.type()
             ))
     );
     @Override

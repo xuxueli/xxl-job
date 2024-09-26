@@ -101,12 +101,10 @@ spring.datasource.driver-class-name=oracle.jdbc.OracleDriver
 9. XxlJobLogMapper.xml / findFailJobLogIds
 10. XxlJobUserMapper.xml / pageList
 ```
-- specially, if page not use offset+limit mode
-- you need modify or add your ***IDatabasePageableConverter*** into spring context
-- such as ***OffsetLimitPageableConverter*** or ***OraclePageableConverter***
-- and use those page parameters (size/length) in your mapper xml file
+- specially, please choose suitable fields implements pageable logic according to defined in ***PageDto***
+- and use those page parameters (number/size/...) in your mapper xml file
 ```shell
-1. global search in java source files of keyword 'DatabasePlatformUtil.convertPageable('
+1. global search in java source files of keyword 'PageDto.of('
 ```
 - modify column alias while returnType is Map type
 - attention below locations
