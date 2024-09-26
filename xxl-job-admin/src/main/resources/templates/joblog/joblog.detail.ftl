@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <#import "../common/common.macro.ftl" as netCommon>
+    <#import "/common/common.macro.ftl" as netCommon>
     <@netCommon.commonStyle />
     <title>${I18n.admin_name}</title>
 </head>

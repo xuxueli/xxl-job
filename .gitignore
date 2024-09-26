@@ -5,3 +5,5 @@
 target/
 .DS_Store
 .gitattributes
+logs
+*.log
