@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.xxl.job.admin.dao.XxlJobInfoDao">
 
 	<resultMap id="XxlJobInfo" type="com.xxl.job.admin.core.model.XxlJobInfo" >
 		<result column="id" property="id" />
 
 		<result column="job_group" property="jobGroup" />
-	    <result column="job_desc" property="jobDesc" />
+		<result column="job_desc" property="jobDesc" />
 
-	    <result column="add_time" property="addTime" />
-	    <result column="update_time" property="updateTime" />
+		<result column="add_time" property="addTime" />
+		<result column="update_time" property="updateTime" />
 
-	    <result column="author" property="author" />
-	    <result column="alarm_email" property="alarmEmail" />
+		<result column="author" property="author" />
+		<result column="alarm_email" property="alarmEmail" />
 
 		<result column="schedule_type" property="scheduleType" />
 		<result column="schedule_conf" property="scheduleConf" />
@@ -21,14 +21,14 @@
 
 		<result column="executor_route_strategy" property="executorRouteStrategy" />
 		<result column="executor_handler" property="executorHandler" />
-	    <result column="executor_param" property="executorParam" />
+		<result column="executor_param" property="executorParam" />
 		<result column="executor_block_strategy" property="executorBlockStrategy" />
 		<result column="executor_timeout" property="executorTimeout" />
 		<result column="executor_fail_retry_count" property="executorFailRetryCount" />
 
-	    <result column="glue_type" property="glueType" />
-	    <result column="glue_source" property="glueSource" />
-	    <result column="glue_remark" property="glueRemark" />
+		<result column="glue_type" property="glueType" />
+		<result column="glue_source" property="glueSource" />
+		<result column="glue_remark" property="glueRemark" />
 		<result column="glue_updatetime" property="glueUpdatetime" />
 
 		<result column="child_jobid" property="childJobId" />
@@ -72,9 +72,9 @@
 			<if test="jobGroup gt 0">
 				AND t.job_group = #{jobGroup}
 			</if>
-            <if test="triggerStatus gte 0">
-                AND t.trigger_status = #{triggerStatus}
-            </if>
+			<if test="triggerStatus gte 0">
+				AND t.trigger_status = #{triggerStatus}
+			</if>
 			<if test="jobDesc != null and jobDesc != ''">
 				AND t.job_desc like CONCAT(CONCAT('%', #{jobDesc}), '%')
 			</if>
@@ -84,6 +84,7 @@
 			<if test="author != null and author != ''">
 				AND t.author like CONCAT(CONCAT('%', #{author}), '%')
 			</if>
+			AND t.is_del = 0
 		</trim>
 		ORDER BY id DESC
 		LIMIT #{offset}, #{pagesize}
@@ -96,9 +97,9 @@
 			<if test="jobGroup gt 0">
 				AND t.job_group = #{jobGroup}
 			</if>
-            <if test="triggerStatus gte 0">
-                AND t.trigger_status = #{triggerStatus}
-            </if>
+			<if test="triggerStatus gte 0">
+				AND t.trigger_status = #{triggerStatus}
+			</if>
 			<if test="jobDesc != null and jobDesc != ''">
 				AND t.job_desc like CONCAT(CONCAT('%', #{jobDesc}), '%')
 			</if>
@@ -108,58 +109,59 @@
 			<if test="author != null and author != ''">
 				AND t.author like CONCAT(CONCAT('%', #{author}), '%')
 			</if>
+			AND t.is_del = 0
 		</trim>
 	</select>
 
 	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobInfo" useGeneratedKeys="true" keyProperty="id" >
 		INSERT INTO xxl_job_info (
-			job_group,
-			job_desc,
-			add_time,
-			update_time,
-			author,
-			alarm_email,
-			schedule_type,
-			schedule_conf,
-			misfire_strategy,
-            executor_route_strategy,
-			executor_handler,
-			executor_param,
-			executor_block_strategy,
-			executor_timeout,
-			executor_fail_retry_count,
-			glue_type,
-			glue_source,
-			glue_remark,
-			glue_updatetime,
-			child_jobid,
-			trigger_status,
-			trigger_last_time,
-			trigger_next_time
+		job_group,
+		job_desc,
+		add_time,
+		update_time,
+		author,
+		alarm_email,
+		schedule_type,
+		schedule_conf,
+		misfire_strategy,
+		executor_route_strategy,
+		executor_handler,
+		executor_param,
+		executor_block_strategy,
+		executor_timeout,
+		executor_fail_retry_count,
+		glue_type,
+		glue_source,
+		glue_remark,
+		glue_updatetime,
+		child_jobid,
+		trigger_status,
+		trigger_last_time,
+		trigger_next_time
 		) VALUES (
-			#{jobGroup},
-			#{jobDesc},
-			#{addTime},
-			#{updateTime},
-			#{author},
-			#{alarmEmail},
-			#{scheduleType},
-			#{scheduleConf},
-			#{misfireStrategy},
-			#{executorRouteStrategy},
-			#{executorHandler},
-			#{executorParam},
-			#{executorBlockStrategy},
-			#{executorTimeout},
-			#{executorFailRetryCount},
-			#{glueType},
-			#{glueSource},
-			#{glueRemark},
-			#{glueUpdatetime},
-			#{childJobId},
-			#{triggerStatus},
-			#{triggerLastTime},
-			#{triggerNextTime}
+		#{jobGroup},
+		#{jobDesc},
+		#{addTime},
+		#{updateTime},
+		#{author},
+		#{alarmEmail},
+		#{scheduleType},
+		#{scheduleConf},
+		#{misfireStrategy},
+		#{executorRouteStrategy},
+		#{executorHandler},
+		#{executorParam},
+		#{executorBlockStrategy},
+		#{executorTimeout},
+		#{executorFailRetryCount},
+		#{glueType},
+		#{glueSource},
+		#{glueRemark},
+		#{glueUpdatetime},
+		#{childJobId},
+		#{triggerStatus},
+		#{triggerLastTime},
+		#{triggerNextTime}
 		);
 		<!--<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
 			SELECT LAST_INSERT_ID()
@@ -202,20 +204,20 @@
 	</update>
 
 	<delete id="delete" parameterType="java.util.HashMap">
-		DELETE
-		FROM xxl_job_info
+		UPDATE xxl_job_info
+		SET is_del = 1
 		WHERE id = #{id}
 	</delete>
 
 	<select id="getJobsByGroup" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
 		SELECT <include refid="Base_Column_List" />
 		FROM xxl_job_info AS t
-		WHERE t.job_group = #{jobGroup}
+		WHERE t.job_group = #{jobGroup} AND t.is_del = 0
 	</select>
 
 	<select id="findAllCount" resultType="int">
 		SELECT count(1)
-		FROM xxl_job_info
+		FROM xxl_job_info WHERE is_del = 0
 	</select>
 
 
@@ -223,7 +225,8 @@
 		SELECT <include refid="Base_Column_List" />
 		FROM xxl_job_info AS t
 		WHERE t.trigger_status = 1
-			and t.trigger_next_time <![CDATA[ <= ]]> #{maxNextTime}
+		AND t.trigger_next_time <![CDATA[ <= ]]> #{maxNextTime}
+		AND t.is_del = 0
 		ORDER BY id ASC
 		LIMIT #{pagesize}
 	</select>

@@ -12,8 +12,8 @@ import java.util.List;
 public interface XxlJobUserDao {
 
 	public List<XxlJobUser> pageList(@Param("offset") int offset,
-                                     @Param("pagesize") int pagesize,
-                                     @Param("username") String username,
+									 @Param("pagesize") int pagesize,
+									 @Param("username") String username,
 									 @Param("role") int role);
 	public int pageListCount(@Param("offset") int offset,
 							 @Param("pagesize") int pagesize,
@@ -22,10 +22,12 @@ public interface XxlJobUserDao {
 
 	public XxlJobUser loadByUserName(@Param("username") String username);
 
+	public XxlJobUser load(@Param("id") int id);
+
 	public int save(XxlJobUser xxlJobUser);
 
 	public int update(XxlJobUser xxlJobUser);
-	
+
 	public int delete(@Param("id") int id);
 
 }

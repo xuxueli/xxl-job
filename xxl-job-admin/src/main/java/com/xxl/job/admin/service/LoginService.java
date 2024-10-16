@@ -1,9 +1,7 @@
 package com.xxl.job.admin.service;
 
 import com.xxl.job.admin.core.model.XxlJobUser;
-import com.xxl.job.admin.core.util.CookieUtil;
-import com.xxl.job.admin.core.util.I18nUtil;
-import com.xxl.job.admin.core.util.JacksonUtil;
+import com.xxl.job.admin.core.util.*;
 import com.xxl.job.admin.dao.XxlJobUserDao;
 import com.xxl.job.core.biz.model.ReturnT;
 import org.springframework.context.annotation.Configuration;
@@ -24,21 +22,8 @@ public class LoginService {
 
     @Resource
     private XxlJobUserDao xxlJobUserDao;
-
-
-    private String makeToken(XxlJobUser xxlJobUser){
-        String tokenJson = JacksonUtil.writeValueAsString(xxlJobUser);
-        String tokenHex = new BigInteger(tokenJson.getBytes()).toString(16);
-        return tokenHex;
-    }
-    private XxlJobUser parseToken(String tokenHex){
-        XxlJobUser xxlJobUser = null;
-        if (tokenHex != null) {
-            String tokenJson = new String(new BigInteger(tokenHex, 16).toByteArray());      // username_password(md5)
-            xxlJobUser = JacksonUtil.readValue(tokenJson, XxlJobUser.class);
-        }
-        return xxlJobUser;
-    }
+    @Resource
+    private OpLogService opLogService;
 
 
     public ReturnT<String> login(HttpServletRequest request, HttpServletResponse response, String username, String password, boolean ifRemember){
@@ -58,10 +43,11 @@ public class LoginService {
             return new ReturnT<String>(500, I18nUtil.getString("login_param_unvalid"));
         }
 
-        String loginToken = makeToken(xxlJobUser);
+        String loginToken = CurrentUserUtil.makeToken(xxlJobUser);
 
         // do login
         CookieUtil.set(response, LOGIN_IDENTITY_KEY, loginToken, ifRemember);
+        opLogService.addLog("登录",xxlJobUser.getUsername());
         return ReturnT.SUCCESS;
     }
 
@@ -72,6 +58,7 @@ public class LoginService {
      * @param response
      */
     public ReturnT<String> logout(HttpServletRequest request, HttpServletResponse response){
+        opLogService.addLog("登出");
         CookieUtil.remove(request, response, LOGIN_IDENTITY_KEY);
         return ReturnT.SUCCESS;
     }
@@ -87,7 +74,7 @@ public class LoginService {
         if (cookieToken != null) {
             XxlJobUser cookieUser = null;
             try {
-                cookieUser = parseToken(cookieToken);
+                cookieUser = CurrentUserUtil.parseToken(cookieToken);
             } catch (Exception e) {
                 logout(request, response);
             }

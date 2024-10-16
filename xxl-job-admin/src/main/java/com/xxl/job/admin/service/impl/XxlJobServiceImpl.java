@@ -13,6 +13,7 @@ import com.xxl.job.admin.core.thread.JobTriggerPoolHelper;
 import com.xxl.job.admin.core.trigger.TriggerTypeEnum;
 import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.admin.dao.*;
+import com.xxl.job.admin.service.OpLogService;
 import com.xxl.job.admin.service.XxlJobService;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
@@ -21,6 +22,7 @@ import com.xxl.job.core.util.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.annotation.Resource;
 import java.text.MessageFormat;
@@ -44,19 +46,23 @@ public class XxlJobServiceImpl implements XxlJobService {
 	private XxlJobLogGlueDao xxlJobLogGlueDao;
 	@Resource
 	private XxlJobLogReportDao xxlJobLogReportDao;
-	
+	@Resource
+	private OpLogService opLogService;
+	@Resource
+	private TransactionTemplate transactionTemplate;
+
 	@Override
 	public Map<String, Object> pageList(int start, int length, int jobGroup, int triggerStatus, String jobDesc, String executorHandler, String author) {
 
 		// page list
 		List<XxlJobInfo> list = xxlJobInfoDao.pageList(start, length, jobGroup, triggerStatus, jobDesc, executorHandler, author);
 		int list_count = xxlJobInfoDao.pageListCount(start, length, jobGroup, triggerStatus, jobDesc, executorHandler, author);
-		
+
 		// package result
 		Map<String, Object> maps = new HashMap<String, Object>();
-	    maps.put("recordsTotal", list_count);		// 总记录数
-	    maps.put("recordsFiltered", list_count);	// 过滤后的总记录数
-	    maps.put("data", list);  					// 分页列表
+		maps.put("recordsTotal", list_count);		// 总记录数
+		maps.put("recordsFiltered", list_count);	// 过滤后的总记录数
+		maps.put("data", list);  					// 分页列表
 		return maps;
 	}
 
@@ -151,8 +157,13 @@ public class XxlJobServiceImpl implements XxlJobService {
 		jobInfo.setAddTime(new Date());
 		jobInfo.setUpdateTime(new Date());
 		jobInfo.setGlueUpdatetime(new Date());
-		xxlJobInfoDao.save(jobInfo);
-		if (jobInfo.getId() < 1) {
+
+		Boolean success = transactionTemplate.execute(status -> {
+			xxlJobInfoDao.save(jobInfo);
+			opLogService.addLog("任务管理",null,jobInfo,"新增");
+			return true;
+		});
+		if (jobInfo.getId() < 1 || !success) {
 			return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("jobinfo_field_add")+I18nUtil.getString("system_fail")) );
 		}
 
@@ -282,12 +293,16 @@ public class XxlJobServiceImpl implements XxlJobService {
 		exists_jobInfo.setExecutorFailRetryCount(jobInfo.getExecutorFailRetryCount());
 		exists_jobInfo.setChildJobId(jobInfo.getChildJobId());
 		exists_jobInfo.setTriggerNextTime(nextTriggerTime);
-
 		exists_jobInfo.setUpdateTime(new Date());
-        xxlJobInfoDao.update(exists_jobInfo);
 
+		Boolean success = transactionTemplate.execute(status -> {
+			XxlJobInfo old = xxlJobInfoDao.loadById(jobInfo.getId());
+			xxlJobInfoDao.update(exists_jobInfo);
+			opLogService.addLog("任务管理",old,exists_jobInfo,"编辑");
+			return true;
+		});
 
-		return ReturnT.SUCCESS;
+		return success ? ReturnT.SUCCESS : ReturnT.FAIL;
 	}
 
 	@Override
@@ -300,7 +315,16 @@ public class XxlJobServiceImpl implements XxlJobService {
 		xxlJobInfoDao.delete(id);
 		xxlJobLogDao.delete(id);
 		xxlJobLogGlueDao.deleteByJobId(id);
-		return ReturnT.SUCCESS;
+
+		Boolean success = transactionTemplate.execute(status -> {
+			xxlJobInfoDao.delete(id);
+			xxlJobLogDao.delete(id);
+			xxlJobLogGlueDao.deleteByJobId(id);
+			opLogService.addLog("任务管理",xxlJobInfo,null,"删除");
+			return true;
+		});
+
+		return success ? ReturnT.SUCCESS : ReturnT.FAIL;
 	}
 
 	@Override
@@ -329,23 +353,34 @@ public class XxlJobServiceImpl implements XxlJobService {
 		xxlJobInfo.setTriggerStatus(1);
 		xxlJobInfo.setTriggerLastTime(0);
 		xxlJobInfo.setTriggerNextTime(nextTriggerTime);
-
 		xxlJobInfo.setUpdateTime(new Date());
-		xxlJobInfoDao.update(xxlJobInfo);
-		return ReturnT.SUCCESS;
+
+		Boolean success = transactionTemplate.execute(status -> {
+			XxlJobInfo old = xxlJobInfoDao.loadById(id);
+			xxlJobInfoDao.update(xxlJobInfo);
+			opLogService.addLog("任务管理",old,xxlJobInfo,"启动");
+			return true;
+		});
+
+		return success ? ReturnT.SUCCESS : ReturnT.FAIL;
 	}
 
 	@Override
 	public ReturnT<String> stop(int id) {
-        XxlJobInfo xxlJobInfo = xxlJobInfoDao.loadById(id);
-
+		XxlJobInfo xxlJobInfo = xxlJobInfoDao.loadById(id);
 		xxlJobInfo.setTriggerStatus(0);
 		xxlJobInfo.setTriggerLastTime(0);
 		xxlJobInfo.setTriggerNextTime(0);
-
 		xxlJobInfo.setUpdateTime(new Date());
-		xxlJobInfoDao.update(xxlJobInfo);
-		return ReturnT.SUCCESS;
+
+		Boolean success = transactionTemplate.execute(status -> {
+			XxlJobInfo old = xxlJobInfoDao.loadById(id);
+			xxlJobInfoDao.update(xxlJobInfo);
+			opLogService.addLog("任务管理",old,xxlJobInfo,"停止");
+			return true;
+		});
+
+		return success ? ReturnT.SUCCESS : ReturnT.FAIL;
 	}
 
 

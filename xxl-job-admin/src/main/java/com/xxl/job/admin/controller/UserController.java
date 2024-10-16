@@ -7,8 +7,10 @@ import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.admin.dao.XxlJobGroupDao;
 import com.xxl.job.admin.dao.XxlJobUserDao;
 import com.xxl.job.admin.service.LoginService;
+import com.xxl.job.admin.service.OpLogService;
 import com.xxl.job.core.biz.model.ReturnT;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.ui.Model;
 import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
@@ -33,6 +35,10 @@ public class UserController {
     private XxlJobUserDao xxlJobUserDao;
     @Resource
     private XxlJobGroupDao xxlJobGroupDao;
+    @Resource
+    private OpLogService opLogService;
+    @Resource
+    private TransactionTemplate transactionTemplate;
 
     @RequestMapping
     @PermissionLimit(adminuser = true)
@@ -101,9 +107,13 @@ public class UserController {
             return new ReturnT<String>(ReturnT.FAIL_CODE, I18nUtil.getString("user_username_repeat") );
         }
 
-        // write
-        xxlJobUserDao.save(xxlJobUser);
-        return ReturnT.SUCCESS;
+        Boolean success = transactionTemplate.execute(status -> {
+            xxlJobUserDao.save(xxlJobUser);
+            opLogService.addLog("用户管理",null,xxlJobUser,"新增");
+            return true;
+        });
+
+        return success ? ReturnT.SUCCESS : ReturnT.FAIL;
     }
 
     @RequestMapping("/update")
@@ -129,9 +139,14 @@ public class UserController {
             xxlJobUser.setPassword(null);
         }
 
-        // write
-        xxlJobUserDao.update(xxlJobUser);
-        return ReturnT.SUCCESS;
+        Boolean success = transactionTemplate.execute(status -> {
+            XxlJobUser old = xxlJobUserDao.load(xxlJobUser.getId());
+            xxlJobUserDao.update(xxlJobUser);
+            opLogService.addLog("用户管理",old,xxlJobUser,"编辑");
+            return true;
+        });
+
+        return success ? ReturnT.SUCCESS : ReturnT.FAIL;
     }
 
     @RequestMapping("/remove")
@@ -145,8 +160,13 @@ public class UserController {
             return new ReturnT<String>(ReturnT.FAIL.getCode(), I18nUtil.getString("user_update_loginuser_limit"));
         }
 
-        xxlJobUserDao.delete(id);
-        return ReturnT.SUCCESS;
+        Boolean success = transactionTemplate.execute(status -> {
+            opLogService.addLog("用户管理",xxlJobUserDao.load(id),null,"删除");
+            xxlJobUserDao.delete(id);
+            return true;
+        });
+
+        return success ? ReturnT.SUCCESS : ReturnT.FAIL;
     }
 
     @RequestMapping("/updatePwd")
@@ -171,9 +191,15 @@ public class UserController {
         // do write
         XxlJobUser existUser = xxlJobUserDao.loadByUserName(loginUser.getUsername());
         existUser.setPassword(md5Password);
-        xxlJobUserDao.update(existUser);
 
-        return ReturnT.SUCCESS;
+        Boolean success = transactionTemplate.execute(status -> {
+            XxlJobUser old = xxlJobUserDao.load(existUser.getId());
+            xxlJobUserDao.update(existUser);
+            opLogService.addLog("用户管理",old,existUser,"修改密码");
+            return true;
+        });
+
+        return success ? ReturnT.SUCCESS : ReturnT.FAIL;
     }
 
 }
