@@ -15,7 +15,7 @@ public class NetUtil {
     private static Logger logger = LoggerFactory.getLogger(NetUtil.class);
 
     /**
-     * find avaliable port
+     * find available port
      *
      * @param defaultPort
      * @return
