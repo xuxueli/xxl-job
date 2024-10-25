@@ -5,6 +5,7 @@
 	<@netCommon.commonStyle />
 	<!-- DataTables -->
   	<link rel="stylesheet" href="${request.contextPath}/static/adminlte/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+    <link rel="stylesheet" href="${request.contextPath}/static/adminlte/bower_components/datatables.net-bs/css/bootstrap-select.min.css">
     <title>${I18n.admin_name}</title>
 </head>
 <body class="hold-transition skin-blue sidebar-mini <#if cookieMap?exists && cookieMap["xxljob_adminlte_settings"]?exists && "off" == cookieMap["xxljob_adminlte_settings"].value >sidebar-collapse</#if>">
@@ -119,11 +120,11 @@
 					<div class="form-group">
 						<label for="firstname" class="col-sm-2 control-label">${I18n.jobinfo_field_jobgroup}<font color="red">*</font></label>
 						<div class="col-sm-4">
-							<select class="form-control" name="jobGroup" >
-		            			<#list JobGroupList as group>
-		            				<option value="${group.id}" <#if jobGroup==group.id>selected</#if> >${group.title}</option>
-		            			</#list>
-		                  	</select>
+                            <select class="selectpicker show-tick form-control" id="addJobGroup" name="jobGroup" >
+                                <#list JobGroupList as group>
+                                    <option value="${group.id}" <#if jobGroup==group.id>selected</#if> >${group.title}</option>
+                                </#list>
+                            </select>
 						</div>
 
                         <label for="lastname" class="col-sm-2 control-label">${I18n.jobinfo_field_jobdesc}<font color="red">*</font></label>
@@ -364,7 +365,7 @@ exit 0
                     <div class="form-group">
                         <label for="firstname" class="col-sm-2 control-label">${I18n.jobinfo_field_jobgroup}<font color="red">*</font></label>
                         <div class="col-sm-4">
-                            <select class="form-control" name="jobGroup" >
+                            <select class="selectpicker show-tick form-control" id="updateJobGroup" name="jobGroup" >
                                 <#list JobGroupList as group>
                                     <option value="${group.id}" >${group.title}</option>
                                 </#list>
@@ -531,6 +532,7 @@ exit 0
 <!-- DataTables -->
 <script src="${request.contextPath}/static/adminlte/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
 <script src="${request.contextPath}/static/adminlte/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+<script src="${request.contextPath}/static/adminlte/bower_components/datatables.net-bs/js/bootstrap-select.min.js"></script>
 <!-- moment -->
 <script src="${request.contextPath}/static/adminlte/bower_components/moment/moment.min.js"></script>
 <#-- cronGen -->
