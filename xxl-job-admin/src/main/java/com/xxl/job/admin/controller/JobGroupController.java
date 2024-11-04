@@ -47,7 +47,6 @@ public class JobGroupController {
 										@RequestParam(required = false, defaultValue = "0") int start,
 										@RequestParam(required = false, defaultValue = "10") int length,
 										String appname, String title) {
-
 		// page query
 		List<XxlJobGroup> list = xxlJobGroupDao.pageList(start, length, appname, title);
 		int list_count = xxlJobGroupDao.pageListCount(start, length, appname, title);
@@ -141,6 +140,10 @@ public class JobGroupController {
 				if (item==null || item.trim().length()==0) {
 					return new ReturnT<String>(500, I18nUtil.getString("jobgroup_field_registryList_unvalid") );
 				}
+				String url = item.trim().toLowerCase();
+				if (!isHttpAddressValid(url)){
+					return new ReturnT<String>(500, I18nUtil.getString("jobgroup_field_registryList_unvalid") );
+				}
 			}
 		}
 
@@ -149,6 +152,19 @@ public class JobGroupController {
 
 		int ret = xxlJobGroupDao.update(xxlJobGroup);
 		return (ret>0)?ReturnT.SUCCESS:ReturnT.FAIL;
+	}
+
+	// valid http address
+	private boolean isHttpAddressValid(String url){
+		if (url == null){
+			return false;
+		}
+
+		// valid
+		if(!url.startsWith("http://") && !url.startsWith("https://") && url.contains(" ")){
+			return false;
+		}
+		return true;
 	}
 
 	private List<String> findRegistryByAppName(String appnameParam){
