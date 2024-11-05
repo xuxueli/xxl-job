@@ -10,6 +10,7 @@ $(function() {
 			type:"post",
 	        data : function ( d ) {
 	        	var obj = {};
+                obj.id = $('#id').val();
                 obj.username = $('#username').val();
                 obj.role = $('#role').val();
 	        	obj.start = d.start;
@@ -23,7 +24,7 @@ $(function() {
 	    "columns": [
 	                {
 	                	"data": 'id',
-						"visible" : false,
+						"visible" : true,
 						"width":'10%'
 					},
 	                {

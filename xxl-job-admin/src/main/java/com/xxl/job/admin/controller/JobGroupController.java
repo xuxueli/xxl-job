@@ -101,7 +101,7 @@ public class JobGroupController {
 		xxlJobGroup.setUpdateTime(new Date());
 
 		int ret = xxlJobGroupDao.save(xxlJobGroup);
-		return (ret>0)?ReturnT.SUCCESS:ReturnT.FAIL;
+		return (ret>0)?new ReturnT<String>(String.valueOf(xxlJobGroup.getId())):ReturnT.FAIL;
 	}
 
 	@RequestMapping("/update")

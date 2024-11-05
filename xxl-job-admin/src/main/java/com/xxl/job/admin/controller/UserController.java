@@ -103,7 +103,7 @@ public class UserController {
 
         // write
         xxlJobUserDao.save(xxlJobUser);
-        return ReturnT.SUCCESS;
+        return new ReturnT<String>(String.valueOf(xxlJobUser.getId()));
     }
 
     @RequestMapping("/update")
