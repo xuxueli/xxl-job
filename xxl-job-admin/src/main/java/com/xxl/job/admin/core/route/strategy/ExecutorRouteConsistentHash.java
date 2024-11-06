@@ -4,7 +4,7 @@ import com.xxl.job.admin.core.route.ExecutorRouter;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.biz.model.TriggerParam;
 
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
@@ -36,14 +36,9 @@ public class ExecutorRouteConsistentHash extends ExecutorRouter {
             throw new RuntimeException("MD5 not supported", e);
         }
         md5.reset();
-        byte[] keyBytes = null;
-        try {
-            keyBytes = key.getBytes("UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException("Unknown string :" + key, e);
-        }
+        byte[] keyBytes = key.getBytes(StandardCharsets.UTF_8);
 
-        md5.update(keyBytes);
+	    md5.update(keyBytes);
         byte[] digest = md5.digest();
 
         // hash code, Truncate to 32-bits
@@ -52,15 +47,14 @@ public class ExecutorRouteConsistentHash extends ExecutorRouter {
                 | ((long) (digest[1] & 0xFF) << 8)
                 | (digest[0] & 0xFF);
 
-        long truncateHashCode = hashCode & 0xffffffffL;
-        return truncateHashCode;
+	    return hashCode & 0xffffffffL;
     }
 
     public String hashJob(int jobId, List<String> addressList) {
 
         // ------A1------A2-------A3------
         // -----------J1------------------
-        TreeMap<Long, String> addressRing = new TreeMap<Long, String>();
+        TreeMap<Long, String> addressRing = new TreeMap<>();
         for (String address: addressList) {
             for (int i = 0; i < VIRTUAL_NODE_NUM; i++) {
                 long addressHash = hash("SHARD-" + address + "-NODE-" + i);
@@ -79,7 +73,7 @@ public class ExecutorRouteConsistentHash extends ExecutorRouter {
     @Override
     public ReturnT<String> route(TriggerParam triggerParam, List<String> addressList) {
         String address = hashJob(triggerParam.getJobId(), addressList);
-        return new ReturnT<String>(address);
+        return new ReturnT<>(address);
     }
 
 }

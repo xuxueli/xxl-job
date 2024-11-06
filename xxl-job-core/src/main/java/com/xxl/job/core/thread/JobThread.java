@@ -42,8 +42,8 @@ public class JobThread extends Thread{
 	public JobThread(int jobId, IJobHandler handler) {
 		this.jobId = jobId;
 		this.handler = handler;
-		this.triggerQueue = new LinkedBlockingQueue<TriggerParam>();
-		this.triggerLogIdSet = Collections.synchronizedSet(new HashSet<Long>());
+		this.triggerQueue = new LinkedBlockingQueue<>();
+		this.triggerLogIdSet = Collections.synchronizedSet(new HashSet<>());
 
 		// assign job thread name
 		this.setName("xxl-job, JobThread-"+jobId+"-"+System.currentTimeMillis());
@@ -62,7 +62,7 @@ public class JobThread extends Thread{
 		// avoid repeat
 		if (triggerLogIdSet.contains(triggerParam.getLogId())) {
 			logger.info(">>>>>>>>>>> repeate trigger job, logId:{}", triggerParam.getLogId());
-			return new ReturnT<String>(ReturnT.FAIL_CODE, "repeate trigger job, logId:" + triggerParam.getLogId());
+			return new ReturnT<>(ReturnT.FAIL_CODE, "repeate trigger job, logId:" + triggerParam.getLogId());
 		}
 
 		triggerLogIdSet.add(triggerParam.getLogId());
@@ -136,16 +136,13 @@ public class JobThread extends Thread{
 						// limit timeout
 						Thread futureThread = null;
 						try {
-							FutureTask<Boolean> futureTask = new FutureTask<Boolean>(new Callable<Boolean>() {
-								@Override
-								public Boolean call() throws Exception {
+							FutureTask<Boolean> futureTask = new FutureTask<>(() -> {
 
-									// init job context
-									XxlJobContext.setXxlJobContext(xxlJobContext);
+								// init job context
+								XxlJobContext.setXxlJobContext(xxlJobContext);
 
-									handler.execute();
-									return true;
-								}
+								handler.execute();
+								return true;
 							});
 							futureThread = new Thread(futureTask);
 							futureThread.start();

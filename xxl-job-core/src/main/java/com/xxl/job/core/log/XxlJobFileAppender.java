@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -113,7 +114,7 @@ public class XxlJobFileAppender {
 		FileOutputStream fos = null;
 		try {
 			fos = new FileOutputStream(logFile, true);
-			fos.write(appendLog.getBytes("utf-8"));
+			fos.write(appendLog.getBytes(StandardCharsets.UTF_8));
 			fos.flush();
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
@@ -148,12 +149,12 @@ public class XxlJobFileAppender {
 		}
 
 		// read file
-		StringBuffer logContentBuffer = new StringBuffer();
+		StringBuilder logContentBuffer = new StringBuilder();
 		int toLineNum = 0;
 		LineNumberReader reader = null;
 		try {
 			//reader = new LineNumberReader(new FileReader(logFile));
-			reader = new LineNumberReader(new InputStreamReader(new FileInputStream(logFile), "utf-8"));
+			reader = new LineNumberReader(new InputStreamReader(new FileInputStream(logFile), StandardCharsets.UTF_8));
 			String line = null;
 
 			while ((line = reader.readLine())!=null) {
@@ -175,8 +176,7 @@ public class XxlJobFileAppender {
 		}
 
 		// result
-		LogResult logResult = new LogResult(fromLineNum, toLineNum, logContentBuffer.toString(), false);
-		return logResult;
+		return new LogResult(fromLineNum, toLineNum, logContentBuffer.toString(), false);
 
 		/*
         // it will return the number of characters actually skipped
@@ -194,15 +194,13 @@ public class XxlJobFileAppender {
 	public static String readLines(File logFile){
 		BufferedReader reader = null;
 		try {
-			reader = new BufferedReader(new InputStreamReader(new FileInputStream(logFile), "utf-8"));
-			if (reader != null) {
-				StringBuilder sb = new StringBuilder();
-				String line = null;
-				while ((line = reader.readLine()) != null) {
-					sb.append(line).append("\n");
-				}
-				return sb.toString();
+			reader = new BufferedReader(new InputStreamReader(new FileInputStream(logFile), StandardCharsets.UTF_8));
+			StringBuilder sb = new StringBuilder();
+			String line;
+			while ((line = reader.readLine()) != null) {
+				sb.append(line).append("\n");
 			}
+			return sb.toString();
 		} catch (IOException e) {
 			logger.error(e.getMessage(), e);
 		} finally {

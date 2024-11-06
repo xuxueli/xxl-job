@@ -2,14 +2,12 @@ package com.xxl.job.core.executor.impl;
 
 import com.xxl.job.core.executor.XxlJobExecutor;
 import com.xxl.job.core.handler.annotation.XxlJob;
-import com.xxl.job.core.handler.impl.MethodJobHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -18,8 +16,6 @@ import java.util.Map;
  * @author xuxueli 2020-11-05
  */
 public class XxlJobSimpleExecutor extends XxlJobExecutor {
-    private static final Logger logger = LoggerFactory.getLogger(XxlJobSimpleExecutor.class);
-
 
     private List<Object> xxlJobBeanList = new ArrayList<>();
     public List<Object> getXxlJobBeanList() {
@@ -59,10 +55,7 @@ public class XxlJobSimpleExecutor extends XxlJobExecutor {
         for (Object bean: xxlJobBeanList) {
             // method
             Method[] methods = bean.getClass().getDeclaredMethods();
-            if (methods.length == 0) {
-                continue;
-            }
-            for (Method executeMethod : methods) {
+	        for (Method executeMethod : methods) {
                 XxlJob xxlJob = executeMethod.getAnnotation(XxlJob.class);
                 // registry
                 registJobHandler(xxlJob, bean, executeMethod);

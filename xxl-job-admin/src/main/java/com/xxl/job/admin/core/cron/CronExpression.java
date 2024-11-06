@@ -215,8 +215,8 @@ public final class CronExpression implements Serializable, Cloneable {
     protected static final Integer ALL_SPEC = ALL_SPEC_INT;
     protected static final Integer NO_SPEC = NO_SPEC_INT;
     
-    protected static final Map<String, Integer> monthMap = new HashMap<String, Integer>(20);
-    protected static final Map<String, Integer> dayMap = new HashMap<String, Integer>(60);
+    protected static final Map<String, Integer> monthMap = new HashMap<>(20);
+    protected static final Map<String, Integer> dayMap = new HashMap<>(60);
     static {
         monthMap.put("JAN", 0);
         monthMap.put("FEB", 1);
@@ -443,25 +443,25 @@ public final class CronExpression implements Serializable, Cloneable {
         try {
 
             if (seconds == null) {
-                seconds = new TreeSet<Integer>();
+                seconds = new TreeSet<>();
             }
             if (minutes == null) {
-                minutes = new TreeSet<Integer>();
+                minutes = new TreeSet<>();
             }
             if (hours == null) {
-                hours = new TreeSet<Integer>();
+                hours = new TreeSet<>();
             }
             if (daysOfMonth == null) {
-                daysOfMonth = new TreeSet<Integer>();
+                daysOfMonth = new TreeSet<>();
             }
             if (months == null) {
-                months = new TreeSet<Integer>();
+                months = new TreeSet<>();
             }
             if (daysOfWeek == null) {
-                daysOfWeek = new TreeSet<Integer>();
+                daysOfWeek = new TreeSet<>();
             }
             if (years == null) {
-                years = new TreeSet<Integer>();
+                years = new TreeSet<>();
             }
 
             int exprOn = SECOND;
@@ -518,8 +518,7 @@ public final class CronExpression implements Serializable, Cloneable {
         } catch (ParseException pe) {
             throw pe;
         } catch (Exception e) {
-            throw new ParseException("Illegal cron expression format ("
-                    + e.toString() + ")", 0);
+            throw new ParseException("Illegal cron expression format (" + e + ")", 0);
         }
     }
 
@@ -859,43 +858,39 @@ public final class CronExpression implements Serializable, Cloneable {
     }
     
     public String getExpressionSummary() {
-        StringBuilder buf = new StringBuilder();
-
-        buf.append("seconds: ");
-        buf.append(getExpressionSetSummary(seconds));
-        buf.append("\n");
-        buf.append("minutes: ");
-        buf.append(getExpressionSetSummary(minutes));
-        buf.append("\n");
-        buf.append("hours: ");
-        buf.append(getExpressionSetSummary(hours));
-        buf.append("\n");
-        buf.append("daysOfMonth: ");
-        buf.append(getExpressionSetSummary(daysOfMonth));
-        buf.append("\n");
-        buf.append("months: ");
-        buf.append(getExpressionSetSummary(months));
-        buf.append("\n");
-        buf.append("daysOfWeek: ");
-        buf.append(getExpressionSetSummary(daysOfWeek));
-        buf.append("\n");
-        buf.append("lastdayOfWeek: ");
-        buf.append(lastdayOfWeek);
-        buf.append("\n");
-        buf.append("nearestWeekday: ");
-        buf.append(nearestWeekday);
-        buf.append("\n");
-        buf.append("NthDayOfWeek: ");
-        buf.append(nthdayOfWeek);
-        buf.append("\n");
-        buf.append("lastdayOfMonth: ");
-        buf.append(lastdayOfMonth);
-        buf.append("\n");
-        buf.append("years: ");
-        buf.append(getExpressionSetSummary(years));
-        buf.append("\n");
-
-        return buf.toString();
+	    return "seconds: "
+                + getExpressionSetSummary(seconds)
+                + "\n"
+                + "minutes: "
+                + getExpressionSetSummary(minutes)
+                + "\n"
+                + "hours: "
+                + getExpressionSetSummary(hours)
+                + "\n"
+                + "daysOfMonth: "
+                + getExpressionSetSummary(daysOfMonth)
+                + "\n"
+                + "months: "
+                + getExpressionSetSummary(months)
+                + "\n"
+                + "daysOfWeek: "
+                + getExpressionSetSummary(daysOfWeek)
+                + "\n"
+                + "lastdayOfWeek: "
+                + lastdayOfWeek
+                + "\n"
+                + "nearestWeekday: "
+                + nearestWeekday
+                + "\n"
+                + "NthDayOfWeek: "
+                + nthdayOfWeek
+                + "\n"
+                + "lastdayOfMonth: "
+                + lastdayOfMonth
+                + "\n"
+                + "years: "
+                + getExpressionSetSummary(years)
+                + "\n";
     }
 
     protected String getExpressionSetSummary(java.util.Set<Integer> set) {
@@ -1067,9 +1062,9 @@ public final class CronExpression implements Serializable, Cloneable {
         int max = -1;
         if (stopAt < startAt) {
             switch (type) {
-              case       SECOND : max = 60; break;
-              case       MINUTE : max = 60; break;
-              case         HOUR : max = 24; break;
+              case       SECOND :
+	          case       MINUTE : max = 60; break;
+	          case         HOUR : max = 24; break;
               case        MONTH : max = 12; break;
               case  DAY_OF_WEEK : max = 7;  break;
               case DAY_OF_MONTH : max = 31; break;
@@ -1428,12 +1423,9 @@ public final class CronExpression implements Serializable, Cloneable {
                         daysToAdd = dow + (7 - cDow);
                     }
 
-                    boolean dayShifted = false;
-                    if (daysToAdd > 0) {
-                        dayShifted = true;
-                    }
+                    boolean dayShifted = daysToAdd > 0;
 
-                    day += daysToAdd;
+	                day += daysToAdd;
                     int weekOfMonth = day / 7;
                     if (day % 7 > 0) {
                         weekOfMonth++;
@@ -1612,32 +1604,22 @@ public final class CronExpression implements Serializable, Cloneable {
 
         switch (monthNum) {
             case 1:
-                return 31;
+            case 3:
+            case 5:
+            case 7:
+            case 8:
+            case 10:
+	        case 12:
+		        return 31;
             case 2:
                 return (isLeapYear(year)) ? 29 : 28;
-            case 3:
-                return 31;
-            case 4:
-                return 30;
-            case 5:
-                return 31;
-            case 6:
-                return 30;
-            case 7:
-                return 31;
-            case 8:
-                return 31;
+	        case 4:
+	        case 6:
             case 9:
-                return 30;
-            case 10:
-                return 31;
             case 11:
-                return 30;
-            case 12:
-                return 31;
-            default:
-                throw new IllegalArgumentException("Illegal month number: "
-                        + monthNum);
+		        return 30;
+	        default:
+                throw new IllegalArgumentException("Illegal month number: " + monthNum);
         }
     }
     

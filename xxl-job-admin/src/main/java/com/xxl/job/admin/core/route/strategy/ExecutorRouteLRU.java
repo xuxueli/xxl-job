@@ -19,7 +19,7 @@ import java.util.concurrent.ConcurrentMap;
  */
 public class ExecutorRouteLRU extends ExecutorRouter {
 
-    private static ConcurrentMap<Integer, LinkedHashMap<String, String>> jobLRUMap = new ConcurrentHashMap<Integer, LinkedHashMap<String, String>>();
+    private static ConcurrentMap<Integer, LinkedHashMap<String, String>> jobLRUMap = new ConcurrentHashMap<>();
     private static long CACHE_VALID_TIME = 0;
 
     public String route(int jobId, List<String> addressList) {
@@ -33,12 +33,12 @@ public class ExecutorRouteLRU extends ExecutorRouter {
         // init lru
         LinkedHashMap<String, String> lruItem = jobLRUMap.get(jobId);
         if (lruItem == null) {
-            /**
+            /*
              * LinkedHashMap
              *      a、accessOrder：true=访问顺序排序（get/put时排序）；false=插入顺序排期；
              *      b、removeEldestEntry：新增元素时将会调用，返回true时会删除最老元素；可封装LinkedHashMap并重写该方法，比如定义最大容量，超出是返回true即可实现固定长度的LRU算法；
              */
-            lruItem = new LinkedHashMap<String, String>(16, 0.75f, true);
+            lruItem = new LinkedHashMap<>(16, 0.75f, true);
             jobLRUMap.putIfAbsent(jobId, lruItem);
         }
 
@@ -63,14 +63,13 @@ public class ExecutorRouteLRU extends ExecutorRouter {
 
         // load
         String eldestKey = lruItem.entrySet().iterator().next().getKey();
-        String eldestValue = lruItem.get(eldestKey);
-        return eldestValue;
+	    return lruItem.get(eldestKey);
     }
 
     @Override
     public ReturnT<String> route(TriggerParam triggerParam, List<String> addressList) {
         String address = route(triggerParam.getJobId(), addressList);
-        return new ReturnT<String>(address);
+        return new ReturnT<>(address);
     }
 
 }

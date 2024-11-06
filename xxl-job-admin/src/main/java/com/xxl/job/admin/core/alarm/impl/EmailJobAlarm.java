@@ -49,7 +49,7 @@ public class EmailJobAlarm implements JobAlarm {
             }
 
             // email info
-            XxlJobGroup group = XxlJobAdminConfig.getAdminConfig().getXxlJobGroupDao().load(Integer.valueOf(info.getJobGroup()));
+            XxlJobGroup group = XxlJobAdminConfig.getAdminConfig().getXxlJobGroupDao().load(info.getJobGroup());
             String personal = I18nUtil.getString("admin_name_full");
             String title = I18nUtil.getString("jobconf_monitor");
             String content = MessageFormat.format(loadEmailJobAlarmTemplate(),
@@ -58,7 +58,7 @@ public class EmailJobAlarm implements JobAlarm {
                     info.getJobDesc(),
                     alarmContent);
 
-            Set<String> emailSet = new HashSet<String>(Arrays.asList(info.getAlarmEmail().split(",")));
+            Set<String> emailSet = new HashSet<>(Arrays.asList(info.getAlarmEmail().split(",")));
             for (String email: emailSet) {
 
                 // make mail
@@ -89,8 +89,8 @@ public class EmailJobAlarm implements JobAlarm {
      *
      * @return
      */
-    private static final String loadEmailJobAlarmTemplate(){
-        String mailBodyTemplate = "<h5>" + I18nUtil.getString("jobconf_monitor_detail") + "：</span>" +
+    private static String loadEmailJobAlarmTemplate(){
+	    return "<h5>" + I18nUtil.getString("jobconf_monitor_detail") + "：</span>" +
                 "<table border=\"1\" cellpadding=\"3\" style=\"border-collapse:collapse; width:80%;\" >\n" +
                 "   <thead style=\"font-weight: bold;color: #ffffff;background-color: #ff8c00;\" >" +
                 "      <tr>\n" +
@@ -111,8 +111,6 @@ public class EmailJobAlarm implements JobAlarm {
                 "      </tr>\n" +
                 "   </tbody>\n" +
                 "</table>";
-
-        return mailBodyTemplate;
     }
 
 }

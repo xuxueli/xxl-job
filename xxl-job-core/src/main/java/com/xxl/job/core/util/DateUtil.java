@@ -24,7 +24,7 @@ public class DateUtil {
     private static final String DATE_FORMAT = "yyyy-MM-dd";
     private static final String DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
-    private static final ThreadLocal<Map<String, DateFormat>> dateFormatThreadLocal = new ThreadLocal<Map<String, DateFormat>>();
+    private static final ThreadLocal<Map<String, DateFormat>> dateFormatThreadLocal = new ThreadLocal<>();
     private static DateFormat getDateFormat(String pattern) {
         if (pattern==null || pattern.trim().length()==0) {
             throw new IllegalArgumentException("pattern cannot be empty.");
@@ -37,7 +37,7 @@ public class DateUtil {
 
         synchronized (dateFormatThreadLocal) {
             if (dateFormatMap == null) {
-                dateFormatMap = new HashMap<String, DateFormat>();
+                dateFormatMap = new HashMap<>();
             }
             dateFormatMap.put(pattern, new SimpleDateFormat(pattern));
             dateFormatThreadLocal.set(dateFormatMap);
@@ -112,8 +112,7 @@ public class DateUtil {
      */
     public static Date parse(String dateString, String pattern) {
         try {
-            Date date = getDateFormat(pattern).parse(dateString);
-            return date;
+	        return getDateFormat(pattern).parse(dateString);
         } catch (Exception e) {
             logger.warn("parse date error, dateString = {}, pattern={}; errorMsg = {}", dateString, pattern, e.getMessage());
             return null;
