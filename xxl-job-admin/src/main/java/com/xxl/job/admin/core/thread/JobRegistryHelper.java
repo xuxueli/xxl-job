@@ -49,52 +49,30 @@ public class JobRegistryHelper {
 			while (!toStop) {
 				try {
 					// auto registry group
-					List<XxlJobGroup> groupList = XxlJobAdminConfig.getAdminConfig().getXxlJobGroupDao().findByAddressType(0);
-					if (groupList!=null && !groupList.isEmpty()) {
-
+					final XxlJobAdminConfig adminConfig = XxlJobAdminConfig.getAdminConfig();
+					List<XxlJobGroup> groupList = adminConfig.getXxlJobGroupDao().findByAddressType(0);
+					if (groupList != null && !groupList.isEmpty()) {
 						// remove dead address (admin/executor)
-						List<Integer> ids = XxlJobAdminConfig.getAdminConfig().getXxlJobRegistryDao().findDead(RegistryConfig.DEAD_TIMEOUT, new Date());
-						if (ids!=null && ids.size()>0) {
-							XxlJobAdminConfig.getAdminConfig().getXxlJobRegistryDao().removeDead(ids);
+						List<Integer> ids = adminConfig.getXxlJobRegistryDao().findDead(RegistryConfig.DEAD_TIMEOUT, new Date());
+						if (ids != null && !ids.isEmpty()) {
+							adminConfig.getXxlJobRegistryDao().removeDead(ids);
 						}
 
 						// fresh online address (admin/executor)
-						HashMap<String, List<String>> appAddressMap = new HashMap<>();
-						List<XxlJobRegistry> list = XxlJobAdminConfig.getAdminConfig().getXxlJobRegistryDao().findAll(RegistryConfig.DEAD_TIMEOUT, new Date());
-						if (list != null) {
-							for (XxlJobRegistry item: list) {
-								if (RegistryConfig.RegistType.EXECUTOR.name().equals(item.getRegistryGroup())) {
-									String appname = item.getRegistryKey();
-									List<String> registryList = appAddressMap.get(appname);
-									if (registryList == null) {
-										registryList = new ArrayList<>();
-									}
-
-									if (!registryList.contains(item.getRegistryValue())) {
-										registryList.add(item.getRegistryValue());
-									}
-									appAddressMap.put(appname, registryList);
-								}
-							}
-						}
+						List<XxlJobRegistry> list = adminConfig.getXxlJobRegistryDao().findAll(RegistryConfig.DEAD_TIMEOUT, new Date());
+						final Map<String, TreeSet<String>> appAddressMap = groupJobsByApp(list);
 
 						// fresh group address
-						for (XxlJobGroup group: groupList) {
-							List<String> registryList = appAddressMap.get(group.getAppname());
+						final Date now = new Date();
+						for (XxlJobGroup group : groupList) {
+							TreeSet<String> registryList = appAddressMap.get(group.getAppname());
 							String addressListStr = null;
-							if (registryList!=null && !registryList.isEmpty()) {
-								Collections.sort(registryList);
-								StringBuilder addressListSB = new StringBuilder();
-								for (String item:registryList) {
-									addressListSB.append(item).append(",");
-								}
-								addressListStr = addressListSB.toString();
-								addressListStr = addressListStr.substring(0, addressListStr.length()-1);
+							if (registryList != null && !registryList.isEmpty()) {
+								addressListStr = String.join(",", registryList);
 							}
 							group.setAddressList(addressListStr);
-							group.setUpdateTime(new Date());
-
-							XxlJobAdminConfig.getAdminConfig().getXxlJobGroupDao().update(group);
+							group.setUpdateTime(now);
+							adminConfig.getXxlJobGroupDao().update(group);
 						}
 					}
 				} catch (Exception e) {
@@ -117,7 +95,25 @@ public class JobRegistryHelper {
 		registryMonitorThread.start();
 	}
 
-	public void toStop(){
+	public static Map<String, TreeSet<String>> groupJobsByApp(List<XxlJobRegistry> list) {
+		if (list != null && !list.isEmpty()) {
+			final Map<String, TreeSet<String>> appJobMap = new HashMap<>();
+			for (XxlJobRegistry item : list) {
+				if (RegistryConfig.RegistType.EXECUTOR.name().equals(item.getRegistryGroup())) {
+					String appname = item.getRegistryKey();
+					TreeSet<String> registries = appJobMap.get(appname);
+					if (registries == null) {
+						appJobMap.put(appname, registries = new TreeSet<>());
+					}
+					registries.add(item.getRegistryValue());
+				}
+			}
+			return appJobMap;
+		}
+		return Collections.emptyMap();
+	}
+
+	public void toStop() {
 		toStop = true;
 
 		// stop registryOrRemoveThreadPool
