@@ -26,8 +26,7 @@ public class WebExceptionResolver implements HandlerExceptionResolver {
 	private static final Logger logger = LoggerFactory.getLogger(WebExceptionResolver.class);
 
 	@Override
-	public ModelAndView resolveException(HttpServletRequest request,
-			HttpServletResponse response, Object handler, Exception ex) {
+	public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
 
 		if (!(ex instanceof XxlJobException)) {
 			logger.error("WebExceptionResolver", ex);
@@ -36,7 +35,7 @@ public class WebExceptionResolver implements HandlerExceptionResolver {
 		// if json
 		boolean isJson = false;
 		if (handler instanceof HandlerMethod) {
-			HandlerMethod method = (HandlerMethod)handler;
+			HandlerMethod method = (HandlerMethod) handler;
 			ResponseBody responseBody = method.getMethodAnnotation(ResponseBody.class);
 			if (responseBody != null) {
 				isJson = true;
@@ -44,7 +43,8 @@ public class WebExceptionResolver implements HandlerExceptionResolver {
 		}
 
 		// error result
-		ReturnT<String> errorResult = new ReturnT<>(ReturnT.FAIL_CODE, ex.toString().replaceAll("\n", "<br/>"));
+		ReturnT<String> errorResult = new ReturnT<>(ReturnT.FAIL_CODE, ex.toString()
+				.replace("\n", "<br/>") /* 无需使用正则替换 */);
 
 		// response
 		ModelAndView mv = new ModelAndView();
@@ -55,13 +55,11 @@ public class WebExceptionResolver implements HandlerExceptionResolver {
 			} catch (IOException e) {
 				logger.error(e.getMessage(), e);
 			}
-			return mv;
 		} else {
-
 			mv.addObject("exceptionMsg", errorResult.getMsg());
 			mv.setViewName("/common/common.exception");
-			return mv;
 		}
+		return mv;
 	}
-	
+
 }
