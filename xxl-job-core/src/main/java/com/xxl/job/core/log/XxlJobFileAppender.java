@@ -1,14 +1,14 @@
 package com.xxl.job.core.log;
 
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.util.Date;
+
 import com.xxl.job.core.biz.model.LogResult;
+import com.xxl.job.core.util.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
-
-import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * store trigger log in each log-file
@@ -68,18 +68,13 @@ public class XxlJobFileAppender {
 	public static String makeLogFileName(Date triggerDate, long logId) {
 
 		// filePath/yyyy-MM-dd
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");	// avoid concurrent problem, can not be static
-		File logFilePath = new File(getLogPath(), sdf.format(triggerDate));
+		File logFilePath = new File(getLogPath(), DateUtil.format(triggerDate, "yyyy-MM-dd"));
 		if (!logFilePath.exists()) {
 			logFilePath.mkdir();
 		}
 
 		// filePath/yyyy-MM-dd/9999.log
-		String logFileName = logFilePath.getPath()
-				.concat(File.separator)
-				.concat(String.valueOf(logId))
-				.concat(".log");
-		return logFileName;
+		return logFilePath.getPath() + File.separator + logId + ".log";
 	}
 
 	/**
@@ -141,7 +136,7 @@ public class XxlJobFileAppender {
 
 		// valid log file
 		if (!StringUtils.hasText(logFileName)) {
-            return new LogResult(fromLineNum, 0, "readLog fail, logFile not found", true);
+			return new LogResult(fromLineNum, 0, "readLog fail, logFile not found", true);
 		}
 		File logFile = new File(logFileName);
 
@@ -150,13 +145,13 @@ public class XxlJobFileAppender {
 		}
 
 		// read file
-		StringBuilder logContentBuffer = new StringBuilder();
+		StringBuilder logContentBuffer = new StringBuilder(256);
 		int toLineNum = 0;
 		LineNumberReader reader = null;
 		try {
 			//reader = new LineNumberReader(new FileReader(logFile));
 			reader = new LineNumberReader(new InputStreamReader(new FileInputStream(logFile), StandardCharsets.UTF_8));
-			String line = null;
+			String line;
 
 			while ((line = reader.readLine())!=null) {
 				toLineNum = reader.getLineNumber();		// [from, to], start as 1
@@ -189,29 +184,19 @@ public class XxlJobFileAppender {
 
 	/**
 	 * read log data
-	 * @param logFile
+	 *
 	 * @return log line content
 	 */
-	public static String readLines(File logFile){
-		BufferedReader reader = null;
-		try {
-			reader = new BufferedReader(new InputStreamReader(new FileInputStream(logFile), StandardCharsets.UTF_8));
+	public static String readLines(File logFile) {
+		try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(logFile), StandardCharsets.UTF_8))) {
 			StringBuilder sb = new StringBuilder();
 			String line;
 			while ((line = reader.readLine()) != null) {
-				sb.append(line).append("\n");
+				sb.append(line).append('\n');
 			}
 			return sb.toString();
 		} catch (IOException e) {
 			logger.error(e.getMessage(), e);
-		} finally {
-			if (reader != null) {
-				try {
-					reader.close();
-				} catch (IOException e) {
-					logger.error(e.getMessage(), e);
-				}
-			}
 		}
 		return null;
 	}

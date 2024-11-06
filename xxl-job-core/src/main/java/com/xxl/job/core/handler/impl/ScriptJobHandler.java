@@ -1,13 +1,13 @@
 package com.xxl.job.core.handler.impl;
 
+import java.io.File;
+
 import com.xxl.job.core.context.XxlJobContext;
 import com.xxl.job.core.context.XxlJobHelper;
 import com.xxl.job.core.glue.GlueTypeEnum;
 import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.log.XxlJobFileAppender;
 import com.xxl.job.core.util.ScriptUtil;
-
-import java.io.File;
 
 /**
  * Created by xuxueli on 17/4/27.
@@ -55,26 +55,27 @@ public class ScriptJobHandler extends IJobHandler {
         // cmd
         String cmd = glueType.getCmd();
 
-        // make script file
-        String scriptFileName = XxlJobFileAppender.getGlueSrcPath()
-                .concat(File.separator)
-                .concat(String.valueOf(jobId))
-                .concat("_")
-                .concat(String.valueOf(glueUpdatetime))
-                .concat(glueType.getSuffix());
-        File scriptFile = new File(scriptFileName);
-        if (!scriptFile.exists()) {
-            ScriptUtil.markScriptFile(scriptFileName, gluesource);
-        }
+	    // make script file
+	    String scriptFileName = XxlJobFileAppender.getGlueSrcPath()
+			    + File.separator
+			    + jobId
+			    + "_"
+			    + glueUpdatetime
+			    + glueType.getSuffix(); // 提高字符串拼接性能
+	    File scriptFile = new File(scriptFileName);
+	    if (!scriptFile.exists()) {
+		    ScriptUtil.markScriptFile(scriptFileName, gluesource);
+	    }
 
-        // log file
-        String logFileName = XxlJobContext.getXxlJobContext().getJobLogFileName();
+	    // log file
+	    final XxlJobContext context = XxlJobContext.getXxlJobContext();
+	    String logFileName = context.getJobLogFileName();
 
-        // script params：0=param、1=分片序号、2=分片总数
-        String[] scriptParams = new String[3];
-        scriptParams[0] = XxlJobHelper.getJobParam();
-        scriptParams[1] = String.valueOf(XxlJobContext.getXxlJobContext().getShardIndex());
-        scriptParams[2] = String.valueOf(XxlJobContext.getXxlJobContext().getShardTotal());
+	    // script params：0=param、1=分片序号、2=分片总数
+	    String[] scriptParams = new String[3];
+	    scriptParams[0] = XxlJobHelper.getJobParam();
+	    scriptParams[1] = String.valueOf(context.getShardIndex());
+	    scriptParams[2] = String.valueOf(context.getShardTotal());
 
         // invoke
         XxlJobHelper.log("----------- script file:"+ scriptFileName +" -----------");
