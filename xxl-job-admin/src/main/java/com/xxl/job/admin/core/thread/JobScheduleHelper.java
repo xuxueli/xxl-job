@@ -150,7 +150,7 @@ public class JobScheduleHelper {
 
                 } catch (Exception e) {
                     if (!scheduleThreadToStop) {
-                        logger.error(">>>>>>>>>>> xxl-job, JobScheduleHelper#scheduleThread error:{}", e);
+                        logger.error(">>>>>>>>>>> xxl-job, JobScheduleHelper#scheduleThread error", e);
                     }
                 } finally {
 
@@ -252,7 +252,7 @@ public class JobScheduleHelper {
                     }
                 } catch (Exception e) {
                     if (!ringThreadToStop) {
-                        logger.error(">>>>>>>>>>> xxl-job, JobScheduleHelper#ringThread error:{}", e);
+                        logger.error(">>>>>>>>>>> xxl-job, JobScheduleHelper#ringThread error", e);
                     }
                 }
             }
