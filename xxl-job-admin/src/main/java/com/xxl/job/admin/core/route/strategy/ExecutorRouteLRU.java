@@ -1,14 +1,12 @@
 package com.xxl.job.admin.core.route.strategy;
 
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+
 import com.xxl.job.admin.core.route.ExecutorRouter;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.biz.model.TriggerParam;
-
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 /**
  * 单个JOB对应的每个执行器，最久为使用的优先被选举
@@ -44,9 +42,7 @@ public class ExecutorRouteLRU extends ExecutorRouter {
 
         // put new
         for (String address: addressList) {
-            if (!lruItem.containsKey(address)) {
-                lruItem.put(address, address);
-            }
+            lruItem.putIfAbsent(address, address);
         }
         // remove old
         List<String> delKeys = new ArrayList<>();

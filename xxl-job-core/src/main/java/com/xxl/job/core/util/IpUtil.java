@@ -57,11 +57,10 @@ public class IpUtil {
             return false;
         }
         String name = address.getHostAddress();
-        boolean result = (name != null
+		return (name != null
                 && IP_PATTERN.matcher(name).matches()
                 && !ANYHOST_VALUE.equals(name)
                 && !LOCALHOST_VALUE.equals(name));
-        return result;
     }
 
 
@@ -110,7 +109,7 @@ public class IpUtil {
 
         try {
             Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
-            if (null == interfaces) {
+			if (interfaces == null) {
                 return localAddress;
             }
             while (interfaces.hasMoreElements()) {
@@ -187,7 +186,7 @@ public class IpUtil {
         if (ip==null) {
             return null;
         }
-        return ip.concat(":").concat(String.valueOf(port));
+		return ip + ":" + port;
     }
 
     public static Object[] parseIpPort(String address){

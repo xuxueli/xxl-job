@@ -1,5 +1,9 @@
 package com.xxl.job.admin.controller;
 
+import java.util.*;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
 import com.xxl.job.admin.controller.annotation.PermissionLimit;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobUser;
@@ -12,15 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author xuxueli 2019-05-04 16:39:50
@@ -57,17 +53,17 @@ public class UserController {
         int list_count = xxlJobUserDao.pageListCount(start, length, username, role);
 
         // filter
-        if (list!=null && list.size()>0) {
-            for (XxlJobUser item: list) {
+        if (!list.isEmpty()) { // MyBatis 返回的 List 不会为 null
+            for (XxlJobUser item : list) {
                 item.setPassword(null);
             }
         }
 
         // package result
-        Map<String, Object> maps = new HashMap<>();
-        maps.put("recordsTotal", list_count);		// 总记录数
-        maps.put("recordsFiltered", list_count);	// 过滤后的总记录数
-        maps.put("data", list);  					// 分页列表
+        Map<String, Object> maps = new HashMap<>(4, 1F);
+        maps.put("recordsTotal", list_count);        // 总记录数
+        maps.put("recordsFiltered", list_count);    // 过滤后的总记录数
+        maps.put("data", list);                    // 分页列表
         return maps;
     }
 

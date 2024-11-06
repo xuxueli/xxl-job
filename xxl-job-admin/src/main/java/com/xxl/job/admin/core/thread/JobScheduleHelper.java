@@ -68,7 +68,7 @@ public class JobScheduleHelper {
                     connAutoCommit = conn.getAutoCommit();
                     conn.setAutoCommit(false);
 
-                    preparedStatement = conn.prepareStatement(  "select * from xxl_job_lock where lock_name = 'schedule_lock' for update" );
+					preparedStatement = conn.prepareStatement("SELECT * FROM xxl_job_lock WHERE lock_name = 'schedule_lock' FOR UPDATE");
                     preparedStatement.execute();
 
                     // tx start
@@ -179,18 +179,18 @@ public class JobScheduleHelper {
                         }
                     }
 
-                    // close PreparedStatement
-                    if (null != preparedStatement) {
-                        try {
-                            preparedStatement.close();
-                        } catch (SQLException e) {
-                            if (!scheduleThreadToStop) {
-                                logger.error(e.getMessage(), e);
-                            }
-                        }
-                    }
-                }
-                long cost = System.currentTimeMillis()-start;
+					// close PreparedStatement
+					if (preparedStatement != null) {
+						try {
+							preparedStatement.close();
+						} catch (SQLException e) {
+							if (!scheduleThreadToStop) {
+								logger.error(e.getMessage(), e);
+							}
+						}
+					}
+				}
+				long cost = System.currentTimeMillis() - start;
 
 
                 // Wait seconds, align second

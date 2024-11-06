@@ -47,8 +47,7 @@ public class IndexController {
     @RequestMapping("/chartInfo")
 	@ResponseBody
 	public ReturnT<Map<String, Object>> chartInfo(Date startDate, Date endDate) {
-        ReturnT<Map<String, Object>> chartInfo = xxlJobService.chartInfo(startDate, endDate);
-        return chartInfo;
+		return xxlJobService.chartInfo(startDate, endDate);
     }
 	
 	@RequestMapping("/toLogin")

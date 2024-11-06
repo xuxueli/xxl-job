@@ -17,7 +17,7 @@ public class ExecutorRouteBusyover extends ExecutorRouter {
 
     @Override
     public ReturnT<String> route(TriggerParam triggerParam, List<String> addressList) {
-        StringBuilder idleBeatResultSB = new StringBuilder();
+		StringBuilder idleBeatResultSB = new StringBuilder(128);
         for (String address : addressList) {
             // beat
             ReturnT<String> idleBeatResult;

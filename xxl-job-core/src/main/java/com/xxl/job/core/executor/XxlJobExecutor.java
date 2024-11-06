@@ -111,12 +111,12 @@ public class XxlJobExecutor  {
 
     }
 
-    // ---------------------- admin-client (rpc invoker) ----------------------
+	// ---------------------- admin-client (rpc invoker) ----------------------
     private static List<AdminBiz> adminBizList;
 
     private void initAdminBizList(String adminAddresses, String accessToken) throws Exception {
         if (StringUtils.hasText(adminAddresses)) {
-            for (String address: adminAddresses.trim().split(",")) {
+            for (String address : adminAddresses.trim().split(",")) {
                 address = address.trim();
                 if (!address.isEmpty()) {
 
@@ -147,7 +147,7 @@ public class XxlJobExecutor  {
         // generate address
         if (!StringUtils.hasText(address)) {
             String ip_port_address = IpUtil.getIpPort(ip, port);   // registry-address：default use address to registry , otherwise use ip:port if address is null
-            address = "http://{ip_port}/".replace("{ip_port}", ip_port_address);
+            address = "http://" + ip_port_address + "/";
         }
 
         // accessToken
@@ -190,7 +190,7 @@ public class XxlJobExecutor  {
         //make and simplify the variables since they'll be called several times later
         Class<?> clazz = bean.getClass();
         String methodName = executeMethod.getName();
-        if (!StringUtils.hasText(name)) {
+	    if (!StringUtils.hasText(name)) {
             throw new RuntimeException("xxl-job method-jobhandler name invalid, for[" + clazz + "#" + methodName + "] .");
         }
         if (loadJobHandler(name) != null) {

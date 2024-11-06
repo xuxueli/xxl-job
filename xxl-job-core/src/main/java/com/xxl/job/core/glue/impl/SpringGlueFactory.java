@@ -42,27 +42,27 @@ public class SpringGlueFactory extends GlueFactory {
             Object fieldBean = null;
             // with bean-id, bean could be found by both @Resource and @Autowired, or bean could only be found by @Autowired
 
-            if (AnnotationUtils.getAnnotation(field, Resource.class) != null) {
-                try {
-                    Resource resource = AnnotationUtils.getAnnotation(field, Resource.class);
-                    if (resource.name()!=null && resource.name().length()>0){
-                        fieldBean = XxlJobSpringExecutor.getApplicationContext().getBean(resource.name());
-                    } else {
-                        fieldBean = XxlJobSpringExecutor.getApplicationContext().getBean(field.getName());
-                    }
-                } catch (Exception e) {
-                }
-                if (fieldBean==null ) {
-                    fieldBean = XxlJobSpringExecutor.getApplicationContext().getBean(field.getType());
-                }
-            } else if (AnnotationUtils.getAnnotation(field, Autowired.class) != null) {
-                Qualifier qualifier = AnnotationUtils.getAnnotation(field, Qualifier.class);
-                if (qualifier!=null && qualifier.value()!=null && qualifier.value().length()>0) {
-                    fieldBean = XxlJobSpringExecutor.getApplicationContext().getBean(qualifier.value());
-                } else {
-                    fieldBean = XxlJobSpringExecutor.getApplicationContext().getBean(field.getType());
-                }
-            }
+			final Resource resource = AnnotationUtils.getAnnotation(field, Resource.class);
+			if (resource != null) {
+				try {
+					if (!resource.name().isEmpty()) {
+						fieldBean = XxlJobSpringExecutor.getApplicationContext().getBean(resource.name());
+					} else {
+						fieldBean = XxlJobSpringExecutor.getApplicationContext().getBean(field.getName());
+					}
+				} catch (Exception ignored) {
+				}
+				if (fieldBean == null) {
+					fieldBean = XxlJobSpringExecutor.getApplicationContext().getBean(field.getType());
+				}
+			} else if (AnnotationUtils.getAnnotation(field, Autowired.class) != null) {
+				Qualifier qualifier = AnnotationUtils.getAnnotation(field, Qualifier.class);
+				if (qualifier != null && !qualifier.value().isEmpty()) {
+					fieldBean = XxlJobSpringExecutor.getApplicationContext().getBean(qualifier.value());
+				} else {
+					fieldBean = XxlJobSpringExecutor.getApplicationContext().getBean(field.getType());
+				}
+			}
 
             if (fieldBean!=null) {
                 field.setAccessible(true);

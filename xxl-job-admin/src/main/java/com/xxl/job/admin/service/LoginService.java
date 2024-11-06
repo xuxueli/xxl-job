@@ -21,16 +21,15 @@ import java.math.BigInteger;
 @Configuration
 public class LoginService {
 
-    public static final String LOGIN_IDENTITY_KEY = "XXL_JOB_LOGIN_IDENTITY";
+	public static final String LOGIN_IDENTITY_KEY = "XXL_JOB_LOGIN_IDENTITY";
 
-    @Resource
-    private XxlJobUserDao xxlJobUserDao;
+	@Resource
+	private XxlJobUserDao xxlJobUserDao;
 
 
     private String makeToken(XxlJobUser xxlJobUser){
         String tokenJson = JacksonUtil.writeValueAsString(xxlJobUser);
-        String tokenHex = new BigInteger(tokenJson.getBytes()).toString(16);
-        return tokenHex;
+	    return new BigInteger(tokenJson.getBytes()).toString(16);
     }
     private XxlJobUser parseToken(String tokenHex){
         XxlJobUser xxlJobUser = null;
@@ -49,15 +48,15 @@ public class LoginService {
             return new ReturnT<>(500, I18nUtil.getString("login_param_empty"));
         }
 
-        // valid passowrd
-        XxlJobUser xxlJobUser = xxlJobUserDao.loadByUserName(username);
-        if (xxlJobUser == null) {
-            return new ReturnT<>(500, I18nUtil.getString("login_param_unvalid"));
-        }
-        String passwordMd5 = DigestUtils.md5DigestAsHex(password.getBytes());
-        if (!passwordMd5.equals(xxlJobUser.getPassword())) {
-            return new ReturnT<>(500, I18nUtil.getString("login_param_unvalid"));
-        }
+		// valid password
+		XxlJobUser xxlJobUser = xxlJobUserDao.loadByUserName(username);
+		if (xxlJobUser == null) {
+			return new ReturnT<>(500, I18nUtil.getString("login_param_unvalid"));
+		}
+		String passwordMd5 = DigestUtils.md5DigestAsHex(password.getBytes());
+		if (!passwordMd5.equals(xxlJobUser.getPassword())) {
+			return new ReturnT<>(500, I18nUtil.getString("login_param_unvalid"));
+		}
 
         String loginToken = makeToken(xxlJobUser);
 
