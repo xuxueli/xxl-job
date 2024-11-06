@@ -1,14 +1,14 @@
 package com.xxl.job.core.glue;
 
-import com.xxl.job.core.glue.impl.SpringGlueFactory;
-import com.xxl.job.core.handler.IJobHandler;
-import groovy.lang.GroovyClassLoader;
-import org.springframework.util.StringUtils;
-
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+
+import com.xxl.job.core.glue.impl.SpringGlueFactory;
+import com.xxl.job.core.handler.IJobHandler;
+import groovy.lang.GroovyClassLoader;
+import org.springframework.util.StringUtils;
 
 /**
  * glue factory, product class/object by name
@@ -17,19 +17,19 @@ import java.util.concurrent.ConcurrentMap;
  */
 public class GlueFactory {
 
-
 	private static GlueFactory glueFactory = new GlueFactory();
-	public static GlueFactory getInstance(){
+
+	public static GlueFactory getInstance() {
 		return glueFactory;
 	}
-	public static void refreshInstance(int type){
+
+	public static void refreshInstance(int type) {
 		if (type == 0) {
 			glueFactory = new GlueFactory();
 		} else if (type == 1) {
 			glueFactory = new SpringGlueFactory();
 		}
 	}
-
 
 	/**
 	 * groovy class loader
@@ -39,37 +39,31 @@ public class GlueFactory {
 
 	/**
 	 * load new instance, prototype
-	 *
-	 * @param codeSource
-	 * @return
-	 * @throws Exception
 	 */
-	public IJobHandler loadNewInstance(String codeSource) throws Exception{
+	public IJobHandler loadNewInstance(String codeSource) throws Exception {
 		if (StringUtils.hasText(codeSource)) {
 			Class<?> clazz = getCodeSourceClass(codeSource);
 			if (clazz != null) {
-				Object instance = clazz.newInstance();
-				if (instance!=null) {
-					if (instance instanceof IJobHandler) {
-						this.injectService(instance);
-						return (IJobHandler) instance;
-					} else {
-						throw new IllegalArgumentException(">>>>>>>>>>> xxl-glue, loadNewInstance error, "
-								+ "cannot convert from instance["+ instance.getClass() +"] to IJobHandler");
-					}
+				Object instance = clazz.newInstance(); // instance 不会为 null
+				if (instance instanceof IJobHandler) {
+					this.injectService(instance);
+					return (IJobHandler) instance;
+				} else {
+					throw new IllegalArgumentException(">>>>>>>>>>> xxl-glue, loadNewInstance error, " + "cannot convert from instance[" + instance.getClass() + "] to IJobHandler");
 				}
 			}
 		}
 		throw new IllegalArgumentException(">>>>>>>>>>> xxl-glue, loadNewInstance error, instance is null");
 	}
-	private Class<?> getCodeSourceClass(String codeSource){
+
+	private Class<?> getCodeSourceClass(String codeSource) {
 		try {
 			// md5
 			byte[] md5 = MessageDigest.getInstance("MD5").digest(codeSource.getBytes());
 			String md5Str = new BigInteger(1, md5).toString(16);
 
 			Class<?> clazz = CLASS_CACHE.get(md5Str);
-			if(clazz == null){
+			if (clazz == null) {
 				clazz = groovyClassLoader.parseClass(codeSource);
 				CLASS_CACHE.putIfAbsent(md5Str, clazz);
 			}
@@ -81,8 +75,6 @@ public class GlueFactory {
 
 	/**
 	 * inject service of bean field
-	 *
-	 * @param instance
 	 */
 	public void injectService(Object instance) {
 		// do something

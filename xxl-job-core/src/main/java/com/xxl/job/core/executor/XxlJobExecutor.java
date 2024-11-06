@@ -111,14 +111,14 @@ public class XxlJobExecutor  {
 
     }
 
-
     // ---------------------- admin-client (rpc invoker) ----------------------
     private static List<AdminBiz> adminBizList;
+
     private void initAdminBizList(String adminAddresses, String accessToken) throws Exception {
         if (StringUtils.hasText(adminAddresses)) {
             for (String address: adminAddresses.trim().split(",")) {
                 address = address.trim();
-                if (address.length() > 0) {
+                if (!address.isEmpty()) {
 
                     AdminBiz adminBiz = new AdminBizClient(address, accessToken);
 
@@ -141,8 +141,8 @@ public class XxlJobExecutor  {
     private void initEmbedServer(String address, String ip, int port, String appname, String accessToken) throws Exception {
 
         // fill ip port
-        port = port>0?port: NetUtil.findAvailablePort(9999);
-        ip = (StringUtils.hasText(ip)) ? ip : IpUtil.getIp();
+        port = port > 0 ? port : NetUtil.findAvailablePort(9999);
+        ip = StringUtils.hasText(ip) ? ip : IpUtil.getIp();
 
         // generate address
         if (!StringUtils.hasText(address)) {
@@ -190,7 +190,7 @@ public class XxlJobExecutor  {
         //make and simplify the variables since they'll be called several times later
         Class<?> clazz = bean.getClass();
         String methodName = executeMethod.getName();
-        if (name.trim().isEmpty()) {
+        if (!StringUtils.hasText(name)) {
             throw new RuntimeException("xxl-job method-jobhandler name invalid, for[" + clazz + "#" + methodName + "] .");
         }
         if (loadJobHandler(name) != null) {
@@ -213,7 +213,7 @@ public class XxlJobExecutor  {
         Method initMethod = null;
         Method destroyMethod = null;
 
-        if (!xxlJob.init().trim().isEmpty()) {
+        if (StringUtils.hasText(xxlJob.init())) {
             try {
                 initMethod = clazz.getDeclaredMethod(xxlJob.init());
                 initMethod.setAccessible(true);
@@ -221,7 +221,7 @@ public class XxlJobExecutor  {
                 throw new RuntimeException("xxl-job method-jobhandler initMethod invalid, for[" + clazz + "#" + methodName + "] .");
             }
         }
-        if (!xxlJob.destroy().trim().isEmpty()) {
+        if (StringUtils.hasText(xxlJob.destroy())) {
             try {
                 destroyMethod = clazz.getDeclaredMethod(xxlJob.destroy());
                 destroyMethod.setAccessible(true);
