@@ -3,6 +3,7 @@ package com.xxl.job.core.glue;
 import com.xxl.job.core.glue.impl.SpringGlueFactory;
 import com.xxl.job.core.handler.IJobHandler;
 import groovy.lang.GroovyClassLoader;
+import org.springframework.util.StringUtils;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -44,7 +45,7 @@ public class GlueFactory {
 	 * @throws Exception
 	 */
 	public IJobHandler loadNewInstance(String codeSource) throws Exception{
-		if (codeSource!=null && codeSource.trim().length()>0) {
+		if (StringUtils.hasText(codeSource)) {
 			Class<?> clazz = getCodeSourceClass(codeSource);
 			if (clazz != null) {
 				Object instance = clazz.newInstance();

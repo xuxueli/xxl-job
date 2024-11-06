@@ -3,6 +3,7 @@ package com.xxl.job.core.util;
 import com.xxl.job.core.biz.model.ReturnT;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 
 import javax.net.ssl.*;
 import java.io.BufferedReader;
@@ -86,7 +87,7 @@ public class XxlJobRemotingUtil {
             connection.setRequestProperty("Content-Type", "application/json;charset=UTF-8");
             connection.setRequestProperty("Accept-Charset", "application/json;charset=UTF-8");
 
-            if(accessToken!=null && accessToken.trim().length()>0){
+            if(StringUtils.hasText(accessToken)){
                 connection.setRequestProperty(XXL_JOB_ACCESS_TOKEN, accessToken);
             }
 

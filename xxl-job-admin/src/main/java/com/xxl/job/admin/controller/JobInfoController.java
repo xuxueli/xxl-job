@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -75,7 +76,7 @@ public class JobInfoController {
 				jobGroupList = jobGroupList_all;
 			} else {
 				List<String> groupIdStrs = new ArrayList<>();
-				if (loginUser.getPermission()!=null && loginUser.getPermission().trim().length()>0) {
+				if (StringUtils.hasText(loginUser.getPermission())) {
 					groupIdStrs = Arrays.asList(loginUser.getPermission().trim().split(","));
 				}
 				for (XxlJobGroup groupItem:jobGroupList_all) {

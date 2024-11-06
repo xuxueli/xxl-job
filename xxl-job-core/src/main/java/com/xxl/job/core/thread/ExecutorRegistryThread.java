@@ -7,6 +7,7 @@ import com.xxl.job.core.enums.RegistryConfig;
 import com.xxl.job.core.executor.XxlJobExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 
 import java.util.concurrent.TimeUnit;
 
@@ -26,7 +27,7 @@ public class ExecutorRegistryThread {
     public void start(final String appname, final String address){
 
         // valid
-        if (appname==null || appname.trim().length()==0) {
+        if (!StringUtils.hasText(appname)) {
             logger.warn(">>>>>>>>>>> xxl-job, executor registry config fail, appname is null.");
             return;
         }

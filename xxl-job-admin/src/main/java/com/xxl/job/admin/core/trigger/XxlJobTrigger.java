@@ -15,6 +15,7 @@ import com.xxl.job.core.util.IpUtil;
 import com.xxl.job.core.util.ThrowableUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 
 import java.util.Date;
 
@@ -61,7 +62,7 @@ public class XxlJobTrigger {
         XxlJobGroup group = XxlJobAdminConfig.getAdminConfig().getXxlJobGroupDao().load(jobInfo.getJobGroup());
 
         // cover addressList
-        if (addressList!=null && addressList.trim().length()>0) {
+        if (StringUtils.hasText(addressList)) {
             group.setAddressType(1);
             group.setAddressList(addressList.trim());
         }

@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.util.StringUtils;
+
 /**
  * Created by xuxueli on 16/9/30.
  */
@@ -20,7 +22,7 @@ public class XxlJobGroup {
     // registry list
     private List<String> registryList;  // 执行器地址列表(系统注册)
     public List<String> getRegistryList() {
-        if (addressList!=null && addressList.trim().length()>0) {
+        if (StringUtils.hasText(addressList)) {
             registryList = new ArrayList<>(Arrays.asList(addressList.split(",")));
         }
         return registryList;

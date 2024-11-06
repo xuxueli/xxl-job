@@ -3,6 +3,7 @@ package com.xxl.job.core.log;
 import com.xxl.job.core.biz.model.LogResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -33,7 +34,7 @@ public class XxlJobFileAppender {
 	private static String glueSrcPath = logBasePath.concat("/gluesource");
 	public static void initLogPath(String logPath){
 		// init
-		if (logPath!=null && logPath.trim().length()>0) {
+		if (StringUtils.hasText(logPath)) {
 			logBasePath = logPath;
 		}
 		// mk base dir
@@ -90,7 +91,7 @@ public class XxlJobFileAppender {
 	public static void appendLog(String logFileName, String appendLog) {
 
 		// log file
-		if (logFileName==null || logFileName.trim().length()==0) {
+		if (!StringUtils.hasText(logFileName)) {
 			return;
 		}
 		File logFile = new File(logFileName);
@@ -139,7 +140,7 @@ public class XxlJobFileAppender {
 	public static LogResult readLog(String logFileName, int fromLineNum){
 
 		// valid log file
-		if (logFileName==null || logFileName.trim().length()==0) {
+		if (!StringUtils.hasText(logFileName)) {
             return new LogResult(fromLineNum, 0, "readLog fail, logFile not found", true);
 		}
 		File logFile = new File(logFileName);

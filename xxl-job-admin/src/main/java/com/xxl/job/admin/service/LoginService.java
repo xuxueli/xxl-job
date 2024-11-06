@@ -8,6 +8,7 @@ import com.xxl.job.admin.dao.XxlJobUserDao;
 import com.xxl.job.core.biz.model.ReturnT;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.DigestUtils;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -44,7 +45,7 @@ public class LoginService {
     public ReturnT<String> login(HttpServletRequest request, HttpServletResponse response, String username, String password, boolean ifRemember){
 
         // param
-        if (username==null || username.trim().length()==0 || password==null || password.trim().length()==0){
+        if (!StringUtils.hasText(username) || !StringUtils.hasText(password)){
             return new ReturnT<>(500, I18nUtil.getString("login_param_empty"));
         }
 

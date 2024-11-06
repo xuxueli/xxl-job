@@ -19,6 +19,7 @@ import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.util.CharsetUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 
 import java.util.concurrent.*;
 
@@ -157,11 +158,10 @@ public class EmbedServer {
             if (HttpMethod.POST != httpMethod) {
                 return new ReturnT<String>(ReturnT.FAIL_CODE, "invalid request, HttpMethod not support.");
             }
-            if (uri == null || uri.trim().length() == 0) {
+            if (!StringUtils.hasText(uri)) {
                 return new ReturnT<String>(ReturnT.FAIL_CODE, "invalid request, uri-mapping empty.");
             }
-            if (accessToken != null
-                    && accessToken.trim().length() > 0
+            if (StringUtils.hasText(accessToken)
                     && !accessToken.equals(accessTokenReq)) {
                 return new ReturnT<String>(ReturnT.FAIL_CODE, "The access token is wrong.");
             }

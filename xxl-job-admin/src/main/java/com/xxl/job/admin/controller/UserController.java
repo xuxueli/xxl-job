@@ -75,28 +75,30 @@ public class UserController {
     @ResponseBody
     @PermissionLimit(adminuser = true)
     public ReturnT<String> add(XxlJobUser xxlJobUser) {
-
         // valid username
-        if (!StringUtils.hasText(xxlJobUser.getUsername())) {
+        String username = xxlJobUser.getUsername();
+        if (!StringUtils.hasText(username)) {
             return new ReturnT<>(ReturnT.FAIL_CODE, I18nUtil.getString("system_please_input") + I18nUtil.getString("user_username"));
         }
-        xxlJobUser.setUsername(xxlJobUser.getUsername().trim());
-        if (!(xxlJobUser.getUsername().length()>=4 && xxlJobUser.getUsername().length()<=20)) {
+        xxlJobUser.setUsername(username = username.trim());
+        int usernameLength = username.length();
+        if (!(usernameLength >= 4 && usernameLength <= 20)) {
             return new ReturnT<>(ReturnT.FAIL_CODE, I18nUtil.getString("system_lengh_limit") + "[4-20]");
         }
         // valid password
-        if (!StringUtils.hasText(xxlJobUser.getPassword())) {
+        String password = xxlJobUser.getPassword();
+        if (!StringUtils.hasText(password)) {
             return new ReturnT<>(ReturnT.FAIL_CODE, I18nUtil.getString("system_please_input") + I18nUtil.getString("user_password"));
         }
-        xxlJobUser.setPassword(xxlJobUser.getPassword().trim());
-        if (!(xxlJobUser.getPassword().length()>=4 && xxlJobUser.getPassword().length()<=20)) {
+        xxlJobUser.setPassword(password = password.trim());
+        if (!(password.length() >= 4 && password.length() <= 20)) {
             return new ReturnT<>(ReturnT.FAIL_CODE, I18nUtil.getString("system_lengh_limit") + "[4-20]");
         }
         // md5 password
-        xxlJobUser.setPassword(DigestUtils.md5DigestAsHex(xxlJobUser.getPassword().getBytes()));
+        xxlJobUser.setPassword(DigestUtils.md5DigestAsHex(password.getBytes()));
 
         // check repeat
-        XxlJobUser existUser = xxlJobUserDao.loadByUserName(xxlJobUser.getUsername());
+        XxlJobUser existUser = xxlJobUserDao.loadByUserName(username);
         if (existUser != null) {
             return new ReturnT<>(ReturnT.FAIL_CODE, I18nUtil.getString("user_username_repeat"));
         }
@@ -118,13 +120,14 @@ public class UserController {
         }
 
         // valid password
-        if (StringUtils.hasText(xxlJobUser.getPassword())) {
-            xxlJobUser.setPassword(xxlJobUser.getPassword().trim());
-            if (!(xxlJobUser.getPassword().length()>=4 && xxlJobUser.getPassword().length()<=20)) {
+        String password = xxlJobUser.getPassword();
+        if (StringUtils.hasText(password)) {
+            xxlJobUser.setPassword(password = password.trim());
+            if (!(password.length() >= 4 && password.length() <= 20)) {
                 return new ReturnT<>(ReturnT.FAIL_CODE, I18nUtil.getString("system_lengh_limit") + "[4-20]");
             }
             // md5 password
-            xxlJobUser.setPassword(DigestUtils.md5DigestAsHex(xxlJobUser.getPassword().getBytes()));
+            xxlJobUser.setPassword(DigestUtils.md5DigestAsHex(password.getBytes()));
         } else {
             xxlJobUser.setPassword(null);
         }
@@ -154,7 +157,7 @@ public class UserController {
     public ReturnT<String> updatePwd(HttpServletRequest request, String password){
 
         // valid password
-        if (password==null || password.trim().length()==0){
+        if (!StringUtils.hasText(password)) {
             return new ReturnT<>(ReturnT.FAIL.getCode(), "密码不可为空");
         }
         password = password.trim();

@@ -5,6 +5,7 @@ import com.xxl.job.core.handler.annotation.XxlJob;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -130,7 +131,7 @@ public class SampleXxlJob {
 
         // param parse
         String param = XxlJobHelper.getJobParam();
-        if (param==null || param.trim().length()==0) {
+        if (!StringUtils.hasText(param)) {
             XxlJobHelper.log("param["+ param +"] invalid.");
 
             XxlJobHelper.handleFail();

@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.helpers.FormattingTuple;
 import org.slf4j.helpers.MessageFormatter;
+import org.springframework.util.StringUtils;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -158,7 +159,7 @@ public class XxlJobHelper {
         // appendlog
         String logFileName = xxlJobContext.getJobLogFileName();
 
-        if (logFileName!=null && logFileName.trim().length()>0) {
+        if (StringUtils.hasText(logFileName)) {
             XxlJobFileAppender.appendLog(logFileName, formatAppendLog);
             return true;
         } else {
