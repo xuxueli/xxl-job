@@ -37,7 +37,7 @@ public class JobFailMonitorHelper {
 
 					List<Long> failLogIds = XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().findFailJobLogIds(1000);
 					if (failLogIds!=null && !failLogIds.isEmpty()) {
-						for (long failLogId: failLogIds) {
+						for (Long failLogId: failLogIds) {
 
 							// lock log
 							int lockRet = XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().updateAlarmStatus(failLogId, 0, -1);
