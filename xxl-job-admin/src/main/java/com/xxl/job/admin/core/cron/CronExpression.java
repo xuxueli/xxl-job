@@ -182,13 +182,11 @@ import java.util.*;
  * </ul>
  * </p>
  *
- *
  * @author Sharada Jambula, James House
  * @author Contributions from Mads Henderson
  * @author Refactoring from CronTrigger to CronExpression by Aaron Craven
- *
+ * <p>
  * Borrowed from quartz v2.3.1
- *
  */
 public final class CronExpression implements Serializable, Cloneable {
 
@@ -231,8 +229,8 @@ public final class CronExpression implements Serializable, Cloneable {
         dayMap.put("SAT", 7);
     }
 
-    private final String cronExpression;
-    private TimeZone timeZone = null;
+	final String cronExpression;
+	TimeZone timeZone = null;
     transient TreeSet<Integer> seconds;
     transient TreeSet<Integer> minutes;
     transient TreeSet<Integer> hours;
@@ -256,8 +254,7 @@ public final class CronExpression implements Serializable, Cloneable {
      *
      * @param cronExpression String representation of the cron expression the
      *                       new object should represent
-     * @throws java.text.ParseException
-     *         if the string expression cannot be parsed into a valid
+	 * @throws java.text.ParseException if the string expression cannot be parsed into a valid
      *         <CODE>CronExpression</CODE>
      */
     public CronExpression(String cronExpression) throws ParseException {
@@ -274,8 +271,7 @@ public final class CronExpression implements Serializable, Cloneable {
      * Constructs a new {@code CronExpression} as a copy of an existing
      * instance.
      *
-     * @param expression
-     *            The existing cron expression to be copied
+	 * @param expression The existing cron expression to be copied
      */
     public CronExpression(CronExpression expression) {
         /*
@@ -682,7 +678,7 @@ public final class CronExpression implements Serializable, Cloneable {
         return i;
     }
 
-    private void checkIncrementRange(int incr, int type, int idxPos) throws ParseException {
+	void checkIncrementRange(int incr, int type, int idxPos) throws ParseException {
         if (incr > 59 && (type == SECOND || type == MINUTE)) {
             throw new ParseException("Increment > 60 : " + incr, idxPos);
         } else if (incr > 23 && (type == HOUR)) {
@@ -979,28 +975,28 @@ public final class CronExpression implements Serializable, Cloneable {
             if (stopAt == -1) {
                 stopAt = 59;
             }
-            if (startAt == -1 || startAt == ALL_SPEC_INT) {
+			if (startAt == ALL_SPEC_INT) {
                 startAt = 0;
             }
         } else if (type == HOUR) {
             if (stopAt == -1) {
                 stopAt = 23;
             }
-            if (startAt == -1 || startAt == ALL_SPEC_INT) {
+			if (startAt == ALL_SPEC_INT) {
                 startAt = 0;
             }
         } else if (type == DAY_OF_MONTH) {
             if (stopAt == -1) {
                 stopAt = 31;
             }
-            if (startAt == -1 || startAt == ALL_SPEC_INT) {
+			if (startAt == ALL_SPEC_INT) {
                 startAt = 1;
             }
         } else if (type == MONTH) {
             if (stopAt == -1) {
                 stopAt = 12;
             }
-            if (startAt == -1 || startAt == ALL_SPEC_INT) {
+			if (startAt == ALL_SPEC_INT) {
                 startAt = 1;
             }
         } else if (type == DAY_OF_WEEK) {
@@ -1582,8 +1578,7 @@ public final class CronExpression implements Serializable, Cloneable {
         }
     }
 
-
-    private void readObject(java.io.ObjectInputStream stream)
+	void readObject(java.io.ObjectInputStream stream)
             throws java.io.IOException, ClassNotFoundException {
 
         stream.defaultReadObject();
