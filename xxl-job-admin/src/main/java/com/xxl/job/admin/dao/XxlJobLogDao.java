@@ -53,7 +53,7 @@ public interface XxlJobLogDao {
 
 	int clearLog(@Param("logIds") List<Long> logIds);
 
-	List<Long> findFailJobLogIds(@Param("pagesize") int pagesize);
+	List<Long> findFailJobLogIds(@Param("pagesize") int pagesize, @Param("minId") Long minId);
 
 	int updateAlarmStatus(@Param("logId") Long logId,
 	                      @Param("oldAlarmStatus") int oldAlarmStatus,
