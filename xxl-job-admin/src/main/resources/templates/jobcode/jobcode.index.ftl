@@ -11,8 +11,6 @@
       		font-size:16px;
             width: 100%;
       		height: 100%;
-            /*bottom: 0;
-            top: 0px;*/
             position: absolute;
 		}
     </style>

@@ -15,8 +15,6 @@
         }
         h1 { font-size: 100%; color: #f00; line-height: 1.5em; }
     </style>
-    
-</head> 
 </head>
 <body> 
 
@@ -24,7 +22,6 @@
 	    <h1>System Error</h1>
 	    <p>${exceptionMsg}</p>
 		<a href="javascript:window.location.href='${request.contextPath}/'">Back</a>
-	    </p> 
 	</div>
 
 </body>
