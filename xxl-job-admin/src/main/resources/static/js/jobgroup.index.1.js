@@ -146,8 +146,9 @@ $(function() {
 		}
 		html += '</tbody></table>';
 
-		$('#showRegistryListModal .data').html(html);
-		$('#showRegistryListModal').modal({backdrop: false, keyboard: false}).modal('show');
+		var $modal = $('#showRegistryListModal');
+		$modal.find('.data').html(html);
+		$modal.modal({backdrop: false, keyboard: false}).modal('show');
 	});
 
 

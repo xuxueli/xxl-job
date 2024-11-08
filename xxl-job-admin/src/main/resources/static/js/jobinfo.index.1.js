@@ -1,7 +1,8 @@
 $(function() {
 
 	// init date tables
-	var jobTable = $("#job_list").dataTable({
+	var $jobList = $("#job_list");
+	var jobTable = $jobList.dataTable({
 		"deferRender": true,
 		"processing" : true,
 	    "serverSide": true,
@@ -35,7 +36,7 @@ $(function() {
 	                	"visible" : false,
 	                	"render": function ( data, type, row ) {
 	            			var groupMenu = $("#jobGroup").find("option");
-	            			for ( var index in $("#jobGroup").find("option")) {
+					for (var index in groupMenu) {
 	            				if ($(groupMenu[index]).attr('value') == data) {
 									return $(groupMenu[index]).html();
 								}
@@ -101,7 +102,6 @@ $(function() {
                             } else {
                                 return '<small class="label label-default" >STOP</small>';
                             }
-	                		return data;
 	                	}
 	                },
 	                {
@@ -111,7 +111,7 @@ $(function() {
 	                		return function(){
 
                                 // status
-                                var start_stop_div = "";
+						var start_stop_div;
                                 if (1 == row.triggerStatus ) {
                                     start_stop_div = '<li><a href="javascript:void(0);" class="job_operate" _type="job_pause" >'+ I18n.jobinfo_opt_stop +'</a></li>\n';
                                 } else {
@@ -206,7 +206,7 @@ $(function() {
     });
 
 	// job operate
-	$("#job_list").on('click', '.job_operate',function() {
+	$jobList.on('click', '.job_operate', function () {
 		var typeName;
 		var url;
 		var needFresh = false;
@@ -260,7 +260,7 @@ $(function() {
 	});
 
     // job trigger
-    $("#job_list").on('click', '.job_trigger',function() {
+	$jobList.on('click', '.job_trigger', function () {
         var id = $(this).parents('ul').attr("_id");
         var row = tableData['key'+id];
 
@@ -296,7 +296,7 @@ $(function() {
 
 
     // job registryinfo
-    $("#job_list").on('click', '.job_registryinfo',function() {
+	$jobList.on('click', '.job_registryinfo', function () {
         var id = $(this).parents('ul').attr("_id");
         var row = tableData['key'+id];
 
@@ -331,7 +331,7 @@ $(function() {
     });
 
     // job_next_time
-    $("#job_list").on('click', '.job_next_time',function() {
+	$jobList.on('click', '.job_next_time', function () {
         var id = $(this).parents('ul').attr("_id");
         var row = tableData['key'+id];
 
@@ -376,14 +376,16 @@ $(function() {
 	$(".add").click(function(){
 
 		// init-cronGen
-        $("#addModal .form input[name='schedule_conf_CRON']").show().siblings().remove();
-        $("#addModal .form input[name='schedule_conf_CRON']").cronGen({});
+		var $schedule_conf_CRON = $("#addModal .form input[name='schedule_conf_CRON']");
+		$schedule_conf_CRON.show().siblings().remove();
+		$schedule_conf_CRON.cronGen({});
 
 		// 》init scheduleType
-		$("#updateModal .form select[name=scheduleType]").change();
+		var $form = $("#updateModal .form");
+		$form.find("select[name=scheduleType]").change();
 
 		// 》init glueType
-		$("#updateModal .form select[name=glueType]").change();
+		$form.find("select[name=glueType]").change();
 
 		$('#addModal').modal({backdrop: false, keyboard: false}).modal('show');
 	});
@@ -433,30 +435,30 @@ $(function() {
         submitHandler : function(form) {
 
 			// process executorTimeout+executorFailRetryCount
-            var executorTimeout = $("#addModal .form input[name='executorTimeout']").val();
+			var $form = $("#addModal .form"), $executorTimeout = $form.find("input[name='executorTimeout']");
+			var executorTimeout = $executorTimeout.val();
             if(!/^\d+$/.test(executorTimeout)) {
-                executorTimeout = 0;
+				$executorTimeout.val(executorTimeout = 0);
 			}
-            $("#addModal .form input[name='executorTimeout']").val(executorTimeout);
-            var executorFailRetryCount = $("#addModal .form input[name='executorFailRetryCount']").val();
+			var $executorFailRetryCount = $form.find("input[name='executorFailRetryCount']");
+			var executorFailRetryCount = $executorFailRetryCount.val();
             if(!/^\d+$/.test(executorFailRetryCount)) {
-                executorFailRetryCount = 0;
+				$executorFailRetryCount.val(executorFailRetryCount = 0);
             }
-            $("#addModal .form input[name='executorFailRetryCount']").val(executorFailRetryCount);
 
             // process schedule_conf
-			var scheduleType = $("#addModal .form select[name='scheduleType']").val();
+			var scheduleType = $form.find("select[name='scheduleType']").val();
 			var scheduleConf;
 			if (scheduleType == 'CRON') {
-				scheduleConf = $("#addModal .form input[name='cronGen_display']").val();
+				scheduleConf = $form.find("input[name='cronGen_display']").val();
 			} else if (scheduleType == 'FIX_RATE') {
-				scheduleConf = $("#addModal .form input[name='schedule_conf_FIX_RATE']").val();
+				scheduleConf = $form.find("input[name='schedule_conf_FIX_RATE']").val();
 			} else if (scheduleType == 'FIX_DELAY') {
-				scheduleConf = $("#addModal .form input[name='schedule_conf_FIX_DELAY']").val();
+				scheduleConf = $form.find("input[name='schedule_conf_FIX_DELAY']").val();
 			}
-			$("#addModal .form input[name='scheduleConf']").val( scheduleConf );
+			$form.find("input[name='scheduleConf']").val(scheduleConf);
 
-        	$.post(base_url + "/jobinfo/add",  $("#addModal .form").serialize(), function(data, status) {
+			$.post(base_url + "/jobinfo/add", $form.serialize(), function (data, status) {
     			if (data.code == "200") {
 					$('#addModal').modal('hide');
 					layer.open({
@@ -482,26 +484,27 @@ $(function() {
 	});
 	$("#addModal").on('hide.bs.modal', function () {
         addModalValidate.resetForm();
-		$("#addModal .form")[0].reset();
-		$("#addModal .form .form-group").removeClass("has-error");
+		var $form = $("#addModal .form");
+		$form[0].reset();
+		$form.find(".form-group").removeClass("has-error");
 		$(".remote_panel").show();	// remote
 
-		$("#addModal .form input[name='executorHandler']").removeAttr("readonly");
+		$form.find("input[name='executorHandler']").removeAttr("readonly");
 	});
 
 	// scheduleType change
 	$(".scheduleType").change(function(){
-		var scheduleType = $(this).val();
-		$(this).parents("form").find(".schedule_conf").hide();
-		$(this).parents("form").find(".schedule_conf_" + scheduleType).show();
+		var $me = $(this), scheduleType = $me.val(), $form = $me.parents("form");
+		$form.find(".schedule_conf").hide();
+		$form.find(".schedule_conf_" + scheduleType).show();
 
 	});
 
     // glueType change
     $(".glueType").change(function(){
 		// executorHandler
-        var $executorHandler = $(this).parents("form").find("input[name='executorHandler']");
-        var glueType = $(this).val();
+		var $me = $(this), $executorHandler = $me.parents("form").find("input[name='executorHandler']");
+		var glueType = $me.val();
         if ('BEAN' != glueType) {
             $executorHandler.val("");
             $executorHandler.attr("readonly","readonly");
@@ -512,70 +515,72 @@ $(function() {
 
 	$("#addModal .glueType").change(function(){
 		// glueSource
-		var glueType = $(this).val();
+		var glueType = $(this).val(), $glueSource = $("#addModal .form textarea[name='glueSource']");
 		if ('GLUE_GROOVY'==glueType){
-			$("#addModal .form textarea[name='glueSource']").val( $("#addModal .form .glueSource_java").val() );
+			$glueSource.val($("#addModal .form .glueSource_java").val());
 		} else if ('GLUE_SHELL'==glueType){
-			$("#addModal .form textarea[name='glueSource']").val( $("#addModal .form .glueSource_shell").val() );
+			$glueSource.val($("#addModal .form .glueSource_shell").val());
 		} else if ('GLUE_PYTHON'==glueType){
-			$("#addModal .form textarea[name='glueSource']").val( $("#addModal .form .glueSource_python").val() );
+			$glueSource.val($("#addModal .form .glueSource_python").val());
 		} else if ('GLUE_PHP'==glueType){
-            $("#addModal .form textarea[name='glueSource']").val( $("#addModal .form .glueSource_php").val() );
+			$glueSource.val($("#addModal .form .glueSource_php").val());
         } else if ('GLUE_NODEJS'==glueType){
-			$("#addModal .form textarea[name='glueSource']").val( $("#addModal .form .glueSource_nodejs").val() );
+			$glueSource.val($("#addModal .form .glueSource_nodejs").val());
 		} else if ('GLUE_POWERSHELL'==glueType){
-            $("#addModal .form textarea[name='glueSource']").val( $("#addModal .form .glueSource_powershell").val() );
+			$glueSource.val($("#addModal .form .glueSource_powershell").val());
         } else {
-            $("#addModal .form textarea[name='glueSource']").val("");
+			$glueSource.val("");
 		}
 	});
 
 	// update
-	$("#job_list").on('click', '.update',function() {
+	$jobList.on('click', '.update', function () {
 
         var id = $(this).parents('ul').attr("_id");
         var row = tableData['key'+id];
 
 		// fill base
-		$("#updateModal .form input[name='id']").val( row.id );
-		$('#updateModal .form select[name=jobGroup] option[value='+ row.jobGroup +']').prop('selected', true);
-		$("#updateModal .form input[name='jobDesc']").val( row.jobDesc );
-		$("#updateModal .form input[name='author']").val( row.author );
-		$("#updateModal .form input[name='alarmEmail']").val( row.alarmEmail );
+		var $form = $("#updateModal .form");
+		$form.find("input[name='id']").val(row.id);
+		$form.find('select[name=jobGroup]').val(row.jobGroup);
+		$form.find("input[name='jobDesc']").val(row.jobDesc);
+		$form.find("input[name='author']").val(row.author);
+		$form.find("input[name='alarmEmail']").val(row.alarmEmail);
 
 		// fill trigger
-		$('#updateModal .form select[name=scheduleType] option[value='+ row.scheduleType +']').prop('selected', true);
-		$("#updateModal .form input[name='scheduleConf']").val( row.scheduleConf );
+		$form.find('select[name=scheduleType]').val(row.scheduleType);
+		$form.find("input[name='scheduleConf']").val(row.scheduleConf);
 		if (row.scheduleType == 'CRON') {
-			$("#updateModal .form input[name='schedule_conf_CRON']").val( row.scheduleConf );
+			$form.find("input[name='schedule_conf_CRON']").val(row.scheduleConf);
 		} else if (row.scheduleType == 'FIX_RATE') {
-			$("#updateModal .form input[name='schedule_conf_FIX_RATE']").val( row.scheduleConf );
+			$form.find("input[name='schedule_conf_FIX_RATE']").val(row.scheduleConf);
 		} else if (row.scheduleType == 'FIX_DELAY') {
-			$("#updateModal .form input[name='schedule_conf_FIX_DELAY']").val( row.scheduleConf );
+			$form.find("input[name='schedule_conf_FIX_DELAY']").val(row.scheduleConf);
 		}
 
 		// 》init scheduleType
-		$("#updateModal .form select[name=scheduleType]").change();
+		$form.find("select[name=scheduleType]").change();
 
 		// fill job
-		$('#updateModal .form select[name=glueType] option[value='+ row.glueType +']').prop('selected', true);
-		$("#updateModal .form input[name='executorHandler']").val( row.executorHandler );
-		$("#updateModal .form textarea[name='executorParam']").val( row.executorParam );
+		$form.find('select[name=glueType]').val(row.glueType);
+		$form.find("input[name='executorHandler']").val(row.executorHandler);
+		$form.find("textarea[name='executorParam']").val(row.executorParam);
 
 		// 》init glueType
-		$("#updateModal .form select[name=glueType]").change();
+		$form.find("select[name=glueType]").change();
 
 		// 》init-cronGen
-		$("#updateModal .form input[name='schedule_conf_CRON']").show().siblings().remove();
-		$("#updateModal .form input[name='schedule_conf_CRON']").cronGen({});
+		var $schedule_conf_CRON = $form.find("input[name='schedule_conf_CRON']");
+		$schedule_conf_CRON.show().siblings().remove();
+		$schedule_conf_CRON.cronGen({});
 
 		// fill advanced
-		$('#updateModal .form select[name=executorRouteStrategy] option[value='+ row.executorRouteStrategy +']').prop('selected', true);
-		$("#updateModal .form input[name='childJobId']").val( row.childJobId );
-		$('#updateModal .form select[name=misfireStrategy] option[value='+ row.misfireStrategy +']').prop('selected', true);
-		$('#updateModal .form select[name=executorBlockStrategy] option[value='+ row.executorBlockStrategy +']').prop('selected', true);
-		$("#updateModal .form input[name='executorTimeout']").val( row.executorTimeout );
-        $("#updateModal .form input[name='executorFailRetryCount']").val( row.executorFailRetryCount );
+		$form.find('select[name=executorRouteStrategy]').val(row.executorRouteStrategy);
+		$form.find("input[name='childJobId']").val(row.childJobId);
+		$form.find("select[name=misfireStrategy]").val(row.misfireStrategy);
+		$form.find('select[name=executorBlockStrategy]').val(row.executorBlockStrategy);
+		$form.find("input[name='executorTimeout']").val(row.executorTimeout);
+		$form.find("input[name='executorFailRetryCount']").val(row.executorFailRetryCount);
 
 		// show
 		$('#updateModal').modal({backdrop: false, keyboard: false}).modal('show');
@@ -615,32 +620,32 @@ $(function() {
         submitHandler : function(form) {
 
             // process executorTimeout + executorFailRetryCount
-            var executorTimeout = $("#updateModal .form input[name='executorTimeout']").val();
+			var $form = $("#updateModal .form");
+			var $executorTimeout = $form.find("input[name='executorTimeout']");
+			var executorTimeout = $executorTimeout.val();
             if(!/^\d+$/.test(executorTimeout)) {
-                executorTimeout = 0;
+				$executorTimeout.val(executorTimeout = 0);
             }
-            $("#updateModal .form input[name='executorTimeout']").val(executorTimeout);
-            var executorFailRetryCount = $("#updateModal .form input[name='executorFailRetryCount']").val();
+			var $executorFailRetryCount = $form.find("input[name='executorFailRetryCount']");
+			var executorFailRetryCount = $executorFailRetryCount.val();
             if(!/^\d+$/.test(executorFailRetryCount)) {
-                executorFailRetryCount = 0;
+				$executorFailRetryCount.val(executorFailRetryCount = 0);
             }
-            $("#updateModal .form input[name='executorFailRetryCount']").val(executorFailRetryCount);
-
 
 			// process schedule_conf
-			var scheduleType = $("#updateModal .form select[name='scheduleType']").val();
+			var scheduleType = $form.find("select[name='scheduleType']").val();
 			var scheduleConf;
 			if (scheduleType == 'CRON') {
-				scheduleConf = $("#updateModal .form input[name='cronGen_display']").val();
+				scheduleConf = $form.find("input[name='cronGen_display']").val();
 			} else if (scheduleType == 'FIX_RATE') {
-				scheduleConf = $("#updateModal .form input[name='schedule_conf_FIX_RATE']").val();
+				scheduleConf = $form.find("input[name='schedule_conf_FIX_RATE']").val();
 			} else if (scheduleType == 'FIX_DELAY') {
-				scheduleConf = $("#updateModal .form input[name='schedule_conf_FIX_DELAY']").val();
+				scheduleConf = $form.find("input[name='schedule_conf_FIX_DELAY']").val();
 			}
-			$("#updateModal .form input[name='scheduleConf']").val( scheduleConf );
+			$form.find("input[name='scheduleConf']").val(scheduleConf);
 
 			// post
-    		$.post(base_url + "/jobinfo/update", $("#updateModal .form").serialize(), function(data, status) {
+			$.post(base_url + "/jobinfo/update", $form.serialize(), function (data, status) {
     			if (data.code == "200") {
 					$('#updateModal').modal('hide');
 					layer.open({
@@ -666,8 +671,9 @@ $(function() {
 	});
 	$("#updateModal").on('hide.bs.modal', function () {
         updateModalValidate.resetForm();
-        $("#updateModal .form")[0].reset();
-        $("#updateModal .form .form-group").removeClass("has-error");
+		var $form = $("#updateModal .form");
+		$form[0].reset();
+		$form.find(".form-group").removeClass("has-error");
 	});
 
     /**
@@ -676,8 +682,7 @@ $(function() {
 	function findGlueTypeTitle(glueType) {
 		var glueTypeTitle;
         $("#addModal .form select[name=glueType] option").each(function () {
-            var name = $(this).val();
-            var title = $(this).text();
+			var $me = $(this), name = $me.val(), title = $me.text();
             if (glueType == name) {
                 glueTypeTitle = title;
                 return false
@@ -687,50 +692,51 @@ $(function() {
     }
 
     // job_copy
-	$("#job_list").on('click', '.job_copy',function() {
+	$jobList.on('click', '.job_copy', function () {
 
 		var id = $(this).parents('ul').attr("_id");
-		var row = tableData['key'+id];
+		var row = tableData['key' + id], $form  = $('#addModal .form');
 
 		// fill base
-		$('#addModal .form select[name=jobGroup] option[value='+ row.jobGroup +']').prop('selected', true);
-		$("#addModal .form input[name='jobDesc']").val( row.jobDesc );
-		$("#addModal .form input[name='author']").val( row.author );
-		$("#addModal .form input[name='alarmEmail']").val( row.alarmEmail );
+		$form.find('select[name=jobGroup]').val(row.jobGroup);
+		$form.find("input[name=jobDesc]").val(row.jobDesc);
+		$form.find("input[name=author]").val(row.author);
+		$form.find("input[name=alarmEmail]").val(row.alarmEmail);
 
 		// fill trigger
-		$('#addModal .form select[name=scheduleType] option[value='+ row.scheduleType +']').prop('selected', true);
-		$("#addModal .form input[name='scheduleConf']").val( row.scheduleConf );
+		$form.find('select[name=scheduleType]').val(row.scheduleType);
+		$form.find("input[name=scheduleConf]").val(row.scheduleConf);
 		if (row.scheduleType == 'CRON') {
-			$("#addModal .form input[name='schedule_conf_CRON']").val( row.scheduleConf );
+			$form.find("input[name=schedule_conf_CRON]").val(row.scheduleConf);
 		} else if (row.scheduleType == 'FIX_RATE') {
-			$("#addModal .form input[name='schedule_conf_FIX_RATE']").val( row.scheduleConf );
+			$form.find("input[name=schedule_conf_FIX_RATE]").val(row.scheduleConf);
 		} else if (row.scheduleType == 'FIX_DELAY') {
-			$("#addModal .form input[name='schedule_conf_FIX_DELAY']").val( row.scheduleConf );
+			$form.find("input[name=schedule_conf_FIX_DELAY]").val(row.scheduleConf);
 		}
 
 		// 》init scheduleType
-		$("#addModal .form select[name=scheduleType]").change();
+		$form.find("select[name=scheduleType]").change();
 
 		// fill job
-		$('#addModal .form select[name=glueType] option[value='+ row.glueType +']').prop('selected', true);
-		$("#addModal .form input[name='executorHandler']").val( row.executorHandler );
-		$("#addModal .form textarea[name='executorParam']").val( row.executorParam );
+		$form.find('select[name=glueType]').val(row.glueType);
+		$form.find("input[name='executorHandler']").val(row.executorHandler);
+		$form.find("textarea[name='executorParam']").val(row.executorParam);
 
 		// 》init glueType
-		$("#addModal .form select[name=glueType]").change();
+		$form.find("select[name=glueType]").change();
 
 		// 》init-cronGen
-		$("#addModal .form input[name='schedule_conf_CRON']").show().siblings().remove();
-		$("#addModal .form input[name='schedule_conf_CRON']").cronGen({});
+		var $schedule_conf_CRON = $form.find("input[name='schedule_conf_CRON']");
+		$schedule_conf_CRON.show().siblings().remove();
+		$schedule_conf_CRON.cronGen({});
 
 		// fill advanced
-		$('#addModal .form select[name=executorRouteStrategy] option[value='+ row.executorRouteStrategy +']').prop('selected', true);
-		$("#addModal .form input[name='childJobId']").val( row.childJobId );
-		$('#addModal .form select[name=misfireStrategy] option[value='+ row.misfireStrategy +']').prop('selected', true);
-		$('#addModal .form select[name=executorBlockStrategy] option[value='+ row.executorBlockStrategy +']').prop('selected', true);
-		$("#addModal .form input[name='executorTimeout']").val( row.executorTimeout );
-		$("#addModal .form input[name='executorFailRetryCount']").val( row.executorFailRetryCount );
+		$form.find('select[name=executorRouteStrategy]').val(row.executorRouteStrategy);
+		$form.find("input[name=childJobId]").val(row.childJobId);
+		$form.find('select[name=misfireStrategy]').val(row.misfireStrategy);
+		$form.find('select[name=executorBlockStrategy]').val(row.executorBlockStrategy);
+		$form.find("input[name=executorTimeout]").val(row.executorTimeout);
+		$form.find("input[name=executorFailRetryCount]").val(row.executorFailRetryCount);
 
 		// show
 		$('#addModal').modal({backdrop: false, keyboard: false}).modal('show');
