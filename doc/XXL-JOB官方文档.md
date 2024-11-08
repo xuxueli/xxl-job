@@ -768,6 +768,7 @@ XXL-JOB是一个分布式任务调度平台，其核心设计目标是开发迅�
 --- | ---
 [https://github.com/xuxueli/xxl-job](https://github.com/xuxueli/xxl-job) | [Download](https://github.com/xuxueli/xxl-job/releases)  
 [http://gitee.com/xuxueli0323/xxl-job](http://gitee.com/xuxueli0323/xxl-job) | [Download](http://gitee.com/xuxueli0323/xxl-job/releases)
+[https://gitcode.com/xuxueli0323/xxl-job](https://gitcode.com/xuxueli0323/xxl-job) | [Download](https://gitcode.com/xuxueli0323/xxl-job/tags)
 
 
 #### 中央仓库地址
