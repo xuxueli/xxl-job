@@ -2,7 +2,6 @@ package com.xxl.job.admin.controller;
 
 import java.util.*;
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 
 import com.xxl.job.admin.controller.annotation.PermissionLimit;
 import com.xxl.job.admin.core.model.XxlJobGroup;
@@ -12,7 +11,6 @@ import com.xxl.job.admin.dao.*;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.enums.RegistryConfig;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,15 +32,14 @@ public class JobGroupController {
 
 	@RequestMapping
 	@PermissionLimit(adminuser = true)
-	public String index(Model model) {
+	public String index() {
 		return "jobgroup/jobgroup.index";
 	}
 
 	@RequestMapping("/pageList")
 	@ResponseBody
 	@PermissionLimit(adminuser = true)
-	public Map<String, Object> pageList(HttpServletRequest request,
-	                                    @RequestParam(required = false, defaultValue = "0") int start,
+	public Map<String, Object> pageList(@RequestParam(required = false, defaultValue = "0") int start,
 	                                    @RequestParam(required = false, defaultValue = "10") int length,
 	                                    String appname, String title) {
 
@@ -174,9 +171,8 @@ public class JobGroupController {
 		if (allList.size() == 1) {
 			return new ReturnT<>(500, I18nUtil.getString("jobgroup_del_limit_1"));
 		}
-
 		int ret = xxlJobGroupDao.remove(id);
-		return (ret > 0) ? ReturnT.SUCCESS : ReturnT.FAIL;
+		return ret > 0 ? ReturnT.SUCCESS : ReturnT.FAIL;
 	}
 
 	@RequestMapping("/loadById")
