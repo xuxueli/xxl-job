@@ -32,26 +32,18 @@
 </p>
 
 
-## Sponsor
-XXL-JOB is an open source and free project, with its ongoing development made possible entirely by the support of these awesome backers.
-
-XXL-JOB 是一个开源且免费项目，其正在进行的开发完全得益于支持者的支持。开源不易，[前往赞助项目开发](https://www.xuxueli.com/page/donate.html )
-
-<div>
-    <a href="https://www.mingdao.com?s=utm_208&utm_source=XXL-JOB&utm_campaign=github&utm_content=%E6%B3%A8%E5%86%8C%E4%BD%93%E9%AA%8C" title="mingdao" target="_blank" >
-        <img width="240px" src="https://www.xuxueli.com/page/static/images/logo_mingdaoyun.png" >
-    </a>
-    <a href="https://www.jetbrains.com/idea/" title="jetbrains" target="_blank" >
-        <img width="55px" src="https://www.xuxueli.com/page/static/images/logo_intellij.jpeg" >
-    </a>
-</div>
-
 ## Introduction
 XXL-JOB is a distributed task scheduling framework. 
 It's core design goal is to develop quickly and learn simple, lightweight, and easy to expand. 
 Now, it's already open source, and many companies use it in production environments, real "out-of-the-box".
 
 XXL-JOB是一个分布式任务调度平台，其核心设计目标是开发迅速、学习简单、轻量级、易扩展。现已开放源代码并接入多家公司线上产品线，开箱即用。
+
+
+## Sponsor
+XXL-JOB is an open source and free project, with its ongoing development made possible entirely by the support of these awesome backers.
+
+XXL-JOB 是一个开源且免费项目，其正在进行的开发完全得益于支持者的支持。开源不易，[前往赞助项目开发](https://www.xuxueli.com/page/donate.html )
 
 
 ## Documentation
