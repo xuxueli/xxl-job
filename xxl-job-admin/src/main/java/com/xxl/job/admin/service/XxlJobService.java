@@ -31,18 +31,20 @@ public interface XxlJobService {
 	/**
 	 * add job
 	 *
+	 * @param loginUser
 	 * @param jobInfo
 	 * @return
 	 */
-	public ReturnT<String> add(XxlJobInfo jobInfo);
+	public ReturnT<String> add(XxlJobUser loginUser, XxlJobInfo jobInfo);
 
 	/**
 	 * update job
 	 *
+	 * @param loginUser
 	 * @param jobInfo
 	 * @return
 	 */
-	public ReturnT<String> update(XxlJobInfo jobInfo);
+	public ReturnT<String> update(XxlJobUser loginUser, XxlJobInfo jobInfo);
 
 	/**
 	 * remove job

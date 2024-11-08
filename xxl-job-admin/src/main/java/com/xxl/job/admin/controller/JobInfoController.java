@@ -105,14 +105,16 @@ public class JobInfoController {
 	
 	@RequestMapping("/add")
 	@ResponseBody
-	public ReturnT<String> add(XxlJobInfo jobInfo) {
-		return xxlJobService.add(jobInfo);
+	public ReturnT<String> add(HttpServletRequest request, XxlJobInfo jobInfo) {
+		XxlJobUser loginUser = (XxlJobUser) request.getAttribute(LoginService.LOGIN_IDENTITY_KEY);
+		return xxlJobService.add(loginUser, jobInfo);
 	}
 	
 	@RequestMapping("/update")
 	@ResponseBody
-	public ReturnT<String> update(XxlJobInfo jobInfo) {
-		return xxlJobService.update(jobInfo);
+	public ReturnT<String> update(HttpServletRequest request, XxlJobInfo jobInfo) {
+		XxlJobUser loginUser = (XxlJobUser) request.getAttribute(LoginService.LOGIN_IDENTITY_KEY);
+		return xxlJobService.update(loginUser, jobInfo);
 	}
 	
 	@RequestMapping("/remove")
