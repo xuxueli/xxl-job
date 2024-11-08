@@ -129,7 +129,7 @@ public class JobLogController {
 	public ReturnT<LogResult> logDetailCat(long logId, int fromLineNum) {
 		try {
 			// valid
-			XxlJobLog jobLog = xxlJobLogDao.load(logId);    // todo, need to improve performance
+			XxlJobLog jobLog = xxlJobLogDao.load(logId);    // TODO, need to improve performance
 			if (jobLog == null) {
 				return new ReturnT<>(ReturnT.FAIL_CODE, I18nUtil.getString("joblog_logid_unvalid"));
 			}
@@ -139,17 +139,17 @@ public class JobLogController {
 			ReturnT<LogResult> logResult = executorBiz.log(new LogParam(jobLog.getTriggerTime().getTime(), logId, fromLineNum));
 
 			// is end
-			if (logResult.getContent() != null && logResult.getContent().getFromLineNum() > logResult.getContent().getToLineNum()) {
+			final LogResult content = logResult.getContent();
+			if (content != null && content.getFromLineNum() > content.getToLineNum()) {
 				if (jobLog.getHandleCode() > 0) {
-					logResult.getContent().setEnd(true);
+					content.setEnd(true);
 				}
 			}
 
 			// fix xss
-			if (logResult.getContent() != null && StringUtils.hasText(logResult.getContent().getLogContent())) {
-				String newLogContent = logResult.getContent().getLogContent();
-				newLogContent = HtmlUtils.htmlEscape(newLogContent, "UTF-8");
-				logResult.getContent().setLogContent(newLogContent);
+			if (content != null && StringUtils.hasText(content.getLogContent())) {
+				String newLogContent = HtmlUtils.htmlEscape(content.getLogContent(), "UTF-8");
+				content.setLogContent(newLogContent);
 			}
 
 			return logResult;
@@ -216,7 +216,7 @@ public class JobLogController {
 		} else if (type == 8) {
 			clearBeforeNum = 100000;	// 清理十万条以前日志数据
 		} else if (type == 9) {
-			clearBeforeNum = 0;			// 清理所有日志数据
+			// 清理所有日志数据
 		} else {
 			return new ReturnT<>(ReturnT.FAIL_CODE, I18nUtil.getString("joblog_clean_type_unvalid"));
 		}

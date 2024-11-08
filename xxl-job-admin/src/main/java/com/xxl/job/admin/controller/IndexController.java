@@ -1,5 +1,12 @@
 package com.xxl.job.admin.controller;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Map;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import com.xxl.job.admin.controller.annotation.PermissionLimit;
 import com.xxl.job.admin.service.LoginService;
 import com.xxl.job.admin.service.XxlJobService;
@@ -8,22 +15,13 @@ import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Map;
-
 /**
  * index controller
+ *
  * @author xuxueli 2015-12-19 16:13:16
  */
 @Controller
@@ -34,47 +32,44 @@ public class IndexController {
 	@Resource
 	private LoginService loginService;
 
-
 	@RequestMapping("/")
 	public String index(Model model) {
-
 		Map<String, Object> dashboardMap = xxlJobService.dashboardInfo();
 		model.addAllAttributes(dashboardMap);
-
 		return "index";
 	}
 
-    @RequestMapping("/chartInfo")
+	@RequestMapping("/chartInfo")
 	@ResponseBody
 	public ReturnT<Map<String, Object>> chartInfo(Date startDate, Date endDate) {
 		return xxlJobService.chartInfo(startDate, endDate);
-    }
-	
+	}
+
 	@RequestMapping("/toLogin")
-	@PermissionLimit(limit=false)
-	public ModelAndView toLogin(HttpServletRequest request, HttpServletResponse response,ModelAndView modelAndView) {
+	@PermissionLimit(limit = false)
+	public ModelAndView toLogin(HttpServletRequest request, HttpServletResponse response, ModelAndView modelAndView) {
 		if (loginService.ifLogin(request, response) != null) {
-			modelAndView.setView(new RedirectView("/",true,false));
+			modelAndView.setView(new RedirectView("/", true, false));
 			return modelAndView;
 		}
 		return new ModelAndView("login");
 	}
-	
-	@RequestMapping(value="login", method=RequestMethod.POST)
+
+	@PostMapping("login")
 	@ResponseBody
-	@PermissionLimit(limit=false)
-	public ReturnT<String> loginDo(HttpServletRequest request, HttpServletResponse response, String userName, String password, String ifRemember){
+	@PermissionLimit(limit = false)
+	public ReturnT<String> loginDo(HttpServletRequest request, HttpServletResponse response, String userName, String password, String ifRemember) {
 		boolean ifRem = "on".equals(ifRemember);
 		return loginService.login(request, response, userName, password, ifRem);
 	}
-	
-	@RequestMapping(value="logout", method=RequestMethod.POST)
+
+	@PostMapping("logout")
 	@ResponseBody
-	@PermissionLimit(limit=false)
-	public ReturnT<String> logout(HttpServletRequest request, HttpServletResponse response){
+	@PermissionLimit(limit = false)
+	public ReturnT<String> logout(HttpServletRequest request, HttpServletResponse response) {
 		return loginService.logout(request, response);
 	}
-	
+
 	@RequestMapping("/help")
 	public String help() {
 
@@ -91,5 +86,5 @@ public class IndexController {
 		dateFormat.setLenient(false);
 		binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
 	}
-	
+
 }

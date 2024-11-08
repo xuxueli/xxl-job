@@ -1,5 +1,6 @@
 package com.xxl.job.admin.core.util;
 
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -12,124 +13,84 @@ import org.springframework.util.StringUtils;
  */
 public class LocalCacheUtil {
 
-    private static ConcurrentMap<String, LocalCacheData> cacheRepository = new ConcurrentHashMap<>();   // 类型建议用抽象父类，兼容性更好；
-    private static class LocalCacheData{
-        private String key;
-        private Object val;
-        private long timeoutTime;
+	private static final ConcurrentMap<String, LocalCacheData> cacheRepository = new ConcurrentHashMap<>();   // 类型建议用抽象父类，兼容性更好；
 
-        public LocalCacheData() {
-        }
+	/**
+	 * set cache
+	 */
+	public static boolean set(String key, Object val, long cacheTime) {
+		// clean timeout cache, before set new cache (avoid cache too much)
+		cleanTimeoutCache();
 
-        public LocalCacheData(String key, Object val, long timeoutTime) {
-            this.key = key;
-            this.val = val;
-            this.timeoutTime = timeoutTime;
-        }
+		// set new cache
+		if (!StringUtils.hasText(key)) {
+			return false;
+		}
+		if (val == null || cacheTime <= 0) {
+			remove(key);
+		}
+		long timeoutTime = System.currentTimeMillis() + cacheTime;
+		LocalCacheData item = new LocalCacheData(val, timeoutTime);
+		cacheRepository.put(key, item);
+		return true;
+	}
 
-        public String getKey() {
-            return key;
-        }
+	/**
+	 * remove cache
+	 */
+	public static boolean remove(String key) {
+		if (!StringUtils.hasText(key)) {
+			return false;
+		}
+		cacheRepository.remove(key);
+		return true;
+	}
 
-        public void setKey(String key) {
-            this.key = key;
-        }
+	/**
+	 * get cache
+	 */
+	public static Object get(String key) {
+		if (!StringUtils.hasText(key)) {
+			return null;
+		}
+		LocalCacheData item = cacheRepository.get(key);
+		if (item != null) {
+			if (System.currentTimeMillis() < item.timeoutTime) {
+				return item.val;
+			}
+			cacheRepository.remove(key);
+		}
+		return null;
+	}
 
-        public Object getVal() {
-            return val;
-        }
+	/**
+	 * clean timeout cache
+	 */
+	public static boolean cleanTimeoutCache() {
+		if (!cacheRepository.isEmpty()) {
+			final long now = System.currentTimeMillis();
+			for (Map.Entry<String, LocalCacheData> entry : cacheRepository.entrySet()) {
+				LocalCacheData item = entry.getValue();
+				if (item != null) {
+					if (now >= item.timeoutTime) {
+						cacheRepository.remove(entry.getKey());
+					}
+				}
+			}
+		}
+		return true;
+	}
 
-        public void setVal(Object val) {
-            this.val = val;
-        }
+	private static class LocalCacheData {
 
-        public long getTimeoutTime() {
-            return timeoutTime;
-        }
+		Object val;
+		long timeoutTime;
 
-        public void setTimeoutTime(long timeoutTime) {
-            this.timeoutTime = timeoutTime;
-        }
-    }
+		public LocalCacheData(Object val, long timeoutTime) {
+			this.val = val;
+			this.timeoutTime = timeoutTime;
+		}
 
-
-    /**
-     * set cache
-     *
-     * @param key
-     * @param val
-     * @param cacheTime
-     * @return
-     */
-    public static boolean set(String key, Object val, long cacheTime){
-
-        // clean timeout cache, before set new cache (avoid cache too much)
-        cleanTimeoutCache();
-
-        // set new cache
-        if (!StringUtils.hasText(key)) {
-            return false;
-        }
-        if (val == null) {
-            remove(key);
-        }
-        if (cacheTime <= 0) {
-            remove(key);
-        }
-        long timeoutTime = System.currentTimeMillis() + cacheTime;
-        LocalCacheData localCacheData = new LocalCacheData(key, val, timeoutTime);
-        cacheRepository.put(localCacheData.getKey(), localCacheData);
-        return true;
-    }
-
-    /**
-     * remove cache
-     *
-     * @param key
-     * @return
-     */
-    public static boolean remove(String key){
-        if (!StringUtils.hasText(key)) {
-            return false;
-        }
-        cacheRepository.remove(key);
-        return true;
-    }
-
-    /**
-     * get cache
-     *
-     * @param key
-     * @return
-     */
-    public static Object get(String key){
-        if (!StringUtils.hasText(key)) {
-            return null;
-        }
-        LocalCacheData localCacheData = cacheRepository.get(key);
-        if (localCacheData!=null && System.currentTimeMillis()<localCacheData.getTimeoutTime()) {
-            return localCacheData.getVal();
-        } else {
-            remove(key);
-            return null;
-        }
-    }
-
-    /**
-     * clean timeout cache
-     *
-     * @return
-     */
-    public static boolean cleanTimeoutCache(){
-        if (!cacheRepository.keySet().isEmpty()) {
-            for (String key: cacheRepository.keySet()) {
-                LocalCacheData localCacheData = cacheRepository.get(key);
-                if (localCacheData!=null && System.currentTimeMillis()>=localCacheData.getTimeoutTime()) {
-                    cacheRepository.remove(key);
-                }
-            }
-        }
-        return true;
-    }
+	}
 
 }
