@@ -151,11 +151,14 @@ public class UserController {
 
     @RequestMapping("/updatePwd")
     @ResponseBody
-    public ReturnT<String> updatePwd(HttpServletRequest request, String password){
+    public ReturnT<String> updatePwd(HttpServletRequest request, String password, String oldPassword){
 
-        // valid password
+        // valid
+        if (oldPassword==null || oldPassword.trim().length()==0){
+            return new ReturnT<String>(ReturnT.FAIL.getCode(), I18nUtil.getString("system_please_input") + I18nUtil.getString("change_pwd_field_oldpwd"));
+        }
         if (password==null || password.trim().length()==0){
-            return new ReturnT<String>(ReturnT.FAIL.getCode(), "密码不可为空");
+            return new ReturnT<String>(ReturnT.FAIL.getCode(), I18nUtil.getString("system_please_input") + I18nUtil.getString("change_pwd_field_oldpwd"));
         }
         password = password.trim();
         if (!(password.length()>=4 && password.length()<=20)) {
@@ -163,13 +166,17 @@ public class UserController {
         }
 
         // md5 password
+        String md5OldPassword = DigestUtils.md5DigestAsHex(oldPassword.getBytes());
         String md5Password = DigestUtils.md5DigestAsHex(password.getBytes());
 
-        // update pwd
+        // valid old pwd
         XxlJobUser loginUser = PermissionInterceptor.getLoginUser(request);
-
-        // do write
         XxlJobUser existUser = xxlJobUserDao.loadByUserName(loginUser.getUsername());
+        if (!md5OldPassword.equals(existUser.getPassword())) {
+            return new ReturnT<String>(ReturnT.FAIL.getCode(), I18nUtil.getString("change_pwd_field_oldpwd") + I18nUtil.getString("system_unvalid"));
+        }
+
+        // write new
         existUser.setPassword(md5Password);
         xxlJobUserDao.update(existUser);
 
