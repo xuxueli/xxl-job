@@ -79,6 +79,10 @@ public class JobInfoController {
 	@RequestMapping("/add")
 	@ResponseBody
 	public ReturnT<String> add(HttpServletRequest request, XxlJobInfo jobInfo) {
+		// valid permission
+		PermissionInterceptor.validJobGroupPermission(request, jobInfo.getJobGroup());
+
+		// opt
 		XxlJobUser loginUser = PermissionInterceptor.getLoginUser(request);
 		return xxlJobService.add(jobInfo, loginUser);
 	}
@@ -86,6 +90,10 @@ public class JobInfoController {
 	@RequestMapping("/update")
 	@ResponseBody
 	public ReturnT<String> update(HttpServletRequest request, XxlJobInfo jobInfo) {
+		// valid permission
+		PermissionInterceptor.validJobGroupPermission(request, jobInfo.getJobGroup());
+
+		// opt
 		XxlJobUser loginUser = PermissionInterceptor.getLoginUser(request);
 		return xxlJobService.update(jobInfo, loginUser);
 	}

@@ -207,8 +207,11 @@ public class JobLogController {
 
 	@RequestMapping("/clearLog")
 	@ResponseBody
-	public ReturnT<String> clearLog(int jobGroup, int jobId, int type){
+	public ReturnT<String> clearLog(HttpServletRequest request, int jobGroup, int jobId, int type){
+		// valid permission
+		PermissionInterceptor.validJobGroupPermission(request, jobGroup);
 
+		// opt
 		Date clearBeforeTime = null;
 		int clearBeforeNum = 0;
 		if (type == 1) {
