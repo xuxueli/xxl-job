@@ -270,16 +270,27 @@ public class JobScheduleHelper {
     }
 
     private void refreshNextValidTime(XxlJobInfo jobInfo, Date fromTime) throws Exception {
-        Date nextValidTime = generateNextValidTime(jobInfo, fromTime);
-        if (nextValidTime != null) {
-            jobInfo.setTriggerLastTime(jobInfo.getTriggerNextTime());
-            jobInfo.setTriggerNextTime(nextValidTime.getTime());
-        } else {
+        try {
+            Date nextValidTime = generateNextValidTime(jobInfo, fromTime);
+            if (nextValidTime != null) {
+                jobInfo.setTriggerLastTime(jobInfo.getTriggerNextTime());
+                jobInfo.setTriggerNextTime(nextValidTime.getTime());
+            } else {
+                // generateNextValidTime fail, stop job
+                jobInfo.setTriggerStatus(0);
+                jobInfo.setTriggerLastTime(0);
+                jobInfo.setTriggerNextTime(0);
+                logger.error(">>>>>>>>>>> xxl-job, refreshNextValidTime fail for job: jobId={}, scheduleType={}, scheduleConf={}",
+                        jobInfo.getId(), jobInfo.getScheduleType(), jobInfo.getScheduleConf());
+            }
+        } catch (Exception e) {
+            // generateNextValidTime error, stop job
             jobInfo.setTriggerStatus(0);
             jobInfo.setTriggerLastTime(0);
             jobInfo.setTriggerNextTime(0);
-            logger.warn(">>>>>>>>>>> xxl-job, refreshNextValidTime fail for job: jobId={}, scheduleType={}, scheduleConf={}",
-                    jobInfo.getId(), jobInfo.getScheduleType(), jobInfo.getScheduleConf());
+
+            logger.error(">>>>>>>>>>> xxl-job, refreshNextValidTime error for job: jobId={}, scheduleType={}, scheduleConf={}",
+                    jobInfo.getId(), jobInfo.getScheduleType(), jobInfo.getScheduleConf(), e);
         }
     }
 
