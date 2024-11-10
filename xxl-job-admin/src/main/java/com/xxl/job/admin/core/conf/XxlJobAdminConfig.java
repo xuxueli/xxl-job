@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import javax.sql.DataSource;
 import java.util.Arrays;
+import java.util.Optional;
 
 /**
  * xxl-job config
@@ -67,6 +68,9 @@ public class XxlJobAdminConfig implements InitializingBean, DisposableBean {
     @Value("${xxl.job.logretentiondays}")
     private int logretentiondays;
 
+    @Value("${xxl.job.pre-read-ms}")
+    private long preReadMs;
+
     // dao, service
 
     @Resource
@@ -121,6 +125,10 @@ public class XxlJobAdminConfig implements InitializingBean, DisposableBean {
             return -1;  // Limit greater than or equal to 7, otherwise close
         }
         return logretentiondays;
+    }
+
+    public long getPreReadMs() {
+        return Optional.ofNullable(preReadMs).orElse(5000l);
     }
 
     public XxlJobLogDao getXxlJobLogDao() {
