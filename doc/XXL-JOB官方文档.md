@@ -2368,6 +2368,8 @@ public void execute() {
 
 ### 7.35 版本 v2.4.2 Release Notes[规划中]
 - 1、【升级】多个项目依赖升级至较新稳定版本，涉及netty、groovy、gson、springboot、mybatis等；
+- 2、【修复】"CVE-2024-42681" 子任务越权漏洞修复；
+
 - 2、[规划中]登陆态Token声称逻辑优化，混淆登陆时间属性，降低token泄漏风险。
 
 ### TODO LIST

@@ -1,4 +1,4 @@
-package com.xxl.job.admin.service;
+package com.xxl.job.admin.service.impl;
 
 import com.xxl.job.admin.core.model.XxlJobUser;
 import com.xxl.job.admin.core.util.CookieUtil;
@@ -6,7 +6,7 @@ import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.admin.core.util.JacksonUtil;
 import com.xxl.job.admin.dao.XxlJobUserDao;
 import com.xxl.job.core.biz.model.ReturnT;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
 import javax.annotation.Resource;
@@ -17,7 +17,7 @@ import java.math.BigInteger;
 /**
  * @author xuxueli 2019-05-04 22:13:264
  */
-@Configuration
+@Service
 public class LoginService {
 
     public static final String LOGIN_IDENTITY_KEY = "XXL_JOB_LOGIN_IDENTITY";
@@ -25,6 +25,8 @@ public class LoginService {
     @Resource
     private XxlJobUserDao xxlJobUserDao;
 
+
+    // ---------------------- token tool ----------------------
 
     private String makeToken(XxlJobUser xxlJobUser){
         String tokenJson = JacksonUtil.writeValueAsString(xxlJobUser);
@@ -40,6 +42,8 @@ public class LoginService {
         return xxlJobUser;
     }
 
+
+    // ---------------------- login tool, with cookie and db ----------------------
 
     public ReturnT<String> login(HttpServletRequest request, HttpServletResponse response, String username, String password, boolean ifRemember){
 

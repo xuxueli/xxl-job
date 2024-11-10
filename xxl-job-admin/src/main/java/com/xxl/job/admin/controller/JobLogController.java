@@ -1,5 +1,6 @@
 package com.xxl.job.admin.controller;
 
+import com.xxl.job.admin.controller.interceptor.PermissionInterceptor;
 import com.xxl.job.admin.core.complete.XxlJobCompleter;
 import com.xxl.job.admin.core.exception.XxlJobException;
 import com.xxl.job.admin.core.model.XxlJobGroup;
@@ -56,7 +57,7 @@ public class JobLogController {
 		List<XxlJobGroup> jobGroupList_all =  xxlJobGroupDao.findAll();
 
 		// filter group
-		List<XxlJobGroup> jobGroupList = JobInfoController.filterJobGroupByRole(request, jobGroupList_all);
+		List<XxlJobGroup> jobGroupList = PermissionInterceptor.filterJobGroupByRole(request, jobGroupList_all);
 		if (jobGroupList==null || jobGroupList.size()==0) {
 			throw new XxlJobException(I18nUtil.getString("jobgroup_empty"));
 		}
@@ -73,7 +74,7 @@ public class JobLogController {
 			model.addAttribute("jobInfo", jobInfo);
 
 			// valid permission
-			JobInfoController.validPermission(request, jobInfo.getJobGroup());
+			PermissionInterceptor.validJobGroupPermission(request, jobInfo.getJobGroup());
 		}
 
 		return "joblog/joblog.index";
@@ -94,7 +95,7 @@ public class JobLogController {
 										int jobGroup, int jobId, int logStatus, String filterTime) {
 
 		// valid permission
-		JobInfoController.validPermission(request, jobGroup);	// 仅管理员支持查询全部；普通用户仅支持查询有权限的 jobGroup
+		PermissionInterceptor.validJobGroupPermission(request, jobGroup);	// 仅管理员支持查询全部；普通用户仅支持查询有权限的 jobGroup
 		
 		// parse param
 		Date triggerTimeStart = null;

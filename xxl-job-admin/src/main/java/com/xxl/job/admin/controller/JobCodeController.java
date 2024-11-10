@@ -1,5 +1,6 @@
 package com.xxl.job.admin.controller;
 
+import com.xxl.job.admin.controller.interceptor.PermissionInterceptor;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLogGlue;
 import com.xxl.job.admin.core.util.I18nUtil;
@@ -43,7 +44,7 @@ public class JobCodeController {
 		}
 
 		// valid permission
-		JobInfoController.validPermission(request, jobInfo.getJobGroup());
+		PermissionInterceptor.validJobGroupPermission(request, jobInfo.getJobGroup());
 
 		// Glue类型-字典
 		model.addAttribute("GlueTypeEnum", GlueTypeEnum.values());

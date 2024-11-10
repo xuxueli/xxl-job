@@ -1,12 +1,12 @@
 package com.xxl.job.admin.controller;
 
 import com.xxl.job.admin.controller.annotation.PermissionLimit;
+import com.xxl.job.admin.controller.interceptor.PermissionInterceptor;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobUser;
 import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.admin.dao.XxlJobGroupDao;
 import com.xxl.job.admin.dao.XxlJobUserDao;
-import com.xxl.job.admin.service.LoginService;
 import com.xxl.job.core.biz.model.ReturnT;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -112,7 +112,7 @@ public class UserController {
     public ReturnT<String> update(HttpServletRequest request, XxlJobUser xxlJobUser) {
 
         // avoid opt login seft
-        XxlJobUser loginUser = (XxlJobUser) request.getAttribute(LoginService.LOGIN_IDENTITY_KEY);
+        XxlJobUser loginUser = PermissionInterceptor.getLoginUser(request);
         if (loginUser.getUsername().equals(xxlJobUser.getUsername())) {
             return new ReturnT<String>(ReturnT.FAIL.getCode(), I18nUtil.getString("user_update_loginuser_limit"));
         }
@@ -140,7 +140,7 @@ public class UserController {
     public ReturnT<String> remove(HttpServletRequest request, int id) {
 
         // avoid opt login seft
-        XxlJobUser loginUser = (XxlJobUser) request.getAttribute(LoginService.LOGIN_IDENTITY_KEY);
+        XxlJobUser loginUser = PermissionInterceptor.getLoginUser(request);
         if (loginUser.getId() == id) {
             return new ReturnT<String>(ReturnT.FAIL.getCode(), I18nUtil.getString("user_update_loginuser_limit"));
         }
@@ -166,7 +166,7 @@ public class UserController {
         String md5Password = DigestUtils.md5DigestAsHex(password.getBytes());
 
         // update pwd
-        XxlJobUser loginUser = (XxlJobUser) request.getAttribute(LoginService.LOGIN_IDENTITY_KEY);
+        XxlJobUser loginUser = PermissionInterceptor.getLoginUser(request);
 
         // do write
         XxlJobUser existUser = xxlJobUserDao.loadByUserName(loginUser.getUsername());

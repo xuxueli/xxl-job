@@ -61,7 +61,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 	}
 
 	@Override
-	public ReturnT<String> add(XxlJobInfo jobInfo) {
+	public ReturnT<String> add(XxlJobInfo jobInfo, XxlJobUser loginUser) {
 
 		// valid base
 		XxlJobGroup group = xxlJobGroupDao.load(jobInfo.getJobGroup());
@@ -131,6 +131,10 @@ public class XxlJobServiceImpl implements XxlJobService {
 						return new ReturnT<String>(ReturnT.FAIL_CODE,
 								MessageFormat.format((I18nUtil.getString("jobinfo_field_childJobId")+"({0})"+I18nUtil.getString("system_not_found")), childJobIdItem));
 					}
+					if (!loginUser.validPermission(childJobInfo.getJobGroup())) {
+						return new ReturnT<String>(ReturnT.FAIL_CODE,
+								MessageFormat.format((I18nUtil.getString("jobinfo_field_childJobId")+"({0})"+I18nUtil.getString("system_permission_limit")), childJobIdItem));
+					}
 				} else {
 					return new ReturnT<String>(ReturnT.FAIL_CODE,
 							MessageFormat.format((I18nUtil.getString("jobinfo_field_childJobId")+"({0})"+I18nUtil.getString("system_unvalid")), childJobIdItem));
@@ -169,7 +173,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 	}
 
 	@Override
-	public ReturnT<String> update(XxlJobInfo jobInfo) {
+	public ReturnT<String> update(XxlJobInfo jobInfo, XxlJobUser loginUser) {
 
 		// valid base
 		if (jobInfo.getJobDesc()==null || jobInfo.getJobDesc().trim().length()==0) {
@@ -222,6 +226,10 @@ public class XxlJobServiceImpl implements XxlJobService {
 					if (childJobInfo==null) {
 						return new ReturnT<String>(ReturnT.FAIL_CODE,
 								MessageFormat.format((I18nUtil.getString("jobinfo_field_childJobId")+"({0})"+I18nUtil.getString("system_not_found")), childJobIdItem));
+					}
+					if (!loginUser.validPermission(childJobInfo.getJobGroup())) {
+						return new ReturnT<String>(ReturnT.FAIL_CODE,
+								MessageFormat.format((I18nUtil.getString("jobinfo_field_childJobId")+"({0})"+I18nUtil.getString("system_permission_limit")), childJobIdItem));
 					}
 				} else {
 					return new ReturnT<String>(ReturnT.FAIL_CODE,
