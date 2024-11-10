@@ -2369,8 +2369,12 @@ public void execute() {
 ### 7.35 版本 v2.4.2 Release Notes[规划中]
 - 1、【升级】多个项目依赖升级至较新稳定版本，涉及netty、groovy、gson、springboot、mybatis等；
 - 2、【修复】"CVE-2024-42681" 子任务越权漏洞修复；
+- 3、【修复】"CVE-2023-33779" 任务API越权问题修复；
 - 3、【优化】Cron解析组件优化代码优化。
-- 4、【优化】修改密码交互优化，解决CSRF隐患。
+- 4、【优化】修改密码交互调整，解决CSRF问题隐患。
+
+备注：“CVE-2024-38820”漏洞源自spring，当前使用spring5.x及springboot2.x软件普遍受该问题影响。
+该问题修复需要升级至spring6.x与springboot3.x，如有诉求可自行升级，计划下个大版本升级spring相关版本解决该问题。
 
 
 
