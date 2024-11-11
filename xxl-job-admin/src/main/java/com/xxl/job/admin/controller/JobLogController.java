@@ -10,6 +10,7 @@ import com.xxl.job.admin.core.model.*;
 import com.xxl.job.admin.core.scheduler.XxlJobScheduler;
 import com.xxl.job.admin.core.thread.JobLogReportHelper;
 import com.xxl.job.admin.core.util.I18nUtil;
+import com.xxl.job.admin.core.util.ModelUtil;
 import com.xxl.job.admin.dao.*;
 import com.xxl.job.core.biz.ExecutorBiz;
 import com.xxl.job.core.biz.model.*;
@@ -100,14 +101,12 @@ public class JobLogController {
 
 		// page query
 		List<XxlJobLog> list = xxlJobLogDao.pageList(start, length, jobGroup, jobId, triggerTimeStart, triggerTimeEnd, logStatus);
-		int list_count = xxlJobLogDao.pageListCount(start, length, jobGroup, jobId, triggerTimeStart, triggerTimeEnd, logStatus);
+		int totalCount = ModelUtil.calcTotalCount(list, start, length);
+		if (totalCount == -1) {
+			totalCount = xxlJobLogDao.pageListCount(start, length, jobGroup, jobId, triggerTimeStart, triggerTimeEnd, logStatus);
+		}
 
-		// package result
-		Map<String, Object> maps = new HashMap<>(4, 1F);
-		maps.put("recordsTotal", list_count);        // 总记录数
-		maps.put("recordsFiltered", list_count);    // 过滤后的总记录数
-		maps.put("data", list);                    // 分页列表
-		return maps;
+		return ModelUtil.pageListResult(list, totalCount);
 	}
 
 	@RequestMapping("/logDetailPage")

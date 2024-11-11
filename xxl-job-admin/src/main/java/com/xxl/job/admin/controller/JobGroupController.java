@@ -7,6 +7,7 @@ import com.xxl.job.admin.controller.annotation.PermissionLimit;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobRegistry;
 import com.xxl.job.admin.core.util.I18nUtil;
+import com.xxl.job.admin.core.util.ModelUtil;
 import com.xxl.job.admin.dao.*;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.enums.RegistryConfig;
@@ -45,14 +46,12 @@ public class JobGroupController {
 
 		// page query
 		List<XxlJobGroup> list = xxlJobGroupDao.pageList(start, length, appname, title);
-		int list_count = xxlJobGroupDao.pageListCount(start, length, appname, title);
+		int totalCount = ModelUtil.calcTotalCount(list, start, length);
+		if (totalCount == -1) {
+			totalCount = xxlJobGroupDao.pageListCount(start, length, appname, title);
+		}
 
-		// package result
-		Map<String, Object> maps = new HashMap<>(4, 1F); // 初始化容量，降低内存占用
-		maps.put("recordsTotal", list_count);        // 总记录数
-		maps.put("recordsFiltered", list_count);    // 过滤后的总记录数
-		maps.put("data", list);                    // 分页列表
-		return maps;
+		return ModelUtil.pageListResult(list, totalCount);
 	}
 
 	@RequestMapping("/save")
