@@ -1,4 +1,4 @@
-package com.xxl.job.admin.service;
+package com.xxl.job.admin.service.impl;
 
 import java.math.BigInteger;
 import javax.annotation.Resource;

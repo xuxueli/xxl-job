@@ -1,12 +1,11 @@
 package com.xxl.job.admin.service;
 
+import java.util.Date;
+import java.util.Map;
 
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobUser;
 import com.xxl.job.core.biz.model.ReturnT;
-
-import java.util.Date;
-import java.util.Map;
 
 /**
  * core job action for xxl-job
@@ -23,12 +22,12 @@ public interface XxlJobService {
 	/**
 	 * add job
 	 */
-	ReturnT<String> add(XxlJobInfo jobInfo);
+	ReturnT<String> add(XxlJobInfo jobInfo, XxlJobUser loginUser);
 
 	/**
 	 * update job
 	 */
-	ReturnT<String> update(XxlJobInfo jobInfo);
+	ReturnT<String> update(XxlJobInfo jobInfo, XxlJobUser loginUser);
 
 	/**
 	 * remove job

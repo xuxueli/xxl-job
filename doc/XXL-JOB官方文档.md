@@ -748,6 +748,28 @@ XXL-JOB是一个分布式任务调度平台，其核心设计目标是开发迅�
     - 652、福建福昕软件开发股份有限公司【福昕】
     - 653、广州中长康达信息技术有限公司
     - 654、武汉趣改信息科技有限公司
+    - 655、北京华夏思源科技发展有限公司
+    - 656、宁波关关通科技有限公司
+    - 657、青岛吕氏餐饮有限公司
+    - 658、杭州乐刻网络科技有限公司
+    - 659、上海红瓦信息科技有限公司
+    - 660、陕西旅小宝信息科技有限公司
+    - 661、中科卓恒(大连)科技有限公司
+    - 662、北京华益精点生物技术有限公司
+    - 663、马士基（中国）航运有限公司【马士基】
+    - 664、陕西美咚网络科技有限公司
+    - 665、山东新北洋信息技术股份有限公司 
+    - 666、福建中瑞文化发展集团有限公司
+    - 667、黑龙江省建工集团有限责任公司【黑龙江省建工】
+    - 668、志信能达安全科技(广州)有限公司
+    - 669、重庆开源共创科技有限公司
+    - 670、华泰人寿保险股份有限公司【华泰人寿】
+    - 671、成都盘古纵横集团
+    - 672、北京果果乐学科技有限公司
+    - 673、北京凌云空间科技有限公司
+    - 674、临工重机股份有限公司
+    - 675、上海热风时尚管理集团【热风】
+    - 676、福建中瑞文化发展集团有限公司
     - ……
 
 > 更多接入的公司，欢迎在 [登记地址](https://github.com/xuxueli/xxl-job/issues/1 ) 登记，登记仅仅为了产品推广。
@@ -768,6 +790,7 @@ XXL-JOB是一个分布式任务调度平台，其核心设计目标是开发迅�
 --- | ---
 [https://github.com/xuxueli/xxl-job](https://github.com/xuxueli/xxl-job) | [Download](https://github.com/xuxueli/xxl-job/releases)  
 [http://gitee.com/xuxueli0323/xxl-job](http://gitee.com/xuxueli0323/xxl-job) | [Download](http://gitee.com/xuxueli0323/xxl-job/releases)
+[https://gitcode.com/xuxueli0323/xxl-job](https://gitcode.com/xuxueli0323/xxl-job) | [Download](https://gitcode.com/xuxueli0323/xxl-job/tags)
 
 
 #### 中央仓库地址
@@ -1037,7 +1060,7 @@ public XxlJobSpringExecutor xxlJobExecutor() {
             GLUE模式(PHP)：任务以源码方式维护在调度中心；该模式的任务实际上是一段 "php" 脚本；
             GLUE模式(NodeJS)：任务以源码方式维护在调度中心；该模式的任务实际上是一段 "nodejs" 脚本；
             GLUE模式(PowerShell)：任务以源码方式维护在调度中心；该模式的任务实际上是一段 "PowerShell" 脚本；
-        - JobHandler：运行模式为 "BEAN模式" 时生效，对应执行器中新开发的JobHandler类“@JobHandler”注解自定义的value值；
+        - JobHandler：运行模式为 "BEAN模式" 时生效，对应执行器中新开发的JobHandler类“@XxlJob”注解自定义的value值；
         - 执行参数：任务执行所需的参数；     
         
     高级配置：
@@ -1479,7 +1502,7 @@ xxl-job-admin#com.xxl.job.admin.controller.JobApiController.callback
 #### 5.5.4 执行器
 执行器实际上是一个内嵌的Server，默认端口9999（配置项：xxl.job.executor.port）。
 
-在项目启动时，执行器会通过“@JobHandler”识别Spring容器中“Bean模式任务”，以注解的value属性为key管理起来。
+在项目启动时，执行器会通过“@XxlJob”识别Spring容器中“Bean模式任务”，以注解的value属性为key管理起来。
 
 “执行器”接收到“调度中心”的调度请求时，如果任务类型为“Bean模式”，将会匹配Spring容器中的“Bean模式任务”，然后调用其execute方法，执行任务逻辑。如果任务类型为“GLUE模式”，将会加载GLue代码，实例化Java对象，注入依赖的Spring服务（注意：Glue代码中注入的Spring服务，必须存在与该“执行器”项目的Spring容器中），然后调用execute方法，执行任务逻辑。
 
@@ -2351,22 +2374,33 @@ public void execute() {
 - 5、【优化】任务线程名优化，提升可读性与问题定位效率(ISSUE-2527)。
 
 ### 7.33 版本 v2.4.0 Release Notes[2023-03-23]
-- 1、【优化】执行器任务Bean扫描逻辑优化：解决懒加载注解失效问题。
+- 1、【优化】执行器任务Bean扫描逻辑优化：解决懒加载注解失效问题；
 - 2、【优化】多个项目依赖升级至较新稳定版本，涉及netty、groovy、spring、springboot、mybatis等；
-- 3、【修复】"CVE-2022-36157" 授权漏洞修复。 
-- 4、【修复】"CVE-2022-43183" SSRF漏洞修复。
+- 3、【修复】漏洞修复，包括："CVE-2022-36157" 授权漏洞修复；"CVE-2022-43183" SSRF漏洞修复；
 
 ### 7.34 版本 v2.4.1 Release Notes[2024-04-17]
 - 1、【优化】多个项目依赖升级至较新稳定版本，涉及netty、groovy、springboot、mybatis等；
-- 2、【修复】"CVE-2022-43402" groovy低版本漏洞修复。
-- 3、【修复】"CVE-2024-29025" netty低版本漏洞修复。
-- 4、【修复】"CVE-2024-3366" freemarker模板注入漏洞修复。
-- 5、【修复】"CVE-2022-43183" 越权漏洞修复。
-- 6、【修复】调度日志页面XSS漏洞修复(ISSUE-3360)。
-- 7、【优化】执行器注册节点显示优化，解决注册节点过多时无法展示问题。
+- 2、【优化】执行器注册节点显示交互调整，优化注册节点过多时展示不全体验；
+- 3、【修复】漏洞修复，包括："CVE-2022-43402" groovy低版本漏洞修复；"CVE-2024-29025" netty低版本漏洞修复；"CVE-2024-3366" freemarker模板注入漏洞修复；"CVE-2022-43183" 越权漏洞增强修复；
+- 4、【修复】调度日志页面XSS问题修复(ISSUE-3360)。
+
 
 ### 7.35 版本 v2.4.2 Release Notes[规划中]
-- 1、[规划中]登陆态Token声称逻辑优化，混淆登陆时间属性，降低token泄漏风险。
+- 1、【优化】调度中心任务Next计算逻辑调整，避免Cron解析失败导致重复执行问题。
+- 2、【优化】Cron解析组件代码重构微调，健壮性提升；
+- 3、【优化】修改密码交互调整，避免CSRF隐患；
+- 4、【优化】任务信息、执行日志API飞功能设计完善，避免越权隐患；
+- 5、【修复】漏洞修复，包括 "CVE-2024-42681" 子任务越权漏洞修复、"CVE-2023-33779" 任务API越权问题修复；
+- 6、【升级】多个项目依赖升级至较新稳定版本，涉及netty、groovy、gson、springboot、mybatis等；
+
+备注：“CVE-2024-38820”漏洞源自spring，当前使用spring5.x及springboot2.x软件普遍受该问题影响。
+该问题修复需要升级至spring6.x与springboot3.x，如有诉求可自行升级，计划下个大版本升级spring相关版本解决该问题。
+
+
+### 7.35 版本 v2.5.0 Release Notes[规划中]
+- 1、[规划中]升级springboot3.x，解决2.x老版本漏洞类问题。注意，springboot3.x依赖jdk17。
+- 2、[规划中]安全功能增强，通讯加密参数改用加密数据避免AccessToken明文， 降低token泄漏风险。
+- 3、[规划中]登陆态Token声称逻辑优化，混淆登陆时间属性，降低token泄漏风险。
 
 ### TODO LIST
 - 1、调度隔离：调度中心针对不同执行器，各自维护不同的调度和远程触发组件。

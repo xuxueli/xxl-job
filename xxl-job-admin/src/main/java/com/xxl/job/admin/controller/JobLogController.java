@@ -4,6 +4,7 @@ import java.util.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import com.xxl.job.admin.controller.interceptor.PermissionInterceptor;
 import com.xxl.job.admin.core.complete.XxlJobCompleter;
 import com.xxl.job.admin.core.exception.XxlJobException;
 import com.xxl.job.admin.core.model.*;
@@ -48,7 +49,7 @@ public class JobLogController {
 		List<XxlJobGroup> jobGroupList_all = xxlJobGroupDao.findAll();
 
 		// filter group
-		List<XxlJobGroup> jobGroupList = JobInfoController.filterJobGroupByRole(request, jobGroupList_all);
+		List<XxlJobGroup> jobGroupList = PermissionInterceptor.filterJobGroupByRole(request, jobGroupList_all);
 		if (jobGroupList.isEmpty()) {
 			throw new XxlJobException(I18nUtil.getString("jobgroup_empty"));
 		}
@@ -65,7 +66,7 @@ public class JobLogController {
 			model.addAttribute("jobInfo", jobInfo);
 
 			// valid permission
-			JobInfoController.validPermission(request, jobInfo.getJobGroup());
+			PermissionInterceptor.validJobGroupPermission(request, jobInfo.getJobGroup());
 		}
 
 		return "joblog/joblog.index";
@@ -86,7 +87,7 @@ public class JobLogController {
 	                                    int jobGroup, int jobId, int logStatus, String filterTime) {
 
 		// valid permission
-		JobInfoController.validPermission(request, jobGroup);    // 仅管理员支持查询全部；普通用户仅支持查询有权限的 jobGroup
+		PermissionInterceptor.validJobGroupPermission(request, jobGroup);    // 仅管理员支持查询全部；普通用户仅支持查询有权限的 jobGroup
 
 		// parse param
 		Date triggerTimeStart = null;
@@ -194,26 +195,29 @@ public class JobLogController {
 
 	@RequestMapping("/clearLog")
 	@ResponseBody
-	public ReturnT<String> clearLog(int jobGroup, int jobId, int type) {
+	public ReturnT<String> clearLog(HttpServletRequest request, int jobGroup, int jobId, int type) {
+		// valid permission
+		PermissionInterceptor.validJobGroupPermission(request, jobGroup);
 
+		// opt
 		Date clearBeforeTime = null;
 		int clearBeforeNum = 0;
 		if (type == 1) {
-			clearBeforeTime = DateUtil.addMonths(new Date(), -1);	// 清理一个月之前日志数据
+			clearBeforeTime = DateUtil.addMonths(new Date(), -1);    // 清理一个月之前日志数据
 		} else if (type == 2) {
-			clearBeforeTime = DateUtil.addMonths(new Date(), -3);	// 清理三个月之前日志数据
+			clearBeforeTime = DateUtil.addMonths(new Date(), -3);    // 清理三个月之前日志数据
 		} else if (type == 3) {
-			clearBeforeTime = DateUtil.addMonths(new Date(), -6);	// 清理六个月之前日志数据
+			clearBeforeTime = DateUtil.addMonths(new Date(), -6);    // 清理六个月之前日志数据
 		} else if (type == 4) {
-			clearBeforeTime = DateUtil.addYears(new Date(), -1);	// 清理一年之前日志数据
+			clearBeforeTime = DateUtil.addYears(new Date(), -1);    // 清理一年之前日志数据
 		} else if (type == 5) {
-			clearBeforeNum = 1000;		// 清理一千条以前日志数据
+			clearBeforeNum = 1000;        // 清理一千条以前日志数据
 		} else if (type == 6) {
-			clearBeforeNum = 10000;		// 清理一万条以前日志数据
+			clearBeforeNum = 10000;        // 清理一万条以前日志数据
 		} else if (type == 7) {
-			clearBeforeNum = 30000;		// 清理三万条以前日志数据
+			clearBeforeNum = 30000;        // 清理三万条以前日志数据
 		} else if (type == 8) {
-			clearBeforeNum = 100000;	// 清理十万条以前日志数据
+			clearBeforeNum = 100000;    // 清理十万条以前日志数据
 		} else if (type == 9) {
 			// 清理所有日志数据
 		} else {
@@ -224,4 +228,5 @@ public class JobLogController {
 
 		return ReturnT.SUCCESS;
 	}
+
 }

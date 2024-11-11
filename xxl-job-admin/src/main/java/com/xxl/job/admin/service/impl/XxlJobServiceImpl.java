@@ -61,7 +61,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 	}
 
 	@Override
-	public ReturnT<String> add(XxlJobInfo jobInfo) {
+	public ReturnT<String> add(XxlJobInfo jobInfo, XxlJobUser loginUser) {
 
 		// valid base
 		XxlJobGroup group = xxlJobGroupDao.load(jobInfo.getJobGroup());
@@ -122,7 +122,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 		}
 
 		// 》ChildJobId valid
-		final ReturnT<String> err = checkChildJobIdValid(jobInfo); // 抽取方法，复用代码
+		final ReturnT<String> err = checkChildJobIdValid(jobInfo, loginUser); // 抽取方法，复用代码
 		if (err != null) {
 			return err;
 		}
@@ -141,7 +141,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 	}
 
 	/** 如果检查通过则返回 null */
-	protected ReturnT<String> checkChildJobIdValid(XxlJobInfo jobInfo) {
+	protected ReturnT<String> checkChildJobIdValid(XxlJobInfo jobInfo, XxlJobUser loginUser) {
 		if (StringUtils.hasText(jobInfo.getChildJobId())) {
 			String[] childJobIds = jobInfo.getChildJobId().split(",");
 			for (String childJobIdItem : childJobIds) {
@@ -151,6 +151,10 @@ public class XxlJobServiceImpl implements XxlJobService {
 					if (childJobInfo == null) {
 						return new ReturnT<>(ReturnT.FAIL_CODE,
 								MessageFormat.format((I18nUtil.getString("jobinfo_field_childJobId") + "({0})" + I18nUtil.getString("system_not_found")), childJobIdItem));
+					}
+					if (!loginUser.validPermission(childJobInfo.getJobGroup())) {
+						return new ReturnT<>(ReturnT.FAIL_CODE,
+								MessageFormat.format((I18nUtil.getString("jobinfo_field_childJobId") + "({0})" + I18nUtil.getString("system_permission_limit")), childJobIdItem));
 					}
 				} else {
 					return new ReturnT<>(ReturnT.FAIL_CODE,
@@ -165,7 +169,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 	}
 
 	@Override
-	public ReturnT<String> update(XxlJobInfo jobInfo) {
+	public ReturnT<String> update(XxlJobInfo jobInfo, XxlJobUser loginUser) {
 
 		// valid base
 		if (!StringUtils.hasText(jobInfo.getJobDesc())) {
@@ -209,8 +213,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 			return new ReturnT<>(ReturnT.FAIL_CODE, (I18nUtil.getString("jobinfo_field_executorBlockStrategy") + I18nUtil.getString("system_unvalid")));
 		}
 
-		// 》ChildJobId valid
-		final ReturnT<String> err = checkChildJobIdValid(jobInfo);
+		final ReturnT<String> err = checkChildJobIdValid(jobInfo, loginUser);
 		if (err != null) {
 			return err;
 		}
@@ -229,7 +232,8 @@ public class XxlJobServiceImpl implements XxlJobService {
 
 		// next trigger time (5s后生效，避开预读周期)
 		long nextTriggerTime = exists_jobInfo.getTriggerNextTime();
-		boolean scheduleDataNotChanged = jobInfo.getScheduleType().equals(exists_jobInfo.getScheduleType()) && jobInfo.getScheduleConf().equals(exists_jobInfo.getScheduleConf());
+		boolean scheduleDataNotChanged = jobInfo.getScheduleType().equals(exists_jobInfo.getScheduleType())
+				&& jobInfo.getScheduleConf().equals(exists_jobInfo.getScheduleConf());
 		if (exists_jobInfo.getTriggerStatus() == 1 && !scheduleDataNotChanged) {
 			try {
 				Date nextValidTime = JobScheduleHelper.generateNextValidTime(jobInfo, new Date(System.currentTimeMillis() + JobScheduleHelper.PRE_READ_MS));
