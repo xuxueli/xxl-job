@@ -248,7 +248,6 @@ $(function() {
 					if (data.code == 200) {
                         layer.msg( typeName + I18n.system_success );
                         if (needFresh) {
-                            //window.location.reload();
                             jobTable.fnDraw(false);
                         }
 					} else {
@@ -468,7 +467,6 @@ $(function() {
 						icon: '1',
 						end: function(layero, index){
 							jobTable.fnDraw();
-							//window.location.reload();
 						}
 					});
     			} else {
@@ -654,7 +652,6 @@ $(function() {
 						content: I18n.system_update_suc ,
 						icon: '1',
 						end: function(layero, index){
-							//window.location.reload();
 							jobTable.fnDraw();
 						}
 					});

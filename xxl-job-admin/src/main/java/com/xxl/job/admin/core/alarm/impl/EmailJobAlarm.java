@@ -26,8 +26,6 @@ public class EmailJobAlarm implements JobAlarm {
 
     /**
      * fail alarm
-     *
-     * @param jobLog
      */
     @Override
     public boolean doAlarm(XxlJobInfo info, XxlJobLog jobLog){
@@ -82,8 +80,6 @@ public class EmailJobAlarm implements JobAlarm {
 
     /**
      * load email job alarm template
-     *
-     * @return
      */
     private static String loadEmailJobAlarmTemplate(){
 	    return "<h5>" + I18nUtil.getString("jobconf_monitor_detail") + "：</span>" +
