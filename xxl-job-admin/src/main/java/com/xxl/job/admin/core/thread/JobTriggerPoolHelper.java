@@ -6,6 +6,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import com.xxl.job.admin.core.conf.XxlJobAdminConfig;
 import com.xxl.job.admin.core.trigger.TriggerTypeEnum;
 import com.xxl.job.admin.core.trigger.XxlJobTrigger;
+import com.xxl.job.core.util.XxlJobTool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,10 +36,9 @@ public class JobTriggerPoolHelper {
 	}
 
 	static ThreadPoolExecutor createExecutor(int maxPoolSize, int queueCapacity, String namePrefix) {
-		final AtomicInteger counter = new AtomicInteger();
 		return new ThreadPoolExecutor(10, maxPoolSize, 60L, TimeUnit.SECONDS
 				, new LinkedBlockingQueue<>(queueCapacity)
-				, r -> new Thread(r, namePrefix + counter.incrementAndGet()));
+				, XxlJobTool.namedThreadFactory(namePrefix));
 	}
 
 	public void stop() {

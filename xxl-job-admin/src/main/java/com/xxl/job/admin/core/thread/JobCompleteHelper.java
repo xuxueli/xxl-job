@@ -10,6 +10,7 @@ import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.core.biz.model.HandleCallbackParam;
 import com.xxl.job.core.biz.model.ReturnT;
+import com.xxl.job.core.util.XxlJobTool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,7 +44,7 @@ public class JobCompleteHelper {
 				30L,
 				TimeUnit.SECONDS,
 				new LinkedBlockingQueue<>(3000),
-				r -> new Thread(r, "xxl-job, admin JobLosedMonitorHelper-callbackThreadPool-" + r.hashCode()),
+				XxlJobTool.namedThreadFactory("xxl-job-callbackThreadPool-"),
 				(r, executor) -> {
 					r.run();
 					logger.warn(">>>>>>>>>>> xxl-job, callback too fast, match threadpool rejected handler(run now).");
