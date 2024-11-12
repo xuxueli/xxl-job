@@ -4,7 +4,6 @@ import java.lang.reflect.Method;
 import java.util.Map;
 
 import com.xxl.job.core.executor.XxlJobExecutor;
-import com.xxl.job.core.glue.GlueFactory;
 import com.xxl.job.core.handler.annotation.XxlJob;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +24,8 @@ import org.springframework.core.annotation.AnnotatedElementUtils;
 public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationContextAware, SmartInitializingSingleton, DisposableBean {
 
 	private static final Logger logger = LoggerFactory.getLogger(XxlJobSpringExecutor.class);
+	// 将该变量放在一个与 GlueFactory 更密切的类中，会有更合理的层次体系结构，不过需要额外更多的代码量，在此也无伤大雅
+	public static volatile boolean groovyRefreshRequired;
 
 	// start
 	@Override
@@ -37,7 +38,7 @@ public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationC
 		initJobHandlerMethodRepository(applicationContext);
 
 		// refresh GlueFactory
-		GlueFactory.refreshInstance(1);
+		groovyRefreshRequired = true;
 
 		// super start
 		try {

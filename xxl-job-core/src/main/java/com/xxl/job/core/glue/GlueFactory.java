@@ -5,6 +5,7 @@ import java.security.MessageDigest;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import com.xxl.job.core.executor.impl.XxlJobSpringExecutor;
 import com.xxl.job.core.glue.impl.SpringGlueFactory;
 import com.xxl.job.core.handler.IJobHandler;
 import groovy.lang.GroovyClassLoader;
@@ -17,25 +18,31 @@ import org.springframework.util.StringUtils;
  */
 public class GlueFactory {
 
-	private static GlueFactory glueFactory = new GlueFactory();
+	private static GlueFactory glueFactory;
 
 	public static GlueFactory getInstance() {
-		return glueFactory;
-	}
-
-	public static void refreshInstance(int type) {
-		if (type == 0) {
-			glueFactory = new GlueFactory();
-		} else if (type == 1) {
-			glueFactory = new SpringGlueFactory();
+		GlueFactory factory = glueFactory;
+		if (XxlJobSpringExecutor.groovyRefreshRequired) {
+			synchronized (GlueFactory.class) {
+				if (XxlJobSpringExecutor.groovyRefreshRequired) {
+					glueFactory = factory = new SpringGlueFactory();
+					XxlJobSpringExecutor.groovyRefreshRequired = false;
+				} else {
+					factory = glueFactory;
+				}
+			}
 		}
+		if (factory == null) {
+			glueFactory = factory = new GlueFactory();
+		}
+		return factory;
 	}
 
 	/**
 	 * groovy class loader
 	 */
-	private GroovyClassLoader groovyClassLoader = new GroovyClassLoader();
-	private ConcurrentMap<String, Class<?>> CLASS_CACHE = new ConcurrentHashMap<>();
+	private final GroovyClassLoader groovyClassLoader = new GroovyClassLoader();
+	private final ConcurrentMap<String, Class<?>> CLASS_CACHE = new ConcurrentHashMap<>();
 
 	/**
 	 * load new instance, prototype
@@ -49,7 +56,7 @@ public class GlueFactory {
 					this.injectService(instance);
 					return (IJobHandler) instance;
 				} else {
-					throw new IllegalArgumentException(">>>>>>>>>>> xxl-glue, loadNewInstance error, " + "cannot convert from instance[" + instance.getClass() + "] to IJobHandler");
+					throw new IllegalArgumentException(">>>>>>>>>>> xxl-glue, loadNewInstance error, cannot convert from instance[" + instance.getClass() + "] to IJobHandler");
 				}
 			}
 		}

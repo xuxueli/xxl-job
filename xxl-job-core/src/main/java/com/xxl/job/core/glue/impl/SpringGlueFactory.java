@@ -1,78 +1,79 @@
 package com.xxl.job.core.glue.impl;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import javax.annotation.Resource;
+
 import com.xxl.job.core.executor.impl.XxlJobSpringExecutor;
 import com.xxl.job.core.glue.GlueFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationContext;
 import org.springframework.core.annotation.AnnotationUtils;
-
-import javax.annotation.Resource;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 
 /**
  * @author xuxueli 2018-11-01
  */
 public class SpringGlueFactory extends GlueFactory {
-    private static Logger logger = LoggerFactory.getLogger(SpringGlueFactory.class);
 
+	private static final Logger logger = LoggerFactory.getLogger(SpringGlueFactory.class);
 
-    /**
-     * inject action of spring
-     * @param instance
-     */
-    @Override
-    public void injectService(Object instance){
-        if (instance==null) {
-            return;
-        }
+	/**
+	 * inject action of spring
+	 */
+	@Override
+	public void injectService(Object instance) {
+		if (instance == null) {
+			return;
+		}
 
-        if (XxlJobSpringExecutor.getApplicationContext() == null) {
-            return;
-        }
+		final ApplicationContext context = XxlJobSpringExecutor.getApplicationContext();
+		if (context == null) {
+			return;
+		}
 
-        Field[] fields = instance.getClass().getDeclaredFields();
-        for (Field field : fields) {
-            if (Modifier.isStatic(field.getModifiers())) {
-                continue;
-            }
+		Field[] fields = instance.getClass().getDeclaredFields();
+		for (Field field : fields) {
+			if (Modifier.isStatic(field.getModifiers())) {
+				continue;
+			}
 
-            Object fieldBean = null;
-            // with bean-id, bean could be found by both @Resource and @Autowired, or bean could only be found by @Autowired
+			Object fieldBean = null;
+			// with bean-id, bean could be found by both @Resource and @Autowired, or bean could only be found by @Autowired
 
 			final Resource resource = AnnotationUtils.getAnnotation(field, Resource.class);
 			if (resource != null) {
 				try {
 					if (!resource.name().isEmpty()) {
-						fieldBean = XxlJobSpringExecutor.getApplicationContext().getBean(resource.name());
+						fieldBean = context.getBean(resource.name());
 					} else {
-						fieldBean = XxlJobSpringExecutor.getApplicationContext().getBean(field.getName());
+						fieldBean = context.getBean(field.getName());
 					}
 				} catch (Exception ignored) {
 				}
 				if (fieldBean == null) {
-					fieldBean = XxlJobSpringExecutor.getApplicationContext().getBean(field.getType());
+					fieldBean = context.getBean(field.getType());
 				}
 			} else if (AnnotationUtils.getAnnotation(field, Autowired.class) != null) {
 				Qualifier qualifier = AnnotationUtils.getAnnotation(field, Qualifier.class);
 				if (qualifier != null && !qualifier.value().isEmpty()) {
-					fieldBean = XxlJobSpringExecutor.getApplicationContext().getBean(qualifier.value());
+					fieldBean = context.getBean(qualifier.value());
 				} else {
-					fieldBean = XxlJobSpringExecutor.getApplicationContext().getBean(field.getType());
+					fieldBean = context.getBean(field.getType());
 				}
 			}
 
-            if (fieldBean!=null) {
-                field.setAccessible(true);
-                try {
-                    field.set(instance, fieldBean);
-                } catch (IllegalArgumentException | IllegalAccessException e) {
-                    logger.error(e.getMessage(), e);
-                }
-            }
-        }
-    }
+			if (fieldBean != null) {
+				field.setAccessible(true);
+				try {
+					field.set(instance, fieldBean);
+				} catch (IllegalArgumentException | IllegalAccessException e) {
+					logger.error(e.getMessage(), e);
+				}
+			}
+		}
+	}
 
 }
