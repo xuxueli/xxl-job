@@ -51,16 +51,18 @@ public class JdkSerializeTool {
      * @return
      */
     public static  <T> Object deserialize(byte[] bytes, Class<T> clazz) {
+        ObjectInputStream ois = null;
         ByteArrayInputStream bais = null;
         try {
             // 反序列化
             bais = new ByteArrayInputStream(bytes);
-            ObjectInputStream ois = new ObjectInputStream(bais);
+            ois = new ObjectInputStream(bais);
             return ois.readObject();
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         } finally {
             try {
+                ois.close();
                 bais.close();
             } catch (IOException e) {
                 logger.error(e.getMessage(), e);
