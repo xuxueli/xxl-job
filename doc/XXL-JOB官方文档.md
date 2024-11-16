@@ -2391,12 +2391,13 @@ public void execute() {
 - 2、【优化】Cron解析组件代码重构微调，健壮性提升；
 - 3、【优化】修改密码交互调整，避免CSRF隐患；
 - 4、【优化】JdkSerializeTool流关闭逻辑优化；
-- 5、【优化】任务信息、执行日志API飞功能设计完善，避免越权隐患；
+- 5、【优化】任务信息、执行日志API非功能设计完善，避免越权隐患；
 - 6、【修复】漏洞修复，包括 "CVE-2024-42681" 子任务越权漏洞修复、"CVE-2023-33779" 任务API越权问题修复；
 - 7、【升级】多个项目依赖升级至较新稳定版本，涉及netty、groovy、gson、springboot、mybatis等；
 
-备注：“CVE-2024-38820”漏洞源自spring，当前使用spring5.x及springboot2.x软件普遍受该问题影响。
-该问题修复需要升级至spring6.x与springboot3.x，同时需要升级JDK17，如有诉求可自行升级。计划下个大版本升级spring及jdk版本解决该问题。
+备注：
+- 1、“CVE-2024-38820”漏洞源自spring，当前使用spring5.x及springboot2.x软件普遍受该问题影响。 该问题修复需要升级至spring6.x与springboot3.x，同时需要升级JDK17，如有诉求可自行升级。计划下个大版本升级spring及jdk版本解决该问题。
+- 2、本次升级数据模型及通讯协议向前兼容，v2.4.*可无缝升级。
 
 
 ### 7.35 版本 v2.5.0 Release Notes[规划中]
