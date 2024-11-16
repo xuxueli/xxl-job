@@ -24,7 +24,7 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<maven.test.skip>true</maven.test.skip>
 
-		<netty.version>4.1.114.Final</netty.version>
+		<netty.version>4.1.115.Final</netty.version>
 		<gson.version>2.11.0</gson.version>
 
 		<spring.version>5.3.39</spring.version>

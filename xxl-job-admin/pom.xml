@@ -93,13 +93,14 @@
 					</execution>
 				</executions>
 			</plugin>
+
 			<!-- docker -->
-			<plugin>
+			<!--<plugin>
 				<groupId>com.spotify</groupId>
 				<artifactId>docker-maven-plugin</artifactId>
 				<version>0.4.13</version>
 				<configuration>
-					<!-- made of '[a-z0-9-_.]' -->
+					&lt;!&ndash; made of '[a-z0-9-_.]' &ndash;&gt;
 					<imageName>${project.artifactId}:${project.version}</imageName>
 					<dockerDirectory>${project.basedir}</dockerDirectory>
 					<resources>
@@ -110,7 +111,8 @@
 						</resource>
 					</resources>
 				</configuration>
-			</plugin>
+			</plugin>-->
+
 		</plugins>
 	</build>
 
