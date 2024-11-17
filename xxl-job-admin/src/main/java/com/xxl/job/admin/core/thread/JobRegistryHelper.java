@@ -165,6 +165,9 @@ public class JobRegistryHelper {
 
 					// fresh
 					freshGroupRegistryInfo(registryParam);
+
+					// misfire compensation
+					XxlJobAdminConfig.getAdminConfig().getXxlJobService().misfireCompensation(registryParam.getRegistryKey());
 				}
 			}
 		});
