@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.xuxueli</groupId>
 	<artifactId>xxl-job</artifactId>
-	<version>2.4.2-SNAPSHOT</version>
+	<version>2.5.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>${project.artifactId}</name>
@@ -24,7 +24,7 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<maven.test.skip>true</maven.test.skip>
 
-		<netty.version>4.1.114.Final</netty.version>
+		<netty.version>4.1.115.Final</netty.version>
 		<gson.version>2.11.0</gson.version>
 
 		<spring.version>5.3.39</spring.version>
@@ -76,6 +76,12 @@
 
 		<profile>
 			<id>release</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<modules>
+				<module>xxl-job-core</module>
+			</modules>
 			<build>
 				<plugins>
 					<!-- Source -->
