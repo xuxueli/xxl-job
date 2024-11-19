@@ -1,0 +1,2 @@
+alter table `xxl_job_info` add column `alarm_hook_type` varchar(64) DEFAULT NULL COMMENT '报警Hook类型';
+alter table `xxl_job_info` add column `alarm_hook_url` varchar(255) DEFAULT NULL COMMENT '报警Hook地址';
