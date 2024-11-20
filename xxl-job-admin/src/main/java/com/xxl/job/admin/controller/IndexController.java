@@ -6,7 +6,7 @@ import com.antherd.smcrypto.sm3.Sm3;
 import com.xxl.job.admin.controller.annotation.PermissionLimit;
 import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.admin.security.SecurityContext;
-import com.xxl.job.admin.service.LoginService;
+import com.xxl.job.admin.service.impl.LoginService;
 import com.xxl.job.admin.service.XxlJobService;
 import com.xxl.job.core.biz.model.ReturnT;
 import org.springframework.beans.propertyeditors.CustomDateEditor;

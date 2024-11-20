@@ -3,6 +3,7 @@ package com.xxl.job.admin.controller;
 import com.antherd.smcrypto.sm2.Keypair;
 import com.antherd.smcrypto.sm2.Sm2;
 import com.xxl.job.admin.controller.annotation.PermissionLimit;
+import com.xxl.job.admin.controller.interceptor.PermissionInterceptor;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobUser;
 import com.xxl.job.admin.core.util.I18nUtil;
@@ -10,7 +11,6 @@ import com.xxl.job.admin.dao.XxlJobGroupDao;
 import com.xxl.job.admin.dao.XxlJobUserDao;
 import com.xxl.job.admin.platform.pageable.data.PageDto;
 import com.xxl.job.admin.security.SecurityContext;
-import com.xxl.job.admin.service.LoginService;
 import com.xxl.job.core.biz.model.ReturnT;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,7 +31,7 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/user")
-public class UserController {
+public class JobUserController {
 
     @Resource
     private XxlJobUserDao xxlJobUserDao;
@@ -124,7 +124,7 @@ public class UserController {
     public ReturnT<String> update(HttpServletRequest request, XxlJobUser xxlJobUser) throws ScriptException {
 
         // avoid opt login seft
-        XxlJobUser loginUser = (XxlJobUser) request.getAttribute(LoginService.LOGIN_IDENTITY_KEY);
+        XxlJobUser loginUser = PermissionInterceptor.getLoginUser(request);
         if (loginUser.getUsername().equals(xxlJobUser.getUsername())) {
             return new ReturnT<String>(ReturnT.FAIL.getCode(), I18nUtil.getString("user_update_loginuser_limit"));
         }
@@ -158,7 +158,7 @@ public class UserController {
     public ReturnT<String> remove(HttpServletRequest request, int id) {
 
         // avoid opt login seft
-        XxlJobUser loginUser = (XxlJobUser) request.getAttribute(LoginService.LOGIN_IDENTITY_KEY);
+        XxlJobUser loginUser = PermissionInterceptor.getLoginUser(request);
         if (loginUser.getId() == id) {
             return new ReturnT<String>(ReturnT.FAIL.getCode(), I18nUtil.getString("user_update_loginuser_limit"));
         }
@@ -169,20 +169,26 @@ public class UserController {
 
     @RequestMapping("/updatePwd")
     @ResponseBody
-    public ReturnT<String> updatePwd(HttpServletRequest request, String password,String sign) throws ScriptException {
+    public ReturnT<String> updatePwd(HttpServletRequest request, String password, String oldPassword,String sign) throws ScriptException {
 
-        // valid password
-        if (!StringUtils.hasText(password)){
-            return new ReturnT<String>(ReturnT.FAIL.getCode(), "密码不可为空");
+        // valid
+        if (!StringUtils.hasText(oldPassword)){
+            return new ReturnT<String>(ReturnT.FAIL.getCode(), I18nUtil.getString("system_please_input") + I18nUtil.getString("change_pwd_field_oldpwd"));
         }
+        if (!StringUtils.hasText(password)){
+            return new ReturnT<String>(ReturnT.FAIL.getCode(), I18nUtil.getString("system_please_input") + I18nUtil.getString("change_pwd_field_oldpwd"));
+        }
+
 
         Keypair keypair = SecurityContext.getInstance().findKeypair(sign);
         if(keypair==null){
             return new ReturnT<String>(500, I18nUtil.getString("system_fail"));
         }
         password= Sm2.doDecrypt(password,keypair.getPrivateKey());
+        oldPassword=Sm2.doDecrypt(oldPassword,keypair.getPrivateKey());
 
         password = password.trim();
+        oldPassword=oldPassword.trim();
         if (!(password.length()>=4 && password.length()<=20)) {
             return new ReturnT<String>(ReturnT.FAIL_CODE, I18nUtil.getString("system_lengh_limit")+"[4-20]" );
         }
@@ -190,11 +196,14 @@ public class UserController {
         // hash password
         String hashPassword = SecurityContext.getInstance().encodePassword(password);
 
-        // update pwd
-        XxlJobUser loginUser = (XxlJobUser) request.getAttribute(LoginService.LOGIN_IDENTITY_KEY);
-
-        // do write
+        // valid old pwd
+        XxlJobUser loginUser = PermissionInterceptor.getLoginUser(request);
         XxlJobUser existUser = xxlJobUserDao.loadByUserName(loginUser.getUsername());
+        if(!SecurityContext.getInstance().matchPassword(oldPassword,existUser.getPassword())){
+            return new ReturnT<String>(ReturnT.FAIL.getCode(), I18nUtil.getString("change_pwd_field_oldpwd") + I18nUtil.getString("system_unvalid"));
+        }
+
+        // write new
         existUser.setPassword(hashPassword);
         xxlJobUserDao.update(existUser);
 

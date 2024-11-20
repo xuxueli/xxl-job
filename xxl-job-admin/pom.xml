@@ -4,13 +4,14 @@
 	<parent>
 		<groupId>com.xuxueli</groupId>
 		<artifactId>xxl-job</artifactId>
-		<version>2.4.2-SNAPSHOT</version>
+		<version>2.5.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>xxl-job-admin</artifactId>
 	<packaging>jar</packaging>
-    <properties>
+
+	<properties>
 		<maven.deploy.skip>true</maven.deploy.skip>
-    </properties>
+	</properties>
 
 	<dependencyManagement>
 		<dependencies>

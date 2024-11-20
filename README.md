@@ -32,26 +32,18 @@
 </p>
 
 
-## Sponsor
-XXL-JOB is an open source and free project, with its ongoing development made possible entirely by the support of these awesome backers.
-
-XXL-JOB 是一个开源且免费项目，其正在进行的开发完全得益于支持者的支持。开源不易，[前往赞助项目开发](https://www.xuxueli.com/page/donate.html )
-
-<div>
-    <a href="https://www.mingdao.com?s=utm_208&utm_source=XXL-JOB&utm_campaign=github&utm_content=%E6%B3%A8%E5%86%8C%E4%BD%93%E9%AA%8C" title="mingdao" target="_blank" >
-        <img width="240px" src="https://www.xuxueli.com/page/static/images/logo_mingdaoyun.png" >
-    </a>
-    <a href="https://www.jetbrains.com/idea/" title="jetbrains" target="_blank" >
-        <img width="55px" src="https://www.xuxueli.com/page/static/images/logo_intellij.jpeg" >
-    </a>
-</div>
-
 ## Introduction
 XXL-JOB is a distributed task scheduling framework. 
 It's core design goal is to develop quickly and learn simple, lightweight, and easy to expand. 
 Now, it's already open source, and many companies use it in production environments, real "out-of-the-box".
 
 XXL-JOB是一个分布式任务调度平台，其核心设计目标是开发迅速、学习简单、轻量级、易扩展。现已开放源代码并接入多家公司线上产品线，开箱即用。
+
+
+## Sponsor
+XXL-JOB is an open source and free project, with its ongoing development made possible entirely by the support of these awesome backers.
+
+XXL-JOB 是一个开源且免费项目，其正在进行的开发完全得益于支持者的支持。开源不易，[前往赞助项目开发](https://www.xuxueli.com/page/donate.html )
 
 
 ## Documentation
@@ -792,6 +784,29 @@ XXL-JOB是一个分布式任务调度平台，其核心设计目标是开发迅�
     - 652、福建福昕软件开发股份有限公司【福昕】
     - 653、广州中长康达信息技术有限公司
     - 654、武汉趣改信息科技有限公司
+    - 655、北京华夏思源科技发展有限公司
+    - 656、宁波关关通科技有限公司
+    - 657、青岛吕氏餐饮有限公司
+    - 658、杭州乐刻网络科技有限公司
+    - 659、上海红瓦信息科技有限公司
+    - 660、陕西旅小宝信息科技有限公司
+    - 661、中科卓恒(大连)科技有限公司
+    - 662、北京华益精点生物技术有限公司
+    - 663、马士基（中国）航运有限公司【马士基】
+    - 664、陕西美咚网络科技有限公司
+    - 665、山东新北洋信息技术股份有限公司 
+    - 666、福建中瑞文化发展集团有限公司
+    - 667、黑龙江省建工集团有限责任公司【黑龙江省建工】
+    - 668、志信能达安全科技(广州)有限公司
+    - 669、重庆开源共创科技有限公司
+    - 670、华泰人寿保险股份有限公司【华泰人寿】
+    - 671、成都盘古纵横集团
+    - 672、北京果果乐学科技有限公司
+    - 673、北京凌云空间科技有限公司
+    - 674、临工重机股份有限公司
+    - 675、上海热风时尚管理集团【热风】
+    - 676、HashKey Exchange
+    - 677、傲基（深圳）跨境商务股份有限公司
     - ……
 
 > 更多接入的公司，欢迎在 [登记地址](https://github.com/xuxueli/xxl-job/issues/1 ) 登记，登记仅仅为了产品推广。
