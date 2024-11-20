@@ -326,14 +326,18 @@ $(function() {
 						"id": $("#updateModal .form input[name=id]").val(),
 						"username": $("#updateModal .form input[name=username]").val(),
 						"password": $("#updateModal .form input[name=password]").val(),
+						"repeatPassword": $("#updateModal .form input[name=repeatPassword]").val(),
 						"role": $("#updateModal .form input[name=role]:checked").val(),
 						"permission": permissionArr.join(',')
 					};
 
 					if(paramData.password && paramData.password!=''){
 						let password = paramData.password
+						let repeatPassword = paramData.repeatPassword
 						password = Sm2.doEncrypt(password, publicKey, 1)
+						repeatPassword = Sm2.doEncrypt(repeatPassword, publicKey, 1)
 						paramData.password=password
+						paramData.repeatPassword=repeatPassword
 						paramData.sign=sign
 					}
 					$.post(base_url + "/user/update", paramData, function (data, status) {

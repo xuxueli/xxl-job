@@ -101,21 +101,29 @@ $(function(){
         rules : {
             oldPassword : {
                 required : true ,
-                rangelength:[4,20]
+                rangelength:[4,50]
             },
             password : {
                 required : true ,
-                rangelength:[4,20]
+                rangelength:[4,50]
+            },
+            repeatPassword : {
+                required : true ,
+                rangelength:[4,50]
             }
         },
         messages : {
             oldPassword : {
                 required : I18n.system_please_input +I18n.change_pwd_field_oldpwd,
-                rangelength : "密码长度限制为4~20"
+                rangelength : "密码长度限制为4~50"
             },
             password : {
                 required : I18n.system_please_input +I18n.change_pwd_field_newpwd,
-                rangelength : "密码长度限制为4~20"
+                rangelength : "密码长度限制为4~50"
+            },
+            repeatPassword : {
+                required : I18n.system_please_input +I18n.change_pwd_field_newpwd,
+                rangelength : "密码长度限制为4~50"
             }
         },
         highlight : function(element) {
@@ -140,9 +148,19 @@ $(function(){
 
                     let param=$("#updatePwdModal .form").serialize()
                     let searchParams=new URLSearchParams(param)
+                    let oldPassword=searchParams.get("oldPassword")
                     let password=searchParams.get("password")
+                    let repeatPassword=searchParams.get("repeatPassword")
+
+                    oldPassword=Sm2.doEncrypt(oldPassword,publicKey,1)
+                    searchParams.set('oldPassword',oldPassword)
+
                     password=Sm2.doEncrypt(password,publicKey,1)
                     searchParams.set('password',password)
+
+                    repeatPassword=Sm2.doEncrypt(repeatPassword,publicKey,1)
+                    searchParams.set('repeatPassword',repeatPassword)
+
                     searchParams.set('sign',sign)
                     param=searchParams.toString()
                     $.post(base_url + "/user/updatePwd",param , function (data, status) {
