@@ -10,6 +10,7 @@ public class XxlJobUser {
 	private int id;
 	private String username;		// 账号
 	private String password;		// 密码
+	private String repeatPassword;		// 确认密码
 	private int role;				// 角色：0-普通用户、1-管理员
 	private String permission;	// 权限：执行器ID列表，多个逗号分割
 	private String sign;
@@ -44,6 +45,14 @@ public class XxlJobUser {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public String getRepeatPassword() {
+		return repeatPassword;
+	}
+
+	public void setRepeatPassword(String repeatPassword) {
+		this.repeatPassword = repeatPassword;
 	}
 
 	public int getRole() {
