@@ -1,4 +1,4 @@
-package com.xxl.job.admin.service;
+package com.xxl.job.admin.service.impl;
 
 import com.antherd.smcrypto.sm2.Keypair;
 import com.antherd.smcrypto.sm2.Sm2;
