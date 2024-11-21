@@ -30,7 +30,8 @@
                         <span class="input-group-addon">${I18n.user_role}</span>
                         <select class="form-control" id="role" >
                             <option value="-1" >${I18n.system_all}</option>
-                            <option value="1" >${I18n.user_role_admin}</option>
+							<option value="2" >${I18n.user_role_readonly}</option>
+							<option value="1" >${I18n.user_role_admin}</option>
                             <option value="0" >${I18n.user_role_normal}</option>
                         </select>
                     </div>
@@ -41,15 +42,13 @@
                         <input type="text" class="form-control" id="username" autocomplete="on" >
                     </div>
                 </div>
-	            <div class="col-xs-1">
-	            	<button class="btn btn-block btn-info" id="searchBtn">${I18n.system_search}</button>
-	            </div>
-	            <div class="col-xs-2">
-	            	<button class="btn btn-block btn-success add" type="button">${I18n.user_add}</button>
+	            <div class="col-xs-6">
+	            	<button class="btn btn-info" id="searchBtn">${I18n.system_search}</button>
+					<button class="btn btn-success add" type="button">${I18n.user_add}</button>
 	            </div>
           	</div>
 	    	
-			<div class="row">
+			<div class="row gap-top-8">
 				<div class="col-xs-12">
 					<div class="box">
 			            <div class="box-body" >
@@ -98,9 +97,15 @@
                     <div class="form-group">
                         <label for="lastname" class="col-sm-2 control-label">${I18n.user_role}<font color="red">*</font></label>
                         <div class="col-sm-10">
-                            <input type="radio" name="role" value="0" checked />${I18n.user_role_normal}
-                            &nbsp;&nbsp;&nbsp;&nbsp;
-                            <input type="radio" name="role" value="1" />${I18n.user_role_admin}
+							<label class="checkbox-inline">
+								<input type="radio" name="role" value="0" checked />&nbsp;${I18n.user_role_normal}
+							</label>
+							<label class="checkbox-inline">
+								<input type="radio" name="role" value="1" />&nbsp;${I18n.user_role_admin}
+							</label>
+							<label class="checkbox-inline">
+								<input type="radio" name="role" value="2" />&nbsp;${I18n.user_role_readonly}
+							</label>
                         </div>
                     </div>
                     <div class="form-group">
@@ -148,9 +153,13 @@
                     <div class="form-group">
                         <label for="lastname" class="col-sm-2 control-label">${I18n.user_role}<font color="red">*</font></label>
                         <div class="col-sm-10">
-                            <input type="radio" name="role" value="0" />${I18n.user_role_normal}
-                            &nbsp;&nbsp;&nbsp;&nbsp;
-                            <input type="radio" name="role" value="1" />${I18n.user_role_admin}
+							<label class="checkbox-inline">
+								<input type="radio" name="role" value="0" />&nbsp;${I18n.user_role_normal}
+							</label>
+							<label class="checkbox-inline">
+								<input type="radio" name="role" value="1" />&nbsp;${I18n.user_role_admin}</label>
+							<label class="checkbox-inline">
+								<input type="radio" name="role" value="2" />&nbsp;${I18n.user_role_readonly}</label>
                         </div>
                     </div>
                     <div class="form-group">

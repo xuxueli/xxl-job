@@ -67,12 +67,14 @@
 									</#if>
                                 </ul>
                             </li>
+                            <#if Request["XXL_JOB_LOGIN_IDENTITY"].role != 2>
                             <li id="save" >
 								<a href="javascript:;" >
 									<i class="fa fa-fw fa-save" ></i>
                                     ${I18n.system_save}
 								</a>
 							</li>
+                            </#if>
                             <li>
                                 <a href="javascript:window.close();" >
                                     <i class="fa fa-fw fa-close" ></i>
