@@ -22,7 +22,7 @@ public class ExecutorRegistryThread {
     }
 
     private Thread registryThread;
-    private volatile boolean toStop = false;
+    private volatile boolean toStop;
     public void start(final String appname, final String address){
 
         // valid
@@ -35,6 +35,8 @@ public class ExecutorRegistryThread {
             return;
         }
 
+        toStop = false;
+        
         registryThread = new Thread(new Runnable() {
             @Override
             public void run() {
