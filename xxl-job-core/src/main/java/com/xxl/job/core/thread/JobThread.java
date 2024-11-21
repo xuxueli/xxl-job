@@ -59,13 +59,14 @@ public class JobThread extends Thread{
      * @return
      */
 	public ReturnT<String> pushTriggerQueue(TriggerParam triggerParam) {
-		// avoid repeat
-		if (triggerLogIdSet.contains(triggerParam.getLogId())) {
-			logger.info(">>>>>>>>>>> repeate trigger job, logId:{}", triggerParam.getLogId());
-			return new ReturnT<String>(ReturnT.FAIL_CODE, "repeate trigger job, logId:" + triggerParam.getLogId());
+        // avoid repeat
+		synchronized (this){
+			if (triggerLogIdSet.contains(triggerParam.getLogId())) {
+				logger.info(">>>>>>>>>>> repeate trigger job, logId:{}", triggerParam.getLogId());
+				return new ReturnT<String>(ReturnT.FAIL_CODE, "repeate trigger job, logId:" + triggerParam.getLogId());
+			}
+			triggerLogIdSet.add(triggerParam.getLogId());
 		}
-
-		triggerLogIdSet.add(triggerParam.getLogId());
 		triggerQueue.add(triggerParam);
         return ReturnT.SUCCESS;
 	}
