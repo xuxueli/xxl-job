@@ -37,6 +37,7 @@
 		SELECT <include refid="Base_Column_List" />
 		FROM xxl_job_registry AS t
 		WHERE t.update_time <![CDATA[ > ]]> DATE_ADD(#{nowTime},INTERVAL -#{timeout} SECOND)
+		ORDER BY t.update_time DESC
 	</select>
 
     <update id="registryUpdate" >
