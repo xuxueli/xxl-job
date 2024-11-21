@@ -25,7 +25,7 @@
 		
 		<!-- Main content -->
 	    <section class="content">
-	    	<div class="row">
+	    	<div class="row row-pd-sm">
 	    		<div class="col-xs-2">
  					<div class="input-group">
 	                	<span class="input-group-addon">${I18n.jobinfo_field_jobgroup}</span>
