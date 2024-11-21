@@ -105,36 +105,36 @@
             <version>3.43.0.0</version>
         </dependency>
 
-		<dependency>
-			<groupId>com.dameng</groupId>
-			<artifactId>DmJdbcDriver18</artifactId>
-			<version>8.1.1.193</version>
-		</dependency>
+        <dependency>
+            <groupId>com.dameng</groupId>
+            <artifactId>DmJdbcDriver18</artifactId>
+            <version>8.1.1.193</version>
+        </dependency>
 
-		<dependency>
-			<groupId>cn.com.kingbase</groupId>
-			<artifactId>kingbase8</artifactId>
-			<version>8.6.0</version>
-		</dependency>
+        <dependency>
+            <groupId>cn.com.kingbase</groupId>
+            <artifactId>kingbase8</artifactId>
+            <version>8.6.0</version>
+        </dependency>
 
-		<dependency>
-			<groupId>com.microsoft.sqlserver</groupId>
-			<artifactId>mssql-jdbc</artifactId>
-			<version>7.4.1.jre8</version>
-		</dependency>
+        <dependency>
+            <groupId>com.microsoft.sqlserver</groupId>
+            <artifactId>mssql-jdbc</artifactId>
+            <version>7.4.1.jre8</version>
+        </dependency>
 
         <!-- xxl-job-core -->
-		<dependency>
-			<groupId>com.xuxueli</groupId>
-			<artifactId>xxl-job-core</artifactId>
-			<version>${project.parent.version}</version>
-		</dependency>
+	<dependency>
+		<groupId>com.xuxueli</groupId>
+		<artifactId>xxl-job-core</artifactId>
+		<version>${project.parent.version}</version>
+	</dependency>
 
 
         <dependency>
             <groupId>com.antherd</groupId>
             <artifactId>sm-crypto</artifactId>
-			<version>0.3.2.1-RELEASE</version>
+            <version>0.3.2.1-RELEASE</version>
         </dependency>
 
         <dependency>
@@ -147,21 +147,22 @@
 
 	<build>
         <plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.1</version>
-				<configuration>
-					<source>${java.version}</source>
-					<target>${java.version}</target>
-					<encoding>${project.build.sourceEncoding}</encoding>
-					<compilerArgument>-parameters</compilerArgument>
-					<compilerArgs>
-						<arg>-Xlint:unchecked</arg>
-						<arg>-Xlint:deprecation</arg>
-					</compilerArgs>
-				</configuration>
-			</plugin>
+            <!-- 规定java版本等信息，防止每次都要设置jdk版本和编码 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                    <compilerArgument>-parameters</compilerArgument>
+                    <compilerArgs>
+                        <arg>-Xlint:unchecked</arg>
+                        <arg>-Xlint:deprecation</arg>
+                    </compilerArgs>
+                </configuration>
+            </plugin>
             <plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
