@@ -24,7 +24,8 @@ public class TriggerParam implements Serializable{
 
     private int broadcastIndex;
     private int broadcastTotal;
-
+    //new add
+    private long timestamp;
 
     public int getJobId() {
         return jobId;
@@ -122,6 +123,13 @@ public class TriggerParam implements Serializable{
         this.broadcastTotal = broadcastTotal;
     }
 
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
+    }
 
     @Override
     public String toString() {
@@ -138,6 +146,7 @@ public class TriggerParam implements Serializable{
                 ", glueUpdatetime=" + glueUpdatetime +
                 ", broadcastIndex=" + broadcastIndex +
                 ", broadcastTotal=" + broadcastTotal +
+                ", timestamp=" + timestamp +
                 '}';
     }
 
