@@ -1,7 +1,6 @@
 FROM openjdk:17-jdk-slim
 MAINTAINER xuxueli
 
-
 ENV PARAMS=""
 
 ENV SERVER_PORT=8080
