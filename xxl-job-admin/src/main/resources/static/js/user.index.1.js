@@ -150,7 +150,7 @@ $(function() {
 
     jQuery.validator.addMethod("myValid01", function(value, element) {
         var length = value.length;
-        var valid = /^[a-z][a-z0-9]*$/;
+        var valid = /^[a-zA-Z0-9\.]+$/;
         return this.optional(element) || valid.test(value);
     }, I18n.user_username_valid );
 
