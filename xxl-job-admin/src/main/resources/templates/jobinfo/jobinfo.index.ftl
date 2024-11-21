@@ -66,6 +66,15 @@
 	            	<button class="btn btn-block btn-success add" type="button">${I18n.jobinfo_field_add}</button>
 	            </div>
           	</div>
+            <div class="row">
+                <div class="col-xs-1">
+                    <button class="btn btn-block btn-info" onclick="webExport()" type="button">导出</button>
+                </div>
+                <div class="col-xs-1">
+                    <button class="btn btn-block btn-success" onclick="webImport()" type="button">导入</button>
+                </div>
+                <div class="col-xs-10"></div>
+            </div>
 	    	
 			<div class="row">
 				<div class="col-xs-12">
@@ -77,6 +86,7 @@
 			              	<table id="job_list" class="table table-bordered table-striped" width="100%" >
 				                <thead>
 					            	<tr>
+                                        <th><input type="checkbox" id="allDataCheckTag"></th>
 					            		<th name="id" >${I18n.jobinfo_field_id}</th>
 					                	<th name="jobGroup" >${I18n.jobinfo_field_jobgroup}</th>
 					                  	<th name="jobDesc" >${I18n.jobinfo_field_jobdesc}</th>
