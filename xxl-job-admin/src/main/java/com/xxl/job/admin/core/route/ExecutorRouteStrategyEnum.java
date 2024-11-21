@@ -16,8 +16,9 @@ public enum ExecutorRouteStrategyEnum {
     LEAST_FREQUENTLY_USED(I18nUtil.getString("jobconf_route_lfu"), new ExecutorRouteLFU()),
     LEAST_RECENTLY_USED(I18nUtil.getString("jobconf_route_lru"), new ExecutorRouteLRU()),
     FAILOVER(I18nUtil.getString("jobconf_route_failover"), new ExecutorRouteFailover()),
-    BUSYOVER(I18nUtil.getString("jobconf_route_busyover"), new ExecutorRouteBusyover()),
-    SHARDING_BROADCAST(I18nUtil.getString("jobconf_route_shard"), null);
+    BUSYOVER(I18nUtil.getString("jobconf_route_busyover"), new ExecutorRouteBusyover());
+    // 去除 分片广播 ，上述所有策略都可以分片, 分片的逻辑交给执行器处理
+//    SHARDING_BROADCAST(I18nUtil.getString("jobconf_route_shard"), null);
 
     ExecutorRouteStrategyEnum(String title, ExecutorRouter router) {
         this.title = title;
