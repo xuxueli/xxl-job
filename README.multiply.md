@@ -23,6 +23,27 @@ xxl.job.database.platform.type=mysql
 ```
 实际上，mysql 的语法适用于 gbase ，或者其他兼容的数据库，所以其他数据库也可以使用 mysql 平台
 
+## Branch Merge Rule
+- [master] fork from official master and adapt multiply database
+- [springboot3] adapt to springboot3 & jakarta & jdk17 base on master
+- [multiply/master] partial upgrade package for [master]
+- [multiply/springboot3] partial upgrade package for [springboot3]
+- merge rule : source merge to target [source] -> [target]
+- all rule is :
+- [master] -> [springboot3]
+- [master] -> [multiply/master]
+- [springboot3] -> [multiply/springboot3]
+
+- [master] 从官方fork其master分支进行多数据库适配
+- [springboot3] 基于master分支适配 springboot3 & jakarta & jdk17
+- [multiply/master] 是 [master]分支的分包打包适配
+- [multiply/springboot3] 是 [springboot3]分支的分包打包适配
+- merge 规则 : 源分支合并到目标分支 [source] -> [target]
+- 所有规则如下 :
+- [master] -> [springboot3]
+- [master] -> [multiply/master]
+- [springboot3] -> [multiply/springboot3]
+
 ## features
 - support database type list
     - mysql(official)
