@@ -4,6 +4,7 @@ import com.xxl.job.admin.controller.annotation.PermissionLimit;
 import com.xxl.job.admin.core.conf.XxlJobAdminConfig;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
+import com.xxl.job.admin.service.XxlJobService;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.util.GsonTool;
 import com.xxl.job.core.util.XxlJobRemotingUtil;
@@ -28,6 +29,9 @@ public class JobApiV2Controller {
 
     @Resource
     private JobInfoController jobInfoController;
+
+    @Resource
+    private XxlJobService xxlJobService;
 
     /**
      * api
@@ -77,10 +81,10 @@ public class JobApiV2Controller {
             return new ReturnT<Object>(map);
         } else if ("jobInfoAdd".equals(uri)) {
             XxlJobInfo xxlJobInfo = GsonTool.fromJson(data, XxlJobInfo.class);
-            return jobInfoController.add(xxlJobInfo);
+            return xxlJobService.add(xxlJobInfo);
         } else if ("jobInfoUpdate".equals(uri)) {
             XxlJobInfo xxlJobInfo = GsonTool.fromJson(data, XxlJobInfo.class);
-            return jobInfoController.update(xxlJobInfo);
+            return xxlJobService.update(xxlJobInfo);
         } else if ("jobInfoRemove".equals(uri)) {
             XxlJobInfo xxlJobInfo = GsonTool.fromJson(data, XxlJobInfo.class);
             return jobInfoController.remove(xxlJobInfo.getId());
@@ -92,7 +96,7 @@ public class JobApiV2Controller {
             return jobInfoController.pause(xxlJobInfo.getId());
         } else if ("jobInfoTrigger".equals(uri)) {
             JobInfoTrigger jobInfoTrigger = GsonTool.fromJson(data, JobInfoTrigger.class);
-            return jobInfoController.triggerJob(jobInfoTrigger.getId(), jobInfoTrigger.getExecutorParam(), jobInfoTrigger.getAddressList());
+            return xxlJobService.trigger(jobInfoTrigger.getId(), jobInfoTrigger.getExecutorParam(), jobInfoTrigger.getAddressList());
         } else {
             return new ReturnT<Object>(ReturnT.FAIL_CODE, "invalid request, uri-mapping(" + uri + ") not found.");
         }
