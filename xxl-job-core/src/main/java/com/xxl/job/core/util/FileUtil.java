@@ -76,8 +76,8 @@ public class FileUtil {
     }
 
     public static byte[] readFileContent(File file) {
-        Long filelength = file.length();
-        byte[] filecontent = new byte[filelength.intValue()];
+        long filelength = file.length();
+        byte[] filecontent = new byte[(int) filelength];
 
         FileInputStream in = null;
         try {

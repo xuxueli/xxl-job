@@ -214,7 +214,7 @@
 	</select>
 
 	<select id="findAllCount" resultType="int">
-		SELECT count(1)
+		SELECT COUNT(*)
 		FROM xxl_job_info
 	</select>
 
