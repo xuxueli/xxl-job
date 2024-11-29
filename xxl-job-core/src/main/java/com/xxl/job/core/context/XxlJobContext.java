@@ -60,6 +60,8 @@ public class XxlJobContext {
      */
     private String handleMsg;
 
+    private String triggerType;
+
 
     public XxlJobContext(long jobId, String jobParam, String jobLogFileName, int shardIndex, int shardTotal) {
         this.jobId = jobId;
@@ -69,6 +71,14 @@ public class XxlJobContext {
         this.shardTotal = shardTotal;
 
         this.handleCode = HANDLE_CODE_SUCCESS;  // default success
+    }
+
+    public String getTriggerType() {
+        return triggerType;
+    }
+
+    public void setTriggerType(String triggerType) {
+        this.triggerType = triggerType;
     }
 
     public long getJobId() {
