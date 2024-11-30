@@ -107,14 +107,14 @@ public class JobRegistryHelper {
 								XxlJobAdminConfig.getAdminConfig().getXxlJobGroupDao().update(group);
 							}
 						}
-					} catch (Exception e) {
+					} catch (Throwable e) {
 						if (!toStop) {
 							logger.error(">>>>>>>>>>> xxl-job, job registry monitor thread error:{}", e);
 						}
 					}
 					try {
 						TimeUnit.SECONDS.sleep(RegistryConfig.BEAT_TIMEOUT);
-					} catch (InterruptedException e) {
+					} catch (Throwable e) {
 						if (!toStop) {
 							logger.error(">>>>>>>>>>> xxl-job, job registry monitor thread error:{}", e);
 						}
@@ -138,7 +138,7 @@ public class JobRegistryHelper {
 		registryMonitorThread.interrupt();
 		try {
 			registryMonitorThread.join();
-		} catch (InterruptedException e) {
+		} catch (Throwable e) {
 			logger.error(e.getMessage(), e);
 		}
 	}

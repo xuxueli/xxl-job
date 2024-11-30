@@ -89,14 +89,14 @@ public class EmbedServer {
 
                 } catch (InterruptedException e) {
                     logger.info(">>>>>>>>>>> xxl-job remoting server stop.");
-                } catch (Exception e) {
+                } catch (Throwable e) {
                     logger.error(">>>>>>>>>>> xxl-job remoting server error.", e);
                 } finally {
                     // stop
                     try {
                         workerGroup.shutdownGracefully();
                         bossGroup.shutdownGracefully();
-                    } catch (Exception e) {
+                    } catch (Throwable e) {
                         logger.error(e.getMessage(), e);
                     }
                 }
@@ -200,7 +200,7 @@ public class EmbedServer {
                     default:
                         return new ReturnT<String>(ReturnT.FAIL_CODE, "invalid request, uri-mapping(" + uri + ") not found.");
                 }
-            } catch (Exception e) {
+            } catch (Throwable e) {
                 logger.error(e.getMessage(), e);
                 return new ReturnT<String>(ReturnT.FAIL_CODE, "request error:" + ThrowableUtil.toString(e));
             }
