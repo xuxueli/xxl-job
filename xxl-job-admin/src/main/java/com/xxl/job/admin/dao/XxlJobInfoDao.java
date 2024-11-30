@@ -41,8 +41,21 @@ public interface XxlJobInfoDao {
 
 	public int findAllCount();
 
+	/**
+	 * find schedule job, limit "trigger_status = 1"
+	 *
+	 * @param maxNextTime
+	 * @param pagesize
+	 * @return
+	 */
 	public List<XxlJobInfo> scheduleJobQuery(@Param("maxNextTime") long maxNextTime, @Param("pagesize") int pagesize );
 
+	/**
+	 * update schedule job, limit "trigger_status = 1"（avoid stopping tasks from being opened）
+	 *
+	 * @param xxlJobInfo
+	 * @return
+	 */
 	public int scheduleUpdate(XxlJobInfo xxlJobInfo);
 
 
