@@ -28,7 +28,10 @@ $(function() {
 			{
 				"data": 'appname',
 				"visible" : true,
-				"width":'30%'
+				"width":'30%',
+				"render": function ( data, type, row ) {
+					return '<a href="'+base_url+'/jobinfo?jobGroup='+row.id+'">['+row.id+'] '+row.appname+'</a>';
+				}
 			},
 			{
 				"data": 'title',

@@ -24,7 +24,7 @@
 	<select id="findAll" resultMap="XxlJobGroup">
 		SELECT <include refid="Base_Column_List" />
 		FROM xxl_job_group AS t
-		ORDER BY t.app_name, t.title, t.id ASC
+		ORDER BY t.id, t.title, t.app_name ASC
 	</select>
 
 	<select id="findByAddressType" parameterType="java.lang.Integer" resultMap="XxlJobGroup">
@@ -71,7 +71,8 @@
 				AND t.title like CONCAT(CONCAT('%', #{title}), '%')
 			</if>
 		</trim>
-		ORDER BY t.app_name, t.title, t.id ASC
+		ORDER BY t.id DESC
+		<!-- ORDER BY t.app_name, t.title, t.id ASC -->
 		LIMIT #{offset}, #{pagesize}
 	</select>
 
