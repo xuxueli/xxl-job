@@ -19,7 +19,12 @@ public interface XxlJobRegistryDao {
 
     public List<XxlJobRegistry> findAll(@Param("deadTime") Date deadTime);
 
-    public int registryUpdate(@Param("registryGroup") String registryGroup,
+    public int registrySaveOrUpdate(@Param("registryGroup") String registryGroup,
+                            @Param("registryKey") String registryKey,
+                            @Param("registryValue") String registryValue,
+                            @Param("updateTime") Date updateTime);
+
+    /*public int registryUpdate(@Param("registryGroup") String registryGroup,
                               @Param("registryKey") String registryKey,
                               @Param("registryValue") String registryValue,
                               @Param("updateTime") Date updateTime);
@@ -27,7 +32,7 @@ public interface XxlJobRegistryDao {
     public int registrySave(@Param("registryGroup") String registryGroup,
                             @Param("registryKey") String registryKey,
                             @Param("registryValue") String registryValue,
-                            @Param("updateTime") Date updateTime);
+                            @Param("updateTime") Date updateTime);*/
 
     public int registryDelete(@Param("registryGroup") String registryGroup,
                           @Param("registryKey") String registryKey,
