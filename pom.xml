@@ -17,32 +17,33 @@
     </modules>
 
 	<properties>
-		<java.version>17</java.version>
+		<!-- env -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<maven.compiler.encoding>UTF-8</maven.compiler.encoding>
+        <java.version>17</java.version>
 		<maven.compiler.source>17</maven.compiler.source>
 		<maven.compiler.target>17</maven.compiler.target>
 		<maven.test.skip>true</maven.test.skip>
-
-		<netty.version>4.1.115.Final</netty.version>
-		<gson.version>2.11.0</gson.version>
-
-		<spring.version>6.1.12</spring.version>
-		<spring-boot.version>3.3.0</spring-boot.version>
-
-		<mybatis-spring-boot-starter.version>3.0.3</mybatis-spring-boot-starter.version>
-		<mysql-connector-j.version>9.1.0</mysql-connector-j.version>
-
-		<slf4j-api.version>2.0.16</slf4j-api.version>
-		<junit-jupiter.version>5.11.3</junit-jupiter.version>
-		<jakarta.annotation-api.version>3.0.0</jakarta.annotation-api.version>
-
-		<groovy.version>4.0.24</groovy.version>
-
-		<maven-source-plugin.version>3.3.1</maven-source-plugin.version>
-		<maven-javadoc-plugin.version>3.11.1</maven-javadoc-plugin.version>
-		<maven-gpg-plugin.version>3.2.7</maven-gpg-plugin.version>
+		<!-- plugin -->
+        <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
+        <maven-javadoc-plugin.version>3.11.1</maven-javadoc-plugin.version>
+        <maven-gpg-plugin.version>3.2.7</maven-gpg-plugin.version>
+		<!-- base -->
+        <slf4j-api.version>2.0.16</slf4j-api.version>
+        <junit-jupiter.version>5.11.3</junit-jupiter.version>
+        <jakarta.annotation-api.version>3.0.0</jakarta.annotation-api.version>
+		<!-- net -->
+        <netty.version>4.1.115.Final</netty.version>
+        <gson.version>2.11.0</gson.version>
+		<!-- spring -->
+        <spring.version>6.1.12</spring.version>
+        <spring-boot.version>3.3.0</spring-boot.version>
+		<!-- db -->
+        <mybatis-spring-boot-starter.version>3.0.3</mybatis-spring-boot-starter.version>
+        <mysql-connector-j.version>9.1.0</mysql-connector-j.version>
+		<!-- dynamic language -->
+        <groovy.version>4.0.24</groovy.version>
 	</properties>
 
 	<build>

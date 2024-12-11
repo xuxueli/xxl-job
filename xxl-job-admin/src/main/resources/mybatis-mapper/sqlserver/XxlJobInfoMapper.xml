@@ -223,6 +223,7 @@
 			"TRIGGER_NEXT_TIME" = #{triggerNextTime},
 			"TRIGGER_STATUS" = #{triggerStatus}
 		WHERE "ID" = #{id}
+		  AND "TRIGGER_STATUS" = 1
 	</update>
 
 </mapper>
