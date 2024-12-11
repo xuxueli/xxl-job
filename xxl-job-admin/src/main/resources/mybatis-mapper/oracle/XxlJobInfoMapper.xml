@@ -239,6 +239,7 @@
             "TRIGGER_NEXT_TIME" = #{triggerNextTime,jdbcType=NUMERIC},
             "TRIGGER_STATUS"    = #{triggerStatus,jdbcType=NUMERIC}
         WHERE "ID" = #{id,jdbcType=NUMERIC}
+          AND "TRIGGER_STATUS" = 1
     </update>
 
 </mapper>

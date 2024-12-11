@@ -156,7 +156,7 @@ CREATE TABLE xxl_job_registry
 ;
 
 
-create index idx_xxl_job_registry_g_k_v
+create unique index idx_xxl_job_registry_g_k_v
     on xxl_job_registry (registry_group, registry_key, registry_value)
 ;
 
