@@ -24,12 +24,13 @@ CREATE TABLE xxl_job_info
     executor_fail_retry_count integer      NOT NULL DEFAULT 0 ,
     glue_type                 varchar(50)  NOT NULL ,
     glue_source               text ,
-    glue_remark               varchar(128)           ,
+    glue_remark               varchar(512)           ,
     glue_updatetime           timestamp               ,
     child_jobid               varchar(255)           ,
     trigger_status            int4   NOT NULL DEFAULT 0 ,
     trigger_last_time         bigint   NOT NULL DEFAULT 0 ,
     trigger_next_time         bigint   NOT NULL DEFAULT 0 ,
+    remark               varchar(512)           ,
     PRIMARY KEY (id)
 )
 ;
@@ -56,6 +57,7 @@ comment on column xxl_job_info.child_jobid is '子任务id，多个逗号分隔'
 comment on column xxl_job_info.trigger_status is '调度状态：0-停止，1-运行';
 comment on column xxl_job_info.trigger_last_time is '上次调度时间';
 comment on column xxl_job_info.trigger_next_time is '下次调度时间';
+comment on column xxl_job_info.remark is '备注';
 
 
 CREATE TABLE xxl_job_log

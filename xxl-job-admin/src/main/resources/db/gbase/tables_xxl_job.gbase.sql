@@ -24,12 +24,13 @@ CREATE TABLE `xxl_job_info`
     `executor_fail_retry_count` int(11)      NOT NULL DEFAULT '0' COMMENT '失败重试次数',
     `glue_type`                 varchar(50)  NOT NULL COMMENT 'GLUE类型',
     `glue_source`               mediumtext COMMENT 'GLUE源代码',
-    `glue_remark`               varchar(128)          DEFAULT NULL COMMENT 'GLUE备注',
+    `glue_remark`               varchar(512)          DEFAULT NULL COMMENT 'GLUE备注',
     `glue_updatetime`           datetime              DEFAULT NULL COMMENT 'GLUE更新时间',
     `child_jobid`               varchar(255)          DEFAULT NULL COMMENT '子任务ID，多个逗号分隔',
     `trigger_status`            tinyint(4)   NOT NULL DEFAULT '0' COMMENT '调度状态：0-停止，1-运行',
     `trigger_last_time`         bigint(13)   NOT NULL DEFAULT '0' COMMENT '上次调度时间',
     `trigger_next_time`         bigint(13)   NOT NULL DEFAULT '0' COMMENT '下次调度时间',
+    `remark`               varchar(512)          DEFAULT NULL COMMENT '备注',
     PRIMARY KEY (`id`)
 ) DEFAULT CHARSET = utf8mb4;
 

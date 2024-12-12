@@ -601,6 +601,8 @@ $(function() {
 		$("#updateModal .form input[name='executorTimeout']").val( row.executorTimeout );
         $("#updateModal .form input[name='executorFailRetryCount']").val( row.executorFailRetryCount );
 
+		$("#updateModal .form textarea[name='remark']").val( row.remark );
+
 		// show
 		$('#updateModal').modal({backdrop: false, keyboard: false}).modal('show');
 	});
@@ -755,6 +757,8 @@ $(function() {
 		$('#addModal .form select[name=executorBlockStrategy] option[value='+ row.executorBlockStrategy +']').prop('selected', true);
 		$("#addModal .form input[name='executorTimeout']").val( row.executorTimeout );
 		$("#addModal .form input[name='executorFailRetryCount']").val( row.executorFailRetryCount );
+
+		$("#addModal .form textarea[name='remark']").val( row.remark );
 
 		// show
 		$('#addModal').modal({backdrop: false, keyboard: false}).modal('show');

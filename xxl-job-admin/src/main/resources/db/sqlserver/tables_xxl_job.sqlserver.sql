@@ -23,12 +23,13 @@ CREATE TABLE "XXL_JOB_INFO"
     "EXECUTOR_FAIL_RETRY_COUNT" INT DEFAULT 0 NOT NULL,
     "GLUE_TYPE" VARCHAR (100) NOT NULL,
     "GLUE_SOURCE" text,
-    "GLUE_REMARK" VARCHAR (256),
+    "GLUE_REMARK" VARCHAR (512),
     "GLUE_UPDATETIME" DATETIME,
     "CHILD_JOBID" VARCHAR (512),
     "TRIGGER_STATUS" INT DEFAULT 0 NOT NULL,
     "TRIGGER_LAST_TIME" BIGINT DEFAULT 0,
     "TRIGGER_NEXT_TIME" BIGINT DEFAULT 0,
+    "REMARK" VARCHAR (512),
     PRIMARY KEY ("ID")
 );
 
@@ -153,7 +154,12 @@ EXEC sys.sp_addextendedproperty
     @level2type = N'Column',  @level2name = 'TRIGGER_NEXT_TIME',
     @name = N'MS_Description', @value = N'下次调度时间'
     ;
-
+EXEC sys.sp_addextendedproperty
+    @level0type = N'Schema',  @level0name = N'dbo',
+    @level1type = N'Table',  @level1name = 'XXL_JOB_INFO',
+    @level2type = N'Column',  @level2name = 'REMARK',
+    @name = N'MS_Description', @value = N'备注'
+    ;
 
 
 CREATE TABLE "XXL_JOB_LOG"
