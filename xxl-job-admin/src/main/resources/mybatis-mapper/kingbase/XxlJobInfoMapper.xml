@@ -36,6 +36,7 @@
 		<result column="trigger_status" property="triggerStatus" />
 		<result column="trigger_last_time" property="triggerLastTime" />
 		<result column="trigger_next_time" property="triggerNextTime" />
+		<result column="remark" property="remark" />
 
 		<result column="newest_trigger_time" property="newestTriggerTime" />
 		<result column="newest_log_status" property="newestLogStatus" />
@@ -65,7 +66,8 @@
 		t.child_jobid,
 		t.trigger_status,
 		t.trigger_last_time,
-		t.trigger_next_time
+		t.trigger_next_time,
+		t.remark
 	</sql>
 
 	<sql id="sqlPageListBody">
@@ -143,7 +145,8 @@
 			child_jobid,
 			trigger_status,
 			trigger_last_time,
-			trigger_next_time
+			trigger_next_time,
+			remark
 		) VALUES (
 			#{jobGroup},
 			#{jobDesc},
@@ -167,7 +170,8 @@
 			#{childJobId},
 			#{triggerStatus},
 			#{triggerLastTime},
-			#{triggerNextTime}
+			#{triggerNextTime},
+			#{remark}
 		)
 		<!--<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
 			SELECT LAST_INSERT_ID()
@@ -205,7 +209,8 @@
 			child_jobid = #{childJobId},
 			trigger_status = #{triggerStatus},
 			trigger_last_time = #{triggerLastTime},
-			trigger_next_time = #{triggerNextTime}
+			trigger_next_time = #{triggerNextTime},
+			remark = #{remark}
 		WHERE id = #{id}
 	</update>
 
