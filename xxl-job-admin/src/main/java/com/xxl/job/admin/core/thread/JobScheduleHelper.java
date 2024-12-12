@@ -89,7 +89,7 @@ public class JobScheduleHelper {
 								if (MisfireStrategyEnum.FIRE_ONCE_NOW == misfireStrategyEnum) {
 									// FIRE_ONCE_NOW 》 trigger
 									JobTriggerPoolHelper.trigger(jobInfo.getId(), TriggerTypeEnum.MISFIRE, -1, null, null, null);
-									logger.debug(">>>>>>>>>>> xxl-job, schedule push trigger : jobId = " + jobInfo.getId());
+									logger.debug(">>>>>>>>>>> xxl-job, schedule push trigger : jobId = {}", jobInfo.getId());
 								}
 
 								// 2、fresh next
@@ -100,7 +100,7 @@ public class JobScheduleHelper {
 
 								// 1、trigger
 								JobTriggerPoolHelper.trigger(jobInfo.getId(), TriggerTypeEnum.CRON, -1, null, null, null);
-								logger.debug(">>>>>>>>>>> xxl-job, schedule push trigger : jobId = " + jobInfo.getId());
+								logger.debug(">>>>>>>>>>> xxl-job, schedule push trigger : jobId = {}", jobInfo.getId());
 
 								// 2、fresh next
 								refreshNextValidTime(jobInfo, new Date());
@@ -235,7 +235,7 @@ public class JobScheduleHelper {
 					}
 
 					// ring trigger
-					logger.debug(">>>>>>>>>>> xxl-job, time-ring beat : " + nowSecond + " = " + Arrays.asList(ringItemData));
+					logger.debug(">>>>>>>>>>> xxl-job, time-ring beat : {} = {}", nowSecond, ringItemData);
 					if (!ringItemData.isEmpty()) {
 						// do trigger
 						for (int jobId : ringItemData) {
@@ -291,7 +291,7 @@ public class JobScheduleHelper {
 		}
 		ringItemData.add(jobId);
 
-		logger.debug(">>>>>>>>>>> xxl-job, schedule push time-ring : " + ringSecond + " = " + Arrays.asList(ringItemData));
+		logger.debug(">>>>>>>>>>> xxl-job, schedule push time-ring : {} = {}", ringSecond, ringItemData);
 	}
 
 	public void toStop() {
