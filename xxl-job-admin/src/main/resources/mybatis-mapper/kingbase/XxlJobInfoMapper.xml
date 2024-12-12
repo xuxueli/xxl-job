@@ -36,6 +36,9 @@
 		<result column="trigger_status" property="triggerStatus" />
 		<result column="trigger_last_time" property="triggerLastTime" />
 		<result column="trigger_next_time" property="triggerNextTime" />
+
+		<result column="newest_trigger_time" property="newestTriggerTime" />
+		<result column="newest_log_status" property="newestLogStatus" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -67,6 +70,21 @@
 
 	<sql id="sqlPageListBody">
 		FROM xxl_job_info t
+		left join (
+			select
+			job_id,trigger_time as newest_trigger_time,
+			case when handle_code =200 then 1
+			when trigger_code not in (0,200) or handle_code not in (0,200) then 2
+			when trigger_code =200 and handle_code =0 then 3
+			else -1
+			end as newest_log_status
+			from xxl_job_log
+			where id in (
+				select max(id) as max_id
+				from xxl_job_log b
+				group by job_id
+			)
+		) b on t.id=b.job_id
 		<where>
 			<if test="jobGroup gt 0">
 				AND t.job_group = #{jobGroup}
@@ -88,6 +106,9 @@
 
 	<select id="pageList" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
 		SELECT <include refid="Base_Column_List" />
+		,
+		b.newest_trigger_time,
+		b.newest_log_status
 		<include refid="sqlPageListBody"></include>
 		ORDER BY id DESC
 		LIMIT #{page.offsetBegin},#{page.size}

@@ -36,6 +36,9 @@
         <result column="TRIGGER_STATUS" property="triggerStatus"/>
         <result column="TRIGGER_LAST_TIME" property="triggerLastTime"/>
         <result column="TRIGGER_NEXT_TIME" property="triggerNextTime"/>
+
+        <result column="NEWEST_TRIGGER_TIME" property="newestTriggerTime" />
+        <result column="NEWEST_LOG_STATUS" property="newestLogStatus" />
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -67,6 +70,21 @@
 
     <sql id="sqlPageListBody">
         FROM XXL_JOB_INFO t
+        LEFT JOIN (
+            SELECT
+            "JOB_ID","TRIGGER_TIME" AS "NEWEST_TRIGGER_TIME",
+            CASE WHEN "HANDLE_CODE" =200 THEN 1
+            WHEN "TRIGGER_CODE" NOT IN (0,200) OR "HANDLE_CODE" NOT IN (0,200) THEN 2
+            WHEN "TRIGGER_CODE" =200 AND "HANDLE_CODE" =0 THEN 3
+            ELSE -1
+            END AS "NEWEST_LOG_STATUS"
+            FROM "XXL_JOB_LOG"
+            WHERE "ID" IN (
+                SELECT MAX("ID") AS MAX_ID
+                FROM "XXL_JOB_LOG" b
+                GROUP BY "JOB_ID"
+            )
+        ) b ON t."ID"=b."JOB_ID"
         <where>
             <if test="jobGroup gt 0">
                 AND t."JOB_GROUP" = #{jobGroup,jdbcType=NUMERIC}
@@ -93,6 +111,9 @@
 
         SELECT
         <include refid="Base_Column_List"/>
+        ,
+        b."NEWEST_TRIGGER_TIME",
+        b."NEWEST_LOG_STATUS"
         <include refid="sqlPageListBody"></include>
         ORDER BY "ID" DESC
 
