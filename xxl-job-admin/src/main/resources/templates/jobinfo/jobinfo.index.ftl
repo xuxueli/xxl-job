@@ -88,6 +88,8 @@
 					                  	<th name="author" >${I18n.jobinfo_field_author}</th>
 					                  	<th name="alarmEmail" >${I18n.jobinfo_field_alarmemail}</th>
 					                  	<th name="triggerStatus" >${I18n.system_status}</th>
+                                        <th name="newestTriggerTime" >${I18n.joblog_field_triggerTime}</th>
+                                        <th name="newestLogStatus" >${I18n.joblog_status}</th>
 					                  	<th>${I18n.system_opt}</th>
 					                </tr>
 				                </thead>

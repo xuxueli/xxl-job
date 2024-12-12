@@ -42,6 +42,8 @@ public class XxlJobInfo {
 	private long triggerLastTime;	// 上次调度时间
 	private long triggerNextTime;	// 下次调度时间
 
+	private Date newestTriggerTime;
+	private Integer newestLogStatus;
 
 	public int getId() {
 		return id;
@@ -233,5 +235,21 @@ public class XxlJobInfo {
 
 	public void setTriggerNextTime(long triggerNextTime) {
 		this.triggerNextTime = triggerNextTime;
+	}
+
+	public Date getNewestTriggerTime() {
+		return newestTriggerTime;
+	}
+
+	public void setNewestTriggerTime(Date newestTriggerTime) {
+		this.newestTriggerTime = newestTriggerTime;
+	}
+
+	public Integer getNewestLogStatus() {
+		return newestLogStatus;
+	}
+
+	public void setNewestLogStatus(Integer newestLogStatus) {
+		this.newestLogStatus = newestLogStatus;
 	}
 }
