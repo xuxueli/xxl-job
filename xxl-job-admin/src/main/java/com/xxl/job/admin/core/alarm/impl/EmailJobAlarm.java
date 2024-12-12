@@ -1,22 +1,19 @@
 package com.xxl.job.admin.core.alarm.impl;
 
+import java.text.MessageFormat;
+import java.util.*;
+import javax.mail.internet.MimeMessage;
+
 import com.xxl.job.admin.core.alarm.JobAlarm;
 import com.xxl.job.admin.core.conf.XxlJobAdminConfig;
-import com.xxl.job.admin.core.model.XxlJobGroup;
-import com.xxl.job.admin.core.model.XxlJobInfo;
-import com.xxl.job.admin.core.model.XxlJobLog;
+import com.xxl.job.admin.core.model.*;
 import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.core.biz.model.ReturnT;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
-
-import javax.mail.internet.MimeMessage;
-import java.text.MessageFormat;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import org.springframework.util.StringUtils;
 
 /**
  * job alarm by email
@@ -29,15 +26,13 @@ public class EmailJobAlarm implements JobAlarm {
 
     /**
      * fail alarm
-     *
-     * @param jobLog
      */
     @Override
     public boolean doAlarm(XxlJobInfo info, XxlJobLog jobLog){
         boolean alarmResult = true;
 
         // send monitor email
-        if (info!=null && info.getAlarmEmail()!=null && info.getAlarmEmail().trim().length()>0) {
+        if (info != null && StringUtils.hasText(info.getAlarmEmail())) {
 
             // alarmContent
             String alarmContent = "Alarm Job LogId=" + jobLog.getId();
@@ -48,49 +43,46 @@ public class EmailJobAlarm implements JobAlarm {
                 alarmContent += "<br>HandleCode=" + jobLog.getHandleMsg();
             }
 
-            // email info
-            XxlJobGroup group = XxlJobAdminConfig.getAdminConfig().getXxlJobGroupDao().load(Integer.valueOf(info.getJobGroup()));
-            String personal = I18nUtil.getString("admin_name_full");
-            String title = I18nUtil.getString("jobconf_monitor");
-            String content = MessageFormat.format(loadEmailJobAlarmTemplate(),
-                    group!=null?group.getTitle():"null",
-                    info.getId(),
-                    info.getJobDesc(),
-                    alarmContent);
+			// email info
+			final XxlJobAdminConfig adminConfig = XxlJobAdminConfig.getAdminConfig();
+			XxlJobGroup group = adminConfig.getXxlJobGroupDao().load(info.getJobGroup());
+			String personal = I18nUtil.getString("admin_name_full");
+			String title = I18nUtil.getString("jobconf_monitor");
+			String content = MessageFormat.format(loadEmailJobAlarmTemplate(),
+					group != null ? group.getTitle() : "null",
+					info.getId(),
+					info.getJobDesc(),
+					alarmContent);
 
-            Set<String> emailSet = new HashSet<String>(Arrays.asList(info.getAlarmEmail().split(",")));
-            for (String email: emailSet) {
+			Set<String> emailSet = new HashSet<>(Arrays.asList(info.getAlarmEmail().split(",")));
+			for (String email : emailSet) {
+				// make mail
+				try {
+					MimeMessage mimeMessage = adminConfig.getMailSender().createMimeMessage();
 
-                // make mail
-                try {
-                    MimeMessage mimeMessage = XxlJobAdminConfig.getAdminConfig().getMailSender().createMimeMessage();
+					MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+					helper.setFrom(adminConfig.getEmailFrom(), personal);
+					helper.setTo(email);
+					helper.setSubject(title);
+					helper.setText(content, true);
 
-                    MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
-                    helper.setFrom(XxlJobAdminConfig.getAdminConfig().getEmailFrom(), personal);
-                    helper.setTo(email);
-                    helper.setSubject(title);
-                    helper.setText(content, true);
+					adminConfig.getMailSender().send(mimeMessage);
+				} catch (Exception e) {
+					logger.error(">>>>>>>>>>> xxl-job, job fail alarm email send error, JobLogId:{}", jobLog.getId(), e);
 
-                    XxlJobAdminConfig.getAdminConfig().getMailSender().send(mimeMessage);
-                } catch (Exception e) {
-                    logger.error(">>>>>>>>>>> xxl-job, job fail alarm email send error, JobLogId:{}", jobLog.getId(), e);
-
-                    alarmResult = false;
-                }
-
-            }
-        }
+					alarmResult = false;
+				}
+			}
+		}
 
         return alarmResult;
     }
 
     /**
      * load email job alarm template
-     *
-     * @return
      */
-    private static final String loadEmailJobAlarmTemplate(){
-        String mailBodyTemplate = "<h5>" + I18nUtil.getString("jobconf_monitor_detail") + "：</span>" +
+    private static String loadEmailJobAlarmTemplate(){
+	    return "<h5>" + I18nUtil.getString("jobconf_monitor_detail") + "：</span>" +
                 "<table border=\"1\" cellpadding=\"3\" style=\"border-collapse:collapse; width:80%;\" >\n" +
                 "   <thead style=\"font-weight: bold;color: #ffffff;background-color: #ff8c00;\" >" +
                 "      <tr>\n" +
@@ -111,8 +103,6 @@ public class EmailJobAlarm implements JobAlarm {
                 "      </tr>\n" +
                 "   </tbody>\n" +
                 "</table>";
-
-        return mailBodyTemplate;
     }
 
 }

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.xxl.job.admin.dao.XxlJobLogDao">
-	
+
 	<resultMap id="XxlJobLog" type="com.xxl.job.admin.core.model.XxlJobLog" >
 		<result column="id" property="id" />
 
@@ -11,17 +11,17 @@
 
 		<result column="executor_address" property="executorAddress" />
 		<result column="executor_handler" property="executorHandler" />
-	    <result column="executor_param" property="executorParam" />
+		<result column="executor_param" property="executorParam" />
 		<result column="executor_sharding_param" property="executorShardingParam" />
 		<result column="executor_fail_retry_count" property="executorFailRetryCount" />
-	    
-	    <result column="trigger_time" property="triggerTime" />
-	    <result column="trigger_code" property="triggerCode" />
-	    <result column="trigger_msg" property="triggerMsg" />
-	    
-	    <result column="handle_time" property="handleTime" />
-	    <result column="handle_code" property="handleCode" />
-	    <result column="handle_msg" property="handleMsg" />
+
+		<result column="trigger_time" property="triggerTime" />
+		<result column="trigger_code" property="triggerCode" />
+		<result column="trigger_msg" property="triggerMsg" />
+
+		<result column="handle_time" property="handleTime" />
+		<result column="handle_code" property="handleCode" />
+		<result column="handle_msg" property="handleMsg" />
 
 		<result column="alarm_status" property="alarmStatus" />
 	</resultMap>
@@ -43,7 +43,7 @@
 		t.handle_msg,
 		t.alarm_status
 	</sql>
-	
+
 	<select id="pageList" resultMap="XxlJobLog">
 		SELECT <include refid="Base_Column_List" />
 		FROM xxl_job_log AS t
@@ -77,9 +77,9 @@
 		ORDER BY t.trigger_time DESC
 		LIMIT #{offset}, #{pagesize}
 	</select>
-	
+
 	<select id="pageListCount" resultType="int">
-		SELECT count(1)
+		SELECT COUNT(*)
 		FROM xxl_job_log AS t
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
 			<if test="jobId==0 and jobGroup gt 0">
@@ -109,14 +109,14 @@
 			</if>
 		</trim>
 	</select>
-	
+
 	<select id="load" parameterType="java.lang.Long" resultMap="XxlJobLog">
 		SELECT <include refid="Base_Column_List" />
 		FROM xxl_job_log AS t
 		WHERE t.id = #{id}
 	</select>
 
-	
+
 	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobLog" useGeneratedKeys="true" keyProperty="id" >
 		INSERT INTO xxl_job_log (
 			`job_group`,
@@ -152,19 +152,19 @@
 
 	<update id="updateHandleInfo">
 		UPDATE xxl_job_log
-		SET 
-			`handle_time`= #{handleTime}, 
+		SET
+			`handle_time`= #{handleTime},
 			`handle_code`= #{handleCode},
 			`handle_msg`= #{handleMsg}
 		WHERE `id`= #{id}
 	</update>
-	
+
 	<delete id="delete" >
-		delete from xxl_job_log
+		DELETE FROM xxl_job_log
 		WHERE job_id = #{jobId}
 	</delete>
 
-    <!--<select id="triggerCountByDay" resultType="java.util.Map" >
+	<!--<select id="triggerCountByDay" resultType="java.util.Map" >
 		SELECT
 			DATE_FORMAT(trigger_time,'%Y-%m-%d') triggerDay,
 			COUNT(handle_code) triggerDayCount,
@@ -174,16 +174,16 @@
 		WHERE trigger_time BETWEEN #{from} and #{to}
 		GROUP BY triggerDay
 		ORDER BY triggerDay
-    </select>-->
+	</select>-->
 
-    <select id="findLogReport" resultType="java.util.Map" >
+	<select id="findLogReport" resultType="java.util.Map" >
 		SELECT
 			COUNT(handle_code) triggerDayCount,
-			SUM(CASE WHEN (trigger_code in (0, 200) and handle_code = 0) then 1 else 0 end) as triggerDayCountRunning,
-			SUM(CASE WHEN handle_code = 200 then 1 else 0 end) as triggerDayCountSuc
+			SUM(trigger_code IN (0, 200) AND handle_code = 0) AS triggerDayCountRunning,
+			SUM(handle_code = 200) AS triggerDayCountSuc
 		FROM xxl_job_log
-		WHERE trigger_time BETWEEN #{from} and #{to}
-    </select>
+		WHERE trigger_time BETWEEN #{from} AND #{to}
+	</select>
 
 	<select id="findClearLogIds" resultType="long" >
 		SELECT id FROM xxl_job_log
@@ -215,13 +215,13 @@
 				)
 			</if>
 		</trim>
-		order by id asc
+		ORDER BY id ASC
 		LIMIT #{pagesize}
 	</select>
 
 	<delete id="clearLog" >
-		delete from xxl_job_log
-		WHERE id in
+		DELETE FROM xxl_job_log
+		WHERE id IN
 		<foreach collection="logIds" item="item" open="(" close=")" separator="," >
 			#{item}
 		</foreach>
@@ -235,6 +235,7 @@
 			(handle_code = 200)
 		)
 		AND `alarm_status` = 0
+		AND id > #{minId}
 		ORDER BY id ASC
 		LIMIT #{pagesize}
 	</select>

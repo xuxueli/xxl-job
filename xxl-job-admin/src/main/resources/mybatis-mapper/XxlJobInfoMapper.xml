@@ -214,10 +214,9 @@
 	</select>
 
 	<select id="findAllCount" resultType="int">
-		SELECT count(1)
+		SELECT COUNT(*)
 		FROM xxl_job_info
 	</select>
-
 
 	<select id="scheduleJobQuery" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
 		SELECT <include refid="Base_Column_List" />

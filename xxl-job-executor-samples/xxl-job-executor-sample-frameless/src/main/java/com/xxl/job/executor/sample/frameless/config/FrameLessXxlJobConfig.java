@@ -7,8 +7,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.Properties;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 
 /**
  * @author xuxueli 2018-10-31 19:05:43
@@ -40,12 +40,12 @@ public class FrameLessXxlJobConfig {
         xxlJobExecutor.setAppname(xxlJobProp.getProperty("xxl.job.executor.appname"));
         xxlJobExecutor.setAddress(xxlJobProp.getProperty("xxl.job.executor.address"));
         xxlJobExecutor.setIp(xxlJobProp.getProperty("xxl.job.executor.ip"));
-        xxlJobExecutor.setPort(Integer.valueOf(xxlJobProp.getProperty("xxl.job.executor.port")));
+        xxlJobExecutor.setPort(Integer.parseInt(xxlJobProp.getProperty("xxl.job.executor.port")));
         xxlJobExecutor.setLogPath(xxlJobProp.getProperty("xxl.job.executor.logpath"));
-        xxlJobExecutor.setLogRetentionDays(Integer.valueOf(xxlJobProp.getProperty("xxl.job.executor.logretentiondays")));
+        xxlJobExecutor.setLogRetentionDays(Integer.parseInt(xxlJobProp.getProperty("xxl.job.executor.logretentiondays")));
 
         // registry job bean
-        xxlJobExecutor.setXxlJobBeanList(Arrays.asList(new SampleXxlJob()));
+        xxlJobExecutor.setXxlJobBeanList(Collections.singletonList(new SampleXxlJob()));
 
         // start executor
         try {
@@ -70,12 +70,10 @@ public class FrameLessXxlJobConfig {
         try {
             ClassLoader loder = Thread.currentThread().getContextClassLoader();
 
-            in = new InputStreamReader(loder.getResourceAsStream(propertyFileName), "UTF-8");;
-            if (in != null) {
-                Properties prop = new Properties();
-                prop.load(in);
-                return prop;
-            }
+            in = new InputStreamReader(loder.getResourceAsStream(propertyFileName), StandardCharsets.UTF_8);;
+	        Properties prop = new Properties();
+	        prop.load(in);
+	        return prop;
         } catch (IOException e) {
             logger.error("load {} error!", propertyFileName);
         } finally {

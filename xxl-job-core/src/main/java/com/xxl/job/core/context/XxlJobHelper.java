@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.helpers.FormattingTuple;
 import org.slf4j.helpers.MessageFormatter;
+import org.springframework.util.StringUtils;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -149,18 +150,16 @@ public class XxlJobHelper {
         StackTraceElement[] stackTraceElements = new Throwable().getStackTrace();
         StackTraceElement callInfo = stackTraceElements[1];*/
 
-        StringBuffer stringBuffer = new StringBuffer();
-        stringBuffer.append(DateUtil.formatDateTime(new Date())).append(" ")
-                .append("["+ callInfo.getClassName() + "#" + callInfo.getMethodName() +"]").append("-")
-                .append("["+ callInfo.getLineNumber() +"]").append("-")
-                .append("["+ Thread.currentThread().getName() +"]").append(" ")
-                .append(appendLog!=null?appendLog:"");
-        String formatAppendLog = stringBuffer.toString();
+        String formatAppendLog = DateUtil.formatDateTime(new Date()) + " "
+                + "[" + callInfo.getClassName() + "#" + callInfo.getMethodName() + "]" + "-"
+                + "[" + callInfo.getLineNumber() + "]" + "-"
+                + "[" + Thread.currentThread().getName() + "]" + " "
+                + (appendLog != null ? appendLog : "");
 
         // appendlog
         String logFileName = xxlJobContext.getJobLogFileName();
 
-        if (logFileName!=null && logFileName.trim().length()>0) {
+        if (StringUtils.hasText(logFileName)) {
             XxlJobFileAppender.appendLog(logFileName, formatAppendLog);
             return true;
         } else {
