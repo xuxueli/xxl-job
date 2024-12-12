@@ -79,14 +79,14 @@ public class JobRegistryHelper {
 							adminConfig.getXxlJobGroupDao().update(group);
 						}
 					}
-				} catch (Exception e) {
+				} catch (Throwable e) {
 					if (!toStop) {
 						logger.error(">>>>>>>>>>> xxl-job, job registry monitor thread error", e);
 					}
 				}
 				try {
 					TimeUnit.SECONDS.sleep(RegistryConfig.BEAT_TIMEOUT);
-				} catch (InterruptedException e) {
+				} catch (Throwable e) {
 					if (!toStop) {
 						logger.error(">>>>>>>>>>> xxl-job, job registry monitor thread error", e);
 					}
@@ -127,7 +127,7 @@ public class JobRegistryHelper {
 		registryMonitorThread.interrupt();
 		try {
 			registryMonitorThread.join();
-		} catch (InterruptedException e) {
+		} catch (Throwable e) {
 			logger.error(e.getMessage(), e);
 		}
 	}
@@ -145,6 +145,14 @@ public class JobRegistryHelper {
 
 		// async execute
 		registryOrRemoveThreadPool.execute(() -> {
+			// 0-fail; 1-save suc; 2-update suc;
+			int ret = XxlJobAdminConfig.getAdminConfig().getXxlJobRegistryDao()
+					.registrySaveOrUpdate(registryParam.getRegistryGroup(), registryParam.getRegistryKey(), registryParam.getRegistryValue(), new Date());
+			if (ret == 1) {
+				// fresh (add)
+				freshGroupRegistryInfo(registryParam);
+			}
+			/*
 			int ret = XxlJobAdminConfig.getAdminConfig().getXxlJobRegistryDao()
 					.registryUpdate(registryParam.getRegistryGroup(), registryParam.getRegistryKey(), registryParam.getRegistryValue(), new Date());
 			if (ret < 1) {
@@ -154,6 +162,7 @@ public class JobRegistryHelper {
 				// fresh
 				freshGroupRegistryInfo(registryParam);
 			}
+			*/
 		});
 
 		return ReturnT.SUCCESS;
@@ -173,7 +182,7 @@ public class JobRegistryHelper {
 			int ret = XxlJobAdminConfig.getAdminConfig().getXxlJobRegistryDao()
 					.registryDelete(registryParam.getRegistryGroup(), registryParam.getRegistryKey(), registryParam.getRegistryValue());
 			if (ret > 0) {
-				// fresh
+				// fresh (delete)
 				freshGroupRegistryInfo(registryParam);
 			}
 		});

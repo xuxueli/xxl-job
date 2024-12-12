@@ -1,14 +1,14 @@
 package com.xxl.job.admin.dao;
 
+import java.util.List;
+
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import java.util.List;
-
-
 /**
  * job info
+ *
  * @author xuxueli 2016-1-12 18:03:45
  */
 @Mapper
@@ -42,8 +42,14 @@ public interface XxlJobInfoDao {
 
 	int findAllCount();
 
+	/**
+	 * find schedule job, limit "trigger_status = 1"
+	 */
 	List<XxlJobInfo> scheduleJobQuery(@Param("maxNextTime") long maxNextTime, @Param("pagesize") int pagesize);
 
+	/**
+	 * update schedule job, limit "trigger_status = 1"（avoid stopping tasks from being opened）
+	 */
 	int scheduleUpdate(XxlJobInfo xxlJobInfo);
 
 }

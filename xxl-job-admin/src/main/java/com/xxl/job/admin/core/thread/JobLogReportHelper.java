@@ -94,7 +94,7 @@ public class JobLogReportHelper {
                         }
                     }
 
-                } catch (Exception e) {
+                } catch (Throwable e) {
                     if (!toStop) {
                         logger.error(">>>>>>>>>>> xxl-job, job log report thread error", e);
                     }
@@ -122,7 +122,7 @@ public class JobLogReportHelper {
 
                 try {
                     TimeUnit.MINUTES.sleep(1);
-                } catch (Exception e) {
+                } catch (Throwable e) {
                     if (!toStop) {
                         logger.error(e.getMessage(), e);
                     }
@@ -156,7 +156,7 @@ public class JobLogReportHelper {
         logrThread.interrupt();
         try {
             logrThread.join();
-        } catch (InterruptedException e) {
+        } catch (Throwable e) {
             logger.error(e.getMessage(), e);
         }
     }

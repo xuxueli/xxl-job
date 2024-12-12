@@ -218,7 +218,6 @@
 		FROM xxl_job_info
 	</select>
 
-
 	<select id="scheduleJobQuery" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
 		SELECT <include refid="Base_Column_List" />
 		FROM xxl_job_info AS t
@@ -235,6 +234,7 @@
 			trigger_next_time = #{triggerNextTime},
 			trigger_status = #{triggerStatus}
 		WHERE id = #{id}
+		  AND trigger_status = 1
 	</update>
 
 </mapper>

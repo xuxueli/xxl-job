@@ -71,7 +71,7 @@ public class JobTriggerPoolHelper {
 			try {
 				// do trigger
 				XxlJobTrigger.trigger(jobId, triggerType, failRetryCount, executorShardingParam, executorParam, addressList);
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				logger.error(e.getMessage(), e);
 			} finally {
 				// check timeout-count-map
