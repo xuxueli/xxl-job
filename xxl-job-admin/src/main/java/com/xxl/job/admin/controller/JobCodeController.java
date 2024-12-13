@@ -25,7 +25,7 @@ import java.util.List;
 @Controller
 @RequestMapping("/jobcode")
 public class JobCodeController {
-	
+
 	@Resource
 	private XxlJobInfoDao xxlJobInfoDao;
 	@Resource
@@ -53,7 +53,7 @@ public class JobCodeController {
 		model.addAttribute("jobLogGlues", jobLogGlues);
 		return "jobcode/jobcode.index";
 	}
-	
+
 	@RequestMapping("/save")
 	@ResponseBody
 	public ReturnT<String> save(HttpServletRequest request, int id, String glueSource, String glueRemark) {
@@ -71,7 +71,7 @@ public class JobCodeController {
 
 		// valid permission
 		PermissionInterceptor.validJobGroupPermission(request, existsJobInfo.getJobGroup());
-		
+
 		// update new code
 		existsJobInfo.setGlueSource(glueSource);
 		existsJobInfo.setGlueRemark(glueRemark);
@@ -96,5 +96,5 @@ public class JobCodeController {
 
 		return ReturnT.SUCCESS;
 	}
-	
+
 }
