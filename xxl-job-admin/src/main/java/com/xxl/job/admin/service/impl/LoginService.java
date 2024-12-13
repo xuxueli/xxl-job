@@ -95,7 +95,7 @@ public class LoginService {
 
     private XxlJobUser parseToken(String tokenHex){
         XxlJobUser xxlJobUser = null;
-        if (tokenHex != null) {
+        if (tokenHex != null && !tokenHex.isEmpty()) {
             String tokenJson = cacheParseToken.get(tokenHex);
             xxlJobUser = JacksonUtil.readValue(tokenJson, XxlJobUser.class);
         }
