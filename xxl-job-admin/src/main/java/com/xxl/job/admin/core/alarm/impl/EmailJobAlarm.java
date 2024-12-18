@@ -9,6 +9,7 @@ import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.core.biz.model.ReturnT;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 
@@ -26,6 +27,9 @@ import java.util.Set;
 @Component
 public class EmailJobAlarm implements JobAlarm {
     private static Logger logger = LoggerFactory.getLogger(EmailJobAlarm.class);
+    
+    @Value("${xxl.job.alarm.mail.enable}")
+    private boolean enable;
 
     /**
      * fail alarm
@@ -34,6 +38,9 @@ public class EmailJobAlarm implements JobAlarm {
      */
     @Override
     public boolean doAlarm(XxlJobInfo info, XxlJobLog jobLog){
+        if(!enable){
+            return true;
+        }
         boolean alarmResult = true;
 
         // send monitor email
