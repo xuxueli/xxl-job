@@ -48,8 +48,7 @@ public class PermissionInterceptor implements AsyncHandlerInterceptor {
 		if (needLogin) {
 			XxlJobUser loginUser = loginService.ifLogin(request, response);
 			if (loginUser == null) {
-				response.setStatus(302);
-				response.setHeader("location", request.getContextPath()+"/toLogin");
+				response.sendRedirect(request.getContextPath()+"/toLogin");
 				return false;
 			}
 			if (needAdminuser && loginUser.getRole()!=1) {
