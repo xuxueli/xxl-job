@@ -140,7 +140,7 @@ public class LoginService {
         // do login
         CookieUtil.set(response, LOGIN_IDENTITY_KEY, webToken, ifRemember);
         response.setHeader(LOGIN_API_TOKEN_HEADER,token);
-        response.setHeader(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS,"token");
+        response.setHeader(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS,LOGIN_API_TOKEN_HEADER);
         return ReturnT.SUCCESS;
     }
 
@@ -192,7 +192,7 @@ public class LoginService {
                     String refreshWebToken=(ifRemember?"y":"n")+"."+refreshToken;
                     CookieUtil.set(response, LOGIN_IDENTITY_KEY, refreshWebToken, ifRemember);
                     response.setHeader(LOGIN_API_TOKEN_HEADER,refreshToken);
-                    response.setHeader(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS,"token");
+                    response.setHeader(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS,LOGIN_API_TOKEN_HEADER);
                 }
             } catch (Exception e) {
                 logout(request, response);
