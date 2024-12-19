@@ -1,5 +1,17 @@
 $(function(){
 
+    $.ajaxSetup({
+        complete: function(xhr,textStatus) {
+            if(!xhr.responseText){
+                return
+            }
+            if(xhr.responseText.indexOf('loginForm')>=0 && xhr.responseText.indexOf('login.1.js')>=0){
+                // 处理302重定向到登录页
+                window.location.reload()
+            }
+        }
+    });
+
 	// logout
 	$("#logoutBtn").click(function(){
 		layer.confirm( I18n.logout_confirm , {

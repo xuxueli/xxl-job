@@ -3,6 +3,7 @@ package com.xxl.job.admin.core.util;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Cookie.Util
@@ -12,7 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 public class CookieUtil {
 
 	// 默认缓存时间,单位/秒, 2H
-	private static final int COOKIE_MAX_AGE = Integer.MAX_VALUE;
+	private static final int COOKIE_MAX_AGE = (int)TimeUnit.DAYS.toSeconds(15);
 	// 保存路径,根路径
 	private static final String COOKIE_PATH = "/";
 
@@ -69,7 +70,7 @@ public class CookieUtil {
 	 * @param request
 	 * @param key
 	 */
-	private static Cookie get(HttpServletRequest request, String key) {
+	public static Cookie get(HttpServletRequest request, String key) {
 		Cookie[] arr_cookie = request.getCookies();
 		if (arr_cookie != null && arr_cookie.length > 0) {
 			for (Cookie cookie : arr_cookie) {
