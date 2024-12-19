@@ -16,6 +16,7 @@ import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import javax.script.ScriptException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.concurrent.TimeUnit;
@@ -29,7 +30,7 @@ public class LoginService {
     public static final String LOGIN_IDENTITY_KEY = "XXL_JOB_LOGIN_IDENTITY";
 
     public static final String LOGIN_API_TOKEN_HEADER ="token";
-    public static final int LOGIN_API_TOKEN_EXPIRE_MINUTES=15;
+    public static final int LOGIN_API_TOKEN_EXPIRE_MINUTES=30;
 
     public static final String KEY_PAIR_PATH=SecurityContext.STORE_PATH+"/token.pk";
 
@@ -148,7 +149,11 @@ public class LoginService {
      * @return
      */
     public XxlJobUser ifLogin(HttpServletRequest request, HttpServletResponse response){
-        String token = CookieUtil.getValue(request, LOGIN_IDENTITY_KEY);
+        Cookie cookie = CookieUtil.get(request, LOGIN_IDENTITY_KEY);
+        String token=null;
+        if(cookie!=null){
+            token=cookie.getValue();
+        }
         boolean isApiType=false;
         if(!StringUtils.hasText(token)){
             token = request.getHeader(LOGIN_API_TOKEN_HEADER);
@@ -161,6 +166,10 @@ public class LoginService {
                     cookieUser = parseApiToken(token.trim());
                 }else{
                     cookieUser = parseToken(token.trim());
+                    int maxAge = cookie.getMaxAge();
+                    if(maxAge>=0) {
+                        CookieUtil.set(response, LOGIN_IDENTITY_KEY, token, false);
+                    }
                 }
             } catch (Exception e) {
                 logout(request, response);
