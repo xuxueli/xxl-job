@@ -2,6 +2,7 @@ package com.xxl.job.admin.service.impl;
 
 import com.antherd.smcrypto.sm2.Keypair;
 import com.antherd.smcrypto.sm2.Sm2;
+import com.antherd.smcrypto.sm3.Sm3;
 import com.xxl.job.admin.core.model.XxlJobUser;
 import com.xxl.job.admin.core.util.CookieUtil;
 import com.xxl.job.admin.core.util.I18nUtil;
@@ -10,6 +11,7 @@ import com.xxl.job.admin.dao.XxlJobUserDao;
 import com.xxl.job.admin.security.ConcurrentLruCache;
 import com.xxl.job.admin.security.SecurityContext;
 import com.xxl.job.core.biz.model.ReturnT;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
@@ -19,6 +21,8 @@ import javax.script.ScriptException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.AbstractMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -64,43 +68,52 @@ public class LoginService {
 
     // ---------------------- token tool ----------------------
 
-    private String[] makeToken(XxlJobUser xxlJobUser) throws ScriptException {
+    public String makeSign(String msg) throws ScriptException {
+        String sign= Sm3.sm3(msg);
+        return sign.substring(0,4)+sign.substring(sign.length()-4);
+    }
+
+    public String refreshToken(String payload) throws ScriptException {
+        long ets=System.currentTimeMillis()+ TimeUnit.MINUTES.toMillis(LOGIN_API_TOKEN_EXPIRE_MINUTES);
+        String timestamp=Long.toHexString(ets);
+        String content=timestamp+"."+payload;
+        String sign= makeSign(keypair.getPrivateKey()+"."+content);
+        String token=sign+"."+content;
+        return token;
+    }
+
+    private String makeToken(XxlJobUser xxlJobUser) throws ScriptException {
         xxlJobUser.setPassword(null);
         String tokenJson = JacksonUtil.writeValueAsString(xxlJobUser);
-        long ets=System.currentTimeMillis()+ TimeUnit.MINUTES.toMillis(LOGIN_API_TOKEN_EXPIRE_MINUTES);
-        String apiToken=Long.toHexString(ets)+"#"+tokenJson;
-        String tokenHex = Sm2.doEncrypt(tokenJson, keypair.getPublicKey());
-        String apiTokenHex="expire"+ets+"."+Sm2.doEncrypt(apiToken,keypair.getPublicKey());
-        return new String[]{tokenHex,apiTokenHex};
-    }
-
-    private XxlJobUser parseApiToken(String apiTokenHex){
-        XxlJobUser xxlJobUser = null;
-        if (apiTokenHex != null) {
-            int idx=apiTokenHex.indexOf(".");
-            if(idx>=0){
-                apiTokenHex=apiTokenHex.substring(idx+1);
-            }
-            String tokenJson = cacheParseToken.get(apiTokenHex);
-            String[] arr = tokenJson.split("#", 2);
-            long ts = Long.parseLong(arr[0],16);
-            if(ts<System.currentTimeMillis()){
-                return null;
-            }
-            tokenJson=arr[1];
-            xxlJobUser = JacksonUtil.readValue(tokenJson, XxlJobUser.class);
-        }
-        return xxlJobUser;
+        String payload = Sm2.doEncrypt(tokenJson, keypair.getPublicKey());
+        String token=refreshToken(payload);
+        return token;
     }
 
 
-    private XxlJobUser parseToken(String tokenHex){
-        XxlJobUser xxlJobUser = null;
-        if (tokenHex != null) {
-            String tokenJson = cacheParseToken.get(tokenHex);
-            xxlJobUser = JacksonUtil.readValue(tokenJson, XxlJobUser.class);
+    private Map.Entry<String,XxlJobUser> parseToken(String token) throws ScriptException {
+        if(token==null || token.isEmpty()){
+            return null;
         }
-        return xxlJobUser;
+        String[] arr = token.split("\\.", 3);
+        if(arr.length!=3){
+            return null;
+        }
+        String sign=arr[0];
+        String timestamp=arr[1];
+        String payload=arr[2];
+        long ets = Long.parseLong(timestamp, 16);
+        if(ets<System.currentTimeMillis()){
+            return null;
+        }
+        String content=timestamp+"."+payload;
+        String resign=makeSign(keypair.getPrivateKey()+"."+content);
+        if(!resign.equalsIgnoreCase(sign)){
+            return null;
+        }
+        String tokenJson = cacheParseToken.get(payload);
+        XxlJobUser user= JacksonUtil.readValue(tokenJson, XxlJobUser.class);
+        return new AbstractMap.SimpleEntry<>(payload,user);
     }
 
     // ---------------------- login tool, with cookie and db ----------------------
@@ -121,13 +134,13 @@ public class LoginService {
             return new ReturnT<String>(500, I18nUtil.getString("login_param_unvalid"));
         }
 
-        String[] tokens = makeToken(xxlJobUser);
-        String loginToken=tokens[0];
-        String apiToken=tokens[1];
+        String token = makeToken(xxlJobUser);
 
+        String webToken=(ifRemember?"y":"n")+"."+token;
         // do login
-        CookieUtil.set(response, LOGIN_IDENTITY_KEY, loginToken, ifRemember);
-        response.setHeader(LOGIN_API_TOKEN_HEADER,apiToken);
+        CookieUtil.set(response, LOGIN_IDENTITY_KEY, webToken, ifRemember);
+        response.setHeader(LOGIN_API_TOKEN_HEADER,token);
+        response.setHeader(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS,"token");
         return ReturnT.SUCCESS;
     }
 
@@ -154,22 +167,32 @@ public class LoginService {
         if(cookie!=null){
             token=cookie.getValue();
         }
-        boolean isApiType=false;
         if(!StringUtils.hasText(token)){
             token = request.getHeader(LOGIN_API_TOKEN_HEADER);
-            isApiType=true;
         }
         if (StringUtils.hasText(token)) {
             XxlJobUser cookieUser = null;
+            boolean ifRemember=false;
+            int idx=token.indexOf(".");
+            if(idx>=0){
+                String remember=token.substring(0,idx);
+                if("y".equalsIgnoreCase(remember)){
+                    ifRemember=true;
+                    token=token.substring(idx+1);
+                }else if("n".equalsIgnoreCase(remember)){
+                    ifRemember=false;
+                    token=token.substring(idx+1);
+                }
+            }
             try {
-                if(isApiType){
-                    cookieUser = parseApiToken(token.trim());
-                }else{
-                    cookieUser = parseToken(token.trim());
-                    int maxAge = cookie.getMaxAge();
-                    if(maxAge>=0) {
-                        CookieUtil.set(response, LOGIN_IDENTITY_KEY, token, false);
-                    }
+                Map.Entry<String, XxlJobUser> entry = parseToken(token.trim());
+                if(entry!=null){
+                    cookieUser=entry.getValue();
+                    String refreshToken = refreshToken(entry.getKey());
+                    String refreshWebToken=(ifRemember?"y":"n")+"."+refreshToken;
+                    CookieUtil.set(response, LOGIN_IDENTITY_KEY, refreshWebToken, ifRemember);
+                    response.setHeader(LOGIN_API_TOKEN_HEADER,refreshToken);
+                    response.setHeader(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS,"token");
                 }
             } catch (Exception e) {
                 logout(request, response);
