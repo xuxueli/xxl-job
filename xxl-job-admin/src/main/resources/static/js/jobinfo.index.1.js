@@ -46,7 +46,7 @@ $(function() {
 	                {
 	                	"data": 'jobDesc',
 						"visible" : true,
-						"width":'25%'
+						"width":'15%'
 					},
 					{
 						"data": 'scheduleType',
@@ -92,7 +92,7 @@ $(function() {
 	                { "data": 'alarmEmail', "visible" : false},
 	                {
 	                	"data": 'triggerStatus',
-						"width":'10%',
+						"width":'5%',
 	                	"visible" : true,
 	                	"render": function ( data, type, row ) {
                             // status
@@ -104,9 +104,33 @@ $(function() {
 	                		return data;
 	                	}
 	                },
+					{
+						"data": 'newestTriggerTime',
+						"width":'13%',
+						"visible" : true,
+						"render": function ( data, type, row ) {
+							return data?moment(new Date(data)).format("YYYY-MM-DD HH:mm:ss"):"";
+						}
+					},
+					{
+						"data": 'newestLogStatus',
+						"width":'5%',
+						"visible" : true,
+						"render": function ( data, type, row ) {
+							// status
+							if (1 == data) {
+								return '<small class="label label-success" >'+I18n.joblog_status_suc+'</small>';
+							}else if (2 == data) {
+								return '<small class="label label-danger" >'+I18n.joblog_status_fail+'</small>';
+							}else if (3 == data) {
+								return '<small class="label label-default" >'+I18n.joblog_status_running+'</small>';
+							}
+							return data;
+						}
+					},
 	                {
 						"data": I18n.system_opt ,
-						"width":'10%',
+						"width":'12%',
 	                	"render": function ( data, type, row ) {
 	                		return function(){
 
@@ -577,6 +601,8 @@ $(function() {
 		$("#updateModal .form input[name='executorTimeout']").val( row.executorTimeout );
         $("#updateModal .form input[name='executorFailRetryCount']").val( row.executorFailRetryCount );
 
+		$("#updateModal .form textarea[name='remark']").val( row.remark );
+
 		// show
 		$('#updateModal').modal({backdrop: false, keyboard: false}).modal('show');
 	});
@@ -731,6 +757,8 @@ $(function() {
 		$('#addModal .form select[name=executorBlockStrategy] option[value='+ row.executorBlockStrategy +']').prop('selected', true);
 		$("#addModal .form input[name='executorTimeout']").val( row.executorTimeout );
 		$("#addModal .form input[name='executorFailRetryCount']").val( row.executorFailRetryCount );
+
+		$("#addModal .form textarea[name='remark']").val( row.remark );
 
 		// show
 		$('#addModal').modal({backdrop: false, keyboard: false}).modal('show');

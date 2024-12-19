@@ -102,6 +102,10 @@ public class XxlJobAdminConfig implements InitializingBean, DisposableBean {
         return emailFrom;
     }
 
+    public void setEmailFrom(String emailFrom) {
+        this.emailFrom = emailFrom;
+    }
+
     public int getTriggerPoolFastMax() {
         if (triggerPoolFastMax < 200) {
             return 200;
