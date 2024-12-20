@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  	<#import "../common/common.macro.ftl" as netCommon>
+  	<#import "/common/common.macro.ftl" as netCommon>
 	<@netCommon.commonStyle />
 	<!-- DataTables -->
   	<link rel="stylesheet" href="${request.contextPath}/static/adminlte/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
@@ -88,6 +88,8 @@
 					                  	<th name="author" >${I18n.jobinfo_field_author}</th>
 					                  	<th name="alarmEmail" >${I18n.jobinfo_field_alarmemail}</th>
 					                  	<th name="triggerStatus" >${I18n.system_status}</th>
+                                        <th name="newestTriggerTime" >${I18n.joblog_field_triggerTime}</th>
+                                        <th name="newestLogStatus" >${I18n.joblog_status}</th>
 					                  	<th>${I18n.system_opt}</th>
 					                </tr>
 				                </thead>
@@ -230,6 +232,13 @@
                         <div class="col-sm-4"><input type="text" class="form-control" name="executorTimeout" placeholder="${I18n.jobinfo_field_executorTimeout_placeholder}" maxlength="6" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" ></div>
                         <label for="lastname" class="col-sm-2 control-label">${I18n.jobinfo_field_executorFailRetryCount}<font color="black">*</font></label>
                         <div class="col-sm-4"><input type="text" class="form-control" name="executorFailRetryCount" placeholder="${I18n.jobinfo_field_executorFailRetryCount_placeholder}" maxlength="4" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" ></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="firstname" class="col-sm-2 control-label">${I18n.jobinfo_remark}<font color="black">*</font></label>
+                        <div class="col-sm-10">
+                            <textarea class="textarea form-control" name="remark" placeholder="${I18n.system_please_input}${I18n.jobinfo_remark}" maxlength="512" style="height: 63px; line-height: 1.2;"></textarea>
+                        </div>
                     </div>
 
                     <hr>
@@ -475,6 +484,14 @@ exit 0
                         <div class="col-sm-4"><input type="text" class="form-control" name="executorTimeout" placeholder="${I18n.jobinfo_field_executorTimeout_placeholder}" maxlength="6" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" ></div>
                         <label for="lastname" class="col-sm-2 control-label">${I18n.jobinfo_field_executorFailRetryCount}<font color="black">*</font></label>
                         <div class="col-sm-4"><input type="text" class="form-control" name="executorFailRetryCount" placeholder="${I18n.jobinfo_field_executorFailRetryCount_placeholder}" maxlength="4" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" ></div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="firstname" class="col-sm-2 control-label">${I18n.jobinfo_remark}<font color="black">*</font></label>
+                        <div class="col-sm-10">
+                            <textarea class="textarea form-control" name="remark" placeholder="${I18n.system_please_input}${I18n.jobinfo_remark}" maxlength="512" style="height: 63px; line-height: 1.2;"></textarea>
+                        </div>
                     </div>
 
 					<hr>
