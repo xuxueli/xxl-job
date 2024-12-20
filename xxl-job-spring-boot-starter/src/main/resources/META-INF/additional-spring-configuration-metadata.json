@@ -1,0 +1,91 @@
+{
+  "groups": [
+    {
+      "name": "xxl.job",
+      "type": "com.xxl.job.autoconfiguration.properties.XxlJobProperties",
+      "sourceType": "com.xxl.job.autoconfiguration.properties.XxlJobProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "xxl.job.admin.addresses",
+      "type": "java.lang.String",
+      "description": "admin address, multi value split by ','.",
+      "sourceType": "com.xxl.job.autoconfiguration.properties.XxlJobProperties",
+      "defaultValue": "http://127.0.0.1:8080/xxl-job-admin"
+    },
+    {
+      "name": "xxl.job.access-token",
+      "type": "java.lang.String",
+      "description": "access token.",
+      "sourceType": "com.xxl.job.autoconfiguration.properties.XxlJobProperties",
+      "defaultValue": "default_token"
+    },
+    {
+      "name": "xxl.job.executor.appname",
+      "type": "java.lang.String",
+      "description": "executor name.",
+      "sourceType": "com.xxl.job.autoconfiguration.properties.XxlJobProperties",
+      "defaultValue": "biz-executor"
+    },
+    {
+      "name": "xxl.job.executor.address",
+      "type": "java.lang.String",
+      "description": "executor bind address.",
+      "sourceType": "com.xxl.job.autoconfiguration.properties.XxlJobProperties",
+      "defaultValue": ""
+    },
+    {
+      "name": "xxl.job.executor.ip",
+      "type": "java.lang.String",
+      "description": "executor bind ip.",
+      "sourceType": "com.xxl.job.autoconfiguration.properties.XxlJobProperties",
+      "defaultValue": ""
+    },
+    {
+      "name": "xxl.job.executor.port",
+      "type": "java.lang.Integer",
+      "description": "executor port.",
+      "sourceType": "com.xxl.job.autoconfiguration.properties.XxlJobProperties",
+      "defaultValue": 9999
+    },
+    {
+      "name": "xxl.job.executor.log-path",
+      "type": "java.lang.String",
+      "description": "executor log path.",
+      "sourceType": "com.xxl.job.autoconfiguration.properties.XxlJobProperties",
+      "defaultValue": "./xxj-job/logs"
+    },
+    {
+      "name": "xxl.job.executor.log-retention-days",
+      "type": "java.lang.Integer",
+      "description": "executor log retention days.",
+      "sourceType": "com.xxl.job.autoconfiguration.properties.XxlJobProperties",
+      "defaultValue": 30
+    }
+  ],
+  "hints": [
+    {
+      "name": "server.servlet.jsp.class-name",
+      "providers": [
+        {
+          "name": "class-reference",
+          "parameters": {
+            "target": "javax.servlet.http.HttpServlet"
+          }
+        }
+      ]
+    },
+    {
+      "name": "server.tomcat.accesslog.encoding",
+      "providers": [
+        {
+          "name": "handle-as",
+          "parameters": {
+            "target": "java.nio.charset.Charset"
+          }
+        }
+      ]
+    }
+  ]
+}
