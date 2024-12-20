@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.script.ScriptException;
+import java.security.SecureRandom;
 import java.util.AbstractMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -36,6 +37,8 @@ public class LoginService {
     public static final int LOGIN_API_TOKEN_EXPIRE_MINUTES=30;
 
     public static final String KEY_PAIR_PATH=SecurityContext.STORE_PATH+"/token.pk";
+
+    public static final SecureRandom RANDOM=new SecureRandom();
 
     private final Keypair keypair;
     {
@@ -72,8 +75,12 @@ public class LoginService {
         return sign.substring(0,4)+sign.substring(sign.length()-4);
     }
 
-    public String refreshToken(String payload) throws ScriptException {
-        long ets=System.currentTimeMillis()+ TimeUnit.MINUTES.toMillis(LOGIN_API_TOKEN_EXPIRE_MINUTES);
+    public long getExpireMillSeconds(boolean ifRemember){
+        return (ifRemember ? TimeUnit.SECONDS.toMillis(CookieUtil.COOKIE_MAX_AGE) : TimeUnit.MINUTES.toMillis(LOGIN_API_TOKEN_EXPIRE_MINUTES));
+    }
+
+    public String refreshToken(String payload,boolean ifRemember) throws ScriptException {
+        long ets=System.currentTimeMillis()+ getExpireMillSeconds(ifRemember);
         String timestamp=Long.toHexString(ets);
         String content=timestamp+"."+payload;
         String sign= makeSign(keypair.getPrivateKey()+"."+content);
@@ -81,16 +88,23 @@ public class LoginService {
         return token;
     }
 
-    private String makeToken(XxlJobUser xxlJobUser) throws ScriptException {
+    private String makeToken(XxlJobUser xxlJobUser,boolean ifRemember) throws ScriptException {
         xxlJobUser.setPassword(null);
         String tokenJson = JacksonUtil.writeValueAsString(xxlJobUser);
         String payload = Sm2.doEncrypt(tokenJson, keypair.getPublicKey());
-        String token=refreshToken(payload);
+        String token=refreshToken(payload,ifRemember);
         return token;
     }
 
+    public static class TokenUser{
+        public String sign;
+        public long ets;
+        public String payload;
+        public XxlJobUser user;
+    }
 
-    private Map.Entry<String,XxlJobUser> parseToken(String token) throws ScriptException {
+
+    private TokenUser parseToken(String token) throws ScriptException {
         if(token==null || token.isEmpty()){
             return null;
         }
@@ -112,7 +126,13 @@ public class LoginService {
         }
         String tokenJson = cacheParseToken.get(payload);
         XxlJobUser user= JacksonUtil.readValue(tokenJson, XxlJobUser.class);
-        return new AbstractMap.SimpleEntry<>(payload,user);
+
+        TokenUser ret=new TokenUser();
+        ret.sign=sign;
+        ret.ets=ets;
+        ret.payload=payload;
+        ret.user=user;
+        return ret;
     }
 
     // ---------------------- login tool, with cookie and db ----------------------
@@ -133,7 +153,7 @@ public class LoginService {
             return new ReturnT<String>(500, I18nUtil.getString("login_param_unvalid"));
         }
 
-        String token = makeToken(xxlJobUser);
+        String token = makeToken(xxlJobUser,ifRemember);
 
         String webToken=(ifRemember?"y":"n")+"."+token;
         // do login
@@ -184,14 +204,19 @@ public class LoginService {
                 }
             }
             try {
-                Map.Entry<String, XxlJobUser> entry = parseToken(token.trim());
-                if(entry!=null){
-                    cookieUser=entry.getValue();
-                    String refreshToken = refreshToken(entry.getKey());
-                    String refreshWebToken=(ifRemember?"y":"n")+"."+refreshToken;
-                    CookieUtil.set(response, LOGIN_IDENTITY_KEY, refreshWebToken, ifRemember);
-                    response.setHeader(LOGIN_API_TOKEN_HEADER,refreshToken);
-                    response.setHeader(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS,LOGIN_API_TOKEN_HEADER);
+                TokenUser tokenUser = parseToken(token.trim());
+                if(tokenUser!=null){
+                    cookieUser=tokenUser.user;
+                    long lts = tokenUser.ets - System.currentTimeMillis();
+                    long ets = getExpireMillSeconds(ifRemember);
+                    double refreshRate=1.0-(lts*1.0/ets)+0.1;
+                    if(RANDOM.nextDouble()<refreshRate) {
+                        String refreshToken = refreshToken(tokenUser.payload, ifRemember);
+                        String refreshWebToken = (ifRemember ? "y" : "n") + "." + refreshToken;
+                        CookieUtil.set(response, LOGIN_IDENTITY_KEY, refreshWebToken, ifRemember);
+                        response.setHeader(LOGIN_API_TOKEN_HEADER, refreshToken);
+                        response.setHeader(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, LOGIN_API_TOKEN_HEADER);
+                    }
                 }
             } catch (Exception e) {
                 logout(request, response);

@@ -113,6 +113,10 @@
 		.layui-layer-shade {
 			opacity: 0.35 !important;
 		}
+
+		.layui-layer-hui .layui-layer-content{
+			color: #666;
+		}
 	</style>
 </#macro>
 
