@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xxl.job.admin.dao.XxlJobLogGlueDao">
+
+    <resultMap id="XxlJobLogGlue" type="com.xxl.job.admin.core.model.XxlJobLogGlue">
+        <result column="ID" property="id"/>
+        <result column="JOB_ID" property="jobId"/>
+        <result column="GLUE_TYPE" property="glueType"/>
+        <result column="GLUE_SOURCE" property="glueSource"/>
+        <result column="GLUE_REMARK" property="glueRemark"/>
+        <result column="ADD_TIME" property="addTime"/>
+        <result column="UPDATE_TIME" property="updateTime"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        t."ID",
+		t."JOB_ID",
+		t."GLUE_TYPE",
+		t."GLUE_SOURCE",
+		t."GLUE_REMARK",
+		t."ADD_TIME",
+		t."UPDATE_TIME"
+    </sql>
+
+    <insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobLogGlue" useGeneratedKeys="true"
+            keyProperty="id">
+        <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Integer">
+            select SEQ_XXL_JOB_LOGGLUE_ID.nextval from dual
+        </selectKey>
+        INSERT INTO XXL_JOB_LOGGLUE (
+        "ID",
+        "JOB_ID",
+        "GLUE_TYPE",
+        "GLUE_SOURCE",
+        "GLUE_REMARK",
+        "ADD_TIME",
+        "UPDATE_TIME"
+        ) VALUES (
+        #{id,jdbcType=NUMERIC},
+        #{jobId,jdbcType=NUMERIC},
+        #{glueType,jdbcType=VARCHAR},
+        #{glueSource,jdbcType=VARCHAR},
+        #{glueRemark,jdbcType=VARCHAR},
+        #{addTime,jdbcType=DATE},
+        #{updateTime,jdbcType=DATE}
+        )
+    </insert>
+
+    <select id="findByJobId" parameterType="java.lang.Integer" resultMap="XxlJobLogGlue">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM XXL_JOB_LOGGLUE t
+        WHERE t."JOB_ID" = #{jobId,jdbcType=NUMERIC}
+        ORDER BY "ID" DESC
+    </select>
+
+    <delete id="removeOld">
+        DELETE
+        FROM XXL_JOB_LOGGLUE
+        WHERE "ID" NOT in (SELECT "ID"
+                           FROM (SELECT "ID"
+                                 FROM (SELECT "ID"
+                                       FROM XXL_JOB_LOGGLUE
+                                       WHERE "JOB_ID" = #{jobId,jdbcType=NUMERIC}
+                                       ORDER BY UPDATE_TIME desc) p
+                                 where ROENUM &lt;= #{limit,jdbcType=NUMERIC}) t1)
+          AND "JOB_ID" = #{jobId,jdbcType=NUMERIC}
+    </delete>
+
+    <delete id="deleteByJobId" parameterType="java.lang.Integer">
+        DELETE
+        FROM XXL_JOB_LOGGLUE
+        WHERE "JOB_ID" = #{jobId,jdbcType=NUMERIC}
+    </delete>
+
+</mapper>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<included>
+
+    <!-- 控制台日志输出-->
+    <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- encoder 默认配置为PatternLayoutEncoder -->
+        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+            <charset>UTF-8</charset>
+            <layout class="ch.qos.logback.classic.PatternLayout">
+                <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+            </layout>
+        </encoder>
+    </appender>
+
+    <root level="all">
+        <appender-ref ref="stdout"/>
+    </root>
+</included>

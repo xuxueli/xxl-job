@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xxl.job.admin.dao.XxlJobRegistryDao">
+
+    <resultMap id="XxlJobRegistry" type="com.xxl.job.admin.core.model.XxlJobRegistry">
+        <result column="ID" property="id"/>
+        <result column="REGISTRY_GROUP" property="registryGroup"/>
+        <result column="REGISTRY_KEY" property="registryKey"/>
+        <result column="REGISTRY_VALUE" property="registryValue"/>
+        <result column="UPDATE_TIME" property="updateTime"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        t."ID",
+		t."REGISTRY_GROUP",
+		t."REGISTRY_KEY",
+		t."REGISTRY_VALUE",
+		t."UPDATE_TIME"
+    </sql>
+
+    <select id="findDead" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+        SELECT t."ID"
+        FROM XXL_JOB_REGISTRY t
+        WHERE t."UPDATE_TIME"  &lt;  #{deadTime,jdbcType=DATE}
+    </select>
+
+    <delete id="removeDead" parameterType="java.lang.Integer">
+        DELETE FROM XXL_JOB_REGISTRY
+        WHERE "ID" in
+        <foreach collection="ids" item="item" open="(" close=")" separator=",">
+            #{item,jdbcType=NUMERIC}
+        </foreach>
+    </delete>
+
+    <select id="findAll" parameterType="java.util.HashMap" resultMap="XxlJobRegistry">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM XXL_JOB_REGISTRY t
+        WHERE t."UPDATE_TIME"  &gt;  #{deadTime,jdbcType=DATE}
+    </select>
+
+    <update id="registryUpdate">
+        UPDATE XXL_JOB_REGISTRY
+        SET "UPDATE_TIME" = #{updateTime,jdbcType=DATE}
+        WHERE "REGISTRY_GROUP" = #{registryGroup,jdbcType=VARCHAR}
+          AND "REGISTRY_KEY" = #{registryKey,jdbcType=VARCHAR}
+          AND "REGISTRY_VALUE" = #{registryValue,jdbcType=VARCHAR}
+    </update>
+
+    <insert id="registrySave">
+        <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Integer">
+            select SEQ_XXL_JOB_REGISTRY_ID.nextval from dual
+        </selectKey>
+        INSERT INTO XXL_JOB_REGISTRY( "ID","REGISTRY_GROUP" , "REGISTRY_KEY" , "REGISTRY_VALUE", "UPDATE_TIME")
+        VALUES(#{id,jdbcType=NUMERIC}, #{registryGroup,jdbcType=VARCHAR} , #{registryKey,jdbcType=VARCHAR} , #{registryValue,jdbcType=VARCHAR}, #{updateTime,jdbcType=DATE})
+    </insert>
+
+    <delete id="registryDelete">
+        DELETE
+        FROM XXL_JOB_REGISTRY
+        WHERE REGISTRY_GROUP = #{registryGroup,jdbcType=VARCHAR}
+          AND REGISTRY_KEY = #{registryKey,jdbcType=VARCHAR}
+          AND REGISTRY_VALUE = #{registryValue,jdbcType=VARCHAR}
+    </delete>
+
+</mapper>
