@@ -5,6 +5,7 @@ import com.xxl.job.core.handler.annotation.XxlJob;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -12,6 +13,7 @@ import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
@@ -129,7 +131,7 @@ public class SampleXxlJob {
 
         // param parse
         String param = XxlJobHelper.getJobParam();
-        if (param==null || param.trim().length()==0) {
+        if (!StringUtils.hasText(param)) {
             XxlJobHelper.log("param["+ param +"] invalid.");
 
             XxlJobHelper.handleFail();
@@ -192,7 +194,7 @@ public class SampleXxlJob {
             // data
             if (isPostMethod && data!=null && data.trim().length()>0) {
                 DataOutputStream dataOutputStream = new DataOutputStream(connection.getOutputStream());
-                dataOutputStream.write(data.getBytes("UTF-8"));
+                dataOutputStream.write(data.getBytes(StandardCharsets.UTF_8));
                 dataOutputStream.flush();
                 dataOutputStream.close();
             }
@@ -204,7 +206,7 @@ public class SampleXxlJob {
             }
 
             // result
-            bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
+            bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8));
             StringBuilder result = new StringBuilder();
             String line;
             while ((line = bufferedReader.readLine()) != null) {
@@ -213,13 +215,10 @@ public class SampleXxlJob {
             String responseMsg = result.toString();
 
             XxlJobHelper.log(responseMsg);
-
-            return;
         } catch (Exception e) {
             XxlJobHelper.log(e);
 
             XxlJobHelper.handleFail();
-            return;
         } finally {
             try {
                 if (bufferedReader != null) {

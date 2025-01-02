@@ -1,15 +1,13 @@
 package com.xxl.job.admin.controller.interceptor;
 
+import java.util.HashMap;
+import javax.servlet.http.*;
+
 import com.xxl.job.admin.core.util.FtlUtil;
 import com.xxl.job.admin.core.util.I18nUtil;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.AsyncHandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
-
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
 
 /**
  * push cookies to model as cookieMap
@@ -24,19 +22,17 @@ public class CookieInterceptor implements AsyncHandlerInterceptor {
 			ModelAndView modelAndView) throws Exception {
 
 		// cookie
-		if (modelAndView!=null && request.getCookies()!=null && request.getCookies().length>0) {
-			HashMap<String, Cookie> cookieMap = new HashMap<String, Cookie>();
-			for (Cookie ck : request.getCookies()) {
-				cookieMap.put(ck.getName(), ck);
-			}
-			modelAndView.addObject("cookieMap", cookieMap);
-		}
-
-		// static method
 		if (modelAndView != null) {
+			Cookie[] cookies = request.getCookies();
+			if (cookies != null && cookies.length > 0) {
+				HashMap<String, Cookie> cookieMap = new HashMap<>(cookies.length, 1F);
+				for (Cookie ck : cookies) {
+					cookieMap.put(ck.getName(), ck);
+				}
+				modelAndView.addObject("cookieMap", cookieMap);
+			}
 			modelAndView.addObject("I18nUtil", FtlUtil.generateStaticModel(I18nUtil.class.getName()));
 		}
-
 	}
 	
 }

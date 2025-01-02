@@ -8,6 +8,7 @@ import com.xxl.job.core.biz.client.ExecutorBizClient;
 import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -77,10 +78,10 @@ public class XxlJobScheduler  {
     }
 
     // ---------------------- executor-client ----------------------
-    private static ConcurrentMap<String, ExecutorBiz> executorBizRepository = new ConcurrentHashMap<String, ExecutorBiz>();
+    private static ConcurrentMap<String, ExecutorBiz> executorBizRepository = new ConcurrentHashMap<>();
     public static ExecutorBiz getExecutorBiz(String address) throws Exception {
         // valid
-        if (address==null || address.trim().length()==0) {
+        if (!StringUtils.hasText(address)) {
             return null;
         }
 

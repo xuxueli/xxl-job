@@ -1,5 +1,10 @@
 package com.xxl.job.admin.controller;
 
+import java.util.Date;
+import java.util.List;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
 import com.xxl.job.admin.controller.interceptor.PermissionInterceptor;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLogGlue;
@@ -13,19 +18,15 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
-import java.util.List;
-
 /**
  * job code controller
+ *
  * @author xuxueli 2015-12-19 16:13:16
  */
 @Controller
 @RequestMapping("/jobcode")
 public class JobCodeController {
-	
+
 	@Resource
 	private XxlJobInfoDao xxlJobInfoDao;
 	@Resource
@@ -53,31 +54,32 @@ public class JobCodeController {
 		model.addAttribute("jobLogGlues", jobLogGlues);
 		return "jobcode/jobcode.index";
 	}
-	
+
 	@RequestMapping("/save")
 	@ResponseBody
 	public ReturnT<String> save(HttpServletRequest request, int id, String glueSource, String glueRemark) {
 		// valid
-		if (glueRemark==null) {
-			return new ReturnT<String>(500, (I18nUtil.getString("system_please_input") + I18nUtil.getString("jobinfo_glue_remark")) );
+		if (glueRemark == null) {
+			return new ReturnT<>(500, (I18nUtil.getString("system_please_input") + I18nUtil.getString("jobinfo_glue_remark")));
 		}
-		if (glueRemark.length()<4 || glueRemark.length()>100) {
-			return new ReturnT<String>(500, I18nUtil.getString("jobinfo_glue_remark_limit"));
+		if (glueRemark.length() < 4 || glueRemark.length() > 100) {
+			return new ReturnT<>(500, I18nUtil.getString("jobinfo_glue_remark_limit"));
 		}
 		XxlJobInfo existsJobInfo = xxlJobInfoDao.loadById(id);
 		if (existsJobInfo == null) {
-			return new ReturnT<String>(500, I18nUtil.getString("jobinfo_glue_jobid_unvalid"));
+			return new ReturnT<>(500, I18nUtil.getString("jobinfo_glue_jobid_unvalid"));
 		}
 
 		// valid permission
 		PermissionInterceptor.validJobGroupPermission(request, existsJobInfo.getJobGroup());
-		
+
 		// update new code
 		existsJobInfo.setGlueSource(glueSource);
 		existsJobInfo.setGlueRemark(glueRemark);
-		existsJobInfo.setGlueUpdatetime(new Date());
+		final Date now = new Date();
+		existsJobInfo.setGlueUpdatetime(now);
 
-		existsJobInfo.setUpdateTime(new Date());
+		existsJobInfo.setUpdateTime(now);
 		xxlJobInfoDao.update(existsJobInfo);
 
 		// log old code
@@ -87,8 +89,8 @@ public class JobCodeController {
 		xxlJobLogGlue.setGlueSource(glueSource);
 		xxlJobLogGlue.setGlueRemark(glueRemark);
 
-		xxlJobLogGlue.setAddTime(new Date());
-		xxlJobLogGlue.setUpdateTime(new Date());
+		xxlJobLogGlue.setAddTime(now);
+		xxlJobLogGlue.setUpdateTime(now);
 		xxlJobLogGlueDao.save(xxlJobLogGlue);
 
 		// remove code backup more than 30
@@ -96,5 +98,5 @@ public class JobCodeController {
 
 		return ReturnT.SUCCESS;
 	}
-	
+
 }

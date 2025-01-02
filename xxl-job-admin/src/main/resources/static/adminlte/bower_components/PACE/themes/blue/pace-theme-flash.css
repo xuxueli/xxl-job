@@ -24,7 +24,7 @@
 .pace .pace-progress-inner {
   display: block;
   position: absolute;
-  right: 0px;
+  right: 0;
   width: 100px;
   height: 100%;
   box-shadow: 0 0 10px #2299dd, 0 0 5px #2299dd;
