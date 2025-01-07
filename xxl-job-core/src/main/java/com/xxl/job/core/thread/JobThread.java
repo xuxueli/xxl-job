@@ -29,6 +29,9 @@ public class JobThread extends Thread{
 
 	private int jobId;
 	private IJobHandler handler;
+
+	private XxlJobExecutor xxlJobExecutor;
+
 	private LinkedBlockingQueue<TriggerParam> triggerQueue;
 	private Set<Long> triggerLogIdSet;		// avoid repeat trigger for the same TRIGGER_LOG_ID
 
@@ -39,9 +42,10 @@ public class JobThread extends Thread{
 	private int idleTimes = 0;			// idel times
 
 
-	public JobThread(int jobId, IJobHandler handler) {
+	public JobThread(int jobId, IJobHandler handler, XxlJobExecutor xxlJobExecutor) {
 		this.jobId = jobId;
 		this.handler = handler;
+		this.xxlJobExecutor = xxlJobExecutor;
 		this.triggerQueue = new LinkedBlockingQueue<TriggerParam>();
 		this.triggerLogIdSet = Collections.synchronizedSet(new HashSet<Long>());
 
@@ -185,7 +189,7 @@ public class JobThread extends Thread{
 				} else {
 					if (idleTimes > 30) {
 						if(triggerQueue.size() == 0) {	// avoid concurrent trigger causes jobId-lost
-							XxlJobExecutor.removeJobThread(jobId, "excutor idel times over limit.");
+							xxlJobExecutor.removeJobThread(jobId, "excutor idel times over limit.");
 						}
 					}
 				}

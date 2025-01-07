@@ -16,10 +16,10 @@ import java.util.concurrent.TimeUnit;
 public class ExecutorRegistryThread {
     private static Logger logger = LoggerFactory.getLogger(ExecutorRegistryThread.class);
 
-    private static ExecutorRegistryThread instance = new ExecutorRegistryThread();
-    public static ExecutorRegistryThread getInstance(){
-        return instance;
-    }
+    // private static ExecutorRegistryThread instance = new ExecutorRegistryThread();
+    // public static ExecutorRegistryThread getInstance(){
+    //     return instance;
+    // }
 
     private Thread registryThread;
     private volatile boolean toStop = false;

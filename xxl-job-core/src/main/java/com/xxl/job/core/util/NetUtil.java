@@ -5,6 +5,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * net util
@@ -14,6 +16,8 @@ import java.net.ServerSocket;
 public class NetUtil {
     private static Logger logger = LoggerFactory.getLogger(NetUtil.class);
 
+    private static Set<Integer> usedPorts = new HashSet<>();
+
     /**
      * find avaliable port
      *
@@ -21,9 +25,13 @@ public class NetUtil {
      * @return
      */
     public static int findAvailablePort(int defaultPort) {
+        if (defaultPort == 0) {
+            defaultPort = 9999;
+        }
         int portTmp = defaultPort;
         while (portTmp < 65535) {
             if (!isPortUsed(portTmp)) {
+                usedPorts.add(portTmp);
                 return portTmp;
             } else {
                 portTmp++;
@@ -32,6 +40,7 @@ public class NetUtil {
         portTmp = defaultPort--;
         while (portTmp > 0) {
             if (!isPortUsed(portTmp)) {
+                usedPorts.add(portTmp);
                 return portTmp;
             } else {
                 portTmp--;
@@ -47,6 +56,11 @@ public class NetUtil {
      * @return
      */
     public static boolean isPortUsed(int port) {
+        if (usedPorts.contains(port)) {
+            logger.info(">>>>>>>>>>> xxl-job, port[{}] is in use.", port);
+            return true;
+        }
+
         boolean used = false;
         ServerSocket serverSocket = null;
         try {
