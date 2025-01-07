@@ -37,7 +37,7 @@ public interface XxlJobInfoDao {
 	
 	public int delete(@Param("id") long id);
 
-	public List<XxlJobInfo> getJobsByGroup(@Param("jobGroup") int jobGroup);
+	public List<XxlJobInfo> getJobsByGroup(@Param("jobGroup") int jobGroup, @Param("jobId") Integer jobId);
 
 	public int findAllCount();
 
