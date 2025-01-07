@@ -46,7 +46,9 @@ $(function() {
                         "render": function ( data, type, row ) {
                             if (data == 1) {
                                 return I18n.user_role_admin
-                            } else {
+                            } if (data == 2) {
+								return I18n.user_role_readonly
+							} else {
                                 return I18n.user_role_normal
                             }
                         }
@@ -63,7 +65,7 @@ $(function() {
 	                		return function(){
 								// html
                                 tableData['key'+row.id] = row;
-								var html = '<p id="'+ row.id +'" >'+
+								var html = '<p style="margin: 0px;" id="'+ row.id +'" >'+
 									'<button class="btn btn-warning btn-xs update" type="button">'+ I18n.system_opt_edit +'</button>  '+
 									'<button class="btn btn-danger btn-xs delete" type="button">'+ I18n.system_opt_del +'</button>  '+
 									'</p>';
