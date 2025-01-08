@@ -134,13 +134,11 @@ public class JobScheduleHelper {
                                     refreshNextValidTime(jobInfo, new Date(jobInfo.getTriggerNextTime()));
 
                                 }
-
-                            }
-
-                            // 3、update trigger info
-                            for (XxlJobInfo jobInfo: scheduleList) {
+                                //update the task schedule
                                 XxlJobAdminConfig.getAdminConfig().getXxlJobInfoDao().scheduleUpdate(jobInfo);
+
                             }
+
 
                         } else {
                             preReadSuc = false;
