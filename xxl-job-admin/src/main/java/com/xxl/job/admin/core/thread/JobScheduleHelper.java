@@ -63,6 +63,7 @@ public class JobScheduleHelper {
                     PreparedStatement preparedStatement = null;
 
                     boolean preReadSuc = true;
+                    List<XxlJobInfo> scheduleList = null;
                     try {
 
                         conn = XxlJobAdminConfig.getAdminConfig().getDataSource().getConnection();
@@ -76,7 +77,7 @@ public class JobScheduleHelper {
 
                         // 1、pre read
                         long nowTime = System.currentTimeMillis();
-                        List<XxlJobInfo> scheduleList = XxlJobAdminConfig.getAdminConfig().getXxlJobInfoDao().scheduleJobQuery(nowTime + PRE_READ_MS, preReadCount);
+                        scheduleList = XxlJobAdminConfig.getAdminConfig().getXxlJobInfoDao().scheduleJobQuery(nowTime + PRE_READ_MS, preReadCount);
                         if (scheduleList!=null && scheduleList.size()>0) {
                             // 2、push time-ring
                             for (XxlJobInfo jobInfo: scheduleList) {
@@ -137,10 +138,6 @@ public class JobScheduleHelper {
 
                             }
 
-                            // 3、update trigger info
-                            for (XxlJobInfo jobInfo: scheduleList) {
-                                XxlJobAdminConfig.getAdminConfig().getXxlJobInfoDao().scheduleUpdate(jobInfo);
-                            }
 
                         } else {
                             preReadSuc = false;
@@ -154,7 +151,10 @@ public class JobScheduleHelper {
                             logger.error(">>>>>>>>>>> xxl-job, JobScheduleHelper#scheduleThread error:{}", e);
                         }
                     } finally {
-
+                        // 3、update trigger info
+                        for (XxlJobInfo jobInfo: scheduleList) {
+                            XxlJobAdminConfig.getAdminConfig().getXxlJobInfoDao().scheduleUpdate(jobInfo);
+                        }
                         // commit
                         if (conn != null) {
                             try {
