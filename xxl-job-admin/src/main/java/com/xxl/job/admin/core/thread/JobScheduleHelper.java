@@ -8,6 +8,7 @@ import com.xxl.job.admin.core.scheduler.ScheduleTypeEnum;
 import com.xxl.job.admin.core.trigger.TriggerTypeEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.CollectionUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -63,6 +64,7 @@ public class JobScheduleHelper {
                     PreparedStatement preparedStatement = null;
 
                     boolean preReadSuc = true;
+                    List<XxlJobInfo> scheduleList = null;
                     try {
 
                         conn = XxlJobAdminConfig.getAdminConfig().getDataSource().getConnection();
@@ -76,7 +78,7 @@ public class JobScheduleHelper {
 
                         // 1、pre read
                         long nowTime = System.currentTimeMillis();
-                        List<XxlJobInfo> scheduleList = XxlJobAdminConfig.getAdminConfig().getXxlJobInfoDao().scheduleJobQuery(nowTime + PRE_READ_MS, preReadCount);
+                        scheduleList = XxlJobAdminConfig.getAdminConfig().getXxlJobInfoDao().scheduleJobQuery(nowTime + PRE_READ_MS, preReadCount);
                         if (scheduleList!=null && scheduleList.size()>0) {
                             // 2、push time-ring
                             for (XxlJobInfo jobInfo: scheduleList) {
@@ -134,9 +136,12 @@ public class JobScheduleHelper {
                                     refreshNextValidTime(jobInfo, new Date(jobInfo.getTriggerNextTime()));
 
                                 }
-                                //update the task schedule
-                                XxlJobAdminConfig.getAdminConfig().getXxlJobInfoDao().scheduleUpdate(jobInfo);
 
+                            }
+
+                            // 3、update trigger info
+                            for (XxlJobInfo jobInfo: scheduleList) {
+                                XxlJobAdminConfig.getAdminConfig().getXxlJobInfoDao().scheduleUpdate(jobInfo);
                             }
 
 
@@ -150,6 +155,12 @@ public class JobScheduleHelper {
                     } catch (Throwable e) {
                         if (!scheduleThreadToStop) {
                             logger.error(">>>>>>>>>>> xxl-job, JobScheduleHelper#scheduleThread error:{}", e);
+                            // 3、update trigger info
+                            if(scheduleList != null && scheduleList.size()>0){
+                                for (XxlJobInfo jobInfo: scheduleList) {
+                                    XxlJobAdminConfig.getAdminConfig().getXxlJobInfoDao().scheduleUpdate(jobInfo);
+                                }
+                            }
                         }
                     } finally {
 
