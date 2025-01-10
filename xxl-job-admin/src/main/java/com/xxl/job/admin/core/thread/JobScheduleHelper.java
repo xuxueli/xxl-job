@@ -152,8 +152,10 @@ public class JobScheduleHelper {
                         }
                     } finally {
                         // 3、update trigger info
-                        for (XxlJobInfo jobInfo: scheduleList) {
-                            XxlJobAdminConfig.getAdminConfig().getXxlJobInfoDao().scheduleUpdate(jobInfo);
+                        if (scheduleList != null) {
+                            for (XxlJobInfo jobInfo: scheduleList) {
+                                XxlJobAdminConfig.getAdminConfig().getXxlJobInfoDao().scheduleUpdate(jobInfo);
+                            }
                         }
                         // commit
                         if (conn != null) {
