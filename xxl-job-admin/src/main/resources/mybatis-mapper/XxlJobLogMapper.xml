@@ -178,9 +178,9 @@
 
     <select id="findLogReport" resultType="java.util.Map" >
 		SELECT
-			COUNT(handle_code) triggerDayCount,
-			SUM(CASE WHEN (trigger_code in (0, 200) and handle_code = 0) then 1 else 0 end) as triggerDayCountRunning,
-			SUM(CASE WHEN handle_code = 200 then 1 else 0 end) as triggerDayCountSuc
+			COUNT(handle_code) "triggerDayCount",
+			SUM(CASE WHEN (trigger_code in (0, 200) and handle_code = 0) then 1 else 0 end) as "triggerDayCountRunning",
+			SUM(CASE WHEN handle_code = 200 then 1 else 0 end) as "triggerDayCountSuc"
 		FROM xxl_job_log
 		WHERE trigger_time BETWEEN #{from} and #{to}
     </select>
