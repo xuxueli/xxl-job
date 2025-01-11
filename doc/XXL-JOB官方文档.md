@@ -2439,7 +2439,7 @@ public void execute() {
 - b、计划下个大版本升级 v3.0，将会基于 jdk17 与 springboot3.x 构建；版本v2.5.x将会继续维护，问题及漏洞将会及时跟进修复。 
 
 
-### 7.37 版本 v2.5.0 Release Notes[规划中]
+### 7.37 版本 v3.0.0 Release Notes[规划中]
 - 14、[规划中]登陆态Token生成逻辑优化，混淆登陆时间属性，降低token泄漏风险；
 - 15、[规划中]升级springboot3.x，解决2.x老版本漏洞类问题。注意，springboot3.x依赖jdk17；
 
