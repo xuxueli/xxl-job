@@ -2439,8 +2439,9 @@ public void execute() {
 - b、计划下个大版本升级 v3.0，将会基于 jdk17 与 springboot3.x 构建；版本v2.5.x将会继续维护，问题及漏洞将会及时跟进修复。 
 
 ### 7.37 版本 v3.0.0 Release Notes[规划中]
-- 1、调度中心升级 SpringBoot3 + JDK17。
-- 2、[规划中]登陆态Token生成逻辑优化，混淆登陆时间属性，降低token泄漏风险；
+- 1、调度中心升级至 SpringBoot3 + JDK17；
+- 2、Docker镜像升级，镜像构建基于JDK17（openjdk:17-jdk-slim）；
+- 3、[规划中]登陆态Token生成逻辑优化，混淆登陆时间属性，降低token泄漏风险；
 
 
 ### TODO LIST
