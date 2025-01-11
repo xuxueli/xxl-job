@@ -54,6 +54,7 @@ CREATE TABLE `xxl_job_log` (
   PRIMARY KEY (`id`),
   KEY `I_trigger_time` (`trigger_time`),
   KEY `I_handle_code` (`handle_code`),
+  KEY `I_jobid_jobgroup` (`job_id`,`job_group`),
   KEY `I_job_id` (`job_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
