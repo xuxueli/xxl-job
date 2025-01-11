@@ -55,7 +55,7 @@ public class ExecutorRouteLRU extends ExecutorRouter {
                 delKeys.add(existKey);
             }
         }
-        if (delKeys.size() > 0) {
+        if (!delKeys.isEmpty()) {
             for (String delKey: delKeys) {
                 lruItem.remove(delKey);
             }

@@ -16,16 +16,17 @@ import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
 import com.xxl.job.core.glue.GlueTypeEnum;
 import com.xxl.job.core.util.DateUtil;
-import jakarta.annotation.Resource;
-import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 /**
@@ -41,7 +42,7 @@ public class JobInfoController {
 	private XxlJobGroupDao xxlJobGroupDao;
 	@Resource
 	private XxlJobService xxlJobService;
-	
+
 	@RequestMapping
 	public String index(HttpServletRequest request, Model model, @RequestParam(value = "jobGroup", required = false, defaultValue = "-1") int jobGroup) {
 
@@ -57,7 +58,7 @@ public class JobInfoController {
 
 		// filter group
 		List<XxlJobGroup> jobGroupList = PermissionInterceptor.filterJobGroupByRole(request, jobGroupList_all);
-		if (jobGroupList==null || jobGroupList.size()==0) {
+		if (jobGroupList==null || jobGroupList.isEmpty()) {
 			throw new XxlJobException(I18nUtil.getString("jobgroup_empty"));
 		}
 
@@ -76,10 +77,10 @@ public class JobInfoController {
 										@RequestParam("jobDesc") String jobDesc,
 										@RequestParam("executorHandler") String executorHandler,
 										@RequestParam("author") String author) {
-		
+
 		return xxlJobService.pageList(start, length, jobGroup, triggerStatus, jobDesc, executorHandler, author);
 	}
-	
+
 	@RequestMapping("/add")
 	@ResponseBody
 	public ReturnT<String> add(HttpServletRequest request, XxlJobInfo jobInfo) {
@@ -90,7 +91,7 @@ public class JobInfoController {
 		XxlJobUser loginUser = PermissionInterceptor.getLoginUser(request);
 		return xxlJobService.add(jobInfo, loginUser);
 	}
-	
+
 	@RequestMapping("/update")
 	@ResponseBody
 	public ReturnT<String> update(HttpServletRequest request, XxlJobInfo jobInfo) {
@@ -101,25 +102,25 @@ public class JobInfoController {
 		XxlJobUser loginUser = PermissionInterceptor.getLoginUser(request);
 		return xxlJobService.update(jobInfo, loginUser);
 	}
-	
+
 	@RequestMapping("/remove")
 	@ResponseBody
 	public ReturnT<String> remove(@RequestParam("id") int id) {
 		return xxlJobService.remove(id);
 	}
-	
+
 	@RequestMapping("/stop")
 	@ResponseBody
 	public ReturnT<String> pause(@RequestParam("id") int id) {
 		return xxlJobService.stop(id);
 	}
-	
+
 	@RequestMapping("/start")
 	@ResponseBody
 	public ReturnT<String> start(@RequestParam("id") int id) {
 		return xxlJobService.start(id);
 	}
-	
+
 	@RequestMapping("/trigger")
 	@ResponseBody
 	public ReturnT<String> triggerJob(HttpServletRequest request,
@@ -160,5 +161,5 @@ public class JobInfoController {
 		return new ReturnT<List<String>>(result);
 
 	}
-	
+
 }

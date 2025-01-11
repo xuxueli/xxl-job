@@ -1,5 +1,7 @@
 package com.xxl.job.admin.controller;
 
+import com.antherd.smcrypto.sm2.Keypair;
+import com.antherd.smcrypto.sm2.Sm2;
 import com.xxl.job.admin.controller.annotation.PermissionLimit;
 import com.xxl.job.admin.controller.interceptor.PermissionInterceptor;
 import com.xxl.job.admin.core.model.XxlJobGroup;
@@ -7,20 +9,23 @@ import com.xxl.job.admin.core.model.XxlJobUser;
 import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.admin.dao.XxlJobGroupDao;
 import com.xxl.job.admin.dao.XxlJobUserDao;
+import com.xxl.job.admin.platform.pageable.data.PageDto;
+import com.xxl.job.admin.security.SecurityContext;
 import com.xxl.job.core.biz.model.ReturnT;
-import jakarta.annotation.Resource;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.annotation.Resource;
+import javax.script.ScriptException;
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author xuxueli 2019-05-04 16:39:50
@@ -54,11 +59,12 @@ public class JobUserController {
                                         @RequestParam("role") int role) {
 
         // page list
-        List<XxlJobUser> list = xxlJobUserDao.pageList(start, length, username, role);
-        int list_count = xxlJobUserDao.pageListCount(start, length, username, role);
+        PageDto page=PageDto.of(start/length+1,length);
+        List<XxlJobUser> list= xxlJobUserDao.pageList(page, username, role);
+        int list_count = xxlJobUserDao.pageListCount( username, role);
 
         // filter
-        if (list!=null && list.size()>0) {
+        if (list!=null && !list.isEmpty()) {
             for (XxlJobUser item: list) {
                 item.setPassword(null);
             }
@@ -75,7 +81,17 @@ public class JobUserController {
     @RequestMapping("/add")
     @ResponseBody
     @PermissionLimit(adminuser = true)
-    public ReturnT<String> add(XxlJobUser xxlJobUser) {
+    public ReturnT<String> add(XxlJobUser xxlJobUser) throws ScriptException {
+        // valid password
+        if (!StringUtils.hasText(xxlJobUser.getPassword())) {
+            return new ReturnT<String>(ReturnT.FAIL_CODE, I18nUtil.getString("system_please_input")+I18nUtil.getString("user_password") );
+        }
+
+        Keypair keypair = SecurityContext.getInstance().findKeypair(xxlJobUser.getSign());
+        if(keypair==null){
+            return new ReturnT<String>(500, I18nUtil.getString("system_fail"));
+        }
+        xxlJobUser.setPassword(Sm2.doDecrypt(xxlJobUser.getPassword(),keypair.getPrivateKey()));
 
         // valid username
         if (!StringUtils.hasText(xxlJobUser.getUsername())) {
@@ -85,16 +101,13 @@ public class JobUserController {
         if (!(xxlJobUser.getUsername().length()>=4 && xxlJobUser.getUsername().length()<=20)) {
             return new ReturnT<String>(ReturnT.FAIL_CODE, I18nUtil.getString("system_lengh_limit")+"[4-20]" );
         }
-        // valid password
-        if (!StringUtils.hasText(xxlJobUser.getPassword())) {
-            return new ReturnT<String>(ReturnT.FAIL_CODE, I18nUtil.getString("system_please_input")+I18nUtil.getString("user_password") );
-        }
+
         xxlJobUser.setPassword(xxlJobUser.getPassword().trim());
         if (!(xxlJobUser.getPassword().length()>=4 && xxlJobUser.getPassword().length()<=20)) {
             return new ReturnT<String>(ReturnT.FAIL_CODE, I18nUtil.getString("system_lengh_limit")+"[4-20]" );
         }
-        // md5 password
-        xxlJobUser.setPassword(DigestUtils.md5DigestAsHex(xxlJobUser.getPassword().getBytes()));
+        // hash password
+        xxlJobUser.setPassword(SecurityContext.getInstance().encodePassword(xxlJobUser.getPassword()));
 
         // check repeat
         XxlJobUser existUser = xxlJobUserDao.loadByUserName(xxlJobUser.getUsername());
@@ -110,7 +123,7 @@ public class JobUserController {
     @RequestMapping("/update")
     @ResponseBody
     @PermissionLimit(adminuser = true)
-    public ReturnT<String> update(HttpServletRequest request, XxlJobUser xxlJobUser) {
+    public ReturnT<String> update(HttpServletRequest request, XxlJobUser xxlJobUser) throws ScriptException {
 
         // avoid opt login seft
         XxlJobUser loginUser = PermissionInterceptor.getLoginUser(request);
@@ -120,12 +133,25 @@ public class JobUserController {
 
         // valid password
         if (StringUtils.hasText(xxlJobUser.getPassword())) {
+            Keypair keypair = SecurityContext.getInstance().findKeypair(xxlJobUser.getSign());
+            if(keypair==null){
+                return new ReturnT<String>(500, I18nUtil.getString("system_fail"));
+            }
+            xxlJobUser.setPassword(Sm2.doDecrypt(xxlJobUser.getPassword(),keypair.getPrivateKey()));
+            if(!StringUtils.hasText(xxlJobUser.getRepeatPassword())){
+                return new ReturnT<String>(ReturnT.FAIL_CODE, I18nUtil.getString("repeat_password_not_match") );
+            }
+            xxlJobUser.setRepeatPassword(Sm2.doDecrypt(xxlJobUser.getRepeatPassword(),keypair.getPrivateKey()));
+            if(!Objects.equals(xxlJobUser.getPassword(),xxlJobUser.getRepeatPassword())){
+                return new ReturnT<String>(ReturnT.FAIL_CODE, I18nUtil.getString("repeat_password_not_match") );
+            }
+
             xxlJobUser.setPassword(xxlJobUser.getPassword().trim());
             if (!(xxlJobUser.getPassword().length()>=4 && xxlJobUser.getPassword().length()<=20)) {
                 return new ReturnT<String>(ReturnT.FAIL_CODE, I18nUtil.getString("system_lengh_limit")+"[4-20]" );
             }
-            // md5 password
-            xxlJobUser.setPassword(DigestUtils.md5DigestAsHex(xxlJobUser.getPassword().getBytes()));
+            // hash password
+            xxlJobUser.setPassword(SecurityContext.getInstance().encodePassword(xxlJobUser.getPassword()));
         } else {
             xxlJobUser.setPassword(null);
         }
@@ -154,33 +180,54 @@ public class JobUserController {
     @ResponseBody
     public ReturnT<String> updatePwd(HttpServletRequest request,
                                      @RequestParam("password") String password,
-                                     @RequestParam("oldPassword") String oldPassword){
+                                     @RequestParam("repeatPassword") String repeatPassword,
+                                     @RequestParam("oldPassword") String oldPassword,
+                                     @RequestParam("sign") String sign) throws ScriptException {
 
         // valid
-        if (oldPassword==null || oldPassword.trim().length()==0){
+        if (!StringUtils.hasText(oldPassword)){
             return new ReturnT<String>(ReturnT.FAIL.getCode(), I18nUtil.getString("system_please_input") + I18nUtil.getString("change_pwd_field_oldpwd"));
         }
-        if (password==null || password.trim().length()==0){
+        if (!StringUtils.hasText(password)){
             return new ReturnT<String>(ReturnT.FAIL.getCode(), I18nUtil.getString("system_please_input") + I18nUtil.getString("change_pwd_field_oldpwd"));
         }
+        if (!StringUtils.hasText(repeatPassword)){
+            return new ReturnT<String>(ReturnT.FAIL.getCode(), I18nUtil.getString("system_please_input") + I18nUtil.getString("change_pwd_field_oldpwd"));
+        }
+
+
+        Keypair keypair = SecurityContext.getInstance().findKeypair(sign);
+        if(keypair==null){
+            return new ReturnT<String>(500, I18nUtil.getString("system_fail"));
+        }
+        password= Sm2.doDecrypt(password,keypair.getPrivateKey());
+        repeatPassword= Sm2.doDecrypt(repeatPassword,keypair.getPrivateKey());
+        oldPassword=Sm2.doDecrypt(oldPassword,keypair.getPrivateKey());
+
         password = password.trim();
-        if (!(password.length()>=4 && password.length()<=20)) {
+        repeatPassword = repeatPassword.trim();
+        oldPassword=oldPassword.trim();
+
+        if(!Objects.equals(password,repeatPassword)){
+            return new ReturnT<String>(ReturnT.FAIL_CODE, I18nUtil.getString("repeat_password_not_match") );
+        }
+
+        if (!(password.length()>=4 && password.length()<=50)) {
             return new ReturnT<String>(ReturnT.FAIL_CODE, I18nUtil.getString("system_lengh_limit")+"[4-20]" );
         }
 
-        // md5 password
-        String md5OldPassword = DigestUtils.md5DigestAsHex(oldPassword.getBytes());
-        String md5Password = DigestUtils.md5DigestAsHex(password.getBytes());
+        // hash password
+        String hashPassword = SecurityContext.getInstance().encodePassword(password);
 
         // valid old pwd
         XxlJobUser loginUser = PermissionInterceptor.getLoginUser(request);
         XxlJobUser existUser = xxlJobUserDao.loadByUserName(loginUser.getUsername());
-        if (!md5OldPassword.equals(existUser.getPassword())) {
+        if(!SecurityContext.getInstance().matchPassword(oldPassword,existUser.getPassword())){
             return new ReturnT<String>(ReturnT.FAIL.getCode(), I18nUtil.getString("change_pwd_field_oldpwd") + I18nUtil.getString("system_unvalid"));
         }
 
         // write new
-        existUser.setPassword(md5Password);
+        existUser.setPassword(hashPassword);
         xxlJobUserDao.update(existUser);
 
         return ReturnT.SUCCESS;

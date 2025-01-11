@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  	<#import "../common/common.macro.ftl" as netCommon>
+  	<#import "/common/common.macro.ftl" as netCommon>
 	<@netCommon.commonStyle />
 	<!-- DataTables -->
   	<link rel="stylesheet" href="${request.contextPath}/static/adminlte/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
@@ -13,17 +13,17 @@
 	<@netCommon.commonHeader />
 	<!-- left -->
 	<@netCommon.commonLeft "user" />
-	
+
 	<!-- Content Wrapper. Contains page content -->
 	<div class="content-wrapper">
 		<!-- Content Header (Page header) -->
 		<section class="content-header">
 			<h1>${I18n.user_manage}</h1>
 		</section>
-		
+
 		<!-- Main content -->
 	    <section class="content">
-	    
+
 	    	<div class="row">
                 <div class="col-xs-3">
                     <div class="input-group">
@@ -48,7 +48,7 @@
 	            	<button class="btn btn-block btn-success add" type="button">${I18n.user_add}</button>
 	            </div>
           	</div>
-	    	
+
 			<div class="row">
 				<div class="col-xs-12">
 					<div class="box">
@@ -73,7 +73,7 @@
 			</div>
 	    </section>
 	</div>
-	
+
 	<!-- footer -->
 	<@netCommon.commonFooter />
 </div>
@@ -143,8 +143,12 @@
                     </div>
                     <div class="form-group">
                         <label for="lastname" class="col-sm-2 control-label">${I18n.user_password}<font color="red">*</font></label>
-                        <div class="col-sm-8"><input type="text" class="form-control" name="password" placeholder="${I18n.user_password_update_placeholder}" maxlength="20" ></div>
+                        <div class="col-sm-8"><input type="password" class="form-control" name="password" placeholder="${I18n.user_password_update_placeholder}" maxlength="50" ></div>
                     </div>
+					<div class="form-group">
+						<label for="lastname" class="col-sm-2 control-label">${I18n.change_pwd_field_repeat_pwd}<font color="red">*</font></label>
+						<div class="col-sm-8"><input type="password" class="form-control" name="repeatPassword" placeholder="${I18n.change_pwd_field_repeat_pwd}" maxlength="50" ></div>
+					</div>
                     <div class="form-group">
                         <label for="lastname" class="col-sm-2 control-label">${I18n.user_role}<font color="red">*</font></label>
                         <div class="col-sm-10">
@@ -184,5 +188,8 @@
 <script src="${request.contextPath}/static/adminlte/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
 <script src="${request.contextPath}/static/adminlte/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
 <script src="${request.contextPath}/static/js/user.index.1.js"></script>
+
+<script src="${request.contextPath}/static/plugins/com/antherd/sm-crypto-0.3.2/sm2.js"></script>
+<script src="${request.contextPath}/static/plugins/com/antherd/sm-crypto-0.3.2/sm3.js"></script>
 </body>
 </html>

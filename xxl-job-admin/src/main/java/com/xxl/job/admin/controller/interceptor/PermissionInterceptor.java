@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.AsyncHandlerInterceptor;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,7 +30,7 @@ public class PermissionInterceptor implements AsyncHandlerInterceptor {
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-		
+
 		if (!(handler instanceof HandlerMethod)) {
 			return true;	// proceed with the next interceptor
 		}
@@ -47,8 +48,7 @@ public class PermissionInterceptor implements AsyncHandlerInterceptor {
 		if (needLogin) {
 			XxlJobUser loginUser = loginService.ifLogin(request, response);
 			if (loginUser == null) {
-				response.setStatus(302);
-				response.setHeader("location", request.getContextPath()+"/toLogin");
+				response.sendRedirect(request.getContextPath()+"/toLogin");
 				return false;
 			}
 			if (needAdminuser && loginUser.getRole()!=1) {
@@ -62,6 +62,13 @@ public class PermissionInterceptor implements AsyncHandlerInterceptor {
 		return true;	// proceed with the next interceptor
 	}
 
+    @Override
+    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+        if(modelAndView!=null){
+            XxlJobUser loginUser = loginService.ifLogin(request, response);
+            modelAndView.getModel().putIfAbsent("loginUser", loginUser);
+        }
+    }
 
 	// -------------------- permission tool --------------------
 
@@ -127,5 +134,5 @@ public class PermissionInterceptor implements AsyncHandlerInterceptor {
 		return jobGroupList;
 	}
 
-	
+
 }

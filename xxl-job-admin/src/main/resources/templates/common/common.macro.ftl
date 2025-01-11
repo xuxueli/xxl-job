@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="${request.contextPath}/static/adminlte/dist/css/AdminLTE.min.css">
     <!-- AdminLTE Skins. Choose a skin from the css/skins folder instead of downloading all of them to reduce the load. -->
     <link rel="stylesheet" href="${request.contextPath}/static/adminlte/dist/css/skins/_all-skins.min.css">
-      
+
 	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -31,6 +31,93 @@
 	<#-- i18n -->
 	<#global I18n = I18nUtil.getMultString()?eval />
 
+	<style>
+		html{
+			background: linear-gradient(125deg, #2ceee0, #27ae60, #2980b9, #e75c3c, #8e44ad);
+			background-size: 400%;
+			animation: aniHtml 20s infinite;
+		}
+		body{
+			background: transparent !important;
+		}
+		.login-box-body{
+			border-radius: 8px !important;
+			background: linear-gradient(0deg, rgba(255,255,255,0.8), rgba(255,255,255,0.3)) !important;
+		}
+		.login-logo a{
+			color: white !important;
+		}
+		@keyframes aniHtml {
+			0% {
+				background-position: 0% 50%;
+			}
+			50% {
+				background-position: 100% 50%;
+			}
+			100% {
+				background-position: 0% 50%;
+			}
+		}
+		.wrapper{
+			background-color: #222d3244 !important;
+		}
+		.main-footer{
+			background: linear-gradient(28deg, #fffb, #fff3) !important;
+		}
+		.main-sidebar, .left-side{
+			background: linear-gradient(90deg,#222d3266,#222d3211) !important;
+		}
+		.main-header .logo{
+			background: linear-gradient(90deg,#367fa966,#367fa944) !important;
+		}
+		.main-header .navbar{
+			background: linear-gradient(92deg,#367fa944,#367fa911) !important;
+		}
+		.sidebar-menu>li.header {
+			background: #1a2226aa !important;
+		}
+		.sidebar-menu>li:hover>a,
+		.sidebar-menu>li.active>a,
+		.sidebar-menu>li.menu-open>a {
+			background: #1e282caa !important;
+		}
+		.content-wrapper{
+			background: linear-gradient(130deg,#ecf0f5aa,#ecf0f544) !important;
+		}
+		.box,
+		.card{
+			background: linear-gradient(179deg, #fffd, #fff1) !important;
+		}
+		.table-striped>tbody>tr:nth-of-type(odd) {
+			background-color: #fff8 !important;
+		}
+		.pagination > li >a {
+			background: #fafafa88 !important;
+		}
+		.pagination > .disable >a {
+			background: #fafafa88 !important;
+		}
+		.pagination > .active >a {
+			background: #337ab788 !important;
+		}
+		.modal-content {
+			background: linear-gradient(179deg, #ffff, #fff8) !important;
+			border-radius: 8px !important;
+		}
+		.callout-info {
+			background: linear-gradient(180deg, #00c0efee, #00c0ef11) !important;
+		}
+		.layui-layer {
+			background: linear-gradient(176deg, #fffe, #fffa) !important;
+		}
+		.layui-layer-shade {
+			opacity: 0.35 !important;
+		}
+
+		.layui-layer-hui .layui-layer-content{
+			color: #666;
+		}
+	</style>
 </#macro>
 
 <#macro commonScript>
@@ -62,6 +149,34 @@
         var I18n = ${I18nUtil.getMultString()};
 	</script>
 
+	<script>
+		setTimeout(function(){
+			let url=new URL(window.location.href)
+			let enableAnimation=url.searchParams.get('ani')
+			if(enableAnimation===null|| enableAnimation===undefined){
+				enableAnimation=localStorage.getItem('ani')
+			}else{
+				localStorage.setItem('ani',enableAnimation)
+			}
+			if('false'===enableAnimation||'0'===enableAnimation){
+				let dom=document.getElementsByTagName('html')
+				if(dom && dom.length>0){
+					dom[0].style.animation='unset'
+					dom[0].style.backgroundPosition=Math.floor(Math.random()*80+10)+'% '+Math.floor(Math.random()*80+10)+'%'
+				}
+
+				dom=document.getElementsByClassName('login-footer')
+				if(dom && dom.length>0){
+					dom[0].style.animation='unset'
+					dom[0].style.backgroundPosition=Math.floor(Math.random()*80+10)+'% '+Math.floor(Math.random()*80+10)+'%'
+				}
+			}
+		},300);
+
+	</script>
+
+	<script src="${request.contextPath}/static/plugins/com/antherd/sm-crypto-0.3.2/sm2.js"></script>
+	<script src="${request.contextPath}/static/plugins/com/antherd/sm-crypto-0.3.2/sm3.js"></script>
 </#macro>
 
 <#macro commonHeader>
@@ -109,11 +224,15 @@
 					<form class="form-horizontal form" role="form" >
 						<div class="form-group">
 							<label for="lastname" class="col-sm-2 control-label">${I18n.change_pwd_field_oldpwd}<font color="red">*</font></label>
-							<div class="col-sm-10"><input type="text" class="form-control" name="oldPassword" placeholder="${I18n.system_please_input} ${I18n.change_pwd_field_oldpwd}" maxlength="20" ></div>
+							<div class="col-sm-10"><input type="password" class="form-control" name="oldPassword" placeholder="${I18n.system_please_input} ${I18n.change_pwd_field_oldpwd}" maxlength="50" ></div>
 						</div>
 						<div class="form-group">
 							<label for="lastname" class="col-sm-2 control-label">${I18n.change_pwd_field_newpwd}<font color="red">*</font></label>
-							<div class="col-sm-10"><input type="text" class="form-control" name="password" placeholder="${I18n.system_please_input} ${I18n.change_pwd_field_newpwd}" maxlength="20" ></div>
+							<div class="col-sm-10"><input type="password" class="form-control" name="password" placeholder="${I18n.system_please_input} ${I18n.change_pwd_field_newpwd}" maxlength="50" ></div>
+						</div>
+						<div class="form-group">
+							<label for="lastname" class="col-sm-2 control-label">${I18n.change_pwd_field_repeat_pwd}<font color="red">*</font></label>
+							<div class="col-sm-10"><input type="password" class="form-control" name="repeatPassword" placeholder="${I18n.system_please_input} ${I18n.change_pwd_field_repeat_pwd}" maxlength="50" ></div>
 						</div>
 						<hr>
 						<div class="form-group">
@@ -144,6 +263,7 @@
 				<#if loginUser.role == 1>
                     <li class="nav-click <#if pageName == "jobgroup">active</#if>" ><a href="${request.contextPath}/jobgroup"><i class="fa fa-circle-o text-red"></i><span>${I18n.jobgroup_name}</span></a></li>
                     <li class="nav-click <#if pageName == "user">active</#if>" ><a href="${request.contextPath}/user"><i class="fa fa-circle-o text-purple"></i><span>${I18n.user_manage}</span></a></li>
+					<li class="nav-click <#if pageName == "emailconfig">active</#if>" ><a href="${request.contextPath}/emailconfig"><i class="fa fa-circle-o text-orange"></i><span>${I18n.emailconfig_name}</span></a></li>
 				</#if>
 				<li class="nav-click <#if pageName == "help">active</#if>" ><a href="${request.contextPath}/help"><i class="fa fa-circle-o text-gray"></i><span>${I18n.job_help}</span></a></li>
 			</ul>
@@ -176,7 +296,7 @@
 						</a>
 					</li>
 					<li>
-						<a href="javascript::;"> 
+						<a href="javascript::;">
 							<i class="menu-icon fa fa-user bg-yellow"></i>
 							<div class="menu-info">
 								<h4 class="control-sidebar-subheading">Frodo 更新了资料</h4>
@@ -185,7 +305,7 @@
 						</a>
 					</li>
 					<li>
-						<a href="javascript::;"> 
+						<a href="javascript::;">
 							<i class="menu-icon fa fa-envelope-o bg-light-blue"></i>
 							<div class="menu-info">
 								<h4 class="control-sidebar-subheading">Nora 加入邮件列表</h4>
