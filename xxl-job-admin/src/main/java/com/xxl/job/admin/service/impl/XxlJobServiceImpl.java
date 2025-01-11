@@ -4,10 +4,13 @@ import com.xxl.job.admin.core.cron.CronExpression;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLogReport;
+import com.xxl.job.admin.core.model.XxlJobUser;
 import com.xxl.job.admin.core.route.ExecutorRouteStrategyEnum;
 import com.xxl.job.admin.core.scheduler.MisfireStrategyEnum;
 import com.xxl.job.admin.core.scheduler.ScheduleTypeEnum;
 import com.xxl.job.admin.core.thread.JobScheduleHelper;
+import com.xxl.job.admin.core.thread.JobTriggerPoolHelper;
+import com.xxl.job.admin.core.trigger.TriggerTypeEnum;
 import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.admin.dao.*;
 import com.xxl.job.admin.service.XxlJobService;
@@ -58,7 +61,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 	}
 
 	@Override
-	public ReturnT<String> add(XxlJobInfo jobInfo) {
+	public ReturnT<String> add(XxlJobInfo jobInfo, XxlJobUser loginUser) {
 
 		// valid base
 		XxlJobGroup group = xxlJobGroupDao.load(jobInfo.getJobGroup());
@@ -128,6 +131,10 @@ public class XxlJobServiceImpl implements XxlJobService {
 						return new ReturnT<String>(ReturnT.FAIL_CODE,
 								MessageFormat.format((I18nUtil.getString("jobinfo_field_childJobId")+"({0})"+I18nUtil.getString("system_not_found")), childJobIdItem));
 					}
+					if (!loginUser.validPermission(childJobInfo.getJobGroup())) {
+						return new ReturnT<String>(ReturnT.FAIL_CODE,
+								MessageFormat.format((I18nUtil.getString("jobinfo_field_childJobId")+"({0})"+I18nUtil.getString("system_permission_limit")), childJobIdItem));
+					}
 				} else {
 					return new ReturnT<String>(ReturnT.FAIL_CODE,
 							MessageFormat.format((I18nUtil.getString("jobinfo_field_childJobId")+"({0})"+I18nUtil.getString("system_unvalid")), childJobIdItem));
@@ -166,7 +173,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 	}
 
 	@Override
-	public ReturnT<String> update(XxlJobInfo jobInfo) {
+	public ReturnT<String> update(XxlJobInfo jobInfo, XxlJobUser loginUser) {
 
 		// valid base
 		if (jobInfo.getJobDesc()==null || jobInfo.getJobDesc().trim().length()==0) {
@@ -215,10 +222,18 @@ public class XxlJobServiceImpl implements XxlJobService {
 			String[] childJobIds = jobInfo.getChildJobId().split(",");
 			for (String childJobIdItem: childJobIds) {
 				if (childJobIdItem!=null && childJobIdItem.trim().length()>0 && isNumeric(childJobIdItem)) {
-					XxlJobInfo childJobInfo = xxlJobInfoDao.loadById(Integer.parseInt(childJobIdItem));
+					int childJobId = Integer.parseInt(childJobIdItem);
+					XxlJobInfo childJobInfo = xxlJobInfoDao.loadById(childJobId);
+					if (childJobId == jobInfo.getId()) {
+						return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("jobinfo_field_childJobId")+"("+childJobId+")"+I18nUtil.getString("system_unvalid")) );
+					}
 					if (childJobInfo==null) {
 						return new ReturnT<String>(ReturnT.FAIL_CODE,
 								MessageFormat.format((I18nUtil.getString("jobinfo_field_childJobId")+"({0})"+I18nUtil.getString("system_not_found")), childJobIdItem));
+					}
+					if (!loginUser.validPermission(childJobInfo.getJobGroup())) {
+						return new ReturnT<String>(ReturnT.FAIL_CODE,
+								MessageFormat.format((I18nUtil.getString("jobinfo_field_childJobId")+"({0})"+I18nUtil.getString("system_permission_limit")), childJobIdItem));
 					}
 				} else {
 					return new ReturnT<String>(ReturnT.FAIL_CODE,
@@ -343,6 +358,42 @@ public class XxlJobServiceImpl implements XxlJobService {
 		xxlJobInfo.setUpdateTime(new Date());
 		xxlJobInfoDao.update(xxlJobInfo);
 		return ReturnT.SUCCESS;
+	}
+
+
+
+	@Override
+	public ReturnT<String> trigger(XxlJobUser loginUser, int jobId, String executorParam, String addressList) {
+		// permission
+		if (loginUser == null) {
+			return new ReturnT<String>(ReturnT.FAIL.getCode(), I18nUtil.getString("system_permission_limit"));
+		}
+		XxlJobInfo xxlJobInfo = xxlJobInfoDao.loadById(jobId);
+		if (xxlJobInfo == null) {
+			return new ReturnT<String>(ReturnT.FAIL.getCode(), I18nUtil.getString("jobinfo_glue_jobid_unvalid"));
+		}
+		if (!hasPermission(loginUser, xxlJobInfo.getJobGroup())) {
+			return new ReturnT<String>(ReturnT.FAIL.getCode(), I18nUtil.getString("system_permission_limit"));
+		}
+
+		// force cover job param
+		if (executorParam == null) {
+			executorParam = "";
+		}
+
+		JobTriggerPoolHelper.trigger(jobId, TriggerTypeEnum.MANUAL, -1, null, executorParam, addressList);
+		return ReturnT.SUCCESS;
+	}
+
+	private boolean hasPermission(XxlJobUser loginUser, int jobGroup){
+		if (loginUser.getRole() == 1) {
+			return true;
+		}
+		List<String> groupIdStrs = new ArrayList<>();
+		if (loginUser.getPermission()!=null && loginUser.getPermission().trim().length()>0) {
+			groupIdStrs = Arrays.asList(loginUser.getPermission().trim().split(","));
+		}
+		return groupIdStrs.contains(String.valueOf(jobGroup));
 	}
 
 	@Override

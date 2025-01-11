@@ -1,5 +1,5 @@
 #
-# XXL-JOB v2.4.1-SNAPSHOT
+# XXL-JOB
 # Copyright (c) 2015-present, xuxueli.
 
 CREATE database if NOT EXISTS `xxl_job` default character set utf8mb4 collate utf8mb4_unicode_ci;
@@ -54,7 +54,8 @@ CREATE TABLE `xxl_job_log` (
   PRIMARY KEY (`id`),
   KEY `I_trigger_time` (`trigger_time`),
   KEY `I_handle_code` (`handle_code`),
-  KEY `idx_jobid_jobgroup` (`job_id`,`job_group`)
+  KEY `I_jobid_jobgroup` (`job_id`,`job_group`),
+  KEY `I_job_id` (`job_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `xxl_job_log_report` (
@@ -86,7 +87,7 @@ CREATE TABLE `xxl_job_registry` (
   `registry_value` varchar(255) NOT NULL,
   `update_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `i_g_k_v` (`registry_group`,`registry_key`,`registry_value`)
+  UNIQUE KEY `i_g_k_v` (`registry_group`,`registry_key`,`registry_value`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `xxl_job_group` (

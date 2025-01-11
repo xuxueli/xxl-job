@@ -53,12 +53,12 @@ public class ExecutorRegistryThread {
                                 } else {
                                     logger.info(">>>>>>>>>>> xxl-job registry fail, registryParam:{}, registryResult:{}", new Object[]{registryParam, registryResult});
                                 }
-                            } catch (Exception e) {
+                            } catch (Throwable e) {
                                 logger.info(">>>>>>>>>>> xxl-job registry error, registryParam:{}", registryParam, e);
                             }
 
                         }
-                    } catch (Exception e) {
+                    } catch (Throwable e) {
                         if (!toStop) {
                             logger.error(e.getMessage(), e);
                         }
@@ -69,7 +69,7 @@ public class ExecutorRegistryThread {
                         if (!toStop) {
                             TimeUnit.SECONDS.sleep(RegistryConfig.BEAT_TIMEOUT);
                         }
-                    } catch (InterruptedException e) {
+                    } catch (Throwable e) {
                         if (!toStop) {
                             logger.warn(">>>>>>>>>>> xxl-job, executor registry thread interrupted, error msg:{}", e.getMessage());
                         }
@@ -89,7 +89,7 @@ public class ExecutorRegistryThread {
                             } else {
                                 logger.info(">>>>>>>>>>> xxl-job registry-remove fail, registryParam:{}, registryResult:{}", new Object[]{registryParam, registryResult});
                             }
-                        } catch (Exception e) {
+                        } catch (Throwable e) {
                             if (!toStop) {
                                 logger.info(">>>>>>>>>>> xxl-job registry-remove error, registryParam:{}", registryParam, e);
                             }
@@ -97,7 +97,7 @@ public class ExecutorRegistryThread {
                         }
 
                     }
-                } catch (Exception e) {
+                } catch (Throwable e) {
                     if (!toStop) {
                         logger.error(e.getMessage(), e);
                     }
@@ -119,7 +119,7 @@ public class ExecutorRegistryThread {
             registryThread.interrupt();
             try {
                 registryThread.join();
-            } catch (InterruptedException e) {
+            } catch (Throwable e) {
                 logger.error(e.getMessage(), e);
             }
         }
