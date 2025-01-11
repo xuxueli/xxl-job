@@ -2,9 +2,9 @@ package com.xxl.job.admin.controller.interceptor;
 
 import com.xxl.job.admin.core.util.FtlUtil;
 import com.xxl.job.admin.core.util.I18nUtil;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.AsyncHandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;

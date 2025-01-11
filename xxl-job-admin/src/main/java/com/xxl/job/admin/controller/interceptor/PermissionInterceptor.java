@@ -5,9 +5,9 @@ import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobUser;
 import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.admin.service.impl.LoginService;
-import jakarta.annotation.Resource;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.AsyncHandlerInterceptor;
@@ -64,10 +64,12 @@ public class PermissionInterceptor implements AsyncHandlerInterceptor {
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-        if(modelAndView!=null){
-            XxlJobUser loginUser = loginService.ifLogin(request, response);
-            modelAndView.getModel().putIfAbsent("loginUser", loginUser);
-        }
+		if(request.getAttribute(LoginService.LOGIN_USER_KEY)==null) {
+			if (modelAndView != null) {
+				XxlJobUser loginUser = loginService.ifLogin(request, response);
+				modelAndView.getModel().putIfAbsent(LoginService.LOGIN_USER_KEY, loginUser);
+			}
+		}
     }
 
 	// -------------------- permission tool --------------------
@@ -79,7 +81,7 @@ public class PermissionInterceptor implements AsyncHandlerInterceptor {
 	 * @param loginUser
 	 */
 	private static void setLoginUser(HttpServletRequest request, XxlJobUser loginUser){
-		request.setAttribute("loginUser", loginUser);
+		request.setAttribute(LoginService.LOGIN_USER_KEY, loginUser);
 	}
 
 	/**
@@ -89,7 +91,7 @@ public class PermissionInterceptor implements AsyncHandlerInterceptor {
 	 * @return
 	 */
 	public static XxlJobUser getLoginUser(HttpServletRequest request){
-		XxlJobUser loginUser = (XxlJobUser) request.getAttribute("loginUser");	// get loginUser, with request
+		XxlJobUser loginUser = (XxlJobUser) request.getAttribute(LoginService.LOGIN_USER_KEY);	// get loginUser, with request
 		return loginUser;
 	}
 
@@ -110,21 +112,21 @@ public class PermissionInterceptor implements AsyncHandlerInterceptor {
 	 * filter XxlJobGroup by role
 	 *
 	 * @param request
-	 * @param jobGroupList_all
+	 * @param jobGroupAllList
 	 * @return
 	 */
-	public static List<XxlJobGroup> filterJobGroupByRole(HttpServletRequest request, List<XxlJobGroup> jobGroupList_all){
+	public static List<XxlJobGroup> filterJobGroupByRole(HttpServletRequest request, List<XxlJobGroup> jobGroupAllList){
 		List<XxlJobGroup> jobGroupList = new ArrayList<>();
-		if (jobGroupList_all!=null && jobGroupList_all.size()>0) {
+		if (jobGroupAllList!=null && !jobGroupAllList.isEmpty()) {
 			XxlJobUser loginUser = PermissionInterceptor.getLoginUser(request);
 			if (loginUser.getRole() == 1) {
-				jobGroupList = jobGroupList_all;
+				jobGroupList = jobGroupAllList;
 			} else {
 				List<String> groupIdStrs = new ArrayList<>();
-				if (loginUser.getPermission()!=null && loginUser.getPermission().trim().length()>0) {
+				if (loginUser.getPermission()!=null && !loginUser.getPermission().trim().isEmpty()) {
 					groupIdStrs = Arrays.asList(loginUser.getPermission().trim().split(","));
 				}
-				for (XxlJobGroup groupItem:jobGroupList_all) {
+				for (XxlJobGroup groupItem:jobGroupAllList) {
 					if (groupIdStrs.contains(String.valueOf(groupItem.getId()))) {
 						jobGroupList.add(groupItem);
 					}

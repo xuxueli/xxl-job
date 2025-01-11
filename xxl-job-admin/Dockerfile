@@ -1,5 +1,4 @@
-FROM openjdk:17-jdk-slim
-
+FROM openjdk:8-jre-slim
 MAINTAINER xuxueli
 
 ENV PARAMS=""

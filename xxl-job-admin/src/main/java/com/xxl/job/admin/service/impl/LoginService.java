@@ -34,6 +34,8 @@ public class LoginService {
 
     public static final String LOGIN_IDENTITY_KEY = "XXL_JOB_LOGIN_IDENTITY";
 
+    public static final String LOGIN_USER_KEY = "loginUser";
+
     public static final String LOGIN_API_TOKEN_HEADER ="token";
     public static final int LOGIN_API_TOKEN_EXPIRE_MINUTES=30;
 
