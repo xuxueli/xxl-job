@@ -138,6 +138,37 @@ xxl.job.database.platform.type=mysql
         - static/js/login.1.js
         - 搜索 "submitHandler" 或者 "generateKeyPairHex"
 
+## usage
+- 1. download the package
+    - xxl-job-admin-all.tar.gz
+```shell
+wget https://gitee.com/ice2faith/xxl-job/releases/download/v3.0.0-SNAPSHOT-springboot3/xxl-job-admin-all.tar.gz
+```
+- 2. release it
+```shell
+tar -xzvf xxl-job-admin-all.tar.gz
+```
+- 3. cd to package
+```shell
+cd xxl-job-admin-all/xxl-job-admin
+```
+- 4. modify the config file
+```shell
+vi resources/application-dev.properties
+```
+- 5. run it
+```shell
+./jarctrl.sh restart
+```
+- or direct run jar
+```shell
+java -jar xxl-job-admin.jar
+```
+- 6. view log
+```shell
+./jarctrl.sh log
+```
+
 ## previews
 
 - login page
