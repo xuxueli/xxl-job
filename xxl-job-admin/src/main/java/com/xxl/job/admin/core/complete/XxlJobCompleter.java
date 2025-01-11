@@ -57,7 +57,13 @@ public class XxlJobCompleter {
                 for (int i = 0; i < childJobIds.length; i++) {
                     int childJobId = (StringUtils.hasText(childJobIds[i]) && isNumeric(childJobIds[i]))?Integer.valueOf(childJobIds[i]):-1;
                     if (childJobId > 0) {
+                        // valid
+                        if (childJobId == xxlJobLog.getJobId()) {
+                            logger.debug(">>>>>>>>>>> xxl-job, XxlJobCompleter-finishJob ignore childJobId,  childJobId {} is self.", childJobId);
+                            continue;
+                        }
 
+                        // trigger child job
                         JobTriggerPoolHelper.trigger(childJobId, TriggerTypeEnum.PARENT, -1, null, null, null);
                         ReturnT<String> triggerChildResult = ReturnT.SUCCESS;
 

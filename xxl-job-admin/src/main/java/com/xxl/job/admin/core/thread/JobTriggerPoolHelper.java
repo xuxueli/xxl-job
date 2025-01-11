@@ -30,11 +30,17 @@ public class JobTriggerPoolHelper {
                 XxlJobAdminConfig.getAdminConfig().getTriggerPoolFastMax(),
                 60L,
                 TimeUnit.SECONDS,
-                new LinkedBlockingQueue<Runnable>(1000),
+                new LinkedBlockingQueue<Runnable>(2000),
                 new ThreadFactory() {
                     @Override
                     public Thread newThread(Runnable r) {
                         return new Thread(r, "xxl-job, admin JobTriggerPoolHelper-fastTriggerPool-" + r.hashCode());
+                    }
+                },
+                new RejectedExecutionHandler() {
+                    @Override
+                    public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
+                        logger.error(">>>>>>>>>>> xxl-job, admin JobTriggerPoolHelper-fastTriggerPool execute too fast, Runnable="+r.toString() );
                     }
                 });
 
@@ -43,11 +49,17 @@ public class JobTriggerPoolHelper {
                 XxlJobAdminConfig.getAdminConfig().getTriggerPoolSlowMax(),
                 60L,
                 TimeUnit.SECONDS,
-                new LinkedBlockingQueue<Runnable>(2000),
+                new LinkedBlockingQueue<Runnable>(5000),
                 new ThreadFactory() {
                     @Override
                     public Thread newThread(Runnable r) {
                         return new Thread(r, "xxl-job, admin JobTriggerPoolHelper-slowTriggerPool-" + r.hashCode());
+                    }
+                },
+                new RejectedExecutionHandler() {
+                    @Override
+                    public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
+                        logger.error(">>>>>>>>>>> xxl-job, admin JobTriggerPoolHelper-slowTriggerPool execute too fast, Runnable="+r.toString() );
                     }
                 });
     }
@@ -115,6 +127,10 @@ public class JobTriggerPoolHelper {
 
                 }
 
+            }
+            @Override
+            public String toString() {
+                return "Job Runnable, jobId:"+jobId;
             }
         });
     }

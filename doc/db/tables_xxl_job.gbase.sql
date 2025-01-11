@@ -1,5 +1,5 @@
 --
--- XXL-JOB v2.4.0
+-- XXL-JOB
 -- Copyright (c) 2015-present, xuxueli.
 
 SET NAMES utf8mb4;
@@ -59,6 +59,12 @@ create index `I_trigger_time`
 
 create index `I_handle_code`
     on `xxl_job_log` (`handle_code`);
+
+create index `I_jobid_jobgroup`
+    on `xxl_job_log` (`job_id`,`job_group`);
+
+create index `I_job_id`
+    on `xxl_job_log` (`job_id`);
 
 CREATE TABLE `xxl_job_log_report`
 (

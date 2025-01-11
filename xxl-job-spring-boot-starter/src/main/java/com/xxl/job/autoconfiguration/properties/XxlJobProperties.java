@@ -14,13 +14,13 @@ public class XxlJobProperties {
 
     private AdminProperties admin;
 
-    private String accessToken;
-
     private ExecutorProperties executor;
 
     @Data
     public static class AdminProperties {
         private String addresses;
+        private String accessToken;
+        private int timeout;
     }
 
     @Data

@@ -15,11 +15,18 @@
       "defaultValue": "http://127.0.0.1:8080/xxl-job-admin"
     },
     {
-      "name": "xxl.job.access-token",
+      "name": "xxl.job.admin.access-token",
       "type": "java.lang.String",
       "description": "access token.",
       "sourceType": "com.xxl.job.autoconfiguration.properties.XxlJobProperties",
       "defaultValue": "default_token"
+    },
+    {
+      "name": "xxl.job.admin.timeout",
+      "type": "java.lang.Integer",
+      "description": "rpc timeout.",
+      "sourceType": "com.xxl.job.autoconfiguration.properties.XxlJobProperties",
+      "defaultValue": 3
     },
     {
       "name": "xxl.job.executor.appname",

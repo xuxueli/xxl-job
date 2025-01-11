@@ -45,6 +45,13 @@ XXL-JOB is an open source and free project, with its ongoing development made po
 
 XXL-JOB 是一个开源且免费项目，其正在进行的开发完全得益于支持者的支持。开源不易，[前往赞助项目开发](https://www.xuxueli.com/page/donate.html )
 
+<!-- supporter start -->
+<h5 style="color: silver;" >金牌赞助方</h5>
+<a href="https://www.jetbrains.com/idea/?from=xuxueli.com" title="jetbrains" target="_blank" >
+    <img width="55px" src="http://www.xuxueli.com/page/static/images/logo_intellij.jpeg" >
+</a>
+<!-- supporter end -->
+
 
 ## Documentation
 - [中文文档](https://www.xuxueli.com/xxl-job/)
@@ -124,6 +131,8 @@ XXL-JOB 是一个开源且免费项目，其正在进行的开发完全得益于
 于2020-11-16，XXL-JOB参与"[2020年度最受欢迎中国开源软件](https://www.oschina.net/project/top_cn_2020)"评比，在当时已录入的一万多个开源项目中角逐，最终排名"开发框架和基础组件类"第8名。
 
 于2021-12-06，XXL-JOB参与"[2021年度OSC中国开源项目评选](https://www.oschina.net/project/top_cn_2021) "评比，在当时已录入的一万多个开源项目中角逐，最终当选"最受欢迎项目"。
+
+于2024-11-06，XXL-JOB经 GitCode 官方评审，获得 “G-Star项目毕业认证”。
 
 > 我司大众点评目前已接入XXL-JOB，内部别名《Ferrari》（Ferrari基于XXL-JOB的V1.1版本定制而成，新接入应用推荐升级最新版本）。
 据最新统计, 自2016-01-21接入至2017-12-01期间，该系统已调度约100万次，表现优异。新接入应用推荐使用最新版本，因为经过数十个版本的更新，系统的任务模型、UI交互模型以及底层调度通讯模型都有了较大的优化和提升，核心功能更加稳定高效。
@@ -807,6 +816,17 @@ XXL-JOB 是一个开源且免费项目，其正在进行的开发完全得益于
     - 675、上海热风时尚管理集团【热风】
     - 676、HashKey Exchange
     - 677、傲基（深圳）跨境商务股份有限公司
+    - 678、青岛文达通科技股份有限公司
+    - 679、杭州普罗云科技有限公司
+    - 680、浙江云鹭科技有限公司
+    - 681、中山市芯宏柿网络科技有限公司
+    - 682、深圳市家家顺物联科技
+    - 683、重庆斑西科技有限公司
+    - 684、福建省泰古信息技术有限公司
+    - 685、贵阳永青仪电科技有限公司
+    - 686、广州博依特智能信息科技有限公司
+    - 687、河南宠呦呦信息技术有限公司
+    - 688、陕西星邑空间技术有限公司
     - ……
 
 > 更多接入的公司，欢迎在 [登记地址](https://github.com/xuxueli/xxl-job/issues/1 ) 登记，登记仅仅为了产品推广。

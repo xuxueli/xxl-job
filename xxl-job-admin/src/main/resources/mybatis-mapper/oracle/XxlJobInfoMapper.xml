@@ -262,8 +262,10 @@
     <update id="scheduleUpdate" parameterType="com.xxl.job.admin.core.model.XxlJobInfo">
         UPDATE XXL_JOB_INFO
         SET "TRIGGER_LAST_TIME" = #{triggerLastTime,jdbcType=NUMERIC},
-            "TRIGGER_NEXT_TIME" = #{triggerNextTime,jdbcType=NUMERIC},
-            "TRIGGER_STATUS"    = #{triggerStatus,jdbcType=NUMERIC}
+            "TRIGGER_NEXT_TIME" = #{triggerNextTime,jdbcType=NUMERIC}
+            <if test="triggerStatus gte 0">
+                , "TRIGGER_STATUS"    = #{triggerStatus,jdbcType=NUMERIC}
+            </if>
         WHERE "ID" = #{id,jdbcType=NUMERIC}
           AND "TRIGGER_STATUS" = 1
     </update>
