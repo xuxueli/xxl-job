@@ -72,7 +72,7 @@ $(function() {
 	// init date tables
 	var logTable = $("#joblog_list").dataTable({
 		"deferRender": true,
-		"processing" : true, 
+		"processing" : true,
 	    "serverSide": true,
 		"ajax": {
 	        url: base_url + "/joblog/pageList" ,
@@ -95,7 +95,7 @@ $(function() {
 					{
 						"data": 'jobId',
 						"visible" : true,
-                        "width":'10%',
+                        "width":'5%',
 						"render": function ( data, type, row ) {
 
 							var jobhandler = '';
@@ -112,16 +112,18 @@ $(function() {
 						}
 					},
 					{ "data": 'jobGroup', "visible" : false},
+					{ "data": 'groupTitle', "visible" : true, "width":'10%'},
+					{ "data": 'jobDesc', "visible" : true, "width":'15%'},
 					{
 						"data": 'triggerTime',
-                        "width":'20%',
+                        "width":'13%',
 						"render": function ( data, type, row ) {
 							return data?moment(data).format("YYYY-MM-DD HH:mm:ss"):"";
 						}
 					},
 					{
 						"data": 'triggerCode',
-                        "width":'10%',
+                        "width":'7%',
 						"render": function ( data, type, row ) {
 							var html = data;
 							if (data == 200) {
@@ -141,16 +143,16 @@ $(function() {
 							return data?'<a class="logTips" href="javascript:;" >'+ I18n.system_show +'<span style="display:none;">'+ data +'</span></a>':I18n.system_empty;
 						}
 					},
-	                { 
+	                {
 	                	"data": 'handleTime',
-                        "width":'20%',
+                        "width":'13%',
 	                	"render": function ( data, type, row ) {
 	                		return data?moment(data).format("YYYY-MM-DD HH:mm:ss"):"";
 	                	}
 	                },
 	                {
 						"data": 'handleCode',
-                        "width":'10%',
+                        "width":'7%',
 						"render": function ( data, type, row ) {
                             var html = data;
                             if (data == 200) {
@@ -165,7 +167,7 @@ $(function() {
                             return html;
 						}
 	                },
-	                { 
+	                {
 	                	"data": 'handleMsg',
                         "width":'10%',
 	                	"render": function ( data, type, row ) {
@@ -207,7 +209,7 @@ $(function() {
 
 		                			return html;
 		                		}
-		                		return null;	
+		                		return null;
 	                		}
 	                	}
 	                }
@@ -242,22 +244,22 @@ $(function() {
             layer.msg( json.msg || I18n.system_api_error );
         }
     });
-	
+
 	// logTips alert
 	$('#joblog_list').on('click', '.logTips', function(){
 		var msg = $(this).find('span').html();
 		ComAlertTec.show(msg);
 	});
-	
+
 	// search Btn
 	$('#searchBtn').on('click', function(){
 		logTable.fnDraw();
 	});
-	
+
 	// logDetail look
 	$('#joblog_list').on('click', '.logDetail', function(){
 		var _id = $(this).attr('_id');
-		
+
 		window.open(base_url + '/joblog/logDetailPage?id=' + _id);
 		return;
 	});
