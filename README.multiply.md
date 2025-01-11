@@ -1,27 +1,42 @@
 # multiply platform database supports
 
 ## project
-this project is a branch from https://github.com/xuxueli/xxl-job .
-and version is 2.4.1.
-aim to adapt oracle/gbase xxl-job-admin.
-those change not effect xxl-job-core,.
-below config database platform to switch target platform
+- this project is a branch from https://github.com/xuxueli/xxl-job .
+- and this project was forked
+- it changes include in pull request https://github.com/xuxueli/xxl-job/pull/3462
+```shell
+feat(database): support multiply database type & secure enhance #3462
+```
+- aim to adapt oracle/gbase xxl-job-admin.
+- those change not effect xxl-job-core,.
+- below config database platform to switch target platform
 ```shell
 # database platform, mysql|oracle|postgre|gbase|h2|dm|kingbase|sqlserver
 xxl.job.database.platform.type=mysql
 ```
-actually, mysql grammar adapted to gbase, or other, so that, other database could be use mysql platform.
+- actually, mysql grammar adapted to gbase, or other, so that, other database could be use mysql platform.
 
-这个项目是 https://github.com/xuxueli/xxl-job 的一个分支。
-版本为 2.4.1。
-目标是适配 oracle/gbase 版本的 xxl-job-admin
-这些改变不影响 xxl-job-core
-下面的配置数据库平台为目标平台
+- 这个项目是 https://github.com/xuxueli/xxl-job 的一个分支。
+- 这是一个fork出来的项目
+- 它的变更都包含在PR中 https://github.com/xuxueli/xxl-job/pull/3462
+```shell
+feat(database): support multiply database type & secure enhance #3462
+```
+- 目标是适配 oracle/gbase 版本的 xxl-job-admin
+- 这些改变不影响 xxl-job-core
+- 下面的配置数据库平台为目标平台
 ```shell
 # database platform, mysql|oracle|postgre|gbase|h2|dm|kingbase|sqlserver
 xxl.job.database.platform.type=mysql
 ```
-实际上，mysql 的语法适用于 gbase ，或者其他兼容的数据库，所以其他数据库也可以使用 mysql 平台
+- 实际上，mysql 的语法适用于 gbase ，或者其他兼容的数据库，所以其他数据库也可以使用 mysql 平台
+
+## notice
+- 2025-01-11
+    - 同步最新的3.0.0-SNAPSHOT版本，为最后一个同步官方的springboot2版本
+    - 官方在此之后升级为springboot3+jdk17
+    - 后续将会在springboot3分支中保持与官方版本同步，同时将会协同地将官方修改也同步到springboot2(master)版本中
+    - 不过分支命名可能会变更：master->springboot2, springboot3->master
 
 ## Branch Merge Rule
 - [master] fork from official master and adapt multiply database
