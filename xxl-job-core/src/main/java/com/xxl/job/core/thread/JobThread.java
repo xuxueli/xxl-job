@@ -36,7 +36,7 @@ public class JobThread extends Thread{
 	private String stopReason;
 
     private boolean running = false;    // if running job
-	private int idleTimes = 0;			// idel times
+	private int idleTimes = 0;			// idle times
 
 
 	public JobThread(int jobId, IJobHandler handler) {
@@ -185,7 +185,7 @@ public class JobThread extends Thread{
 				} else {
 					if (idleTimes > 30) {
 						if(triggerQueue.size() == 0) {	// avoid concurrent trigger causes jobId-lost
-							XxlJobExecutor.removeJobThread(jobId, "excutor idel times over limit.");
+							XxlJobExecutor.removeJobThread(jobId, "excutor idle times over limit.");
 						}
 					}
 				}
