@@ -497,7 +497,11 @@ exit 0
     <div class="modal-dialog ">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" >${I18n.jobinfo_opt_run}</h4>
+                <h4 class="modal-title" >
+                    <span>${I18n.jobinfo_opt_run}</span>
+                    <span>：</span>
+                    <span name="jobDesc"></span>
+                </h4>
             </div>
             <div class="modal-body">
                 <form class="form-horizontal form" role="form" >
