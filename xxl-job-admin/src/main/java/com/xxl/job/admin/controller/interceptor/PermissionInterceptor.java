@@ -54,7 +54,9 @@ public class PermissionInterceptor implements AsyncHandlerInterceptor {
 			if (needAdminuser && loginUser.getRole()!=1) {
 				throw new RuntimeException(I18nUtil.getString("system_permission_limit"));
 			}
-			request.setAttribute(LoginService.LOGIN_IDENTITY_KEY, loginUser);	// set loginUser, with request
+
+			// set loginUser, with request
+			setLoginUser(request, loginUser);
 		}
 
 		return true;	// proceed with the next interceptor
@@ -64,13 +66,23 @@ public class PermissionInterceptor implements AsyncHandlerInterceptor {
 	// -------------------- permission tool --------------------
 
 	/**
+	 * set loginUser
+	 *
+	 * @param request
+	 * @param loginUser
+	 */
+	private static void setLoginUser(HttpServletRequest request, XxlJobUser loginUser){
+		request.setAttribute("loginUser", loginUser);
+	}
+
+	/**
 	 * get loginUser
 	 *
 	 * @param request
 	 * @return
 	 */
 	public static XxlJobUser getLoginUser(HttpServletRequest request){
-		XxlJobUser loginUser = (XxlJobUser) request.getAttribute(LoginService.LOGIN_IDENTITY_KEY);	// get loginUser, with request
+		XxlJobUser loginUser = (XxlJobUser) request.getAttribute("loginUser");	// get loginUser, with request
 		return loginUser;
 	}
 

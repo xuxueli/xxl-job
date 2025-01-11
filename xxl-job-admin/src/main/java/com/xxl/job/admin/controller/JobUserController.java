@@ -48,9 +48,10 @@ public class JobUserController {
     @RequestMapping("/pageList")
     @ResponseBody
     @PermissionLimit(adminuser = true)
-    public Map<String, Object> pageList(@RequestParam(required = false, defaultValue = "0") int start,
-                                        @RequestParam(required = false, defaultValue = "10") int length,
-                                        String username, int role) {
+    public Map<String, Object> pageList(@RequestParam(value = "start", required = false, defaultValue = "0") int start,
+                                        @RequestParam(value = "length", required = false, defaultValue = "10") int length,
+                                        @RequestParam("username") String username,
+                                        @RequestParam("role") int role) {
 
         // page list
         List<XxlJobUser> list = xxlJobUserDao.pageList(start, length, username, role);
@@ -137,7 +138,7 @@ public class JobUserController {
     @RequestMapping("/remove")
     @ResponseBody
     @PermissionLimit(adminuser = true)
-    public ReturnT<String> remove(HttpServletRequest request, int id) {
+    public ReturnT<String> remove(HttpServletRequest request, @RequestParam("id") int id) {
 
         // avoid opt login seft
         XxlJobUser loginUser = PermissionInterceptor.getLoginUser(request);
@@ -151,7 +152,9 @@ public class JobUserController {
 
     @RequestMapping("/updatePwd")
     @ResponseBody
-    public ReturnT<String> updatePwd(HttpServletRequest request, String password, String oldPassword){
+    public ReturnT<String> updatePwd(HttpServletRequest request,
+                                     @RequestParam("password") String password,
+                                     @RequestParam("oldPassword") String oldPassword){
 
         // valid
         if (oldPassword==null || oldPassword.trim().length()==0){

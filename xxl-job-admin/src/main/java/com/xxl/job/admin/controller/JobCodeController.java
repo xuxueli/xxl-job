@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Date;
@@ -32,7 +33,7 @@ public class JobCodeController {
 	private XxlJobLogGlueDao xxlJobLogGlueDao;
 
 	@RequestMapping
-	public String index(HttpServletRequest request, Model model, int jobId) {
+	public String index(HttpServletRequest request, Model model, @RequestParam("jobId") int jobId) {
 		XxlJobInfo jobInfo = xxlJobInfoDao.loadById(jobId);
 		List<XxlJobLogGlue> jobLogGlues = xxlJobLogGlueDao.findByJobId(jobId);
 
@@ -56,7 +57,11 @@ public class JobCodeController {
 	
 	@RequestMapping("/save")
 	@ResponseBody
-	public ReturnT<String> save(HttpServletRequest request, int id, String glueSource, String glueRemark) {
+	public ReturnT<String> save(HttpServletRequest request,
+								@RequestParam("id") int id,
+								@RequestParam("glueSource") String glueSource,
+								@RequestParam("glueRemark") String glueRemark) {
+
 		// valid
 		if (glueRemark==null) {
 			return new ReturnT<String>(500, (I18nUtil.getString("system_please_input") + I18nUtil.getString("jobinfo_glue_remark")) );
