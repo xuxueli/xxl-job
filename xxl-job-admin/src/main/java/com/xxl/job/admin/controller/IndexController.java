@@ -17,10 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -53,14 +50,14 @@ public class IndexController {
 
     @RequestMapping("/chartInfo")
 	@ResponseBody
-	public ReturnT<Map<String, Object>> chartInfo(Date startDate, Date endDate) {
+	public ReturnT<Map<String, Object>> chartInfo(@RequestParam("startDate") Date startDate, @RequestParam("endDate") Date endDate) {
         ReturnT<Map<String, Object>> chartInfo = xxlJobService.chartInfo(startDate, endDate);
         return chartInfo;
     }
 
 	@RequestMapping("/toLogin")
 	@PermissionLimit(limit=false)
-	public ModelAndView toLogin(HttpServletRequest request, HttpServletResponse response,ModelAndView modelAndView) {
+	public ModelAndView toLogin(HttpServletRequest request, HttpServletResponse response, ModelAndView modelAndView) {
 		if (loginService.ifLogin(request, response) != null) {
 			modelAndView.setView(new RedirectView("/",true,false));
 			return modelAndView;
@@ -73,8 +70,8 @@ public class IndexController {
 	@ResponseBody
 	@PermissionLimit(limit=false)
 	public ReturnT<String> getServerPublicKey(HttpServletRequest request, HttpServletResponse response,
-											  String pk,
-											  String sign) throws ScriptException {
+											  @RequestParam("pk") String pk,
+											  @RequestParam("sign") String sign) throws ScriptException {
 		if(!StringUtils.hasLength(pk) || !StringUtils.hasLength(sign)){
 			return new ReturnT<String>(500, I18nUtil.getString("system_fail"));
 		}
@@ -91,10 +88,10 @@ public class IndexController {
 	@ResponseBody
 	@PermissionLimit(limit=false)
 	public ReturnT<String> loginDo(HttpServletRequest request, HttpServletResponse response,
-								   String userName,
-								   String password,
-								   String sign,
-								   String ifRemember) throws ScriptException {
+                                   @RequestParam("userName") String userName,
+                                   @RequestParam("password") String password,
+                                   @RequestParam("sign") String sign,
+                                   @RequestParam(value = "ifRemember", required = false) String ifRemember) throws ScriptException {
 		Keypair keypair = SecurityContext.getInstance().findKeypair(sign);
 		if(keypair==null){
 			return new ReturnT<String>(500, I18nUtil.getString("login_param_unvalid"));

@@ -25,8 +25,7 @@ public class WebExceptionResolver implements HandlerExceptionResolver {
 	private static transient Logger logger = LoggerFactory.getLogger(WebExceptionResolver.class);
 
 	@Override
-	public ModelAndView resolveException(HttpServletRequest request,
-			HttpServletResponse response, Object handler, Exception ex) {
+	public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
 
 		if (!(ex instanceof XxlJobException)) {
 			logger.error("WebExceptionResolver:{}", ex);
