@@ -1,6 +1,7 @@
 package com.xxl.job.admin.dao;
 
 import com.xxl.job.admin.core.model.XxlJobLog;
+import com.xxl.job.admin.platform.pageable.data.PageDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -16,8 +17,9 @@ public class XxlJobLogDaoTest {
 
     @Test
     public void test(){
-        List<XxlJobLog> list = xxlJobLogDao.pageList(0, 10, 1, 1, null, null, 1);
-        int list_count = xxlJobLogDao.pageListCount(0, 10, 1, 1, null, null, 1);
+        PageDto page=PageDto.of(0/10+1,10);
+        List<XxlJobLog> list = xxlJobLogDao.pageList(page, 1, 1, null, null, 1);
+        int list_count = xxlJobLogDao.pageListCount(1, 1, null, null, 1);
 
         XxlJobLog log = new XxlJobLog();
         log.setJobGroup(1);
