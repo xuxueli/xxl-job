@@ -51,7 +51,7 @@
 			<version>${slf4j-api.version}</version>
 		</dependency>
 
-		<!-- javax.annotation-api -->
+		<!-- jakarta.annotation-api -->
 		<dependency>
 			<groupId>jakarta.annotation</groupId>
 			<artifactId>jakarta.annotation-api</artifactId>
