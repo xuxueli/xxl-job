@@ -233,7 +233,7 @@
 		SET
 			trigger_last_time = #{triggerLastTime},
 			trigger_next_time = #{triggerNextTime}
-			<if test="triggerStatus == 0">
+			<if test="triggerStatus gte 0">
 			 , trigger_status = #{triggerStatus}
 			</if>
 		WHERE id = #{id}

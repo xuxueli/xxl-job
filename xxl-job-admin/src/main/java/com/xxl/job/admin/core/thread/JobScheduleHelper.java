@@ -272,6 +272,7 @@ public class JobScheduleHelper {
         try {
             Date nextValidTime = generateNextValidTime(jobInfo, fromTime);
             if (nextValidTime != null) {
+                jobInfo.setTriggerStatus(-1);                               // pass, may be Inaccurate
                 jobInfo.setTriggerLastTime(jobInfo.getTriggerNextTime());
                 jobInfo.setTriggerNextTime(nextValidTime.getTime());
             } else {
