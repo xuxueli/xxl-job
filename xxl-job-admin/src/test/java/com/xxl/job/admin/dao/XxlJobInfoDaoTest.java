@@ -3,6 +3,7 @@ package com.xxl.job.admin.dao;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.scheduler.MisfireStrategyEnum;
 import com.xxl.job.admin.core.scheduler.ScheduleTypeEnum;
+import com.xxl.job.admin.platform.pageable.data.PageDto;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,8 +22,9 @@ public class XxlJobInfoDaoTest {
 	
 	@Test
 	public void pageList(){
-		List<XxlJobInfo> list = xxlJobInfoDao.pageList(0, 20, 0, -1, null, null, null);
-		int list_count = xxlJobInfoDao.pageListCount(0, 20, 0, -1, null, null, null);
+		PageDto page=PageDto.of(0/20+1,20);
+		List<XxlJobInfo> list = xxlJobInfoDao.pageList(page, 0, -1, null, null, null);
+		int list_count = xxlJobInfoDao.pageListCount( 0, -1, null, null, null);
 
 		logger.info("", list);
 		logger.info("", list_count);
