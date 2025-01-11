@@ -1,5 +1,5 @@
 --
--- XXL-JOB v2.4.0
+-- XXL-JOB
 -- Copyright (c) 2015-present, xuxueli.
 
 
@@ -87,6 +87,12 @@ create index idx_xxl_job_log_trigger_time on xxl_job_log (trigger_time)
 ;
 
 create index idx_xxl_job_log_handle_code on xxl_job_log (handle_code)
+;
+
+create index idx_xxl_job_log_jobid_jobgroup on xxl_job_log (job_id,job_group)
+;
+
+create index idx_xxl_job_log_job_id on xxl_job_log (job_id)
 ;
 
 

@@ -246,8 +246,10 @@
 		UPDATE "XXL_JOB_INFO"
 		SET
 			"TRIGGER_LAST_TIME" = #{triggerLastTime},
-			"TRIGGER_NEXT_TIME" = #{triggerNextTime},
-			"TRIGGER_STATUS" = #{triggerStatus}
+			"TRIGGER_NEXT_TIME" = #{triggerNextTime}
+			<if test="triggerStatus gte 0">
+				, "TRIGGER_STATUS" = #{triggerStatus}
+			</if>
 		WHERE "ID" = #{id}
 		  AND "TRIGGER_STATUS" = 1
 	</update>

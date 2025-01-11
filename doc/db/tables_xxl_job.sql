@@ -133,7 +133,7 @@ CREATE TABLE `xxl_job_lock`
   DEFAULT CHARSET = utf8mb4;
 
 
-## —————————————————————— init data ——————————————————
+-- —————————————————————— init data ——————————————————
 
 INSERT INTO `xxl_job_group`(`id`, `app_name`, `title`, `address_type`, `address_list`, `update_time`)
 VALUES (1, 'xxl-job-executor-sample', '示例执行器', 0, NULL, '2018-11-03 22:21:31');
@@ -153,5 +153,4 @@ VALUES (1, 'admin', '$2a$10$rElzP.wCmjyjsVIIqoP4fe8u1qH3otIxiG4UhYs9A3Ivsrm1LrpO
 INSERT INTO `xxl_job_lock` (`lock_name`)
 VALUES ('schedule_lock');
 
-commit;
 

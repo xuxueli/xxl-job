@@ -178,11 +178,11 @@
     </select>-->
 
     <select id="findLogReport" resultType="java.util.Map">
-        SELECT COUNT("HANDLE_CODE")                                    triggerDayCount,
+        SELECT COUNT("HANDLE_CODE")                                    "triggerDayCount",
                SUM(CASE
                        WHEN ("TRIGGER_CODE" in (0, 200) and "HANDLE_CODE" = 0) then 1
-                       else 0 end)                                  as triggerDayCountRunning,
-               SUM(CASE WHEN "HANDLE_CODE" = 200 then 1 else 0 end) as triggerDayCountSuc
+                       else 0 end)                                  as "triggerDayCountRunning",
+               SUM(CASE WHEN "HANDLE_CODE" = 200 then 1 else 0 end) as "triggerDayCountSuc"
         FROM XXL_JOB_LOG
         WHERE "TRIGGER_TIME" BETWEEN #{from,jdbcType=DATE} and #{to,jdbcType=DATE}
     </select>
