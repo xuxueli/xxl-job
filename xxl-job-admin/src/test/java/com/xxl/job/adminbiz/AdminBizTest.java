@@ -24,11 +24,12 @@ public class AdminBizTest {
     // admin-client
     private static String addressUrl = "http://127.0.0.1:8080/xxl-job-admin/";
     private static String accessToken = null;
+    private static int timeoutSecond = 3;
 
 
     @Test
     public void callback() throws Exception {
-        AdminBiz adminBiz = new AdminBizClient(addressUrl, accessToken);
+        AdminBiz adminBiz = new AdminBizClient(addressUrl, accessToken, timeoutSecond);
 
         HandleCallbackParam param = new HandleCallbackParam();
         param.setLogId(1);
@@ -48,7 +49,7 @@ public class AdminBizTest {
      */
     @Test
     public void registry() throws Exception {
-        AdminBiz adminBiz = new AdminBizClient(addressUrl, accessToken);
+        AdminBiz adminBiz = new AdminBizClient(addressUrl, accessToken, timeoutSecond);
 
         RegistryParam registryParam = new RegistryParam(RegistryConfig.RegistType.EXECUTOR.name(), "xxl-job-executor-example", "127.0.0.1:9999");
         ReturnT<String> returnT = adminBiz.registry(registryParam);
@@ -63,7 +64,7 @@ public class AdminBizTest {
      */
     @Test
     public void registryRemove() throws Exception {
-        AdminBiz adminBiz = new AdminBizClient(addressUrl, accessToken);
+        AdminBiz adminBiz = new AdminBizClient(addressUrl, accessToken, timeoutSecond);
 
         RegistryParam registryParam = new RegistryParam(RegistryConfig.RegistType.EXECUTOR.name(), "xxl-job-executor-example", "127.0.0.1:9999");
         ReturnT<String> returnT = adminBiz.registryRemove(registryParam);

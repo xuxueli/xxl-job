@@ -23,12 +23,12 @@ $(function(){
         	userName : {
         		required : true ,
                 minlength: 4,
-                maxlength: 18
+                maxlength: 20
             },
             password : {
             	required : true ,
                 minlength: 4,
-                maxlength: 18
+                maxlength: 20
             }
         },
         messages : {
@@ -39,7 +39,7 @@ $(function(){
             password : {
             	required  : I18n.login_password_empty  ,
                 minlength : I18n.login_password_lt_4
-                /*,maxlength:"登录密码不应超过18位"*/
+                /*,maxlength:"登录密码不应超过20位"*/
             }
         },
 		highlight : function(element) {
