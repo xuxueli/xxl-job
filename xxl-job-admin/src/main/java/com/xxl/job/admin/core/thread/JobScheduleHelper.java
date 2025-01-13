@@ -391,7 +391,7 @@ public class JobScheduleHelper {
         } else if (ScheduleTypeEnum.FIX_RATE == scheduleTypeEnum) {
             return new Date(fromTime.getTime() + Long.parseLong(jobInfo.getScheduleConf()) * 1000);
         } else if (ScheduleTypeEnum.FIX_DELAY == scheduleTypeEnum) {
-            // Initial as the same as FIX_RATE.
+            // Initial as the same as FIX_RATE and update the real trigger next time when finish callback.
             if (lastTriggerTimeMap.get(jobInfo.getId()) == null) {
                 return new Date(fromTime.getTime() + Long.parseLong(jobInfo.getScheduleConf()) * 1000);
             }
