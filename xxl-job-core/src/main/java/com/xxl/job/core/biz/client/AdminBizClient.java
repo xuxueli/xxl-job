@@ -17,19 +17,23 @@ public class AdminBizClient implements AdminBiz {
 
     public AdminBizClient() {
     }
-    public AdminBizClient(String addressUrl, String accessToken) {
+    public AdminBizClient(String addressUrl, String accessToken, int timeout) {
         this.addressUrl = addressUrl;
         this.accessToken = accessToken;
+        this.timeout = timeout;
 
         // valid
         if (!this.addressUrl.endsWith("/")) {
             this.addressUrl = this.addressUrl + "/";
         }
+        if (!(this.timeout >=1 && this.timeout <= 10)) {
+            this.timeout = 3;
+        }
     }
 
     private String addressUrl ;
     private String accessToken;
-    private int timeout = 3;
+    private int timeout;
 
 
     @Override

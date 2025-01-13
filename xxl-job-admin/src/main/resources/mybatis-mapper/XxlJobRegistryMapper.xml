@@ -39,6 +39,14 @@
 		WHERE t.update_time <![CDATA[ > ]]> DATE_ADD(#{nowTime},INTERVAL -#{timeout} SECOND)
 	</select>
 
+	<insert id="registrySaveOrUpdate" >
+		INSERT INTO xxl_job_registry( `registry_group` , `registry_key` , `registry_value`, `update_time`)
+		VALUES( #{registryGroup}  , #{registryKey} , #{registryValue}, #{updateTime})
+		ON DUPLICATE KEY UPDATE
+			`update_time` = #{updateTime}
+	</insert>
+
+	<!--
     <update id="registryUpdate" >
         UPDATE xxl_job_registry
         SET `update_time` = #{updateTime}
@@ -51,6 +59,7 @@
         INSERT INTO xxl_job_registry( `registry_group` , `registry_key` , `registry_value`, `update_time`)
         VALUES( #{registryGroup}  , #{registryKey} , #{registryValue}, #{updateTime})
     </insert>
+	-->
 
 	<delete id="registryDelete" >
 		DELETE FROM xxl_job_registry

@@ -70,6 +70,25 @@
 	    </section>
 	</div>
 
+    <!-- 注册列表查看.模态框 -->
+    <div class="modal fade" id="showRegistryListModal" tabindex="-1" role="dialog"  aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" >${I18n.jobinfo_opt_registryinfo}</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="data" style="word-wrap: break-word;"></div>
+                </div>
+                <div class="modal-footer">
+                    <div class="text-center" >
+                        <button type="button" class="btn btn-info ok" data-dismiss="modal" >${I18n.system_ok}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- 新增.模态框 -->
     <div class="modal fade" id="addModal" tabindex="-1" role="dialog"  aria-hidden="true">
         <div class="modal-dialog ">

@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>com.xuxueli</groupId>
 		<artifactId>xxl-job</artifactId>
-		<version>2.4.0-SNAPSHOT</version>
+		<version>3.0.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>xxl-job-core</artifactId>
 	<packaging>jar</packaging>
@@ -18,8 +18,8 @@
 		<!-- ********************** embed server: netty + gson ********************** -->
 		<dependency>
 			<groupId>io.netty</groupId>
-			<artifactId>netty-all</artifactId>
-			<version>${netty-all.version}</version>
+			<artifactId>netty-codec-http</artifactId>
+			<version>${netty.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
@@ -30,7 +30,7 @@
 		<!-- ********************** plugin ********************** -->
 		<!-- groovy-all -->
 		<dependency>
-			<groupId>org.codehaus.groovy</groupId>
+			<groupId>org.apache.groovy</groupId>
 			<artifactId>groovy</artifactId>
 			<version>${groovy.version}</version>
 		</dependency>
@@ -51,14 +51,13 @@
 			<version>${slf4j-api.version}</version>
 		</dependency>
 
-		<!-- javax.annotation-api -->
+		<!-- jakarta.annotation-api -->
 		<dependency>
-			<groupId>javax.annotation</groupId>
-			<artifactId>javax.annotation-api</artifactId>
-			<version>${javax.annotation-api.version}</version>
+			<groupId>jakarta.annotation</groupId>
+			<artifactId>jakarta.annotation-api</artifactId>
+			<version>${jakarta.annotation-api.version}</version>
 			<scope>provided</scope>
 		</dependency>
-
 	</dependencies>
 
 </project>
