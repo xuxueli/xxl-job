@@ -176,7 +176,7 @@ public class JobCompleteHelper {
 		log.setHandleMsg(handleMsg.toString());
 		XxlJobCompleter.updateHandleInfoAndFinish(log);
 
-		// Handle the fix delay
+		// Handle the fix delay strategy, for only now know the fix delay real trigger next time.
 		JobScheduleHelper.generateFixDelayNextValidTime(log.getJobId(), log.getHandleTime());
 
 		return ReturnT.SUCCESS;

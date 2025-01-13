@@ -34,7 +34,7 @@ public class JobScheduleHelper {
     private volatile boolean ringThreadToStop = false;
     private volatile static Map<Integer, List<Integer>> ringData = new ConcurrentHashMap<>();
     /** Map of last trigger time, keyed by job id. */
-    private volatile static Map<Integer, Long> lastTriggerTimeMap = new ConcurrentHashMap<>();
+    private static final Map<Integer, Long> lastTriggerTimeMap = new ConcurrentHashMap<>();
 
     public void start(){
 
@@ -279,11 +279,18 @@ public class JobScheduleHelper {
                 jobInfo.setTriggerNextTime(nextValidTime.getTime());
             } else {
                 // generateNextValidTime fail, stop job
-                jobInfo.setTriggerStatus(0);
                 jobInfo.setTriggerLastTime(0);
                 jobInfo.setTriggerNextTime(0);
-                logger.error(">>>>>>>>>>> xxl-job, refreshNextValidTime fail for job: jobId={}, scheduleType={}, scheduleConf={}",
-                        jobInfo.getId(), jobInfo.getScheduleType(), jobInfo.getScheduleConf());
+
+                if (ScheduleTypeEnum.FIX_DELAY.equals(ScheduleTypeEnum.match(jobInfo.getScheduleType(), null))) {
+                    jobInfo.setTriggerStatus(0);
+                    // Now don't know Fix delay next trigger time, can not disable trigger status.
+                    logger.error(">>>>>>>>>>> xxl-job, refreshNextValidTime fail for job: jobId={}, scheduleType={}, scheduleConf={}",
+                            jobInfo.getId(), jobInfo.getScheduleType(), jobInfo.getScheduleConf());
+                }else {
+                    // For the sake of don't misfire, set a long trigger next time: 9999-12-31 23:59:59
+                    jobInfo.setTriggerNextTime(253402271939000L);
+                }
             }
         } catch (Throwable e) {
             // generateNextValidTime error, stop job
@@ -403,8 +410,10 @@ public class JobScheduleHelper {
         XxlJobInfo jobInfo = XxlJobAdminConfig.getAdminConfig().getXxlJobInfoDao().loadById(jobId);
         ScheduleTypeEnum scheduleTypeEnum = ScheduleTypeEnum.match(jobInfo.getScheduleType(), null);
         if (ScheduleTypeEnum.FIX_DELAY == scheduleTypeEnum) {
+            // Trigger next time = handle time + configured fix delay time(ms)
             long triggerNextTime = handleTime.getTime() + Long.parseLong(jobInfo.getScheduleConf()) * 1000;
             jobInfo.setTriggerNextTime(triggerNextTime);
+            // Update trigger next time when callback.
             XxlJobAdminConfig.getAdminConfig().getXxlJobInfoDao().scheduleUpdate(jobInfo);
         }
     }
