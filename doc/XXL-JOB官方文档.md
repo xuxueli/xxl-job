@@ -1172,13 +1172,12 @@ public void demoJobHandler() throws Exception {
 - demoJobHandler：简单示例任务，任务内部模拟耗时任务逻辑，用户可在线体验Rolling Log等功能；
 - shardingJobHandler：分片示例任务，任务内部模拟处理分片参数，可参考熟悉分片任务；
 - httpJobHandler：通用HTTP任务Handler；业务方只需要提供HTTP链接等信息即可，不限制语言、平台。示例任务入参如下：
-    ```
-    url: http://www.xxx.com
-    method: get 或 post
-    data: post-data
-    ```
-- commandJobHandler：通用命令行任务Handler；业务方只需要提供命令行即可；如 “pwd”命令；
-
+```
+url: http://www.xxx.com
+method: get 或 post
+data: post-data
+```
+- commandJobHandler：通用命令行任务Handler；业务方只需要提供命令行即可，命令及参数之间通过空格隔开；如任务参数 "ls la" 或 "pwd" 将会执行命令并输出数据；
 
 ### 3.3 GLUE模式(Java)
 任务以源码方式维护在调度中心，支持通过Web IDE在线更新，实时编译和生效，因此不需要指定JobHandler。开发流程如下：
@@ -1655,8 +1654,8 @@ docker run --name xxl-job-admin -p 8080:8080 -d xuxueli/xxl-job-admin
 针对上述情况，可以通过结合 "单机路由策略（如：第一台、一致性哈希）" + "阻塞策略（如：单机串行、丢弃后续调度）" 来规避，最终避免任务重复执行。
 
 ### 5.21 命令行任务
-原生提供通用命令行任务Handler（Bean任务，"CommandJobHandler"）；业务方只需要提供命令行即可；
-如任务参数 "pwd" 将会执行命令并输出数据；
+原生提供通用命令行任务Handler（Bean任务，"CommandJobHandler"）；业务方只需要提供命令行即可，命令及参数之间通过空格隔开；
+如任务参数 "ls la" 或 "pwd" 将会执行命令并输出数据；
 
 ### 5.22 日志自动清理
 XXL-JOB日志主要包含如下两部分，均支持日志自动清理，说明如下：
@@ -2443,8 +2442,8 @@ public void execute() {
 - 1、【升级】调度中心升级至 SpringBoot3 + JDK17；
 - 2、【升级】Docker镜像升级，镜像构建基于JDK17（openjdk:17-jdk-slim）；
 - 3、【优化】IP获取逻辑优化，优先遍历网卡来获取可用IP；
-- 4、[规划中]登陆态Token生成逻辑优化，混淆登陆时间属性，降低token泄漏风险；
-
+- 4、【优化】通用命令行任务(“commandJobHandler”)优化，支持多参数执行，命令及参数之间通过空格隔开，如任务参数 "ls la" 或 "pwd" 将会执行命令并输出数据；
+- 5、[规划中]登陆态Token生成逻辑优化，混淆登陆时间属性，降低token泄漏风险；
 
 ### TODO LIST
 - 1、调度隔离：调度中心针对不同执行器，各自维护不同的调度和远程触发组件。
