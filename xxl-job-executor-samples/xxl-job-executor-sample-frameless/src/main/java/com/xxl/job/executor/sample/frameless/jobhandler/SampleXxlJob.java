@@ -174,12 +174,13 @@ public class SampleXxlJob {
             XxlJobHelper.handleFail();
             return;
         }
-        if (method==null || !Arrays.asList("GET", "POST").contains(method)) {
+        if (method==null || !Arrays.asList("GET", "POST").contains(method.toUpperCase())) {
             XxlJobHelper.log("method["+ method +"] invalid.");
 
             XxlJobHelper.handleFail();
             return;
         }
+        method = method.toUpperCase();
         boolean isPostMethod = method.equals("POST");
 
         // request
