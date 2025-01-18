@@ -33,11 +33,11 @@
 		<junit-jupiter.version>5.11.4</junit-jupiter.version>
 		<jakarta.annotation-api.version>3.0.0</jakarta.annotation-api.version>
 		<!-- net -->
-		<netty.version>4.1.116.Final</netty.version>
+		<netty.version>4.1.117.Final</netty.version>
 		<gson.version>2.11.0</gson.version>
 		<!-- spring -->
-		<spring.version>6.2.1</spring.version>
 		<spring-boot.version>3.4.1</spring-boot.version>
+		<spring.version>6.2.2</spring.version>
 		<!-- db -->
 		<mybatis-spring-boot-starter.version>3.0.4</mybatis-spring-boot-starter.version>
 		<mysql-connector-j.version>9.1.0</mysql-connector-j.version>
