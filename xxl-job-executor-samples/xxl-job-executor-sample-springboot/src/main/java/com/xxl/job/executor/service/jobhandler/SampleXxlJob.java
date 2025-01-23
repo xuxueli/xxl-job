@@ -158,11 +158,13 @@ public class SampleXxlJob {
         String url;
         String method;
         String data;
+        String auth;
         try {
             Map<String, String> paramMap =GsonTool.fromJson(param, Map.class);
             url = paramMap.get("url");
             method = paramMap.get("method");
             data = paramMap.get("data");
+            auth = paramMap.get("auth");
         } catch (Exception e) {
             XxlJobHelper.log(e);
             XxlJobHelper.handleFail();
@@ -203,7 +205,10 @@ public class SampleXxlJob {
             connection.setRequestProperty("connection", "Keep-Alive");
             connection.setRequestProperty("Content-Type", "application/json;charset=UTF-8");
             connection.setRequestProperty("Accept-Charset", "application/json;charset=UTF-8");
-
+            if (auth != null) {
+            connection.setRequestProperty("Authorization", "Basic " + auth);
+            }
+            
             // do connection
             connection.connect();
 
