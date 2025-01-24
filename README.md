@@ -46,14 +46,14 @@ XXL-JOB is an open source and free project, with its ongoing development made po
 XXL-JOB 是一个开源且免费项目，其正在进行的开发完全得益于支持者的支持。开源不易，[前往赞助项目开发](https://www.xuxueli.com/page/donate.html )
 
 <!-- supporter start -->
-<h5 style="color: silver;" >金牌赞助方</h5>
+<h3 style="color: #E6BE8A;" >金牌赞助方</h3>
 
 <a href="https://www.aliyun.com/product/aliware/mse?utm_content=g_10004013" title="jetbrains" target="_blank" >
-    <img width="100px" src="http://www.xuxueli.com/page/static/images/logo_aliyun2.png" >
+    <img width="150px" src="http://www.xuxueli.com/page/static/images/logo_aliyun2.png" >
 </a>
-
+&nbsp;&nbsp;&nbsp;&nbsp;
 <a href="https://www.jetbrains.com/idea/?from=xuxueli.com" title="jetbrains" target="_blank" >
-    <img width="55px" src="http://www.xuxueli.com/page/static/images/logo_intellij.jpeg" >
+    <img width="60px" src="http://www.xuxueli.com/page/static/images/logo_intellij.jpeg" >
 </a>
 <!-- supporter end -->
 
