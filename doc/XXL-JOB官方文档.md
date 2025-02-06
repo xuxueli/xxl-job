@@ -2442,7 +2442,7 @@ public void execute() {
 
 ### 7.37 版本 v3.0.0 Release Notes[2025-02-07]
 - 1、【升级】调度中心升级至 SpringBoot3 + JDK17；
-- 2、【升级】Docker镜像升级，镜像构建基于JDK17（openjdk:17-jdk-slim）；
+- 2、【升级】Docker镜像升级，镜像构建基于JDK17；
 - 3、【优化】IP获取逻辑优化，优先遍历网卡来获取可用IP；
 - 4、【优化】通用命令行任务(“commandJobHandler”)优化，支持多参数执行，命令及参数之间通过空格隔开；如任务参数 "ls la" 或 "pwd" 将会执行命令并输出数据；
 - 5、【优化】通用HTTP任务（httpJobHandler）优化，任务参数格式调整为json格式；示例参数如下：
