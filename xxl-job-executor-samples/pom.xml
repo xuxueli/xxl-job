@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.xuxueli</groupId>
         <artifactId>xxl-job</artifactId>
-        <version>3.0.0-SNAPSHOT</version>
+        <version>3.0.0</version>
     </parent>
     <artifactId>xxl-job-executor-samples</artifactId>
     <packaging>pom</packaging>
@@ -15,6 +15,7 @@
     </modules>
 
     <properties>
+        <maven.install.skip>true</maven.install.skip>
         <maven.deploy.skip>true</maven.deploy.skip>
     </properties>
 

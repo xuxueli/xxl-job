@@ -1,7 +1,7 @@
 ## 《分布式任务调度平台XXL-JOB》
 
 [![Actions Status](https://github.com/xuxueli/xxl-job/workflows/Java%20CI/badge.svg)](https://github.com/xuxueli/xxl-job/actions)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.xuxueli/xxl-job/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.xuxueli/xxl-job/)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.xuxueli/xxl-job-core/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.xuxueli/xxl-job-core/)
 [![GitHub release](https://img.shields.io/github/release/xuxueli/xxl-job.svg)](https://github.com/xuxueli/xxl-job/releases)
 [![GitHub stars](https://img.shields.io/github/stars/xuxueli/xxl-job)](https://github.com/xuxueli/xxl-job/)
 [![Docker Status](https://img.shields.io/docker/pulls/xuxueli/xxl-job-admin)](https://hub.docker.com/r/xuxueli/xxl-job-admin/)
@@ -2440,7 +2440,7 @@ public void execute() {
 - b、版本v2.5.x为基于jdk8的最后的大版本，将会长期持续维护，问题及漏洞将会及时跟进修复。
 - c、下个大版本（v3.0）将会基于 jdk17 与 springboot3.x 构建；
 
-### 7.37 版本 v3.0.0 Release Notes[规划中]
+### 7.37 版本 v3.0.0 Release Notes[2025-02-07]
 - 1、【升级】调度中心升级至 SpringBoot3 + JDK17；
 - 2、【升级】Docker镜像升级，镜像构建基于JDK17（openjdk:17-jdk-slim）；
 - 3、【优化】IP获取逻辑优化，优先遍历网卡来获取可用IP；
@@ -2453,8 +2453,15 @@ public void execute() {
     "data": "hello world"
 }
 ```
-- 6、[规划中]登陆态Token生成逻辑优化，混淆登陆时间属性，降低token泄漏风险；
-- 7、[规划中]组件扫描改为BeanPostProcessor方式，避免小概率情况下提前初始化；底层组件移除单例写法，汇总factory统一管理；
+- 6、【升级】多个项目依赖升级至较新稳定版本，涉及 gson、groovy、spring/springboot 等；
+
+**备注：**
+- a、本次升级数据模型及通讯协议向前兼容，v2.4.*及后续版本可无缝升级；
+- b、从该版本(v3.0.x)开始基于 SpringBoot3 + JDK17 构建，
+
+### 7.38 版本 v3.0.1 Release Notes[规划中]
+- 1、[规划中]登陆态Token生成逻辑优化，混淆登陆时间属性，降低token泄漏风险；
+- 2、[规划中]组件扫描改为BeanPostProcessor方式，避免小概率情况下提前初始化；底层组件移除单例写法，汇总factory统一管理；
 
 ### TODO LIST
 - 1、调度隔离：调度中心针对不同执行器，各自维护不同的调度和远程触发组件。
