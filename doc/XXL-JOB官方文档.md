@@ -2446,19 +2446,12 @@ public void execute() {
 - 2、【升级】Docker镜像升级，镜像构建基于JDK17；
 - 3、【优化】IP获取逻辑优化，优先遍历网卡来获取可用IP；
 - 4、【优化】通用命令行任务(“commandJobHandler”)优化，支持多参数执行，命令及参数之间通过空格隔开；如任务参数 "ls la" 或 "pwd" 将会执行命令并输出数据；
-- 5、【优化】通用HTTP任务（httpJobHandler）优化，任务参数格式调整为json格式；示例参数如下：
-```
-{
-    "url": "http://www.baidu.com",
-    "method": "get",
-    "data": "hello world"
-}
-```
+- 5、【优化】通用HTTP任务（httpJobHandler）优化，任务参数格式调整为json格式；
 - 6、【升级】多个项目依赖升级至较新稳定版本，涉及 gson、groovy、spring/springboot 等；
 
 **备注：**
 - a、本次升级数据模型及通讯协议向前兼容，v2.4.*及后续版本可无缝升级；
-- b、从该版本(v3.0.x)开始基于 SpringBoot3 + JDK17 构建，
+- b、版本3.x开始要求Jdk17；版本2.x及以下支持Jdk1.8。如对Jdk版本有诉求，可选择接入不同版本;
 
 ### 7.38 版本 v3.0.1 Release Notes[规划中]
 - 1、【修复】任务操作逻辑优化，修复边界情况下逻辑中断问题(ISSUE-2081)。
