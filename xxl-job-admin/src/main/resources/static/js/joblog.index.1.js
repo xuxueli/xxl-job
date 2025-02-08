@@ -5,7 +5,7 @@ $(function() {
 		var jobGroup = $(this).children('option:selected').val();
 		$.ajax({
 			type : 'POST',
-            async: false,   // async, avoid js invoke pagelist before jobId data init
+			async: false,   // async, avoid js invoke pagelist before jobId data init
 			url : base_url + '/joblog/getJobsByGroup',
 			data : {"jobGroup":jobGroup},
 			dataType : "json",
@@ -29,6 +29,7 @@ $(function() {
 			},
 		});
 	});
+	$("#jobGroup").trigger("change")
 	if ($("#jobGroup").attr("paramVal")){
 		$("#jobGroup").find("option[value='" + $("#jobGroup").attr("paramVal") + "']").attr("selected",true);
         $("#jobGroup").change();
