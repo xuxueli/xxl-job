@@ -95,6 +95,9 @@ public class JobGroupController {
 				if (item==null || item.trim().length()==0) {
 					return new ReturnT<String>(500, I18nUtil.getString("jobgroup_field_registryList_unvalid") );
 				}
+				if (!item.startsWith("http://") && !item.startsWith("https://")) {
+					return new ReturnT<String>(500, I18nUtil.getString("jobgroup_field_registryList_unvalid_protocol") );
+				}
 			}
 		}
 
@@ -141,6 +144,9 @@ public class JobGroupController {
 			for (String item: addresss) {
 				if (item==null || item.trim().length()==0) {
 					return new ReturnT<String>(500, I18nUtil.getString("jobgroup_field_registryList_unvalid") );
+				}
+				if (!item.startsWith("http://") && !item.startsWith("https://")) {
+					return new ReturnT<String>(500, I18nUtil.getString("jobgroup_field_registryList_unvalid_protocol") );
 				}
 			}
 		}
