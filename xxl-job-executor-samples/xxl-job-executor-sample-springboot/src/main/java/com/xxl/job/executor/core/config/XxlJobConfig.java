@@ -1,11 +1,16 @@
 package com.xxl.job.executor.core.config;
 
 import com.xxl.job.core.executor.impl.XxlJobSpringExecutor;
+import com.xxl.job.core.ssl.SslConfig;
+import com.xxl.job.core.util.XxlJobRemotingUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import javax.net.ssl.SSLException;
 
 /**
  * xxl-job config
@@ -40,9 +45,19 @@ public class XxlJobConfig {
     @Value("${xxl.job.executor.logretentiondays}")
     private int logRetentionDays;
 
+    @Bean
+    @ConfigurationProperties(prefix = "xxl.job.executor.ssl")
+    public SslConfig sslConfig() {
+        return new SslConfig();
+    }
 
     @Bean
-    public XxlJobSpringExecutor xxlJobExecutor() {
+    SslConfigInitializer sslConfigInitializer(SslConfig sslConfig) throws SSLException {
+        return new SslConfigInitializer(sslConfig);
+    }
+
+    @Bean
+    public XxlJobSpringExecutor xxlJobExecutor(SslConfig sslConfig) {
         logger.info(">>>>>>>>>>> xxl-job config init.");
         XxlJobSpringExecutor xxlJobSpringExecutor = new XxlJobSpringExecutor();
         xxlJobSpringExecutor.setAdminAddresses(adminAddresses);
@@ -53,8 +68,19 @@ public class XxlJobConfig {
         xxlJobSpringExecutor.setAccessToken(accessToken);
         xxlJobSpringExecutor.setLogPath(logPath);
         xxlJobSpringExecutor.setLogRetentionDays(logRetentionDays);
+        xxlJobSpringExecutor.setSsl(sslConfig);
 
         return xxlJobSpringExecutor;
+    }
+
+
+
+    static class SslConfigInitializer {
+
+        public SslConfigInitializer(SslConfig ssl) throws SSLException {
+            // 初始化静态变量
+            XxlJobRemotingUtil.init(ssl);
+        }
     }
 
     /**
@@ -73,6 +99,5 @@ public class XxlJobConfig {
      *      3、获取IP
      *          String ip_ = inetUtils.findFirstNonLoopbackHostInfo().getIpAddress();
      */
-
 
 }
