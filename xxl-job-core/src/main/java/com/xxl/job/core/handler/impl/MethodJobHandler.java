@@ -1,8 +1,12 @@
 package com.xxl.job.core.handler.impl;
 
+import com.xxl.job.core.context.XxlJobContext;
+import com.xxl.job.core.context.XxlJobHelper;
 import com.xxl.job.core.handler.IJobHandler;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
+import java.util.Objects;
 
 /**
  * @author xuxueli 2019-12-11 21:12:18
@@ -24,9 +28,10 @@ public class MethodJobHandler extends IJobHandler {
 
     @Override
     public void execute() throws Exception {
-        Class<?>[] paramTypes = method.getParameterTypes();
-        if (paramTypes.length > 0) {
-            method.invoke(target, new Object[paramTypes.length]);       // method-param can not be primitive-types
+        String jobParam = XxlJobHelper.getJobParam();
+        if (Objects.nonNull(jobParam) && jobParam.length() > 0) {
+            // method-param can
+            method.invoke(target, new Object[]{jobParam});
         } else {
             method.invoke(target);
         }
