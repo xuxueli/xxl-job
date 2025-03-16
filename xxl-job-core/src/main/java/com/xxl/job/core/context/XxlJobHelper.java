@@ -1,5 +1,6 @@
 package com.xxl.job.core.context;
 
+import com.xxl.job.core.enums.TriggerTypeEnum;
 import com.xxl.job.core.log.XxlJobFileAppender;
 import com.xxl.job.core.util.DateUtil;
 import org.slf4j.Logger;
@@ -32,6 +33,26 @@ public class XxlJobHelper {
         }
 
         return xxlJobContext.getJobId();
+    }
+
+    /**
+     * trigger type
+     * Manual,
+     * Cron,
+     * Retry,
+     * Parent,
+     * API,
+     * MISFIRE
+     *
+     * @return
+     */
+    public static TriggerTypeEnum getTriggerType() {
+        XxlJobContext xxlJobContext = XxlJobContext.getXxlJobContext();
+        if (xxlJobContext == null) {
+            return null;
+        }
+
+        return TriggerTypeEnum.valueOf(xxlJobContext.getTriggerType());
     }
 
     /**
