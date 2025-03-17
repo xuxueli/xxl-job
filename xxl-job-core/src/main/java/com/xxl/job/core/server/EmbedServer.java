@@ -3,6 +3,8 @@ package com.xxl.job.core.server;
 import com.xxl.job.core.biz.ExecutorBiz;
 import com.xxl.job.core.biz.impl.ExecutorBizImpl;
 import com.xxl.job.core.biz.model.*;
+import com.xxl.job.core.ssl.SslConfig;
+import com.xxl.job.core.ssl.SslContextUtils;
 import com.xxl.job.core.thread.ExecutorRegistryThread;
 import com.xxl.job.core.util.GsonTool;
 import com.xxl.job.core.util.ThrowableUtil;
@@ -14,6 +16,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.http.*;
+import io.netty.handler.ssl.SslContext;
 import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.util.CharsetUtil;
@@ -33,7 +36,7 @@ public class EmbedServer {
     private ExecutorBiz executorBiz;
     private Thread thread;
 
-    public void start(final String address, final int port, final String appname, final String accessToken) {
+    public void start(final String address, final int port, final String appname, final String accessToken, SslConfig ssl) {
         executorBiz = new ExecutorBizImpl();
         thread = new Thread(new Runnable() {
             @Override
@@ -61,12 +64,16 @@ public class EmbedServer {
                         });
                 try {
                     // start server
+                    SslContext sslContext = SslContextUtils.forNetty(ssl, true);
                     ServerBootstrap bootstrap = new ServerBootstrap();
                     bootstrap.group(bossGroup, workerGroup)
                             .channel(NioServerSocketChannel.class)
                             .childHandler(new ChannelInitializer<SocketChannel>() {
                                 @Override
                                 public void initChannel(SocketChannel channel) throws Exception {
+                                    if (sslContext != null) {
+                                        channel.pipeline().addLast(sslContext.newHandler(channel.alloc()));
+                                    }
                                     channel.pipeline()
                                             .addLast(new IdleStateHandler(0, 0, 30 * 3, TimeUnit.SECONDS))  // beat 3N, close if idle
                                             .addLast(new HttpServerCodec())
