@@ -18,7 +18,46 @@
 		t.suc_count,
 		t.fail_count
 	</sql>
-	
+
+	<!--//TODO oracle支持调整 取序列 -->
+	<sql id='XXL_JOB_LOG_REPORT_ID' databaseId="oracle">XXL_JOB_LOG_REPORT_ID.NEXTVAL</sql>
+
+	<insert id="save" databaseId="oracle" parameterType="com.xxl.job.admin.core.model.XxlJobLogReport" useGeneratedKeys="true" keyProperty="id" >
+		<selectKey keyProperty="id" resultType="int" order="BEFORE">
+			select <include refid="XXL_JOB_LOG_REPORT_ID" /> from dual
+		</selectKey>
+		INSERT INTO xxl_job_log_report (
+		id,
+		trigger_day,
+		running_count,
+		suc_count,
+		fail_count
+		) VALUES (
+		#{id},
+		#{triggerDay,jdbcType=TIMESTAMP},
+		#{runningCount,jdbcType=NUMERIC},
+		#{sucCount,jdbcType=NUMERIC},
+		#{failCount,jdbcType=NUMERIC}
+		)
+	</insert>
+
+	<insert id="save" databaseId="sqlserver" parameterType="com.xxl.job.admin.core.model.XxlJobLogReport" useGeneratedKeys="true" keyProperty="id" >
+		INSERT INTO xxl_job_log_report (
+		trigger_day,
+		running_count,
+		suc_count,
+		fail_count
+		) VALUES (
+		#{triggerDay, jdbcType=TIMESTAMP},
+		#{runningCount},
+		#{sucCount},
+		#{failCount}
+		);
+		<!--<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>-->
+	</insert>
+
 	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobLogReport" useGeneratedKeys="true" keyProperty="id" >
 		INSERT INTO xxl_job_log_report (
 			`trigger_day`,
@@ -35,6 +74,22 @@
 			SELECT LAST_INSERT_ID() 
 		</selectKey>-->
 	</insert>
+
+	<update id="update"  databaseId="oracle" parameterType="com.xxl.job.admin.core.model.XxlJobLogReport">
+		UPDATE xxl_job_log_report
+		SET running_count = #{runningCount,jdbcType=NUMERIC},
+			suc_count = #{sucCount,jdbcType=NUMERIC},
+			fail_count = #{failCount,jdbcType=NUMERIC}
+		WHERE trigger_day = #{triggerDay,jdbcType=TIMESTAMP}
+	</update>
+
+	<update id="update" databaseId="sqlserver">
+		UPDATE xxl_job_log_report
+		SET running_count = #{runningCount},
+			suc_count = #{sucCount},
+			fail_count = #{failCount}
+		WHERE trigger_day = #{triggerDay, jdbcType=TIMESTAMP}
+	</update>
 
 	<update id="update" >
         UPDATE xxl_job_log_report

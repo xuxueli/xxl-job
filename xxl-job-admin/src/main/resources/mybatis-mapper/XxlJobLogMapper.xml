@@ -43,7 +43,87 @@
 		t.handle_msg,
 		t.alarm_status
 	</sql>
-	
+
+	<sql id='XXL_JOB_LOG_ID' databaseId="oracle">XXL_JOB_LOG_ID.NEXTVAL</sql>
+
+	<select id="pageList" databaseId="oracle" resultMap="XxlJobLog">
+		select *
+		from (select *
+		from (select A.*, rownum rn
+		from (
+
+		SELECT <include refid="Base_Column_List" />
+		FROM xxl_job_log t
+		<trim prefix="WHERE" prefixOverrides="AND | OR" >
+			<if test="jobId==0 and jobGroup gt 0">
+				AND t.job_group = #{jobGroup}
+			</if>
+			<if test="jobId gt 0">
+				AND t.job_id = #{jobId}
+			</if>
+			<if test="triggerTimeStart != null">
+				AND t.trigger_time <![CDATA[ >= ]]> #{triggerTimeStart}
+			</if>
+			<if test="triggerTimeEnd != null">
+				AND t.trigger_time <![CDATA[ <= ]]> #{triggerTimeEnd}
+			</if>
+			<if test="logStatus == 1" >
+				AND t.handle_code = 200
+			</if>
+			<if test="logStatus == 2" >
+				AND (
+				t.trigger_code NOT IN (0, 200) OR
+				t.handle_code NOT IN (0, 200)
+				)
+			</if>
+			<if test="logStatus == 3" >
+				AND t.trigger_code = 200
+				AND t.handle_code = 0
+			</if>
+		</trim>
+		ORDER BY t.trigger_time DESC) A)
+		where rn > #{offset}) B
+		<![CDATA[	where rn <= #{offset}+ #{pagesize} ]]>
+	</select>
+
+	<select id="pageList" databaseId="sqlserver" resultMap="XxlJobLog">
+		SELECT <include refid="Base_Column_List" />
+		from (
+		SELECT row_number () OVER ( ORDER BY t.trigger_time DESC ) AS rownumber,
+		<include refid="Base_Column_List" />
+		FROM xxl_job_log AS t
+		<trim prefix="WHERE" prefixOverrides="AND | OR" >
+			<if test="jobId==0 and jobGroup gt 0">
+				AND t.job_group = #{jobGroup}
+			</if>
+			<if test="jobId gt 0">
+				AND t.job_id = #{jobId}
+			</if>
+			<if test="triggerTimeStart != null">
+				AND t.trigger_time <![CDATA[ >= ]]> #{triggerTimeStart}
+			</if>
+			<if test="triggerTimeEnd != null">
+				AND t.trigger_time <![CDATA[ <= ]]> #{triggerTimeEnd}
+			</if>
+			<if test="logStatus == 1" >
+				AND t.handle_code = 200
+			</if>
+			<if test="logStatus == 2" >
+				AND (
+				t.trigger_code NOT IN (0, 200) OR
+				t.handle_code NOT IN (0, 200)
+				)
+			</if>
+			<if test="logStatus == 3" >
+				AND t.trigger_code = 200
+				AND t.handle_code = 0
+			</if>
+		</trim>
+		) AS t
+		WHERE t.rownumber <![CDATA[ > ]]> #{offset}
+		AND t.rownumber <![CDATA[ <= ]]> (#{offset} + #{pagesize})
+	</select>
+
 	<select id="pageList" resultMap="XxlJobLog">
 		SELECT <include refid="Base_Column_List" />
 		FROM xxl_job_log AS t
@@ -116,7 +196,50 @@
 		WHERE t.id = #{id}
 	</select>
 
-	
+
+	<insert id="save" databaseId="oracle" parameterType="com.xxl.job.admin.core.model.XxlJobLog" useGeneratedKeys="true" keyProperty="id" >
+		<selectKey keyProperty="id" resultType="int" order="BEFORE">
+			select <include refid="XXL_JOB_LOG_ID" /> from dual
+		</selectKey>
+		INSERT INTO xxl_job_log (
+		id,
+		job_group,
+		job_id,
+		trigger_time,
+		trigger_code,
+		handle_code
+		) VALUES (
+		#{id},
+		#{jobGroup},
+		#{jobId},
+		#{triggerTime,jdbcType=TIMESTAMP},
+		#{triggerCode,jdbcType=INTEGER},
+		#{handleCode,jdbcType=INTEGER}
+		)
+		<!--<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>-->
+	</insert>
+
+	<insert id="save" databaseId="sqlserver" parameterType="com.xxl.job.admin.core.model.XxlJobLog" useGeneratedKeys="true" keyProperty="id" >
+		INSERT INTO xxl_job_log (
+		job_group,
+		job_id,
+		trigger_time,
+		trigger_code,
+		handle_code
+		) VALUES (
+		#{jobGroup},
+		#{jobId},
+		#{triggerTime, jdbcType=TIMESTAMP},
+		#{triggerCode, jdbcType=INTEGER},
+		#{handleCode, jdbcType=INTEGER}
+		);
+		<!--<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>-->
+	</insert>
+
 	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobLog" useGeneratedKeys="true" keyProperty="id" >
 		INSERT INTO xxl_job_log (
 			`job_group`,
@@ -136,6 +259,34 @@
 		</selectKey>-->
 	</insert>
 
+	<update id="updateTriggerInfo" databaseId="oracle">
+		UPDATE xxl_job_log
+		SET
+			trigger_time= #{triggerTime,jdbcType=TIMESTAMP},
+			trigger_code= #{triggerCode,jdbcType=INTEGER},
+			trigger_msg= #{triggerMsg},
+			executor_address= #{executorAddress,jdbcType=VARCHAR},
+			executor_handler= #{executorHandler},
+			executor_param= #{executorParam,jdbcType=VARCHAR},
+			executor_sharding_param= #{executorShardingParam,jdbcType=VARCHAR},
+			executor_fail_retry_count= #{executorFailRetryCount,jdbcType=INTEGER}
+		WHERE id = #{id,jdbcType=VARCHAR}
+	</update>
+
+	<update id="updateTriggerInfo" databaseId="sqlserver">
+		UPDATE xxl_job_log
+		SET
+			trigger_time= #{triggerTime, jdbcType=TIMESTAMP},
+			trigger_code= #{triggerCode},
+			trigger_msg= #{triggerMsg},
+			executor_address= #{executorAddress},
+			executor_handler= #{executorHandler},
+			executor_param= #{executorParam, jdbcType=VARCHAR},
+			executor_sharding_param= #{executorShardingParam, jdbcType=VARCHAR},
+			executor_fail_retry_count= #{executorFailRetryCount}
+		WHERE id = #{id}
+	</update>
+
 	<update id="updateTriggerInfo" >
 		UPDATE xxl_job_log
 		SET
@@ -150,6 +301,24 @@
 		WHERE `id`= #{id}
 	</update>
 
+	<update id="updateHandleInfo" databaseId="oracle">
+		UPDATE xxl_job_log
+		SET
+			handle_time= #{handleTime,jdbcType=TIMESTAMP},
+			handle_code= #{handleCode,jdbcType=INTEGER},
+			handle_msg= #{handleMsg,jdbcType=CLOB}
+		WHERE id= #{id}
+	</update>
+
+	<update id="updateHandleInfo" databaseId="sqlserver">
+		UPDATE xxl_job_log
+		SET
+			handle_time= #{handleTime, jdbcType=TIMESTAMP},
+			handle_code= #{handleCode},
+			handle_msg= #{handleMsg}
+		WHERE id = #{id}
+	</update>
+
 	<update id="updateHandleInfo">
 		UPDATE xxl_job_log
 		SET 
@@ -158,7 +327,7 @@
 			`handle_msg`= #{handleMsg}
 		WHERE `id`= #{id}
 	</update>
-	
+
 	<delete id="delete" >
 		delete from xxl_job_log
 		WHERE job_id = #{jobId}
@@ -176,6 +345,24 @@
 		ORDER BY triggerDay
     </select>-->
 
+	<select id="findLogReport" databaseId="oracle" resultType="java.util.Map" >
+		SELECT
+			COUNT(handle_code) triggerDayCount,
+			SUM(CASE WHEN (trigger_code in (0, 200) and handle_code = 0) then 1 else 0 end) as triggerDayCountRunning,
+				SUM(CASE WHEN handle_code = 200 then 1 else 0 end) as triggerDayCountSuc
+		FROM xxl_job_log
+		WHERE trigger_time BETWEEN #{from} and #{to}
+	</select>
+
+	<select id="findLogReport" databaseId="sqlserver" resultType="java.util.Map" >
+		SELECT
+			COUNT(handle_code) triggerDayCount,
+			SUM(CASE WHEN (trigger_code in (0, 200) and handle_code = 0) then 1 else 0 end) as triggerDayCountRunning,
+				SUM(CASE WHEN handle_code = 200 then 1 else 0 end) as triggerDayCountSuc
+		FROM xxl_job_log
+		WHERE trigger_time BETWEEN #{from} and #{to}
+	</select>
+
     <select id="findLogReport" resultType="java.util.Map" >
 		SELECT
 			COUNT(handle_code) `triggerDayCount`,
@@ -184,6 +371,76 @@
 		FROM xxl_job_log
 		WHERE trigger_time BETWEEN #{from} and #{to}
     </select>
+
+	<!--//TODO oracle支持调整 分页修改为oracle三层分页 -->
+	<select id="findClearLogIds" databaseId="oracle" resultType="long" >
+		select id from
+		(select id,rownum rn from (
+		SELECT id FROM xxl_job_log
+		<trim prefix="WHERE" prefixOverrides="AND | OR" >
+			<if test="jobGroup gt 0">
+				AND job_group = #{jobGroup}
+			</if>
+			<if test="jobId gt 0">
+				AND job_id = #{jobId}
+			</if>
+			<if test="clearBeforeTime != null">
+				AND trigger_time <![CDATA[ <= ]]> #{clearBeforeTime}
+			</if>
+			<if test="clearBeforeNum gt 0">
+				AND id NOT in(
+				SELECT id FROM(
+				SELECT id FROM xxl_job_log t
+				<trim prefix="WHERE" prefixOverrides="AND | OR" >
+					<if test="jobGroup gt 0">
+						AND t.job_group = #{jobGroup}
+					</if>
+					<if test="jobId gt 0">
+						AND t.job_id = #{jobId}
+					</if>
+				</trim>
+				ORDER BY t.trigger_time desc
+
+				) t1 where where <![CDATA[  rownum < #{clearBeforeNum} ]]>
+				)
+			</if>
+		</trim>
+		order by id asc
+		) )
+		where <![CDATA[  rn <= #{pagesize} ]]>
+	</select>
+
+	<select id="findClearLogIds" databaseId="sqlserver" resultType="long" >
+		SELECT top (#{pagesize}) id FROM xxl_job_log
+		<trim prefix="WHERE" prefixOverrides="AND | OR" >
+			<if test="jobGroup gt 0">
+				AND job_group = #{jobGroup}
+			</if>
+			<if test="jobId gt 0">
+				AND job_id = #{jobId}
+			</if>
+			<if test="clearBeforeTime != null">
+				AND trigger_time <![CDATA[ <= ]]> #{clearBeforeTime}
+			</if>
+			<if test="clearBeforeNum gt 0">
+				AND id NOT in(
+				SELECT id FROM(
+				SELECT top (#{clearBeforeNum}) id FROM xxl_job_log AS t
+				<trim prefix="WHERE" prefixOverrides="AND | OR" >
+					<if test="jobGroup gt 0">
+						AND t.job_group = #{jobGroup}
+					</if>
+					<if test="jobId gt 0">
+						AND t.job_id = #{jobId}
+					</if>
+				</trim>
+				ORDER BY t.trigger_time desc
+				) t1
+				)
+			</if>
+		</trim>
+		order by id asc
+	</select>
 
 	<select id="findClearLogIds" resultType="long" >
 		SELECT id FROM xxl_job_log
@@ -227,6 +484,25 @@
 		</foreach>
 	</delete>
 
+	<select id="findFailJobLogIds" databaseId="oracle" resultType="long" >
+		select id from (
+						   SELECT id
+						   FROM xxl_job_log
+						   WHERE 1 = 1
+							   and (trigger_code not in (0, 200) and handle_code != 0)
+							  OR (handle_code != 200)
+							   AND alarm_status = 0
+						   ORDER BY id ASC
+					   ) where <![CDATA[  rownum < #{pagesize} ]]>
+	</select>
+
+	<select id="findFailJobLogIds" databaseId="sqlserver" resultType="long" >
+		SELECT top (#{pagesize}) id FROM xxl_job_log
+		WHERE (  (trigger_code != 0 or handle_code != 0) and (handle_code != 200)  )
+		  AND alarm_status = 0
+		ORDER BY id ASC
+	</select>
+
 	<select id="findFailJobLogIds" resultType="long" >
 		SELECT id FROM `xxl_job_log`
 		WHERE !(
@@ -238,6 +514,20 @@
 		ORDER BY id ASC
 		LIMIT #{pagesize}
 	</select>
+
+	<update id="updateAlarmStatus" databaseId="oracle">
+		UPDATE xxl_job_log
+		SET
+			alarm_status = #{newAlarmStatus}
+		WHERE id= #{logId} AND alarm_status = #{oldAlarmStatus}
+	</update>
+
+	<update id="updateAlarmStatus" databaseId="sqlserver">
+		UPDATE xxl_job_log
+		SET
+			alarm_status = #{newAlarmStatus}
+		WHERE id= #{logId} AND alarm_status = #{oldAlarmStatus}
+	</update>
 
 	<update id="updateAlarmStatus" >
 		UPDATE xxl_job_log

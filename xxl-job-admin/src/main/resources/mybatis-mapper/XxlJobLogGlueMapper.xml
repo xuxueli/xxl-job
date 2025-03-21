@@ -22,7 +22,51 @@
 		t.add_time,
 		t.update_time
 	</sql>
-	
+
+	<!--//TODO oracle支持调整 取序列 -->
+	<sql id='XXL_JOB_LOGGLUE_ID' databaseId="oracle">XXL_JOB_LOGGLUE_ID.NEXTVAL</sql>
+
+	<insert id="save" databaseId="oracle" parameterType="com.xxl.job.admin.core.model.XxlJobLogGlue" useGeneratedKeys="true" keyProperty="id" >
+		<selectKey keyProperty="id" resultType="int" order="BEFORE">
+			select <include refid="XXL_JOB_LOGGLUE_ID" /> from dual
+		</selectKey>
+		INSERT INTO xxl_job_logglue (
+		id,
+		job_id,
+		glue_type,
+		glue_source,
+		glue_remark,
+		add_time,
+		update_time
+		) VALUES (
+		#{id},
+		#{jobId},
+		#{glueType},
+		#{glueSource,jdbcType=CLOB},
+		#{glueRemark},
+		#{addTime,jdbcType=TIMESTAMP},
+		#{updateTime,jdbcType=TIMESTAMP}
+		)
+	</insert>
+
+	<insert id="save" databaseId="sqlserver" parameterType="com.xxl.job.admin.core.model.XxlJobLogGlue" useGeneratedKeys="true" keyProperty="id" >
+		INSERT INTO xxl_job_logglue (
+		job_id,
+		glue_type,
+		glue_source,
+		glue_remark,
+		add_time,
+		update_time
+		) VALUES (
+		#{jobId},
+		#{glueType},
+		#{glueSource},
+		#{glueRemark},
+		#{addTime, jdbcType=TIMESTAMP},
+		#{updateTime, jdbcType=TIMESTAMP}
+		);
+	</insert>
+
 	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobLogGlue" useGeneratedKeys="true" keyProperty="id" >
 		INSERT INTO xxl_job_logglue (
 			`job_id`,
@@ -50,7 +94,31 @@
 		WHERE t.job_id = #{jobId}
 		ORDER BY id DESC
 	</select>
-	
+
+	<delete id="removeOld" databaseId="oracle">
+		DELETE FROM xxl_job_logglue
+		WHERE id NOT IN(
+			SELECT id FROM(
+				SELECT id FROM(
+						SELECT id FROM xxl_job_logglue
+						WHERE job_id = #{jobId}
+						ORDER BY update_time desc) a
+			<![CDATA[where rownum <  #{limit} ]]>
+			) t1
+		) AND job_id = #{jobId}
+	</delete>
+
+	<delete id="removeOld" databaseId="sqlserver">
+		DELETE FROM xxl_job_logglue
+		WHERE id NOT in(
+			SELECT id FROM(
+				SELECT top(#{limit}) id FROM xxl_job_logglue
+				WHERE job_id = #{jobId}
+				ORDER BY update_time desc
+			) t1
+		) AND job_id = #{jobId}
+	</delete>
+
 	<delete id="removeOld" >
 		DELETE FROM xxl_job_logglue
 		WHERE id NOT in(
@@ -66,6 +134,16 @@
 	<delete id="deleteByJobId" parameterType="java.lang.Integer" >
 		DELETE FROM xxl_job_logglue
 		WHERE `job_id` = #{jobId}
+	</delete>
+
+	<delete id="deleteByJobId" databaseId="oracle" parameterType="java.lang.Integer" >
+		DELETE FROM xxl_job_logglue
+		WHERE job_id = #{jobId}
+	</delete>
+
+	<delete id="deleteByJobId" databaseId="sqlserver" parameterType="java.lang.Integer" >
+		DELETE FROM xxl_job_logglue
+		WHERE job_id = #{jobId}
 	</delete>
 	
 </mapper>
