@@ -42,21 +42,15 @@
 			select <include refid="XXL_JOB_GROUP_ID" /> from dual
 		</selectKey>
 		INSERT INTO xxl_job_group (id, app_name, title, address_type, address_list, update_time)
-		values ( #{id}, #{appname}, #{title}, #{addressType,jdbcType=BIT}, #{addressList,jdbcType=CLOB}, #{updateTime,jdbcType=TIMESTAMP} )
+		values ( #{id}, #{appname}, #{title}, #{addressType}, #{addressList}, #{updateTime} )
 	</insert>
 
 	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobGroup" useGeneratedKeys="true" keyProperty="id" >
-		INSERT INTO xxl_job_group ( `app_name`, `title`, `address_type`, `address_list`, `update_time`)
+		INSERT INTO xxl_job_group ( app_name, title, address_type, address_list, update_time)
 		values ( #{appname}, #{title}, #{addressType}, #{addressList}, #{updateTime} );
 	</insert>
 
-	<insert id="save" databaseId = 'sqlserver' parameterType="com.xxl.job.admin.core.model.XxlJobGroup" useGeneratedKeys="true" keyProperty="id" >
-		INSERT INTO xxl_job_group ( app_name, title, address_type, address_list, update_time)
-		values ( #{appname}, #{title}, #{addressType, jdbcType=SMALLINT}, #{addressList}, #{updateTime,jdbcType=TIMESTAMP} );
-	</insert>
-
-
-	<update id="update" parameterType="com.xxl.job.admin.core.model.XxlJobGroup" >
+	<update id="update" databaseId="mysql" parameterType="com.xxl.job.admin.core.model.XxlJobGroup" >
 		UPDATE xxl_job_group
 		SET `app_name` = #{appname},
 			`title` = #{title},
@@ -66,23 +60,13 @@
 		WHERE id = #{id}
 	</update>
 
-	<update id="update" databaseId = 'oracle' parameterType="com.xxl.job.admin.core.model.XxlJobGroup" >
-		UPDATE xxl_job_group
-		SET app_name = #{appname},
-			title = #{title},
-			address_type = #{addressType,jdbcType=BIT},
-			address_list = #{addressList,jdbcType=CLOB},
-			update_time = #{updateTime,jdbcType=TIMESTAMP}
-		WHERE id = #{id}
-	</update>
-
-	<update id="update" databaseId = 'sqlserver' parameterType="com.xxl.job.admin.core.model.XxlJobGroup" >
+	<update id="update" parameterType="com.xxl.job.admin.core.model.XxlJobGroup" >
 		UPDATE xxl_job_group
 		SET app_name = #{appname},
 			title = #{title},
 			address_type = #{addressType},
-			address_list = #{addressList, jdbcType=VARCHAR},
-			update_time = #{updateTime, jdbcType=TIMESTAMP}
+			address_list = #{addressList},
+			update_time = #{updateTime}
 		WHERE id = #{id}
 	</update>
 
@@ -112,25 +96,20 @@
 		LIMIT #{offset}, #{pagesize}
 	</select>
 
-	<!--//TODO oracle支持调整 分页修改为oracle三层分页 -->
-	<select id="pageList" databaseId = 'oracle' parameterType="java.util.HashMap" resultMap="XxlJobGroup">
-		select *
-		from (select *
-		from (select A.*, rownum rn
-		from (
+	<select id="pageList" databaseId="oracle" parameterType="java.util.HashMap" resultMap="XxlJobGroup">
 		SELECT <include refid="Base_Column_List" />
 		FROM xxl_job_group t
-		<trim prefix="WHERE" prefixOverrides="AND | OR" >
+		<trim prefix="WHERE" prefixOverrides="AND | OR">
 			<if test="appname != null and appname != ''">
-				AND t.app_name like CONCAT(CONCAT('%', #{appname}), '%')
+				AND t.app_name LIKE '%' || #{appname} || '%'
 			</if>
 			<if test="title != null and title != ''">
-				AND t.title like CONCAT(CONCAT('%', #{title}), '%')
+				AND t.title LIKE '%' || #{title} || '%'
 			</if>
 		</trim>
-		ORDER BY t.app_name, t.title, t.id ASC) A)
-		where rn > #{offset}) B
-		<![CDATA[	where rn <= #{offset}+ #{pagesize} ]]>
+		ORDER BY t.app_name, t.title, t.id ASC
+		OFFSET #{offset} ROWS
+		FETCH NEXT #{pagesize} ROWS ONLY
 	</select>
 
 	<select id="pageList" databaseId = 'sqlserver' parameterType="java.util.HashMap" resultMap="XxlJobGroup">

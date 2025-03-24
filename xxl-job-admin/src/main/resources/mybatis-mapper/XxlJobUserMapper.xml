@@ -22,23 +22,19 @@
 	<sql id='XXL_JOB_USER_ID' databaseId="oracle">XXL_JOB_USER_ID.NEXTVAL</sql>
 
 	<select id="pageList" databaseId="oracle" parameterType="java.util.HashMap" resultMap="XxlJobUser">
-		select *
-		from (select *
-		from (select A.*, rownum rn
-		from (
 		SELECT <include refid="Base_Column_List" />
 		FROM xxl_job_user t
-		<trim prefix="WHERE" prefixOverrides="AND | OR" >
+		<trim prefix="WHERE" prefixOverrides="AND | OR">
 			<if test="username != null and username != ''">
-				AND t.username like CONCAT(CONCAT('%', #{username}), '%')
+				AND t.username LIKE '%' || #{username} || '%'
 			</if>
 			<if test="role gt -1">
 				AND t.role = #{role}
 			</if>
 		</trim>
-		ORDER BY username ASC) A)
-		where rn > #{offset}) B
-		<![CDATA[	where rn <= #{offset}+ #{pagesize} ]]>
+		ORDER BY t.username ASC
+		OFFSET #{offset} ROWS
+		FETCH NEXT #{pagesize} ROWS ONLY
 	</select>
 
 	<select id="pageList" databaseId="sqlserver" parameterType="java.util.HashMap" resultMap="XxlJobUser">
@@ -107,7 +103,7 @@
 		#{id},
 		#{username},
 		#{password},
-		#{role, jdbcType=SMALLINT},
+		#{role},
 		#{permission}
 		)
 	</insert>

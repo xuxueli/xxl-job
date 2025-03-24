@@ -148,4 +148,26 @@
 		</profile>
 	</profiles>
 
+
+	<dependencies>
+		<dependency>
+			<groupId>cn.com.kingbase</groupId>
+			<artifactId>kingbase8-mysql</artifactId>
+			<version>9.0.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>cn.com.kingbase</groupId>
+			<artifactId>kingbase8</artifactId>
+			<version>9.0.0</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>cn.com.kingbase</groupId>
+			<artifactId>kingbase8-sqlserver</artifactId>
+			<version>9.0.0</version>
+		</dependency>
+	</dependencies>
+
 </project>

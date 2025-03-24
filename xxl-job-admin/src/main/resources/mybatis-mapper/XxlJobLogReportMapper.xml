@@ -34,21 +34,21 @@
 		fail_count
 		) VALUES (
 		#{id},
-		#{triggerDay,jdbcType=TIMESTAMP},
-		#{runningCount,jdbcType=NUMERIC},
-		#{sucCount,jdbcType=NUMERIC},
-		#{failCount,jdbcType=NUMERIC}
+		#{triggerDay},
+		#{runningCount},
+		#{sucCount},
+		#{failCount}
 		)
 	</insert>
 
-	<insert id="save" databaseId="sqlserver" parameterType="com.xxl.job.admin.core.model.XxlJobLogReport" useGeneratedKeys="true" keyProperty="id" >
+	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobLogReport" useGeneratedKeys="true" keyProperty="id" >
 		INSERT INTO xxl_job_log_report (
 		trigger_day,
 		running_count,
 		suc_count,
 		fail_count
 		) VALUES (
-		#{triggerDay, jdbcType=TIMESTAMP},
+		#{triggerDay},
 		#{runningCount},
 		#{sucCount},
 		#{failCount}
@@ -58,46 +58,13 @@
 		</selectKey>-->
 	</insert>
 
-	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobLogReport" useGeneratedKeys="true" keyProperty="id" >
-		INSERT INTO xxl_job_log_report (
-			`trigger_day`,
-			`running_count`,
-			`suc_count`,
-			`fail_count`
-		) VALUES (
-			#{triggerDay},
-			#{runningCount},
-			#{sucCount},
-			#{failCount}
-		);
-		<!--<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
-			SELECT LAST_INSERT_ID() 
-		</selectKey>-->
-	</insert>
-
-	<update id="update"  databaseId="oracle" parameterType="com.xxl.job.admin.core.model.XxlJobLogReport">
-		UPDATE xxl_job_log_report
-		SET running_count = #{runningCount,jdbcType=NUMERIC},
-			suc_count = #{sucCount,jdbcType=NUMERIC},
-			fail_count = #{failCount,jdbcType=NUMERIC}
-		WHERE trigger_day = #{triggerDay,jdbcType=TIMESTAMP}
-	</update>
-
-	<update id="update" databaseId="sqlserver">
+	<update id="update">
 		UPDATE xxl_job_log_report
 		SET running_count = #{runningCount},
 			suc_count = #{sucCount},
 			fail_count = #{failCount}
-		WHERE trigger_day = #{triggerDay, jdbcType=TIMESTAMP}
+		WHERE trigger_day = #{triggerDay}
 	</update>
-
-	<update id="update" >
-        UPDATE xxl_job_log_report
-        SET `running_count` = #{runningCount},
-        	`suc_count` = #{sucCount},
-        	`fail_count` = #{failCount}
-        WHERE `trigger_day` = #{triggerDay}
-    </update>
 
 	<select id="queryLogReport" resultMap="XxlJobLogReport">
 		SELECT <include refid="Base_Column_List" />

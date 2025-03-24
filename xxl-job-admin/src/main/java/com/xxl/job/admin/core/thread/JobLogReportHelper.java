@@ -5,11 +5,7 @@ import com.xxl.job.admin.core.model.XxlJobLogReport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -71,7 +67,7 @@ public class JobLogReportHelper {
 
                             Map<String, Object> triggerCountMap = XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().findLogReport(todayFrom, todayTo);
                             if (triggerCountMap!=null && triggerCountMap.size()>0) {
-                                Map<String, Object> useTriggerCountMap = new ConcurrentHashMap<>();
+                                Map<String, Object> useTriggerCountMap = new HashMap<>();
                                 for (String key : triggerCountMap.keySet()) {
                                     Object value = triggerCountMap.get(key);
                                     useTriggerCountMap.put(key.toUpperCase(), value);

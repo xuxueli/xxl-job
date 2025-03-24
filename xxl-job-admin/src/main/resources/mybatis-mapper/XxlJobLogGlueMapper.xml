@@ -42,10 +42,10 @@
 		#{id},
 		#{jobId},
 		#{glueType},
-		#{glueSource,jdbcType=CLOB},
+		#{glueSource},
 		#{glueRemark},
-		#{addTime,jdbcType=TIMESTAMP},
-		#{updateTime,jdbcType=TIMESTAMP}
+		#{addTime},
+		#{updateTime}
 		)
 	</insert>
 
@@ -62,8 +62,8 @@
 		#{glueType},
 		#{glueSource},
 		#{glueRemark},
-		#{addTime, jdbcType=TIMESTAMP},
-		#{updateTime, jdbcType=TIMESTAMP}
+		#{addTime},
+		#{updateTime}
 		);
 	</insert>
 
@@ -131,19 +131,13 @@
 		) AND `job_id` = #{jobId}
 	</delete>
 	
-	<delete id="deleteByJobId" parameterType="java.lang.Integer" >
+	<delete id="deleteByJobId" databaseId="mysql" parameterType="java.lang.Integer" >
 		DELETE FROM xxl_job_logglue
 		WHERE `job_id` = #{jobId}
 	</delete>
 
-	<delete id="deleteByJobId" databaseId="oracle" parameterType="java.lang.Integer" >
+	<delete id="deleteByJobId" parameterType="java.lang.Integer" >
 		DELETE FROM xxl_job_logglue
 		WHERE job_id = #{jobId}
 	</delete>
-
-	<delete id="deleteByJobId" databaseId="sqlserver" parameterType="java.lang.Integer" >
-		DELETE FROM xxl_job_logglue
-		WHERE job_id = #{jobId}
-	</delete>
-	
 </mapper>
