@@ -243,7 +243,7 @@
 		WHERE trigger_time BETWEEN #{from} and #{to}
     </select>
 
-	<select id="findClearLogIds" resultType="long">
+	<select id="findClearLogIds" resultType="long" >
 		SELECT id FROM xxl_job_log
 		<trim prefix="WHERE" prefixOverrides="AND | OR">
 			<if test="jobGroup gt 0">
@@ -322,7 +322,7 @@
 		</foreach>
 	</delete>
 
-	<select id="findFailJobLogIds" resultType="long">
+	<select id="findFailJobLogIds" resultType="long" >
 		SELECT id FROM xxl_job_log
 		WHERE (
 		(
