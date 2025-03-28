@@ -65,13 +65,11 @@
 		t.trigger_next_time
 	</sql>
 
-	<!--//TODO oracle支持调整 取序列 -->
 	<sql id='XXL_JOB_INFO_ID' databaseId = "oracle">
 		XXL_JOB_INFO_ID.NEXTVAL
 	</sql>
 
-	<!--//TODO oracle支持调整 分页修改为oracle三层分页 -->
-	<select id="pageList" databaseId = "oracle" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
+	<select id="pageList" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
 		SELECT <include refid="Base_Column_List" />
 		FROM xxl_job_info t
 		<trim prefix="WHERE" prefixOverrides="AND | OR">
@@ -82,13 +80,13 @@
 				AND t.trigger_status = #{triggerStatus}
 			</if>
 			<if test="jobDesc != null and jobDesc != ''">
-				AND t.job_desc LIKE '%' || #{jobDesc} || '%'
+				AND t.job_desc LIKE CONCAT(CONCAT('%', #{jobDesc}), '%')
 			</if>
 			<if test="executorHandler != null and executorHandler != ''">
-				AND t.executor_handler LIKE '%' || #{executorHandler} || '%'
+				AND t.executor_handler LIKE CONCAT(CONCAT('%', #{executorHandler}), '%')
 			</if>
 			<if test="author != null and author != ''">
-				AND t.author LIKE '%' || #{author} || '%'
+				AND t.author LIKE CONCAT(CONCAT('%', #{author}), '%')
 			</if>
 		</trim>
 		ORDER BY id DESC
@@ -96,32 +94,7 @@
 		FETCH NEXT #{pagesize} ROWS ONLY
 	</select>
 
-	<select id="pageList" databaseId="sqlserver" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
-		SELECT <include refid="Base_Column_List" />
-		FROM (SELECT row_number () OVER ( ORDER BY id DESC ) AS rownumber ,
-		<include refid="Base_Column_List"/>FROM xxl_job_info AS t
-		<trim prefix="WHERE" prefixOverrides="AND | OR" >
-			<if
-					test="jobGroup gt 0">AND t.job_group = #{jobGroup}
-			</if>
-			<if test="triggerStatus gte 0">
-				AND t.trigger_status = #{triggerStatus}
-			</if>
-			<if test="jobDesc != null and jobDesc != ''">
-				AND t.job_desc like CONCAT(CONCAT('%', #{jobDesc}), '%')
-			</if>
-			<if test="executorHandler != null and executorHandler != ''">
-				AND t.executor_handler like CONCAT(CONCAT('%', #{executorHandler}), '%')
-			</if>
-			<if test="author != null and author != ''">
-				AND t.author like CONCAT(CONCAT('%', #{author}), '%')
-			</if>
-		</trim>) AS t
-		WHERE t.rownumber <![CDATA[ > ]]> #{offset}
-		AND t.rownumber <![CDATA[ <= ]]> (#{offset} + #{pagesize})
-	</select>
-
-	<select id="pageList" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
+	<select id="pageList" databaseId="mysql" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
 		SELECT <include refid="Base_Column_List" />
 		FROM xxl_job_info AS t
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
@@ -226,7 +199,7 @@
 	<insert id="save" databaseId = "oracle" parameterType="com.xxl.job.admin.core.model.XxlJobInfo" useGeneratedKeys="true" keyProperty="id" >
 		<selectKey keyProperty="id" resultType="int" order="BEFORE">
 			select <include refid="XXL_JOB_INFO_ID" /> from dual
-		</selectKey>sqlserver
+		</selectKey>
 		INSERT INTO xxl_job_info (
 		id,
 		job_group,
@@ -336,7 +309,7 @@
 	</select>
 
 
-	<select id="scheduleJobQuery" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
+	<select id="scheduleJobQuery" databaseId="mysql" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
 		SELECT <include refid="Base_Column_List" />
 		FROM xxl_job_info AS t
 		WHERE t.trigger_status = 1
@@ -345,23 +318,14 @@
 		LIMIT #{pagesize}
 	</select>
 
-	<!--//TODO oracle支持调整 分页修改为oracle分页 -->
-	<select id="scheduleJobQuery" databaseId="oracle" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
-		select <include refid="Base_Column_List" /> from (
-		SELECT *
-		FROM xxl_job_info a
-		WHERE a.trigger_status = 1
-		and a.trigger_next_time <![CDATA[ <= ]]> #{maxNextTime}
-		ORDER BY id ASC
-		)  t where <![CDATA[  rownum < #{pagesize} ]]>
-	</select>
-
-	<select id="scheduleJobQuery" databaseId="sqlserver" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
-		SELECT top (#{pagesize}) <include refid="Base_Column_List" />
+	<select id="scheduleJobQuery" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
+		SELECT <include refid="Base_Column_List" />
 		FROM xxl_job_info AS t
 		WHERE t.trigger_status = 1
-		and t.trigger_next_time <![CDATA[ <= ]]> #{maxNextTime}
+			AND t.trigger_next_time <![CDATA[ <= ]]> #{maxNextTime}
 		ORDER BY id ASC
+		OFFSET 0 ROWS
+		FETCH NEXT #{pagesize} ROWS ONLY
 	</select>
 
 	<update id="scheduleUpdate" parameterType="com.xxl.job.admin.core.model.XxlJobInfo"  >

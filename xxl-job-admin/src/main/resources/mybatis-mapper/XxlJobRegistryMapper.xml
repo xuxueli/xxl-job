@@ -51,7 +51,7 @@
 
 	<select id="findAll" databaseId="oracle" parameterType="java.util.HashMap" resultMap="XxlJobRegistry">
 		SELECT <include refid="Base_Column_List" />
-		FROM xxl_job_registry t
+		FROM xxl_job_registry AS t
 		WHERE t.update_time <![CDATA[ > ]]> cast(#{nowTime} as timestamp) - numtodsinterval(#{timeout},'SECOND')
 	</select>
 

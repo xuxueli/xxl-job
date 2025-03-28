@@ -49,32 +49,14 @@
 		)
 	</insert>
 
-	<insert id="save" databaseId="sqlserver" parameterType="com.xxl.job.admin.core.model.XxlJobLogGlue" useGeneratedKeys="true" keyProperty="id" >
-		INSERT INTO xxl_job_logglue (
-		job_id,
-		glue_type,
-		glue_source,
-		glue_remark,
-		add_time,
-		update_time
-		) VALUES (
-		#{jobId},
-		#{glueType},
-		#{glueSource},
-		#{glueRemark},
-		#{addTime},
-		#{updateTime}
-		);
-	</insert>
-
 	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobLogGlue" useGeneratedKeys="true" keyProperty="id" >
 		INSERT INTO xxl_job_logglue (
-			`job_id`,
-			`glue_type`,
-			`glue_source`,
-			`glue_remark`,
-			`add_time`, 
-			`update_time`
+			job_id,
+			glue_type,
+			glue_source,
+			glue_remark,
+			add_time,
+			update_time
 		) VALUES (
 			#{jobId},
 			#{glueType},
@@ -82,9 +64,9 @@
 			#{glueRemark},
 			#{addTime},
 			#{updateTime}
-		);
+			);
 		<!--<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
-			SELECT LAST_INSERT_ID() 
+			SELECT LAST_INSERT_ID()
 		</selectKey>-->
 	</insert>
 	
@@ -97,26 +79,30 @@
 
 	<delete id="removeOld" databaseId="oracle">
 		DELETE FROM xxl_job_logglue
-		WHERE id NOT IN(
-			SELECT id FROM(
-				SELECT id FROM(
-						SELECT id FROM xxl_job_logglue
-						WHERE job_id = #{jobId}
-						ORDER BY update_time desc) a
-			<![CDATA[where rownum <  #{limit} ]]>
+		WHERE id NOT IN (
+			SELECT id FROM (
+				SELECT id
+				FROM xxl_job_logglue
+				WHERE job_id = #{jobId}
+				ORDER BY update_time DESC
+				OFFSET 0 ROWS
+				FETCH NEXT #{limit} ROWS ONLY
 			) t1
-		) AND job_id = #{jobId}
+		)
+		AND job_id = #{jobId}
 	</delete>
 
 	<delete id="removeOld" databaseId="sqlserver">
 		DELETE FROM xxl_job_logglue
-		WHERE id NOT in(
-			SELECT id FROM(
-				SELECT top(#{limit}) id FROM xxl_job_logglue
-				WHERE job_id = #{jobId}
-				ORDER BY update_time desc
-			) t1
-		) AND job_id = #{jobId}
+		WHERE id NOT IN (
+			SELECT id
+			FROM xxl_job_logglue
+			WHERE job_id = #{jobId}
+			ORDER BY update_time DESC
+			OFFSET 0 ROWS
+			FETCH NEXT #{limit} ROWS ONLY
+		)
+		AND job_id = #{jobId}
 	</delete>
 
 	<delete id="removeOld" >
@@ -130,14 +116,10 @@
 			) t1
 		) AND `job_id` = #{jobId}
 	</delete>
-	
-	<delete id="deleteByJobId" databaseId="mysql" parameterType="java.lang.Integer" >
-		DELETE FROM xxl_job_logglue
-		WHERE `job_id` = #{jobId}
-	</delete>
 
 	<delete id="deleteByJobId" parameterType="java.lang.Integer" >
 		DELETE FROM xxl_job_logglue
 		WHERE job_id = #{jobId}
 	</delete>
+
 </mapper>

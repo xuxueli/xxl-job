@@ -41,6 +41,7 @@
 		<!-- db -->
 		<mybatis-spring-boot-starter.version>3.0.4</mybatis-spring-boot-starter.version>
 		<mysql-connector-j.version>9.2.0</mysql-connector-j.version>
+		<kingbase.version>8.6.0</kingbase.version>
 		<!-- dynamic language -->
 		<groovy.version>4.0.25</groovy.version>
 	</properties>
@@ -147,27 +148,5 @@
 			</distributionManagement>
 		</profile>
 	</profiles>
-
-
-	<dependencies>
-		<dependency>
-			<groupId>cn.com.kingbase</groupId>
-			<artifactId>kingbase8-mysql</artifactId>
-			<version>9.0.0</version>
-		</dependency>
-
-		<dependency>
-			<groupId>cn.com.kingbase</groupId>
-			<artifactId>kingbase8</artifactId>
-			<version>9.0.0</version>
-		</dependency>
-
-
-		<dependency>
-			<groupId>cn.com.kingbase</groupId>
-			<artifactId>kingbase8-sqlserver</artifactId>
-			<version>9.0.0</version>
-		</dependency>
-	</dependencies>
 
 </project>

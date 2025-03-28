@@ -2,7 +2,7 @@
 IF NOT EXISTS (SELECT name FROM master.dbo.sysdatabases WHERE name = N'xxl_job')
     BEGIN
         CREATE DATABASE [xxl_job]
-            COLLATE Latin1_General_100_CI_AS_SC_UTF8;  -- SQL Server 2019+ 的 UTF-8 排序规则示例
+            COLLATE Latin1_General_100_CI_AS_SC_UTF8;
     END
 GO
 
@@ -32,7 +32,7 @@ CREATE TABLE xxl_job_info (
                               glue_remark VARCHAR(128) DEFAULT NULL,
                               glue_updatetime DATETIME2 DEFAULT NULL,
                               child_jobid VARCHAR(255) DEFAULT NULL,
-                              trigger_status BIT NOT NULL DEFAULT 0,
+                              trigger_status tinyint NOT NULL DEFAULT 0,
                               trigger_last_time BIGINT NOT NULL DEFAULT 0,
                               trigger_next_time BIGINT NOT NULL DEFAULT 0,
                               PRIMARY KEY (id)
@@ -53,7 +53,7 @@ CREATE TABLE xxl_job_log (
                              handle_time DATETIME2 DEFAULT NULL,
                              handle_code INT NOT NULL,
                              handle_msg TEXT,
-                             alarm_status BIT NOT NULL DEFAULT 0,
+                             alarm_status smallint NOT NULL DEFAULT 0,
                              PRIMARY KEY (id)
 );
 
@@ -98,7 +98,7 @@ CREATE TABLE xxl_job_group (
                                id INT NOT NULL IDENTITY(1,1),
                                app_name VARCHAR(64) NOT NULL,
                                title VARCHAR(128) NOT NULL,
-                               address_type BIT NOT NULL DEFAULT 0,
+                               address_type TINYINT NOT NULL DEFAULT 0,
                                address_list TEXT,
                                update_time DATETIME2 DEFAULT NULL,
                                PRIMARY KEY (id)
@@ -108,7 +108,7 @@ CREATE TABLE xxl_job_user (
                               id INT NOT NULL IDENTITY(1,1),
                               username VARCHAR(50) NOT NULL,
                               password VARCHAR(50) NOT NULL,
-                              role BIT NOT NULL,
+                              role TINYINT NOT NULL,
                               permission VARCHAR(255) DEFAULT NULL,
                               PRIMARY KEY (id),
                               CONSTRAINT i_username UNIQUE(username)
@@ -123,3 +123,14 @@ INSERT INTO xxl_job_group(app_name, title, address_type, address_list, update_ti
 INSERT INTO xxl_job_info(job_group, job_desc, add_time, update_time, author, alarm_email, schedule_type, schedule_conf, misfire_strategy, executor_route_strategy, executor_handler, executor_param, executor_block_strategy, executor_timeout, executor_fail_retry_count, glue_type, glue_source, glue_remark, glue_updatetime, child_jobid) VALUES (1, '测试任务1', '2018-11-03 22:21:31', '2018-11-03 22:21:31', 'XXL', '', 'CRON', '0 0 0 * * ? *', 'DO_NOTHING', 'FIRST', 'demoJobHandler', '', 'SERIAL_EXECUTION', 0, 0, 'BEAN', '', 'GLUE代码初始化', '2018-11-03 22:21:31', '');
 INSERT INTO xxl_job_user(username, password, role, permission) VALUES ('admin', 'e10adc3949ba59abbe56e057f20f883e', 1, NULL);
 INSERT INTO xxl_job_lock ( lock_name) VALUES ( 'schedule_lock');
+
+
+
+
+
+
+
+
+
+
+

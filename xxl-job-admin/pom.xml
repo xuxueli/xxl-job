@@ -77,6 +77,12 @@
 			<version>${project.parent.version}</version>
 		</dependency>
 
+		<dependency>
+			<groupId>com.kingbase</groupId>
+			<artifactId>kingbase8</artifactId>
+			<version>${kingbase.version}</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>

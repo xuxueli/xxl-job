@@ -50,16 +50,6 @@
 		values ( #{appname}, #{title}, #{addressType}, #{addressList}, #{updateTime} );
 	</insert>
 
-	<update id="update" databaseId="mysql" parameterType="com.xxl.job.admin.core.model.XxlJobGroup" >
-		UPDATE xxl_job_group
-		SET `app_name` = #{appname},
-			`title` = #{title},
-			`address_type` = #{addressType},
-			`address_list` = #{addressList},
-			`update_time` = #{updateTime}
-		WHERE id = #{id}
-	</update>
-
 	<update id="update" parameterType="com.xxl.job.admin.core.model.XxlJobGroup" >
 		UPDATE xxl_job_group
 		SET app_name = #{appname},
@@ -81,7 +71,7 @@
 		WHERE t.id = #{id}
 	</select>
 
-	<select id="pageList" parameterType="java.util.HashMap" resultMap="XxlJobGroup">
+	<select id="pageList" databaseId="mysql" parameterType="java.util.HashMap" resultMap="XxlJobGroup">
 		SELECT <include refid="Base_Column_List" />
 		FROM xxl_job_group AS t
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
@@ -96,39 +86,20 @@
 		LIMIT #{offset}, #{pagesize}
 	</select>
 
-	<select id="pageList" databaseId="oracle" parameterType="java.util.HashMap" resultMap="XxlJobGroup">
+	<select id="pageList" parameterType="java.util.HashMap" resultMap="XxlJobGroup">
 		SELECT <include refid="Base_Column_List" />
-		FROM xxl_job_group t
-		<trim prefix="WHERE" prefixOverrides="AND | OR">
-			<if test="appname != null and appname != ''">
-				AND t.app_name LIKE '%' || #{appname} || '%'
-			</if>
-			<if test="title != null and title != ''">
-				AND t.title LIKE '%' || #{title} || '%'
-			</if>
-		</trim>
-		ORDER BY t.app_name, t.title, t.id ASC
-		OFFSET #{offset} ROWS
-		FETCH NEXT #{pagesize} ROWS ONLY
-	</select>
-
-	<select id="pageList" databaseId = 'sqlserver' parameterType="java.util.HashMap" resultMap="XxlJobGroup">
-		SELECT <include refid="Base_Column_List" /> FROM
-		(
-		SELECT <include refid="Base_Column_List"/>
-		,row_number () OVER ( ORDER BY t.app_name, t.title, t.id ASC ) AS rownumber
 		FROM xxl_job_group AS t
 		<trim prefix="WHERE" prefixOverrides="AND | OR">
 			<if test="appname != null and appname != ''">
-				AND t.app_name like CONCAT(CONCAT('%', #{appname}), '%')
+				AND t.app_name LIKE CONCAT(CONCAT('%', #{appname}), '%')
 			</if>
 			<if test="title != null and title != ''">
-				AND t.title like CONCAT(CONCAT('%', #{title}), '%')
+				AND t.title LIKE CONCAT(CONCAT('%', #{title}), '%')
 			</if>
 		</trim>
-		) AS t
-		WHERE t.rownumber <![CDATA[ > ]]> #{offset}
-		AND t.rownumber <![CDATA[ <= ]]> (#{offset} + #{pagesize})
+		ORDER BY t.app_name ASC, t.title ASC, t.id ASC
+		OFFSET #{offset} ROWS
+		FETCH NEXT #{pagesize} ROWS ONLY
 	</select>
 
 	<select id="pageListCount" parameterType="java.util.HashMap" resultType="int">

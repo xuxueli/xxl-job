@@ -46,7 +46,7 @@
 
 	<sql id='XXL_JOB_LOG_ID' databaseId="oracle">XXL_JOB_LOG_ID.NEXTVAL</sql>
 
-	<select id="pageList" databaseId="oracle" resultMap="XxlJobLog">
+	<select id="pageList" parameterType="java.util.HashMap" resultMap="XxlJobLog">
 		SELECT <include refid="Base_Column_List" />
 		FROM xxl_job_log t
 		<trim prefix="WHERE" prefixOverrides="AND | OR">
@@ -78,45 +78,7 @@
 		FETCH NEXT #{pagesize} ROWS ONLY
 	</select>
 
-	<select id="pageList" databaseId="sqlserver" resultMap="XxlJobLog">
-		SELECT <include refid="Base_Column_List" />
-		from (
-		SELECT row_number () OVER ( ORDER BY t.trigger_time DESC ) AS rownumber,
-		<include refid="Base_Column_List" />
-		FROM xxl_job_log AS t
-		<trim prefix="WHERE" prefixOverrides="AND | OR" >
-			<if test="jobId==0 and jobGroup gt 0">
-				AND t.job_group = #{jobGroup}
-			</if>
-			<if test="jobId gt 0">
-				AND t.job_id = #{jobId}
-			</if>
-			<if test="triggerTimeStart != null">
-				AND t.trigger_time <![CDATA[ >= ]]> #{triggerTimeStart}
-			</if>
-			<if test="triggerTimeEnd != null">
-				AND t.trigger_time <![CDATA[ <= ]]> #{triggerTimeEnd}
-			</if>
-			<if test="logStatus == 1" >
-				AND t.handle_code = 200
-			</if>
-			<if test="logStatus == 2" >
-				AND (
-				t.trigger_code NOT IN (0, 200) OR
-				t.handle_code NOT IN (0, 200)
-				)
-			</if>
-			<if test="logStatus == 3" >
-				AND t.trigger_code = 200
-				AND t.handle_code = 0
-			</if>
-		</trim>
-		) AS t
-		WHERE t.rownumber <![CDATA[ > ]]> #{offset}
-		AND t.rownumber <![CDATA[ <= ]]> (#{offset} + #{pagesize})
-	</select>
-
-	<select id="pageList" resultMap="XxlJobLog">
+	<select id="pageList" databaseId="mysql" resultMap="XxlJobLog">
 		SELECT <include refid="Base_Column_List" />
 		FROM xxl_job_log AS t
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
@@ -194,19 +156,19 @@
 			select <include refid="XXL_JOB_LOG_ID" /> from dual
 		</selectKey>
 		INSERT INTO xxl_job_log (
-		id,
-		job_group,
-		job_id,
-		trigger_time,
-		trigger_code,
-		handle_code
+			id,
+			job_group,
+			job_id,
+			trigger_time,
+			trigger_code,
+			handle_code
 		) VALUES (
-		#{id},
-		#{jobGroup},
-		#{jobId},
-		#{triggerTime},
-		#{triggerCode},
-		#{handleCode}
+			#{id},
+			#{jobGroup},
+			#{jobId},
+			#{triggerTime},
+			#{triggerCode},
+			#{handleCode}
 		)
 		<!--<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
 			SELECT LAST_INSERT_ID()
@@ -215,24 +177,24 @@
 
 	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobLog" useGeneratedKeys="true" keyProperty="id" >
 		INSERT INTO xxl_job_log (
-		job_group,
-		job_id,
-		trigger_time,
-		trigger_code,
-		handle_code
+			job_group,
+			job_id,
+			trigger_time,
+			trigger_code,
+			handle_code
 		) VALUES (
-		#{jobGroup},
-		#{jobId},
-		#{triggerTime},
-		#{triggerCode},
-		#{handleCode}
+			#{jobGroup},
+			#{jobId},
+			#{triggerTime},
+			#{triggerCode},
+			#{handleCode}
 		);
 		<!--<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
 			SELECT LAST_INSERT_ID()
 		</selectKey>-->
 	</insert>
 
-	<update id="updateTriggerInfo">
+	<update id="updateTriggerInfo" >
 		UPDATE xxl_job_log
 		SET
 			trigger_time= #{triggerTime},
@@ -272,34 +234,16 @@
 		ORDER BY triggerDay
     </select>-->
 
-	<select id="findLogReport" databaseId="oracle" resultType="java.util.Map" >
-		SELECT
-			COUNT(handle_code) triggerDayCount,
-			SUM(CASE WHEN (trigger_code in (0, 200) and handle_code = 0) then 1 else 0 end) as triggerDayCountRunning,
-				SUM(CASE WHEN handle_code = 200 then 1 else 0 end) as triggerDayCountSuc
-		FROM xxl_job_log
-		WHERE trigger_time BETWEEN #{from} and #{to}
-	</select>
-
-	<select id="findLogReport" databaseId="sqlserver" resultType="java.util.Map" >
-		SELECT
-			COUNT(handle_code) triggerDayCount,
-			SUM(CASE WHEN (trigger_code in (0, 200) and handle_code = 0) then 1 else 0 end) as triggerDayCountRunning,
-				SUM(CASE WHEN handle_code = 200 then 1 else 0 end) as triggerDayCountSuc
-		FROM xxl_job_log
-		WHERE trigger_time BETWEEN #{from} and #{to}
-	</select>
-
     <select id="findLogReport" resultType="java.util.Map" >
 		SELECT
-			COUNT(handle_code) `triggerDayCount`,
-			SUM(CASE WHEN (trigger_code in (0, 200) and handle_code = 0) then 1 else 0 end) as `triggerDayCountRunning`,
-			SUM(CASE WHEN handle_code = 200 then 1 else 0 end) as `triggerDayCountSuc`
+			COUNT(handle_code) triggerDayCount,
+			SUM(CASE WHEN (trigger_code in (0, 200) and handle_code = 0) then 1 else 0 end) as triggerDayCountRunning,
+			SUM(CASE WHEN handle_code = 200 then 1 else 0 end) as triggerDayCountSuc
 		FROM xxl_job_log
 		WHERE trigger_time BETWEEN #{from} and #{to}
     </select>
 
-	<select id="findClearLogIds" databaseId="oracle" resultType="long" >
+	<select id="findClearLogIds" resultType="long">
 		SELECT id FROM xxl_job_log
 		<trim prefix="WHERE" prefixOverrides="AND | OR">
 			<if test="jobGroup gt 0">
@@ -313,7 +257,9 @@
 			</if>
 			<if test="clearBeforeNum gt 0">
 				AND id NOT IN (
-				SELECT id FROM xxl_job_log
+				SELECT id FROM (
+				SELECT id
+				FROM xxl_job_log
 				<trim prefix="WHERE" prefixOverrides="AND | OR">
 					<if test="jobGroup gt 0">
 						AND job_group = #{jobGroup}
@@ -323,47 +269,18 @@
 					</if>
 				</trim>
 				ORDER BY trigger_time DESC
-				FETCH FIRST #{clearBeforeNum} ROWS ONLY
-				)
-			</if>
-		</trim>
-		ORDER BY id ASC
-		FETCH FIRST #{pagesize} ROWS ONLY
-	</select>
-
-	<select id="findClearLogIds" databaseId="sqlserver" resultType="long" >
-		SELECT top (#{pagesize}) id FROM xxl_job_log
-		<trim prefix="WHERE" prefixOverrides="AND | OR" >
-			<if test="jobGroup gt 0">
-				AND job_group = #{jobGroup}
-			</if>
-			<if test="jobId gt 0">
-				AND job_id = #{jobId}
-			</if>
-			<if test="clearBeforeTime != null">
-				AND trigger_time <![CDATA[ <= ]]> #{clearBeforeTime}
-			</if>
-			<if test="clearBeforeNum gt 0">
-				AND id NOT in(
-				SELECT id FROM(
-				SELECT top (#{clearBeforeNum}) id FROM xxl_job_log AS t
-				<trim prefix="WHERE" prefixOverrides="AND | OR" >
-					<if test="jobGroup gt 0">
-						AND t.job_group = #{jobGroup}
-					</if>
-					<if test="jobId gt 0">
-						AND t.job_id = #{jobId}
-					</if>
-				</trim>
-				ORDER BY t.trigger_time desc
+				OFFSET 0 ROWS
+				FETCH NEXT #{clearBeforeNum} ROWS ONLY
 				) t1
 				)
 			</if>
 		</trim>
-		order by id asc
+		ORDER BY id ASC
+		OFFSET 0 ROWS
+		FETCH NEXT #{pagesize} ROWS ONLY
 	</select>
 
-	<select id="findClearLogIds" resultType="long" >
+	<select id="findClearLogIds" databaseId="mysql" resultType="long" >
 		SELECT id FROM xxl_job_log
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
 			<if test="jobGroup gt 0">
@@ -405,26 +322,21 @@
 		</foreach>
 	</delete>
 
-	<select id="findFailJobLogIds" databaseId="oracle" resultType="long" >
-		SELECT id
-		FROM xxl_job_log
+	<select id="findFailJobLogIds" resultType="long">
+		SELECT id FROM xxl_job_log
 		WHERE (
-			(trigger_code NOT IN (0, 200) AND handle_code != 0)
-				OR (handle_code != 200)
-			)
-		  AND alarm_status = 0
+		(
+		(trigger_code NOT IN (0, 200) AND handle_code != 0)
+		OR (handle_code != 200)
+		)
+		)
+		AND alarm_status = 0
 		ORDER BY id ASC
-			FETCH FIRST #{pagesize} ROWS ONLY
+		OFFSET 0 ROWS
+		FETCH NEXT #{pagesize} ROWS ONLY
 	</select>
 
-	<select id="findFailJobLogIds" databaseId="sqlserver" resultType="long" >
-		SELECT top (#{pagesize}) id FROM xxl_job_log
-		WHERE (  (trigger_code != 0 or handle_code != 0) and (handle_code != 200)  )
-		  AND alarm_status = 0
-		ORDER BY id ASC
-	</select>
-
-	<select id="findFailJobLogIds" resultType="long" >
+	<select id="findFailJobLogIds" databaseId="mysql" resultType="long" >
 		SELECT id FROM `xxl_job_log`
 		WHERE NOT(
 			(trigger_code in (0, 200) and handle_code = 0)
@@ -436,25 +348,11 @@
 		LIMIT #{pagesize}
 	</select>
 
-	<update id="updateAlarmStatus" databaseId="oracle">
-		UPDATE xxl_job_log
-		SET
-			alarm_status = #{newAlarmStatus}
-		WHERE id= #{logId} AND alarm_status = #{oldAlarmStatus}
-	</update>
-
-	<update id="updateAlarmStatus" databaseId="sqlserver">
-		UPDATE xxl_job_log
-		SET
-			alarm_status = #{newAlarmStatus}
-		WHERE id= #{logId} AND alarm_status = #{oldAlarmStatus}
-	</update>
-
 	<update id="updateAlarmStatus" >
 		UPDATE xxl_job_log
 		SET
-			`alarm_status` = #{newAlarmStatus}
-		WHERE `id`= #{logId} AND `alarm_status` = #{oldAlarmStatus}
+			alarm_status = #{newAlarmStatus}
+		WHERE id= #{logId} AND alarm_status = #{oldAlarmStatus}
 	</update>
 
 	<select id="findLostJobIds" resultType="long" >

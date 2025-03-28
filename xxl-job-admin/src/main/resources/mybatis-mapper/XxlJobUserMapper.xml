@@ -21,12 +21,12 @@
 
 	<sql id='XXL_JOB_USER_ID' databaseId="oracle">XXL_JOB_USER_ID.NEXTVAL</sql>
 
-	<select id="pageList" databaseId="oracle" parameterType="java.util.HashMap" resultMap="XxlJobUser">
+	<select id="pageList" parameterType="java.util.HashMap" resultMap="XxlJobUser">
 		SELECT <include refid="Base_Column_List" />
 		FROM xxl_job_user t
 		<trim prefix="WHERE" prefixOverrides="AND | OR">
 			<if test="username != null and username != ''">
-				AND t.username LIKE '%' || #{username} || '%'
+				AND t.username LIKE CONCAT(CONCAT('%', #{username}), '%')
 			</if>
 			<if test="role gt -1">
 				AND t.role = #{role}
@@ -37,25 +37,8 @@
 		FETCH NEXT #{pagesize} ROWS ONLY
 	</select>
 
-	<select id="pageList" databaseId="sqlserver" parameterType="java.util.HashMap" resultMap="XxlJobUser">
-		SELECT <include refid="Base_Column_List" />
-		from (
-		SELECT row_number () OVER ( ORDER BY username ASC ) AS rownumber,
-		<include refid="Base_Column_List" />
-		FROM xxl_job_user AS t
-		<trim prefix="WHERE" prefixOverrides="AND | OR" >
-			<if test="username != null and username != ''">
-				AND t.username like CONCAT(CONCAT('%', #{username}), '%')
-			</if>
-			<if test="role gt -1">
-				AND t.role = #{role}
-			</if>
-		</trim>) AS t
-		WHERE t.rownumber <![CDATA[ > ]]> #{offset}
-		AND t.rownumber <![CDATA[ <= ]]> (#{offset} + #{pagesize})
-	</select>
 
-	<select id="pageList" parameterType="java.util.HashMap" resultMap="XxlJobUser">
+	<select id="pageList" databaseId="mysql" parameterType="java.util.HashMap" resultMap="XxlJobUser">
 		SELECT <include refid="Base_Column_List" />
 		FROM xxl_job_user AS t
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
