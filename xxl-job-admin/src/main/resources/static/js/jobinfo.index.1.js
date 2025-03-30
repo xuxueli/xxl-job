@@ -1,5 +1,9 @@
 $(function() {
 
+	//select2
+	$("#jobGroup").select2();
+	$("#triggerStatus").select2({ width: '100%' });
+
 	// init date tables
 	var jobTable = $("#job_list").dataTable({
 		"deferRender": true,
@@ -189,6 +193,7 @@ $(function() {
 			}
 		}
 	});
+
 
     // table data
     var tableData = {};
