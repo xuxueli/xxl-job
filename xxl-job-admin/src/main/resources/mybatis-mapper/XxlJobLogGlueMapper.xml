@@ -23,32 +23,6 @@
 		t.update_time
 	</sql>
 
-	<!--//TODO oracle支持调整 取序列 -->
-	<sql id='XXL_JOB_LOGGLUE_ID' databaseId="oracle">XXL_JOB_LOGGLUE_ID.NEXTVAL</sql>
-
-	<insert id="save" databaseId="oracle" parameterType="com.xxl.job.admin.core.model.XxlJobLogGlue" useGeneratedKeys="true" keyProperty="id" >
-		<selectKey keyProperty="id" resultType="int" order="BEFORE">
-			select <include refid="XXL_JOB_LOGGLUE_ID" /> from dual
-		</selectKey>
-		INSERT INTO xxl_job_logglue (
-		id,
-		job_id,
-		glue_type,
-		glue_source,
-		glue_remark,
-		add_time,
-		update_time
-		) VALUES (
-		#{id},
-		#{jobId},
-		#{glueType},
-		#{glueSource},
-		#{glueRemark},
-		#{addTime},
-		#{updateTime}
-		)
-	</insert>
-
 	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobLogGlue" useGeneratedKeys="true" keyProperty="id" >
 		INSERT INTO xxl_job_logglue (
 			job_id,
@@ -66,7 +40,7 @@
 			#{updateTime}
 		);
 		<!--<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
-			SELECT LAST_INSERT_ID() 
+			SELECT LAST_INSERT_ID()
 		</selectKey>-->
 	</insert>
 	
@@ -77,49 +51,30 @@
 		ORDER BY id DESC
 	</select>
 
-	<delete id="removeOld" databaseId="oracle">
+	<delete id="removeOld" parameterType="java.util.HashMap">
 		DELETE FROM xxl_job_logglue
 		WHERE id NOT IN (
-			SELECT id FROM (
-				SELECT id
-				FROM xxl_job_logglue
-				WHERE job_id = #{jobId}
-				ORDER BY update_time DESC
-				OFFSET 0 ROWS
-				FETCH NEXT #{limit} ROWS ONLY
-			) t1
+		SELECT id FROM (
+		SELECT id
+		FROM xxl_job_logglue
+		WHERE job_id = #{jobId}
+		ORDER BY update_time DESC
+		<choose>
+			<when test="_databaseId == 'oracle' or _databaseId == 'sqlserver' or _databaseId == 'pg'">
+				OFFSET 0 ROWS FETCH NEXT #{limit} ROWS ONLY
+			</when>
+			<otherwise>
+				LIMIT #{limit}
+			</otherwise>
+		</choose>
+		) t1
 		)
 		AND job_id = #{jobId}
 	</delete>
 
-	<delete id="removeOld" databaseId="sqlserver">
-		DELETE FROM xxl_job_logglue
-		WHERE id NOT IN (
-			SELECT id
-			FROM xxl_job_logglue
-			WHERE job_id = #{jobId}
-			ORDER BY update_time DESC
-			OFFSET 0 ROWS
-			FETCH NEXT #{limit} ROWS ONLY
-		)
-		AND job_id = #{jobId}
-	</delete>
-
-	<delete id="removeOld" >
-		DELETE FROM xxl_job_logglue
-		WHERE id NOT in(
-			SELECT id FROM(
-				SELECT id FROM xxl_job_logglue
-				WHERE `job_id` = #{jobId}
-				ORDER BY update_time desc
-				LIMIT 0, #{limit}
-			) t1
-		) AND `job_id` = #{jobId}
-	</delete>
-	
 	<delete id="deleteByJobId" parameterType="java.lang.Integer" >
 		DELETE FROM xxl_job_logglue
 		WHERE job_id = #{jobId}
 	</delete>
-	
+
 </mapper>

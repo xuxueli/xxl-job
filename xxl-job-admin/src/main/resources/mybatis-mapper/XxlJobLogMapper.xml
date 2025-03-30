@@ -44,8 +44,6 @@
 		t.alarm_status
 	</sql>
 
-	<sql id='XXL_JOB_LOG_ID' databaseId="oracle">XXL_JOB_LOG_ID.NEXTVAL</sql>
-
 	<select id="pageList" parameterType="java.util.HashMap" resultMap="XxlJobLog">
 		SELECT <include refid="Base_Column_List" />
 		FROM xxl_job_log t
@@ -74,44 +72,16 @@
 			</if>
 		</trim>
 		ORDER BY t.trigger_time DESC
-		OFFSET #{offset} ROWS
-		FETCH NEXT #{pagesize} ROWS ONLY
+		<choose>
+			<when test="_databaseId == 'oracle' or _databaseId == 'sqlserver' or _databaseId == 'pg'">
+				OFFSET #{offset} ROWS FETCH NEXT #{pagesize} ROWS ONLY
+			</when>
+			<otherwise>
+				LIMIT #{offset}, #{pagesize}
+			</otherwise>
+		</choose>
 	</select>
 
-	<select id="pageList" databaseId="mysql" resultMap="XxlJobLog">
-		SELECT <include refid="Base_Column_List" />
-		FROM xxl_job_log AS t
-		<trim prefix="WHERE" prefixOverrides="AND | OR" >
-			<if test="jobId==0 and jobGroup gt 0">
-				AND t.job_group = #{jobGroup}
-			</if>
-			<if test="jobId gt 0">
-				AND t.job_id = #{jobId}
-			</if>
-			<if test="triggerTimeStart != null">
-				AND t.trigger_time <![CDATA[ >= ]]> #{triggerTimeStart}
-			</if>
-			<if test="triggerTimeEnd != null">
-				AND t.trigger_time <![CDATA[ <= ]]> #{triggerTimeEnd}
-			</if>
-			<if test="logStatus == 1" >
-				AND t.handle_code = 200
-			</if>
-			<if test="logStatus == 2" >
-				AND (
-					t.trigger_code NOT IN (0, 200) OR
-					t.handle_code NOT IN (0, 200)
-				)
-			</if>
-			<if test="logStatus == 3" >
-				AND t.trigger_code = 200
-				AND t.handle_code = 0
-			</if>
-		</trim>
-		ORDER BY t.trigger_time DESC
-		LIMIT #{offset}, #{pagesize}
-	</select>
-	
 	<select id="pageListCount" resultType="int">
 		SELECT count(1)
 		FROM xxl_job_log AS t
@@ -150,31 +120,6 @@
 		WHERE t.id = #{id}
 	</select>
 
-
-	<insert id="save" databaseId="oracle" parameterType="com.xxl.job.admin.core.model.XxlJobLog" useGeneratedKeys="true" keyProperty="id" >
-		<selectKey keyProperty="id" resultType="int" order="BEFORE">
-			select <include refid="XXL_JOB_LOG_ID" /> from dual
-		</selectKey>
-		INSERT INTO xxl_job_log (
-			id,
-			job_group,
-			job_id,
-			trigger_time,
-			trigger_code,
-			handle_code
-		) VALUES (
-			#{id},
-			#{jobGroup},
-			#{jobId},
-			#{triggerTime},
-			#{triggerCode},
-			#{handleCode}
-		)
-		<!--<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
-			SELECT LAST_INSERT_ID()
-		</selectKey>-->
-	</insert>
-
 	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobLog" useGeneratedKeys="true" keyProperty="id" >
 		INSERT INTO xxl_job_log (
 			job_group,
@@ -190,7 +135,7 @@
 			#{handleCode}
 		);
 		<!--<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
-			SELECT LAST_INSERT_ID() 
+			SELECT LAST_INSERT_ID()
 		</selectKey>-->
 	</insert>
 
@@ -216,7 +161,7 @@
 			handle_msg= #{handleMsg}
 		WHERE id= #{id}
 	</update>
-	
+
 	<delete id="delete" >
 		delete from xxl_job_log
 		WHERE job_id = #{jobId}
@@ -243,7 +188,7 @@
 		WHERE trigger_time BETWEEN #{from} and #{to}
     </select>
 
-	<select id="findClearLogIds" resultType="long" >
+	<select id="findClearLogIds" resultType="long">
 		SELECT id FROM xxl_job_log
 		<trim prefix="WHERE" prefixOverrides="AND | OR">
 			<if test="jobGroup gt 0">
@@ -269,49 +214,27 @@
 					</if>
 				</trim>
 				ORDER BY trigger_time DESC
-				OFFSET 0 ROWS
-				FETCH NEXT #{clearBeforeNum} ROWS ONLY
+				<choose>
+					<when test="_databaseId == 'oracle' or _databaseId == 'sqlserver' or _databaseId == 'pg'">
+						OFFSET 0 ROWS FETCH NEXT #{clearBeforeNum} ROWS ONLY
+					</when>
+					<otherwise>
+						LIMIT #{clearBeforeNum}
+					</otherwise>
+				</choose>
 				) t1
 				)
 			</if>
 		</trim>
 		ORDER BY id ASC
-		OFFSET 0 ROWS
-		FETCH NEXT #{pagesize} ROWS ONLY
-	</select>
-
-	<select id="findClearLogIds" databaseId="mysql" resultType="long" >
-		SELECT id FROM xxl_job_log
-		<trim prefix="WHERE" prefixOverrides="AND | OR" >
-			<if test="jobGroup gt 0">
-				AND job_group = #{jobGroup}
-			</if>
-			<if test="jobId gt 0">
-				AND job_id = #{jobId}
-			</if>
-			<if test="clearBeforeTime != null">
-				AND trigger_time <![CDATA[ <= ]]> #{clearBeforeTime}
-			</if>
-			<if test="clearBeforeNum gt 0">
-				AND id NOT in(
-				SELECT id FROM(
-				SELECT id FROM xxl_job_log AS t
-				<trim prefix="WHERE" prefixOverrides="AND | OR" >
-					<if test="jobGroup gt 0">
-						AND t.job_group = #{jobGroup}
-					</if>
-					<if test="jobId gt 0">
-						AND t.job_id = #{jobId}
-					</if>
-				</trim>
-				ORDER BY t.trigger_time desc
-				LIMIT 0, #{clearBeforeNum}
-				) t1
-				)
-			</if>
-		</trim>
-		order by id asc
-		LIMIT #{pagesize}
+		<choose>
+			<when test="_databaseId == 'oracle' or _databaseId == 'sqlserver' or _databaseId == 'pg'">
+				OFFSET 0 ROWS FETCH NEXT #{pagesize} ROWS ONLY
+			</when>
+			<otherwise>
+				LIMIT #{pagesize}
+			</otherwise>
+		</choose>
 	</select>
 
 	<delete id="clearLog" >
@@ -322,30 +245,22 @@
 		</foreach>
 	</delete>
 
-	<select id="findFailJobLogIds" resultType="long" >
+	<select id="findFailJobLogIds" resultType="long">
 		SELECT id FROM xxl_job_log
 		WHERE (
-		(
 		(trigger_code NOT IN (0, 200) AND handle_code != 0)
-		OR (handle_code != 200)
-		)
+		OR handle_code != 200
 		)
 		AND alarm_status = 0
 		ORDER BY id ASC
-		OFFSET 0 ROWS
-		FETCH NEXT #{pagesize} ROWS ONLY
-	</select>
-
-	<select id="findFailJobLogIds" databaseId="mysql" resultType="long" >
-		SELECT id FROM `xxl_job_log`
-		WHERE NOT(
-			(trigger_code in (0, 200) and handle_code = 0)
-			OR
-			(handle_code = 200)
-		)
-		AND `alarm_status` = 0
-		ORDER BY id ASC
-		LIMIT #{pagesize}
+		<choose>
+			<when test="_databaseId == 'oracle' or _databaseId == 'sqlserver' or _databaseId == 'pg'">
+				OFFSET 0 ROWS FETCH NEXT #{pagesize} ROWS ONLY
+			</when>
+			<otherwise>
+				LIMIT #{pagesize}
+			</otherwise>
+		</choose>
 	</select>
 
 	<update id="updateAlarmStatus" >

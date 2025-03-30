@@ -65,10 +65,6 @@
 		t.trigger_next_time
 	</sql>
 
-	<sql id='XXL_JOB_INFO_ID' databaseId = "oracle">
-		XXL_JOB_INFO_ID.NEXTVAL
-	</sql>
-
 	<select id="pageList" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
 		SELECT <include refid="Base_Column_List" />
 		FROM xxl_job_info t
@@ -90,32 +86,14 @@
 			</if>
 		</trim>
 		ORDER BY id DESC
-		OFFSET #{offset} ROWS
-		FETCH NEXT #{pagesize} ROWS ONLY
-	</select>
-
-	<select id="pageList" databaseId="mysql" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
-		SELECT <include refid="Base_Column_List" />
-		FROM xxl_job_info AS t
-		<trim prefix="WHERE" prefixOverrides="AND | OR" >
-			<if test="jobGroup gt 0">
-				AND t.job_group = #{jobGroup}
-			</if>
-            <if test="triggerStatus gte 0">
-                AND t.trigger_status = #{triggerStatus}
-            </if>
-			<if test="jobDesc != null and jobDesc != ''">
-				AND t.job_desc like CONCAT(CONCAT('%', #{jobDesc}), '%')
-			</if>
-			<if test="executorHandler != null and executorHandler != ''">
-				AND t.executor_handler like CONCAT(CONCAT('%', #{executorHandler}), '%')
-			</if>
-			<if test="author != null and author != ''">
-				AND t.author like CONCAT(CONCAT('%', #{author}), '%')
-			</if>
-		</trim>
-		ORDER BY id DESC
-		LIMIT #{offset}, #{pagesize}
+		<choose>
+			<when test="_databaseId == 'oracle' or _databaseId == 'sqlserver' or _databaseId == 'pg'">
+				OFFSET #{offset} ROWS FETCH NEXT #{pagesize} ROWS ONLY
+			</when>
+			<otherwise>
+				LIMIT #{offset}, #{pagesize}
+			</otherwise>
+		</choose>
 	</select>
 
 	<select id="pageListCount" parameterType="java.util.HashMap" resultType="int">
@@ -196,67 +174,6 @@
 		</selectKey>-->
 	</insert>
 
-	<insert id="save" databaseId = "oracle" parameterType="com.xxl.job.admin.core.model.XxlJobInfo" useGeneratedKeys="true" keyProperty="id" >
-		<selectKey keyProperty="id" resultType="int" order="BEFORE">
-			select <include refid="XXL_JOB_INFO_ID" /> from dual
-		</selectKey>
-		INSERT INTO xxl_job_info (
-		id,
-		job_group,
-		job_desc,
-		add_time,
-		update_time,
-		author,
-		alarm_email,
-		schedule_type,
-		schedule_conf,
-		misfire_strategy,
-		executor_route_strategy,
-		executor_handler,
-		executor_param,
-		executor_block_strategy,
-		executor_timeout,
-		executor_fail_retry_count,
-		glue_type,
-		glue_source,
-		glue_remark,
-		glue_updatetime,
-		child_jobid,
-		trigger_status,
-		trigger_last_time,
-		trigger_next_time
-		) VALUES (
-		#{id},
-		#{jobGroup},
-		#{jobDesc},
-		#{addTime},
-		#{updateTime},
-		#{author},
-		#{alarmEmail},
-		#{scheduleType},
-		#{scheduleConf},
-		#{misfireStrategy},
-		#{executorRouteStrategy},
-		#{executorHandler},
-		#{executorParam},
-		#{executorBlockStrategy},
-		#{executorTimeout},
-		#{executorFailRetryCount},
-		#{glueType},
-		#{glueSource},
-		#{glueRemark},
-		#{glueUpdatetime},
-		#{childJobId},
-		#{triggerStatus},
-		#{triggerLastTime},
-		#{triggerNextTime}
-		)
-		<!--<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
-			SELECT LAST_INSERT_ID()
-			/*SELECT @@IDENTITY AS id*/
-		</selectKey>-->
-	</insert>
-
 	<select id="loadById" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
 		SELECT <include refid="Base_Column_List" />
 		FROM xxl_job_info AS t
@@ -308,24 +225,20 @@
 		FROM xxl_job_info
 	</select>
 
-
-	<select id="scheduleJobQuery" databaseId="mysql" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
-		SELECT <include refid="Base_Column_List" />
-		FROM xxl_job_info AS t
-		WHERE t.trigger_status = 1
-			and t.trigger_next_time <![CDATA[ <= ]]> #{maxNextTime}
-		ORDER BY id ASC
-		LIMIT #{pagesize}
-	</select>
-
 	<select id="scheduleJobQuery" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
 		SELECT <include refid="Base_Column_List" />
 		FROM xxl_job_info AS t
 		WHERE t.trigger_status = 1
-			AND t.trigger_next_time <![CDATA[ <= ]]> #{maxNextTime}
+		AND t.trigger_next_time <![CDATA[ <= ]]> #{maxNextTime}
 		ORDER BY id ASC
-		OFFSET 0 ROWS
-		FETCH NEXT #{pagesize} ROWS ONLY
+		<choose>
+			<when test="_databaseId == 'oracle' or _databaseId == 'sqlserver' or _databaseId == 'pg'">
+				OFFSET 0 ROWS FETCH NEXT #{pagesize} ROWS ONLY
+			</when>
+			<otherwise>
+				LIMIT #{pagesize}
+			</otherwise>
+		</choose>
 	</select>
 
 	<update id="scheduleUpdate" parameterType="com.xxl.job.admin.core.model.XxlJobInfo"  >

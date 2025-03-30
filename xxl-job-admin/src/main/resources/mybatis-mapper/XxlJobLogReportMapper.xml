@@ -19,28 +19,6 @@
 		t.fail_count
 	</sql>
 
-	<!--//TODO oracle支持调整 取序列 -->
-	<sql id='XXL_JOB_LOG_REPORT_ID' databaseId="oracle">XXL_JOB_LOG_REPORT_ID.NEXTVAL</sql>
-
-	<insert id="save" databaseId="oracle" parameterType="com.xxl.job.admin.core.model.XxlJobLogReport" useGeneratedKeys="true" keyProperty="id" >
-		<selectKey keyProperty="id" resultType="int" order="BEFORE">
-			select <include refid="XXL_JOB_LOG_REPORT_ID" /> from dual
-		</selectKey>
-		INSERT INTO xxl_job_log_report (
-		id,
-		trigger_day,
-		running_count,
-		suc_count,
-		fail_count
-		) VALUES (
-		#{id},
-		#{triggerDay},
-		#{runningCount},
-		#{sucCount},
-		#{failCount}
-		)
-	</insert>
-
 	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobLogReport" useGeneratedKeys="true" keyProperty="id" >
 		INSERT INTO xxl_job_log_report (
 			trigger_day,
@@ -54,7 +32,7 @@
 			#{failCount}
 		);
 		<!--<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
-			SELECT LAST_INSERT_ID() 
+			SELECT LAST_INSERT_ID()
 		</selectKey>-->
 	</insert>
 

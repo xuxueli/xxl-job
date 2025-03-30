@@ -19,8 +19,6 @@
 		t.permission
 	</sql>
 
-	<sql id='XXL_JOB_USER_ID' databaseId="oracle">XXL_JOB_USER_ID.NEXTVAL</sql>
-
 	<select id="pageList" parameterType="java.util.HashMap" resultMap="XxlJobUser">
 		SELECT <include refid="Base_Column_List" />
 		FROM xxl_job_user t
@@ -33,24 +31,14 @@
 			</if>
 		</trim>
 		ORDER BY t.username ASC
-		OFFSET #{offset} ROWS
-		FETCH NEXT #{pagesize} ROWS ONLY
-	</select>
-
-
-	<select id="pageList" databaseId="mysql" parameterType="java.util.HashMap" resultMap="XxlJobUser">
-		SELECT <include refid="Base_Column_List" />
-		FROM xxl_job_user AS t
-		<trim prefix="WHERE" prefixOverrides="AND | OR" >
-			<if test="username != null and username != ''">
-				AND t.username like CONCAT(CONCAT('%', #{username}), '%')
-			</if>
-			<if test="role gt -1">
-				AND t.role = #{role}
-			</if>
-		</trim>
-		ORDER BY username ASC
-		LIMIT #{offset}, #{pagesize}
+		<choose>
+			<when test="_databaseId == 'oracle' or _databaseId == 'sqlserver' or _databaseId == 'pg'">
+				OFFSET #{offset} ROWS FETCH NEXT #{pagesize} ROWS ONLY
+			</when>
+			<otherwise>
+				LIMIT #{offset}, #{pagesize}
+			</otherwise>
+		</choose>
 	</select>
 
 	<select id="pageListCount" parameterType="java.util.HashMap" resultType="int">
@@ -71,25 +59,6 @@
 		FROM xxl_job_user AS t
 		WHERE t.username = #{username}
 	</select>
-
-	<insert id="save" databaseId="oracle" parameterType="com.xxl.job.admin.core.model.XxlJobUser" useGeneratedKeys="true" keyProperty="id" >
-		<selectKey keyProperty="id" resultType="int" order="BEFORE">
-			select <include refid="XXL_JOB_USER_ID" /> from dual
-		</selectKey>
-		INSERT INTO xxl_job_user (
-		id,
-		username,
-		password,
-		role,
-		permission
-		) VALUES (
-		#{id},
-		#{username},
-		#{password},
-		#{role},
-		#{permission}
-		)
-	</insert>
 
 	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobUser" useGeneratedKeys="true" keyProperty="id" >
 		INSERT INTO xxl_job_user (
