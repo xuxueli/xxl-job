@@ -43,7 +43,7 @@
 		t.handle_msg,
 		t.alarm_status
 	</sql>
-
+	
 	<select id="pageList" resultMap="XxlJobLog">
 		SELECT <include refid="Base_Column_List" />
 		FROM xxl_job_log AS t

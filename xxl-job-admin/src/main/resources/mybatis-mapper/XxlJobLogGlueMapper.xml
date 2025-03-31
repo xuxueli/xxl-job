@@ -22,7 +22,7 @@
 		t.add_time,
 		t.update_time
 	</sql>
-
+	
 	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobLogGlue" useGeneratedKeys="true" keyProperty="id" >
 		INSERT INTO xxl_job_logglue (
 			job_id,
