@@ -69,7 +69,7 @@
 				) t1
 		)AND job_id = #{jobId}
 	</delete>
-
+	
 	<delete id="deleteByJobId" parameterType="java.lang.Integer" >
 		DELETE FROM xxl_job_logglue
 		WHERE job_id = #{jobId}

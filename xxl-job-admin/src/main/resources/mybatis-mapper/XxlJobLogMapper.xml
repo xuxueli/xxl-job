@@ -165,7 +165,7 @@
 			handle_msg= #{handleMsg}
 		WHERE id= #{id}
 	</update>
-
+	
 	<delete id="delete" >
 		delete from xxl_job_log
 		WHERE job_id = #{jobId}
