@@ -50,7 +50,7 @@
 		WHERE t.job_id = #{jobId}
 		ORDER BY id DESC
 	</select>
-
+	
 	<delete id="removeOld" >
 		DELETE FROM xxl_job_logglue
 		WHERE id NOT IN (

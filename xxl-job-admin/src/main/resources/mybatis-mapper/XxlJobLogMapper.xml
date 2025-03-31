@@ -123,7 +123,7 @@
 		WHERE t.id = #{id}
 	</select>
 
-
+	
 	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobLog" useGeneratedKeys="true" keyProperty="id" >
 		INSERT INTO xxl_job_log (
 			job_group,
