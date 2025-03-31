@@ -139,7 +139,7 @@
 			#{handleCode}
 		);
 		<!--<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
-			SELECT LAST_INSERT_ID()
+			SELECT LAST_INSERT_ID() 
 		</selectKey>-->
 	</insert>
 
@@ -248,7 +248,7 @@
 		</foreach>
 	</delete>
 
-	<select id="findFailJobLogIds" resultType="long">
+	<select id="findFailJobLogIds" resultType="long" >
 		SELECT id FROM xxl_job_log
 		WHERE NOT(
       			  (trigger_code in (0, 200) and handle_code = 0)
