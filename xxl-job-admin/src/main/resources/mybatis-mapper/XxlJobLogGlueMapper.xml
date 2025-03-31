@@ -22,7 +22,7 @@
 		t.add_time,
 		t.update_time
 	</sql>
-	
+
 	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobLogGlue" useGeneratedKeys="true" keyProperty="id" >
 		INSERT INTO xxl_job_logglue (
 			job_id,
@@ -40,7 +40,7 @@
 			#{updateTime}
 		);
 		<!--<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
-			SELECT LAST_INSERT_ID() 
+			SELECT LAST_INSERT_ID()
 		</selectKey>-->
 	</insert>
 	
@@ -50,29 +50,29 @@
 		WHERE t.job_id = #{jobId}
 		ORDER BY id DESC
 	</select>
-	
+
 	<delete id="removeOld" >
 		DELETE FROM xxl_job_logglue
-		WHERE id NOT IN (
-				SELECT id FROM (
-					SELECT id FROM xxl_job_logglue
-					WHERE job_id = #{jobId}
-					ORDER BY update_time desc
-					<choose>
-						<when test="_databaseId == 'oracle' or _databaseId == 'sqlserver' or _databaseId == 'pg'">
-							OFFSET 0 ROWS FETCH NEXT #{limit} ROWS ONLY
-						</when>
-						<otherwise>
-							LIMIT #{limit}
-						</otherwise>
-					</choose>
-				) t1
+		WHERE id NOT in(
+			SELECT id FROM(
+				SELECT id FROM xxl_job_logglue
+				WHERE job_id = #{jobId}
+				ORDER BY update_time desc
+				<choose>
+					<when test="_databaseId == 'oracle' or _databaseId == 'sqlserver' or _databaseId == 'pg'">
+						OFFSET 0 ROWS FETCH NEXT #{limit} ROWS ONLY
+					</when>
+					<otherwise>
+						LIMIT #{limit}
+					</otherwise>
+				</choose>
+			) t1
 		)AND job_id = #{jobId}
 	</delete>
-	
+
 	<delete id="deleteByJobId" parameterType="java.lang.Integer" >
 		DELETE FROM xxl_job_logglue
 		WHERE job_id = #{jobId}
 	</delete>
-	
+
 </mapper>

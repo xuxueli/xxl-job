@@ -43,7 +43,7 @@
 		t.handle_msg,
 		t.alarm_status
 	</sql>
-	
+
 	<select id="pageList" resultMap="XxlJobLog">
 		SELECT <include refid="Base_Column_List" />
 		FROM xxl_job_log AS t
@@ -65,8 +65,8 @@
 			</if>
 			<if test="logStatus == 2" >
 				AND (
-		    			t.trigger_code NOT IN (0, 200) OR
-						t.handle_code NOT IN (0, 200)
+					t.trigger_code NOT IN (0, 200) OR
+					t.handle_code NOT IN (0, 200)
 				)
 			</if>
 			<if test="logStatus == 3" >
@@ -84,7 +84,7 @@
 			</otherwise>
 		</choose>
 	</select>
-	
+
 	<select id="pageListCount" resultType="int">
 		SELECT count(1)
 		FROM xxl_job_log AS t
@@ -123,7 +123,7 @@
 		WHERE t.id = #{id}
 	</select>
 
-	
+
 	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobLog" useGeneratedKeys="true" keyProperty="id" >
 		INSERT INTO xxl_job_log (
 			job_group,
@@ -139,7 +139,7 @@
 			#{handleCode}
 		);
 		<!--<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
-			SELECT LAST_INSERT_ID() 
+			SELECT LAST_INSERT_ID()
 		</selectKey>-->
 	</insert>
 
@@ -165,7 +165,7 @@
 			handle_msg= #{handleMsg}
 		WHERE id= #{id}
 	</update>
-	
+
 	<delete id="delete" >
 		delete from xxl_job_log
 		WHERE job_id = #{jobId}
@@ -251,10 +251,10 @@
 	<select id="findFailJobLogIds" resultType="long" >
 		SELECT id FROM xxl_job_log
 		WHERE NOT(
-      			  (trigger_code in (0, 200) and handle_code = 0)
-       			  OR
-        		  (handle_code = 200)
-        )
+			(trigger_code in (0, 200) and handle_code = 0)
+			OR
+			(handle_code = 200)
+		)
 		AND alarm_status = 0
 		ORDER BY id ASC
 		<choose>

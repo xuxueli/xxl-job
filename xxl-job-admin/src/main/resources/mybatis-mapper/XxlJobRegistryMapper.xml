@@ -19,7 +19,7 @@
 		t.update_time
 	</sql>
 
-	<select id="findDead" parameterType="java.util.HashMap" resultType="java.lang.Long" >
+	<select id="findDead" parameterType="java.util.HashMap" resultType="java.lang.Integer" >
 		SELECT t.id
 		FROM xxl_job_registry AS t
 		WHERE t.update_time <![CDATA[ < ]]>
@@ -34,11 +34,11 @@
 				cast(#{nowTime} as timestamp) - #{timeout} * INTERVAL '1 SECOND'
 			</when>
 			<otherwise>
-				DATE_ADD(#{nowTime}, INTERVAL -#{timeout} SECOND)
+				DATE_ADD(#{nowTime},INTERVAL -#{timeout} SECOND)
 			</otherwise>
 		</choose>
 	</select>
-	
+
 	<delete id="removeDead" parameterType="java.lang.Integer" >
 		DELETE FROM xxl_job_registry
 		WHERE id in
@@ -114,7 +114,7 @@
 			<when test="_databaseId == 'pg'">
 				INSERT INTO xxl_job_registry( registry_group , registry_key , registry_value, update_time)
 				VALUES( #{registryGroup}  , #{registryKey} , #{registryValue}, #{updateTime})
-				CONFLICT (registry_group, registry_key, registry_value) DO UPDATE SET
+				ON CONFLICT (registry_group, registry_key, registry_value) DO UPDATE SET
 				update_time = #{updateTime}
 			</when>
 			<otherwise>
