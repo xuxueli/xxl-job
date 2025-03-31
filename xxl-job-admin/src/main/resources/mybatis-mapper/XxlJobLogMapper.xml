@@ -44,11 +44,11 @@
 		t.alarm_status
 	</sql>
 
-	<select id="pageList" parameterType="java.util.HashMap" resultMap="XxlJobLog">
+	<select id="pageList" resultMap="XxlJobLog">
 		SELECT <include refid="Base_Column_List" />
-		FROM xxl_job_log t
-		<trim prefix="WHERE" prefixOverrides="AND | OR">
-			<if test="jobId == 0 and jobGroup gt 0">
+		FROM xxl_job_log AS t
+		<trim prefix="WHERE" prefixOverrides="AND | OR" >
+			<if test="jobId==0 and jobGroup gt 0">
 				AND t.job_group = #{jobGroup}
 			</if>
 			<if test="jobId gt 0">
@@ -60,13 +60,16 @@
 			<if test="triggerTimeEnd != null">
 				AND t.trigger_time <![CDATA[ <= ]]> #{triggerTimeEnd}
 			</if>
-			<if test="logStatus == 1">
+			<if test="logStatus == 1" >
 				AND t.handle_code = 200
 			</if>
-			<if test="logStatus == 2">
-				AND (t.trigger_code NOT IN (0, 200) OR t.handle_code NOT IN (0, 200))
+			<if test="logStatus == 2" >
+				AND (
+		    			t.trigger_code NOT IN (0, 200) OR
+						t.handle_code NOT IN (0, 200)
+				)
 			</if>
-			<if test="logStatus == 3">
+			<if test="logStatus == 3" >
 				AND t.trigger_code = 200
 				AND t.handle_code = 0
 			</if>
@@ -119,6 +122,7 @@
 		FROM xxl_job_log AS t
 		WHERE t.id = #{id}
 	</select>
+
 
 	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobLog" useGeneratedKeys="true" keyProperty="id" >
 		INSERT INTO xxl_job_log (
@@ -188,9 +192,9 @@
 		WHERE trigger_time BETWEEN #{from} and #{to}
     </select>
 
-	<select id="findClearLogIds" resultType="long">
+	<select id="findClearLogIds" resultType="long" >
 		SELECT id FROM xxl_job_log
-		<trim prefix="WHERE" prefixOverrides="AND | OR">
+		<trim prefix="WHERE" prefixOverrides="AND | OR" >
 			<if test="jobGroup gt 0">
 				AND job_group = #{jobGroup}
 			</if>
@@ -201,19 +205,18 @@
 				AND trigger_time <![CDATA[ <= ]]> #{clearBeforeTime}
 			</if>
 			<if test="clearBeforeNum gt 0">
-				AND id NOT IN (
-				SELECT id FROM (
-				SELECT id
-				FROM xxl_job_log
-				<trim prefix="WHERE" prefixOverrides="AND | OR">
+				AND id NOT in(
+				SELECT id FROM(
+				SELECT id FROM xxl_job_log AS t
+				<trim prefix="WHERE" prefixOverrides="AND | OR" >
 					<if test="jobGroup gt 0">
-						AND job_group = #{jobGroup}
+						AND t.job_group = #{jobGroup}
 					</if>
 					<if test="jobId gt 0">
-						AND job_id = #{jobId}
+						AND t.job_id = #{jobId}
 					</if>
 				</trim>
-				ORDER BY trigger_time DESC
+				ORDER BY t.trigger_time desc
 				<choose>
 					<when test="_databaseId == 'oracle' or _databaseId == 'sqlserver' or _databaseId == 'pg'">
 						OFFSET 0 ROWS FETCH NEXT #{clearBeforeNum} ROWS ONLY
@@ -226,7 +229,7 @@
 				)
 			</if>
 		</trim>
-		ORDER BY id ASC
+		order by id asc
 		<choose>
 			<when test="_databaseId == 'oracle' or _databaseId == 'sqlserver' or _databaseId == 'pg'">
 				OFFSET 0 ROWS FETCH NEXT #{pagesize} ROWS ONLY
@@ -247,10 +250,11 @@
 
 	<select id="findFailJobLogIds" resultType="long">
 		SELECT id FROM xxl_job_log
-		WHERE (
-		(trigger_code NOT IN (0, 200) AND handle_code != 0)
-		OR handle_code != 200
-		)
+		WHERE NOT(
+      			  (trigger_code in (0, 200) and handle_code = 0)
+       			  OR
+        		  (handle_code = 200)
+        )
 		AND alarm_status = 0
 		ORDER BY id ASC
 		<choose>

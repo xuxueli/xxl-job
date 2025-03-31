@@ -36,7 +36,7 @@
 		</selectKey>-->
 	</insert>
 
-	<update id="update">
+	<update id="update" >
 		UPDATE xxl_job_log_report
 		SET running_count = #{runningCount},
 			suc_count = #{sucCount},

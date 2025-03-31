@@ -19,7 +19,7 @@
 		t.update_time
 	</sql>
 
-	<select id="findDead" parameterType="java.util.HashMap" resultType="java.lang.Long">
+	<select id="findDead" parameterType="java.util.HashMap" resultType="java.lang.Long" >
 		SELECT t.id
 		FROM xxl_job_registry AS t
 		WHERE t.update_time <![CDATA[ < ]]>

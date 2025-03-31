@@ -51,25 +51,23 @@
 		ORDER BY id DESC
 	</select>
 
-	<delete id="removeOld" parameterType="java.util.HashMap">
+	<delete id="removeOld" >
 		DELETE FROM xxl_job_logglue
 		WHERE id NOT IN (
-		SELECT id FROM (
-		SELECT id
-		FROM xxl_job_logglue
-		WHERE job_id = #{jobId}
-		ORDER BY update_time DESC
-		<choose>
-			<when test="_databaseId == 'oracle' or _databaseId == 'sqlserver' or _databaseId == 'pg'">
-				OFFSET 0 ROWS FETCH NEXT #{limit} ROWS ONLY
-			</when>
-			<otherwise>
-				LIMIT #{limit}
-			</otherwise>
-		</choose>
-		) t1
-		)
-		AND job_id = #{jobId}
+				SELECT id FROM (
+					SELECT id FROM xxl_job_logglue
+					WHERE job_id = #{jobId}
+					ORDER BY update_time desc
+					<choose>
+						<when test="_databaseId == 'oracle' or _databaseId == 'sqlserver' or _databaseId == 'pg'">
+							OFFSET 0 ROWS FETCH NEXT #{limit} ROWS ONLY
+						</when>
+						<otherwise>
+							LIMIT #{limit}
+						</otherwise>
+					</choose>
+				) t1
+		)AND job_id = #{jobId}
 	</delete>
 
 	<delete id="deleteByJobId" parameterType="java.lang.Integer" >

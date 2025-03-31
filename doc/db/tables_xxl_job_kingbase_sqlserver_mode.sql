@@ -1,14 +1,6 @@
--- 判断数据库是否存在，若不存在则创建
-IF NOT EXISTS (SELECT name FROM master.dbo.sysdatabases WHERE name = N'xxl_job')
-    BEGIN
-        CREATE DATABASE [xxl_job]
-            COLLATE Latin1_General_100_CI_AS_SC_UTF8;
-    END
-GO
-
--- 切换到新创建的数据库
-USE [xxl_job];
-GO
+CREATE database xxl_job;
+\c xxl_job
+set client_encoding='UTF8';
 
 CREATE TABLE xxl_job_info (
                               id INT NOT NULL IDENTITY(1,1),
@@ -63,14 +55,15 @@ CREATE NONCLUSTERED INDEX I_jobid_jobgroup ON xxl_job_log(job_id, job_group);
 CREATE NONCLUSTERED INDEX I_job_id ON xxl_job_log(job_id);
 
 CREATE TABLE xxl_job_log_report (
-                                    id INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
+                                    id INT NOT NULL IDENTITY(1,1),
                                     trigger_day DATETIME2 DEFAULT NULL,
                                     running_count INT NOT NULL DEFAULT 0,
                                     suc_count INT NOT NULL DEFAULT 0,
                                     fail_count INT NOT NULL DEFAULT 0,
                                     update_time DATETIME2 DEFAULT NULL,
-                                    CONSTRAINT i_trigger_day UNIQUE(trigger_day)
+                                    PRIMARY KEY(id)
 );
+CREATE UNIQUE INDEX i_trigger_day ON xxl_job_log_report (trigger_day);
 
 CREATE TABLE xxl_job_logglue (
                                  id INT NOT NULL IDENTITY(1,1),
@@ -110,9 +103,9 @@ CREATE TABLE xxl_job_user (
                               password VARCHAR(50) NOT NULL,
                               role TINYINT NOT NULL,
                               permission VARCHAR(255) DEFAULT NULL,
-                              PRIMARY KEY (id),
-                              CONSTRAINT i_username UNIQUE(username)
+                              PRIMARY KEY (id)
 );
+CREATE UNIQUE INDEX i_username  ON xxl_job_user (username);
 
 CREATE TABLE xxl_job_lock (
                               lock_name VARCHAR(50) NOT NULL,
@@ -123,14 +116,4 @@ INSERT INTO xxl_job_group(app_name, title, address_type, address_list, update_ti
 INSERT INTO xxl_job_info(job_group, job_desc, add_time, update_time, author, alarm_email, schedule_type, schedule_conf, misfire_strategy, executor_route_strategy, executor_handler, executor_param, executor_block_strategy, executor_timeout, executor_fail_retry_count, glue_type, glue_source, glue_remark, glue_updatetime, child_jobid) VALUES (1, '测试任务1', '2018-11-03 22:21:31', '2018-11-03 22:21:31', 'XXL', '', 'CRON', '0 0 0 * * ? *', 'DO_NOTHING', 'FIRST', 'demoJobHandler', '', 'SERIAL_EXECUTION', 0, 0, 'BEAN', '', 'GLUE代码初始化', '2018-11-03 22:21:31', '');
 INSERT INTO xxl_job_user(username, password, role, permission) VALUES ('admin', 'e10adc3949ba59abbe56e057f20f883e', 1, NULL);
 INSERT INTO xxl_job_lock ( lock_name) VALUES ( 'schedule_lock');
-
-
-
-
-
-
-
-
-
-
 

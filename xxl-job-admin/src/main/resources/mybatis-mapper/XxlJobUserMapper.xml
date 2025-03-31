@@ -21,16 +21,16 @@
 
 	<select id="pageList" parameterType="java.util.HashMap" resultMap="XxlJobUser">
 		SELECT <include refid="Base_Column_List" />
-		FROM xxl_job_user t
-		<trim prefix="WHERE" prefixOverrides="AND | OR">
+		FROM xxl_job_user AS t
+		<trim prefix="WHERE" prefixOverrides="AND | OR" >
 			<if test="username != null and username != ''">
-				AND t.username LIKE CONCAT(CONCAT('%', #{username}), '%')
+				AND t.username like CONCAT(CONCAT('%', #{username}), '%')
 			</if>
 			<if test="role gt -1">
 				AND t.role = #{role}
 			</if>
 		</trim>
-		ORDER BY t.username ASC
+		ORDER BY username ASC
 		<choose>
 			<when test="_databaseId == 'oracle' or _databaseId == 'sqlserver' or _databaseId == 'pg'">
 				OFFSET #{offset} ROWS FETCH NEXT #{pagesize} ROWS ONLY

@@ -67,8 +67,8 @@
 
 	<select id="pageList" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
 		SELECT <include refid="Base_Column_List" />
-		FROM xxl_job_info t
-		<trim prefix="WHERE" prefixOverrides="AND | OR">
+		FROM xxl_job_info AS t
+		<trim prefix="WHERE" prefixOverrides="AND | OR" >
 			<if test="jobGroup gt 0">
 				AND t.job_group = #{jobGroup}
 			</if>
@@ -76,13 +76,13 @@
 				AND t.trigger_status = #{triggerStatus}
 			</if>
 			<if test="jobDesc != null and jobDesc != ''">
-				AND t.job_desc LIKE CONCAT(CONCAT('%', #{jobDesc}), '%')
+				AND t.job_desc like CONCAT(CONCAT('%', #{jobDesc}), '%')
 			</if>
 			<if test="executorHandler != null and executorHandler != ''">
-				AND t.executor_handler LIKE CONCAT(CONCAT('%', #{executorHandler}), '%')
+				AND t.executor_handler like CONCAT(CONCAT('%', #{executorHandler}), '%')
 			</if>
 			<if test="author != null and author != ''">
-				AND t.author LIKE CONCAT(CONCAT('%', #{author}), '%')
+				AND t.author like CONCAT(CONCAT('%', #{author}), '%')
 			</if>
 		</trim>
 		ORDER BY id DESC
@@ -229,7 +229,7 @@
 		SELECT <include refid="Base_Column_List" />
 		FROM xxl_job_info AS t
 		WHERE t.trigger_status = 1
-		AND t.trigger_next_time <![CDATA[ <= ]]> #{maxNextTime}
+				and t.trigger_next_time <![CDATA[ <= ]]> #{maxNextTime}
 		ORDER BY id ASC
 		<choose>
 			<when test="_databaseId == 'oracle' or _databaseId == 'sqlserver' or _databaseId == 'pg'">

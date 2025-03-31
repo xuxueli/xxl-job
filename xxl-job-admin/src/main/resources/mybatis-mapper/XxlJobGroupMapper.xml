@@ -63,12 +63,12 @@
 	<select id="pageList" parameterType="java.util.HashMap" resultMap="XxlJobGroup">
 		SELECT <include refid="Base_Column_List" />
 		FROM xxl_job_group AS t
-		<trim prefix="WHERE" prefixOverrides="AND | OR">
+		<trim prefix="WHERE" prefixOverrides="AND | OR" >
 			<if test="appname != null and appname != ''">
-				AND t.app_name LIKE CONCAT(CONCAT('%', #{appname}), '%')
+				AND t.app_name like CONCAT(CONCAT('%', #{appname}), '%')
 			</if>
 			<if test="title != null and title != ''">
-				AND t.title LIKE CONCAT(CONCAT('%', #{title}), '%')
+				AND t.title like CONCAT(CONCAT('%', #{title}), '%')
 			</if>
 		</trim>
 		ORDER BY t.app_name ASC, t.title ASC, t.id ASC

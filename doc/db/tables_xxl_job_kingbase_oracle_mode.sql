@@ -5,7 +5,7 @@ set client_encoding='UTF8';
 --drop table XXL_JOB_INFO;
 CREATE TABLE XXL_JOB_INFO
 (
-    ID                        INT                NOT NULL,
+    ID                        INT GENERATED ALWAYS AS IDENTITY,
     JOB_GROUP                 INT                NOT NULL,
     JOB_DESC                  VARCHAR(255)       NOT NULL,
     ADD_TIME                  TIMESTAMP,
@@ -76,7 +76,7 @@ comment on column XXL_JOB_INFO.JOB_GROUP
 --drop table XXL_JOB_LOG;
 CREATE TABLE XXL_JOB_LOG
 (
-    ID                        BIGINT             NOT NULL,
+    ID                        BIGINT GENERATED ALWAYS AS IDENTITY,
     JOB_GROUP                 INT                NOT NULL,
     JOB_ID                    INT                NOT NULL,
     EXECUTOR_ADDRESS          VARCHAR(255),
@@ -131,7 +131,7 @@ create index IDX_JOB_LOG_JOB_ID on XXL_JOB_LOG(JOB_ID) ;
 --drop table XXL_JOB_LOG_REPORT;
 CREATE TABLE XXL_JOB_LOG_REPORT
 (
-    ID            INT                NOT NULL,
+    ID            INT GENERATED ALWAYS AS IDENTITY,
     TRIGGER_DAY   TIMESTAMP,
     RUNNING_COUNT INT                NOT NULL DEFAULT 0,
     SUC_COUNT     INT                NOT NULL DEFAULT 0,
@@ -156,7 +156,7 @@ CREATE UNIQUE INDEX I_TRIGGER_DAY ON XXL_JOB_LOG_REPORT(TRIGGER_DAY);
 --drop table XXL_JOB_LOGGLUE;
 CREATE TABLE XXL_JOB_LOGGLUE
 (
-    ID          INT                NOT NULL,
+    ID          INT GENERATED ALWAYS AS IDENTITY,
     JOB_ID      INT                NOT NULL,
     GLUE_TYPE   VARCHAR(50),
     GLUE_SOURCE TEXT,
@@ -178,7 +178,7 @@ comment on column XXL_JOB_LOGGLUE.GLUE_TYPE
 --drop table XXL_JOB_REGISTRY;
 CREATE TABLE XXL_JOB_REGISTRY
 (
-    ID             INT                NOT NULL,
+    ID             INT GENERATED ALWAYS AS IDENTITY,
     REGISTRY_GROUP VARCHAR(50)        NOT NULL,
     REGISTRY_KEY   VARCHAR(255)       NOT NULL,
     REGISTRY_VALUE VARCHAR(255)       NOT NULL,
@@ -192,7 +192,7 @@ CREATE UNIQUE INDEX IDX_JOB_REGISTRY_GROUP_KEY_VALUE ON XXL_JOB_REGISTRY (REGIST
 --drop table XXL_JOB_GROUP;
 create table XXL_JOB_GROUP
 (
-    ID            INT NOT NULL,
+    ID            INT GENERATED ALWAYS AS IDENTITY,
     APP_NAME      VARCHAR(64) not null,
     TITLE         VARCHAR(12) not null,
     ADDRESS_TYPE  TINYINT DEFAULT 0 NOT NULL,
@@ -212,7 +212,7 @@ comment on column XXL_JOB_GROUP.ADDRESS_LIST
 --drop table XXL_JOB_USER;
 create table XXL_JOB_USER
 (
-    ID         INT                NOT NULL,
+    ID         INT GENERATED ALWAYS AS IDENTITY,
     USERNAME   VARCHAR(50)        NOT NULL,
     PASSWORD   VARCHAR(50)        NOT NULL,
     ROLE       TINYINT            NOT NULL,
@@ -241,68 +241,7 @@ comment on column XXL_JOB_LOCK.LOCK_NAME
     is '锁名称';
 
 
--- Create sequence
-create sequence XXL_JOB_GROUP_ID
-    minvalue 1
-    maxvalue 999999999999
-    start with 2
-    increment by 1
-    cache 20
-    cycle;
 
--- Create sequence
-create sequence XXL_JOB_INFO_ID
-    minvalue 1
-    maxvalue 999999999999
-    start with 2
-    increment by 1
-    cache 20
-    cycle;
-
--- Create sequence
-create sequence XXL_JOB_LOGGLUE_ID
-    minvalue 1
-    maxvalue 999999999999
-    start with 1
-    increment by 1
-    cache 20
-    cycle;
-
--- Create sequence
-create sequence XXL_JOB_LOG_ID
-    minvalue 1
-    maxvalue 999999999999
-    start with 1
-    increment by 1
-    cache 20
-    cycle;
-
--- Create sequence
-create sequence XXL_JOB_LOG_REPORT_ID
-    minvalue 1
-    maxvalue 999999999999
-    start with 2
-    increment by 1
-    cache 20
-    cycle;
-
--- Create sequence
-create sequence XXL_JOB_REGISTRY_ID
-    minvalue 1
-    maxvalue 999999999999
-    start with 1
-    increment by 1
-    cache 20
-    cycle;
-
--- Create sequence
-create sequence XXL_JOB_USER_ID
-    minvalue 1
-    maxvalue 999999999999
-    start with 2
-    increment by 1
-    cache 20
-    cycle;
 
 -- 插入 XXL_JOB_GROUP 数据
 INSERT INTO XXL_JOB_GROUP (ID, APP_NAME, TITLE, ADDRESS_TYPE, ADDRESS_LIST, UPDATE_TIME)
