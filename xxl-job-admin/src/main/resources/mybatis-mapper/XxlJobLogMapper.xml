@@ -43,7 +43,7 @@
 		t.handle_msg,
 		t.alarm_status
 	</sql>
-
+	
 	<select id="pageList" resultMap="XxlJobLog">
 		SELECT <include refid="Base_Column_List" />
 		FROM xxl_job_log AS t
@@ -84,7 +84,7 @@
 			</otherwise>
 		</choose>
 	</select>
-
+	
 	<select id="pageListCount" resultType="int">
 		SELECT count(1)
 		FROM xxl_job_log AS t
@@ -123,7 +123,7 @@
 		WHERE t.id = #{id}
 	</select>
 
-
+	
 	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobLog" useGeneratedKeys="true" keyProperty="id" >
 		INSERT INTO xxl_job_log (
 			job_group,

@@ -22,7 +22,7 @@
 		t.add_time,
 		t.update_time
 	</sql>
-
+	
 	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobLogGlue" useGeneratedKeys="true" keyProperty="id" >
 		INSERT INTO xxl_job_logglue (
 			job_id,
@@ -50,7 +50,7 @@
 		WHERE t.job_id = #{jobId}
 		ORDER BY id DESC
 	</select>
-
+	
 	<delete id="removeOld" >
 		DELETE FROM xxl_job_logglue
 		WHERE id NOT in(
@@ -69,7 +69,7 @@
 			) t1
 		)AND job_id = #{jobId}
 	</delete>
-
+	
 	<delete id="deleteByJobId" parameterType="java.lang.Integer" >
 		DELETE FROM xxl_job_logglue
 		WHERE job_id = #{jobId}
