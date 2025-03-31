@@ -84,7 +84,7 @@
 			</otherwise>
 		</choose>
 	</select>
-
+	
 	<select id="pageListCount" resultType="int">
 		SELECT count(1)
 		FROM xxl_job_log AS t
