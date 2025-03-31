@@ -38,7 +38,7 @@
 			</otherwise>
 		</choose>
 	</select>
-
+	
 	<delete id="removeDead" parameterType="java.lang.Integer" >
 		DELETE FROM xxl_job_registry
 		WHERE id in
