@@ -17,6 +17,7 @@ public class DatabaseIdProviderConfig {
         props.put("MySQL", "mysql");
         props.put("Oracle", "oracle");
         props.put("Microsoft SQL Server", "sqlserver");
+        props.put("PostgreSQL", "pg");
         props.put("KingbaseES", "kingbase");
         databaseIdProvider.setProperties(props);
         return databaseIdProvider;
