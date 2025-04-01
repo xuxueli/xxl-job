@@ -67,7 +67,7 @@
 		</choose>
 	</select>
 
-	<insert id="registrySaveOrUpdate" parameterType="java.util.HashMap">
+	<insert id="registrySaveOrUpdate" >
 		<choose>
 			<when test="_databaseId == 'oracle'">
 				MERGE INTO xxl_job_registry target
