@@ -54,22 +54,6 @@
                             <mainClass>com.xxl.job.executor.sample.frameless.XxlJobFramelessApplication</mainClass>
                         </manifest>
                     </archive>
-                <configuration>
-            <plugin>
-        <plugins>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.3.0</version>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <!-- 填写正确的主类路径 -->
-                            <mainClass>com.xxl.job.executor.sample.frameless.XxlJobFramelessApplication</mainClass>
-                        </manifest>
-                    </archive>
                 </configuration>
             </plugin>
             <plugin>
