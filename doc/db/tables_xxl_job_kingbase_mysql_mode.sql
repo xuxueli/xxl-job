@@ -1,11 +1,6 @@
-#
-# XXL-JOB
-# Copyright (c) 2015-present, xuxueli.
-
-CREATE database if NOT EXISTS `xxl_job` default character set utf8mb4 collate utf8mb4_unicode_ci;
-use `xxl_job`;
-
-SET NAMES utf8mb4;
+CREATE database xxl_job;
+\c xxl_job
+set client_encoding='UTF8';
 
 CREATE TABLE `xxl_job_info`
 (
@@ -131,8 +126,6 @@ CREATE TABLE `xxl_job_lock`
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4;
 
-
-## —————————————————————— init data ——————————————————
 
 INSERT INTO `xxl_job_group`(`id`, `app_name`, `title`, `address_type`, `address_list`, `update_time`)
 VALUES (1, 'xxl-job-executor-sample', '示例执行器', 0, NULL, '2018-11-03 22:21:31');

@@ -222,7 +222,7 @@
 						OFFSET 0 ROWS FETCH NEXT #{clearBeforeNum} ROWS ONLY
 					</when>
 					<otherwise>
-						LIMIT #{clearBeforeNum}
+						LIMIT 0, #{clearBeforeNum}
 					</otherwise>
 				</choose>
 				) t1
