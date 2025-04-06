@@ -1056,6 +1056,7 @@ public XxlJobSpringExecutor xxlJobExecutor() {
 
 ![输入图片说明](https://www.xuxueli.com/doc/static/xxl-job/images/img_eYrv.png "在这里输入图片标题")
 
+
 ## 三、任务详解
 
 ### 配置属性详细说明：
@@ -1167,12 +1168,19 @@ public void demoJobHandler() throws Exception {
 
 ![输入图片说明](https://www.xuxueli.com/doc/static/xxl-job/images/img_ZAsz.png "在这里输入图片标题")
 
-#### 原生内置Bean模式任务
-为方便用户参考与快速使用，示例执行器内原生提供多个Bean模式任务Handler，可以直接配置使用，如下：
+#### 原生内置Bean模式任务（通用执行器）
+为方便用户参考与快速使用，提供 “通用执行器” 并内置多个Bean模式任务Handler，可以直接配置使用，如下：
 
-- demoJobHandler：简单示例任务，任务内部模拟耗时任务逻辑，用户可在线体验Rolling Log等功能；
-- shardingJobHandler：分片示例任务，任务内部模拟处理分片参数，可参考熟悉分片任务；
-- httpJobHandler：通用HTTP任务Handler；业务方只需要提供HTTP链接等信息即可，不限制语言、平台。示例任务入参如下：
+**通用执行器说明：**
+- 执行器：xxl-job-executor-sample
+- 执行器代码：
+  - xxl-job-executor-sample-springboot：springboot版本
+  - xxl-job-executor-sample-frameless：无框架版本
+
+**执行器内置任务列表：**
+- a、demoJobHandler：简单示例任务，任务内部模拟耗时任务逻辑，用户可在线体验Rolling Log等功能；
+- b、shardingJobHandler：分片示例任务，任务内部模拟处理分片参数，可参考熟悉分片任务；
+- c、httpJobHandler：通用HTTP任务Handler；业务方只需要提供HTTP链接等信息即可，不限制语言、平台。示例任务入参如下：
 ```
 {
     "url": "http://www.baidu.com",
@@ -1180,7 +1188,34 @@ public void demoJobHandler() throws Exception {
     "data": "hello world"
 }
 ```
-- commandJobHandler：通用命令行任务Handler；业务方只需要提供命令行即可，命令及参数之间通过空格隔开；如任务参数 "ls la" 或 "pwd" 将会执行命令并输出数据；
+- d、commandJobHandler：通用命令行任务Handler；业务方只需要提供命令行即可，命令及参数之间通过空格隔开；如任务参数 "ls la" 或 "pwd" 将会执行命令并输出数据；
+
+#### 原生内置Bean模式任务（AI执行器）
+为方便用户参考与快速使用，提供 “AI执行器” 并内置多个Bean模式任务Handler，与spring-ai集成打通，支持快速开发AI类任务，如下：
+
+**AI执行器说明：**
+- 执行器：xxl-job-executor-sample-ai
+- 执行器代码：xxl-job-executor-sample-springboot-ai
+
+**执行器内置任务列表：**
+- a、ollamaJobHandler： OllamaChat任务，支持自定义prompt、input等输入信息。示例任务入参如下：
+```
+{
+    "input": "{输入信息，必填信息}",
+    "prompt": "{模型prompt，可选信息}"
+}
+```
+依赖1：参考 [Ollama本地化部署大模型](https://www.xuxueli.com/blog/?blog=./notebook/13-AI/%E4%BD%BF%E7%94%A8Ollama%E6%9C%AC%E5%9C%B0%E5%8C%96%E9%83%A8%E7%BD%B2DeepSeek.md) ，本文示例部署“qwen2.5:1.5b”模型，也可自定选择其他模型版本。 
+依赖2：启动示例 “AI执行器” 相关配置文件说明如下：
+```
+### ollama 配置
+spring.ai.ollama.base-url=http://localhost:11434
+spring.ai.ollama.chat.enabled=true
+### Model模型配置；注意，此处配置模型版本、必须本地先通过ollama进行安装运行。
+spring.ai.ollama.chat.options.model=qwen2.5:1.5b
+spring.ai.ollama.chat.options.temperature=0.8
+```
+
 
 ### 3.3 GLUE模式(Java)
 任务以源码方式维护在调度中心，支持通过Web IDE在线更新，实时编译和生效，因此不需要指定JobHandler。开发流程如下：
@@ -1356,6 +1391,7 @@ try{
 ![输入图片说明](https://www.xuxueli.com/doc/static/xxl-job/images/img_1001.png "在这里输入图片标题")
 
 ![输入图片说明](https://www.xuxueli.com/doc/static/xxl-job/images/img_1002.png "在这里输入图片标题")
+
 
 
 ## 五、总体设计
@@ -1669,6 +1705,7 @@ XXL-JOB日志主要包含如下两部分，均支持日志自动清理，说明�
 执行器因网络抖动回调失败或宕机等异常情况，会导致任务调度结果丢失。由于调度中心依赖执行器回调来感知调度结果，因此会导致调度日志永远处于 "运行中" 状态。
 
 针对该问题，调度中心提供内置组件进行处理，逻辑为：调度记录停留在 "运行中" 状态超过10min，且对应执行器心跳注册失败不在线，则将本地调度主动标记失败；
+
 
 
 ## 六、调度中心/执行器 OpenApi
