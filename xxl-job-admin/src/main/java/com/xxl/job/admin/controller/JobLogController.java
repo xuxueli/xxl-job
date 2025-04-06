@@ -127,7 +127,7 @@ public class JobLogController {
 	public String logDetailPage(@RequestParam("id") int id, Model model){
 
 		// base check
-		ReturnT<String> logStatue = ReturnT.SUCCESS;
+		//ReturnT<String> logStatue = ReturnT.SUCCESS;
 		XxlJobLog jobLog = xxlJobLogDao.load(id);
 		if (jobLog == null) {
             throw new RuntimeException(I18nUtil.getString("joblog_logid_unvalid"));
@@ -162,8 +162,7 @@ public class JobLogController {
 
 			// fix xss
 			if (logResult.getContent()!=null && StringUtils.hasText(logResult.getContent().getLogContent())) {
-				String newLogContent = logResult.getContent().getLogContent();
-				newLogContent = HtmlUtils.htmlEscape(newLogContent, "UTF-8");
+				String newLogContent = filter(logResult.getContent().getLogContent());
 				logResult.getContent().setLogContent(newLogContent);
 			}
 
@@ -172,6 +171,38 @@ public class JobLogController {
 			logger.error(e.getMessage(), e);
 			return new ReturnT<LogResult>(ReturnT.FAIL_CODE, e.getMessage());
 		}
+	}
+
+	/**
+	 * filter xss tag
+	 *
+	 * @param originData
+	 * @return
+	 */
+	private String filter(String originData){
+
+		// exclude tag
+		Map<String, String> excludeTagMap = new HashMap<String, String>();
+		excludeTagMap.put("<br>", "###TAG_BR###");
+		excludeTagMap.put("<b>", "###TAG_BOLD###");
+		excludeTagMap.put("</b>", "###TAG_BOLD_END###");
+
+		// replace
+		for (String key : excludeTagMap.keySet()) {
+			String value = excludeTagMap.get(key);
+			originData = originData.replaceAll(key, value);
+		}
+
+		// htmlEscape
+		originData = HtmlUtils.htmlEscape(originData, "UTF-8");
+
+		// replace back
+		for (String key : excludeTagMap.keySet()) {
+			String value = excludeTagMap.get(key);
+			originData = originData.replaceAll(value, key);
+		}
+
+		return originData;
 	}
 
 	@RequestMapping("/logKill")

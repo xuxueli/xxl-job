@@ -2447,18 +2447,31 @@ public void execute() {
 - 3、【优化】IP获取逻辑优化，优先遍历网卡来获取可用IP；
 - 4、【优化】通用命令行任务(“commandJobHandler”)优化，支持多参数执行，命令及参数之间通过空格隔开；如任务参数 "ls la" 或 "pwd" 将会执行命令并输出数据；
 - 5、【优化】通用HTTP任务（httpJobHandler）优化，任务参数格式调整为json格式；
-- 6、【升级】多个项目依赖升级至较新稳定版本，涉及 gson、groovy、spring/springboot 等；
+- 6、【升级】多个项目依赖升级至较新稳定版本，涉及 netty、groovy、spring/springboot 等；
 
 **备注：**
 - a、本次升级数据模型及通讯协议向前兼容，v2.4.*及后续版本可无缝升级；
 - b、版本3.x开始要求Jdk17；版本2.x及以下支持Jdk1.8。如对Jdk版本有诉求，可选择接入不同版本;
 
 ### 7.38 版本 v3.0.1 Release Notes[规划中]
-- 1、【修复】任务操作逻辑优化，修复边界情况下逻辑中断问题(ISSUE-2081)。
-- 2、【修复】调度中心Cron前端组件优化，解决week配置与后端兼容性问题(ISSUE-2220)。
-- 3、【优化】Glue IDE优化，版本回溯支持查看修改时间；
-- 4、[规划中]登陆态Token生成逻辑优化，混淆登陆时间属性，降低token泄漏风险；
-- 5、[规划中]组件扫描改为BeanPostProcessor方式，避免小概率情况下提前初始化；底层组件移除单例写法，汇总factory统一管理；
+- 1、【新增】新增AI执行器示例，并与spring-ai集成打通；内置一系列AIXxlJob，支持快速开发AI类任务（xxl-job-executor-sample-springboot-ai）。
+- 2、【新增】新增通用OllamaChat任务（ollamaJobHandler），支持自定义prompt、input等输入信息，示例参数如下；
+```
+{
+    "input": "{输入信息，必填信息}",
+    "prompt": "{模型prompt，可选信息}"
+}
+```
+- 3、【修复】任务操作逻辑优化，修复边界情况下逻辑中断问题(ISSUE-2081)。
+- 4、【修复】调度中心Cron前端组件优化，解决week配置与后端兼容性问题(ISSUE-2220)。
+- 5、【优化】Glue IDE调整，版本回溯支持查看修改时间；
+- 6、【优化】任务RollingLog调整，XSS过滤支持白名单排出，提升日志易读性；
+- 7、【升级】多个项目依赖升级至较新稳定版本，涉及 gson、groovy、spring/springboot 等；
+
+
+### 7.39 版本 v3.0.2 Release Notes[规划中]
+- 1、[规划中]登陆态Token生成逻辑优化，混淆登陆时间属性，降低token泄漏风险；
+- 2、[规划中]组件扫描改为BeanPostProcessor方式，避免小概率情况下提前初始化；底层组件移除单例写法，汇总factory统一管理；
 
 ### TODO LIST
 - 1、调度隔离：调度中心针对不同执行器，各自维护不同的调度和远程触发组件。
