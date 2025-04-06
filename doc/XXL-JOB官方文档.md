@@ -2491,13 +2491,18 @@ public void execute() {
 - b、版本3.x开始要求Jdk17；版本2.x及以下支持Jdk1.8。如对Jdk版本有诉求，可选择接入不同版本;
 
 ### 7.38 版本 v3.0.1 Release Notes[规划中]
-- 1、【新增】新增AI执行器示例，并与spring-ai集成打通；内置一系列AIXxlJob，支持快速开发AI类任务（xxl-job-executor-sample-springboot-ai）。
+- 1、【新增】新增“AI执行器”示例，并与spring-ai集成打通；内置一系列AIXxlJob，支持快速开发AI类任务（xxl-job-executor-sample-springboot-ai）。
 - 2、【新增】新增通用OllamaChat任务（ollamaJobHandler），支持自定义prompt、input等输入信息，示例参数如下；
 ```
 {
     "input": "{输入信息，必填信息}",
     "prompt": "{模型prompt，可选信息}"
 }
+```
+说明：ollamaJobHandler 内置在“AI执行器（AppName = xxl-job-executor-sample-ai）”中，需要先新建执行器；可参考如下SQL或自行创建：
+```
+INSERT INTO `xxl_job_group`(`app_name`, `title`, `address_type`, `address_list`, `update_time`)
+    VALUES ('xxl-job-executor-sample-ai', 'AI执行器Sample', 0, NULL, now());
 ```
 - 3、【修复】任务操作逻辑优化，修复边界情况下逻辑中断问题(ISSUE-2081)。
 - 4、【修复】调度中心Cron前端组件优化，解决week配置与后端兼容性问题(ISSUE-2220)。
