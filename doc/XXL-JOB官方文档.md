@@ -2507,7 +2507,7 @@ public void execute() {
 - a、本次升级数据模型及通讯协议向前兼容，v2.4.*及后续版本可无缝升级；
 - b、版本3.x开始要求Jdk17；版本2.x及以下支持Jdk1.8。如对Jdk版本有诉求，可选择接入不同版本;
 
-### 7.38 版本 v3.1.0 Release Notes[规划中]
+### 7.38 版本 v3.1.0 Release Notes[2025-05-01]
 - 1、【新增】新增提供 “AI执行器” 并内置多个Bean模式 AI任务Handler，与spring-ai、ollama、dify等集成打通，支持快速开发AI类任务。
     - AppName：xxl-job-executor-sample-ai
     - 执行器代码：xxl-job-executor-sample-springboot-ai
