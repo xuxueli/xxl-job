@@ -2540,7 +2540,7 @@ public void execute() {
 - 7、【优化】Glue IDE调整，版本回溯支持查看修改时间；
 - 8、【优化】任务RollingLog调整，XSS过滤支持白名单排出，提升日志易读性；
 - 9、【升级】多个项目依赖升级至较新稳定版本，涉及 gson、groovy、spring/springboot、mysql 等；
-
+- 10、【优化】执行器日志文件保存天数（logretentiondays）调整，最小保留时间调整至3天。
 
 
 ### 7.39 版本 v3.0.2 Release Notes[规划中]

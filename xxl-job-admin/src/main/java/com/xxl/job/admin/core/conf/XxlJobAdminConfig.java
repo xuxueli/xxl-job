@@ -124,8 +124,8 @@ public class XxlJobAdminConfig implements InitializingBean, DisposableBean {
     }
 
     public int getLogretentiondays() {
-        if (logretentiondays < 7) {
-            return -1;  // Limit greater than or equal to 7, otherwise close
+        if (logretentiondays < 3) {
+            return -1;  // Limit greater than or equal to 3, otherwise close
         }
         return logretentiondays;
     }
