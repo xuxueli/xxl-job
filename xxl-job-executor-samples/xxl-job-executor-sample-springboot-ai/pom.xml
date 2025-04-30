@@ -17,6 +17,7 @@
 
     <properties>
         <spring-ai.version>1.0.0-M6</spring-ai.version>
+        <dify-java-client.version>1.0.7</dify-java-client.version>
     </properties>
 
     <dependencyManagement>
@@ -55,6 +56,13 @@
             <groupId>org.springframework.ai</groupId>
             <artifactId>spring-ai-ollama-spring-boot-starter</artifactId>
             <version>${spring-ai.version}</version>
+        </dependency>
+
+        <!-- dify -->
+        <dependency>
+            <groupId>io.github.imfangs</groupId>
+            <artifactId>dify-java-client</artifactId>
+            <version>${dify-java-client.version}</version>
         </dependency>
 
     </dependencies>

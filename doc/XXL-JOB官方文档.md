@@ -1172,7 +1172,7 @@ public void demoJobHandler() throws Exception {
 为方便用户参考与快速使用，提供 “通用执行器” 并内置多个Bean模式任务Handler，可以直接配置使用，如下：
 
 **通用执行器说明：**
-- 执行器：xxl-job-executor-sample
+- AppName：xxl-job-executor-sample
 - 执行器代码：
   - xxl-job-executor-sample-springboot：springboot版本
   - xxl-job-executor-sample-frameless：无框架版本
@@ -1194,7 +1194,7 @@ public void demoJobHandler() throws Exception {
 为方便用户参考与快速使用，提供 “AI执行器” 并内置多个Bean模式任务Handler，与spring-ai集成打通，支持快速开发AI类任务，如下：
 
 **AI执行器说明：**
-- 执行器：xxl-job-executor-sample-ai
+- AppName：xxl-job-executor-sample-ai
 - 执行器代码：xxl-job-executor-sample-springboot-ai
 
 **执行器内置任务列表：**
@@ -1205,8 +1205,19 @@ public void demoJobHandler() throws Exception {
     "prompt": "{模型prompt，可选信息}"
 }
 ```
-依赖1：参考 [Ollama本地化部署大模型](https://www.xuxueli.com/blog/?blog=./notebook/13-AI/%E4%BD%BF%E7%94%A8Ollama%E6%9C%AC%E5%9C%B0%E5%8C%96%E9%83%A8%E7%BD%B2DeepSeek.md) ，本文示例部署“qwen2.5:1.5b”模型，也可自定选择其他模型版本。 
-依赖2：启动示例 “AI执行器” 相关配置文件说明如下：
+- b、difyWorkflowJobHandler：DifyWorkflow 任务，支持自定义inputs、user等输入信息，示例参数如下；
+```
+{
+    "inputs":{                      // inputs 为dify工作流任务参数；参数不固定，结合各自 workflow 自行定义。
+        "input":"{用户输入信息}"      // 该参数为示例变量，需要 workflow 的“开始”节点 自定义参数 “input”，可自行调整或删除。
+    },
+    "user": "{用户标识，选填}"
+}
+```
+
+依赖1：参考 [Ollama本地化部署大模型](https://www.xuxueli.com/blog/?blog=./notebook/13-AI/%E4%BD%BF%E7%94%A8Ollama%E6%9C%AC%E5%9C%B0%E5%8C%96%E9%83%A8%E7%BD%B2DeepSeek.md) ，执行器示例部署“qwen2.5:1.5b”模型，也可自定选择其他模型版本。
+依赖2：参考 [使用DeepSeek与Dify搭建AI助手](https://www.xuxueli.com/blog/?blog=./notebook/13-AI/%E4%BD%BF%E7%94%A8DeepSeek%E4%B8%8EDify%E6%90%AD%E5%BB%BAAI%E5%8A%A9%E6%89%8B.md)，执行器示例新建Dify DifyWork应用，并在开始节点添加“input”参数，可结合实际情况调整。
+依赖3：启动示例 “AI执行器” 相关配置文件说明如下：
 ```
 ### ollama 配置
 spring.ai.ollama.base-url=http://localhost:11434
@@ -1214,6 +1225,12 @@ spring.ai.ollama.chat.enabled=true
 ### Model模型配置；注意，此处配置模型版本、必须本地先通过ollama进行安装运行。
 spring.ai.ollama.chat.options.model=qwen2.5:1.5b
 spring.ai.ollama.chat.options.temperature=0.8
+
+### dify 配置；选择相关 workflow 应用，切换 “访问API” 页面获取 url 地址信息.
+dify.base-url=http://localhost/v1
+### dify api-key；选择相关 workflow 应用并进入 “访问API” 页面，右上角 “API 密钥” 入口获取 api-key。
+dify.api-key={自行获取并修改}
+
 ```
 
 
@@ -2491,24 +2508,35 @@ public void execute() {
 - b、版本3.x开始要求Jdk17；版本2.x及以下支持Jdk1.8。如对Jdk版本有诉求，可选择接入不同版本;
 
 ### 7.38 版本 v3.0.1 Release Notes[规划中]
-- 1、【新增】新增“AI执行器”示例，并与spring-ai集成打通；内置一系列AIXxlJob，支持快速开发AI类任务（xxl-job-executor-sample-springboot-ai）。
-- 2、【新增】新增通用OllamaChat任务（ollamaJobHandler），支持自定义prompt、input等输入信息，示例参数如下；
+- 1、【新增】新增“AI执行器”示例，并与spring-ai、Ollama、Dify等集成打通；内置一系列AIXxlJob，支持快速开发AI类任务（xxl-job-executor-sample-springboot-ai）。
+```
+// 说明：ollamaJobHandler 内置在“AI执行器（AppName = xxl-job-executor-sample-ai）”中，需要先新建执行器；可参考如下SQL或自行创建：
+INSERT INTO `xxl_job_group`(`app_name`, `title`, `address_type`, `address_list`, `update_time`)
+    VALUES ('xxl-job-executor-sample-ai', 'AI执行器Sample', 0, NULL, now());
+```
+- 2、【新增】新增通用 OllamaChat 任务（ollamaJobHandler），支持自定义prompt、input等输入信息，示例参数如下；
 ```
 {
     "input": "{输入信息，必填信息}",
     "prompt": "{模型prompt，可选信息}"
 }
 ```
-说明：ollamaJobHandler 内置在“AI执行器（AppName = xxl-job-executor-sample-ai）”中，需要先新建执行器；可参考如下SQL或自行创建：
+- 3、【新增】新增通用 DifyWorkflow 任务（difyWorkflowJobHandler），支持自定义inputs、user等输入信息，示例参数如下；
 ```
-INSERT INTO `xxl_job_group`(`app_name`, `title`, `address_type`, `address_list`, `update_time`)
-    VALUES ('xxl-job-executor-sample-ai', 'AI执行器Sample', 0, NULL, now());
+{
+    "inputs":{                      // inputs 为dify工作流任务参数；参数不固定，结合各自 workflow 自行定义。
+        "input":"{用户输入信息}"      // 该参数为示例变量，需要 workflow 的“开始”节点 自定义参数 “input”，可自行调整或删除。
+    },
+    "user": "{用户标识，选填}"
+}
 ```
-- 3、【修复】任务操作逻辑优化，修复边界情况下逻辑中断问题(ISSUE-2081)。
-- 4、【修复】调度中心Cron前端组件优化，解决week配置与后端兼容性问题(ISSUE-2220)。
-- 5、【优化】Glue IDE调整，版本回溯支持查看修改时间；
-- 6、【优化】任务RollingLog调整，XSS过滤支持白名单排出，提升日志易读性；
-- 7、【升级】多个项目依赖升级至较新稳定版本，涉及 gson、groovy、spring/springboot 等；
+- 4、【修复】任务操作逻辑优化，修复边界情况下逻辑中断问题(ISSUE-2081)。
+- 5、【修复】调度中心Cron前端组件优化，解决week配置与后端兼容性问题(ISSUE-2220)。
+- 6、【修复】合并PR-3708、PR-3704：修复固定速度模式计算，下次执行时间计算不准问题（间隔秒数超过Int时触发）。
+- 7、【优化】Glue IDE调整，版本回溯支持查看修改时间；
+- 8、【优化】任务RollingLog调整，XSS过滤支持白名单排出，提升日志易读性；
+- 9、【升级】多个项目依赖升级至较新稳定版本，涉及 gson、groovy、spring/springboot、mysql 等；
+
 
 
 ### 7.39 版本 v3.0.2 Release Notes[规划中]

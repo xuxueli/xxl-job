@@ -30,17 +30,17 @@
 		<maven-gpg-plugin.version>3.2.7</maven-gpg-plugin.version>
 		<!-- base -->
 		<slf4j-api.version>2.0.17</slf4j-api.version>
-		<junit-jupiter.version>5.12.1</junit-jupiter.version>
+		<junit-jupiter.version>5.12.2</junit-jupiter.version>
 		<jakarta.annotation-api.version>3.0.0</jakarta.annotation-api.version>
 		<!-- net -->
 		<netty.version>4.2.0.Final</netty.version>
-		<gson.version>2.12.1</gson.version>
+		<gson.version>2.13.1</gson.version>
 		<!-- spring -->
-		<spring-boot.version>3.4.4</spring-boot.version>
-		<spring.version>6.2.5</spring.version>
+		<spring-boot.version>3.4.5</spring-boot.version>
+		<spring.version>6.2.6</spring.version>
 		<!-- db -->
 		<mybatis-spring-boot-starter.version>3.0.4</mybatis-spring-boot-starter.version>
-		<mysql-connector-j.version>9.2.0</mysql-connector-j.version>
+		<mysql-connector-j.version>9.3.0</mysql-connector-j.version>
 		<!-- dynamic language -->
 		<groovy.version>4.0.26</groovy.version>
 	</properties>
