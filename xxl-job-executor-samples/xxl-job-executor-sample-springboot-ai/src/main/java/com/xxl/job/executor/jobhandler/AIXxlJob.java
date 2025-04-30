@@ -64,7 +64,7 @@ public class AIXxlJob {
                 return;
             }
         } catch (Exception e) {
-            XxlJobHelper.log(e);
+            XxlJobHelper.log(new RuntimeException("OllamaParam parse error", e));
             XxlJobHelper.handleFail();
             return;
         }
@@ -144,7 +144,7 @@ public class AIXxlJob {
                 difyParam.setUser("xxl-job");
             }
         } catch (Exception e) {
-            XxlJobHelper.log(e);
+            XxlJobHelper.log(new RuntimeException("DifyParam parse error", e));
             XxlJobHelper.handleFail();
             return;
         }

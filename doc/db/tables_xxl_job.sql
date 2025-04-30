@@ -145,13 +145,22 @@ INSERT INTO `xxl_job_info`(`id`, `job_group`, `job_desc`, `add_time`, `update_ti
                            `child_jobid`)
 VALUES (1, 1, '示例任务01', now(), now(), 'XXL', '', 'CRON', '0 0 0 * * ? *',
         'DO_NOTHING', 'FIRST', 'demoJobHandler', '', 'SERIAL_EXECUTION', 0, 0, 'BEAN', '', 'GLUE代码初始化',
-        '2018-11-03 22:21:31', ''),
-       (2, 2, 'Ollama示例任务01', now(), now(), 'XXL', '', 'CRON', '0 0 0 * * ? *',
+        now(), ''),
+       (2, 2, 'Ollama示例任务01', now(), now(), 'XXL', '', 'NONE', '',
         'DO_NOTHING', 'FIRST', 'ollamaJobHandler', '{
     "input": "慢SQL问题分析思路",
     "prompt": "你是一个研发工程师，擅长解决技术类问题。"
 }', 'SERIAL_EXECUTION', 0, 0, 'BEAN', '', 'GLUE代码初始化',
-        '2018-11-03 22:21:31', '');
+        now(), ''),
+       (3, 2, 'Dify示例任务', now(), now(), 'XXL', '', 'NONE', '',
+        'DO_NOTHING', 'FIRST', 'difyWorkflowJobHandler', '{
+    "inputs":{
+        "input":"查询班级各学科前三名"
+    },
+    "user": "xxl-job"
+}', 'SERIAL_EXECUTION', 0, 0, 'BEAN', '', 'GLUE代码初始化',
+        now(), '')
+    ;
 
 INSERT INTO `xxl_job_user`(`id`, `username`, `password`, `role`, `permission`)
 VALUES (1, 'admin', 'e10adc3949ba59abbe56e057f20f883e', 1, NULL);
