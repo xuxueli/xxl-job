@@ -124,15 +124,18 @@ public class JobLogController {
 	}
 
 	@RequestMapping("/logDetailPage")
-	public String logDetailPage(@RequestParam("id") int id, Model model){
+	public String logDetailPage(HttpServletRequest request, @RequestParam("id") int id, Model model){
 
 		// base check
-		//ReturnT<String> logStatue = ReturnT.SUCCESS;
 		XxlJobLog jobLog = xxlJobLogDao.load(id);
 		if (jobLog == null) {
             throw new RuntimeException(I18nUtil.getString("joblog_logid_unvalid"));
 		}
 
+		// valid permission
+		PermissionInterceptor.validJobGroupPermission(request, jobLog.getJobGroup());
+
+		// data
         model.addAttribute("triggerCode", jobLog.getTriggerCode());
         model.addAttribute("handleCode", jobLog.getHandleCode());
         model.addAttribute("logId", jobLog.getId());
