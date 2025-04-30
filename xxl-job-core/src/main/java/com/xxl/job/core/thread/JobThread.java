@@ -110,7 +110,7 @@ public class JobThread extends Thread{
 
             TriggerParam triggerParam = null;
             try {
-				// to check toStop signal, we need cycle, so wo cannot use queue.take(), instand of poll(timeout)
+				// to check toStop signal, we need cycle, so we cannot use queue.take(), instead of poll(timeout)
 				triggerParam = triggerQueue.poll(3L, TimeUnit.SECONDS);
 				if (triggerParam!=null) {
 					running = true;
@@ -206,7 +206,7 @@ public class JobThread extends Thread{
                 if(triggerParam != null) {
                     // callback handler info
                     if (!toStop) {
-                        // commonm
+                        // common
                         TriggerCallbackThread.pushCallBack(new HandleCallbackParam(
                         		triggerParam.getLogId(),
 								triggerParam.getLogDateTime(),
