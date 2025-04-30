@@ -1220,16 +1220,16 @@ public void demoJobHandler() throws Exception {
 - 依赖2：参考 [使用DeepSeek与Dify搭建AI助手](https://www.xuxueli.com/blog/?blog=./notebook/13-AI/%E4%BD%BF%E7%94%A8DeepSeek%E4%B8%8EDify%E6%90%AD%E5%BB%BAAI%E5%8A%A9%E6%89%8B.md)，执行器示例新建Dify DifyWork应用，并在开始节点添加“input”参数，可结合实际情况调整。
 - 依赖3：启动示例 “AI执行器” 相关配置文件说明如下：
 ```
-### ollama 配置
+// ollama 配置
 spring.ai.ollama.base-url=http://localhost:11434
 spring.ai.ollama.chat.enabled=true
-### Model模型配置；注意，此处配置模型版本、必须本地先通过ollama进行安装运行。
+// Model模型配置；注意，此处配置模型版本、必须本地先通过ollama进行安装运行。
 spring.ai.ollama.chat.options.model=qwen2.5:1.5b
 spring.ai.ollama.chat.options.temperature=0.8
 
-### dify 配置；选择相关 workflow 应用，切换 “访问API” 页面获取 url 地址信息.
+// dify 配置；选择相关 workflow 应用，切换 “访问API” 页面获取 url 地址信息.
 dify.base-url=http://localhost/v1
-### dify api-key；选择相关 workflow 应用并进入 “访问API” 页面，右上角 “API 密钥” 入口获取 api-key。
+// dify api-key；选择相关 workflow 应用并进入 “访问API” 页面，右上角 “API 密钥” 入口获取 api-key。
 dify.api-key={自行获取并修改}
 
 ```
@@ -2512,28 +2512,14 @@ public void execute() {
 - 1、【新增】新增提供 “AI执行器” 并内置多个Bean模式 AI任务Handler，与spring-ai、ollama、dify等集成打通，支持快速开发AI类任务。
     - AppName：xxl-job-executor-sample-ai
     - 执行器代码：xxl-job-executor-sample-springboot-ai
+    - 执行器初始化脚本：执行参考SQL脚本，或自行人工创建：
         ```
-        // 备注：ollamaJobHandler 内置在“AI执行器（AppName = xxl-job-executor-sample-ai）”中，需要先新建执行器；可参考如下SQL或自行创建：
         INSERT INTO `xxl_job_group`(`app_name`, `title`, `address_type`, `address_list`, `update_time`)
             VALUES ('xxl-job-executor-sample-ai', 'AI执行器Sample', 0, NULL, now());
         ```
-- 2、【新增】新增多个 Bean模式 AI任务Handler，如 ollamaJobHandler、difyWorkflowJobHandler 等，支持快速集成开发AI任务。
-  - a、ollamaJobHandler： OllamaChat任务，支持自定义prompt、input等输入信息。示例任务入参如下：
-    ```
-    {
-        "input": "{输入信息，必填信息}",
-        "prompt": "{模型prompt，可选信息}"
-    }
-    ```
-  - b、difyWorkflowJobHandler：DifyWorkflow 任务，支持自定义inputs、user等输入信息，示例参数如下；
-    ```
-    {
-        "inputs":{                      // inputs 为dify工作流任务参数；参数不固定，结合各自 workflow 自行定义。
-            "input":"{用户输入信息}"      // 该参数为示例变量，需要 workflow 的“开始”节点 自定义参数 “input”，可自行调整或删除。
-        },
-        "user": "{用户标识，选填}"
-    }
-    ```
+- 2、【新增】新增多个 Bean模式 AI任务Handler，如 ollamaJobHandler、difyWorkflowJobHandler 等，支持快速集成开发AI任务。任务配置可参考 [AI执行器](https://www.xuxueli.com/xxl-job/#原生内置Bean模式任务（AI执行器）)
+  - a、ollamaJobHandler： OllamaChat任务，支持自定义prompt、input等输入信息。
+  - b、difyWorkflowJobHandler：DifyWorkflow 任务，支持自定义inputs、user等输入信息。
 - 3、【修复】合并PR-3708、PR-3704，解决固定速度调度模式下，下次计算执行时间小概率（间隔超长时）不准问题。
 - 4、【修复】任务操作逻辑优化，修复边界情况下逻辑中断问题 (ISSUE-2081)。
 - 5、【修复】调度中心Cron前端组件优化，解决week配置与后端兼容性问题 (ISSUE-2220)。
@@ -2544,7 +2530,7 @@ public void execute() {
 - 10、【升级】多个项目依赖升级至较新稳定版本，涉及 gson、groovy、spring/springboot、mysql 等；
 
 
-### 7.39 版本 v3.0.2 Release Notes[规划中]
+### 7.39 版本 v3.1.1 Release Notes[规划中]
 - 1、[规划中]登陆态Token生成逻辑优化，混淆登陆时间属性，降低token泄漏风险；
 - 2、[规划中]组件扫描改为BeanPostProcessor方式，避免小概率情况下提前初始化；底层组件移除单例写法，汇总factory统一管理；
 
