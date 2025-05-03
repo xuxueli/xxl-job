@@ -41,7 +41,7 @@
                     <button class="btn btn-block btn-info" id="searchBtn">${I18n.system_search}</button>
                 </div>
                 <div class="col-xs-2">
-                    <button class="btn btn-block btn-success add" type="button">${I18n.jobinfo_field_add}</button>
+                    <button class="btn btn-block btn-success add" type="button">${I18n.jobgroup_add}</button>
                 </div>
             </div>
 			
