@@ -31,7 +31,14 @@
 			</if>
 		</trim>
 		ORDER BY username ASC
-		LIMIT #{offset}, #{pagesize}
+		<choose>
+			<when test="_databaseId == 'oracle' or _databaseId == 'sqlserver' or _databaseId == 'pg'">
+				OFFSET #{offset} ROWS FETCH NEXT #{pagesize} ROWS ONLY
+			</when>
+			<otherwise>
+				LIMIT #{offset}, #{pagesize}
+			</otherwise>
+		</choose>
 	</select>
 
 	<select id="pageListCount" parameterType="java.util.HashMap" resultType="int">

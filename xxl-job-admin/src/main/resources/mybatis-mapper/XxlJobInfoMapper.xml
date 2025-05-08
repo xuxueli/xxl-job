@@ -86,7 +86,14 @@
 			</if>
 		</trim>
 		ORDER BY id DESC
-		LIMIT #{offset}, #{pagesize}
+		<choose>
+			<when test="_databaseId == 'oracle' or _databaseId == 'sqlserver' or _databaseId == 'pg'">
+				OFFSET #{offset} ROWS FETCH NEXT #{pagesize} ROWS ONLY
+			</when>
+			<otherwise>
+				LIMIT #{offset}, #{pagesize}
+			</otherwise>
+		</choose>
 	</select>
 
 	<select id="pageListCount" parameterType="java.util.HashMap" resultType="int">
@@ -225,7 +232,14 @@
 		WHERE t.trigger_status = 1
 			and t.trigger_next_time <![CDATA[ <= ]]> #{maxNextTime}
 		ORDER BY id ASC
-		LIMIT #{pagesize}
+		<choose>
+			<when test="_databaseId == 'oracle' or _databaseId == 'sqlserver' or _databaseId == 'pg'">
+				OFFSET 0 ROWS FETCH NEXT #{pagesize} ROWS ONLY
+			</when>
+			<otherwise>
+				LIMIT #{pagesize}
+			</otherwise>
+		</choose>
 	</select>
 
 	<update id="scheduleUpdate" parameterType="com.xxl.job.admin.core.model.XxlJobInfo"  >

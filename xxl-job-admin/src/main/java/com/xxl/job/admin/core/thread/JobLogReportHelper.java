@@ -9,6 +9,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -70,9 +71,15 @@ public class JobLogReportHelper {
 
                             Map<String, Object> triggerCountMap = XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().findLogReport(todayFrom, todayTo);
                             if (triggerCountMap!=null && triggerCountMap.size()>0) {
-                                int triggerDayCount = triggerCountMap.containsKey("triggerDayCount")?Integer.valueOf(String.valueOf(triggerCountMap.get("triggerDayCount"))):0;
-                                int triggerDayCountRunning = triggerCountMap.containsKey("triggerDayCountRunning")?Integer.valueOf(String.valueOf(triggerCountMap.get("triggerDayCountRunning"))):0;
-                                int triggerDayCountSuc = triggerCountMap.containsKey("triggerDayCountSuc")?Integer.valueOf(String.valueOf(triggerCountMap.get("triggerDayCountSuc"))):0;
+                                Map<String, Object> useTriggerCountMap = new HashMap<>();
+                                for (String key : triggerCountMap.keySet()) {
+                                    Object value = triggerCountMap.get(key);
+                                    useTriggerCountMap.put(key.toUpperCase(), value);
+                                }
+
+                                int triggerDayCount = useTriggerCountMap.containsKey("TRIGGERDAYCOUNT")?Integer.valueOf(String.valueOf(useTriggerCountMap.get("TRIGGERDAYCOUNT"))):0;
+                                int triggerDayCountRunning = useTriggerCountMap.containsKey("TRIGGERDAYCOUNTRUNNING")?Integer.valueOf(String.valueOf(useTriggerCountMap.get("TRIGGERDAYCOUNTRUNNING"))):0;
+                                int triggerDayCountSuc = useTriggerCountMap.containsKey("TRIGGERDAYCOUNTSUC")?Integer.valueOf(String.valueOf(useTriggerCountMap.get("TRIGGERDAYCOUNTSUC"))):0;
                                 int triggerDayCountFail = triggerDayCount - triggerDayCountRunning - triggerDayCountSuc;
 
                                 xxlJobLogReport.setRunningCount(triggerDayCountRunning);

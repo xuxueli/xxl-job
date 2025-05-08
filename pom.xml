@@ -41,6 +41,7 @@
 		<!-- db -->
 		<mybatis-spring-boot-starter.version>3.0.4</mybatis-spring-boot-starter.version>
 		<mysql-connector-j.version>9.2.0</mysql-connector-j.version>
+		<kingbase.version>9.0.1</kingbase.version>
 		<!-- dynamic language -->
 		<groovy.version>4.0.25</groovy.version>
 	</properties>

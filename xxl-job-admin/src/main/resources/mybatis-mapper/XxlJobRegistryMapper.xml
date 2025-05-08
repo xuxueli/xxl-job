@@ -22,9 +22,23 @@
 	<select id="findDead" parameterType="java.util.HashMap" resultType="java.lang.Integer" >
 		SELECT t.id
 		FROM xxl_job_registry AS t
-		WHERE t.update_time <![CDATA[ < ]]> DATE_ADD(#{nowTime},INTERVAL -#{timeout} SECOND)
+		WHERE t.update_time <![CDATA[ < ]]>
+		<choose>
+			<when test="_databaseId == 'oracle'">
+				cast(#{nowTime} as timestamp) - numtodsinterval(#{timeout},'SECOND')
+			</when>
+			<when test="_databaseId == 'sqlserver'">
+				DATEADD(SECOND, -#{timeout}, #{nowTime})
+			</when>
+			<when test="_databaseId == 'pg'">
+				cast(#{nowTime} as timestamp) - #{timeout} * INTERVAL '1 SECOND'
+			</when>
+			<otherwise>
+				DATE_ADD(#{nowTime},INTERVAL -#{timeout} SECOND)
+			</otherwise>
+		</choose>
 	</select>
-	
+
 	<delete id="removeDead" parameterType="java.lang.Integer" >
 		DELETE FROM xxl_job_registry
 		WHERE id in
@@ -36,14 +50,88 @@
 	<select id="findAll" parameterType="java.util.HashMap" resultMap="XxlJobRegistry">
 		SELECT <include refid="Base_Column_List" />
 		FROM xxl_job_registry AS t
-		WHERE t.update_time <![CDATA[ > ]]> DATE_ADD(#{nowTime},INTERVAL -#{timeout} SECOND)
+		WHERE t.update_time <![CDATA[ > ]]>
+		<choose>
+			<when test="_databaseId == 'oracle'">
+				cast(#{nowTime} as timestamp) - numtodsinterval(#{timeout},'SECOND')
+			</when>
+			<when test="_databaseId == 'sqlserver'">
+				DATEADD(SECOND, -#{timeout}, #{nowTime})
+			</when>
+			<when test="_databaseId == 'pg'">
+				cast(#{nowTime} as timestamp) - #{timeout} * INTERVAL '1 SECOND'
+			</when>
+			<otherwise>
+				DATE_ADD(#{nowTime}, INTERVAL -#{timeout} SECOND)
+			</otherwise>
+		</choose>
 	</select>
 
 	<insert id="registrySaveOrUpdate" >
-		INSERT INTO xxl_job_registry( `registry_group` , `registry_key` , `registry_value`, `update_time`)
-		VALUES( #{registryGroup}  , #{registryKey} , #{registryValue}, #{updateTime})
-		ON DUPLICATE KEY UPDATE
-			`update_time` = #{updateTime}
+		<choose>
+			<when test="_databaseId == 'oracle'">
+				MERGE INTO xxl_job_registry target
+				USING (
+				SELECT
+				#{registryGroup} AS registry_group,
+				#{registryKey} AS registry_key,
+				#{registryValue} AS registry_value,
+				#{updateTime} AS update_time
+				FROM DUAL
+				) source
+				ON (
+				target.registry_group = source.registry_group
+				AND target.registry_key = source.registry_key
+				AND target.registry_value = source.registry_value
+				)
+				WHEN MATCHED THEN
+				UPDATE SET target.update_time = source.update_time
+				WHEN NOT MATCHED THEN
+				INSERT (registry_group, registry_key, registry_value, update_time)
+				VALUES (source.registry_group, source.registry_key, source.registry_value, source.update_time)
+			</when>
+			<when test="_databaseId == 'sqlserver'">
+				MERGE INTO xxl_job_registry AS target
+				USING (
+				VALUES (
+				#{registryGroup},
+				#{registryKey},
+				#{registryValue},
+				#{updateTime}
+				)
+				) AS source (registry_group, registry_key, registry_value, update_time)
+				ON (
+				target.registry_group = source.registry_group
+				AND target.registry_key = source.registry_key
+				AND target.registry_value = source.registry_value
+				)
+				WHEN MATCHED THEN
+				UPDATE SET target.update_time = source.update_time
+				WHEN NOT MATCHED THEN
+				INSERT (registry_group, registry_key, registry_value, update_time)
+				VALUES (source.registry_group, source.registry_key, source.registry_value, source.update_time)
+			</when>
+			<when test="_databaseId == 'pg'">
+				INSERT INTO xxl_job_registry( registry_group , registry_key , registry_value, update_time)
+				VALUES( #{registryGroup}  , #{registryKey} , #{registryValue}, #{updateTime})
+				ON CONFLICT (registry_group, registry_key, registry_value) DO UPDATE SET
+				update_time = #{updateTime}
+			</when>
+			<otherwise>
+				INSERT INTO xxl_job_registry (
+				registry_group,
+				registry_key,
+				registry_value,
+				update_time
+				) VALUES (
+				#{registryGroup},
+				#{registryKey},
+				#{registryValue},
+				#{updateTime}
+				)
+				ON DUPLICATE KEY UPDATE update_time = #{updateTime}
+			</otherwise>
+		</choose>
 	</insert>
 
 	<!--
