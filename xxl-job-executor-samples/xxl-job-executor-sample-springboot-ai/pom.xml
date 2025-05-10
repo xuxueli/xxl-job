@@ -8,7 +8,7 @@
         <artifactId>xxl-job-executor-samples</artifactId>
         <version>3.1.1-SNAPSHOT</version>
     </parent>
-    <artifactId>xxl-job-executor-sample-springboot</artifactId>
+    <artifactId>xxl-job-executor-sample-springboot-ai</artifactId>
     <packaging>jar</packaging>
 
     <name>${project.artifactId}</name>
@@ -16,12 +16,13 @@
     <url>https://www.xuxueli.com/</url>
 
     <properties>
+        <spring-ai.version>1.0.0-M6</spring-ai.version>
+        <dify-java-client.version>1.0.7</dify-java-client.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <!-- Import dependency management from Spring Boot (依赖管理：继承一些默认的依赖，工程需要依赖的jar包的管理，申明其他dependency的时候就不需要version) -->
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-parent</artifactId>
                 <version>${spring-boot.version}</version>
@@ -50,6 +51,20 @@
             <version>${project.parent.version}</version>
         </dependency>
 
+        <!-- spring-ai -->
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-ollama-spring-boot-starter</artifactId>
+            <version>${spring-ai.version}</version>
+        </dependency>
+
+        <!-- dify -->
+        <dependency>
+            <groupId>io.github.imfangs</groupId>
+            <artifactId>dify-java-client</artifactId>
+            <version>${dify-java-client.version}</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -58,7 +73,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>${spring-boot.version}</version>
+                <!--<version>${spring-boot.version}</version>-->
                 <executions>
                     <execution>
                         <goals>
@@ -72,6 +87,5 @@
             </plugin>
         </plugins>
     </build>
-
 
 </project>

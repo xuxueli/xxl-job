@@ -1,10 +1,11 @@
-package com.xxl.job.executor.sample.frameless.jobhandler;
+package com.xxl.job.executor.jobhandler;
 
 import com.xxl.job.core.context.XxlJobHelper;
 import com.xxl.job.core.handler.annotation.XxlJob;
 import com.xxl.job.core.util.GsonTool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -27,6 +28,7 @@ import java.util.concurrent.TimeUnit;
  *
  * @author xuxueli 2019-12-11 21:52:51
  */
+@Component
 public class SampleXxlJob {
     private static Logger logger = LoggerFactory.getLogger(SampleXxlJob.class);
 

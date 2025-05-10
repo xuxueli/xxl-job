@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.xuxueli</groupId>
         <artifactId>xxl-job</artifactId>
-        <version>3.0.0-SNAPSHOT</version>
+        <version>3.1.1-SNAPSHOT</version>
     </parent>
     <artifactId>xxl-job-executor-samples</artifactId>
     <packaging>pom</packaging>
@@ -12,9 +12,11 @@
     <modules>
         <module>xxl-job-executor-sample-frameless</module>
         <module>xxl-job-executor-sample-springboot</module>
+        <module>xxl-job-executor-sample-springboot-ai</module>
     </modules>
 
     <properties>
+        <maven.install.skip>true</maven.install.skip>
         <maven.deploy.skip>true</maven.deploy.skip>
     </properties>
 
