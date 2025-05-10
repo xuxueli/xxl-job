@@ -38,8 +38,8 @@
 		<netty.version>4.2.0.Final</netty.version>
 		<gson.version>2.13.1</gson.version>
 		<!-- spring -->
-		<spring.version>6.2.1</spring.version>
-		<spring-boot.version>3.4.1</spring-boot.version>
+		<spring-boot.version>3.4.5</spring-boot.version>
+		<spring.version>6.2.6</spring.version>
 		<!-- db -->
 		<mybatis-spring-boot-starter.version>3.0.4</mybatis-spring-boot-starter.version>
         <mysql-connector-j.version>9.3.0</mysql-connector-j.version>
