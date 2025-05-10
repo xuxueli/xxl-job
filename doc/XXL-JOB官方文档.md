@@ -1220,6 +1220,7 @@ public void demoJobHandler() throws Exception {
 - 依赖1：参考 [Ollama本地化部署大模型](https://www.xuxueli.com/blog/?blog=./notebook/13-AI/%E4%BD%BF%E7%94%A8Ollama%E6%9C%AC%E5%9C%B0%E5%8C%96%E9%83%A8%E7%BD%B2DeepSeek.md) ，执行器示例部署“qwen2.5:1.5b”模型，也可自定选择其他模型版本。
 - 依赖2：参考 [使用DeepSeek与Dify搭建AI助手](https://www.xuxueli.com/blog/?blog=./notebook/13-AI/%E4%BD%BF%E7%94%A8DeepSeek%E4%B8%8EDify%E6%90%AD%E5%BB%BAAI%E5%8A%A9%E6%89%8B.md)，执行器示例新建Dify DifyWork应用，并在开始节点添加“input”参数，可结合实际情况调整。
 - 依赖3：启动示例 “AI执行器” 相关配置文件说明如下：
+
 ```
 // ollama 配置
 spring.ai.ollama.base-url=http://localhost:11434
