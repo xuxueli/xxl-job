@@ -469,7 +469,10 @@ EXEC sys.sp_addextendedproperty
 set identity_insert XXL_JOB_GROUP on;
 
 INSERT INTO "XXL_JOB_GROUP"("ID", "APP_NAME", "TITLE", "ADDRESS_TYPE", "ADDRESS_LIST", "UPDATE_TIME")
-VALUES (1, 'xxl-job-executor-sample', '示例执行器', 0, NULL, convert(datetime,'2018-11-03 22:21:31'));
+VALUES (1, 'xxl-job-executor-sample', '通用执行器Sample', 0, NULL, SYSDATETIME());
+
+INSERT INTO "XXL_JOB_GROUP"("ID", "APP_NAME", "TITLE", "ADDRESS_TYPE", "ADDRESS_LIST", "UPDATE_TIME")
+VALUES   (2, 'xxl-job-executor-sample-ai', 'AI执行器Sample', 0, NULL, SYSDATETIME());
 
 set identity_insert XXL_JOB_GROUP off;
 
@@ -486,17 +489,47 @@ INSERT INTO "XXL_JOB_INFO"("ID", "JOB_GROUP", "JOB_DESC",
                            "GLUE_TYPE", "GLUE_SOURCE", "GLUE_REMARK",
                            "GLUE_UPDATETIME",
                            "CHILD_JOBID")
-VALUES (1, 1, '测试任务1',
-        convert(datetime,'2018-11-03 22:21:31'),
-        convert(datetime,'2018-11-03 22:21:31'),
-        'XXL', '',
-        'CRON', '0 0 0 * * ? *',
-        'DO_NOTHING', 'FIRST',
-        'demoJobHandler', '',
-        'SERIAL_EXECUTION', 0, 0,
-        'BEAN', '', 'GLUE代码初始化',
-        convert(datetime,'2018-11-03 22:21:31'),
-        '');
+VALUES (1, 1, '示例任务01', SYSDATETIME(), SYSDATETIME(), 'XXL', '', 'CRON', '0 0 0 * * ? *',
+        'DO_NOTHING', 'FIRST', 'demoJobHandler', '', 'SERIAL_EXECUTION', 0, 0, 'BEAN', '', 'GLUE代码初始化',
+        SYSDATETIME(), '');
+
+INSERT INTO "XXL_JOB_INFO"("ID", "JOB_GROUP", "JOB_DESC",
+                           "ADD_TIME", "UPDATE_TIME",
+                           "AUTHOR", "ALARM_EMAIL",
+                           "SCHEDULE_TYPE", "SCHEDULE_CONF",
+                           "MISFIRE_STRATEGY", "EXECUTOR_ROUTE_STRATEGY",
+                           "EXECUTOR_HANDLER", "EXECUTOR_PARAM",
+                           "EXECUTOR_BLOCK_STRATEGY",
+                           "EXECUTOR_TIMEOUT", "EXECUTOR_FAIL_RETRY_COUNT",
+                           "GLUE_TYPE", "GLUE_SOURCE", "GLUE_REMARK",
+                           "GLUE_UPDATETIME",
+                           "CHILD_JOBID")
+VALUES (2, 2, 'Ollama示例任务01', SYSDATETIME(), SYSDATETIME(), 'XXL', '', 'NONE', '',
+        'DO_NOTHING', 'FIRST', 'ollamaJobHandler', '{
+    "input": "慢SQL问题分析思路",
+    "prompt": "你是一个研发工程师，擅长解决技术类问题。"
+}', 'SERIAL_EXECUTION', 0, 0, 'BEAN', '', 'GLUE代码初始化',
+        SYSDATETIME(), '');
+
+INSERT INTO "XXL_JOB_INFO"("ID", "JOB_GROUP", "JOB_DESC",
+                           "ADD_TIME", "UPDATE_TIME",
+                           "AUTHOR", "ALARM_EMAIL",
+                           "SCHEDULE_TYPE", "SCHEDULE_CONF",
+                           "MISFIRE_STRATEGY", "EXECUTOR_ROUTE_STRATEGY",
+                           "EXECUTOR_HANDLER", "EXECUTOR_PARAM",
+                           "EXECUTOR_BLOCK_STRATEGY",
+                           "EXECUTOR_TIMEOUT", "EXECUTOR_FAIL_RETRY_COUNT",
+                           "GLUE_TYPE", "GLUE_SOURCE", "GLUE_REMARK",
+                           "GLUE_UPDATETIME",
+                           "CHILD_JOBID")
+VALUES (3, 2, 'Dify示例任务', SYSDATETIME(), SYSDATETIME(), 'XXL', '', 'NONE', '',
+        'DO_NOTHING', 'FIRST', 'difyWorkflowJobHandler', '{
+    "inputs":{
+        "input":"查询班级各学科前三名"
+    },
+    "user": "xxl-job"
+}', 'SERIAL_EXECUTION', 0, 0, 'BEAN', '', 'GLUE代码初始化',
+        SYSDATETIME(), '');
 
 set identity_insert XXL_JOB_INFO off;
 
