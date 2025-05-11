@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xxl.job.admin.dao.XxlJobLogReportDao">
+
+	<resultMap id="XxlJobLogReport" type="com.xxl.job.admin.core.model.XxlJobLogReport" >
+		<result column="ID" property="id" />
+	    <result column="TRIGGER_DAY" property="triggerDay" />
+		<result column="RUNNING_COUNT" property="runningCount" />
+	    <result column="SUC_COUNT" property="sucCount" />
+	    <result column="FAIL_COUNT" property="failCount" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		t."ID",
+		t."TRIGGER_DAY",
+		t."RUNNING_COUNT",
+		t."SUC_COUNT",
+		t."FAIL_COUNT"
+	</sql>
+
+	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobLogReport" useGeneratedKeys="true" keyProperty="id" >
+		INSERT INTO "XXL_JOB_LOG_REPORT" (
+			"TRIGGER_DAY",
+			"RUNNING_COUNT",
+			"SUC_COUNT",
+			"FAIL_COUNT"
+		) VALUES (
+			#{triggerDay},
+			#{runningCount},
+			#{sucCount},
+			#{failCount}
+		)
+		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+	</insert>
+
+	<update id="update" >
+        UPDATE "XXL_JOB_LOG_REPORT"
+        SET "RUNNING_COUNT" = #{runningCount},
+        	"SUC_COUNT" = #{sucCount},
+        	"FAIL_COUNT" = #{failCount}
+        WHERE "TRIGGER_DAY" = #{triggerDay}
+    </update>
+
+	<select id="queryLogReport" resultMap="XxlJobLogReport">
+		SELECT <include refid="Base_Column_List" />
+		FROM "XXL_JOB_LOG_REPORT" t
+		WHERE t."TRIGGER_DAY" between #{triggerDayFrom} and #{triggerDayTo}
+		ORDER BY t."TRIGGER_DAY" ASC
+	</select>
+
+	<select id="queryLogReportTotal" resultMap="XxlJobLogReport">
+		SELECT
+			SUM("RUNNING_COUNT") "RUNNING_COUNT",
+			SUM("SUC_COUNT") "SUC_COUNT",
+			SUM("FAIL_COUNT") "FAIL_COUNT"
+		FROM "XXL_JOB_LOG_REPORT" t
+	</select>
+
+</mapper>
