@@ -61,7 +61,7 @@ public class JacksonUtil {
 			logger.error(e.getMessage(), e);
 		} catch (JsonMappingException e) {
 			logger.error(e.getMessage(), e);
-		} catch (IOException e) {
+		} catch (IOException | IllegalArgumentException e) {
 			logger.error(e.getMessage(), e);
 		}
     	return null;
