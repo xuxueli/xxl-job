@@ -94,6 +94,20 @@ public class XxlJobHelper {
         return xxlJobContext.getShardTotal();
     }
 
+
+    /**
+     * current batch jobid  timestamp
+     *
+     * @return
+     */
+    public static long getJobTimeStamp() {
+        XxlJobContext xxlJobContext = XxlJobContext.getXxlJobContext();
+        if (xxlJobContext == null) {
+            return -1;
+        }
+
+        return xxlJobContext.getTimestamp();
+    }
     // ---------------------- tool for log ----------------------
 
     private static Logger logger = LoggerFactory.getLogger("xxl-job logger");

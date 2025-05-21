@@ -60,13 +60,18 @@ public class XxlJobContext {
      */
     private String handleMsg;
 
+    /**
+     * new add timestamp
+     */
+    private long timestamp;
 
-    public XxlJobContext(long jobId, String jobParam, String jobLogFileName, int shardIndex, int shardTotal) {
+    public XxlJobContext(long jobId, String jobParam, String jobLogFileName, int shardIndex, int shardTotal,long timestamp) {
         this.jobId = jobId;
         this.jobParam = jobParam;
         this.jobLogFileName = jobLogFileName;
         this.shardIndex = shardIndex;
         this.shardTotal = shardTotal;
+        this.timestamp = timestamp;
 
         this.handleCode = HANDLE_CODE_SUCCESS;  // default success
     }
@@ -106,7 +111,13 @@ public class XxlJobContext {
     public String getHandleMsg() {
         return handleMsg;
     }
+    public long getTimestamp() {
+        return timestamp;
+    }
 
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
+    }
     // ---------------------- tool ----------------------
 
     private static InheritableThreadLocal<XxlJobContext> contextHolder = new InheritableThreadLocal<XxlJobContext>(); // support for child thread of job handler)
