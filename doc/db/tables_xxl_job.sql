@@ -157,7 +157,9 @@ VALUES (1, 1, '示例任务01', now(), now(), 'XXL', '', 'CRON', '0 0 0 * * ? *'
     "inputs":{
         "input":"查询班级各学科前三名"
     },
-    "user": "xxl-job"
+    "user": "xxl-job",
+    "baseUrl": "http://localhost/v1",
+    "apiKey": "app-OUVgNUOQRIMokfmuJvBJoUTN"
 }', 'SERIAL_EXECUTION', 0, 0, 'BEAN', '', 'GLUE代码初始化',
         now(), '')
     ;
