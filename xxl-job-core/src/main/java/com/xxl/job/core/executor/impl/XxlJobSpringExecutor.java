@@ -6,13 +6,17 @@ import com.xxl.job.core.handler.annotation.XxlJob;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.DisposableBean;
-import org.springframework.beans.factory.SmartInitializingSingleton;
+import org.springframework.beans.factory.*;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.support.AbstractBeanFactory;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.core.MethodIntrospector;
 import org.springframework.core.annotation.AnnotatedElementUtils;
+import org.springframework.util.ClassUtils;
 
 import java.lang.reflect.Method;
 import java.util.Map;
@@ -81,36 +85,44 @@ public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationC
         if (applicationContext == null) {
             return;
         }
+        Map<Method, XxlJob> annotatedMethods = null;   // referred to ：org.springframework.context.event.EventListenerMethodProcessor.processBean
         // init job handler from method
         String[] beanDefinitionNames = applicationContext.getBeanNamesForType(Object.class, false, true);
         for (String beanDefinitionName : beanDefinitionNames) {
-
-            // get bean
-            Object bean = null;
-            Lazy onBean = applicationContext.findAnnotationOnBean(beanDefinitionName, Lazy.class);
-            if (onBean!=null){
-                logger.debug("xxl-job annotation scan, skip @Lazy Bean:{}", beanDefinitionName);
-                continue;
-            }else {
-                bean = applicationContext.getBean(beanDefinitionName);
-            }
-
-            // filter method
-            Map<Method, XxlJob> annotatedMethods = null;   // referred to ：org.springframework.context.event.EventListenerMethodProcessor.processBean
-            try {
-                annotatedMethods = MethodIntrospector.selectMethods(bean.getClass(),
-                        new MethodIntrospector.MetadataLookup<XxlJob>() {
-                            @Override
-                            public XxlJob inspect(Method method) {
-                                return AnnotatedElementUtils.findMergedAnnotation(method, XxlJob.class);
-                            }
-                        });
-            } catch (Throwable ex) {
-                logger.error("xxl-job method-jobhandler resolve error for bean[" + beanDefinitionName + "].", ex);
+            //check bean is lazy init
+            AutowireCapableBeanFactory autowireCapableBeanFactory = applicationContext.getAutowireCapableBeanFactory();
+            if(autowireCapableBeanFactory instanceof DefaultListableBeanFactory){
+                DefaultListableBeanFactory abstractBeanFactory= (DefaultListableBeanFactory) autowireCapableBeanFactory;
+                BeanDefinition mergedBeanDefinition;
+                try {
+                    mergedBeanDefinition = abstractBeanFactory.getBeanDefinition(beanDefinitionName);
+                }catch (NoSuchBeanDefinitionException exception){
+                    logger.debug("xxl-job annotation scan, skip BeanDefinition Bean:{}", beanDefinitionName);
+                    continue;
+                }
+                if(mergedBeanDefinition.isLazyInit()){
+                    logger.debug("xxl-job annotation scan, skip Lazy Bean:{}", beanDefinitionName);
+                    continue;
+                }else{
+                    try {
+                        if(null==mergedBeanDefinition.getBeanClassName()){
+                            continue;
+                        }
+                        logger.info("xxl job {}",mergedBeanDefinition.getBeanClassName());
+                        Class<?> aClass = ClassUtils.forName(mergedBeanDefinition.getBeanClassName(), ClassUtils.getDefaultClassLoader());
+                        annotatedMethods = MethodIntrospector.selectMethods(aClass,
+                                (MethodIntrospector.MetadataLookup<XxlJob>) method ->
+                                        AnnotatedElementUtils.findMergedAnnotation(method, XxlJob.class));
+                    } catch (Throwable ex) {
+                        logger.error("xxl-job method-jobhandler resolve error for bean[" + beanDefinitionName + "].", ex);
+                    }
+                }
             }
             if (annotatedMethods==null || annotatedMethods.isEmpty()) {
                 continue;
             }
+            // get bean
+            Object bean = applicationContext.getBean(beanDefinitionName);
 
             // generate and regist method job handler
             for (Map.Entry<Method, XxlJob> methodXxlJobEntry : annotatedMethods.entrySet()) {
