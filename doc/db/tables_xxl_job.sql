@@ -1,9 +1,9 @@
-#
-# XXL-JOB
-# Copyright (c) 2015-present, xuxueli.
+--
+-- XXL-JOB
+-- Copyright (c) 2015-present, xuxueli.
 
-CREATE database if NOT EXISTS `xxl_job` default character set utf8mb4 collate utf8mb4_unicode_ci;
-use `xxl_job`;
+-- CREATE database if NOT EXISTS `xxl_job` default character set utf8mb4 collate utf8mb4_unicode_ci;
+-- use `xxl_job`;
 
 SET NAMES utf8mb4;
 
@@ -27,12 +27,13 @@ CREATE TABLE `xxl_job_info`
     `executor_fail_retry_count` int(11)      NOT NULL DEFAULT '0' COMMENT '失败重试次数',
     `glue_type`                 varchar(50)  NOT NULL COMMENT 'GLUE类型',
     `glue_source`               mediumtext COMMENT 'GLUE源代码',
-    `glue_remark`               varchar(128)          DEFAULT NULL COMMENT 'GLUE备注',
+  `glue_remark` varchar(512) DEFAULT NULL COMMENT 'GLUE备注',
     `glue_updatetime`           datetime              DEFAULT NULL COMMENT 'GLUE更新时间',
     `child_jobid`               varchar(255)          DEFAULT NULL COMMENT '子任务ID，多个逗号分隔',
     `trigger_status`            tinyint(4)   NOT NULL DEFAULT '0' COMMENT '调度状态：0-停止，1-运行',
     `trigger_last_time`         bigint(13)   NOT NULL DEFAULT '0' COMMENT '上次调度时间',
     `trigger_next_time`         bigint(13)   NOT NULL DEFAULT '0' COMMENT '下次调度时间',
+  `remark` varchar(512) DEFAULT NULL COMMENT '备注',
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4;
@@ -104,7 +105,7 @@ CREATE TABLE `xxl_job_group`
 (
     `id`           int(11)     NOT NULL AUTO_INCREMENT,
     `app_name`     varchar(64) NOT NULL COMMENT '执行器AppName',
-    `title`        varchar(12) NOT NULL COMMENT '执行器名称',
+  `title` varchar(64) NOT NULL COMMENT '执行器名称',
     `address_type` tinyint(4)  NOT NULL DEFAULT '0' COMMENT '执行器地址类型：0=自动注册、1=手动录入',
     `address_list` text COMMENT '执行器地址列表，多地址逗号分隔',
     `update_time`  datetime             DEFAULT NULL,
@@ -116,7 +117,7 @@ CREATE TABLE `xxl_job_user`
 (
     `id`         int(11)     NOT NULL AUTO_INCREMENT,
     `username`   varchar(50) NOT NULL COMMENT '账号',
-    `password`   varchar(50) NOT NULL COMMENT '密码',
+  `password` varchar(300) NOT NULL COMMENT '密码',
     `role`       tinyint(4)  NOT NULL COMMENT '角色：0-普通用户、1-管理员',
     `permission` varchar(255) DEFAULT NULL COMMENT '权限：执行器ID列表，多个逗号分割',
     PRIMARY KEY (`id`),
@@ -132,11 +133,13 @@ CREATE TABLE `xxl_job_lock`
   DEFAULT CHARSET = utf8mb4;
 
 
-## —————————————————————— init data ——————————————————
+-- —————————————————————— init data ——————————————————
 
 INSERT INTO `xxl_job_group`(`id`, `app_name`, `title`, `address_type`, `address_list`, `update_time`)
-    VALUES (1, 'xxl-job-executor-sample', '通用执行器Sample', 0, NULL, now()),
-           (2, 'xxl-job-executor-sample-ai', 'AI执行器Sample', 0, NULL, now());
+VALUES (1, 'xxl-job-executor-sample', '通用执行器Sample', 0, NULL, now());
+
+INSERT INTO `xxl_job_group`(`id`, `app_name`, `title`, `address_type`, `address_list`, `update_time`)
+VALUES   (2, 'xxl-job-executor-sample-ai', 'AI执行器Sample', 0, NULL, now());
 
 INSERT INTO `xxl_job_info`(`id`, `job_group`, `job_desc`, `add_time`, `update_time`, `author`, `alarm_email`,
                            `schedule_type`, `schedule_conf`, `misfire_strategy`, `executor_route_strategy`,
@@ -145,14 +148,26 @@ INSERT INTO `xxl_job_info`(`id`, `job_group`, `job_desc`, `add_time`, `update_ti
                            `child_jobid`)
 VALUES (1, 1, '示例任务01', now(), now(), 'XXL', '', 'CRON', '0 0 0 * * ? *',
         'DO_NOTHING', 'FIRST', 'demoJobHandler', '', 'SERIAL_EXECUTION', 0, 0, 'BEAN', '', 'GLUE代码初始化',
-        now(), ''),
-       (2, 2, 'Ollama示例任务01', now(), now(), 'XXL', '', 'NONE', '',
+        now(), '');
+
+INSERT INTO `xxl_job_info`(`id`, `job_group`, `job_desc`, `add_time`, `update_time`, `author`, `alarm_email`,
+                           `schedule_type`, `schedule_conf`, `misfire_strategy`, `executor_route_strategy`,
+                           `executor_handler`, `executor_param`, `executor_block_strategy`, `executor_timeout`,
+                           `executor_fail_retry_count`, `glue_type`, `glue_source`, `glue_remark`, `glue_updatetime`,
+                           `child_jobid`)
+VALUES (2, 2, 'Ollama示例任务01', now(), now(), 'XXL', '', 'NONE', '',
         'DO_NOTHING', 'FIRST', 'ollamaJobHandler', '{
     "input": "慢SQL问题分析思路",
     "prompt": "你是一个研发工程师，擅长解决技术类问题。"
 }', 'SERIAL_EXECUTION', 0, 0, 'BEAN', '', 'GLUE代码初始化',
-        now(), ''),
-       (3, 2, 'Dify示例任务', now(), now(), 'XXL', '', 'NONE', '',
+        now(), '');
+
+INSERT INTO `xxl_job_info`(`id`, `job_group`, `job_desc`, `add_time`, `update_time`, `author`, `alarm_email`,
+                           `schedule_type`, `schedule_conf`, `misfire_strategy`, `executor_route_strategy`,
+                           `executor_handler`, `executor_param`, `executor_block_strategy`, `executor_timeout`,
+                           `executor_fail_retry_count`, `glue_type`, `glue_source`, `glue_remark`, `glue_updatetime`,
+                           `child_jobid`)
+VALUES (3, 2, 'Dify示例任务', now(), now(), 'XXL', '', 'NONE', '',
         'DO_NOTHING', 'FIRST', 'difyWorkflowJobHandler', '{
     "inputs":{
         "input":"查询班级各学科前三名"
@@ -161,14 +176,12 @@ VALUES (1, 1, '示例任务01', now(), now(), 'XXL', '', 'CRON', '0 0 0 * * ? *'
     "baseUrl": "http://localhost/v1",
     "apiKey": "app-OUVgNUOQRIMokfmuJvBJoUTN"
 }', 'SERIAL_EXECUTION', 0, 0, 'BEAN', '', 'GLUE代码初始化',
-        now(), '')
-    ;
+        now(), '');
 
 INSERT INTO `xxl_job_user`(`id`, `username`, `password`, `role`, `permission`)
-VALUES (1, 'admin', 'e10adc3949ba59abbe56e057f20f883e', 1, NULL);
+VALUES (1, 'admin', '$2a$10$rElzP.wCmjyjsVIIqoP4fe8u1qH3otIxiG4UhYs9A3Ivsrm1LrpOu', 1, NULL);
 
 INSERT INTO `xxl_job_lock` (`lock_name`)
 VALUES ('schedule_lock');
 
-commit;
 

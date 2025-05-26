@@ -5,6 +5,21 @@
 	<@netCommon.commonStyle />
     <link rel="stylesheet" href="${request.contextPath}/static/adminlte/plugins/iCheck/square/blue.css">
 	<title>${I18n.admin_name}</title>
+	<style>
+		.login-footer{
+			position: fixed;
+			width: 100%;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			margin-left: 0;
+			background: linear-gradient(90deg, rgba(255,255,255,0.7), transparent,rgba(255,255,255,0.7));
+			border-radius: 18px 18px 0 0;
+			border: none;
+			background-size: 300%;
+			animation: aniHtml 13s infinite;
+		}
+	</style>
 </head>
 <body class="hold-transition login-page">
 	<div class="login-box">
@@ -37,7 +52,20 @@
 			</div>
 		</form>
 	</div>
+
+	<footer class="main-footer login-footer">
+		Powered by <b>XXL-JOB</b> ${I18n.admin_version}
+		<div class="pull-right hidden-xs">
+			<strong>Copyright &copy; 2015-${.now?string('yyyy')} &nbsp;
+				<a href="https://www.xuxueli.com/" target="_blank" >xuxueli</a>
+				&nbsp;
+				<a href="https://github.com/xuxueli/xxl-job" target="_blank" >github</a>
+			</strong><!-- All rights reserved. -->
+		</div>
+	</footer>
 <@netCommon.commonScript />
+<script src="${request.contextPath}/static/plugins/com/antherd/sm-crypto-0.3.2/sm3.js"></script>
+<script src="${request.contextPath}/static/plugins/com/antherd/sm-crypto-0.3.2/sm2.js"></script>
 <script src="${request.contextPath}/static/adminlte/plugins/iCheck/icheck.min.js"></script>
 <script src="${request.contextPath}/static/js/login.1.js"></script>
 

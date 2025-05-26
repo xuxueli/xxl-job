@@ -1,8 +1,8 @@
 package com.xxl.job.admin.controller.resolver;
 
 import com.xxl.job.admin.core.exception.XxlJobException;
-import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.admin.core.util.JacksonUtil;
+import com.xxl.job.core.biz.model.ReturnT;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
@@ -61,5 +61,5 @@ public class WebExceptionResolver implements HandlerExceptionResolver {
 			return mv;
 		}
 	}
-	
+
 }
