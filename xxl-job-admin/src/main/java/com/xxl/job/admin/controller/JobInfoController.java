@@ -9,6 +9,8 @@ import com.xxl.job.admin.core.route.ExecutorRouteStrategyEnum;
 import com.xxl.job.admin.core.scheduler.MisfireStrategyEnum;
 import com.xxl.job.admin.core.scheduler.ScheduleTypeEnum;
 import com.xxl.job.admin.core.thread.JobScheduleHelper;
+import com.xxl.job.admin.core.thread.JobTriggerPoolHelper;
+import com.xxl.job.admin.core.trigger.TriggerTypeEnum;
 import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.admin.dao.XxlJobGroupDao;
 import com.xxl.job.admin.service.XxlJobService;
@@ -112,6 +114,13 @@ public class JobInfoController {
 	@ResponseBody
 	public ReturnT<String> pause(@RequestParam("id") int id) {
 		return xxlJobService.stop(id);
+	}
+
+	@RequestMapping("/stop-immediately")
+	@ResponseBody
+	public ReturnT<String> stopImmediately(int id) {
+		JobTriggerPoolHelper.trigger(id, TriggerTypeEnum.MANUAL, -1, null, null, null);
+		return ReturnT.SUCCESS;
 	}
 	
 	@RequestMapping("/start")

@@ -249,4 +249,13 @@ public class JobThread extends Thread{
 
 		logger.info(">>>>>>>>>>> xxl-job JobThread stoped, hashCode:{}", Thread.currentThread());
 	}
+
+	/**
+	 * 当线程被 Interrup()时，不会被立即中断，Thread.sleep(0L)会触发中断状态检查
+	 *
+	 * @throws InterruptedException
+	 */
+	public static void jobStopped() throws InterruptedException {
+		Thread.sleep(0L);
+	}
 }
