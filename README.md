@@ -92,6 +92,22 @@ public class JobTest {
 }
 ```
 
-|版本号|解决的问题|
-|---|---|
-|[2.5.0](https://github.com/a852203465/xxl-job/releases/tag/2.5.0)|`重构项目`，并移除xxl-job-core中的netty server，使用spring mvc替代netty server的功能，重用客户端spring boot端口号，不再额外开启9999端口号|
+| 版本号                                                               | 解决的问题                                                                                                |
+|-------------------------------------------------------------------|------------------------------------------------------------------------------------------------------|
+| [2.5.0](https://github.com/a852203465/xxl-job/releases/tag/2.5.0) | `重构项目`，并移除xxl-job-core中的netty server，使用spring mvc替代netty server的功能，重用客户端spring boot端口号，不再额外开启9999端口号 |
+| [2.6.0](https://github.com/a852203465/xxl-job/releases/tag/2.6.0) | 移除kettle相关依赖|                                                                                         |                                                                                             |
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
