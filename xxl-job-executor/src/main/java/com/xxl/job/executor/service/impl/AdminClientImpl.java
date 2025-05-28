@@ -22,7 +22,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.stereotype.Service;
 
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * 管理客户端实现类
@@ -49,7 +54,7 @@ public class AdminClientImpl implements AdminClient {
         for (String url : urls) {
             try {
                 if (ResponseUtils.isSuccess(post(url, callbackParams))) return;
-            }catch (Exception e) {
+            } catch (Exception e) {
                 log.error("<br>----------- xxl-job job callback error, errorMsg:" + e.getMessage());
             }
         }
@@ -65,7 +70,7 @@ public class AdminClientImpl implements AdminClient {
     @Override
     public void registry() {
 
-        List<String> urls = UrlUtils.getUrl(xxlJobExecutorProperties.getAdmin().getAddresses(),UrlEnum.ADMIN_REGISTRY);
+        List<String> urls = UrlUtils.getUrl(xxlJobExecutorProperties.getAdmin().getAddresses(), UrlEnum.ADMIN_REGISTRY);
 
         RegistryParam param = new RegistryParam();
         param.setRegistryGroup(RegistryType.EXECUTOR.name());
@@ -121,9 +126,23 @@ public class AdminClientImpl implements AdminClient {
                 : xxlJobExecutorProperties.getExecutor().getPort();
 
         String host = StrUtil.isEmpty(xxlJobExecutorProperties.getExecutor().getHost())
-                ? NetUtil.getLocalhostStr() : xxlJobExecutorProperties.getExecutor().getHost();
+                ? getIp() : xxlJobExecutorProperties.getExecutor().getHost();
 
         return String.format(HOST_STATIC, host, port);
+    }
+
+    private static String getIp() {
+        Collection<NetworkInterface> interfaces = NetUtil.getNetworkInterfaces();
+        return Stream.of(interfaces.toArray(new NetworkInterface[]{}))
+                .filter(ni -> !StrUtil.containsIgnoreCase(ni.getDisplayName(), "Virtual")
+                        && !StrUtil.containsIgnoreCase(ni.getDisplayName(), "VMware"))
+                .flatMap(ni -> Collections.list(ni.getInetAddresses()).stream())
+                .filter(ia -> ia != null
+                        && !ia.isLoopbackAddress()
+                        && !ia.isLinkLocalAddress()
+                        && ia.isSiteLocalAddress())
+                .map(InetAddress::getHostAddress)
+                .findFirst().orElse(NetUtil.getLocalhostStr());
     }
 
     /**
@@ -144,29 +163,12 @@ public class AdminClientImpl implements AdminClient {
         if (ObjectUtil.equals(200, status)) {
             responseVO = httpResult.getBody()
                     .toBean(ResponseVO.class);
-        }else {
+        } else {
             responseVO.setCode(status);
             responseVO.setMessage(ObjectUtil.isNotNull(httpResult.getError()) ? httpResult.getError().getMessage() : null);
         }
         return responseVO;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 }

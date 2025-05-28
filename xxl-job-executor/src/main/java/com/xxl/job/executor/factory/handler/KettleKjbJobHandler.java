@@ -5,7 +5,6 @@ import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import com.alibaba.fastjson2.TypeReference;
 import com.xxl.job.core.enums.KettleLogLevel;
-import com.xxl.job.executor.utils.KettleUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -59,7 +58,7 @@ public class KettleKjbJobHandler extends JobHandler {
         if (ObjectUtil.isNotEmpty(param)) {
             params = JSONObject.parseObject(JSON.toJSONString(param), new TypeReference<Map<String, String>>() {});
         }
-        KettleUtils.callJob(jobName, guideKjb, zip, params, logLevel);
+//        KettleUtils.callJob(jobName, guideKjb, zip, params, logLevel);
     }
 
     @Override
