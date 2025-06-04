@@ -78,7 +78,7 @@ public class TriggerCallbackThread {
                                 doCallback(callbackParamList);
                             }
                         }
-                    } catch (Exception e) {
+                    } catch (Throwable e) {
                         if (!toStop) {
                             logger.error(e.getMessage(), e);
                         }
@@ -92,12 +92,12 @@ public class TriggerCallbackThread {
                     if (callbackParamList!=null && callbackParamList.size()>0) {
                         doCallback(callbackParamList);
                     }
-                } catch (Exception e) {
+                } catch (Throwable e) {
                     if (!toStop) {
                         logger.error(e.getMessage(), e);
                     }
                 }
-                logger.info(">>>>>>>>>>> xxl-job, executor callback thread destory.");
+                logger.info(">>>>>>>>>>> xxl-job, executor callback thread destroy.");
 
             }
         });
@@ -113,7 +113,7 @@ public class TriggerCallbackThread {
                 while(!toStop){
                     try {
                         retryFailCallbackFile();
-                    } catch (Exception e) {
+                    } catch (Throwable e) {
                         if (!toStop) {
                             logger.error(e.getMessage(), e);
                         }
@@ -121,13 +121,13 @@ public class TriggerCallbackThread {
                     }
                     try {
                         TimeUnit.SECONDS.sleep(RegistryConfig.BEAT_TIMEOUT);
-                    } catch (InterruptedException e) {
+                    } catch (Throwable e) {
                         if (!toStop) {
                             logger.error(e.getMessage(), e);
                         }
                     }
                 }
-                logger.info(">>>>>>>>>>> xxl-job, executor retry callback thread destory.");
+                logger.info(">>>>>>>>>>> xxl-job, executor retry callback thread destroy.");
             }
         });
         triggerRetryCallbackThread.setDaemon(true);
@@ -141,7 +141,7 @@ public class TriggerCallbackThread {
             triggerCallbackThread.interrupt();
             try {
                 triggerCallbackThread.join();
-            } catch (InterruptedException e) {
+            } catch (Throwable e) {
                 logger.error(e.getMessage(), e);
             }
         }
@@ -151,7 +151,7 @@ public class TriggerCallbackThread {
             triggerRetryCallbackThread.interrupt();
             try {
                 triggerRetryCallbackThread.join();
-            } catch (InterruptedException e) {
+            } catch (Throwable e) {
                 logger.error(e.getMessage(), e);
             }
         }
@@ -175,7 +175,7 @@ public class TriggerCallbackThread {
                 } else {
                     callbackLog(callbackParamList, "<br>----------- xxl-job job callback fail, callbackResult:" + callbackResult);
                 }
-            } catch (Exception e) {
+            } catch (Throwable e) {
                 callbackLog(callbackParamList, "<br>----------- xxl-job job callback error, errorMsg:" + e.getMessage());
             }
         }

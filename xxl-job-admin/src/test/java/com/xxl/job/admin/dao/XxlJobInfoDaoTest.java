@@ -3,15 +3,18 @@ package com.xxl.job.admin.dao;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.scheduler.MisfireStrategyEnum;
 import com.xxl.job.admin.core.scheduler.ScheduleTypeEnum;
+import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class XxlJobInfoDaoTest {
+	private static Logger logger = LoggerFactory.getLogger(XxlJobInfoDaoTest.class);
 	
 	@Resource
 	private XxlJobInfoDao xxlJobInfoDao;
@@ -20,9 +23,9 @@ public class XxlJobInfoDaoTest {
 	public void pageList(){
 		List<XxlJobInfo> list = xxlJobInfoDao.pageList(0, 20, 0, -1, null, null, null);
 		int list_count = xxlJobInfoDao.pageListCount(0, 20, 0, -1, null, null, null);
-		
-		System.out.println(list);
-		System.out.println(list_count);
+
+		logger.info("", list);
+		logger.info("", list_count);
 
 		List<XxlJobInfo> list2 = xxlJobInfoDao.getJobsByGroup(1);
 	}

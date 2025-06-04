@@ -3,13 +3,13 @@ package com.xxl.job.admin.core.conf;
 import com.xxl.job.admin.core.alarm.JobAlarmer;
 import com.xxl.job.admin.core.scheduler.XxlJobScheduler;
 import com.xxl.job.admin.dao.*;
+import jakarta.annotation.Resource;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import javax.sql.DataSource;
 import java.util.Arrays;
 
@@ -55,6 +55,9 @@ public class XxlJobAdminConfig implements InitializingBean, DisposableBean {
     @Value("${xxl.job.accessToken}")
     private String accessToken;
 
+    @Value("${xxl.job.timeout}")
+    private int timeout;
+
     @Value("${spring.mail.from}")
     private String emailFrom;
 
@@ -98,6 +101,10 @@ public class XxlJobAdminConfig implements InitializingBean, DisposableBean {
         return accessToken;
     }
 
+    public int getTimeout() {
+        return timeout;
+    }
+
     public String getEmailFrom() {
         return emailFrom;
     }
@@ -117,8 +124,8 @@ public class XxlJobAdminConfig implements InitializingBean, DisposableBean {
     }
 
     public int getLogretentiondays() {
-        if (logretentiondays < 7) {
-            return -1;  // Limit greater than or equal to 7, otherwise close
+        if (logretentiondays < 3) {
+            return -1;  // Limit greater than or equal to 3, otherwise close
         }
         return logretentiondays;
     }

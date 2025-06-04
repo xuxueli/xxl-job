@@ -59,7 +59,7 @@
 										<#list jobLogGlues as glue>
                                             <li>
                                                 <a href="javascript:;" class="source_version" version="version_${glue.id}" glueType="${glue.glueType}" >
-                                                    <#list GlueTypeEnum as item><#if item == glue.glueType>${item.desc}</#if></#list>： ${glue.glueRemark}
+                                                    ${glue.addTime?string["yyyy-MM-dd HH:mm:ss"]}： ${glue.glueRemark}
                                                 </a>
                                             </li>
                                             <textarea id="version_${glue.id}" style="display:none;" >${glue.glueSource}</textarea>

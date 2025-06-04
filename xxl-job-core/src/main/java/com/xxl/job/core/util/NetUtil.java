@@ -29,7 +29,7 @@ public class NetUtil {
                 portTmp++;
             }
         }
-        portTmp = defaultPort--;
+        portTmp = defaultPort - 1;
         while (portTmp > 0) {
             if (!isPortUsed(portTmp)) {
                 return portTmp;
@@ -53,7 +53,7 @@ public class NetUtil {
             serverSocket = new ServerSocket(port);
             used = false;
         } catch (IOException e) {
-            logger.info(">>>>>>>>>>> xxl-rpc, port[{}] is in use.", port);
+            logger.info(">>>>>>>>>>> xxl-job, port[{}] is in use.", port);
             used = true;
         } finally {
             if (serverSocket != null) {

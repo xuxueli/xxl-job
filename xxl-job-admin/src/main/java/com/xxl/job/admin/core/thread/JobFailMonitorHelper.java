@@ -60,7 +60,7 @@ public class JobFailMonitorHelper {
 
 								// 2、fail alarm monitor
 								int newAlarmStatus = 0;		// 告警状态：0-默认、-1=锁定状态、1-无需告警、2-告警成功、3-告警失败
-								if (info!=null && info.getAlarmEmail()!=null && info.getAlarmEmail().trim().length()>0) {
+								if (info != null) {
 									boolean alarmResult = XxlJobAdminConfig.getAdminConfig().getJobAlarmer().alarm(info, log);
 									newAlarmStatus = alarmResult?2:3;
 								} else {
@@ -71,7 +71,7 @@ public class JobFailMonitorHelper {
 							}
 						}
 
-					} catch (Exception e) {
+					} catch (Throwable e) {
 						if (!toStop) {
 							logger.error(">>>>>>>>>>> xxl-job, job fail monitor thread error:{}", e);
 						}
@@ -79,7 +79,7 @@ public class JobFailMonitorHelper {
 
                     try {
                         TimeUnit.SECONDS.sleep(10);
-                    } catch (Exception e) {
+                    } catch (Throwable e) {
                         if (!toStop) {
                             logger.error(e.getMessage(), e);
                         }
@@ -102,7 +102,7 @@ public class JobFailMonitorHelper {
 		monitorThread.interrupt();
 		try {
 			monitorThread.join();
-		} catch (InterruptedException e) {
+		} catch (Throwable e) {
 			logger.error(e.getMessage(), e);
 		}
 	}

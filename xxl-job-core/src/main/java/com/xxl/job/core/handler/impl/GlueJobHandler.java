@@ -26,4 +26,13 @@ public class GlueJobHandler extends IJobHandler {
 		jobHandler.execute();
 	}
 
+	@Override
+	public void init() throws Exception {
+		this.jobHandler.init();
+	}
+
+	@Override
+	public void destroy() throws Exception {
+		this.jobHandler.destroy();
+	}
 }

@@ -36,7 +36,7 @@ public class JobThread extends Thread{
 	private String stopReason;
 
     private boolean running = false;    // if running job
-	private int idleTimes = 0;			// idel times
+	private int idleTimes = 0;			// idle times
 
 
 	public JobThread(int jobId, IJobHandler handler) {
@@ -44,6 +44,9 @@ public class JobThread extends Thread{
 		this.handler = handler;
 		this.triggerQueue = new LinkedBlockingQueue<TriggerParam>();
 		this.triggerLogIdSet = Collections.synchronizedSet(new HashSet<Long>());
+
+		// assign job thread name
+		this.setName("xxl-job, JobThread-"+jobId+"-"+System.currentTimeMillis());
 	}
 	public IJobHandler getHandler() {
 		return handler;
@@ -107,7 +110,7 @@ public class JobThread extends Thread{
 
             TriggerParam triggerParam = null;
             try {
-				// to check toStop signal, we need cycle, so wo cannot use queue.take(), instand of poll(timeout)
+				// to check toStop signal, we need cycle, so we cannot use queue.take(), instead of poll(timeout)
 				triggerParam = triggerQueue.poll(3L, TimeUnit.SECONDS);
 				if (triggerParam!=null) {
 					running = true;
@@ -182,7 +185,7 @@ public class JobThread extends Thread{
 				} else {
 					if (idleTimes > 30) {
 						if(triggerQueue.size() == 0) {	// avoid concurrent trigger causes jobId-lost
-							XxlJobExecutor.removeJobThread(jobId, "excutor idel times over limit.");
+							XxlJobExecutor.removeJobThread(jobId, "excutor idle times over limit.");
 						}
 					}
 				}
@@ -203,7 +206,7 @@ public class JobThread extends Thread{
                 if(triggerParam != null) {
                     // callback handler info
                     if (!toStop) {
-                        // commonm
+                        // common
                         TriggerCallbackThread.pushCallBack(new HandleCallbackParam(
                         		triggerParam.getLogId(),
 								triggerParam.getLogDateTime(),
@@ -215,7 +218,7 @@ public class JobThread extends Thread{
                         TriggerCallbackThread.pushCallBack(new HandleCallbackParam(
                         		triggerParam.getLogId(),
 								triggerParam.getLogDateTime(),
-								XxlJobContext.HANDLE_COCE_FAIL,
+								XxlJobContext.HANDLE_CODE_FAIL,
 								stopReason + " [job running, killed]" )
 						);
                     }
@@ -231,7 +234,7 @@ public class JobThread extends Thread{
 				TriggerCallbackThread.pushCallBack(new HandleCallbackParam(
 						triggerParam.getLogId(),
 						triggerParam.getLogDateTime(),
-						XxlJobContext.HANDLE_COCE_FAIL,
+						XxlJobContext.HANDLE_CODE_FAIL,
 						stopReason + " [job not executed, in the job queue, killed.]")
 				);
 			}

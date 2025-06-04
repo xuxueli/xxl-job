@@ -84,7 +84,7 @@
 					<#-- login user -->
                     <li class="dropdown">
                         <a href="javascript:" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                            ${I18n.system_welcome} ${Request["XXL_JOB_LOGIN_IDENTITY"].username}
+                            ${I18n.system_welcome} ${loginUser.username}
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu" role="menu">
@@ -108,8 +108,12 @@
 				<div class="modal-body">
 					<form class="form-horizontal form" role="form" >
 						<div class="form-group">
+							<label for="lastname" class="col-sm-2 control-label">${I18n.change_pwd_field_oldpwd}<font color="red">*</font></label>
+							<div class="col-sm-10"><input type="text" class="form-control" name="oldPassword" placeholder="${I18n.system_please_input} ${I18n.change_pwd_field_oldpwd}" maxlength="20" ></div>
+						</div>
+						<div class="form-group">
 							<label for="lastname" class="col-sm-2 control-label">${I18n.change_pwd_field_newpwd}<font color="red">*</font></label>
-							<div class="col-sm-10"><input type="text" class="form-control" name="password" placeholder="${I18n.system_please_input} ${I18n.change_pwd_field_newpwd}" maxlength="18" ></div>
+							<div class="col-sm-10"><input type="text" class="form-control" name="password" placeholder="${I18n.system_please_input} ${I18n.change_pwd_field_newpwd}" maxlength="20" ></div>
 						</div>
 						<hr>
 						<div class="form-group">
@@ -137,7 +141,7 @@
                 <li class="nav-click <#if pageName == "index">active</#if>" ><a href="${request.contextPath}/"><i class="fa fa-circle-o text-aqua"></i><span>${I18n.job_dashboard_name}</span></a></li>
 				<li class="nav-click <#if pageName == "jobinfo">active</#if>" ><a href="${request.contextPath}/jobinfo"><i class="fa fa-circle-o text-yellow"></i><span>${I18n.jobinfo_name}</span></a></li>
 				<li class="nav-click <#if pageName == "joblog">active</#if>" ><a href="${request.contextPath}/joblog"><i class="fa fa-circle-o text-green"></i><span>${I18n.joblog_name}</span></a></li>
-				<#if Request["XXL_JOB_LOGIN_IDENTITY"].role == 1>
+				<#if loginUser.role == 1>
                     <li class="nav-click <#if pageName == "jobgroup">active</#if>" ><a href="${request.contextPath}/jobgroup"><i class="fa fa-circle-o text-red"></i><span>${I18n.jobgroup_name}</span></a></li>
                     <li class="nav-click <#if pageName == "user">active</#if>" ><a href="${request.contextPath}/user"><i class="fa fa-circle-o text-purple"></i><span>${I18n.user_manage}</span></a></li>
 				</#if>

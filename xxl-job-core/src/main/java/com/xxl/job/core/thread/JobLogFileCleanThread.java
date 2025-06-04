@@ -83,7 +83,7 @@ public class JobLogFileCleanThread {
                             }
                         }
 
-                    } catch (Exception e) {
+                    } catch (Throwable e) {
                         if (!toStop) {
                             logger.error(e.getMessage(), e);
                         }
@@ -92,13 +92,13 @@ public class JobLogFileCleanThread {
 
                     try {
                         TimeUnit.DAYS.sleep(1);
-                    } catch (InterruptedException e) {
+                    } catch (Throwable e) {
                         if (!toStop) {
                             logger.error(e.getMessage(), e);
                         }
                     }
                 }
-                logger.info(">>>>>>>>>>> xxl-job, executor JobLogFileCleanThread thread destory.");
+                logger.info(">>>>>>>>>>> xxl-job, executor JobLogFileCleanThread thread destroy.");
 
             }
         });
