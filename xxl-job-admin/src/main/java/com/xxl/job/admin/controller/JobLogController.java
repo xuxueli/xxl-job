@@ -232,7 +232,7 @@ public class JobLogController {
 		}
 
 		if (ReturnT.SUCCESS_CODE == runResult.getCode()) {
-			log.setHandleCode(ReturnT.FAIL_CODE);
+			log.setHandleCode(ReturnT.SUCCESS_CODE);
 			log.setHandleMsg( I18nUtil.getString("joblog_kill_log_byman")+":" + (runResult.getMsg()!=null?runResult.getMsg():""));
 			log.setHandleTime(new Date());
 			XxlJobCompleter.updateHandleInfoAndFinish(log);
