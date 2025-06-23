@@ -2542,7 +2542,7 @@ public void execute() {
 - 4、【升级】多个项目依赖升级至较新稳定版本，涉及 netty、spring/springboot、groovy 等；
 
 
-### 7.40 版本 v3.1.1 Release Notes[规划中]
+### 7.40 版本 v3.1.2 Release Notes[规划中]
 - 1、[规划中]登陆态Token生成逻辑优化，混淆登陆时间属性，降低token泄漏风险；
 - 2、[规划中]组件扫描改为BeanPostProcessor方式，避免小概率情况下提前初始化；底层组件移除单例写法，汇总factory统一管理；
 
