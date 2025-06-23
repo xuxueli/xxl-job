@@ -155,6 +155,8 @@ public class XxlJobServiceImpl implements XxlJobService {
 		jobInfo.setAddTime(new Date());
 		jobInfo.setUpdateTime(new Date());
 		jobInfo.setGlueUpdatetime(new Date());
+		// remove the whitespace
+		jobInfo.setExecutorHandler(jobInfo.getExecutorHandler().trim());
 		xxlJobInfoDao.save(jobInfo);
 		if (jobInfo.getId() < 1) {
 			return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("jobinfo_field_add")+I18nUtil.getString("system_fail")) );
@@ -290,7 +292,8 @@ public class XxlJobServiceImpl implements XxlJobService {
 		exists_jobInfo.setScheduleConf(jobInfo.getScheduleConf());
 		exists_jobInfo.setMisfireStrategy(jobInfo.getMisfireStrategy());
 		exists_jobInfo.setExecutorRouteStrategy(jobInfo.getExecutorRouteStrategy());
-		exists_jobInfo.setExecutorHandler(jobInfo.getExecutorHandler());
+		// remove the whitespace
+		exists_jobInfo.setExecutorHandler(jobInfo.getExecutorHandler().trim());
 		exists_jobInfo.setExecutorParam(jobInfo.getExecutorParam());
 		exists_jobInfo.setExecutorBlockStrategy(jobInfo.getExecutorBlockStrategy());
 		exists_jobInfo.setExecutorTimeout(jobInfo.getExecutorTimeout());
