@@ -2538,8 +2538,9 @@ public void execute() {
 
 ### 7.39 版本 v3.1.1 Release Notes[规划中]
 - 1、【调整】AI执行器任务（difyWorkflowJobHandler）优化：将 “baseUrl、apiKey” 等Dify配置信息，从执行器侧文件类配置调整至调度中心“任务参数”动态配置，提升多Dify应用集成效率。
-- 2、[规划中]登陆态Token生成逻辑优化，混淆登陆时间属性，降低token泄漏风险；
-- 3、[规划中]组件扫描改为BeanPostProcessor方式，避免小概率情况下提前初始化；底层组件移除单例写法，汇总factory统一管理；
+- 2、【升级】多个项目依赖升级至较新稳定版本，涉及 netty、spring/springboot、groovy 等；
+- 3、[规划中]登陆态Token生成逻辑优化，混淆登陆时间属性，降低token泄漏风险；
+- 4、[规划中]组件扫描改为BeanPostProcessor方式，避免小概率情况下提前初始化；底层组件移除单例写法，汇总factory统一管理；
 
 ### TODO LIST
 - 1、调度隔离：调度中心针对不同执行器，各自维护不同的调度和远程触发组件。
