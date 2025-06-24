@@ -2,6 +2,7 @@ package com.xxl.job.executor.service.jobhandler;
 
 import com.xxl.job.core.context.XxlJobHelper;
 import com.xxl.job.core.handler.annotation.XxlJob;
+import com.xxl.job.core.thread.JobThread;
 import com.xxl.job.core.util.GsonTool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,7 +45,15 @@ public class SampleXxlJob {
             XxlJobHelper.log("beat at:" + i);
             TimeUnit.SECONDS.sleep(2);
         }
-        // default success
+        // 任务中断代码样例
+        int index = 0;
+        while (true) {
+            System.out.println(String.format("模拟任务执行：%s", index++));
+            TimeUnit.SECONDS.sleep(1L);
+
+            //加入这行代码，以判断任务是否被中断
+            JobThread.jobStopped();
+        }
     }
 
 
