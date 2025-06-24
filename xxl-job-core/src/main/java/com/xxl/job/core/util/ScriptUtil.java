@@ -6,8 +6,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  *  1、内嵌编译器如"PythonInterpreter"无法引用扩展包，因此推荐使用java调用控制台进程方式"Runtime.getRuntime().exec()"来运行脚本(shell或python)；
@@ -28,18 +30,25 @@ public class ScriptUtil {
      */
     public static void markScriptFile(String scriptFileName, String content) throws IOException {
         // make file,   filePath/gluesource/666-123456789.py
-        FileOutputStream fileOutputStream = null;
-        try {
-            fileOutputStream = new FileOutputStream(scriptFileName);
-            fileOutputStream.write(content.getBytes("UTF-8"));
-            fileOutputStream.close();
-        } catch (Exception e) {
-            throw e;
-        }finally{
-            if(fileOutputStream != null){
-                fileOutputStream.close();
+        try (FileOutputStream fos = new FileOutputStream(scriptFileName)) {
+            if(isWindows()) {
+                // 写入UTF-8 BOM
+                fos.write(0xEF);
+                fos.write(0xBB);
+                fos.write(0xBF);
             }
+            // 写入内容
+            fos.write(content.getBytes(StandardCharsets.UTF_8));
         }
+    }
+
+    /**
+     * 判断当前系统是否为Windows系列
+     * @return true:是Windows系统, false:非Windows系统
+     */
+    public static boolean isWindows() {
+        String osName = System.getProperty("os.name", "").toLowerCase(Locale.ENGLISH);
+        return osName.contains("windows");
     }
 
     /**
