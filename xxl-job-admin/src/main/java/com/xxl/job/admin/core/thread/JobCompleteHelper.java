@@ -20,9 +20,9 @@ import java.util.concurrent.*;
  * @author xuxueli 2015-9-1 18:05:56
  */
 public class JobCompleteHelper {
-	private static Logger logger = LoggerFactory.getLogger(JobCompleteHelper.class);
+	private static final Logger logger = LoggerFactory.getLogger(JobCompleteHelper.class);
 	
-	private static JobCompleteHelper instance = new JobCompleteHelper();
+	private static final JobCompleteHelper instance = new JobCompleteHelper();
 	public static JobCompleteHelper getInstance(){
 		return instance;
 	}
@@ -78,7 +78,7 @@ public class JobCompleteHelper {
 						Date losedTime = DateUtil.addMinutes(new Date(), -10);
 						List<Long> losedJobIds  = XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().findLostJobIds(losedTime);
 
-						if (losedJobIds!=null && losedJobIds.size()>0) {
+						if (losedJobIds!=null && !losedJobIds.isEmpty()) {
 							for (Long logId: losedJobIds) {
 
 								XxlJobLog jobLog = new XxlJobLog();
@@ -94,7 +94,7 @@ public class JobCompleteHelper {
 						}
 					} catch (Throwable e) {
 						if (!toStop) {
-							logger.error(">>>>>>>>>>> xxl-job, job fail monitor thread error:{}", e);
+							logger.error(">>>>>>>>>>> xxl-job, job fail monitor thread", e);
 						}
 					}
 
@@ -155,10 +155,10 @@ public class JobCompleteHelper {
 		// valid log item
 		XxlJobLog log = XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().load(handleCallbackParam.getLogId());
 		if (log == null) {
-			return new ReturnT<String>(ReturnT.FAIL_CODE, "log item not found.");
+			return new ReturnT<>(ReturnT.FAIL_CODE, "log item not found.");
 		}
 		if (log.getHandleCode() > 0) {
-			return new ReturnT<String>(ReturnT.FAIL_CODE, "log repeate callback.");     // avoid repeat callback, trigger child job etc
+			return new ReturnT<>(ReturnT.FAIL_CODE, "log repeate callback.");     // avoid repeat callback, trigger child job etc
 		}
 
 		// handle msg

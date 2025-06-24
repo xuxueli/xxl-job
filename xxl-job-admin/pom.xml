@@ -8,6 +8,7 @@
 	</parent>
 	<artifactId>xxl-job-admin</artifactId>
 	<packaging>jar</packaging>
+	<description>Xxl job Admin from 3.1.2 project for Spring Boot</description>
 
 	<properties>
 		<maven.deploy.skip>true</maven.deploy.skip>
@@ -80,11 +81,15 @@
 	</dependencies>
 
 	<build>
+		<finalName>${project.name}</finalName>
 		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+			</plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<!--<version>${spring-boot.version}</version>-->
 				<executions>
 					<execution>
 						<goals>

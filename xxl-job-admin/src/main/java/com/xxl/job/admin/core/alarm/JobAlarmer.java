@@ -16,7 +16,7 @@ import java.util.Map;
 
 @Component
 public class JobAlarmer implements ApplicationContextAware, InitializingBean {
-    private static Logger logger = LoggerFactory.getLogger(JobAlarmer.class);
+    private static final Logger logger = LoggerFactory.getLogger(JobAlarmer.class);
 
     private ApplicationContext applicationContext;
     private List<JobAlarm> jobAlarmList;
@@ -29,7 +29,7 @@ public class JobAlarmer implements ApplicationContextAware, InitializingBean {
     @Override
     public void afterPropertiesSet() throws Exception {
         Map<String, JobAlarm> serviceBeanMap = applicationContext.getBeansOfType(JobAlarm.class);
-        if (serviceBeanMap != null && serviceBeanMap.size() > 0) {
+        if (!serviceBeanMap.isEmpty()) {
             jobAlarmList = new ArrayList<JobAlarm>(serviceBeanMap.values());
         }
     }
@@ -44,17 +44,19 @@ public class JobAlarmer implements ApplicationContextAware, InitializingBean {
     public boolean alarm(XxlJobInfo info, XxlJobLog jobLog) {
 
         boolean result = false;
-        if (jobAlarmList!=null && jobAlarmList.size()>0) {
+        if (jobAlarmList != null && !jobAlarmList.isEmpty()) {
             result = true;  // success means all-success
-            for (JobAlarm alarm: jobAlarmList) {
-                boolean resultItem = false;
-                try {
-                    resultItem = alarm.doAlarm(info, jobLog);
-                } catch (Exception e) {
-                    logger.error(e.getMessage(), e);
-                }
-                if (!resultItem) {
-                    result = false;
+            for (JobAlarm alarm : jobAlarmList) {
+                if (alarm.accept(info)) {
+                    boolean resultItem = false;
+                    try {
+                        resultItem = alarm.doAlarm(info, jobLog);
+                    } catch (Exception e) {
+                        logger.error(e.getMessage(), e);
+                    }
+                    if (!resultItem) {
+                        result = false;
+                    }
                 }
             }
         }

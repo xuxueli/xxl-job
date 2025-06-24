@@ -14,6 +14,7 @@
 	    <result column="executor_param" property="executorParam" />
 		<result column="executor_sharding_param" property="executorShardingParam" />
 		<result column="executor_fail_retry_count" property="executorFailRetryCount" />
+		<result column="executor_fail_stop" property="executorFailStop" />
 	    
 	    <result column="trigger_time" property="triggerTime" />
 	    <result column="trigger_code" property="triggerCode" />
@@ -35,6 +36,7 @@
 		t.executor_param,
 		t.executor_sharding_param,
 		t.executor_fail_retry_count,
+		t.executor_fail_stop,
 		t.trigger_time,
 		t.trigger_code,
 		t.trigger_msg,
@@ -137,18 +139,18 @@
 	</insert>
 
 	<update id="updateTriggerInfo" >
-		UPDATE xxl_job_log
-		SET
-			`trigger_time`= #{triggerTime},
-			`trigger_code`= #{triggerCode},
-			`trigger_msg`= #{triggerMsg},
-			`executor_address`= #{executorAddress},
-			`executor_handler`=#{executorHandler},
-			`executor_param`= #{executorParam},
-			`executor_sharding_param`= #{executorShardingParam},
-			`executor_fail_retry_count`= #{executorFailRetryCount}
-		WHERE `id`= #{id}
-	</update>
+        UPDATE xxl_job_log
+        SET `trigger_time`= #{triggerTime},
+            `trigger_code`= #{triggerCode},
+            `trigger_msg`= #{triggerMsg},
+            `executor_address`= #{executorAddress},
+            `executor_handler`=#{executorHandler},
+            `executor_param`= #{executorParam},
+            `executor_sharding_param`= #{executorShardingParam},
+            `executor_fail_retry_count`= #{executorFailRetryCount},
+            `executor_fail_stop`=#{executorFailStop}
+        WHERE `id` = #{id}
+    </update>
 
 	<update id="updateHandleInfo">
 		UPDATE xxl_job_log
