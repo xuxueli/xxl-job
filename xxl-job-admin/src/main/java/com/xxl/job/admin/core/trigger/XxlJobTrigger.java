@@ -167,7 +167,7 @@ public class XxlJobTrigger {
         }
 
         // 5、collection trigger info
-        StringBuffer triggerMsgSb = new StringBuffer();
+        StringBuilder triggerMsgSb = new StringBuilder();
         triggerMsgSb.append(I18nUtil.getString("jobconf_trigger_type")).append("：").append(triggerType.getTitle());
         triggerMsgSb.append("<br>").append(I18nUtil.getString("jobconf_trigger_admin_adress")).append("：").append(IpUtil.getIp());
         triggerMsgSb.append("<br>").append(I18nUtil.getString("jobconf_trigger_exe_regtype")).append("：")
@@ -195,6 +195,15 @@ public class XxlJobTrigger {
         jobLog.setTriggerMsg(triggerMsgSb.toString());
         XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().updateTriggerInfo(jobLog);
 
+        // 任务执行失败后停止
+        if (triggerResult.getCode() != 200 && jobInfo.getExecutorFailStop()) {
+            logger.info(">>>>>>>>>>> xxl-job executor fail stop! jobId:{}", jobInfo.getId());
+            jobInfo.setTriggerStatus(0);
+            jobInfo.setTriggerLastTime(0);
+            jobInfo.setTriggerNextTime(0);
+            jobInfo.setUpdateTime(new Date());
+            XxlJobAdminConfig.getAdminConfig().getXxlJobInfoDao().update(jobInfo);
+        }
         logger.debug(">>>>>>>>>>> xxl-job trigger end, jobId:{}", jobLog.getId());
     }
 
