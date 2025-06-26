@@ -41,12 +41,10 @@ public class EmailJobAlarm implements JobAlarm {
         if (info!=null && info.getAlarmType() == AlarmTypeEnum.EMAIL.getAlarmType() &&  info.getAlarmUrl()!=null && !info.getAlarmUrl().trim().isEmpty()) {
 
             // alarmContent
-            String alarmContent = "Alarm Job LogId=" + jobLog.getId();
-            if (jobLog.getTriggerCode() != ReturnT.SUCCESS_CODE) {
-                alarmContent += "<br>TriggerMsg=<br>" + jobLog.getTriggerMsg();
-            }
+            String alarmContent = "告警日志ID:" + jobLog.getId();
+            alarmContent += "<br/><b>触发信息:</b><br/>" + jobLog.getTriggerMsg();
             if (jobLog.getHandleCode()>0 && jobLog.getHandleCode() != ReturnT.SUCCESS_CODE) {
-                alarmContent += "<br>HandleCode=" + jobLog.getHandleMsg();
+                alarmContent += "<br/><br><b>调度失败信息:</b><br>" + jobLog.getHandleMsg();
             }
 
             // email info

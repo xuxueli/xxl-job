@@ -43,12 +43,12 @@ public class BaseAlarm {
     public String parseContent(XxlJobInfo info, XxlJobLog jobLog) {
 
         // alarmContent
-        String alarmContent = "Alarm Job LogId=" + jobLog.getId();
+        String alarmContent = br + "日志ID:" + jobLog.getId();
         if (jobLog.getTriggerCode() != ReturnT.SUCCESS_CODE) {
-            alarmContent += br + "TriggerMsg=" + br + jobLog.getTriggerMsg();
+            alarmContent += br + "触发信息:" + br + jobLog.getTriggerMsg();
         }
         if (jobLog.getHandleCode() > 0 && jobLog.getHandleCode() != ReturnT.SUCCESS_CODE) {
-            alarmContent += br + "HandleCode=" + jobLog.getHandleMsg();
+            alarmContent += br + "调度失败信息:" + br + jobLog.getHandleMsg();
         }
         // email info
         XxlJobGroup group = XxlJobAdminConfig.getAdminConfig().getXxlJobGroupDao().load(info.getJobGroup());
