@@ -8,6 +8,7 @@
 
 		<result column="job_group" property="jobGroup" />
 		<result column="job_id" property="jobId" />
+		<result column="job_desc" property="jobDesc" />
 
 		<result column="executor_address" property="executorAddress" />
 		<result column="executor_handler" property="executorHandler" />
@@ -30,6 +31,7 @@
 		t.id,
 		t.job_group,
 		t.job_id,
+		i.job_desc,
 		t.executor_address,
 		t.executor_handler,
 		t.executor_param,
@@ -47,6 +49,7 @@
 	<select id="pageList" resultMap="XxlJobLog">
 		SELECT <include refid="Base_Column_List" />
 		FROM xxl_job_log AS t
+		LEFT JOIN xxl_job_info AS i ON t.job_id = i.id
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
 			<if test="jobId==0 and jobGroup gt 0">
 				AND t.job_group = #{jobGroup}
@@ -113,6 +116,7 @@
 	<select id="load" parameterType="java.lang.Long" resultMap="XxlJobLog">
 		SELECT <include refid="Base_Column_List" />
 		FROM xxl_job_log AS t
+		LEFT JOIN xxl_job_info AS i ON t.job_id = i.id
 		WHERE t.id = #{id}
 	</select>
 
