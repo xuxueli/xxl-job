@@ -198,11 +198,7 @@ public class XxlJobTrigger {
         // 任务执行失败后停止
         if (triggerResult.getCode() != 200 && jobInfo.getExecutorFailStop()) {
             logger.info(">>>>>>>>>>> xxl-job executor fail stop! jobId:{}", jobInfo.getId());
-            jobInfo.setTriggerStatus(0);
-            jobInfo.setTriggerLastTime(0);
-            jobInfo.setTriggerNextTime(0);
-            jobInfo.setUpdateTime(new Date());
-            XxlJobAdminConfig.getAdminConfig().getXxlJobInfoDao().update(jobInfo);
+            XxlJobAdminConfig.getAdminConfig().getXxlJobInfoDao().stop(jobInfo.getId());
         }
         logger.debug(">>>>>>>>>>> xxl-job trigger end, jobId:{}", jobLog.getId());
     }

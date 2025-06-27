@@ -368,12 +368,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 		}
 
 		// stop
-		xxlJobInfo.setTriggerStatus(0);
-		xxlJobInfo.setTriggerLastTime(0);
-		xxlJobInfo.setTriggerNextTime(0);
-
-		xxlJobInfo.setUpdateTime(new Date());
-		xxlJobInfoDao.update(xxlJobInfo);
+		xxlJobInfoDao.stop(xxlJobInfo.getId());
 		return ReturnT.SUCCESS;
 	}
 
