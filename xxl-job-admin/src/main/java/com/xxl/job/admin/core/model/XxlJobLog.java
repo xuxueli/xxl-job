@@ -12,6 +12,7 @@ public class XxlJobLog {
 	
 	// job info
 	private int jobGroup;
+	private String jobDesc;
 	private int jobId;
 
 	// execute info
@@ -56,6 +57,14 @@ public class XxlJobLog {
 
 	public void setJobId(int jobId) {
 		this.jobId = jobId;
+	}
+
+	public String getJobDesc() {
+		return jobDesc;
+	}
+
+	public void setJobDesc(String jobDesc) {
+		this.jobDesc = jobDesc;
 	}
 
 	public String getExecutorAddress() {
