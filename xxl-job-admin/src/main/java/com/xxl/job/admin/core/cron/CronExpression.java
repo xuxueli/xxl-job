@@ -1584,10 +1584,20 @@ public final class CronExpression implements Serializable, Cloneable {
         }
 
         final int lastDay = getLastDayOfMonth(mon, year);
+        int smallestDay = Integer.MAX_VALUE;
+
         // For "L", "L-1", etc.
-        int smallestDay = Optional.ofNullable(set.ceiling(LAST_DAY_OFFSET_END - (lastDay - day)))
-                .map(d -> d - LAST_DAY_OFFSET_START + 1)
-                .orElse(Integer.MAX_VALUE);
+        SortedSet<Integer> lValues = set.subSet(LAST_DAY_OFFSET_START, LAST_DAY_OFFSET_END + 1);
+        if (!lValues.isEmpty()) {
+            for (Integer lValue : lValues) {
+                int offset = LAST_DAY_OFFSET_END - lValue;
+                int calculatedDay = lastDay - offset;
+
+                if (calculatedDay >= day && calculatedDay <= lastDay) {
+                    smallestDay = Math.min(smallestDay, calculatedDay);
+                }
+            }
+        }
 
         // For "1", "2", etc.
         SortedSet<Integer> st = set.subSet(day, LAST_DAY_OFFSET_START);
