@@ -47,6 +47,21 @@ public class SampleXxlJob {
         // default success
     }
 
+    /**
+     * 1、简单任务示例（Bean模式）抛异常
+     */
+    @XxlJob("demoJobErrHandler")
+    public void demoJobErrHandler() {
+        XxlJobHelper.log("XXL-JOB, Hello World.");
+
+        for (int i = 0; i < 5; i++) {
+            XxlJobHelper.log("beat at:" + i);
+            if (i == 2) {
+                throw new RuntimeException("测试异常");
+            }
+        }
+        // default success
+    }
 
     /**
      * 2、分片广播任务
