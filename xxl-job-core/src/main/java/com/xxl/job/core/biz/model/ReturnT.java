@@ -1,5 +1,6 @@
 package com.xxl.job.core.biz.model;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -8,13 +9,15 @@ import java.io.Serializable;
  * @param <T>
  */
 public class ReturnT<T> implements Serializable {
-	public static final long serialVersionUID = 42L;
+
+	@Serial
+    private static final long serialVersionUID = 42L;
 
 	public static final int SUCCESS_CODE = 200;
 	public static final int FAIL_CODE = 500;
 
-	public static final ReturnT<String> SUCCESS = new ReturnT<String>(null);
-	public static final ReturnT<String> FAIL = new ReturnT<String>(FAIL_CODE, null);
+	public static final ReturnT<String> SUCCESS = new ReturnT<>(SUCCESS_CODE,"Success");
+	public static final ReturnT<String> FAIL = new ReturnT<>(FAIL_CODE, "Failed");
 
 	private int code;
 	private String msg;
