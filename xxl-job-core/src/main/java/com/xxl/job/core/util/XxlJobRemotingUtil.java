@@ -13,13 +13,12 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-import java.util.Map;
 
 /**
  * @author xuxueli 2018-11-25 00:55:31
  */
 public class XxlJobRemotingUtil {
-    private static Logger logger = LoggerFactory.getLogger(XxlJobRemotingUtil.class);
+    private static final Logger logger = LoggerFactory.getLogger(XxlJobRemotingUtil.class);
     public static final String XXL_JOB_ACCESS_TOKEN = "XXL-JOB-ACCESS-TOKEN";
 
 
