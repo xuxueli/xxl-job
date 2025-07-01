@@ -15,6 +15,7 @@ $(function() {
                 obj.jobDesc = $('#jobDesc').val();
 	        	obj.executorHandler = $('#executorHandler').val();
                 obj.author = $('#author').val();
+				obj.triggerNextTime = $('#triggerNextTime').val();
 	        	obj.start = d.start;
 	        	obj.length = d.length;
                 return obj;
@@ -28,7 +29,7 @@ $(function() {
 	                	"data": 'id',
 						"bSortable": false,
 						"visible" : true,
-						"width":'7%'
+						"width":'5%'
 					},
 	                {
 	                	"data": 'jobGroup',
@@ -89,10 +90,10 @@ $(function() {
 	                	}
 	                },
 	                { "data": 'author', "visible" : true, "width":'10%'},
-	                { "data": 'alarmEmail', "visible" : false},
+	                { "data": 'alarmUrl', "visible" : false},
 	                {
 	                	"data": 'triggerStatus',
-						"width":'10%',
+						"width":'5%',
 	                	"visible" : true,
 	                	"render": function ( data, type, row ) {
                             // status
@@ -104,6 +105,14 @@ $(function() {
 	                		return data;
 	                	}
 	                },
+					{
+						"data": 'triggerNextTime',
+						"visible" : true,
+						"width":'10%',
+						"render": function ( data, type, row ) {
+							return data?moment(new Date(data)).format("YYYY-MM-DD HH:mm:ss"):"";
+						}
+					},
 	                {
 						"data": I18n.system_opt ,
 						"width":'10%',
@@ -340,7 +349,8 @@ $(function() {
             url : base_url + "/jobinfo/nextTriggerTime",
             data : {
                 "scheduleType" : row.scheduleType,
-				"scheduleConf" : row.scheduleConf
+				"scheduleConf" : row.scheduleConf,
+				"triggerNextTime" : row.triggerNextTime
             },
             dataType : "json",
             success : function(data){
@@ -541,7 +551,8 @@ $(function() {
 		$('#updateModal .form select[name=jobGroup] option[value='+ row.jobGroup +']').prop('selected', true);
 		$("#updateModal .form input[name='jobDesc']").val( row.jobDesc );
 		$("#updateModal .form input[name='author']").val( row.author );
-		$("#updateModal .form input[name='alarmEmail']").val( row.alarmEmail );
+		$("#updateModal .form input[name='alarmUrl']").val( row.alarmUrl );
+		$('#updateModal .form select[name=alarmType] option[value='+ row.alarmType +']').prop('selected', true);
 
 		// fill trigger
 		$('#updateModal .form select[name=scheduleType] option[value='+ row.scheduleType +']').prop('selected', true);
@@ -576,6 +587,7 @@ $(function() {
 		$('#updateModal .form select[name=executorBlockStrategy] option[value='+ row.executorBlockStrategy +']').prop('selected', true);
 		$("#updateModal .form input[name='executorTimeout']").val( row.executorTimeout );
         $("#updateModal .form input[name='executorFailRetryCount']").val( row.executorFailRetryCount );
+		$('#updateModal .form select[name=executorFailStop] option[value='+ row.executorFailStop +']').prop('selected', true);
 
 		// show
 		$('#updateModal').modal({backdrop: false, keyboard: false}).modal('show');
@@ -625,7 +637,6 @@ $(function() {
                 executorFailRetryCount = 0;
             }
             $("#updateModal .form input[name='executorFailRetryCount']").val(executorFailRetryCount);
-
 
 			// process schedule_conf
 			var scheduleType = $("#updateModal .form select[name='scheduleType']").val();
@@ -696,7 +707,8 @@ $(function() {
 		$('#addModal .form select[name=jobGroup] option[value='+ row.jobGroup +']').prop('selected', true);
 		$("#addModal .form input[name='jobDesc']").val( row.jobDesc );
 		$("#addModal .form input[name='author']").val( row.author );
-		$("#addModal .form input[name='alarmEmail']").val( row.alarmEmail );
+		$("#addModal .form input[name='alarmUrl']").val( row.alarmUrl );
+		$('#addModal .form select[name=alarmType] option[value='+ row.alarmType +']').prop('selected', true);
 
 		// fill trigger
 		$('#addModal .form select[name=scheduleType] option[value='+ row.scheduleType +']').prop('selected', true);
@@ -731,6 +743,7 @@ $(function() {
 		$('#addModal .form select[name=executorBlockStrategy] option[value='+ row.executorBlockStrategy +']').prop('selected', true);
 		$("#addModal .form input[name='executorTimeout']").val( row.executorTimeout );
 		$("#addModal .form input[name='executorFailRetryCount']").val( row.executorFailRetryCount );
+		$('#addModal .form select[name=executorFailStop] option[value='+ row.executorFailStop +']').prop('selected', true);
 
 		// show
 		$('#addModal').modal({backdrop: false, keyboard: false}).modal('show');

@@ -1,5 +1,6 @@
 package com.xxl.job.admin.core.alarm.impl;
 
+import com.xxl.job.admin.core.alarm.AlarmTypeEnum;
 import com.xxl.job.admin.core.alarm.JobAlarm;
 import com.xxl.job.admin.core.conf.XxlJobAdminConfig;
 import com.xxl.job.admin.core.model.XxlJobGroup;
@@ -37,19 +38,17 @@ public class EmailJobAlarm implements JobAlarm {
         boolean alarmResult = true;
 
         // send monitor email
-        if (info!=null && info.getAlarmEmail()!=null && info.getAlarmEmail().trim().length()>0) {
+        if (info!=null && info.getAlarmType() == AlarmTypeEnum.EMAIL.getAlarmType() &&  info.getAlarmUrl()!=null && !info.getAlarmUrl().trim().isEmpty()) {
 
             // alarmContent
-            String alarmContent = "Alarm Job LogId=" + jobLog.getId();
-            if (jobLog.getTriggerCode() != ReturnT.SUCCESS_CODE) {
-                alarmContent += "<br>TriggerMsg=<br>" + jobLog.getTriggerMsg();
-            }
+            String alarmContent = "告警日志ID:" + jobLog.getId();
+            alarmContent += "<br/><b>触发信息:</b><br/>" + jobLog.getTriggerMsg();
             if (jobLog.getHandleCode()>0 && jobLog.getHandleCode() != ReturnT.SUCCESS_CODE) {
-                alarmContent += "<br>HandleCode=" + jobLog.getHandleMsg();
+                alarmContent += "<br/><br><b>调度失败信息:</b><br>" + jobLog.getHandleMsg();
             }
 
             // email info
-            XxlJobGroup group = XxlJobAdminConfig.getAdminConfig().getXxlJobGroupDao().load(Integer.valueOf(info.getJobGroup()));
+            XxlJobGroup group = XxlJobAdminConfig.getAdminConfig().getXxlJobGroupDao().load(info.getJobGroup());
             String personal = I18nUtil.getString("admin_name_full");
             String title = I18nUtil.getString("jobconf_monitor");
             String content = MessageFormat.format(loadEmailJobAlarmTemplate(),
@@ -58,7 +57,7 @@ public class EmailJobAlarm implements JobAlarm {
                     info.getJobDesc(),
                     alarmContent);
 
-            Set<String> emailSet = new HashSet<String>(Arrays.asList(info.getAlarmEmail().split(",")));
+            Set<String> emailSet = new HashSet<>(Arrays.asList(info.getAlarmUrl().split(",")));
             for (String email: emailSet) {
 
                 // make mail
@@ -84,12 +83,18 @@ public class EmailJobAlarm implements JobAlarm {
         return alarmResult;
     }
 
+    @Override
+    public boolean accept(XxlJobInfo info) {
+        return  info!=null && info.getAlarmType() == AlarmTypeEnum.EMAIL.getAlarmType() &&
+                info.getAlarmUrl()!=null && !info.getAlarmUrl().trim().isEmpty();
+    }
+
     /**
      * load email job alarm template
      *
      * @return
      */
-    private static final String loadEmailJobAlarmTemplate(){
+    private static String loadEmailJobAlarmTemplate(){
         String mailBodyTemplate = "<h5>" + I18nUtil.getString("jobconf_monitor_detail") + "：</span>" +
                 "<table border=\"1\" cellpadding=\"3\" style=\"border-collapse:collapse; width:80%;\" >\n" +
                 "   <thead style=\"font-weight: bold;color: #ffffff;background-color: #ff8c00;\" >" +
