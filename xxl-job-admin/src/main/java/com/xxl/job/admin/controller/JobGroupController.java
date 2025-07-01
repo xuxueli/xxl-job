@@ -110,13 +110,13 @@ public class JobGroupController {
 	@PermissionLimit(adminuser = true)
 	public ReturnT<String> update(XxlJobGroup xxlJobGroup){
 		// valid
-		if (xxlJobGroup.getAppname()==null || xxlJobGroup.getAppname().trim().length()==0) {
+		if (xxlJobGroup.getAppname()==null || xxlJobGroup.getAppname().trim().isEmpty()) {
 			return new ReturnT<String>(500, (I18nUtil.getString("system_please_input")+"AppName") );
 		}
 		if (xxlJobGroup.getAppname().length()<4 || xxlJobGroup.getAppname().length()>64) {
 			return new ReturnT<String>(500, I18nUtil.getString("jobgroup_field_appname_length") );
 		}
-		if (xxlJobGroup.getTitle()==null || xxlJobGroup.getTitle().trim().length()==0) {
+		if (xxlJobGroup.getTitle()==null || xxlJobGroup.getTitle().trim().isEmpty()) {
 			return new ReturnT<String>(500, (I18nUtil.getString("system_please_input") + I18nUtil.getString("jobgroup_field_title")) );
 		}
 		if (xxlJobGroup.getAddressType() == 0) {
@@ -125,21 +125,21 @@ public class JobGroupController {
 			String addressListStr = null;
 			if (registryList!=null && !registryList.isEmpty()) {
 				Collections.sort(registryList);
-				addressListStr = "";
+				StringBuilder addressListSB = new StringBuilder();
 				for (String item:registryList) {
-					addressListStr += item + ",";
+					addressListSB.append(item).append(",");
 				}
-				addressListStr = addressListStr.substring(0, addressListStr.length()-1);
+				addressListStr = addressListSB.substring(0, addressListSB.length() - 1);
 			}
 			xxlJobGroup.setAddressList(addressListStr);
 		} else {
 			// 1=手动录入
-			if (xxlJobGroup.getAddressList()==null || xxlJobGroup.getAddressList().trim().length()==0) {
+			if (xxlJobGroup.getAddressList()==null || xxlJobGroup.getAddressList().trim().isEmpty()) {
 				return new ReturnT<String>(500, I18nUtil.getString("jobgroup_field_addressType_limit") );
 			}
 			String[] addresss = xxlJobGroup.getAddressList().split(",");
 			for (String item: addresss) {
-				if (item==null || item.trim().length()==0) {
+				if (item==null || item.trim().isEmpty()) {
 					return new ReturnT<String>(500, I18nUtil.getString("jobgroup_field_registryList_unvalid") );
 				}
 			}
