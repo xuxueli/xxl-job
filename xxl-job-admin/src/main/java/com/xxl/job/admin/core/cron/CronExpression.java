@@ -1586,27 +1586,62 @@ public final class CronExpression implements Serializable, Cloneable {
         final int lastDay = getLastDayOfMonth(mon, year);
         int smallestDay = Integer.MAX_VALUE;
 
+        // For regular days (1-31)
+        SortedSet<Integer> regularDays = set.subSet(day, LAST_DAY_OFFSET_START);
+        if (!regularDays.isEmpty() && regularDays.first() <= lastDay) {
+            smallestDay = regularDays.first();
+        }
+
+        // For "W" days (nearest weekday)
+        if (!nearestWeekdays.isEmpty()) {
+            for (Integer wDay : nearestWeekdays) {
+                if (wDay > lastDay) {
+                    continue;
+                }
+
+                int adjustedDay = adjustToNearestWeekday(wDay, mon, year);
+                if (adjustedDay >= day && adjustedDay <= lastDay && adjustedDay < smallestDay) {
+                    smallestDay = adjustedDay;
+                }
+            }
+        }
+
         // For "L", "L-1", etc.
         SortedSet<Integer> lValues = set.subSet(LAST_DAY_OFFSET_START, LAST_DAY_OFFSET_END + 1);
         if (!lValues.isEmpty()) {
             for (Integer lValue : lValues) {
                 int offset = LAST_DAY_OFFSET_END - lValue;
                 int calculatedDay = lastDay - offset;
-
-                if (calculatedDay >= day && calculatedDay <= lastDay) {
-                    smallestDay = Math.min(smallestDay, calculatedDay);
+                if (calculatedDay >= day && calculatedDay <= lastDay && calculatedDay < smallestDay) {
+                    smallestDay = calculatedDay;
                 }
             }
         }
 
-        // For "1", "2", etc.
-        SortedSet<Integer> st = set.subSet(day, LAST_DAY_OFFSET_START);
-        // make sure we don't over-run a short month, such as february
-        if (!st.isEmpty() && st.first() < smallestDay && st.first() <= lastDay) {
-            smallestDay = st.first();
-        }
-
         return smallestDay == Integer.MAX_VALUE ? Optional.empty() : Optional.of(smallestDay);
+    }
+
+    private int adjustToNearestWeekday(int day, int month, int year) {
+        Calendar cal = Calendar.getInstance(getTimeZone());
+        cal.set(Calendar.YEAR, year);
+        cal.set(Calendar.MONTH, month - 1);
+        cal.set(Calendar.DATE, day);
+        int dow = cal.get(Calendar.DAY_OF_WEEK);
+
+        if (dow == Calendar.SATURDAY) {
+            if (day > 1) {
+                return day - 1;
+            } else {
+                return day + 2;
+            }
+        } else if (dow == Calendar.SUNDAY) {
+            if (day < getLastDayOfMonth(month, year)) {
+                return day + 1;
+            } else {
+                return day - 2;
+            }
+        }
+        return day;
     }
 
     private void readObject(java.io.ObjectInputStream stream)

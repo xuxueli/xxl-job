@@ -826,4 +826,98 @@ public class CronExpressionTest {
         }
     }
 
+    @Test
+    public void testNearestWeekday() throws ParseException {
+        Map<Integer, String> expectedResults = new HashMap<>() {{
+            put(1, "2025-07-10 00:00:00");
+            put(2, "2025-08-11 00:00:00");
+            put(3, "2025-09-10 00:00:00");
+            put(4, "2025-10-10 00:00:00");
+            put(5, "2025-11-10 00:00:00");
+            put(6, "2025-12-10 00:00:00");
+            put(7, "2026-01-09 00:00:00");
+            put(8, "2026-02-10 00:00:00");
+            put(9, "2026-03-10 00:00:00");
+            put(10, "2026-04-10 00:00:00");
+            put(11, "2026-05-11 00:00:00");
+            put(12, "2026-06-10 00:00:00");
+        }};
+        CronExpression cronExpression = new CronExpression("0 0 0 10W * ?");
+        Calendar cal = Calendar.getInstance();
+        cal.set(2025, Calendar.JULY, 5, 0, 0, 0);
+
+        Date lastTriggerTime = cal.getTime();
+        for (int i = 1; i <= 12; i++) {
+            Date nextTriggerTime = cronExpression.getNextValidTimeAfter(lastTriggerTime);
+            String actualTime = DateUtil.formatDateTime(nextTriggerTime);
+            Assertions.assertEquals(expectedResults.get(i), actualTime);
+            lastTriggerTime = nextTriggerTime;
+        }
+    }
+
+
+    /**
+     * 最近工作日指定日期为月初边界情况，比如1号是周六，应该得到3号
+     */
+    @Test
+    public void testNearestWeekdayOfMonthStart() throws ParseException {
+        Map<Integer, String> expectedResults = new HashMap<>() {{
+            put(1, "2025-08-01 00:00:00");
+            put(2, "2025-09-01 00:00:00");
+            put(3, "2025-10-01 00:00:00");
+            put(4, "2025-11-03 00:00:00");
+            put(5, "2025-12-01 00:00:00");
+            put(6, "2026-01-01 00:00:00");
+            put(7, "2026-02-02 00:00:00");
+            put(8, "2026-03-02 00:00:00");
+            put(9, "2026-04-01 00:00:00");
+            put(10, "2026-05-01 00:00:00");
+            put(11, "2026-06-01 00:00:00");
+            put(12, "2026-07-01 00:00:00");
+        }};
+        CronExpression cronExpression = new CronExpression("0 0 0 1W * ?");
+        Calendar cal = Calendar.getInstance();
+        cal.set(2025, Calendar.JULY, 5, 0, 0, 0);
+
+        Date lastTriggerTime = cal.getTime();
+        for (int i = 1; i <= 12; i++) {
+            Date nextTriggerTime = cronExpression.getNextValidTimeAfter(lastTriggerTime);
+            String actualTime = DateUtil.formatDateTime(nextTriggerTime);
+            Assertions.assertEquals(expectedResults.get(i), actualTime);
+            lastTriggerTime = nextTriggerTime;
+        }
+    }
+
+    /**
+     * 最近工作日指定日期为月末边界情况
+     */
+    @Test
+    public void testNearestWeekdayOfMonthEnd() throws ParseException {
+        Map<Integer, String> expectedResults = new HashMap<>() {{
+            put(1, "2025-07-30 00:00:00");
+            put(2, "2025-08-29 00:00:00");
+            put(3, "2025-09-30 00:00:00");
+            put(4, "2025-10-30 00:00:00");
+            put(5, "2025-11-28 00:00:00");
+            put(6, "2025-12-30 00:00:00");
+            put(7, "2026-01-30 00:00:00");
+            put(8, "2026-03-30 00:00:00");
+            put(9, "2026-04-30 00:00:00");
+            put(10, "2026-05-29 00:00:00");
+            put(11, "2026-06-30 00:00:00");
+            put(12, "2026-07-30 00:00:00");
+        }};
+        CronExpression cronExpression = new CronExpression("0 0 0 30W * ?");
+        Calendar cal = Calendar.getInstance();
+        cal.set(2025, Calendar.JULY, 5, 0, 0, 0);
+
+        Date lastTriggerTime = cal.getTime();
+        for (int i = 1; i <= 12; i++) {
+            Date nextTriggerTime = cronExpression.getNextValidTimeAfter(lastTriggerTime);
+            String actualTime = DateUtil.formatDateTime(nextTriggerTime);
+            Assertions.assertEquals(expectedResults.get(i), actualTime);
+            lastTriggerTime = nextTriggerTime;
+        }
+    }
+
 }
