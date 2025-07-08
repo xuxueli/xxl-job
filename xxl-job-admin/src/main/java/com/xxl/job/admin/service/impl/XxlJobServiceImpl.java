@@ -74,6 +74,9 @@ public class XxlJobServiceImpl implements XxlJobService {
 		if (jobInfo.getAuthor()==null || jobInfo.getAuthor().trim().isEmpty()) {
 			return new ReturnT<>(ReturnT.FAIL_CODE, (I18nUtil.getString("system_please_input")+I18nUtil.getString("jobinfo_field_author")) );
 		}
+		if (jobInfo.getEndTime()!=0 && jobInfo.getEndTime() < System.currentTimeMillis()){
+			return new ReturnT<>(ReturnT.FAIL_CODE, "结束时间不能小于当前时间");
+		}
 
 		// valid trigger
 		ScheduleTypeEnum scheduleTypeEnum = ScheduleTypeEnum.match(jobInfo.getScheduleType(), null);
@@ -302,6 +305,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 		exists_jobInfo.setExecutorFailStop(jobInfo.getExecutorFailStop());
 		exists_jobInfo.setChildJobId(jobInfo.getChildJobId());
 		exists_jobInfo.setTriggerNextTime(nextTriggerTime);
+		exists_jobInfo.setEndTime(jobInfo.getEndTime());
 
 		exists_jobInfo.setUpdateTime(new Date());
         xxlJobInfoDao.update(exists_jobInfo);

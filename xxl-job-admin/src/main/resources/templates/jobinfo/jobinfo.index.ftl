@@ -5,6 +5,8 @@
 	<@netCommon.commonStyle />
 	<!-- DataTables -->
   	<link rel="stylesheet" href="${request.contextPath}/static/adminlte/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+    <!-- daterangepicker -->
+    <link rel="stylesheet" href="${request.contextPath}/static/adminlte/bower_components/bootstrap-daterangepicker/daterangepicker.css">
     <title>${I18n.admin_name}</title>
 </head>
 <body class="hold-transition skin-blue sidebar-mini <#if cookieMap?exists && cookieMap["xxljob_adminlte_settings"]?exists && "off" == cookieMap["xxljob_adminlte_settings"].value >sidebar-collapse</#if>">
@@ -89,6 +91,7 @@
                                         <th name="alarmUrl" >${I18n.jobinfo_field_alarmUrl}</th>
 					                  	<th name="triggerStatus" >${I18n.system_status}</th>
                                         <th name="triggerNextTime" >${I18n.jobinfo_opt_next_time}</th>
+                                        <th name="entTime" >${I18n.jobinfo_opt_ent_time}</th>
 					                  	<th>${I18n.system_opt}</th>
 					                </tr>
 				                </thead>
@@ -212,8 +215,11 @@
                             </select>
                         </div>
 
-                        <label for="lastname" class="col-sm-2 control-label">${I18n.jobinfo_field_childJobId}<font color="black">*</font></label>
-                        <div class="col-sm-4"><input type="text" class="form-control" name="childJobId" placeholder="${I18n.jobinfo_field_childJobId_placeholder}" maxlength="100" ></div>
+                        <label for="lastname" class="col-sm-2 control-label">${I18n.jobinfo_opt_ent_time}<font color="black">*</font></label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control end-time" name="end_time_f" placeholder="${I18n.jobinfo_field_endTime_placeholder}" />
+                            <input type="hidden" name="endTime" value="0" />
+                        </div>
                     </div>
 
                     <div class="form-group">
@@ -252,6 +258,10 @@
                         <div class="col-sm-4"><input type="text" class="form-control" name="executorTimeout" placeholder="${I18n.jobinfo_field_executorTimeout_placeholder}" maxlength="6" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" ></div>
                         <label for="lastname" class="col-sm-2 control-label">${I18n.jobinfo_field_executorFailRetryCount}<font color="black">*</font></label>
                         <div class="col-sm-4"><input type="text" class="form-control" name="executorFailRetryCount" placeholder="${I18n.jobinfo_field_executorFailRetryCount_placeholder}" maxlength="4" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" ></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="lastname" class="col-sm-2 control-label">${I18n.jobinfo_field_childJobId}<font color="black">*</font></label>
+                        <div class="col-sm-4"><input type="text" class="form-control" name="childJobId" placeholder="${I18n.jobinfo_field_childJobId_placeholder}" maxlength="100" ></div>
                     </div>
 
                     <hr>
@@ -478,8 +488,11 @@ exit 0
                             </select>
                         </div>
 
-                        <label for="lastname" class="col-sm-2 control-label">${I18n.jobinfo_field_childJobId}<font color="black">*</font></label>
-                        <div class="col-sm-4"><input type="text" class="form-control" name="childJobId" placeholder="${I18n.jobinfo_field_childJobId_placeholder}" maxlength="100" ></div>
+                        <label for="lastname" class="col-sm-2 control-label">${I18n.jobinfo_opt_ent_time}<font color="black">*</font></label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control end-time" name="end_time_f" placeholder="${I18n.jobinfo_field_endTime_placeholder}" />
+                            <input type="hidden" name="endTime" value="0" />
+                        </div>
                     </div>
 
                     <div class="form-group">
@@ -518,6 +531,10 @@ exit 0
                         <div class="col-sm-4"><input type="text" class="form-control" name="executorTimeout" placeholder="${I18n.jobinfo_field_executorTimeout_placeholder}" maxlength="6" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" ></div>
                         <label for="lastname" class="col-sm-2 control-label">${I18n.jobinfo_field_executorFailRetryCount}<font color="black">*</font></label>
                         <div class="col-sm-4"><input type="text" class="form-control" name="executorFailRetryCount" placeholder="${I18n.jobinfo_field_executorFailRetryCount_placeholder}" maxlength="4" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" ></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="lastname" class="col-sm-2 control-label">${I18n.jobinfo_field_childJobId}<font color="black">*</font></label>
+                        <div class="col-sm-4"><input type="text" class="form-control" name="childJobId" placeholder="${I18n.jobinfo_field_childJobId_placeholder}" maxlength="100" ></div>
                     </div>
 
 					<hr>
@@ -576,6 +593,8 @@ exit 0
 <script src="${request.contextPath}/static/adminlte/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
 <!-- moment -->
 <script src="${request.contextPath}/static/adminlte/bower_components/moment/moment.min.js"></script>
+<!-- daterangepicker -->
+<script src="${request.contextPath}/static/adminlte/bower_components/bootstrap-daterangepicker/daterangepicker.js"></script>
 <#-- cronGen -->
 <script src="${request.contextPath}/static/plugins/cronGen/cronGen<#if I18n.admin_i18n?default('')?length gt 0 >_${I18n.admin_i18n}</#if>.js"></script>
 <script src="${request.contextPath}/static/js/jobinfo.index.1.js"></script>

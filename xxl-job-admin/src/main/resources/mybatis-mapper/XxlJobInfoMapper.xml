@@ -38,6 +38,7 @@
         <result column="trigger_status" property="triggerStatus"/>
         <result column="trigger_last_time" property="triggerLastTime"/>
         <result column="trigger_next_time" property="triggerNextTime"/>
+        <result column="end_time" property="endTime"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -66,7 +67,8 @@
 		t.child_jobid,
 		t.trigger_status,
 		t.trigger_last_time,
-		t.trigger_next_time
+		t.trigger_next_time,
+        t.end_time
     </sql>
 
     <select id="pageList" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
@@ -142,7 +144,8 @@
         child_jobid,
         trigger_status,
         trigger_last_time,
-        trigger_next_time
+        trigger_next_time,
+        end_time
         ) VALUES (
         #{jobGroup},
         #{jobDesc},
@@ -168,7 +171,8 @@
         #{childJobId},
         #{triggerStatus},
         #{triggerLastTime},
-        #{triggerNextTime}
+        #{triggerNextTime},
+        #{endTime}
         );
         <!--<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
             SELECT LAST_INSERT_ID()
@@ -215,7 +219,8 @@
             child_jobid               = #{childJobId},
             trigger_status            = #{triggerStatus},
             trigger_last_time         = #{triggerLastTime},
-            trigger_next_time         = #{triggerNextTime}
+            trigger_next_time         = #{triggerNextTime},
+            end_time                  = #{endTime}
         WHERE id = #{id}
     </update>
 
@@ -228,7 +233,6 @@
     <update id="stop" parameterType="java.util.HashMap">
         UPDATE xxl_job_info AS t
         SET trigger_status    = 0,
-            trigger_last_time = 0,
             trigger_next_time = 0,
             update_time       = NOW()
         WHERE t.id = #{id}

@@ -44,6 +44,7 @@ public class XxlJobInfo {
     private int triggerStatus;        // 调度状态：0-停止，1-运行
     private long triggerLastTime;    // 上次调度时间
     private long triggerNextTime;    // 下次调度时间
+    private long endTime;    // 任务结束时间,当前时间大于任务结束时间则停止任务
 
 
     public int getId() {
@@ -253,5 +254,13 @@ public class XxlJobInfo {
 
     public void setTriggerNextTime(long triggerNextTime) {
         this.triggerNextTime = triggerNextTime;
+    }
+
+    public long getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(long endTime) {
+        this.endTime = endTime;
     }
 }

@@ -1,11 +1,8 @@
 package com.xxl.job.admin.controller;
 
 import com.xxl.job.admin.controller.annotation.PermissionLimit;
-import com.xxl.job.admin.core.model.bo.XxlJobInfoBo;
+import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.service.XxlJobApiService;
-import com.xxl.job.core.biz.AdminBiz;
-import com.xxl.job.core.biz.model.HandleCallbackParam;
-import com.xxl.job.core.biz.model.RegistryParam;
 import com.xxl.job.core.biz.model.ReturnT;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Controller;
@@ -14,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.List;
 
 /**
  * xxl-job api
@@ -32,7 +28,7 @@ public class JobApiController {
     @RequestMapping("/add")
     @ResponseBody
     @PermissionLimit(limit = false)
-    public ReturnT<String> add(@RequestBody XxlJobInfoBo jobInfo) {
+    public ReturnT<String> add(@RequestBody XxlJobInfo jobInfo) {
         return jobApiService.add(jobInfo);
     }
 

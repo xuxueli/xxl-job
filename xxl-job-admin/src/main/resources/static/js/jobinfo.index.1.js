@@ -47,12 +47,12 @@ $(function() {
 	                {
 	                	"data": 'jobDesc',
 						"visible" : true,
-						"width":'25%'
+						"width":'20%'
 					},
 					{
 						"data": 'scheduleType',
 						"visible" : true,
-						"width":'13%',
+						"width":'10%',
 						"render": function ( data, type, row ) {
 							if (row.scheduleConf) {
 								return row.scheduleType + '：'+ row.scheduleConf;
@@ -63,7 +63,7 @@ $(function() {
 					},
 					{
 						"data": 'glueType',
-						"width":'25%',
+						"width":'18%',
 						"visible" : true,
 						"render": function ( data, type, row ) {
 							var glueTypeTitle = findGlueTypeTitle(row.glueType);
@@ -107,6 +107,14 @@ $(function() {
 	                },
 					{
 						"data": 'triggerNextTime',
+						"visible" : true,
+						"width":'10%',
+						"render": function ( data, type, row ) {
+							return data?moment(new Date(data)).format("YYYY-MM-DD HH:mm:ss"):"";
+						}
+					},
+					{
+						"data": 'endTime',
 						"visible" : true,
 						"width":'10%',
 						"render": function ( data, type, row ) {
@@ -582,13 +590,19 @@ $(function() {
 
 		// fill advanced
 		$('#updateModal .form select[name=executorRouteStrategy] option[value='+ row.executorRouteStrategy +']').prop('selected', true);
-		$("#updateModal .form input[name='childJobId']").val( row.childJobId );
+		$("#updateModal .form input[name='endTime']").val(row.endTime);
+		$("#updateModal .form input[name='end_time_f']").val(row.endTime===0? '' : moment(row.endTime).format("YYYY-MM-DD HH:mm:ss"));
 		$('#updateModal .form select[name=misfireStrategy] option[value='+ row.misfireStrategy +']').prop('selected', true);
 		$('#updateModal .form select[name=executorBlockStrategy] option[value='+ row.executorBlockStrategy +']').prop('selected', true);
 		$("#updateModal .form input[name='executorTimeout']").val( row.executorTimeout );
         $("#updateModal .form input[name='executorFailRetryCount']").val( row.executorFailRetryCount );
 		$('#updateModal .form select[name=executorFailStop] option[value='+ row.executorFailStop +']').prop('selected', true);
+		$("#updateModal .form input[name='childJobId']").val( row.childJobId );
 
+		if (row.endTime > 0) {
+			$('#updateModal .end-time').data('daterangepicker').setStartDate(moment(row.endTime));
+			$('#updateModal .end-time').data('daterangepicker').setEndDate(moment(row.endTime));
+		}
 		// show
 		$('#updateModal').modal({backdrop: false, keyboard: false}).modal('show');
 	});
@@ -748,5 +762,62 @@ $(function() {
 		// show
 		$('#addModal').modal({backdrop: false, keyboard: false}).modal('show');
 	});
+
+	let daterangepickerConfig = {
+		autoApply: false,
+		singleDatePicker: true,
+		showWeekNumbers: true,
+		timePickerSeconds: true,//时间显示到秒
+		showDropdowns: true,        // 是否显示年月选择条件
+		timePicker: true, 			// 是否显示小时和分钟选择条件
+		timePickerIncrement: 5, 	// 时间的增量，单位为分钟
+		timePicker24Hour: true,
+		opens: 'left', //日期选择框的弹出位置
+		minDate: new Date(),
+		autoUpdateInput: false,
+		ranges: {
+			'今天': [moment(), moment(),],
+			'3天': [moment().add(3, 'days'), moment().add(3, 'days'),],
+			'下周': [moment().add(7, 'days'), moment().add(7, 'days'),],
+			'下月': [moment().add(1, 'months'), moment().add(1, 'months'),],
+			'3个月': [moment().add(3, 'months'), moment().add(3, 'months'),],
+		},
+		locale: {
+			format: 'YYYY-MM-DD HH:mm:ss',
+			customRangeLabel: I18n.daterangepicker_custom_name,
+			applyLabel: I18n.system_ok,
+			cancelLabel: I18n.system_cancel,
+			// fromLabel : I18n.daterangepicker_custom_starttime ,
+			toLabel: I18n.daterangepicker_custom_endtime,
+			daysOfWeek: I18n.daterangepicker_custom_daysofweek.split(','),        // '日', '一', '二', '三', '四', '五', '六'
+			monthNames: I18n.daterangepicker_custom_monthnames.split(','),        // '一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'
+			firstDay: 1
+		}
+	}
+
+	$('#addModal .end-time').daterangepicker(daterangepickerConfig, function(start, end, label) {
+		console.log(start.toLocaleString(), label);
+		$('#addModal .end-time').val(start.format('YYYY-MM-DD HH:mm:ss'));
+		$('#addModal .form input[name="endTime"]').val(start.start.valueOf());
+	});
+	$('#updateModal .end-time').daterangepicker(daterangepickerConfig, function(start, end, label) {
+		console.log(start.toLocaleString(), label);
+		$('#updateModal .end-time').val(start.format('YYYY-MM-DD HH:mm:ss'));
+		$('#updateModal .form input[name="endTime"]').val(start.valueOf());
+	});
+	// 显示时间范围选择器
+	$(".daterangepicker .ranges ul").show();
+	//清空日期
+	$('.end-time').on('cancel.daterangepicker', function (ev, picker) {
+		$('.end-time').val('');
+		$('.form input[name="endTime"]').val("0");
+	});
+	/*$('#updateModal .end-time').on('show.daterangepicker', function (ev, picker) {
+		let endTime = $('#updateModal .end-time').val();
+		console.log(endTime);
+		if (endTime) {
+			$('#updateModal .end-time').data('daterangepicker').setStartDate(endTime);
+		}
+	});*/
 
 });

@@ -1,7 +1,7 @@
 package com.xxl.job.admin.service;
 
 
-import com.xxl.job.admin.core.model.bo.XxlJobInfoBo;
+import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.core.biz.model.ReturnT;
 
 
@@ -19,7 +19,7 @@ public interface XxlJobApiService {
      * @param jobInfo
      * @return
      */
-    ReturnT<String> add(XxlJobInfoBo jobInfo);
+    ReturnT<String> add(XxlJobInfo jobInfo);
 
     /**
      * remove job
