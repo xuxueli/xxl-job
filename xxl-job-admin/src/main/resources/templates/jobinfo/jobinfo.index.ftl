@@ -90,6 +90,7 @@
 					                  	<th name="author" >${I18n.jobinfo_field_author}</th>
                                         <th name="alarmUrl" >${I18n.jobinfo_field_alarmUrl}</th>
 					                  	<th name="triggerStatus" >${I18n.system_status}</th>
+                                        <th name="triggerLastTime" >${I18n.jobinfo_opt_last_time}</th>
                                         <th name="triggerNextTime" >${I18n.jobinfo_opt_next_time}</th>
                                         <th name="entTime" >${I18n.jobinfo_opt_ent_time}</th>
 					                  	<th>${I18n.system_opt}</th>

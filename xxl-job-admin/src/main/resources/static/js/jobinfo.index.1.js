@@ -63,7 +63,7 @@ $(function() {
 					},
 					{
 						"data": 'glueType',
-						"width":'18%',
+						"width":'13%',
 						"visible" : true,
 						"render": function ( data, type, row ) {
 							var glueTypeTitle = findGlueTypeTitle(row.glueType);
@@ -89,7 +89,7 @@ $(function() {
 	                		return data?moment(new Date(data)).format("YYYY-MM-DD HH:mm:ss"):"";
 	                	}
 	                },
-	                { "data": 'author', "visible" : true, "width":'10%'},
+	                { "data": 'author', "visible" : true, "width":'8%'},
 	                { "data": 'alarmUrl', "visible" : false},
 	                {
 	                	"data": 'triggerStatus',
@@ -105,6 +105,14 @@ $(function() {
 	                		return data;
 	                	}
 	                },
+					{
+						"data": 'triggerLastTime',
+						"visible" : true,
+						"width":'10%',
+						"render": function ( data, type, row ) {
+							return data?moment(new Date(data)).format("YYYY-MM-DD HH:mm:ss"):"";
+						}
+					},
 					{
 						"data": 'triggerNextTime',
 						"visible" : true,
