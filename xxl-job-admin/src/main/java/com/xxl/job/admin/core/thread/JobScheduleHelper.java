@@ -81,8 +81,8 @@ public class JobScheduleHelper {
                             // 2、push time-ring
                             for (XxlJobInfo jobInfo: scheduleList) {
 
-                                if (nowTime >= jobInfo.getEndTime()) {
-                                    logger.info(">>>>>>>>>>> xxl-job, schedule push stop job : jobId = {}" , jobInfo.getId());
+                                if (jobInfo.getEndTime() > 0 && nowTime >= jobInfo.getEndTime()) {
+                                    logger.info(">>>>>>>>>>> xxl-job, schedule push stop job : jobId = {}", jobInfo.getId());
                                     XxlJobAdminConfig.getAdminConfig().getXxlJobInfoDao().stop(jobInfo.getId());
                                     continue;
                                 }
@@ -157,7 +157,7 @@ public class JobScheduleHelper {
 
                     } catch (Throwable e) {
                         if (!scheduleThreadToStop) {
-                            logger.error(">>>>>>>>>>> xxl-job, JobScheduleHelper#scheduleThread error:{}", e);
+                            logger.error(">>>>>>>>>>> xxl-job, JobScheduleHelper#scheduleThread", e);
                         }
                     } finally {
 
@@ -171,7 +171,7 @@ public class JobScheduleHelper {
                                 }
                             }
                             try {
-                                conn.setAutoCommit(connAutoCommit);
+                                conn.setAutoCommit(Boolean.TRUE.equals(connAutoCommit));
                             } catch (Throwable e) {
                                 if (!scheduleThreadToStop) {
                                     logger.error(e.getMessage(), e);
@@ -250,8 +250,8 @@ public class JobScheduleHelper {
                         }
 
                         // ring trigger
-                        logger.debug(">>>>>>>>>>> xxl-job, time-ring beat : " + nowSecond + " = " + Arrays.asList(ringItemData) );
-                        if (ringItemData.size() > 0) {
+                        logger.debug(">>>>>>>>>>> xxl-job, time-ring beat : {} = {}", nowSecond, List.of(ringItemData));
+                        if (!ringItemData.isEmpty()) {
                             // do trigger
                             for (int jobId: ringItemData) {
                                 // do trigger
@@ -262,7 +262,7 @@ public class JobScheduleHelper {
                         }
                     } catch (Throwable e) {
                         if (!ringThreadToStop) {
-                            logger.error(">>>>>>>>>>> xxl-job, JobScheduleHelper#ringThread error:{}", e);
+                            logger.error(">>>>>>>>>>> xxl-job, JobScheduleHelper#ringThread error", e);
                         }
                     }
                 }
@@ -275,24 +275,30 @@ public class JobScheduleHelper {
     }
 
     private void refreshNextValidTime(XxlJobInfo jobInfo, Date fromTime) {
+        jobInfo.setTriggerLastTime(jobInfo.getTriggerNextTime());
+        // ScheduleType NONE 不刷新下次执行时间,只执行一次就停止
+        if (jobInfo.getScheduleType().equals(ScheduleTypeEnum.NONE.name())){
+            jobInfo.setTriggerStatus(0);
+            jobInfo.setTriggerNextTime(0);
+            logger.warn(">>>>>>>>>>> xxl-job, ScheduleType is NONE not refreshNextTime for job: jobId={}, scheduleType={}, scheduleConf={}",
+                    jobInfo.getId(), jobInfo.getScheduleType(), jobInfo.getScheduleConf());
+            return;
+        }
         try {
             Date nextValidTime = generateNextValidTime(jobInfo, fromTime);
             if (nextValidTime != null) {
                 jobInfo.setTriggerStatus(-1);                               // pass, may be Inaccurate
-                jobInfo.setTriggerLastTime(jobInfo.getTriggerNextTime());
                 jobInfo.setTriggerNextTime(nextValidTime.getTime());
             } else {
                 // generateNextValidTime fail, stop job
                 jobInfo.setTriggerStatus(0);
-                jobInfo.setTriggerLastTime(0);
                 jobInfo.setTriggerNextTime(0);
-                logger.error(">>>>>>>>>>> xxl-job, refreshNextValidTime fail for job: jobId={}, scheduleType={}, scheduleConf={}",
+                logger.warn(">>>>>>>>>>> xxl-job, refreshNextValidTime fail for job: jobId={}, scheduleType={}, scheduleConf={}",
                         jobInfo.getId(), jobInfo.getScheduleType(), jobInfo.getScheduleConf());
             }
         } catch (Throwable e) {
             // generateNextValidTime error, stop job
             jobInfo.setTriggerStatus(0);
-            jobInfo.setTriggerLastTime(0);
             jobInfo.setTriggerNextTime(0);
 
             logger.error(">>>>>>>>>>> xxl-job, refreshNextValidTime error for job: jobId={}, scheduleType={}, scheduleConf={}",

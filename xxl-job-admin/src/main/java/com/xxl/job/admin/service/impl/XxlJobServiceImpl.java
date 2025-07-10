@@ -272,7 +272,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 		}
 
 		// next trigger time (5s后生效，避开预读周期)
-		long nextTriggerTime = exists_jobInfo.getTriggerNextTime();
+		long nextTriggerTime = jobInfo.getTriggerNextTime();
 		boolean scheduleDataNotChanged = jobInfo.getScheduleType().equals(exists_jobInfo.getScheduleType()) && jobInfo.getScheduleConf().equals(exists_jobInfo.getScheduleConf());
 		if (exists_jobInfo.getTriggerStatus() == 1 && !scheduleDataNotChanged) {
 			try {
@@ -337,25 +337,41 @@ public class XxlJobServiceImpl implements XxlJobService {
 
 		// valid
 		ScheduleTypeEnum scheduleTypeEnum = ScheduleTypeEnum.match(xxlJobInfo.getScheduleType(), ScheduleTypeEnum.NONE);
-		if (ScheduleTypeEnum.NONE == scheduleTypeEnum) {
+		if (ScheduleTypeEnum.NONE == scheduleTypeEnum && xxlJobInfo.getTriggerNextTime() == 0) {
 			return new ReturnT<>(ReturnT.FAIL_CODE, (I18nUtil.getString("schedule_type_none_limit_start")) );
+		}
+		long currentTime = System.currentTimeMillis();
+		if (xxlJobInfo.getEndTime()!=0 && xxlJobInfo.getEndTime() < currentTime){
+			return new ReturnT<>(ReturnT.FAIL_CODE, "结束时间不能小于当前时间");
+		}
+
+		if (ScheduleTypeEnum.NONE == scheduleTypeEnum && xxlJobInfo.getTriggerNextTime() > 0
+			&& (xxlJobInfo.getTriggerNextTime() + JobScheduleHelper.PRE_READ_MS) < currentTime) {
+			return new ReturnT<>(ReturnT.FAIL_CODE, "下次执行时间过期");
 		}
 
 		// next trigger time (5s后生效，避开预读周期)
 		long nextTriggerTime = 0;
-		try {
-			Date nextValidTime = JobScheduleHelper.generateNextValidTime(xxlJobInfo, new Date(System.currentTimeMillis() + JobScheduleHelper.PRE_READ_MS));
-			if (nextValidTime == null) {
-				return new ReturnT<>(ReturnT.FAIL_CODE, (I18nUtil.getString("schedule_type")+I18nUtil.getString("system_unvalid")) );
+		if (scheduleTypeEnum == ScheduleTypeEnum.NONE ) {
+			nextTriggerTime = xxlJobInfo.getTriggerNextTime() == 0 ? 0 : (xxlJobInfo.getTriggerNextTime() + JobScheduleHelper.PRE_READ_MS);
+		} else {
+			if (xxlJobInfo.getTriggerNextTime() > 0 && xxlJobInfo.getTriggerNextTime() > currentTime) {
+				nextTriggerTime = xxlJobInfo.getTriggerNextTime() + JobScheduleHelper.PRE_READ_MS;
+			} else {
+				try {
+					Date nextValidTime = JobScheduleHelper.generateNextValidTime(xxlJobInfo, new Date(currentTime + JobScheduleHelper.PRE_READ_MS));
+					if (nextValidTime == null) {
+						return new ReturnT<>(ReturnT.FAIL_CODE, (I18nUtil.getString("schedule_type") + I18nUtil.getString("system_unvalid")));
+					}
+					nextTriggerTime = nextValidTime.getTime();
+				} catch (Exception e) {
+					logger.error(e.getMessage(), e);
+					return new ReturnT<>(ReturnT.FAIL_CODE, (I18nUtil.getString("schedule_type") + I18nUtil.getString("system_unvalid")));
+				}
 			}
-			nextTriggerTime = nextValidTime.getTime();
-		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
-			return new ReturnT<>(ReturnT.FAIL_CODE, (I18nUtil.getString("schedule_type")+I18nUtil.getString("system_unvalid")) );
 		}
 
 		xxlJobInfo.setTriggerStatus(1);
-		xxlJobInfo.setTriggerLastTime(0);
 		xxlJobInfo.setTriggerNextTime(nextTriggerTime);
 
 		xxlJobInfo.setUpdateTime(new Date());

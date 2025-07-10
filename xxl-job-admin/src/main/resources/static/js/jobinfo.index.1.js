@@ -406,10 +406,10 @@ $(function() {
         $("#addModal .form input[name='schedule_conf_CRON']").cronGen({});
 
 		// 》init scheduleType
-		$("#updateModal .form select[name=scheduleType]").change();
+		$("#addModal .form select[name=scheduleType]").change();
 
 		// 》init glueType
-		$("#updateModal .form select[name=glueType]").change();
+		$("#addModal .form select[name=glueType]").change();
 
 		$('#addModal').modal({backdrop: false, keyboard: false}).modal('show');
 	});
@@ -600,6 +600,8 @@ $(function() {
 		$('#updateModal .form select[name=executorRouteStrategy] option[value='+ row.executorRouteStrategy +']').prop('selected', true);
 		$("#updateModal .form input[name='endTime']").val(row.endTime);
 		$("#updateModal .form input[name='end_time_f']").val(row.endTime===0? '' : moment(row.endTime).format("YYYY-MM-DD HH:mm:ss"));
+		$("#updateModal .form input[name='triggerNextTime']").val(row.triggerNextTime);
+		$("#updateModal .form input[name='next_time_f']").val(row.triggerNextTime===0? '' : moment(row.triggerNextTime).format("YYYY-MM-DD HH:mm:ss"));
 		$('#updateModal .form select[name=misfireStrategy] option[value='+ row.misfireStrategy +']').prop('selected', true);
 		$('#updateModal .form select[name=executorBlockStrategy] option[value='+ row.executorBlockStrategy +']').prop('selected', true);
 		$("#updateModal .form input[name='executorTimeout']").val( row.executorTimeout );
@@ -608,8 +610,12 @@ $(function() {
 		$("#updateModal .form input[name='childJobId']").val( row.childJobId );
 
 		if (row.endTime > 0) {
-			$('#updateModal .end-time').data('daterangepicker').setStartDate(moment(row.endTime));
-			$('#updateModal .end-time').data('daterangepicker').setEndDate(moment(row.endTime));
+			$('#updateModal .form input[name="end_time_f"]').data('daterangepicker').setStartDate(moment(row.endTime));
+			$('#updateModal .form input[name="end_time_f"]').data('daterangepicker').setEndDate(moment(row.endTime));
+		}
+		if (row.triggerNextTime > 0) {
+			$('#updateModal .form input[name="next_time_f"]').data('daterangepicker').setStartDate(moment(row.triggerNextTime));
+			$('#updateModal .form input[name="next_time_f"]').data('daterangepicker').setEndDate(moment(row.triggerNextTime));
 		}
 		// show
 		$('#updateModal').modal({backdrop: false, keyboard: false}).modal('show');
@@ -778,7 +784,7 @@ $(function() {
 		timePickerSeconds: true,//时间显示到秒
 		showDropdowns: true,        // 是否显示年月选择条件
 		timePicker: true, 			// 是否显示小时和分钟选择条件
-		timePickerIncrement: 5, 	// 时间的增量，单位为分钟
+		timePickerIncrement: 1, 	// 时间的增量，单位为分钟
 		timePicker24Hour: true,
 		opens: 'left', //日期选择框的弹出位置
 		minDate: new Date(),
@@ -803,29 +809,25 @@ $(function() {
 		}
 	}
 
-	$('#addModal .end-time').daterangepicker(daterangepickerConfig, function(start, end, label) {
-		console.log(start.toLocaleString(), label);
-		$('#addModal .end-time').val(start.format('YYYY-MM-DD HH:mm:ss'));
-		$('#addModal .form input[name="endTime"]').val(start.start.valueOf());
+	$('.date-time').daterangepicker(daterangepickerConfig);
+	// 输入框赋值
+	$('.date-time').on('apply.daterangepicker', function(ev, picker) {
+		let $target = $(ev.target);
+		$target.val(picker.startDate.format('YYYY-MM-DD HH:mm:ss'));
+		let dataName = $target.attr("data-name");
+		$target.parent().find("input[name='"+dataName+"']").val(picker.startDate.valueOf());
+		// console.log(picker.startDate.format('YYYY-MM-DD HH:mm:ss'),dataName);
+
 	});
-	$('#updateModal .end-time').daterangepicker(daterangepickerConfig, function(start, end, label) {
-		console.log(start.toLocaleString(), label);
-		$('#updateModal .end-time').val(start.format('YYYY-MM-DD HH:mm:ss'));
-		$('#updateModal .form input[name="endTime"]').val(start.valueOf());
+	//清空日期
+	$('.date-time').on('cancel.daterangepicker', function (ev, picker) {
+		let $target = $(ev.target);
+		$target.val('');
+		let dataName = $target.attr("data-name");
+		$target.parent().find("input[name='"+dataName+"']").val("0");
 	});
 	// 显示时间范围选择器
 	$(".daterangepicker .ranges ul").show();
-	//清空日期
-	$('.end-time').on('cancel.daterangepicker', function (ev, picker) {
-		$('.end-time').val('');
-		$('.form input[name="endTime"]').val("0");
-	});
-	/*$('#updateModal .end-time').on('show.daterangepicker', function (ev, picker) {
-		let endTime = $('#updateModal .end-time').val();
-		console.log(endTime);
-		if (endTime) {
-			$('#updateModal .end-time').data('daterangepicker').setStartDate(endTime);
-		}
-	});*/
+
 
 });

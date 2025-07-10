@@ -14,3 +14,6 @@ alter table xxl_job_log
 
 alter table xxl_job_info
     add end_time bigint default 0 not null comment '任务结束时间';
+
+create index trigger_status_trigger_next_time_index
+    on xxl_job_info (trigger_status, trigger_next_time);

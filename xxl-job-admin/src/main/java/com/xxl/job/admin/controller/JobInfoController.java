@@ -138,15 +138,19 @@ public class JobInfoController {
 	@RequestMapping("/nextTriggerTime")
 	@ResponseBody
 	public ReturnT<List<String>> nextTriggerTime(@RequestParam("scheduleType") String scheduleType,
-												 @RequestParam("scheduleConf") String scheduleConf) {
+												 @RequestParam("scheduleConf") String scheduleConf,
+												 @RequestParam(name = "triggerNextTime", required = false) Long triggerNextTime) {
 
 		XxlJobInfo paramXxlJobInfo = new XxlJobInfo();
 		paramXxlJobInfo.setScheduleType(scheduleType);
 		paramXxlJobInfo.setScheduleConf(scheduleConf);
 
 		List<String> result = new ArrayList<>();
+		Date lastTime=new Date();
+		if (triggerNextTime != null && triggerNextTime > 0) {
+			lastTime = new Date(triggerNextTime);
+		}
 		try {
-			Date lastTime = new Date();
 			for (int i = 0; i < 5; i++) {
 				lastTime = JobScheduleHelper.generateNextValidTime(paramXxlJobInfo, lastTime);
 				if (lastTime != null) {
