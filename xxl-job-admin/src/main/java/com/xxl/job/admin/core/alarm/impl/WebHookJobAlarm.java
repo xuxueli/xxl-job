@@ -1,8 +1,7 @@
 package com.xxl.job.admin.core.alarm.impl;
 
 import com.xxl.job.admin.core.alarm.AlarmTypeEnum;
-import com.xxl.job.admin.core.alarm.JobAlarm;
-import com.xxl.job.admin.core.alarm.msg.WebHookMsg;
+import com.xxl.job.admin.core.alarm.msg.BaseMsg;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
 import org.springframework.stereotype.Component;
@@ -10,29 +9,24 @@ import org.springframework.stereotype.Component;
 /**
  * job alarm by webhook
  *
- * @author hcmyfs@163.com 2022-02-20
+ * @author: Dao-yang.
+ * @date: Created in 2025/7/10 18:22
  */
 @Component
-public class WebHookJobAlarm extends BaseAlarm implements JobAlarm {
+public class WebHookJobAlarm extends AbstractJobAlarm {
 
-    /**
-     * fail alarm
-     *
-     * @param jobLog
-     */
     @Override
-    public boolean doAlarm(XxlJobInfo info, XxlJobLog jobLog) {
-        if (info != null && info.getAlarmType() == AlarmTypeEnum.WEBHOOK.getAlarmType() &&
-            info.getAlarmUrl() != null && !info.getAlarmUrl().trim().isEmpty()) {
-            WebHookMsg webHookMsg = parseWebHookMsg(info, jobLog);
-            return sendToAll(jobLog, info, webHookMsg.toJson());
-        }
-        return true;
+    protected AlarmTypeEnum getAlarmType() {
+        return AlarmTypeEnum.WEBHOOK;
     }
 
     @Override
-    public boolean accept(XxlJobInfo info) {
-        return info != null && info.getAlarmType() == AlarmTypeEnum.WEBHOOK.getAlarmType() &&
-               info.getAlarmUrl() != null && !info.getAlarmUrl().trim().isEmpty();
+    protected BaseMsg createMsgRequest(String content) {
+        return null;
+    }
+
+    @Override
+    protected BaseMsg createMsgRequest(XxlJobInfo info, XxlJobLog jobLog) {
+        return parseWebHookMsg(info, jobLog);
     }
 }
