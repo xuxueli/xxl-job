@@ -71,7 +71,7 @@
 				AND t.title like CONCAT(CONCAT('%', #{title}), '%')
 			</if>
 		</trim>
-		ORDER BY t.app_name, t.title, t.id ASC
+		ORDER BY t.app_name, t.id ASC
 		LIMIT #{offset}, #{pagesize}
 	</select>
 

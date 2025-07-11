@@ -15,6 +15,7 @@ $(function() {
                 obj.jobDesc = $('#jobDesc').val();
 	        	obj.executorHandler = $('#executorHandler').val();
                 obj.author = $('#author').val();
+				obj.triggerNextTime = $('#triggerNextTime').val();
 	        	obj.start = d.start;
 	        	obj.length = d.length;
                 return obj;
@@ -28,7 +29,7 @@ $(function() {
 	                	"data": 'id',
 						"bSortable": false,
 						"visible" : true,
-						"width":'7%'
+						"width":'5%'
 					},
 	                {
 	                	"data": 'jobGroup',
@@ -46,12 +47,12 @@ $(function() {
 	                {
 	                	"data": 'jobDesc',
 						"visible" : true,
-						"width":'25%'
+						"width":'20%'
 					},
 					{
 						"data": 'scheduleType',
 						"visible" : true,
-						"width":'13%',
+						"width":'10%',
 						"render": function ( data, type, row ) {
 							if (row.scheduleConf) {
 								return row.scheduleType + '：'+ row.scheduleConf;
@@ -62,7 +63,7 @@ $(function() {
 					},
 					{
 						"data": 'glueType',
-						"width":'25%',
+						"width":'13%',
 						"visible" : true,
 						"render": function ( data, type, row ) {
 							var glueTypeTitle = findGlueTypeTitle(row.glueType);
@@ -88,11 +89,11 @@ $(function() {
 	                		return data?moment(new Date(data)).format("YYYY-MM-DD HH:mm:ss"):"";
 	                	}
 	                },
-	                { "data": 'author', "visible" : true, "width":'10%'},
-	                { "data": 'alarmEmail', "visible" : false},
+	                { "data": 'author', "visible" : true, "width":'8%'},
+	                { "data": 'alarmUrl', "visible" : false},
 	                {
 	                	"data": 'triggerStatus',
-						"width":'10%',
+						"width":'5%',
 	                	"visible" : true,
 	                	"render": function ( data, type, row ) {
                             // status
@@ -104,6 +105,30 @@ $(function() {
 	                		return data;
 	                	}
 	                },
+					{
+						"data": 'triggerLastTime',
+						"visible" : true,
+						"width":'10%',
+						"render": function ( data, type, row ) {
+							return data?moment(new Date(data)).format("YYYY-MM-DD HH:mm:ss"):"";
+						}
+					},
+					{
+						"data": 'triggerNextTime',
+						"visible" : true,
+						"width":'10%',
+						"render": function ( data, type, row ) {
+							return data?moment(new Date(data)).format("YYYY-MM-DD HH:mm:ss"):"";
+						}
+					},
+					{
+						"data": 'endTime',
+						"visible" : true,
+						"width":'10%',
+						"render": function ( data, type, row ) {
+							return data?moment(new Date(data)).format("YYYY-MM-DD HH:mm:ss"):"";
+						}
+					},
 	                {
 						"data": I18n.system_opt ,
 						"width":'10%',
@@ -340,7 +365,8 @@ $(function() {
             url : base_url + "/jobinfo/nextTriggerTime",
             data : {
                 "scheduleType" : row.scheduleType,
-				"scheduleConf" : row.scheduleConf
+				"scheduleConf" : row.scheduleConf,
+				"triggerNextTime" : row.triggerNextTime
             },
             dataType : "json",
             success : function(data){
@@ -380,10 +406,10 @@ $(function() {
         $("#addModal .form input[name='schedule_conf_CRON']").cronGen({});
 
 		// 》init scheduleType
-		$("#updateModal .form select[name=scheduleType]").change();
+		$("#addModal .form select[name=scheduleType]").change();
 
 		// 》init glueType
-		$("#updateModal .form select[name=glueType]").change();
+		$("#addModal .form select[name=glueType]").change();
 
 		$('#addModal').modal({backdrop: false, keyboard: false}).modal('show');
 	});
@@ -541,7 +567,8 @@ $(function() {
 		$('#updateModal .form select[name=jobGroup] option[value='+ row.jobGroup +']').prop('selected', true);
 		$("#updateModal .form input[name='jobDesc']").val( row.jobDesc );
 		$("#updateModal .form input[name='author']").val( row.author );
-		$("#updateModal .form input[name='alarmEmail']").val( row.alarmEmail );
+		$("#updateModal .form input[name='alarmUrl']").val( row.alarmUrl );
+		$('#updateModal .form select[name=alarmType] option[value='+ row.alarmType +']').prop('selected', true);
 
 		// fill trigger
 		$('#updateModal .form select[name=scheduleType] option[value='+ row.scheduleType +']').prop('selected', true);
@@ -571,12 +598,25 @@ $(function() {
 
 		// fill advanced
 		$('#updateModal .form select[name=executorRouteStrategy] option[value='+ row.executorRouteStrategy +']').prop('selected', true);
-		$("#updateModal .form input[name='childJobId']").val( row.childJobId );
+		$("#updateModal .form input[name='endTime']").val(row.endTime);
+		$("#updateModal .form input[name='end_time_f']").val(row.endTime===0? '' : moment(row.endTime).format("YYYY-MM-DD HH:mm:ss"));
+		$("#updateModal .form input[name='triggerNextTime']").val(row.triggerNextTime);
+		$("#updateModal .form input[name='next_time_f']").val(row.triggerNextTime===0? '' : moment(row.triggerNextTime).format("YYYY-MM-DD HH:mm:ss"));
 		$('#updateModal .form select[name=misfireStrategy] option[value='+ row.misfireStrategy +']').prop('selected', true);
 		$('#updateModal .form select[name=executorBlockStrategy] option[value='+ row.executorBlockStrategy +']').prop('selected', true);
 		$("#updateModal .form input[name='executorTimeout']").val( row.executorTimeout );
         $("#updateModal .form input[name='executorFailRetryCount']").val( row.executorFailRetryCount );
+		$('#updateModal .form select[name=executorFailStop] option[value='+ row.executorFailStop +']').prop('selected', true);
+		$("#updateModal .form input[name='childJobId']").val( row.childJobId );
 
+		if (row.endTime > 0) {
+			$('#updateModal .form input[name="end_time_f"]').data('daterangepicker').setStartDate(moment(row.endTime));
+			$('#updateModal .form input[name="end_time_f"]').data('daterangepicker').setEndDate(moment(row.endTime));
+		}
+		if (row.triggerNextTime > 0) {
+			$('#updateModal .form input[name="next_time_f"]').data('daterangepicker').setStartDate(moment(row.triggerNextTime));
+			$('#updateModal .form input[name="next_time_f"]').data('daterangepicker').setEndDate(moment(row.triggerNextTime));
+		}
 		// show
 		$('#updateModal').modal({backdrop: false, keyboard: false}).modal('show');
 	});
@@ -625,7 +665,6 @@ $(function() {
                 executorFailRetryCount = 0;
             }
             $("#updateModal .form input[name='executorFailRetryCount']").val(executorFailRetryCount);
-
 
 			// process schedule_conf
 			var scheduleType = $("#updateModal .form select[name='scheduleType']").val();
@@ -696,7 +735,8 @@ $(function() {
 		$('#addModal .form select[name=jobGroup] option[value='+ row.jobGroup +']').prop('selected', true);
 		$("#addModal .form input[name='jobDesc']").val( row.jobDesc );
 		$("#addModal .form input[name='author']").val( row.author );
-		$("#addModal .form input[name='alarmEmail']").val( row.alarmEmail );
+		$("#addModal .form input[name='alarmUrl']").val( row.alarmUrl );
+		$('#addModal .form select[name=alarmType] option[value='+ row.alarmType +']').prop('selected', true);
 
 		// fill trigger
 		$('#addModal .form select[name=scheduleType] option[value='+ row.scheduleType +']').prop('selected', true);
@@ -731,9 +771,63 @@ $(function() {
 		$('#addModal .form select[name=executorBlockStrategy] option[value='+ row.executorBlockStrategy +']').prop('selected', true);
 		$("#addModal .form input[name='executorTimeout']").val( row.executorTimeout );
 		$("#addModal .form input[name='executorFailRetryCount']").val( row.executorFailRetryCount );
+		$('#addModal .form select[name=executorFailStop] option[value='+ row.executorFailStop +']').prop('selected', true);
 
 		// show
 		$('#addModal').modal({backdrop: false, keyboard: false}).modal('show');
 	});
+
+	let daterangepickerConfig = {
+		autoApply: false,
+		singleDatePicker: true,
+		showWeekNumbers: true,
+		timePickerSeconds: true,//时间显示到秒
+		showDropdowns: true,        // 是否显示年月选择条件
+		timePicker: true, 			// 是否显示小时和分钟选择条件
+		timePickerIncrement: 1, 	// 时间的增量，单位为分钟
+		timePicker24Hour: true,
+		opens: 'left', //日期选择框的弹出位置
+		minDate: new Date(),
+		autoUpdateInput: false,
+		ranges: {
+			'今天': [moment(), moment(),],
+			'3天': [moment().add(3, 'days'), moment().add(3, 'days'),],
+			'下周': [moment().add(7, 'days'), moment().add(7, 'days'),],
+			'下月': [moment().add(1, 'months'), moment().add(1, 'months'),],
+			'3个月': [moment().add(3, 'months'), moment().add(3, 'months'),],
+		},
+		locale: {
+			format: 'YYYY-MM-DD HH:mm:ss',
+			customRangeLabel: I18n.daterangepicker_custom_name,
+			applyLabel: I18n.system_ok,
+			cancelLabel: I18n.system_cancel,
+			// fromLabel : I18n.daterangepicker_custom_starttime ,
+			toLabel: I18n.daterangepicker_custom_endtime,
+			daysOfWeek: I18n.daterangepicker_custom_daysofweek.split(','),        // '日', '一', '二', '三', '四', '五', '六'
+			monthNames: I18n.daterangepicker_custom_monthnames.split(','),        // '一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'
+			firstDay: 1
+		}
+	}
+
+	$('.date-time').daterangepicker(daterangepickerConfig);
+	// 输入框赋值
+	$('.date-time').on('apply.daterangepicker', function(ev, picker) {
+		let $target = $(ev.target);
+		$target.val(picker.startDate.format('YYYY-MM-DD HH:mm:ss'));
+		let dataName = $target.attr("data-name");
+		$target.parent().find("input[name='"+dataName+"']").val(picker.startDate.valueOf());
+		// console.log(picker.startDate.format('YYYY-MM-DD HH:mm:ss'),dataName);
+
+	});
+	//清空日期
+	$('.date-time').on('cancel.daterangepicker', function (ev, picker) {
+		let $target = $(ev.target);
+		$target.val('');
+		let dataName = $target.attr("data-name");
+		$target.parent().find("input[name='"+dataName+"']").val("0");
+	});
+	// 显示时间范围选择器
+	$(".daterangepicker .ranges ul").show();
+
 
 });

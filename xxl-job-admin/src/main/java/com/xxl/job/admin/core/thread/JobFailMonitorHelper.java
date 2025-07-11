@@ -17,9 +17,9 @@ import java.util.concurrent.TimeUnit;
  * @author xuxueli 2015-9-1 18:05:56
  */
 public class JobFailMonitorHelper {
-	private static Logger logger = LoggerFactory.getLogger(JobFailMonitorHelper.class);
+	private static final Logger logger = LoggerFactory.getLogger(JobFailMonitorHelper.class);
 	
-	private static JobFailMonitorHelper instance = new JobFailMonitorHelper();
+	private static final JobFailMonitorHelper instance = new JobFailMonitorHelper();
 	public static JobFailMonitorHelper getInstance(){
 		return instance;
 	}
@@ -53,7 +53,7 @@ public class JobFailMonitorHelper {
 								// 1、fail retry monitor
 								if (log.getExecutorFailRetryCount() > 0) {
 									JobTriggerPoolHelper.trigger(log.getJobId(), TriggerTypeEnum.RETRY, (log.getExecutorFailRetryCount()-1), log.getExecutorShardingParam(), log.getExecutorParam(), null);
-									String retryMsg = "<br><br><span style=\"color:#F39C12;\" > >>>>>>>>>>>"+ I18nUtil.getString("jobconf_trigger_type_retry") +"<<<<<<<<<<< </span><br>";
+									String retryMsg = "<br><br><span style=\"color:#F39C12;\" > &gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;"+ I18nUtil.getString("jobconf_trigger_type_retry") +"&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt; </span><br>";
 									log.setTriggerMsg(log.getTriggerMsg() + retryMsg);
 									XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().updateTriggerInfo(log);
 								}
@@ -73,7 +73,7 @@ public class JobFailMonitorHelper {
 
 					} catch (Throwable e) {
 						if (!toStop) {
-							logger.error(">>>>>>>>>>> xxl-job, job fail monitor thread error:{}", e);
+							logger.error(">>>>>>>>>>> xxl-job, job fail monitor thread", e);
 						}
 					}
 
