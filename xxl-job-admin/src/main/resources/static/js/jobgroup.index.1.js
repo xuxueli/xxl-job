@@ -23,17 +23,18 @@ $(function() {
 		"columns": [
 			{
 				"data": 'id',
-				"visible" : false
+				"visible" : true,
+				"width":'4%'
 			},
 			{
 				"data": 'appname',
 				"visible" : true,
-				"width":'30%'
+				"width":'28%'
 			},
 			{
 				"data": 'title',
 				"visible" : true,
-				"width":'30%'
+				"width":'28%'
 			},
 			{
 				"data": 'addressType',
