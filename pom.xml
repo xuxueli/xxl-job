@@ -23,6 +23,8 @@
 		<maven.compiler.encoding>UTF-8</maven.compiler.encoding>
 		<maven.compiler.source>17</maven.compiler.source>
 		<maven.compiler.target>17</maven.compiler.target>
+		<client.maven.compiler.source>1.8</client.maven.compiler.source>
+		<client.maven.compiler.target>1.8</client.maven.compiler.target>
 		<maven.test.skip>true</maven.test.skip>
 		<!-- plugin -->
 		<maven-source-plugin.version>3.3.1</maven-source-plugin.version>
