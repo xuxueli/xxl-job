@@ -147,7 +147,8 @@ $(function() {
                                     '     </button>\n' +
                                     '     <ul class="dropdown-menu" role="menu" _id="'+ row.id +'" >\n' +
                                     '       <li><a href="javascript:void(0);" class="job_trigger" >'+ I18n.jobinfo_opt_run +'</a></li>\n' +
-                                    '       <li><a href="'+ logHref +'">'+ I18n.jobinfo_opt_log +'</a></li>\n' +
+									'       <li><a href="javascript:void(0);" class="job_operate" _type="job_stop_immediately" >'+ I18n.jobinfo_opt_stop_immediately +'</a></li>\n' +
+									'       <li><a href="'+ logHref +'">'+ I18n.jobinfo_opt_log +'</a></li>\n' +
                                     '       <li><a href="javascript:void(0);" class="job_registryinfo" >' + I18n.jobinfo_opt_registryinfo + '</a></li>\n' +
 									job_next_time_html +
                                     '       <li class="divider"></li>\n' +
@@ -223,6 +224,11 @@ $(function() {
 		} else if ("job_del" == type) {
 			typeName = I18n.system_opt_del ;
 			url = base_url + "/jobinfo/remove";
+			needFresh = true;
+		} else if ("job_stop_immediately" == type) {
+			//job立即停止
+			typeName = I18n.jobinfo_opt_stop_immediately;
+			url = base_url + "/joblog/logKill";
 			needFresh = true;
 		} else {
 			return;
