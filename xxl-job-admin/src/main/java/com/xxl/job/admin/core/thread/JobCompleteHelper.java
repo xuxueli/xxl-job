@@ -76,7 +76,9 @@ public class JobCompleteHelper {
 					try {
 						// 任务结果丢失处理：调度记录停留在 "运行中" 状态超过10min，且对应执行器心跳注册失败不在线，则将本地调度主动标记失败；
 						Date losedTime = DateUtil.addMinutes(new Date(), -10);
-						List<Long> losedJobIds  = XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().findLostJobIds(losedTime);
+						Date fromTime = DateUtil.addMinutes(new Date(), -20);
+						//缩小时间范围，减少查询范围，挑选从20分钟前到10分钟前的任务来查询，因为每间隔1分钟已经检查过一次。
+						List<Long> losedJobIds  = XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().findLostJobIds(losedTime, fromTime);
 
 						if (losedJobIds!=null && losedJobIds.size()>0) {
 							for (Long logId: losedJobIds) {
