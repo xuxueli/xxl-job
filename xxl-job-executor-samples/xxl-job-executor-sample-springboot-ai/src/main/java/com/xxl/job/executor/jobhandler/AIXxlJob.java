@@ -10,7 +10,6 @@ import io.github.imfangs.dify.client.model.workflow.WorkflowRunRequest;
 import io.github.imfangs.dify.client.model.workflow.WorkflowRunResponse;
 import jakarta.annotation.Resource;
 import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -103,12 +102,6 @@ public class AIXxlJob {
     }
 
 
-
-    @Value("${dify.api-key}")
-    private String apiKey;
-    @Value("${dify.base-url}")
-    private String baseUrl;
-
     /**
      * 2、dify Workflow任务
      *
@@ -143,6 +136,11 @@ public class AIXxlJob {
             if (difyParam.getUser() == null) {
                 difyParam.setUser("xxl-job");
             }
+            if (difyParam.getBaseUrl()==null || difyParam.getApiKey()==null) {
+                XxlJobHelper.log("baseUrl or apiKey invalid.");
+                XxlJobHelper.handleFail();
+                return;
+            }
         } catch (Exception e) {
             XxlJobHelper.log(new RuntimeException("DifyParam parse error", e));
             XxlJobHelper.handleFail();
@@ -161,7 +159,7 @@ public class AIXxlJob {
                 .build();
 
         // dify invoke
-        DifyWorkflowClient workflowClient = DifyClientFactory.createWorkflowClient(baseUrl, apiKey);
+        DifyWorkflowClient workflowClient = DifyClientFactory.createWorkflowClient(difyParam.getBaseUrl(), difyParam.getApiKey());
         WorkflowRunResponse response = workflowClient.runWorkflow(request);
 
         // response
@@ -171,14 +169,24 @@ public class AIXxlJob {
     private static class DifyParam{
 
         /**
-         * 输入参数，允许传入 App 定义的各变量值
+         * dify input, 允许传入 Dify App 定义的各变量值
          */
         private Map<String, Object> inputs;
 
         /**
-         * 用户标识
+         * dify user
          */
         private String user;
+
+        /**
+         * dify baseUrl
+         */
+        private String baseUrl;
+
+        /**
+         * dify apiKey
+         */
+        private String apiKey;
 
         public Map<String, Object> getInputs() {
             return inputs;
@@ -196,7 +204,22 @@ public class AIXxlJob {
             this.user = user;
         }
 
-    }
+        public String getBaseUrl() {
+            return baseUrl;
+        }
 
+        public void setBaseUrl(String baseUrl) {
+            this.baseUrl = baseUrl;
+        }
+
+        public String getApiKey() {
+            return apiKey;
+        }
+
+        public void setApiKey(String apiKey) {
+            this.apiKey = apiKey;
+        }
+
+    }
 
 }

@@ -79,10 +79,9 @@ public class IndexController {
 
     // --------------------------------- dify workflow ---------------------------------
 
-    @Value("${dify.api-key}")
-    private String apiKey;
-    @Value("${dify.base-url}")
-    private String baseUrl;
+    // dify config sample
+    private final String apiKey = "http://localhost/v1";
+    private final String baseUrl = "app-OUVgNUOQRIMokfmuJvBJoUTN";
 
     @GetMapping("/dify/simple")
     @ResponseBody

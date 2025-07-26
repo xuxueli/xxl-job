@@ -1,7 +1,7 @@
 ## 《分布式任务调度平台XXL-JOB》
 
 [![Actions Status](https://github.com/xuxueli/xxl-job/workflows/Java%20CI/badge.svg)](https://github.com/xuxueli/xxl-job/actions)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.xuxueli/xxl-job-core/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.xuxueli/xxl-job-core/)
+[![Maven Central](https://img.shields.io/maven-central/v/com.xuxueli/xxl-job-core)](https://central.sonatype.com/artifact/com.xuxueli/xxl-job-core)
 [![GitHub release](https://img.shields.io/github/release/xuxueli/xxl-job.svg)](https://github.com/xuxueli/xxl-job/releases)
 [![GitHub stars](https://img.shields.io/github/stars/xuxueli/xxl-job)](https://github.com/xuxueli/xxl-job/)
 [![Docker Status](https://img.shields.io/docker/pulls/xuxueli/xxl-job-admin)](https://hub.docker.com/r/xuxueli/xxl-job-admin/)
@@ -786,6 +786,8 @@ XXL-JOB是一个分布式任务调度平台，其核心设计目标是开发迅�
     - 689、广东西欧克实业有限公司
     - 690、唱吧麦颂KTV
     - 691、联通云
+    - 692、北京爱话本科技有限公司
+    - 693、北京起创科技有限公司
     - ……
 
 > 更多接入的公司，欢迎在 [登记地址](https://github.com/xuxueli/xxl-job/issues/1 ) 登记，登记仅仅为了产品推广。
@@ -1207,19 +1209,22 @@ public void demoJobHandler() throws Exception {
     "prompt": "{模型prompt，可选信息}"
 }
 ```
-- b、difyWorkflowJobHandler：DifyWorkflow 任务，支持自定义inputs、user等输入信息，示例参数如下；
+- b、difyWorkflowJobHandler：DifyWorkflow 任务，支持自定义inputs、user、baseUrl、apiKey 等输入信息，示例参数如下；
 ```
 {
-    "inputs":{                      // inputs 为dify工作流任务参数；参数不固定，结合各自 workflow 自行定义。
-        "input":"{用户输入信息}"      // 该参数为示例变量，需要 workflow 的“开始”节点 自定义参数 “input”，可自行调整或删除。
+    "inputs":{                          // inputs 为dify工作流任务参数；参数不固定，结合各自 workflow 自行定义。
+        "input":"{用户输入信息}"          // 该参数为示例变量，需要 workflow 的“开始”节点 自定义参数 “input”，可自行调整或删除。
     },
-    "user": "{用户标识，选填}"
+    "user": "xxl-job",                  // 用户标识，选填
+    "baseUrl": "http://localhost/v1",   // Dify应用的 访问API 地址，需要从 Dify 系统获取；
+    "apiKey": "xxx"                     // Dify应用的 API-Key，需要从 Dify 系统获取；
 }
 ```
 
 - 依赖1：参考 [Ollama本地化部署大模型](https://www.xuxueli.com/blog/?blog=./notebook/13-AI/%E4%BD%BF%E7%94%A8Ollama%E6%9C%AC%E5%9C%B0%E5%8C%96%E9%83%A8%E7%BD%B2DeepSeek.md) ，执行器示例部署“qwen2.5:1.5b”模型，也可自定选择其他模型版本。
 - 依赖2：参考 [使用DeepSeek与Dify搭建AI助手](https://www.xuxueli.com/blog/?blog=./notebook/13-AI/%E4%BD%BF%E7%94%A8DeepSeek%E4%B8%8EDify%E6%90%AD%E5%BB%BAAI%E5%8A%A9%E6%89%8B.md)，执行器示例新建Dify DifyWork应用，并在开始节点添加“input”参数，可结合实际情况调整。
 - 依赖3：启动示例 “AI执行器” 相关配置文件说明如下：
+
 ```
 // ollama 配置
 spring.ai.ollama.base-url=http://localhost:11434
@@ -2520,7 +2525,7 @@ public void execute() {
         ```
 - 2、【新增】新增多个 Bean模式 AI任务Handler，如 ollamaJobHandler、difyWorkflowJobHandler 等，支持快速集成开发AI任务。任务配置可参考 [AI执行器](https://www.xuxueli.com/xxl-job/#原生内置Bean模式任务（AI执行器）)
   - a、ollamaJobHandler： OllamaChat任务，支持自定义prompt、input等输入信息。
-  - b、difyWorkflowJobHandler：DifyWorkflow 任务，支持自定义inputs、user等输入信息。
+  - b、difyWorkflowJobHandler：DifyWorkflow 任务，支持自定义inputs、user、baseUrl、apiKey等输入信息。
 - 3、【修复】合并PR-3708、PR-3704，解决固定速度调度模式下，下次计算执行时间小概率（间隔超长时）不准问题。
 - 4、【修复】任务操作逻辑优化，修复边界情况下逻辑中断问题 (ISSUE-2081)。
 - 5、【修复】调度中心Cron前端组件优化，解决week配置与后端兼容性问题 (ISSUE-2220)。
@@ -2530,10 +2535,17 @@ public void execute() {
 - 9、【优化】执行器日志文件保存天数（logretentiondays）调整，最小保留时间调整至3天。
 - 10、【升级】多个项目依赖升级至较新稳定版本，涉及 gson、groovy、spring/springboot、mysql 等；
 
+### 7.39 版本 v3.1.1 Release Notes[2025-06-23]
+- 1、【调整】AI任务（difyWorkflowJobHandler）优化：针对 “baseUrl、apiKey” 等Dify配置信息，从执行器侧文件类配置调整至调度中心“任务参数”动态配置，支持多Dify应用集成并提升研发效率；
+- 2、【优化】合并PR-2417，修复任务管理时JobHandler录入空格问题；
+- 3、【优化】合并PR-2504，规避SQL注入问题；
+- 4、【升级】多个项目依赖升级至较新稳定版本，涉及 netty、spring/springboot、groovy 等；
 
-### 7.39 版本 v3.1.1 Release Notes[规划中]
+
+### 7.40 版本 v3.1.2 Release Notes[规划中]
 - 1、[规划中]登陆态Token生成逻辑优化，混淆登陆时间属性，降低token泄漏风险；
 - 2、[规划中]组件扫描改为BeanPostProcessor方式，避免小概率情况下提前初始化；底层组件移除单例写法，汇总factory统一管理；
+
 
 ### TODO LIST
 - 1、调度隔离：调度中心针对不同执行器，各自维护不同的调度和远程触发组件。
