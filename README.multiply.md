@@ -150,7 +150,7 @@ tar -xzvf xxl-job-admin-all.tar.gz
 ```
 - 3. cd to package
 ```shell
-cd xxl-job-admin-all/xxl-job-admin
+cd xxl-job-admin
 ```
 - 4. modify the config file
 ```shell
