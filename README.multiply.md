@@ -142,7 +142,8 @@ xxl.job.database.platform.type=mysql
 - 1. download the package
     - xxl-job-admin-all.tar.gz
 ```shell
-wget https://gitee.com/ice2faith/xxl-job/releases/download/v3.0.0-SNAPSHOT-springboot3/xxl-job-admin-all.tar.gz
+wget https://gitee.com/ice2faith/xxl-job/releases/download/v3.1.2-SNAPSHOT-springboot3/xxl-job-admin-all.tar.gz
+```
 ```
 - 2. release it
 ```shell
