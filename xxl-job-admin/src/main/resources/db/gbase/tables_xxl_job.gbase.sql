@@ -173,7 +173,9 @@ VALUES (3, 2, 'Dify示例任务', now(), now(), 'XXL', '', 'NONE', '',
     "inputs":{
         "input":"查询班级各学科前三名"
     },
-    "user": "xxl-job"
+    "user": "xxl-job",
+    "baseUrl": "http://localhost/v1",
+    "apiKey": "app-OUVgNUOQRIMokfmuJvBJoUTN"
 }', 'SERIAL_EXECUTION', 0, 0, 'BEAN', '', 'GLUE代码初始化',
         now(), '');
 
