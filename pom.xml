@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.xuxueli</groupId>
 	<artifactId>xxl-job</artifactId>
-	<version>3.1.1-SNAPSHOT</version>
+	<version>3.1.2-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>${project.artifactId}</name>
@@ -27,15 +27,16 @@
 		<maven.compiler.target>17</maven.compiler.target>
 		<maven.test.skip>true</maven.test.skip>
 		<!-- plugin -->
-        <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
+		<maven-source-plugin.version>3.3.1</maven-source-plugin.version>
 		<maven-javadoc-plugin.version>3.11.2</maven-javadoc-plugin.version>
-        <maven-gpg-plugin.version>3.2.7</maven-gpg-plugin.version>
+		<maven-gpg-plugin.version>3.2.7</maven-gpg-plugin.version>
+		<central-publishing-maven-plugin.version>0.7.0</central-publishing-maven-plugin.version>
 		<!-- base -->
-        <slf4j-api.version>2.0.17</slf4j-api.version>
-        <junit-jupiter.version>5.12.2</junit-jupiter.version>
+		<slf4j-api.version>2.0.17</slf4j-api.version>
+		<junit-jupiter.version>5.13.1</junit-jupiter.version>
         <jakarta.annotation-api.version>3.0.0</jakarta.annotation-api.version>
 		<!-- net -->
-		<netty.version>4.2.0.Final</netty.version>
+		<netty.version>4.2.2.Final</netty.version>
 		<gson.version>2.13.1</gson.version>
 		<!-- spring -->
 		<spring-boot.version>3.4.5</spring-boot.version>
@@ -44,7 +45,7 @@
 		<mybatis-spring-boot-starter.version>3.0.4</mybatis-spring-boot-starter.version>
         <mysql-connector-j.version>9.3.0</mysql-connector-j.version>
 		<!-- dynamic language -->
-		<groovy.version>4.0.26</groovy.version>
+		<groovy.version>4.0.27</groovy.version>
 	</properties>
 
 	<build>
@@ -135,18 +136,25 @@
                             </execution>
                         </executions>
                     </plugin>
+					<!-- maven central -->
+					<plugin>
+						<groupId>org.sonatype.central</groupId>
+						<artifactId>central-publishing-maven-plugin</artifactId>
+						<version>${central-publishing-maven-plugin.version}</version>
+						<extensions>true</extensions>
+						<configuration>
+							<publishingServerId>central</publishingServerId>
+							<excludeArtifacts>
+								<artifact>xxl-job-admin</artifact>
+								<artifact>xxl-job-executor-samples</artifact>
+								<artifact>xxl-job-executor-sample-frameless</artifact>
+								<artifact>xxl-job-executor-sample-springboot</artifact>
+								<artifact>xxl-job-executor-sample-springboot-ai</artifact>
+							</excludeArtifacts>
+						</configuration>
+					</plugin>
 				</plugins>
 			</build>
-			<distributionManagement>
-				<snapshotRepository>
-					<id>oss</id>
-					<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-				</snapshotRepository>
-				<repository>
-					<id>oss</id>
-					<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-				</repository>
-			</distributionManagement>
 		</profile>
 	</profiles>
 
