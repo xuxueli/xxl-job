@@ -58,7 +58,7 @@ public class JobLogFileCleanThread {
                                 if (!childFile.isDirectory()) {
                                     continue;
                                 }
-                                if (childFile.getName().indexOf("-") == -1) {
+                                if (!childFile.getName().contains("-")) {
                                     continue;
                                 }
 
