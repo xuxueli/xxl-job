@@ -13,40 +13,56 @@ public class ReturnT<T> implements Serializable {
 	public static final int SUCCESS_CODE = 200;
 	public static final int FAIL_CODE = 500;
 
-	public static final ReturnT<String> SUCCESS = new ReturnT<String>(null);
-	public static final ReturnT<String> FAIL = new ReturnT<String>(FAIL_CODE, null);
+	public static final ReturnT<String> SUCCESS = success();
+	public static final ReturnT<String> FAIL = fail();
 
-	private int code;
-	private String msg;
-	private T content;
+	private final int code;
+	private final String msg;
+	private final T content;
 
-	public ReturnT(){}
-	public ReturnT(int code, String msg) {
+	public static <T> ReturnT<T> success() {
+		return new ReturnT<>(SUCCESS_CODE, null, null);
+	}
+
+	public static <T> ReturnT<T> success(T content) {
+		return new ReturnT<>(SUCCESS_CODE, null, content);
+	}
+
+	public static <T> ReturnT<T> fail() {
+		return new ReturnT<>(FAIL_CODE, null, null);
+	}
+
+	public static <T> ReturnT<T> fail(String msg) {
+		return new ReturnT<>(FAIL_CODE, msg, null);
+	}
+
+	public static <T> ReturnT<T> fail(int code, String msg) {
+		return new ReturnT<>(code, msg, null);
+	}
+
+	public ReturnT(int code, String msg, T content) {
 		this.code = code;
 		this.msg = msg;
-	}
-	public ReturnT(T content) {
-		this.code = SUCCESS_CODE;
 		this.content = content;
 	}
 	
 	public int getCode() {
 		return code;
 	}
-	public void setCode(int code) {
-		this.code = code;
+	public ReturnT<T> withCode(int code) {
+		return new ReturnT<>(code, this.msg, this.content);
 	}
 	public String getMsg() {
 		return msg;
 	}
-	public void setMsg(String msg) {
-		this.msg = msg;
+	public ReturnT<T> withMsg(String msg) {
+		return new ReturnT<>(this.code, msg, this.content);
 	}
 	public T getContent() {
 		return content;
 	}
-	public void setContent(T content) {
-		this.content = content;
+	public ReturnT<T> withContent(T content) {
+		return new ReturnT<>(this.code, this.msg, content);
 	}
 
 	@Override

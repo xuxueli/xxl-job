@@ -26,7 +26,7 @@ public class ExecutorRouteBusyover extends ExecutorRouter {
                 idleBeatResult = executorBiz.idleBeat(new IdleBeatParam(triggerParam.getJobId()));
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);
-                idleBeatResult = new ReturnT<String>(ReturnT.FAIL_CODE, ""+e );
+                idleBeatResult = ReturnT.fail(""+e );
             }
             idleBeatResultSB.append( (idleBeatResultSB.length()>0)?"<br><br>":"")
                     .append(I18nUtil.getString("jobconf_idleBeat") + "：")
@@ -36,13 +36,13 @@ public class ExecutorRouteBusyover extends ExecutorRouter {
 
             // beat success
             if (idleBeatResult.getCode() == ReturnT.SUCCESS_CODE) {
-                idleBeatResult.setMsg(idleBeatResultSB.toString());
-                idleBeatResult.setContent(address);
-                return idleBeatResult;
+                return idleBeatResult
+                        .withMsg(idleBeatResultSB.toString())
+                        .withContent(address);
             }
         }
 
-        return new ReturnT<String>(ReturnT.FAIL_CODE, idleBeatResultSB.toString());
+        return ReturnT.fail(idleBeatResultSB.toString());
     }
 
 }

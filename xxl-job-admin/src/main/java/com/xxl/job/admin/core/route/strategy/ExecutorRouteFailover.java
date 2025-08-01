@@ -20,13 +20,13 @@ public class ExecutorRouteFailover extends ExecutorRouter {
         StringBuffer beatResultSB = new StringBuffer();
         for (String address : addressList) {
             // beat
-            ReturnT<String> beatResult = null;
+            ReturnT<String> beatResult;
             try {
                 ExecutorBiz executorBiz = XxlJobScheduler.getExecutorBiz(address);
                 beatResult = executorBiz.beat();
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);
-                beatResult = new ReturnT<String>(ReturnT.FAIL_CODE, ""+e );
+                beatResult = ReturnT.fail(""+e);
             }
             beatResultSB.append( (beatResultSB.length()>0)?"<br><br>":"")
                     .append(I18nUtil.getString("jobconf_beat") + "：")
@@ -36,13 +36,12 @@ public class ExecutorRouteFailover extends ExecutorRouter {
 
             // beat success
             if (beatResult.getCode() == ReturnT.SUCCESS_CODE) {
-
-                beatResult.setMsg(beatResultSB.toString());
-                beatResult.setContent(address);
-                return beatResult;
+                return beatResult
+                        .withMsg(beatResultSB.toString())
+                        .withContent(address);
             }
         }
-        return new ReturnT<String>(ReturnT.FAIL_CODE, beatResultSB.toString());
+        return ReturnT.fail(beatResultSB.toString());
 
     }
 }
