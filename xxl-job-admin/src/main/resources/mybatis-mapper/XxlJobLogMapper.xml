@@ -229,7 +229,7 @@
 
 	<select id="findFailJobLogIds" resultType="long" >
 		SELECT id FROM xxl_job_log
-		WHERE !(
+		WHERE NOT (
 			(trigger_code in (0, 200) and handle_code = 0)
 			OR
 			(handle_code = 200)
