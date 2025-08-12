@@ -76,17 +76,17 @@
                 AND t.trigger_status = #{triggerStatus}
             </if>
 			<if test="jobDesc != null and jobDesc != ''">
-				AND t.job_desc like CONCAT(CONCAT('%', #{jobDesc}), '%')
+				AND t.job_desc like '%' || #{jobDesc} || '%'
 			</if>
 			<if test="executorHandler != null and executorHandler != ''">
-				AND t.executor_handler like CONCAT(CONCAT('%', #{executorHandler}), '%')
+				AND t.executor_handler like '%' || #{executorHandler} || '%'
 			</if>
 			<if test="author != null and author != ''">
-				AND t.author like CONCAT(CONCAT('%', #{author}), '%')
+				AND t.author like '%' || #{author} || '%'
 			</if>
 		</trim>
 		ORDER BY id DESC
-		LIMIT #{offset}, #{pagesize}
+		LIMIT #{pagesize} OFFSET #{offset}
 	</select>
 
 	<select id="pageListCount" parameterType="java.util.HashMap" resultType="int">
@@ -100,13 +100,13 @@
                 AND t.trigger_status = #{triggerStatus}
             </if>
 			<if test="jobDesc != null and jobDesc != ''">
-				AND t.job_desc like CONCAT(CONCAT('%', #{jobDesc}), '%')
+				AND t.job_desc like '%' || #{jobDesc} || '%'
 			</if>
 			<if test="executorHandler != null and executorHandler != ''">
-				AND t.executor_handler like CONCAT(CONCAT('%', #{executorHandler}), '%')
+				AND t.executor_handler like '%' || #{executorHandler} || '%'
 			</if>
 			<if test="author != null and author != ''">
-				AND t.author like CONCAT(CONCAT('%', #{author}), '%')
+				AND t.author like '%' || #{author} || '%'
 			</if>
 		</trim>
 	</select>
