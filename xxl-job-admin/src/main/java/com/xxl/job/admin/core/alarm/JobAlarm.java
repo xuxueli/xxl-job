@@ -15,6 +15,14 @@ public interface JobAlarm {
      * @param jobLog
      * @return
      */
-    public boolean doAlarm(XxlJobInfo info, XxlJobLog jobLog);
+    boolean doAlarm(XxlJobInfo info, XxlJobLog jobLog);
+
+    /**
+     * 是否支持告警的类型
+     *
+     * @param info
+     * @return
+     */
+    boolean accept(XxlJobInfo info);
 
 }

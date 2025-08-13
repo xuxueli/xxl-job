@@ -1,29 +1,12 @@
-package com.xxl.job.admin.core.model;
+package com.xxl.job.admin.core.alarm.msg;
+
+import com.xxl.job.admin.core.util.JacksonUtil;
 
 import java.util.Date;
-import java.util.Objects;
 
-/**
- * xxl-job log, used to track trigger process
- *
- * @author xuxueli  2015-12-19 23:19:09
- */
-public class XxlJobLog {
+public class WebHookMsg  extends  BaseMsg {
 
-    private long id;
-
-    // job info
-    private int jobGroup;
-    private int jobId;
-
-    // execute info
-    private String executorAddress;
-    private String executorHandler;
-    private String executorParam;
-    private String executorShardingParam;
-    private int executorFailRetryCount;
-    private Boolean executorFailStop; // 执行失败后是否停止(默认true)
-
+    private String jobDesc;
     // trigger info
     private Date triggerTime;
     private int triggerCode;
@@ -36,6 +19,38 @@ public class XxlJobLog {
 
     // alarm info
     private int alarmStatus;
+    private long id;
+    private String executorAddress;
+    private int jobId;
+    private int jobGroup;
+
+    public String getExecutorHandler() {
+        return executorHandler;
+    }
+
+    public void setExecutorHandler(String executorHandler) {
+        this.executorHandler = executorHandler;
+    }
+
+    public String getExecutorParam() {
+        return executorParam;
+    }
+
+    public void setExecutorParam(String executorParam) {
+        this.executorParam = executorParam;
+    }
+
+    public String getExecutorShardingParam() {
+        return executorShardingParam;
+    }
+
+    public void setExecutorShardingParam(String executorShardingParam) {
+        this.executorShardingParam = executorShardingParam;
+    }
+
+    private String executorHandler;
+    private String executorParam;
+    private String executorShardingParam;
 
     public long getId() {
         return id;
@@ -69,45 +84,6 @@ public class XxlJobLog {
         this.executorAddress = executorAddress;
     }
 
-    public String getExecutorHandler() {
-        return executorHandler;
-    }
-
-    public void setExecutorHandler(String executorHandler) {
-        this.executorHandler = executorHandler;
-    }
-
-    public String getExecutorParam() {
-        return executorParam;
-    }
-
-    public void setExecutorParam(String executorParam) {
-        this.executorParam = executorParam;
-    }
-
-    public String getExecutorShardingParam() {
-        return executorShardingParam;
-    }
-
-    public void setExecutorShardingParam(String executorShardingParam) {
-        this.executorShardingParam = executorShardingParam;
-    }
-
-    public int getExecutorFailRetryCount() {
-        return executorFailRetryCount;
-    }
-
-    public void setExecutorFailRetryCount(int executorFailRetryCount) {
-        this.executorFailRetryCount = executorFailRetryCount;
-    }
-
-    public void setExecutorFailStop(Boolean executorFailStop) {
-        this.executorFailStop = executorFailStop;
-    }
-
-    public Boolean getExecutorFailStop() {
-        return Objects.requireNonNullElse(executorFailStop, true);
-    }
 
     public Date getTriggerTime() {
         return triggerTime;
@@ -165,4 +141,17 @@ public class XxlJobLog {
         this.alarmStatus = alarmStatus;
     }
 
+    public String getJobDesc() {
+        return jobDesc;
+    }
+
+    public void setJobDesc(String jobDesc) {
+        this.jobDesc = jobDesc;
+    }
+
+
+    @Override
+    public String toJson() {
+        return JacksonUtil.writeValueAsString(this);
+    }
 }
