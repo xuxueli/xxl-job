@@ -171,7 +171,8 @@ public class JobCompleteHelper {
 		}
 
 		// success, save log
-		log.setHandleTime(new Date());
+		Date handleTime = DateUtil.timeStampToDate(handleCallbackParam.getLogDateTim(), "");
+		log.setHandleTime(handleTime);
 		log.setHandleCode(handleCallbackParam.getHandleCode());
 		log.setHandleMsg(handleMsg.toString());
 		XxlJobCompleter.updateHandleInfoAndFinish(log);
