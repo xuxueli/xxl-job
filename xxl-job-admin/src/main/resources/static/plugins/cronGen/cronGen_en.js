@@ -12,7 +12,7 @@
             var cronContainer = $("<div/>", { id: "CronContainer", style: "display:none;width:300px;height:300px;" });
             var mainDiv = $("<div/>", { id: "CronGenMainDiv", style: "width:410px;height:420px;" });
             var topMenu = $("<ul/>", { "class": "nav nav-tabs", id: "CronGenTabs" });
-            $('<li/>', { 'class': 'active' }).html($('<a id="SecondlyTab" href="#Secondly">秒</a>')).appendTo(topMenu);
+            $('<li/>', { 'class': 'active' }).html($('<a id="SecondlyTab" href="#Secondly">Second</a>')).appendTo(topMenu);
             $('<li/>').html($('<a id="MinutesTab" href="#Minutes">Minute</a>')).appendTo(topMenu);
             $('<li/>').html($('<a id="HourlyTab" href="#Hourly">Hour</a>')).appendTo(topMenu);
             $('<li/>').html($('<a id="DailyTab" href="#Daily">Day</a>')).appendTo(topMenu);
