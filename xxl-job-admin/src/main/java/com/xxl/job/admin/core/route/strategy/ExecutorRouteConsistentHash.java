@@ -8,6 +8,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -69,9 +70,9 @@ public class ExecutorRouteConsistentHash extends ExecutorRouter {
         }
 
         long jobHash = hash(String.valueOf(jobId));
-        SortedMap<Long, String> lastRing = addressRing.tailMap(jobHash);
-        if (!lastRing.isEmpty()) {
-            return lastRing.get(lastRing.firstKey());
+        Map.Entry<Long, String> ceilingEntry = addressRing.ceilingEntry(jobHash);
+        if (ceilingEntry != null) {
+            return ceilingEntry.getValue();
         }
         return addressRing.firstEntry().getValue();
     }
