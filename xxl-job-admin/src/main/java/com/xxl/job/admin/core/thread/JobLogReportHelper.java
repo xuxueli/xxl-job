@@ -79,6 +79,7 @@ public class JobLogReportHelper {
                                 xxlJobLogReport.setSucCount(triggerDayCountSuc);
                                 xxlJobLogReport.setFailCount(triggerDayCountFail);
                             }
+                            xxlJobLogReport.setUpdateTime(new Date());
 
                             // do refresh
                             int ret = XxlJobAdminConfig.getAdminConfig().getXxlJobLogReportDao().update(xxlJobLogReport);
