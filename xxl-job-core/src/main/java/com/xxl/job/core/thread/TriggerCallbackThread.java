@@ -129,6 +129,7 @@ public class TriggerCallbackThread {
             }
         });
         triggerRetryCallbackThread.setDaemon(true);
+        triggerCallbackThread.setName("xxl-job, retry TriggerCallbackThread");
         triggerRetryCallbackThread.start();
 
     }
