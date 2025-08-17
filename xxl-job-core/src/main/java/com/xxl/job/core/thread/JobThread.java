@@ -26,7 +26,7 @@ import java.util.concurrent.*;
  */
 public class JobThread extends Thread{
 	private static Logger logger = LoggerFactory.getLogger(JobThread.class);
-
+	private static int triggerQueueSize = 1000; // default queue size is 1000
 	private int jobId;
 	private IJobHandler handler;
 	private LinkedBlockingQueue<TriggerParam> triggerQueue;
@@ -42,8 +42,8 @@ public class JobThread extends Thread{
 	public JobThread(int jobId, IJobHandler handler) {
 		this.jobId = jobId;
 		this.handler = handler;
-		this.triggerQueue = new LinkedBlockingQueue<TriggerParam>();
-		this.triggerLogIdSet = Collections.synchronizedSet(new HashSet<Long>());
+		this.triggerQueue = new LinkedBlockingQueue<TriggerParam>(triggerQueueSize);
+		this.triggerLogIdSet = Collections.synchronizedSet(new HashSet<Long>(triggerQueueSize));
 
 		// assign job thread name
 		this.setName("xxl-job, JobThread-"+jobId+"-"+System.currentTimeMillis());
@@ -63,6 +63,12 @@ public class JobThread extends Thread{
 		if (triggerLogIdSet.contains(triggerParam.getLogId())) {
 			logger.info(">>>>>>>>>>> repeate trigger job, logId:{}", triggerParam.getLogId());
 			return new ReturnT<String>(ReturnT.FAIL_CODE, "repeate trigger job, logId:" + triggerParam.getLogId());
+		}
+
+		// avoid linkBlockQueue make OOM
+		if (triggerQueue.size() >= triggerQueueSize) {
+			logger.info(">>>>>>>>>>> ignore trigger job, triggerQueue is full, logId:{}", triggerParam.getLogId());
+			return new ReturnT<String>(ReturnT.FAIL_CODE, "ignore trigger job, triggerQueue is full, logId:" + triggerParam.getLogId());
 		}
 
 		triggerLogIdSet.add(triggerParam.getLogId());
