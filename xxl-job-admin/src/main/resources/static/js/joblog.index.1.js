@@ -1,3 +1,11 @@
+$('#jobGroup').selectpicker({
+	liveSearch: true,
+	maxOptions: 1
+});
+$('#jobId').selectpicker({
+	liveSearch: true,
+	maxOptions: 1
+});
 $(function() {
 
 	// jobGroup change, job list init and select
@@ -15,9 +23,11 @@ $(function() {
 					$.each(data.content, function (n, value) {
                         $("#jobId").append('<option value="' + value.id + '" >' + value.jobDesc + '</option>');
                     });
+					$('#jobId').selectpicker('refresh');
                     if ($("#jobId").attr("paramVal")){
                         $("#jobId").find("option[value='" + $("#jobId").attr("paramVal") + "']").attr("selected",true);
                     }
+					$('#jobId').selectpicker('render');
 				} else {
 					layer.open({
 						title: I18n.system_tips ,

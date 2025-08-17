@@ -1,3 +1,15 @@
+$('#jobGroup').selectpicker({
+	liveSearch: true,
+	maxOptions: 1
+});
+$('#addJobGroup').selectpicker({
+	liveSearch: true,
+	maxOptions: 1
+});
+$('#updateJobGroup').selectpicker({
+	liveSearch: true,
+	maxOptions: 1
+});
 $(function() {
 
 	// init date tables
@@ -539,6 +551,7 @@ $(function() {
 		// fill base
 		$("#updateModal .form input[name='id']").val( row.id );
 		$('#updateModal .form select[name=jobGroup] option[value='+ row.jobGroup +']').prop('selected', true);
+		$('#updateJobGroup').selectpicker('refresh')
 		$("#updateModal .form input[name='jobDesc']").val( row.jobDesc );
 		$("#updateModal .form input[name='author']").val( row.author );
 		$("#updateModal .form input[name='alarmEmail']").val( row.alarmEmail );
