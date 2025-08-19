@@ -104,20 +104,32 @@ public class JobInfoController {
 	
 	@RequestMapping("/remove")
 	@ResponseBody
-	public ReturnT<String> remove(@RequestParam("id") int id) {
-		return xxlJobService.remove(id);
+	public ReturnT<String> remove(HttpServletRequest request,
+								  @RequestParam("id") int id) {
+		// login user
+		XxlJobUser loginUser = PermissionInterceptor.getLoginUser(request);
+
+		return xxlJobService.remove(loginUser, id);
 	}
 	
 	@RequestMapping("/stop")
 	@ResponseBody
-	public ReturnT<String> pause(@RequestParam("id") int id) {
-		return xxlJobService.stop(id);
+	public ReturnT<String> pause(HttpServletRequest request,
+								 @RequestParam("id") int id) {
+		// login user
+		XxlJobUser loginUser = PermissionInterceptor.getLoginUser(request);
+
+		return xxlJobService.stop(loginUser, id);
 	}
 	
 	@RequestMapping("/start")
 	@ResponseBody
-	public ReturnT<String> start(@RequestParam("id") int id) {
-		return xxlJobService.start(id);
+	public ReturnT<String> start(HttpServletRequest request,
+								 @RequestParam("id") int id) {
+		// login user
+		XxlJobUser loginUser = PermissionInterceptor.getLoginUser(request);
+
+		return xxlJobService.start(loginUser, id);
 	}
 	
 	@RequestMapping("/trigger")
