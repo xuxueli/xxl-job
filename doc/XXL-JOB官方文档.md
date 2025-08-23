@@ -2555,8 +2555,10 @@ public void execute() {
 - 9、【修复】合并PR-3747，修复异常情况下资源泄漏风险；
 - 10、【优化】调度中心系统日志调整，支持启动时指定 -DLOG_HOME 参数自定义日志位置；同时优化日志格式提升易读性；
 - 11、【新增】GLUE模式(Python) 扩展，可选 "GLUE(Python3)" 或 "GLUE(Python2)" 两种模式，分别支持 python3/2 多版本；  
-
-- 3、【规划中】登录安全升级，密码加密处理算法从Md5改为Sha256；
+- 12、【优化】任务Bean扫描规则调整，过滤冗余不必要扫描，避免系统组件提前初始化；
+- 
+- 13、【ING】底层组件移除单例写法，汇总factory统一管理；
+- 14、【ING】登录安全升级，密码加密处理算法从Md5改为Sha256；
 ```
 // 1、用户表password字段需要调整长度，执行如下命令
 ALTER TABLE xxl_conf_user
@@ -2565,9 +2567,8 @@ ALTER TABLE xxl_conf_user
 // 2、存量用户密码需要修改，可执行如下命令将密码初始化 “123456”；也可以自行通过 “SHA256Tool.sha256” 工具生成其他初始化密码；
 UPDATE xxl_conf_user t SET t.password = '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92' WHERE t.username = {用户名};
 ```
-- 2、【规划中】登录认证重构，规范登录态以及权限认证逻辑，提升系统安全；
-- 1、【规划中】登陆态Token生成逻辑优化，混淆登陆时间属性，降低token泄漏风险；
-- 2、【规划中】组件扫描改为BeanPostProcessor方式，避免小概率情况下提前初始化；底层组件移除单例写法，汇总factory统一管理；
+- 2、【规划中】登录认证重构，规范登录态以及权限认证逻辑，提升系统安全；登陆态Token生成逻辑优化，混淆登陆时间属性，降低token泄漏风险；
+
 
 
 ### TODO LIST
