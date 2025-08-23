@@ -9,11 +9,13 @@
 
     <#-- biz start（1/5 style） -->
     <#-- biz end（1/5 end） -->
+
 </head>
-<body class="hold-transition skin-blue sidebar-mini">
+<body class="hold-transition skin-blue layout-top-nav">
 <div class="wrapper">
 
     <!-- header -->
+    <#-- biz start（2/5 style） -->
     <header class="main-header">
         <nav class="navbar navbar-static-top">
             <div class="container">
@@ -47,28 +49,24 @@
             </div>
         </nav>
     </header>
-
-    <!-- left -->
-    <#-- biz start（2/5 left） -->
-    <#-- biz end（2/5 left） -->
+    <#-- biz end（2/5 end） -->
 
     <!-- right start -->
     <div class="content-wrapper" >
 
-        <!-- content-header -->
         <#-- biz start（3/5 name） -->
         <#-- biz end（3/5 name） -->
 
         <!-- content-main -->
         <section class="content">
-            <#-- biz start（4/5 content） -->
 
+            <#-- biz start（4/5 content） -->
             <pre style="font-size:12px;position:relative;" >
                 <div id="logConsole"></div>
                 <li class="fa fa-refresh fa-spin" style="font-size: 20px;float: left;" id="logConsoleRunning" ></li>
             </pre>
-
             <#-- biz end（4/5 content） -->
+
         </section>
     </div>
     <!-- right end -->
