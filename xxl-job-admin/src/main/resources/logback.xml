@@ -2,8 +2,8 @@
 <configuration debug="false" scan="true" scanPeriod="1 seconds">
 
     <contextName>logback</contextName>
-    <property name="log.path" value="/data/applogs/xxl-job/xxl-job-admin.log"/>
-
+    <!--System.setProperty("LOG_HOME", "/data/applogs");-->
+    <property name="log.path" value="${LOG_HOME:-/data/applogs}/xxl-job/xxl-job-admin.log" />
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
