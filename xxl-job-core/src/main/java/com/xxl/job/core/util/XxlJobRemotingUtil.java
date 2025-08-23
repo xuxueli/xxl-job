@@ -68,6 +68,7 @@ public class XxlJobRemotingUtil {
     public static ReturnT postBody(String url, String accessToken, int timeout, Object requestObj, Class returnTargClassOfT) {
         HttpURLConnection connection = null;
         BufferedReader bufferedReader = null;
+        DataOutputStream dataOutputStream = null;
         try {
             // connection
             URL realUrl = new URL(url);
@@ -102,7 +103,7 @@ public class XxlJobRemotingUtil {
             if (requestObj != null) {
                 String requestBody = GsonTool.toJson(requestObj);
 
-                DataOutputStream dataOutputStream = new DataOutputStream(connection.getOutputStream());
+                dataOutputStream = new DataOutputStream(connection.getOutputStream());
                 dataOutputStream.write(requestBody.getBytes("UTF-8"));
                 dataOutputStream.flush();
                 dataOutputStream.close();
@@ -144,6 +145,9 @@ public class XxlJobRemotingUtil {
             return new ReturnT<String>(ReturnT.FAIL_CODE, "xxl-job remoting error("+ e.getMessage() +"), for url : " + url);
         } finally {
             try {
+                if (dataOutputStream != null) {
+                    dataOutputStream.close();
+                }
                 if (bufferedReader != null) {
                     bufferedReader.close();
                 }
