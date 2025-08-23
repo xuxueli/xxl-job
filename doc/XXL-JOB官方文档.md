@@ -1206,7 +1206,8 @@ public void demoJobHandler() throws Exception {
 ```
 {
     "input": "{输入信息，必填信息}",
-    "prompt": "{模型prompt，可选信息}"
+    "prompt": "{模型prompt，可选信息}",
+    "model": "{模型实现，如qwen3:0.6b，可选信息}"
 }
 ```
 - b、difyWorkflowJobHandler：DifyWorkflow 任务，支持自定义inputs、user、baseUrl、apiKey 等输入信息，示例参数如下；
@@ -2543,7 +2544,9 @@ public void execute() {
 
 
 ### 7.40 版本 v3.2.0 Release Notes[规划中]
-- 1、【规划中】登录安全升级，密码加密处理算法从Md5改为Sha256；
+- 1、【强化】AI任务（ollamaJobHandler）优化：针对 “model” 模型配置信息，从执行器侧文件类配置调整至调度中心“任务参数”动态配置，支持集成多模型、并结合任务动态配置切换。
+- 2、【升级】升级多项maven依赖至较新版本，如 spring-ai、dify 等；
+- 3、【规划中】登录安全升级，密码加密处理算法从Md5改为Sha256；
 ```
 // 1、用户表password字段需要调整长度，执行如下命令
 ALTER TABLE xxl_conf_user
@@ -2555,7 +2558,6 @@ UPDATE xxl_conf_user t SET t.password = '8d969eef6ecad3c29a3a629280e686cf0c3f5d5
 - 2、【规划中】登录态持久化逻辑调整，简化代码逻辑；
 - 3、【规划中】异常页面处理逻辑优化，新增兜底落地页配置；
 - 4、【规划中】登录信息页面空值处理优化，避免空值影响ftl渲染；
-- 5、【规划中】升级多项maven依赖至较新版本，如 xxl-tool、gson、junit 等；
 - 1、【规划中】登陆态Token生成逻辑优化，混淆登陆时间属性，降低token泄漏风险；
 - 2、【规划中】组件扫描改为BeanPostProcessor方式，避免小概率情况下提前初始化；底层组件移除单例写法，汇总factory统一管理；
 
