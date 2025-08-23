@@ -1160,7 +1160,7 @@ Bean模式任务，支持基于方法的开发方式，每个任务对应一个�
     4、任务结果：默认任务结果为 "成功" 状态，不需要主动设置；如有诉求，比如设置任务结果为失败，可以通过 "XxlJobHelper.handleFail/handleSuccess" 自主设置任务结果；
 
 ```
-// 可参考Sample示例执行器中的 "com.xxl.job.executor.service.jobhandler.SampleXxlJob" ，如下：
+// 可参考Sample示例执行器中的 "com.xxl.job.executor.jobhandler.SampleXxlJob" ，如下：
 @XxlJob("demoJobHandler")
 public void demoJobHandler() throws Exception {
     XxlJobHelper.log("XXL-JOB, Hello World.");
