@@ -1,11 +1,10 @@
 package com.xxl.job.admin.controller.biz;
 
-import com.xxl.job.admin.web.xxlsso.PermissionInterceptor;
+import com.xxl.job.admin.mapper.XxlJobInfoMapper;
+import com.xxl.job.admin.mapper.XxlJobLogGlueMapper;
 import com.xxl.job.admin.model.XxlJobInfo;
 import com.xxl.job.admin.model.XxlJobLogGlue;
 import com.xxl.job.admin.util.I18nUtil;
-import com.xxl.job.admin.mapper.XxlJobInfoMapper;
-import com.xxl.job.admin.mapper.XxlJobLogGlueMapper;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.glue.GlueTypeEnum;
 import jakarta.annotation.Resource;
@@ -44,8 +43,8 @@ public class JobCodeController {
 			throw new RuntimeException(I18nUtil.getString("jobinfo_glue_gluetype_unvalid"));
 		}
 
-		// valid permission
-		PermissionInterceptor.validJobGroupPermission(request, jobInfo.getJobGroup());
+		// valid jobGroup permission
+		JobInfoController.validJobGroupPermission(request, jobInfo.getJobGroup());
 
 		// Glue类型-字典
 		model.addAttribute("GlueTypeEnum", GlueTypeEnum.values());
@@ -74,9 +73,9 @@ public class JobCodeController {
 			return new ReturnT<String>(500, I18nUtil.getString("jobinfo_glue_jobid_unvalid"));
 		}
 
-		// valid permission
-		PermissionInterceptor.validJobGroupPermission(request, existsJobInfo.getJobGroup());
-		
+		// valid jobGroup permission
+		JobInfoController.validJobGroupPermission(request, existsJobInfo.getJobGroup());
+
 		// update new code
 		existsJobInfo.setGlueSource(glueSource);
 		existsJobInfo.setGlueRemark(glueRemark);

@@ -1,23 +1,25 @@
 package com.xxl.job.admin.service.impl;
 
-import com.xxl.job.admin.scheduler.cron.CronExpression;
+import com.xxl.job.admin.controller.biz.JobInfoController;
+import com.xxl.job.admin.mapper.*;
 import com.xxl.job.admin.model.XxlJobGroup;
 import com.xxl.job.admin.model.XxlJobInfo;
 import com.xxl.job.admin.model.XxlJobLogReport;
 import com.xxl.job.admin.model.XxlJobUser;
+import com.xxl.job.admin.scheduler.cron.CronExpression;
 import com.xxl.job.admin.scheduler.route.ExecutorRouteStrategyEnum;
 import com.xxl.job.admin.scheduler.scheduler.MisfireStrategyEnum;
 import com.xxl.job.admin.scheduler.scheduler.ScheduleTypeEnum;
 import com.xxl.job.admin.scheduler.thread.JobScheduleHelper;
 import com.xxl.job.admin.scheduler.thread.JobTriggerPoolHelper;
 import com.xxl.job.admin.scheduler.trigger.TriggerTypeEnum;
-import com.xxl.job.admin.util.I18nUtil;
-import com.xxl.job.admin.mapper.*;
 import com.xxl.job.admin.service.XxlJobService;
+import com.xxl.job.admin.util.I18nUtil;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
 import com.xxl.job.core.glue.GlueTypeEnum;
 import com.xxl.job.core.util.DateUtil;
+import com.xxl.sso.core.model.LoginInfo;
 import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,7 +63,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 	}
 
 	@Override
-	public ReturnT<String> add(XxlJobInfo jobInfo, XxlJobUser loginUser) {
+	public ReturnT<String> add(XxlJobInfo jobInfo, LoginInfo loginInfo) {
 
 		// valid base
 		XxlJobGroup group = xxlJobGroupMapper.load(jobInfo.getJobGroup());
@@ -131,7 +133,8 @@ public class XxlJobServiceImpl implements XxlJobService {
 						return new ReturnT<String>(ReturnT.FAIL_CODE,
 								MessageFormat.format((I18nUtil.getString("jobinfo_field_childJobId")+"({0})"+I18nUtil.getString("system_not_found")), childJobIdItem));
 					}
-					if (!loginUser.validPermission(childJobInfo.getJobGroup())) {
+					// valid jobGroup permission
+					if (!JobInfoController.hasJobGroupPermission(loginInfo, childJobInfo.getJobGroup())) {
 						return new ReturnT<String>(ReturnT.FAIL_CODE,
 								MessageFormat.format((I18nUtil.getString("jobinfo_field_childJobId")+"({0})"+I18nUtil.getString("system_permission_limit")), childJobIdItem));
 					}
@@ -175,7 +178,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 	}
 
 	@Override
-	public ReturnT<String> update(XxlJobInfo jobInfo, XxlJobUser loginUser) {
+	public ReturnT<String> update(XxlJobInfo jobInfo, LoginInfo loginInfo) {
 
 		// valid base
 		if (jobInfo.getJobDesc()==null || jobInfo.getJobDesc().trim().length()==0) {
@@ -236,7 +239,8 @@ public class XxlJobServiceImpl implements XxlJobService {
 						return new ReturnT<String>(ReturnT.FAIL_CODE,
 								MessageFormat.format((I18nUtil.getString("jobinfo_field_childJobId")+"({0})"+I18nUtil.getString("system_not_found")), childJobIdItem));
 					}
-					if (!loginUser.validPermission(childJobInfo.getJobGroup())) {
+					// valid jobGroup permission
+					if (!JobInfoController.hasJobGroupPermission(loginInfo, childJobInfo.getJobGroup())) {
 						return new ReturnT<String>(ReturnT.FAIL_CODE,
 								MessageFormat.format((I18nUtil.getString("jobinfo_field_childJobId")+"({0})"+I18nUtil.getString("system_permission_limit")), childJobIdItem));
 					}
@@ -378,16 +382,17 @@ public class XxlJobServiceImpl implements XxlJobService {
 
 
 	@Override
-	public ReturnT<String> trigger(XxlJobUser loginUser, int jobId, String executorParam, String addressList) {
+	public ReturnT<String> trigger(LoginInfo loginInfo, int jobId, String executorParam, String addressList) {
 		// permission
-		if (loginUser == null) {
+		if (loginInfo == null) {
 			return ReturnT.ofFail(I18nUtil.getString("system_permission_limit"));
 		}
 		XxlJobInfo xxlJobInfo = xxlJobInfoMapper.loadById(jobId);
 		if (xxlJobInfo == null) {
 			return ReturnT.ofFail(I18nUtil.getString("jobinfo_glue_jobid_unvalid"));
 		}
-		if (!hasPermission(loginUser, xxlJobInfo.getJobGroup())) {
+
+		if (!JobInfoController.hasJobGroupPermission(loginInfo, xxlJobInfo.getJobGroup())) {
 			return ReturnT.ofFail(I18nUtil.getString("system_permission_limit"));
 		}
 
@@ -398,17 +403,6 @@ public class XxlJobServiceImpl implements XxlJobService {
 
 		JobTriggerPoolHelper.trigger(jobId, TriggerTypeEnum.MANUAL, -1, null, executorParam, addressList);
 		return ReturnT.ofSuccess();
-	}
-
-	private boolean hasPermission(XxlJobUser loginUser, int jobGroup){
-		if (loginUser.getRole() == 1) {
-			return true;
-		}
-		List<String> groupIdStrs = new ArrayList<>();
-		if (loginUser.getPermission()!=null && loginUser.getPermission().trim().length()>0) {
-			groupIdStrs = Arrays.asList(loginUser.getPermission().trim().split(","));
-		}
-		return groupIdStrs.contains(String.valueOf(jobGroup));
 	}
 
 	@Override

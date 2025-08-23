@@ -1,8 +1,16 @@
 package com.xxl.job.admin.controller.login;
 
-import com.xxl.job.admin.annotation.PermissionLimit;
-import com.xxl.job.admin.service.impl.LoginService;
+import com.xxl.job.admin.mapper.XxlJobUserMapper;
+import com.xxl.job.admin.model.XxlJobUser;
+import com.xxl.job.admin.util.I18nUtil;
 import com.xxl.job.core.biz.model.ReturnT;
+import com.xxl.sso.core.annotation.XxlSso;
+import com.xxl.sso.core.helper.XxlSsoHelper;
+import com.xxl.sso.core.model.LoginInfo;
+import com.xxl.tool.core.StringTool;
+import com.xxl.tool.encrypt.SHA256Tool;
+import com.xxl.tool.id.UUIDTool;
+import com.xxl.tool.response.Response;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -22,39 +30,65 @@ import org.springframework.web.servlet.view.RedirectView;
 @RequestMapping("/auth")
 public class LoginController {
 
-
 	@Resource
-	private LoginService loginService;
+	private XxlJobUserMapper xxlJobUserMapper;
 
+	@RequestMapping("/login")
+	@XxlSso(login = false)
+	public ModelAndView login(HttpServletRequest request, HttpServletResponse response, ModelAndView modelAndView) {
 
-	@RequestMapping("/toLogin")
-	@PermissionLimit(limit=false)
-	public ModelAndView toLogin(HttpServletRequest request, HttpServletResponse response, ModelAndView modelAndView) {
-		if (loginService.ifLogin(request, response) != null) {
+		// xxl-sso, logincheck
+		Response<LoginInfo> loginInfoResponse = XxlSsoHelper.loginCheckWithCookie(request, response);
+		if (loginInfoResponse.isSuccess()) {
 			modelAndView.setView(new RedirectView("/",true,false));
 			return modelAndView;
 		}
+
 		return new ModelAndView("login");
 	}
 
-	@RequestMapping(value="/login", method=RequestMethod.POST)
+	@RequestMapping(value="/doLogin", method=RequestMethod.POST)
 	@ResponseBody
-	@PermissionLimit(limit=false)
-	public ReturnT<String> loginDo(HttpServletRequest request,
-								   HttpServletResponse response,
-								   @RequestParam("userName") String userName,
-								   @RequestParam("password") String password,
-								   @RequestParam(value = "ifRemember", required = false) String ifRemember){
+	@XxlSso(login = false)
+	public ReturnT<String> doLogin(HttpServletRequest request,
+									HttpServletResponse response,
+									@RequestParam("userName") String userName,
+									@RequestParam("password") String password,
+									@RequestParam(value = "ifRemember", required = false) String ifRemember){
 
-		boolean ifRem = (ifRemember!=null && ifRemember.trim().length()>0 && "on".equals(ifRemember))?true:false;
-		return loginService.login(request, response, userName, password, ifRem);
+		// param
+		boolean ifRem = StringTool.isNotBlank(ifRemember) && "on".equals(ifRemember);
+		if (StringTool.isBlank(userName) || StringTool.isBlank(password)){
+			return ReturnT.ofFail( I18nUtil.getString("login_param_empty") );
+		}
+
+		// valid user、status
+		XxlJobUser xxlJobUser = xxlJobUserMapper.loadByUserName(userName);
+		if (xxlJobUser == null) {
+			return ReturnT.ofFail( I18nUtil.getString("login_param_unvalid") );
+		}
+
+		// valid passowrd
+		String passwordHash = SHA256Tool.sha256(password);
+		if (!passwordHash.equals(xxlJobUser.getPassword())) {
+			return ReturnT.ofFail( I18nUtil.getString("login_param_unvalid") );
+		}
+
+		// xxl-sso, do login
+		LoginInfo loginInfo = new LoginInfo(String.valueOf(xxlJobUser.getId()), UUIDTool.getSimpleUUID());
+		Response<String> result= XxlSsoHelper.loginWithCookie(loginInfo, response, ifRem);
+
+		return ReturnT.of(result.getCode(), result.getMsg());
 	}
 
 	@RequestMapping(value="/logout", method=RequestMethod.POST)
 	@ResponseBody
-	@PermissionLimit(limit=false)
+	@XxlSso(login = false)
 	public ReturnT<String> logout(HttpServletRequest request, HttpServletResponse response){
-		return loginService.logout(request, response);
+		// xxl-sso, do logout
+		Response<String> result = XxlSsoHelper.logoutWithCookie(request, response);
+
+		return ReturnT.of(result.getCode(), result.getMsg());
 	}
 
 }

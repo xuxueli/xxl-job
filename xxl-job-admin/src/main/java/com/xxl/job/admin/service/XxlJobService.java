@@ -4,6 +4,7 @@ package com.xxl.job.admin.service;
 import com.xxl.job.admin.model.XxlJobInfo;
 import com.xxl.job.admin.model.XxlJobUser;
 import com.xxl.job.core.biz.model.ReturnT;
+import com.xxl.sso.core.model.LoginInfo;
 
 import java.util.Date;
 import java.util.Map;
@@ -34,7 +35,7 @@ public interface XxlJobService {
 	 * @param jobInfo
 	 * @return
 	 */
-	public ReturnT<String> add(XxlJobInfo jobInfo, XxlJobUser loginUser);
+	public ReturnT<String> add(XxlJobInfo jobInfo, LoginInfo loginInfo);
 
 	/**
 	 * update job
@@ -42,7 +43,7 @@ public interface XxlJobService {
 	 * @param jobInfo
 	 * @return
 	 */
-	public ReturnT<String> update(XxlJobInfo jobInfo, XxlJobUser loginUser);
+	public ReturnT<String> update(XxlJobInfo jobInfo, LoginInfo loginInfo);
 
 	/**
 	 * remove job
@@ -71,13 +72,13 @@ public interface XxlJobService {
 	/**
 	 * trigger
 	 *
-	 * @param loginUser
+	 * @param loginInfo
 	 * @param jobId
 	 * @param executorParam
 	 * @param addressList
 	 * @return
 	 */
-	public ReturnT<String> trigger(XxlJobUser loginUser, int jobId, String executorParam, String addressList);
+	public ReturnT<String> trigger(LoginInfo loginInfo, int jobId, String executorParam, String addressList);
 
 	/**
 	 * dashboard info

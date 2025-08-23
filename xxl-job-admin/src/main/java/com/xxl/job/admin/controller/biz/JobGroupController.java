@@ -1,6 +1,6 @@
 package com.xxl.job.admin.controller.biz;
 
-import com.xxl.job.admin.annotation.PermissionLimit;
+import com.xxl.job.admin.constant.Consts;
 import com.xxl.job.admin.model.XxlJobGroup;
 import com.xxl.job.admin.model.XxlJobRegistry;
 import com.xxl.job.admin.util.I18nUtil;
@@ -9,6 +9,7 @@ import com.xxl.job.admin.mapper.XxlJobInfoMapper;
 import com.xxl.job.admin.mapper.XxlJobRegistryMapper;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.enums.RegistryConfig;
+import com.xxl.sso.core.annotation.XxlSso;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
@@ -35,14 +36,14 @@ public class JobGroupController {
 	private XxlJobRegistryMapper xxlJobRegistryMapper;
 
 	@RequestMapping
-	@PermissionLimit(adminuser = true)
+	@XxlSso(role = Consts.ADMIN_ROLE)
 	public String index(Model model) {
 		return "jobgroup/jobgroup.index";
 	}
 
 	@RequestMapping("/pageList")
 	@ResponseBody
-	@PermissionLimit(adminuser = true)
+	@XxlSso(role = Consts.ADMIN_ROLE)
 	public Map<String, Object> pageList(HttpServletRequest request,
 										@RequestParam(value = "start", required = false, defaultValue = "0") int start,
 										@RequestParam(value = "length", required = false, defaultValue = "10") int length,
@@ -63,7 +64,7 @@ public class JobGroupController {
 
 	@RequestMapping("/save")
 	@ResponseBody
-	@PermissionLimit(adminuser = true)
+	@XxlSso(role = Consts.ADMIN_ROLE)
 	public ReturnT<String> save(XxlJobGroup xxlJobGroup){
 
 		// valid
@@ -107,7 +108,7 @@ public class JobGroupController {
 
 	@RequestMapping("/update")
 	@ResponseBody
-	@PermissionLimit(adminuser = true)
+	@XxlSso(role = Consts.ADMIN_ROLE)
 	public ReturnT<String> update(XxlJobGroup xxlJobGroup){
 		// valid
 		if (xxlJobGroup.getAppname()==null || xxlJobGroup.getAppname().trim().length()==0) {
@@ -176,7 +177,7 @@ public class JobGroupController {
 
 	@RequestMapping("/remove")
 	@ResponseBody
-	@PermissionLimit(adminuser = true)
+	@XxlSso(role = Consts.ADMIN_ROLE)
 	public ReturnT<String> remove(@RequestParam("id") int id){
 
 		// valid
@@ -196,7 +197,7 @@ public class JobGroupController {
 
 	@RequestMapping("/loadById")
 	@ResponseBody
-	@PermissionLimit(adminuser = true)
+	@XxlSso(role = Consts.ADMIN_ROLE)
 	public ReturnT<XxlJobGroup> loadById(@RequestParam("id") int id){
 		XxlJobGroup jobGroup = xxlJobGroupMapper.load(id);
 		return jobGroup!=null?ReturnT.ofSuccess(jobGroup):ReturnT.ofFail();

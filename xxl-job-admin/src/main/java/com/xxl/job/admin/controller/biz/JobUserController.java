@@ -1,14 +1,17 @@
 package com.xxl.job.admin.controller.biz;
 
-import com.xxl.job.admin.annotation.PermissionLimit;
+import com.xxl.job.admin.constant.Consts;
 import com.xxl.job.admin.mapper.XxlJobGroupMapper;
 import com.xxl.job.admin.mapper.XxlJobUserMapper;
 import com.xxl.job.admin.model.XxlJobGroup;
 import com.xxl.job.admin.model.XxlJobUser;
 import com.xxl.job.admin.util.I18nUtil;
-import com.xxl.job.admin.web.xxlsso.PermissionInterceptor;
 import com.xxl.job.core.biz.model.ReturnT;
+import com.xxl.sso.core.annotation.XxlSso;
+import com.xxl.sso.core.helper.XxlSsoHelper;
+import com.xxl.sso.core.model.LoginInfo;
 import com.xxl.tool.encrypt.SHA256Tool;
+import com.xxl.tool.response.Response;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
@@ -35,7 +38,7 @@ public class JobUserController {
     private XxlJobGroupMapper xxlJobGroupMapper;
 
     @RequestMapping
-    @PermissionLimit(adminuser = true)
+    @XxlSso(role = Consts.ADMIN_ROLE)
     public String index(Model model) {
 
         // 执行器列表
@@ -47,7 +50,7 @@ public class JobUserController {
 
     @RequestMapping("/pageList")
     @ResponseBody
-    @PermissionLimit(adminuser = true)
+    @XxlSso(role = Consts.ADMIN_ROLE)
     public Map<String, Object> pageList(@RequestParam(value = "start", required = false, defaultValue = "0") int start,
                                         @RequestParam(value = "length", required = false, defaultValue = "10") int length,
                                         @RequestParam("username") String username,
@@ -74,7 +77,7 @@ public class JobUserController {
 
     @RequestMapping("/add")
     @ResponseBody
-    @PermissionLimit(adminuser = true)
+    @XxlSso(role = Consts.ADMIN_ROLE)
     public ReturnT<String> add(XxlJobUser xxlJobUser) {
 
         // valid username
@@ -110,12 +113,12 @@ public class JobUserController {
 
     @RequestMapping("/update")
     @ResponseBody
-    @PermissionLimit(adminuser = true)
+    @XxlSso(role = Consts.ADMIN_ROLE)
     public ReturnT<String> update(HttpServletRequest request, XxlJobUser xxlJobUser) {
 
         // avoid opt login seft
-        XxlJobUser loginUser = PermissionInterceptor.getLoginUser(request);
-        if (loginUser.getUsername().equals(xxlJobUser.getUsername())) {
+        Response<LoginInfo> loginInfoResponse = XxlSsoHelper.loginCheckWithAttr(request);
+        if (loginInfoResponse.getData().getUserName().equals(xxlJobUser.getUsername())) {
             return ReturnT.ofFail(I18nUtil.getString("user_update_loginuser_limit"));
         }
 
@@ -139,12 +142,12 @@ public class JobUserController {
 
     @RequestMapping("/remove")
     @ResponseBody
-    @PermissionLimit(adminuser = true)
+    @XxlSso(role = Consts.ADMIN_ROLE)
     public ReturnT<String> remove(HttpServletRequest request, @RequestParam("id") int id) {
 
         // avoid opt login seft
-        XxlJobUser loginUser = PermissionInterceptor.getLoginUser(request);
-        if (loginUser.getId() == id) {
+        Response<LoginInfo> loginInfoResponse = XxlSsoHelper.loginCheckWithAttr(request);
+        if (Integer.parseInt(loginInfoResponse.getData().getUserId()) == id) {
             return ReturnT.ofFail(I18nUtil.getString("user_update_loginuser_limit"));
         }
 
@@ -175,8 +178,8 @@ public class JobUserController {
         String passwordHash = SHA256Tool.sha256(password);
 
         // valid old pwd
-        XxlJobUser loginUser = PermissionInterceptor.getLoginUser(request);
-        XxlJobUser existUser = xxlJobUserMapper.loadByUserName(loginUser.getUsername());
+        Response<LoginInfo> loginInfoResponse = XxlSsoHelper.loginCheckWithAttr(request);
+        XxlJobUser existUser = xxlJobUserMapper.loadByUserName(loginInfoResponse.getData().getUserName());
         if (!oldPasswordHash.equals(existUser.getPassword())) {
             return ReturnT.ofFail(I18nUtil.getString("change_pwd_field_oldpwd") + I18nUtil.getString("system_unvalid"));
         }

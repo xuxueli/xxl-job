@@ -1,16 +1,15 @@
 package com.xxl.job.admin.controller.biz;
 
-import com.xxl.job.admin.web.xxlsso.PermissionInterceptor;
-import com.xxl.job.admin.scheduler.complete.XxlJobCompleter;
-import com.xxl.job.admin.scheduler.exception.XxlJobException;
-import com.xxl.job.admin.model.XxlJobGroup;
-import com.xxl.job.admin.model.XxlJobInfo;
-import com.xxl.job.admin.model.XxlJobLog;
-import com.xxl.job.admin.scheduler.scheduler.XxlJobScheduler;
-import com.xxl.job.admin.util.I18nUtil;
 import com.xxl.job.admin.mapper.XxlJobGroupMapper;
 import com.xxl.job.admin.mapper.XxlJobInfoMapper;
 import com.xxl.job.admin.mapper.XxlJobLogMapper;
+import com.xxl.job.admin.model.XxlJobGroup;
+import com.xxl.job.admin.model.XxlJobInfo;
+import com.xxl.job.admin.model.XxlJobLog;
+import com.xxl.job.admin.scheduler.complete.XxlJobCompleter;
+import com.xxl.job.admin.scheduler.exception.XxlJobException;
+import com.xxl.job.admin.scheduler.scheduler.XxlJobScheduler;
+import com.xxl.job.admin.util.I18nUtil;
 import com.xxl.job.core.biz.ExecutorBiz;
 import com.xxl.job.core.biz.model.KillParam;
 import com.xxl.job.core.biz.model.LogParam;
@@ -54,11 +53,11 @@ public class JobLogController {
 	public String index(HttpServletRequest request, Model model, @RequestParam(value = "jobId", required = false, defaultValue = "0") Integer jobId) {
 
 		// 执行器列表
-		List<XxlJobGroup> jobGroupList_all =  xxlJobGroupMapper.findAll();
+		List<XxlJobGroup> jobGroupListTotal =  xxlJobGroupMapper.findAll();
 
 		// filter group
-		List<XxlJobGroup> jobGroupList = PermissionInterceptor.filterJobGroupByRole(request, jobGroupList_all);
-		if (jobGroupList==null || jobGroupList.size()==0) {
+		List<XxlJobGroup> jobGroupList = JobInfoController.filterJobGroupByPermission(request, jobGroupListTotal);
+		if (jobGroupList==null || jobGroupList.isEmpty()) {
 			throw new XxlJobException(I18nUtil.getString("jobgroup_empty"));
 		}
 
@@ -74,7 +73,7 @@ public class JobLogController {
 			model.addAttribute("jobInfo", jobInfo);
 
 			// valid permission
-			PermissionInterceptor.validJobGroupPermission(request, jobInfo.getJobGroup());
+			JobInfoController.validJobGroupPermission(request, jobInfo.getJobGroup());
 		}
 
 		return "joblog/joblog.index";
@@ -97,9 +96,9 @@ public class JobLogController {
 										@RequestParam("logStatus") int logStatus,
 										@RequestParam("filterTime") String filterTime) {
 
-		// valid permission
-		PermissionInterceptor.validJobGroupPermission(request, jobGroup);	// 仅管理员支持查询全部；普通用户仅支持查询有权限的 jobGroup
-		
+		// valid jobGroup permission
+		JobInfoController.validJobGroupPermission(request, jobGroup);
+
 		// parse param
 		Date triggerTimeStart = null;
 		Date triggerTimeEnd = null;
@@ -133,7 +132,7 @@ public class JobLogController {
 		}
 
 		// valid permission
-		PermissionInterceptor.validJobGroupPermission(request, jobLog.getJobGroup());
+		JobInfoController.validJobGroupPermission(request, jobLog.getJobGroup());
 
 		// data
         model.addAttribute("triggerCode", jobLog.getTriggerCode());
@@ -249,7 +248,7 @@ public class JobLogController {
 									@RequestParam("jobId") int jobId,
 									@RequestParam("type") int type){
 		// valid permission
-		PermissionInterceptor.validJobGroupPermission(request, jobGroup);
+		JobInfoController.validJobGroupPermission(request, jobGroup);
 
 		// opt
 		Date clearBeforeTime = null;

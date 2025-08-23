@@ -5,6 +5,7 @@ import com.xxl.tool.freemarker.FtlTool;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.AsyncHandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -18,7 +19,7 @@ import java.util.HashMap;
  *
  * @author xuxueli 2015-12-12 18:09:04
  */
-@Component
+@Configuration
 public class CommonDataInterceptor implements WebMvcConfigurer {
 
 	@Override

@@ -1,13 +1,13 @@
 package com.xxl.job.admin.controller.biz;
 
-import com.xxl.job.admin.annotation.PermissionLimit;
 import com.xxl.job.admin.scheduler.conf.XxlJobAdminConfig;
 import com.xxl.job.core.biz.AdminBiz;
 import com.xxl.job.core.biz.model.HandleCallbackParam;
 import com.xxl.job.core.biz.model.RegistryParam;
 import com.xxl.job.core.biz.model.ReturnT;
-import com.xxl.job.core.util.GsonTool;
 import com.xxl.job.core.util.XxlJobRemotingUtil;
+import com.xxl.sso.core.annotation.XxlSso;
+import com.xxl.tool.gson.GsonTool;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
@@ -37,7 +37,7 @@ public class JobApiController {
      */
     @RequestMapping("/{uri}")
     @ResponseBody
-    @PermissionLimit(limit=false)
+    @XxlSso(login = false)
     public ReturnT<String> api(HttpServletRequest request, @PathVariable("uri") String uri, @RequestBody(required = false) String data) {
 
         // valid
