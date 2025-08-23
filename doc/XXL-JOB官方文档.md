@@ -1,10 +1,10 @@
 ## 《分布式任务调度平台XXL-JOB》
 
-[![Actions Status](https://github.com/xuxueli/xxl-job/workflows/Java%20CI/badge.svg)](https://github.com/xuxueli/xxl-job/actions)
+[![Build Status](https://github.com/xuxueli/xxl-job/workflows/Java%20CI/badge.svg)](https://github.com/xuxueli/xxl-job/actions)
 [![Maven Central](https://img.shields.io/maven-central/v/com.xuxueli/xxl-job-core)](https://central.sonatype.com/artifact/com.xuxueli/xxl-job-core)
 [![GitHub release](https://img.shields.io/github/release/xuxueli/xxl-job.svg)](https://github.com/xuxueli/xxl-job/releases)
 [![GitHub stars](https://img.shields.io/github/stars/xuxueli/xxl-job)](https://github.com/xuxueli/xxl-job/)
-[![Docker Status](https://img.shields.io/docker/pulls/xuxueli/xxl-job-admin)](https://hub.docker.com/r/xuxueli/xxl-job-admin/)
+[![Docker pulls](https://img.shields.io/docker/pulls/xuxueli/xxl-job-admin)](https://hub.docker.com/r/xuxueli/xxl-job-admin/)
 [![License](https://img.shields.io/badge/license-GPLv3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0.html)
 [![donate](https://img.shields.io/badge/%24-donate-ff69b4.svg?style=flat)](https://www.xuxueli.com/page/donate.html)
 
@@ -2542,9 +2542,22 @@ public void execute() {
 - 4、【升级】多个项目依赖升级至较新稳定版本，涉及 netty、spring/springboot、groovy 等；
 
 
-### 7.40 版本 v3.1.2 Release Notes[规划中]
-- 1、[规划中]登陆态Token生成逻辑优化，混淆登陆时间属性，降低token泄漏风险；
-- 2、[规划中]组件扫描改为BeanPostProcessor方式，避免小概率情况下提前初始化；底层组件移除单例写法，汇总factory统一管理；
+### 7.40 版本 v3.2.0 Release Notes[规划中]
+- 1、【规划中】登录安全升级，密码加密处理算法从Md5改为Sha256；
+```
+// 1、用户表password字段需要调整长度，执行如下命令
+ALTER TABLE xxl_conf_user
+    MODIFY COLUMN `password` varchar(100) NOT NULL COMMENT '密码加密信息';
+    
+// 2、存量用户密码需要修改，可执行如下命令将密码初始化 “123456”；也可以自行通过 “SHA256Tool.sha256” 工具生成其他初始化密码；
+UPDATE xxl_conf_user t SET t.password = '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92' WHERE t.username = {用户名};
+```
+- 2、【规划中】登录态持久化逻辑调整，简化代码逻辑；
+- 3、【规划中】异常页面处理逻辑优化，新增兜底落地页配置；
+- 4、【规划中】登录信息页面空值处理优化，避免空值影响ftl渲染；
+- 5、【规划中】升级多项maven依赖至较新版本，如 xxl-tool、gson、junit 等；
+- 1、【规划中】登陆态Token生成逻辑优化，混淆登陆时间属性，降低token泄漏风险；
+- 2、【规划中】组件扫描改为BeanPostProcessor方式，避免小概率情况下提前初始化；底层组件移除单例写法，汇总factory统一管理；
 
 
 ### TODO LIST
