@@ -1,16 +1,16 @@
 package com.xxl.job.admin.service.impl;
 
+import com.xxl.job.admin.mapper.XxlJobUserDao;
 import com.xxl.job.admin.model.XxlJobUser;
 import com.xxl.job.admin.util.CookieUtil;
 import com.xxl.job.admin.util.I18nUtil;
 import com.xxl.job.admin.util.JacksonUtil;
-import com.xxl.job.admin.mapper.XxlJobUserDao;
 import com.xxl.job.core.biz.model.ReturnT;
+import com.xxl.tool.encrypt.SHA256Tool;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Service;
-import org.springframework.util.DigestUtils;
 
 import java.math.BigInteger;
 
@@ -57,8 +57,8 @@ public class LoginService {
         if (xxlJobUser == null) {
             return new ReturnT<String>(500, I18nUtil.getString("login_param_unvalid"));
         }
-        String passwordMd5 = DigestUtils.md5DigestAsHex(password.getBytes());
-        if (!passwordMd5.equals(xxlJobUser.getPassword())) {
+        String passwordHash = SHA256Tool.sha256(password);
+        if (!passwordHash.equals(xxlJobUser.getPassword())) {
             return new ReturnT<String>(500, I18nUtil.getString("login_param_unvalid"));
         }
 

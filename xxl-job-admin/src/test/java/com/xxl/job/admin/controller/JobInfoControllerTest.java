@@ -21,7 +21,7 @@ public class JobInfoControllerTest extends AbstractSpringMvcTest {
   @BeforeEach
   public void login() throws Exception {
     MvcResult ret = mockMvc.perform(
-        post("/login")
+        post("/auth/login")
             .contentType(MediaType.APPLICATION_FORM_URLENCODED)
             .param("userName", "admin")
             .param("password", "123456")

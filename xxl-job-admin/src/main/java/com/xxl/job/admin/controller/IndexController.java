@@ -1,7 +1,5 @@
 package com.xxl.job.admin.controller;
 
-import com.xxl.job.admin.annotation.PermissionLimit;
-import com.xxl.job.admin.service.impl.LoginService;
 import com.xxl.job.admin.service.XxlJobService;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.sso.core.annotation.XxlSso;
@@ -12,9 +10,11 @@ import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -29,8 +29,6 @@ public class IndexController {
 
 	@Resource
 	private XxlJobService xxlJobService;
-	@Resource
-	private LoginService loginService;
 
 
 	@RequestMapping("/")
@@ -48,44 +46,10 @@ public class IndexController {
         ReturnT<Map<String, Object>> chartInfo = xxlJobService.chartInfo(startDate, endDate);
         return chartInfo;
     }
-	
-	@RequestMapping("/toLogin")
-	@PermissionLimit(limit=false)
-	public ModelAndView toLogin(HttpServletRequest request, HttpServletResponse response, ModelAndView modelAndView) {
-		if (loginService.ifLogin(request, response) != null) {
-			modelAndView.setView(new RedirectView("/",true,false));
-			return modelAndView;
-		}
-		return new ModelAndView("login");
-	}
-	
-	@RequestMapping(value="login", method=RequestMethod.POST)
-	@ResponseBody
-	@PermissionLimit(limit=false)
-	public ReturnT<String> loginDo(HttpServletRequest request,
-								   HttpServletResponse response,
-								   @RequestParam("userName") String userName,
-								   @RequestParam("password") String password,
-								   @RequestParam(value = "ifRemember", required = false) String ifRemember){
 
-		boolean ifRem = (ifRemember!=null && ifRemember.trim().length()>0 && "on".equals(ifRemember))?true:false;
-		return loginService.login(request, response, userName, password, ifRem);
-	}
-	
-	@RequestMapping(value="logout", method=RequestMethod.POST)
-	@ResponseBody
-	@PermissionLimit(limit=false)
-	public ReturnT<String> logout(HttpServletRequest request, HttpServletResponse response){
-		return loginService.logout(request, response);
-	}
 	
 	@RequestMapping("/help")
 	public String help() {
-
-		/*if (!PermissionInterceptor.ifLogin(request)) {
-			return "redirect:/toLogin";
-		}*/
-
 		return "help";
 	}
 

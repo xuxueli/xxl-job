@@ -1,18 +1,18 @@
 package com.xxl.job.admin.controller.biz;
 
 import com.xxl.job.admin.annotation.PermissionLimit;
-import com.xxl.job.admin.web.interceptor.PermissionInterceptor;
+import com.xxl.job.admin.mapper.XxlJobGroupDao;
+import com.xxl.job.admin.mapper.XxlJobUserDao;
 import com.xxl.job.admin.model.XxlJobGroup;
 import com.xxl.job.admin.model.XxlJobUser;
 import com.xxl.job.admin.util.I18nUtil;
-import com.xxl.job.admin.mapper.XxlJobGroupDao;
-import com.xxl.job.admin.mapper.XxlJobUserDao;
+import com.xxl.job.admin.web.interceptor.PermissionInterceptor;
 import com.xxl.job.core.biz.model.ReturnT;
+import com.xxl.tool.encrypt.SHA256Tool;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -94,7 +94,8 @@ public class JobUserController {
             return new ReturnT<String>(ReturnT.FAIL_CODE, I18nUtil.getString("system_lengh_limit")+"[4-20]" );
         }
         // md5 password
-        xxlJobUser.setPassword(DigestUtils.md5DigestAsHex(xxlJobUser.getPassword().getBytes()));
+        String passwordHash = SHA256Tool.sha256(xxlJobUser.getPassword());
+        xxlJobUser.setPassword(passwordHash);
 
         // check repeat
         XxlJobUser existUser = xxlJobUserDao.loadByUserName(xxlJobUser.getUsername());
@@ -125,7 +126,8 @@ public class JobUserController {
                 return new ReturnT<String>(ReturnT.FAIL_CODE, I18nUtil.getString("system_lengh_limit")+"[4-20]" );
             }
             // md5 password
-            xxlJobUser.setPassword(DigestUtils.md5DigestAsHex(xxlJobUser.getPassword().getBytes()));
+            String passwordHash = SHA256Tool.sha256(xxlJobUser.getPassword());
+            xxlJobUser.setPassword(passwordHash);
         } else {
             xxlJobUser.setPassword(null);
         }
@@ -169,18 +171,18 @@ public class JobUserController {
         }
 
         // md5 password
-        String md5OldPassword = DigestUtils.md5DigestAsHex(oldPassword.getBytes());
-        String md5Password = DigestUtils.md5DigestAsHex(password.getBytes());
+        String oldPasswordHash = SHA256Tool.sha256(oldPassword);
+        String passwordHash = SHA256Tool.sha256(password);
 
         // valid old pwd
         XxlJobUser loginUser = PermissionInterceptor.getLoginUser(request);
         XxlJobUser existUser = xxlJobUserDao.loadByUserName(loginUser.getUsername());
-        if (!md5OldPassword.equals(existUser.getPassword())) {
+        if (!oldPasswordHash.equals(existUser.getPassword())) {
             return ReturnT.ofFail(I18nUtil.getString("change_pwd_field_oldpwd") + I18nUtil.getString("system_unvalid"));
         }
 
         // write new
-        existUser.setPassword(md5Password);
+        existUser.setPassword(passwordHash);
         xxlJobUserDao.update(existUser);
 
         return ReturnT.ofSuccess();
