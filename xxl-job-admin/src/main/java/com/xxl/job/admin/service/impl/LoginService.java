@@ -1,10 +1,10 @@
 package com.xxl.job.admin.service.impl;
 
-import com.xxl.job.admin.core.model.XxlJobUser;
-import com.xxl.job.admin.core.util.CookieUtil;
-import com.xxl.job.admin.core.util.I18nUtil;
-import com.xxl.job.admin.core.util.JacksonUtil;
-import com.xxl.job.admin.dao.XxlJobUserDao;
+import com.xxl.job.admin.model.XxlJobUser;
+import com.xxl.job.admin.util.CookieUtil;
+import com.xxl.job.admin.util.I18nUtil;
+import com.xxl.job.admin.util.JacksonUtil;
+import com.xxl.job.admin.mapper.XxlJobUserDao;
 import com.xxl.job.core.biz.model.ReturnT;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;

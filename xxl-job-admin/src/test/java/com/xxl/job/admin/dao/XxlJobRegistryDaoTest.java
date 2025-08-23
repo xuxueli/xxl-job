@@ -1,6 +1,7 @@
 package com.xxl.job.admin.dao;
 
-import com.xxl.job.admin.core.model.XxlJobRegistry;
+import com.xxl.job.admin.model.XxlJobRegistry;
+import com.xxl.job.admin.mapper.XxlJobRegistryDao;
 import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

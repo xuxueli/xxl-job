@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.xxl.job.admin.dao.XxlJobGroupDao">
+<mapper namespace="com.xxl.job.admin.mapper.XxlJobGroupDao">
 	
-	<resultMap id="XxlJobGroup" type="com.xxl.job.admin.core.model.XxlJobGroup" >
+	<resultMap id="XxlJobGroup" type="com.xxl.job.admin.model.XxlJobGroup" >
 		<result column="id" property="id" />
 	    <result column="app_name" property="appname" />
 	    <result column="title" property="title" />
@@ -34,12 +34,12 @@
 		ORDER BY t.app_name, t.title, t.id ASC
 	</select>
 
-	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobGroup" useGeneratedKeys="true" keyProperty="id" >
+	<insert id="save" parameterType="com.xxl.job.admin.model.XxlJobGroup" useGeneratedKeys="true" keyProperty="id" >
 		INSERT INTO xxl_job_group ( `app_name`, `title`, `address_type`, `address_list`, `update_time`)
 		values ( #{appname}, #{title}, #{addressType}, #{addressList}, #{updateTime} );
 	</insert>
 
-	<update id="update" parameterType="com.xxl.job.admin.core.model.XxlJobGroup" >
+	<update id="update" parameterType="com.xxl.job.admin.model.XxlJobGroup" >
 		UPDATE xxl_job_group
 		SET `app_name` = #{appname},
 			`title` = #{title},

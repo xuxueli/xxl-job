@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.xxl.job.admin.dao.XxlJobLogGlueDao">
+<mapper namespace="com.xxl.job.admin.mapper.XxlJobLogGlueDao">
 	
-	<resultMap id="XxlJobLogGlue" type="com.xxl.job.admin.core.model.XxlJobLogGlue" >
+	<resultMap id="XxlJobLogGlue" type="com.xxl.job.admin.model.XxlJobLogGlue" >
 		<result column="id" property="id" />
 	    <result column="job_id" property="jobId" />
 		<result column="glue_type" property="glueType" />
@@ -23,7 +23,7 @@
 		t.update_time
 	</sql>
 	
-	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobLogGlue" useGeneratedKeys="true" keyProperty="id" >
+	<insert id="save" parameterType="com.xxl.job.admin.model.XxlJobLogGlue" useGeneratedKeys="true" keyProperty="id" >
 		INSERT INTO xxl_job_logglue (
 			`job_id`,
 			`glue_type`,

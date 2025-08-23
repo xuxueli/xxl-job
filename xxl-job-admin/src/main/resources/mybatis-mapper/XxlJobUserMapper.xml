@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.xxl.job.admin.dao.XxlJobUserDao">
+<mapper namespace="com.xxl.job.admin.mapper.XxlJobUserDao">
 
-	<resultMap id="XxlJobUser" type="com.xxl.job.admin.core.model.XxlJobUser" >
+	<resultMap id="XxlJobUser" type="com.xxl.job.admin.model.XxlJobUser" >
 		<result column="id" property="id" />
 		<result column="username" property="username" />
 	    <result column="password" property="password" />
@@ -53,7 +53,7 @@
 		WHERE t.username = #{username}
 	</select>
 
-	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobUser" useGeneratedKeys="true" keyProperty="id" >
+	<insert id="save" parameterType="com.xxl.job.admin.model.XxlJobUser" useGeneratedKeys="true" keyProperty="id" >
 		INSERT INTO xxl_job_user (
 			username,
 			password,
@@ -67,7 +67,7 @@
 		);
 	</insert>
 
-	<update id="update" parameterType="com.xxl.job.admin.core.model.XxlJobUser" >
+	<update id="update" parameterType="com.xxl.job.admin.model.XxlJobUser" >
 		UPDATE xxl_job_user
 		SET
 			<if test="password != null and password != ''">

@@ -1,6 +1,6 @@
 package com.xxl.job.admin.controller;
 
-import com.xxl.job.admin.controller.annotation.PermissionLimit;
+import com.xxl.job.admin.annotation.PermissionLimit;
 import com.xxl.job.admin.service.impl.LoginService;
 import com.xxl.job.admin.service.XxlJobService;
 import com.xxl.job.core.biz.model.ReturnT;
