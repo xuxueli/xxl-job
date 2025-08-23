@@ -84,7 +84,7 @@ public class JobLogController {
 	@ResponseBody
 	public ReturnT<List<XxlJobInfo>> getJobsByGroup(@RequestParam("jobGroup") int jobGroup){
 		List<XxlJobInfo> list = xxlJobInfoDao.getJobsByGroup(jobGroup);
-		return new ReturnT<List<XxlJobInfo>>(list);
+		return ReturnT.ofSuccess(list);
 	}
 	
 	@RequestMapping("/pageList")
@@ -236,9 +236,9 @@ public class JobLogController {
 			log.setHandleMsg( I18nUtil.getString("joblog_kill_log_byman")+":" + (runResult.getMsg()!=null?runResult.getMsg():""));
 			log.setHandleTime(new Date());
 			XxlJobCompleter.updateHandleInfoAndFinish(log);
-			return new ReturnT<String>(runResult.getMsg());
+			return ReturnT.ofSuccess(runResult.getMsg());
 		} else {
-			return new ReturnT<String>(500, runResult.getMsg());
+			return ReturnT.ofFail(runResult.getMsg());
 		}
 	}
 

@@ -199,7 +199,7 @@ public class JobGroupController {
 	@PermissionLimit(adminuser = true)
 	public ReturnT<XxlJobGroup> loadById(@RequestParam("id") int id){
 		XxlJobGroup jobGroup = xxlJobGroupDao.load(id);
-		return jobGroup!=null?new ReturnT<XxlJobGroup>(jobGroup):new ReturnT<XxlJobGroup>(ReturnT.FAIL_CODE, null);
+		return jobGroup!=null?ReturnT.ofSuccess(jobGroup):ReturnT.ofFail();
 	}
 
 }

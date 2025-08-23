@@ -166,7 +166,7 @@ public class ExecutorBizImpl implements ExecutorBiz {
         String logFileName = XxlJobFileAppender.makeLogFileName(new Date(logParam.getLogDateTim()), logParam.getLogId());
 
         LogResult logResult = XxlJobFileAppender.readLog(logFileName, logParam.getFromLineNum());
-        return new ReturnT<LogResult>(logResult);
+        return ReturnT.ofSuccess(logResult);
     }
 
 }

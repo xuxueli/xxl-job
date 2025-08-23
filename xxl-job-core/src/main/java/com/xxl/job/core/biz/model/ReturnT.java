@@ -30,11 +30,6 @@ public class ReturnT<T> implements Serializable {
 		this.content = content;
 	}
 
-	public ReturnT(T content) {
-		this.code = SUCCESS_CODE;
-		this.content = content;
-	}
-	
 	public int getCode() {
 		return code;
 	}

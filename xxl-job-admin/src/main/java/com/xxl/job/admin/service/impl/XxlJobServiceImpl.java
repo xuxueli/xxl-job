@@ -162,7 +162,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 			return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("jobinfo_field_add")+I18nUtil.getString("system_fail")) );
 		}
 
-		return new ReturnT<String>(String.valueOf(jobInfo.getId()));
+		return ReturnT.ofSuccess(String.valueOf(jobInfo.getId()));
 	}
 
 	private boolean isNumeric(String str){
@@ -494,7 +494,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 		result.put("triggerCountSucTotal", triggerCountSucTotal);
 		result.put("triggerCountFailTotal", triggerCountFailTotal);
 
-		return new ReturnT<Map<String, Object>>(result);
+		return ReturnT.ofSuccess(result);
 	}
 
 }
