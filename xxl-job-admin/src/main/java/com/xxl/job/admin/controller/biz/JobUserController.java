@@ -6,7 +6,7 @@ import com.xxl.job.admin.mapper.XxlJobUserMapper;
 import com.xxl.job.admin.model.XxlJobGroup;
 import com.xxl.job.admin.model.XxlJobUser;
 import com.xxl.job.admin.util.I18nUtil;
-import com.xxl.job.admin.web.interceptor.PermissionInterceptor;
+import com.xxl.job.admin.web.xxlsso.PermissionInterceptor;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.tool.encrypt.SHA256Tool;
 import jakarta.annotation.Resource;

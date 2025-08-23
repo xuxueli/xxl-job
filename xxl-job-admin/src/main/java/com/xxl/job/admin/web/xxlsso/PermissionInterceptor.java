@@ -1,4 +1,4 @@
-package com.xxl.job.admin.web.interceptor;
+package com.xxl.job.admin.web.xxlsso;
 
 import com.xxl.job.admin.annotation.PermissionLimit;
 import com.xxl.job.admin.model.XxlJobGroup;

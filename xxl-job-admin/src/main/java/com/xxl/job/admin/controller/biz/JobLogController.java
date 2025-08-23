@@ -1,6 +1,6 @@
 package com.xxl.job.admin.controller.biz;
 
-import com.xxl.job.admin.web.interceptor.PermissionInterceptor;
+import com.xxl.job.admin.web.xxlsso.PermissionInterceptor;
 import com.xxl.job.admin.scheduler.complete.XxlJobCompleter;
 import com.xxl.job.admin.scheduler.exception.XxlJobException;
 import com.xxl.job.admin.model.XxlJobGroup;

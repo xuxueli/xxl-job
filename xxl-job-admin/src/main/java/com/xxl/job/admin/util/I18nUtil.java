@@ -1,6 +1,7 @@
 package com.xxl.job.admin.util;
 
 import com.xxl.job.admin.scheduler.conf.XxlJobAdminConfig;
+import com.xxl.job.core.util.GsonTool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
@@ -59,7 +60,7 @@ public class I18nUtil {
      * @return
      */
     public static String getMultString(String... keys) {
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, String> map = new HashMap<>();
 
         Properties prop = loadI18nProp();
         if (keys!=null && keys.length>0) {
@@ -72,8 +73,7 @@ public class I18nUtil {
             }
         }
 
-        String json = JacksonUtil.writeValueAsString(map);
-        return json;
+        return GsonTool.toJson(map);
     }
 
 }

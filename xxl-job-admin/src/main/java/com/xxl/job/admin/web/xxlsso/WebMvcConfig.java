@@ -1,5 +1,6 @@
-package com.xxl.job.admin.web.interceptor;
+package com.xxl.job.admin.web.xxlsso;
 
+import com.xxl.job.admin.web.interceptor.CommonDataInterceptor;
 import jakarta.annotation.Resource;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -15,13 +16,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Resource
     private PermissionInterceptor permissionInterceptor;
-    @Resource
-    private CookieInterceptor cookieInterceptor;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(permissionInterceptor).addPathPatterns("/**");
-        registry.addInterceptor(cookieInterceptor).addPathPatterns("/**");
     }
 
 }

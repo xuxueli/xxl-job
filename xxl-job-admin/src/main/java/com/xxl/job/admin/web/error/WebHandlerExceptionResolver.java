@@ -1,8 +1,8 @@
-package com.xxl.job.admin.web.resolver;
+package com.xxl.job.admin.web.error;
 
 import com.xxl.job.admin.scheduler.exception.XxlJobException;
-import com.xxl.job.core.biz.model.ReturnT;
-import com.xxl.job.admin.util.JacksonUtil;
+import com.xxl.tool.gson.GsonTool;
+import com.xxl.tool.response.Response;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
@@ -21,8 +21,8 @@ import java.io.IOException;
  * @author xuxueli 2016-1-6 19:22:18
  */
 @Component
-public class WebExceptionResolver implements HandlerExceptionResolver {
-	private static transient Logger logger = LoggerFactory.getLogger(WebExceptionResolver.class);
+public class WebHandlerExceptionResolver implements HandlerExceptionResolver {
+	private static transient Logger logger = LoggerFactory.getLogger(WebHandlerExceptionResolver.class);
 
 	@Override
 	public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
@@ -31,35 +31,35 @@ public class WebExceptionResolver implements HandlerExceptionResolver {
 			logger.error("WebExceptionResolver:{}", ex);
 		}
 
-		// if json
+		// parse isJson
 		boolean isJson = false;
 		if (handler instanceof HandlerMethod) {
 			HandlerMethod method = (HandlerMethod)handler;
-			ResponseBody responseBody = method.getMethodAnnotation(ResponseBody.class);
-			if (responseBody != null) {
-				isJson = true;
-			}
+			isJson = method.getMethodAnnotation(ResponseBody.class)!=null;
 		}
 
-		// error result
-		ReturnT<String> errorResult = new ReturnT<String>(ReturnT.FAIL_CODE, ex.toString().replaceAll("\n", "<br/>"));
-
-		// response
+		// process error
 		ModelAndView mv = new ModelAndView();
 		if (isJson) {
 			try {
-				response.setContentType("application/json;charset=utf-8");
-				response.getWriter().print(JacksonUtil.writeValueAsString(errorResult));
+				// errorMsg
+				String errorMsg = GsonTool.toJson(Response.ofFail(ex.toString()));
+
+				// write response
+				response.setStatus(HttpServletResponse.SC_OK);
+				response.setContentType("application/json;charset=UTF-8");
+				response.getWriter().println(errorMsg);
 			} catch (IOException e) {
 				logger.error(e.getMessage(), e);
 			}
 			return mv;
 		} else {
 
-			mv.addObject("exceptionMsg", errorResult.getMsg());
-			mv.setViewName("/common/common.errorpage");
+			mv.addObject("exceptionMsg", ex.toString());
+			mv.setViewName("common/common.errorpage");
 			return mv;
 		}
+
 	}
 	
 }

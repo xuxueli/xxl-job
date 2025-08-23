@@ -4,8 +4,8 @@ import com.xxl.job.admin.mapper.XxlJobUserMapper;
 import com.xxl.job.admin.model.XxlJobUser;
 import com.xxl.job.admin.util.CookieUtil;
 import com.xxl.job.admin.util.I18nUtil;
-import com.xxl.job.admin.util.JacksonUtil;
 import com.xxl.job.core.biz.model.ReturnT;
+import com.xxl.job.core.util.GsonTool;
 import com.xxl.tool.encrypt.SHA256Tool;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
@@ -29,7 +29,7 @@ public class LoginService {
     // ---------------------- token tool ----------------------
 
     private String makeToken(XxlJobUser xxlJobUser){
-        String tokenJson = JacksonUtil.writeValueAsString(xxlJobUser);
+        String tokenJson = GsonTool.toJson(xxlJobUser);
         String tokenHex = new BigInteger(tokenJson.getBytes()).toString(16);
         return tokenHex;
     }
@@ -37,7 +37,7 @@ public class LoginService {
         XxlJobUser xxlJobUser = null;
         if (tokenHex != null) {
             String tokenJson = new String(new BigInteger(tokenHex, 16).toByteArray());      // username_password(md5)
-            xxlJobUser = JacksonUtil.readValue(tokenJson, XxlJobUser.class);
+            xxlJobUser = GsonTool.fromJson(tokenJson, XxlJobUser.class);
         }
         return xxlJobUser;
     }

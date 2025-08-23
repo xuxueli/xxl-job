@@ -1,4 +1,4 @@
-package com.xxl.job.admin.web.resolver;
+package com.xxl.job.admin.web.error;
 
 import org.springframework.boot.web.server.ErrorPage;
 import org.springframework.boot.web.server.ErrorPageRegistrar;
