@@ -2567,7 +2567,8 @@ UPDATE xxl_job_user t SET t.password = '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a
 - 11、【修复】合并PR-3738，修复拼写问题；
 - 12、【修复】合并PR-3506，修复小概率情况下任务重复调度问题；
 - 13、【修复】合并PR-3747，修复异常情况下资源泄漏风险；
-- 14、【升级】升级多项maven依赖至较新版本，如 netty、groovy、mybatis、spring、spring-ai、dify 等；
+- 14、【修复】IDOR越权问题修复，提升任务操作及日志管理安全性；
+- 15、【升级】升级多项maven依赖至较新版本，如 netty、groovy、mybatis、spring、spring-ai、dify 等；
 
 
 ### 7.41 版本 v3.2.1 Release Notes[规划中]
