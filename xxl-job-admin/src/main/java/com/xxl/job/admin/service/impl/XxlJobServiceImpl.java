@@ -35,15 +35,15 @@ public class XxlJobServiceImpl implements XxlJobService {
 	private static Logger logger = LoggerFactory.getLogger(XxlJobServiceImpl.class);
 
 	@Resource
-	private XxlJobGroupDao xxlJobGroupDao;
+	private XxlJobGroupMapper xxlJobGroupDao;
 	@Resource
-	private XxlJobInfoDao xxlJobInfoDao;
+	private XxlJobInfoMapper xxlJobInfoDao;
 	@Resource
-	public XxlJobLogDao xxlJobLogDao;
+	public XxlJobLogMapper xxlJobLogDao;
 	@Resource
-	private XxlJobLogGlueDao xxlJobLogGlueDao;
+	private XxlJobLogGlueMapper xxlJobLogGlueDao;
 	@Resource
-	private XxlJobLogReportDao xxlJobLogReportDao;
+	private XxlJobLogReportMapper xxlJobLogReportDao;
 	
 	@Override
 	public Map<String, Object> pageList(int start, int length, int jobGroup, int triggerStatus, String jobDesc, String executorHandler, String author) {

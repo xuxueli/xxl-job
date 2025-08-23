@@ -11,7 +11,7 @@ import java.util.List;
  * Created by xuxueli on 16/9/30.
  */
 @Mapper
-public interface XxlJobRegistryDao {
+public interface XxlJobRegistryMapper {
 
     public List<Integer> findDead(@Param("timeout") int timeout,
                                   @Param("nowTime") Date nowTime);

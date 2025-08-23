@@ -4,8 +4,8 @@ import com.xxl.job.admin.web.interceptor.PermissionInterceptor;
 import com.xxl.job.admin.model.XxlJobInfo;
 import com.xxl.job.admin.model.XxlJobLogGlue;
 import com.xxl.job.admin.util.I18nUtil;
-import com.xxl.job.admin.mapper.XxlJobInfoDao;
-import com.xxl.job.admin.mapper.XxlJobLogGlueDao;
+import com.xxl.job.admin.mapper.XxlJobInfoMapper;
+import com.xxl.job.admin.mapper.XxlJobLogGlueMapper;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.glue.GlueTypeEnum;
 import jakarta.annotation.Resource;
@@ -28,9 +28,9 @@ import java.util.List;
 public class JobCodeController {
 	
 	@Resource
-	private XxlJobInfoDao xxlJobInfoDao;
+	private XxlJobInfoMapper xxlJobInfoDao;
 	@Resource
-	private XxlJobLogGlueDao xxlJobLogGlueDao;
+	private XxlJobLogGlueMapper xxlJobLogGlueDao;
 
 	@RequestMapping
 	public String index(HttpServletRequest request, Model model, @RequestParam("jobId") int jobId) {

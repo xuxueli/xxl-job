@@ -1,6 +1,6 @@
 package com.xxl.job.admin.service.impl;
 
-import com.xxl.job.admin.mapper.XxlJobUserDao;
+import com.xxl.job.admin.mapper.XxlJobUserMapper;
 import com.xxl.job.admin.model.XxlJobUser;
 import com.xxl.job.admin.util.CookieUtil;
 import com.xxl.job.admin.util.I18nUtil;
@@ -23,7 +23,7 @@ public class LoginService {
     public static final String LOGIN_IDENTITY_KEY = "XXL_JOB_LOGIN_IDENTITY";
 
     @Resource
-    private XxlJobUserDao xxlJobUserDao;
+    private XxlJobUserMapper xxlJobUserDao;
 
 
     // ---------------------- token tool ----------------------

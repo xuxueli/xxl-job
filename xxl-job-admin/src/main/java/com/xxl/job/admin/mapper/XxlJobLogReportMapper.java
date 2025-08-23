@@ -12,7 +12,7 @@ import java.util.List;
  * @author xuxueli 2019-11-22
  */
 @Mapper
-public interface XxlJobLogReportDao {
+public interface XxlJobLogReportMapper {
 
 	public int save(XxlJobLogReport xxlJobLogReport);
 

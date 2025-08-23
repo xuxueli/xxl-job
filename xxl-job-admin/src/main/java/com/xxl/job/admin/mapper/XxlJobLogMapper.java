@@ -13,7 +13,7 @@ import java.util.Map;
  * @author xuxueli 2016-1-12 18:03:06
  */
 @Mapper
-public interface XxlJobLogDao {
+public interface XxlJobLogMapper {
 
 	// exist jobId not use jobGroup, not exist use jobGroup
 	public List<XxlJobLog> pageList(@Param("offset") int offset,

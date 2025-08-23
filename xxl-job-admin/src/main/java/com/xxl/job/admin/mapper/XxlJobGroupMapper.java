@@ -10,7 +10,7 @@ import java.util.List;
  * Created by xuxueli on 16/9/30.
  */
 @Mapper
-public interface XxlJobGroupDao {
+public interface XxlJobGroupMapper {
 
     public List<XxlJobGroup> findAll();
 

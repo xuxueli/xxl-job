@@ -12,7 +12,7 @@ import java.util.List;
  * @author xuxueli 2016-1-12 18:03:45
  */
 @Mapper
-public interface XxlJobInfoDao {
+public interface XxlJobInfoMapper {
 
 	public List<XxlJobInfo> pageList(@Param("offset") int offset,
 									 @Param("pagesize") int pagesize,

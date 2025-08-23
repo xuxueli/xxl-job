@@ -10,7 +10,7 @@ import com.xxl.job.admin.scheduler.scheduler.MisfireStrategyEnum;
 import com.xxl.job.admin.scheduler.scheduler.ScheduleTypeEnum;
 import com.xxl.job.admin.scheduler.thread.JobScheduleHelper;
 import com.xxl.job.admin.util.I18nUtil;
-import com.xxl.job.admin.mapper.XxlJobGroupDao;
+import com.xxl.job.admin.mapper.XxlJobGroupMapper;
 import com.xxl.job.admin.service.XxlJobService;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
@@ -38,7 +38,7 @@ public class JobInfoController {
 	private static Logger logger = LoggerFactory.getLogger(JobInfoController.class);
 
 	@Resource
-	private XxlJobGroupDao xxlJobGroupDao;
+	private XxlJobGroupMapper xxlJobGroupDao;
 	@Resource
 	private XxlJobService xxlJobService;
 	

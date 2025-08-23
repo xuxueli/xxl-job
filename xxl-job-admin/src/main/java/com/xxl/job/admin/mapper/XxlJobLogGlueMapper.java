@@ -11,7 +11,7 @@ import java.util.List;
  * @author xuxueli 2016-5-19 18:04:56
  */
 @Mapper
-public interface XxlJobLogGlueDao {
+public interface XxlJobLogGlueMapper {
 	
 	public int save(XxlJobLogGlue xxlJobLogGlue);
 	

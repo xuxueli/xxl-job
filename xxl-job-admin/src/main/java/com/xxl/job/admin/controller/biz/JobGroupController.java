@@ -4,9 +4,9 @@ import com.xxl.job.admin.annotation.PermissionLimit;
 import com.xxl.job.admin.model.XxlJobGroup;
 import com.xxl.job.admin.model.XxlJobRegistry;
 import com.xxl.job.admin.util.I18nUtil;
-import com.xxl.job.admin.mapper.XxlJobGroupDao;
-import com.xxl.job.admin.mapper.XxlJobInfoDao;
-import com.xxl.job.admin.mapper.XxlJobRegistryDao;
+import com.xxl.job.admin.mapper.XxlJobGroupMapper;
+import com.xxl.job.admin.mapper.XxlJobInfoMapper;
+import com.xxl.job.admin.mapper.XxlJobRegistryMapper;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.enums.RegistryConfig;
 import jakarta.annotation.Resource;
@@ -28,11 +28,11 @@ import java.util.*;
 public class JobGroupController {
 
 	@Resource
-	public XxlJobInfoDao xxlJobInfoDao;
+	public XxlJobInfoMapper xxlJobInfoDao;
 	@Resource
-	public XxlJobGroupDao xxlJobGroupDao;
+	public XxlJobGroupMapper xxlJobGroupDao;
 	@Resource
-	private XxlJobRegistryDao xxlJobRegistryDao;
+	private XxlJobRegistryMapper xxlJobRegistryDao;
 
 	@RequestMapping
 	@PermissionLimit(adminuser = true)

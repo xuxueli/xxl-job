@@ -1,7 +1,7 @@
 package com.xxl.job.admin.dao;
 
 import com.xxl.job.admin.model.XxlJobGroup;
-import com.xxl.job.admin.mapper.XxlJobGroupDao;
+import com.xxl.job.admin.mapper.XxlJobGroupMapper;
 import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,7 +13,7 @@ import java.util.List;
 public class XxlJobGroupDaoTest {
 
     @Resource
-    private XxlJobGroupDao xxlJobGroupDao;
+    private XxlJobGroupMapper xxlJobGroupDao;
 
     @Test
     public void test(){

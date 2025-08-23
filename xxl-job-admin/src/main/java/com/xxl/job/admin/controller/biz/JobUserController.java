@@ -1,8 +1,8 @@
 package com.xxl.job.admin.controller.biz;
 
 import com.xxl.job.admin.annotation.PermissionLimit;
-import com.xxl.job.admin.mapper.XxlJobGroupDao;
-import com.xxl.job.admin.mapper.XxlJobUserDao;
+import com.xxl.job.admin.mapper.XxlJobGroupMapper;
+import com.xxl.job.admin.mapper.XxlJobUserMapper;
 import com.xxl.job.admin.model.XxlJobGroup;
 import com.xxl.job.admin.model.XxlJobUser;
 import com.xxl.job.admin.util.I18nUtil;
@@ -30,9 +30,9 @@ import java.util.Map;
 public class JobUserController {
 
     @Resource
-    private XxlJobUserDao xxlJobUserDao;
+    private XxlJobUserMapper xxlJobUserDao;
     @Resource
-    private XxlJobGroupDao xxlJobGroupDao;
+    private XxlJobGroupMapper xxlJobGroupDao;
 
     @RequestMapping
     @PermissionLimit(adminuser = true)

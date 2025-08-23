@@ -1,7 +1,7 @@
 package com.xxl.job.admin.dao;
 
 import com.xxl.job.admin.model.XxlJobRegistry;
-import com.xxl.job.admin.mapper.XxlJobRegistryDao;
+import com.xxl.job.admin.mapper.XxlJobRegistryMapper;
 import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 public class XxlJobRegistryDaoTest {
 
     @Resource
-    private XxlJobRegistryDao xxlJobRegistryDao;
+    private XxlJobRegistryMapper xxlJobRegistryDao;
 
     @Test
     public void test(){

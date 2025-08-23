@@ -1,7 +1,7 @@
 package com.xxl.job.admin.dao;
 
 import com.xxl.job.admin.model.XxlJobLogGlue;
-import com.xxl.job.admin.mapper.XxlJobLogGlueDao;
+import com.xxl.job.admin.mapper.XxlJobLogGlueMapper;
 import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,7 +13,7 @@ import java.util.List;
 public class XxlJobLogGlueDaoTest {
 
     @Resource
-    private XxlJobLogGlueDao xxlJobLogGlueDao;
+    private XxlJobLogGlueMapper xxlJobLogGlueDao;
 
     @Test
     public void test(){

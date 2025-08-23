@@ -8,9 +8,9 @@ import com.xxl.job.admin.model.XxlJobInfo;
 import com.xxl.job.admin.model.XxlJobLog;
 import com.xxl.job.admin.scheduler.scheduler.XxlJobScheduler;
 import com.xxl.job.admin.util.I18nUtil;
-import com.xxl.job.admin.mapper.XxlJobGroupDao;
-import com.xxl.job.admin.mapper.XxlJobInfoDao;
-import com.xxl.job.admin.mapper.XxlJobLogDao;
+import com.xxl.job.admin.mapper.XxlJobGroupMapper;
+import com.xxl.job.admin.mapper.XxlJobInfoMapper;
+import com.xxl.job.admin.mapper.XxlJobLogMapper;
 import com.xxl.job.core.biz.ExecutorBiz;
 import com.xxl.job.core.biz.model.KillParam;
 import com.xxl.job.core.biz.model.LogParam;
@@ -44,11 +44,11 @@ public class JobLogController {
 	private static Logger logger = LoggerFactory.getLogger(JobLogController.class);
 
 	@Resource
-	private XxlJobGroupDao xxlJobGroupDao;
+	private XxlJobGroupMapper xxlJobGroupDao;
 	@Resource
-	public XxlJobInfoDao xxlJobInfoDao;
+	public XxlJobInfoMapper xxlJobInfoDao;
 	@Resource
-	public XxlJobLogDao xxlJobLogDao;
+	public XxlJobLogMapper xxlJobLogDao;
 
 	@RequestMapping
 	public String index(HttpServletRequest request, Model model, @RequestParam(value = "jobId", required = false, defaultValue = "0") Integer jobId) {
