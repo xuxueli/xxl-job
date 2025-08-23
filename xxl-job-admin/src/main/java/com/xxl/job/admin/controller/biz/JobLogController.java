@@ -50,41 +50,56 @@ public class JobLogController {
 	public XxlJobLogMapper xxlJobLogMapper;
 
 	@RequestMapping
-	public String index(HttpServletRequest request, Model model, @RequestParam(value = "jobId", required = false, defaultValue = "0") Integer jobId) {
+	public String index(HttpServletRequest request, Model model,
+						@RequestParam(value = "jobGroup", required = false, defaultValue = "0") Integer jobGroup,
+						@RequestParam(value = "jobId", required = false, defaultValue = "0") Integer jobId) {
 
-		// 执行器列表
+		// find jobGroup
 		List<XxlJobGroup> jobGroupListTotal =  xxlJobGroupMapper.findAll();
-
-		// filter group
+		// filter jobGroup
 		List<XxlJobGroup> jobGroupList = JobInfoController.filterJobGroupByPermission(request, jobGroupListTotal);
 		if (jobGroupList==null || jobGroupList.isEmpty()) {
 			throw new XxlJobException(I18nUtil.getString("jobgroup_empty"));
 		}
-
+		// write jobGroup
 		model.addAttribute("JobGroupList", jobGroupList);
 
-		// 任务
+		// parse jobId、jobGroup
 		if (jobId > 0) {
 			XxlJobInfo jobInfo = xxlJobInfoMapper.loadById(jobId);
 			if (jobInfo == null) {
 				throw new RuntimeException(I18nUtil.getString("jobinfo_field_id") + I18nUtil.getString("system_unvalid"));
 			}
-
-			model.addAttribute("jobInfo", jobInfo);
-
-			// valid permission
-			JobInfoController.validJobGroupPermission(request, jobInfo.getJobGroup());
+			jobGroup = jobInfo.getJobGroup();
+		} else if (jobGroup > 0){
+			jobId = 0;
 		}
+		jobGroup = jobGroup > 0 ? jobGroup : jobGroupList.get(0).getId();
+		// valid permission
+		JobInfoController.validJobGroupPermission(request, jobGroup);
+
+		// find jobList
+		List<XxlJobInfo> jobInfoList = xxlJobInfoMapper.getJobsByGroup(jobGroup);
+
+		// write
+		model.addAttribute("jobInfoList", jobInfoList);
+		model.addAttribute("jobGroup", jobGroup);
+		model.addAttribute("jobId", jobId);
 
 		return "joblog/joblog.index";
 	}
 
-	@RequestMapping("/getJobsByGroup")
+	/*@RequestMapping("/getJobsByGroup")
 	@ResponseBody
-	public ReturnT<List<XxlJobInfo>> getJobsByGroup(@RequestParam("jobGroup") int jobGroup){
+	public ReturnT<List<XxlJobInfo>> getJobsByGroup(HttpServletRequest request, @RequestParam("jobGroup") int jobGroup){
+
+		// valid permission
+		JobInfoController.validJobGroupPermission(request, jobGroup);
+
+		// query
 		List<XxlJobInfo> list = xxlJobInfoMapper.getJobsByGroup(jobGroup);
 		return ReturnT.ofSuccess(list);
-	}
+	}*/
 	
 	@RequestMapping("/pageList")
 	@ResponseBody
@@ -209,7 +224,7 @@ public class JobLogController {
 
 	@RequestMapping("/logKill")
 	@ResponseBody
-	public ReturnT<String> logKill(@RequestParam("id") int id){
+	public ReturnT<String> logKill(HttpServletRequest request, @RequestParam("id") int id){
 		// base check
 		XxlJobLog log = xxlJobLogMapper.load(id);
 		XxlJobInfo jobInfo = xxlJobInfoMapper.loadById(log.getJobId());
@@ -219,6 +234,9 @@ public class JobLogController {
 		if (ReturnT.SUCCESS_CODE != log.getTriggerCode()) {
 			return new ReturnT<String>(500, I18nUtil.getString("joblog_kill_log_limit"));
 		}
+
+		// valid JobGroup permission
+		JobInfoController.validJobGroupPermission(request, jobInfo.getJobGroup());
 
 		// request of kill
 		ReturnT<String> runResult = null;
@@ -247,7 +265,7 @@ public class JobLogController {
 									@RequestParam("jobGroup") int jobGroup,
 									@RequestParam("jobId") int jobId,
 									@RequestParam("type") int type){
-		// valid permission
+		// valid JobGroup permission
 		JobInfoController.validJobGroupPermission(request, jobGroup);
 
 		// opt
