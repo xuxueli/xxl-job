@@ -44,6 +44,8 @@
 		<mysql-connector-j.version>9.4.0</mysql-connector-j.version>
 		<!-- dynamic language -->
 		<groovy.version>4.0.28</groovy.version>
+		<!-- xxl-sso (+xxl-tool、gson) -->
+		<xxl-sso.version>2.0.0</xxl-sso.version>
 	</properties>
 
 	<build>

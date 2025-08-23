@@ -4,6 +4,7 @@ import com.xxl.job.admin.controller.annotation.PermissionLimit;
 import com.xxl.job.admin.service.impl.LoginService;
 import com.xxl.job.admin.service.XxlJobService;
 import com.xxl.job.core.biz.model.ReturnT;
+import com.xxl.sso.core.annotation.XxlSso;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -86,6 +87,17 @@ public class IndexController {
 		}*/
 
 		return "help";
+	}
+
+	@RequestMapping(value = "/errorpage")
+	@XxlSso(login = false)
+	public ModelAndView errorPage(HttpServletRequest request, HttpServletResponse response, ModelAndView mv) {
+
+		String exceptionMsg = "HTTP Status Code: "+response.getStatus();
+
+		mv.addObject("exceptionMsg", exceptionMsg);
+		mv.setViewName("common/common.errorpage");
+		return mv;
 	}
 
 	@InitBinder

@@ -57,7 +57,7 @@ public class WebExceptionResolver implements HandlerExceptionResolver {
 		} else {
 
 			mv.addObject("exceptionMsg", errorResult.getMsg());
-			mv.setViewName("/common/common.exception");
+			mv.setViewName("/common/common.errorpage");
 			return mv;
 		}
 	}
