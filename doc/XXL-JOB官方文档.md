@@ -2557,17 +2557,18 @@ public void execute() {
 - 11、【新增】GLUE模式(Python) 扩展，可选 "GLUE(Python3)" 或 "GLUE(Python2)" 两种模式，分别支持 python3/2 多版本；  
 - 12、【优化】任务Bean扫描规则调整，过滤冗余不必要扫描，避免系统组件提前初始化；
 - 13、【重构】项目结构重构，提升可维护性与易读性；
-
-- 14、【ING】登录安全升级，密码加密处理算法从Md5改为Sha256；
+- 
+- 14、【ING】登录认证重构，提升安全性。密码加密算法从Md5改为Sha256；登录态改为登录后动态随机生成；（需要针对用户表进行字段调整；同时需要重新初始化加密密码；相关SQL脚本如下；）
 ```
 // 1、用户表password字段需要调整长度，执行如下命令
-ALTER TABLE xxl_conf_user
+ALTER TABLE xxl_job_user
     MODIFY COLUMN `password` varchar(100) NOT NULL COMMENT '密码加密信息';
+ALTER TABLE xxl_job_user
+    ADD COLUMN `token` varchar(100) DEFAULT NULL COMMENT '登录token';
     
 // 2、存量用户密码需要修改，可执行如下命令将密码初始化 “123456”；也可以自行通过 “SHA256Tool.sha256” 工具生成其他初始化密码；
-UPDATE xxl_conf_user t SET t.password = '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92' WHERE t.username = {用户名};
+UPDATE xxl_job_user t SET t.password = '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92' WHERE t.username = {用户名};
 ```
-- 2、【规划中】登录认证重构，规范登录态以及权限认证逻辑，提升系统安全；登陆态Token生成逻辑优化，混淆登陆时间属性，降低token泄漏风险；
 
 
 ### 7.41 版本 v3.2.1 Release Notes[规划中]
