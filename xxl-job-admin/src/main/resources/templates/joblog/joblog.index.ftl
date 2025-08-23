@@ -30,9 +30,9 @@
  					<div class="input-group">
 	                	<span class="input-group-addon">${I18n.jobinfo_field_jobgroup}</span>
                 		<select class="form-control" id="jobGroup"  paramVal="<#if jobInfo?exists>${jobInfo.jobGroup}</#if>" >
-                            <#if xxl_sso_user.roleList?? && xxl_sso_user.roleList?seq_contains("ADMIN") >
-                                <option value="0" >${I18n.system_all}</option>  <#-- 仅管理员支持查询全部；普通用户仅支持查询有权限的 jobGroup -->
-                            </#if>
+                            <#--<#if xxl_sso_user.roleList?? && xxl_sso_user.roleList?seq_contains("ADMIN") >
+                                <option value="0" >${I18n.system_all}</option>  &lt;#&ndash; 仅管理员支持查询全部；普通用户仅支持查询有权限的 jobGroup &ndash;&gt;
+                            </#if>-->
                 			<#list JobGroupList as group>
                 				<option value="${group.id}" >${group.title}</option>
                 			</#list>
