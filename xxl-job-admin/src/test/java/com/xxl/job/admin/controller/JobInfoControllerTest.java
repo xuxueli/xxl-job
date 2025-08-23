@@ -1,7 +1,7 @@
 package com.xxl.job.admin.controller;
 
-import com.xxl.job.admin.service.impl.LoginService;
-import javax.servlet.http.Cookie;
+import com.xxl.sso.core.constant.Const;
+import jakarta.servlet.http.Cookie;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -21,12 +21,12 @@ public class JobInfoControllerTest extends AbstractSpringMvcTest {
   @BeforeEach
   public void login() throws Exception {
     MvcResult ret = mockMvc.perform(
-        post("/login")
+        post("/auth/doLogin")
             .contentType(MediaType.APPLICATION_FORM_URLENCODED)
             .param("userName", "admin")
             .param("password", "123456")
     ).andReturn();
-    cookie = ret.getResponse().getCookie(LoginService.LOGIN_IDENTITY_KEY);
+    cookie = ret.getResponse().getCookie(Const.XXL_SSO_TOKEN);
   }
 
   @Test

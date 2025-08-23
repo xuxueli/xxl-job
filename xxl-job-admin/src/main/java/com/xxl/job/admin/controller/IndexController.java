@@ -9,14 +9,17 @@ import com.xxl.job.admin.security.SecurityContext;
 import com.xxl.job.admin.service.impl.LoginService;
 import com.xxl.job.admin.service.XxlJobService;
 import com.xxl.job.core.biz.model.ReturnT;
+import com.xxl.sso.core.annotation.XxlSso;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
 
 import javax.annotation.Resource;
 import javax.script.ScriptException;
@@ -35,8 +38,6 @@ public class IndexController {
 
 	@Resource
 	private XxlJobService xxlJobService;
-	@Resource
-	private LoginService loginService;
 
 
 	@RequestMapping("/")
@@ -110,12 +111,18 @@ public class IndexController {
 
 	@RequestMapping("/help")
 	public String help() {
-
-		/*if (!PermissionInterceptor.ifLogin(request)) {
-			return "redirect:/toLogin";
-		}*/
-
 		return "help";
+	}
+
+	@RequestMapping(value = "/errorpage")
+	@XxlSso(login = false)
+	public ModelAndView errorPage(HttpServletRequest request, HttpServletResponse response, ModelAndView mv) {
+
+		String exceptionMsg = "HTTP Status Code: "+response.getStatus();
+
+		mv.addObject("exceptionMsg", exceptionMsg);
+		mv.setViewName("common/common.errorpage");
+		return mv;
 	}
 
 	@InitBinder

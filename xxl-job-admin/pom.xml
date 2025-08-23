@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>com.xuxueli</groupId>
 		<artifactId>xxl-job</artifactId>
-		<version>3.1.2-SNAPSHOT</version>
+		<version>3.2.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>xxl-job-admin</artifactId>
 	<packaging>jar</packaging>
@@ -44,13 +44,11 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-freemarker</artifactId>
 		</dependency>
-
 		<!-- mail-starter -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-mail</artifactId>
 		</dependency>
-
 		<!-- starter-actuator -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -129,6 +127,13 @@
 		<artifactId>xxl-job-core</artifactId>
 		<version>${project.parent.version}</version>
 	</dependency>
+
+		<!-- xxl-sso (xxl-tool、gson) -->
+		<dependency>
+			<groupId>com.xuxueli</groupId>
+			<artifactId>xxl-sso-core</artifactId>
+			<version>${xxl-sso.version}</version>
+		</dependency>
 
 
         <dependency>
