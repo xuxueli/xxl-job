@@ -66,7 +66,7 @@ public class LoginService {
 
         // do login
         CookieUtil.set(response, LOGIN_IDENTITY_KEY, loginToken, ifRemember);
-        return ReturnT.SUCCESS;
+        return ReturnT.ofSuccess();
     }
 
     /**
@@ -77,7 +77,7 @@ public class LoginService {
      */
     public ReturnT<String> logout(HttpServletRequest request, HttpServletResponse response){
         CookieUtil.remove(request, response, LOGIN_IDENTITY_KEY);
-        return ReturnT.SUCCESS;
+        return ReturnT.ofSuccess();
     }
 
     /**

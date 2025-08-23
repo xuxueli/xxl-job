@@ -143,12 +143,12 @@ public class JobCompleteHelper {
 				for (HandleCallbackParam handleCallbackParam: callbackParamList) {
 					ReturnT<String> callbackResult = callback(handleCallbackParam);
 					logger.debug(">>>>>>>>> JobApiController.callback {}, handleCallbackParam={}, callbackResult={}",
-							(callbackResult.getCode()== ReturnT.SUCCESS_CODE?"success":"fail"), handleCallbackParam, callbackResult);
+							(callbackResult.isSuccess()?"success":"fail"), handleCallbackParam, callbackResult);
 				}
 			}
 		});
 
-		return ReturnT.SUCCESS;
+		return ReturnT.ofSuccess();
 	}
 
 	private ReturnT<String> callback(HandleCallbackParam handleCallbackParam) {
@@ -176,7 +176,7 @@ public class JobCompleteHelper {
 		log.setHandleMsg(handleMsg.toString());
 		XxlJobCompleter.updateHandleInfoAndFinish(log);
 
-		return ReturnT.SUCCESS;
+		return ReturnT.ofSuccess();
 	}
 
 

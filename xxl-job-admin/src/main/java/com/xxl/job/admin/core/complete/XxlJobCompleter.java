@@ -64,14 +64,14 @@ public class XxlJobCompleter {
 
                         // trigger child job
                         JobTriggerPoolHelper.trigger(childJobId, TriggerTypeEnum.PARENT, -1, null, null, null);
-                        ReturnT<String> triggerChildResult = ReturnT.SUCCESS;
+                        ReturnT<String> triggerChildResult = ReturnT.ofSuccess();
 
                         // add msg
                         triggerChildMsg += MessageFormat.format(I18nUtil.getString("jobconf_callback_child_msg1"),
                                 (i+1),
                                 childJobIds.length,
                                 childJobIds[i],
-                                (triggerChildResult.getCode()==ReturnT.SUCCESS_CODE?I18nUtil.getString("system_success"):I18nUtil.getString("system_fail")),
+                                (triggerChildResult.isSuccess()?I18nUtil.getString("system_success"):I18nUtil.getString("system_fail")),
                                 triggerChildResult.getMsg());
                     } else {
                         triggerChildMsg += MessageFormat.format(I18nUtil.getString("jobconf_callback_child_msg2"),

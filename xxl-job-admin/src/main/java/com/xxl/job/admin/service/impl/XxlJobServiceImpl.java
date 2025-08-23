@@ -305,20 +305,20 @@ public class XxlJobServiceImpl implements XxlJobService {
         xxlJobInfoDao.update(exists_jobInfo);
 
 
-		return ReturnT.SUCCESS;
+		return ReturnT.ofSuccess();
 	}
 
 	@Override
 	public ReturnT<String> remove(int id) {
 		XxlJobInfo xxlJobInfo = xxlJobInfoDao.loadById(id);
 		if (xxlJobInfo == null) {
-			return ReturnT.SUCCESS;
+			return ReturnT.ofSuccess();
 		}
 
 		xxlJobInfoDao.delete(id);
 		xxlJobLogDao.delete(id);
 		xxlJobLogGlueDao.deleteByJobId(id);
-		return ReturnT.SUCCESS;
+		return ReturnT.ofSuccess();
 	}
 
 	@Override
@@ -326,13 +326,13 @@ public class XxlJobServiceImpl implements XxlJobService {
 		// load and valid
 		XxlJobInfo xxlJobInfo = xxlJobInfoDao.loadById(id);
 		if (xxlJobInfo == null) {
-			return new ReturnT<String>(ReturnT.FAIL.getCode(), I18nUtil.getString("jobinfo_glue_jobid_unvalid"));
+			return ReturnT.ofFail(I18nUtil.getString("jobinfo_glue_jobid_unvalid"));
 		}
 
 		// valid
 		ScheduleTypeEnum scheduleTypeEnum = ScheduleTypeEnum.match(xxlJobInfo.getScheduleType(), ScheduleTypeEnum.NONE);
 		if (ScheduleTypeEnum.NONE == scheduleTypeEnum) {
-			return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("schedule_type_none_limit_start")) );
+			return ReturnT.ofFail(I18nUtil.getString("schedule_type_none_limit_start"));
 		}
 
 		// next trigger time (5s后生效，避开预读周期)
@@ -354,7 +354,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 
 		xxlJobInfo.setUpdateTime(new Date());
 		xxlJobInfoDao.update(xxlJobInfo);
-		return ReturnT.SUCCESS;
+		return ReturnT.ofSuccess();
 	}
 
 	@Override
@@ -362,7 +362,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 		// load and valid
         XxlJobInfo xxlJobInfo = xxlJobInfoDao.loadById(id);
 		if (xxlJobInfo == null) {
-			return new ReturnT<String>(ReturnT.FAIL.getCode(), I18nUtil.getString("jobinfo_glue_jobid_unvalid"));
+			return ReturnT.ofFail(I18nUtil.getString("jobinfo_glue_jobid_unvalid"));
 		}
 
 		// stop
@@ -372,7 +372,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 
 		xxlJobInfo.setUpdateTime(new Date());
 		xxlJobInfoDao.update(xxlJobInfo);
-		return ReturnT.SUCCESS;
+		return ReturnT.ofSuccess();
 	}
 
 
@@ -381,14 +381,14 @@ public class XxlJobServiceImpl implements XxlJobService {
 	public ReturnT<String> trigger(XxlJobUser loginUser, int jobId, String executorParam, String addressList) {
 		// permission
 		if (loginUser == null) {
-			return new ReturnT<String>(ReturnT.FAIL.getCode(), I18nUtil.getString("system_permission_limit"));
+			return ReturnT.ofFail(I18nUtil.getString("system_permission_limit"));
 		}
 		XxlJobInfo xxlJobInfo = xxlJobInfoDao.loadById(jobId);
 		if (xxlJobInfo == null) {
-			return new ReturnT<String>(ReturnT.FAIL.getCode(), I18nUtil.getString("jobinfo_glue_jobid_unvalid"));
+			return ReturnT.ofFail(I18nUtil.getString("jobinfo_glue_jobid_unvalid"));
 		}
 		if (!hasPermission(loginUser, xxlJobInfo.getJobGroup())) {
-			return new ReturnT<String>(ReturnT.FAIL.getCode(), I18nUtil.getString("system_permission_limit"));
+			return ReturnT.ofFail(I18nUtil.getString("system_permission_limit"));
 		}
 
 		// force cover job param
@@ -397,7 +397,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 		}
 
 		JobTriggerPoolHelper.trigger(jobId, TriggerTypeEnum.MANUAL, -1, null, executorParam, addressList);
-		return ReturnT.SUCCESS;
+		return ReturnT.ofSuccess();
 	}
 
 	private boolean hasPermission(XxlJobUser loginUser, int jobGroup){

@@ -24,7 +24,7 @@ public class ExecutorBizImpl implements ExecutorBiz {
 
     @Override
     public ReturnT<String> beat() {
-        return ReturnT.SUCCESS;
+        return ReturnT.ofSuccess();
     }
 
     @Override
@@ -40,7 +40,7 @@ public class ExecutorBizImpl implements ExecutorBiz {
         if (isRunningOrHasQueue) {
             return new ReturnT<String>(ReturnT.FAIL_CODE, "job thread is running or has trigger queue.");
         }
-        return ReturnT.SUCCESS;
+        return ReturnT.ofSuccess();
     }
 
     @Override
@@ -154,10 +154,10 @@ public class ExecutorBizImpl implements ExecutorBiz {
         JobThread jobThread = XxlJobExecutor.loadJobThread(killParam.getJobId());
         if (jobThread != null) {
             XxlJobExecutor.removeJobThread(killParam.getJobId(), "scheduling center kill job.");
-            return ReturnT.SUCCESS;
+            return ReturnT.ofSuccess();
         }
 
-        return new ReturnT<String>(ReturnT.SUCCESS_CODE, "job thread already killed.");
+        return ReturnT.ofSuccess( "job thread already killed.");
     }
 
     @Override

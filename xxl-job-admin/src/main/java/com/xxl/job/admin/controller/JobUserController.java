@@ -104,7 +104,7 @@ public class JobUserController {
 
         // write
         xxlJobUserDao.save(xxlJobUser);
-        return ReturnT.SUCCESS;
+        return ReturnT.ofSuccess();
     }
 
     @RequestMapping("/update")
@@ -115,7 +115,7 @@ public class JobUserController {
         // avoid opt login seft
         XxlJobUser loginUser = PermissionInterceptor.getLoginUser(request);
         if (loginUser.getUsername().equals(xxlJobUser.getUsername())) {
-            return new ReturnT<String>(ReturnT.FAIL.getCode(), I18nUtil.getString("user_update_loginuser_limit"));
+            return ReturnT.ofFail(I18nUtil.getString("user_update_loginuser_limit"));
         }
 
         // valid password
@@ -132,7 +132,7 @@ public class JobUserController {
 
         // write
         xxlJobUserDao.update(xxlJobUser);
-        return ReturnT.SUCCESS;
+        return ReturnT.ofSuccess();
     }
 
     @RequestMapping("/remove")
@@ -143,11 +143,11 @@ public class JobUserController {
         // avoid opt login seft
         XxlJobUser loginUser = PermissionInterceptor.getLoginUser(request);
         if (loginUser.getId() == id) {
-            return new ReturnT<String>(ReturnT.FAIL.getCode(), I18nUtil.getString("user_update_loginuser_limit"));
+            return ReturnT.ofFail(I18nUtil.getString("user_update_loginuser_limit"));
         }
 
         xxlJobUserDao.delete(id);
-        return ReturnT.SUCCESS;
+        return ReturnT.ofSuccess();
     }
 
     @RequestMapping("/updatePwd")
@@ -157,15 +157,15 @@ public class JobUserController {
                                      @RequestParam("oldPassword") String oldPassword){
 
         // valid
-        if (oldPassword==null || oldPassword.trim().length()==0){
-            return new ReturnT<String>(ReturnT.FAIL.getCode(), I18nUtil.getString("system_please_input") + I18nUtil.getString("change_pwd_field_oldpwd"));
+        if (oldPassword==null || oldPassword.trim().isEmpty()){
+            return ReturnT.ofFail(I18nUtil.getString("system_please_input") + I18nUtil.getString("change_pwd_field_oldpwd"));
         }
-        if (password==null || password.trim().length()==0){
-            return new ReturnT<String>(ReturnT.FAIL.getCode(), I18nUtil.getString("system_please_input") + I18nUtil.getString("change_pwd_field_oldpwd"));
+        if (password==null || password.trim().isEmpty()){
+            return ReturnT.ofFail(I18nUtil.getString("system_please_input") + I18nUtil.getString("change_pwd_field_oldpwd"));
         }
         password = password.trim();
         if (!(password.length()>=4 && password.length()<=20)) {
-            return new ReturnT<String>(ReturnT.FAIL_CODE, I18nUtil.getString("system_lengh_limit")+"[4-20]" );
+            return ReturnT.ofFail(I18nUtil.getString("system_lengh_limit")+"[4-20]" );
         }
 
         // md5 password
@@ -176,14 +176,14 @@ public class JobUserController {
         XxlJobUser loginUser = PermissionInterceptor.getLoginUser(request);
         XxlJobUser existUser = xxlJobUserDao.loadByUserName(loginUser.getUsername());
         if (!md5OldPassword.equals(existUser.getPassword())) {
-            return new ReturnT<String>(ReturnT.FAIL.getCode(), I18nUtil.getString("change_pwd_field_oldpwd") + I18nUtil.getString("system_unvalid"));
+            return ReturnT.ofFail(I18nUtil.getString("change_pwd_field_oldpwd") + I18nUtil.getString("system_unvalid"));
         }
 
         // write new
         existUser.setPassword(md5Password);
         xxlJobUserDao.update(existUser);
 
-        return ReturnT.SUCCESS;
+        return ReturnT.ofSuccess();
     }
 
 }

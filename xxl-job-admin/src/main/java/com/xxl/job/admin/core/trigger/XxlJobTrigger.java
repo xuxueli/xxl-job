@@ -150,7 +150,7 @@ public class XxlJobTrigger {
                 }
             } else {
                 routeAddressResult = executorRouteStrategyEnum.getRouter().route(triggerParam, group.getRegistryList());
-                if (routeAddressResult.getCode() == ReturnT.SUCCESS_CODE) {
+                if (routeAddressResult.isSuccess()) {
                     address = routeAddressResult.getContent();
                 }
             }

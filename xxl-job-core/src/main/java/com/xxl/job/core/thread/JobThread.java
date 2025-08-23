@@ -67,7 +67,7 @@ public class JobThread extends Thread{
 
 		triggerLogIdSet.add(triggerParam.getLogId());
 		triggerQueue.add(triggerParam);
-        return ReturnT.SUCCESS;
+        return ReturnT.ofSuccess();
 	}
 
     /**

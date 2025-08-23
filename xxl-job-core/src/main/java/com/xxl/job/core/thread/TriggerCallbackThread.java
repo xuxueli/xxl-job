@@ -166,7 +166,7 @@ public class TriggerCallbackThread {
         for (AdminBiz adminBiz: XxlJobExecutor.getAdminBizList()) {
             try {
                 ReturnT<String> callbackResult = adminBiz.callback(callbackParamList);
-                if (callbackResult!=null && ReturnT.SUCCESS_CODE == callbackResult.getCode()) {
+                if (callbackResult!=null && callbackResult.isSuccess()) {
                     callbackLog(callbackParamList, "<br>----------- xxl-job job callback finish.");
                     callbackRet = true;
                     break;

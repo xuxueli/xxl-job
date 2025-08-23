@@ -1625,7 +1625,7 @@ XXL-JOB会为每次调度请求生成一个单独的日志文件，需要通过 
 
 ### 5.8 任务执行结果
 自v1.6.2之后，任务执行结果通过 "IJobHandler" 的返回值 "ReturnT" 进行判断；
-当返回值符合 "ReturnT.code == ReturnT.SUCCESS_CODE" 时表示任务执行成功，否则表示任务执行失败，而且可以通过 "ReturnT.msg" 回调错误信息给调度中心；
+当返回值符合 "ReturnT#code == 200" 时表示任务执行成功，否则表示任务执行失败，而且可以通过 "ReturnT#msg" 回调错误信息给调度中心；
 从而，在任务逻辑中可以方便的控制任务执行结果；
 
 ### 5.9 分片广播 & 动态分片
@@ -2376,7 +2376,7 @@ Tips: 历史版本(V1.3.x)目前已经Release至稳定版本, 进入维护阶段
 @XxlJob("demoJobHandler")
 public ReturnT<String> execute(String param) {
     XxlJobLogger.log("hello world");
-    return ReturnT.SUCCESS;
+    return ReturnT.ofSuccess();
 }
 ```
 - 2、移除commons-exec，采用原生方式实现，降低第三方依赖；

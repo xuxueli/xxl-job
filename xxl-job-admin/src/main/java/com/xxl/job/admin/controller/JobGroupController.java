@@ -102,7 +102,7 @@ public class JobGroupController {
 		xxlJobGroup.setUpdateTime(new Date());
 
 		int ret = xxlJobGroupDao.save(xxlJobGroup);
-		return (ret>0)?ReturnT.SUCCESS:ReturnT.FAIL;
+		return (ret>0)?ReturnT.ofSuccess():ReturnT.ofFail();
 	}
 
 	@RequestMapping("/update")
@@ -149,7 +149,7 @@ public class JobGroupController {
 		xxlJobGroup.setUpdateTime(new Date());
 
 		int ret = xxlJobGroupDao.update(xxlJobGroup);
-		return (ret>0)?ReturnT.SUCCESS:ReturnT.FAIL;
+		return (ret>0)?ReturnT.ofSuccess():ReturnT.ofFail();
 	}
 
 	private List<String> findRegistryByAppName(String appnameParam){
@@ -191,7 +191,7 @@ public class JobGroupController {
 		}
 
 		int ret = xxlJobGroupDao.remove(id);
-		return (ret>0)?ReturnT.SUCCESS:ReturnT.FAIL;
+		return (ret>0)?ReturnT.ofSuccess():ReturnT.ofFail();
 	}
 
 	@RequestMapping("/loadById")

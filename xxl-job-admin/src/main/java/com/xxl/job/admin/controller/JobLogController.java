@@ -284,7 +284,7 @@ public class JobLogController {
 			}
 		} while (logIds!=null && logIds.size()>0);
 
-		return ReturnT.SUCCESS;
+		return ReturnT.ofSuccess();
 	}
 
 }

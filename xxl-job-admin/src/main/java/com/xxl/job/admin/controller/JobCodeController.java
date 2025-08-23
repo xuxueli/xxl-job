@@ -99,7 +99,7 @@ public class JobCodeController {
 		// remove code backup more than 30
 		xxlJobLogGlueDao.removeOld(existsJobInfo.getId(), 30);
 
-		return ReturnT.SUCCESS;
+		return ReturnT.ofSuccess();
 	}
 	
 }

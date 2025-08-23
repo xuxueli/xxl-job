@@ -35,7 +35,7 @@ public class ExecutorRouteBusyover extends ExecutorRouter {
                     .append("<br>msg：").append(idleBeatResult.getMsg());
 
             // beat success
-            if (idleBeatResult.getCode() == ReturnT.SUCCESS_CODE) {
+            if (idleBeatResult.isSuccess()) {
                 idleBeatResult.setMsg(idleBeatResultSB.toString());
                 idleBeatResult.setContent(address);
                 return idleBeatResult;

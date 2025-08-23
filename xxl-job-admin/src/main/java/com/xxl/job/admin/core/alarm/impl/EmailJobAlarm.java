@@ -37,7 +37,7 @@ public class EmailJobAlarm implements JobAlarm {
         boolean alarmResult = true;
 
         // send monitor email
-        if (info!=null && info.getAlarmEmail()!=null && info.getAlarmEmail().trim().length()>0) {
+        if (info!=null && info.getAlarmEmail()!=null && !info.getAlarmEmail().trim().isEmpty()) {
 
             // alarmContent
             String alarmContent = "Alarm Job LogId=" + jobLog.getId();
