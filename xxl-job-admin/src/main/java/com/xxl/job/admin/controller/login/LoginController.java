@@ -38,7 +38,7 @@ public class LoginController {
 	public ModelAndView login(HttpServletRequest request, HttpServletResponse response, ModelAndView modelAndView) {
 
 		// xxl-sso, logincheck
-		Response<LoginInfo> loginInfoResponse = XxlSsoHelper.loginCheckWithCookie(request, response);
+		Response<LoginInfo> loginInfoResponse = XxlSsoHelper.loginCheckWithAttr(request);
 		if (loginInfoResponse.isSuccess()) {
 			modelAndView.setView(new RedirectView("/",true,false));
 			return modelAndView;
