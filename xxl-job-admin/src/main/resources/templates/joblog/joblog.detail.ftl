@@ -5,8 +5,7 @@
     <@netCommon.commonStyle />
     <title>${I18n.admin_name}</title>
 </head>
-<body class="hold-transition skin-blue layout-top-nav">
-
+<body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
 
     <header class="main-header">

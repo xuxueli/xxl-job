@@ -1,12 +1,20 @@
+<#-- page import (style + script) -->
 <#macro commonStyle>
 
-	<#-- favicon -->
+	<#-- i18n -->
+	<#global I18n = I18nUtil.getMultString()?eval />
+
+	<#-- favicon、logo -->
+	<title>${I18n.admin_name}</title>
 	<link rel="icon" href="${request.contextPath}/static/favicon.ico" />
 
+	<#-- meta -->
 	<meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+
+	<#-- link style -->
     <!-- Bootstrap -->
     <link rel="stylesheet" href="${request.contextPath}/static/adminlte/bower_components/bootstrap/css/bootstrap.min.css">
     <!-- Font Awesome -->
@@ -28,9 +36,6 @@
 	<!-- pace -->
 	<link rel="stylesheet" href="${request.contextPath}/static/adminlte/bower_components/PACE/themes/blue/pace-theme-flash.css">
 
-	<#-- i18n -->
-	<#global I18n = I18nUtil.getMultString()?eval />
-
 </#macro>
 
 <#macro commonScript>
@@ -38,29 +43,42 @@
 	<script src="${request.contextPath}/static/adminlte/bower_components/jquery/jquery.min.js"></script>
 	<!-- Bootstrap -->
 	<script src="${request.contextPath}/static/adminlte/bower_components/bootstrap/js/bootstrap.min.js"></script>
-	<!-- FastClick -->
-	<script src="${request.contextPath}/static/adminlte/bower_components/fastclick/fastclick.js"></script>
-	<!-- AdminLTE App -->
-	<script src="${request.contextPath}/static/adminlte/dist/js/adminlte.min.js"></script>
+	<!-- PACE -->
+	<script src="${request.contextPath}/static/adminlte/bower_components/PACE/pace.min.js"></script>
 	<!-- jquery.slimscroll -->
 	<script src="${request.contextPath}/static/adminlte/bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+	<!-- FastClick -->
+	<script src="${request.contextPath}/static/adminlte/bower_components/fastclick/fastclick.js"></script>
 
-    <!-- pace -->
-    <script src="${request.contextPath}/static/adminlte/bower_components/PACE/pace.min.js"></script>
     <#-- jquery cookie -->
 	<script src="${request.contextPath}/static/plugins/jquery/jquery.cookie.js"></script>
 	<#-- jquery.validate -->
 	<script src="${request.contextPath}/static/plugins/jquery/jquery.validate.min.js"></script>
-
 	<#-- layer -->
 	<script src="${request.contextPath}/static/plugins/layer/layer.js"></script>
 
-	<#-- common -->
-    <script src="${request.contextPath}/static/js/common.1.js"></script>
+	<!-- base config -->
     <script>
 		var base_url = '${request.contextPath}';
         var I18n = ${I18nUtil.getMultString()};
+
+		// init menu status
+		if ( 'close' == $.cookie('sidebar_status') ) {
+			$('body').addClass('sidebar-collapse');
+		} else {
+			$('body').removeClass('sidebar-collapse');
+		}
+		// init body fixed
+		$('body').addClass('fixed');
+		// init menu speed
+		$('.sidebar-menu').attr('data-animation-speed', 1);
 	</script>
+
+	<!-- AdminLTE App -->
+	<script src="${request.contextPath}/static/adminlte/dist/js/adminlte.min.js"></script>
+
+	<#-- common js -->
+	<script src="${request.contextPath}/static/js/common.1.js"></script>
 
 </#macro>
 

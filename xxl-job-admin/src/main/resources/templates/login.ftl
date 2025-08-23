@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<#-- import macro -->
   	<#import "./common/common.macro.ftl" as netCommon>
+
+	<#-- commonStyle -->
 	<@netCommon.commonStyle />
+	<!-- iCheck -->
     <link rel="stylesheet" href="${request.contextPath}/static/adminlte/plugins/iCheck/square/blue.css">
-	<title>${I18n.admin_name}</title>
 </head>
 <body class="hold-transition login-page">
 	<div class="login-box">
