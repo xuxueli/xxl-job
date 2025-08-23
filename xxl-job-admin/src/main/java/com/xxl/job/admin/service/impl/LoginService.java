@@ -23,7 +23,7 @@ public class LoginService {
     public static final String LOGIN_IDENTITY_KEY = "XXL_JOB_LOGIN_IDENTITY";
 
     @Resource
-    private XxlJobUserMapper xxlJobUserDao;
+    private XxlJobUserMapper xxlJobUserMapper;
 
 
     // ---------------------- token tool ----------------------
@@ -53,7 +53,7 @@ public class LoginService {
         }
 
         // valid passowrd
-        XxlJobUser xxlJobUser = xxlJobUserDao.loadByUserName(username);
+        XxlJobUser xxlJobUser = xxlJobUserMapper.loadByUserName(username);
         if (xxlJobUser == null) {
             return new ReturnT<String>(500, I18nUtil.getString("login_param_unvalid"));
         }
@@ -96,7 +96,7 @@ public class LoginService {
                 logout(request, response);
             }
             if (cookieUser != null) {
-                XxlJobUser dbUser = xxlJobUserDao.loadByUserName(cookieUser.getUsername());
+                XxlJobUser dbUser = xxlJobUserMapper.loadByUserName(cookieUser.getUsername());
                 if (dbUser != null) {
                     if (cookieUser.getPassword().equals(dbUser.getPassword())) {
                         return dbUser;

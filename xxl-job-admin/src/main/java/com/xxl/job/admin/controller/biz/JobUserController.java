@@ -30,16 +30,16 @@ import java.util.Map;
 public class JobUserController {
 
     @Resource
-    private XxlJobUserMapper xxlJobUserDao;
+    private XxlJobUserMapper xxlJobUserMapper;
     @Resource
-    private XxlJobGroupMapper xxlJobGroupDao;
+    private XxlJobGroupMapper xxlJobGroupMapper;
 
     @RequestMapping
     @PermissionLimit(adminuser = true)
     public String index(Model model) {
 
         // 执行器列表
-        List<XxlJobGroup> groupList = xxlJobGroupDao.findAll();
+        List<XxlJobGroup> groupList = xxlJobGroupMapper.findAll();
         model.addAttribute("groupList", groupList);
 
         return "user/user.index";
@@ -54,8 +54,8 @@ public class JobUserController {
                                         @RequestParam("role") int role) {
 
         // page list
-        List<XxlJobUser> list = xxlJobUserDao.pageList(start, length, username, role);
-        int list_count = xxlJobUserDao.pageListCount(start, length, username, role);
+        List<XxlJobUser> list = xxlJobUserMapper.pageList(start, length, username, role);
+        int list_count = xxlJobUserMapper.pageListCount(start, length, username, role);
 
         // filter
         if (list!=null && list.size()>0) {
@@ -98,13 +98,13 @@ public class JobUserController {
         xxlJobUser.setPassword(passwordHash);
 
         // check repeat
-        XxlJobUser existUser = xxlJobUserDao.loadByUserName(xxlJobUser.getUsername());
+        XxlJobUser existUser = xxlJobUserMapper.loadByUserName(xxlJobUser.getUsername());
         if (existUser != null) {
             return new ReturnT<String>(ReturnT.FAIL_CODE, I18nUtil.getString("user_username_repeat") );
         }
 
         // write
-        xxlJobUserDao.save(xxlJobUser);
+        xxlJobUserMapper.save(xxlJobUser);
         return ReturnT.ofSuccess();
     }
 
@@ -133,7 +133,7 @@ public class JobUserController {
         }
 
         // write
-        xxlJobUserDao.update(xxlJobUser);
+        xxlJobUserMapper.update(xxlJobUser);
         return ReturnT.ofSuccess();
     }
 
@@ -148,7 +148,7 @@ public class JobUserController {
             return ReturnT.ofFail(I18nUtil.getString("user_update_loginuser_limit"));
         }
 
-        xxlJobUserDao.delete(id);
+        xxlJobUserMapper.delete(id);
         return ReturnT.ofSuccess();
     }
 
@@ -176,14 +176,14 @@ public class JobUserController {
 
         // valid old pwd
         XxlJobUser loginUser = PermissionInterceptor.getLoginUser(request);
-        XxlJobUser existUser = xxlJobUserDao.loadByUserName(loginUser.getUsername());
+        XxlJobUser existUser = xxlJobUserMapper.loadByUserName(loginUser.getUsername());
         if (!oldPasswordHash.equals(existUser.getPassword())) {
             return ReturnT.ofFail(I18nUtil.getString("change_pwd_field_oldpwd") + I18nUtil.getString("system_unvalid"));
         }
 
         // write new
         existUser.setPassword(passwordHash);
-        xxlJobUserDao.update(existUser);
+        xxlJobUserMapper.update(existUser);
 
         return ReturnT.ofSuccess();
     }

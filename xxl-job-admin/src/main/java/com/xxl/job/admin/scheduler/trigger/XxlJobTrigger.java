@@ -49,7 +49,7 @@ public class XxlJobTrigger {
                                String addressList) {
 
         // load data
-        XxlJobInfo jobInfo = XxlJobAdminConfig.getAdminConfig().getXxlJobInfoDao().loadById(jobId);
+        XxlJobInfo jobInfo = XxlJobAdminConfig.getAdminConfig().getXxlJobInfoMapper().loadById(jobId);
         if (jobInfo == null) {
             logger.warn(">>>>>>>>>>>> trigger fail, jobId invalid，jobId={}", jobId);
             return;
@@ -58,7 +58,7 @@ public class XxlJobTrigger {
             jobInfo.setExecutorParam(executorParam);
         }
         int finalFailRetryCount = failRetryCount>=0?failRetryCount:jobInfo.getExecutorFailRetryCount();
-        XxlJobGroup group = XxlJobAdminConfig.getAdminConfig().getXxlJobGroupDao().load(jobInfo.getJobGroup());
+        XxlJobGroup group = XxlJobAdminConfig.getAdminConfig().getXxlJobGroupMapper().load(jobInfo.getJobGroup());
 
         // cover addressList
         if (addressList!=null && addressList.trim().length()>0) {
@@ -120,7 +120,7 @@ public class XxlJobTrigger {
         jobLog.setJobGroup(jobInfo.getJobGroup());
         jobLog.setJobId(jobInfo.getId());
         jobLog.setTriggerTime(new Date());
-        XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().save(jobLog);
+        XxlJobAdminConfig.getAdminConfig().getXxlJobLogMapper().save(jobLog);
         logger.debug(">>>>>>>>>>> xxl-job trigger start, jobId:{}", jobLog.getId());
 
         // 2、init trigger-param
@@ -193,7 +193,7 @@ public class XxlJobTrigger {
         //jobLog.setTriggerTime();
         jobLog.setTriggerCode(triggerResult.getCode());
         jobLog.setTriggerMsg(triggerMsgSb.toString());
-        XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().updateTriggerInfo(jobLog);
+        XxlJobAdminConfig.getAdminConfig().getXxlJobLogMapper().updateTriggerInfo(jobLog);
 
         logger.debug(">>>>>>>>>>> xxl-job trigger end, jobId:{}", jobLog.getId());
     }

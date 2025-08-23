@@ -38,24 +38,24 @@ public class JobFailMonitorHelper {
 				while (!toStop) {
 					try {
 
-						List<Long> failLogIds = XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().findFailJobLogIds(1000);
+						List<Long> failLogIds = XxlJobAdminConfig.getAdminConfig().getXxlJobLogMapper().findFailJobLogIds(1000);
 						if (failLogIds!=null && !failLogIds.isEmpty()) {
 							for (long failLogId: failLogIds) {
 
 								// lock log
-								int lockRet = XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().updateAlarmStatus(failLogId, 0, -1);
+								int lockRet = XxlJobAdminConfig.getAdminConfig().getXxlJobLogMapper().updateAlarmStatus(failLogId, 0, -1);
 								if (lockRet < 1) {
 									continue;
 								}
-								XxlJobLog log = XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().load(failLogId);
-								XxlJobInfo info = XxlJobAdminConfig.getAdminConfig().getXxlJobInfoDao().loadById(log.getJobId());
+								XxlJobLog log = XxlJobAdminConfig.getAdminConfig().getXxlJobLogMapper().load(failLogId);
+								XxlJobInfo info = XxlJobAdminConfig.getAdminConfig().getXxlJobInfoMapper().loadById(log.getJobId());
 
 								// 1、fail retry monitor
 								if (log.getExecutorFailRetryCount() > 0) {
 									JobTriggerPoolHelper.trigger(log.getJobId(), TriggerTypeEnum.RETRY, (log.getExecutorFailRetryCount()-1), log.getExecutorShardingParam(), log.getExecutorParam(), null);
 									String retryMsg = "<br><br><span style=\"color:#F39C12;\" > >>>>>>>>>>>"+ I18nUtil.getString("jobconf_trigger_type_retry") +"<<<<<<<<<<< </span><br>";
 									log.setTriggerMsg(log.getTriggerMsg() + retryMsg);
-									XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().updateTriggerInfo(log);
+									XxlJobAdminConfig.getAdminConfig().getXxlJobLogMapper().updateTriggerInfo(log);
 								}
 
 								// 2、fail alarm monitor
@@ -67,7 +67,7 @@ public class JobFailMonitorHelper {
 									newAlarmStatus = 1;
 								}
 
-								XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().updateAlarmStatus(failLogId, -1, newAlarmStatus);
+								XxlJobAdminConfig.getAdminConfig().getXxlJobLogMapper().updateAlarmStatus(failLogId, -1, newAlarmStatus);
 							}
 						}
 

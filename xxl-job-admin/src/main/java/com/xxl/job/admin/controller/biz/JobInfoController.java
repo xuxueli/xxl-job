@@ -38,7 +38,7 @@ public class JobInfoController {
 	private static Logger logger = LoggerFactory.getLogger(JobInfoController.class);
 
 	@Resource
-	private XxlJobGroupMapper xxlJobGroupDao;
+	private XxlJobGroupMapper xxlJobGroupMapper;
 	@Resource
 	private XxlJobService xxlJobService;
 	
@@ -53,7 +53,7 @@ public class JobInfoController {
 		model.addAttribute("MisfireStrategyEnum", MisfireStrategyEnum.values());	    			// 调度过期策略
 
 		// 执行器列表
-		List<XxlJobGroup> jobGroupList_all =  xxlJobGroupDao.findAll();
+		List<XxlJobGroup> jobGroupList_all =  xxlJobGroupMapper.findAll();
 
 		// filter group
 		List<XxlJobGroup> jobGroupList = PermissionInterceptor.filterJobGroupByRole(request, jobGroupList_all);

@@ -76,7 +76,7 @@ public class JobScheduleHelper {
 
                         // 1、pre read
                         long nowTime = System.currentTimeMillis();
-                        List<XxlJobInfo> scheduleList = XxlJobAdminConfig.getAdminConfig().getXxlJobInfoDao().scheduleJobQuery(nowTime + PRE_READ_MS, preReadCount);
+                        List<XxlJobInfo> scheduleList = XxlJobAdminConfig.getAdminConfig().getXxlJobInfoMapper().scheduleJobQuery(nowTime + PRE_READ_MS, preReadCount);
                         if (scheduleList!=null && scheduleList.size()>0) {
                             // 2、push time-ring
                             for (XxlJobInfo jobInfo: scheduleList) {
@@ -139,7 +139,7 @@ public class JobScheduleHelper {
 
                             // 3、update trigger info
                             for (XxlJobInfo jobInfo: scheduleList) {
-                                XxlJobAdminConfig.getAdminConfig().getXxlJobInfoDao().scheduleUpdate(jobInfo);
+                                XxlJobAdminConfig.getAdminConfig().getXxlJobInfoMapper().scheduleUpdate(jobInfo);
                             }
 
                         } else {

@@ -1,9 +1,8 @@
-package com.xxl.job.admin.dao;
+package com.xxl.job.admin.mapper;
 
 import com.xxl.job.admin.model.XxlJobInfo;
 import com.xxl.job.admin.scheduler.scheduler.MisfireStrategyEnum;
 import com.xxl.job.admin.scheduler.scheduler.ScheduleTypeEnum;
-import com.xxl.job.admin.mapper.XxlJobInfoMapper;
 import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -14,21 +13,21 @@ import java.util.Date;
 import java.util.List;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class XxlJobInfoDaoTest {
-	private static Logger logger = LoggerFactory.getLogger(XxlJobInfoDaoTest.class);
+public class XxlJobInfoMapperTest {
+	private static Logger logger = LoggerFactory.getLogger(XxlJobInfoMapperTest.class);
 	
 	@Resource
-	private XxlJobInfoMapper xxlJobInfoDao;
+	private XxlJobInfoMapper xxlJobInfoMapper;
 	
 	@Test
 	public void pageList(){
-		List<XxlJobInfo> list = xxlJobInfoDao.pageList(0, 20, 0, -1, null, null, null);
-		int list_count = xxlJobInfoDao.pageListCount(0, 20, 0, -1, null, null, null);
+		List<XxlJobInfo> list = xxlJobInfoMapper.pageList(0, 20, 0, -1, null, null, null);
+		int list_count = xxlJobInfoMapper.pageListCount(0, 20, 0, -1, null, null, null);
 
 		logger.info("", list);
 		logger.info("", list_count);
 
-		List<XxlJobInfo> list2 = xxlJobInfoDao.getJobsByGroup(1);
+		List<XxlJobInfo> list2 = xxlJobInfoMapper.getJobsByGroup(1);
 	}
 	
 	@Test
@@ -54,9 +53,9 @@ public class XxlJobInfoDaoTest {
 		info.setUpdateTime(new Date());
 		info.setGlueUpdatetime(new Date());
 
-		int count = xxlJobInfoDao.save(info);
+		int count = xxlJobInfoMapper.save(info);
 
-		XxlJobInfo info2 = xxlJobInfoDao.loadById(info.getId());
+		XxlJobInfo info2 = xxlJobInfoMapper.loadById(info.getId());
 		info.setScheduleType(ScheduleTypeEnum.FIX_RATE.name());
 		info.setScheduleConf(String.valueOf(44));
 		info.setMisfireStrategy(MisfireStrategyEnum.FIRE_ONCE_NOW.name());
@@ -74,13 +73,13 @@ public class XxlJobInfoDaoTest {
 		info2.setChildJobId("1");
 
 		info2.setUpdateTime(new Date());
-		int item2 = xxlJobInfoDao.update(info2);
+		int item2 = xxlJobInfoMapper.update(info2);
 
-		xxlJobInfoDao.delete(info2.getId());
+		xxlJobInfoMapper.delete(info2.getId());
 
-		List<XxlJobInfo> list2 = xxlJobInfoDao.getJobsByGroup(1);
+		List<XxlJobInfo> list2 = xxlJobInfoMapper.getJobsByGroup(1);
 
-		int ret3 = xxlJobInfoDao.findAllCount();
+		int ret3 = xxlJobInfoMapper.findAllCount();
 
 	}
 

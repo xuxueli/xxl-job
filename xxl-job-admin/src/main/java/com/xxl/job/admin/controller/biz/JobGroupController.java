@@ -28,11 +28,11 @@ import java.util.*;
 public class JobGroupController {
 
 	@Resource
-	public XxlJobInfoMapper xxlJobInfoDao;
+	public XxlJobInfoMapper xxlJobInfoMapper;
 	@Resource
-	public XxlJobGroupMapper xxlJobGroupDao;
+	public XxlJobGroupMapper xxlJobGroupMapper;
 	@Resource
-	private XxlJobRegistryMapper xxlJobRegistryDao;
+	private XxlJobRegistryMapper xxlJobRegistryMapper;
 
 	@RequestMapping
 	@PermissionLimit(adminuser = true)
@@ -50,8 +50,8 @@ public class JobGroupController {
 										@RequestParam("title") String title) {
 
 		// page query
-		List<XxlJobGroup> list = xxlJobGroupDao.pageList(start, length, appname, title);
-		int list_count = xxlJobGroupDao.pageListCount(start, length, appname, title);
+		List<XxlJobGroup> list = xxlJobGroupMapper.pageList(start, length, appname, title);
+		int list_count = xxlJobGroupMapper.pageListCount(start, length, appname, title);
 
 		// package result
 		Map<String, Object> maps = new HashMap<String, Object>();
@@ -101,7 +101,7 @@ public class JobGroupController {
 		// process
 		xxlJobGroup.setUpdateTime(new Date());
 
-		int ret = xxlJobGroupDao.save(xxlJobGroup);
+		int ret = xxlJobGroupMapper.save(xxlJobGroup);
 		return (ret>0)?ReturnT.ofSuccess():ReturnT.ofFail();
 	}
 
@@ -148,13 +148,13 @@ public class JobGroupController {
 		// process
 		xxlJobGroup.setUpdateTime(new Date());
 
-		int ret = xxlJobGroupDao.update(xxlJobGroup);
+		int ret = xxlJobGroupMapper.update(xxlJobGroup);
 		return (ret>0)?ReturnT.ofSuccess():ReturnT.ofFail();
 	}
 
 	private List<String> findRegistryByAppName(String appnameParam){
 		HashMap<String, List<String>> appAddressMap = new HashMap<String, List<String>>();
-		List<XxlJobRegistry> list = xxlJobRegistryDao.findAll(RegistryConfig.DEAD_TIMEOUT, new Date());
+		List<XxlJobRegistry> list = xxlJobRegistryMapper.findAll(RegistryConfig.DEAD_TIMEOUT, new Date());
 		if (list != null) {
 			for (XxlJobRegistry item: list) {
 				if (RegistryConfig.RegistType.EXECUTOR.name().equals(item.getRegistryGroup())) {
@@ -180,17 +180,17 @@ public class JobGroupController {
 	public ReturnT<String> remove(@RequestParam("id") int id){
 
 		// valid
-		int count = xxlJobInfoDao.pageListCount(0, 10, id, -1,  null, null, null);
+		int count = xxlJobInfoMapper.pageListCount(0, 10, id, -1,  null, null, null);
 		if (count > 0) {
 			return new ReturnT<String>(500, I18nUtil.getString("jobgroup_del_limit_0") );
 		}
 
-		List<XxlJobGroup> allList = xxlJobGroupDao.findAll();
+		List<XxlJobGroup> allList = xxlJobGroupMapper.findAll();
 		if (allList.size() == 1) {
 			return new ReturnT<String>(500, I18nUtil.getString("jobgroup_del_limit_1") );
 		}
 
-		int ret = xxlJobGroupDao.remove(id);
+		int ret = xxlJobGroupMapper.remove(id);
 		return (ret>0)?ReturnT.ofSuccess():ReturnT.ofFail();
 	}
 
@@ -198,7 +198,7 @@ public class JobGroupController {
 	@ResponseBody
 	@PermissionLimit(adminuser = true)
 	public ReturnT<XxlJobGroup> loadById(@RequestParam("id") int id){
-		XxlJobGroup jobGroup = xxlJobGroupDao.load(id);
+		XxlJobGroup jobGroup = xxlJobGroupMapper.load(id);
 		return jobGroup!=null?ReturnT.ofSuccess(jobGroup):ReturnT.ofFail();
 	}
 

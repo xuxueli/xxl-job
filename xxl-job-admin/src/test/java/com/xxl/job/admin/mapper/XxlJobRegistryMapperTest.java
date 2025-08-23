@@ -1,7 +1,6 @@
-package com.xxl.job.admin.dao;
+package com.xxl.job.admin.mapper;
 
 import com.xxl.job.admin.model.XxlJobRegistry;
-import com.xxl.job.admin.mapper.XxlJobRegistryMapper;
 import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,29 +11,29 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class XxlJobRegistryDaoTest {
+public class XxlJobRegistryMapperTest {
 
     @Resource
-    private XxlJobRegistryMapper xxlJobRegistryDao;
+    private XxlJobRegistryMapper xxlJobRegistryMapper;
 
     @Test
     public void test(){
-        int ret = xxlJobRegistryDao.registrySaveOrUpdate("g1", "k1", "v1", new Date());
+        int ret = xxlJobRegistryMapper.registrySaveOrUpdate("g1", "k1", "v1", new Date());
         /*int ret = xxlJobRegistryDao.registryUpdate("g1", "k1", "v1", new Date());
         if (ret < 1) {
             ret = xxlJobRegistryDao.registrySave("g1", "k1", "v1", new Date());
         }*/
 
-        List<XxlJobRegistry> list = xxlJobRegistryDao.findAll(1, new Date());
+        List<XxlJobRegistry> list = xxlJobRegistryMapper.findAll(1, new Date());
 
-        int ret2 = xxlJobRegistryDao.removeDead(Arrays.asList(1));
+        int ret2 = xxlJobRegistryMapper.removeDead(Arrays.asList(1));
     }
 
     @Test
     public void test2() throws InterruptedException {
         for (int i = 0; i < 100; i++) {
             new Thread(()->{
-                int ret = xxlJobRegistryDao.registrySaveOrUpdate("g1", "k1", "v1", new Date());
+                int ret = xxlJobRegistryMapper.registrySaveOrUpdate("g1", "k1", "v1", new Date());
                 System.out.println(ret);
 
                 /*int ret = xxlJobRegistryDao.registryUpdate("g1", "k1", "v1", new Date());

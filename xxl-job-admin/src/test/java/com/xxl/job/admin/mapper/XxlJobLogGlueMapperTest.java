@@ -1,7 +1,6 @@
-package com.xxl.job.admin.dao;
+package com.xxl.job.admin.mapper;
 
 import com.xxl.job.admin.model.XxlJobLogGlue;
-import com.xxl.job.admin.mapper.XxlJobLogGlueMapper;
 import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,10 +9,10 @@ import java.util.Date;
 import java.util.List;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class XxlJobLogGlueDaoTest {
+public class XxlJobLogGlueMapperTest {
 
     @Resource
-    private XxlJobLogGlueMapper xxlJobLogGlueDao;
+    private XxlJobLogGlueMapper xxlJobLogGlueMapper;
 
     @Test
     public void test(){
@@ -25,13 +24,13 @@ public class XxlJobLogGlueDaoTest {
 
         logGlue.setAddTime(new Date());
         logGlue.setUpdateTime(new Date());
-        int ret = xxlJobLogGlueDao.save(logGlue);
+        int ret = xxlJobLogGlueMapper.save(logGlue);
 
-        List<XxlJobLogGlue> list = xxlJobLogGlueDao.findByJobId(1);
+        List<XxlJobLogGlue> list = xxlJobLogGlueMapper.findByJobId(1);
 
-        int ret2 = xxlJobLogGlueDao.removeOld(1, 1);
+        int ret2 = xxlJobLogGlueMapper.removeOld(1, 1);
 
-        int ret3 =xxlJobLogGlueDao.deleteByJobId(1);
+        int ret3 = xxlJobLogGlueMapper.deleteByJobId(1);
     }
 
 }

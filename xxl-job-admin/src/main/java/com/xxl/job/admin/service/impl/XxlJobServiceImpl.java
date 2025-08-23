@@ -35,22 +35,22 @@ public class XxlJobServiceImpl implements XxlJobService {
 	private static Logger logger = LoggerFactory.getLogger(XxlJobServiceImpl.class);
 
 	@Resource
-	private XxlJobGroupMapper xxlJobGroupDao;
+	private XxlJobGroupMapper xxlJobGroupMapper;
 	@Resource
-	private XxlJobInfoMapper xxlJobInfoDao;
+	private XxlJobInfoMapper xxlJobInfoMapper;
 	@Resource
-	public XxlJobLogMapper xxlJobLogDao;
+	public XxlJobLogMapper xxlJobLogMapper;
 	@Resource
-	private XxlJobLogGlueMapper xxlJobLogGlueDao;
+	private XxlJobLogGlueMapper xxlJobLogGlueMapper;
 	@Resource
-	private XxlJobLogReportMapper xxlJobLogReportDao;
+	private XxlJobLogReportMapper xxlJobLogReportMapper;
 	
 	@Override
 	public Map<String, Object> pageList(int start, int length, int jobGroup, int triggerStatus, String jobDesc, String executorHandler, String author) {
 
 		// page list
-		List<XxlJobInfo> list = xxlJobInfoDao.pageList(start, length, jobGroup, triggerStatus, jobDesc, executorHandler, author);
-		int list_count = xxlJobInfoDao.pageListCount(start, length, jobGroup, triggerStatus, jobDesc, executorHandler, author);
+		List<XxlJobInfo> list = xxlJobInfoMapper.pageList(start, length, jobGroup, triggerStatus, jobDesc, executorHandler, author);
+		int list_count = xxlJobInfoMapper.pageListCount(start, length, jobGroup, triggerStatus, jobDesc, executorHandler, author);
 		
 		// package result
 		Map<String, Object> maps = new HashMap<String, Object>();
@@ -64,7 +64,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 	public ReturnT<String> add(XxlJobInfo jobInfo, XxlJobUser loginUser) {
 
 		// valid base
-		XxlJobGroup group = xxlJobGroupDao.load(jobInfo.getJobGroup());
+		XxlJobGroup group = xxlJobGroupMapper.load(jobInfo.getJobGroup());
 		if (group == null) {
 			return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("system_please_choose")+I18nUtil.getString("jobinfo_field_jobgroup")) );
 		}
@@ -126,7 +126,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 			String[] childJobIds = jobInfo.getChildJobId().split(",");
 			for (String childJobIdItem: childJobIds) {
 				if (childJobIdItem!=null && childJobIdItem.trim().length()>0 && isNumeric(childJobIdItem)) {
-					XxlJobInfo childJobInfo = xxlJobInfoDao.loadById(Integer.parseInt(childJobIdItem));
+					XxlJobInfo childJobInfo = xxlJobInfoMapper.loadById(Integer.parseInt(childJobIdItem));
 					if (childJobInfo==null) {
 						return new ReturnT<String>(ReturnT.FAIL_CODE,
 								MessageFormat.format((I18nUtil.getString("jobinfo_field_childJobId")+"({0})"+I18nUtil.getString("system_not_found")), childJobIdItem));
@@ -157,7 +157,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 		jobInfo.setGlueUpdatetime(new Date());
 		// remove the whitespace
 		jobInfo.setExecutorHandler(jobInfo.getExecutorHandler().trim());
-		xxlJobInfoDao.save(jobInfo);
+		xxlJobInfoMapper.save(jobInfo);
 		if (jobInfo.getId() < 1) {
 			return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("jobinfo_field_add")+I18nUtil.getString("system_fail")) );
 		}
@@ -231,7 +231,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 					}
 
 					// valid child
-					XxlJobInfo childJobInfo = xxlJobInfoDao.loadById(childJobId);
+					XxlJobInfo childJobInfo = xxlJobInfoMapper.loadById(childJobId);
 					if (childJobInfo==null) {
 						return new ReturnT<String>(ReturnT.FAIL_CODE,
 								MessageFormat.format((I18nUtil.getString("jobinfo_field_childJobId")+"({0})"+I18nUtil.getString("system_not_found")), childJobIdItem));
@@ -257,13 +257,13 @@ public class XxlJobServiceImpl implements XxlJobService {
 		}
 
 		// group valid
-		XxlJobGroup jobGroup = xxlJobGroupDao.load(jobInfo.getJobGroup());
+		XxlJobGroup jobGroup = xxlJobGroupMapper.load(jobInfo.getJobGroup());
 		if (jobGroup == null) {
 			return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("jobinfo_field_jobgroup")+I18nUtil.getString("system_unvalid")) );
 		}
 
 		// stage job info
-		XxlJobInfo exists_jobInfo = xxlJobInfoDao.loadById(jobInfo.getId());
+		XxlJobInfo exists_jobInfo = xxlJobInfoMapper.loadById(jobInfo.getId());
 		if (exists_jobInfo == null) {
 			return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("jobinfo_field_id")+I18nUtil.getString("system_not_found")) );
 		}
@@ -302,7 +302,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 		exists_jobInfo.setTriggerNextTime(nextTriggerTime);
 
 		exists_jobInfo.setUpdateTime(new Date());
-        xxlJobInfoDao.update(exists_jobInfo);
+        xxlJobInfoMapper.update(exists_jobInfo);
 
 
 		return ReturnT.ofSuccess();
@@ -310,21 +310,21 @@ public class XxlJobServiceImpl implements XxlJobService {
 
 	@Override
 	public ReturnT<String> remove(int id) {
-		XxlJobInfo xxlJobInfo = xxlJobInfoDao.loadById(id);
+		XxlJobInfo xxlJobInfo = xxlJobInfoMapper.loadById(id);
 		if (xxlJobInfo == null) {
 			return ReturnT.ofSuccess();
 		}
 
-		xxlJobInfoDao.delete(id);
-		xxlJobLogDao.delete(id);
-		xxlJobLogGlueDao.deleteByJobId(id);
+		xxlJobInfoMapper.delete(id);
+		xxlJobLogMapper.delete(id);
+		xxlJobLogGlueMapper.deleteByJobId(id);
 		return ReturnT.ofSuccess();
 	}
 
 	@Override
 	public ReturnT<String> start(int id) {
 		// load and valid
-		XxlJobInfo xxlJobInfo = xxlJobInfoDao.loadById(id);
+		XxlJobInfo xxlJobInfo = xxlJobInfoMapper.loadById(id);
 		if (xxlJobInfo == null) {
 			return ReturnT.ofFail(I18nUtil.getString("jobinfo_glue_jobid_unvalid"));
 		}
@@ -353,14 +353,14 @@ public class XxlJobServiceImpl implements XxlJobService {
 		xxlJobInfo.setTriggerNextTime(nextTriggerTime);
 
 		xxlJobInfo.setUpdateTime(new Date());
-		xxlJobInfoDao.update(xxlJobInfo);
+		xxlJobInfoMapper.update(xxlJobInfo);
 		return ReturnT.ofSuccess();
 	}
 
 	@Override
 	public ReturnT<String> stop(int id) {
 		// load and valid
-        XxlJobInfo xxlJobInfo = xxlJobInfoDao.loadById(id);
+        XxlJobInfo xxlJobInfo = xxlJobInfoMapper.loadById(id);
 		if (xxlJobInfo == null) {
 			return ReturnT.ofFail(I18nUtil.getString("jobinfo_glue_jobid_unvalid"));
 		}
@@ -371,7 +371,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 		xxlJobInfo.setTriggerNextTime(0);
 
 		xxlJobInfo.setUpdateTime(new Date());
-		xxlJobInfoDao.update(xxlJobInfo);
+		xxlJobInfoMapper.update(xxlJobInfo);
 		return ReturnT.ofSuccess();
 	}
 
@@ -383,7 +383,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 		if (loginUser == null) {
 			return ReturnT.ofFail(I18nUtil.getString("system_permission_limit"));
 		}
-		XxlJobInfo xxlJobInfo = xxlJobInfoDao.loadById(jobId);
+		XxlJobInfo xxlJobInfo = xxlJobInfoMapper.loadById(jobId);
 		if (xxlJobInfo == null) {
 			return ReturnT.ofFail(I18nUtil.getString("jobinfo_glue_jobid_unvalid"));
 		}
@@ -414,10 +414,10 @@ public class XxlJobServiceImpl implements XxlJobService {
 	@Override
 	public Map<String, Object> dashboardInfo() {
 
-		int jobInfoCount = xxlJobInfoDao.findAllCount();
+		int jobInfoCount = xxlJobInfoMapper.findAllCount();
 		int jobLogCount = 0;
 		int jobLogSuccessCount = 0;
-		XxlJobLogReport xxlJobLogReport = xxlJobLogReportDao.queryLogReportTotal();
+		XxlJobLogReport xxlJobLogReport = xxlJobLogReportMapper.queryLogReportTotal();
 		if (xxlJobLogReport != null) {
 			jobLogCount = xxlJobLogReport.getRunningCount() + xxlJobLogReport.getSucCount() + xxlJobLogReport.getFailCount();
 			jobLogSuccessCount = xxlJobLogReport.getSucCount();
@@ -425,7 +425,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 
 		// executor count
 		Set<String> executorAddressSet = new HashSet<String>();
-		List<XxlJobGroup> groupList = xxlJobGroupDao.findAll();
+		List<XxlJobGroup> groupList = xxlJobGroupMapper.findAll();
 
 		if (groupList!=null && !groupList.isEmpty()) {
 			for (XxlJobGroup group: groupList) {
@@ -457,7 +457,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 		int triggerCountSucTotal = 0;
 		int triggerCountFailTotal = 0;
 
-		List<XxlJobLogReport> logReportList = xxlJobLogReportDao.queryLogReport(startDate, endDate);
+		List<XxlJobLogReport> logReportList = xxlJobLogReportMapper.queryLogReport(startDate, endDate);
 
 		if (logReportList!=null && logReportList.size()>0) {
 			for (XxlJobLogReport item: logReportList) {
