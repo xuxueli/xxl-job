@@ -2546,7 +2546,7 @@ public void execute() {
 ### 7.40 版本 v3.2.0 Release Notes[规划中]
 - 1、【强化】AI任务（ollamaJobHandler）优化：针对 “model” 模型配置信息，从执行器侧文件类配置调整至调度中心“任务参数”动态配置，支持集成多模型、并结合任务动态配置切换。
 - 2、【修复】漏洞修复（CVE-2025-7787），针对 httpJobHandler 支持配置URL白名单限制，防止服务器端请求伪造（SSRF）攻击。
-- 3、【升级】升级多项maven依赖至较新版本，如 spring-ai、dify 等；
+- 3、【升级】升级多项maven依赖至较新版本，如 netty、groovy、mybatis、spring、spring-ai、dify 等；
 
 - 3、【规划中】登录安全升级，密码加密处理算法从Md5改为Sha256；
 ```
