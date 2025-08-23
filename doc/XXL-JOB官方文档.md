@@ -2549,6 +2549,7 @@ public void execute() {
 - 3、【升级】升级多项maven依赖至较新版本，如 netty、groovy、mybatis、spring、spring-ai、dify 等；
 - 4、【优化】登录信息页面空值处理优化，避免空值影响ftl渲染；
 - 5、【优化】异常页面处理逻辑优化，新增兜底落地页配置；
+- 6、【重构】ReturnT 重构，简化代码结构，提升API易用性以及可维护性；
 
 - 3、【规划中】登录安全升级，密码加密处理算法从Md5改为Sha256；
 ```
