@@ -134,7 +134,7 @@ public class JobRegistryHelper {
 		// stop registryOrRemoveThreadPool
 		registryOrRemoveThreadPool.shutdownNow();
 
-		// stop monitir (interrupt and wait)
+		// stop monitor (interrupt and wait)
 		registryMonitorThread.interrupt();
 		try {
 			registryMonitorThread.join();
