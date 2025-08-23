@@ -1,13 +1,19 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <#-- import macro -->
     <#import "../common/common.macro.ftl" as netCommon>
+
+    <#-- commonStyle -->
     <@netCommon.commonStyle />
-    <title>${I18n.admin_name}</title>
+
+    <#-- biz start（1/5 style） -->
+    <#-- biz end（1/5 end） -->
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
 
+    <!-- header -->
     <header class="main-header">
         <nav class="navbar navbar-static-top">
             <div class="container">
@@ -42,14 +48,30 @@
         </nav>
     </header>
 
+    <!-- left -->
+    <#-- biz start（2/5 left） -->
+    <#-- biz end（2/5 left） -->
+
+    <!-- right start -->
     <div class="content-wrapper" >
+
+        <!-- content-header -->
+        <#-- biz start（3/5 name） -->
+        <#-- biz end（3/5 name） -->
+
+        <!-- content-main -->
         <section class="content">
+            <#-- biz start（4/5 content） -->
+
             <pre style="font-size:12px;position:relative;" >
                 <div id="logConsole"></div>
                 <li class="fa fa-refresh fa-spin" style="font-size: 20px;float: left;" id="logConsoleRunning" ></li>
             </pre>
+
+            <#-- biz end（4/5 content） -->
         </section>
     </div>
+    <!-- right end -->
 
     <!-- footer -->
     <@netCommon.commonFooter />
@@ -57,6 +79,8 @@
 </div>
 
 <@netCommon.commonScript />
+
+<#-- biz start（5/5 script） -->
 <script>
     // 参数
     var triggerCode = '${triggerCode}';
@@ -64,6 +88,7 @@
     var logId = '${logId}';
 </script>
 <script src="${request.contextPath}/static/js/joblog.detail.1.js"></script>
+<#-- biz end（5/5 script） -->
 
 </body>
 </html>

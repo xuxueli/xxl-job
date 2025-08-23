@@ -82,21 +82,23 @@
 
 </#macro>
 
+<#-- page module: Header-->
 <#macro commonHeader>
 	<header class="main-header">
+		<!-- header-logo -->
 		<a href="${request.contextPath}/" class="logo">
 			<span class="logo-mini"><b>XXL</b></span>
 			<span class="logo-lg"><b>${I18n.admin_name}</b></span>
 		</a>
 		<nav class="navbar navbar-static-top" role="navigation">
-
+			<!--header left -->
 			<a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
                 <span class="sr-only">Toggle navigation</span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </a>
-
+			<!--header right -->
           	<div class="navbar-custom-menu">
 				<ul class="nav navbar-nav">
 					<#-- login user -->
@@ -148,6 +150,21 @@
 
 </#macro>
 
+<#-- page module: Footer-->
+<#macro commonFooter >
+	<footer class="main-footer">
+		Powered by <b>XXL-JOB</b> ${I18n.admin_version}
+		<div class="pull-right hidden-xs">
+			<strong>Copyright &copy; 2015-${.now?string('yyyy')} &nbsp;
+				<a href="https://www.xuxueli.com/" target="_blank" >xuxueli</a>
+				&nbsp;
+				<a href="https://github.com/xuxueli/xxl-job" target="_blank" >github</a>
+			</strong><!-- All rights reserved. -->
+		</div>
+	</footer>
+</#macro>
+
+<#-- page module: Left-->
 <#macro commonLeft pageName >
 	<!-- Left side column. contains the logo and sidebar -->
 	<aside class="main-sidebar">
@@ -198,7 +215,7 @@
 							<i class="menu-icon fa fa-user bg-yellow"></i>
 							<div class="menu-info">
 								<h4 class="control-sidebar-subheading">Frodo 更新了资料</h4>
-								<p>更新手机号码 +1(800)555-1234</p>
+								<p>更新手机号码 +1(800)1111-1111</p>
 							</div>
 						</a>
 					</li>
@@ -212,7 +229,7 @@
 						</a>
 					</li>
 					<li>
-						<a href="javascript::;">
+						<a href="javascript:;">
 						<i class="menu-icon fa fa-file-code-o bg-green"></i>
 						<div class="menu-info">
 							<h4 class="control-sidebar-subheading">001号定时作业调度</h4>
@@ -245,17 +262,4 @@
 	<!-- /.control-sidebar -->
 	<!-- Add the sidebar's background. This div must be placed immediately after the control sidebar -->
 	<div class="control-sidebar-bg"></div>
-</#macro>
-
-<#macro commonFooter >
-	<footer class="main-footer">
-        Powered by <b>XXL-JOB</b> ${I18n.admin_version}
-		<div class="pull-right hidden-xs">
-            <strong>Copyright &copy; 2015-${.now?string('yyyy')} &nbsp;
-                <a href="https://www.xuxueli.com/" target="_blank" >xuxueli</a>
-				&nbsp;
-                <a href="https://github.com/xuxueli/xxl-job" target="_blank" >github</a>
-            </strong><!-- All rights reserved. -->
-		</div>
-	</footer>
 </#macro>

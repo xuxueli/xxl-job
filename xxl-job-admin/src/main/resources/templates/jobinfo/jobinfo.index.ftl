@@ -1,29 +1,45 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <#-- import macro -->
   	<#import "../common/common.macro.ftl" as netCommon>
+
+    <#-- commonStyle -->
 	<@netCommon.commonStyle />
+
+    <#-- biz start（1/5 style） -->
 	<!-- DataTables -->
   	<link rel="stylesheet" href="${request.contextPath}/static/adminlte/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
-    <title>${I18n.admin_name}</title>
+    <#-- biz end（1/5 end） -->
+
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
+
 	<!-- header -->
 	<@netCommon.commonHeader />
+
 	<!-- left -->
-	<@netCommon.commonLeft "jobinfo" />
-	
-	<!-- Content Wrapper. Contains page content -->
+    <#-- biz start（2/5 left） -->
+    <@netCommon.commonLeft "jobinfo" />
+    <#-- biz end（2/5 left） -->
+
+    <!-- right start -->
 	<div class="content-wrapper">
-		<!-- Content Header (Page header) -->
-		<section class="content-header">
-			<h1>${I18n.jobinfo_name}</h1>
-		</section>
-		
-		<!-- Main content -->
+
+        <!-- content-header -->
+        <section class="content-header">
+            <#-- biz start（3/5 name） -->
+            <h1>${I18n.jobinfo_name}</h1>
+            <#-- biz end（3/5 name） -->
+        </section>
+
+        <!-- content-main -->
 	    <section class="content">
-	    
+
+            <#-- biz start（4/5 content） -->
+
+            <!-- filter -->
 	    	<div class="row">
 	    		<div class="col-xs-3">
 	              	<div class="input-group">
@@ -66,7 +82,8 @@
 	            	<button class="btn btn-block btn-success add" type="button">${I18n.jobinfo_field_add}</button>
 	            </div>
           	</div>
-	    	
+
+            <!-- table -->
 			<div class="row">
 				<div class="col-xs-12">
 					<div class="box">
@@ -98,8 +115,13 @@
 					</div>
 				</div>
 			</div>
+
+
 	    </section>
+
+        <#-- biz end（4/5 content） -->
 	</div>
+    <!-- right end -->
 	
 	<!-- footer -->
 	<@netCommon.commonFooter />
@@ -543,6 +565,8 @@ exit 0
 </div>
 
 <@netCommon.commonScript />
+
+<#-- biz start（5/5 script） -->
 <!-- DataTables -->
 <script src="${request.contextPath}/static/adminlte/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
 <script src="${request.contextPath}/static/adminlte/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
@@ -551,5 +575,7 @@ exit 0
 <#-- cronGen -->
 <script src="${request.contextPath}/static/plugins/cronGen/cronGen<#if I18n.admin_i18n?default('')?length gt 0 >_${I18n.admin_i18n}</#if>.js"></script>
 <script src="${request.contextPath}/static/js/jobinfo.index.1.js"></script>
+<#-- biz end（5/5 script） -->
+
 </body>
 </html>
