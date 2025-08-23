@@ -12,8 +12,11 @@ import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -83,7 +86,7 @@ public class SampleXxlJob {
         BufferedReader bufferedReader = null;
         try {
             // valid
-            if (command==null || command.trim().length()==0) {
+            if (command==null || command.trim().isEmpty()) {
                 XxlJobHelper.handleFail("command empty.");
                 return;
             }
@@ -168,15 +171,18 @@ public class SampleXxlJob {
         }
 
         // param valid
-        if (url==null || url.trim().length()==0) {
+        if (url==null || url.trim().isEmpty()) {
             XxlJobHelper.log("url["+ url +"] invalid.");
-
+            XxlJobHelper.handleFail();
+            return;
+        }
+        if (!isValidDomain( url)) {
+            XxlJobHelper.log("url["+ url +"] not allowed.");
             XxlJobHelper.handleFail();
             return;
         }
         if (method==null || !Arrays.asList("GET", "POST").contains(method.toUpperCase())) {
             XxlJobHelper.log("method["+ method +"] invalid.");
-
             XxlJobHelper.handleFail();
             return;
         }
@@ -206,9 +212,9 @@ public class SampleXxlJob {
             connection.connect();
 
             // data
-            if (isPostMethod && data!=null && data.trim().length()>0) {
+            if (isPostMethod && data!=null && !data.trim().isEmpty()) {
                 DataOutputStream dataOutputStream = new DataOutputStream(connection.getOutputStream());
-                dataOutputStream.write(data.getBytes("UTF-8"));
+                dataOutputStream.write(data.getBytes(StandardCharsets.UTF_8));
                 dataOutputStream.flush();
                 dataOutputStream.close();
             }
@@ -220,7 +226,7 @@ public class SampleXxlJob {
             }
 
             // result
-            bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
+            bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8));
             StringBuilder result = new StringBuilder();
             String line;
             while ((line = bufferedReader.readLine()) != null) {
@@ -250,6 +256,25 @@ public class SampleXxlJob {
         }
 
     }
+
+    // domain white-list, for httpJobHandler
+    private static Set<String> DOMAIN_WHITE_LIST = new HashSet<String>(Arrays.asList(
+            "http://www.baidu.com",
+            "http://cn.bing.com"
+    ));
+    // valid if domain is in white-list
+    private boolean isValidDomain(String url) {
+        if (url == null || DOMAIN_WHITE_LIST.isEmpty()) {
+            return false;
+        }
+        for (String prefix : DOMAIN_WHITE_LIST) {
+            if (url.startsWith(prefix)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     /**
      * 5、生命周期任务示例：任务初始化与销毁时，支持自定义相关逻辑；
