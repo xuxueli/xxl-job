@@ -51,7 +51,7 @@ public interface XxlJobService {
 	 * @param id
 	 * @return
 	 */
-	public ReturnT<String> remove(int id);
+	public ReturnT<String> remove(int id, LoginInfo loginInfo);
 
 	/**
 	 * start job
@@ -59,7 +59,7 @@ public interface XxlJobService {
 	 * @param id
 	 * @return
 	 */
-	public ReturnT<String> start(int id);
+	public ReturnT<String> start(int id, LoginInfo loginInfo);
 
 	/**
 	 * stop job
@@ -67,7 +67,7 @@ public interface XxlJobService {
 	 * @param id
 	 * @return
 	 */
-	public ReturnT<String> stop(int id);
+	public ReturnT<String> stop(int id, LoginInfo loginInfo);
 
 	/**
 	 * trigger

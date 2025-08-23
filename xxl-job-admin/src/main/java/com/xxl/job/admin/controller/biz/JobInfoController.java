@@ -75,14 +75,19 @@ public class JobInfoController {
 
 	@RequestMapping("/pageList")
 	@ResponseBody
-	public Map<String, Object> pageList(@RequestParam(value = "start", required = false, defaultValue = "0") int start,
+	public Map<String, Object> pageList(HttpServletRequest request,
+										@RequestParam(value = "start", required = false, defaultValue = "0") int start,
 										@RequestParam(value = "length", required = false, defaultValue = "10") int length,
 										@RequestParam("jobGroup") int jobGroup,
 										@RequestParam("triggerStatus") int triggerStatus,
 										@RequestParam("jobDesc") String jobDesc,
 										@RequestParam("executorHandler") String executorHandler,
 										@RequestParam("author") String author) {
-		
+
+		// valid jobGroup permission
+		validJobGroupPermission(request, jobGroup);
+
+		// page
 		return xxlJobService.pageList(start, length, jobGroup, triggerStatus, jobDesc, executorHandler, author);
 	}
 	
@@ -108,20 +113,23 @@ public class JobInfoController {
 	
 	@RequestMapping("/remove")
 	@ResponseBody
-	public ReturnT<String> remove(@RequestParam("id") int id) {
-		return xxlJobService.remove(id);
+	public ReturnT<String> remove(HttpServletRequest request, @RequestParam("id") int id) {
+		Response<LoginInfo> loginInfoResponse = XxlSsoHelper.loginCheckWithAttr(request);
+		return xxlJobService.remove(id, loginInfoResponse.getData());
 	}
 	
 	@RequestMapping("/stop")
 	@ResponseBody
-	public ReturnT<String> pause(@RequestParam("id") int id) {
-		return xxlJobService.stop(id);
+	public ReturnT<String> pause(HttpServletRequest request, @RequestParam("id") int id) {
+		Response<LoginInfo> loginInfoResponse = XxlSsoHelper.loginCheckWithAttr(request);
+		return xxlJobService.stop(id, loginInfoResponse.getData());
 	}
 	
 	@RequestMapping("/start")
 	@ResponseBody
-	public ReturnT<String> start(@RequestParam("id") int id) {
-		return xxlJobService.start(id);
+	public ReturnT<String> start(HttpServletRequest request, @RequestParam("id") int id) {
+		Response<LoginInfo> loginInfoResponse = XxlSsoHelper.loginCheckWithAttr(request);
+		return xxlJobService.start(id, loginInfoResponse.getData());
 	}
 	
 	@RequestMapping("/trigger")
@@ -130,11 +138,7 @@ public class JobInfoController {
 									  @RequestParam("id") int id,
 									  @RequestParam("executorParam") String executorParam,
 									  @RequestParam("addressList") String addressList) {
-
-		// login user
 		Response<LoginInfo> loginInfoResponse = XxlSsoHelper.loginCheckWithAttr(request);
-
-		// trigger
 		return xxlJobService.trigger(loginInfoResponse.getData(), id, executorParam, addressList);
 	}
 
@@ -186,7 +190,7 @@ public class JobInfoController {
 	 * valid jobGroup permission
 	 */
 	public static LoginInfo validJobGroupPermission(HttpServletRequest request, int jobGroup) {
-		Response<LoginInfo>  loginInfoResponse = XxlSsoHelper.loginCheckWithAttr(request);
+		Response<LoginInfo> loginInfoResponse = XxlSsoHelper.loginCheckWithAttr(request);
 		if (!(loginInfoResponse.isSuccess() && hasJobGroupPermission(loginInfoResponse.getData(), jobGroup))) {
 			throw new RuntimeException(I18nUtil.getString("system_permission_limit") + "[username="+ loginInfoResponse.getData().getUserName() +"]");
 		}

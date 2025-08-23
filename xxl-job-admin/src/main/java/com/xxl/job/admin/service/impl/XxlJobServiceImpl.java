@@ -313,10 +313,16 @@ public class XxlJobServiceImpl implements XxlJobService {
 	}
 
 	@Override
-	public ReturnT<String> remove(int id) {
+	public ReturnT<String> remove(int id, LoginInfo loginInfo) {
+		// valid job
 		XxlJobInfo xxlJobInfo = xxlJobInfoMapper.loadById(id);
 		if (xxlJobInfo == null) {
 			return ReturnT.ofSuccess();
+		}
+
+		// valid jobGroup permission
+		if (!JobInfoController.hasJobGroupPermission(loginInfo, xxlJobInfo.getJobGroup())) {
+			return ReturnT.ofFail(I18nUtil.getString("system_permission_limit"));
 		}
 
 		xxlJobInfoMapper.delete(id);
@@ -326,11 +332,16 @@ public class XxlJobServiceImpl implements XxlJobService {
 	}
 
 	@Override
-	public ReturnT<String> start(int id) {
+	public ReturnT<String> start(int id, LoginInfo loginInfo) {
 		// load and valid
 		XxlJobInfo xxlJobInfo = xxlJobInfoMapper.loadById(id);
 		if (xxlJobInfo == null) {
 			return ReturnT.ofFail(I18nUtil.getString("jobinfo_glue_jobid_unvalid"));
+		}
+
+		// valid jobGroup permission
+		if (!JobInfoController.hasJobGroupPermission(loginInfo, xxlJobInfo.getJobGroup())) {
+			return ReturnT.ofFail(I18nUtil.getString("system_permission_limit"));
 		}
 
 		// valid
@@ -362,11 +373,16 @@ public class XxlJobServiceImpl implements XxlJobService {
 	}
 
 	@Override
-	public ReturnT<String> stop(int id) {
+	public ReturnT<String> stop(int id, LoginInfo loginInfo) {
 		// load and valid
         XxlJobInfo xxlJobInfo = xxlJobInfoMapper.loadById(id);
 		if (xxlJobInfo == null) {
 			return ReturnT.ofFail(I18nUtil.getString("jobinfo_glue_jobid_unvalid"));
+		}
+
+		// valid jobGroup permission
+		if (!JobInfoController.hasJobGroupPermission(loginInfo, xxlJobInfo.getJobGroup())) {
+			return ReturnT.ofFail(I18nUtil.getString("system_permission_limit"));
 		}
 
 		// stop
@@ -383,15 +399,13 @@ public class XxlJobServiceImpl implements XxlJobService {
 
 	@Override
 	public ReturnT<String> trigger(LoginInfo loginInfo, int jobId, String executorParam, String addressList) {
-		// permission
-		if (loginInfo == null) {
-			return ReturnT.ofFail(I18nUtil.getString("system_permission_limit"));
-		}
+		// valid job
 		XxlJobInfo xxlJobInfo = xxlJobInfoMapper.loadById(jobId);
 		if (xxlJobInfo == null) {
 			return ReturnT.ofFail(I18nUtil.getString("jobinfo_glue_jobid_unvalid"));
 		}
 
+		// valid jobGroup permission
 		if (!JobInfoController.hasJobGroupPermission(loginInfo, xxlJobInfo.getJobGroup())) {
 			return ReturnT.ofFail(I18nUtil.getString("system_permission_limit"));
 		}
