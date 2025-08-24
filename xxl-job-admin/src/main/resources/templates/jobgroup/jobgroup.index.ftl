@@ -87,7 +87,7 @@
 
             <!-- 注册列表查看.模态框 -->
             <div class="modal fade" id="showRegistryListModal" tabindex="-1" role="dialog"  aria-hidden="true">
-                <div class="modal-dialog modal-sm">
+                <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h4 class="modal-title" >${I18n.jobinfo_opt_registryinfo}</h4>

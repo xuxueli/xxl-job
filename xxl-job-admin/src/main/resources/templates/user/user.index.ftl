@@ -55,7 +55,7 @@
                         <input type="text" class="form-control" id="username" autocomplete="on" >
                     </div>
                 </div>
-	            <div class="col-xs-1">
+	            <div class="col-xs-2">
 	            	<button class="btn btn-block btn-info" id="searchBtn">${I18n.system_search}</button>
 	            </div>
 	            <div class="col-xs-2">

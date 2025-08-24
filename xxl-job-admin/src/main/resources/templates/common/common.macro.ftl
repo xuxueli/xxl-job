@@ -61,17 +61,6 @@
     <script>
 		var base_url = '${request.contextPath}';
         var I18n = ${I18nUtil.getMultString()};
-
-		// init menu status
-		if ( 'close' == $.cookie('sidebar_status') ) {
-			$('body').addClass('sidebar-collapse');
-		} else {
-			$('body').removeClass('sidebar-collapse');
-		}
-		// init body fixed
-		$('body').addClass('fixed');
-		// init menu speed
-		$('.sidebar-menu').attr('data-animation-speed', 1);
 	</script>
 
 	<!-- AdminLTE App -->

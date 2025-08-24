@@ -1,4 +1,4 @@
-package com.xxl.job.admin.controller.biz;
+package com.xxl.job.admin.controller.openapi;
 
 import com.xxl.job.admin.scheduler.conf.XxlJobAdminConfig;
 import com.xxl.job.core.biz.AdminBiz;

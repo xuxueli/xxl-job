@@ -1,5 +1,8 @@
 $(function(){
 
+
+    // ---------------------- logout ----------------------
+
 	// logout
 	$("#logoutBtn").click(function(){
 		layer.confirm( I18n.logout_confirm , {
@@ -27,6 +30,9 @@ $(function(){
 		});
 
 	});
+
+
+    // ---------------------- update pwd ----------------------
 
     // update pwd
     $('#updatePwd').on('click', function(){
@@ -99,6 +105,9 @@ $(function(){
         $("#updatePwdModal .form .form-group").removeClass("has-error");
     });
 
+
+    // ---------------------- slideToTop ----------------------
+
 	// slideToTop
 	var slideToTop = $("<div />");
 	slideToTop.html('<i class="fa fa-chevron-up"></i>');
@@ -142,9 +151,27 @@ $(function(){
 	});
 
 
+    // ---------------------- body fixed ----------------------
+
+    // init body fixed
+    $('body').addClass('fixed');
+
+
+    // ---------------------- menu, sidebar-toggle ----------------------
+
+    // init menu speed
+    $('.sidebar-menu').attr('data-animation-speed', 1);		// default 300ms
+
+    // init menu status
+    if ( 'close' === $.cookie('sidebar_status') ) {
+        $('body').addClass('sidebar-collapse');
+    } else {
+        $('body').removeClass('sidebar-collapse');
+    }
+
     // change menu status
     $('.sidebar-toggle').click(function(){
-        if ( 'close' == $.cookie('sidebar_status') ) {
+        if ( 'close' === $.cookie('sidebar_status') ) {
             $.cookie('sidebar_status', 'open', { expires: 7 });
         } else {
             $.cookie('sidebar_status', 'close', { expires: 7 });	//$.cookie('the_cookie', '', { expires: -1 });
