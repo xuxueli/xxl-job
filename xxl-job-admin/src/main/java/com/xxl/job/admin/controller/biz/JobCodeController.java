@@ -5,6 +5,7 @@ import com.xxl.job.admin.mapper.XxlJobLogGlueMapper;
 import com.xxl.job.admin.model.XxlJobInfo;
 import com.xxl.job.admin.model.XxlJobLogGlue;
 import com.xxl.job.admin.util.I18nUtil;
+import com.xxl.job.admin.util.JobGroupPermissionUtil;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.glue.GlueTypeEnum;
 import jakarta.annotation.Resource;
@@ -44,7 +45,7 @@ public class JobCodeController {
 		}
 
 		// valid jobGroup permission
-		JobInfoController.validJobGroupPermission(request, jobInfo.getJobGroup());
+		JobGroupPermissionUtil.validJobGroupPermission(request, jobInfo.getJobGroup());
 
 		// Glue类型-字典
 		model.addAttribute("GlueTypeEnum", GlueTypeEnum.values());
@@ -63,18 +64,18 @@ public class JobCodeController {
 
 		// valid
 		if (glueRemark==null) {
-			return new ReturnT<String>(500, (I18nUtil.getString("system_please_input") + I18nUtil.getString("jobinfo_glue_remark")) );
+			return ReturnT.ofFail( (I18nUtil.getString("system_please_input") + I18nUtil.getString("jobinfo_glue_remark")) );
 		}
 		if (glueRemark.length()<4 || glueRemark.length()>100) {
-			return new ReturnT<String>(500, I18nUtil.getString("jobinfo_glue_remark_limit"));
+			return ReturnT.ofFail(I18nUtil.getString("jobinfo_glue_remark_limit"));
 		}
 		XxlJobInfo existsJobInfo = xxlJobInfoMapper.loadById(id);
 		if (existsJobInfo == null) {
-			return new ReturnT<String>(500, I18nUtil.getString("jobinfo_glue_jobid_unvalid"));
+			return ReturnT.ofFail( I18nUtil.getString("jobinfo_glue_jobid_unvalid"));
 		}
 
 		// valid jobGroup permission
-		JobInfoController.validJobGroupPermission(request, existsJobInfo.getJobGroup());
+		JobGroupPermissionUtil.validJobGroupPermission(request, existsJobInfo.getJobGroup());
 
 		// update new code
 		existsJobInfo.setGlueSource(glueSource);

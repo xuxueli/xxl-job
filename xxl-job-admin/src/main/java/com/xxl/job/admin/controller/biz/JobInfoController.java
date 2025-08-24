@@ -1,6 +1,5 @@
 package com.xxl.job.admin.controller.biz;
 
-import com.xxl.job.admin.constant.Consts;
 import com.xxl.job.admin.mapper.XxlJobGroupMapper;
 import com.xxl.job.admin.model.XxlJobGroup;
 import com.xxl.job.admin.model.XxlJobInfo;
@@ -11,6 +10,7 @@ import com.xxl.job.admin.scheduler.scheduler.ScheduleTypeEnum;
 import com.xxl.job.admin.scheduler.thread.JobScheduleHelper;
 import com.xxl.job.admin.service.XxlJobService;
 import com.xxl.job.admin.util.I18nUtil;
+import com.xxl.job.admin.util.JobGroupPermissionUtil;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
 import com.xxl.job.core.glue.GlueTypeEnum;
@@ -62,7 +62,7 @@ public class JobInfoController {
 		List<XxlJobGroup> jobGroupListTotal =  xxlJobGroupMapper.findAll();
 
 		// filter group
-		List<XxlJobGroup> jobGroupList = filterJobGroupByPermission(request, jobGroupListTotal);
+		List<XxlJobGroup> jobGroupList = JobGroupPermissionUtil.filterJobGroupByPermission(request, jobGroupListTotal);
 		if (jobGroupList==null || jobGroupList.isEmpty()) {
 			throw new XxlJobException(I18nUtil.getString("jobgroup_empty"));
 		}
@@ -85,7 +85,7 @@ public class JobInfoController {
 										@RequestParam("author") String author) {
 
 		// valid jobGroup permission
-		validJobGroupPermission(request, jobGroup);
+		JobGroupPermissionUtil.validJobGroupPermission(request, jobGroup);
 
 		// page
 		return xxlJobService.pageList(start, length, jobGroup, triggerStatus, jobDesc, executorHandler, author);
@@ -95,7 +95,7 @@ public class JobInfoController {
 	@ResponseBody
 	public ReturnT<String> add(HttpServletRequest request, XxlJobInfo jobInfo) {
 		// valid permission
-		LoginInfo loginInfo = validJobGroupPermission(request, jobInfo.getJobGroup());
+		LoginInfo loginInfo = JobGroupPermissionUtil.validJobGroupPermission(request, jobInfo.getJobGroup());
 
 		// opt
 		return xxlJobService.add(jobInfo, loginInfo);
@@ -105,7 +105,7 @@ public class JobInfoController {
 	@ResponseBody
 	public ReturnT<String> update(HttpServletRequest request, XxlJobInfo jobInfo) {
 		// valid permission
-		LoginInfo loginInfo = validJobGroupPermission(request, jobInfo.getJobGroup());
+		LoginInfo loginInfo = JobGroupPermissionUtil.validJobGroupPermission(request, jobInfo.getJobGroup());
 
 		// opt
 		return xxlJobService.update(jobInfo, loginInfo);
@@ -164,56 +164,10 @@ public class JobInfoController {
 			}
 		} catch (Exception e) {
 			logger.error("nextTriggerTime error. scheduleType = {}, scheduleConf= {}", scheduleType, scheduleConf, e);
-			return new ReturnT<List<String>>(ReturnT.FAIL_CODE, (I18nUtil.getString("schedule_type")+I18nUtil.getString("system_unvalid")) + e.getMessage());
+			return ReturnT.ofFail((I18nUtil.getString("schedule_type")+I18nUtil.getString("system_unvalid")) + e.getMessage());
 		}
 		return ReturnT.ofSuccess(result);
 
 	}
 
-
-	// -------------------- tool --------------------
-
-	/**
-	 * check if has jobgroup permission
-	 */
-	public static boolean hasJobGroupPermission(LoginInfo loginInfo, int jobGroup){
-		if (XxlSsoHelper.hasRole(loginInfo, Consts.ADMIN_ROLE).isSuccess()) {
-			return true;
-		} else {
-			List<String> jobGroups = (loginInfo.getExtraInfo()!=null && loginInfo.getExtraInfo().containsKey("jobGroups"))
-					? List.of(StringTool.tokenizeToArray(loginInfo.getExtraInfo().get("jobGroups"), ",")) :new ArrayList<>();
-			return jobGroups.contains(String.valueOf(jobGroup));
-		}
-	}
-
-	/**
-	 * valid jobGroup permission
-	 */
-	public static LoginInfo validJobGroupPermission(HttpServletRequest request, int jobGroup) {
-		Response<LoginInfo> loginInfoResponse = XxlSsoHelper.loginCheckWithAttr(request);
-		if (!(loginInfoResponse.isSuccess() && hasJobGroupPermission(loginInfoResponse.getData(), jobGroup))) {
-			throw new RuntimeException(I18nUtil.getString("system_permission_limit") + "[username="+ loginInfoResponse.getData().getUserName() +"]");
-		}
-		return loginInfoResponse.getData();
-	}
-
-	/**
-	 * filter jobGroupList by permission
-	 */
-	public static List<XxlJobGroup> filterJobGroupByPermission(HttpServletRequest request, List<XxlJobGroup> jobGroupListTotal){
-		Response<LoginInfo>  loginInfoResponse = XxlSsoHelper.loginCheckWithAttr(request);
-
-		if (XxlSsoHelper.hasRole(loginInfoResponse.getData(), Consts.ADMIN_ROLE).isSuccess()) {
-			return jobGroupListTotal;
-		} else {
-			List<String> jobGroups = (loginInfoResponse.getData().getExtraInfo()!=null && loginInfoResponse.getData().getExtraInfo().containsKey("jobGroups"))
-					? List.of(StringTool.tokenizeToArray(loginInfoResponse.getData().getExtraInfo().get("jobGroups"), ",")) :new ArrayList<>();
-
-			return jobGroupListTotal
-					.stream()
-					.filter(jobGroup -> jobGroups.contains(String.valueOf(jobGroup.getId())))
-					.toList();
-		}
-	}
-	
 }

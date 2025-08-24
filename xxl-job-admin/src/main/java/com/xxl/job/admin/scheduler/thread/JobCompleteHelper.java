@@ -155,10 +155,10 @@ public class JobCompleteHelper {
 		// valid log item
 		XxlJobLog log = XxlJobAdminConfig.getAdminConfig().getXxlJobLogMapper().load(handleCallbackParam.getLogId());
 		if (log == null) {
-			return new ReturnT<String>(ReturnT.FAIL_CODE, "log item not found.");
+			return ReturnT.ofFail( "log item not found.");
 		}
 		if (log.getHandleCode() > 0) {
-			return new ReturnT<String>(ReturnT.FAIL_CODE, "log repeate callback.");     // avoid repeat callback, trigger child job etc
+			return ReturnT.ofFail("log repeate callback.");     // avoid repeat callback, trigger child job etc
 		}
 
 		// handle msg

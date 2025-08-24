@@ -152,7 +152,7 @@ public class JobRegistryHelper {
 		if (!StringUtils.hasText(registryParam.getRegistryGroup())
 				|| !StringUtils.hasText(registryParam.getRegistryKey())
 				|| !StringUtils.hasText(registryParam.getRegistryValue())) {
-			return new ReturnT<String>(ReturnT.FAIL_CODE, "Illegal Argument.");
+			return ReturnT.ofFail("Illegal Argument.");
 		}
 
 		// async execute
@@ -184,7 +184,7 @@ public class JobRegistryHelper {
 		if (!StringUtils.hasText(registryParam.getRegistryGroup())
 				|| !StringUtils.hasText(registryParam.getRegistryKey())
 				|| !StringUtils.hasText(registryParam.getRegistryValue())) {
-			return new ReturnT<String>(ReturnT.FAIL_CODE, "Illegal Argument.");
+			return ReturnT.ofFail("Illegal Argument.");
 		}
 
 		// async execute

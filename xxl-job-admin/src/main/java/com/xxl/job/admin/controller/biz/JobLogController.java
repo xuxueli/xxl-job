@@ -10,6 +10,7 @@ import com.xxl.job.admin.scheduler.complete.XxlJobCompleter;
 import com.xxl.job.admin.scheduler.exception.XxlJobException;
 import com.xxl.job.admin.scheduler.scheduler.XxlJobScheduler;
 import com.xxl.job.admin.util.I18nUtil;
+import com.xxl.job.admin.util.JobGroupPermissionUtil;
 import com.xxl.job.core.biz.ExecutorBiz;
 import com.xxl.job.core.biz.model.KillParam;
 import com.xxl.job.core.biz.model.LogParam;
@@ -57,7 +58,7 @@ public class JobLogController {
 		// find jobGroup
 		List<XxlJobGroup> jobGroupListTotal =  xxlJobGroupMapper.findAll();
 		// filter jobGroup
-		List<XxlJobGroup> jobGroupList = JobInfoController.filterJobGroupByPermission(request, jobGroupListTotal);
+		List<XxlJobGroup> jobGroupList = JobGroupPermissionUtil.filterJobGroupByPermission(request, jobGroupListTotal);
 		if (jobGroupList==null || jobGroupList.isEmpty()) {
 			throw new XxlJobException(I18nUtil.getString("jobgroup_empty"));
 		}
@@ -76,7 +77,7 @@ public class JobLogController {
 		}
 		jobGroup = jobGroup > 0 ? jobGroup : jobGroupList.get(0).getId();
 		// valid permission
-		JobInfoController.validJobGroupPermission(request, jobGroup);
+		JobGroupPermissionUtil.validJobGroupPermission(request, jobGroup);
 
 		// find jobList
 		List<XxlJobInfo> jobInfoList = xxlJobInfoMapper.getJobsByGroup(jobGroup);
@@ -112,7 +113,7 @@ public class JobLogController {
 										@RequestParam("filterTime") String filterTime) {
 
 		// valid jobGroup permission
-		JobInfoController.validJobGroupPermission(request, jobGroup);
+		JobGroupPermissionUtil.validJobGroupPermission(request, jobGroup);
 
 		// parse param
 		Date triggerTimeStart = null;
@@ -147,7 +148,7 @@ public class JobLogController {
 		}
 
 		// valid permission
-		JobInfoController.validJobGroupPermission(request, jobLog.getJobGroup());
+		JobGroupPermissionUtil.validJobGroupPermission(request, jobLog.getJobGroup());
 
 		// data
         model.addAttribute("triggerCode", jobLog.getTriggerCode());
@@ -163,7 +164,7 @@ public class JobLogController {
 			// valid
 			XxlJobLog jobLog = xxlJobLogMapper.load(logId);	// todo, need to improve performance
 			if (jobLog == null) {
-				return new ReturnT<LogResult>(ReturnT.FAIL_CODE, I18nUtil.getString("joblog_logid_unvalid"));
+				return ReturnT.ofFail(I18nUtil.getString("joblog_logid_unvalid"));
 			}
 
 			// log cat
@@ -186,7 +187,7 @@ public class JobLogController {
 			return logResult;
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
-			return new ReturnT<LogResult>(ReturnT.FAIL_CODE, e.getMessage());
+			return ReturnT.ofFail(e.getMessage());
 		}
 	}
 
@@ -229,14 +230,14 @@ public class JobLogController {
 		XxlJobLog log = xxlJobLogMapper.load(id);
 		XxlJobInfo jobInfo = xxlJobInfoMapper.loadById(log.getJobId());
 		if (jobInfo==null) {
-			return new ReturnT<String>(500, I18nUtil.getString("jobinfo_glue_jobid_unvalid"));
+			return ReturnT.ofFail(I18nUtil.getString("jobinfo_glue_jobid_unvalid"));
 		}
 		if (ReturnT.SUCCESS_CODE != log.getTriggerCode()) {
-			return new ReturnT<String>(500, I18nUtil.getString("joblog_kill_log_limit"));
+			return ReturnT.ofFail( I18nUtil.getString("joblog_kill_log_limit"));
 		}
 
 		// valid JobGroup permission
-		JobInfoController.validJobGroupPermission(request, jobInfo.getJobGroup());
+		JobGroupPermissionUtil.validJobGroupPermission(request, jobInfo.getJobGroup());
 
 		// request of kill
 		ReturnT<String> runResult = null;
@@ -245,7 +246,7 @@ public class JobLogController {
 			runResult = executorBiz.kill(new KillParam(jobInfo.getId()));
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
-			runResult = new ReturnT<String>(500, e.getMessage());
+			runResult = ReturnT.ofFail( e.getMessage());
 		}
 
 		if (ReturnT.SUCCESS_CODE == runResult.getCode()) {
@@ -266,7 +267,7 @@ public class JobLogController {
 									@RequestParam("jobId") int jobId,
 									@RequestParam("type") int type){
 		// valid JobGroup permission
-		JobInfoController.validJobGroupPermission(request, jobGroup);
+		JobGroupPermissionUtil.validJobGroupPermission(request, jobGroup);
 
 		// opt
 		Date clearBeforeTime = null;
@@ -290,7 +291,7 @@ public class JobLogController {
 		} else if (type == 9) {
 			clearBeforeNum = 0;			// 清理所有日志数据
 		} else {
-			return new ReturnT<String>(ReturnT.FAIL_CODE, I18nUtil.getString("joblog_clean_type_unvalid"));
+			return ReturnT.ofFail(I18nUtil.getString("joblog_clean_type_unvalid"));
 		}
 
 		List<Long> logIds = null;
