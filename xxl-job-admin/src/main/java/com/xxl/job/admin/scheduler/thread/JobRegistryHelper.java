@@ -1,14 +1,14 @@
 package com.xxl.job.admin.scheduler.thread;
 
-import com.xxl.job.admin.scheduler.conf.XxlJobAdminConfig;
 import com.xxl.job.admin.model.XxlJobGroup;
 import com.xxl.job.admin.model.XxlJobRegistry;
+import com.xxl.job.admin.scheduler.conf.XxlJobAdminConfig;
 import com.xxl.job.core.biz.model.RegistryParam;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.enums.RegistryConfig;
+import com.xxl.tool.core.StringTool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
 
 import java.util.*;
 import java.util.concurrent.*;
@@ -149,9 +149,9 @@ public class JobRegistryHelper {
 	public ReturnT<String> registry(RegistryParam registryParam) {
 
 		// valid
-		if (!StringUtils.hasText(registryParam.getRegistryGroup())
-				|| !StringUtils.hasText(registryParam.getRegistryKey())
-				|| !StringUtils.hasText(registryParam.getRegistryValue())) {
+		if (StringTool.isBlank(registryParam.getRegistryGroup())
+				|| StringTool.isBlank(registryParam.getRegistryKey())
+				|| StringTool.isBlank(registryParam.getRegistryValue())) {
 			return ReturnT.ofFail("Illegal Argument.");
 		}
 
@@ -181,9 +181,9 @@ public class JobRegistryHelper {
 	public ReturnT<String> registryRemove(RegistryParam registryParam) {
 
 		// valid
-		if (!StringUtils.hasText(registryParam.getRegistryGroup())
-				|| !StringUtils.hasText(registryParam.getRegistryKey())
-				|| !StringUtils.hasText(registryParam.getRegistryValue())) {
+		if (StringTool.isBlank(registryParam.getRegistryGroup())
+				|| StringTool.isBlank(registryParam.getRegistryKey())
+				|| StringTool.isBlank(registryParam.getRegistryValue())) {
 			return ReturnT.ofFail("Illegal Argument.");
 		}
 

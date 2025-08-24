@@ -10,13 +10,13 @@ import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.sso.core.annotation.XxlSso;
 import com.xxl.sso.core.helper.XxlSsoHelper;
 import com.xxl.sso.core.model.LoginInfo;
+import com.xxl.tool.core.StringTool;
 import com.xxl.tool.encrypt.SHA256Tool;
 import com.xxl.tool.response.Response;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -81,7 +81,7 @@ public class JobUserController {
     public ReturnT<String> add(XxlJobUser xxlJobUser) {
 
         // valid username
-        if (!StringUtils.hasText(xxlJobUser.getUsername())) {
+        if (StringTool.isBlank(xxlJobUser.getUsername())) {
             return ReturnT.ofFail(I18nUtil.getString("system_please_input")+I18nUtil.getString("user_username") );
         }
         xxlJobUser.setUsername(xxlJobUser.getUsername().trim());
@@ -89,7 +89,7 @@ public class JobUserController {
             return ReturnT.ofFail(I18nUtil.getString("system_lengh_limit")+"[4-20]" );
         }
         // valid password
-        if (!StringUtils.hasText(xxlJobUser.getPassword())) {
+        if (StringTool.isBlank(xxlJobUser.getPassword())) {
             return ReturnT.ofFail(I18nUtil.getString("system_please_input")+I18nUtil.getString("user_password") );
         }
         xxlJobUser.setPassword(xxlJobUser.getPassword().trim());
@@ -123,7 +123,7 @@ public class JobUserController {
         }
 
         // valid password
-        if (StringUtils.hasText(xxlJobUser.getPassword())) {
+        if (StringTool.isNotBlank(xxlJobUser.getPassword())) {
             xxlJobUser.setPassword(xxlJobUser.getPassword().trim());
             if (!(xxlJobUser.getPassword().length()>=4 && xxlJobUser.getPassword().length()<=20)) {
                 return ReturnT.ofFail(I18nUtil.getString("system_lengh_limit")+"[4-20]" );

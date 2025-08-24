@@ -17,13 +17,14 @@ import com.xxl.job.core.biz.model.LogParam;
 import com.xxl.job.core.biz.model.LogResult;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.util.DateUtil;
+import com.xxl.tool.core.CollectionTool;
+import com.xxl.tool.core.StringTool;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -59,7 +60,7 @@ public class JobLogController {
 		List<XxlJobGroup> jobGroupListTotal =  xxlJobGroupMapper.findAll();
 		// filter jobGroup
 		List<XxlJobGroup> jobGroupList = JobGroupPermissionUtil.filterJobGroupByPermission(request, jobGroupListTotal);
-		if (jobGroupList==null || jobGroupList.isEmpty()) {
+		if (CollectionTool.isEmpty(jobGroupList)) {
 			throw new XxlJobException(I18nUtil.getString("jobgroup_empty"));
 		}
 		// write jobGroup
@@ -118,7 +119,7 @@ public class JobLogController {
 		// parse param
 		Date triggerTimeStart = null;
 		Date triggerTimeEnd = null;
-		if (filterTime!=null && filterTime.trim().length()>0) {
+		if (StringTool.isNotBlank(filterTime)) {
 			String[] temp = filterTime.split(" - ");
 			if (temp.length == 2) {
 				triggerTimeStart = DateUtil.parseDateTime(temp[0]);
@@ -179,7 +180,7 @@ public class JobLogController {
             }
 
 			// fix xss
-			if (logResult.getContent()!=null && StringUtils.hasText(logResult.getContent().getLogContent())) {
+			if (logResult.getContent()!=null && StringTool.isNotBlank(logResult.getContent().getLogContent())) {
 				String newLogContent = filter(logResult.getContent().getLogContent());
 				logResult.getContent().setLogContent(newLogContent);
 			}

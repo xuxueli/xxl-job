@@ -17,7 +17,7 @@ import com.xxl.job.core.glue.GlueTypeEnum;
 import com.xxl.job.core.util.DateUtil;
 import com.xxl.sso.core.helper.XxlSsoHelper;
 import com.xxl.sso.core.model.LoginInfo;
-import com.xxl.tool.core.StringTool;
+import com.xxl.tool.core.CollectionTool;
 import com.xxl.tool.response.Response;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
@@ -63,7 +63,7 @@ public class JobInfoController {
 
 		// filter group
 		List<XxlJobGroup> jobGroupList = JobGroupPermissionUtil.filterJobGroupByPermission(request, jobGroupListTotal);
-		if (jobGroupList==null || jobGroupList.isEmpty()) {
+		if (CollectionTool.isEmpty(jobGroupList)) {
 			throw new XxlJobException(I18nUtil.getString("jobgroup_empty"));
 		}
 
