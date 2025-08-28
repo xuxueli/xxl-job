@@ -63,10 +63,7 @@ public class JobRegistryHelper {
 						if (groupList!=null && !groupList.isEmpty()) {
 
 							// remove dead address (admin/executor)
-							List<Integer> ids = XxlJobAdminConfig.getAdminConfig().getXxlJobRegistryMapper().findDead(RegistryConfig.DEAD_TIMEOUT, new Date());
-							if (ids!=null && ids.size()>0) {
-								XxlJobAdminConfig.getAdminConfig().getXxlJobRegistryMapper().removeDead(ids);
-							}
+							XxlJobAdminConfig.getAdminConfig().getXxlJobRegistryMapper().removeDeadGrace(RegistryConfig.DEAD_TIMEOUT,new Date());
 
 							// fresh online address (admin/executor)
 							HashMap<String, List<String>> appAddressMap = new HashMap<String, List<String>>();

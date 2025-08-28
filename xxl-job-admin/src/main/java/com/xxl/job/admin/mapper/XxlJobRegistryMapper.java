@@ -1,6 +1,7 @@
 package com.xxl.job.admin.mapper;
 
 import com.xxl.job.admin.model.XxlJobRegistry;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -17,6 +18,9 @@ public interface XxlJobRegistryMapper {
                                   @Param("nowTime") Date nowTime);
 
     public int removeDead(@Param("ids") List<Integer> ids);
+
+    public int removeDeadGrace(@Param("timeout") int timeout,
+                               @Param("nowTime") Date nowTime);
 
     public List<XxlJobRegistry> findAll(@Param("timeout") int timeout,
                                         @Param("nowTime") Date nowTime);
