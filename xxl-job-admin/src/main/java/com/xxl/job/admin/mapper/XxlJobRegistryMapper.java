@@ -1,7 +1,6 @@
 package com.xxl.job.admin.mapper;
 
 import com.xxl.job.admin.model.XxlJobRegistry;
-import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
