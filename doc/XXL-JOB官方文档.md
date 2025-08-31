@@ -1,10 +1,10 @@
 ## 《分布式任务调度平台XXL-JOB》
 
-[![Actions Status](https://github.com/xuxueli/xxl-job/workflows/Java%20CI/badge.svg)](https://github.com/xuxueli/xxl-job/actions)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.xuxueli/xxl-job-core/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.xuxueli/xxl-job-core/)
+[![Build Status](https://github.com/xuxueli/xxl-job/workflows/Java%20CI/badge.svg)](https://github.com/xuxueli/xxl-job/actions)
+[![Maven Central](https://img.shields.io/maven-central/v/com.xuxueli/xxl-job-core)](https://central.sonatype.com/artifact/com.xuxueli/xxl-job-core)
 [![GitHub release](https://img.shields.io/github/release/xuxueli/xxl-job.svg)](https://github.com/xuxueli/xxl-job/releases)
 [![GitHub stars](https://img.shields.io/github/stars/xuxueli/xxl-job)](https://github.com/xuxueli/xxl-job/)
-[![Docker Status](https://img.shields.io/docker/pulls/xuxueli/xxl-job-admin)](https://hub.docker.com/r/xuxueli/xxl-job-admin/)
+[![Docker pulls](https://img.shields.io/docker/pulls/xuxueli/xxl-job-admin)](https://hub.docker.com/r/xuxueli/xxl-job-admin/)
 [![License](https://img.shields.io/badge/license-GPLv3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0.html)
 [![donate](https://img.shields.io/badge/%24-donate-ff69b4.svg?style=flat)](https://www.xuxueli.com/page/donate.html)
 
@@ -1160,7 +1160,7 @@ Bean模式任务，支持基于方法的开发方式，每个任务对应一个�
     4、任务结果：默认任务结果为 "成功" 状态，不需要主动设置；如有诉求，比如设置任务结果为失败，可以通过 "XxlJobHelper.handleFail/handleSuccess" 自主设置任务结果；
 
 ```
-// 可参考Sample示例执行器中的 "com.xxl.job.executor.service.jobhandler.SampleXxlJob" ，如下：
+// 可参考Sample示例执行器中的 "com.xxl.job.executor.jobhandler.SampleXxlJob" ，如下：
 @XxlJob("demoJobHandler")
 public void demoJobHandler() throws Exception {
     XxlJobHelper.log("XXL-JOB, Hello World.");
@@ -1206,7 +1206,8 @@ public void demoJobHandler() throws Exception {
 ```
 {
     "input": "{输入信息，必填信息}",
-    "prompt": "{模型prompt，可选信息}"
+    "prompt": "{模型prompt，可选信息}",
+    "model": "{模型实现，如qwen3:0.6b，可选信息}"
 }
 ```
 - b、difyWorkflowJobHandler：DifyWorkflow 任务，支持自定义inputs、user、baseUrl、apiKey 等输入信息，示例参数如下；
@@ -1624,7 +1625,7 @@ XXL-JOB会为每次调度请求生成一个单独的日志文件，需要通过 
 
 ### 5.8 任务执行结果
 自v1.6.2之后，任务执行结果通过 "IJobHandler" 的返回值 "ReturnT" 进行判断；
-当返回值符合 "ReturnT.code == ReturnT.SUCCESS_CODE" 时表示任务执行成功，否则表示任务执行失败，而且可以通过 "ReturnT.msg" 回调错误信息给调度中心；
+当返回值符合 "ReturnT#code == 200" 时表示任务执行成功，否则表示任务执行失败，而且可以通过 "ReturnT#msg" 回调错误信息给调度中心；
 从而，在任务逻辑中可以方便的控制任务执行结果；
 
 ### 5.9 分片广播 & 动态分片
@@ -2375,7 +2376,7 @@ Tips: 历史版本(V1.3.x)目前已经Release至稳定版本, 进入维护阶段
 @XxlJob("demoJobHandler")
 public ReturnT<String> execute(String param) {
     XxlJobLogger.log("hello world");
-    return ReturnT.SUCCESS;
+    return ReturnT.ofSuccess();
 }
 ```
 - 2、移除commons-exec，采用原生方式实现，降低第三方依赖；
@@ -2542,9 +2543,36 @@ public void execute() {
 - 4、【升级】多个项目依赖升级至较新稳定版本，涉及 netty、spring/springboot、groovy 等；
 
 
-### 7.40 版本 v3.1.2 Release Notes[规划中]
-- 1、[规划中]登陆态Token生成逻辑优化，混淆登陆时间属性，降低token泄漏风险；
-- 2、[规划中]组件扫描改为BeanPostProcessor方式，避免小概率情况下提前初始化；底层组件移除单例写法，汇总factory统一管理；
+### 7.40 版本 v3.2.0 Release Notes[2025-08-24]
+- 1、【强化】AI任务（ollamaJobHandler）优化：针对 “model” 模型配置信息，从执行器侧文件类配置调整至调度中心“任务参数”动态配置，支持集成多模型、并结合任务动态配置切换。
+- 2、【安全】登录认证重构：密码加密算法从Md5改为Sha256；登录态改为登录后动态随机生成；提升系统安全性；（需要针对用户表进行字段调整，同时需要重新初始化密码信息；相关SQL脚本如下）
+```
+// 1、用户表password字段需要调整长度，执行如下命令
+ALTER TABLE xxl_job_user
+    MODIFY COLUMN `password` varchar(100) NOT NULL COMMENT '密码加密信息';
+ALTER TABLE xxl_job_user
+    ADD COLUMN `token` varchar(100) DEFAULT NULL COMMENT '登录token';
+    
+// 2、存量用户密码需要修改，可执行如下命令将密码初始化 “123456”；也可以自行通过 “SHA256Tool.sha256” 工具生成其他初始化密码；
+UPDATE xxl_job_user t SET t.password = '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92' WHERE t.username = {用户名};
+```
+- 3、【强化】GLUE模式(Python) 扩展，支持 "GLUE(Python3)" 与 "GLUE(Python2)" 两种模式，分别支持 python3/2 多版本；
+- 4、【强化】调度中心系统日志调整，支持启动时指定 -DLOG_HOME 参数自定义日志位置；同时优化日志格式提升易读性；
+- 5、【优化】任务Bean扫描规则调整，过滤冗余不必要扫描，避免系统组件提前初始化；
+- 6、【优化】登录信息页面空值处理优化，避免空值影响ftl渲染；
+- 7、【优化】异常页面处理逻辑优化，新增兜底落地页配置；
+- 8、【重构】ReturnT 重构，简化代码结构，提升API易用性以及可维护性；
+- 9、【重构】项目结构重构，提升可维护性与易读性；
+- 10、【修复】漏洞修复（CVE-2025-7787），针对 httpJobHandler 支持配置URL白名单限制，防止服务器端请求伪造（SSRF）攻击。
+- 11、【修复】合并PR-3738，修复拼写问题；
+- 12、【修复】合并PR-3506，修复小概率情况下任务重复调度问题；
+- 13、【修复】合并PR-3747，修复异常情况下资源泄漏风险；
+- 14、【修复】IDOR越权问题修复，提升任务操作及日志管理安全性；
+- 15、【升级】升级多项maven依赖至较新版本，如 netty、groovy、mybatis、spring、spring-ai、dify 等；
+
+
+### 7.41 版本 v3.2.1 Release Notes[规划中]
+- 1、【ING】底层组件移除单例写法，汇总factory统一管理；
 
 
 ### TODO LIST

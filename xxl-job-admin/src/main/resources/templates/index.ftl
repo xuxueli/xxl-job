@@ -1,35 +1,39 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <#-- import macro -->
   	<#import "./common/common.macro.ftl" as netCommon>
+    <#-- commonStyle -->
 	<@netCommon.commonStyle />
-    <!-- daterangepicker -->
+
+    <#-- biz start（1/5 style） -->
     <link rel="stylesheet" href="${request.contextPath}/static/adminlte/bower_components/bootstrap-daterangepicker/daterangepicker.css">
-    <title>${I18n.admin_name}</title>
+    <#-- biz end（1/5 end） -->
+
 </head>
-<body class="hold-transition skin-blue sidebar-mini <#if cookieMap?exists && cookieMap["xxljob_adminlte_settings"]?exists && "off" == cookieMap["xxljob_adminlte_settings"].value >sidebar-collapse</#if> ">
+<body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
+
 	<!-- header -->
 	<@netCommon.commonHeader />
+
 	<!-- left -->
 	<@netCommon.commonLeft "index" />
-	
-	<!-- Content Wrapper. Contains page content -->
+
+    <!-- right start -->
 	<div class="content-wrapper">
-		<!-- Content Header (Page header) -->
+
+        <!-- content-header -->
 		<section class="content-header">
+            <#-- biz start（3/5 name） -->
 			<h1>${I18n.job_dashboard_name}</h1>
-			<!--
-			<h1>运行报表<small>任务调度中心</small></h1>
-			<ol class="breadcrumb">
-				<li><a><i class="fa fa-dashboard"></i>调度中心</a></li>
-				<li class="active">使用教程</li>
-			</ol>
-			-->
+            <#-- biz end（3/5 name） -->
 		</section>
 
-		<!-- Main content -->
+        <!-- content-main -->
 		<section class="content">
+
+            <#-- biz start（4/5 content） -->
 
             <!-- 任务信息 -->
             <div class="row">
@@ -128,20 +132,26 @@
                 </div>
             </div>
 
+            <#-- biz end（4/5 content） -->
+
 		</section>
-		<!-- /.content -->
 	</div>
-	<!-- /.content-wrapper -->
-	
-	<!-- footer -->
+    <!-- right end -->
+
+    <!-- footer -->
 	<@netCommon.commonFooter />
 </div>
 <@netCommon.commonScript />
+
+<#-- biz start（5/5 script） -->
+
 <!-- daterangepicker -->
 <script src="${request.contextPath}/static/adminlte/bower_components/moment/moment.min.js"></script>
 <script src="${request.contextPath}/static/adminlte/bower_components/bootstrap-daterangepicker/daterangepicker.js"></script>
 <#-- echarts -->
 <script src="${request.contextPath}/static/plugins/echarts/echarts.common.min.js"></script>
 <script src="${request.contextPath}/static/js/index.js"></script>
+
+<#-- biz end（5/5 script） -->
 </body>
 </html>

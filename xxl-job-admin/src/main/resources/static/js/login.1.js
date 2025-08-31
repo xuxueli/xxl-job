@@ -46,7 +46,7 @@ $(function(){
             element.parent('div').append(error);  
         },
         submitHandler : function(form) {
-			$.post(base_url + "/login", $("#loginForm").serialize(), function(data, status) {
+			$.post(base_url + "/auth/doLogin", $("#loginForm").serialize(), function(data, status) {
 				if (data.code == "200") {
                     layer.msg( I18n.login_success );
                     setTimeout(function(){

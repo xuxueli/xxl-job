@@ -1,26 +1,41 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<#-- import macro -->
   	<#import "./common/common.macro.ftl" as netCommon>
+	<#-- commonStyle -->
 	<@netCommon.commonStyle />
-	<title>${I18n.admin_name}</title>
+
+	<#-- biz start（1/5 style） -->
+	<#-- biz end（1/5 end） -->
+
 </head>
-<body class="hold-transition skin-blue sidebar-mini <#if cookieMap?exists && cookieMap["xxljob_adminlte_settings"]?exists && "off" == cookieMap["xxljob_adminlte_settings"].value >sidebar-collapse</#if> ">
+<body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
+
 	<!-- header -->
 	<@netCommon.commonHeader />
+
 	<!-- left -->
+	<#-- biz start（2/5 left） -->
 	<@netCommon.commonLeft "help" />
-	
-	<!-- Content Wrapper. Contains page content -->
+	<#-- biz end（2/5 left） -->
+
+	<!-- right start -->
 	<div class="content-wrapper">
-		<!-- Content Header (Page header) -->
+
+		<!-- content-header -->
 		<section class="content-header">
+			<#-- biz start（3/5 name） -->
 			<h1>${I18n.job_help}</h1>
+			<#-- biz end（3/5 name） -->
 		</section>
 
-		<!-- Main content -->
+		<!-- content-main -->
 		<section class="content">
+
+			<#-- biz start（4/5 content） -->
+
 			<div class="callout callout-info">
 				<h4>${I18n.admin_name_full}</h4>
 				<br>
@@ -34,14 +49,20 @@
 				</p>
 				<p></p>
             </div>
+
+			<#-- biz end（4/5 content） -->
+
 		</section>
-		<!-- /.content -->
 	</div>
-	<!-- /.content-wrapper -->
-	
+	<!-- right end -->
+
 	<!-- footer -->
 	<@netCommon.commonFooter />
 </div>
 <@netCommon.commonScript />
+
+<#-- biz start（5/5 script） -->
+<#-- biz end（5/5 script） -->
+
 </body>
 </html>

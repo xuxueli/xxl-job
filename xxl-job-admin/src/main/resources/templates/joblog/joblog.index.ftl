@@ -1,40 +1,54 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <#-- import macro -->
   	<#import "../common/common.macro.ftl" as netCommon>
+
+    <#-- commonStyle -->
 	<@netCommon.commonStyle />
+
+    <#-- biz start（1/5 style） -->
 	<!-- DataTables -->
   	<link rel="stylesheet" href="${request.contextPath}/static/adminlte/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
   	<!-- daterangepicker -->
   	<link rel="stylesheet" href="${request.contextPath}/static/adminlte/bower_components/bootstrap-daterangepicker/daterangepicker.css">
-    <title>${I18n.admin_name}</title>
+    <#-- biz end（1/5 end） -->
+
 </head>
-<body class="hold-transition skin-blue sidebar-mini <#if cookieMap?exists && cookieMap["xxljob_adminlte_settings"]?exists && "off" == cookieMap["xxljob_adminlte_settings"].value >sidebar-collapse</#if> ">
+<body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
+
 	<!-- header -->
 	<@netCommon.commonHeader />
+
 	<!-- left -->
-	<@netCommon.commonLeft "joblog" />
-	
-	<!-- Content Wrapper. Contains page content -->
+    <#-- biz start（2/5 left） -->
+    <@netCommon.commonLeft "joblog" />
+    <#-- biz end（2/5 left） -->
+
+    <!-- right start -->
 	<div class="content-wrapper">
-		<!-- Content Header (Page header) -->
-		<section class="content-header">
-			<h1>${I18n.joblog_name}</h1>
-		</section>
-		
-		<!-- Main content -->
+
+        <!-- content-header -->
+        <section class="content-header">
+            <#-- biz start（3/5 name） -->
+            <h1>${I18n.joblog_name}</h1>
+            <#-- biz end（3/5 name） -->
+        </section>
+
+        <!-- content-main -->
 	    <section class="content">
+
+            <#-- biz start（4/5 content） -->
+
+            <!-- filter-->
 	    	<div class="row">
 	    		<div class="col-xs-2">
  					<div class="input-group">
 	                	<span class="input-group-addon">${I18n.jobinfo_field_jobgroup}</span>
-                		<select class="form-control" id="jobGroup"  paramVal="<#if jobInfo?exists>${jobInfo.jobGroup}</#if>" >
-                            <#if loginUser.role == 1>
-                                <option value="0" >${I18n.system_all}</option>  <#-- 仅管理员支持查询全部；普通用户仅支持查询有权限的 jobGroup -->
-                            </#if>
+                		<select class="form-control" id="jobGroup"  >
                 			<#list JobGroupList as group>
-                				<option value="${group.id}" >${group.title}</option>
+                				<option value="${group.id}" <#if jobGroup==group.id>selected</#if> >${group.title}</option>
                 			</#list>
 	                  	</select>
 	              	</div>
@@ -42,8 +56,11 @@
 	            <div class="col-xs-2">
 	              	<div class="input-group">
 	                	<span class="input-group-addon">${I18n.jobinfo_job}</span>
-                        <select class="form-control" id="jobId" paramVal="<#if jobInfo?exists>${jobInfo.id}</#if>" >
+                        <select class="form-control" id="jobId" >
                             <option value="0" >${I18n.system_all}</option>
+                            <#list jobInfoList as jobItem>
+                                <option value="${jobItem.id}" <#if jobId==jobItem.id>selected</#if> >${jobItem.jobDesc}</option>
+                            </#list>
 						</select>
 	              	</div>
 	            </div>
@@ -77,7 +94,8 @@
                     <button class="btn btn-block btn-default" id="clearLog">${I18n.joblog_clean}</button>
 	            </div>
           	</div>
-			
+
+            <!-- table-->
 			<div class="row">
 				<div class="col-xs-12">
 					<div class="box">
@@ -107,68 +125,74 @@
 				</div>
 			</div>
 	    </section>
+
+        <!-- 日志清理.模态框 -->
+        <div class="modal fade" id="clearLogModal" tabindex="-1" role="dialog"  aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" >${I18n.joblog_clean_log}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form class="form-horizontal form" role="form" >
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">${I18n.jobinfo_field_jobgroup}：</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control jobGroupText" readonly >
+                                    <input type="hidden" name="jobGroup" >
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">${I18n.jobinfo_job}：</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control jobIdText" readonly >
+                                    <input type="hidden" name="jobId" >
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">${I18n.joblog_clean_type}：</label>
+                                <div class="col-sm-9">
+                                    <select class="form-control" name="type" >
+                                        <option value="1" >${I18n.joblog_clean_type_1}</option>
+                                        <option value="2" >${I18n.joblog_clean_type_2}</option>
+                                        <option value="3" >${I18n.joblog_clean_type_3}</option>
+                                        <option value="4" >${I18n.joblog_clean_type_4}</option>
+                                        <option value="5" >${I18n.joblog_clean_type_5}</option>
+                                        <option value="6" >${I18n.joblog_clean_type_6}</option>
+                                        <option value="7" >${I18n.joblog_clean_type_7}</option>
+                                        <option value="8" >${I18n.joblog_clean_type_8}</option>
+                                        <option value="9" >${I18n.joblog_clean_type_9}</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <hr>
+                            <div class="form-group">
+                                <div class="col-sm-offset-3 col-sm-6">
+                                    <button type="button" class="btn btn-primary ok" >${I18n.system_ok}</button>
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">${I18n.system_cancel}</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <#-- biz end（4/5 content） -->
+
 	</div>
-	
+    <!-- right end -->
+
 	<!-- footer -->
 	<@netCommon.commonFooter />
 </div>
 
-<!-- 日志清理.模态框 -->
-<div class="modal fade" id="clearLogModal" tabindex="-1" role="dialog"  aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title" >${I18n.joblog_clean_log}</h4>
-            </div>
-            <div class="modal-body">
-                <form class="form-horizontal form" role="form" >
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">${I18n.jobinfo_field_jobgroup}：</label>
-                        <div class="col-sm-9">
-                            <input type="text" class="form-control jobGroupText" readonly >
-							<input type="hidden" name="jobGroup" >
-						</div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">${I18n.jobinfo_job}：</label>
-                        <div class="col-sm-9">
-                            <input type="text" class="form-control jobIdText" readonly >
-                            <input type="hidden" name="jobId" >
-						</div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">${I18n.joblog_clean_type}：</label>
-                        <div class="col-sm-9">
-                            <select class="form-control" name="type" >
-                                <option value="1" >${I18n.joblog_clean_type_1}</option>
-                                <option value="2" >${I18n.joblog_clean_type_2}</option>
-                                <option value="3" >${I18n.joblog_clean_type_3}</option>
-                                <option value="4" >${I18n.joblog_clean_type_4}</option>
-                                <option value="5" >${I18n.joblog_clean_type_5}</option>
-                                <option value="6" >${I18n.joblog_clean_type_6}</option>
-                                <option value="7" >${I18n.joblog_clean_type_7}</option>
-                                <option value="8" >${I18n.joblog_clean_type_8}</option>
-                                <option value="9" >${I18n.joblog_clean_type_9}</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <hr>
-                    <div class="form-group">
-                        <div class="col-sm-offset-3 col-sm-6">
-                            <button type="button" class="btn btn-primary ok" >${I18n.system_ok}</button>
-                            <button type="button" class="btn btn-default" data-dismiss="modal">${I18n.system_cancel}</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
 <@netCommon.commonScript />
+
+<#-- biz start（5/5 script） -->
 <!-- DataTables -->
 <script src="${request.contextPath}/static/adminlte/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
 <script src="${request.contextPath}/static/adminlte/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
@@ -176,5 +200,7 @@
 <script src="${request.contextPath}/static/adminlte/bower_components/moment/moment.min.js"></script>
 <script src="${request.contextPath}/static/adminlte/bower_components/bootstrap-daterangepicker/daterangepicker.js"></script>
 <script src="${request.contextPath}/static/js/joblog.index.1.js"></script>
+<#-- biz end（5/5 script） -->
+
 </body>
 </html>

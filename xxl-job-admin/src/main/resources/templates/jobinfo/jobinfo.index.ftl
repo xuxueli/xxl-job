@@ -1,29 +1,45 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <#-- import macro -->
   	<#import "../common/common.macro.ftl" as netCommon>
+
+    <#-- commonStyle -->
 	<@netCommon.commonStyle />
+
+    <#-- biz start（1/5 style） -->
 	<!-- DataTables -->
   	<link rel="stylesheet" href="${request.contextPath}/static/adminlte/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
-    <title>${I18n.admin_name}</title>
+    <#-- biz end（1/5 end） -->
+
 </head>
-<body class="hold-transition skin-blue sidebar-mini <#if cookieMap?exists && cookieMap["xxljob_adminlte_settings"]?exists && "off" == cookieMap["xxljob_adminlte_settings"].value >sidebar-collapse</#if>">
+<body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
+
 	<!-- header -->
 	<@netCommon.commonHeader />
+
 	<!-- left -->
-	<@netCommon.commonLeft "jobinfo" />
-	
-	<!-- Content Wrapper. Contains page content -->
+    <#-- biz start（2/5 left） -->
+    <@netCommon.commonLeft "jobinfo" />
+    <#-- biz end（2/5 left） -->
+
+    <!-- right start -->
 	<div class="content-wrapper">
-		<!-- Content Header (Page header) -->
-		<section class="content-header">
-			<h1>${I18n.jobinfo_name}</h1>
-		</section>
-		
-		<!-- Main content -->
+
+        <!-- content-header -->
+        <section class="content-header">
+            <#-- biz start（3/5 name） -->
+            <h1>${I18n.jobinfo_name}</h1>
+            <#-- biz end（3/5 name） -->
+        </section>
+
+        <!-- content-main -->
 	    <section class="content">
-	    
+
+            <#-- biz start（4/5 content） -->
+
+            <!-- filter -->
 	    	<div class="row">
 	    		<div class="col-xs-3">
 	              	<div class="input-group">
@@ -66,7 +82,8 @@
 	            	<button class="btn btn-block btn-success add" type="button">${I18n.jobinfo_field_add}</button>
 	            </div>
           	</div>
-	    	
+
+            <!-- table -->
 			<div class="row">
 				<div class="col-xs-12">
 					<div class="box">
@@ -98,8 +115,13 @@
 					</div>
 				</div>
 			</div>
+
+
 	    </section>
+
+        <#-- biz end（4/5 content） -->
 	</div>
+    <!-- right end -->
 	
 	<!-- footer -->
 	<@netCommon.commonFooter />
@@ -281,6 +303,22 @@ exit 0
 import time
 import sys
 
+print("xxl-job: hello python")
+
+print("${I18n.jobinfo_script_location}：", sys.argv[0])
+print("${I18n.jobinfo_field_executorparam}：", sys.argv[1])
+print("${I18n.jobinfo_shard_index}：", sys.argv[2])
+print("${I18n.jobinfo_shard_total}：", sys.argv[3])
+
+print("Good bye!")
+exit(0)
+</textarea>
+<textarea class="glueSource_python2" style="display:none;" >
+#!/usr/bin/python
+# -*- coding: UTF-8 -*-
+import time
+import sys
+
 print "xxl-job: hello python"
 
 print "${I18n.jobinfo_script_location}：", sys.argv[0]
@@ -299,7 +337,6 @@ logging.basicConfig(level=logging.DEBUG)
 logging.info("脚本文件：" + sys.argv[0])
 -->
 </textarea>
-<#--这里有问题，新建一个运行模式为 php 的任务后，GLUE 中没有下边的 php 代码-->
 <textarea class="glueSource_php" style="display:none;" >
 <?php
 
@@ -528,6 +565,8 @@ exit 0
 </div>
 
 <@netCommon.commonScript />
+
+<#-- biz start（5/5 script） -->
 <!-- DataTables -->
 <script src="${request.contextPath}/static/adminlte/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
 <script src="${request.contextPath}/static/adminlte/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
@@ -536,5 +575,7 @@ exit 0
 <#-- cronGen -->
 <script src="${request.contextPath}/static/plugins/cronGen/cronGen<#if I18n.admin_i18n?default('')?length gt 0 >_${I18n.admin_i18n}</#if>.js"></script>
 <script src="${request.contextPath}/static/js/jobinfo.index.1.js"></script>
+<#-- biz end（5/5 script） -->
+
 </body>
 </html>

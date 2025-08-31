@@ -27,6 +27,8 @@ public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationC
     private static final Logger logger = LoggerFactory.getLogger(XxlJobSpringExecutor.class);
 
 
+    // ---------------------- start / stop ----------------------
+
     // start
     @Override
     public void afterSingletonsInstantiated() {
@@ -82,8 +84,13 @@ public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationC
             return;
         }
         // init job handler from method
-        String[] beanDefinitionNames = applicationContext.getBeanNamesForType(Object.class, false, true);
+        String[] beanDefinitionNames = applicationContext.getBeanNamesForType(Object.class, false, false);  // allowEagerInit=false, avoid early initialization
         for (String beanDefinitionName : beanDefinitionNames) {
+
+            // filter system bean
+            if (isSystemBean(beanDefinitionName)) {
+                continue;
+            }
 
             // get bean
             Object bean = null;
@@ -122,6 +129,13 @@ public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationC
 
         }
     }
+
+    // check if system bean, not job bean
+    private boolean isSystemBean(String beanClassName) {
+        return beanClassName.startsWith("org.springframework")
+                || beanClassName.startsWith("spring.");
+    }
+
 
     // ---------------------- applicationContext ----------------------
     private static ApplicationContext applicationContext;

@@ -1,6 +1,6 @@
 package com.xxl.job.admin.core.util;
 
-import com.xxl.job.admin.core.cron.CronExpression;
+import com.xxl.job.admin.scheduler.cron.CronExpression;
 import com.xxl.job.core.util.DateUtil;
 import org.apache.groovy.util.Maps;
 import org.junit.jupiter.api.Assertions;

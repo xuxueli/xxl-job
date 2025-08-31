@@ -1,12 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<#-- import macro -->
   	<#import "./common/common.macro.ftl" as netCommon>
+
+	<#-- commonStyle -->
 	<@netCommon.commonStyle />
+	<!-- iCheck -->
     <link rel="stylesheet" href="${request.contextPath}/static/adminlte/plugins/iCheck/square/blue.css">
-	<title>${I18n.admin_name}</title>
 </head>
 <body class="hold-transition login-page">
+
+	<#-- login div -->
 	<div class="login-box">
 		<div class="login-logo">
 			<a><b>XXL</b>JOB</a>
@@ -37,8 +42,11 @@
 			</div>
 		</form>
 	</div>
+
 <@netCommon.commonScript />
+<!-- icheck -->
 <script src="${request.contextPath}/static/adminlte/plugins/iCheck/icheck.min.js"></script>
+<!-- js file -->
 <script src="${request.contextPath}/static/js/login.1.js"></script>
 
 </body>

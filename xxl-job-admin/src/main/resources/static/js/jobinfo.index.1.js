@@ -519,6 +519,8 @@ $(function() {
 			$("#addModal .form textarea[name='glueSource']").val( $("#addModal .form .glueSource_shell").val() );
 		} else if ('GLUE_PYTHON'==glueType){
 			$("#addModal .form textarea[name='glueSource']").val( $("#addModal .form .glueSource_python").val() );
+		} else if ('GLUE_PYTHON2'==glueType){
+			$("#addModal .form textarea[name='glueSource']").val( $("#addModal .form .glueSource_python2").val() );
 		} else if ('GLUE_PHP'==glueType){
             $("#addModal .form textarea[name='glueSource']").val( $("#addModal .form .glueSource_php").val() );
         } else if ('GLUE_NODEJS'==glueType){

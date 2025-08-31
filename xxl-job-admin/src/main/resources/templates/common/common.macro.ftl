@@ -1,12 +1,20 @@
+<#-- page import (style + script) -->
 <#macro commonStyle>
 
-	<#-- favicon -->
+	<#-- i18n -->
+	<#global I18n = I18nUtil.getMultString()?eval />
+
+	<#-- favicon、logo -->
+	<title>${I18n.admin_name}</title>
 	<link rel="icon" href="${request.contextPath}/static/favicon.ico" />
 
+	<#-- meta -->
 	<meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+
+	<#-- link style -->
     <!-- Bootstrap -->
     <link rel="stylesheet" href="${request.contextPath}/static/adminlte/bower_components/bootstrap/css/bootstrap.min.css">
     <!-- Font Awesome -->
@@ -28,9 +36,6 @@
 	<!-- pace -->
 	<link rel="stylesheet" href="${request.contextPath}/static/adminlte/bower_components/PACE/themes/blue/pace-theme-flash.css">
 
-	<#-- i18n -->
-	<#global I18n = I18nUtil.getMultString()?eval />
-
 </#macro>
 
 <#macro commonScript>
@@ -38,53 +43,57 @@
 	<script src="${request.contextPath}/static/adminlte/bower_components/jquery/jquery.min.js"></script>
 	<!-- Bootstrap -->
 	<script src="${request.contextPath}/static/adminlte/bower_components/bootstrap/js/bootstrap.min.js"></script>
-	<!-- FastClick -->
-	<script src="${request.contextPath}/static/adminlte/bower_components/fastclick/fastclick.js"></script>
-	<!-- AdminLTE App -->
-	<script src="${request.contextPath}/static/adminlte/dist/js/adminlte.min.js"></script>
+	<!-- PACE -->
+	<script src="${request.contextPath}/static/adminlte/bower_components/PACE/pace.min.js"></script>
 	<!-- jquery.slimscroll -->
 	<script src="${request.contextPath}/static/adminlte/bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+	<!-- FastClick -->
+	<script src="${request.contextPath}/static/adminlte/bower_components/fastclick/fastclick.js"></script>
 
-    <!-- pace -->
-    <script src="${request.contextPath}/static/adminlte/bower_components/PACE/pace.min.js"></script>
     <#-- jquery cookie -->
 	<script src="${request.contextPath}/static/plugins/jquery/jquery.cookie.js"></script>
 	<#-- jquery.validate -->
 	<script src="${request.contextPath}/static/plugins/jquery/jquery.validate.min.js"></script>
-
 	<#-- layer -->
 	<script src="${request.contextPath}/static/plugins/layer/layer.js"></script>
 
-	<#-- common -->
-    <script src="${request.contextPath}/static/js/common.1.js"></script>
+	<!-- base config -->
     <script>
 		var base_url = '${request.contextPath}';
         var I18n = ${I18nUtil.getMultString()};
 	</script>
 
+	<!-- AdminLTE App -->
+	<script src="${request.contextPath}/static/adminlte/dist/js/adminlte.min.js"></script>
+
+	<#-- common js -->
+	<script src="${request.contextPath}/static/js/common.1.js"></script>
+
 </#macro>
 
+<#-- page module: Header-->
 <#macro commonHeader>
 	<header class="main-header">
+		<!-- header-logo -->
 		<a href="${request.contextPath}/" class="logo">
 			<span class="logo-mini"><b>XXL</b></span>
 			<span class="logo-lg"><b>${I18n.admin_name}</b></span>
 		</a>
 		<nav class="navbar navbar-static-top" role="navigation">
-
+			<!--header left -->
 			<a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
                 <span class="sr-only">Toggle navigation</span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </a>
-
+			<!--header right -->
           	<div class="navbar-custom-menu">
 				<ul class="nav navbar-nav">
 					<#-- login user -->
                     <li class="dropdown">
-                        <a href="javascript:" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                            ${I18n.system_welcome} ${loginUser.username}
+                        <a href="javascript:" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" style="font-weight: bold;">
+                            ${I18n.system_welcome}：${xxl_sso_user.userName!}
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu" role="menu">
@@ -130,6 +139,21 @@
 
 </#macro>
 
+<#-- page module: Footer-->
+<#macro commonFooter >
+	<footer class="main-footer">
+		Powered by <b>XXL-JOB</b> ${I18n.admin_version}
+		<div class="pull-right hidden-xs">
+			<strong>Copyright &copy; 2015-${.now?string('yyyy')} &nbsp;
+				<a href="https://www.xuxueli.com/" target="_blank" >xuxueli</a>
+				&nbsp;
+				<a href="https://github.com/xuxueli/xxl-job" target="_blank" >github</a>
+			</strong><!-- All rights reserved. -->
+		</div>
+	</footer>
+</#macro>
+
+<#-- page module: Left-->
 <#macro commonLeft pageName >
 	<!-- Left side column. contains the logo and sidebar -->
 	<aside class="main-sidebar">
@@ -141,7 +165,7 @@
                 <li class="nav-click <#if pageName == "index">active</#if>" ><a href="${request.contextPath}/"><i class="fa fa-circle-o text-aqua"></i><span>${I18n.job_dashboard_name}</span></a></li>
 				<li class="nav-click <#if pageName == "jobinfo">active</#if>" ><a href="${request.contextPath}/jobinfo"><i class="fa fa-circle-o text-yellow"></i><span>${I18n.jobinfo_name}</span></a></li>
 				<li class="nav-click <#if pageName == "joblog">active</#if>" ><a href="${request.contextPath}/joblog"><i class="fa fa-circle-o text-green"></i><span>${I18n.joblog_name}</span></a></li>
-				<#if loginUser.role == 1>
+				<#if xxl_sso_user.roleList?? && xxl_sso_user.roleList?seq_contains("ADMIN") >
                     <li class="nav-click <#if pageName == "jobgroup">active</#if>" ><a href="${request.contextPath}/jobgroup"><i class="fa fa-circle-o text-red"></i><span>${I18n.jobgroup_name}</span></a></li>
                     <li class="nav-click <#if pageName == "user">active</#if>" ><a href="${request.contextPath}/user"><i class="fa fa-circle-o text-purple"></i><span>${I18n.user_manage}</span></a></li>
 				</#if>
@@ -180,7 +204,7 @@
 							<i class="menu-icon fa fa-user bg-yellow"></i>
 							<div class="menu-info">
 								<h4 class="control-sidebar-subheading">Frodo 更新了资料</h4>
-								<p>更新手机号码 +1(800)555-1234</p>
+								<p>更新手机号码 +1(800)1111-1111</p>
 							</div>
 						</a>
 					</li>
@@ -194,7 +218,7 @@
 						</a>
 					</li>
 					<li>
-						<a href="javascript::;">
+						<a href="javascript:;">
 						<i class="menu-icon fa fa-file-code-o bg-green"></i>
 						<div class="menu-info">
 							<h4 class="control-sidebar-subheading">001号定时作业调度</h4>
@@ -227,17 +251,4 @@
 	<!-- /.control-sidebar -->
 	<!-- Add the sidebar's background. This div must be placed immediately after the control sidebar -->
 	<div class="control-sidebar-bg"></div>
-</#macro>
-
-<#macro commonFooter >
-	<footer class="main-footer">
-        Powered by <b>XXL-JOB</b> ${I18n.admin_version}
-		<div class="pull-right hidden-xs">
-            <strong>Copyright &copy; 2015-${.now?string('yyyy')} &nbsp;
-                <a href="https://www.xuxueli.com/" target="_blank" >xuxueli</a>
-				&nbsp;
-                <a href="https://github.com/xuxueli/xxl-job" target="_blank" >github</a>
-            </strong><!-- All rights reserved. -->
-		</div>
-	</footer>
 </#macro>
