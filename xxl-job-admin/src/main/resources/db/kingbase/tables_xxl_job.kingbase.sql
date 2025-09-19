@@ -199,6 +199,7 @@ CREATE TABLE xxl_job_user
     id         serial     NOT NULL ,
     username   varchar(50) NOT NULL ,
     password   varchar(300) NOT NULL ,
+    token   varchar(1024),
     role       int4  NOT NULL ,
     permission varchar(255)  ,
     PRIMARY KEY (id)
@@ -211,7 +212,8 @@ create unique index idx_xxl_job_user_username on xxl_job_user (username)
 ;
 
 comment on column xxl_job_user.username is '账号';
-comment on column xxl_job_user.password is '密码';
+comment on column xxl_job_user.password is '密码加密信息';
+comment on column xxl_job_user.token is '登录token';
 comment on column xxl_job_user.role is '角色：0-普通用户、1-管理员';
 comment on column xxl_job_user.permission is '权限：执行器id列表，多个逗号分割';
 
@@ -250,7 +252,8 @@ INSERT INTO xxl_job_info(id, job_group, job_desc, add_time, update_time, author,
 VALUES (2, 2, 'Ollama示例任务01', now(), now(), 'XXL', '', 'NONE', '',
         'DO_NOTHING', 'FIRST', 'ollamaJobHandler', '{
     "input": "慢SQL问题分析思路",
-    "prompt": "你是一个研发工程师，擅长解决技术类问题。"
+    "prompt": "你是一个研发工程师，擅长解决技术类问题。",
+    "model": "qwen3:0.6b"
 }', 'SERIAL_EXECUTION', 0, 0, 'BEAN', '', 'GLUE代码初始化',
         now(), '');
 

@@ -120,7 +120,8 @@ CREATE TABLE `xxl_job_user`
 (
     `id`         int(11)     NOT NULL AUTO_INCREMENT,
     `username`   varchar(50) NOT NULL COMMENT '账号',
-    `password`   varchar(300) NOT NULL COMMENT '密码',
+    `password`   varchar(300) NOT NULL COMMENT '密码加密信息',
+    `token`      varchar(1024) DEFAULT NULL COMMENT '登录token',
     `role`       tinyint(4)  NOT NULL COMMENT '角色：0-普通用户、1-管理员',
     `permission` varchar(255) DEFAULT NULL COMMENT '权限：执行器ID列表，多个逗号分割',
     PRIMARY KEY (`id`)
@@ -159,7 +160,8 @@ INSERT INTO `xxl_job_info`(`id`, `job_group`, `job_desc`, `add_time`, `update_ti
 VALUES (2, 2, 'Ollama示例任务01', now(), now(), 'XXL', '', 'NONE', '',
         'DO_NOTHING', 'FIRST', 'ollamaJobHandler', '{
     "input": "慢SQL问题分析思路",
-    "prompt": "你是一个研发工程师，擅长解决技术类问题。"
+    "prompt": "你是一个研发工程师，擅长解决技术类问题。",
+    "model": "qwen3:0.6b"
 }', 'SERIAL_EXECUTION', 0, 0, 'BEAN', '', 'GLUE代码初始化',
         now(), '');
 

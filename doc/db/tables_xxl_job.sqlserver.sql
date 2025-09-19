@@ -416,6 +416,7 @@ CREATE TABLE "XXL_JOB_USER"
     "ID" BIGINT IDENTITY(100,1) NOT NULL,
     "USERNAME" VARCHAR (100) NOT NULL,
     "PASSWORD" VARCHAR (600) NOT NULL,
+    "TOKEN" VARCHAR (1024),
     "ROLE" INT NOT NULL,
     "PERMISSION" VARCHAR (512),
     PRIMARY KEY ("ID")
@@ -436,7 +437,13 @@ EXEC sys.sp_addextendedproperty
     @level0type = N'Schema',  @level0name = N'dbo',
     @level1type = N'Table',  @level1name = 'XXL_JOB_USER',
     @level2type = N'Column',  @level2name = 'PASSWORD',
-    @name = N'MS_Description', @value = N'密码'
+    @name = N'MS_Description', @value = N'密码加密信息'
+    ;
+EXEC sys.sp_addextendedproperty
+    @level0type = N'Schema',  @level0name = N'dbo',
+    @level1type = N'Table',  @level1name = 'XXL_JOB_USER',
+    @level2type = N'Column',  @level2name = 'TOKEN',
+    @name = N'MS_Description', @value = N'登录token'
     ;
 EXEC sys.sp_addextendedproperty
     @level0type = N'Schema',  @level0name = N'dbo',
@@ -507,7 +514,8 @@ INSERT INTO "XXL_JOB_INFO"("ID", "JOB_GROUP", "JOB_DESC",
 VALUES (2, 2, 'Ollama示例任务01', SYSDATETIME(), SYSDATETIME(), 'XXL', '', 'NONE', '',
         'DO_NOTHING', 'FIRST', 'ollamaJobHandler', '{
     "input": "慢SQL问题分析思路",
-    "prompt": "你是一个研发工程师，擅长解决技术类问题。"
+    "prompt": "你是一个研发工程师，擅长解决技术类问题。",
+    "model": "qwen3:0.6b"
 }', 'SERIAL_EXECUTION', 0, 0, 'BEAN', '', 'GLUE代码初始化',
         SYSDATETIME(), '');
 
