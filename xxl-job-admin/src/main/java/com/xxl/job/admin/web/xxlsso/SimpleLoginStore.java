@@ -15,7 +15,7 @@ import java.util.Map;
 
 /**
  * Simple LoginStore
- *
+ * <p>
  * 1、store by database；
  * 2、If you have higher performance requirements, it is recommended to use RedisLoginStore；
  *
@@ -65,7 +65,7 @@ public class SimpleLoginStore implements LoginStore {
         }
 
         // parse role
-        List<String> roleList = user.getRole()==1? List.of(Consts.ADMIN_ROLE):null;
+        List<String> roleList = user.getRole() == 1 ? List.of(Consts.ADMIN_ROLE) : null;
 
         // parse jobGroup permission
         Map<String, String> extraInfo = MapTool.newHashMap(

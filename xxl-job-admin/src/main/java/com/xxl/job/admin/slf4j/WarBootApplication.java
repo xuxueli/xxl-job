@@ -39,7 +39,7 @@ public class WarBootApplication extends SpringBootServletInitializer {
     protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
         Slf4jPrintStream.redirectSysoutSyserr();
         return builder.sources(this.getClass())
-                .listeners(getStartedListener(null,this.getClass()));
+                .listeners(getStartedListener(null, this.getClass()));
     }
 
     public static void startup(Class mainClass, String[] args) {
@@ -54,11 +54,11 @@ public class WarBootApplication extends SpringBootServletInitializer {
             builder.web(WebApplicationType.NONE);
         }
         builder.sources(mainClass)
-                .listeners(getStartedListener(webType,mainClass))
+                .listeners(getStartedListener(webType, mainClass))
                 .run(args);
     }
 
-    public static ApplicationListener<ApplicationStartedEvent> getStartedListener(WebApplicationType webType, Class mainClass){
+    public static ApplicationListener<ApplicationStartedEvent> getStartedListener(WebApplicationType webType, Class mainClass) {
         return new ApplicationListener<ApplicationStartedEvent>() {
             @Override
             public void onApplicationEvent(ApplicationStartedEvent event) {
@@ -107,11 +107,11 @@ public class WarBootApplication extends SpringBootServletInitializer {
                 if (contextPath == null) {
                     contextPath = "";
                 }
-                if(contextPath.endsWith("/")){
-                    contextPath=contextPath.substring(0,contextPath.length()-1);
+                if (contextPath.endsWith("/")) {
+                    contextPath = contextPath.substring(0, contextPath.length() - 1);
                 }
-                if(!"".equals(contextPath) && !contextPath.startsWith("/")){
-                    contextPath="/"+contextPath;
+                if (!"".equals(contextPath) && !contextPath.startsWith("/")) {
+                    contextPath = "/" + contextPath;
                 }
 
 
@@ -198,24 +198,24 @@ public class WarBootApplication extends SpringBootServletInitializer {
 
         ServiceLoader<Provider> providers = ServiceLoader.load(Provider.class);
         if (providers != null) {
-            boolean isFirst=true;
+            boolean isFirst = true;
             for (Provider provider : providers) {
-                if(isFirst){
+                if (isFirst) {
                     builder.append("\tjce:\n");
                 }
-                isFirst=false;
+                isFirst = false;
                 builder.append("\t\t").append(String.format("%-6s", provider.getName())).append(":").append(provider.getClass().getName()).append("\n");
             }
         }
 
         ServiceLoader<IIOServiceProvider> ios = ServiceLoader.load(IIOServiceProvider.class);
         if (ios != null) {
-            boolean isFirst=true;
+            boolean isFirst = true;
             for (IIOServiceProvider io : ios) {
-                if(isFirst){
+                if (isFirst) {
                     builder.append("\tio:\n");
                 }
-                isFirst=false;
+                isFirst = false;
                 builder.append("\t\t").append(io.getClass().getName()).append("\n");
             }
         }

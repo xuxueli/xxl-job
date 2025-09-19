@@ -21,6 +21,7 @@ public class XxlJobGroup {
 
     // registry list
     private List<String> registryList;  // 执行器地址列表(系统注册)
+
     public List<String> getRegistryList() {
         if (StringUtils.hasText(addressList)) {
             registryList = new ArrayList<String>(Arrays.asList(addressList.split(",")));

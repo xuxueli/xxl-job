@@ -26,13 +26,13 @@ public enum DatabasePlatformType {
         return this.type;
     }
 
-    public static DatabasePlatformType of(String name){
-        if(name==null){
+    public static DatabasePlatformType of(String name) {
+        if (name == null) {
             return DatabasePlatformType.UNKNOWN;
         }
-        name=name.toLowerCase();
+        name = name.toLowerCase();
         for (DatabasePlatformType value : DatabasePlatformType.values()) {
-            if(value.type().equals(name)){
+            if (value.type().equals(name)) {
                 return value;
             }
         }

@@ -1,15 +1,15 @@
 package com.xxl.job.admin.scheduler.conf;
 
+import com.xxl.job.admin.mapper.*;
 import com.xxl.job.admin.scheduler.alarm.JobAlarmer;
 import com.xxl.job.admin.scheduler.scheduler.XxlJobScheduler;
-import com.xxl.job.admin.mapper.*;
-import javax.annotation.Resource;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import javax.sql.DataSource;
 import java.util.Arrays;
 
@@ -23,6 +23,7 @@ import java.util.Arrays;
 public class XxlJobAdminConfig implements InitializingBean, DisposableBean {
 
     private static XxlJobAdminConfig adminConfig = null;
+
     public static XxlJobAdminConfig getAdminConfig() {
         return adminConfig;
     }

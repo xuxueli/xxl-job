@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ConfigurationProperties(prefix = "xxl.job.database.platform")
 public class DatabasePlatformConfig implements InitializingBean {
-    private Logger log= LoggerFactory.getLogger(DatabasePlatformConfig.class);
+    private Logger log = LoggerFactory.getLogger(DatabasePlatformConfig.class);
 
     private String type;
     private boolean standalone;
@@ -22,7 +22,7 @@ public class DatabasePlatformConfig implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        log.info("database platform active: "+type);
+        log.info("database platform active: " + type);
     }
 
     public String getType() {
@@ -41,7 +41,7 @@ public class DatabasePlatformConfig implements InitializingBean {
         this.standalone = standalone;
     }
 
-    public DatabasePlatformType type(){
+    public DatabasePlatformType type() {
         return DatabasePlatformType.of(type);
     }
 }

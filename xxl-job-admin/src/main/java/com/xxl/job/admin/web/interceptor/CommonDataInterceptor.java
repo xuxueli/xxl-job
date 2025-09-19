@@ -18,22 +18,22 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class CommonDataInterceptor implements WebMvcConfigurer {
 
-	@Override
-	public void addInterceptors(InterceptorRegistry registry) {
-		registry.addInterceptor(new AsyncHandlerInterceptor() {
-			@Override
-			public void postHandle(HttpServletRequest request,
-								   HttpServletResponse response,
-								   Object handler,
-								   ModelAndView modelAndView) throws Exception {
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new AsyncHandlerInterceptor() {
+            @Override
+            public void postHandle(HttpServletRequest request,
+                                   HttpServletResponse response,
+                                   Object handler,
+                                   ModelAndView modelAndView) throws Exception {
 
-				// static method
-				if (modelAndView != null) {
-					modelAndView.addObject("I18nUtil", FtlTool.generateStaticModel(I18nUtil.class.getName()));
-				}
+                // static method
+                if (modelAndView != null) {
+                    modelAndView.addObject("I18nUtil", FtlTool.generateStaticModel(I18nUtil.class.getName()));
+                }
 
-			}
-		}).addPathPatterns("/**");
-	}
+            }
+        }).addPathPatterns("/**");
+    }
 
 }

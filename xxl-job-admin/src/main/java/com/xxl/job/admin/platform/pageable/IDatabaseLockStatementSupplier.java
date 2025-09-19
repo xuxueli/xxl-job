@@ -11,5 +11,6 @@ import java.sql.SQLException;
  */
 public interface IDatabaseLockStatementSupplier {
     boolean supportDatabase(String type);
+
     PreparedStatement getStatement(Connection conn) throws SQLException;
 }

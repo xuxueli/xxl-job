@@ -21,36 +21,37 @@ import java.util.concurrent.TimeUnit;
  * @desc
  */
 @Component
-public class SecurityContext implements InitializingBean  {
-    public static final String STORE_PATH="../xxl-job-meta";
+public class SecurityContext implements InitializingBean {
+    public static final String STORE_PATH = "../xxl-job-meta";
     private static SecurityContext instance;
 
-    private PasswordEncoder passwordEncoder=new BCryptPasswordEncoder();
+    private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    public static final String LAST_KEY_PATH=SecurityContext.STORE_PATH+"/last.pk";
+    public static final String LAST_KEY_PATH = SecurityContext.STORE_PATH + "/last.pk";
     private volatile Keypair lastKeyPair;
     private volatile String lastPublicKeySm3;
 
-    public static final String CURR_KEY_PATH=SecurityContext.STORE_PATH+"/curr.pk";
+    public static final String CURR_KEY_PATH = SecurityContext.STORE_PATH + "/curr.pk";
     private volatile Keypair currKeyPair;
     private volatile String currPublicKeySm3;
 
     {
         try {
             currKeyPair = loadStoreKeypair(CURR_KEY_PATH, Sm2.generateKeyPairHex());
-            currPublicKeySm3= Sm3.sm3(currKeyPair.getPublicKey());
-            saveStoreKeypair(CURR_KEY_PATH,currKeyPair);
+            currPublicKeySm3 = Sm3.sm3(currKeyPair.getPublicKey());
+            saveStoreKeypair(CURR_KEY_PATH, currKeyPair);
 
             lastKeyPair = loadStoreKeypair(LAST_KEY_PATH, currKeyPair);
-            lastPublicKeySm3= Sm3.sm3(lastKeyPair.getPublicKey());
-            saveStoreKeypair(LAST_KEY_PATH,lastKeyPair);
+            lastPublicKeySm3 = Sm3.sm3(lastKeyPair.getPublicKey());
+            saveStoreKeypair(LAST_KEY_PATH, lastKeyPair);
         } catch (ScriptException e) {
             e.printStackTrace();
         }
     }
 
 
-    private ScheduledExecutorService pool= Executors.newSingleThreadScheduledExecutor();
+    private ScheduledExecutorService pool = Executors.newSingleThreadScheduledExecutor();
+
     {
         pool.scheduleAtFixedRate(new Runnable() {
             @Override
@@ -61,71 +62,71 @@ public class SecurityContext implements InitializingBean  {
                     e.printStackTrace();
                 }
             }
-        },0,30, TimeUnit.MINUTES);
+        }, 0, 30, TimeUnit.MINUTES);
     }
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        SecurityContext.instance=this;
+        SecurityContext.instance = this;
     }
 
-    public static SecurityContext getInstance(){
+    public static SecurityContext getInstance() {
         return instance;
     }
 
-    public String encodePassword(String password){
+    public String encodePassword(String password) {
         return passwordEncoder.encode(password);
     }
 
-    public boolean matchPassword(String password,String encoded){
-        return passwordEncoder.matches(password,encoded);
+    public boolean matchPassword(String password, String encoded) {
+        return passwordEncoder.matches(password, encoded);
     }
 
     public synchronized Keypair refreshKeypair() throws ScriptException {
         lastKeyPair = currKeyPair;
-        lastPublicKeySm3=currPublicKeySm3;
+        lastPublicKeySm3 = currPublicKeySm3;
         currKeyPair = Sm2.generateKeyPairHex();
-        currPublicKeySm3=Sm3.sm3(currKeyPair.getPublicKey());
-        saveStoreKeypair(CURR_KEY_PATH,currKeyPair);
-        saveStoreKeypair(LAST_KEY_PATH,lastKeyPair);
+        currPublicKeySm3 = Sm3.sm3(currKeyPair.getPublicKey());
+        saveStoreKeypair(CURR_KEY_PATH, currKeyPair);
+        saveStoreKeypair(LAST_KEY_PATH, lastKeyPair);
         return currKeyPair;
     }
 
-    public synchronized Keypair currentKeypair(){
+    public synchronized Keypair currentKeypair() {
         return currKeyPair;
     }
 
-    public synchronized Keypair findKeypair(String sign){
-        if(Objects.equals(sign,currPublicKeySm3)){
+    public synchronized Keypair findKeypair(String sign) {
+        if (Objects.equals(sign, currPublicKeySm3)) {
             return currKeyPair;
         }
-        if(Objects.equals(sign,lastPublicKeySm3)){
+        if (Objects.equals(sign, lastPublicKeySm3)) {
             return lastKeyPair;
         }
         return null;
     }
 
-    public static Keypair loadStoreKeypair(String storeFileName,Keypair defVal){
+    public static Keypair loadStoreKeypair(String storeFileName, Keypair defVal) {
 
         File file = new File(storeFileName);
-        if(file.exists()){
-            Keypair pair=new Keypair();
-            try(BufferedReader reader=new BufferedReader(new InputStreamReader(new FileInputStream(file),"UTF-8"))){
+        if (file.exists()) {
+            Keypair pair = new Keypair();
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"))) {
                 pair.setPublicKey(reader.readLine().trim());
                 pair.setPrivateKey(reader.readLine().trim());
-            }catch (Exception e){
+            } catch (Exception e) {
 
             }
-            boolean valid=false;
-            try{
-                String testMsg="123456";
+            boolean valid = false;
+            try {
+                String testMsg = "123456";
                 String enc = Sm2.doEncrypt(testMsg, pair.getPublicKey());
                 String dec = Sm2.doDecrypt(enc, pair.getPrivateKey());
-                valid=testMsg.equals(dec);
-            }catch(Exception e){
+                valid = testMsg.equals(dec);
+            } catch (Exception e) {
 
             }
-            if(!valid){
+            if (!valid) {
                 return defVal;
             }
             return pair;
@@ -133,17 +134,17 @@ public class SecurityContext implements InitializingBean  {
         return defVal;
     }
 
-    public static void saveStoreKeypair(String storeFileName,Keypair pair){
+    public static void saveStoreKeypair(String storeFileName, Keypair pair) {
         File file = new File(storeFileName);
-        if(!file.getParentFile().exists()){
+        if (!file.getParentFile().exists()) {
             file.getParentFile().mkdirs();
         }
-        try(BufferedWriter writer=new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file),"UTF-8"))){
+        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF-8"))) {
             writer.write(pair.getPublicKey());
             writer.newLine();
             writer.write(pair.getPrivateKey());
             writer.newLine();
-        }catch (Exception e){
+        } catch (Exception e) {
 
         }
     }

@@ -61,17 +61,17 @@ public class JobUserController {
         int list_count = xxlJobUserMapper.pageListCount(start, length, username, role);
 
         // filter
-        if (list!=null && list.size()>0) {
-            for (XxlJobUser item: list) {
+        if (list != null && list.size() > 0) {
+            for (XxlJobUser item : list) {
                 item.setPassword(null);
             }
         }
 
         // package result
         Map<String, Object> maps = new HashMap<String, Object>();
-        maps.put("recordsTotal", list_count);		// 总记录数
-        maps.put("recordsFiltered", list_count);	// 过滤后的总记录数
-        maps.put("data", list);  					// 分页列表
+        maps.put("recordsTotal", list_count);        // 总记录数
+        maps.put("recordsFiltered", list_count);    // 过滤后的总记录数
+        maps.put("data", list);                    // 分页列表
         return maps;
     }
 
@@ -82,19 +82,19 @@ public class JobUserController {
 
         // valid username
         if (StringTool.isBlank(xxlJobUser.getUsername())) {
-            return ReturnT.ofFail(I18nUtil.getString("system_please_input")+I18nUtil.getString("user_username") );
+            return ReturnT.ofFail(I18nUtil.getString("system_please_input") + I18nUtil.getString("user_username"));
         }
         xxlJobUser.setUsername(xxlJobUser.getUsername().trim());
-        if (!(xxlJobUser.getUsername().length()>=4 && xxlJobUser.getUsername().length()<=20)) {
-            return ReturnT.ofFail(I18nUtil.getString("system_lengh_limit")+"[4-20]" );
+        if (!(xxlJobUser.getUsername().length() >= 4 && xxlJobUser.getUsername().length() <= 20)) {
+            return ReturnT.ofFail(I18nUtil.getString("system_lengh_limit") + "[4-20]");
         }
         // valid password
         if (StringTool.isBlank(xxlJobUser.getPassword())) {
-            return ReturnT.ofFail(I18nUtil.getString("system_please_input")+I18nUtil.getString("user_password") );
+            return ReturnT.ofFail(I18nUtil.getString("system_please_input") + I18nUtil.getString("user_password"));
         }
         xxlJobUser.setPassword(xxlJobUser.getPassword().trim());
-        if (!(xxlJobUser.getPassword().length()>=4 && xxlJobUser.getPassword().length()<=20)) {
-            return ReturnT.ofFail(I18nUtil.getString("system_lengh_limit")+"[4-20]" );
+        if (!(xxlJobUser.getPassword().length() >= 4 && xxlJobUser.getPassword().length() <= 20)) {
+            return ReturnT.ofFail(I18nUtil.getString("system_lengh_limit") + "[4-20]");
         }
         // md5 password
         String passwordHash = SHA256Tool.sha256(xxlJobUser.getPassword());
@@ -103,7 +103,7 @@ public class JobUserController {
         // check repeat
         XxlJobUser existUser = xxlJobUserMapper.loadByUserName(xxlJobUser.getUsername());
         if (existUser != null) {
-            return ReturnT.ofFail( I18nUtil.getString("user_username_repeat") );
+            return ReturnT.ofFail(I18nUtil.getString("user_username_repeat"));
         }
 
         // write
@@ -125,8 +125,8 @@ public class JobUserController {
         // valid password
         if (StringTool.isNotBlank(xxlJobUser.getPassword())) {
             xxlJobUser.setPassword(xxlJobUser.getPassword().trim());
-            if (!(xxlJobUser.getPassword().length()>=4 && xxlJobUser.getPassword().length()<=20)) {
-                return ReturnT.ofFail(I18nUtil.getString("system_lengh_limit")+"[4-20]" );
+            if (!(xxlJobUser.getPassword().length() >= 4 && xxlJobUser.getPassword().length() <= 20)) {
+                return ReturnT.ofFail(I18nUtil.getString("system_lengh_limit") + "[4-20]");
             }
             // md5 password
             String passwordHash = SHA256Tool.sha256(xxlJobUser.getPassword());
@@ -159,18 +159,18 @@ public class JobUserController {
     @ResponseBody
     public ReturnT<String> updatePwd(HttpServletRequest request,
                                      @RequestParam("password") String password,
-                                     @RequestParam("oldPassword") String oldPassword){
+                                     @RequestParam("oldPassword") String oldPassword) {
 
         // valid
-        if (oldPassword==null || oldPassword.trim().isEmpty()){
+        if (oldPassword == null || oldPassword.trim().isEmpty()) {
             return ReturnT.ofFail(I18nUtil.getString("system_please_input") + I18nUtil.getString("change_pwd_field_oldpwd"));
         }
-        if (password==null || password.trim().isEmpty()){
+        if (password == null || password.trim().isEmpty()) {
             return ReturnT.ofFail(I18nUtil.getString("system_please_input") + I18nUtil.getString("change_pwd_field_oldpwd"));
         }
         password = password.trim();
-        if (!(password.length()>=4 && password.length()<=20)) {
-            return ReturnT.ofFail(I18nUtil.getString("system_lengh_limit")+"[4-20]" );
+        if (!(password.length() >= 4 && password.length() <= 20)) {
+            return ReturnT.ofFail(I18nUtil.getString("system_lengh_limit") + "[4-20]");
         }
 
         // md5 password

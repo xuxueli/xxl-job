@@ -1,14 +1,13 @@
 package com.xxl.job.admin.core.conf;
 
 import com.xxl.job.admin.core.util.I18nUtil;
+import com.xxl.job.admin.scheduler.conf.XxlJobAdminConfig;
 import com.xxl.job.admin.security.SecurityContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.autoconfigure.mail.MailProperties;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 
@@ -18,7 +17,10 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.*;
-import java.util.*;
+import java.util.Enumeration;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * @author Ice2Faith
@@ -26,9 +28,9 @@ import java.util.*;
  */
 @Configuration
 public class XxlJobMailConfig implements ApplicationRunner {
-    public static final String FILE_NAME="email.properties";
-    public static final String MAIL_CONFIG_FILE=SecurityContext.STORE_PATH+"/"+FILE_NAME;
-    public static final Path CONFIG_PATH=Paths.get(MAIL_CONFIG_FILE);
+    public static final String FILE_NAME = "email.properties";
+    public static final String MAIL_CONFIG_FILE = SecurityContext.STORE_PATH + "/" + FILE_NAME;
+    public static final Path CONFIG_PATH = Paths.get(MAIL_CONFIG_FILE);
 
     @Autowired
     private MailProperties mailProperties;
@@ -65,7 +67,7 @@ public class XxlJobMailConfig implements ApplicationRunner {
                         continue;
                     }
 
-                    if(kind != StandardWatchEventKinds.ENTRY_MODIFY){
+                    if (kind != StandardWatchEventKinds.ENTRY_MODIFY) {
                         continue;
                     }
 
@@ -89,70 +91,70 @@ public class XxlJobMailConfig implements ApplicationRunner {
     }
 
     public void loadConfig() throws Exception {
-        Properties properties=new Properties();
+        Properties properties = new Properties();
         File file = getConfigFile();
-        if(!file.exists()){
+        if (!file.exists()) {
             return;
         }
-        FileInputStream fis=new FileInputStream(file);
+        FileInputStream fis = new FileInputStream(file);
         properties.load(fis);
         fis.close();
         loadConfig(properties);
     }
 
-    public void loadConfig(Properties properties){
+    public void loadConfig(Properties properties) {
         String host = properties.getProperty("spring.mail.host");
-        if(host==null || host.isEmpty()){
+        if (host == null || host.isEmpty()) {
             return;
         }
         mailProperties.setHost(host);
-        int port=25;
-        try{
-            port=Integer.parseInt(properties.getProperty("spring.mail.port","25"));
-        }catch(Exception e){
+        int port = 25;
+        try {
+            port = Integer.parseInt(properties.getProperty("spring.mail.port", "25"));
+        } catch (Exception e) {
 
         }
         mailProperties.setPort(port);
         String username = properties.getProperty("spring.mail.username");
-        if(username!=null && !username.isEmpty()) {
+        if (username != null && !username.isEmpty()) {
             mailProperties.setUsername(username);
         }
         String password = properties.getProperty("spring.mail.password");
-        if(password!=null && !password.isEmpty()) {
+        if (password != null && !password.isEmpty()) {
             mailProperties.setPassword(password);
         }
         String from = properties.getProperty("spring.mail.from");
-        if(from!=null && !from.isEmpty()){
+        if (from != null && !from.isEmpty()) {
             xxlJobAdminConfig.setEmailFrom(from);
         }
 
         Enumeration<?> enumeration = properties.propertyNames();
-        while(enumeration.hasMoreElements()){
-            String key = (String)enumeration.nextElement();
-            if(key.startsWith("spring.mail.properties.")){
-                String name=key.substring("spring.mail.properties.".length());
-                if(!name.isEmpty()) {
+        while (enumeration.hasMoreElements()) {
+            String key = (String) enumeration.nextElement();
+            if (key.startsWith("spring.mail.properties.")) {
+                String name = key.substring("spring.mail.properties.".length());
+                if (!name.isEmpty()) {
                     String prop = (String) properties.get(key);
                     mailProperties.getProperties().put(name, prop);
                 }
             }
         }
 
-        applyProperties(mailProperties,javaMailSender);
+        applyProperties(mailProperties, javaMailSender);
     }
 
-    public Map<String,String> getConfig(){
-        Map<String,String> map=new LinkedHashMap<>();
-        map.put("spring.mail.host",mailProperties.getHost());
+    public Map<String, String> getConfig() {
+        Map<String, String> map = new LinkedHashMap<>();
+        map.put("spring.mail.host", mailProperties.getHost());
         map.put("spring.mail.port", String.valueOf(mailProperties.getPort()));
-        map.put("spring.mail.username",mailProperties.getUsername());
-        map.put("spring.mail.from",xxlJobAdminConfig.getEmailFrom());
-        map.put("spring.mail.password",mailProperties.getPassword());
+        map.put("spring.mail.username", mailProperties.getUsername());
+        map.put("spring.mail.from", xxlJobAdminConfig.getEmailFrom());
+        map.put("spring.mail.password", mailProperties.getPassword());
         for (Map.Entry<String, String> entry : mailProperties.getProperties().entrySet()) {
-            if(entry.getValue()==null){
+            if (entry.getValue() == null) {
                 continue;
             }
-            map.put("spring.mail.properties."+entry.getKey(),String.valueOf(entry.getValue()));
+            map.put("spring.mail.properties." + entry.getKey(), String.valueOf(entry.getValue()));
         }
 
         return map;
@@ -160,18 +162,18 @@ public class XxlJobMailConfig implements ApplicationRunner {
 
     public void storeConfig() throws Exception {
         Map<String, String> map = getConfig();
-        Properties properties=new Properties();
+        Properties properties = new Properties();
         properties.putAll(map);
 
         File file = getConfigFile();
         FileOutputStream fos = new FileOutputStream(file);
-        properties.store(fos,null);
+        properties.store(fos, null);
         fos.close();
     }
 
-    public File getConfigFile(){
+    public File getConfigFile() {
         File file = new File(MAIL_CONFIG_FILE);
-        if(!file.getParentFile().exists()){
+        if (!file.getParentFile().exists()) {
             file.getParentFile().mkdirs();
         }
         return file;

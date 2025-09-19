@@ -1,14 +1,16 @@
 package com.xxl.job.admin.scheduler.thread;
 
-import com.xxl.job.admin.scheduler.conf.XxlJobAdminConfig;
 import com.xxl.job.admin.model.XxlJobLogReport;
+import com.xxl.job.admin.scheduler.conf.XxlJobAdminConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -20,14 +22,16 @@ public class JobLogReportHelper {
     private static Logger logger = LoggerFactory.getLogger(JobLogReportHelper.class);
 
     private static JobLogReportHelper instance = new JobLogReportHelper();
-    public static JobLogReportHelper getInstance(){
+
+    public static JobLogReportHelper getInstance() {
         return instance;
     }
 
 
     private Thread logrThread;
     private volatile boolean toStop = false;
-    public void start(){
+
+    public void start() {
         logrThread = new Thread(new Runnable() {
 
             @Override
@@ -53,7 +57,7 @@ public class JobLogReportHelper {
 
                             Date todayFrom = Date.from(
                                     itemDay.atZone(ZoneId.systemDefault())
-                                    .toInstant()
+                                            .toInstant()
                             );
 
                             itemDay = itemDay.plusDays(1)
@@ -73,28 +77,28 @@ public class JobLogReportHelper {
 
                             Map<String, Object> countMap = XxlJobAdminConfig.getAdminConfig().getXxlJobLogMapper().findLogReport(todayFrom, todayTo);
 
-                            Map<String, Object> triggerCountMap=new HashMap<>();
-                            if(countMap!=null){
-                                String[] names={"triggerDayCount","triggerDayCountRunning","triggerDayCountSuc"};
+                            Map<String, Object> triggerCountMap = new HashMap<>();
+                            if (countMap != null) {
+                                String[] names = {"triggerDayCount", "triggerDayCountRunning", "triggerDayCountSuc"};
                                 for (Map.Entry<String, Object> entry : countMap.entrySet()) {
-                                    boolean isFind=false;
+                                    boolean isFind = false;
                                     for (String name : names) {
-                                        if(name.equalsIgnoreCase(entry.getKey())){
-                                            triggerCountMap.put(name,entry.getValue());
-                                            isFind=true;
+                                        if (name.equalsIgnoreCase(entry.getKey())) {
+                                            triggerCountMap.put(name, entry.getValue());
+                                            isFind = true;
                                             break;
                                         }
                                     }
-                                    if(!isFind){
+                                    if (!isFind) {
                                         triggerCountMap.put(entry.getKey(), entry.getValue());
                                     }
                                 }
                             }
 
-                            if (triggerCountMap!=null && !triggerCountMap.isEmpty()) {
-                                int triggerDayCount = triggerCountMap.containsKey("triggerDayCount")?Integer.valueOf(String.valueOf(triggerCountMap.get("triggerDayCount"))):0;
-                                int triggerDayCountRunning = triggerCountMap.containsKey("triggerDayCountRunning")?Integer.valueOf(String.valueOf(triggerCountMap.get("triggerDayCountRunning"))):0;
-                                int triggerDayCountSuc = triggerCountMap.containsKey("triggerDayCountSuc")?Integer.valueOf(String.valueOf(triggerCountMap.get("triggerDayCountSuc"))):0;
+                            if (triggerCountMap != null && !triggerCountMap.isEmpty()) {
+                                int triggerDayCount = triggerCountMap.containsKey("triggerDayCount") ? Integer.valueOf(String.valueOf(triggerCountMap.get("triggerDayCount"))) : 0;
+                                int triggerDayCountRunning = triggerCountMap.containsKey("triggerDayCountRunning") ? Integer.valueOf(String.valueOf(triggerCountMap.get("triggerDayCountRunning"))) : 0;
+                                int triggerDayCountSuc = triggerCountMap.containsKey("triggerDayCountSuc") ? Integer.valueOf(String.valueOf(triggerCountMap.get("triggerDayCountSuc"))) : 0;
                                 int triggerDayCountFail = triggerDayCount - triggerDayCountRunning - triggerDayCountSuc;
 
                                 xxlJobLogReport.setRunningCount(triggerDayCountRunning);
@@ -116,8 +120,8 @@ public class JobLogReportHelper {
                     }
 
                     // 2、log-clean: switch open & once each day
-                    if (XxlJobAdminConfig.getAdminConfig().getLogretentiondays()>0
-                            && System.currentTimeMillis() - lastCleanLogTime > 24*60*60*1000) {
+                    if (XxlJobAdminConfig.getAdminConfig().getLogretentiondays() > 0
+                            && System.currentTimeMillis() - lastCleanLogTime > 24 * 60 * 60 * 1000) {
 
                         // expire-time
                         LocalDateTime expiredDay = LocalDateTime.now()
@@ -136,10 +140,10 @@ public class JobLogReportHelper {
                         List<Long> logIds = null;
                         do {
                             logIds = XxlJobAdminConfig.getAdminConfig().getXxlJobLogMapper().findClearLogIds(0, 0, clearBeforeTime, 0, 1000);
-                            if (logIds!=null && !logIds.isEmpty()) {
+                            if (logIds != null && !logIds.isEmpty()) {
                                 XxlJobAdminConfig.getAdminConfig().getXxlJobLogMapper().clearLog(logIds);
                             }
-                        } while (logIds!=null && !logIds.isEmpty());
+                        } while (logIds != null && !logIds.isEmpty());
 
                         // update clean time
                         lastCleanLogTime = System.currentTimeMillis();
@@ -164,7 +168,7 @@ public class JobLogReportHelper {
         logrThread.start();
     }
 
-    public void toStop(){
+    public void toStop() {
         toStop = true;
         // interrupt and wait
         logrThread.interrupt();

@@ -7,10 +7,7 @@ import com.xxl.job.core.biz.model.RegistryParam;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.util.XxlJobRemotingUtil;
 import com.xxl.sso.core.annotation.XxlSso;
-import com.xxl.tool.core.StringTool;
 import com.xxl.tool.gson.GsonTool;
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -65,7 +64,7 @@ public class JobApiController {
             RegistryParam registryParam = GsonTool.fromJson(data, RegistryParam.class);
             return adminBiz.registryRemove(registryParam);
         } else {
-            return ReturnT.ofFail("invalid request, uri-mapping("+ uri +") not found.");
+            return ReturnT.ofFail("invalid request, uri-mapping(" + uri + ") not found.");
         }
 
     }

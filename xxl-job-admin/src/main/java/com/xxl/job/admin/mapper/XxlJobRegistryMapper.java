@@ -30,7 +30,7 @@ public interface XxlJobRegistryMapper {
                             @Param("updateTime") Date updateTime);
 
     public int registryDelete(@Param("registryGroup") String registryGroup,
-                          @Param("registryKey") String registryKey,
-                          @Param("registryValue") String registryValue);
+                              @Param("registryKey") String registryKey,
+                              @Param("registryValue") String registryValue);
 
 }

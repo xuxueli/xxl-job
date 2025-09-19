@@ -10,55 +10,57 @@ import java.util.List;
 
 /**
  * job info
+ *
  * @author xuxueli 2016-1-12 18:03:45
  */
 @Mapper
 public interface XxlJobInfoMapper {
 
-	public List<XxlJobInfo> pageList(@Param("page")PageDto page,
-									 @Param("jobGroup") int jobGroup,
-									 @Param("triggerStatus") int triggerStatus,
-									 @Param("jobDesc") String jobDesc,
-									 @Param("executorHandler") String executorHandler,
-									 @Param("author") String author);
-	public int pageListCount(
-							 @Param("jobGroup") int jobGroup,
-							 @Param("triggerStatus") int triggerStatus,
-							 @Param("jobDesc") String jobDesc,
-							 @Param("executorHandler") String executorHandler,
-							 @Param("author") String author);
+    public List<XxlJobInfo> pageList(@Param("page") PageDto page,
+                                     @Param("jobGroup") int jobGroup,
+                                     @Param("triggerStatus") int triggerStatus,
+                                     @Param("jobDesc") String jobDesc,
+                                     @Param("executorHandler") String executorHandler,
+                                     @Param("author") String author);
 
-	public int save(XxlJobInfo info);
+    public int pageListCount(
+            @Param("jobGroup") int jobGroup,
+            @Param("triggerStatus") int triggerStatus,
+            @Param("jobDesc") String jobDesc,
+            @Param("executorHandler") String executorHandler,
+            @Param("author") String author);
 
-	public XxlJobInfo loadById(@Param("id") int id);
+    public int save(XxlJobInfo info);
 
-	public int update(XxlJobInfo xxlJobInfo);
+    public XxlJobInfo loadById(@Param("id") int id);
 
-	public int delete(@Param("id") long id);
+    public int update(XxlJobInfo xxlJobInfo);
 
-	public List<XxlJobInfo> getJobsByGroup(@Param("jobGroup") int jobGroup);
+    public int delete(@Param("id") long id);
 
-	public int findAllCount();
+    public List<XxlJobInfo> getJobsByGroup(@Param("jobGroup") int jobGroup);
 
-	/**
-	 * find schedule job, limit "trigger_status = 1"
-	 *
-	 * @param maxNextTime
-	 * @param pagesize
-	 * @return
-	 */
-	public List<XxlJobInfo> scheduleJobQuery(@Param("maxNextTime") long maxNextTime, @Param("pagesize") int pagesize );
+    public int findAllCount();
 
-	/**
-	 * update schedule job
-	 *
-	 * 	1、can only update "trigger_status = 1", Avoid stopping tasks from being opened
-	 * 	2、valid "triggerStatus gte 0", filter illegal state
-	 *
-	 * @param xxlJobInfo
-	 * @return
-	 */
-	public int scheduleUpdate(XxlJobInfo xxlJobInfo);
+    /**
+     * find schedule job, limit "trigger_status = 1"
+     *
+     * @param maxNextTime
+     * @param pagesize
+     * @return
+     */
+    public List<XxlJobInfo> scheduleJobQuery(@Param("maxNextTime") long maxNextTime, @Param("pagesize") int pagesize);
+
+    /**
+     * update schedule job
+     * <p>
+     * 1、can only update "trigger_status = 1", Avoid stopping tasks from being opened
+     * 2、valid "triggerStatus gte 0", filter illegal state
+     *
+     * @param xxlJobInfo
+     * @return
+     */
+    public int scheduleUpdate(XxlJobInfo xxlJobInfo);
 
 
 }

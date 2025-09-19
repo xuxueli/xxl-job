@@ -19,7 +19,7 @@ import java.util.Set;
  */
 @Component
 public class CommonLockStatementSupplier implements IDatabaseLockStatementSupplier {
-    public static final Set<String> SUPPORT_TYPES= Collections.unmodifiableSet(
+    public static final Set<String> SUPPORT_TYPES = Collections.unmodifiableSet(
             new HashSet<>(Arrays.asList(
                     DatabasePlatformType.MYSQL.type(),
                     DatabasePlatformType.POSTGRE.type(),
@@ -29,6 +29,7 @@ public class CommonLockStatementSupplier implements IDatabaseLockStatementSuppli
                     DatabasePlatformType.KINGBASE.type()
             ))
     );
+
     @Override
     public boolean supportDatabase(String type) {
         return SUPPORT_TYPES.contains(type);
@@ -36,6 +37,6 @@ public class CommonLockStatementSupplier implements IDatabaseLockStatementSuppli
 
     @Override
     public PreparedStatement getStatement(Connection conn) throws SQLException {
-        return conn.prepareStatement(  "select * from xxl_job_lock where lock_name = 'schedule_lock' for update" );
+        return conn.prepareStatement("select * from xxl_job_lock where lock_name = 'schedule_lock' for update");
     }
 }

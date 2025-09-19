@@ -19,11 +19,12 @@ import java.util.Set;
  */
 @Component
 public class OracleLockStatementSupplier implements IDatabaseLockStatementSupplier {
-    public static final Set<String> SUPPORT_TYPES= Collections.unmodifiableSet(
+    public static final Set<String> SUPPORT_TYPES = Collections.unmodifiableSet(
             new HashSet<>(Arrays.asList(
                     DatabasePlatformType.ORACLE.type()
             ))
     );
+
     @Override
     public boolean supportDatabase(String type) {
         return SUPPORT_TYPES.contains(type);
@@ -31,6 +32,6 @@ public class OracleLockStatementSupplier implements IDatabaseLockStatementSuppli
 
     @Override
     public PreparedStatement getStatement(Connection conn) throws SQLException {
-        return conn.prepareStatement(  "select * from XXL_JOB_LOCK where \"LOCK_NAME\" = 'schedule_lock' for update" );
+        return conn.prepareStatement("select * from XXL_JOB_LOCK where \"LOCK_NAME\" = 'schedule_lock' for update");
     }
 }

@@ -1,10 +1,10 @@
 package com.xxl.job.admin.scheduler.alarm.impl;
 
-import com.xxl.job.admin.scheduler.alarm.JobAlarm;
-import com.xxl.job.admin.scheduler.conf.XxlJobAdminConfig;
 import com.xxl.job.admin.model.XxlJobGroup;
 import com.xxl.job.admin.model.XxlJobInfo;
 import com.xxl.job.admin.model.XxlJobLog;
+import com.xxl.job.admin.scheduler.alarm.JobAlarm;
+import com.xxl.job.admin.scheduler.conf.XxlJobAdminConfig;
 import com.xxl.job.admin.util.I18nUtil;
 import com.xxl.job.core.biz.model.ReturnT;
 import org.slf4j.Logger;
@@ -52,18 +52,19 @@ public class EmailJobAlarm implements JobAlarm, EnvironmentAware {
             hostIdentity = str;
         }
     }
+
     /**
      * fail alarm
      *
      * @param jobLog
      */
     @Override
-    public boolean doAlarm(XxlJobInfo info, XxlJobLog jobLog){
+    public boolean doAlarm(XxlJobInfo info, XxlJobLog jobLog) {
         SimpleDateFormat dateFmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         boolean alarmResult = true;
 
         // send monitor email
-        if (info!=null && info.getAlarmEmail()!=null && info.getAlarmEmail().trim().length()>0) {
+        if (info != null && info.getAlarmEmail() != null && info.getAlarmEmail().trim().length() > 0) {
 
             // alarmContent
             String alarmContent = "Alarm Job LogId=" + jobLog.getId();
@@ -81,7 +82,7 @@ public class EmailJobAlarm implements JobAlarm, EnvironmentAware {
             if (jobLog.getTriggerCode() != ReturnT.SUCCESS_CODE) {
                 alarmContent += "<br>TriggerMsg=<br>" + jobLog.getTriggerMsg();
             }
-            if (jobLog.getHandleCode()>0 && jobLog.getHandleCode() != ReturnT.SUCCESS_CODE) {
+            if (jobLog.getHandleCode() > 0 && jobLog.getHandleCode() != ReturnT.SUCCESS_CODE) {
                 alarmContent += "<br>HandleCode=" + jobLog.getHandleMsg();
             }
 
@@ -90,13 +91,13 @@ public class EmailJobAlarm implements JobAlarm, EnvironmentAware {
             String personal = I18nUtil.getString("admin_name_full");
             String title = I18nUtil.getString("jobconf_monitor");
             String content = MessageFormat.format(loadEmailJobAlarmTemplate(),
-                    group!=null?group.getTitle():"null",
+                    group != null ? group.getTitle() : "null",
                     info.getId(),
                     info.getJobDesc(),
                     alarmContent);
 
             Set<String> emailSet = new HashSet<String>(Arrays.asList(info.getAlarmEmail().split(",")));
-            for (String email: emailSet) {
+            for (String email : emailSet) {
 
                 // make mail
                 try {
@@ -126,16 +127,16 @@ public class EmailJobAlarm implements JobAlarm, EnvironmentAware {
      *
      * @return
      */
-    private static final String loadEmailJobAlarmTemplate(){
+    private static final String loadEmailJobAlarmTemplate() {
         String mailBodyTemplate = "<h5>" + I18nUtil.getString("jobconf_monitor_detail") + "：</span>" +
                 "<table border=\"1\" cellpadding=\"3\" style=\"border-collapse:collapse; width:80%;\" >\n" +
                 "   <thead style=\"font-weight: bold;color: #ffffff;background-color: #ff8c00;\" >" +
                 "      <tr>\n" +
-                "         <td width=\"20%\" >"+ I18nUtil.getString("jobinfo_field_jobgroup") +"</td>\n" +
-                "         <td width=\"10%\" >"+ I18nUtil.getString("jobinfo_field_id") +"</td>\n" +
-                "         <td width=\"20%\" >"+ I18nUtil.getString("jobinfo_field_jobdesc") +"</td>\n" +
-                "         <td width=\"10%\" >"+ I18nUtil.getString("jobconf_monitor_alarm_title") +"</td>\n" +
-                "         <td width=\"40%\" >"+ I18nUtil.getString("jobconf_monitor_alarm_content") +"</td>\n" +
+                "         <td width=\"20%\" >" + I18nUtil.getString("jobinfo_field_jobgroup") + "</td>\n" +
+                "         <td width=\"10%\" >" + I18nUtil.getString("jobinfo_field_id") + "</td>\n" +
+                "         <td width=\"20%\" >" + I18nUtil.getString("jobinfo_field_jobdesc") + "</td>\n" +
+                "         <td width=\"10%\" >" + I18nUtil.getString("jobconf_monitor_alarm_title") + "</td>\n" +
+                "         <td width=\"40%\" >" + I18nUtil.getString("jobconf_monitor_alarm_content") + "</td>\n" +
                 "      </tr>\n" +
                 "   </thead>\n" +
                 "   <tbody>\n" +
@@ -143,7 +144,7 @@ public class EmailJobAlarm implements JobAlarm, EnvironmentAware {
                 "         <td>{0}</td>\n" +
                 "         <td>{1}</td>\n" +
                 "         <td>{2}</td>\n" +
-                "         <td>"+ I18nUtil.getString("jobconf_monitor_alarm_type") +"</td>\n" +
+                "         <td>" + I18nUtil.getString("jobconf_monitor_alarm_type") + "</td>\n" +
                 "         <td>{3}</td>\n" +
                 "      </tr>\n" +
                 "   </tbody>\n" +
