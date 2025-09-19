@@ -22,7 +22,7 @@
     <select id="findDead" parameterType="java.util.HashMap" resultType="java.lang.Integer">
         SELECT t."ID"
         FROM XXL_JOB_REGISTRY t
-        WHERE t."UPDATE_TIME"  &lt;  #{deadTime,jdbcType=DATE}
+        WHERE t."UPDATE_TIME"  &lt;  #{deadTime,jdbcType=TIMESTAMP}
     </select>
 
     <delete id="removeDead" parameterType="java.lang.Integer">
@@ -37,12 +37,12 @@
         SELECT
         <include refid="Base_Column_List"/>
         FROM XXL_JOB_REGISTRY t
-        WHERE t."UPDATE_TIME"  &gt;  #{deadTime,jdbcType=DATE}
+        WHERE t."UPDATE_TIME"  &gt;  #{deadTime,jdbcType=TIMESTAMP}
     </select>
 
     <update id="registryUpdate">
         UPDATE XXL_JOB_REGISTRY
-        SET "UPDATE_TIME" = #{updateTime,jdbcType=DATE}
+        SET "UPDATE_TIME" = #{updateTime,jdbcType=TIMESTAMP}
         WHERE "REGISTRY_GROUP" = #{registryGroup,jdbcType=VARCHAR}
           AND "REGISTRY_KEY" = #{registryKey,jdbcType=VARCHAR}
           AND "REGISTRY_VALUE" = #{registryValue,jdbcType=VARCHAR}
@@ -53,7 +53,7 @@
             select SEQ_XXL_JOB_REGISTRY_ID.nextval from dual
         </selectKey>
         INSERT INTO XXL_JOB_REGISTRY( "ID","REGISTRY_GROUP" , "REGISTRY_KEY" , "REGISTRY_VALUE", "UPDATE_TIME")
-        VALUES(#{id,jdbcType=NUMERIC}, #{registryGroup,jdbcType=VARCHAR} , #{registryKey,jdbcType=VARCHAR} , #{registryValue,jdbcType=VARCHAR}, #{updateTime,jdbcType=DATE})
+        VALUES(#{id,jdbcType=NUMERIC}, #{registryGroup,jdbcType=VARCHAR} , #{registryKey,jdbcType=VARCHAR} , #{registryValue,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
     </insert>
 
     <delete id="registryDelete">

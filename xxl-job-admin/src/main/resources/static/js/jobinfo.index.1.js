@@ -124,6 +124,8 @@ $(function() {
 								return '<small class="label label-danger" >'+I18n.joblog_status_fail+'</small>';
 							}else if (3 == data) {
 								return '<small class="label label-default" >'+I18n.joblog_status_running+'</small>';
+							}else if (-1 == data) { // 已经触发，但是还没开始执行，也算作执行中
+								return '<small class="label label-default" >'+I18n.joblog_status_running+'</small>';
 							}
 							return data;
 						}
@@ -307,7 +309,10 @@ $(function() {
                 if (data.code == 200) {
                     $('#jobTriggerModal').modal('hide');
 
-                    layer.msg( I18n.jobinfo_opt_run + I18n.system_success );
+					layer.msg( I18n.system_success );
+					setTimeout(function(){
+						jobTable.fnDraw(false);
+					},500);
                 } else {
                     layer.msg( data.msg || I18n.jobinfo_opt_run + I18n.system_fail );
                 }

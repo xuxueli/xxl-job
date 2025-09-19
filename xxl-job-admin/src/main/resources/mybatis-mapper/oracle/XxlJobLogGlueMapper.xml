@@ -42,8 +42,8 @@
         #{glueType,jdbcType=VARCHAR},
         #{glueSource,jdbcType=VARCHAR},
         #{glueRemark,jdbcType=VARCHAR},
-        #{addTime,jdbcType=DATE},
-        #{updateTime,jdbcType=DATE}
+        #{addTime,jdbcType=TIMESTAMP},
+        #{updateTime,jdbcType=TIMESTAMP}
         )
     </insert>
 

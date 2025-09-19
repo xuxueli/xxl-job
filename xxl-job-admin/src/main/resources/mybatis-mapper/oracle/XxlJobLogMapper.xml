@@ -66,10 +66,10 @@
                 AND t."JOB_ID" = #{jobId,jdbcType=NUMERIC}
             </if>
             <if test="triggerTimeStart != null">
-                AND t."TRIGGER_TIME" &gt;= #{triggerTimeStart,jdbcType=DATE}
+                AND t."TRIGGER_TIME" &gt;= #{triggerTimeStart,jdbcType=TIMESTAMP}
             </if>
             <if test="triggerTimeEnd != null">
-                AND t."TRIGGER_TIME" &lt;= #{triggerTimeEnd,jdbcType=DATE}
+                AND t."TRIGGER_TIME" &lt;= #{triggerTimeEnd,jdbcType=TIMESTAMP}
             </if>
             <if test="logStatus == 1">
                 AND t."HANDLE_CODE" = 200
@@ -132,7 +132,7 @@
         #{id,jdbcType=NUMERIC},
         #{jobGroup,jdbcType=NUMERIC},
         #{jobId,jdbcType=NUMERIC},
-        #{triggerTime,jdbcType=DATE},
+        #{triggerTime,jdbcType=TIMESTAMP},
         #{triggerCode,jdbcType=NUMERIC},
         #{handleCode,jdbcType=NUMERIC}
         )
@@ -140,7 +140,7 @@
 
     <update id="updateTriggerInfo">
         UPDATE XXL_JOB_LOG
-        SET "TRIGGER_TIME"= #{triggerTime,jdbcType=DATE},
+        SET "TRIGGER_TIME"= #{triggerTime,jdbcType=TIMESTAMP},
             "TRIGGER_CODE"= #{triggerCode,jdbcType=NUMERIC},
             "TRIGGER_MSG"= #{triggerMsg,jdbcType=VARCHAR},
             "EXECUTOR_ADDRESS"= #{executorAddress,jdbcType=VARCHAR},
@@ -153,7 +153,7 @@
 
     <update id="updateHandleInfo">
         UPDATE XXL_JOB_LOG
-        SET "HANDLE_TIME"= #{handleTime,jdbcType=DATE},
+        SET "HANDLE_TIME"= #{handleTime,jdbcType=TIMESTAMP},
             "HANDLE_CODE"= #{handleCode,jdbcType=NUMERIC},
             "HANDLE_MSG"= #{handleMsg,jdbcType=VARCHAR}
         WHERE "ID" = #{id,jdbcType=NUMERIC}
@@ -172,7 +172,7 @@
 			SUM(CASE WHEN (trigger_code in (0, 200) and handle_code = 0) then 1 else 0 end) as triggerDayCountRunning,
 			SUM(CASE WHEN handle_code = 200 then 1 else 0 end) as triggerDayCountSuc
 		FROM xxl_job_log
-		WHERE trigger_time BETWEEN #{from,jdbcType=DATE} and #{to,jdbcType=DATE}
+		WHERE trigger_time BETWEEN #{from,jdbcType=TIMESTAMP} and #{to,jdbcType=TIMESTAMP}
 		GROUP BY triggerDay
 		ORDER BY triggerDay
     </select>-->
@@ -184,7 +184,7 @@
                        else 0 end)                                  as "triggerDayCountRunning",
                SUM(CASE WHEN "HANDLE_CODE" = 200 then 1 else 0 end) as "triggerDayCountSuc"
         FROM XXL_JOB_LOG
-        WHERE "TRIGGER_TIME" BETWEEN #{from,jdbcType=DATE} and #{to,jdbcType=DATE}
+        WHERE "TRIGGER_TIME" BETWEEN #{from,jdbcType=TIMESTAMP} and #{to,jdbcType=TIMESTAMP}
     </select>
 
     <select id="findClearLogIds" resultType="long">
@@ -199,7 +199,7 @@
                 AND "JOB_ID" = #{jobId,jdbcType=NUMERIC}
             </if>
             <if test="clearBeforeTime != null">
-                AND "TRIGGER_TIME" &lt;= #{clearBeforeTime,jdbcType=DATE}
+                AND "TRIGGER_TIME" &lt;= #{clearBeforeTime,jdbcType=TIMESTAMP}
             </if>
             <if test="clearBeforeNum gt 0">
                 AND "ID" NOT in(
@@ -263,7 +263,7 @@
                  LEFT JOIN XXL_JOB_REGISTRY t2 ON t."EXECUTOR_ADDRESS" = t2."REGISTRY_VALUE"
         WHERE t."TRIGGER_CODE" = 200
           AND t."HANDLE_CODE" = 0
-          AND t."TRIGGER_TIME" &lt;= #{losedTime,jdbcType=DATE}
+          AND t."TRIGGER_TIME" &lt;= #{losedTime,jdbcType=TIMESTAMP}
           AND t2."ID" IS NULL
     </select>
     <!--
@@ -271,7 +271,7 @@
     FROM xxl_job_log t
     WHERE t.trigger_code = 200
         and t.handle_code = 0
-        and t.trigger_time &lt;= #{losedTime,jdbcType=DATE}
+        and t.trigger_time &lt;= #{losedTime,jdbcType=TIMESTAMP}
         and t.executor_address not in (
             SELECT t2.registry_value
             FROM xxl_job_registry t2
