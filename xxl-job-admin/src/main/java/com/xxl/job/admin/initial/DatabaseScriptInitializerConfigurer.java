@@ -1,6 +1,7 @@
 package com.xxl.job.admin.initial;
 
 import com.xxl.job.admin.core.conf.XxlJobAdminConfig;
+import org.apache.ibatis.jdbc.ScriptRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -15,6 +16,9 @@ import org.springframework.util.StreamUtils;
 
 import javax.sql.DataSource;
 import java.io.InputStream;
+import java.io.PrintWriter;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.sql.Connection;
@@ -34,6 +38,7 @@ import java.util.List;
 public class DatabaseScriptInitializerConfigurer implements InstantiationAwareBeanPostProcessor {
     private Logger log = LoggerFactory.getLogger(DatabaseScriptInitializerConfigurer.class);
 
+    private String platformType;
     private String testSql = "select 1 from xxl_job_info where 1!=1";
     private String encoding = "UTF-8";
     private String separator = ";";
@@ -124,13 +129,7 @@ public class DatabaseScriptInitializerConfigurer implements InstantiationAwareBe
                             String text = StreamUtils.copyToString(is, Charset.forName(encoding));
                             is.close();
 
-                            String[] arr = text.split(separator);
-                            for (String item : arr) {
-                                String sql = item.trim();
-                                if (!"".equals(sql)) {
-                                    sqls.add(sql);
-                                }
-                            }
+                            sqls.add(text);
                             log.info("loaded script : "+path);
                         }
                     } catch (Exception e) {
@@ -169,9 +168,9 @@ public class DatabaseScriptInitializerConfigurer implements InstantiationAwareBe
                 try {
                     log.info("database init script running...");
                     for (String sql : sqls) {
-                        Statement stat = conn.createStatement();
-                        stat.executeUpdate(sql);
-                        stat.close();
+                        ScriptRunner runner = new ScriptRunner(conn);
+                        runner.setLogWriter(new PrintWriter(new StringWriter()));
+                        runner.runScript(new StringReader(sql));
                     }
                     log.info("database init script has run.");
                 } catch (Exception e) {
