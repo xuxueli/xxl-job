@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.xxl.job.admin.dao.XxlJobGroupDao">
+<mapper namespace="com.xxl.job.admin.mapper.XxlJobGroupMapper">
 
-	<resultMap id="XxlJobGroup" type="com.xxl.job.admin.core.model.XxlJobGroup" >
+	<resultMap id="XxlJobGroup" type="com.xxl.job.admin.model.XxlJobGroup" >
 		<result column="ID" property="id" />
 	    <result column="APP_NAME" property="appname" />
 	    <result column="TITLE" property="title" />
@@ -34,7 +34,7 @@
 		ORDER BY t."APP_NAME", t."TITLE", t."ID" ASC
 	</select>
 
-	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobGroup" useGeneratedKeys="true" keyProperty="id" >
+	<insert id="save" parameterType="com.xxl.job.admin.model.XxlJobGroup" useGeneratedKeys="true" keyProperty="id" >
 		INSERT INTO "XXL_JOB_GROUP" ( "APP_NAME", "TITLE", "ADDRESS_TYPE", "ADDRESS_LIST", "UPDATE_TIME")
 		values ( #{appname}, #{title}, #{addressType}, #{addressList}, #{updateTime} )
 		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
@@ -42,7 +42,7 @@
 		</selectKey>
 	</insert>
 
-	<update id="update" parameterType="com.xxl.job.admin.core.model.XxlJobGroup" >
+	<update id="update" parameterType="com.xxl.job.admin.model.XxlJobGroup" >
 		UPDATE XXL_JOB_GROUP
 		SET "APP_NAME" = #{appname},
 			"TITLE" = #{title},

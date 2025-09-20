@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.xxl.job.admin.dao.XxlJobGroupDao">
+<mapper namespace="com.xxl.job.admin.mapper.XxlJobGroupMapper">
 
-    <resultMap id="XxlJobGroup" type="com.xxl.job.admin.core.model.XxlJobGroup">
+	<resultMap id="XxlJobGroup" type="com.xxl.job.admin.model.XxlJobGroup" >
         <result column="ID" property="id"/>
         <result column="APP_NAME" property="appname"/>
         <result column="TITLE" property="title"/>
@@ -36,7 +36,7 @@
         ORDER BY t."APP_NAME", t."TITLE", t."ID" ASC
     </select>
 
-    <insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobGroup">
+    <insert id="save" parameterType="com.xxl.job.admin.model.XxlJobGroup">
         <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Integer">
             select SEQ_XXL_JOB_GROUP_ID.nextval from dual
         </selectKey>
@@ -44,7 +44,7 @@
         values ( #{id,jdbcType=NUMERIC},#{appname,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, #{addressType,jdbcType=NUMERIC}, #{addressList,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP} )
     </insert>
 
-    <update id="update" parameterType="com.xxl.job.admin.core.model.XxlJobGroup">
+    <update id="update" parameterType="com.xxl.job.admin.model.XxlJobGroup">
         UPDATE XXL_JOB_GROUP
         SET "APP_NAME"     = #{appname,jdbcType=VARCHAR},
             "TITLE"        = #{title,jdbcType=VARCHAR},

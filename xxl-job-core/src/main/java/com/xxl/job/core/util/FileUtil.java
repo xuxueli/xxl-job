@@ -76,16 +76,16 @@ public class FileUtil {
     }
 
     public static byte[] readFileContent(File file) {
-        Long filelength = file.length();
-        byte[] filecontent = new byte[filelength.intValue()];
+        Long fileLength = file.length();
+        byte[] fileContent = new byte[fileLength.intValue()];
 
         FileInputStream in = null;
         try {
             in = new FileInputStream(file);
-            in.read(filecontent);
+            in.read(fileContent);
             in.close();
 
-            return filecontent;
+            return fileContent;
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             return null;

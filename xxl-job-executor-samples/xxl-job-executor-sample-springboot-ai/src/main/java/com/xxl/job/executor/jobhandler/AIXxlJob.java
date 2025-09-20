@@ -10,6 +10,11 @@ import io.github.imfangs.dify.client.model.workflow.WorkflowRunRequest;
 import io.github.imfangs.dify.client.model.workflow.WorkflowRunResponse;
 import jakarta.annotation.Resource;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
+import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
+import org.springframework.ai.chat.memory.MessageWindowChatMemory;
+import org.springframework.ai.ollama.OllamaChatModel;
+import org.springframework.ai.ollama.api.OllamaOptions;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -23,8 +28,10 @@ import java.util.Map;
 @Component
 public class AIXxlJob {
 
+    // --------------------------------- ollama chat ---------------------------------
+
     @Resource
-    private ChatClient chatClient;
+    private OllamaChatModel ollamaChatModel;
 
     /**
      * 1、ollama Chat任务
@@ -38,7 +45,7 @@ public class AIXxlJob {
      *  </pre>
      */
     @XxlJob("ollamaJobHandler")
-    public void ollamaJobHandler() throws Exception {
+    public void ollamaJobHandler() {
 
         // param
         String param = XxlJobHelper.getJobParam();
@@ -53,14 +60,17 @@ public class AIXxlJob {
         OllamaParam ollamaParam = null;
         try {
             ollamaParam = GsonTool.fromJson(param, OllamaParam.class);
-            if (ollamaParam.getPrompt() == null) {
+            if (ollamaParam.getPrompt()==null || ollamaParam.getPrompt().isBlank()) {
                 ollamaParam.setPrompt("你是一个研发工程师，擅长解决技术类问题。");
             }
-            if (ollamaParam.getInput() == null || ollamaParam.getInput().trim().isEmpty()) {
+            if (ollamaParam.getInput() == null || ollamaParam.getInput().isBlank()) {
                 XxlJobHelper.log("input is empty.");
 
                 XxlJobHelper.handleFail();
                 return;
+            }
+            if (ollamaParam.getModel()==null || ollamaParam.getModel().isBlank()) {
+                ollamaParam.setModel("qwen3:0.6b");
             }
         } catch (Exception e) {
             XxlJobHelper.log(new RuntimeException("OllamaParam parse error", e));
@@ -71,18 +81,28 @@ public class AIXxlJob {
         // input
         XxlJobHelper.log("<br><br><b>【Input】: " + ollamaParam.getInput()+ "</b><br><br>");
 
-        // invoke
-        String result = chatClient
+        // build chat-client
+        ChatClient ollamaChatClient = ChatClient
+                .builder(ollamaChatModel)
+                .defaultAdvisors(MessageChatMemoryAdvisor.builder(MessageWindowChatMemory.builder().build()).build())
+                .defaultAdvisors(SimpleLoggerAdvisor.builder().build())
+                .build();
+
+        // call ollama
+        String response = ollamaChatClient
                 .prompt(ollamaParam.getPrompt())
                 .user(ollamaParam.getInput())
+                .options(OllamaOptions.builder().model(ollamaParam.getModel()).build())
                 .call()
                 .content();
-        XxlJobHelper.log("<br><br><b>【Output】: " + result+ "</b><br><br>");
+
+        XxlJobHelper.log("<br><br><b>【Output】: " + response + "</b><br><br>");
     }
 
     private static class OllamaParam{
         private String input;
         private String prompt;
+        private String model;
 
         public String getInput() {
             return input;
@@ -99,8 +119,18 @@ public class AIXxlJob {
         public void setPrompt(String prompt) {
             this.prompt = prompt;
         }
+
+        public String getModel() {
+            return model;
+        }
+
+        public void setModel(String model) {
+            this.model = model;
+        }
     }
 
+
+    // --------------------------------- dify workflow ---------------------------------
 
     /**
      * 2、dify Workflow任务

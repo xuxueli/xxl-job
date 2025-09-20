@@ -4,7 +4,7 @@ import com.antherd.smcrypto.sm2.Keypair;
 import com.antherd.smcrypto.sm2.Sm2;
 import com.antherd.smcrypto.sm4.Sm4;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.xxl.job.admin.core.conf.XxlJobMailConfig;
+import com.xxl.job.admin.scheduler.conf.XxlJobMailConfig;
 import com.xxl.job.admin.security.SecurityContext;
 import com.xxl.job.core.biz.model.ReturnT;
 import org.slf4j.Logger;
@@ -58,7 +58,7 @@ public class EmailConfigController {
         String secretKey = Sm2.doDecrypt(payload, keypair.getPrivateKey());
         String enc = Sm4.encrypt(content, secretKey);
 
-        return new ReturnT<>(enc);
+        return ReturnT.ofSuccess(enc);
     }
 
     @RequestMapping("/update")
@@ -75,7 +75,7 @@ public class EmailConfigController {
         xxlJobMailConfig.loadConfig(properties);
 
         xxlJobMailConfig.storeConfig();
-        return ReturnT.SUCCESS;
+        return ReturnT.ofSuccess();
     }
 
 

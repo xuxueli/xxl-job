@@ -19,11 +19,12 @@ import java.util.Set;
  */
 @Component
 public class SqlServerLockStatementSupplier implements IDatabaseLockStatementSupplier {
-    public static final Set<String> SUPPORT_TYPES= Collections.unmodifiableSet(
+    public static final Set<String> SUPPORT_TYPES = Collections.unmodifiableSet(
             new HashSet<>(Arrays.asList(
                     DatabasePlatformType.SQLSERVER.type()
             ))
     );
+
     @Override
     public boolean supportDatabase(String type) {
         return SUPPORT_TYPES.contains(type);
@@ -31,6 +32,6 @@ public class SqlServerLockStatementSupplier implements IDatabaseLockStatementSup
 
     @Override
     public PreparedStatement getStatement(Connection conn) throws SQLException {
-        return conn.prepareStatement(  "select * from XXL_JOB_LOCK WITH (UPDLOCK, ROWLOCK) where \"LOCK_NAME\" = 'schedule_lock'" );
+        return conn.prepareStatement("select * from XXL_JOB_LOCK WITH (UPDLOCK, ROWLOCK) where \"LOCK_NAME\" = 'schedule_lock'");
     }
 }

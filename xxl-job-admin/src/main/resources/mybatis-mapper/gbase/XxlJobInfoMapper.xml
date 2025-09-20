@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.xxl.job.admin.dao.XxlJobInfoDao">
+<mapper namespace="com.xxl.job.admin.mapper.XxlJobInfoMapper">
 
-	<resultMap id="XxlJobInfo" type="com.xxl.job.admin.core.model.XxlJobInfo" >
+	<resultMap id="XxlJobInfo" type="com.xxl.job.admin.model.XxlJobInfo" >
 		<result column="id" property="id" />
 
 		<result column="job_group" property="jobGroup" />
@@ -121,7 +121,7 @@
 		<include refid="sqlPageListBody"></include>
 	</select>
 
-	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobInfo" useGeneratedKeys="true" keyProperty="id" >
+	<insert id="save" parameterType="com.xxl.job.admin.model.XxlJobInfo" useGeneratedKeys="true" keyProperty="id" >
 		INSERT INTO xxl_job_info (
 			job_group,
 			job_desc,
@@ -184,7 +184,7 @@
 		WHERE t.id = #{id}
 	</select>
 
-	<update id="update" parameterType="com.xxl.job.admin.core.model.XxlJobInfo" >
+	<update id="update" parameterType="com.xxl.job.admin.model.XxlJobInfo" >
 		UPDATE xxl_job_info
 		SET
 			job_group = #{jobGroup},
@@ -240,7 +240,7 @@
 		LIMIT #{pagesize}
 	</select>
 
-	<update id="scheduleUpdate" parameterType="com.xxl.job.admin.core.model.XxlJobInfo"  >
+	<update id="scheduleUpdate" parameterType="com.xxl.job.admin.model.XxlJobInfo"  >
 		UPDATE xxl_job_info
 		SET
 			trigger_last_time = #{triggerLastTime},

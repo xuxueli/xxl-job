@@ -1,8 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-  	<#import "./common/common.macro.ftl" as netCommon>
+	<#-- import macro -->
+  	<#import "/common/common.macro.ftl" as netCommon>
+
+	<#-- commonStyle -->
 	<@netCommon.commonStyle />
+	<!-- iCheck -->
     <link rel="stylesheet" href="${request.contextPath}/static/adminlte/plugins/iCheck/square/blue.css">
 	<title>${I18n.admin_name}</title>
 	<style>
@@ -22,6 +26,8 @@
 	</style>
 </head>
 <body class="hold-transition login-page">
+
+	<#-- login div -->
 	<div class="login-box">
 		<div class="login-logo">
 			<a><b>XXL</b>JOB</a>
@@ -53,6 +59,7 @@
 		</form>
 	</div>
 
+
 	<footer class="main-footer login-footer">
 		Powered by <b>XXL-JOB</b> ${I18n.admin_version}
 		<div class="pull-right hidden-xs">
@@ -64,9 +71,11 @@
 		</div>
 	</footer>
 <@netCommon.commonScript />
+<!-- icheck -->
 <script src="${request.contextPath}/static/plugins/com/antherd/sm-crypto-0.3.2/sm3.js"></script>
 <script src="${request.contextPath}/static/plugins/com/antherd/sm-crypto-0.3.2/sm2.js"></script>
 <script src="${request.contextPath}/static/adminlte/plugins/iCheck/icheck.min.js"></script>
+<!-- js file -->
 <script src="${request.contextPath}/static/js/login.1.js"></script>
 
 </body>

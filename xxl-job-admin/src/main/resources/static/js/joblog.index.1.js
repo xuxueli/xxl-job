@@ -1,38 +1,11 @@
 $(function() {
 
-	// jobGroup change, job list init and select
-	$("#jobGroup").on("change", function () {
-		var jobGroup = $(this).children('option:selected').val();
-		$.ajax({
-			type : 'POST',
-            async: false,   // async, avoid js invoke pagelist before jobId data init
-			url : base_url + '/joblog/getJobsByGroup',
-			data : {"jobGroup":jobGroup},
-			dataType : "json",
-			success : function(data){
-				if (data.code == 200) {
-					$("#jobId").html( '<option value="0" >'+ I18n.system_all +'</option>' );
-					$.each(data.content, function (n, value) {
-                        $("#jobId").append('<option value="' + value.id + '" >' + value.jobDesc + '</option>');
-                    });
-                    if ($("#jobId").attr("paramVal")){
-                        $("#jobId").find("option[value='" + $("#jobId").attr("paramVal") + "']").attr("selected",true);
-                    }
-				} else {
-					layer.open({
-						title: I18n.system_tips ,
-                        btn: [ I18n.system_ok ],
-						content: (data.msg || I18n.system_api_error ),
-						icon: '2'
-					});
-				}
-			},
-		});
+	// jobGroup change
+	$('#jobGroup').on('change', function(){
+		//reload
+		var jobGroup = $('#jobGroup').val();
+		window.location.href = base_url + "/joblog?jobGroup=" + jobGroup;
 	});
-	if ($("#jobGroup").attr("paramVal")){
-		$("#jobGroup").find("option[value='" + $("#jobGroup").attr("paramVal") + "']").attr("selected",true);
-        $("#jobGroup").change();
-	}
 
 	// filter Time
     var rangesConf = {};

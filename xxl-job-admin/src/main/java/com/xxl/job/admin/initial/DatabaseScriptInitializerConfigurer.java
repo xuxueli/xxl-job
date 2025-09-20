@@ -1,6 +1,6 @@
 package com.xxl.job.admin.initial;
 
-import com.xxl.job.admin.core.conf.XxlJobAdminConfig;
+import com.xxl.job.admin.scheduler.conf.XxlJobAdminConfig;
 import org.apache.ibatis.jdbc.ScriptRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,7 +42,7 @@ public class DatabaseScriptInitializerConfigurer implements InstantiationAwareBe
     private String testSql = "select 1 from xxl_job_info where 1!=1";
     private String encoding = "UTF-8";
     private String separator = ";";
-    private String scriptLocations ;
+    private String scriptLocations;
 
     @Autowired
     private DataSource dataSource;
@@ -112,7 +112,7 @@ public class DatabaseScriptInitializerConfigurer implements InstantiationAwareBe
                 }
             }
 
-            if(paths.isEmpty()){
+            if (paths.isEmpty()) {
                 log.warn("jump init database, empty init script location config.");
                 return null;
             }
@@ -121,7 +121,7 @@ public class DatabaseScriptInitializerConfigurer implements InstantiationAwareBe
 
             for (String path : paths) {
                 if (path != null && !"".equals(path)) {
-                    log.info("read script : "+path);
+                    log.info("read script : " + path);
                     try {
                         URL url = ResourceUtils.getURL(path);
                         if (url != null) {
@@ -130,10 +130,10 @@ public class DatabaseScriptInitializerConfigurer implements InstantiationAwareBe
                             is.close();
 
                             sqls.add(text);
-                            log.info("loaded script : "+path);
+                            log.info("loaded script : " + path);
                         }
                     } catch (Exception e) {
-                        log.info("read script content error,continue it : "+e.getMessage(),e);
+                        log.info("read script content error,continue it : " + e.getMessage(), e);
                     }
                 }
             }
@@ -156,7 +156,7 @@ public class DatabaseScriptInitializerConfigurer implements InstantiationAwareBe
                         stat.close();
                     } catch (Exception e) {
                         hasTable = false;
-                        log.debug("test table exists exception,ignore it : "+e.getMessage(),e);
+                        log.debug("test table exists exception,ignore it : " + e.getMessage(), e);
                     }
 
                     if (hasTable) {
@@ -174,7 +174,7 @@ public class DatabaseScriptInitializerConfigurer implements InstantiationAwareBe
                     }
                     log.info("database init script has run.");
                 } catch (Exception e) {
-                    log.error("database init script run error : "+e.getMessage(),e);
+                    log.error("database init script run error : " + e.getMessage(), e);
                 }
 
             } finally {

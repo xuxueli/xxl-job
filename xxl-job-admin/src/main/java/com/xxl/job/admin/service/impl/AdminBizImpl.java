@@ -1,7 +1,7 @@
 package com.xxl.job.admin.service.impl;
 
-import com.xxl.job.admin.core.thread.JobCompleteHelper;
-import com.xxl.job.admin.core.thread.JobRegistryHelper;
+import com.xxl.job.admin.scheduler.thread.JobCompleteHelper;
+import com.xxl.job.admin.scheduler.thread.JobRegistryHelper;
 import com.xxl.job.core.biz.AdminBiz;
 import com.xxl.job.core.biz.model.HandleCallbackParam;
 import com.xxl.job.core.biz.model.RegistryParam;

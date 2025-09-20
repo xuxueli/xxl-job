@@ -69,7 +69,7 @@ $(function(){
                     searchParams.set('password',password)
                     searchParams.set('sign',sign)
                     param=searchParams.toString()
-                    $.post(base_url + "/login",param , function(data, status) {
+                    $.post(base_url + "/auth/doLogin",param , function(data, status) {
                         if (data.code == "200") {
                             layer.msg( I18n.login_success );
                             setTimeout(function(){
