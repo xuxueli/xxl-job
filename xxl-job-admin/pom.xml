@@ -26,7 +26,13 @@
 	</dependencyManagement>
 
 	<dependencies>
-
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.30</version>
+			<scope>provided</scope>
+			<optional>true</optional>
+		</dependency>
 		<!-- starter-web：spring-webmvc + autoconfigure + logback + yaml + tomcat -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -129,10 +135,20 @@
 	</dependency>
 
 		<!-- xxl-sso (xxl-tool、gson) -->
-		<dependency>
+		<!--<dependency>
 			<groupId>com.xuxueli</groupId>
 			<artifactId>xxl-sso-core</artifactId>
 			<version>${xxl-sso.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>jakarta.servlet</groupId>
+					<artifactId>jakarta.servlet-api</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>-->
+		<dependency>
+			<groupId>com.xuxueli</groupId>
+			<artifactId>xxl-job-adapter</artifactId>
 		</dependency>
 
 
@@ -141,6 +157,12 @@
             <artifactId>sm-crypto</artifactId>
             <version>0.3.2.1-RELEASE</version>
         </dependency>
+
+		<!--<dependency>
+			<groupId>org.openjdk.nashorn</groupId>
+			<artifactId>nashorn-core</artifactId>
+			<version>15.4</version>
+		</dependency>-->
 
         <dependency>
             <groupId>org.springframework.security</groupId>

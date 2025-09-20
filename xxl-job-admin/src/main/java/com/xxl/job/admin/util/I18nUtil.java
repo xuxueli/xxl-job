@@ -1,7 +1,6 @@
 package com.xxl.job.admin.util;
 
 import com.xxl.job.admin.scheduler.conf.XxlJobAdminConfig;
-import com.xxl.tool.gson.GsonTool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
@@ -74,7 +73,7 @@ public class I18nUtil {
             }
         }
 
-        return GsonTool.toJson(map);
+        return JsonUtil.toJson(map);
     }
 
 

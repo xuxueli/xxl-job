@@ -1,7 +1,6 @@
 package com.xxl.job.admin.web.xxlsso;
 
-import com.xxl.job.admin.adapter.XxlSsoHelperAdapter;
-import com.xxl.job.admin.adapter.XxlSsoWebInterceptorAdapter;
+import com.xxl.sso.core.helper.XxlSsoHelper;
 import com.xxl.sso.core.auth.interceptor.XxlSsoWebInterceptor;
 import com.xxl.sso.core.bootstrap.XxlSsoBootstrap;
 import javax.annotation.Resource;
@@ -47,7 +46,7 @@ public class XxlSsoConfig implements WebMvcConfigurer {
         bootstrap.setTokenKey(tokenKey);
         bootstrap.setTokenTimeout(tokenTimeout);
 
-        XxlSsoHelperAdapter.init(this.loginStore, this.tokenKey, this.tokenTimeout);
+        XxlSsoHelper.init(this.loginStore, this.tokenKey, this.tokenTimeout);
         return bootstrap;
     }
 
@@ -58,7 +57,7 @@ public class XxlSsoConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
 
         // 2.1、build xxl-sso interceptor
-        XxlSsoWebInterceptorAdapter webInterceptor = new XxlSsoWebInterceptorAdapter(excludedPaths, loginPath);
+        XxlSsoWebInterceptor webInterceptor = new XxlSsoWebInterceptor(excludedPaths, loginPath);
 
         // 2.2、add interceptor
         registry.addInterceptor(webInterceptor).addPathPatterns("/**");

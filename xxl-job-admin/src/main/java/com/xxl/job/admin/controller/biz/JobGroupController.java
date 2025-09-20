@@ -11,12 +11,11 @@ import com.xxl.job.admin.util.I18nUtil;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.enums.RegistryConfig;
 import com.xxl.sso.core.annotation.XxlSso;
-import com.xxl.tool.core.CollectionTool;
-import com.xxl.tool.core.StringTool;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -74,7 +73,7 @@ public class JobGroupController {
     public ReturnT<String> save(XxlJobGroup xxlJobGroup) {
 
         // valid
-        if (StringTool.isBlank(xxlJobGroup.getAppname())) {
+        if (!StringUtils.hasText(xxlJobGroup.getAppname())) {
             return ReturnT.ofFail((I18nUtil.getString("system_please_input") + "AppName"));
         }
         if (xxlJobGroup.getAppname().length() < 4 || xxlJobGroup.getAppname().length() > 64) {
@@ -83,14 +82,14 @@ public class JobGroupController {
         if (xxlJobGroup.getAppname().contains(">") || xxlJobGroup.getAppname().contains("<")) {
             return ReturnT.ofFail("AppName" + I18nUtil.getString("system_unvalid"));
         }
-        if (StringTool.isBlank(xxlJobGroup.getTitle())) {
+        if (!StringUtils.hasText(xxlJobGroup.getTitle())) {
             return ReturnT.ofFail((I18nUtil.getString("system_please_input") + I18nUtil.getString("jobgroup_field_title")));
         }
         if (xxlJobGroup.getTitle().contains(">") || xxlJobGroup.getTitle().contains("<")) {
             return ReturnT.ofFail(I18nUtil.getString("jobgroup_field_title") + I18nUtil.getString("system_unvalid"));
         }
         if (xxlJobGroup.getAddressType() != 0) {
-            if (StringTool.isBlank(xxlJobGroup.getAddressList())) {
+            if (!StringUtils.hasText(xxlJobGroup.getAddressList())) {
                 return ReturnT.ofFail(I18nUtil.getString("jobgroup_field_addressType_limit"));
             }
             if (xxlJobGroup.getAddressList().contains(">") || xxlJobGroup.getAddressList().contains("<")) {
@@ -99,7 +98,7 @@ public class JobGroupController {
 
             String[] addresss = xxlJobGroup.getAddressList().split(",");
             for (String item : addresss) {
-                if (StringTool.isBlank(item)) {
+                if (!StringUtils.hasText(item)) {
                     return ReturnT.ofFail(I18nUtil.getString("jobgroup_field_registryList_unvalid"));
                 }
             }
@@ -117,32 +116,32 @@ public class JobGroupController {
     @XxlSso(role = Consts.ADMIN_ROLE)
     public ReturnT<String> update(XxlJobGroup xxlJobGroup) {
         // valid
-        if (StringTool.isBlank(xxlJobGroup.getAppname())) {
+        if (!StringUtils.hasText(xxlJobGroup.getAppname())) {
             return ReturnT.ofFail((I18nUtil.getString("system_please_input") + "AppName"));
         }
         if (xxlJobGroup.getAppname().length() < 4 || xxlJobGroup.getAppname().length() > 64) {
             return ReturnT.ofFail(I18nUtil.getString("jobgroup_field_appname_length"));
         }
-        if (StringTool.isBlank(xxlJobGroup.getTitle())) {
+        if (!StringUtils.hasText(xxlJobGroup.getTitle())) {
             return ReturnT.ofFail((I18nUtil.getString("system_please_input") + I18nUtil.getString("jobgroup_field_title")));
         }
         if (xxlJobGroup.getAddressType() == 0) {
             // 0=自动注册
             List<String> registryList = findRegistryByAppName(xxlJobGroup.getAppname());
             String addressListStr = null;
-            if (CollectionTool.isNotEmpty(registryList)) {
+            if (registryList!=null && !registryList.isEmpty()) {
                 Collections.sort(registryList);
                 addressListStr = String.join(",", registryList);
             }
             xxlJobGroup.setAddressList(addressListStr);
         } else {
             // 1=手动录入
-            if (StringTool.isBlank(xxlJobGroup.getAddressList())) {
+            if (!StringUtils.hasText(xxlJobGroup.getAddressList())) {
                 return ReturnT.ofFail(I18nUtil.getString("jobgroup_field_addressType_limit"));
             }
             String[] addresss = xxlJobGroup.getAddressList().split(",");
             for (String item : addresss) {
-                if (StringTool.isBlank(item)) {
+                if (!StringUtils.hasText(item)) {
                     return ReturnT.ofFail(I18nUtil.getString("jobgroup_field_registryList_unvalid"));
                 }
             }
@@ -161,7 +160,7 @@ public class JobGroupController {
         long deadTs = ts - TimeUnit.SECONDS.toMillis(RegistryConfig.DEAD_TIMEOUT);
         Date deadTime = new Date(deadTs);
         List<XxlJobRegistry> list = xxlJobRegistryMapper.findAll(deadTime);
-        if (CollectionTool.isNotEmpty(list)) {
+        if (list!=null && !list.isEmpty()) {
             for (XxlJobRegistry item : list) {
                 if (!RegistryConfig.RegistType.EXECUTOR.name().equals(item.getRegistryGroup())) {
                     continue;

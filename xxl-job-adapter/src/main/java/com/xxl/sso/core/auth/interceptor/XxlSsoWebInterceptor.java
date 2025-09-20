@@ -1,13 +1,14 @@
-package com.xxl.job.admin.adapter;
+package com.xxl.sso.core.auth.interceptor;
 
 import com.xxl.sso.core.annotation.XxlSso;
 import com.xxl.sso.core.exception.XxlSsoException;
+import com.xxl.sso.core.helper.XxlSsoHelper;
 import com.xxl.sso.core.model.LoginInfo;
-import com.xxl.tool.core.StringTool;
 import com.xxl.tool.response.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.AntPathMatcher;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -20,29 +21,29 @@ import javax.servlet.http.HttpServletResponse;
  * @date 2025/9/20 8:59
  */
 
-public class XxlSsoWebInterceptorAdapter implements HandlerInterceptor {
-    private static final Logger logger = LoggerFactory.getLogger(XxlSsoWebInterceptorAdapter.class);
+public class XxlSsoWebInterceptor implements HandlerInterceptor {
+    private static final Logger logger = LoggerFactory.getLogger(XxlSsoWebInterceptor.class);
     private final AntPathMatcher antPathMatcher;
     private String excludedPaths;
     private String loginPath;
 
-    public XxlSsoWebInterceptorAdapter(String excludedPaths, String loginPath) {
+    public XxlSsoWebInterceptor(String excludedPaths, String loginPath) {
         this.antPathMatcher = new AntPathMatcher();
         this.excludedPaths = excludedPaths;
         this.loginPath = loginPath;
-        if (StringTool.isBlank(loginPath)) {
+        if (!StringUtils.hasText(loginPath)) {
             this.loginPath = "/login";
         }
 
         logger.info("XxlSsoWebInterceptor init.");
     }
 
-    public XxlSsoWebInterceptorAdapter(String loginPath) {
+    public XxlSsoWebInterceptor(String loginPath) {
         this((String) null, loginPath);
     }
 
     public boolean isMatchExcludedPaths(HttpServletRequest request) {
-        if (StringTool.isBlank(this.excludedPaths)) {
+        if (!StringUtils.hasText(this.excludedPaths)) {
             return false;
         } else {
             String servletPath = request.getServletPath();
@@ -52,7 +53,7 @@ public class XxlSsoWebInterceptorAdapter implements HandlerInterceptor {
             for (int var5 = 0; var5 < var4; ++var5) {
                 String excludedPath = var3[var5];
                 String uriPattern = excludedPath.trim();
-                if (!StringTool.isBlank(uriPattern) && this.antPathMatcher.match(uriPattern, servletPath)) {
+                if (StringUtils.hasText(uriPattern) && this.antPathMatcher.match(uriPattern, servletPath)) {
                     return true;
                 }
             }
@@ -76,7 +77,7 @@ public class XxlSsoWebInterceptorAdapter implements HandlerInterceptor {
         if (!needLogin) {
             return true;
         }
-        Response<LoginInfo> loginCheckResult = XxlSsoHelperAdapter.loginCheckWithCookie(request, response);
+        Response<LoginInfo> loginCheckResult = XxlSsoHelper.loginCheckWithCookie(request, response);
         LoginInfo loginInfo = null;
         if (loginCheckResult != null && loginCheckResult.isSuccess()) {
             loginInfo = (LoginInfo) loginCheckResult.getData();
@@ -93,10 +94,10 @@ public class XxlSsoWebInterceptorAdapter implements HandlerInterceptor {
 
         }
         request.setAttribute("xxl_sso_user", loginInfo);
-        if (!XxlSsoHelperAdapter.hasPermission(loginInfo, permission).isSuccess()) {
+        if (!XxlSsoHelper.hasPermission(loginInfo, permission).isSuccess()) {
             throw new XxlSsoException("permission limit, current login-user does not have permission:" + permission);
         }
-        if (!XxlSsoHelperAdapter.hasRole(loginInfo, role).isSuccess()) {
+        if (!XxlSsoHelper.hasRole(loginInfo, role).isSuccess()) {
             throw new XxlSsoException("permission limit, current login-user does not have role:" + role);
         }
         return true;

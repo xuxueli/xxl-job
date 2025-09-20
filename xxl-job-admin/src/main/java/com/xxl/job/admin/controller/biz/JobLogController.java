@@ -18,8 +18,6 @@ import com.xxl.job.core.biz.model.LogParam;
 import com.xxl.job.core.biz.model.LogResult;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.util.DateUtil;
-import com.xxl.tool.core.CollectionTool;
-import com.xxl.tool.core.StringTool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -63,7 +61,7 @@ public class JobLogController {
         List<XxlJobGroup> jobGroupListTotal = xxlJobGroupMapper.findAll();
         // filter jobGroup
         List<XxlJobGroup> jobGroupList = JobGroupPermissionUtil.filterJobGroupByPermission(request, jobGroupListTotal);
-        if (CollectionTool.isEmpty(jobGroupList)) {
+        if (jobGroupList==null || jobGroupList.isEmpty()) {
             throw new XxlJobException(I18nUtil.getString("jobgroup_empty"));
         }
         // write jobGroup
@@ -184,7 +182,7 @@ public class JobLogController {
             }
 
             // fix xss
-            if (logResult.getContent() != null && StringTool.isNotBlank(logResult.getContent().getLogContent())) {
+            if (logResult.getContent() != null && StringUtils.hasText(logResult.getContent().getLogContent())) {
                 String newLogContent = filter(logResult.getContent().getLogContent());
                 logResult.getContent().setLogContent(newLogContent);
             }

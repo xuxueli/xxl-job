@@ -1,12 +1,10 @@
 package com.xxl.job.admin.util;
 
-import com.xxl.job.admin.adapter.XxlSsoHelperAdapter;
+import com.xxl.sso.core.helper.XxlSsoHelper;
 import com.xxl.job.admin.constant.Consts;
 import com.xxl.job.admin.model.XxlJobGroup;
-import com.xxl.sso.core.helper.XxlSsoHelper;
-import com.xxl.sso.core.model.LoginInfo;
-import com.xxl.tool.core.StringTool;
 import com.xxl.tool.response.Response;
+import com.xxl.sso.core.model.LoginInfo;
 import javax.servlet.http.HttpServletRequest;
 
 import java.util.ArrayList;
@@ -29,7 +27,7 @@ public class JobGroupPermissionUtil {
             return true;
         } else {
             List<String> jobGroups = (loginInfo.getExtraInfo() != null && loginInfo.getExtraInfo().containsKey("jobGroups"))
-                    ? new ArrayList<>(Arrays.asList(StringTool.tokenizeToArray(loginInfo.getExtraInfo().get("jobGroups"), ","))) : new ArrayList<>();
+                    ? new ArrayList<>(Arrays.asList(loginInfo.getExtraInfo().get("jobGroups").split(",")).stream().map(e->e.trim()).filter(e->!e.isEmpty()).collect(Collectors.toList())) : new ArrayList<>();
             return jobGroups.contains(String.valueOf(jobGroup));
         }
     }
@@ -38,7 +36,7 @@ public class JobGroupPermissionUtil {
      * valid jobGroup permission
      */
     public static LoginInfo validJobGroupPermission(HttpServletRequest request, int jobGroup) {
-        Response<LoginInfo> loginInfoResponse = XxlSsoHelperAdapter.loginCheckWithAttr(request);
+        Response<LoginInfo> loginInfoResponse = XxlSsoHelper.loginCheckWithAttr(request);
         if (!(loginInfoResponse.isSuccess() && hasJobGroupPermission(loginInfoResponse.getData(), jobGroup))) {
             throw new RuntimeException(I18nUtil.getString("system_permission_limit") + "[username=" + loginInfoResponse.getData().getUserName() + "]");
         }
@@ -49,13 +47,13 @@ public class JobGroupPermissionUtil {
      * filter jobGroupList by permission
      */
     public static List<XxlJobGroup> filterJobGroupByPermission(HttpServletRequest request, List<XxlJobGroup> jobGroupListTotal) {
-        Response<LoginInfo> loginInfoResponse = XxlSsoHelperAdapter.loginCheckWithAttr(request);
+        Response<LoginInfo> loginInfoResponse = XxlSsoHelper.loginCheckWithAttr(request);
 
         if (XxlSsoHelper.hasRole(loginInfoResponse.getData(), Consts.ADMIN_ROLE).isSuccess()) {
             return jobGroupListTotal;
         } else {
             List<String> jobGroups = (loginInfoResponse.getData().getExtraInfo() != null && loginInfoResponse.getData().getExtraInfo().containsKey("jobGroups"))
-                    ? new ArrayList<>(Arrays.asList(StringTool.tokenizeToArray(loginInfoResponse.getData().getExtraInfo().get("jobGroups"), ","))) : new ArrayList<>();
+                    ? new ArrayList<>(Arrays.asList(loginInfoResponse.getData().getExtraInfo().get("jobGroups").split(",")).stream().map(e->e.trim()).filter(e->!e.isEmpty()).collect(Collectors.toList())) : new ArrayList<>();
 
             return jobGroupListTotal
                     .stream()

@@ -1,42 +1,42 @@
-package com.xxl.job.admin.adapter;
+package com.xxl.sso.core.helper;
 
 import com.xxl.sso.core.model.LoginInfo;
 import com.xxl.sso.core.store.LoginStore;
 import com.xxl.sso.core.token.TokenHelper;
-import com.xxl.tool.core.CollectionTool;
-import com.xxl.tool.core.StringTool;
-import com.xxl.tool.id.UUIDTool;
+import com.xxl.tool.http.CookieTool;
 import com.xxl.tool.response.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.UUID;
 
 /**
  * @author Ice2Faith
  * @date 2025/9/19 18:41
  */
-public class XxlSsoHelperAdapter {
-    private static final Logger logger = LoggerFactory.getLogger(XxlSsoHelperAdapter.class);
-    private static XxlSsoHelperAdapter instance;
+public class XxlSsoHelper {
+    private static final Logger logger = LoggerFactory.getLogger(XxlSsoHelper.class);
+    private static XxlSsoHelper instance;
     private final LoginStore loginStore;
     private String tokenKey;
     private long tokenTimeout;
 
     public static void init(LoginStore loginStore, String tokenKey, long tokenTimeout) {
-        instance = new XxlSsoHelperAdapter(loginStore, tokenKey, tokenTimeout);
+        instance = new XxlSsoHelper(loginStore, tokenKey, tokenTimeout);
     }
 
-    public static XxlSsoHelperAdapter getInstance() {
+    public static XxlSsoHelper getInstance() {
         return instance;
     }
 
-    public XxlSsoHelperAdapter(LoginStore loginStore, String tokenKey, long tokenTimeout) {
+    public XxlSsoHelper(LoginStore loginStore, String tokenKey, long tokenTimeout) {
         this.loginStore = loginStore;
         this.tokenKey = tokenKey;
         this.tokenTimeout = tokenTimeout;
-        if (StringTool.isBlank(this.tokenKey)) {
+        if (!StringUtils.hasText(this.tokenKey)) {
             this.tokenKey = "xxl_sso_token";
         }
 
@@ -73,7 +73,7 @@ public class XxlSsoHelperAdapter {
         Response<String> loginResult = login(loginInfo);
         if (loginResult.isSuccess()) {
             String token = (String)loginResult.getData();
-            CookieToolAdapter.set(response, getInstance().getTokenKey(), token, ifRemember);
+            CookieTool.set(response, getInstance().getTokenKey(), token, ifRemember);
         }
 
         return loginResult;
@@ -93,19 +93,19 @@ public class XxlSsoHelperAdapter {
     }
 
     public static Response<String> logoutWithCookie(HttpServletRequest request, HttpServletResponse response) {
-        String token = CookieToolAdapter.getValue(request, getInstance().getTokenKey());
-        if (StringTool.isBlank(token)) {
+        String token = CookieTool.getValue(request, getInstance().getTokenKey());
+        if (!StringUtils.hasText(token)) {
             return Response.ofSuccess();
         } else {
             Response<String> logoutResult = logout(token);
-            CookieToolAdapter.remove(request, response, getInstance().getTokenKey());
+            CookieTool.remove(request, response, getInstance().getTokenKey());
             return logoutResult;
         }
     }
 
     public static Response<LoginInfo> loginCheck(String token) {
         LoginInfo loginInfoForToken = TokenHelper.parseToken(token);
-        if (loginInfoForToken != null && !StringTool.isBlank(loginInfoForToken.getSignature())) {
+        if (loginInfoForToken != null && StringUtils.hasText(loginInfoForToken.getSignature())) {
             Response<LoginInfo> loginInfoResponse = getInstance().getLoginStore().get(loginInfoForToken.getUserId());
             if (!loginInfoResponse.isSuccess()) {
                 return loginInfoResponse;
@@ -124,10 +124,10 @@ public class XxlSsoHelperAdapter {
     }
 
     public static Response<LoginInfo> loginCheckWithCookie(HttpServletRequest request, HttpServletResponse response) {
-        String token = CookieToolAdapter.getValue(request, getInstance().getTokenKey());
+        String token = CookieTool.getValue(request, getInstance().getTokenKey());
         Response<LoginInfo> result = loginCheck(token);
         if (result == null || !result.isSuccess()) {
-            CookieToolAdapter.remove(request, response, getInstance().getTokenKey());
+            CookieTool.remove(request, response, getInstance().getTokenKey());
         }
 
         return result;
@@ -139,12 +139,12 @@ public class XxlSsoHelperAdapter {
     }
 
     public static Response<String> createTicket(HttpServletRequest request) {
-        String token = CookieToolAdapter.getValue(request, getInstance().getTokenKey());
+        String token = CookieTool.getValue(request, getInstance().getTokenKey());
         LoginInfo loginInfoForToken = TokenHelper.parseToken(token);
         if (loginInfoForToken == null) {
             return Response.ofFail("not login.");
         } else {
-            String ticket = loginInfoForToken.getUserId().concat("_").concat(UUIDTool.getSimpleUUID());
+            String ticket = loginInfoForToken.getUserId().concat("_").concat(UUID.randomUUID().toString().replaceAll("-",""));
             long ticketTimeout = 60000L;
             return getInstance().getLoginStore().createTicket(ticket, token, ticketTimeout);
         }
@@ -152,7 +152,7 @@ public class XxlSsoHelperAdapter {
 
     public static Response<LoginInfo> validTicket(HttpServletRequest request, HttpServletResponse response) {
         String ticket = request.getParameter("xxl_sso_ticket");
-        if (StringTool.isBlank(ticket)) {
+        if (!StringUtils.hasText(ticket)) {
             return Response.ofFail("ticket is null.");
         } else {
             Response<String> validTicketResult = getInstance().getLoginStore().validTicket(ticket);
@@ -162,7 +162,7 @@ public class XxlSsoHelperAdapter {
                 String token = (String)validTicketResult.getData();
                 Response<LoginInfo> result = loginCheck(token);
                 if (result.isSuccess()) {
-                    CookieToolAdapter.set(response, getInstance().getTokenKey(), token, false);
+                    CookieTool.set(response, getInstance().getTokenKey(), token, false);
                 }
 
                 return loginCheck(token);
@@ -171,9 +171,9 @@ public class XxlSsoHelperAdapter {
     }
 
     public static Response<String> hasRole(LoginInfo loginInfo, String role) {
-        if (StringTool.isBlank(role)) {
+        if (!StringUtils.hasText(role)) {
             return Response.ofSuccess();
-        } else if (CollectionTool.isEmpty(loginInfo.getRoleList())) {
+        } else if (loginInfo.getRoleList()==null || loginInfo.getRoleList().isEmpty()) {
             return Response.ofFail("roleList is null.");
         } else {
             return loginInfo.getRoleList().contains(role) ? Response.ofSuccess() : Response.ofFail("has no role.");
@@ -181,9 +181,9 @@ public class XxlSsoHelperAdapter {
     }
 
     public static Response<String> hasPermission(LoginInfo loginInfo, String permission) {
-        if (StringTool.isBlank(permission)) {
+        if (!StringUtils.hasText(permission)) {
             return Response.ofSuccess();
-        } else if (CollectionTool.isEmpty(loginInfo.getPermissionList())) {
+        } else if (loginInfo.getPermissionList()==null || loginInfo.getPermissionList().isEmpty()) {
             return Response.ofFail("permissionList is null.");
         } else {
             return loginInfo.getPermissionList().contains(permission) ? Response.ofSuccess() : Response.ofFail("has no permission.");

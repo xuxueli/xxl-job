@@ -1,4 +1,4 @@
-package com.xxl.job.admin.adapter;
+package com.xxl.tool.http;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -11,11 +11,11 @@ import java.net.URLEncoder;
  * @author Ice2Faith
  * @date 2025/9/19 18:57
  */
-public class CookieToolAdapter {
+public class CookieTool {
     private static final int COOKIE_MAX_AGE = Integer.MAX_VALUE;
     private static final String COOKIE_PATH = "/";
 
-    public CookieToolAdapter() {
+    public CookieTool() {
     }
 
     private static void set(HttpServletResponse response, String key, String value, String domain, String path, int maxAge, boolean isHttpOnly) {

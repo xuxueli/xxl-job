@@ -5,15 +5,11 @@ import com.xxl.job.admin.mapper.XxlJobUserMapper;
 import com.xxl.job.admin.model.XxlJobUser;
 import com.xxl.sso.core.model.LoginInfo;
 import com.xxl.sso.core.store.LoginStore;
-import com.xxl.tool.core.MapTool;
 import com.xxl.tool.response.Response;
 import javax.annotation.Resource;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Simple LoginStore
@@ -70,9 +66,8 @@ public class SimpleLoginStore implements LoginStore {
         List<String> roleList = user.getRole() == 1 ? new ArrayList<>(Arrays.asList(Consts.ADMIN_ROLE)) : null;
 
         // parse jobGroup permission
-        Map<String, String> extraInfo = MapTool.newHashMap(
-                "jobGroups", user.getPermission()
-        );
+        Map<String, String> extraInfo = new HashMap<>();
+        extraInfo.put("jobGroups", user.getPermission());
 
         // build LoginInfo
         LoginInfo loginInfo = new LoginInfo(userId, user.getToken());

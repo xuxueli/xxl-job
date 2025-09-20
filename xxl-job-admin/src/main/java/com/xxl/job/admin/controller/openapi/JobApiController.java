@@ -1,13 +1,14 @@
 package com.xxl.job.admin.controller.openapi;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.xxl.job.admin.scheduler.conf.XxlJobAdminConfig;
+import com.xxl.job.admin.util.JsonUtil;
 import com.xxl.job.core.biz.AdminBiz;
 import com.xxl.job.core.biz.model.HandleCallbackParam;
 import com.xxl.job.core.biz.model.RegistryParam;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.util.XxlJobRemotingUtil;
 import com.xxl.sso.core.annotation.XxlSso;
-import com.xxl.tool.gson.GsonTool;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -55,13 +56,13 @@ public class JobApiController {
 
         // services mapping
         if ("callback".equals(uri)) {
-            List<HandleCallbackParam> callbackParamList = GsonTool.fromJson(data, List.class, HandleCallbackParam.class);
+            List<HandleCallbackParam> callbackParamList = JsonUtil.fromJson(data, new TypeReference<List<HandleCallbackParam>>() {});
             return adminBiz.callback(callbackParamList);
         } else if ("registry".equals(uri)) {
-            RegistryParam registryParam = GsonTool.fromJson(data, RegistryParam.class);
+            RegistryParam registryParam = JsonUtil.fromJson(data, RegistryParam.class);
             return adminBiz.registry(registryParam);
         } else if ("registryRemove".equals(uri)) {
-            RegistryParam registryParam = GsonTool.fromJson(data, RegistryParam.class);
+            RegistryParam registryParam = JsonUtil.fromJson(data, RegistryParam.class);
             return adminBiz.registryRemove(registryParam);
         } else {
             return ReturnT.ofFail("invalid request, uri-mapping(" + uri + ") not found.");

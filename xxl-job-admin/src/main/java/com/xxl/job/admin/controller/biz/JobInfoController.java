@@ -1,6 +1,7 @@
 package com.xxl.job.admin.controller.biz;
 
-import com.xxl.job.admin.adapter.XxlSsoHelperAdapter;
+import com.xxl.tool.response.Response;
+import com.xxl.sso.core.helper.XxlSsoHelper;
 import com.xxl.job.admin.mapper.XxlJobGroupMapper;
 import com.xxl.job.admin.model.XxlJobGroup;
 import com.xxl.job.admin.model.XxlJobInfo;
@@ -17,8 +18,6 @@ import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
 import com.xxl.job.core.glue.GlueTypeEnum;
 import com.xxl.job.core.util.DateUtil;
 import com.xxl.sso.core.model.LoginInfo;
-import com.xxl.tool.core.CollectionTool;
-import com.xxl.tool.response.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -64,7 +63,7 @@ public class JobInfoController {
 
         // filter group
         List<XxlJobGroup> jobGroupList = JobGroupPermissionUtil.filterJobGroupByPermission(request, jobGroupListTotal);
-        if (CollectionTool.isEmpty(jobGroupList)) {
+        if (jobGroupList==null || jobGroupList.isEmpty()) {
             throw new XxlJobException(I18nUtil.getString("jobgroup_empty"));
         }
 
@@ -115,21 +114,21 @@ public class JobInfoController {
     @RequestMapping("/remove")
     @ResponseBody
     public ReturnT<String> remove(HttpServletRequest request, @RequestParam("id") int id) {
-        Response<LoginInfo> loginInfoResponse = XxlSsoHelperAdapter.loginCheckWithAttr(request);
+        Response<LoginInfo> loginInfoResponse = XxlSsoHelper.loginCheckWithAttr(request);
         return xxlJobService.remove(id, loginInfoResponse.getData());
     }
 
     @RequestMapping("/stop")
     @ResponseBody
     public ReturnT<String> pause(HttpServletRequest request, @RequestParam("id") int id) {
-        Response<LoginInfo> loginInfoResponse = XxlSsoHelperAdapter.loginCheckWithAttr(request);
+        Response<LoginInfo> loginInfoResponse = XxlSsoHelper.loginCheckWithAttr(request);
         return xxlJobService.stop(id, loginInfoResponse.getData());
     }
 
     @RequestMapping("/start")
     @ResponseBody
     public ReturnT<String> start(HttpServletRequest request, @RequestParam("id") int id) {
-        Response<LoginInfo> loginInfoResponse = XxlSsoHelperAdapter.loginCheckWithAttr(request);
+        Response<LoginInfo> loginInfoResponse = XxlSsoHelper.loginCheckWithAttr(request);
         return xxlJobService.start(id, loginInfoResponse.getData());
     }
 
@@ -139,7 +138,7 @@ public class JobInfoController {
                                       @RequestParam("id") int id,
                                       @RequestParam("executorParam") String executorParam,
                                       @RequestParam("addressList") String addressList) {
-        Response<LoginInfo> loginInfoResponse = XxlSsoHelperAdapter.loginCheckWithAttr(request);
+        Response<LoginInfo> loginInfoResponse = XxlSsoHelper.loginCheckWithAttr(request);
         return xxlJobService.trigger(loginInfoResponse.getData(), id, executorParam, addressList);
     }
 
