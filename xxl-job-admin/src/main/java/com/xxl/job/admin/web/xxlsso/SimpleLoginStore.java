@@ -6,7 +6,7 @@ import com.xxl.job.admin.model.XxlJobUser;
 import com.xxl.sso.core.model.LoginInfo;
 import com.xxl.sso.core.store.LoginStore;
 import com.xxl.tool.response.Response;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
 
 import java.util.*;

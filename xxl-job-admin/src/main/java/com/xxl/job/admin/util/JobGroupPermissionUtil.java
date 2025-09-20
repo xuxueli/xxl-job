@@ -5,7 +5,7 @@ import com.xxl.job.admin.constant.Consts;
 import com.xxl.job.admin.model.XxlJobGroup;
 import com.xxl.tool.response.Response;
 import com.xxl.sso.core.model.LoginInfo;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.ArrayList;
 import java.util.Arrays;
