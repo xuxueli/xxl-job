@@ -1,8 +1,7 @@
-package com.xxl.job.admin.core.conf;
+package com.xxl.job.admin.scheduler.conf;
 
-import com.xxl.job.admin.core.util.I18nUtil;
-import com.xxl.job.admin.scheduler.conf.XxlJobAdminConfig;
 import com.xxl.job.admin.security.SecurityContext;
+import com.xxl.job.admin.util.I18nUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -37,7 +36,6 @@ public class XxlJobMailConfig implements ApplicationRunner {
 
     @Autowired
     private JavaMailSenderImpl javaMailSender;
-
 
     @Autowired
     private XxlJobAdminConfig xxlJobAdminConfig;

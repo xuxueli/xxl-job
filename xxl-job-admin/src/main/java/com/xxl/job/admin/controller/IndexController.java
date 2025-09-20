@@ -3,10 +3,9 @@ package com.xxl.job.admin.controller;
 import com.antherd.smcrypto.sm2.Keypair;
 import com.antherd.smcrypto.sm2.Sm2;
 import com.antherd.smcrypto.sm3.Sm3;
-import com.xxl.job.admin.controller.annotation.PermissionLimit;
-import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.admin.security.SecurityContext;
 import com.xxl.job.admin.service.XxlJobService;
+import com.xxl.job.admin.util.I18nUtil;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.sso.core.annotation.XxlSso;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -53,9 +52,9 @@ public class IndexController {
         ReturnT<Map<String, Object>> chartInfo = xxlJobService.chartInfo(startDate, endDate);
         return chartInfo;
     }
-
+/*
     @RequestMapping("/toLogin")
-    @PermissionLimit(limit = false)
+    @XxlSso(login = false)
     public ModelAndView toLogin(HttpServletRequest request, HttpServletResponse response, ModelAndView modelAndView) {
         if (loginService.ifLogin(request, response) != null) {
             modelAndView.setView(new RedirectView("/", true, false));
@@ -64,28 +63,9 @@ public class IndexController {
         return new ModelAndView("login");
     }
 
-
-    @RequestMapping(value = "spk", method = RequestMethod.POST)
-    @ResponseBody
-    @PermissionLimit(limit = false)
-    public ReturnT<String> getServerPublicKey(HttpServletRequest request, HttpServletResponse response,
-                                              @RequestParam("pk") String pk,
-                                              @RequestParam("sign") String sign) throws ScriptException {
-        if (!StringUtils.hasLength(pk) || !StringUtils.hasLength(sign)) {
-            return new ReturnT<String>(500, I18nUtil.getString("system_fail"));
-        }
-        if (!Sm3.sm3(pk).equals(sign)) {
-            return new ReturnT<String>(500, I18nUtil.getString("system_fail"));
-        }
-        Keypair keypair = SecurityContext.getInstance().currentKeypair();
-        String publicKey = keypair.getPublicKey();
-        String ret = Sm2.doEncrypt(publicKey, pk);
-        return new ReturnT<>(ret);
-    }
-
     @RequestMapping(value = "login", method = RequestMethod.POST)
     @ResponseBody
-    @PermissionLimit(limit = false)
+    @XxlSso(login = false)
     public ReturnT<String> loginDo(HttpServletRequest request, HttpServletResponse response,
                                    @RequestParam("userName") String userName,
                                    @RequestParam("password") String password,
@@ -102,10 +82,29 @@ public class IndexController {
 
     @RequestMapping(value = "logout", method = RequestMethod.POST)
     @ResponseBody
-    @PermissionLimit(limit = false)
+    @XxlSso(login = false)
     public ReturnT<String> logout(HttpServletRequest request, HttpServletResponse response) {
         return loginService.logout(request, response);
+    }*/
+
+    @RequestMapping(value = "spk", method = RequestMethod.POST)
+    @ResponseBody
+    @XxlSso(login = false)
+    public ReturnT<String> getServerPublicKey(HttpServletRequest request, HttpServletResponse response,
+                                              @RequestParam("pk") String pk,
+                                              @RequestParam("sign") String sign) throws ScriptException {
+        if (!StringUtils.hasLength(pk) || !StringUtils.hasLength(sign)) {
+            return new ReturnT<String>(500, I18nUtil.getString("system_fail"));
+        }
+        if (!Sm3.sm3(pk).equals(sign)) {
+            return new ReturnT<String>(500, I18nUtil.getString("system_fail"));
+        }
+        Keypair keypair = SecurityContext.getInstance().currentKeypair();
+        String publicKey = keypair.getPublicKey();
+        String ret = Sm2.doEncrypt(publicKey, pk);
+        return ReturnT.ofSuccess(ret);
     }
+
 
     @RequestMapping("/help")
     public String help() {

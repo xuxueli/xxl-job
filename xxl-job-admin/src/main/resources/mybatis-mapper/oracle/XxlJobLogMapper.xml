@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.xxl.job.admin.dao.XxlJobLogDao">
+<mapper namespace="com.xxl.job.admin.mapper.XxlJobLogMapper">
 
-    <resultMap id="XxlJobLog" type="com.xxl.job.admin.core.model.XxlJobLog">
+    <resultMap id="XxlJobLog" type="com.xxl.job.admin.model.XxlJobLog">
         <result column="ID" property="id"/>
 
         <result column="JOB_GROUP" property="jobGroup"/>
@@ -117,7 +117,7 @@
     </select>
 
 
-    <insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobLog" useGeneratedKeys="true" keyProperty="id">
+    <insert id="save" parameterType="com.xxl.job.admin.model.XxlJobLog" useGeneratedKeys="true" keyProperty="id">
         <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Integer">
             select SEQ_XXL_JOB_LOG_ID.nextval from dual
         </selectKey>

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.xxl.job.admin.dao.XxlJobInfoDao">
+<mapper namespace="com.xxl.job.admin.mapper.XxlJobInfoMapper">
 
-    <resultMap id="XxlJobInfo" type="com.xxl.job.admin.core.model.XxlJobInfo">
+    <resultMap id="XxlJobInfo" type="com.xxl.job.admin.model.XxlJobInfo">
         <result column="ID" property="id"/>
 
         <result column="JOB_GROUP" property="jobGroup"/>
@@ -131,7 +131,7 @@
         <include refid="sqlPageListBody"></include>
     </select>
 
-    <insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobInfo">
+    <insert id="save" parameterType="com.xxl.job.admin.model.XxlJobInfo">
         <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Integer">
             select SEQ_XXL_JOB_INFO_ID.nextval from dual
         </selectKey>
@@ -197,7 +197,7 @@
         WHERE t."ID" = #{id,jdbcType=NUMERIC}
     </select>
 
-    <update id="update" parameterType="com.xxl.job.admin.core.model.XxlJobInfo">
+    <update id="update" parameterType="com.xxl.job.admin.model.XxlJobInfo">
         UPDATE XXL_JOB_INFO
         SET "JOB_GROUP"                 = #{jobGroup,jdbcType=NUMERIC},
             "JOB_DESC"                  = #{jobDesc,jdbcType=VARCHAR},
@@ -259,7 +259,7 @@
         where ROWNUM &lt;= #{pagesize,jdbcType=NUMERIC}
     </select>
 
-    <update id="scheduleUpdate" parameterType="com.xxl.job.admin.core.model.XxlJobInfo">
+    <update id="scheduleUpdate" parameterType="com.xxl.job.admin.model.XxlJobInfo">
         UPDATE XXL_JOB_INFO
         SET "TRIGGER_LAST_TIME" = #{triggerLastTime,jdbcType=NUMERIC},
             "TRIGGER_NEXT_TIME" = #{triggerNextTime,jdbcType=NUMERIC}

@@ -1,6 +1,6 @@
 package com.xxl.job.admin.initial;
 
-import com.xxl.job.admin.core.conf.XxlJobAdminConfig;
+import com.xxl.job.admin.scheduler.conf.XxlJobAdminConfig;
 import org.apache.ibatis.jdbc.ScriptRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

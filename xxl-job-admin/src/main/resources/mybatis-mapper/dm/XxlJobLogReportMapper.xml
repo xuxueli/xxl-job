@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.xxl.job.admin.dao.XxlJobLogReportDao">
+<mapper namespace="com.xxl.job.admin.mapper.XxlJobLogReportMapper">
 
-	<resultMap id="XxlJobLogReport" type="com.xxl.job.admin.core.model.XxlJobLogReport" >
+	<resultMap id="XxlJobLogReport" type="com.xxl.job.admin.model.XxlJobLogReport" >
 		<result column="ID" property="id" />
 	    <result column="TRIGGER_DAY" property="triggerDay" />
 		<result column="RUNNING_COUNT" property="runningCount" />
@@ -19,7 +19,7 @@
 		t."FAIL_COUNT"
 	</sql>
 
-	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobLogReport" useGeneratedKeys="true" keyProperty="id" >
+	<insert id="save" parameterType="com.xxl.job.admin.model.XxlJobLogReport" useGeneratedKeys="true" keyProperty="id" >
 		INSERT INTO "XXL_JOB_LOG_REPORT" (
 			"TRIGGER_DAY",
 			"RUNNING_COUNT",

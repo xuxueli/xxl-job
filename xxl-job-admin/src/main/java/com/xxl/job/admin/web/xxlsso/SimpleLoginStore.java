@@ -7,9 +7,11 @@ import com.xxl.sso.core.model.LoginInfo;
 import com.xxl.sso.core.store.LoginStore;
 import com.xxl.tool.core.MapTool;
 import com.xxl.tool.response.Response;
-import jakarta.annotation.Resource;
+import javax.annotation.Resource;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -65,7 +67,7 @@ public class SimpleLoginStore implements LoginStore {
         }
 
         // parse role
-        List<String> roleList = user.getRole() == 1 ? List.of(Consts.ADMIN_ROLE) : null;
+        List<String> roleList = user.getRole() == 1 ? new ArrayList<>(Arrays.asList(Consts.ADMIN_ROLE)) : null;
 
         // parse jobGroup permission
         Map<String, String> extraInfo = MapTool.newHashMap(

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.xxl.job.admin.dao.XxlJobRegistryDao">
+<mapper namespace="com.xxl.job.admin.mapper.XxlJobRegistryMapper">
 
-	<resultMap id="XxlJobRegistry" type="com.xxl.job.admin.core.model.XxlJobRegistry" >
+	<resultMap id="XxlJobRegistry" type="com.xxl.job.admin.model.XxlJobRegistry" >
 		<result column="id" property="id" />
 	    <result column="registry_group" property="registryGroup" />
 	    <result column="registry_key" property="registryKey" />

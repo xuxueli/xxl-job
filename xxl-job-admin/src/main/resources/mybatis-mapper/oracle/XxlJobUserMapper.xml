@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.xxl.job.admin.dao.XxlJobUserDao">
+<mapper namespace="com.xxl.job.admin.mapper.XxlJobUserMapper">
 
     <resultMap id="XxlJobUser" type="com.xxl.job.admin.core.model.XxlJobUser">
         <result column="ID" property="id"/>
         <result column="USERNAME" property="username"/>
         <result column="PASSWORD" property="password"/>
+        <result column="TOKEN" property="token" />
         <result column="ROLE" property="role"/>
         <result column="PERMISSION" property="permission"/>
     </resultMap>
@@ -15,6 +16,7 @@
         t."ID",
 		t."USERNAME",
 		t."PASSWORD",
+        t."TOKEN",
 		t."ROLE",
 		t."PERMISSION"
     </sql>
@@ -59,7 +61,13 @@
         WHERE t."USERNAME" = #{username,jdbcType=VARCHAR}
     </select>
 
-    <insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobUser">
+    <select id="loadById" parameterType="java.util.HashMap" resultMap="XxlJobUser">
+        SELECT <include refid="Base_Column_List" />
+        FROM XXL_JOB_USER t
+        WHERE t."ID" = #{id}
+    </select>
+
+    <insert id="save" parameterType="com.xxl.job.admin.model.XxlJobUser">
         <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Integer">
             select SEQ_XXL_JOB_USER_ID.nextval from dual
         </selectKey>
@@ -78,7 +86,7 @@
         )
     </insert>
 
-    <update id="update" parameterType="com.xxl.job.admin.core.model.XxlJobUser">
+    <update id="update" parameterType="com.xxl.job.admin.model.XxlJobUser">
         UPDATE XXL_JOB_USER
         SET
         <if test="password != null and password != ''">
@@ -94,5 +102,11 @@
         FROM XXL_JOB_USER
         WHERE "ID" = #{id,jdbcType=NUMERIC}
     </delete>
+
+    <update id="updateToken" parameterType="java.util.HashMap" >
+        UPDATE XXL_JOB_USER
+        SET "TOKEN" = #{token}
+        WHERE "ID" = #{id}
+    </update>
 
 </mapper>

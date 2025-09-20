@@ -1,20 +1,24 @@
 package com.xxl.job.admin.controller.biz;
 
+import com.antherd.smcrypto.sm2.Keypair;
+import com.antherd.smcrypto.sm2.Sm2;
+import com.xxl.job.admin.adapter.XxlSsoHelperAdapter;
 import com.xxl.job.admin.constant.Consts;
 import com.xxl.job.admin.mapper.XxlJobGroupMapper;
 import com.xxl.job.admin.mapper.XxlJobUserMapper;
 import com.xxl.job.admin.model.XxlJobGroup;
 import com.xxl.job.admin.model.XxlJobUser;
+import com.xxl.job.admin.platform.pageable.data.PageDto;
+import com.xxl.job.admin.security.SecurityContext;
 import com.xxl.job.admin.util.I18nUtil;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.sso.core.annotation.XxlSso;
-import com.xxl.sso.core.helper.XxlSsoHelper;
 import com.xxl.sso.core.model.LoginInfo;
 import com.xxl.tool.core.StringTool;
 import com.xxl.tool.encrypt.SHA256Tool;
 import com.xxl.tool.response.Response;
-import jakarta.annotation.Resource;
-import jakarta.servlet.http.HttpServletRequest;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -57,11 +61,12 @@ public class JobUserController {
                                         @RequestParam("role") int role) {
 
         // page list
-        List<XxlJobUser> list = xxlJobUserMapper.pageList(start, length, username, role);
-        int list_count = xxlJobUserMapper.pageListCount(start, length, username, role);
+        PageDto page = PageDto.of(start / length + 1, length);
+        List<XxlJobUser> list = xxlJobUserMapper.pageList(page, username, role);
+        int listCount = xxlJobUserMapper.pageListCount( username, role);
 
         // filter
-        if (list != null && list.size() > 0) {
+        if (list != null && !list.isEmpty()) {
             for (XxlJobUser item : list) {
                 item.setPassword(null);
             }
@@ -69,8 +74,8 @@ public class JobUserController {
 
         // package result
         Map<String, Object> maps = new HashMap<String, Object>();
-        maps.put("recordsTotal", list_count);        // 总记录数
-        maps.put("recordsFiltered", list_count);    // 过滤后的总记录数
+        maps.put("recordsTotal", listCount);        // 总记录数
+        maps.put("recordsFiltered", listCount);    // 过滤后的总记录数
         maps.put("data", list);                    // 分页列表
         return maps;
     }
@@ -78,7 +83,13 @@ public class JobUserController {
     @RequestMapping("/add")
     @ResponseBody
     @XxlSso(role = Consts.ADMIN_ROLE)
-    public ReturnT<String> add(XxlJobUser xxlJobUser) {
+    public ReturnT<String> add(XxlJobUser xxlJobUser) throws Exception {
+        Keypair keypair = SecurityContext.getInstance().findKeypair(xxlJobUser.getSign());
+        if (keypair == null) {
+            return ReturnT.ofFail(I18nUtil.getString("login_param_unvalid"));
+        }
+        String decodePass = Sm2.doDecrypt(xxlJobUser.getPassword(), keypair.getPrivateKey());
+        xxlJobUser.setPassword(decodePass);
 
         // valid username
         if (StringTool.isBlank(xxlJobUser.getUsername())) {
@@ -114,16 +125,27 @@ public class JobUserController {
     @RequestMapping("/update")
     @ResponseBody
     @XxlSso(role = Consts.ADMIN_ROLE)
-    public ReturnT<String> update(HttpServletRequest request, XxlJobUser xxlJobUser) {
-
+    public ReturnT<String> update(HttpServletRequest request, XxlJobUser xxlJobUser) throws Exception {
         // avoid opt login seft
-        Response<LoginInfo> loginInfoResponse = XxlSsoHelper.loginCheckWithAttr(request);
+        Response<LoginInfo> loginInfoResponse = XxlSsoHelperAdapter.loginCheckWithAttr(request);
         if (loginInfoResponse.getData().getUserName().equals(xxlJobUser.getUsername())) {
             return ReturnT.ofFail(I18nUtil.getString("user_update_loginuser_limit"));
         }
 
         // valid password
         if (StringTool.isNotBlank(xxlJobUser.getPassword())) {
+            Keypair keypair = SecurityContext.getInstance().findKeypair(xxlJobUser.getSign());
+            if (keypair == null) {
+                return ReturnT.ofFail(I18nUtil.getString("login_param_unvalid"));
+            }
+            String decodePass = Sm2.doDecrypt(xxlJobUser.getPassword(), keypair.getPrivateKey());
+            xxlJobUser.setPassword(decodePass);
+            String decodeRepeatPass = Sm2.doDecrypt(xxlJobUser.getRepeatPassword(), keypair.getPrivateKey());
+            xxlJobUser.setRepeatPassword(decodeRepeatPass);
+            if(!decodePass.equals(decodeRepeatPass)){
+                return ReturnT.ofFail(I18nUtil.getString("repeat_password_not_match"));
+            }
+
             xxlJobUser.setPassword(xxlJobUser.getPassword().trim());
             if (!(xxlJobUser.getPassword().length() >= 4 && xxlJobUser.getPassword().length() <= 20)) {
                 return ReturnT.ofFail(I18nUtil.getString("system_lengh_limit") + "[4-20]");
@@ -146,7 +168,7 @@ public class JobUserController {
     public ReturnT<String> remove(HttpServletRequest request, @RequestParam("id") int id) {
 
         // avoid opt login seft
-        Response<LoginInfo> loginInfoResponse = XxlSsoHelper.loginCheckWithAttr(request);
+        Response<LoginInfo> loginInfoResponse = XxlSsoHelperAdapter.loginCheckWithAttr(request);
         if (Integer.parseInt(loginInfoResponse.getData().getUserId()) == id) {
             return ReturnT.ofFail(I18nUtil.getString("user_update_loginuser_limit"));
         }
@@ -159,7 +181,9 @@ public class JobUserController {
     @ResponseBody
     public ReturnT<String> updatePwd(HttpServletRequest request,
                                      @RequestParam("password") String password,
-                                     @RequestParam("oldPassword") String oldPassword) {
+                                     @RequestParam("oldPassword") String oldPassword,
+                                     @RequestParam("repeatPassword") String repeatPassword,
+                                     @RequestParam("sign") String sign) throws Exception {
 
         // valid
         if (oldPassword == null || oldPassword.trim().isEmpty()) {
@@ -168,6 +192,18 @@ public class JobUserController {
         if (password == null || password.trim().isEmpty()) {
             return ReturnT.ofFail(I18nUtil.getString("system_please_input") + I18nUtil.getString("change_pwd_field_oldpwd"));
         }
+
+        Keypair keypair = SecurityContext.getInstance().findKeypair(sign);
+        if (keypair == null) {
+            return ReturnT.ofFail(I18nUtil.getString("login_param_unvalid"));
+        }
+        password = Sm2.doDecrypt(password, keypair.getPrivateKey());
+        oldPassword = Sm2.doDecrypt(oldPassword, keypair.getPrivateKey());
+        repeatPassword = Sm2.doDecrypt(repeatPassword, keypair.getPrivateKey());
+        if(!password.equals(repeatPassword)){
+            return ReturnT.ofFail(I18nUtil.getString("repeat_password_not_match"));
+        }
+
         password = password.trim();
         if (!(password.length() >= 4 && password.length() <= 20)) {
             return ReturnT.ofFail(I18nUtil.getString("system_lengh_limit") + "[4-20]");
@@ -178,7 +214,7 @@ public class JobUserController {
         String passwordHash = SHA256Tool.sha256(password);
 
         // valid old pwd
-        Response<LoginInfo> loginInfoResponse = XxlSsoHelper.loginCheckWithAttr(request);
+        Response<LoginInfo> loginInfoResponse = XxlSsoHelperAdapter.loginCheckWithAttr(request);
         XxlJobUser existUser = xxlJobUserMapper.loadByUserName(loginInfoResponse.getData().getUserName());
         if (!oldPasswordHash.equals(existUser.getPassword())) {
             return ReturnT.ofFail(I18nUtil.getString("change_pwd_field_oldpwd") + I18nUtil.getString("system_unvalid"));

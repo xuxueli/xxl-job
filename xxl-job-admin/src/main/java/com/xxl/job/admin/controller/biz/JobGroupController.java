@@ -6,14 +6,15 @@ import com.xxl.job.admin.mapper.XxlJobInfoMapper;
 import com.xxl.job.admin.mapper.XxlJobRegistryMapper;
 import com.xxl.job.admin.model.XxlJobGroup;
 import com.xxl.job.admin.model.XxlJobRegistry;
+import com.xxl.job.admin.platform.pageable.data.PageDto;
 import com.xxl.job.admin.util.I18nUtil;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.enums.RegistryConfig;
 import com.xxl.sso.core.annotation.XxlSso;
 import com.xxl.tool.core.CollectionTool;
 import com.xxl.tool.core.StringTool;
-import jakarta.annotation.Resource;
-import jakarta.servlet.http.HttpServletRequest;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * job group controller
@@ -54,8 +56,9 @@ public class JobGroupController {
                                         @RequestParam("title") String title) {
 
         // page query
-        List<XxlJobGroup> list = xxlJobGroupMapper.pageList(start, length, appname, title);
-        int list_count = xxlJobGroupMapper.pageListCount(start, length, appname, title);
+        PageDto page = PageDto.of(start / length + 1, length);
+        List<XxlJobGroup> list = xxlJobGroupMapper.pageList(page, appname, title);
+        int list_count = xxlJobGroupMapper.pageListCount(appname, title);
 
         // package result
         Map<String, Object> maps = new HashMap<String, Object>();
@@ -154,7 +157,10 @@ public class JobGroupController {
 
     private List<String> findRegistryByAppName(String appnameParam) {
         HashMap<String, List<String>> appAddressMap = new HashMap<>();
-        List<XxlJobRegistry> list = xxlJobRegistryMapper.findAll(RegistryConfig.DEAD_TIMEOUT, new Date());
+        long ts = System.currentTimeMillis();
+        long deadTs = ts - TimeUnit.SECONDS.toMillis(RegistryConfig.DEAD_TIMEOUT);
+        Date deadTime = new Date(deadTs);
+        List<XxlJobRegistry> list = xxlJobRegistryMapper.findAll(deadTime);
         if (CollectionTool.isNotEmpty(list)) {
             for (XxlJobRegistry item : list) {
                 if (!RegistryConfig.RegistType.EXECUTOR.name().equals(item.getRegistryGroup())) {
@@ -178,7 +184,7 @@ public class JobGroupController {
     public ReturnT<String> remove(@RequestParam("id") int id) {
 
         // valid
-        int count = xxlJobInfoMapper.pageListCount(0, 10, id, -1, null, null, null);
+        int count = xxlJobInfoMapper.pageListCount( id, -1, null, null, null);
         if (count > 0) {
             return ReturnT.ofFail(I18nUtil.getString("jobgroup_del_limit_0"));
         }

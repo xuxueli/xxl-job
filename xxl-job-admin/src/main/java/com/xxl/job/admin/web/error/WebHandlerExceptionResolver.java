@@ -1,9 +1,11 @@
 package com.xxl.job.admin.web.error;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xxl.job.admin.scheduler.exception.XxlJobException;
 import com.xxl.tool.response.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.method.HandlerMethod;
@@ -22,6 +24,9 @@ import java.io.IOException;
 @Component
 public class WebHandlerExceptionResolver implements HandlerExceptionResolver {
     private static transient Logger logger = LoggerFactory.getLogger(WebHandlerExceptionResolver.class);
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Override
     public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
@@ -42,7 +47,7 @@ public class WebHandlerExceptionResolver implements HandlerExceptionResolver {
         if (isJson) {
             try {
                 // errorMsg
-                String errorMsg = JacksonUtilJacksonUtil.toJson(Response.ofFail(ex.toString()));
+                String errorMsg = objectMapper.writeValueAsString(Response.ofFail(ex.toString()));
 
                 // write response
                 response.setStatus(HttpServletResponse.SC_OK);
