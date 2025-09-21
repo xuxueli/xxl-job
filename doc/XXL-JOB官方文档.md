@@ -2546,16 +2546,16 @@ public void execute() {
 ### 7.40 版本 v3.2.0 Release Notes[2025-08-24]
 - 1、【强化】AI任务（ollamaJobHandler）优化：针对 “model” 模型配置信息，从执行器侧文件类配置调整至调度中心“任务参数”动态配置，支持集成多模型、并结合任务动态配置切换。
 - 2、【安全】登录认证重构：密码加密算法从Md5改为Sha256；登录态改为登录后动态随机生成；提升系统安全性；（需要针对用户表进行字段调整，同时需要重新初始化密码信息；相关SQL脚本如下）
-```
-// 1、用户表password字段需要调整长度，执行如下命令
-ALTER TABLE xxl_job_user
-    MODIFY COLUMN `password` varchar(100) NOT NULL COMMENT '密码加密信息';
-ALTER TABLE xxl_job_user
-    ADD COLUMN `token` varchar(100) DEFAULT NULL COMMENT '登录token';
-    
-// 2、存量用户密码需要修改，可执行如下命令将密码初始化 “123456”；也可以自行通过 “SHA256Tool.sha256” 工具生成其他初始化密码；
-UPDATE xxl_job_user t SET t.password = '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92' WHERE t.username = {用户名};
-```
+    ```
+    // 1、用户表password字段需要调整长度，执行如下命令
+    ALTER TABLE xxl_job_user
+        MODIFY COLUMN `password` varchar(100) NOT NULL COMMENT '密码加密信息';
+    ALTER TABLE xxl_job_user
+        ADD COLUMN `token` varchar(100) DEFAULT NULL COMMENT '登录token';
+        
+    // 2、存量用户密码需要修改，可执行如下命令将密码初始化 “123456”；也可以自行通过 “SHA256Tool.sha256” 工具生成其他初始化密码；
+    UPDATE xxl_job_user t SET t.password = '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92' WHERE t.username = {用户名};
+    ```
 - 3、【强化】GLUE模式(Python) 扩展，支持 "GLUE(Python3)" 与 "GLUE(Python2)" 两种模式，分别支持 python3/2 多版本；
 - 4、【强化】调度中心系统日志调整，支持启动时指定 -DLOG_HOME 参数自定义日志位置；同时优化日志格式提升易读性；
 - 5、【优化】任务Bean扫描规则调整，过滤冗余不必要扫描，避免系统组件提前初始化；
