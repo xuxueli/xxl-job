@@ -8,230 +8,258 @@ import java.util.Date;
  * @author xuxueli  2016-1-12 18:25:49
  */
 public class XxlJobInfo {
-	
-	private int id;				// 主键ID
-	
-	private int jobGroup;		// 执行器主键ID
-	private String jobDesc;
-	
-	private Date addTime;
-	private Date updateTime;
-	
-	private String author;		// 负责人
-	private String alarmEmail;	// 报警邮件
 
-	private String scheduleType;			// 调度类型
-	private String scheduleConf;			// 调度配置，值含义取决于调度类型
-	private String misfireStrategy;			// 调度过期策略
+    private int id;                // 主键ID
 
-	private String executorRouteStrategy;	// 执行器路由策略
-	private String executorHandler;		    // 执行器，任务Handler名称
-	private String executorParam;		    // 执行器，任务参数
-	private String executorBlockStrategy;	// 阻塞处理策略
-	private int executorTimeout;     		// 任务执行超时时间，单位秒
-	private int executorFailRetryCount;		// 失败重试次数
-	
-	private String glueType;		// GLUE类型	#com.xxl.job.core.glue.GlueTypeEnum
-	private String glueSource;		// GLUE源代码
-	private String glueRemark;		// GLUE备注
-	private Date glueUpdatetime;	// GLUE更新时间
+    private int jobGroup;        // 执行器主键ID
+    private String jobDesc;
 
-	private String childJobId;		// 子任务ID，多个逗号分隔
+    private Date addTime;
+    private Date updateTime;
 
-	private int triggerStatus;		// 调度状态：0-停止，1-运行
-	private long triggerLastTime;	// 上次调度时间
-	private long triggerNextTime;	// 下次调度时间
+    private String author;        // 负责人
+    private String alarmEmail;    // 报警邮件
 
+    private String scheduleType;            // 调度类型
+    private String scheduleConf;            // 调度配置，值含义取决于调度类型
+    private String misfireStrategy;            // 调度过期策略
 
-	public int getId() {
-		return id;
-	}
+    private String executorRouteStrategy;    // 执行器路由策略
+    private String executorHandler;            // 执行器，任务Handler名称
+    private String executorParam;            // 执行器，任务参数
+    private String executorBlockStrategy;    // 阻塞处理策略
+    private int executorTimeout;            // 任务执行超时时间，单位秒
+    private int executorFailRetryCount;        // 失败重试次数
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    private String glueType;        // GLUE类型	#com.xxl.job.core.glue.GlueTypeEnum
+    private String glueSource;        // GLUE源代码
+    private String glueRemark;        // GLUE备注
+    private Date glueUpdatetime;    // GLUE更新时间
 
-	public int getJobGroup() {
-		return jobGroup;
-	}
+    private String childJobId;        // 子任务ID，多个逗号分隔
 
-	public void setJobGroup(int jobGroup) {
-		this.jobGroup = jobGroup;
-	}
+    private int triggerStatus;        // 调度状态：0-停止，1-运行
+    private long triggerLastTime;    // 上次调度时间
+    private long triggerNextTime;    // 下次调度时间
 
-	public String getJobDesc() {
-		return jobDesc;
-	}
+    private String remark; // 备注
 
-	public void setJobDesc(String jobDesc) {
-		this.jobDesc = jobDesc;
-	}
+    private Date newestTriggerTime; // 最新一次调度时间，仅列表显示使用
+    private Integer newestLogStatus; // 最新一次调度状态，仅列表显示使用
 
-	public Date getAddTime() {
-		return addTime;
-	}
+    public int getId() {
+        return id;
+    }
 
-	public void setAddTime(Date addTime) {
-		this.addTime = addTime;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public Date getUpdateTime() {
-		return updateTime;
-	}
+    public int getJobGroup() {
+        return jobGroup;
+    }
 
-	public void setUpdateTime(Date updateTime) {
-		this.updateTime = updateTime;
-	}
+    public void setJobGroup(int jobGroup) {
+        this.jobGroup = jobGroup;
+    }
 
-	public String getAuthor() {
-		return author;
-	}
+    public String getJobDesc() {
+        return jobDesc;
+    }
 
-	public void setAuthor(String author) {
-		this.author = author;
-	}
+    public void setJobDesc(String jobDesc) {
+        this.jobDesc = jobDesc;
+    }
 
-	public String getAlarmEmail() {
-		return alarmEmail;
-	}
+    public Date getAddTime() {
+        return addTime;
+    }
 
-	public void setAlarmEmail(String alarmEmail) {
-		this.alarmEmail = alarmEmail;
-	}
+    public void setAddTime(Date addTime) {
+        this.addTime = addTime;
+    }
 
-	public String getScheduleType() {
-		return scheduleType;
-	}
+    public Date getUpdateTime() {
+        return updateTime;
+    }
 
-	public void setScheduleType(String scheduleType) {
-		this.scheduleType = scheduleType;
-	}
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
 
-	public String getScheduleConf() {
-		return scheduleConf;
-	}
+    public String getAuthor() {
+        return author;
+    }
 
-	public void setScheduleConf(String scheduleConf) {
-		this.scheduleConf = scheduleConf;
-	}
+    public void setAuthor(String author) {
+        this.author = author;
+    }
 
-	public String getMisfireStrategy() {
-		return misfireStrategy;
-	}
+    public String getAlarmEmail() {
+        return alarmEmail;
+    }
 
-	public void setMisfireStrategy(String misfireStrategy) {
-		this.misfireStrategy = misfireStrategy;
-	}
+    public void setAlarmEmail(String alarmEmail) {
+        this.alarmEmail = alarmEmail;
+    }
 
-	public String getExecutorRouteStrategy() {
-		return executorRouteStrategy;
-	}
+    public String getScheduleType() {
+        return scheduleType;
+    }
 
-	public void setExecutorRouteStrategy(String executorRouteStrategy) {
-		this.executorRouteStrategy = executorRouteStrategy;
-	}
+    public void setScheduleType(String scheduleType) {
+        this.scheduleType = scheduleType;
+    }
 
-	public String getExecutorHandler() {
-		return executorHandler;
-	}
+    public String getScheduleConf() {
+        return scheduleConf;
+    }
 
-	public void setExecutorHandler(String executorHandler) {
-		this.executorHandler = executorHandler;
-	}
+    public void setScheduleConf(String scheduleConf) {
+        this.scheduleConf = scheduleConf;
+    }
 
-	public String getExecutorParam() {
-		return executorParam;
-	}
+    public String getMisfireStrategy() {
+        return misfireStrategy;
+    }
 
-	public void setExecutorParam(String executorParam) {
-		this.executorParam = executorParam;
-	}
+    public void setMisfireStrategy(String misfireStrategy) {
+        this.misfireStrategy = misfireStrategy;
+    }
 
-	public String getExecutorBlockStrategy() {
-		return executorBlockStrategy;
-	}
+    public String getExecutorRouteStrategy() {
+        return executorRouteStrategy;
+    }
 
-	public void setExecutorBlockStrategy(String executorBlockStrategy) {
-		this.executorBlockStrategy = executorBlockStrategy;
-	}
+    public void setExecutorRouteStrategy(String executorRouteStrategy) {
+        this.executorRouteStrategy = executorRouteStrategy;
+    }
 
-	public int getExecutorTimeout() {
-		return executorTimeout;
-	}
+    public String getExecutorHandler() {
+        return executorHandler;
+    }
 
-	public void setExecutorTimeout(int executorTimeout) {
-		this.executorTimeout = executorTimeout;
-	}
+    public void setExecutorHandler(String executorHandler) {
+        this.executorHandler = executorHandler;
+    }
 
-	public int getExecutorFailRetryCount() {
-		return executorFailRetryCount;
-	}
+    public String getExecutorParam() {
+        return executorParam;
+    }
 
-	public void setExecutorFailRetryCount(int executorFailRetryCount) {
-		this.executorFailRetryCount = executorFailRetryCount;
-	}
+    public void setExecutorParam(String executorParam) {
+        this.executorParam = executorParam;
+    }
 
-	public String getGlueType() {
-		return glueType;
-	}
+    public String getExecutorBlockStrategy() {
+        return executorBlockStrategy;
+    }
 
-	public void setGlueType(String glueType) {
-		this.glueType = glueType;
-	}
+    public void setExecutorBlockStrategy(String executorBlockStrategy) {
+        this.executorBlockStrategy = executorBlockStrategy;
+    }
 
-	public String getGlueSource() {
-		return glueSource;
-	}
+    public int getExecutorTimeout() {
+        return executorTimeout;
+    }
 
-	public void setGlueSource(String glueSource) {
-		this.glueSource = glueSource;
-	}
+    public void setExecutorTimeout(int executorTimeout) {
+        this.executorTimeout = executorTimeout;
+    }
 
-	public String getGlueRemark() {
-		return glueRemark;
-	}
+    public int getExecutorFailRetryCount() {
+        return executorFailRetryCount;
+    }
 
-	public void setGlueRemark(String glueRemark) {
-		this.glueRemark = glueRemark;
-	}
+    public void setExecutorFailRetryCount(int executorFailRetryCount) {
+        this.executorFailRetryCount = executorFailRetryCount;
+    }
 
-	public Date getGlueUpdatetime() {
-		return glueUpdatetime;
-	}
+    public String getGlueType() {
+        return glueType;
+    }
 
-	public void setGlueUpdatetime(Date glueUpdatetime) {
-		this.glueUpdatetime = glueUpdatetime;
-	}
+    public void setGlueType(String glueType) {
+        this.glueType = glueType;
+    }
 
-	public String getChildJobId() {
-		return childJobId;
-	}
+    public String getGlueSource() {
+        return glueSource;
+    }
 
-	public void setChildJobId(String childJobId) {
-		this.childJobId = childJobId;
-	}
+    public void setGlueSource(String glueSource) {
+        this.glueSource = glueSource;
+    }
 
-	public int getTriggerStatus() {
-		return triggerStatus;
-	}
+    public String getGlueRemark() {
+        return glueRemark;
+    }
 
-	public void setTriggerStatus(int triggerStatus) {
-		this.triggerStatus = triggerStatus;
-	}
+    public void setGlueRemark(String glueRemark) {
+        this.glueRemark = glueRemark;
+    }
 
-	public long getTriggerLastTime() {
-		return triggerLastTime;
-	}
+    public Date getGlueUpdatetime() {
+        return glueUpdatetime;
+    }
 
-	public void setTriggerLastTime(long triggerLastTime) {
-		this.triggerLastTime = triggerLastTime;
-	}
+    public void setGlueUpdatetime(Date glueUpdatetime) {
+        this.glueUpdatetime = glueUpdatetime;
+    }
 
-	public long getTriggerNextTime() {
-		return triggerNextTime;
-	}
+    public String getChildJobId() {
+        return childJobId;
+    }
 
-	public void setTriggerNextTime(long triggerNextTime) {
-		this.triggerNextTime = triggerNextTime;
-	}
+    public void setChildJobId(String childJobId) {
+        this.childJobId = childJobId;
+    }
+
+    public int getTriggerStatus() {
+        return triggerStatus;
+    }
+
+    public void setTriggerStatus(int triggerStatus) {
+        this.triggerStatus = triggerStatus;
+    }
+
+    public long getTriggerLastTime() {
+        return triggerLastTime;
+    }
+
+    public void setTriggerLastTime(long triggerLastTime) {
+        this.triggerLastTime = triggerLastTime;
+    }
+
+    public long getTriggerNextTime() {
+        return triggerNextTime;
+    }
+
+    public void setTriggerNextTime(long triggerNextTime) {
+        this.triggerNextTime = triggerNextTime;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    public Date getNewestTriggerTime() {
+        return newestTriggerTime;
+    }
+
+    public void setNewestTriggerTime(Date newestTriggerTime) {
+        this.newestTriggerTime = newestTriggerTime;
+    }
+
+    public Integer getNewestLogStatus() {
+        return newestLogStatus;
+    }
+
+    public void setNewestLogStatus(Integer newestLogStatus) {
+        this.newestLogStatus = newestLogStatus;
+    }
 }

@@ -1,9 +1,10 @@
 package com.xxl.job.admin.mapper;
 
 import com.xxl.job.admin.model.XxlJobUser;
-import com.xxl.tool.response.Response;
+import com.xxl.job.admin.platform.pageable.data.PageDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+
 import java.util.List;
 
 /**
@@ -12,25 +13,24 @@ import java.util.List;
 @Mapper
 public interface XxlJobUserMapper {
 
-	public List<XxlJobUser> pageList(@Param("offset") int offset,
-                                     @Param("pagesize") int pagesize,
+    public List<XxlJobUser> pageList(@Param("page") PageDto page,
                                      @Param("username") String username,
-									 @Param("role") int role);
-	public int pageListCount(@Param("offset") int offset,
-							 @Param("pagesize") int pagesize,
-							 @Param("username") String username,
-							 @Param("role") int role);
+                                     @Param("role") int role);
 
-	public XxlJobUser loadByUserName(@Param("username") String username);
+    public int pageListCount(
+            @Param("username") String username,
+            @Param("role") int role);
 
-	public XxlJobUser loadById(@Param("id") int id);
+    public XxlJobUser loadByUserName(@Param("username") String username);
 
-	public int save(XxlJobUser xxlJobUser);
+    public XxlJobUser loadById(@Param("id") int id);
 
-	public int update(XxlJobUser xxlJobUser);
-	
-	public int delete(@Param("id") int id);
+    public int save(XxlJobUser xxlJobUser);
 
-	public int updateToken(@Param("id") int id, @Param("token") String token);
+    public int update(XxlJobUser xxlJobUser);
+
+    public int delete(@Param("id") int id);
+
+    public int updateToken(@Param("id") int id, @Param("token") String token);
 
 }

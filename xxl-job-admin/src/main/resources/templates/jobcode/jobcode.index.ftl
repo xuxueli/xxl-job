@@ -2,7 +2,7 @@
 <html>
 <head>
     <#-- import macro -->
-  	<#import "../common/common.macro.ftl" as netCommon>
+  	<#import "/common/common.macro.ftl" as netCommon>
 
     <#-- commonStyle -->
 	<@netCommon.commonStyle />
@@ -134,7 +134,7 @@
     <#--<@netCommon.commonFooter />-->
 </div>
 
-	
+
 <@netCommon.commonScript />
 
 <#-- biz start（5/5 script） -->

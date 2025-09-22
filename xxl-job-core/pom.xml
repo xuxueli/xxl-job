@@ -58,6 +58,7 @@
 			<version>${jakarta.annotation-api.version}</version>
 			<scope>provided</scope>
 		</dependency>
+
 	</dependencies>
 
 </project>

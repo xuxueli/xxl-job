@@ -2,7 +2,7 @@
 <html>
 <head>
     <#-- import macro -->
-  	<#import "../common/common.macro.ftl" as netCommon>
+  	<#import "/common/common.macro.ftl" as netCommon>
 
     <#-- commonStyle -->
 	<@netCommon.commonStyle />
@@ -106,6 +106,8 @@
 					            	<tr>
                                         <th name="jobId" >${I18n.jobinfo_field_id}</th>
                                         <th name="jobGroup" >jobGroup</th>
+                                        <th name="groupTitle" >${I18n.jobinfo_field_jobgroup}</th>
+                                        <th name="jobDesc" >${I18n.jobinfo_field_jobdesc}</th>
 										<#--<th name="executorAddress" >执行器地址</th>
 										<th name="glueType" >运行模式</th>
                                       	<th name="executorParam" >任务参数</th>-->

@@ -2,7 +2,7 @@
 <html>
 <head>
 	<#-- import macro -->
-  	<#import "../common/common.macro.ftl" as netCommon>
+  	<#import "/common/common.macro.ftl" as netCommon>
 
 	<#-- commonStyle -->
 	<@netCommon.commonStyle />
@@ -152,7 +152,11 @@
 								</div>
 								<div class="form-group">
 									<label for="lastname" class="col-sm-2 control-label">${I18n.user_password}<font color="red">*</font></label>
-									<div class="col-sm-8"><input type="text" class="form-control" name="password" placeholder="${I18n.user_password_update_placeholder}" maxlength="20" ></div>
+                        <div class="col-sm-8"><input type="password" class="form-control" name="password" placeholder="${I18n.user_password_update_placeholder}" maxlength="50" ></div>
+                    </div>
+					<div class="form-group">
+						<label for="lastname" class="col-sm-2 control-label">${I18n.change_pwd_field_repeat_pwd}<font color="red">*</font></label>
+						<div class="col-sm-8"><input type="password" class="form-control" name="repeatPassword" placeholder="${I18n.change_pwd_field_repeat_pwd}" maxlength="50" ></div>
 								</div>
 								<div class="form-group">
 									<label for="lastname" class="col-sm-2 control-label">${I18n.user_role}<font color="red">*</font></label>
@@ -192,7 +196,7 @@
 	    </section>
 	</div>
 	<!-- right end -->
-	
+
 	<!-- footer -->
 	<@netCommon.commonFooter />
 </div>
@@ -204,6 +208,9 @@
 <script src="${request.contextPath}/static/adminlte/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
 <script src="${request.contextPath}/static/adminlte/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
 <script src="${request.contextPath}/static/js/user.index.1.js"></script>
+
+<script src="${request.contextPath}/static/plugins/com/antherd/sm-crypto-0.3.2/sm2.js"></script>
+<script src="${request.contextPath}/static/plugins/com/antherd/sm-crypto-0.3.2/sm3.js"></script>
 <#-- biz end（5/5 script） -->
 
 </body>

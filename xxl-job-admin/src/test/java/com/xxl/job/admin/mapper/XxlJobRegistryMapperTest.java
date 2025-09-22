@@ -1,8 +1,10 @@
 package com.xxl.job.admin.mapper;
 
 import com.xxl.job.admin.model.XxlJobRegistry;
-import jakarta.annotation.Resource;
+import javax.annotation.Resource;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Arrays;
@@ -10,8 +12,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class XxlJobRegistryMapperTest {
+
+    private Logger logger= LoggerFactory.getLogger(XxlJobRegistryDaoTest.class);
 
     @Resource
     private XxlJobRegistryMapper xxlJobRegistryMapper;
