@@ -84,17 +84,16 @@ public class XxlJobFileAppender {
 	/**
 	 * append log
 	 *
-	 * @param logFileName
-	 * @param appendLog
+	 * @param logFileName	log file name
+	 * @param appendLog		append log
 	 */
 	public static void appendLog(String logFileName, String appendLog) {
 
 		// log file
-		if (logFileName==null || logFileName.trim().length()==0) {
+		if (logFileName==null || logFileName.trim().isEmpty()) {
 			return;
 		}
 		File logFile = new File(logFileName);
-
 		if (!logFile.exists()) {
 			try {
 				logFile.createNewFile();
@@ -111,29 +110,20 @@ public class XxlJobFileAppender {
 		appendLog += "\r\n";
 		
 		// append file content
-		FileOutputStream fos = null;
-		try {
-			fos = new FileOutputStream(logFile, true);
-			fos.write(appendLog.getBytes("utf-8"));
-			fos.flush();
-		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
-		} finally {
-			if (fos != null) {
-				try {
-					fos.close();
-				} catch (IOException e) {
-					logger.error(e.getMessage(), e);
-				}
-			}
-		}
+        try (FileOutputStream fos = new FileOutputStream(logFile, true)) {
+            fos.write(appendLog.getBytes(StandardCharsets.UTF_8));
+            fos.flush();
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
 		
 	}
 
 	/**
 	 * support read log-file
 	 *
-	 * @param logFileName
+	 * @param logFileName	log file name
+	 * @param fromLineNum	from line num
 	 * @return log content
 	 */
 	public static LogResult readLog(String logFileName, int fromLineNum){
