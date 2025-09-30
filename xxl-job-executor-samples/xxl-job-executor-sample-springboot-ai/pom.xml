@@ -16,8 +16,8 @@
     <url>https://www.xuxueli.com/</url>
 
     <properties>
-        <spring-ai.version>1.0.1</spring-ai.version>
-        <dify-java-client.version>1.1.7</dify-java-client.version>
+        <spring-ai.version>1.0.2</spring-ai.version>
+        <dify-java-client.version>1.1.9</dify-java-client.version>
     </properties>
 
     <dependencyManagement>
@@ -69,11 +69,10 @@
 
     <build>
         <plugins>
-            <!-- spring-boot-maven-plugin (提供了直接运行项目的插件：如果是通过parent方式继承spring-boot-starter-parent则不用此插件) -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <!--<version>${spring-boot.version}</version>-->
+                <version>${spring-boot.version}</version>
                 <executions>
                     <execution>
                         <goals>

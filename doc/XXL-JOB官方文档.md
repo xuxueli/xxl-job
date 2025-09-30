@@ -2572,7 +2572,8 @@ public void execute() {
 
 
 ### 7.41 版本 v3.2.1 Release Notes[规划中]
-- 1、【ING】底层组件移除单例写法，汇总factory统一管理；
+- 1、【升级】升级多项maven依赖至较新版本，如 netty、groovy、spring、spring-ai、dify 等；
+- 2、【ING】底层组件移除单例写法，汇总factory统一管理；
 
 
 ### TODO LIST

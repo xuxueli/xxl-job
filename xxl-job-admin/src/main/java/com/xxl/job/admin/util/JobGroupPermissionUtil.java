@@ -26,7 +26,7 @@ public class JobGroupPermissionUtil {
             return true;
         } else {
             List<String> jobGroups = (loginInfo.getExtraInfo()!=null && loginInfo.getExtraInfo().containsKey("jobGroups"))
-                    ? List.of(StringTool.tokenizeToArray(loginInfo.getExtraInfo().get("jobGroups"), ",")) :new ArrayList<>();
+                    ? StringTool.split(loginInfo.getExtraInfo().get("jobGroups"), ",") :new ArrayList<>();
             return jobGroups.contains(String.valueOf(jobGroup));
         }
     }
@@ -52,7 +52,7 @@ public class JobGroupPermissionUtil {
             return jobGroupListTotal;
         } else {
             List<String> jobGroups = (loginInfoResponse.getData().getExtraInfo()!=null && loginInfoResponse.getData().getExtraInfo().containsKey("jobGroups"))
-                    ? List.of(StringTool.tokenizeToArray(loginInfoResponse.getData().getExtraInfo().get("jobGroups"), ",")) :new ArrayList<>();
+                    ? StringTool.split(loginInfoResponse.getData().getExtraInfo().get("jobGroups"), ",") :new ArrayList<>();
 
             return jobGroupListTotal
                     .stream()
