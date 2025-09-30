@@ -18,6 +18,9 @@ public interface XxlJobRegistryMapper {
 
     public int removeDead(@Param("ids") List<Integer> ids);
 
+    public int removeDeadGrace(@Param("timeout") int timeout,
+                               @Param("nowTime") Date nowTime);
+
     public List<XxlJobRegistry> findAll(@Param("timeout") int timeout,
                                         @Param("nowTime") Date nowTime);
 
