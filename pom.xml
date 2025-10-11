@@ -32,12 +32,10 @@
 		<central-publishing-maven-plugin.version>0.9.0</central-publishing-maven-plugin.version>
 		<!-- base -->
 		<slf4j-api.version>2.0.17</slf4j-api.version>
-		<junit-jupiter.version>5.13.4</junit-jupiter.version>
-		<jakarta.annotation-api.version>3.0.0</jakarta.annotation-api.version>
+		<junit-jupiter.version>5.14.0</junit-jupiter.version>
 
-		<!-- net -->
-		<netty.version>4.2.6.Final</netty.version>
-		<gson.version>2.13.2</gson.version>
+		<!-- jakarta.annotation-api -->
+		<jakarta.annotation-api.version>3.0.0</jakarta.annotation-api.version>
 
 		<!-- spring -->
 		<spring-boot.version>3.5.6</spring-boot.version>
@@ -46,10 +44,14 @@
 		<mybatis-spring-boot-starter.version>3.0.5</mybatis-spring-boot-starter.version>
 		<mysql-connector-j.version>9.4.0</mysql-connector-j.version>
 
+		<!-- net -->
+		<netty.version>4.2.6.Final</netty.version>
+		<gson.version>2.13.2</gson.version>
+
 		<!-- groovy -->
 		<groovy.version>5.0.1</groovy.version>
 		<!-- xxl-sso (+xxl-tool、gson) -->
-		<xxl-sso.version>2.1.0</xxl-sso.version>
+		<xxl-sso.version>2.1.1</xxl-sso.version>
 	</properties>
 
 	<licenses>

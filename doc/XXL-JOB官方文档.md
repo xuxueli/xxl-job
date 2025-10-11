@@ -2542,7 +2542,6 @@ public void execute() {
 - 3、【优化】合并PR-2504，规避SQL注入问题；
 - 4、【升级】多个项目依赖升级至较新稳定版本，涉及 netty、spring/springboot、groovy 等；
 
-
 ### 7.40 版本 v3.2.0 Release Notes[2025-08-24]
 - 1、【强化】AI任务（ollamaJobHandler）优化：针对 “model” 模型配置信息，从执行器侧文件类配置调整至调度中心“任务参数”动态配置，支持集成多模型、并结合任务动态配置切换。
 - 2、【安全】登录认证重构：密码加密算法从Md5改为Sha256；登录态改为登录后动态随机生成；提升系统安全性；（需要针对用户表进行字段调整，同时需要重新初始化密码信息；相关SQL脚本如下）
@@ -2570,12 +2569,16 @@ public void execute() {
 - 14、【修复】IDOR越权问题修复，提升任务操作及日志管理安全性；
 - 15、【升级】升级多项maven依赖至较新版本，如 netty、groovy、mybatis、spring、spring-ai、dify 等；
 
-
 ### 7.41 版本 v3.2.1 Release Notes[规划中]
 - 1、【升级】升级多项maven依赖至较新版本，如 netty、groovy、spring、spring-ai、dify 等；
 - 2、【修复】合并PR-2369，修复脚本任务参数取值问题；
 - 3、【优化】报表统计SQL优化，修复小概率情况下查询null值问题；
 - 4、【ING】底层组件移除单例写法，汇总factory统一管理；
+- 5、【ING】UI框架重构升级，提升交互体验；
+- 6、【ING】调整资源加载逻辑，移除不必要的拦截器逻辑，提升页面加载效率；
+- 7、【ING】事务SQL下沉至Mapper统一管理，降低维护成本；
+- 8、【ING】规范API交互协议，通用响应结构体调整为Response；
+- 9、【ING】Http通讯组件升级，基于接口代理方式重构；
 
 
 ### TODO LIST
