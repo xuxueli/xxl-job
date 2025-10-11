@@ -8,6 +8,7 @@ import com.xxl.job.admin.core.trigger.TriggerTypeEnum;
 import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.context.XxlJobContext;
+import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
@@ -19,7 +20,11 @@ import java.text.MessageFormat;
  */
 public class XxlJobCompleter {
     private static Logger logger = LoggerFactory.getLogger(XxlJobCompleter.class);
-
+    public static String[] DISCARD_LATER_MSG_KEYWORDS ={
+            ExecutorBlockStrategyEnum.DISCARD_LATER.getTitle(),
+            "丢弃后续调度",
+            "丢棄后續調度"
+    };
     /**
      * common fresh handle entrance (limit only once)
      *
@@ -34,6 +39,19 @@ public class XxlJobCompleter {
         // text最大64kb 避免长度过长
         if (xxlJobLog.getHandleMsg().length() > 15000) {
             xxlJobLog.setHandleMsg( xxlJobLog.getHandleMsg().substring(0, 15000) );
+        }
+
+        // 处理因为阻塞策略导致的失败，这里转换为阻塞的状态，而不是直接失败
+        if(XxlJobContext.HANDLE_CODE_FAIL==xxlJobLog.getHandleCode()){
+            String handleMsg = xxlJobLog.getHandleMsg();
+            if(handleMsg!=null){
+                for (String item : DISCARD_LATER_MSG_KEYWORDS) {
+                    if(handleMsg.contains(item)){
+                        xxlJobLog.setHandleCode(XxlJobContext.HANDLE_CODE_SUCCESS);
+                        break;
+                    }
+                }
+            }
         }
 
         // fresh handle
