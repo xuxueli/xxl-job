@@ -29,6 +29,12 @@
         <result column="GROUP_TITLE" property="groupTitle" />
     </resultMap>
 
+    <resultMap id="logReportMap" type="com.xxl.job.admin.platform.data.LogReportDto">
+        <result column="TRIGGER_DAY_COUNT" property="triggerDayCount"/>
+        <result column="TRIGGER_DAY_COUNT_RUNNING" property="triggerDayCountRunning"/>
+        <result column="TRIGGER_DAY_COUNT_SUC" property="triggerDayCountSuc"/>
+    </resultMap>
+
     <sql id="Base_Column_List">
         t."ID",
 		t."JOB_GROUP",
@@ -177,12 +183,12 @@
 		ORDER BY triggerDay
     </select>-->
 
-    <select id="findLogReport" resultType="java.util.Map">
-        SELECT COUNT("HANDLE_CODE")                                    "triggerDayCount",
+    <select id="findLogReport" resultMap="logReportMap">
+        SELECT COUNT("HANDLE_CODE")                                 as   "TRIGGER_DAY_COUNT",
                SUM(CASE
                        WHEN ("TRIGGER_CODE" in (0, 200) and "HANDLE_CODE" = 0) then 1
-                       else 0 end)                                  as "triggerDayCountRunning",
-               SUM(CASE WHEN "HANDLE_CODE" = 200 then 1 else 0 end) as "triggerDayCountSuc"
+                       else 0 end)                                  as "TRIGGER_DAY_COUNT_RUNNING",
+               SUM(CASE WHEN "HANDLE_CODE" = 200 then 1 else 0 end) as "TRIGGER_DAY_COUNT_SUC"
         FROM XXL_JOB_LOG
         WHERE "TRIGGER_TIME" BETWEEN #{from,jdbcType=DATE} and #{to,jdbcType=DATE}
     </select>
