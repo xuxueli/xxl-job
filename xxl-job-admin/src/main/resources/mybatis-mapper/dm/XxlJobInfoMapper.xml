@@ -252,4 +252,55 @@
 		  AND "TRIGGER_STATUS" = 1
 	</update>
 
+	<sql id="batchCondition">
+		<choose>
+			<when test="post.operGroupIds!=null and !post.operGroupIds.isEmpty()">
+				and "JOB_GROUP" in
+				<foreach collection="post.operGroupIds" item="item" open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</when>
+			<otherwise>
+				and "ID" > 0
+			</otherwise>
+		</choose>
+		<if test="post.triggerStatus!=null">
+			and "TRIGGER_STATUS"=#{post.triggerStatus}
+		</if>
+		<if test="post.jobDesc!=null and post.jobDesc!=''">
+			and "JOB_DESC" like #{post.jobDesc}
+		</if>
+		<if test="post.executorHandler!=null and post.executorHandler!=''">
+			and "EXECUTOR_HANDLER" like #{post.executorHandler}
+		</if>
+		<if test="post.author!=null and post.author!=''">
+			and "AUTHOR" like #{post.author}
+		</if>
+	</sql>
+	<update id="batchChangeTriggerStatus">
+		update "XXL_JOB_INFO"
+		set "TRIGGER_STATUS"=#{triggerStatus}
+		where
+		<trim prefixOverrides="and|or">
+			<include refid="batchCondition"></include>
+		</trim>
+	</update>
+	<update id="batchUpdateScheduleConf">
+		update "XXL_JOB_INFO"
+		set
+		<trim prefixOverrides="," suffixOverrides=",">
+			<if test="post.scheduleType!=null and post.scheduleType!=''">
+				"SCHEDULE_TYPE"=#{post.scheduleType},
+			</if>
+			<if test="post.scheduleConf!=null and post.scheduleConf!=''">
+				"SCHEDULE_CONF"=#{post.scheduleConf},
+			</if>
+		</trim>
+		where
+		<trim prefixOverrides="and|or">
+			<include refid="batchCondition"></include>
+		</trim>
+	</update>
+
+
 </mapper>

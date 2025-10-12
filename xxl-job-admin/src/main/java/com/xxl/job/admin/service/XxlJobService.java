@@ -3,6 +3,7 @@ package com.xxl.job.admin.service;
 
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobUser;
+import com.xxl.job.admin.platform.data.LogBatchOperateDto;
 import com.xxl.job.core.biz.model.ReturnT;
 
 import java.util.Date;
@@ -95,4 +96,5 @@ public interface XxlJobService {
 	 */
 	public ReturnT<Map<String,Object>> chartInfo(Date startDate, Date endDate);
 
+    public ReturnT<String> batchOperate(LogBatchOperateDto operateDto, XxlJobUser loginUser);
 }

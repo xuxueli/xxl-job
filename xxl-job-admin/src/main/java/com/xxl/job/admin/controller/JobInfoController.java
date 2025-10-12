@@ -11,6 +11,7 @@ import com.xxl.job.admin.core.scheduler.ScheduleTypeEnum;
 import com.xxl.job.admin.core.thread.JobScheduleHelper;
 import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.admin.dao.XxlJobGroupDao;
+import com.xxl.job.admin.platform.data.LogBatchOperateDto;
 import com.xxl.job.admin.service.XxlJobService;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
@@ -162,4 +163,12 @@ public class JobInfoController {
 
 	}
 
+	@RequestMapping("/batch-operate")
+	@ResponseBody
+	public ReturnT<String> batchOperate(HttpServletRequest request, LogBatchOperateDto operateDto) {
+
+		// opt
+		XxlJobUser loginUser = PermissionInterceptor.getLoginUser(request);
+		return xxlJobService.batchOperate(operateDto, loginUser);
+	}
 }

@@ -13,6 +13,7 @@ import com.xxl.job.admin.core.thread.JobTriggerPoolHelper;
 import com.xxl.job.admin.core.trigger.TriggerTypeEnum;
 import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.admin.dao.*;
+import com.xxl.job.admin.platform.data.LogBatchOperateDto;
 import com.xxl.job.admin.platform.pageable.data.PageDto;
 import com.xxl.job.admin.service.XxlJobService;
 import com.xxl.job.core.biz.model.ReturnT;
@@ -27,6 +28,7 @@ import org.springframework.util.StringUtils;
 
 import java.text.MessageFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * core job action for xxl-job
@@ -505,4 +507,118 @@ public class XxlJobServiceImpl implements XxlJobService {
 		return new ReturnT<Map<String, Object>>(result);
 	}
 
+	@Override
+	public ReturnT<String> batchOperate(LogBatchOperateDto operateDto, XxlJobUser loginUser) {
+		String operateType = operateDto.getOperateType();
+		Integer groupRange = operateDto.getGroupRange();
+		operateDto.setOperGroupIds(new HashSet<>());
+		Set<Integer> permGroupIds = new HashSet<>();
+		Set<Integer> operGroupIds = operateDto.getOperGroupIds();
+		// 分解权限的执行器
+		if(loginUser!=null){
+			String permission = loginUser.getPermission();
+			if(permission!=null){
+				Set<Integer> ids = Arrays.stream(permission.split(","))
+						.map(String::trim)
+						.filter(e -> !e.isEmpty())
+						.map(Integer::parseInt)
+						.collect(Collectors.toSet());
+				permGroupIds.addAll(ids);
+			}
+			// 管理员则清除
+			if(loginUser.getRole()==1){
+				permGroupIds.clear();
+			}
+		}
+		if(groupRange==0){
+			operGroupIds.addAll(permGroupIds);
+		}else if(groupRange==1){
+			// 如果是当前执行器，则需要在权限范围内
+			Set<Integer> reqGroupIds=new HashSet<>();
+			String jobGroup = operateDto.getJobGroup();
+			if(jobGroup!=null){
+				Set<Integer> ids = Arrays.stream(jobGroup.split(","))
+						.map(String::trim)
+						.filter(e -> !e.isEmpty())
+						.map(Integer::parseInt)
+						.collect(Collectors.toSet());
+				reqGroupIds.addAll(ids);
+			}
+			if(permGroupIds.isEmpty()){
+				operGroupIds.addAll(reqGroupIds);
+			}else{
+				for (Integer id : reqGroupIds) {
+					if(permGroupIds.contains(id)){
+						operGroupIds.add(id);
+					}
+				}
+			}
+		}
+		// 如果仅当前的情况下，没有操作执行器，则设置一个不存在的
+		if(groupRange==1){
+			if(operGroupIds.isEmpty()){
+				operGroupIds.add(-1);
+			}
+		}
+		// mapper-xml 中的值进行预先处理，以更好兼容多数据库类型
+		if(operateDto.getTriggerStatus()!=null && operateDto.getTriggerStatus()<0){
+			operateDto.setTriggerStatus(null);
+		}
+		if(operateDto.getJobDesc()!=null){
+			String jobDesc = operateDto.getJobDesc().trim();
+			operateDto.setJobDesc(jobDesc);
+			if(!jobDesc.isEmpty()){
+				operateDto.setJobDesc("%"+jobDesc+"%");
+			}
+		}
+		if(operateDto.getExecutorHandler()!=null){
+			String executorHandler = operateDto.getExecutorHandler().trim();
+			operateDto.setExecutorHandler(executorHandler);
+			if(!executorHandler.isEmpty()){
+				operateDto.setExecutorHandler("%"+executorHandler+"%");
+			}
+		}
+		if(operateDto.getAuthor()!=null){
+			String author = operateDto.getAuthor().trim();
+			operateDto.setAuthor(author);
+			if(!author.isEmpty()){
+				operateDto.setAuthor("%"+author+"%");
+			}
+		}
+		if(operateDto.getScheduleType()!=null){
+			String scheduleType = operateDto.getScheduleType().trim();
+			operateDto.setScheduleType(scheduleType);
+			if("NOP".equalsIgnoreCase(scheduleType) || scheduleType.isEmpty()){
+				operateDto.setScheduleType(null);
+			}
+		}
+		if(operateDto.getScheduleConf()!=null){
+			String scheduleConf = operateDto.getScheduleConf().trim();
+			operateDto.setScheduleConf(scheduleConf);
+			if(scheduleConf.isEmpty()){
+				operateDto.setScheduleConf(null);
+			}
+		}
+		// 开始执行语句
+		if("stop".equals(operateType)){
+			xxlJobInfoDao.batchChangeTriggerStatus(operateDto,0,loginUser);
+		}else if("run".equals(operateType)){
+			xxlJobInfoDao.batchChangeTriggerStatus(operateDto,1,loginUser);
+		}else if("update".equals(operateType)){
+			boolean hasUpdateItem=false;
+			if(StringUtils.hasText(operateDto.getScheduleType())){
+				hasUpdateItem=true;
+			}
+			if(StringUtils.hasText(operateDto.getScheduleConf())){
+				hasUpdateItem=true;
+			}
+			if(!hasUpdateItem){
+				return ReturnT.FAIL;
+			}
+			xxlJobInfoDao.batchUpdateScheduleConf(operateDto,loginUser);
+		}else{
+			return ReturnT.FAIL;
+		}
+		return ReturnT.SUCCESS;
+	}
 }

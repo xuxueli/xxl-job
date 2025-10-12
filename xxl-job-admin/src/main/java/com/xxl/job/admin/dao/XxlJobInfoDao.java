@@ -1,10 +1,15 @@
 package com.xxl.job.admin.dao;
 
 import com.xxl.job.admin.core.model.XxlJobInfo;
+import com.xxl.job.admin.core.model.XxlJobUser;
+import com.xxl.job.admin.platform.data.LogBatchOperateDto;
 import com.xxl.job.admin.platform.pageable.data.PageDto;
+import javafx.print.Collation;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -61,4 +66,10 @@ public interface XxlJobInfoDao {
 	public int scheduleUpdate(XxlJobInfo xxlJobInfo);
 
 
+    public int batchChangeTriggerStatus(@Param("post")LogBatchOperateDto post,
+								 @Param("triggerStatus")int triggerStatus,
+								 @Param("loginUser")XxlJobUser loginUser);
+
+	public int batchUpdateScheduleConf(@Param("post")LogBatchOperateDto post,
+									   @Param("loginUser")XxlJobUser loginUser);
 }

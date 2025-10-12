@@ -23,7 +23,7 @@
 		
 		<!-- Main content -->
 	    <section class="content">
-	    
+
 	    	<div class="row">
 	    		<div class="col-xs-3">
 	              	<div class="input-group">
@@ -66,6 +66,43 @@
 	            	<button class="btn btn-block btn-success add" type="button">${I18n.jobinfo_field_add}</button>
 	            </div>
           	</div>
+
+            <div class="row" style="margin-top: 3px">
+                <div class="col-xs-3">
+                    <div class="input-group">
+                        <span class="input-group-addon">${I18n.jobinfo_batch_ops_group_range}</span>
+                        <select class="form-control" id="batchOpsGroupRange" >
+                            <option value="0" >${I18n.jobinfo_batch_ops_group_all}</option>
+                            <option value="1" selected>${I18n.jobinfo_batch_ops_group_current}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-xs-1">
+                    <button class="btn btn-block btn-info" style="width: auto;" id="batchOpsStop">${I18n.jobinfo_batch_ops_stop}</button>
+                </div>
+                <div class="col-xs-1">
+                    <button class="btn btn-block btn-success" style="width: auto;" id="batchOpsRun">${I18n.jobinfo_batch_ops_run}</button>
+                </div>
+                <div class="col-xs-3">
+                    <div class="input-group">
+                        <span class="input-group-addon">${I18n.schedule_type}</span>
+                        <select class="form-control scheduleType" id="batchOpsScheduleType" >
+                            <option value="NOP" selected>${I18n.jobinfo_batch_ops_not_select}</option>
+                            <#list ScheduleTypeEnum as item>
+                            <option value="${item}" >${item.title}</option>
+                            </#list>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-xs-2">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="batchOpsScheduleConf" placeholder="${I18n.system_please_input}${I18n.jobinfo_conf_schedule}" >
+                    </div>
+                </div>
+                <div class="col-xs-1">
+                    <button class="btn btn-block btn-success" style="width: auto;" id="batchOpsUpdate">${I18n.jobinfo_batch_ops_update}</button>
+                </div>
+            </div>
 	    	
 			<div class="row">
 				<div class="col-xs-12">
