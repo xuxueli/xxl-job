@@ -42,13 +42,15 @@ public class XxlJobCompleter {
         }
 
         // 处理因为阻塞策略导致的失败，这里转换为阻塞的状态，而不是直接失败
-        if(XxlJobContext.HANDLE_CODE_FAIL==xxlJobLog.getHandleCode()){
-            String handleMsg = xxlJobLog.getHandleMsg();
-            if(handleMsg!=null){
-                for (String item : DISCARD_LATER_MSG_KEYWORDS) {
-                    if(handleMsg.contains(item)){
-                        xxlJobLog.setHandleCode(XxlJobContext.HANDLE_CODE_SUCCESS);
-                        break;
+        if(XxlJobAdminConfig.getAdminConfig().isDiscardLaterAsSuccess()) {
+            if (XxlJobContext.HANDLE_CODE_FAIL == xxlJobLog.getHandleCode()) {
+                String handleMsg = xxlJobLog.getHandleMsg();
+                if (handleMsg != null) {
+                    for (String item : DISCARD_LATER_MSG_KEYWORDS) {
+                        if (handleMsg.contains(item)) {
+                            xxlJobLog.setHandleCode(XxlJobContext.HANDLE_CODE_SUCCESS);
+                            break;
+                        }
                     }
                 }
             }
