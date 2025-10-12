@@ -39,8 +39,23 @@ Now, it's already open source, and many companies use it in production environme
 
 XXL-JOB是一个分布式任务调度平台，其核心设计目标是开发迅速、学习简单、轻量级、易扩展。现已开放源代码并接入多家公司线上产品线，开箱即用。
 
+
 ## fork introduce
-- please view README.multiply.md
+- this repository aim to adapt multiply database type platform for xxl-job-admin
+- we provide mysql/oracle/postgre/sqlserver/etc. database type
+- and provide some secure/useful features
+- we only enhance xxl-job-admin, not effect xxl-job-core
+- so, you can use official xxl-job-core and this repo's xxl-job-admin
+- more information please view README.multiply.md
+
+[README.multiply.md](README.multiply.md)
+
+- 本仓库的目标是为 xxl-job-admin 提供多数据的适配
+- 我们提供 mysql/oracle/postgre/sqlserver 等数据库类型的支持
+- 同时提供一些安全/有用的特性
+- 我们仅仅对 xxl-job-admin 进行增强，不影响 xxl-job-core
+- 所以，你可以使用官方的 xxl-job-core 和本仓库的 xxl-job-admin
+- 更多详情请查看 README.multiply.md
 
 [README.multiply.md](README.multiply.md)
 
