@@ -1,5 +1,6 @@
 package com.xxl.job.admin.controller.biz;
 
+import com.xxl.job.admin.platform.data.LogBatchOperateDto;
 import com.xxl.tool.response.Response;
 import com.xxl.sso.core.helper.XxlSsoHelper;
 import com.xxl.job.admin.mapper.XxlJobGroupMapper;
@@ -168,6 +169,15 @@ public class JobInfoController {
         }
         return ReturnT.ofSuccess(result);
 
+    }
+
+    @RequestMapping("/batch-operate")
+    @ResponseBody
+    public ReturnT<String> batchOperate(HttpServletRequest request, LogBatchOperateDto operateDto) {
+
+        // opt
+        Response<LoginInfo> loginInfoResponse = XxlSsoHelper.loginCheckWithAttr(request);
+        return xxlJobService.batchOperate(operateDto, loginInfoResponse.getData());
     }
 
 }

@@ -1,5 +1,6 @@
 package com.xxl.job.admin.service.impl;
 
+import com.xxl.job.admin.constant.Consts;
 import com.xxl.job.admin.mapper.*;
 import com.xxl.job.admin.model.XxlJobGroup;
 import com.xxl.job.admin.model.XxlJobInfo;
@@ -20,6 +21,7 @@ import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
 import com.xxl.job.core.glue.GlueTypeEnum;
 import com.xxl.job.core.util.DateUtil;
+import com.xxl.sso.core.helper.XxlSsoHelper;
 import com.xxl.sso.core.model.LoginInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -515,16 +517,16 @@ public class XxlJobServiceImpl implements XxlJobService {
     }
 
 	@Override
-	public ReturnT<String> batchOperate(LogBatchOperateDto operateDto, XxlJobUser loginUser) {
+	public ReturnT<String> batchOperate(LogBatchOperateDto operateDto, LoginInfo loginInfo) {
 		String operateType = operateDto.getOperateType();
 		Integer groupRange = operateDto.getGroupRange();
 		operateDto.setOperGroupIds(new HashSet<>());
 		Set<Integer> permGroupIds = new HashSet<>();
 		Set<Integer> operGroupIds = operateDto.getOperGroupIds();
 		// 分解权限的执行器
-		if(loginUser!=null){
-			String permission = loginUser.getPermission();
-			if(permission!=null){
+		if(loginInfo!=null){
+            String permission=loginInfo.getExtraInfo()!=null?loginInfo.getExtraInfo().get("jobGroups"):null;
+            if(permission!=null){
 				Set<Integer> ids = Arrays.stream(permission.split(","))
 						.map(String::trim)
 						.filter(e -> !e.isEmpty())
@@ -533,7 +535,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 				permGroupIds.addAll(ids);
 			}
 			// 管理员则清除
-			if(loginUser.getRole()==1){
+			if(XxlSsoHelper.hasRole(loginInfo, Consts.ADMIN_ROLE).isSuccess()){
 				permGroupIds.clear();
 			}
 		}
@@ -608,9 +610,9 @@ public class XxlJobServiceImpl implements XxlJobService {
 		}
 		// 开始执行语句
 		if("stop".equals(operateType)){
-			xxlJobInfoDao.batchChangeTriggerStatus(operateDto,0,loginUser);
+            xxlJobInfoMapper.batchChangeTriggerStatus(operateDto,0,loginInfo);
 		}else if("run".equals(operateType)){
-			xxlJobInfoDao.batchChangeTriggerStatus(operateDto,1,loginUser);
+            xxlJobInfoMapper.batchChangeTriggerStatus(operateDto,1,loginInfo);
 		}else if("update".equals(operateType)){
 			boolean hasUpdateItem=false;
 			if(StringUtils.hasText(operateDto.getScheduleType())){
@@ -620,12 +622,12 @@ public class XxlJobServiceImpl implements XxlJobService {
 				hasUpdateItem=true;
 			}
 			if(!hasUpdateItem){
-				return ReturnT.FAIL;
+				return ReturnT.ofFail();
 			}
-			xxlJobInfoDao.batchUpdateScheduleConf(operateDto,loginUser);
+            xxlJobInfoMapper.batchUpdateScheduleConf(operateDto,loginInfo);
 		}else{
-			return ReturnT.FAIL;
+			return ReturnT.ofFail();
 		}
-		return ReturnT.SUCCESS;
+		return ReturnT.ofSuccess();
 	}
 }
