@@ -231,6 +231,121 @@ $(function() {
         window.location.href = base_url + "/jobinfo?jobGroup=" + jobGroup;
     });
 
+	function doBatchOps(type){
+		// updates
+		var batchOpsScheduleType=$('#batchOpsScheduleType').val();
+		var batchOpsScheduleTypeText=$('#batchOpsScheduleType option:selected').text();
+		var batchOpsScheduleConf=$('#batchOpsScheduleConf').val().trim();
+
+		// conditions
+		var batchOpsGroupRange=$('#batchOpsGroupRange').val()
+		var batchOpsGroupRangeText=$('#batchOpsGroupRange option:selected').text()
+		var jobGroup=$('#jobGroup').val();
+		var jobGroupText=$('#jobGroup option:selected').text();
+		var triggerStatus=$('#triggerStatus').val();
+		var triggerStatusText=$('#triggerStatus option:selected').text();
+		var jobDesc=$('#jobDesc').val().trim();
+		var executorHandler=$('#executorHandler').val().trim();
+		var author=$('#author').val().trim();
+
+		var confirmText=``;
+		if(type=='stop'){
+			confirmText+=`${I18n.system_ok}${I18n.jobinfo_batch_ops_stop}？<br/>`;
+		}else if(type=='run'){
+			confirmText+=`${I18n.system_ok}${I18n.jobinfo_batch_ops_run}？<br/>`;
+		}else if(type=='update'){
+			confirmText+=`${I18n.system_ok}${I18n.jobinfo_batch_ops_update}？<br/>`;
+		}
+		if(type=='update'){
+			var updateText=''
+			if(batchOpsScheduleType!='NOP'){
+				updateText+=`${I18n.schedule_type}=${batchOpsScheduleTypeText}<br/>`;
+			}
+			if(batchOpsScheduleConf.length>0) {
+				updateText += `and ${I18n.jobinfo_conf_schedule} = ${batchOpsScheduleConf}<br/>`;
+			}
+			if(updateText.length==0){
+				layer.msg( I18n.jobinfo_batch_ops_no_update_item );
+				return;
+			}
+			confirmText+=`${I18n.jobinfo_batch_ops_update_item}：<br/>`;
+			confirmText+=updateText;
+
+		}
+		confirmText+=`${I18n.jobinfo_batch_ops_operate_condition}：<br/>`;
+		confirmText+=`${I18n.jobinfo_batch_ops_group_range}=${batchOpsGroupRangeText}<br/>`;
+		if(batchOpsGroupRange==1) {
+			confirmText += `and ${I18n.jobinfo_field_jobgroup}=${jobGroupText}<br/>`;
+		}
+		confirmText+=`and ${I18n.joblog_status}=${triggerStatusText}<br/>`;
+		if(jobDesc.length>0) {
+			confirmText += `and ${I18n.jobinfo_field_jobdesc} like '%${jobDesc}%'<br/>`;
+		}
+		if(executorHandler.length>0) {
+			confirmText += `and JobHandler like '%${executorHandler}%'<br/>`;
+		}
+		if(author.length>0) {
+			confirmText += `and ${I18n.jobinfo_field_author} like '%${author}%'<br/>`;
+		}
+
+		layer.confirm( (confirmText) , {
+			icon: 3,
+			title: I18n.system_tips ,
+			btn: [ I18n.system_ok, I18n.system_cancel ]
+		}, function(index){
+			layer.close(index);
+
+			$.ajax({
+				type : 'POST',
+				url : base_url + '/jobinfo/batch-operate',
+				data : {
+					operateType: type,
+					scheduleType: batchOpsScheduleType,
+					scheduleConf: batchOpsScheduleConf,
+					groupRange: batchOpsGroupRange,
+					jobGroup: jobGroup,
+					triggerStatus: triggerStatus,
+					jobDesc: jobDesc,
+					executorHandler: executorHandler,
+					author: author
+				},
+				dataType : "json",
+				success : function(data){
+					if (data.code == 200) {
+						layer.open({
+							title: I18n.system_tips ,
+							btn: [ I18n.system_ok ],
+							content: ( I18n.system_success),
+							icon: '1',
+							end: function(layero, index){
+								jobTable.fnDraw();
+							}
+						});
+					} else {
+						layer.open({
+							title: I18n.system_tips,
+							btn: [ I18n.system_ok ],
+							content: (data.msg || ( I18n.system_fail)),
+							icon: '2'
+						});
+					}
+				},
+			});
+		});
+	}
+
+	$("#batchOpsStop").on('click',function() {
+		doBatchOps('stop');
+	});
+
+	$("#batchOpsRun").on('click',function() {
+		doBatchOps('run');
+	});
+
+	$("#batchOpsUpdate").on('click',function() {
+		doBatchOps('update');
+	});
+
 	// job operate
 	$("#job_list").on('click', '.job_operate',function() {
 		var typeName;

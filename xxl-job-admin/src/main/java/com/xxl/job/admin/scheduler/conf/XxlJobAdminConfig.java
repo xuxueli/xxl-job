@@ -71,6 +71,9 @@ public class XxlJobAdminConfig implements InitializingBean, DisposableBean {
     @Value("${xxl.job.logretentiondays}")
     private int logretentiondays;
 
+    @Value("${xxl.job.discard-later-as-success.enable:false}")
+    private boolean discardLaterAsSuccess;
+
     // dao, service
 
     @Resource
@@ -133,6 +136,10 @@ public class XxlJobAdminConfig implements InitializingBean, DisposableBean {
             return -1;  // Limit greater than or equal to 3, otherwise close
         }
         return logretentiondays;
+    }
+
+    public boolean isDiscardLaterAsSuccess() {
+        return discardLaterAsSuccess;
     }
 
     public XxlJobLogMapper getXxlJobLogMapper() {

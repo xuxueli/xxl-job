@@ -1,6 +1,7 @@
 package com.xxl.job.admin.mapper;
 
 import com.xxl.job.admin.model.XxlJobLog;
+import com.xxl.job.admin.platform.data.LogReportDto;
 import com.xxl.job.admin.platform.pageable.data.PageDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -42,8 +43,8 @@ public interface XxlJobLogMapper {
 
     public int delete(@Param("jobId") int jobId);
 
-    public Map<String, Object> findLogReport(@Param("from") Date from,
-                                             @Param("to") Date to);
+    public LogReportDto findLogReport(@Param("from") Date from,
+                                      @Param("to") Date to);
 
     public List<Long> findClearLogIds(@Param("jobGroup") int jobGroup,
                                       @Param("jobId") int jobId,
