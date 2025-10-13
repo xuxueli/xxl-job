@@ -3,6 +3,7 @@ package com.xxl.job.admin.scheduler.trigger;
 import com.xxl.job.admin.model.XxlJobGroup;
 import com.xxl.job.admin.model.XxlJobInfo;
 import com.xxl.job.admin.model.XxlJobLog;
+import com.xxl.job.admin.scheduler.complete.XxlJobCompleter;
 import com.xxl.job.admin.scheduler.conf.XxlJobAdminConfig;
 import com.xxl.job.admin.scheduler.route.ExecutorRouteStrategyEnum;
 import com.xxl.job.admin.scheduler.scheduler.XxlJobScheduler;
@@ -10,6 +11,7 @@ import com.xxl.job.admin.util.I18nUtil;
 import com.xxl.job.core.biz.ExecutorBiz;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.biz.model.TriggerParam;
+import com.xxl.job.core.context.XxlJobContext;
 import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
 import com.xxl.job.core.util.IpUtil;
 import com.xxl.job.core.util.ThrowableUtil;
@@ -192,6 +194,23 @@ public class XxlJobTrigger {
         //jobLog.setTriggerTime();
         jobLog.setTriggerCode(triggerResult.getCode());
         jobLog.setTriggerMsg(triggerMsgSb.toString());
+
+
+        // 处理因为阻塞策略导致的失败，这里转换为阻塞的状态，而不是直接失败
+        if(XxlJobAdminConfig.getAdminConfig().isDiscardLaterAsSuccess()) {
+            if (XxlJobContext.HANDLE_CODE_FAIL == jobLog.getTriggerCode()) {
+                String handleMsg = jobLog.getTriggerMsg();
+                if (handleMsg != null) {
+                    for (String item : XxlJobCompleter.DISCARD_LATER_MSG_KEYWORDS) {
+                        if (handleMsg.contains(item)) {
+                            jobLog.setTriggerCode(XxlJobContext.HANDLE_CODE_SUCCESS);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
         XxlJobAdminConfig.getAdminConfig().getXxlJobLogMapper().updateTriggerInfo(jobLog);
 
         logger.debug(">>>>>>>>>>> xxl-job trigger end, jobId:{}", jobLog.getId());
