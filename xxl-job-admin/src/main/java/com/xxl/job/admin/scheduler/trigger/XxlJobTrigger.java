@@ -197,6 +197,7 @@ public class XxlJobTrigger {
 
 
         // 处理因为阻塞策略导致的失败，这里转换为阻塞的状态，而不是直接失败
+        boolean matched=false;
         if(XxlJobAdminConfig.getAdminConfig().isDiscardLaterAsSuccess()) {
             if (XxlJobContext.HANDLE_CODE_FAIL == jobLog.getTriggerCode()) {
                 String handleMsg = jobLog.getTriggerMsg();
@@ -204,6 +205,7 @@ public class XxlJobTrigger {
                     for (String item : XxlJobCompleter.DISCARD_LATER_MSG_KEYWORDS) {
                         if (handleMsg.contains(item)) {
                             jobLog.setTriggerCode(XxlJobContext.HANDLE_CODE_SUCCESS);
+                            matched=true;
                             break;
                         }
                     }
@@ -212,6 +214,15 @@ public class XxlJobTrigger {
         }
 
         XxlJobAdminConfig.getAdminConfig().getXxlJobLogMapper().updateTriggerInfo(jobLog);
+
+        if(matched){
+            XxlJobLog updInfo=new XxlJobLog();
+            updInfo.setId(jobLog.getId());
+            updInfo.setHandleCode(XxlJobContext.HANDLE_CODE_SUCCESS);
+            updInfo.setHandleMsg("msg: "+ExecutorBlockStrategyEnum.DISCARD_LATER.getTitle());
+            updInfo.setHandleTime(new Date());
+            XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().updateHandleInfo(updInfo);
+        }
 
         logger.debug(">>>>>>>>>>> xxl-job trigger end, jobId:{}", jobLog.getId());
     }
