@@ -221,7 +221,7 @@ public class XxlJobTrigger {
             updInfo.setHandleCode(XxlJobContext.HANDLE_CODE_SUCCESS);
             updInfo.setHandleMsg("msg: "+ExecutorBlockStrategyEnum.DISCARD_LATER.getTitle());
             updInfo.setHandleTime(new Date());
-            XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().updateHandleInfo(updInfo);
+            XxlJobAdminConfig.getAdminConfig().getXxlJobLogMapper().updateHandleInfo(updInfo);
         }
 
         logger.debug(">>>>>>>>>>> xxl-job trigger end, jobId:{}", jobLog.getId());
