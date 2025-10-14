@@ -21,7 +21,8 @@ import java.text.MessageFormat;
 public class XxlJobCompleter {
     private static Logger logger = LoggerFactory.getLogger(XxlJobCompleter.class);
     public static String[] DISCARD_LATER_MSG_KEYWORDS ={
-            "block strategy effect："+ExecutorBlockStrategyEnum.DISCARD_LATER.getTitle()
+            "block strategy effect："+ExecutorBlockStrategyEnum.DISCARD_LATER.getTitle(),
+            ExecutorBlockStrategyEnum.DISCARD_LATER.getTitle()
     };
     /**
      * common fresh handle entrance (limit only once)
