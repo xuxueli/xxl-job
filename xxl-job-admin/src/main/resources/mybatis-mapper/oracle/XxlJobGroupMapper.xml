@@ -41,7 +41,7 @@
             select SEQ_XXL_JOB_GROUP_ID.nextval from dual
         </selectKey>
         INSERT INTO XXL_JOB_GROUP ( "ID","APP_NAME", "TITLE", "ADDRESS_TYPE", "ADDRESS_LIST", "UPDATE_TIME")
-        values ( #{id,jdbcType=NUMERIC},#{appname,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, #{addressType,jdbcType=NUMERIC}, #{addressList,jdbcType=VARCHAR}, #{updateTime,jdbcType=DATE} )
+        values ( #{id,jdbcType=NUMERIC},#{appname,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, #{addressType,jdbcType=NUMERIC}, #{addressList,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP} )
     </insert>
 
     <update id="update" parameterType="com.xxl.job.admin.core.model.XxlJobGroup">
@@ -50,7 +50,7 @@
             "TITLE"        = #{title,jdbcType=VARCHAR},
             "ADDRESS_TYPE" = #{addressType,jdbcType=NUMERIC},
             "ADDRESS_LIST" = #{addressList,jdbcType=VARCHAR},
-            "UPDATE_TIME"  = #{updateTime,jdbcType=DATE}
+            "UPDATE_TIME"  = #{updateTime,jdbcType=TIMESTAMP}
         WHERE "ID" = #{id,jdbcType=NUMERIC}
     </update>
 

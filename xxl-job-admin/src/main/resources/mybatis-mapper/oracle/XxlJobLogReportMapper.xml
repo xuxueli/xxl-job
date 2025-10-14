@@ -32,7 +32,7 @@
         "FAIL_COUNT"
         ) VALUES (
         #{id,jdbcType=NUMERIC},
-        #{triggerDay,jdbcType=DATE},
+        #{triggerDay,jdbcType=TIMESTAMP},
         #{runningCount,jdbcType=NUMERIC},
         #{sucCount,jdbcType=NUMERIC},
         #{failCount,jdbcType=NUMERIC}
@@ -45,14 +45,14 @@
         SET "RUNNING_COUNT" = #{runningCount,jdbcType=NUMERIC},
             "SUC_COUNT"     = #{sucCount,jdbcType=NUMERIC},
             "FAIL_COUNT"    = #{failCount,jdbcType=NUMERIC}
-        WHERE "TRIGGER_DAY" = #{triggerDay,jdbcType=DATE}
+        WHERE "TRIGGER_DAY" = #{triggerDay,jdbcType=TIMESTAMP}
     </update>
 
     <select id="queryLogReport" resultMap="XxlJobLogReport">
         SELECT
         <include refid="Base_Column_List"/>
         FROM XXL_JOB_LOG_REPORT t
-        WHERE t."TRIGGER_DAY" between #{triggerDayFrom,jdbcType=DATE} and #{triggerDayTo,jdbcType=DATE}
+        WHERE t."TRIGGER_DAY" between #{triggerDayFrom,jdbcType=TIMESTAMP} and #{triggerDayTo,jdbcType=TIMESTAMP}
         ORDER BY t."TRIGGER_DAY" ASC
     </select>
 
