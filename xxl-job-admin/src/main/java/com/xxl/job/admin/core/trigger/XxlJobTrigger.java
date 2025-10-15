@@ -205,9 +205,13 @@ public class XxlJobTrigger {
             if (XxlJobContext.HANDLE_CODE_FAIL == jobLog.getTriggerCode()) {
                 String handleMsg = jobLog.getTriggerMsg();
                 if (handleMsg != null) {
+                    int idx = handleMsg.indexOf("<<<<<<<");
+                    if(idx>=0){
+                        handleMsg=handleMsg.substring(idx);
+                    }
                     handleMsg=handleMsg.trim();
                     for (String item : XxlJobCompleter.DISCARD_LATER_MSG_KEYWORDS) {
-                        if (handleMsg.endsWith(item)) {
+                        if (handleMsg.contains(item)) {
                             jobLog.setTriggerCode(XxlJobContext.HANDLE_CODE_SUCCESS);
                             matched=true;
                             break;
