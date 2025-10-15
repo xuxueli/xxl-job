@@ -21,9 +21,12 @@ import java.text.MessageFormat;
 public class XxlJobCompleter {
     private static Logger logger = LoggerFactory.getLogger(XxlJobCompleter.class);
     public static String[] DISCARD_LATER_MSG_KEYWORDS ={
+            "block strategy effect：Discard Later",
             ExecutorBlockStrategyEnum.DISCARD_LATER.getTitle(),
+            ExecutorBlockStrategyEnum.DISCARD_LATER.name(),
             "丢弃后续调度",
             "丢棄后續調度"
+
     };
     /**
      * common fresh handle entrance (limit only once)
@@ -46,6 +49,11 @@ public class XxlJobCompleter {
             if (XxlJobContext.HANDLE_CODE_FAIL == xxlJobLog.getHandleCode()) {
                 String handleMsg = xxlJobLog.getHandleMsg();
                 if (handleMsg != null) {
+                    int idx = handleMsg.indexOf("<<<<<<<");
+                    if(idx>=0){
+                        handleMsg=handleMsg.substring(idx);
+                    }
+                    handleMsg=handleMsg.trim();
                     for (String item : DISCARD_LATER_MSG_KEYWORDS) {
                         if (handleMsg.contains(item)) {
                             xxlJobLog.setHandleCode(XxlJobContext.HANDLE_CODE_SUCCESS);
