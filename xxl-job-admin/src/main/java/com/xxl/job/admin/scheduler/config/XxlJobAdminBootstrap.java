@@ -1,4 +1,4 @@
-package com.xxl.job.admin.scheduler.conf;
+package com.xxl.job.admin.scheduler.config;
 
 import com.xxl.job.admin.scheduler.alarm.JobAlarmer;
 import com.xxl.job.admin.scheduler.scheduler.XxlJobScheduler;
@@ -20,10 +20,10 @@ import java.util.Arrays;
  */
 
 @Component
-public class XxlJobAdminConfig implements InitializingBean, DisposableBean {
+public class XxlJobAdminBootstrap implements InitializingBean, DisposableBean {
 
-    private static XxlJobAdminConfig adminConfig = null;
-    public static XxlJobAdminConfig getAdminConfig() {
+    private static XxlJobAdminBootstrap adminConfig = null;
+    public static XxlJobAdminBootstrap getAdminConfig() {
         return adminConfig;
     }
 

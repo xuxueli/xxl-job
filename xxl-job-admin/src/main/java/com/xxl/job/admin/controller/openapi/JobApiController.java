@@ -1,6 +1,6 @@
 package com.xxl.job.admin.controller.openapi;
 
-import com.xxl.job.admin.scheduler.conf.XxlJobAdminConfig;
+import com.xxl.job.admin.scheduler.config.XxlJobAdminBootstrap;
 import com.xxl.job.core.biz.AdminBiz;
 import com.xxl.job.core.biz.model.HandleCallbackParam;
 import com.xxl.job.core.biz.model.RegistryParam;
@@ -48,8 +48,8 @@ public class JobApiController {
         if (StringTool.isBlank(uri)) {
             return ReturnT.ofFail("invalid request, uri-mapping empty.");
         }
-        if (StringTool.isNotBlank(XxlJobAdminConfig.getAdminConfig().getAccessToken())
-                && !XxlJobAdminConfig.getAdminConfig().getAccessToken().equals(request.getHeader(XxlJobRemotingUtil.XXL_JOB_ACCESS_TOKEN))) {
+        if (StringTool.isNotBlank(XxlJobAdminBootstrap.getAdminConfig().getAccessToken())
+                && !XxlJobAdminBootstrap.getAdminConfig().getAccessToken().equals(request.getHeader(XxlJobRemotingUtil.XXL_JOB_ACCESS_TOKEN))) {
             return ReturnT.ofFail("The access token is wrong.");
         }
 

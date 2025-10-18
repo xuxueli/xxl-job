@@ -1,6 +1,6 @@
 package com.xxl.job.admin.scheduler.scheduler;
 
-import com.xxl.job.admin.scheduler.conf.XxlJobAdminConfig;
+import com.xxl.job.admin.scheduler.config.XxlJobAdminBootstrap;
 import com.xxl.job.admin.scheduler.thread.*;
 import com.xxl.job.admin.util.I18nUtil;
 import com.xxl.job.core.biz.ExecutorBiz;
@@ -93,8 +93,8 @@ public class XxlJobScheduler  {
 
         // set-cache
         executorBiz = new ExecutorBizClient(address,
-                XxlJobAdminConfig.getAdminConfig().getAccessToken(),
-                XxlJobAdminConfig.getAdminConfig().getTimeout());
+                XxlJobAdminBootstrap.getAdminConfig().getAccessToken(),
+                XxlJobAdminBootstrap.getAdminConfig().getTimeout());
 
         executorBizRepository.put(address, executorBiz);
         return executorBiz;

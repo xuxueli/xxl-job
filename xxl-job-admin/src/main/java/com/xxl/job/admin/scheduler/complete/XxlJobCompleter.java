@@ -1,6 +1,6 @@
 package com.xxl.job.admin.scheduler.complete;
 
-import com.xxl.job.admin.scheduler.conf.XxlJobAdminConfig;
+import com.xxl.job.admin.scheduler.config.XxlJobAdminBootstrap;
 import com.xxl.job.admin.model.XxlJobInfo;
 import com.xxl.job.admin.model.XxlJobLog;
 import com.xxl.job.admin.scheduler.thread.JobTriggerPoolHelper;
@@ -36,7 +36,7 @@ public class XxlJobCompleter {
         }
 
         // fresh handle
-        return XxlJobAdminConfig.getAdminConfig().getXxlJobLogMapper().updateHandleInfo(xxlJobLog);
+        return XxlJobAdminBootstrap.getAdminConfig().getXxlJobLogMapper().updateHandleInfo(xxlJobLog);
     }
 
 
@@ -48,7 +48,7 @@ public class XxlJobCompleter {
         // 1、handle success, to trigger child job
         String triggerChildMsg = null;
         if (XxlJobContext.HANDLE_CODE_SUCCESS == xxlJobLog.getHandleCode()) {
-            XxlJobInfo xxlJobInfo = XxlJobAdminConfig.getAdminConfig().getXxlJobInfoMapper().loadById(xxlJobLog.getJobId());
+            XxlJobInfo xxlJobInfo = XxlJobAdminBootstrap.getAdminConfig().getXxlJobInfoMapper().loadById(xxlJobLog.getJobId());
             if (xxlJobInfo!=null && xxlJobInfo.getChildJobId()!=null && xxlJobInfo.getChildJobId().trim().length()>0) {
                 triggerChildMsg = "<br><br><span style=\"color:#00c0ef;\" > >>>>>>>>>>>"+ I18nUtil.getString("jobconf_trigger_child_run") +"<<<<<<<<<<< </span><br>";
 

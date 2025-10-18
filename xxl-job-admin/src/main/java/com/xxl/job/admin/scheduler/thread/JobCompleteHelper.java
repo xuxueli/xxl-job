@@ -1,7 +1,7 @@
 package com.xxl.job.admin.scheduler.thread;
 
 import com.xxl.job.admin.scheduler.complete.XxlJobCompleter;
-import com.xxl.job.admin.scheduler.conf.XxlJobAdminConfig;
+import com.xxl.job.admin.scheduler.config.XxlJobAdminBootstrap;
 import com.xxl.job.admin.model.XxlJobLog;
 import com.xxl.job.admin.util.I18nUtil;
 import com.xxl.job.core.biz.model.HandleCallbackParam;
@@ -76,7 +76,7 @@ public class JobCompleteHelper {
 					try {
 						// 任务结果丢失处理：调度记录停留在 "运行中" 状态超过10min，且对应执行器心跳注册失败不在线，则将本地调度主动标记失败；
 						Date losedTime = DateUtil.addMinutes(new Date(), -10);
-						List<Long> losedJobIds  = XxlJobAdminConfig.getAdminConfig().getXxlJobLogMapper().findLostJobIds(losedTime);
+						List<Long> losedJobIds  = XxlJobAdminBootstrap.getAdminConfig().getXxlJobLogMapper().findLostJobIds(losedTime);
 
 						if (losedJobIds!=null && losedJobIds.size()>0) {
 							for (Long logId: losedJobIds) {
@@ -153,7 +153,7 @@ public class JobCompleteHelper {
 
 	private ReturnT<String> callback(HandleCallbackParam handleCallbackParam) {
 		// valid log item
-		XxlJobLog log = XxlJobAdminConfig.getAdminConfig().getXxlJobLogMapper().load(handleCallbackParam.getLogId());
+		XxlJobLog log = XxlJobAdminBootstrap.getAdminConfig().getXxlJobLogMapper().load(handleCallbackParam.getLogId());
 		if (log == null) {
 			return ReturnT.ofFail( "log item not found.");
 		}
