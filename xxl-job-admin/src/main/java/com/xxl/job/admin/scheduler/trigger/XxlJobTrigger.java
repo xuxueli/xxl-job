@@ -5,7 +5,6 @@ import com.xxl.job.admin.model.XxlJobGroup;
 import com.xxl.job.admin.model.XxlJobInfo;
 import com.xxl.job.admin.model.XxlJobLog;
 import com.xxl.job.admin.scheduler.route.ExecutorRouteStrategyEnum;
-import com.xxl.job.admin.scheduler.scheduler.XxlJobScheduler;
 import com.xxl.job.admin.util.I18nUtil;
 import com.xxl.job.core.biz.ExecutorBiz;
 import com.xxl.job.core.biz.model.ReturnT;
@@ -49,7 +48,7 @@ public class XxlJobTrigger {
                                String addressList) {
 
         // load data
-        XxlJobInfo jobInfo = XxlJobAdminBootstrap.getAdminConfig().getXxlJobInfoMapper().loadById(jobId);
+        XxlJobInfo jobInfo = XxlJobAdminBootstrap.getInstance().getXxlJobInfoMapper().loadById(jobId);
         if (jobInfo == null) {
             logger.warn(">>>>>>>>>>>> trigger fail, jobId invalid，jobId={}", jobId);
             return;
@@ -58,7 +57,7 @@ public class XxlJobTrigger {
             jobInfo.setExecutorParam(executorParam);
         }
         int finalFailRetryCount = failRetryCount>=0?failRetryCount:jobInfo.getExecutorFailRetryCount();
-        XxlJobGroup group = XxlJobAdminBootstrap.getAdminConfig().getXxlJobGroupMapper().load(jobInfo.getJobGroup());
+        XxlJobGroup group = XxlJobAdminBootstrap.getInstance().getXxlJobGroupMapper().load(jobInfo.getJobGroup());
 
         // cover addressList
         if (addressList!=null && addressList.trim().length()>0) {
@@ -120,7 +119,7 @@ public class XxlJobTrigger {
         jobLog.setJobGroup(jobInfo.getJobGroup());
         jobLog.setJobId(jobInfo.getId());
         jobLog.setTriggerTime(new Date());
-        XxlJobAdminBootstrap.getAdminConfig().getXxlJobLogMapper().save(jobLog);
+        XxlJobAdminBootstrap.getInstance().getXxlJobLogMapper().save(jobLog);
         logger.debug(">>>>>>>>>>> xxl-job trigger start, jobId:{}", jobLog.getId());
 
         // 2、init trigger-param
@@ -193,7 +192,7 @@ public class XxlJobTrigger {
         //jobLog.setTriggerTime();
         jobLog.setTriggerCode(triggerResult.getCode());
         jobLog.setTriggerMsg(triggerMsgSb.toString());
-        XxlJobAdminBootstrap.getAdminConfig().getXxlJobLogMapper().updateTriggerInfo(jobLog);
+        XxlJobAdminBootstrap.getInstance().getXxlJobLogMapper().updateTriggerInfo(jobLog);
 
         logger.debug(">>>>>>>>>>> xxl-job trigger end, jobId:{}", jobLog.getId());
     }
@@ -207,7 +206,7 @@ public class XxlJobTrigger {
     public static ReturnT<String> runExecutor(TriggerParam triggerParam, String address){
         ReturnT<String> runResult = null;
         try {
-            ExecutorBiz executorBiz = XxlJobScheduler.getExecutorBiz(address);
+            ExecutorBiz executorBiz = XxlJobAdminBootstrap.getExecutorBiz(address);
             runResult = executorBiz.run(triggerParam);
         } catch (Exception e) {
             logger.error(">>>>>>>>>>> xxl-job trigger error, please check if the executor[{}] is running.", address, e);

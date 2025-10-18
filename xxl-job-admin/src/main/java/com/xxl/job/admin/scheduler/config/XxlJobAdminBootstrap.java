@@ -1,9 +1,15 @@
 package com.xxl.job.admin.scheduler.config;
 
 import com.xxl.job.admin.scheduler.alarm.JobAlarmer;
-import com.xxl.job.admin.scheduler.scheduler.XxlJobScheduler;
 import com.xxl.job.admin.mapper.*;
+import com.xxl.job.admin.scheduler.thread.*;
+import com.xxl.job.admin.util.I18nUtil;
+import com.xxl.job.core.biz.ExecutorBiz;
+import com.xxl.job.core.biz.client.ExecutorBizClient;
+import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
 import jakarta.annotation.Resource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,6 +18,8 @@ import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
 import java.util.Arrays;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * xxl-job config
@@ -21,32 +29,121 @@ import java.util.Arrays;
 
 @Component
 public class XxlJobAdminBootstrap implements InitializingBean, DisposableBean {
+    private static final Logger logger = LoggerFactory.getLogger(XxlJobAdminBootstrap.class);
+
+    // ---------------------- instance ----------------------
 
     private static XxlJobAdminBootstrap adminConfig = null;
-    public static XxlJobAdminBootstrap getAdminConfig() {
+    public static XxlJobAdminBootstrap getInstance() {
         return adminConfig;
     }
 
 
-    // ---------------------- XxlJobScheduler ----------------------
-
-    private XxlJobScheduler xxlJobScheduler;
+    // ---------------------- start / stop ----------------------
 
     @Override
     public void afterPropertiesSet() throws Exception {
+        // init instance
         adminConfig = this;
 
-        xxlJobScheduler = new XxlJobScheduler();
-        xxlJobScheduler.init();
+        // start
+        doStart();
     }
 
     @Override
     public void destroy() throws Exception {
-        xxlJobScheduler.destroy();
+        // stop
+        doStop();
+    }
+
+    /**
+     * do start
+     */
+    private void doStart() throws Exception {
+        // init i18n
+        initI18n();
+
+        // admin trigger pool start
+        JobTriggerPoolHelper.toStart();
+
+        // admin registry monitor run
+        JobRegistryHelper.getInstance().start();
+
+        // admin fail-monitor run
+        JobFailMonitorHelper.getInstance().start();
+
+        // admin lose-monitor run ( depend on JobTriggerPoolHelper )
+        JobCompleteHelper.getInstance().start();
+
+        // admin log report start
+        JobLogReportHelper.getInstance().start();
+
+        // start-schedule  ( depend on JobTriggerPoolHelper )
+        JobScheduleHelper.getInstance().start();
+
+        logger.info(">>>>>>>>> xxl-job admin start success.");
+    }
+
+    /**
+     * do stop
+     */
+    private void doStop(){
+        // stop-schedule
+        JobScheduleHelper.getInstance().toStop();
+
+        // admin log report stop
+        JobLogReportHelper.getInstance().toStop();
+
+        // admin lose-monitor stop
+        JobCompleteHelper.getInstance().toStop();
+
+        // admin fail-monitor stop
+        JobFailMonitorHelper.getInstance().toStop();
+
+        // admin registry stop
+        JobRegistryHelper.getInstance().toStop();
+
+        // admin trigger pool stop
+        JobTriggerPoolHelper.toStop();
+        logger.info(">>>>>>>>> xxl-job admin stopped.");
     }
 
 
-    // ---------------------- XxlJobScheduler ----------------------
+    // ---------------------- I18n ----------------------
+
+    private void initI18n(){
+        for (ExecutorBlockStrategyEnum item : ExecutorBlockStrategyEnum.values()) {
+            item.setTitle(I18nUtil.getString("jobconf_block_".concat(item.name())));
+        }
+    }
+
+    // ---------------------- executor-client ----------------------
+
+    private static ConcurrentMap<String, ExecutorBiz> executorBizRepository = new ConcurrentHashMap<String, ExecutorBiz>();
+    public static ExecutorBiz getExecutorBiz(String address) throws Exception {
+        // valid
+        if (address==null || address.trim().length()==0) {
+            return null;
+        }
+
+        // load-cache
+        address = address.trim();
+        ExecutorBiz executorBiz = executorBizRepository.get(address);
+        if (executorBiz != null) {
+            return executorBiz;
+        }
+
+        // set-cache
+        executorBiz = new ExecutorBizClient(address,
+                XxlJobAdminBootstrap.getInstance().getAccessToken(),
+                XxlJobAdminBootstrap.getInstance().getTimeout());
+
+        executorBizRepository.put(address, executorBiz);
+        return executorBiz;
+    }
+
+
+    // ---------------------- field ----------------------
 
     // conf
     @Value("${xxl.job.i18n}")
@@ -70,8 +167,7 @@ public class XxlJobAdminBootstrap implements InitializingBean, DisposableBean {
     @Value("${xxl.job.logretentiondays}")
     private int logretentiondays;
 
-    // dao, service
-
+    // service, mapper
     @Resource
     private XxlJobLogMapper xxlJobLogMapper;
     @Resource

@@ -7,8 +7,8 @@ import com.xxl.job.admin.model.XxlJobGroup;
 import com.xxl.job.admin.model.XxlJobInfo;
 import com.xxl.job.admin.model.XxlJobLog;
 import com.xxl.job.admin.scheduler.complete.XxlJobCompleter;
+import com.xxl.job.admin.scheduler.config.XxlJobAdminBootstrap;
 import com.xxl.job.admin.scheduler.exception.XxlJobException;
-import com.xxl.job.admin.scheduler.scheduler.XxlJobScheduler;
 import com.xxl.job.admin.util.I18nUtil;
 import com.xxl.job.admin.util.JobGroupPermissionUtil;
 import com.xxl.job.core.biz.ExecutorBiz;
@@ -169,7 +169,7 @@ public class JobLogController {
 			}
 
 			// log cat
-			ExecutorBiz executorBiz = XxlJobScheduler.getExecutorBiz(jobLog.getExecutorAddress());
+			ExecutorBiz executorBiz = XxlJobAdminBootstrap.getExecutorBiz(jobLog.getExecutorAddress());
 			ReturnT<LogResult> logResult = executorBiz.log(new LogParam(jobLog.getTriggerTime().getTime(), logId, fromLineNum));
 
 			// is end
@@ -243,7 +243,7 @@ public class JobLogController {
 		// request of kill
 		ReturnT<String> runResult = null;
 		try {
-			ExecutorBiz executorBiz = XxlJobScheduler.getExecutorBiz(log.getExecutorAddress());
+			ExecutorBiz executorBiz = XxlJobAdminBootstrap.getExecutorBiz(log.getExecutorAddress());
 			runResult = executorBiz.kill(new KillParam(jobInfo.getId()));
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);

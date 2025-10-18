@@ -48,8 +48,8 @@ public class JobApiController {
         if (StringTool.isBlank(uri)) {
             return ReturnT.ofFail("invalid request, uri-mapping empty.");
         }
-        if (StringTool.isNotBlank(XxlJobAdminBootstrap.getAdminConfig().getAccessToken())
-                && !XxlJobAdminBootstrap.getAdminConfig().getAccessToken().equals(request.getHeader(XxlJobRemotingUtil.XXL_JOB_ACCESS_TOKEN))) {
+        if (StringTool.isNotBlank(XxlJobAdminBootstrap.getInstance().getAccessToken())
+                && !XxlJobAdminBootstrap.getInstance().getAccessToken().equals(request.getHeader(XxlJobRemotingUtil.XXL_JOB_ACCESS_TOKEN))) {
             return ReturnT.ofFail("The access token is wrong.");
         }
 

@@ -59,18 +59,18 @@ public class JobRegistryHelper {
 				while (!toStop) {
 					try {
 						// auto registry group
-						List<XxlJobGroup> groupList = XxlJobAdminBootstrap.getAdminConfig().getXxlJobGroupMapper().findByAddressType(0);
+						List<XxlJobGroup> groupList = XxlJobAdminBootstrap.getInstance().getXxlJobGroupMapper().findByAddressType(0);
 						if (groupList!=null && !groupList.isEmpty()) {
 
 							// remove dead address (admin/executor)
-							List<Integer> ids = XxlJobAdminBootstrap.getAdminConfig().getXxlJobRegistryMapper().findDead(RegistryConfig.DEAD_TIMEOUT, new Date());
+							List<Integer> ids = XxlJobAdminBootstrap.getInstance().getXxlJobRegistryMapper().findDead(RegistryConfig.DEAD_TIMEOUT, new Date());
 							if (ids!=null && ids.size()>0) {
-								XxlJobAdminBootstrap.getAdminConfig().getXxlJobRegistryMapper().removeDead(ids);
+								XxlJobAdminBootstrap.getInstance().getXxlJobRegistryMapper().removeDead(ids);
 							}
 
 							// fresh online address (admin/executor)
 							HashMap<String, List<String>> appAddressMap = new HashMap<String, List<String>>();
-							List<XxlJobRegistry> list = XxlJobAdminBootstrap.getAdminConfig().getXxlJobRegistryMapper().findAll(RegistryConfig.DEAD_TIMEOUT, new Date());
+							List<XxlJobRegistry> list = XxlJobAdminBootstrap.getInstance().getXxlJobRegistryMapper().findAll(RegistryConfig.DEAD_TIMEOUT, new Date());
 							if (list != null) {
 								for (XxlJobRegistry item: list) {
 									if (RegistryConfig.RegistType.EXECUTOR.name().equals(item.getRegistryGroup())) {
@@ -104,7 +104,7 @@ public class JobRegistryHelper {
 								group.setAddressList(addressListStr);
 								group.setUpdateTime(new Date());
 
-								XxlJobAdminBootstrap.getAdminConfig().getXxlJobGroupMapper().update(group);
+								XxlJobAdminBootstrap.getInstance().getXxlJobGroupMapper().update(group);
 							}
 						}
 					} catch (Throwable e) {
@@ -160,7 +160,7 @@ public class JobRegistryHelper {
 			@Override
 			public void run() {
 				// 0-fail; 1-save suc; 2-update suc;
-				int ret = XxlJobAdminBootstrap.getAdminConfig().getXxlJobRegistryMapper().registrySaveOrUpdate(registryParam.getRegistryGroup(), registryParam.getRegistryKey(), registryParam.getRegistryValue(), new Date());
+				int ret = XxlJobAdminBootstrap.getInstance().getXxlJobRegistryMapper().registrySaveOrUpdate(registryParam.getRegistryGroup(), registryParam.getRegistryKey(), registryParam.getRegistryValue(), new Date());
 				if (ret == 1) {
 					// fresh (add)
 					freshGroupRegistryInfo(registryParam);
@@ -191,7 +191,7 @@ public class JobRegistryHelper {
 		registryOrRemoveThreadPool.execute(new Runnable() {
 			@Override
 			public void run() {
-				int ret = XxlJobAdminBootstrap.getAdminConfig().getXxlJobRegistryMapper().registryDelete(registryParam.getRegistryGroup(), registryParam.getRegistryKey(), registryParam.getRegistryValue());
+				int ret = XxlJobAdminBootstrap.getInstance().getXxlJobRegistryMapper().registryDelete(registryParam.getRegistryGroup(), registryParam.getRegistryKey(), registryParam.getRegistryValue());
 				if (ret > 0) {
 					// fresh (delete)
 					freshGroupRegistryInfo(registryParam);

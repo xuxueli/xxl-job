@@ -51,7 +51,7 @@ public class JobScheduleHelper {
                 logger.info(">>>>>>>>> init xxl-job admin scheduler success.");
 
                 // pre-read count: treadpool-size * trigger-qps (each trigger cost 50ms, qps = 1000/50 = 20)
-                int preReadCount = (XxlJobAdminBootstrap.getAdminConfig().getTriggerPoolFastMax() + XxlJobAdminBootstrap.getAdminConfig().getTriggerPoolSlowMax()) * 20;
+                int preReadCount = (XxlJobAdminBootstrap.getInstance().getTriggerPoolFastMax() + XxlJobAdminBootstrap.getInstance().getTriggerPoolSlowMax()) * 20;
 
                 while (!scheduleThreadToStop) {
 
@@ -65,7 +65,7 @@ public class JobScheduleHelper {
                     boolean preReadSuc = true;
                     try {
 
-                        conn = XxlJobAdminBootstrap.getAdminConfig().getDataSource().getConnection();
+                        conn = XxlJobAdminBootstrap.getInstance().getDataSource().getConnection();
                         connAutoCommit = conn.getAutoCommit();
                         conn.setAutoCommit(false);
 
@@ -76,7 +76,7 @@ public class JobScheduleHelper {
 
                         // 1、pre read
                         long nowTime = System.currentTimeMillis();
-                        List<XxlJobInfo> scheduleList = XxlJobAdminBootstrap.getAdminConfig().getXxlJobInfoMapper().scheduleJobQuery(nowTime + PRE_READ_MS, preReadCount);
+                        List<XxlJobInfo> scheduleList = XxlJobAdminBootstrap.getInstance().getXxlJobInfoMapper().scheduleJobQuery(nowTime + PRE_READ_MS, preReadCount);
                         if (scheduleList!=null && scheduleList.size()>0) {
                             // 2、push time-ring
                             for (XxlJobInfo jobInfo: scheduleList) {
@@ -139,7 +139,7 @@ public class JobScheduleHelper {
 
                             // 3、update trigger info
                             for (XxlJobInfo jobInfo: scheduleList) {
-                                XxlJobAdminBootstrap.getAdminConfig().getXxlJobInfoMapper().scheduleUpdate(jobInfo);
+                                XxlJobAdminBootstrap.getInstance().getXxlJobInfoMapper().scheduleUpdate(jobInfo);
                             }
 
                         } else {
