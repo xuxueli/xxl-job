@@ -2,7 +2,9 @@ package com.xxl.job.admin.scheduler.config;
 
 import com.xxl.job.admin.scheduler.alarm.JobAlarmer;
 import com.xxl.job.admin.mapper.*;
+import com.xxl.job.admin.scheduler.complete.JobCompleter;
 import com.xxl.job.admin.scheduler.thread.*;
+import com.xxl.job.admin.scheduler.trigger.JobTrigger;
 import com.xxl.job.admin.util.I18nUtil;
 import com.xxl.job.core.biz.ExecutorBiz;
 import com.xxl.job.core.biz.client.ExecutorBizClient;
@@ -184,6 +186,10 @@ public class XxlJobAdminBootstrap implements InitializingBean, DisposableBean {
     private DataSource dataSource;
     @Resource
     private JobAlarmer jobAlarmer;
+    @Resource
+    private JobTrigger jobTrigger;
+    @Resource
+    private JobCompleter jobCompleter;
 
 
     public String getI18n() {
@@ -256,6 +262,14 @@ public class XxlJobAdminBootstrap implements InitializingBean, DisposableBean {
 
     public JobAlarmer getJobAlarmer() {
         return jobAlarmer;
+    }
+
+    public JobTrigger getJobTrigger() {
+        return jobTrigger;
+    }
+
+    public JobCompleter getJobCompleter() {
+        return jobCompleter;
     }
 
 }

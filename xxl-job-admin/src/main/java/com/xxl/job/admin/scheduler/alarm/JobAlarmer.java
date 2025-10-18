@@ -16,6 +16,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * xxl-job alarmer
+ *
+ * @author xuxueli 17/7/13.
+ */
 @Component
 public class JobAlarmer implements ApplicationContextAware, InitializingBean {
     private static final Logger logger = LoggerFactory.getLogger(JobAlarmer.class);

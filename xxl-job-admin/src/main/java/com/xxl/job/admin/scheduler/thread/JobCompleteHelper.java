@@ -1,6 +1,5 @@
 package com.xxl.job.admin.scheduler.thread;
 
-import com.xxl.job.admin.scheduler.complete.XxlJobCompleter;
 import com.xxl.job.admin.scheduler.config.XxlJobAdminBootstrap;
 import com.xxl.job.admin.model.XxlJobLog;
 import com.xxl.job.admin.util.I18nUtil;
@@ -88,7 +87,7 @@ public class JobCompleteHelper {
 								jobLog.setHandleCode(ReturnT.FAIL_CODE);
 								jobLog.setHandleMsg( I18nUtil.getString("joblog_lost_fail") );
 
-								XxlJobCompleter.updateHandleInfoAndFinish(jobLog);
+								XxlJobAdminBootstrap.getInstance().getJobCompleter().complete(jobLog);
 							}
 
 						}
@@ -174,7 +173,7 @@ public class JobCompleteHelper {
 		log.setHandleTime(new Date());
 		log.setHandleCode(handleCallbackParam.getHandleCode());
 		log.setHandleMsg(handleMsg.toString());
-		XxlJobCompleter.updateHandleInfoAndFinish(log);
+		XxlJobAdminBootstrap.getInstance().getJobCompleter().complete(log);
 
 		return ReturnT.ofSuccess();
 	}
