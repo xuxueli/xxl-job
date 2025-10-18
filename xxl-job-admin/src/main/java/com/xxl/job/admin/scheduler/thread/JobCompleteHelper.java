@@ -1,7 +1,7 @@
 package com.xxl.job.admin.scheduler.thread;
 
-import com.xxl.job.admin.scheduler.config.XxlJobAdminBootstrap;
 import com.xxl.job.admin.model.XxlJobLog;
+import com.xxl.job.admin.scheduler.config.XxlJobAdminBootstrap;
 import com.xxl.job.admin.util.I18nUtil;
 import com.xxl.job.core.biz.model.HandleCallbackParam;
 import com.xxl.job.core.biz.model.ReturnT;
@@ -14,23 +14,22 @@ import java.util.List;
 import java.util.concurrent.*;
 
 /**
- * job lose-monitor instance
+ * job complate, for callback and result-lost
  *
  * @author xuxueli 2015-9-1 18:05:56
  */
 public class JobCompleteHelper {
 	private static Logger logger = LoggerFactory.getLogger(JobCompleteHelper.class);
 	
-	private static JobCompleteHelper instance = new JobCompleteHelper();
-	public static JobCompleteHelper getInstance(){
-		return instance;
-	}
-
 	// ---------------------- monitor ----------------------
 
 	private ThreadPoolExecutor callbackThreadPool = null;
 	private Thread monitorThread;
 	private volatile boolean toStop = false;
+
+	/**
+	 * start
+	 */
 	public void start(){
 
 		// for callback
@@ -116,7 +115,10 @@ public class JobCompleteHelper {
 		monitorThread.start();
 	}
 
-	public void toStop(){
+	/**
+	 * stop
+	 */
+	public void stop(){
 		toStop = true;
 
 		// stop registryOrRemoveThreadPool

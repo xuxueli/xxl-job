@@ -1,7 +1,6 @@
 package com.xxl.job.admin.service.impl;
 
-import com.xxl.job.admin.scheduler.thread.JobCompleteHelper;
-import com.xxl.job.admin.scheduler.thread.JobRegistryHelper;
+import com.xxl.job.admin.scheduler.config.XxlJobAdminBootstrap;
 import com.xxl.job.core.biz.AdminBiz;
 import com.xxl.job.core.biz.model.HandleCallbackParam;
 import com.xxl.job.core.biz.model.RegistryParam;
@@ -19,17 +18,17 @@ public class AdminBizImpl implements AdminBiz {
 
     @Override
     public ReturnT<String> callback(List<HandleCallbackParam> callbackParamList) {
-        return JobCompleteHelper.getInstance().callback(callbackParamList);
+        return XxlJobAdminBootstrap.getInstance().getJobCompleteHelper().callback(callbackParamList);
     }
 
     @Override
     public ReturnT<String> registry(RegistryParam registryParam) {
-        return JobRegistryHelper.getInstance().registry(registryParam);
+        return XxlJobAdminBootstrap.getInstance().getJobRegistryHelper().registry(registryParam);
     }
 
     @Override
     public ReturnT<String> registryRemove(RegistryParam registryParam) {
-        return JobRegistryHelper.getInstance().registryRemove(registryParam);
+        return XxlJobAdminBootstrap.getInstance().getJobRegistryHelper().registryRemove(registryParam);
     }
 
 }

@@ -19,14 +19,13 @@ import java.util.concurrent.TimeUnit;
 public class JobLogReportHelper {
     private static Logger logger = LoggerFactory.getLogger(JobLogReportHelper.class);
 
-    private static JobLogReportHelper instance = new JobLogReportHelper();
-    public static JobLogReportHelper getInstance(){
-        return instance;
-    }
-
 
     private Thread logrThread;
     private volatile boolean toStop = false;
+
+    /**
+     * start
+     */
     public void start(){
         logrThread = new Thread(new Runnable() {
 
@@ -138,7 +137,10 @@ public class JobLogReportHelper {
         logrThread.start();
     }
 
-    public void toStop(){
+    /**
+     * stop
+     */
+    public void stop(){
         toStop = true;
         // interrupt and wait
         logrThread.interrupt();

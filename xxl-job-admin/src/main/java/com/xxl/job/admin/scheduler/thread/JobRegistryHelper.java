@@ -14,21 +14,22 @@ import java.util.*;
 import java.util.concurrent.*;
 
 /**
- * job registry instance
+ * job registry instance helper
+ *
  * @author xuxueli 2016-10-02 19:10:24
  */
 public class JobRegistryHelper {
 	private static Logger logger = LoggerFactory.getLogger(JobRegistryHelper.class);
 
-	private static JobRegistryHelper instance = new JobRegistryHelper();
-	public static JobRegistryHelper getInstance(){
-		return instance;
-	}
 
 	private ThreadPoolExecutor registryOrRemoveThreadPool = null;
 	private Thread registryMonitorThread;
 	private volatile boolean toStop = false;
 
+
+	/**
+	 * start
+	 */
 	public void start(){
 
 		// for registry or remove
@@ -128,7 +129,11 @@ public class JobRegistryHelper {
 		registryMonitorThread.start();
 	}
 
-	public void toStop(){
+
+	/**
+	 * stop
+	 */
+	public void stop(){
 		toStop = true;
 
 		// stop registryOrRemoveThreadPool
@@ -144,8 +149,11 @@ public class JobRegistryHelper {
 	}
 
 
-	// ---------------------- helper ----------------------
+	// ---------------------- tool ----------------------
 
+	/**
+	 * registry
+	 */
 	public ReturnT<String> registry(RegistryParam registryParam) {
 
 		// valid
@@ -178,6 +186,9 @@ public class JobRegistryHelper {
 		return ReturnT.ofSuccess();
 	}
 
+	/**
+	 * registry remove
+	 */
 	public ReturnT<String> registryRemove(RegistryParam registryParam) {
 
 		// valid

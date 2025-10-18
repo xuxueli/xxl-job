@@ -58,6 +58,24 @@ public class XxlJobAdminBootstrap implements InitializingBean, DisposableBean {
         doStop();
     }
 
+    // job module
+    private JobTriggerPoolHelper jobTriggerPoolHelper;
+    private JobRegistryHelper jobRegistryHelper;
+    private JobFailAlarmMonitorHelper jobFailAlarmMonitorHelper;
+    private JobCompleteHelper jobCompleteHelper;
+    private JobLogReportHelper jobLogReportHelper;
+    private JobScheduleHelper jobScheduleHelper;
+
+    public JobTriggerPoolHelper getJobTriggerPoolHelper() {
+        return jobTriggerPoolHelper;
+    }
+    public JobRegistryHelper getJobRegistryHelper() {
+        return jobRegistryHelper;
+    }
+    public JobCompleteHelper getJobCompleteHelper() {
+        return jobCompleteHelper;
+    }
+
     /**
      * do start
      */
@@ -65,23 +83,29 @@ public class XxlJobAdminBootstrap implements InitializingBean, DisposableBean {
         // init i18n
         initI18n();
 
-        // admin trigger pool start
-        JobTriggerPoolHelper.toStart();
+        // trigger-pool start
+        jobTriggerPoolHelper = new JobTriggerPoolHelper();
+        jobTriggerPoolHelper.start();
 
-        // admin registry monitor run
-        JobRegistryHelper.getInstance().start();
+        // registry monitor start
+        jobRegistryHelper = new JobRegistryHelper();
+        jobRegistryHelper.start();
 
-        // admin fail-monitor run
-        JobFailMonitorHelper.getInstance().start();
+        // fail-alarm monitor start
+        jobFailAlarmMonitorHelper = new JobFailAlarmMonitorHelper();
+        jobFailAlarmMonitorHelper.start();
 
-        // admin lose-monitor run ( depend on JobTriggerPoolHelper )
-        JobCompleteHelper.getInstance().start();
+        // job complate start  ( depend on JobTriggerPoolHelper ) for callback and result-lost
+        jobCompleteHelper = new JobCompleteHelper();
+        jobCompleteHelper.start();
 
-        // admin log report start
-        JobLogReportHelper.getInstance().start();
+        // log-report start
+        jobLogReportHelper = new JobLogReportHelper();
+        jobLogReportHelper.start();
 
-        // start-schedule  ( depend on JobTriggerPoolHelper )
-        JobScheduleHelper.getInstance().start();
+        // job-schedule start  ( depend on JobTriggerPoolHelper )
+        jobScheduleHelper = new JobScheduleHelper();
+        jobScheduleHelper.start();
 
         logger.info(">>>>>>>>> xxl-job admin start success.");
     }
@@ -90,23 +114,24 @@ public class XxlJobAdminBootstrap implements InitializingBean, DisposableBean {
      * do stop
      */
     private void doStop(){
-        // stop-schedule
-        JobScheduleHelper.getInstance().toStop();
+        // job-schedule stop
+        jobScheduleHelper.stop();
 
-        // admin log report stop
-        JobLogReportHelper.getInstance().toStop();
+        // log-report stop
+        jobLogReportHelper.stop();
 
-        // admin lose-monitor stop
-        JobCompleteHelper.getInstance().toStop();
+        // job complate stop
+        jobCompleteHelper.stop();
 
-        // admin fail-monitor stop
-        JobFailMonitorHelper.getInstance().toStop();
+        // fail-alarm monitor stop
+        jobFailAlarmMonitorHelper.stop();
 
-        // admin registry stop
-        JobRegistryHelper.getInstance().toStop();
+        // registry monitor stop
+        jobRegistryHelper.stop();
 
-        // admin trigger pool stop
-        JobTriggerPoolHelper.toStop();
+        // trigger-pool stop
+        jobTriggerPoolHelper.stop();
+
         logger.info(">>>>>>>>> xxl-job admin stopped.");
     }
 
