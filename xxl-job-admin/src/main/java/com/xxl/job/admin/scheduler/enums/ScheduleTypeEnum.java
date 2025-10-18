@@ -1,4 +1,4 @@
-package com.xxl.job.admin.scheduler.scheduler;
+package com.xxl.job.admin.scheduler.enums;
 
 import com.xxl.job.admin.util.I18nUtil;
 

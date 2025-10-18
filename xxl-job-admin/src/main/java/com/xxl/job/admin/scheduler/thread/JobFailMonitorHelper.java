@@ -73,7 +73,7 @@ public class JobFailMonitorHelper {
 
 					} catch (Throwable e) {
 						if (!toStop) {
-							logger.error(">>>>>>>>>>> xxl-job, job fail monitor thread error:{}", e);
+							logger.error(">>>>>>>>>>> xxl-job, job fail monitor thread error:{}", e.getMessage(), e);
 						}
 					}
 

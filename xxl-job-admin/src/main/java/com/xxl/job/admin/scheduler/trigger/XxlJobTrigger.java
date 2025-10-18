@@ -12,6 +12,7 @@ import com.xxl.job.core.biz.model.TriggerParam;
 import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
 import com.xxl.job.core.util.IpUtil;
 import com.xxl.job.core.util.ThrowableUtil;
+import com.xxl.tool.core.StringTool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,7 +61,7 @@ public class XxlJobTrigger {
         XxlJobGroup group = XxlJobAdminBootstrap.getInstance().getXxlJobGroupMapper().load(jobInfo.getJobGroup());
 
         // cover addressList
-        if (addressList!=null && addressList.trim().length()>0) {
+        if (StringTool.isNotBlank(addressList)) {
             group.setAddressType(1);
             group.setAddressList(addressList.trim());
         }
@@ -69,7 +70,7 @@ public class XxlJobTrigger {
         int[] shardingParam = null;
         if (executorShardingParam!=null){
             String[] shardingArr = executorShardingParam.split("/");
-            if (shardingArr.length==2 && isNumeric(shardingArr[0]) && isNumeric(shardingArr[1])) {
+            if (shardingArr.length==2 && StringTool.isNumeric(shardingArr[0]) && StringTool.isNumeric(shardingArr[1])) {
                 shardingParam = new int[2];
                 shardingParam[0] = Integer.valueOf(shardingArr[0]);
                 shardingParam[1] = Integer.valueOf(shardingArr[1]);

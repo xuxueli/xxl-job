@@ -2,6 +2,8 @@ package com.xxl.job.admin.scheduler.alarm;
 
 import com.xxl.job.admin.model.XxlJobInfo;
 import com.xxl.job.admin.model.XxlJobLog;
+import com.xxl.tool.core.CollectionTool;
+import com.xxl.tool.core.MapTool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -16,7 +18,7 @@ import java.util.Map;
 
 @Component
 public class JobAlarmer implements ApplicationContextAware, InitializingBean {
-    private static Logger logger = LoggerFactory.getLogger(JobAlarmer.class);
+    private static final Logger logger = LoggerFactory.getLogger(JobAlarmer.class);
 
     private ApplicationContext applicationContext;
     private List<JobAlarm> jobAlarmList;
@@ -29,22 +31,18 @@ public class JobAlarmer implements ApplicationContextAware, InitializingBean {
     @Override
     public void afterPropertiesSet() throws Exception {
         Map<String, JobAlarm> serviceBeanMap = applicationContext.getBeansOfType(JobAlarm.class);
-        if (serviceBeanMap != null && serviceBeanMap.size() > 0) {
-            jobAlarmList = new ArrayList<JobAlarm>(serviceBeanMap.values());
+        if (MapTool.isNotEmpty(serviceBeanMap)) {
+            jobAlarmList = new ArrayList<>(serviceBeanMap.values());
         }
     }
 
     /**
      * job alarm
-     *
-     * @param info
-     * @param jobLog
-     * @return
      */
     public boolean alarm(XxlJobInfo info, XxlJobLog jobLog) {
 
         boolean result = false;
-        if (jobAlarmList!=null && jobAlarmList.size()>0) {
+        if (CollectionTool.isNotEmpty(jobAlarmList)) {
             result = true;  // success means all-success
             for (JobAlarm alarm: jobAlarmList) {
                 boolean resultItem = false;
