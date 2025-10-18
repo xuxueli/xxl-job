@@ -9,6 +9,7 @@ import com.xxl.job.admin.util.I18nUtil;
 import com.xxl.job.core.biz.ExecutorBiz;
 import com.xxl.job.core.biz.client.ExecutorBizClient;
 import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
+import com.xxl.tool.core.StringTool;
 import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,8 +18,8 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.PlatformTransactionManager;
 
-import javax.sql.DataSource;
 import java.util.Arrays;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -149,7 +150,7 @@ public class XxlJobAdminBootstrap implements InitializingBean, DisposableBean {
     private static ConcurrentMap<String, ExecutorBiz> executorBizRepository = new ConcurrentHashMap<String, ExecutorBiz>();
     public static ExecutorBiz getExecutorBiz(String address) throws Exception {
         // valid
-        if (address==null || address.trim().length()==0) {
+        if (StringTool.isBlank(address)) {
             return null;
         }
 
@@ -206,9 +207,13 @@ public class XxlJobAdminBootstrap implements InitializingBean, DisposableBean {
     @Resource
     private XxlJobLogReportMapper xxlJobLogReportMapper;
     @Resource
-    private JavaMailSender mailSender;
+    private XxlJobLockMapper xxlJobLockMapper;
     @Resource
-    private DataSource dataSource;
+    private JavaMailSender mailSender;
+    /*@Resource
+    private DataSource dataSource;*/
+    @Resource
+    private PlatformTransactionManager transactionManager;
     @Resource
     private JobAlarmer jobAlarmer;
     @Resource
@@ -277,12 +282,20 @@ public class XxlJobAdminBootstrap implements InitializingBean, DisposableBean {
         return xxlJobLogReportMapper;
     }
 
+    public XxlJobLockMapper getXxlJobLockMapper() {
+        return xxlJobLockMapper;
+    }
+
     public JavaMailSender getMailSender() {
         return mailSender;
     }
 
-    public DataSource getDataSource() {
+    /*public DataSource getDataSource() {
         return dataSource;
+    }*/
+
+    public PlatformTransactionManager getTransactionManager() {
+        return transactionManager;
     }
 
     public JobAlarmer getJobAlarmer() {
