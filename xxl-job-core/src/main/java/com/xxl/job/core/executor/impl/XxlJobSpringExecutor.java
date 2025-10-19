@@ -5,17 +5,26 @@ import com.xxl.job.core.glue.GlueFactory;
 import com.xxl.job.core.handler.annotation.XxlJob;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.aop.framework.AopInfrastructureBean;
+import org.springframework.aop.framework.AopProxyUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.SmartInitializingSingleton;
+import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.core.MethodIntrospector;
 import org.springframework.core.annotation.AnnotatedElementUtils;
+import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.scheduling.annotation.Schedules;
 
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 /**
@@ -23,8 +32,33 @@ import java.util.Map;
  *
  * @author xuxueli 2018-11-01 09:24:52
  */
-public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationContextAware, SmartInitializingSingleton, DisposableBean {
+public class XxlJobSpringExecutor extends XxlJobExecutor implements BeanPostProcessor, ApplicationContextAware, SmartInitializingSingleton, DisposableBean {
     private static final Logger logger = LoggerFactory.getLogger(XxlJobSpringExecutor.class);
+
+    private final Set<Class<?>> nonAnnotatedClasses = ConcurrentHashMap.newKeySet(64);
+
+    @Override
+    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+        // add by qiuyouyao
+        if (isSystemBean(beanName) || bean instanceof AopInfrastructureBean) {
+            return bean;
+        }
+        Class<?> targetClass = AopProxyUtils.ultimateTargetClass(bean);
+        if (!this.nonAnnotatedClasses.contains(targetClass) &&
+                AnnotationUtils.isCandidateClass(targetClass, List.of(XxlJob.class))) {
+            Map<Method, XxlJob> annotatedMethods = MethodIntrospector.selectMethods(targetClass,
+                    (MethodIntrospector.MetadataLookup<XxlJob>) method -> AnnotatedElementUtils.getMergedAnnotation(method, XxlJob.class));
+            if (annotatedMethods.isEmpty()) {
+                nonAnnotatedClasses.add(targetClass);
+            } else {
+                for (Map.Entry<Method, XxlJob> entry : annotatedMethods.entrySet()) {
+                    // init JobHandler Repository (for method)
+                    registJobHandler(entry.getValue(), bean, entry.getKey());
+                }
+            }
+        }
+        return bean;
+    }
 
 
     // ---------------------- start / stop ----------------------
@@ -32,13 +66,7 @@ public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationC
     // start
     @Override
     public void afterSingletonsInstantiated() {
-
-        // init JobHandler Repository
-        /*initJobHandlerRepository(applicationContext);*/
-
-        // init JobHandler Repository (for method)
-        initJobHandlerMethodRepository(applicationContext);
-
+        nonAnnotatedClasses.clear();
         // refresh GlueFactory
         GlueFactory.refreshInstance(1);
 
@@ -79,7 +107,7 @@ public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationC
         }
     }*/
 
-    private void initJobHandlerMethodRepository(ApplicationContext applicationContext) {
+    /*private void initJobHandlerMethodRepository(ApplicationContext applicationContext) {
         if (applicationContext == null) {
             return;
         }
@@ -128,7 +156,7 @@ public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationC
             }
 
         }
-    }
+    }*/
 
     // check if system bean, not job bean
     private boolean isSystemBean(String beanClassName) {
