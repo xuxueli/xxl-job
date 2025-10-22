@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -83,17 +84,16 @@ public class XxlJobFileAppender {
 	/**
 	 * append log
 	 *
-	 * @param logFileName
-	 * @param appendLog
+	 * @param logFileName	log file name
+	 * @param appendLog		append log
 	 */
 	public static void appendLog(String logFileName, String appendLog) {
 
 		// log file
-		if (logFileName==null || logFileName.trim().length()==0) {
+		if (logFileName==null || logFileName.trim().isEmpty()) {
 			return;
 		}
 		File logFile = new File(logFileName);
-
 		if (!logFile.exists()) {
 			try {
 				logFile.createNewFile();
@@ -110,57 +110,54 @@ public class XxlJobFileAppender {
 		appendLog += "\r\n";
 		
 		// append file content
-		FileOutputStream fos = null;
-		try {
-			fos = new FileOutputStream(logFile, true);
-			fos.write(appendLog.getBytes("utf-8"));
-			fos.flush();
-		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
-		} finally {
-			if (fos != null) {
-				try {
-					fos.close();
-				} catch (IOException e) {
-					logger.error(e.getMessage(), e);
-				}
-			}
-		}
+        try (FileOutputStream fos = new FileOutputStream(logFile, true)) {
+            fos.write(appendLog.getBytes(StandardCharsets.UTF_8));
+            fos.flush();
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
 		
 	}
 
 	/**
 	 * support read log-file
 	 *
-	 * @param logFileName
+	 * @param logFileName	log file name
+	 * @param fromLineNum	from line num
 	 * @return log content
 	 */
 	public static LogResult readLog(String logFileName, int fromLineNum){
 
 		// valid log file
-		if (logFileName==null || logFileName.trim().length()==0) {
+		if (logFileName==null || logFileName.trim().isEmpty()) {
             return new LogResult(fromLineNum, 0, "readLog fail, logFile not found", true);
 		}
 		File logFile = new File(logFileName);
-
 		if (!logFile.exists()) {
             return new LogResult(fromLineNum, 0, "readLog fail, logFile not exists", true);
 		}
 
 		// read file
-		StringBuffer logContentBuffer = new StringBuffer();
-		int toLineNum = 0;
+		StringBuilder logContentBuilder = new StringBuilder();
 		LineNumberReader reader = null;
+		int toLineNum = 0;
+		/*int readLineCount = 0;*/
 		try {
-			//reader = new LineNumberReader(new FileReader(logFile));
-			reader = new LineNumberReader(new InputStreamReader(new FileInputStream(logFile), "utf-8"));
+			reader = new LineNumberReader(new InputStreamReader(new FileInputStream(logFile), StandardCharsets.UTF_8));
 			String line = null;
-
 			while ((line = reader.readLine())!=null) {
+				// skip before lineNum
 				toLineNum = reader.getLineNumber();		// [from, to], start as 1
-				if (toLineNum >= fromLineNum) {
-					logContentBuffer.append(line).append("\n");
+				if (toLineNum < fromLineNum) {
+					continue;
 				}
+
+				// append log
+				logContentBuilder.append(line).append("\n");
+				// Limit return less than 1000 rows per query request	// todo
+				/*if(++readLineCount >= 5) {
+					break;
+				}*/
 			}
 		} catch (IOException e) {
 			logger.error(e.getMessage(), e);
@@ -175,15 +172,7 @@ public class XxlJobFileAppender {
 		}
 
 		// result
-		LogResult logResult = new LogResult(fromLineNum, toLineNum, logContentBuffer.toString(), false);
-		return logResult;
-
-		/*
-        // it will return the number of characters actually skipped
-        reader.skip(Long.MAX_VALUE);
-        int maxLineNum = reader.getLineNumber();
-        maxLineNum++;	// 最大行号
-        */
+        return new LogResult(fromLineNum, toLineNum, logContentBuilder.toString(), false);
 	}
 
 	/**

@@ -1,6 +1,6 @@
 package com.xxl.job.admin.scheduler.thread;
 
-import com.xxl.job.admin.scheduler.conf.XxlJobAdminConfig;
+import com.xxl.job.admin.scheduler.config.XxlJobAdminBootstrap;
 import com.xxl.job.admin.model.XxlJobLogReport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,11 +22,6 @@ import java.util.concurrent.TimeUnit;
 public class JobLogReportHelper {
     private static final Logger logger = LoggerFactory.getLogger(JobLogReportHelper.class);
 
-    private static final JobLogReportHelper INSTANCE = new JobLogReportHelper();
-    public static JobLogReportHelper getInstance(){
-        return INSTANCE;
-    }
-
     /**
      * 刷新最近 N 天的日志
      */
@@ -35,6 +30,9 @@ public class JobLogReportHelper {
     private Thread logrThread;
     private volatile boolean toStop = false;
 
+    /**
+     * start
+     */
     public void start(){
         
         logrThread = new Thread(new Runnable() {
@@ -59,7 +57,7 @@ public class JobLogReportHelper {
 
                     try {
                         // 2、log-clean: switch open & once each day
-                        final int retentionDays = XxlJobAdminConfig.getAdminConfig().getLogretentiondays();
+                        final int retentionDays = XxlJobAdminBootstrap.getInstance().getLogretentiondays();
                         if (retentionDays > 0
                                 && System.currentTimeMillis() - lastCleanLogTime > 24 * 60 * 60 * 1000) {
                             cleanExpiredLogs(retentionDays);
@@ -91,7 +89,10 @@ public class JobLogReportHelper {
         logrThread.start();
     }
 
-    public void toStop(){
+    /**
+     * stop
+     */
+    public void stop(){
         toStop = true;
         // interrupt and wait
         logrThread.interrupt();
@@ -113,9 +114,9 @@ public class JobLogReportHelper {
         // clean expired log
         List<Long> logIds;
         do {
-            logIds = XxlJobAdminConfig.getAdminConfig().getXxlJobLogMapper().findClearLogIds(0, 0, clearBeforeTime, 0, 1000);
+            logIds = XxlJobAdminBootstrap.getInstance().getXxlJobLogMapper().findClearLogIds(0, 0, clearBeforeTime, 0, 1000);
             if (logIds != null && !logIds.isEmpty()) {
-                XxlJobAdminConfig.getAdminConfig().getXxlJobLogMapper().clearLog(logIds);
+                XxlJobAdminBootstrap.getInstance().getXxlJobLogMapper().clearLog(logIds);
             }
         } while (logIds != null && !logIds.isEmpty());
     }
@@ -135,7 +136,7 @@ public class JobLogReportHelper {
             report.setFailCount(0);
 
             Map<String, Object> triggerCountMap =
-                    XxlJobAdminConfig.getAdminConfig().getXxlJobLogMapper().findLogReport(start, end);
+                    XxlJobAdminBootstrap.getInstance().getXxlJobLogMapper().findLogReport(start, end);
 
             if (triggerCountMap != null && !triggerCountMap.isEmpty()) {
                 int triggerDayCount = triggerCountMap.containsKey("triggerDayCount") ? Integer.parseInt(String.valueOf(triggerCountMap.get("triggerDayCount"))) : 0;
@@ -148,9 +149,9 @@ public class JobLogReportHelper {
                 report.setFailCount(triggerDayCountFail);
             }
 
-            int ret = XxlJobAdminConfig.getAdminConfig().getXxlJobLogReportMapper().update(report);
+            int ret = XxlJobAdminBootstrap.getInstance().getXxlJobLogReportMapper().update(report);
             if (ret < 1) {
-                XxlJobAdminConfig.getAdminConfig().getXxlJobLogReportMapper().save(report);
+                XxlJobAdminBootstrap.getInstance().getXxlJobLogReportMapper().save(report);
             }
         }
     }

@@ -1,8 +1,7 @@
 package com.xxl.job.admin.scheduler.thread;
 
-import com.xxl.job.admin.scheduler.conf.XxlJobAdminConfig;
+import com.xxl.job.admin.scheduler.config.XxlJobAdminBootstrap;
 import com.xxl.job.admin.scheduler.trigger.TriggerTypeEnum;
-import com.xxl.job.admin.scheduler.trigger.XxlJobTrigger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,10 +23,13 @@ public class JobTriggerPoolHelper {
     private ThreadPoolExecutor fastTriggerPool = null;
     private ThreadPoolExecutor slowTriggerPool = null;
 
+    /**
+     * start
+     */
     public void start(){
         fastTriggerPool = new ThreadPoolExecutor(
                 10,
-                XxlJobAdminConfig.getAdminConfig().getTriggerPoolFastMax(),
+                XxlJobAdminBootstrap.getInstance().getTriggerPoolFastMax(),
                 60L,
                 TimeUnit.SECONDS,
                 new LinkedBlockingQueue<Runnable>(2000),
@@ -46,7 +48,7 @@ public class JobTriggerPoolHelper {
 
         slowTriggerPool = new ThreadPoolExecutor(
                 10,
-                XxlJobAdminConfig.getAdminConfig().getTriggerPoolSlowMax(),
+                XxlJobAdminBootstrap.getInstance().getTriggerPoolSlowMax(),
                 60L,
                 TimeUnit.SECONDS,
                 new LinkedBlockingQueue<Runnable>(5000),
@@ -64,7 +66,9 @@ public class JobTriggerPoolHelper {
                 });
     }
 
-
+    /**
+     * stop
+     */
     public void stop() {
         //triggerPool.shutdown();
         fastTriggerPool.shutdownNow();
@@ -78,15 +82,27 @@ public class JobTriggerPoolHelper {
     private volatile ConcurrentMap<Integer, AtomicInteger> jobTimeoutCountMap = new ConcurrentHashMap<>();
 
 
+    // ---------------------- tool ----------------------
+
     /**
-     * add trigger
+     * trigger job
+     *
+     * @param jobId
+     * @param triggerType
+     * @param failRetryCount
+     * 			>=0: use this param
+     * 			<0: use param from job info config
+     * @param executorShardingParam
+     * @param executorParam
+     *          null: use job param
+     *          not null: cover job param
      */
-    public void addTrigger(final int jobId,
-                           final TriggerTypeEnum triggerType,
-                           final int failRetryCount,
-                           final String executorShardingParam,
-                           final String executorParam,
-                           final String addressList) {
+    public void trigger(final int jobId,
+                        final TriggerTypeEnum triggerType,
+                        final int failRetryCount,
+                        final String executorShardingParam,
+                        final String executorParam,
+                        final String addressList) {
 
         // choose thread pool
         ThreadPoolExecutor triggerPool_ = fastTriggerPool;
@@ -104,7 +120,7 @@ public class JobTriggerPoolHelper {
 
                 try {
                     // do trigger
-                    XxlJobTrigger.trigger(jobId, triggerType, failRetryCount, executorShardingParam, executorParam, addressList);
+                    XxlJobAdminBootstrap.getInstance().getJobTrigger().trigger(jobId, triggerType, failRetryCount, executorShardingParam, executorParam, addressList);
                 } catch (Throwable e) {
                     logger.error(e.getMessage(), e);
                 } finally {
@@ -133,34 +149,6 @@ public class JobTriggerPoolHelper {
                 return "Job Runnable, jobId:"+jobId;
             }
         });
-    }
-
-
-
-    // ---------------------- helper ----------------------
-
-    private static JobTriggerPoolHelper helper = new JobTriggerPoolHelper();
-
-    public static void toStart() {
-        helper.start();
-    }
-    public static void toStop() {
-        helper.stop();
-    }
-
-    /**
-     * @param jobId
-     * @param triggerType
-     * @param failRetryCount
-     * 			>=0: use this param
-     * 			<0: use param from job info config
-     * @param executorShardingParam
-     * @param executorParam
-     *          null: use job param
-     *          not null: cover job param
-     */
-    public static void trigger(int jobId, TriggerTypeEnum triggerType, int failRetryCount, String executorShardingParam, String executorParam, String addressList) {
-        helper.addTrigger(jobId, triggerType, failRetryCount, executorShardingParam, executorParam, addressList);
     }
 
 }

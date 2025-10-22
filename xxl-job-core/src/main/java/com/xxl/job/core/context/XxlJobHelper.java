@@ -160,7 +160,7 @@ public class XxlJobHelper {
         // appendlog
         String logFileName = xxlJobContext.getJobLogFileName();
 
-        if (logFileName!=null && logFileName.trim().length()>0) {
+        if (logFileName!=null && !logFileName.trim().isEmpty()) {
             XxlJobFileAppender.appendLog(logFileName, formatAppendLog);
             return true;
         } else {

@@ -1,6 +1,6 @@
 package com.xxl.job.admin.scheduler.route.strategy;
 
-import com.xxl.job.admin.scheduler.scheduler.XxlJobScheduler;
+import com.xxl.job.admin.scheduler.config.XxlJobAdminBootstrap;
 import com.xxl.job.admin.scheduler.route.ExecutorRouter;
 import com.xxl.job.admin.util.I18nUtil;
 import com.xxl.job.core.biz.ExecutorBiz;
@@ -22,7 +22,7 @@ public class ExecutorRouteBusyover extends ExecutorRouter {
             // beat
             ReturnT<String> idleBeatResult = null;
             try {
-                ExecutorBiz executorBiz = XxlJobScheduler.getExecutorBiz(address);
+                ExecutorBiz executorBiz = XxlJobAdminBootstrap.getExecutorBiz(address);
                 idleBeatResult = executorBiz.idleBeat(new IdleBeatParam(triggerParam.getJobId()));
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);

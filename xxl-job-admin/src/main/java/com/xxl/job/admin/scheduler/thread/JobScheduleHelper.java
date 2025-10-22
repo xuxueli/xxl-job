@@ -1,16 +1,17 @@
 package com.xxl.job.admin.scheduler.thread;
 
-import com.xxl.job.admin.scheduler.conf.XxlJobAdminConfig;
-import com.xxl.job.admin.scheduler.cron.CronExpression;
 import com.xxl.job.admin.model.XxlJobInfo;
-import com.xxl.job.admin.scheduler.scheduler.MisfireStrategyEnum;
-import com.xxl.job.admin.scheduler.scheduler.ScheduleTypeEnum;
+import com.xxl.job.admin.scheduler.config.XxlJobAdminBootstrap;
+import com.xxl.job.admin.scheduler.cron.CronExpression;
+import com.xxl.job.admin.scheduler.enums.MisfireStrategyEnum;
+import com.xxl.job.admin.scheduler.enums.ScheduleTypeEnum;
 import com.xxl.job.admin.scheduler.trigger.TriggerTypeEnum;
+import com.xxl.tool.core.CollectionTool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
@@ -19,12 +20,8 @@ import java.util.concurrent.TimeUnit;
  * @author xuxueli 2019-05-21
  */
 public class JobScheduleHelper {
-    private static Logger logger = LoggerFactory.getLogger(JobScheduleHelper.class);
+    private static final Logger logger = LoggerFactory.getLogger(JobScheduleHelper.class);
 
-    private static JobScheduleHelper instance = new JobScheduleHelper();
-    public static JobScheduleHelper getInstance(){
-        return instance;
-    }
 
     public static final long PRE_READ_MS = 5000;    // pre read
 
@@ -34,6 +31,9 @@ public class JobScheduleHelper {
     private volatile boolean ringThreadToStop = false;
     private volatile static Map<Integer, List<Integer>> ringData = new ConcurrentHashMap<>();
 
+    /**
+     * start
+     */
     public void start(){
 
         // schedule thread
@@ -41,6 +41,7 @@ public class JobScheduleHelper {
             @Override
             public void run() {
 
+                // align time
                 try {
                     TimeUnit.MILLISECONDS.sleep(5000 - System.currentTimeMillis()%1000 );
                 } catch (Throwable e) {
@@ -51,33 +52,26 @@ public class JobScheduleHelper {
                 logger.info(">>>>>>>>> init xxl-job admin scheduler success.");
 
                 // pre-read count: treadpool-size * trigger-qps (each trigger cost 50ms, qps = 1000/50 = 20)
-                int preReadCount = (XxlJobAdminConfig.getAdminConfig().getTriggerPoolFastMax() + XxlJobAdminConfig.getAdminConfig().getTriggerPoolSlowMax()) * 20;
+                int preReadCount = (XxlJobAdminBootstrap.getInstance().getTriggerPoolFastMax() + XxlJobAdminBootstrap.getInstance().getTriggerPoolSlowMax()) * 20;
 
+                // do schedule
                 while (!scheduleThreadToStop) {
 
-                    // Scan Job
+                    // param
                     long start = System.currentTimeMillis();
-
-                    Connection conn = null;
-                    Boolean connAutoCommit = null;
-                    PreparedStatement preparedStatement = null;
-
                     boolean preReadSuc = true;
+
+                    // transaction start
+                    TransactionStatus transactionStatus = XxlJobAdminBootstrap.getInstance().getTransactionManager().getTransaction(new DefaultTransactionDefinition());
                     try {
-
-                        conn = XxlJobAdminConfig.getAdminConfig().getDataSource().getConnection();
-                        connAutoCommit = conn.getAutoCommit();
-                        conn.setAutoCommit(false);
-
-                        preparedStatement = conn.prepareStatement(  "select * from xxl_job_lock where lock_name = 'schedule_lock' for update" );
-                        preparedStatement.execute();
-
-                        // tx start
-
-                        // 1、pre read
+                        // 1、job lock
+                        String lockedRecord = XxlJobAdminBootstrap.getInstance().getXxlJobLockMapper().scheduleLock();
                         long nowTime = System.currentTimeMillis();
-                        List<XxlJobInfo> scheduleList = XxlJobAdminConfig.getAdminConfig().getXxlJobInfoMapper().scheduleJobQuery(nowTime + PRE_READ_MS, preReadCount);
-                        if (scheduleList!=null && scheduleList.size()>0) {
+
+                        // scan and process job
+                        List<XxlJobInfo> scheduleList = XxlJobAdminBootstrap.getInstance().getXxlJobInfoMapper().scheduleJobQuery(nowTime + PRE_READ_MS, preReadCount);
+                        if (CollectionTool.isNotEmpty(scheduleList)) {
+
                             // 2、push time-ring
                             for (XxlJobInfo jobInfo: scheduleList) {
 
@@ -90,7 +84,7 @@ public class JobScheduleHelper {
                                     MisfireStrategyEnum misfireStrategyEnum = MisfireStrategyEnum.match(jobInfo.getMisfireStrategy(), MisfireStrategyEnum.DO_NOTHING);
                                     if (MisfireStrategyEnum.FIRE_ONCE_NOW == misfireStrategyEnum) {
                                         // FIRE_ONCE_NOW 》 trigger
-                                        JobTriggerPoolHelper.trigger(jobInfo.getId(), TriggerTypeEnum.MISFIRE, -1, null, null, null);
+                                        XxlJobAdminBootstrap.getInstance().getJobTriggerPoolHelper().trigger(jobInfo.getId(), TriggerTypeEnum.MISFIRE, -1, null, null, null);
                                         logger.debug(">>>>>>>>>>> xxl-job, schedule push trigger : jobId = " + jobInfo.getId() );
                                     }
 
@@ -101,7 +95,7 @@ public class JobScheduleHelper {
                                     // 2.2、trigger-expire < 5s：direct-trigger && make next-trigger-time
 
                                     // 1、trigger
-                                    JobTriggerPoolHelper.trigger(jobInfo.getId(), TriggerTypeEnum.CRON, -1, null, null, null);
+                                    XxlJobAdminBootstrap.getInstance().getJobTriggerPoolHelper().trigger(jobInfo.getId(), TriggerTypeEnum.CRON, -1, null, null, null);
                                     logger.debug(">>>>>>>>>>> xxl-job, schedule push trigger : jobId = " + jobInfo.getId() );
 
                                     // 2、fresh next
@@ -139,58 +133,22 @@ public class JobScheduleHelper {
 
                             // 3、update trigger info
                             for (XxlJobInfo jobInfo: scheduleList) {
-                                XxlJobAdminConfig.getAdminConfig().getXxlJobInfoMapper().scheduleUpdate(jobInfo);
+                                XxlJobAdminBootstrap.getInstance().getXxlJobInfoMapper().scheduleUpdate(jobInfo);
                             }
 
                         } else {
                             preReadSuc = false;
                         }
 
-                        // tx stop
-
-
                     } catch (Throwable e) {
                         if (!scheduleThreadToStop) {
-                            logger.error(">>>>>>>>>>> xxl-job, JobScheduleHelper#scheduleThread error:{}", e);
+                            logger.error(">>>>>>>>>>> xxl-job, JobScheduleHelper#scheduleThread error:{}", e.getMessage(), e);
                         }
                     } finally {
-
-                        // commit
-                        if (conn != null) {
-                            try {
-                                conn.commit();
-                            } catch (Throwable e) {
-                                if (!scheduleThreadToStop) {
-                                    logger.error(e.getMessage(), e);
-                                }
-                            }
-                            try {
-                                conn.setAutoCommit(connAutoCommit);
-                            } catch (Throwable e) {
-                                if (!scheduleThreadToStop) {
-                                    logger.error(e.getMessage(), e);
-                                }
-                            }
-                            try {
-                                conn.close();
-                            } catch (Throwable e) {
-                                if (!scheduleThreadToStop) {
-                                    logger.error(e.getMessage(), e);
-                                }
-                            }
-                        }
-
-                        // close PreparedStatement
-                        if (null != preparedStatement) {
-                            try {
-                                preparedStatement.close();
-                            } catch (Throwable e) {
-                                if (!scheduleThreadToStop) {
-                                    logger.error(e.getMessage(), e);
-                                }
-                            }
-                        }
+                        // transaction commit
+                        XxlJobAdminBootstrap.getInstance().getTransactionManager().commit(transactionStatus);   // avlid schedule repeat
                     }
+                    // transaction end
                     long cost = System.currentTimeMillis()-start;
 
 
@@ -249,7 +207,7 @@ public class JobScheduleHelper {
                             // do trigger
                             for (int jobId: ringItemData) {
                                 // do trigger
-                                JobTriggerPoolHelper.trigger(jobId, TriggerTypeEnum.CRON, -1, null, null, null);
+                                XxlJobAdminBootstrap.getInstance().getJobTriggerPoolHelper().trigger(jobId, TriggerTypeEnum.CRON, -1, null, null, null);
                             }
                             // clear
                             ringItemData.clear();
@@ -306,7 +264,10 @@ public class JobScheduleHelper {
         logger.debug(">>>>>>>>>>> xxl-job, schedule push time-ring : " + ringSecond + " = " + Arrays.asList(ringItemData) );
     }
 
-    public void toStop(){
+    /**
+     * stop
+     */
+    public void stop(){
 
         // 1、stop schedule
         scheduleThreadToStop = true;
@@ -366,6 +327,10 @@ public class JobScheduleHelper {
 
 
     // ---------------------- tools ----------------------
+
+    /**
+     * generate next valid time
+     */
     public static Date generateNextValidTime(XxlJobInfo jobInfo, Date fromTime) throws Exception {
         ScheduleTypeEnum scheduleTypeEnum = ScheduleTypeEnum.match(jobInfo.getScheduleType(), null);
         if (ScheduleTypeEnum.CRON == scheduleTypeEnum) {

@@ -34,6 +34,9 @@ public enum ExecutorRouteStrategyEnum {
         return router;
     }
 
+    /**
+     * match router
+     */
     public static ExecutorRouteStrategyEnum match(String name, ExecutorRouteStrategyEnum defaultItem){
         if (name != null) {
             for (ExecutorRouteStrategyEnum item: ExecutorRouteStrategyEnum.values()) {

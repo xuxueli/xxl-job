@@ -1,8 +1,7 @@
 package com.xxl.job.admin.scheduler.thread;
 
-import com.xxl.job.admin.scheduler.complete.XxlJobCompleter;
-import com.xxl.job.admin.scheduler.conf.XxlJobAdminConfig;
 import com.xxl.job.admin.model.XxlJobLog;
+import com.xxl.job.admin.scheduler.config.XxlJobAdminBootstrap;
 import com.xxl.job.admin.util.I18nUtil;
 import com.xxl.job.core.biz.model.HandleCallbackParam;
 import com.xxl.job.core.biz.model.ReturnT;
@@ -15,23 +14,22 @@ import java.util.List;
 import java.util.concurrent.*;
 
 /**
- * job lose-monitor instance
+ * job complate, for callback and result-lost
  *
  * @author xuxueli 2015-9-1 18:05:56
  */
 public class JobCompleteHelper {
 	private static Logger logger = LoggerFactory.getLogger(JobCompleteHelper.class);
 	
-	private static JobCompleteHelper instance = new JobCompleteHelper();
-	public static JobCompleteHelper getInstance(){
-		return instance;
-	}
-
 	// ---------------------- monitor ----------------------
 
 	private ThreadPoolExecutor callbackThreadPool = null;
 	private Thread monitorThread;
 	private volatile boolean toStop = false;
+
+	/**
+	 * start
+	 */
 	public void start(){
 
 		// for callback
@@ -76,7 +74,7 @@ public class JobCompleteHelper {
 					try {
 						// 任务结果丢失处理：调度记录停留在 "运行中" 状态超过10min，且对应执行器心跳注册失败不在线，则将本地调度主动标记失败；
 						Date losedTime = DateUtil.addMinutes(new Date(), -10);
-						List<Long> losedJobIds  = XxlJobAdminConfig.getAdminConfig().getXxlJobLogMapper().findLostJobIds(losedTime);
+						List<Long> losedJobIds  = XxlJobAdminBootstrap.getInstance().getXxlJobLogMapper().findLostJobIds(losedTime);
 
 						if (losedJobIds!=null && losedJobIds.size()>0) {
 							for (Long logId: losedJobIds) {
@@ -88,7 +86,7 @@ public class JobCompleteHelper {
 								jobLog.setHandleCode(ReturnT.FAIL_CODE);
 								jobLog.setHandleMsg( I18nUtil.getString("joblog_lost_fail") );
 
-								XxlJobCompleter.updateHandleInfoAndFinish(jobLog);
+								XxlJobAdminBootstrap.getInstance().getJobCompleter().complete(jobLog);
 							}
 
 						}
@@ -117,7 +115,10 @@ public class JobCompleteHelper {
 		monitorThread.start();
 	}
 
-	public void toStop(){
+	/**
+	 * stop
+	 */
+	public void stop(){
 		toStop = true;
 
 		// stop registryOrRemoveThreadPool
@@ -153,7 +154,7 @@ public class JobCompleteHelper {
 
 	private ReturnT<String> callback(HandleCallbackParam handleCallbackParam) {
 		// valid log item
-		XxlJobLog log = XxlJobAdminConfig.getAdminConfig().getXxlJobLogMapper().load(handleCallbackParam.getLogId());
+		XxlJobLog log = XxlJobAdminBootstrap.getInstance().getXxlJobLogMapper().load(handleCallbackParam.getLogId());
 		if (log == null) {
 			return ReturnT.ofFail( "log item not found.");
 		}
@@ -174,7 +175,7 @@ public class JobCompleteHelper {
 		log.setHandleTime(new Date());
 		log.setHandleCode(handleCallbackParam.getHandleCode());
 		log.setHandleMsg(handleMsg.toString());
-		XxlJobCompleter.updateHandleInfoAndFinish(log);
+		XxlJobAdminBootstrap.getInstance().getJobCompleter().complete(log);
 
 		return ReturnT.ofSuccess();
 	}

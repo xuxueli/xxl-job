@@ -68,7 +68,7 @@ public class SimpleLoginStore implements LoginStore {
         List<String> roleList = user.getRole()==1? List.of(Consts.ADMIN_ROLE):null;
 
         // parse jobGroup permission
-        Map<String, String> extraInfo = MapTool.newHashMap(
+        Map<String, String> extraInfo = MapTool.newMap(
                 "jobGroups", user.getPermission()
         );
 
