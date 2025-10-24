@@ -6,7 +6,7 @@ import com.xxl.job.admin.model.XxlJobInfo;
 import com.xxl.job.admin.model.XxlJobLogReport;
 import com.xxl.job.admin.scheduler.config.XxlJobAdminBootstrap;
 import com.xxl.job.admin.scheduler.cron.CronExpression;
-import com.xxl.job.admin.scheduler.enums.MisfireStrategyEnum;
+import com.xxl.job.admin.scheduler.misfire.MisfireStrategyEnum;
 import com.xxl.job.admin.scheduler.enums.ScheduleTypeEnum;
 import com.xxl.job.admin.scheduler.route.ExecutorRouteStrategyEnum;
 import com.xxl.job.admin.scheduler.thread.JobScheduleHelper;

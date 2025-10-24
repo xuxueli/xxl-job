@@ -3,7 +3,7 @@ package com.xxl.job.admin.scheduler.thread;
 import com.xxl.job.admin.model.XxlJobInfo;
 import com.xxl.job.admin.scheduler.config.XxlJobAdminBootstrap;
 import com.xxl.job.admin.scheduler.cron.CronExpression;
-import com.xxl.job.admin.scheduler.enums.MisfireStrategyEnum;
+import com.xxl.job.admin.scheduler.misfire.MisfireStrategyEnum;
 import com.xxl.job.admin.scheduler.enums.ScheduleTypeEnum;
 import com.xxl.job.admin.scheduler.trigger.TriggerTypeEnum;
 import com.xxl.tool.core.CollectionTool;
@@ -80,15 +80,9 @@ public class JobScheduleHelper {
                                 if (nowTime > jobInfo.getTriggerNextTime() + PRE_READ_MS) {
                                     // 2.1、trigger-expire > 5s：pass && make next-trigger-time
 
-                                    // 1、misfire match
+                                    // 1、misfire handle
                                     MisfireStrategyEnum misfireStrategyEnum = MisfireStrategyEnum.match(jobInfo.getMisfireStrategy(), MisfireStrategyEnum.DO_NOTHING);
-                                    if (MisfireStrategyEnum.FIRE_ONCE_NOW == misfireStrategyEnum) {
-                                        // FIRE_ONCE_NOW 》 trigger
-                                        XxlJobAdminBootstrap.getInstance().getJobTriggerPoolHelper().trigger(jobInfo.getId(), TriggerTypeEnum.MISFIRE, -1, null, null, null);
-                                        logger.debug(">>>>>>>>>>> xxl-job, schedule misfire, FIRE_ONCE_NOW trigger : jobId = " + jobInfo.getId() );
-                                    } else {
-                                        logger.debug(">>>>>>>>>>> xxl-job, schedule misfire, DO_NOTHING: jobId = " + jobInfo.getId() );
-                                    }
+                                    misfireStrategyEnum.getMisfireHandler().handle(jobInfo.getId());
 
                                     // 2、fresh next
                                     refreshNextValidTime(jobInfo, new Date());
@@ -96,7 +90,7 @@ public class JobScheduleHelper {
                                 } else if (nowTime > jobInfo.getTriggerNextTime()) {
                                     // 2.2、trigger-expire < 5s：direct-trigger && make next-trigger-time
 
-                                    // 1、trigger
+                                    // 1、trigger direct
                                     XxlJobAdminBootstrap.getInstance().getJobTriggerPoolHelper().trigger(jobInfo.getId(), TriggerTypeEnum.CRON, -1, null, null, null);
                                     logger.debug(">>>>>>>>>>> xxl-job, schedule expire, direct trigger : jobId = " + jobInfo.getId() );
 
@@ -109,7 +103,7 @@ public class JobScheduleHelper {
                                         // 1、make ring second
                                         int ringSecond = (int)((jobInfo.getTriggerNextTime()/1000)%60);
 
-                                        // 2、push time ring
+                                        // 2、push time ring (pre read)
                                         pushTimeRing(ringSecond, jobInfo.getId());
                                         logger.debug(">>>>>>>>>>> xxl-job, schedule pre-read, push trigger : jobId = " + jobInfo.getId() );
 
