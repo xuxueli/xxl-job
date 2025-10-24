@@ -199,12 +199,12 @@ public class JobScheduleHelper {
                         List<Integer> ringItemData = new ArrayList<>();
 
                         // collect rind data, by second
-                        int nowSecond = Calendar.getInstance().get(Calendar.SECOND);   // 避免处理耗时太长，跨过刻度，向前校验一个刻度；
-                        for (int i = 0; i < 2; i++) {
+                        int nowSecond = Calendar.getInstance().get(Calendar.SECOND);
+                        for (int i = 0; i <= 2; i++) {                                                              // 避免调度遗漏：处理耗时太长、跨过刻度，除当前刻度外 + 向前校验2个刻度；
                             List<Integer> ringItemList = ringData.remove( (nowSecond+60-i)%60 );
                             if (CollectionTool.isNotEmpty(ringItemList)) {
                                 // distinct for each second
-                                List<Integer> ringItemListDistinct = ringItemList.stream().distinct().toList();
+                                List<Integer> ringItemListDistinct = ringItemList.stream().distinct().toList();     // 避免调度重复：重复推送时间轮刻度，去重只保留一个；；
                                 if (ringItemListDistinct.size() < ringItemList.size()) {
                                     logger.warn(">>>>>>>>>>> xxl-job, time-ring found job repeat beat : " + nowSecond + " = " + ringItemData);
                                 }
