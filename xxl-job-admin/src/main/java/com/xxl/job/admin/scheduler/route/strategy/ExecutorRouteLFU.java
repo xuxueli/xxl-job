@@ -17,6 +17,11 @@ import java.util.concurrent.ConcurrentMap;
  */
 public class ExecutorRouteLFU extends ExecutorRouter {
 
+    /**
+     * job lfu map
+     *
+     * <jobId, <address, count>>
+     */
     private static ConcurrentMap<Integer, HashMap<String, Integer>> jobLfuMap = new ConcurrentHashMap<Integer, HashMap<String, Integer>>();
     private static long CACHE_VALID_TIME = 0;
 
@@ -31,7 +36,7 @@ public class ExecutorRouteLFU extends ExecutorRouter {
         // lfu item init
         HashMap<String, Integer> lfuItemMap = jobLfuMap.get(jobId);     // Key排序可以用TreeMap+构造入参Compare；Value排序暂时只能通过ArrayList；
         if (lfuItemMap == null) {
-            lfuItemMap = new HashMap<String, Integer>();
+            lfuItemMap = new HashMap<>();
             jobLfuMap.putIfAbsent(jobId, lfuItemMap);   // 避免重复覆盖
         }
 
@@ -48,23 +53,17 @@ public class ExecutorRouteLFU extends ExecutorRouter {
                 delKeys.add(existKey);
             }
         }
-        if (delKeys.size() > 0) {
+        if (!delKeys.isEmpty()) {
             for (String delKey: delKeys) {
                 lfuItemMap.remove(delKey);
             }
         }
 
         // load least userd count address
-        List<Map.Entry<String, Integer>> lfuItemList = new ArrayList<Map.Entry<String, Integer>>(lfuItemMap.entrySet());
-        Collections.sort(lfuItemList, new Comparator<Map.Entry<String, Integer>>() {
-            @Override
-            public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {
-                return o1.getValue().compareTo(o2.getValue());
-            }
-        });
+        List<Map.Entry<String, Integer>> lfuItemList = new ArrayList<>(lfuItemMap.entrySet());
+        lfuItemList.sort(Map.Entry.comparingByValue());     // 默认升序, 获取 Value 最小值
 
         Map.Entry<String, Integer> addressItem = lfuItemList.get(0);
-        String minAddress = addressItem.getKey();
         addressItem.setValue(addressItem.getValue() + 1);
 
         return addressItem.getKey();
