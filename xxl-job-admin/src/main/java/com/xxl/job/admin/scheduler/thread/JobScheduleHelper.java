@@ -228,6 +228,12 @@ public class JobScheduleHelper {
         ringThread.start();
     }
 
+    /**
+     * refresh next valid time of job
+     *
+     * @param jobInfo   job info
+     * @param fromTime  from time
+     */
     private void refreshNextValidTime(XxlJobInfo jobInfo, Date fromTime) {
         try {
             Date nextValidTime = generateNextValidTime(jobInfo, fromTime);
@@ -254,16 +260,21 @@ public class JobScheduleHelper {
         }
     }
 
+    /**
+     * push time ring
+     *
+     * @param ringSecond    ring second
+     * @param jobId         job id
+     */
     private void pushTimeRing(int ringSecond, int jobId){
-        // push async ring
-        List<Integer> ringItemData = ringData.get(ringSecond);
-        if (ringItemData == null) {
-            ringItemData = new ArrayList<Integer>();
-            ringData.put(ringSecond, ringItemData);
-        }
-        ringItemData.add(jobId);
+        // get ringItemData, init when not exists
+        List<Integer> ringItemData = ringData.computeIfAbsent(
+                ringSecond,
+                k -> new ArrayList<>());
 
-        logger.debug(">>>>>>>>>>> xxl-job, schedule push time-ring : " + ringSecond + " = " + Arrays.asList(ringItemData) );
+        // push async rind
+        ringItemData.add(jobId);
+        logger.debug(">>>>>>>>>>> xxl-job, schedule push time-ring : " + ringSecond + " = " + List.of(ringItemData));
     }
 
     /**
@@ -293,7 +304,7 @@ public class JobScheduleHelper {
         if (!ringData.isEmpty()) {
             for (int second : ringData.keySet()) {
                 List<Integer> tmpData = ringData.get(second);
-                if (tmpData!=null && tmpData.size()>0) {
+                if (tmpData!=null && !tmpData.isEmpty()) {
                     hasRingData = true;
                     break;
                 }
