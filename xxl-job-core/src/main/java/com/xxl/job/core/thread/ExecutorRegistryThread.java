@@ -35,6 +35,7 @@ public class ExecutorRegistryThread {
             return;
         }
 
+        toStop = false;
         registryThread = new Thread(new Runnable() {
             @Override
             public void run() {
