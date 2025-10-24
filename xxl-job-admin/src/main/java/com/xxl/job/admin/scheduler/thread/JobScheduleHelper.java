@@ -85,7 +85,7 @@ public class JobScheduleHelper {
                                     if (MisfireStrategyEnum.FIRE_ONCE_NOW == misfireStrategyEnum) {
                                         // FIRE_ONCE_NOW 》 trigger
                                         XxlJobAdminBootstrap.getInstance().getJobTriggerPoolHelper().trigger(jobInfo.getId(), TriggerTypeEnum.MISFIRE, -1, null, null, null);
-                                        logger.debug(">>>>>>>>>>> xxl-job, schedule push trigger : jobId = " + jobInfo.getId() );
+                                        logger.debug(">>>>>>>>>>> xxl-job, schedule misfire, FIRE_ONCE_NOW trigger : jobId = " + jobInfo.getId() );
                                     }
 
                                     // 2、fresh next
@@ -96,7 +96,7 @@ public class JobScheduleHelper {
 
                                     // 1、trigger
                                     XxlJobAdminBootstrap.getInstance().getJobTriggerPoolHelper().trigger(jobInfo.getId(), TriggerTypeEnum.CRON, -1, null, null, null);
-                                    logger.debug(">>>>>>>>>>> xxl-job, schedule push trigger : jobId = " + jobInfo.getId() );
+                                    logger.debug(">>>>>>>>>>> xxl-job, schedule expire, direct trigger : jobId = " + jobInfo.getId() );
 
                                     // 2、fresh next
                                     refreshNextValidTime(jobInfo, new Date());
@@ -109,6 +109,7 @@ public class JobScheduleHelper {
 
                                         // 2、push time ring
                                         pushTimeRing(ringSecond, jobInfo.getId());
+                                        logger.debug(">>>>>>>>>>> xxl-job, schedule pre-read, push trigger : jobId = " + jobInfo.getId() );
 
                                         // 3、fresh next
                                         refreshNextValidTime(jobInfo, new Date(jobInfo.getTriggerNextTime()));
@@ -123,6 +124,7 @@ public class JobScheduleHelper {
 
                                     // 2、push time ring
                                     pushTimeRing(ringSecond, jobInfo.getId());
+                                    logger.debug(">>>>>>>>>>> xxl-job, schedule normal, push trigger : jobId = " + jobInfo.getId() );
 
                                     // 3、fresh next
                                     refreshNextValidTime(jobInfo, new Date(jobInfo.getTriggerNextTime()));
