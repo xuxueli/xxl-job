@@ -2,9 +2,8 @@ package com.xxl.job.admin.scheduler.thread;
 
 import com.xxl.job.admin.model.XxlJobInfo;
 import com.xxl.job.admin.scheduler.config.XxlJobAdminBootstrap;
-import com.xxl.job.admin.scheduler.cron.CronExpression;
 import com.xxl.job.admin.scheduler.misfire.MisfireStrategyEnum;
-import com.xxl.job.admin.scheduler.enums.ScheduleTypeEnum;
+import com.xxl.job.admin.scheduler.type.ScheduleTypeEnum;
 import com.xxl.job.admin.scheduler.trigger.TriggerTypeEnum;
 import com.xxl.tool.core.CollectionTool;
 import com.xxl.tool.core.MapTool;
@@ -85,7 +84,7 @@ public class JobScheduleHelper {
                                     misfireStrategyEnum.getMisfireHandler().handle(jobInfo.getId());
 
                                     // 2、fresh next
-                                    refreshNextValidTime(jobInfo, new Date());
+                                    refreshNextTriggerTime(jobInfo, new Date());
 
                                 } else if (nowTime > jobInfo.getTriggerNextTime()) {
                                     // 2.2、trigger-expire < 5s：direct-trigger && make next-trigger-time
@@ -95,7 +94,7 @@ public class JobScheduleHelper {
                                     logger.debug(">>>>>>>>>>> xxl-job, schedule expire, direct trigger : jobId = " + jobInfo.getId() );
 
                                     // 2、fresh next
-                                    refreshNextValidTime(jobInfo, new Date());
+                                    refreshNextTriggerTime(jobInfo, new Date());
 
                                     // next-trigger-time in 5s, pre-read again
                                     if (jobInfo.getTriggerStatus()==1 && nowTime + PRE_READ_MS > jobInfo.getTriggerNextTime()) {
@@ -108,7 +107,7 @@ public class JobScheduleHelper {
                                         logger.debug(">>>>>>>>>>> xxl-job, schedule pre-read, push trigger : jobId = " + jobInfo.getId() );
 
                                         // 3、fresh next
-                                        refreshNextValidTime(jobInfo, new Date(jobInfo.getTriggerNextTime()));
+                                        refreshNextTriggerTime(jobInfo, new Date(jobInfo.getTriggerNextTime()));
 
                                     }
 
@@ -123,7 +122,7 @@ public class JobScheduleHelper {
                                     logger.debug(">>>>>>>>>>> xxl-job, schedule normal, push trigger : jobId = " + jobInfo.getId() );
 
                                     // 3、fresh next
-                                    refreshNextValidTime(jobInfo, new Date(jobInfo.getTriggerNextTime()));
+                                    refreshNextTriggerTime(jobInfo, new Date(jobInfo.getTriggerNextTime()));
 
                                 }
 
@@ -234,20 +233,25 @@ public class JobScheduleHelper {
     }
 
     /**
-     * refresh next valid time of job
+     * refresh next trigger time of job
      *
      * @param jobInfo   job info
      * @param fromTime  from time
      */
-    private void refreshNextValidTime(XxlJobInfo jobInfo, Date fromTime) {
+    private void refreshNextTriggerTime(XxlJobInfo jobInfo, Date fromTime) {
         try {
-            Date nextValidTime = generateNextValidTime(jobInfo, fromTime);
-            if (nextValidTime != null) {
+            // generate next trigger time
+            ScheduleTypeEnum scheduleTypeEnum = ScheduleTypeEnum.match(jobInfo.getScheduleType(), ScheduleTypeEnum.NONE);
+            Date nextTriggerTime = scheduleTypeEnum.getScheduleType().generateNextTriggerTime(jobInfo, fromTime);
+
+            // refresh next trigger-time + status
+            if (nextTriggerTime != null) {
+                // generate success
                 jobInfo.setTriggerStatus(-1);                               // pass, may be Inaccurate
                 jobInfo.setTriggerLastTime(jobInfo.getTriggerNextTime());
-                jobInfo.setTriggerNextTime(nextValidTime.getTime());
+                jobInfo.setTriggerNextTime(nextTriggerTime.getTime());
             } else {
-                // generateNextValidTime fail, stop job
+                // generate fail, stop job
                 jobInfo.setTriggerStatus(0);
                 jobInfo.setTriggerLastTime(0);
                 jobInfo.setTriggerNextTime(0);
@@ -255,7 +259,7 @@ public class JobScheduleHelper {
                         jobInfo.getId(), jobInfo.getScheduleType(), jobInfo.getScheduleConf());
             }
         } catch (Throwable e) {
-            // generateNextValidTime error, stop job
+            // generate error, stop job
             jobInfo.setTriggerStatus(0);
             jobInfo.setTriggerLastTime(0);
             jobInfo.setTriggerNextTime(0);
@@ -341,23 +345,6 @@ public class JobScheduleHelper {
         }
 
         logger.info(">>>>>>>>>>> xxl-job, JobScheduleHelper stop");
-    }
-
-
-    // ---------------------- tools ----------------------
-
-    /**
-     * generate next valid time
-     */
-    public static Date generateNextValidTime(XxlJobInfo jobInfo, Date fromTime) throws Exception {
-        ScheduleTypeEnum scheduleTypeEnum = ScheduleTypeEnum.match(jobInfo.getScheduleType(), null);
-        if (ScheduleTypeEnum.CRON == scheduleTypeEnum) {
-            Date nextValidTime = new CronExpression(jobInfo.getScheduleConf()).getNextValidTimeAfter(fromTime);
-            return nextValidTime;
-        } else if (ScheduleTypeEnum.FIX_RATE == scheduleTypeEnum /*|| ScheduleTypeEnum.FIX_DELAY == scheduleTypeEnum*/) {
-            return new Date(fromTime.getTime() + Long.parseLong(jobInfo.getScheduleConf()) * 1000L);
-        }
-        return null;
     }
 
 }

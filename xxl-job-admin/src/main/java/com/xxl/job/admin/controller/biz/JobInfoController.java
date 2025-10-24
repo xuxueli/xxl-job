@@ -6,8 +6,7 @@ import com.xxl.job.admin.model.XxlJobInfo;
 import com.xxl.job.admin.scheduler.exception.XxlJobException;
 import com.xxl.job.admin.scheduler.route.ExecutorRouteStrategyEnum;
 import com.xxl.job.admin.scheduler.misfire.MisfireStrategyEnum;
-import com.xxl.job.admin.scheduler.enums.ScheduleTypeEnum;
-import com.xxl.job.admin.scheduler.thread.JobScheduleHelper;
+import com.xxl.job.admin.scheduler.type.ScheduleTypeEnum;
 import com.xxl.job.admin.service.XxlJobService;
 import com.xxl.job.admin.util.I18nUtil;
 import com.xxl.job.admin.util.JobGroupPermissionUtil;
@@ -155,7 +154,12 @@ public class JobInfoController {
 		try {
 			Date lastTime = new Date();
 			for (int i = 0; i < 5; i++) {
-				lastTime = JobScheduleHelper.generateNextValidTime(paramXxlJobInfo, lastTime);
+
+				// generate next trigger time
+				ScheduleTypeEnum scheduleTypeEnum = ScheduleTypeEnum.match(paramXxlJobInfo.getScheduleType(), ScheduleTypeEnum.NONE);
+				lastTime = scheduleTypeEnum.getScheduleType().generateNextTriggerTime(paramXxlJobInfo, lastTime);
+
+				// collect data
 				if (lastTime != null) {
 					result.add(DateUtil.formatDateTime(lastTime));
 				} else {
