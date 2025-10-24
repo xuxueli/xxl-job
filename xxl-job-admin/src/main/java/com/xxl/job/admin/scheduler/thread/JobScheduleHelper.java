@@ -7,6 +7,7 @@ import com.xxl.job.admin.scheduler.enums.MisfireStrategyEnum;
 import com.xxl.job.admin.scheduler.enums.ScheduleTypeEnum;
 import com.xxl.job.admin.scheduler.trigger.TriggerTypeEnum;
 import com.xxl.tool.core.CollectionTool;
+import com.xxl.tool.core.MapTool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.TransactionStatus;
@@ -29,7 +30,7 @@ public class JobScheduleHelper {
     private Thread ringThread;
     private volatile boolean scheduleThreadToStop = false;
     private volatile boolean ringThreadToStop = false;
-    private volatile static Map<Integer, List<Integer>> ringData = new ConcurrentHashMap<>();
+    private final Map<Integer, List<Integer>> ringData = new ConcurrentHashMap<>();
 
     /**
      * start
@@ -78,7 +79,6 @@ public class JobScheduleHelper {
                                 // time-ring jump
                                 if (nowTime > jobInfo.getTriggerNextTime() + PRE_READ_MS) {
                                     // 2.1、trigger-expire > 5s：pass && make next-trigger-time
-                                    logger.warn(">>>>>>>>>>> xxl-job, schedule misfire, jobId = " + jobInfo.getId());
 
                                     // 1、misfire match
                                     MisfireStrategyEnum misfireStrategyEnum = MisfireStrategyEnum.match(jobInfo.getMisfireStrategy(), MisfireStrategyEnum.DO_NOTHING);
@@ -86,6 +86,8 @@ public class JobScheduleHelper {
                                         // FIRE_ONCE_NOW 》 trigger
                                         XxlJobAdminBootstrap.getInstance().getJobTriggerPoolHelper().trigger(jobInfo.getId(), TriggerTypeEnum.MISFIRE, -1, null, null, null);
                                         logger.debug(">>>>>>>>>>> xxl-job, schedule misfire, FIRE_ONCE_NOW trigger : jobId = " + jobInfo.getId() );
+                                    } else {
+                                        logger.debug(">>>>>>>>>>> xxl-job, schedule misfire, DO_NOTHING: jobId = " + jobInfo.getId() );
                                     }
 
                                     // 2、fresh next
@@ -195,17 +197,26 @@ public class JobScheduleHelper {
                     try {
                         // second data
                         List<Integer> ringItemData = new ArrayList<>();
+
+                        // collect rind data, by second
                         int nowSecond = Calendar.getInstance().get(Calendar.SECOND);   // 避免处理耗时太长，跨过刻度，向前校验一个刻度；
                         for (int i = 0; i < 2; i++) {
-                            List<Integer> tmpData = ringData.remove( (nowSecond+60-i)%60 );
-                            if (tmpData != null) {
-                                ringItemData.addAll(tmpData);
+                            List<Integer> ringItemList = ringData.remove( (nowSecond+60-i)%60 );
+                            if (CollectionTool.isNotEmpty(ringItemList)) {
+                                // distinct for each second
+                                List<Integer> ringItemListDistinct = ringItemList.stream().distinct().toList();
+                                if (ringItemListDistinct.size() < ringItemList.size()) {
+                                    logger.warn(">>>>>>>>>>> xxl-job, time-ring found job repeat beat : " + nowSecond + " = " + ringItemData);
+                                }
+
+                                // collect ring item
+                                ringItemData.addAll(ringItemListDistinct);
                             }
                         }
 
                         // ring trigger
-                        logger.debug(">>>>>>>>>>> xxl-job, time-ring beat : " + nowSecond + " = " + Arrays.asList(ringItemData) );
-                        if (ringItemData.size() > 0) {
+                        logger.debug(">>>>>>>>>>> xxl-job, time-ring beat : " + nowSecond + " = " + ringItemData);
+                        if (CollectionTool.isNotEmpty(ringItemData)) {
                             // do trigger
                             for (int jobId: ringItemData) {
                                 // do trigger
@@ -216,7 +227,7 @@ public class JobScheduleHelper {
                         }
                     } catch (Throwable e) {
                         if (!ringThreadToStop) {
-                            logger.error(">>>>>>>>>>> xxl-job, JobScheduleHelper#ringThread error:{}", e);
+                            logger.error(">>>>>>>>>>> xxl-job, JobScheduleHelper#ringThread error:{}", e.getMessage(), e);
                         }
                     }
                 }
@@ -268,13 +279,13 @@ public class JobScheduleHelper {
      */
     private void pushTimeRing(int ringSecond, int jobId){
         // get ringItemData, init when not exists
-        List<Integer> ringItemData = ringData.computeIfAbsent(
+        List<Integer> ringItemList = ringData.computeIfAbsent(
                 ringSecond,
                 k -> new ArrayList<>());
 
         // push async rind
-        ringItemData.add(jobId);
-        logger.debug(">>>>>>>>>>> xxl-job, schedule push time-ring : " + ringSecond + " = " + List.of(ringItemData));
+        ringItemList.add(jobId);
+        logger.debug(">>>>>>>>>>> xxl-job, schedule push time-ring : " + ringSecond + " = " + List.of(ringItemList));
     }
 
     /**
@@ -301,10 +312,10 @@ public class JobScheduleHelper {
 
         // if has ring data
         boolean hasRingData = false;
-        if (!ringData.isEmpty()) {
+        if (MapTool.isNotEmpty(ringData)) {
             for (int second : ringData.keySet()) {
-                List<Integer> tmpData = ringData.get(second);
-                if (tmpData!=null && !tmpData.isEmpty()) {
+                List<Integer> ringItemList = ringData.get(second);
+                if (CollectionTool.isNotEmpty(ringItemList)) {
                     hasRingData = true;
                     break;
                 }
