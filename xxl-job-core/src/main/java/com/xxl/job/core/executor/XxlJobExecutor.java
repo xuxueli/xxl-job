@@ -28,7 +28,7 @@ import java.util.concurrent.ConcurrentMap;
 public class XxlJobExecutor  {
     private static final Logger logger = LoggerFactory.getLogger(XxlJobExecutor.class);
 
-    // ---------------------- param ----------------------
+    // ---------------------- field ----------------------
     private String adminAddresses;
     private String accessToken;
     private int timeout;

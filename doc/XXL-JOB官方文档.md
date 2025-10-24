@@ -981,6 +981,8 @@ xxl.job.executor.port=9999
 xxl.job.executor.logpath=/data/applogs/xxl-job/jobhandler
 ### 执行器日志文件保存天数 [选填] ： 过期日志自动清理, 限制值大于等于3时生效; 否则, 如-1, 关闭自动清理功能；
 xxl.job.executor.logretentiondays=30
+### 任务扫描排除路径，任务扫描时忽略指定包路径下的Bean；支持配置多个包路径、逗号分隔；
+xxl.job.executor.excludedpackage=org.springframework,spring
 ```
 
 #### 步骤三：执行器组件配置
@@ -2581,10 +2583,11 @@ public void execute() {
 - 9、【优化】调度不重不漏逻辑优化：调度时间轮单刻度数据去重，避免极端情况下任务重复执行；时间轮转动时校验临近刻度，避免极端情况下遗漏刻度；
 - 10、【重构】调度过期策略、调度类型策略逻辑重构，代码组件化拆分并完善日志，提升健壮性及可维护性；
 - 11、【优化】执行器任务Bean扫描逻辑优化，完善懒加载Bean检测及过滤机制；
-- 12、【ING】UI框架重构升级，提升交互体验；
-- 13、【ING】调整资源加载逻辑，移除不必要的拦截器逻辑，提升页面加载效率；
-- 14、【ING】规范API交互协议，通用响应结构体调整为Response；
-- 15、【ING】Http通讯组件升级，基于接口代理方式重构；
+- 12、【新增】执行器新增“任务扫描排除路径”配置项(xxl.job.executor.excludedpackage)，任务扫描时忽略指定包路径下的Bean；支持配置多个包路径、逗号分隔；
+- 13、【ING】UI框架重构升级，提升交互体验；
+- 14、【ING】调整资源加载逻辑，移除不必要的拦截器逻辑，提升页面加载效率；
+- 15、【ING】规范API交互协议，通用响应结构体调整为Response；
+- 16、【ING】Http通讯组件升级，基于接口代理方式重构；
 
 
 ### TODO LIST
