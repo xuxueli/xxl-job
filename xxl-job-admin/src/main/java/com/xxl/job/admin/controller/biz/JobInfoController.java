@@ -4,8 +4,8 @@ import com.xxl.job.admin.mapper.XxlJobGroupMapper;
 import com.xxl.job.admin.model.XxlJobGroup;
 import com.xxl.job.admin.model.XxlJobInfo;
 import com.xxl.job.admin.scheduler.exception.XxlJobException;
-import com.xxl.job.admin.scheduler.route.ExecutorRouteStrategyEnum;
 import com.xxl.job.admin.scheduler.misfire.MisfireStrategyEnum;
+import com.xxl.job.admin.scheduler.route.ExecutorRouteStrategyEnum;
 import com.xxl.job.admin.scheduler.type.ScheduleTypeEnum;
 import com.xxl.job.admin.service.XxlJobService;
 import com.xxl.job.admin.util.I18nUtil;
@@ -13,10 +13,10 @@ import com.xxl.job.admin.util.JobGroupPermissionUtil;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
 import com.xxl.job.core.glue.GlueTypeEnum;
-import com.xxl.job.core.util.DateUtil;
 import com.xxl.sso.core.helper.XxlSsoHelper;
 import com.xxl.sso.core.model.LoginInfo;
 import com.xxl.tool.core.CollectionTool;
+import com.xxl.tool.core.DateTool;
 import com.xxl.tool.response.Response;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
@@ -161,7 +161,7 @@ public class JobInfoController {
 
 				// collect data
 				if (lastTime != null) {
-					result.add(DateUtil.formatDateTime(lastTime));
+					result.add(DateTool.formatDateTime(lastTime));
 				} else {
 					break;
 				}

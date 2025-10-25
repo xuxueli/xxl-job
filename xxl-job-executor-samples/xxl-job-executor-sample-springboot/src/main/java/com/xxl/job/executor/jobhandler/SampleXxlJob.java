@@ -2,7 +2,7 @@ package com.xxl.job.executor.jobhandler;
 
 import com.xxl.job.core.context.XxlJobHelper;
 import com.xxl.job.core.handler.annotation.XxlJob;
-import com.xxl.job.core.util.GsonTool;
+import com.xxl.tool.gson.GsonTool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -162,7 +162,7 @@ public class SampleXxlJob {
         String method;
         String data;
         try {
-            Map<String, String> paramMap =GsonTool.fromJson(param, Map.class);
+            Map<String, String> paramMap = GsonTool.fromJson(param, Map.class);
             url = paramMap.get("url");
             method = paramMap.get("method");
             data = paramMap.get("data");

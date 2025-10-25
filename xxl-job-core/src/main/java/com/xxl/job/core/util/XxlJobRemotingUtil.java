@@ -1,6 +1,7 @@
 package com.xxl.job.core.util;
 
 import com.xxl.job.core.biz.model.ReturnT;
+import com.xxl.tool.gson.GsonTool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,7 +13,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-import java.util.Map;
 
 /**
  * @author xuxueli 2018-11-25 00:55:31

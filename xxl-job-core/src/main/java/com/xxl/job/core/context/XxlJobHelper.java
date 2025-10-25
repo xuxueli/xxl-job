@@ -1,7 +1,7 @@
 package com.xxl.job.core.context;
 
 import com.xxl.job.core.log.XxlJobFileAppender;
-import com.xxl.job.core.util.DateUtil;
+import com.xxl.tool.core.DateTool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.helpers.FormattingTuple;
@@ -151,7 +151,7 @@ public class XxlJobHelper {
         StackTraceElement callInfo = stackTraceElements[1];*/
 
         StringBuffer stringBuffer = new StringBuffer();
-        stringBuffer.append(DateUtil.formatDateTime(new Date())).append(" ")
+        stringBuffer.append(DateTool.formatDateTime(new Date())).append(" ")
                 .append("["+ callInfo.getClassName() + "#" + callInfo.getMethodName() +"]").append("-")
                 .append("["+ callInfo.getLineNumber() +"]").append("-")
                 .append("["+ Thread.currentThread().getName() +"]").append(" ")
