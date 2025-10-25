@@ -5,9 +5,19 @@ package com.xxl.job.core.enums;
  */
 public class RegistryConfig {
 
+    /**
+     * registry beat interval, default 30s
+     */
     public static final int BEAT_TIMEOUT = 30;
+
+    /**
+     * registry dead timeout, default 90s
+     */
     public static final int DEAD_TIMEOUT = BEAT_TIMEOUT * 3;
 
+    /**
+     * registry type
+     */
     public enum RegistType{ EXECUTOR, ADMIN }
 
 }

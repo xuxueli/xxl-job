@@ -17,7 +17,7 @@ public class ExecutorBizTest {
 
     // admin-client
     private static String addressUrl = "http://127.0.0.1:9999/";
-    private static String accessToken = null;
+    private static String accessToken = "default_token";
     private static int timeout = 3;
 
     @Test
@@ -70,6 +70,7 @@ public class ExecutorBizTest {
 
         // Assert result
         Assertions.assertNotNull(retval);
+
     }
 
     @Test

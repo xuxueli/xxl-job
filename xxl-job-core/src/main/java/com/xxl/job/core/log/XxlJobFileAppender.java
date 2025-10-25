@@ -1,6 +1,7 @@
 package com.xxl.job.core.log;
 
 import com.xxl.job.core.biz.model.LogResult;
+import com.xxl.tool.core.StringTool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,27 +15,26 @@ import java.util.Date;
  * @author xuxueli 2016-3-12 19:25:12
  */
 public class XxlJobFileAppender {
-	private static Logger logger = LoggerFactory.getLogger(XxlJobFileAppender.class);
+	private static final Logger logger = LoggerFactory.getLogger(XxlJobFileAppender.class);
 
 	/**
 	 * log base path
 	 *
 	 * strut like:
 	 * 	---/
-	 * 	---/gluesource/
 	 * 	---/gluesource/10_1514171108000.js
-	 * 	---/gluesource/10_1514171108000.js
-	 * 	---/2017-12-25/
+	 * 	---/callbacklogs/xxl-job-callback-1761412677119.log
 	 * 	---/2017-12-25/639.log
 	 * 	---/2017-12-25/821.log
 	 *
 	 */
 	private static String logBasePath = "/data/applogs/xxl-job/jobhandler";
-	private static String glueSrcPath = logBasePath.concat("/gluesource");
+	private static String glueSrcPath = logBasePath.concat(File.separator).concat("gluesource");
+	private static String callbackLogPath = logBasePath.concat(File.separator).concat("callbacklogs");
 	public static void initLogPath(String logPath){
 		// init
-		if (logPath!=null && logPath.trim().length()>0) {
-			logBasePath = logPath;
+		if (StringTool.isNotBlank(logPath)) {
+			logBasePath = logPath.trim();
 		}
 		// mk base dir
 		File logPathDir = new File(logBasePath);
@@ -55,6 +55,9 @@ public class XxlJobFileAppender {
 	}
 	public static String getGlueSrcPath() {
 		return glueSrcPath;
+	}
+	public static String getCallbackLogPath() {
+		return callbackLogPath;
 	}
 
 	/**

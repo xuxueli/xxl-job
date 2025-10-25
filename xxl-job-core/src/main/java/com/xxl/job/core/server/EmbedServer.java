@@ -5,8 +5,8 @@ import com.xxl.job.core.biz.impl.ExecutorBizImpl;
 import com.xxl.job.core.biz.model.*;
 import com.xxl.job.core.thread.ExecutorRegistryThread;
 import com.xxl.job.core.util.GsonTool;
-import com.xxl.job.core.util.ThrowableUtil;
 import com.xxl.job.core.util.XxlJobRemotingUtil;
+import com.xxl.tool.exception.ThrowableTool;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.*;
@@ -202,7 +202,7 @@ public class EmbedServer {
                 }
             } catch (Throwable e) {
                 logger.error(e.getMessage(), e);
-                return ReturnT.ofFail("request error:" + ThrowableUtil.toString(e));
+                return ReturnT.ofFail("request error:" + ThrowableTool.toString(e));
             }
         }
 
