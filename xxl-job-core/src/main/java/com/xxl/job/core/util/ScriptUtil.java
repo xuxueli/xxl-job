@@ -2,10 +2,11 @@ package com.xxl.job.core.util;
 
 import com.xxl.job.core.context.XxlJobHelper;
 import com.xxl.tool.core.ArrayTool;
-import com.xxl.tool.core.AssertTool;
 import com.xxl.tool.io.FileTool;
+import com.xxl.tool.io.IOTool;
 
-import java.io.*;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -83,15 +84,15 @@ public class ScriptUtil {
             final FileOutputStream finalFileOutputStream = fileOutputStream;
             inputThread = new Thread(() -> {
                 try {
-                    copy(finalProcess.getInputStream(), finalFileOutputStream, true, false);
+                    // 数据流Copy（Input自动关闭，Output不处理）
+                    IOTool.copy(finalProcess.getInputStream(), finalFileOutputStream, true, false);
                 } catch (IOException e) {
                     XxlJobHelper.log(e);
                 }
             });
             errorThread = new Thread(() -> {
                 try {
-                    // 数据流Copy（Input自动关闭，Output不处理）
-                    copy(finalProcess.getErrorStream(), finalFileOutputStream, true, false);
+                    IOTool.copy(finalProcess.getErrorStream(), finalFileOutputStream, true, false);
                 } catch (IOException e) {
                     XxlJobHelper.log(e);
                 }
@@ -131,42 +132,6 @@ public class ScriptUtil {
                 process.destroy();
                 // process.destroyForcibly();
             }
-        }
-    }
-
-
-    private static final int BUFFER_SIZE = 1024 * 8;
-    private static int copy(InputStream input, OutputStream output, boolean closeInput, boolean closeOutput) throws IOException {
-        AssertTool.notNull(input, "No InputStream specified");
-        AssertTool.notNull(output, "No OutputStream specified");
-
-        try {
-            int byteCount = 0;
-            byte[] buffer = new byte[BUFFER_SIZE];
-            int bytesRead;
-            while ((bytesRead = input.read(buffer)) != -1) {
-                output.write(buffer, 0, bytesRead);
-                byteCount += bytesRead;
-            }
-            output.flush();
-            return byteCount;
-        } finally {
-            if (closeInput) {
-                close(input);
-            }
-            if (closeOutput) {
-                close(output);
-            }
-        }
-    }
-    private static void close(Closeable closeable) {
-        if (closeable == null) {
-            return;
-        }
-        try {
-            closeable.close();
-        } catch (IOException ex) {
-            // ignore
         }
     }
 

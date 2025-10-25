@@ -153,12 +153,12 @@ public class XxlJobExecutor  {
         // generate address
         if (StringTool.isBlank(address)) {
             // registry-address：default use address to registry , otherwise use ip:port if address is null
-            String ip_port_address = IPTool.toAddressString(IPTool.toAddress(ip, port));
+            String ip_port_address = IPTool.toAddressString(ip, port);
             address = "http://{ip_port}/".replace("{ip_port}", ip_port_address);
         }
 
         // accessToken
-        if (accessToken==null || accessToken.trim().length()==0) {
+        if (StringTool.isBlank(accessToken)) {
             logger.warn(">>>>>>>>>>> xxl-job accessToken is empty. To ensure system security, please set the accessToken.");
         }
 
