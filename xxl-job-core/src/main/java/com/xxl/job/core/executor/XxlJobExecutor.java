@@ -183,11 +183,11 @@ public class XxlJobExecutor  {
     public static IJobHandler loadJobHandler(String name){
         return jobHandlerRepository.get(name);
     }
-    public static IJobHandler registJobHandler(String name, IJobHandler jobHandler){
+    public static IJobHandler registryJobHandler(String name, IJobHandler jobHandler){
         logger.info(">>>>>>>>>>> xxl-job register jobhandler success, name:{}, jobHandler:{}", name, jobHandler);
         return jobHandlerRepository.put(name, jobHandler);
     }
-    protected void registJobHandler(XxlJob xxlJob, Object bean, Method executeMethod){
+    protected void registryJobHandler(XxlJob xxlJob, Object bean, Method executeMethod){
         if (xxlJob == null) {
             return;
         }
@@ -237,7 +237,7 @@ public class XxlJobExecutor  {
         }
 
         // registry jobhandler
-        registJobHandler(name, new MethodJobHandler(bean, executeMethod, initMethod, destroyMethod));
+        registryJobHandler(name, new MethodJobHandler(bean, executeMethod, initMethod, destroyMethod));
 
     }
 

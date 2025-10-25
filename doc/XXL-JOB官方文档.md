@@ -981,7 +981,7 @@ xxl.job.executor.port=9999
 xxl.job.executor.logpath=/data/applogs/xxl-job/jobhandler
 ### 执行器日志文件保存天数 [选填] ： 过期日志自动清理, 限制值大于等于3时生效; 否则, 如-1, 关闭自动清理功能；
 xxl.job.executor.logretentiondays=30
-### 任务扫描排除路径，任务扫描时忽略指定包路径下的Bean；支持配置多个包路径、逗号分隔；
+### 任务扫描排除路径 [选填] ：任务扫描时忽略指定包路径下的Bean；支持配置包路径前缀，多个逗号分隔；
 xxl.job.executor.excludedpackage=org.springframework,spring
 ```
 
