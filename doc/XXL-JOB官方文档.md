@@ -1206,7 +1206,7 @@ public void demoJobHandler() throws Exception {
     "cookies": {                                // 请求Cookie，key-value结构
         "cookie01": "value01"
     },
-    "timeout": 3000,                            // 请求超时时间，单位：毫秒
+    "timeout": 3000,                            // 请求超时时间，默认 3000；单位：毫秒；
     "data": "request body data",                // 请求Body数据，仅针对 POST 请求有效
     "form": {                                   // 请求Form数据，仅针对 GET 请求有效
         "key01": "value01"
