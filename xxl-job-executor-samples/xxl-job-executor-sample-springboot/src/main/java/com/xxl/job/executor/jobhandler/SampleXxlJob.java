@@ -223,9 +223,7 @@ public class SampleXxlJob {
             }
         }
         if (httpJobParam.getTimeout() <= 0) {
-            XxlJobHelper.log("timeout["+ httpJobParam.getTimeout() +"] invalid.");
-            XxlJobHelper.handleFail();
-            return;
+            httpJobParam.setTimeout(3000);
         }
 
         // do request
@@ -235,7 +233,6 @@ public class SampleXxlJob {
                     .method(method)
                     .contentType(contentType)
                     .header(httpJobParam.getHeaders())
-                    .header(Header.USER_AGENT.getValue(), Header.DEFAULT_USER_AGENT_WIN)
                     .cookie(httpJobParam.getCookies())
                     .body(httpJobParam.getData())
                     .form(httpJobParam.getForm())
