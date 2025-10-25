@@ -138,10 +138,30 @@ public class SampleXxlJob {
      *
      *  参数示例：
      *  <pre>
+     *      // 1、简单示例：
      *      {
      *          "url": "http://www.baidu.com",
      *          "method": "get",
      *          "data": "hello world"
+     *      }
+     *
+     *      // 2、完整参数示例：
+     *      {
+     *          "url": "http://www.baidu.com",
+     *          "method": "POST",
+     *          "contentType": "application/json",
+     *          "headers": {
+     *              "header01": "value01"
+     *          },
+     *          "cookies": {
+     *              "cookie01": "value01"
+     *          },
+     *          "timeout": 3000,
+     *          "data": "request body data",
+     *          "form": {
+     *              "key01": "value01"
+     *          },
+     *          "auth": "auth data"
      *      }
      *  </pre>
      */
