@@ -29,9 +29,9 @@ public class ScriptJobHandler extends IJobHandler {
         File glueSrcPath = new File(XxlJobFileAppender.getGlueSrcPath());
         if (glueSrcPath.exists()) {
             File[] glueSrcFileList = glueSrcPath.listFiles();
-            if (glueSrcFileList!=null && glueSrcFileList.length>0) {
+            if (glueSrcFileList != null) {
                 for (File glueSrcFileItem : glueSrcFileList) {
-                    if (glueSrcFileItem.getName().startsWith(String.valueOf(jobId)+"_")) {
+                    if (glueSrcFileItem.getName().startsWith(jobId +"_")) {
                         glueSrcFileItem.delete();
                     }
                 }
@@ -47,6 +47,7 @@ public class ScriptJobHandler extends IJobHandler {
     @Override
     public void execute() throws Exception {
 
+        // valid
         if (!glueType.isScript()) {
             XxlJobHelper.handleFail("glueType["+ glueType +"] invalid.");
             return;

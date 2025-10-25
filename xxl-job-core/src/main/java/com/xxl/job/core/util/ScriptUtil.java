@@ -1,11 +1,11 @@
 package com.xxl.job.core.util;
 
 import com.xxl.job.core.context.XxlJobHelper;
+import com.xxl.tool.core.ArrayTool;
+import com.xxl.tool.core.AssertTool;
+import com.xxl.tool.io.FileTool;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,16 +22,18 @@ public class ScriptUtil {
     /**
      * make script file
      *
-     * @param scriptFileName
-     * @param content
-     * @throws IOException
+     * @param scriptFileName        script file name
+     * @param scriptContent         script content
+     * @throws IOException exception
      */
-    public static void markScriptFile(String scriptFileName, String content) throws IOException {
-        // make file,   filePath/gluesource/666-123456789.py
-        FileOutputStream fileOutputStream = null;
+    public static void markScriptFile(String scriptFileName, String scriptContent) throws IOException {
+        // make file: filePath/gluesource/666-123456789.py
+        FileTool.writeString(scriptFileName, scriptContent);
+
+        /*FileOutputStream fileOutputStream = null;
         try {
             fileOutputStream = new FileOutputStream(scriptFileName);
-            fileOutputStream.write(content.getBytes("UTF-8"));
+            fileOutputStream.write(scriptContent.getBytes("UTF-8"));
             fileOutputStream.close();
         } catch (Exception e) {
             throw e;
@@ -39,129 +41,131 @@ public class ScriptUtil {
             if(fileOutputStream != null){
                 fileOutputStream.close();
             }
-        }
+        }*/
     }
 
     /**
      * 脚本执行，日志文件实时输出
      *
-     * @param command
-     * @param scriptFile
-     * @param logFile
-     * @param params
-     * @return
-     * @throws IOException
+     * @param command       command
+     * @param scriptFile    script file
+     * @param logFile       log file
+     * @param params        params
+     * @return  exit code
+     * @throws IOException exception
      */
     public static int execToFile(String command, String scriptFile, String logFile, String... params) throws IOException {
 
         FileOutputStream fileOutputStream = null;
         Thread inputThread = null;
-        Thread errThread = null;
+        Thread errorThread = null;
+        Process process = null;
         try {
-            // file
+            // 1、build file OutputStream
             fileOutputStream = new FileOutputStream(logFile, true);
 
-            // command
+            // 2、build command
             List<String> cmdarray = new ArrayList<>();
             cmdarray.add(command);
             cmdarray.add(scriptFile);
-            if (params!=null && params.length>0) {
+            if (ArrayTool.isNotEmpty(params)) {
                 for (String param:params) {
                     cmdarray.add(param);
                 }
             }
-            String[] cmdarrayFinal = cmdarray.toArray(new String[cmdarray.size()]);
+            String[] cmdarrayFinal = cmdarray.toArray(new String[0]);
 
-            // process-exec
-            final Process process = Runtime.getRuntime().exec(cmdarrayFinal);
+            // 3、process：exec
+            process = Runtime.getRuntime().exec(cmdarrayFinal);
+            Process finalProcess = process;
 
-            // log-thread
+            // 4、read script log: inputStream + errStream
             final FileOutputStream finalFileOutputStream = fileOutputStream;
-            inputThread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        copy(process.getInputStream(), finalFileOutputStream, new byte[1024]);
-                    } catch (IOException e) {
-                        XxlJobHelper.log(e);
-                    }
+            inputThread = new Thread(() -> {
+                try {
+                    copy(finalProcess.getInputStream(), finalFileOutputStream, true, false);
+                } catch (IOException e) {
+                    XxlJobHelper.log(e);
                 }
             });
-            errThread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        copy(process.getErrorStream(), finalFileOutputStream, new byte[1024]);
-                    } catch (IOException e) {
-                        XxlJobHelper.log(e);
-                    }
+            errorThread = new Thread(() -> {
+                try {
+                    // 数据流Copy（Input自动关闭，Output不处理）
+                    copy(finalProcess.getErrorStream(), finalFileOutputStream, true, false);
+                } catch (IOException e) {
+                    XxlJobHelper.log(e);
                 }
             });
             inputThread.start();
-            errThread.start();
+            errorThread.start();
 
-            // process-wait
+            // 5、process：wait for result
             int exitValue = process.waitFor();      // exit code: 0=success, 1=error
 
-            // log-thread join
+            // 6、thread join, wait for log
             inputThread.join();
-            errThread.join();
+            errorThread.join();
 
             return exitValue;
         } catch (Exception e) {
             XxlJobHelper.log(e);
             return -1;
         } finally {
+            // 7、close file OutputStream
             if (fileOutputStream != null) {
                 try {
                     fileOutputStream.close();
                 } catch (IOException e) {
                     XxlJobHelper.log(e);
                 }
-
             }
+            // 8、interrupt thread
             if (inputThread != null && inputThread.isAlive()) {
                 inputThread.interrupt();
             }
-            if (errThread != null && errThread.isAlive()) {
-                errThread.interrupt();
+            if (errorThread != null && errorThread.isAlive()) {
+                errorThread.interrupt();
+            }
+            // 9、process destroy
+            if (process != null) {
+                process.destroy();
             }
         }
     }
 
-    /**
-     * 数据流Copy（Input自动关闭，Output不处理）
-     *
-     * @param inputStream
-     * @param outputStream
-     * @param buffer
-     * @return
-     * @throws IOException
-     */
-    private static long copy(InputStream inputStream, OutputStream outputStream, byte[] buffer) throws IOException {
+
+    private static final int BUFFER_SIZE = 1024 * 8;
+    private static int copy(InputStream input, OutputStream output, boolean closeInput, boolean closeOutput) throws IOException {
+        AssertTool.notNull(input, "No InputStream specified");
+        AssertTool.notNull(output, "No OutputStream specified");
+
         try {
-            long total = 0;
-            for (;;) {
-                int res = inputStream.read(buffer);
-                if (res == -1) {
-                    break;
-                }
-                if (res > 0) {
-                    total += res;
-                    if (outputStream != null) {
-                        outputStream.write(buffer, 0, res);
-                    }
-                }
+            int byteCount = 0;
+            byte[] buffer = new byte[BUFFER_SIZE];
+            int bytesRead;
+            while ((bytesRead = input.read(buffer)) != -1) {
+                output.write(buffer, 0, bytesRead);
+                byteCount += bytesRead;
             }
-            outputStream.flush();
-            //out = null;
-            inputStream.close();
-            inputStream = null;
-            return total;
+            output.flush();
+            return byteCount;
         } finally {
-            if (inputStream != null) {
-                inputStream.close();
+            if (closeInput) {
+                close(input);
             }
+            if (closeOutput) {
+                close(output);
+            }
+        }
+    }
+    private static void close(Closeable closeable) {
+        if (closeable == null) {
+            return;
+        }
+        try {
+            closeable.close();
+        } catch (IOException ex) {
+            // ignore
         }
     }
 

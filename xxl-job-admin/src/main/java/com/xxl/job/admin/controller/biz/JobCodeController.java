@@ -8,6 +8,7 @@ import com.xxl.job.admin.util.I18nUtil;
 import com.xxl.job.admin.util.JobGroupPermissionUtil;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.glue.GlueTypeEnum;
+import com.xxl.tool.core.StringTool;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
@@ -63,6 +64,9 @@ public class JobCodeController {
 								@RequestParam("glueRemark") String glueRemark) {
 
 		// valid
+		if (StringTool.isBlank(glueSource)) {
+			return ReturnT.ofFail( (I18nUtil.getString("system_please_input") + I18nUtil.getString("jobinfo_glue_source")) );
+		}
 		if (glueRemark==null) {
 			return ReturnT.ofFail( (I18nUtil.getString("system_please_input") + I18nUtil.getString("jobinfo_glue_remark")) );
 		}
