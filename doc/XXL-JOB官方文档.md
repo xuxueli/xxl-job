@@ -1186,12 +1186,32 @@ public void demoJobHandler() throws Exception {
 **执行器内置任务列表：**
 - a、demoJobHandler：简单示例任务，任务内部模拟耗时任务逻辑，用户可在线体验Rolling Log等功能；
 - b、shardingJobHandler：分片示例任务，任务内部模拟处理分片参数，可参考熟悉分片任务；
-- c、httpJobHandler：通用HTTP任务Handler；业务方只需要提供HTTP链接等信息即可，不限制语言、平台。示例任务入参如下：
+- c、httpJobHandler：通用HTTP任务Handler；业务方只需要提供HTTP链接等信息即可，不限制语言、平台。任务入参示例如下：
 ```
+// 1、简单示例：
 {
     "url": "http://www.baidu.com",
-    "method": "get",
+    "method": "GET",
     "data": "hello world"
+}
+
+// 2、完整参数示例：
+{
+    "url": "http://www.baidu.com",              // 请求URL
+    "method": "POST",                           // 请求方法，支持：GET、POST、HEAD、OPTIONS、PUT、DELETE、TRACE
+    "contentType": "application/json",          // 请求内容类型，支持：application/json、application/x-www-form-urlencoded、application/xml、text/html、text/xml、text/plain
+    "headers": {                                // 请求Header，key-value结构
+        "header01": "value01"
+    },
+    "cookies": {                                // 请求Cookie，key-value结构
+        "cookie01": "value01"
+    },
+    "timeout": 3000,                            // 请求超时时间，单位：毫秒
+    "data": "request body data",                // 请求Body数据，仅针对 POST 请求有效
+    "form": {                                   // 请求Form数据，仅针对 GET 请求有效
+        "key01": "value01"
+    },
+    "auth": "auth data"                         // 请求认证信息, 通过Basic Auth方式认证
 }
 ```
 - d、commandJobHandler：通用命令行任务Handler；业务方只需要提供命令行即可，命令及参数之间通过空格隔开；如任务参数 "ls la" 或 "pwd" 将会执行命令并输出数据；
@@ -2586,10 +2606,30 @@ public void execute() {
 - 12、【升级】升级多项maven依赖至较新版本，如 netty、groovy、spring、spring-ai、dify 等；
 - 14、【优化】任务回调失败日志读写磁盘逻辑优化，解决极端情况下大文件读写内存问题；
 - 15、【修复】脚本任务process销毁逻辑优化，解决风险情况下脚本进程无法终止问题；
-- 16、【ING】UI框架重构升级，提升交互体验；
-- 17、【ING】调整资源加载逻辑，移除不必要的拦截器逻辑，提升页面加载效率；
-- 18、【ING】规范API交互协议，通用响应结构体调整为Response；
-- 19、【ING】Http通讯组件升级，基于接口代理方式重构；
+- 16、【强化】通用HTTP任务（httpJobHandler）强化，支持更丰富请求参数设置，完整参数示例如下：
+```
+{
+    "url": "http://www.baidu.com",
+    "method": "POST",
+    "contentType": "application/json",
+    "headers": {
+        "header01": "value01"
+    },
+    "cookies": {
+        "cookie01": "value01"
+    },
+    "timeout": 3000,
+    "data": "request body data",
+    "form": {
+        "key01": "value01"
+    },
+    "auth": "auth data"
+}
+```
+- 17、【ING】UI框架重构升级，提升交互体验；
+- 18、【ING】调整资源加载逻辑，移除不必要的拦截器逻辑，提升页面加载效率；
+- 19、【ING】规范API交互协议，通用响应结构体调整为Response；
+- 20、【ING】Http通讯组件升级，基于接口代理方式重构；
 
 
 ### TODO LIST
