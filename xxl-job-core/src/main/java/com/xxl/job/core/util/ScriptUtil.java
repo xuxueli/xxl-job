@@ -129,6 +129,7 @@ public class ScriptUtil {
             // 9、process destroy
             if (process != null) {
                 process.destroy();
+                // process.destroyForcibly();
             }
         }
     }
