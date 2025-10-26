@@ -1187,6 +1187,7 @@ public void demoJobHandler() throws Exception {
 - a、demoJobHandler：简单示例任务，任务内部模拟耗时任务逻辑，用户可在线体验Rolling Log等功能；
 - b、shardingJobHandler：分片示例任务，任务内部模拟处理分片参数，可参考熟悉分片任务；
 - c、httpJobHandler：通用HTTP任务Handler；业务方只需要提供HTTP链接等信息即可，不限制语言、平台。任务入参示例如下：
+
 ```
 // 1、简单示例：
 {
@@ -1214,6 +1215,7 @@ public void demoJobHandler() throws Exception {
     "auth": "auth data"                         // 请求认证信息, 通过Basic Auth方式认证
 }
 ```
+
 - d、commandJobHandler：通用命令行任务Handler；业务方只需要提供命令行即可，命令及参数之间通过空格隔开；如任务参数 "ls la" 或 "pwd" 将会执行命令并输出数据；
 
 #### 原生内置Bean模式任务（AI执行器）
