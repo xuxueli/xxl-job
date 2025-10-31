@@ -178,35 +178,4 @@ public class XxlJobFileAppender {
         return new LogResult(fromLineNum, toLineNum, logContentBuilder.toString(), false);
 	}
 
-	/**
-	 * read log data
-	 * @param logFile
-	 * @return log line content
-	 */
-	public static String readLines(File logFile){
-		BufferedReader reader = null;
-		try {
-			reader = new BufferedReader(new InputStreamReader(new FileInputStream(logFile), "utf-8"));
-			if (reader != null) {
-				StringBuilder sb = new StringBuilder();
-				String line = null;
-				while ((line = reader.readLine()) != null) {
-					sb.append(line).append("\n");
-				}
-				return sb.toString();
-			}
-		} catch (IOException e) {
-			logger.error(e.getMessage(), e);
-		} finally {
-			if (reader != null) {
-				try {
-					reader.close();
-				} catch (IOException e) {
-					logger.error(e.getMessage(), e);
-				}
-			}
-		}
-		return null;
-	}
-
 }
