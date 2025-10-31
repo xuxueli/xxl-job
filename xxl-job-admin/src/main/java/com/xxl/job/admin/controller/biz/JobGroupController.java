@@ -8,6 +8,7 @@ import com.xxl.job.admin.mapper.XxlJobGroupMapper;
 import com.xxl.job.admin.mapper.XxlJobInfoMapper;
 import com.xxl.job.admin.mapper.XxlJobRegistryMapper;
 import com.xxl.job.core.constant.Const;
+import com.xxl.job.core.constant.RegistType;
 import com.xxl.sso.core.annotation.XxlSso;
 import com.xxl.tool.core.CollectionTool;
 import com.xxl.tool.core.StringTool;
@@ -155,7 +156,7 @@ public class JobGroupController {
 		List<XxlJobRegistry> list = xxlJobRegistryMapper.findAll(Const.DEAD_TIMEOUT, new Date());
 		if (CollectionTool.isNotEmpty(list)) {
 			for (XxlJobRegistry item: list) {
-				if (!Const.RegistType.EXECUTOR.name().equals(item.getRegistryGroup())) {
+				if (!RegistType.EXECUTOR.name().equals(item.getRegistryGroup())) {
 					continue;
 				}
 

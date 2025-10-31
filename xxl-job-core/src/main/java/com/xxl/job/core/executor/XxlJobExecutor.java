@@ -94,7 +94,7 @@ public class XxlJobExecutor  {
         stopEmbedServer();
 
         // destroy jobThreadRepository
-        if (jobThreadRepository.size() > 0) {
+        if (!jobThreadRepository.isEmpty()) {
             for (Map.Entry<Integer, JobThread> item: jobThreadRepository.entrySet()) {
                 JobThread oldJobThread = removeJobThread(item.getKey(), "web container destroy and kill the job.");
                 // wait for job thread push result to callback queue

@@ -3,6 +3,7 @@ package com.xxl.job.admin.scheduler.thread;
 import com.xxl.job.admin.model.XxlJobGroup;
 import com.xxl.job.admin.model.XxlJobRegistry;
 import com.xxl.job.admin.scheduler.config.XxlJobAdminBootstrap;
+import com.xxl.job.core.constant.RegistType;
 import com.xxl.job.core.openapi.model.RegistryRequest;
 import com.xxl.job.core.constant.Const;
 import com.xxl.tool.core.StringTool;
@@ -74,7 +75,7 @@ public class JobRegistryHelper {
 							List<XxlJobRegistry> list = XxlJobAdminBootstrap.getInstance().getXxlJobRegistryMapper().findAll(Const.DEAD_TIMEOUT, new Date());
 							if (list != null) {
 								for (XxlJobRegistry item: list) {
-									if (Const.RegistType.EXECUTOR.name().equals(item.getRegistryGroup())) {
+									if (RegistType.EXECUTOR.name().equals(item.getRegistryGroup())) {
 										String appname = item.getRegistryKey();
 										List<String> registryList = appAddressMap.get(appname);
 										if (registryList == null) {

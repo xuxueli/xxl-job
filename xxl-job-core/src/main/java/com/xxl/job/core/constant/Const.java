@@ -25,9 +25,4 @@ public class Const {
      */
     public static final int DEAD_TIMEOUT = BEAT_TIMEOUT * 3;
 
-    /**
-     * registry type
-     */
-    public enum RegistType{ EXECUTOR, ADMIN }
-
 }

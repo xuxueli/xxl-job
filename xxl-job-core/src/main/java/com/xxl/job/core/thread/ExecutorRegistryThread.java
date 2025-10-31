@@ -1,5 +1,6 @@
 package com.xxl.job.core.thread;
 
+import com.xxl.job.core.constant.RegistType;
 import com.xxl.job.core.openapi.AdminBiz;
 import com.xxl.job.core.openapi.model.RegistryRequest;
 import com.xxl.job.core.constant.Const;
@@ -42,7 +43,7 @@ public class ExecutorRegistryThread {
                 // registry
                 while (!toStop) {
                     try {
-                        RegistryRequest registryParam = new RegistryRequest(Const.RegistType.EXECUTOR.name(), appname, address);
+                        RegistryRequest registryParam = new RegistryRequest(RegistType.EXECUTOR.name(), appname, address);
                         for (AdminBiz adminBiz: XxlJobExecutor.getAdminBizList()) {
                             try {
                                 Response<String> registryResult = adminBiz.registry(registryParam);
@@ -78,7 +79,7 @@ public class ExecutorRegistryThread {
 
                 // registry remove
                 try {
-                    RegistryRequest registryParam = new RegistryRequest(Const.RegistType.EXECUTOR.name(), appname, address);
+                    RegistryRequest registryParam = new RegistryRequest(RegistType.EXECUTOR.name(), appname, address);
                     for (AdminBiz adminBiz: XxlJobExecutor.getAdminBizList()) {
                         try {
                             Response<String> registryResult = adminBiz.registryRemove(registryParam);
