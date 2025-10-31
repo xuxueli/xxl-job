@@ -1919,7 +1919,7 @@ Header：
         "jobId":1,                                  // 任务ID
         "executorHandler":"demoJobHandler",         // 任务标识
         "executorParams":"demoJobHandler",          // 任务参数
-        "executorBlockStrategy":"COVER_EARLY",      // 任务阻塞策略，可选值参考 com.xxl.job.core.enums.ExecutorBlockStrategyEnum
+        "executorBlockStrategy":"COVER_EARLY",      // 任务阻塞策略，可选值参考 com.xxl.job.core.constant.ExecutorBlockStrategyEnum
         "executorTimeout":0,                        // 任务超时时间，单位秒，大于零时生效
         "logId":1,                                  // 本次调度日志ID
         "logDateTime":1586629003729,                // 本次调度日志时间

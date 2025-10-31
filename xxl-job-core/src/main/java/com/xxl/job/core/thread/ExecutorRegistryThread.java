@@ -2,7 +2,7 @@ package com.xxl.job.core.thread;
 
 import com.xxl.job.core.openapi.AdminBiz;
 import com.xxl.job.core.openapi.model.RegistryRequest;
-import com.xxl.job.core.enums.RegistryConfig;
+import com.xxl.job.core.constant.Const;
 import com.xxl.job.core.executor.XxlJobExecutor;
 import com.xxl.tool.response.Response;
 import org.slf4j.Logger;
@@ -42,7 +42,7 @@ public class ExecutorRegistryThread {
                 // registry
                 while (!toStop) {
                     try {
-                        RegistryRequest registryParam = new RegistryRequest(RegistryConfig.RegistType.EXECUTOR.name(), appname, address);
+                        RegistryRequest registryParam = new RegistryRequest(Const.RegistType.EXECUTOR.name(), appname, address);
                         for (AdminBiz adminBiz: XxlJobExecutor.getAdminBizList()) {
                             try {
                                 Response<String> registryResult = adminBiz.registry(registryParam);
@@ -67,7 +67,7 @@ public class ExecutorRegistryThread {
 
                     try {
                         if (!toStop) {
-                            TimeUnit.SECONDS.sleep(RegistryConfig.BEAT_TIMEOUT);
+                            TimeUnit.SECONDS.sleep(Const.BEAT_TIMEOUT);
                         }
                     } catch (Throwable e) {
                         if (!toStop) {
@@ -78,7 +78,7 @@ public class ExecutorRegistryThread {
 
                 // registry remove
                 try {
-                    RegistryRequest registryParam = new RegistryRequest(RegistryConfig.RegistType.EXECUTOR.name(), appname, address);
+                    RegistryRequest registryParam = new RegistryRequest(Const.RegistType.EXECUTOR.name(), appname, address);
                     for (AdminBiz adminBiz: XxlJobExecutor.getAdminBizList()) {
                         try {
                             Response<String> registryResult = adminBiz.registryRemove(registryParam);

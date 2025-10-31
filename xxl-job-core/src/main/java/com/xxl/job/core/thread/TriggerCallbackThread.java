@@ -4,7 +4,7 @@ import com.xxl.job.core.openapi.AdminBiz;
 import com.xxl.job.core.openapi.model.HandleCallbackRequest;
 import com.xxl.job.core.context.XxlJobContext;
 import com.xxl.job.core.context.XxlJobHelper;
-import com.xxl.job.core.enums.RegistryConfig;
+import com.xxl.job.core.constant.Const;
 import com.xxl.job.core.executor.XxlJobExecutor;
 import com.xxl.job.core.log.XxlJobFileAppender;
 import com.xxl.tool.core.ArrayTool;
@@ -132,7 +132,7 @@ public class TriggerCallbackThread {
 
                     }
                     try {
-                        TimeUnit.SECONDS.sleep(RegistryConfig.BEAT_TIMEOUT);
+                        TimeUnit.SECONDS.sleep(Const.BEAT_TIMEOUT);
                     } catch (Throwable e) {
                         if (!toStop) {
                             logger.error(e.getMessage(), e);

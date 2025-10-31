@@ -8,7 +8,7 @@ import com.xxl.job.admin.scheduler.trigger.JobTrigger;
 import com.xxl.job.admin.util.I18nUtil;
 import com.xxl.job.core.openapi.ExecutorBiz;
 import com.xxl.job.core.openapi.client.ExecutorBizClient;
-import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
+import com.xxl.job.core.constant.ExecutorBlockStrategyEnum;
 import com.xxl.tool.core.StringTool;
 import jakarta.annotation.Resource;
 import org.slf4j.Logger;

@@ -7,6 +7,7 @@ import com.xxl.job.core.thread.ExecutorRegistryThread;
 import com.xxl.job.core.util.XxlJobRemotingUtil;
 import com.xxl.tool.exception.ThrowableTool;
 import com.xxl.tool.gson.GsonTool;
+import com.xxl.tool.response.Response;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.*;
@@ -169,15 +170,15 @@ public class EmbedServer {
         private Object dispatchRequest(HttpMethod httpMethod, String uri, String requestData, String accessTokenReq) {
             // valid
             if (HttpMethod.POST != httpMethod) {
-                return ReturnT.ofFail("invalid request, HttpMethod not support.");
+                return Response.ofFail("invalid request, HttpMethod not support.");
             }
             if (uri == null || uri.trim().isEmpty()) {
-                return ReturnT.ofFail( "invalid request, uri-mapping empty.");
+                return Response.ofFail( "invalid request, uri-mapping empty.");
             }
             if (accessToken != null
                     && !accessToken.trim().isEmpty()
                     && !accessToken.equals(accessTokenReq)) {
-                return ReturnT.ofFail("The access token is wrong.");
+                return Response.ofFail("The access token is wrong.");
             }
 
             // services mapping
@@ -198,11 +199,11 @@ public class EmbedServer {
                         LogRequest logParam = GsonTool.fromJson(requestData, LogRequest.class);
                         return executorBiz.log(logParam);
                     default:
-                        return ReturnT.ofFail( "invalid request, uri-mapping(" + uri + ") not found.");
+                        return Response.ofFail( "invalid request, uri-mapping(" + uri + ") not found.");
                 }
             } catch (Throwable e) {
                 logger.error(e.getMessage(), e);
-                return ReturnT.ofFail("request error:" + ThrowableTool.toString(e));
+                return Response.ofFail("request error:" + ThrowableTool.toString(e));
             }
         }
 

@@ -361,9 +361,9 @@ $(function() {
                     });
 				} else {
                     var html = '<center>';
-                    if (data.code == 200 && data.content) {
-                        for (var index in data.content) {
-                            html += '<span>' + data.content[index] + '</span><br>';
+                    if (data.code == 200 && data.data) {
+                        for (var index in data.data) {
+                            html += '<span>' + data.data[index] + '</span><br>';
                         }
                     }
                     html += '</center>';

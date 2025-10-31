@@ -1,7 +1,6 @@
 package com.xxl.job.admin.service;
 
 import com.xxl.job.admin.model.XxlJobInfo;
-import com.xxl.job.core.openapi.model.ReturnT;
 import com.xxl.sso.core.model.LoginInfo;
 import com.xxl.tool.response.PageModel;
 import com.xxl.tool.response.Response;
@@ -24,32 +23,32 @@ public interface XxlJobService {
 	/**
 	 * add job
 	 */
-	public ReturnT<String> add(XxlJobInfo jobInfo, LoginInfo loginInfo);
+	public Response<String> add(XxlJobInfo jobInfo, LoginInfo loginInfo);
 
 	/**
 	 * update job
 	 */
-	public ReturnT<String> update(XxlJobInfo jobInfo, LoginInfo loginInfo);
+	public Response<String> update(XxlJobInfo jobInfo, LoginInfo loginInfo);
 
 	/**
 	 * remove job
 	 */
-	public ReturnT<String> remove(int id, LoginInfo loginInfo);
+	public Response<String> remove(int id, LoginInfo loginInfo);
 
 	/**
 	 * start job
 	 */
-	public ReturnT<String> start(int id, LoginInfo loginInfo);
+	public Response<String> start(int id, LoginInfo loginInfo);
 
 	/**
 	 * stop job
 	 */
-	public ReturnT<String> stop(int id, LoginInfo loginInfo);
+	public Response<String> stop(int id, LoginInfo loginInfo);
 
 	/**
 	 * trigger
 	 */
-	public ReturnT<String> trigger(LoginInfo loginInfo, int jobId, String executorParam, String addressList);
+	public Response<String> trigger(LoginInfo loginInfo, int jobId, String executorParam, String addressList);
 
 	/**
 	 * dashboard info

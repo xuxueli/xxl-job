@@ -7,7 +7,7 @@ import com.xxl.job.admin.util.I18nUtil;
 import com.xxl.job.admin.mapper.XxlJobGroupMapper;
 import com.xxl.job.admin.mapper.XxlJobInfoMapper;
 import com.xxl.job.admin.mapper.XxlJobRegistryMapper;
-import com.xxl.job.core.enums.RegistryConfig;
+import com.xxl.job.core.constant.Const;
 import com.xxl.sso.core.annotation.XxlSso;
 import com.xxl.tool.core.CollectionTool;
 import com.xxl.tool.core.StringTool;
@@ -152,10 +152,10 @@ public class JobGroupController {
 
 	private List<String> findRegistryByAppName(String appnameParam){
 		HashMap<String, List<String>> appAddressMap = new HashMap<>();
-		List<XxlJobRegistry> list = xxlJobRegistryMapper.findAll(RegistryConfig.DEAD_TIMEOUT, new Date());
+		List<XxlJobRegistry> list = xxlJobRegistryMapper.findAll(Const.DEAD_TIMEOUT, new Date());
 		if (CollectionTool.isNotEmpty(list)) {
 			for (XxlJobRegistry item: list) {
-				if (!RegistryConfig.RegistType.EXECUTOR.name().equals(item.getRegistryGroup())) {
+				if (!Const.RegistType.EXECUTOR.name().equals(item.getRegistryGroup())) {
 					continue;
 				}
 

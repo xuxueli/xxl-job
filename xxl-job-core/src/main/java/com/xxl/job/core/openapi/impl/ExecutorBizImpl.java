@@ -3,7 +3,7 @@ package com.xxl.job.core.openapi.impl;
 import com.xxl.job.core.context.XxlJobContext;
 import com.xxl.job.core.openapi.ExecutorBiz;
 import com.xxl.job.core.openapi.model.*;
-import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
+import com.xxl.job.core.constant.ExecutorBlockStrategyEnum;
 import com.xxl.job.core.executor.XxlJobExecutor;
 import com.xxl.job.core.glue.GlueFactory;
 import com.xxl.job.core.glue.GlueTypeEnum;

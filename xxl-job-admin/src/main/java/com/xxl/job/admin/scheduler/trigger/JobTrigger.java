@@ -12,7 +12,7 @@ import com.xxl.job.admin.util.I18nUtil;
 import com.xxl.job.core.openapi.ExecutorBiz;
 import com.xxl.job.core.openapi.model.TriggerRequest;
 import com.xxl.job.core.context.XxlJobContext;
-import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
+import com.xxl.job.core.constant.ExecutorBlockStrategyEnum;
 import com.xxl.tool.core.StringTool;
 import com.xxl.tool.exception.ThrowableTool;
 import com.xxl.tool.http.IPTool;
