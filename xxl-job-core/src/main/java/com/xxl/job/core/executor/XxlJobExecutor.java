@@ -1,7 +1,7 @@
 package com.xxl.job.core.executor;
 
+import com.xxl.job.core.constant.Const;
 import com.xxl.job.core.openapi.AdminBiz;
-import com.xxl.job.core.openapi.client.AdminBizClient;
 import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.handler.annotation.XxlJob;
 import com.xxl.job.core.handler.impl.MethodJobHandler;
@@ -11,6 +11,7 @@ import com.xxl.job.core.thread.JobLogFileCleanThread;
 import com.xxl.job.core.thread.JobThread;
 import com.xxl.job.core.thread.TriggerCallbackThread;
 import com.xxl.tool.core.StringTool;
+import com.xxl.tool.http.HttpTool;
 import com.xxl.tool.http.IPTool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -122,12 +123,25 @@ public class XxlJobExecutor  {
     // ---------------------- admin-client (rpc invoker) ----------------------
     private static List<AdminBiz> adminBizList;
     private void initAdminBizList(String adminAddresses, String accessToken, int timeout) throws Exception {
-        if (adminAddresses!=null && adminAddresses.trim().length()>0) {
+        if (StringTool.isNotBlank(adminAddresses)) {
             for (String address: adminAddresses.trim().split(",")) {
-                if (address!=null && address.trim().length()>0) {
+                if (StringTool.isNotBlank(address)) {
 
-                    AdminBiz adminBiz = new AdminBizClient(address.trim(), accessToken, timeout);
+                    // valid
+                    String finalAddress = address.trim();
+                    finalAddress = finalAddress.endsWith("/") ? (finalAddress + "api") : (finalAddress + "/api");
+                    if (!(this.timeout >=1 && this.timeout <= 10)) {
+                        this.timeout = 3;
+                    }
 
+                    // build
+                    AdminBiz adminBiz = HttpTool.createClient()
+                            .url(finalAddress)
+                            .timeout(timeout * 1000)
+                            .header(Const.XXL_JOB_ACCESS_TOKEN, accessToken)
+                            .proxy(AdminBiz.class);
+
+                    // registry
                     if (adminBizList == null) {
                         adminBizList = new ArrayList<AdminBiz>();
                     }
