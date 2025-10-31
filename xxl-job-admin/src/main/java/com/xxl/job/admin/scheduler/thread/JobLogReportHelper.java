@@ -79,11 +79,11 @@ public class JobLogReportHelper {
                                 xxlJobLogReport.setFailCount(triggerDayCountFail);
                             }
 
-                            // do refresh
-                            int ret = XxlJobAdminBootstrap.getInstance().getXxlJobLogReportMapper().update(xxlJobLogReport);
-                            if (ret < 1) {
+                            // do refresh:
+                            XxlJobAdminBootstrap.getInstance().getXxlJobLogReportMapper().saveOrUpdate(xxlJobLogReport);      // 0-fail; 1-save suc; 2-update suc;
+                            /*if (ret < 1) {
                                 XxlJobAdminBootstrap.getInstance().getXxlJobLogReportMapper().save(xxlJobLogReport);
-                            }
+                            }*/
                         }
 
                     } catch (Throwable e) {
