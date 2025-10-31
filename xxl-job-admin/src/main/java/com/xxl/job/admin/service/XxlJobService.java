@@ -5,6 +5,7 @@ import com.xxl.job.admin.model.XxlJobInfo;
 import com.xxl.job.admin.model.XxlJobUser;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.sso.core.model.LoginInfo;
+import com.xxl.tool.response.Response;
 
 import java.util.Date;
 import java.util.Map;
@@ -94,6 +95,6 @@ public interface XxlJobService {
 	 * @param endDate
 	 * @return
 	 */
-	public ReturnT<Map<String,Object>> chartInfo(Date startDate, Date endDate);
+	public Response<Map<String,Object>> chartInfo(Date startDate, Date endDate);
 
 }

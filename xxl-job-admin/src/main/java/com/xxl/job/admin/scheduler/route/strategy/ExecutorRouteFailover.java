@@ -4,7 +4,6 @@ import com.xxl.job.admin.scheduler.config.XxlJobAdminBootstrap;
 import com.xxl.job.admin.scheduler.route.ExecutorRouter;
 import com.xxl.job.admin.util.I18nUtil;
 import com.xxl.job.core.biz.ExecutorBiz;
-import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.biz.model.TriggerRequest;
 import com.xxl.tool.response.Response;
 

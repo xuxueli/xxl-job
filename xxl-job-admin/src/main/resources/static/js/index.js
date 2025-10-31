@@ -57,8 +57,8 @@ $(function () {
             dataType : "json",
             success : function(data){
                 if (data.code == 200) {
-                    lineChartInit(data)
-                    pieChartInit(data);
+                    lineChartInit(data.data)
+                    pieChartInit(data.data);
                 } else {
                     layer.open({
                         title: I18n.system_tips ,
@@ -106,7 +106,7 @@ $(function () {
                    {
                        type : 'category',
                        boundaryGap : false,
-                       data : data.content.triggerDayList
+                       data : data.triggerDayList
                    }
                ],
                yAxis : [
@@ -120,7 +120,7 @@ $(function () {
                        type:'line',
                        stack: 'Total',
                        areaStyle: {normal: {}},
-                       data: data.content.triggerDayCountSucList
+                       data: data.triggerDayCountSucList
                    },
                    {
                        name:I18n.joblog_status_fail,
@@ -133,14 +133,14 @@ $(function () {
                            }
                        },
                        areaStyle: {normal: {}},
-                       data: data.content.triggerDayCountFailList
+                       data: data.triggerDayCountFailList
                    },
                    {
                        name:I18n.joblog_status_running,
                        type:'line',
                        stack: 'Total',
                        areaStyle: {normal: {}},
-                       data: data.content.triggerDayCountRunningList
+                       data: data.triggerDayCountRunningList
                    }
                ],
                 color:['#00A65A', '#c23632', '#F39C12']
@@ -178,15 +178,15 @@ $(function () {
                     data:[
                         {
                             name:I18n.joblog_status_suc,
-                            value:data.content.triggerCountSucTotal
+                            value:data.triggerCountSucTotal
                         },
                         {
                             name:I18n.joblog_status_fail,
-                            value:data.content.triggerCountFailTotal
+                            value:data.triggerCountFailTotal
                         },
                         {
                             name:I18n.joblog_status_running,
-                            value:data.content.triggerCountRunningTotal
+                            value:data.triggerCountRunningTotal
                         }
                     ],
                     itemStyle: {

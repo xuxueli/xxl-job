@@ -19,6 +19,7 @@ import com.xxl.tool.core.CollectionTool;
 import com.xxl.tool.core.DateTool;
 import com.xxl.tool.core.StringTool;
 import com.xxl.tool.response.Response;
+import com.xxl.tool.response.ResponseCode;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
@@ -251,7 +252,7 @@ public class JobLogController {
 		}
 
 		if (ReturnT.SUCCESS_CODE == runResult.getCode()) {
-			log.setHandleCode(ReturnT.FAIL_CODE);
+			log.setHandleCode(ResponseCode.CODE_202.getCode());
 			log.setHandleMsg( I18nUtil.getString("joblog_kill_log_byman")+":" + (runResult.getMsg()!=null?runResult.getMsg():""));
 			log.setHandleTime(new Date());
 			XxlJobAdminBootstrap.getInstance().getJobCompleter().complete(log);

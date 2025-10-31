@@ -10,11 +10,19 @@ $(function() {
 			type:"post",
 			data : function ( d ) {
 				var obj = {};
+				obj.offset = d.start;
+				obj.pagesize = d.length;
 				obj.appname = $('#appname').val();
 				obj.title = $('#title').val();
-				obj.start = d.start;
-				obj.length = d.length;
 				return obj;
+			},
+			dataFilter: function (json ) {
+				var result = JSON.parse(json);
+				return JSON.stringify({
+					"recordsTotal": result.data.totalCount,
+					"recordsFiltered": result.data.totalCount,
+					"data": result.data.pageData
+				});
 			}
 		},
 		"searching": false,

@@ -312,9 +312,9 @@ $(function() {
             success : function(data){
 
                 var html = '<div>';
-                if (data.code == 200 && data.content.registryList) {
-                    for (var index in data.content.registryList) {
-                        html += (parseInt(index)+1) + '. <span class="badge bg-green" >' + data.content.registryList[index] + '</span><br>';
+                if (data.code == 200 && data.data.registryList) {
+                    for (var index in data.data.registryList) {
+                        html += (parseInt(index)+1) + '. <span class="badge bg-green" >' + data.data.registryList[index] + '</span><br>';
                     }
                 }
                 html += '</div>';

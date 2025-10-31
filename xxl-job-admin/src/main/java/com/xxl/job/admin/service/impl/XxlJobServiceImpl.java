@@ -19,6 +19,7 @@ import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
 import com.xxl.job.core.glue.GlueTypeEnum;
 import com.xxl.sso.core.model.LoginInfo;
 import com.xxl.tool.core.DateTool;
+import com.xxl.tool.response.Response;
 import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -457,7 +458,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 	}
 
 	@Override
-	public ReturnT<Map<String, Object>> chartInfo(Date startDate, Date endDate) {
+	public Response<Map<String, Object>> chartInfo(Date startDate, Date endDate) {
 
 		// process
 		List<String> triggerDayList = new ArrayList<String>();
@@ -470,7 +471,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 
 		List<XxlJobLogReport> logReportList = xxlJobLogReportMapper.queryLogReport(startDate, endDate);
 
-		if (logReportList!=null && logReportList.size()>0) {
+		if (logReportList!=null && !logReportList.isEmpty()) {
 			for (XxlJobLogReport item: logReportList) {
 				String day = DateTool.formatDate(item.getTriggerDay());
 				int triggerDayCountRunning = item.getRunningCount();
@@ -505,7 +506,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 		result.put("triggerCountSucTotal", triggerCountSucTotal);
 		result.put("triggerCountFailTotal", triggerCountFailTotal);
 
-		return ReturnT.ofSuccess(result);
+		return Response.ofSuccess(result);
 	}
 
 }
