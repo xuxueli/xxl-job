@@ -25,7 +25,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class AdminBizTest {
     private static final Logger logger = LoggerFactory.getLogger(AdminBizTest.class);
 
-    // admin-client
     private static String addressUrl = "http://127.0.0.1:8080/xxl-job-admin";
     private static String accessToken = "default_token";
 
@@ -38,7 +37,6 @@ public class AdminBizTest {
                 .header(Const.XXL_JOB_ACCESS_TOKEN, accessToken)
                 .proxy(AdminBiz.class);
     }
-
 
     @Test
     public void callback() throws Exception {

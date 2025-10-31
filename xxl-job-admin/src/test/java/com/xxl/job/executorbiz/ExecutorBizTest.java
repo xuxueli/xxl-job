@@ -1,13 +1,16 @@
 package com.xxl.job.executorbiz;
 
+import com.xxl.job.core.constant.Const;
 import com.xxl.job.core.openapi.ExecutorBiz;
-import com.xxl.job.core.openapi.client.ExecutorBizClient;
 import com.xxl.job.core.openapi.model.*;
 import com.xxl.job.core.constant.ExecutorBlockStrategyEnum;
 import com.xxl.job.core.glue.GlueTypeEnum;
+import com.xxl.tool.http.HttpTool;
 import com.xxl.tool.response.Response;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * executor api test
@@ -15,15 +18,22 @@ import org.junit.jupiter.api.Test;
  * Created by xuxueli on 17/5/12.
  */
 public class ExecutorBizTest {
+    private static final Logger logger = LoggerFactory.getLogger(ExecutorBizTest.class);
 
-    // admin-client
     private static String addressUrl = "http://127.0.0.1:9999/";
     private static String accessToken = "default_token";
-    private static int timeout = 3;
+
+    private ExecutorBiz buildClient(){
+        return HttpTool.createClient()
+                .url(addressUrl)
+                .timeout(3 * 1000)
+                .header(Const.XXL_JOB_ACCESS_TOKEN, accessToken)
+                .proxy(ExecutorBiz.class);
+    }
 
     @Test
     public void beat() throws Exception {
-        ExecutorBiz executorBiz = new ExecutorBizClient(addressUrl, accessToken, timeout);
+        ExecutorBiz executorBiz = buildClient();
         // Act
         final Response<String> retval = executorBiz.beat();
 
@@ -36,7 +46,7 @@ public class ExecutorBizTest {
 
     @Test
     public void idleBeat(){
-        ExecutorBiz executorBiz = new ExecutorBizClient(addressUrl, accessToken, timeout);
+        ExecutorBiz executorBiz = buildClient();
 
         final int jobId = 0;
 
@@ -52,7 +62,7 @@ public class ExecutorBizTest {
 
     @Test
     public void run(){
-        ExecutorBiz executorBiz = new ExecutorBizClient(addressUrl, accessToken, timeout);
+        ExecutorBiz executorBiz = buildClient();
 
         // trigger data
         final TriggerRequest triggerParam = new TriggerRequest();
@@ -76,7 +86,7 @@ public class ExecutorBizTest {
 
     @Test
     public void kill(){
-        ExecutorBiz executorBiz = new ExecutorBizClient(addressUrl, accessToken, timeout);
+        ExecutorBiz executorBiz = buildClient();
 
         final int jobId = 0;
 
@@ -92,7 +102,7 @@ public class ExecutorBizTest {
 
     @Test
     public void log(){
-        ExecutorBiz executorBiz = new ExecutorBizClient(addressUrl, accessToken, timeout);
+        ExecutorBiz executorBiz = buildClient();
 
         final long logDateTim = 0L;
         final long logId = 0;

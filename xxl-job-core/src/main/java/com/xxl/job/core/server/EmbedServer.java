@@ -1,10 +1,10 @@
 package com.xxl.job.core.server;
 
+import com.xxl.job.core.constant.Const;
 import com.xxl.job.core.openapi.ExecutorBiz;
 import com.xxl.job.core.openapi.impl.ExecutorBizImpl;
 import com.xxl.job.core.openapi.model.*;
 import com.xxl.job.core.thread.ExecutorRegistryThread;
-import com.xxl.job.core.util.XxlJobRemotingUtil;
 import com.xxl.tool.exception.ThrowableTool;
 import com.xxl.tool.gson.GsonTool;
 import com.xxl.tool.response.Response;
@@ -149,7 +149,7 @@ public class EmbedServer {
             String uri = msg.uri();
             HttpMethod httpMethod = msg.method();
             boolean keepAlive = HttpUtil.isKeepAlive(msg);
-            String accessTokenReq = msg.headers().get(XxlJobRemotingUtil.XXL_JOB_ACCESS_TOKEN);
+            String accessTokenReq = msg.headers().get(Const.XXL_JOB_ACCESS_TOKEN);
 
             // invoke
             bizThreadPool.execute(new Runnable() {
