@@ -40,7 +40,7 @@ public class ExecutorBizTest {
         final int jobId = 0;
 
         // Act
-        final ReturnT<String> retval = executorBiz.idleBeat(new IdleBeatParam(jobId));
+        final ReturnT<String> retval = executorBiz.idleBeat(new IdleBeatRequest(jobId));
 
         // Assert result
         Assertions.assertNotNull(retval);
@@ -54,7 +54,7 @@ public class ExecutorBizTest {
         ExecutorBiz executorBiz = new ExecutorBizClient(addressUrl, accessToken, timeout);
 
         // trigger data
-        final TriggerParam triggerParam = new TriggerParam();
+        final TriggerRequest triggerParam = new TriggerRequest();
         triggerParam.setJobId(1);
         triggerParam.setExecutorHandler("demoJobHandler");
         triggerParam.setExecutorParams(null);
@@ -80,7 +80,7 @@ public class ExecutorBizTest {
         final int jobId = 0;
 
         // Act
-        final ReturnT<String> retval = executorBiz.kill(new KillParam(jobId));
+        final ReturnT<String> retval = executorBiz.kill(new KillRequest(jobId));
 
         // Assert result
         Assertions.assertNotNull(retval);
@@ -98,7 +98,7 @@ public class ExecutorBizTest {
         final int fromLineNum = 0;
 
         // Act
-        final ReturnT<LogResult> retval = executorBiz.log(new LogParam(logDateTim, logId, fromLineNum));
+        final ReturnT<LogResult> retval = executorBiz.log(new LogRequest(logDateTim, logId, fromLineNum));
 
         // Assert result
         Assertions.assertNotNull(retval);

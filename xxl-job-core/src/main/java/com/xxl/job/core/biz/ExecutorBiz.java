@@ -16,30 +16,30 @@ public interface ExecutorBiz {
     /**
      * idle beat
      *
-     * @param idleBeatParam
+     * @param idleBeatRequest
      * @return
      */
-    public ReturnT<String> idleBeat(IdleBeatParam idleBeatParam);
+    public ReturnT<String> idleBeat(IdleBeatRequest idleBeatRequest);
 
     /**
      * run
-     * @param triggerParam
+     * @param triggerRequest
      * @return
      */
-    public ReturnT<String> run(TriggerParam triggerParam);
+    public ReturnT<String> run(TriggerRequest triggerRequest);
 
     /**
      * kill
-     * @param killParam
+     * @param killRequest
      * @return
      */
-    public ReturnT<String> kill(KillParam killParam);
+    public ReturnT<String> kill(KillRequest killRequest);
 
     /**
      * log
-     * @param logParam
+     * @param logRequest
      * @return
      */
-    public ReturnT<LogResult> log(LogParam logParam);
+    public ReturnT<LogResult> log(LogRequest logRequest);
 
 }

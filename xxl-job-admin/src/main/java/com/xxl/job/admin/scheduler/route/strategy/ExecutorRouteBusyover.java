@@ -4,9 +4,9 @@ import com.xxl.job.admin.scheduler.config.XxlJobAdminBootstrap;
 import com.xxl.job.admin.scheduler.route.ExecutorRouter;
 import com.xxl.job.admin.util.I18nUtil;
 import com.xxl.job.core.biz.ExecutorBiz;
-import com.xxl.job.core.biz.model.IdleBeatParam;
+import com.xxl.job.core.biz.model.IdleBeatRequest;
 import com.xxl.job.core.biz.model.ReturnT;
-import com.xxl.job.core.biz.model.TriggerParam;
+import com.xxl.job.core.biz.model.TriggerRequest;
 
 import java.util.List;
 
@@ -16,14 +16,14 @@ import java.util.List;
 public class ExecutorRouteBusyover extends ExecutorRouter {
 
     @Override
-    public ReturnT<String> route(TriggerParam triggerParam, List<String> addressList) {
+    public ReturnT<String> route(TriggerRequest triggerParam, List<String> addressList) {
         StringBuffer idleBeatResultSB = new StringBuffer();
         for (String address : addressList) {
             // beat
             ReturnT<String> idleBeatResult = null;
             try {
                 ExecutorBiz executorBiz = XxlJobAdminBootstrap.getExecutorBiz(address);
-                idleBeatResult = executorBiz.idleBeat(new IdleBeatParam(triggerParam.getJobId()));
+                idleBeatResult = executorBiz.idleBeat(new IdleBeatRequest(triggerParam.getJobId()));
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);
                 idleBeatResult = ReturnT.ofFail( ""+e );

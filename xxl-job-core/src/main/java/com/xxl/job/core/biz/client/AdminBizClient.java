@@ -1,8 +1,8 @@
 package com.xxl.job.core.biz.client;
 
 import com.xxl.job.core.biz.AdminBiz;
-import com.xxl.job.core.biz.model.HandleCallbackParam;
-import com.xxl.job.core.biz.model.RegistryParam;
+import com.xxl.job.core.biz.model.HandleCallbackRequest;
+import com.xxl.job.core.biz.model.RegistryRequest;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.util.XxlJobRemotingUtil;
 
@@ -37,18 +37,18 @@ public class AdminBizClient implements AdminBiz {
 
 
     @Override
-    public ReturnT<String> callback(List<HandleCallbackParam> callbackParamList) {
-        return XxlJobRemotingUtil.postBody(addressUrl+"api/callback", accessToken, timeout, callbackParamList, String.class);
+    public ReturnT<String> callback(List<HandleCallbackRequest> handleCallbackRequestList) {
+        return XxlJobRemotingUtil.postBody(addressUrl+"api/callback", accessToken, timeout, handleCallbackRequestList, String.class);
     }
 
     @Override
-    public ReturnT<String> registry(RegistryParam registryParam) {
-        return XxlJobRemotingUtil.postBody(addressUrl + "api/registry", accessToken, timeout, registryParam, String.class);
+    public ReturnT<String> registry(RegistryRequest registryRequest) {
+        return XxlJobRemotingUtil.postBody(addressUrl + "api/registry", accessToken, timeout, registryRequest, String.class);
     }
 
     @Override
-    public ReturnT<String> registryRemove(RegistryParam registryParam) {
-        return XxlJobRemotingUtil.postBody(addressUrl + "api/registryRemove", accessToken, timeout, registryParam, String.class);
+    public ReturnT<String> registryRemove(RegistryRequest registryRequest) {
+        return XxlJobRemotingUtil.postBody(addressUrl + "api/registryRemove", accessToken, timeout, registryRequest, String.class);
     }
 
 }

@@ -2,7 +2,7 @@ package com.xxl.job.admin.scheduler.route.strategy;
 
 import com.xxl.job.admin.scheduler.route.ExecutorRouter;
 import com.xxl.job.core.biz.model.ReturnT;
-import com.xxl.job.core.biz.model.TriggerParam;
+import com.xxl.job.core.biz.model.TriggerRequest;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -81,7 +81,7 @@ public class ExecutorRouteConsistentHash extends ExecutorRouter {
     }
 
     @Override
-    public ReturnT<String> route(TriggerParam triggerParam, List<String> addressList) {
+    public ReturnT<String> route(TriggerRequest triggerParam, List<String> addressList) {
         String address = hashJob(triggerParam.getJobId(), addressList);
         return ReturnT.ofSuccess(address);
     }

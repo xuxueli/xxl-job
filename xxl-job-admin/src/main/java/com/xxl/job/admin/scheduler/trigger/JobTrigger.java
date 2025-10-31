@@ -11,7 +11,7 @@ import com.xxl.job.admin.scheduler.route.ExecutorRouteStrategyEnum;
 import com.xxl.job.admin.util.I18nUtil;
 import com.xxl.job.core.biz.ExecutorBiz;
 import com.xxl.job.core.biz.model.ReturnT;
-import com.xxl.job.core.biz.model.TriggerParam;
+import com.xxl.job.core.biz.model.TriggerRequest;
 import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
 import com.xxl.tool.core.StringTool;
 import com.xxl.tool.exception.ThrowableTool;
@@ -147,7 +147,7 @@ public class JobTrigger {
         logger.debug(">>>>>>>>>>> xxl-job trigger start, jobId:{}", jobLog.getId());
 
         // 2、init trigger-param
-        TriggerParam triggerParam = new TriggerParam();
+        TriggerRequest triggerParam = new TriggerRequest();
         triggerParam.setJobId(jobInfo.getId());
         triggerParam.setExecutorHandler(jobInfo.getExecutorHandler());
         triggerParam.setExecutorParams(jobInfo.getExecutorParam());
@@ -228,7 +228,7 @@ public class JobTrigger {
      * @param address       the address
      * @return return
      */
-    private ReturnT<String> doTrigger(TriggerParam triggerParam, String address){
+    private ReturnT<String> doTrigger(TriggerRequest triggerParam, String address){
         ReturnT<String> runResult = null;
         try {
             ExecutorBiz executorBiz = XxlJobAdminBootstrap.getExecutorBiz(address);

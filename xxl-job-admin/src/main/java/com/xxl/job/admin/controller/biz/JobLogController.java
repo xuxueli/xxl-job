@@ -11,8 +11,8 @@ import com.xxl.job.admin.scheduler.exception.XxlJobException;
 import com.xxl.job.admin.util.I18nUtil;
 import com.xxl.job.admin.util.JobGroupPermissionUtil;
 import com.xxl.job.core.biz.ExecutorBiz;
-import com.xxl.job.core.biz.model.KillParam;
-import com.xxl.job.core.biz.model.LogParam;
+import com.xxl.job.core.biz.model.KillRequest;
+import com.xxl.job.core.biz.model.LogRequest;
 import com.xxl.job.core.biz.model.LogResult;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.tool.core.CollectionTool;
@@ -169,7 +169,7 @@ public class JobLogController {
 
 			// log cat
 			ExecutorBiz executorBiz = XxlJobAdminBootstrap.getExecutorBiz(jobLog.getExecutorAddress());
-			ReturnT<LogResult> logResult = executorBiz.log(new LogParam(jobLog.getTriggerTime().getTime(), logId, fromLineNum));
+			ReturnT<LogResult> logResult = executorBiz.log(new LogRequest(jobLog.getTriggerTime().getTime(), logId, fromLineNum));
 
 			// is end
             if (logResult.getContent()!=null && logResult.getContent().getFromLineNum() > logResult.getContent().getToLineNum()) {
@@ -243,7 +243,7 @@ public class JobLogController {
 		ReturnT<String> runResult = null;
 		try {
 			ExecutorBiz executorBiz = XxlJobAdminBootstrap.getExecutorBiz(log.getExecutorAddress());
-			runResult = executorBiz.kill(new KillParam(jobInfo.getId()));
+			runResult = executorBiz.kill(new KillRequest(jobInfo.getId()));
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			runResult = ReturnT.ofFail( e.getMessage());

@@ -186,16 +186,16 @@ public class EmbedServer {
                     case "/beat":
                         return executorBiz.beat();
                     case "/idleBeat":
-                        IdleBeatParam idleBeatParam = GsonTool.fromJson(requestData, IdleBeatParam.class);
+                        IdleBeatRequest idleBeatParam = GsonTool.fromJson(requestData, IdleBeatRequest.class);
                         return executorBiz.idleBeat(idleBeatParam);
                     case "/run":
-                        TriggerParam triggerParam = GsonTool.fromJson(requestData, TriggerParam.class);
+                        TriggerRequest triggerParam = GsonTool.fromJson(requestData, TriggerRequest.class);
                         return executorBiz.run(triggerParam);
                     case "/kill":
-                        KillParam killParam = GsonTool.fromJson(requestData, KillParam.class);
+                        KillRequest killParam = GsonTool.fromJson(requestData, KillRequest.class);
                         return executorBiz.kill(killParam);
                     case "/log":
-                        LogParam logParam = GsonTool.fromJson(requestData, LogParam.class);
+                        LogRequest logParam = GsonTool.fromJson(requestData, LogRequest.class);
                         return executorBiz.log(logParam);
                     default:
                         return ReturnT.ofFail( "invalid request, uri-mapping(" + uri + ") not found.");

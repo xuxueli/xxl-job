@@ -2,8 +2,8 @@ package com.xxl.job.admin.controller.openapi;
 
 import com.xxl.job.admin.scheduler.config.XxlJobAdminBootstrap;
 import com.xxl.job.core.biz.AdminBiz;
-import com.xxl.job.core.biz.model.HandleCallbackParam;
-import com.xxl.job.core.biz.model.RegistryParam;
+import com.xxl.job.core.biz.model.HandleCallbackRequest;
+import com.xxl.job.core.biz.model.RegistryRequest;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.util.XxlJobRemotingUtil;
 import com.xxl.sso.core.annotation.XxlSso;
@@ -55,13 +55,13 @@ public class JobApiController {
 
         // services mapping
         if ("callback".equals(uri)) {
-            List<HandleCallbackParam> callbackParamList = GsonTool.fromJson(data, List.class, HandleCallbackParam.class);
+            List<HandleCallbackRequest> callbackParamList = GsonTool.fromJson(data, List.class, HandleCallbackRequest.class);
             return adminBiz.callback(callbackParamList);
         } else if ("registry".equals(uri)) {
-            RegistryParam registryParam = GsonTool.fromJson(data, RegistryParam.class);
+            RegistryRequest registryParam = GsonTool.fromJson(data, RegistryRequest.class);
             return adminBiz.registry(registryParam);
         } else if ("registryRemove".equals(uri)) {
-            RegistryParam registryParam = GsonTool.fromJson(data, RegistryParam.class);
+            RegistryRequest registryParam = GsonTool.fromJson(data, RegistryRequest.class);
             return adminBiz.registryRemove(registryParam);
         } else {
             return ReturnT.ofFail("invalid request, uri-mapping("+ uri +") not found.");

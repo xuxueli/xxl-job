@@ -3,7 +3,7 @@ package com.xxl.job.admin.scheduler.thread;
 import com.xxl.job.admin.model.XxlJobLog;
 import com.xxl.job.admin.scheduler.config.XxlJobAdminBootstrap;
 import com.xxl.job.admin.util.I18nUtil;
-import com.xxl.job.core.biz.model.HandleCallbackParam;
+import com.xxl.job.core.biz.model.HandleCallbackRequest;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.tool.core.DateTool;
 import org.slf4j.Logger;
@@ -136,12 +136,12 @@ public class JobCompleteHelper {
 
 	// ---------------------- helper ----------------------
 
-	public ReturnT<String> callback(List<HandleCallbackParam> callbackParamList) {
+	public ReturnT<String> callback(List<HandleCallbackRequest> callbackParamList) {
 
 		callbackThreadPool.execute(new Runnable() {
 			@Override
 			public void run() {
-				for (HandleCallbackParam handleCallbackParam: callbackParamList) {
+				for (HandleCallbackRequest handleCallbackParam: callbackParamList) {
 					ReturnT<String> callbackResult = callback(handleCallbackParam);
 					logger.debug(">>>>>>>>> JobApiController.callback {}, handleCallbackParam={}, callbackResult={}",
 							(callbackResult.isSuccess()?"success":"fail"), handleCallbackParam, callbackResult);
@@ -152,7 +152,7 @@ public class JobCompleteHelper {
 		return ReturnT.ofSuccess();
 	}
 
-	private ReturnT<String> callback(HandleCallbackParam handleCallbackParam) {
+	private ReturnT<String> callback(HandleCallbackRequest handleCallbackParam) {
 		// valid log item
 		XxlJobLog log = XxlJobAdminBootstrap.getInstance().getXxlJobLogMapper().load(handleCallbackParam.getLogId());
 		if (log == null) {

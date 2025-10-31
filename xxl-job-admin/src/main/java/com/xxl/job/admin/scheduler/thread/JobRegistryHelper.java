@@ -3,7 +3,7 @@ package com.xxl.job.admin.scheduler.thread;
 import com.xxl.job.admin.model.XxlJobGroup;
 import com.xxl.job.admin.model.XxlJobRegistry;
 import com.xxl.job.admin.scheduler.config.XxlJobAdminBootstrap;
-import com.xxl.job.core.biz.model.RegistryParam;
+import com.xxl.job.core.biz.model.RegistryRequest;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.enums.RegistryConfig;
 import com.xxl.tool.core.StringTool;
@@ -154,7 +154,7 @@ public class JobRegistryHelper {
 	/**
 	 * registry
 	 */
-	public ReturnT<String> registry(RegistryParam registryParam) {
+	public ReturnT<String> registry(RegistryRequest registryParam) {
 
 		// valid
 		if (StringTool.isBlank(registryParam.getRegistryGroup())
@@ -189,7 +189,7 @@ public class JobRegistryHelper {
 	/**
 	 * registry remove
 	 */
-	public ReturnT<String> registryRemove(RegistryParam registryParam) {
+	public ReturnT<String> registryRemove(RegistryRequest registryParam) {
 
 		// valid
 		if (StringTool.isBlank(registryParam.getRegistryGroup())
@@ -213,7 +213,7 @@ public class JobRegistryHelper {
 		return ReturnT.ofSuccess();
 	}
 
-	private void freshGroupRegistryInfo(RegistryParam registryParam){
+	private void freshGroupRegistryInfo(RegistryRequest registryParam){
 		// Under consideration, prevent affecting core tables
 	}
 
