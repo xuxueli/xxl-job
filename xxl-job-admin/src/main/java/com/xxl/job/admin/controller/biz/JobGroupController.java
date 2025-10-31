@@ -7,7 +7,6 @@ import com.xxl.job.admin.util.I18nUtil;
 import com.xxl.job.admin.mapper.XxlJobGroupMapper;
 import com.xxl.job.admin.mapper.XxlJobInfoMapper;
 import com.xxl.job.admin.mapper.XxlJobRegistryMapper;
-import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.enums.RegistryConfig;
 import com.xxl.sso.core.annotation.XxlSso;
 import com.xxl.tool.core.CollectionTool;
@@ -15,7 +14,6 @@ import com.xxl.tool.core.StringTool;
 import com.xxl.tool.response.PageModel;
 import com.xxl.tool.response.Response;
 import jakarta.annotation.Resource;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,11 +46,10 @@ public class JobGroupController {
 	@RequestMapping("/pageList")
 	@ResponseBody
 	@XxlSso(role = Consts.ADMIN_ROLE)
-	public Response<PageModel<XxlJobGroup>> pageList(HttpServletRequest request,
-												  	@RequestParam(required = false, defaultValue = "0") int offset,
-												  	@RequestParam(required = false, defaultValue = "10") int pagesize,
-												  	@RequestParam String appname,
-												  	@RequestParam String title) {
+	public Response<PageModel<XxlJobGroup>> pageList(@RequestParam(required = false, defaultValue = "0") int offset,
+													 @RequestParam(required = false, defaultValue = "10") int pagesize,
+													 @RequestParam String appname,
+													 @RequestParam String title) {
 
 		// page query
 		List<XxlJobGroup> list = xxlJobGroupMapper.pageList(offset, pagesize, appname, title);

@@ -10,16 +10,17 @@ import com.xxl.job.admin.scheduler.config.XxlJobAdminBootstrap;
 import com.xxl.job.admin.scheduler.exception.XxlJobException;
 import com.xxl.job.admin.util.I18nUtil;
 import com.xxl.job.admin.util.JobGroupPermissionUtil;
-import com.xxl.job.core.biz.ExecutorBiz;
-import com.xxl.job.core.biz.model.KillRequest;
-import com.xxl.job.core.biz.model.LogRequest;
-import com.xxl.job.core.biz.model.LogResult;
-import com.xxl.job.core.biz.model.ReturnT;
+import com.xxl.job.core.openapi.ExecutorBiz;
+import com.xxl.job.core.openapi.model.KillRequest;
+import com.xxl.job.core.openapi.model.LogRequest;
+import com.xxl.job.core.openapi.model.LogResult;
+import com.xxl.job.core.openapi.model.ReturnT;
+import com.xxl.job.core.context.XxlJobContext;
 import com.xxl.tool.core.CollectionTool;
 import com.xxl.tool.core.DateTool;
 import com.xxl.tool.core.StringTool;
+import com.xxl.tool.response.PageModel;
 import com.xxl.tool.response.Response;
-import com.xxl.tool.response.ResponseCode;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
@@ -106,13 +107,13 @@ public class JobLogController {
 	
 	@RequestMapping("/pageList")
 	@ResponseBody
-	public Map<String, Object> pageList(HttpServletRequest request,
-										@RequestParam(value = "start", required = false, defaultValue = "0") int start,
-										@RequestParam(value = "length", required = false, defaultValue = "10") int length,
-										@RequestParam("jobGroup") int jobGroup,
-										@RequestParam("jobId") int jobId,
-										@RequestParam("logStatus") int logStatus,
-										@RequestParam("filterTime") String filterTime) {
+	public Response<PageModel<XxlJobLog>> pageList(HttpServletRequest request,
+										@RequestParam(required = false, defaultValue = "0") int offset,
+										@RequestParam(required = false, defaultValue = "10") int pagesize,
+										@RequestParam int jobGroup,
+										@RequestParam int jobId,
+										@RequestParam int logStatus,
+										@RequestParam String filterTime) {
 
 		// valid jobGroup permission
 		JobGroupPermissionUtil.validJobGroupPermission(request, jobGroup);
@@ -129,15 +130,15 @@ public class JobLogController {
 		}
 		
 		// page query
-		List<XxlJobLog> list = xxlJobLogMapper.pageList(start, length, jobGroup, jobId, triggerTimeStart, triggerTimeEnd, logStatus);
-		int list_count = xxlJobLogMapper.pageListCount(start, length, jobGroup, jobId, triggerTimeStart, triggerTimeEnd, logStatus);
-		
+		List<XxlJobLog> list = xxlJobLogMapper.pageList(offset, pagesize, jobGroup, jobId, triggerTimeStart, triggerTimeEnd, logStatus);
+		int list_count = xxlJobLogMapper.pageListCount(offset, pagesize, jobGroup, jobId, triggerTimeStart, triggerTimeEnd, logStatus);
+
 		// package result
-		Map<String, Object> maps = new HashMap<String, Object>();
-	    maps.put("recordsTotal", list_count);		// 总记录数
-	    maps.put("recordsFiltered", list_count);	// 过滤后的总记录数
-	    maps.put("data", list);  					// 分页列表
-		return maps;
+		PageModel<XxlJobLog> pageModel = new PageModel<>();
+		pageModel.setPageData(list);
+		pageModel.setTotalCount(list_count);
+
+		return Response.ofSuccess(pageModel);
 	}
 
 	@RequestMapping("/logDetailPage")
@@ -251,8 +252,8 @@ public class JobLogController {
 			runResult = Response.ofFail( e.getMessage());
 		}
 
-		if (ReturnT.SUCCESS_CODE == runResult.getCode()) {
-			log.setHandleCode(ResponseCode.CODE_202.getCode());
+		if (XxlJobContext.HANDLE_CODE_SUCCESS == runResult.getCode()) {
+			log.setHandleCode(XxlJobContext.HANDLE_CODE_FAIL);
 			log.setHandleMsg( I18nUtil.getString("joblog_kill_log_byman")+":" + (runResult.getMsg()!=null?runResult.getMsg():""));
 			log.setHandleTime(new Date());
 			XxlJobAdminBootstrap.getInstance().getJobCompleter().complete(log);

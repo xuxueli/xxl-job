@@ -3,10 +3,10 @@ package com.xxl.job.admin.scheduler.thread;
 import com.xxl.job.admin.model.XxlJobLog;
 import com.xxl.job.admin.scheduler.config.XxlJobAdminBootstrap;
 import com.xxl.job.admin.util.I18nUtil;
-import com.xxl.job.core.biz.model.HandleCallbackRequest;
+import com.xxl.job.core.openapi.model.HandleCallbackRequest;
+import com.xxl.job.core.context.XxlJobContext;
 import com.xxl.tool.core.DateTool;
 import com.xxl.tool.response.Response;
-import com.xxl.tool.response.ResponseCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -84,7 +84,7 @@ public class JobCompleteHelper {
 								jobLog.setId(logId);
 
 								jobLog.setHandleTime(new Date());
-								jobLog.setHandleCode(ResponseCode.CODE_202.getCode());
+								jobLog.setHandleCode(XxlJobContext.HANDLE_CODE_FAIL);
 								jobLog.setHandleMsg( I18nUtil.getString("joblog_lost_fail") );
 
 								XxlJobAdminBootstrap.getInstance().getJobCompleter().complete(jobLog);
