@@ -2,9 +2,9 @@ package com.xxl.job.core.thread;
 
 import com.xxl.job.core.biz.AdminBiz;
 import com.xxl.job.core.biz.model.RegistryRequest;
-import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.enums.RegistryConfig;
 import com.xxl.job.core.executor.XxlJobExecutor;
+import com.xxl.tool.response.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,9 +45,9 @@ public class ExecutorRegistryThread {
                         RegistryRequest registryParam = new RegistryRequest(RegistryConfig.RegistType.EXECUTOR.name(), appname, address);
                         for (AdminBiz adminBiz: XxlJobExecutor.getAdminBizList()) {
                             try {
-                                ReturnT<String> registryResult = adminBiz.registry(registryParam);
+                                Response<String> registryResult = adminBiz.registry(registryParam);
                                 if (registryResult!=null && registryResult.isSuccess()) {
-                                    registryResult = ReturnT.ofSuccess();
+                                    registryResult = Response.ofSuccess();
                                     logger.debug(">>>>>>>>>>> xxl-job registry success, registryParam:{}, registryResult:{}", new Object[]{registryParam, registryResult});
                                     break;
                                 } else {
@@ -81,9 +81,9 @@ public class ExecutorRegistryThread {
                     RegistryRequest registryParam = new RegistryRequest(RegistryConfig.RegistType.EXECUTOR.name(), appname, address);
                     for (AdminBiz adminBiz: XxlJobExecutor.getAdminBizList()) {
                         try {
-                            ReturnT<String> registryResult = adminBiz.registryRemove(registryParam);
+                            Response<String> registryResult = adminBiz.registryRemove(registryParam);
                             if (registryResult!=null && registryResult.isSuccess()) {
-                                registryResult = ReturnT.ofSuccess();
+                                registryResult = Response.ofSuccess();
                                 logger.info(">>>>>>>>>>> xxl-job registry-remove success, registryParam:{}, registryResult:{}", new Object[]{registryParam, registryResult});
                                 break;
                             } else {

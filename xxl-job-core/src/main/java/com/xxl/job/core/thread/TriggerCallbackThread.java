@@ -2,7 +2,6 @@ package com.xxl.job.core.thread;
 
 import com.xxl.job.core.biz.AdminBiz;
 import com.xxl.job.core.biz.model.HandleCallbackRequest;
-import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.context.XxlJobContext;
 import com.xxl.job.core.context.XxlJobHelper;
 import com.xxl.job.core.enums.RegistryConfig;
@@ -14,6 +13,7 @@ import com.xxl.tool.core.StringTool;
 import com.xxl.tool.encrypt.Md5Tool;
 import com.xxl.tool.gson.GsonTool;
 import com.xxl.tool.io.FileTool;
+import com.xxl.tool.response.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -181,7 +181,7 @@ public class TriggerCallbackThread {
         // callback, will retry if error
         for (AdminBiz adminBiz: XxlJobExecutor.getAdminBizList()) {
             try {
-                ReturnT<String> callbackResult = adminBiz.callback(callbackParamList);
+                Response<String> callbackResult = adminBiz.callback(callbackParamList);
                 if (callbackResult!=null && callbackResult.isSuccess()) {
                     callbackLog(callbackParamList, "<br>----------- xxl-job job callback finish.");
                     callbackRet = true;

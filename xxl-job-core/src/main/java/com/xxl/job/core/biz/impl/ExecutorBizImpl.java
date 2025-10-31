@@ -11,6 +11,7 @@ import com.xxl.job.core.handler.impl.GlueJobHandler;
 import com.xxl.job.core.handler.impl.ScriptJobHandler;
 import com.xxl.job.core.log.XxlJobFileAppender;
 import com.xxl.job.core.thread.JobThread;
+import com.xxl.tool.response.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,12 +24,12 @@ public class ExecutorBizImpl implements ExecutorBiz {
     private static Logger logger = LoggerFactory.getLogger(ExecutorBizImpl.class);
 
     @Override
-    public ReturnT<String> beat() {
-        return ReturnT.ofSuccess();
+    public Response<String> beat() {
+        return Response.ofSuccess();
     }
 
     @Override
-    public ReturnT<String> idleBeat(IdleBeatRequest idleBeatRequest) {
+    public Response<String> idleBeat(IdleBeatRequest idleBeatRequest) {
 
         // isRunningOrHasQueue
         boolean isRunningOrHasQueue = false;
@@ -38,13 +39,13 @@ public class ExecutorBizImpl implements ExecutorBiz {
         }
 
         if (isRunningOrHasQueue) {
-            return ReturnT.ofFail("job thread is running or has trigger queue.");
+            return Response.ofFail("job thread is running or has trigger queue.");
         }
-        return ReturnT.ofSuccess();
+        return Response.ofSuccess();
     }
 
     @Override
-    public ReturnT<String> run(TriggerRequest triggerRequest) {
+    public Response<String> run(TriggerRequest triggerRequest) {
         // load old：jobHandler + jobThread
         JobThread jobThread = XxlJobExecutor.loadJobThread(triggerRequest.getJobId());
         IJobHandler jobHandler = jobThread!=null?jobThread.getHandler():null;
@@ -70,7 +71,7 @@ public class ExecutorBizImpl implements ExecutorBiz {
             if (jobHandler == null) {
                 jobHandler = newJobHandler;
                 if (jobHandler == null) {
-                    return ReturnT.ofFail( "job handler [" + triggerRequest.getExecutorHandler() + "] not found.");
+                    return Response.ofFail( "job handler [" + triggerRequest.getExecutorHandler() + "] not found.");
                 }
             }
 
@@ -94,7 +95,7 @@ public class ExecutorBizImpl implements ExecutorBiz {
                     jobHandler = new GlueJobHandler(originJobHandler, triggerRequest.getGlueUpdatetime());
                 } catch (Exception e) {
                     logger.error(e.getMessage(), e);
-                    return ReturnT.ofFail( e.getMessage());
+                    return Response.ofFail( e.getMessage());
                 }
             }
         } else if (glueTypeEnum!=null && glueTypeEnum.isScript()) {
@@ -115,7 +116,7 @@ public class ExecutorBizImpl implements ExecutorBiz {
                 jobHandler = new ScriptJobHandler(triggerRequest.getJobId(), triggerRequest.getGlueUpdatetime(), triggerRequest.getGlueSource(), GlueTypeEnum.match(triggerRequest.getGlueType()));
             }
         } else {
-            return ReturnT.ofFail("glueType[" + triggerRequest.getGlueType() + "] is not valid.");
+            return Response.ofFail("glueType[" + triggerRequest.getGlueType() + "] is not valid.");
         }
 
         // executor block strategy
@@ -124,7 +125,7 @@ public class ExecutorBizImpl implements ExecutorBiz {
             if (ExecutorBlockStrategyEnum.DISCARD_LATER == blockStrategy) {
                 // discard when running
                 if (jobThread.isRunningOrHasQueue()) {
-                    return ReturnT.ofFail("block strategy effect："+ExecutorBlockStrategyEnum.DISCARD_LATER.getTitle());
+                    return Response.ofFail("block strategy effect："+ExecutorBlockStrategyEnum.DISCARD_LATER.getTitle());
                 }
             } else if (ExecutorBlockStrategyEnum.COVER_EARLY == blockStrategy) {
                 // kill running jobThread
@@ -144,29 +145,29 @@ public class ExecutorBizImpl implements ExecutorBiz {
         }
 
         // push data to queue
-        ReturnT<String> pushResult = jobThread.pushTriggerQueue(triggerRequest);
+        Response<String> pushResult = jobThread.pushTriggerQueue(triggerRequest);
         return pushResult;
     }
 
     @Override
-    public ReturnT<String> kill(KillRequest killRequest) {
+    public Response<String> kill(KillRequest killRequest) {
         // kill handlerThread, and create new one
         JobThread jobThread = XxlJobExecutor.loadJobThread(killRequest.getJobId());
         if (jobThread != null) {
             XxlJobExecutor.removeJobThread(killRequest.getJobId(), "scheduling center kill job.");
-            return ReturnT.ofSuccess();
+            return Response.ofSuccess();
         }
 
-        return ReturnT.ofSuccess( "job thread already killed.");
+        return Response.ofSuccess( "job thread already killed.");
     }
 
     @Override
-    public ReturnT<LogResult> log(LogRequest logRequest) {
+    public Response<LogResult> log(LogRequest logRequest) {
         // log filename: logPath/yyyy-MM-dd/9999.log
         String logFileName = XxlJobFileAppender.makeLogFileName(new Date(logRequest.getLogDateTim()), logRequest.getLogId());
 
         LogResult logResult = XxlJobFileAppender.readLog(logFileName, logRequest.getFromLineNum());
-        return ReturnT.ofSuccess(logResult);
+        return Response.ofSuccess(logResult);
     }
 
 }

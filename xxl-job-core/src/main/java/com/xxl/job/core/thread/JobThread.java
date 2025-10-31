@@ -1,13 +1,13 @@
 package com.xxl.job.core.thread;
 
 import com.xxl.job.core.biz.model.HandleCallbackRequest;
-import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.biz.model.TriggerRequest;
 import com.xxl.job.core.context.XxlJobContext;
 import com.xxl.job.core.context.XxlJobHelper;
 import com.xxl.job.core.executor.XxlJobExecutor;
 import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.log.XxlJobFileAppender;
+import com.xxl.tool.response.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,16 +57,16 @@ public class JobThread extends Thread{
      * @param triggerParam
      * @return
      */
-	public ReturnT<String> pushTriggerQueue(TriggerRequest triggerParam) {
+	public Response<String> pushTriggerQueue(TriggerRequest triggerParam) {
         // avoid repeat
 		if (!triggerLogIdSet.add(triggerParam.getLogId())) {
 			logger.info(">>>>>>>>>>> repeate trigger job, logId:{}", triggerParam.getLogId());
-			return ReturnT.ofFail("repeate trigger job, logId:" + triggerParam.getLogId());
+			return Response.ofFail("repeate trigger job, logId:" + triggerParam.getLogId());
 		}
 
 		// push trigger queue
 		triggerQueue.add(triggerParam);
-        return ReturnT.ofSuccess();
+        return Response.ofSuccess();
 	}
 
     /**

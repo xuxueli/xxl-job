@@ -4,9 +4,9 @@ import com.xxl.job.core.biz.AdminBiz;
 import com.xxl.job.core.biz.client.AdminBizClient;
 import com.xxl.job.core.biz.model.HandleCallbackRequest;
 import com.xxl.job.core.biz.model.RegistryRequest;
-import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.context.XxlJobContext;
 import com.xxl.job.core.enums.RegistryConfig;
+import com.xxl.tool.response.Response;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -37,7 +37,7 @@ public class AdminBizTest {
 
         List<HandleCallbackRequest> callbackParamList = Arrays.asList(param);
 
-        ReturnT<String> returnT = adminBiz.callback(callbackParamList);
+        Response<String> returnT = adminBiz.callback(callbackParamList);
 
         assertTrue(returnT.isSuccess());
     }
@@ -52,7 +52,7 @@ public class AdminBizTest {
         AdminBiz adminBiz = new AdminBizClient(addressUrl, accessToken, timeoutSecond);
 
         RegistryRequest registryParam = new RegistryRequest(RegistryConfig.RegistType.EXECUTOR.name(), "xxl-job-executor-example", "127.0.0.1:9999");
-        ReturnT<String> returnT = adminBiz.registry(registryParam);
+        Response<String> returnT = adminBiz.registry(registryParam);
 
         assertTrue(returnT.isSuccess());
     }
@@ -67,7 +67,7 @@ public class AdminBizTest {
         AdminBiz adminBiz = new AdminBizClient(addressUrl, accessToken, timeoutSecond);
 
         RegistryRequest registryParam = new RegistryRequest(RegistryConfig.RegistType.EXECUTOR.name(), "xxl-job-executor-example", "127.0.0.1:9999");
-        ReturnT<String> returnT = adminBiz.registryRemove(registryParam);
+        Response<String> returnT = adminBiz.registryRemove(registryParam);
 
         assertTrue(returnT.isSuccess());
 

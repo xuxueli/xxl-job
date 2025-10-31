@@ -18,6 +18,7 @@ import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.tool.core.CollectionTool;
 import com.xxl.tool.core.DateTool;
 import com.xxl.tool.core.StringTool;
+import com.xxl.tool.response.Response;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
@@ -159,35 +160,35 @@ public class JobLogController {
 
 	@RequestMapping("/logDetailCat")
 	@ResponseBody
-	public ReturnT<LogResult> logDetailCat(@RequestParam("logId") long logId, @RequestParam("fromLineNum") int fromLineNum){
+	public Response<LogResult> logDetailCat(@RequestParam("logId") long logId, @RequestParam("fromLineNum") int fromLineNum){
 		try {
 			// valid
 			XxlJobLog jobLog = xxlJobLogMapper.load(logId);	// todo, need to improve performance
 			if (jobLog == null) {
-				return ReturnT.ofFail(I18nUtil.getString("joblog_logid_unvalid"));
+				return Response.ofFail(I18nUtil.getString("joblog_logid_unvalid"));
 			}
 
 			// log cat
 			ExecutorBiz executorBiz = XxlJobAdminBootstrap.getExecutorBiz(jobLog.getExecutorAddress());
-			ReturnT<LogResult> logResult = executorBiz.log(new LogRequest(jobLog.getTriggerTime().getTime(), logId, fromLineNum));
+			Response<LogResult> logResult = executorBiz.log(new LogRequest(jobLog.getTriggerTime().getTime(), logId, fromLineNum));
 
 			// is end
-            if (logResult.getContent()!=null && logResult.getContent().getFromLineNum() > logResult.getContent().getToLineNum()) {
+            if (logResult.getData()!=null && logResult.getData().getFromLineNum() > logResult.getData().getToLineNum()) {
                 if (jobLog.getHandleCode() > 0) {
-                    logResult.getContent().setEnd(true);
+                    logResult.getData().setEnd(true);
                 }
             }
 
 			// fix xss
-			if (logResult.getContent()!=null && StringTool.isNotBlank(logResult.getContent().getLogContent())) {
-				String newLogContent = filter(logResult.getContent().getLogContent());
-				logResult.getContent().setLogContent(newLogContent);
+			if (logResult.getData()!=null && StringTool.isNotBlank(logResult.getData().getLogContent())) {
+				String newLogContent = filter(logResult.getData().getLogContent());
+				logResult.getData().setLogContent(newLogContent);
 			}
 
 			return logResult;
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
-			return ReturnT.ofFail(e.getMessage());
+			return Response.ofFail(e.getMessage());
 		}
 	}
 
@@ -240,13 +241,13 @@ public class JobLogController {
 		JobGroupPermissionUtil.validJobGroupPermission(request, jobInfo.getJobGroup());
 
 		// request of kill
-		ReturnT<String> runResult = null;
+		Response<String> runResult = null;
 		try {
 			ExecutorBiz executorBiz = XxlJobAdminBootstrap.getExecutorBiz(log.getExecutorAddress());
 			runResult = executorBiz.kill(new KillRequest(jobInfo.getId()));
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
-			runResult = ReturnT.ofFail( e.getMessage());
+			runResult = Response.ofFail( e.getMessage());
 		}
 
 		if (ReturnT.SUCCESS_CODE == runResult.getCode()) {

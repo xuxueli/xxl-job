@@ -155,7 +155,7 @@ public class EmbedServer {
                 @Override
                 public void run() {
                     // do invoke
-                    Object responseObj = process(httpMethod, uri, requestData, accessTokenReq);
+                    Object responseObj = dispatchRequest(httpMethod, uri, requestData, accessTokenReq);
 
                     // to json
                     String responseJson = GsonTool.toJson(responseObj);
@@ -166,16 +166,16 @@ public class EmbedServer {
             });
         }
 
-        private Object process(HttpMethod httpMethod, String uri, String requestData, String accessTokenReq) {
+        private Object dispatchRequest(HttpMethod httpMethod, String uri, String requestData, String accessTokenReq) {
             // valid
             if (HttpMethod.POST != httpMethod) {
                 return ReturnT.ofFail("invalid request, HttpMethod not support.");
             }
-            if (uri == null || uri.trim().length() == 0) {
+            if (uri == null || uri.trim().isEmpty()) {
                 return ReturnT.ofFail( "invalid request, uri-mapping empty.");
             }
             if (accessToken != null
-                    && accessToken.trim().length() > 0
+                    && !accessToken.trim().isEmpty()
                     && !accessToken.equals(accessTokenReq)) {
                 return ReturnT.ofFail("The access token is wrong.");
             }

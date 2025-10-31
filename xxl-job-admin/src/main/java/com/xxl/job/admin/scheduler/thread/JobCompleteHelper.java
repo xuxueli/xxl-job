@@ -6,6 +6,7 @@ import com.xxl.job.admin.util.I18nUtil;
 import com.xxl.job.core.biz.model.HandleCallbackRequest;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.tool.core.DateTool;
+import com.xxl.tool.response.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -136,30 +137,30 @@ public class JobCompleteHelper {
 
 	// ---------------------- helper ----------------------
 
-	public ReturnT<String> callback(List<HandleCallbackRequest> callbackParamList) {
+	public Response<String> callback(List<HandleCallbackRequest> callbackParamList) {
 
 		callbackThreadPool.execute(new Runnable() {
 			@Override
 			public void run() {
 				for (HandleCallbackRequest handleCallbackParam: callbackParamList) {
-					ReturnT<String> callbackResult = callback(handleCallbackParam);
+					Response<String> callbackResult = doCallback(handleCallbackParam);
 					logger.debug(">>>>>>>>> JobApiController.callback {}, handleCallbackParam={}, callbackResult={}",
 							(callbackResult.isSuccess()?"success":"fail"), handleCallbackParam, callbackResult);
 				}
 			}
 		});
 
-		return ReturnT.ofSuccess();
+		return Response.ofSuccess();
 	}
 
-	private ReturnT<String> callback(HandleCallbackRequest handleCallbackParam) {
+	private Response<String> doCallback(HandleCallbackRequest handleCallbackParam) {
 		// valid log item
 		XxlJobLog log = XxlJobAdminBootstrap.getInstance().getXxlJobLogMapper().load(handleCallbackParam.getLogId());
 		if (log == null) {
-			return ReturnT.ofFail( "log item not found.");
+			return Response.ofFail( "log item not found.");
 		}
 		if (log.getHandleCode() > 0) {
-			return ReturnT.ofFail("log repeate callback.");     // avoid repeat callback, trigger child job etc
+			return Response.ofFail("log repeate callback.");     // avoid repeat callback, trigger child job etc
 		}
 
 		// handle msg
@@ -177,7 +178,7 @@ public class JobCompleteHelper {
 		log.setHandleMsg(handleMsg.toString());
 		XxlJobAdminBootstrap.getInstance().getJobCompleter().complete(log);
 
-		return ReturnT.ofSuccess();
+		return Response.ofSuccess();
 	}
 
 

@@ -20,7 +20,7 @@ import java.util.List;
  * Created by xuxueli on 17/5/10.
  */
 @Controller
-public class JobApiController {
+public class OpenApiController {
 
     @Resource
     private AdminBiz adminBiz;
@@ -31,7 +31,7 @@ public class JobApiController {
     @RequestMapping("/api/{uri}")
     @ResponseBody
     @XxlSso(login = false)
-    public ReturnT<String> api(HttpServletRequest request,
+    public Object api(HttpServletRequest request,
                                @PathVariable("uri") String uri,
                                @RequestHeader(XxlJobRemotingUtil.XXL_JOB_ACCESS_TOKEN) String accesstoken,
                                @RequestBody(required = false) String requestBody) {

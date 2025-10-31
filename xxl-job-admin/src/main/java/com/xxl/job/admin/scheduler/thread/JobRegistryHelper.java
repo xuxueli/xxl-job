@@ -4,9 +4,9 @@ import com.xxl.job.admin.model.XxlJobGroup;
 import com.xxl.job.admin.model.XxlJobRegistry;
 import com.xxl.job.admin.scheduler.config.XxlJobAdminBootstrap;
 import com.xxl.job.core.biz.model.RegistryRequest;
-import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.enums.RegistryConfig;
 import com.xxl.tool.core.StringTool;
+import com.xxl.tool.response.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -154,13 +154,13 @@ public class JobRegistryHelper {
 	/**
 	 * registry
 	 */
-	public ReturnT<String> registry(RegistryRequest registryParam) {
+	public Response<String> registry(RegistryRequest registryParam) {
 
 		// valid
 		if (StringTool.isBlank(registryParam.getRegistryGroup())
 				|| StringTool.isBlank(registryParam.getRegistryKey())
 				|| StringTool.isBlank(registryParam.getRegistryValue())) {
-			return ReturnT.ofFail("Illegal Argument.");
+			return Response.ofFail("Illegal Argument.");
 		}
 
 		// async execute
@@ -183,19 +183,19 @@ public class JobRegistryHelper {
 			}
 		});
 
-		return ReturnT.ofSuccess();
+		return Response.ofSuccess();
 	}
 
 	/**
 	 * registry remove
 	 */
-	public ReturnT<String> registryRemove(RegistryRequest registryParam) {
+	public Response<String> registryRemove(RegistryRequest registryParam) {
 
 		// valid
 		if (StringTool.isBlank(registryParam.getRegistryGroup())
 				|| StringTool.isBlank(registryParam.getRegistryKey())
 				|| StringTool.isBlank(registryParam.getRegistryValue())) {
-			return ReturnT.ofFail("Illegal Argument.");
+			return Response.ofFail("Illegal Argument.");
 		}
 
 		// async execute
@@ -210,7 +210,7 @@ public class JobRegistryHelper {
 			}
 		});
 
-		return ReturnT.ofSuccess();
+		return Response.ofSuccess();
 	}
 
 	private void freshGroupRegistryInfo(RegistryRequest registryParam){

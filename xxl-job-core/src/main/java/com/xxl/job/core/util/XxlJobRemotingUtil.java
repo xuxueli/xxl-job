@@ -1,7 +1,7 @@
 package com.xxl.job.core.util;
 
-import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.tool.gson.GsonTool;
+import com.xxl.tool.response.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,7 +65,7 @@ public class XxlJobRemotingUtil {
      * @param returnTargClassOfT
      * @return
      */
-    public static ReturnT postBody(String url, String accessToken, int timeout, Object requestObj, Class returnTargClassOfT) {
+    public static Response postBody(String url, String accessToken, int timeout, Object requestObj, Class returnTargClassOfT) {
         HttpURLConnection connection = null;
         BufferedReader bufferedReader = null;
         DataOutputStream dataOutputStream = null;
@@ -119,7 +119,7 @@ public class XxlJobRemotingUtil {
             // valid StatusCode
             int statusCode = connection.getResponseCode();
             if (statusCode != 200) {
-                return ReturnT.ofFail("xxl-job remoting fail, StatusCode("+ statusCode +") invalid. for url : " + url);
+                return Response.ofFail("xxl-job remoting fail, StatusCode("+ statusCode +") invalid. for url : " + url);
             }
 
             // result
@@ -133,16 +133,16 @@ public class XxlJobRemotingUtil {
 
             // parse returnT
             try {
-                ReturnT returnT = GsonTool.fromJson(resultJson, ReturnT.class, returnTargClassOfT);
+                Response returnT = GsonTool.fromJson(resultJson, Response.class, returnTargClassOfT);
                 return returnT;
             } catch (Exception e) {
                 logger.error("xxl-job remoting (url="+url+") response content invalid("+ resultJson +").", e);
-                return ReturnT.ofFail("xxl-job remoting (url="+url+") response content invalid("+ resultJson +").");
+                return Response.ofFail("xxl-job remoting (url="+url+") response content invalid("+ resultJson +").");
             }
 
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-            return ReturnT.ofFail("xxl-job remoting error("+ e.getMessage() +"), for url : " + url);
+            return Response.ofFail("xxl-job remoting error("+ e.getMessage() +"), for url : " + url);
         } finally {
             try {
                 if (dataOutputStream != null) {

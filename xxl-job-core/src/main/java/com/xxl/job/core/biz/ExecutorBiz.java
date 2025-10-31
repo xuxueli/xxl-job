@@ -1,6 +1,7 @@
 package com.xxl.job.core.biz;
 
 import com.xxl.job.core.biz.model.*;
+import com.xxl.tool.response.Response;
 
 /**
  * Created by xuxueli on 17/3/1.
@@ -9,37 +10,37 @@ public interface ExecutorBiz {
 
     /**
      * beat
-     * @return
+     * @return response
      */
-    public ReturnT<String> beat();
+    public Response<String> beat();
 
     /**
      * idle beat
      *
-     * @param idleBeatRequest
-     * @return
+     * @param idleBeatRequest idleBeatRequest
+     * @return response
      */
-    public ReturnT<String> idleBeat(IdleBeatRequest idleBeatRequest);
+    public Response<String> idleBeat(IdleBeatRequest idleBeatRequest);
 
     /**
      * run
-     * @param triggerRequest
-     * @return
+     * @param triggerRequest triggerRequest
+     * @return response
      */
-    public ReturnT<String> run(TriggerRequest triggerRequest);
+    public Response<String> run(TriggerRequest triggerRequest);
 
     /**
      * kill
-     * @param killRequest
-     * @return
+     * @param killRequest killRequest
+     * @return response
      */
-    public ReturnT<String> kill(KillRequest killRequest);
+    public Response<String> kill(KillRequest killRequest);
 
     /**
      * log
-     * @param logRequest
-     * @return
+     * @param logRequest logRequest
+     * @return response
      */
-    public ReturnT<LogResult> log(LogRequest logRequest);
+    public Response<LogResult> log(LogRequest logRequest);
 
 }

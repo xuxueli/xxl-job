@@ -2,7 +2,7 @@ package com.xxl.job.core.biz;
 
 import com.xxl.job.core.biz.model.HandleCallbackRequest;
 import com.xxl.job.core.biz.model.RegistryRequest;
-import com.xxl.job.core.biz.model.ReturnT;
+import com.xxl.tool.response.Response;
 
 import java.util.List;
 
@@ -20,7 +20,7 @@ public interface AdminBiz {
      * @param handleCallbackRequestList
      * @return
      */
-    public ReturnT<String> callback(List<HandleCallbackRequest> handleCallbackRequestList);
+    public Response<String> callback(List<HandleCallbackRequest> handleCallbackRequestList);
 
 
     // ---------------------- registry ----------------------
@@ -31,7 +31,7 @@ public interface AdminBiz {
      * @param registryRequest
      * @return
      */
-    public ReturnT<String> registry(RegistryRequest registryRequest);
+    public Response<String> registry(RegistryRequest registryRequest);
 
     /**
      * registry remove
@@ -39,7 +39,7 @@ public interface AdminBiz {
      * @param registryRequest
      * @return
      */
-    public ReturnT<String> registryRemove(RegistryRequest registryRequest);
+    public Response<String> registryRemove(RegistryRequest registryRequest);
 
 
     // ---------------------- biz (custome) ----------------------

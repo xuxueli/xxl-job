@@ -3,8 +3,8 @@ package com.xxl.job.core.biz.client;
 import com.xxl.job.core.biz.AdminBiz;
 import com.xxl.job.core.biz.model.HandleCallbackRequest;
 import com.xxl.job.core.biz.model.RegistryRequest;
-import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.util.XxlJobRemotingUtil;
+import com.xxl.tool.response.Response;
 
 import java.util.List;
 
@@ -37,17 +37,17 @@ public class AdminBizClient implements AdminBiz {
 
 
     @Override
-    public ReturnT<String> callback(List<HandleCallbackRequest> handleCallbackRequestList) {
+    public Response<String> callback(List<HandleCallbackRequest> handleCallbackRequestList) {
         return XxlJobRemotingUtil.postBody(addressUrl+"api/callback", accessToken, timeout, handleCallbackRequestList, String.class);
     }
 
     @Override
-    public ReturnT<String> registry(RegistryRequest registryRequest) {
+    public Response<String> registry(RegistryRequest registryRequest) {
         return XxlJobRemotingUtil.postBody(addressUrl + "api/registry", accessToken, timeout, registryRequest, String.class);
     }
 
     @Override
-    public ReturnT<String> registryRemove(RegistryRequest registryRequest) {
+    public Response<String> registryRemove(RegistryRequest registryRequest) {
         return XxlJobRemotingUtil.postBody(addressUrl + "api/registryRemove", accessToken, timeout, registryRequest, String.class);
     }
 

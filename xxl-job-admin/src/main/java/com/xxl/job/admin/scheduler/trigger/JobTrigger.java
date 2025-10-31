@@ -10,12 +10,12 @@ import com.xxl.job.admin.scheduler.config.XxlJobAdminBootstrap;
 import com.xxl.job.admin.scheduler.route.ExecutorRouteStrategyEnum;
 import com.xxl.job.admin.util.I18nUtil;
 import com.xxl.job.core.biz.ExecutorBiz;
-import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.biz.model.TriggerRequest;
 import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
 import com.xxl.tool.core.StringTool;
 import com.xxl.tool.exception.ThrowableTool;
 import com.xxl.tool.http.IPTool;
+import com.xxl.tool.response.Response;
 import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -163,7 +163,7 @@ public class JobTrigger {
 
         // 3、init address
         String address = null;
-        ReturnT<String> routeAddressResult = null;
+        Response<String> routeAddressResult = null;
         if (group.getRegistryList()!=null && !group.getRegistryList().isEmpty()) {
             if (ExecutorRouteStrategyEnum.SHARDING_BROADCAST == executorRouteStrategyEnum) {
                 if (index < group.getRegistryList().size()) {
@@ -174,19 +174,19 @@ public class JobTrigger {
             } else {
                 routeAddressResult = executorRouteStrategyEnum.getRouter().route(triggerParam, group.getRegistryList());
                 if (routeAddressResult.isSuccess()) {
-                    address = routeAddressResult.getContent();
+                    address = routeAddressResult.getData();
                 }
             }
         } else {
-            routeAddressResult = ReturnT.ofFail( I18nUtil.getString("jobconf_trigger_address_empty"));
+            routeAddressResult = Response.ofFail( I18nUtil.getString("jobconf_trigger_address_empty"));
         }
 
         // 4、trigger remote executor
-        ReturnT<String> triggerResult = null;
+        Response<String> triggerResult = null;
         if (address != null) {
             triggerResult = doTrigger(triggerParam, address);
         } else {
-            triggerResult = ReturnT.ofFail(null);
+            triggerResult = Response.ofFail(null);
         }
 
         // 5、collection trigger info
@@ -228,14 +228,14 @@ public class JobTrigger {
      * @param address       the address
      * @return return
      */
-    private ReturnT<String> doTrigger(TriggerRequest triggerParam, String address){
-        ReturnT<String> runResult = null;
+    private Response<String> doTrigger(TriggerRequest triggerParam, String address){
+        Response<String> runResult = null;
         try {
             ExecutorBiz executorBiz = XxlJobAdminBootstrap.getExecutorBiz(address);
             runResult = executorBiz.run(triggerParam);
         } catch (Exception e) {
             logger.error(">>>>>>>>>>> xxl-job trigger error, please check if the executor[{}] is running.", address, e);
-            runResult = ReturnT.ofFail(ThrowableTool.toString(e));
+            runResult = Response.ofFail(ThrowableTool.toString(e));
         }
 
         StringBuffer runResultSB = new StringBuffer(I18nUtil.getString("jobconf_trigger_run") + "：");
