@@ -1,9 +1,9 @@
 package com.xxl.job.admin.service.impl;
 
 import com.xxl.job.admin.scheduler.config.XxlJobAdminBootstrap;
-import com.xxl.job.core.biz.AdminBiz;
-import com.xxl.job.core.biz.model.HandleCallbackRequest;
-import com.xxl.job.core.biz.model.RegistryRequest;
+import com.xxl.job.core.openapi.AdminBiz;
+import com.xxl.job.core.openapi.model.HandleCallbackRequest;
+import com.xxl.job.core.openapi.model.RegistryRequest;
 import com.xxl.tool.response.Response;
 import org.springframework.stereotype.Service;
 

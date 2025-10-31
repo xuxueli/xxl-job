@@ -1,7 +1,7 @@
 package com.xxl.job.core.thread;
 
-import com.xxl.job.core.biz.model.HandleCallbackRequest;
-import com.xxl.job.core.biz.model.TriggerRequest;
+import com.xxl.job.core.openapi.model.HandleCallbackRequest;
+import com.xxl.job.core.openapi.model.TriggerRequest;
 import com.xxl.job.core.context.XxlJobContext;
 import com.xxl.job.core.context.XxlJobHelper;
 import com.xxl.job.core.executor.XxlJobExecutor;
@@ -61,7 +61,7 @@ public class JobThread extends Thread{
         // avoid repeat
 		if (!triggerLogIdSet.add(triggerParam.getLogId())) {
 			logger.info(">>>>>>>>>>> repeate trigger job, logId:{}", triggerParam.getLogId());
-			return Response.ofFail("repeate trigger job, logId:" + triggerParam.getLogId());
+			return Response.of(XxlJobContext.HANDLE_CODE_FAIL, "repeate trigger job, logId:" + triggerParam.getLogId());
 		}
 
 		// push trigger queue

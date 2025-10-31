@@ -1,10 +1,10 @@
 package com.xxl.job.admin.scheduler.openapi;
 
 import com.xxl.job.admin.scheduler.config.XxlJobAdminBootstrap;
-import com.xxl.job.core.biz.AdminBiz;
-import com.xxl.job.core.biz.model.HandleCallbackRequest;
-import com.xxl.job.core.biz.model.RegistryRequest;
-import com.xxl.job.core.biz.model.ReturnT;
+import com.xxl.job.core.openapi.AdminBiz;
+import com.xxl.job.core.openapi.model.HandleCallbackRequest;
+import com.xxl.job.core.openapi.model.RegistryRequest;
+import com.xxl.job.core.openapi.model.ReturnT;
 import com.xxl.job.core.util.XxlJobRemotingUtil;
 import com.xxl.sso.core.annotation.XxlSso;
 import com.xxl.tool.core.StringTool;

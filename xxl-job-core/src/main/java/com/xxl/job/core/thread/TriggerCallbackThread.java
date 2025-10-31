@@ -1,7 +1,7 @@
 package com.xxl.job.core.thread;
 
-import com.xxl.job.core.biz.AdminBiz;
-import com.xxl.job.core.biz.model.HandleCallbackRequest;
+import com.xxl.job.core.openapi.AdminBiz;
+import com.xxl.job.core.openapi.model.HandleCallbackRequest;
 import com.xxl.job.core.context.XxlJobContext;
 import com.xxl.job.core.context.XxlJobHelper;
 import com.xxl.job.core.enums.RegistryConfig;

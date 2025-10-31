@@ -1,6 +1,6 @@
-package com.xxl.job.core.biz;
+package com.xxl.job.core.openapi;
 
-import com.xxl.job.core.biz.model.*;
+import com.xxl.job.core.openapi.model.*;
 import com.xxl.tool.response.Response;
 
 /**

@@ -1,7 +1,7 @@
-package com.xxl.job.core.biz.client;
+package com.xxl.job.core.openapi.client;
 
-import com.xxl.job.core.biz.ExecutorBiz;
-import com.xxl.job.core.biz.model.*;
+import com.xxl.job.core.openapi.ExecutorBiz;
+import com.xxl.job.core.openapi.model.*;
 import com.xxl.job.core.util.XxlJobRemotingUtil;
 import com.xxl.tool.response.Response;
 

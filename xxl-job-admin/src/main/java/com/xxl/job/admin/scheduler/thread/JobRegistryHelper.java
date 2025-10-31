@@ -3,7 +3,7 @@ package com.xxl.job.admin.scheduler.thread;
 import com.xxl.job.admin.model.XxlJobGroup;
 import com.xxl.job.admin.model.XxlJobRegistry;
 import com.xxl.job.admin.scheduler.config.XxlJobAdminBootstrap;
-import com.xxl.job.core.biz.model.RegistryRequest;
+import com.xxl.job.core.openapi.model.RegistryRequest;
 import com.xxl.job.core.enums.RegistryConfig;
 import com.xxl.tool.core.StringTool;
 import com.xxl.tool.response.Response;

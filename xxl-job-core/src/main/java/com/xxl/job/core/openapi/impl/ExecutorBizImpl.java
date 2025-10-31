@@ -1,7 +1,8 @@
-package com.xxl.job.core.biz.impl;
+package com.xxl.job.core.openapi.impl;
 
-import com.xxl.job.core.biz.ExecutorBiz;
-import com.xxl.job.core.biz.model.*;
+import com.xxl.job.core.context.XxlJobContext;
+import com.xxl.job.core.openapi.ExecutorBiz;
+import com.xxl.job.core.openapi.model.*;
 import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
 import com.xxl.job.core.executor.XxlJobExecutor;
 import com.xxl.job.core.glue.GlueFactory;
@@ -71,7 +72,7 @@ public class ExecutorBizImpl implements ExecutorBiz {
             if (jobHandler == null) {
                 jobHandler = newJobHandler;
                 if (jobHandler == null) {
-                    return Response.ofFail( "job handler [" + triggerRequest.getExecutorHandler() + "] not found.");
+                    return Response.of(XxlJobContext.HANDLE_CODE_FAIL, "job handler [" + triggerRequest.getExecutorHandler() + "] not found.");
                 }
             }
 
@@ -95,7 +96,7 @@ public class ExecutorBizImpl implements ExecutorBiz {
                     jobHandler = new GlueJobHandler(originJobHandler, triggerRequest.getGlueUpdatetime());
                 } catch (Exception e) {
                     logger.error(e.getMessage(), e);
-                    return Response.ofFail( e.getMessage());
+                    return Response.of(XxlJobContext.HANDLE_CODE_FAIL, e.getMessage());
                 }
             }
         } else if (glueTypeEnum!=null && glueTypeEnum.isScript()) {
@@ -116,7 +117,7 @@ public class ExecutorBizImpl implements ExecutorBiz {
                 jobHandler = new ScriptJobHandler(triggerRequest.getJobId(), triggerRequest.getGlueUpdatetime(), triggerRequest.getGlueSource(), GlueTypeEnum.match(triggerRequest.getGlueType()));
             }
         } else {
-            return Response.ofFail("glueType[" + triggerRequest.getGlueType() + "] is not valid.");
+            return Response.of(XxlJobContext.HANDLE_CODE_FAIL, "glueType[" + triggerRequest.getGlueType() + "] is not valid.");
         }
 
         // executor block strategy
@@ -125,7 +126,7 @@ public class ExecutorBizImpl implements ExecutorBiz {
             if (ExecutorBlockStrategyEnum.DISCARD_LATER == blockStrategy) {
                 // discard when running
                 if (jobThread.isRunningOrHasQueue()) {
-                    return Response.ofFail("block strategy effect："+ExecutorBlockStrategyEnum.DISCARD_LATER.getTitle());
+                    return Response.of(XxlJobContext.HANDLE_CODE_FAIL, "block strategy effect："+ExecutorBlockStrategyEnum.DISCARD_LATER.getTitle());
                 }
             } else if (ExecutorBlockStrategyEnum.COVER_EARLY == blockStrategy) {
                 // kill running jobThread
@@ -145,8 +146,7 @@ public class ExecutorBizImpl implements ExecutorBiz {
         }
 
         // push data to queue
-        Response<String> pushResult = jobThread.pushTriggerQueue(triggerRequest);
-        return pushResult;
+        return jobThread.pushTriggerQueue(triggerRequest);
     }
 
     @Override

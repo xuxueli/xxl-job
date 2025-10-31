@@ -1,6 +1,6 @@
 package com.xxl.job.admin.scheduler.route;
 
-import com.xxl.job.core.biz.model.TriggerRequest;
+import com.xxl.job.core.openapi.model.TriggerRequest;
 import com.xxl.tool.response.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

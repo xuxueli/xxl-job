@@ -1,8 +1,8 @@
-package com.xxl.job.core.biz.client;
+package com.xxl.job.core.openapi.client;
 
-import com.xxl.job.core.biz.AdminBiz;
-import com.xxl.job.core.biz.model.HandleCallbackRequest;
-import com.xxl.job.core.biz.model.RegistryRequest;
+import com.xxl.job.core.openapi.AdminBiz;
+import com.xxl.job.core.openapi.model.HandleCallbackRequest;
+import com.xxl.job.core.openapi.model.RegistryRequest;
 import com.xxl.job.core.util.XxlJobRemotingUtil;
 import com.xxl.tool.response.Response;
 

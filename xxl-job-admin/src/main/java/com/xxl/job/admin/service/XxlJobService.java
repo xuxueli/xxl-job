@@ -2,8 +2,7 @@ package com.xxl.job.admin.service;
 
 
 import com.xxl.job.admin.model.XxlJobInfo;
-import com.xxl.job.admin.model.XxlJobUser;
-import com.xxl.job.core.biz.model.ReturnT;
+import com.xxl.job.core.openapi.model.ReturnT;
 import com.xxl.sso.core.model.LoginInfo;
 import com.xxl.tool.response.Response;
 

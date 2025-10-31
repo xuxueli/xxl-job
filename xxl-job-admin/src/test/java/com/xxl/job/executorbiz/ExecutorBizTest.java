@@ -1,8 +1,8 @@
 package com.xxl.job.executorbiz;
 
-import com.xxl.job.core.biz.ExecutorBiz;
-import com.xxl.job.core.biz.client.ExecutorBizClient;
-import com.xxl.job.core.biz.model.*;
+import com.xxl.job.core.openapi.ExecutorBiz;
+import com.xxl.job.core.openapi.client.ExecutorBizClient;
+import com.xxl.job.core.openapi.model.*;
 import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
 import com.xxl.job.core.glue.GlueTypeEnum;
 import com.xxl.tool.response.Response;

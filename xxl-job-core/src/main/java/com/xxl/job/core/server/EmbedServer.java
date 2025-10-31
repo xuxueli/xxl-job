@@ -1,8 +1,8 @@
 package com.xxl.job.core.server;
 
-import com.xxl.job.core.biz.ExecutorBiz;
-import com.xxl.job.core.biz.impl.ExecutorBizImpl;
-import com.xxl.job.core.biz.model.*;
+import com.xxl.job.core.openapi.ExecutorBiz;
+import com.xxl.job.core.openapi.impl.ExecutorBizImpl;
+import com.xxl.job.core.openapi.model.*;
 import com.xxl.job.core.thread.ExecutorRegistryThread;
 import com.xxl.job.core.util.XxlJobRemotingUtil;
 import com.xxl.tool.exception.ThrowableTool;
