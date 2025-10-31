@@ -4,11 +4,11 @@ import com.xxl.job.admin.scheduler.config.XxlJobAdminBootstrap;
 import com.xxl.job.core.openapi.AdminBiz;
 import com.xxl.job.core.openapi.model.HandleCallbackRequest;
 import com.xxl.job.core.openapi.model.RegistryRequest;
-import com.xxl.job.core.openapi.model.ReturnT;
 import com.xxl.job.core.util.XxlJobRemotingUtil;
 import com.xxl.sso.core.annotation.XxlSso;
 import com.xxl.tool.core.StringTool;
 import com.xxl.tool.gson.GsonTool;
+import com.xxl.tool.response.Response;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
@@ -38,19 +38,19 @@ public class OpenApiController {
 
         // valid
         if (!"POST".equalsIgnoreCase(request.getMethod())) {
-            return ReturnT.ofFail("invalid request, HttpMethod not support.");
+            return Response.ofFail("invalid request, HttpMethod not support.");
         }
         if (StringTool.isBlank(uri)) {
-            return ReturnT.ofFail("invalid request, uri-mapping empty.");
+            return Response.ofFail("invalid request, uri-mapping empty.");
         }
         if (StringTool.isBlank(requestBody)) {
-            return ReturnT.ofFail("invalid request, requestBody empty.");
+            return Response.ofFail("invalid request, requestBody empty.");
         }
 
         // valid token
         if (StringTool.isNotBlank(XxlJobAdminBootstrap.getInstance().getAccessToken())
                 && !XxlJobAdminBootstrap.getInstance().getAccessToken().equals(accesstoken)) {
-            return ReturnT.ofFail("The access token is wrong.");
+            return Response.ofFail("The access token is wrong.");
         }
 
         // dispatch request
@@ -69,10 +69,10 @@ public class OpenApiController {
                     return adminBiz.registryRemove(registryParam);
                     }
                 default:
-                    return ReturnT.ofFail("invalid request, uri-mapping("+ uri +") not found.");
+                    return Response.ofFail("invalid request, uri-mapping("+ uri +") not found.");
             }
         } catch (Exception e) {
-            return ReturnT.ofFail("openapi invoke error: " + e.getMessage());
+            return Response.ofFail("openapi invoke error: " + e.getMessage());
         }
 
     }

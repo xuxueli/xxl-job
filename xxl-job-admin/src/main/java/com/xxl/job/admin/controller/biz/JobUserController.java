@@ -52,9 +52,9 @@ public class JobUserController {
     @ResponseBody
     @XxlSso(role = Consts.ADMIN_ROLE)
     public Response<PageModel<XxlJobUser>> pageList(@RequestParam(required = false, defaultValue = "0") int offset,
-                                        @RequestParam(required = false, defaultValue = "10") int pagesize,
-                                        @RequestParam String username,
-                                        @RequestParam int role) {
+                                                    @RequestParam(required = false, defaultValue = "10") int pagesize,
+                                                    @RequestParam String username,
+                                                    @RequestParam int role) {
 
         // page list
         List<XxlJobUser> list = xxlJobUserMapper.pageList(offset, pagesize, username, role);

@@ -10,15 +10,23 @@ $(function() {
 			type:"post",
 	        data : function ( d ) {
 	        	var obj = {};
+				obj.offset = d.start;
+				obj.pagesize = d.length;
 	        	obj.jobGroup = $('#jobGroup').val();
                 obj.triggerStatus = $('#triggerStatus').val();
                 obj.jobDesc = $('#jobDesc').val();
 	        	obj.executorHandler = $('#executorHandler').val();
                 obj.author = $('#author').val();
-	        	obj.start = d.start;
-	        	obj.length = d.length;
                 return obj;
-            }
+            },
+			dataFilter: function (json ) {
+				var result = JSON.parse(json);
+				return JSON.stringify({
+					"recordsTotal": result.data.totalCount,
+					"recordsFiltered": result.data.totalCount,
+					"data": result.data.pageData
+				});
+			}
 	    },
 	    "searching": false,
 	    "ordering": false,

@@ -17,6 +17,7 @@ import com.xxl.sso.core.helper.XxlSsoHelper;
 import com.xxl.sso.core.model.LoginInfo;
 import com.xxl.tool.core.CollectionTool;
 import com.xxl.tool.core.DateTool;
+import com.xxl.tool.response.PageModel;
 import com.xxl.tool.response.Response;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
@@ -74,20 +75,20 @@ public class JobInfoController {
 
 	@RequestMapping("/pageList")
 	@ResponseBody
-	public Map<String, Object> pageList(HttpServletRequest request,
-										@RequestParam(value = "start", required = false, defaultValue = "0") int start,
-										@RequestParam(value = "length", required = false, defaultValue = "10") int length,
-										@RequestParam("jobGroup") int jobGroup,
-										@RequestParam("triggerStatus") int triggerStatus,
-										@RequestParam("jobDesc") String jobDesc,
-										@RequestParam("executorHandler") String executorHandler,
-										@RequestParam("author") String author) {
+	public Response<PageModel<XxlJobInfo>> pageList(HttpServletRequest request,
+													@RequestParam(required = false, defaultValue = "0") int offset,
+													@RequestParam(required = false, defaultValue = "10") int pagesize,
+													@RequestParam int jobGroup,
+													@RequestParam int triggerStatus,
+													@RequestParam String jobDesc,
+													@RequestParam String executorHandler,
+													@RequestParam String author) {
 
 		// valid jobGroup permission
 		JobGroupPermissionUtil.validJobGroupPermission(request, jobGroup);
 
 		// page
-		return xxlJobService.pageList(start, length, jobGroup, triggerStatus, jobDesc, executorHandler, author);
+		return xxlJobService.pageList(offset, pagesize, jobGroup, triggerStatus, jobDesc, executorHandler, author);
 	}
 	
 	@RequestMapping("/add")

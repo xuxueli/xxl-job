@@ -14,7 +14,6 @@ import com.xxl.job.core.openapi.ExecutorBiz;
 import com.xxl.job.core.openapi.model.KillRequest;
 import com.xxl.job.core.openapi.model.LogRequest;
 import com.xxl.job.core.openapi.model.LogResult;
-import com.xxl.job.core.openapi.model.ReturnT;
 import com.xxl.job.core.context.XxlJobContext;
 import com.xxl.tool.core.CollectionTool;
 import com.xxl.tool.core.DateTool;
@@ -95,14 +94,14 @@ public class JobLogController {
 
 	/*@RequestMapping("/getJobsByGroup")
 	@ResponseBody
-	public ReturnT<List<XxlJobInfo>> getJobsByGroup(HttpServletRequest request, @RequestParam("jobGroup") int jobGroup){
+	public Response<List<XxlJobInfo>> getJobsByGroup(HttpServletRequest request, @RequestParam("jobGroup") int jobGroup){
 
 		// valid permission
 		JobInfoController.validJobGroupPermission(request, jobGroup);
 
 		// query
 		List<XxlJobInfo> list = xxlJobInfoMapper.getJobsByGroup(jobGroup);
-		return ReturnT.ofSuccess(list);
+		return Response.ofSuccess(list);
 	}*/
 	
 	@RequestMapping("/pageList")
@@ -228,15 +227,15 @@ public class JobLogController {
 
 	@RequestMapping("/logKill")
 	@ResponseBody
-	public ReturnT<String> logKill(HttpServletRequest request, @RequestParam("id") int id){
+	public Response<String> logKill(HttpServletRequest request, @RequestParam("id") int id){
 		// base check
 		XxlJobLog log = xxlJobLogMapper.load(id);
 		XxlJobInfo jobInfo = xxlJobInfoMapper.loadById(log.getJobId());
 		if (jobInfo==null) {
-			return ReturnT.ofFail(I18nUtil.getString("jobinfo_glue_jobid_unvalid"));
+			return Response.ofFail(I18nUtil.getString("jobinfo_glue_jobid_unvalid"));
 		}
-		if (ReturnT.SUCCESS_CODE != log.getTriggerCode()) {
-			return ReturnT.ofFail( I18nUtil.getString("joblog_kill_log_limit"));
+		if (XxlJobContext.HANDLE_CODE_SUCCESS != log.getTriggerCode()) {
+			return Response.ofFail( I18nUtil.getString("joblog_kill_log_limit"));
 		}
 
 		// valid JobGroup permission
@@ -257,15 +256,15 @@ public class JobLogController {
 			log.setHandleMsg( I18nUtil.getString("joblog_kill_log_byman")+":" + (runResult.getMsg()!=null?runResult.getMsg():""));
 			log.setHandleTime(new Date());
 			XxlJobAdminBootstrap.getInstance().getJobCompleter().complete(log);
-			return ReturnT.ofSuccess(runResult.getMsg());
+			return Response.ofSuccess(runResult.getMsg());
 		} else {
-			return ReturnT.ofFail(runResult.getMsg());
+			return Response.ofFail(runResult.getMsg());
 		}
 	}
 
 	@RequestMapping("/clearLog")
 	@ResponseBody
-	public ReturnT<String> clearLog(HttpServletRequest request,
+	public Response<String> clearLog(HttpServletRequest request,
 									@RequestParam("jobGroup") int jobGroup,
 									@RequestParam("jobId") int jobId,
 									@RequestParam("type") int type){
@@ -294,7 +293,7 @@ public class JobLogController {
 		} else if (type == 9) {
 			clearBeforeNum = 0;			// 清理所有日志数据
 		} else {
-			return ReturnT.ofFail(I18nUtil.getString("joblog_clean_type_unvalid"));
+			return Response.ofFail(I18nUtil.getString("joblog_clean_type_unvalid"));
 		}
 
 		List<Long> logIds = null;
@@ -305,7 +304,7 @@ public class JobLogController {
 			}
 		} while (logIds!=null && logIds.size()>0);
 
-		return ReturnT.ofSuccess();
+		return Response.ofSuccess();
 	}
 
 }

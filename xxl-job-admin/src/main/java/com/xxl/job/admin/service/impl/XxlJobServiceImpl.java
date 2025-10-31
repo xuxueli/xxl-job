@@ -19,6 +19,7 @@ import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
 import com.xxl.job.core.glue.GlueTypeEnum;
 import com.xxl.sso.core.model.LoginInfo;
 import com.xxl.tool.core.DateTool;
+import com.xxl.tool.response.PageModel;
 import com.xxl.tool.response.Response;
 import jakarta.annotation.Resource;
 import org.slf4j.Logger;
@@ -48,18 +49,18 @@ public class XxlJobServiceImpl implements XxlJobService {
 	private XxlJobLogReportMapper xxlJobLogReportMapper;
 	
 	@Override
-	public Map<String, Object> pageList(int start, int length, int jobGroup, int triggerStatus, String jobDesc, String executorHandler, String author) {
+	public Response<PageModel<XxlJobInfo>> pageList(int offset, int pagesize, int jobGroup, int triggerStatus, String jobDesc, String executorHandler, String author) {
 
 		// page list
-		List<XxlJobInfo> list = xxlJobInfoMapper.pageList(start, length, jobGroup, triggerStatus, jobDesc, executorHandler, author);
-		int list_count = xxlJobInfoMapper.pageListCount(start, length, jobGroup, triggerStatus, jobDesc, executorHandler, author);
-		
+		List<XxlJobInfo> list = xxlJobInfoMapper.pageList(offset, pagesize, jobGroup, triggerStatus, jobDesc, executorHandler, author);
+		int list_count = xxlJobInfoMapper.pageListCount(offset, pagesize, jobGroup, triggerStatus, jobDesc, executorHandler, author);
+
 		// package result
-		Map<String, Object> maps = new HashMap<String, Object>();
-	    maps.put("recordsTotal", list_count);		// 总记录数
-	    maps.put("recordsFiltered", list_count);	// 过滤后的总记录数
-	    maps.put("data", list);  					// 分页列表
-		return maps;
+		PageModel<XxlJobInfo> pageModel = new PageModel<>();
+		pageModel.setPageData(list);
+		pageModel.setTotalCount(list_count);
+
+		return Response.ofSuccess(pageModel);
 	}
 
 	@Override
