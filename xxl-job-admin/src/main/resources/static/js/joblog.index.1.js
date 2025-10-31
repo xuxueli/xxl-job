@@ -105,10 +105,12 @@ $(function() {
                         "width":'10%',
 						"render": function ( data, type, row ) {
 							var html = data;
-							if (data == 200) {
+							if (data == 200) {			// 200, success
 								html = '<span style="color: green">'+ I18n.system_success +'</span>';
-							} else if (data > 0) {	// 500
+							} else if (data > 0) {		// >0 or 500, fail
 								html = '<span style="color: red">'+ I18n.system_fail +'</span>';
+							} else if (data == 0) {		// 0, original pass
+								html = '';
 							}
                             return html;
 						}
@@ -132,12 +134,14 @@ $(function() {
                         "width":'10%',
 						"render": function ( data, type, row ) {
                             var html = data;
-                            if (data == 200) {
+                            if (data == 200) {			// 200, success
                                 html = '<span style="color: green">'+ I18n.joblog_handleCode_200 +'</span>';
-                            } else if (data == 502) {
+                            } else if (data == 502) {	// 502, timeout
 								html = '<span style="color: red">'+ I18n.joblog_handleCode_502 +'</span>';
-							} else if (data > 0) {	// 500
+							} else if (data > 0) {		// >0 or 500, fail
                                 html = '<span style="color: red">'+ I18n.joblog_handleCode_500 +'</span>';
+                            } else if (data == 0) {		// 0, original pass
+                                html = '';
                             }
                             return html;
 						}
