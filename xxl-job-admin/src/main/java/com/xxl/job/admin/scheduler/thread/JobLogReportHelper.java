@@ -149,10 +149,8 @@ public class JobLogReportHelper {
                 report.setFailCount(triggerDayCountFail);
             }
 
-            int ret = XxlJobAdminBootstrap.getInstance().getXxlJobLogReportMapper().update(report);
-            if (ret < 1) {
-                XxlJobAdminBootstrap.getInstance().getXxlJobLogReportMapper().save(report);
-            }
+            // do refresh:
+            XxlJobAdminBootstrap.getInstance().getXxlJobLogReportMapper().saveOrUpdate(xxlJobLogReport);      
         }
     }
 

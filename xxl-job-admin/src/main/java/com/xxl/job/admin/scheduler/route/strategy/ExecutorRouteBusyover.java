@@ -3,10 +3,10 @@ package com.xxl.job.admin.scheduler.route.strategy;
 import com.xxl.job.admin.scheduler.config.XxlJobAdminBootstrap;
 import com.xxl.job.admin.scheduler.route.ExecutorRouter;
 import com.xxl.job.admin.util.I18nUtil;
-import com.xxl.job.core.biz.ExecutorBiz;
-import com.xxl.job.core.biz.model.IdleBeatParam;
-import com.xxl.job.core.biz.model.ReturnT;
-import com.xxl.job.core.biz.model.TriggerParam;
+import com.xxl.job.core.openapi.ExecutorBiz;
+import com.xxl.job.core.openapi.model.IdleBeatRequest;
+import com.xxl.job.core.openapi.model.TriggerRequest;
+import com.xxl.tool.response.Response;
 
 import java.util.List;
 
@@ -16,17 +16,17 @@ import java.util.List;
 public class ExecutorRouteBusyover extends ExecutorRouter {
 
     @Override
-    public ReturnT<String> route(TriggerParam triggerParam, List<String> addressList) {
+    public Response<String> route(TriggerRequest triggerParam, List<String> addressList) {
         StringBuffer idleBeatResultSB = new StringBuffer();
         for (String address : addressList) {
             // beat
-            ReturnT<String> idleBeatResult = null;
+            Response<String> idleBeatResult = null;
             try {
                 ExecutorBiz executorBiz = XxlJobAdminBootstrap.getExecutorBiz(address);
-                idleBeatResult = executorBiz.idleBeat(new IdleBeatParam(triggerParam.getJobId()));
+                idleBeatResult = executorBiz.idleBeat(new IdleBeatRequest(triggerParam.getJobId()));
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);
-                idleBeatResult = ReturnT.ofFail( ""+e );
+                idleBeatResult = Response.ofFail( ""+e );
             }
             idleBeatResultSB.append( (idleBeatResultSB.length()>0)?"<br><br>":"")
                     .append(I18nUtil.getString("jobconf_idleBeat") + "：")
@@ -37,12 +37,12 @@ public class ExecutorRouteBusyover extends ExecutorRouter {
             // beat success
             if (idleBeatResult.isSuccess()) {
                 idleBeatResult.setMsg(idleBeatResultSB.toString());
-                idleBeatResult.setContent(address);
+                idleBeatResult.setData(address);
                 return idleBeatResult;
             }
         }
 
-        return ReturnT.ofFail( idleBeatResultSB.toString());
+        return Response.ofFail( idleBeatResultSB.toString());
     }
 
 }

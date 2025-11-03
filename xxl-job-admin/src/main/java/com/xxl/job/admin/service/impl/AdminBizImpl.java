@@ -1,10 +1,10 @@
 package com.xxl.job.admin.service.impl;
 
 import com.xxl.job.admin.scheduler.config.XxlJobAdminBootstrap;
-import com.xxl.job.core.biz.AdminBiz;
-import com.xxl.job.core.biz.model.HandleCallbackParam;
-import com.xxl.job.core.biz.model.RegistryParam;
-import com.xxl.job.core.biz.model.ReturnT;
+import com.xxl.job.core.openapi.AdminBiz;
+import com.xxl.job.core.openapi.model.HandleCallbackRequest;
+import com.xxl.job.core.openapi.model.RegistryRequest;
+import com.xxl.tool.response.Response;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,20 +15,19 @@ import java.util.List;
 @Service
 public class AdminBizImpl implements AdminBiz {
 
-
     @Override
-    public ReturnT<String> callback(List<HandleCallbackParam> callbackParamList) {
-        return XxlJobAdminBootstrap.getInstance().getJobCompleteHelper().callback(callbackParamList);
+    public Response<String> callback(List<HandleCallbackRequest> handleCallbackRequestList) {
+        return XxlJobAdminBootstrap.getInstance().getJobCompleteHelper().callback(handleCallbackRequestList);
     }
 
     @Override
-    public ReturnT<String> registry(RegistryParam registryParam) {
-        return XxlJobAdminBootstrap.getInstance().getJobRegistryHelper().registry(registryParam);
+    public Response<String> registry(RegistryRequest registryRequest) {
+        return XxlJobAdminBootstrap.getInstance().getJobRegistryHelper().registry(registryRequest);
     }
 
     @Override
-    public ReturnT<String> registryRemove(RegistryParam registryParam) {
-        return XxlJobAdminBootstrap.getInstance().getJobRegistryHelper().registryRemove(registryParam);
+    public Response<String> registryRemove(RegistryRequest registryRequest) {
+        return XxlJobAdminBootstrap.getInstance().getJobRegistryHelper().registryRemove(registryRequest);
     }
 
 }

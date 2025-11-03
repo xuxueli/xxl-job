@@ -3,10 +3,11 @@ package com.xxl.job.admin.scheduler.thread;
 import com.xxl.job.admin.model.XxlJobGroup;
 import com.xxl.job.admin.model.XxlJobRegistry;
 import com.xxl.job.admin.scheduler.config.XxlJobAdminBootstrap;
-import com.xxl.job.core.biz.model.RegistryParam;
-import com.xxl.job.core.biz.model.ReturnT;
-import com.xxl.job.core.enums.RegistryConfig;
+import com.xxl.job.core.constant.RegistType;
+import com.xxl.job.core.openapi.model.RegistryRequest;
+import com.xxl.job.core.constant.Const;
 import com.xxl.tool.core.StringTool;
+import com.xxl.tool.response.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -64,17 +65,17 @@ public class JobRegistryHelper {
 						if (groupList!=null && !groupList.isEmpty()) {
 
 							// remove dead address (admin/executor)
-							List<Integer> ids = XxlJobAdminBootstrap.getInstance().getXxlJobRegistryMapper().findDead(RegistryConfig.DEAD_TIMEOUT, new Date());
+							List<Integer> ids = XxlJobAdminBootstrap.getInstance().getXxlJobRegistryMapper().findDead(Const.DEAD_TIMEOUT, new Date());
 							if (ids!=null && ids.size()>0) {
 								XxlJobAdminBootstrap.getInstance().getXxlJobRegistryMapper().removeDead(ids);
 							}
 
 							// fresh online address (admin/executor)
 							HashMap<String, List<String>> appAddressMap = new HashMap<String, List<String>>();
-							List<XxlJobRegistry> list = XxlJobAdminBootstrap.getInstance().getXxlJobRegistryMapper().findAll(RegistryConfig.DEAD_TIMEOUT, new Date());
+							List<XxlJobRegistry> list = XxlJobAdminBootstrap.getInstance().getXxlJobRegistryMapper().findAll(Const.DEAD_TIMEOUT, new Date());
 							if (list != null) {
 								for (XxlJobRegistry item: list) {
-									if (RegistryConfig.RegistType.EXECUTOR.name().equals(item.getRegistryGroup())) {
+									if (RegistType.EXECUTOR.name().equals(item.getRegistryGroup())) {
 										String appname = item.getRegistryKey();
 										List<String> registryList = appAddressMap.get(appname);
 										if (registryList == null) {
@@ -114,7 +115,7 @@ public class JobRegistryHelper {
 						}
 					}
 					try {
-						TimeUnit.SECONDS.sleep(RegistryConfig.BEAT_TIMEOUT);
+						TimeUnit.SECONDS.sleep(Const.BEAT_TIMEOUT);
 					} catch (Throwable e) {
 						if (!toStop) {
 							logger.error(">>>>>>>>>>> xxl-job, job registry monitor thread error:{}", e);
@@ -154,13 +155,13 @@ public class JobRegistryHelper {
 	/**
 	 * registry
 	 */
-	public ReturnT<String> registry(RegistryParam registryParam) {
+	public Response<String> registry(RegistryRequest registryParam) {
 
 		// valid
 		if (StringTool.isBlank(registryParam.getRegistryGroup())
 				|| StringTool.isBlank(registryParam.getRegistryKey())
 				|| StringTool.isBlank(registryParam.getRegistryValue())) {
-			return ReturnT.ofFail("Illegal Argument.");
+			return Response.ofFail("Illegal Argument.");
 		}
 
 		// async execute
@@ -183,19 +184,19 @@ public class JobRegistryHelper {
 			}
 		});
 
-		return ReturnT.ofSuccess();
+		return Response.ofSuccess();
 	}
 
 	/**
 	 * registry remove
 	 */
-	public ReturnT<String> registryRemove(RegistryParam registryParam) {
+	public Response<String> registryRemove(RegistryRequest registryParam) {
 
 		// valid
 		if (StringTool.isBlank(registryParam.getRegistryGroup())
 				|| StringTool.isBlank(registryParam.getRegistryKey())
 				|| StringTool.isBlank(registryParam.getRegistryValue())) {
-			return ReturnT.ofFail("Illegal Argument.");
+			return Response.ofFail("Illegal Argument.");
 		}
 
 		// async execute
@@ -210,10 +211,10 @@ public class JobRegistryHelper {
 			}
 		});
 
-		return ReturnT.ofSuccess();
+		return Response.ofSuccess();
 	}
 
-	private void freshGroupRegistryInfo(RegistryParam registryParam){
+	private void freshGroupRegistryInfo(RegistryRequest registryParam){
 		// Under consideration, prevent affecting core tables
 	}
 

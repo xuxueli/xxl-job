@@ -52,14 +52,22 @@ $(function() {
             type:"post",
 	        data : function ( d ) {
 	        	var obj = {};
-	        	obj.jobGroup = $('#jobGroup').val();
+				obj.offset = d.start;
+				obj.pagesize = d.length;
+				obj.jobGroup = $('#jobGroup').val();
 	        	obj.jobId = $('#jobId').val();
                 obj.logStatus = $('#logStatus').val();
 				obj.filterTime = $('#filterTime').val();
-	        	obj.start = d.start;
-	        	obj.length = d.length;
                 return obj;
-            }
+            },
+			dataFilter: function (json ) {
+				var result = JSON.parse(json);
+				return JSON.stringify({
+					"recordsTotal": result.data.totalCount,
+					"recordsFiltered": result.data.totalCount,
+					"data": result.data.pageData
+				});
+			}
 	    },
 	    "searching": false,
 	    "ordering": false,
@@ -97,12 +105,12 @@ $(function() {
                         "width":'10%',
 						"render": function ( data, type, row ) {
 							var html = data;
-							if (data == 200) {
+							if (data == 200) {			// 200, success
 								html = '<span style="color: green">'+ I18n.system_success +'</span>';
-							} else if (data == 500) {
+							} else if (data > 0) {		// >0 or 500, fail
 								html = '<span style="color: red">'+ I18n.system_fail +'</span>';
-							} else if (data == 0) {
-                                html = '';
+							} else if (data == 0) {		// 0, original pass
+								html = '';
 							}
                             return html;
 						}
@@ -126,13 +134,13 @@ $(function() {
                         "width":'10%',
 						"render": function ( data, type, row ) {
                             var html = data;
-                            if (data == 200) {
+                            if (data == 200) {			// 200, success
                                 html = '<span style="color: green">'+ I18n.joblog_handleCode_200 +'</span>';
-                            } else if (data == 500) {
+                            } else if (data == 502) {	// 502, timeout
+								html = '<span style="color: red">'+ I18n.joblog_handleCode_502 +'</span>';
+							} else if (data > 0) {		// >0 or 500, fail
                                 html = '<span style="color: red">'+ I18n.joblog_handleCode_500 +'</span>';
-                            } else if (data == 502) {
-                                html = '<span style="color: red">'+ I18n.joblog_handleCode_502 +'</span>';
-                            } else if (data == 0) {
+                            } else if (data == 0) {		// 0, original pass
                                 html = '';
                             }
                             return html;

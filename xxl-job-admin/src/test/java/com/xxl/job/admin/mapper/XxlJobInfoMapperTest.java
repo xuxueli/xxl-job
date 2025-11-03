@@ -1,8 +1,8 @@
 package com.xxl.job.admin.mapper;
 
 import com.xxl.job.admin.model.XxlJobInfo;
-import com.xxl.job.admin.scheduler.enums.MisfireStrategyEnum;
-import com.xxl.job.admin.scheduler.enums.ScheduleTypeEnum;
+import com.xxl.job.admin.scheduler.misfire.MisfireStrategyEnum;
+import com.xxl.job.admin.scheduler.type.ScheduleTypeEnum;
 import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;

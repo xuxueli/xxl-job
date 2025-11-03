@@ -43,6 +43,13 @@
 			<version>${gson.version}</version>
 		</dependency>
 
+		<!-- ********************** tool: xxl-tool ********************** -->
+		<dependency>
+			<groupId>com.xuxueli</groupId>
+			<artifactId>xxl-tool</artifactId>
+			<version>${xxl-tool.version}</version>
+		</dependency>
+
 		<!-- ********************** plugin: groovy + spring ********************** -->
 		<!-- groovy-all -->
 		<dependency>

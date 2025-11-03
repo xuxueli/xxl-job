@@ -1,12 +1,13 @@
 package com.xxl.job.core.server;
 
-import com.xxl.job.core.biz.ExecutorBiz;
-import com.xxl.job.core.biz.impl.ExecutorBizImpl;
-import com.xxl.job.core.biz.model.*;
+import com.xxl.job.core.constant.Const;
+import com.xxl.job.core.openapi.ExecutorBiz;
+import com.xxl.job.core.openapi.impl.ExecutorBizImpl;
+import com.xxl.job.core.openapi.model.*;
 import com.xxl.job.core.thread.ExecutorRegistryThread;
-import com.xxl.job.core.util.GsonTool;
-import com.xxl.job.core.util.ThrowableUtil;
-import com.xxl.job.core.util.XxlJobRemotingUtil;
+import com.xxl.tool.exception.ThrowableTool;
+import com.xxl.tool.gson.GsonTool;
+import com.xxl.tool.response.Response;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.*;
@@ -148,14 +149,14 @@ public class EmbedServer {
             String uri = msg.uri();
             HttpMethod httpMethod = msg.method();
             boolean keepAlive = HttpUtil.isKeepAlive(msg);
-            String accessTokenReq = msg.headers().get(XxlJobRemotingUtil.XXL_JOB_ACCESS_TOKEN);
+            String accessTokenReq = msg.headers().get(Const.XXL_JOB_ACCESS_TOKEN);
 
             // invoke
             bizThreadPool.execute(new Runnable() {
                 @Override
                 public void run() {
                     // do invoke
-                    Object responseObj = process(httpMethod, uri, requestData, accessTokenReq);
+                    Object responseObj = dispatchRequest(httpMethod, uri, requestData, accessTokenReq);
 
                     // to json
                     String responseJson = GsonTool.toJson(responseObj);
@@ -166,18 +167,18 @@ public class EmbedServer {
             });
         }
 
-        private Object process(HttpMethod httpMethod, String uri, String requestData, String accessTokenReq) {
+        private Object dispatchRequest(HttpMethod httpMethod, String uri, String requestData, String accessTokenReq) {
             // valid
             if (HttpMethod.POST != httpMethod) {
-                return ReturnT.ofFail("invalid request, HttpMethod not support.");
+                return Response.ofFail("invalid request, HttpMethod not support.");
             }
-            if (uri == null || uri.trim().length() == 0) {
-                return ReturnT.ofFail( "invalid request, uri-mapping empty.");
+            if (uri == null || uri.trim().isEmpty()) {
+                return Response.ofFail( "invalid request, uri-mapping empty.");
             }
             if (accessToken != null
-                    && accessToken.trim().length() > 0
+                    && !accessToken.trim().isEmpty()
                     && !accessToken.equals(accessTokenReq)) {
-                return ReturnT.ofFail("The access token is wrong.");
+                return Response.ofFail("The access token is wrong.");
             }
 
             // services mapping
@@ -186,23 +187,23 @@ public class EmbedServer {
                     case "/beat":
                         return executorBiz.beat();
                     case "/idleBeat":
-                        IdleBeatParam idleBeatParam = GsonTool.fromJson(requestData, IdleBeatParam.class);
+                        IdleBeatRequest idleBeatParam = GsonTool.fromJson(requestData, IdleBeatRequest.class);
                         return executorBiz.idleBeat(idleBeatParam);
                     case "/run":
-                        TriggerParam triggerParam = GsonTool.fromJson(requestData, TriggerParam.class);
+                        TriggerRequest triggerParam = GsonTool.fromJson(requestData, TriggerRequest.class);
                         return executorBiz.run(triggerParam);
                     case "/kill":
-                        KillParam killParam = GsonTool.fromJson(requestData, KillParam.class);
+                        KillRequest killParam = GsonTool.fromJson(requestData, KillRequest.class);
                         return executorBiz.kill(killParam);
                     case "/log":
-                        LogParam logParam = GsonTool.fromJson(requestData, LogParam.class);
+                        LogRequest logParam = GsonTool.fromJson(requestData, LogRequest.class);
                         return executorBiz.log(logParam);
                     default:
-                        return ReturnT.ofFail( "invalid request, uri-mapping(" + uri + ") not found.");
+                        return Response.ofFail( "invalid request, uri-mapping(" + uri + ") not found.");
                 }
             } catch (Throwable e) {
                 logger.error(e.getMessage(), e);
-                return ReturnT.ofFail("request error:" + ThrowableUtil.toString(e));
+                return Response.ofFail("request error:" + ThrowableTool.toString(e));
             }
         }
 

@@ -6,12 +6,12 @@ import com.xxl.job.admin.mapper.XxlJobUserMapper;
 import com.xxl.job.admin.model.XxlJobGroup;
 import com.xxl.job.admin.model.XxlJobUser;
 import com.xxl.job.admin.util.I18nUtil;
-import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.sso.core.annotation.XxlSso;
 import com.xxl.sso.core.helper.XxlSsoHelper;
 import com.xxl.sso.core.model.LoginInfo;
 import com.xxl.tool.core.StringTool;
 import com.xxl.tool.encrypt.SHA256Tool;
+import com.xxl.tool.response.PageModel;
 import com.xxl.tool.response.Response;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
@@ -51,50 +51,50 @@ public class JobUserController {
     @RequestMapping("/pageList")
     @ResponseBody
     @XxlSso(role = Consts.ADMIN_ROLE)
-    public Map<String, Object> pageList(@RequestParam(value = "start", required = false, defaultValue = "0") int start,
-                                        @RequestParam(value = "length", required = false, defaultValue = "10") int length,
-                                        @RequestParam("username") String username,
-                                        @RequestParam("role") int role) {
+    public Response<PageModel<XxlJobUser>> pageList(@RequestParam(required = false, defaultValue = "0") int offset,
+                                                    @RequestParam(required = false, defaultValue = "10") int pagesize,
+                                                    @RequestParam String username,
+                                                    @RequestParam int role) {
 
         // page list
-        List<XxlJobUser> list = xxlJobUserMapper.pageList(start, length, username, role);
-        int list_count = xxlJobUserMapper.pageListCount(start, length, username, role);
+        List<XxlJobUser> list = xxlJobUserMapper.pageList(offset, pagesize, username, role);
+        int list_count = xxlJobUserMapper.pageListCount(offset, pagesize, username, role);
 
         // filter
-        if (list!=null && list.size()>0) {
+        if (list!=null && !list.isEmpty()) {
             for (XxlJobUser item: list) {
                 item.setPassword(null);
             }
         }
 
         // package result
-        Map<String, Object> maps = new HashMap<String, Object>();
-        maps.put("recordsTotal", list_count);		// 总记录数
-        maps.put("recordsFiltered", list_count);	// 过滤后的总记录数
-        maps.put("data", list);  					// 分页列表
-        return maps;
+        PageModel<XxlJobUser> pageModel = new PageModel<>();
+        pageModel.setPageData(list);
+        pageModel.setTotalCount(list_count);
+
+        return Response.ofSuccess(pageModel);
     }
 
     @RequestMapping("/add")
     @ResponseBody
     @XxlSso(role = Consts.ADMIN_ROLE)
-    public ReturnT<String> add(XxlJobUser xxlJobUser) {
+    public Response<String> add(XxlJobUser xxlJobUser) {
 
         // valid username
         if (StringTool.isBlank(xxlJobUser.getUsername())) {
-            return ReturnT.ofFail(I18nUtil.getString("system_please_input")+I18nUtil.getString("user_username") );
+            return Response.ofFail(I18nUtil.getString("system_please_input")+I18nUtil.getString("user_username") );
         }
         xxlJobUser.setUsername(xxlJobUser.getUsername().trim());
         if (!(xxlJobUser.getUsername().length()>=4 && xxlJobUser.getUsername().length()<=20)) {
-            return ReturnT.ofFail(I18nUtil.getString("system_lengh_limit")+"[4-20]" );
+            return Response.ofFail(I18nUtil.getString("system_lengh_limit")+"[4-20]" );
         }
         // valid password
         if (StringTool.isBlank(xxlJobUser.getPassword())) {
-            return ReturnT.ofFail(I18nUtil.getString("system_please_input")+I18nUtil.getString("user_password") );
+            return Response.ofFail(I18nUtil.getString("system_please_input")+I18nUtil.getString("user_password") );
         }
         xxlJobUser.setPassword(xxlJobUser.getPassword().trim());
         if (!(xxlJobUser.getPassword().length()>=4 && xxlJobUser.getPassword().length()<=20)) {
-            return ReturnT.ofFail(I18nUtil.getString("system_lengh_limit")+"[4-20]" );
+            return Response.ofFail(I18nUtil.getString("system_lengh_limit")+"[4-20]" );
         }
         // md5 password
         String passwordHash = SHA256Tool.sha256(xxlJobUser.getPassword());
@@ -103,30 +103,30 @@ public class JobUserController {
         // check repeat
         XxlJobUser existUser = xxlJobUserMapper.loadByUserName(xxlJobUser.getUsername());
         if (existUser != null) {
-            return ReturnT.ofFail( I18nUtil.getString("user_username_repeat") );
+            return Response.ofFail( I18nUtil.getString("user_username_repeat") );
         }
 
         // write
         xxlJobUserMapper.save(xxlJobUser);
-        return ReturnT.ofSuccess();
+        return Response.ofSuccess();
     }
 
     @RequestMapping("/update")
     @ResponseBody
     @XxlSso(role = Consts.ADMIN_ROLE)
-    public ReturnT<String> update(HttpServletRequest request, XxlJobUser xxlJobUser) {
+    public Response<String> update(HttpServletRequest request, XxlJobUser xxlJobUser) {
 
         // avoid opt login seft
         Response<LoginInfo> loginInfoResponse = XxlSsoHelper.loginCheckWithAttr(request);
         if (loginInfoResponse.getData().getUserName().equals(xxlJobUser.getUsername())) {
-            return ReturnT.ofFail(I18nUtil.getString("user_update_loginuser_limit"));
+            return Response.ofFail(I18nUtil.getString("user_update_loginuser_limit"));
         }
 
         // valid password
         if (StringTool.isNotBlank(xxlJobUser.getPassword())) {
             xxlJobUser.setPassword(xxlJobUser.getPassword().trim());
             if (!(xxlJobUser.getPassword().length()>=4 && xxlJobUser.getPassword().length()<=20)) {
-                return ReturnT.ofFail(I18nUtil.getString("system_lengh_limit")+"[4-20]" );
+                return Response.ofFail(I18nUtil.getString("system_lengh_limit")+"[4-20]" );
             }
             // md5 password
             String passwordHash = SHA256Tool.sha256(xxlJobUser.getPassword());
@@ -137,40 +137,40 @@ public class JobUserController {
 
         // write
         xxlJobUserMapper.update(xxlJobUser);
-        return ReturnT.ofSuccess();
+        return Response.ofSuccess();
     }
 
     @RequestMapping("/remove")
     @ResponseBody
     @XxlSso(role = Consts.ADMIN_ROLE)
-    public ReturnT<String> remove(HttpServletRequest request, @RequestParam("id") int id) {
+    public Response<String> remove(HttpServletRequest request, @RequestParam("id") int id) {
 
         // avoid opt login seft
         Response<LoginInfo> loginInfoResponse = XxlSsoHelper.loginCheckWithAttr(request);
         if (Integer.parseInt(loginInfoResponse.getData().getUserId()) == id) {
-            return ReturnT.ofFail(I18nUtil.getString("user_update_loginuser_limit"));
+            return Response.ofFail(I18nUtil.getString("user_update_loginuser_limit"));
         }
 
         xxlJobUserMapper.delete(id);
-        return ReturnT.ofSuccess();
+        return Response.ofSuccess();
     }
 
     @RequestMapping("/updatePwd")
     @ResponseBody
-    public ReturnT<String> updatePwd(HttpServletRequest request,
+    public Response<String> updatePwd(HttpServletRequest request,
                                      @RequestParam("password") String password,
                                      @RequestParam("oldPassword") String oldPassword){
 
         // valid
         if (oldPassword==null || oldPassword.trim().isEmpty()){
-            return ReturnT.ofFail(I18nUtil.getString("system_please_input") + I18nUtil.getString("change_pwd_field_oldpwd"));
+            return Response.ofFail(I18nUtil.getString("system_please_input") + I18nUtil.getString("change_pwd_field_oldpwd"));
         }
         if (password==null || password.trim().isEmpty()){
-            return ReturnT.ofFail(I18nUtil.getString("system_please_input") + I18nUtil.getString("change_pwd_field_oldpwd"));
+            return Response.ofFail(I18nUtil.getString("system_please_input") + I18nUtil.getString("change_pwd_field_oldpwd"));
         }
         password = password.trim();
         if (!(password.length()>=4 && password.length()<=20)) {
-            return ReturnT.ofFail(I18nUtil.getString("system_lengh_limit")+"[4-20]" );
+            return Response.ofFail(I18nUtil.getString("system_lengh_limit")+"[4-20]" );
         }
 
         // md5 password
@@ -181,14 +181,14 @@ public class JobUserController {
         Response<LoginInfo> loginInfoResponse = XxlSsoHelper.loginCheckWithAttr(request);
         XxlJobUser existUser = xxlJobUserMapper.loadByUserName(loginInfoResponse.getData().getUserName());
         if (!oldPasswordHash.equals(existUser.getPassword())) {
-            return ReturnT.ofFail(I18nUtil.getString("change_pwd_field_oldpwd") + I18nUtil.getString("system_unvalid"));
+            return Response.ofFail(I18nUtil.getString("change_pwd_field_oldpwd") + I18nUtil.getString("system_unvalid"));
         }
 
         // write new
         existUser.setPassword(passwordHash);
         xxlJobUserMapper.update(existUser);
 
-        return ReturnT.ofSuccess();
+        return Response.ofSuccess();
     }
 
 }

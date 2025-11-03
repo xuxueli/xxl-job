@@ -10,15 +10,23 @@ $(function() {
 			type:"post",
 	        data : function ( d ) {
 	        	var obj = {};
+				obj.offset = d.start;
+				obj.pagesize = d.length;
 	        	obj.jobGroup = $('#jobGroup').val();
                 obj.triggerStatus = $('#triggerStatus').val();
                 obj.jobDesc = $('#jobDesc').val();
 	        	obj.executorHandler = $('#executorHandler').val();
                 obj.author = $('#author').val();
-	        	obj.start = d.start;
-	        	obj.length = d.length;
                 return obj;
-            }
+            },
+			dataFilter: function (json ) {
+				var result = JSON.parse(json);
+				return JSON.stringify({
+					"recordsTotal": result.data.totalCount,
+					"recordsFiltered": result.data.totalCount,
+					"data": result.data.pageData
+				});
+			}
 	    },
 	    "searching": false,
 	    "ordering": false,
@@ -312,9 +320,9 @@ $(function() {
             success : function(data){
 
                 var html = '<div>';
-                if (data.code == 200 && data.content.registryList) {
-                    for (var index in data.content.registryList) {
-                        html += (parseInt(index)+1) + '. <span class="badge bg-green" >' + data.content.registryList[index] + '</span><br>';
+                if (data.code == 200 && data.data.registryList) {
+                    for (var index in data.data.registryList) {
+                        html += (parseInt(index)+1) + '. <span class="badge bg-green" >' + data.data.registryList[index] + '</span><br>';
                     }
                 }
                 html += '</div>';
@@ -353,9 +361,9 @@ $(function() {
                     });
 				} else {
                     var html = '<center>';
-                    if (data.code == 200 && data.content) {
-                        for (var index in data.content) {
-                            html += '<span>' + data.content[index] + '</span><br>';
+                    if (data.code == 200 && data.data) {
+                        for (var index in data.data) {
+                            html += '<span>' + data.data[index] + '</span><br>';
                         }
                     }
                     html += '</center>';

@@ -4,20 +4,19 @@ import com.xxl.job.admin.mapper.XxlJobGroupMapper;
 import com.xxl.job.admin.model.XxlJobGroup;
 import com.xxl.job.admin.model.XxlJobInfo;
 import com.xxl.job.admin.scheduler.exception.XxlJobException;
+import com.xxl.job.admin.scheduler.misfire.MisfireStrategyEnum;
 import com.xxl.job.admin.scheduler.route.ExecutorRouteStrategyEnum;
-import com.xxl.job.admin.scheduler.enums.MisfireStrategyEnum;
-import com.xxl.job.admin.scheduler.enums.ScheduleTypeEnum;
-import com.xxl.job.admin.scheduler.thread.JobScheduleHelper;
+import com.xxl.job.admin.scheduler.type.ScheduleTypeEnum;
 import com.xxl.job.admin.service.XxlJobService;
 import com.xxl.job.admin.util.I18nUtil;
 import com.xxl.job.admin.util.JobGroupPermissionUtil;
-import com.xxl.job.core.biz.model.ReturnT;
-import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
+import com.xxl.job.core.constant.ExecutorBlockStrategyEnum;
 import com.xxl.job.core.glue.GlueTypeEnum;
-import com.xxl.job.core.util.DateUtil;
 import com.xxl.sso.core.helper.XxlSsoHelper;
 import com.xxl.sso.core.model.LoginInfo;
 import com.xxl.tool.core.CollectionTool;
+import com.xxl.tool.core.DateTool;
+import com.xxl.tool.response.PageModel;
 import com.xxl.tool.response.Response;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
@@ -32,7 +31,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 /**
  * index controller
@@ -75,25 +73,25 @@ public class JobInfoController {
 
 	@RequestMapping("/pageList")
 	@ResponseBody
-	public Map<String, Object> pageList(HttpServletRequest request,
-										@RequestParam(value = "start", required = false, defaultValue = "0") int start,
-										@RequestParam(value = "length", required = false, defaultValue = "10") int length,
-										@RequestParam("jobGroup") int jobGroup,
-										@RequestParam("triggerStatus") int triggerStatus,
-										@RequestParam("jobDesc") String jobDesc,
-										@RequestParam("executorHandler") String executorHandler,
-										@RequestParam("author") String author) {
+	public Response<PageModel<XxlJobInfo>> pageList(HttpServletRequest request,
+													@RequestParam(required = false, defaultValue = "0") int offset,
+													@RequestParam(required = false, defaultValue = "10") int pagesize,
+													@RequestParam int jobGroup,
+													@RequestParam int triggerStatus,
+													@RequestParam String jobDesc,
+													@RequestParam String executorHandler,
+													@RequestParam String author) {
 
 		// valid jobGroup permission
 		JobGroupPermissionUtil.validJobGroupPermission(request, jobGroup);
 
 		// page
-		return xxlJobService.pageList(start, length, jobGroup, triggerStatus, jobDesc, executorHandler, author);
+		return xxlJobService.pageList(offset, pagesize, jobGroup, triggerStatus, jobDesc, executorHandler, author);
 	}
 	
 	@RequestMapping("/add")
 	@ResponseBody
-	public ReturnT<String> add(HttpServletRequest request, XxlJobInfo jobInfo) {
+	public Response<String> add(HttpServletRequest request, XxlJobInfo jobInfo) {
 		// valid permission
 		LoginInfo loginInfo = JobGroupPermissionUtil.validJobGroupPermission(request, jobInfo.getJobGroup());
 
@@ -103,7 +101,7 @@ public class JobInfoController {
 
 	@RequestMapping("/update")
 	@ResponseBody
-	public ReturnT<String> update(HttpServletRequest request, XxlJobInfo jobInfo) {
+	public Response<String> update(HttpServletRequest request, XxlJobInfo jobInfo) {
 		// valid permission
 		LoginInfo loginInfo = JobGroupPermissionUtil.validJobGroupPermission(request, jobInfo.getJobGroup());
 
@@ -113,28 +111,28 @@ public class JobInfoController {
 	
 	@RequestMapping("/remove")
 	@ResponseBody
-	public ReturnT<String> remove(HttpServletRequest request, @RequestParam("id") int id) {
+	public Response<String> remove(HttpServletRequest request, @RequestParam("id") int id) {
 		Response<LoginInfo> loginInfoResponse = XxlSsoHelper.loginCheckWithAttr(request);
 		return xxlJobService.remove(id, loginInfoResponse.getData());
 	}
 	
 	@RequestMapping("/stop")
 	@ResponseBody
-	public ReturnT<String> pause(HttpServletRequest request, @RequestParam("id") int id) {
+	public Response<String> pause(HttpServletRequest request, @RequestParam("id") int id) {
 		Response<LoginInfo> loginInfoResponse = XxlSsoHelper.loginCheckWithAttr(request);
 		return xxlJobService.stop(id, loginInfoResponse.getData());
 	}
 	
 	@RequestMapping("/start")
 	@ResponseBody
-	public ReturnT<String> start(HttpServletRequest request, @RequestParam("id") int id) {
+	public Response<String> start(HttpServletRequest request, @RequestParam("id") int id) {
 		Response<LoginInfo> loginInfoResponse = XxlSsoHelper.loginCheckWithAttr(request);
 		return xxlJobService.start(id, loginInfoResponse.getData());
 	}
 	
 	@RequestMapping("/trigger")
 	@ResponseBody
-	public ReturnT<String> triggerJob(HttpServletRequest request,
+	public Response<String> triggerJob(HttpServletRequest request,
 									  @RequestParam("id") int id,
 									  @RequestParam("executorParam") String executorParam,
 									  @RequestParam("addressList") String addressList) {
@@ -144,7 +142,7 @@ public class JobInfoController {
 
 	@RequestMapping("/nextTriggerTime")
 	@ResponseBody
-	public ReturnT<List<String>> nextTriggerTime(@RequestParam("scheduleType") String scheduleType,
+	public Response<List<String>> nextTriggerTime(@RequestParam("scheduleType") String scheduleType,
 												 @RequestParam("scheduleConf") String scheduleConf) {
 
 		XxlJobInfo paramXxlJobInfo = new XxlJobInfo();
@@ -155,18 +153,23 @@ public class JobInfoController {
 		try {
 			Date lastTime = new Date();
 			for (int i = 0; i < 5; i++) {
-				lastTime = JobScheduleHelper.generateNextValidTime(paramXxlJobInfo, lastTime);
+
+				// generate next trigger time
+				ScheduleTypeEnum scheduleTypeEnum = ScheduleTypeEnum.match(paramXxlJobInfo.getScheduleType(), ScheduleTypeEnum.NONE);
+				lastTime = scheduleTypeEnum.getScheduleType().generateNextTriggerTime(paramXxlJobInfo, lastTime);
+
+				// collect data
 				if (lastTime != null) {
-					result.add(DateUtil.formatDateTime(lastTime));
+					result.add(DateTool.formatDateTime(lastTime));
 				} else {
 					break;
 				}
 			}
 		} catch (Exception e) {
-			logger.error("nextTriggerTime error. scheduleType = {}, scheduleConf= {}", scheduleType, scheduleConf, e);
-			return ReturnT.ofFail((I18nUtil.getString("schedule_type")+I18nUtil.getString("system_unvalid")) + e.getMessage());
+			logger.error(">>>>>>>>>>> nextTriggerTime error. scheduleType = {}, scheduleConf= {}", scheduleType, scheduleConf, e);
+			return Response.ofFail((I18nUtil.getString("schedule_type")+I18nUtil.getString("system_unvalid")) + e.getMessage());
 		}
-		return ReturnT.ofSuccess(result);
+		return Response.ofSuccess(result);
 
 	}
 

@@ -32,19 +32,19 @@ $(function() {
             success : function(data){
 
                 if (data.code == 200) {
-                    if (!data.content) {
+                    if (!data.data) {
                         console.log('pullLog fail');
                         return;
                     }
-                    if (fromLineNum != data.content.fromLineNum) {
+                    if (fromLineNum != data.data.fromLineNum) {
                         console.log('pullLog fromLineNum not match');
                         return;
                     }
-                    if (fromLineNum > data.content.toLineNum ) {
+                    if (fromLineNum > data.data.toLineNum ) {
                         console.log('pullLog already line-end');
 
                         // valid end
-                        if (data.content.end) {
+                        if (data.data.end) {
                             logRunStop('<br><span style="color: green;">[Rolling Log Finish]</span>');
                             return;
                         }
@@ -53,8 +53,8 @@ $(function() {
                     }
 
                     // append content
-                    fromLineNum = data.content.toLineNum + 1;
-                    $('#logConsole').append(data.content.logContent);
+                    fromLineNum = data.data.toLineNum + 1;
+                    $('#logConsole').append(data.data.logContent);
                     pullFailCount = 0;
 
                     // scroll to bottom

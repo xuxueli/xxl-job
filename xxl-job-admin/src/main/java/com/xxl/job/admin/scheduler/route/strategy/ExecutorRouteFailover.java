@@ -3,9 +3,9 @@ package com.xxl.job.admin.scheduler.route.strategy;
 import com.xxl.job.admin.scheduler.config.XxlJobAdminBootstrap;
 import com.xxl.job.admin.scheduler.route.ExecutorRouter;
 import com.xxl.job.admin.util.I18nUtil;
-import com.xxl.job.core.biz.ExecutorBiz;
-import com.xxl.job.core.biz.model.ReturnT;
-import com.xxl.job.core.biz.model.TriggerParam;
+import com.xxl.job.core.openapi.ExecutorBiz;
+import com.xxl.job.core.openapi.model.TriggerRequest;
+import com.xxl.tool.response.Response;
 
 import java.util.List;
 
@@ -15,18 +15,18 @@ import java.util.List;
 public class ExecutorRouteFailover extends ExecutorRouter {
 
     @Override
-    public ReturnT<String> route(TriggerParam triggerParam, List<String> addressList) {
+    public Response<String> route(TriggerRequest triggerParam, List<String> addressList) {
 
         StringBuffer beatResultSB = new StringBuffer();
         for (String address : addressList) {
             // beat
-            ReturnT<String> beatResult = null;
+            Response<String> beatResult = null;
             try {
                 ExecutorBiz executorBiz = XxlJobAdminBootstrap.getExecutorBiz(address);
                 beatResult = executorBiz.beat();
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);
-                beatResult = ReturnT.ofFail(e.getMessage() );
+                beatResult = Response.ofFail(e.getMessage() );
             }
             beatResultSB.append( (beatResultSB.length()>0)?"<br><br>":"")
                     .append(I18nUtil.getString("jobconf_beat") + "：")
@@ -38,11 +38,11 @@ public class ExecutorRouteFailover extends ExecutorRouter {
             if (beatResult.isSuccess()) {
 
                 beatResult.setMsg(beatResultSB.toString());
-                beatResult.setContent(address);
+                beatResult.setData(address);
                 return beatResult;
             }
         }
-        return ReturnT.ofFail( beatResultSB.toString());
+        return Response.ofFail( beatResultSB.toString());
 
     }
 }

@@ -6,19 +6,20 @@ import com.xxl.job.admin.model.XxlJobInfo;
 import com.xxl.job.admin.model.XxlJobLogReport;
 import com.xxl.job.admin.scheduler.config.XxlJobAdminBootstrap;
 import com.xxl.job.admin.scheduler.cron.CronExpression;
-import com.xxl.job.admin.scheduler.enums.MisfireStrategyEnum;
-import com.xxl.job.admin.scheduler.enums.ScheduleTypeEnum;
+import com.xxl.job.admin.scheduler.misfire.MisfireStrategyEnum;
 import com.xxl.job.admin.scheduler.route.ExecutorRouteStrategyEnum;
 import com.xxl.job.admin.scheduler.thread.JobScheduleHelper;
 import com.xxl.job.admin.scheduler.trigger.TriggerTypeEnum;
+import com.xxl.job.admin.scheduler.type.ScheduleTypeEnum;
 import com.xxl.job.admin.service.XxlJobService;
 import com.xxl.job.admin.util.I18nUtil;
 import com.xxl.job.admin.util.JobGroupPermissionUtil;
-import com.xxl.job.core.biz.model.ReturnT;
-import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
+import com.xxl.job.core.constant.ExecutorBlockStrategyEnum;
 import com.xxl.job.core.glue.GlueTypeEnum;
-import com.xxl.job.core.util.DateUtil;
 import com.xxl.sso.core.model.LoginInfo;
+import com.xxl.tool.core.DateTool;
+import com.xxl.tool.response.PageModel;
+import com.xxl.tool.response.Response;
 import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,64 +48,64 @@ public class XxlJobServiceImpl implements XxlJobService {
 	private XxlJobLogReportMapper xxlJobLogReportMapper;
 	
 	@Override
-	public Map<String, Object> pageList(int start, int length, int jobGroup, int triggerStatus, String jobDesc, String executorHandler, String author) {
+	public Response<PageModel<XxlJobInfo>> pageList(int offset, int pagesize, int jobGroup, int triggerStatus, String jobDesc, String executorHandler, String author) {
 
 		// page list
-		List<XxlJobInfo> list = xxlJobInfoMapper.pageList(start, length, jobGroup, triggerStatus, jobDesc, executorHandler, author);
-		int list_count = xxlJobInfoMapper.pageListCount(start, length, jobGroup, triggerStatus, jobDesc, executorHandler, author);
-		
+		List<XxlJobInfo> list = xxlJobInfoMapper.pageList(offset, pagesize, jobGroup, triggerStatus, jobDesc, executorHandler, author);
+		int list_count = xxlJobInfoMapper.pageListCount(offset, pagesize, jobGroup, triggerStatus, jobDesc, executorHandler, author);
+
 		// package result
-		Map<String, Object> maps = new HashMap<String, Object>();
-	    maps.put("recordsTotal", list_count);		// 总记录数
-	    maps.put("recordsFiltered", list_count);	// 过滤后的总记录数
-	    maps.put("data", list);  					// 分页列表
-		return maps;
+		PageModel<XxlJobInfo> pageModel = new PageModel<>();
+		pageModel.setPageData(list);
+		pageModel.setTotalCount(list_count);
+
+		return Response.ofSuccess(pageModel);
 	}
 
 	@Override
-	public ReturnT<String> add(XxlJobInfo jobInfo, LoginInfo loginInfo) {
+	public Response<String> add(XxlJobInfo jobInfo, LoginInfo loginInfo) {
 
 		// valid base
 		XxlJobGroup group = xxlJobGroupMapper.load(jobInfo.getJobGroup());
 		if (group == null) {
-			return ReturnT.ofFail (I18nUtil.getString("system_please_choose")+I18nUtil.getString("jobinfo_field_jobgroup"));
+			return Response.ofFail (I18nUtil.getString("system_please_choose")+I18nUtil.getString("jobinfo_field_jobgroup"));
 		}
 		if (jobInfo.getJobDesc()==null || jobInfo.getJobDesc().trim().length()==0) {
-			return ReturnT.ofFail ( (I18nUtil.getString("system_please_input")+I18nUtil.getString("jobinfo_field_jobdesc")) );
+			return Response.ofFail ( (I18nUtil.getString("system_please_input")+I18nUtil.getString("jobinfo_field_jobdesc")) );
 		}
 		if (jobInfo.getAuthor()==null || jobInfo.getAuthor().trim().length()==0) {
-			return ReturnT.ofFail ( (I18nUtil.getString("system_please_input")+I18nUtil.getString("jobinfo_field_author")) );
+			return Response.ofFail ( (I18nUtil.getString("system_please_input")+I18nUtil.getString("jobinfo_field_author")) );
 		}
 
 		// valid trigger
 		ScheduleTypeEnum scheduleTypeEnum = ScheduleTypeEnum.match(jobInfo.getScheduleType(), null);
 		if (scheduleTypeEnum == null) {
-			return ReturnT.ofFail ( (I18nUtil.getString("schedule_type")+I18nUtil.getString("system_unvalid")) );
+			return Response.ofFail ( (I18nUtil.getString("schedule_type")+I18nUtil.getString("system_unvalid")) );
 		}
 		if (scheduleTypeEnum == ScheduleTypeEnum.CRON) {
 			if (jobInfo.getScheduleConf()==null || !CronExpression.isValidExpression(jobInfo.getScheduleConf())) {
-				return ReturnT.ofFail ( "Cron"+I18nUtil.getString("system_unvalid"));
+				return Response.ofFail ( "Cron"+I18nUtil.getString("system_unvalid"));
 			}
 		} else if (scheduleTypeEnum == ScheduleTypeEnum.FIX_RATE/* || scheduleTypeEnum == ScheduleTypeEnum.FIX_DELAY*/) {
 			if (jobInfo.getScheduleConf() == null) {
-				return ReturnT.ofFail ( (I18nUtil.getString("schedule_type")) );
+				return Response.ofFail ( (I18nUtil.getString("schedule_type")) );
 			}
 			try {
 				int fixSecond = Integer.valueOf(jobInfo.getScheduleConf());
 				if (fixSecond < 1) {
-					return ReturnT.ofFail ( (I18nUtil.getString("schedule_type")+I18nUtil.getString("system_unvalid")) );
+					return Response.ofFail ( (I18nUtil.getString("schedule_type")+I18nUtil.getString("system_unvalid")) );
 				}
 			} catch (Exception e) {
-				return ReturnT.ofFail ( (I18nUtil.getString("schedule_type")+I18nUtil.getString("system_unvalid")) );
+				return Response.ofFail ( (I18nUtil.getString("schedule_type")+I18nUtil.getString("system_unvalid")) );
 			}
 		}
 
 		// valid job
 		if (GlueTypeEnum.match(jobInfo.getGlueType()) == null) {
-			return ReturnT.ofFail ( (I18nUtil.getString("jobinfo_field_gluetype")+I18nUtil.getString("system_unvalid")) );
+			return Response.ofFail ( (I18nUtil.getString("jobinfo_field_gluetype")+I18nUtil.getString("system_unvalid")) );
 		}
 		if (GlueTypeEnum.BEAN==GlueTypeEnum.match(jobInfo.getGlueType()) && (jobInfo.getExecutorHandler()==null || jobInfo.getExecutorHandler().trim().length()==0) ) {
-			return ReturnT.ofFail ( (I18nUtil.getString("system_please_input")+"JobHandler") );
+			return Response.ofFail ( (I18nUtil.getString("system_please_input")+"JobHandler") );
 		}
 		// 》fix "\r" in shell
 		if (GlueTypeEnum.GLUE_SHELL==GlueTypeEnum.match(jobInfo.getGlueType()) && jobInfo.getGlueSource()!=null) {
@@ -113,13 +114,13 @@ public class XxlJobServiceImpl implements XxlJobService {
 
 		// valid advanced
 		if (ExecutorRouteStrategyEnum.match(jobInfo.getExecutorRouteStrategy(), null) == null) {
-			return ReturnT.ofFail ( (I18nUtil.getString("jobinfo_field_executorRouteStrategy")+I18nUtil.getString("system_unvalid")) );
+			return Response.ofFail ( (I18nUtil.getString("jobinfo_field_executorRouteStrategy")+I18nUtil.getString("system_unvalid")) );
 		}
 		if (MisfireStrategyEnum.match(jobInfo.getMisfireStrategy(), null) == null) {
-			return ReturnT.ofFail ( (I18nUtil.getString("misfire_strategy")+I18nUtil.getString("system_unvalid")) );
+			return Response.ofFail ( (I18nUtil.getString("misfire_strategy")+I18nUtil.getString("system_unvalid")) );
 		}
 		if (ExecutorBlockStrategyEnum.match(jobInfo.getExecutorBlockStrategy(), null) == null) {
-			return ReturnT.ofFail ( (I18nUtil.getString("jobinfo_field_executorBlockStrategy")+I18nUtil.getString("system_unvalid")) );
+			return Response.ofFail ( (I18nUtil.getString("jobinfo_field_executorBlockStrategy")+I18nUtil.getString("system_unvalid")) );
 		}
 
 		// 》ChildJobId valid
@@ -129,16 +130,16 @@ public class XxlJobServiceImpl implements XxlJobService {
 				if (childJobIdItem!=null && childJobIdItem.trim().length()>0 && isNumeric(childJobIdItem)) {
 					XxlJobInfo childJobInfo = xxlJobInfoMapper.loadById(Integer.parseInt(childJobIdItem));
 					if (childJobInfo==null) {
-						return ReturnT.ofFail (
+						return Response.ofFail (
 								MessageFormat.format((I18nUtil.getString("jobinfo_field_childJobId")+"({0})"+I18nUtil.getString("system_not_found")), childJobIdItem));
 					}
 					// valid jobGroup permission
 					if (!JobGroupPermissionUtil.hasJobGroupPermission(loginInfo, childJobInfo.getJobGroup())) {
-						return ReturnT.ofFail (
+						return Response.ofFail (
 								MessageFormat.format((I18nUtil.getString("jobinfo_field_childJobId")+"({0})"+I18nUtil.getString("system_permission_limit")), childJobIdItem));
 					}
 				} else {
-					return ReturnT.ofFail (
+					return Response.ofFail (
 							MessageFormat.format((I18nUtil.getString("jobinfo_field_childJobId")+"({0})"+I18nUtil.getString("system_unvalid")), childJobIdItem));
 				}
 			}
@@ -161,10 +162,10 @@ public class XxlJobServiceImpl implements XxlJobService {
 		jobInfo.setExecutorHandler(jobInfo.getExecutorHandler().trim());
 		xxlJobInfoMapper.save(jobInfo);
 		if (jobInfo.getId() < 1) {
-			return ReturnT.ofFail ( (I18nUtil.getString("jobinfo_field_add")+I18nUtil.getString("system_fail")) );
+			return Response.ofFail ( (I18nUtil.getString("jobinfo_field_add")+I18nUtil.getString("system_fail")) );
 		}
 
-		return ReturnT.ofSuccess(String.valueOf(jobInfo.getId()));
+		return Response.ofSuccess(String.valueOf(jobInfo.getId()));
 	}
 
 	private boolean isNumeric(String str){
@@ -177,48 +178,48 @@ public class XxlJobServiceImpl implements XxlJobService {
 	}
 
 	@Override
-	public ReturnT<String> update(XxlJobInfo jobInfo, LoginInfo loginInfo) {
+	public Response<String> update(XxlJobInfo jobInfo, LoginInfo loginInfo) {
 
 		// valid base
 		if (jobInfo.getJobDesc()==null || jobInfo.getJobDesc().trim().length()==0) {
-			return ReturnT.ofFail ( (I18nUtil.getString("system_please_input")+I18nUtil.getString("jobinfo_field_jobdesc")) );
+			return Response.ofFail ( (I18nUtil.getString("system_please_input")+I18nUtil.getString("jobinfo_field_jobdesc")) );
 		}
 		if (jobInfo.getAuthor()==null || jobInfo.getAuthor().trim().length()==0) {
-			return ReturnT.ofFail ( (I18nUtil.getString("system_please_input")+I18nUtil.getString("jobinfo_field_author")) );
+			return Response.ofFail ( (I18nUtil.getString("system_please_input")+I18nUtil.getString("jobinfo_field_author")) );
 		}
 
 		// valid trigger
 		ScheduleTypeEnum scheduleTypeEnum = ScheduleTypeEnum.match(jobInfo.getScheduleType(), null);
 		if (scheduleTypeEnum == null) {
-			return ReturnT.ofFail ( (I18nUtil.getString("schedule_type")+I18nUtil.getString("system_unvalid")) );
+			return Response.ofFail ( (I18nUtil.getString("schedule_type")+I18nUtil.getString("system_unvalid")) );
 		}
 		if (scheduleTypeEnum == ScheduleTypeEnum.CRON) {
 			if (jobInfo.getScheduleConf()==null || !CronExpression.isValidExpression(jobInfo.getScheduleConf())) {
-				return ReturnT.ofFail ( "Cron"+I18nUtil.getString("system_unvalid") );
+				return Response.ofFail ( "Cron"+I18nUtil.getString("system_unvalid") );
 			}
 		} else if (scheduleTypeEnum == ScheduleTypeEnum.FIX_RATE /*|| scheduleTypeEnum == ScheduleTypeEnum.FIX_DELAY*/) {
 			if (jobInfo.getScheduleConf() == null) {
-				return ReturnT.ofFail ( (I18nUtil.getString("schedule_type")+I18nUtil.getString("system_unvalid")) );
+				return Response.ofFail ( (I18nUtil.getString("schedule_type")+I18nUtil.getString("system_unvalid")) );
 			}
 			try {
 				int fixSecond = Integer.valueOf(jobInfo.getScheduleConf());
 				if (fixSecond < 1) {
-					return ReturnT.ofFail ( (I18nUtil.getString("schedule_type")+I18nUtil.getString("system_unvalid")) );
+					return Response.ofFail ( (I18nUtil.getString("schedule_type")+I18nUtil.getString("system_unvalid")) );
 				}
 			} catch (Exception e) {
-				return ReturnT.ofFail ( (I18nUtil.getString("schedule_type")+I18nUtil.getString("system_unvalid")) );
+				return Response.ofFail ( (I18nUtil.getString("schedule_type")+I18nUtil.getString("system_unvalid")) );
 			}
 		}
 
 		// valid advanced
 		if (ExecutorRouteStrategyEnum.match(jobInfo.getExecutorRouteStrategy(), null) == null) {
-			return ReturnT.ofFail ( (I18nUtil.getString("jobinfo_field_executorRouteStrategy")+I18nUtil.getString("system_unvalid")) );
+			return Response.ofFail ( (I18nUtil.getString("jobinfo_field_executorRouteStrategy")+I18nUtil.getString("system_unvalid")) );
 		}
 		if (MisfireStrategyEnum.match(jobInfo.getMisfireStrategy(), null) == null) {
-			return ReturnT.ofFail ( (I18nUtil.getString("misfire_strategy")+I18nUtil.getString("system_unvalid")) );
+			return Response.ofFail ( (I18nUtil.getString("misfire_strategy")+I18nUtil.getString("system_unvalid")) );
 		}
 		if (ExecutorBlockStrategyEnum.match(jobInfo.getExecutorBlockStrategy(), null) == null) {
-			return ReturnT.ofFail ( (I18nUtil.getString("jobinfo_field_executorBlockStrategy")+I18nUtil.getString("system_unvalid")) );
+			return Response.ofFail ( (I18nUtil.getString("jobinfo_field_executorBlockStrategy")+I18nUtil.getString("system_unvalid")) );
 		}
 
 		// 》ChildJobId valid
@@ -229,22 +230,22 @@ public class XxlJobServiceImpl implements XxlJobService {
 					// parse child
 					int childJobId = Integer.parseInt(childJobIdItem);
 					if (childJobId == jobInfo.getId()) {
-						return ReturnT.ofFail ( (I18nUtil.getString("jobinfo_field_childJobId")+"("+childJobId+")"+I18nUtil.getString("system_unvalid")) );
+						return Response.ofFail ( (I18nUtil.getString("jobinfo_field_childJobId")+"("+childJobId+")"+I18nUtil.getString("system_unvalid")) );
 					}
 
 					// valid child
 					XxlJobInfo childJobInfo = xxlJobInfoMapper.loadById(childJobId);
 					if (childJobInfo==null) {
-						return ReturnT.ofFail (
+						return Response.ofFail (
 								MessageFormat.format((I18nUtil.getString("jobinfo_field_childJobId")+"({0})"+I18nUtil.getString("system_not_found")), childJobIdItem));
 					}
 					// valid jobGroup permission
 					if (!JobGroupPermissionUtil.hasJobGroupPermission(loginInfo, childJobInfo.getJobGroup())) {
-						return ReturnT.ofFail (
+						return Response.ofFail (
 								MessageFormat.format((I18nUtil.getString("jobinfo_field_childJobId")+"({0})"+I18nUtil.getString("system_permission_limit")), childJobIdItem));
 					}
 				} else {
-					return ReturnT.ofFail (
+					return Response.ofFail (
 							MessageFormat.format((I18nUtil.getString("jobinfo_field_childJobId")+"({0})"+I18nUtil.getString("system_unvalid")), childJobIdItem));
 				}
 			}
@@ -262,28 +263,30 @@ public class XxlJobServiceImpl implements XxlJobService {
 		// group valid
 		XxlJobGroup jobGroup = xxlJobGroupMapper.load(jobInfo.getJobGroup());
 		if (jobGroup == null) {
-			return ReturnT.ofFail ( (I18nUtil.getString("jobinfo_field_jobgroup")+I18nUtil.getString("system_unvalid")) );
+			return Response.ofFail ( (I18nUtil.getString("jobinfo_field_jobgroup")+I18nUtil.getString("system_unvalid")) );
 		}
 
 		// stage job info
 		XxlJobInfo exists_jobInfo = xxlJobInfoMapper.loadById(jobInfo.getId());
 		if (exists_jobInfo == null) {
-			return ReturnT.ofFail ( (I18nUtil.getString("jobinfo_field_id")+I18nUtil.getString("system_not_found")) );
+			return Response.ofFail ( (I18nUtil.getString("jobinfo_field_id")+I18nUtil.getString("system_not_found")) );
 		}
 
 		// next trigger time (5s后生效，避开预读周期)
 		long nextTriggerTime = exists_jobInfo.getTriggerNextTime();
-		boolean scheduleDataNotChanged = jobInfo.getScheduleType().equals(exists_jobInfo.getScheduleType()) && jobInfo.getScheduleConf().equals(exists_jobInfo.getScheduleConf());
+		boolean scheduleDataNotChanged = jobInfo.getScheduleType().equals(exists_jobInfo.getScheduleType())
+				&& jobInfo.getScheduleConf().equals(exists_jobInfo.getScheduleConf());		// 触发配置如果不变，避免重复计算；
 		if (exists_jobInfo.getTriggerStatus() == 1 && !scheduleDataNotChanged) {
 			try {
-				Date nextValidTime = JobScheduleHelper.generateNextValidTime(jobInfo, new Date(System.currentTimeMillis() + JobScheduleHelper.PRE_READ_MS));
+				// generate next trigger time
+				Date nextValidTime = scheduleTypeEnum.getScheduleType().generateNextTriggerTime(jobInfo, new Date(System.currentTimeMillis() + JobScheduleHelper.PRE_READ_MS));
 				if (nextValidTime == null) {
-					return ReturnT.ofFail ( (I18nUtil.getString("schedule_type")+I18nUtil.getString("system_unvalid")) );
+					return Response.ofFail ( (I18nUtil.getString("schedule_type")+I18nUtil.getString("system_unvalid")) );
 				}
 				nextTriggerTime = nextValidTime.getTime();
 			} catch (Exception e) {
 				logger.error(e.getMessage(), e);
-				return ReturnT.ofFail ( (I18nUtil.getString("schedule_type")+I18nUtil.getString("system_unvalid")) );
+				return Response.ofFail ( (I18nUtil.getString("schedule_type")+I18nUtil.getString("system_unvalid")) );
 			}
 		}
 
@@ -307,59 +310,60 @@ public class XxlJobServiceImpl implements XxlJobService {
 		exists_jobInfo.setUpdateTime(new Date());
         xxlJobInfoMapper.update(exists_jobInfo);
 
-
-		return ReturnT.ofSuccess();
+		return Response.ofSuccess();
 	}
 
 	@Override
-	public ReturnT<String> remove(int id, LoginInfo loginInfo) {
+	public Response<String> remove(int id, LoginInfo loginInfo) {
 		// valid job
 		XxlJobInfo xxlJobInfo = xxlJobInfoMapper.loadById(id);
 		if (xxlJobInfo == null) {
-			return ReturnT.ofSuccess();
+			return Response.ofSuccess();
 		}
 
 		// valid jobGroup permission
 		if (!JobGroupPermissionUtil.hasJobGroupPermission(loginInfo, xxlJobInfo.getJobGroup())) {
-			return ReturnT.ofFail(I18nUtil.getString("system_permission_limit"));
+			return Response.ofFail(I18nUtil.getString("system_permission_limit"));
 		}
 
 		xxlJobInfoMapper.delete(id);
 		xxlJobLogMapper.delete(id);
 		xxlJobLogGlueMapper.deleteByJobId(id);
-		return ReturnT.ofSuccess();
+		return Response.ofSuccess();
 	}
 
 	@Override
-	public ReturnT<String> start(int id, LoginInfo loginInfo) {
+	public Response<String> start(int id, LoginInfo loginInfo) {
 		// load and valid
 		XxlJobInfo xxlJobInfo = xxlJobInfoMapper.loadById(id);
 		if (xxlJobInfo == null) {
-			return ReturnT.ofFail(I18nUtil.getString("jobinfo_glue_jobid_unvalid"));
+			return Response.ofFail(I18nUtil.getString("jobinfo_glue_jobid_unvalid"));
 		}
 
 		// valid jobGroup permission
 		if (!JobGroupPermissionUtil.hasJobGroupPermission(loginInfo, xxlJobInfo.getJobGroup())) {
-			return ReturnT.ofFail(I18nUtil.getString("system_permission_limit"));
+			return Response.ofFail(I18nUtil.getString("system_permission_limit"));
 		}
 
-		// valid
+		// valid ScheduleType: can not be none
 		ScheduleTypeEnum scheduleTypeEnum = ScheduleTypeEnum.match(xxlJobInfo.getScheduleType(), ScheduleTypeEnum.NONE);
 		if (ScheduleTypeEnum.NONE == scheduleTypeEnum) {
-			return ReturnT.ofFail(I18nUtil.getString("schedule_type_none_limit_start"));
+			return Response.ofFail(I18nUtil.getString("schedule_type_none_limit_start"));
 		}
 
 		// next trigger time (5s后生效，避开预读周期)
 		long nextTriggerTime = 0;
 		try {
-			Date nextValidTime = JobScheduleHelper.generateNextValidTime(xxlJobInfo, new Date(System.currentTimeMillis() + JobScheduleHelper.PRE_READ_MS));
+			// generate next trigger time
+			Date nextValidTime = scheduleTypeEnum.getScheduleType().generateNextTriggerTime(xxlJobInfo, new Date(System.currentTimeMillis() + JobScheduleHelper.PRE_READ_MS));
+
 			if (nextValidTime == null) {
-				return ReturnT.ofFail ( (I18nUtil.getString("schedule_type")+I18nUtil.getString("system_unvalid")) );
+				return Response.ofFail ( (I18nUtil.getString("schedule_type")+I18nUtil.getString("system_unvalid")) );
 			}
 			nextTriggerTime = nextValidTime.getTime();
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
-			return ReturnT.ofFail ( (I18nUtil.getString("schedule_type")+I18nUtil.getString("system_unvalid")) );
+			return Response.ofFail ( (I18nUtil.getString("schedule_type")+I18nUtil.getString("system_unvalid")) );
 		}
 
 		xxlJobInfo.setTriggerStatus(1);
@@ -368,20 +372,20 @@ public class XxlJobServiceImpl implements XxlJobService {
 
 		xxlJobInfo.setUpdateTime(new Date());
 		xxlJobInfoMapper.update(xxlJobInfo);
-		return ReturnT.ofSuccess();
+		return Response.ofSuccess();
 	}
 
 	@Override
-	public ReturnT<String> stop(int id, LoginInfo loginInfo) {
+	public Response<String> stop(int id, LoginInfo loginInfo) {
 		// load and valid
         XxlJobInfo xxlJobInfo = xxlJobInfoMapper.loadById(id);
 		if (xxlJobInfo == null) {
-			return ReturnT.ofFail(I18nUtil.getString("jobinfo_glue_jobid_unvalid"));
+			return Response.ofFail(I18nUtil.getString("jobinfo_glue_jobid_unvalid"));
 		}
 
 		// valid jobGroup permission
 		if (!JobGroupPermissionUtil.hasJobGroupPermission(loginInfo, xxlJobInfo.getJobGroup())) {
-			return ReturnT.ofFail(I18nUtil.getString("system_permission_limit"));
+			return Response.ofFail(I18nUtil.getString("system_permission_limit"));
 		}
 
 		// stop
@@ -391,22 +395,20 @@ public class XxlJobServiceImpl implements XxlJobService {
 
 		xxlJobInfo.setUpdateTime(new Date());
 		xxlJobInfoMapper.update(xxlJobInfo);
-		return ReturnT.ofSuccess();
+		return Response.ofSuccess();
 	}
 
-
-
 	@Override
-	public ReturnT<String> trigger(LoginInfo loginInfo, int jobId, String executorParam, String addressList) {
+	public Response<String> trigger(LoginInfo loginInfo, int jobId, String executorParam, String addressList) {
 		// valid job
 		XxlJobInfo xxlJobInfo = xxlJobInfoMapper.loadById(jobId);
 		if (xxlJobInfo == null) {
-			return ReturnT.ofFail(I18nUtil.getString("jobinfo_glue_jobid_unvalid"));
+			return Response.ofFail(I18nUtil.getString("jobinfo_glue_jobid_unvalid"));
 		}
 
 		// valid jobGroup permission
 		if (!JobGroupPermissionUtil.hasJobGroupPermission(loginInfo, xxlJobInfo.getJobGroup())) {
-			return ReturnT.ofFail(I18nUtil.getString("system_permission_limit"));
+			return Response.ofFail(I18nUtil.getString("system_permission_limit"));
 		}
 
 		// force cover job param
@@ -415,7 +417,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 		}
 
 		XxlJobAdminBootstrap.getInstance().getJobTriggerPoolHelper().trigger(jobId, TriggerTypeEnum.MANUAL, -1, null, executorParam, addressList);
-		return ReturnT.ofSuccess();
+		return Response.ofSuccess();
 	}
 
 	@Override
@@ -453,7 +455,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 	}
 
 	@Override
-	public ReturnT<Map<String, Object>> chartInfo(Date startDate, Date endDate) {
+	public Response<Map<String, Object>> chartInfo(Date startDate, Date endDate) {
 
 		// process
 		List<String> triggerDayList = new ArrayList<String>();
@@ -466,9 +468,9 @@ public class XxlJobServiceImpl implements XxlJobService {
 
 		List<XxlJobLogReport> logReportList = xxlJobLogReportMapper.queryLogReport(startDate, endDate);
 
-		if (logReportList!=null && logReportList.size()>0) {
+		if (logReportList!=null && !logReportList.isEmpty()) {
 			for (XxlJobLogReport item: logReportList) {
-				String day = DateUtil.formatDate(item.getTriggerDay());
+				String day = DateTool.formatDate(item.getTriggerDay());
 				int triggerDayCountRunning = item.getRunningCount();
 				int triggerDayCountSuc = item.getSucCount();
 				int triggerDayCountFail = item.getFailCount();
@@ -484,7 +486,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 			}
 		} else {
 			for (int i = -6; i <= 0; i++) {
-				triggerDayList.add(DateUtil.formatDate(DateUtil.addDays(new Date(), i)));
+				triggerDayList.add(DateTool.formatDate(DateTool.addDays(new Date(), i)));
 				triggerDayCountRunningList.add(0);
 				triggerDayCountSucList.add(0);
 				triggerDayCountFailList.add(0);
@@ -501,7 +503,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 		result.put("triggerCountSucTotal", triggerCountSucTotal);
 		result.put("triggerCountFailTotal", triggerCountFailTotal);
 
-		return ReturnT.ofSuccess(result);
+		return Response.ofSuccess(result);
 	}
 
 }

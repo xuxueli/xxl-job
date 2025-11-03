@@ -6,10 +6,11 @@ import com.xxl.job.admin.scheduler.complete.JobCompleter;
 import com.xxl.job.admin.scheduler.thread.*;
 import com.xxl.job.admin.scheduler.trigger.JobTrigger;
 import com.xxl.job.admin.util.I18nUtil;
-import com.xxl.job.core.biz.ExecutorBiz;
-import com.xxl.job.core.biz.client.ExecutorBizClient;
-import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
+import com.xxl.job.core.constant.Const;
+import com.xxl.job.core.openapi.ExecutorBiz;
+import com.xxl.job.core.constant.ExecutorBlockStrategyEnum;
 import com.xxl.tool.core.StringTool;
+import com.xxl.tool.http.HttpTool;
 import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -162,10 +163,11 @@ public class XxlJobAdminBootstrap implements InitializingBean, DisposableBean {
         }
 
         // set-cache
-        executorBiz = new ExecutorBizClient(address,
-                XxlJobAdminBootstrap.getInstance().getAccessToken(),
-                XxlJobAdminBootstrap.getInstance().getTimeout());
-
+        executorBiz = HttpTool.createClient()
+                .url(address)
+                .timeout(XxlJobAdminBootstrap.getInstance().getTimeout() * 1000)
+                .header(Const.XXL_JOB_ACCESS_TOKEN, XxlJobAdminBootstrap.getInstance().getAccessToken())
+                .proxy(ExecutorBiz.class);
         executorBizRepository.put(address, executorBiz);
         return executorBiz;
     }
