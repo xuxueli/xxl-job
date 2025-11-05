@@ -102,8 +102,9 @@ public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationC
              *      - skip excluded-package bean
              *      - skip lazy-init bean
               */
-            if (applicationContext instanceof BeanDefinitionRegistry beanDefinitionRegistry) {
+            if (applicationContext instanceof BeanDefinitionRegistry) {
                 // get BeanDefinition
+                BeanDefinitionRegistry beanDefinitionRegistry = (BeanDefinitionRegistry) applicationContext;
                 if (!beanDefinitionRegistry.containsBeanDefinition(beanName)) {
                     continue;
                 }
