@@ -2607,25 +2607,29 @@ public void execute() {
 - 11、【修复】调度预读任务数量调整，改为调度线程池大小x10，降低事务颗粒度，提升性能及稳定性；
 - 12、【修复】合并PR-2369，修复脚本任务参数取值问题；
 - 13、【强化】通用HTTP任务（httpJobHandler）强化，支持更丰富请求参数设置，完整参数示例如下：
-```
-{
-    "url": "http://www.baidu.com",
-    "method": "POST",
-    "contentType": "application/json",
-    "headers": {
-        "header01": "value01"
-    },
-    "cookies": {
-        "cookie01": "value01"
-    },
-    "timeout": 3000,
-    "data": "request body data",
-    "form": {
-        "key01": "value01"
-    },
-    "auth": "auth data"
-}
-```
+<details>
+    <summary>完整参数示例参考：</summary>
+
+    ```
+    {
+        "url": "http://www.baidu.com",
+        "method": "POST",
+        "contentType": "application/json",
+        "headers": {
+            "header01": "value01"
+        },
+        "cookies": {
+            "cookie01": "value01"
+        },
+        "timeout": 3000,
+        "data": "request body data",
+        "form": {
+            "key01": "value01"
+        },
+        "auth": "auth data"
+    }
+    ```
+</details>  
 - 14、【优化】调度组件日志完善，提升边界情况下问题定位效率；
 - 15、【升级】升级多项maven依赖至较新版本，如 netty、groovy、spring、spring-ai、dify 等；
 - 16、【重构】规范API交互协议，通用响应结构体调整为Response，调度中心API统一为Response封装数据；
