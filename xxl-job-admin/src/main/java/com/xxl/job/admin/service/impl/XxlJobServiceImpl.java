@@ -56,8 +56,8 @@ public class XxlJobServiceImpl implements XxlJobService {
 
 		// package result
 		PageModel<XxlJobInfo> pageModel = new PageModel<>();
-		pageModel.setPageData(list);
-		pageModel.setTotalCount(list_count);
+		pageModel.setData(list);
+		pageModel.setTotal(list_count);
 
 		return Response.ofSuccess(pageModel);
 	}

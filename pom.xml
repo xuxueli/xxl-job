@@ -52,9 +52,9 @@
 		<groovy.version>5.0.2</groovy.version>
 
 		<!-- xxl-sso (+xxl-tool、gson) -->
-		<xxl-sso.version>2.1.1</xxl-sso.version>
+		<xxl-sso.version>2.2.0</xxl-sso.version>
 		<!-- xxl-tool -->
-		<xxl-tool.version>2.3.1</xxl-tool.version>
+		<xxl-tool.version>2.3.2</xxl-tool.version>
 	</properties>
 
 	<licenses>

@@ -134,8 +134,8 @@ public class JobLogController {
 
 		// package result
 		PageModel<XxlJobLog> pageModel = new PageModel<>();
-		pageModel.setPageData(list);
-		pageModel.setTotalCount(list_count);
+		pageModel.setData(list);
+		pageModel.setTotal(list_count);
 
 		return Response.ofSuccess(pageModel);
 	}

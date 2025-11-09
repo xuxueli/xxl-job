@@ -19,9 +19,9 @@ $(function() {
 			dataFilter: function (json ) {
 				var result = JSON.parse(json);
 				return JSON.stringify({
-					"recordsTotal": result.data.totalCount,
-					"recordsFiltered": result.data.totalCount,
-					"data": result.data.pageData
+					"recordsTotal": result.data.total,
+					"recordsFiltered": result.data.total,
+					"data": result.data.data
 				});
 			}
 	    },
