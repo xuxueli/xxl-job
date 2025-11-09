@@ -122,6 +122,7 @@ public class JobThread extends Thread{
 							triggerParam.getJobId(),
 							triggerParam.getExecutorParams(),
 							logFileName,
+							triggerParam.getLogDateTime(),
 							triggerParam.getBroadcastIndex(),
 							triggerParam.getBroadcastTotal());
 
