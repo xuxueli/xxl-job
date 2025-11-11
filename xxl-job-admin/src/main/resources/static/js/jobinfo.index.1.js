@@ -274,6 +274,7 @@ $(function() {
 
         $("#jobTriggerModal .form input[name='id']").val( row.id );
         $("#jobTriggerModal .form textarea[name='executorParam']").val( row.executorParam );
+		$("#jobTriggerModal .modal-title span[name='jobDesc']").text( row.jobDesc );
 
         $('#jobTriggerModal').modal({backdrop: false, keyboard: false}).modal('show');
     });
