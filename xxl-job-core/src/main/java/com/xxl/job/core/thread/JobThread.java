@@ -147,6 +147,7 @@ public class JobThread extends Thread{
 								}
 							});
 							futureThread = new Thread(futureTask);
+							futureThread.setName(getName());
 							futureThread.start();
 
 							Boolean tempResult = futureTask.get(triggerParam.getExecutorTimeout(), TimeUnit.SECONDS);
