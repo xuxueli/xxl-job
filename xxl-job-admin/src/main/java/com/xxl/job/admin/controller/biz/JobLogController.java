@@ -141,7 +141,7 @@ public class JobLogController {
 	}
 
 	@RequestMapping("/logDetailPage")
-	public String logDetailPage(HttpServletRequest request, @RequestParam("id") int id, Model model){
+	public String logDetailPage(HttpServletRequest request, @RequestParam("id") long id, Model model){
 
 		// base check
 		XxlJobLog jobLog = xxlJobLogMapper.load(id);
@@ -227,7 +227,7 @@ public class JobLogController {
 
 	@RequestMapping("/logKill")
 	@ResponseBody
-	public Response<String> logKill(HttpServletRequest request, @RequestParam("id") int id){
+	public Response<String> logKill(HttpServletRequest request, @RequestParam("id") long id){
 		// base check
 		XxlJobLog log = xxlJobLogMapper.load(id);
 		XxlJobInfo jobInfo = xxlJobInfoMapper.loadById(log.getJobId());

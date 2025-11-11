@@ -7,6 +7,6 @@ ENV PARAMS=""
 ENV TZ=PRC
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-ADD target/xxl-job-executor-sample-springboot-*.jar /app.jar
+ADD target/xxl-job-executor-sample-springboot-ai*.jar /app.jar
 
 ENTRYPOINT ["sh","-c","java -DLOG_HOME=$LOG_HOME -jar $JAVA_OPTS /app.jar $PARAMS"]
