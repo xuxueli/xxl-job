@@ -211,7 +211,8 @@ $(function() {
         //reload
         var jobGroup = $('#jobGroup').val();
         window.location.href = base_url + "/jobinfo?jobGroup=" + jobGroup;
-    });
+		localStorage.setItem("jobGroup.value",jobGroup)
+	});
 
 	// job operate
 	$("#job_list").on('click', '.job_operate',function() {
@@ -745,5 +746,9 @@ $(function() {
 		// show
 		$('#addModal').modal({backdrop: false, keyboard: false}).modal('show');
 	});
+
+	// save lasted jobGroup
+	$("#jobGroup").find("option[value='" + localStorage.getItem("jobGroup.value") + "']").attr("selected",true);
+
 
 });
