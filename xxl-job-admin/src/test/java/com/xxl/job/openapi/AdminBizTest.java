@@ -1,4 +1,4 @@
-package com.xxl.job.adminbiz;
+package com.xxl.job.openapi;
 
 import com.xxl.job.core.constant.RegistType;
 import com.xxl.job.core.openapi.AdminBiz;

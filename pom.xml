@@ -32,17 +32,17 @@
 		<central-publishing-maven-plugin.version>0.9.0</central-publishing-maven-plugin.version>
 		<!-- base -->
 		<slf4j-api.version>2.0.17</slf4j-api.version>
-		<junit-jupiter.version>5.14.0</junit-jupiter.version>
+		<junit-jupiter.version>6.0.1</junit-jupiter.version>
 
 		<!-- jakarta.annotation-api -->
 		<jakarta.annotation-api.version>3.0.0</jakarta.annotation-api.version>
 
 		<!-- spring -->
 		<spring-boot.version>3.5.7</spring-boot.version>
-		<spring.version>6.2.12</spring.version>
+		<spring.version>6.2.13</spring.version>
 		<!-- mybatis & db -->
 		<mybatis-spring-boot-starter.version>3.0.5</mybatis-spring-boot-starter.version>
-		<mysql-connector-j.version>9.4.0</mysql-connector-j.version>
+		<mysql-connector-j.version>9.5.0</mysql-connector-j.version>
 
 		<!-- net -->
 		<netty.version>4.2.7.Final</netty.version>

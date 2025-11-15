@@ -1,4 +1,4 @@
-package com.xxl.job.executorbiz;
+package com.xxl.job.openapi;
 
 import com.xxl.job.core.constant.Const;
 import com.xxl.job.core.openapi.ExecutorBiz;

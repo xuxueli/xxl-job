@@ -14,7 +14,7 @@ import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
 import org.springframework.ai.chat.memory.MessageWindowChatMemory;
 import org.springframework.ai.ollama.OllamaChatModel;
-import org.springframework.ai.ollama.api.OllamaOptions;
+import org.springframework.ai.ollama.api.OllamaChatOptions;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -86,13 +86,13 @@ public class AIXxlJob {
                 .builder(ollamaChatModel)
                 .defaultAdvisors(MessageChatMemoryAdvisor.builder(MessageWindowChatMemory.builder().build()).build())
                 .defaultAdvisors(SimpleLoggerAdvisor.builder().build())
+                .defaultOptions(OllamaChatOptions.builder().model(ollamaParam.getModel()).build())
                 .build();
 
         // call ollama
         String response = ollamaChatClient
                 .prompt(ollamaParam.getPrompt())
                 .user(ollamaParam.getInput())
-                .options(OllamaOptions.builder().model(ollamaParam.getModel()).build())
                 .call()
                 .content();
 

@@ -16,8 +16,8 @@
     <url>https://www.xuxueli.com/</url>
 
     <properties>
-        <spring-ai.version>1.0.3</spring-ai.version>
-        <dify-java-client.version>1.1.9</dify-java-client.version>
+        <spring-ai.version>1.1.0</spring-ai.version>
+        <dify-java-client.version>	1.2.0</dify-java-client.version>
     </properties>
 
     <dependencyManagement>
