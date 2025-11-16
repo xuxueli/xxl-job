@@ -9,6 +9,7 @@ import com.xxl.job.admin.util.I18nUtil;
 import com.xxl.sso.core.annotation.XxlSso;
 import com.xxl.sso.core.helper.XxlSsoHelper;
 import com.xxl.sso.core.model.LoginInfo;
+import com.xxl.tool.core.CollectionTool;
 import com.xxl.tool.core.StringTool;
 import com.xxl.tool.encrypt.SHA256Tool;
 import com.xxl.tool.response.PageModel;
@@ -45,7 +46,7 @@ public class JobUserController {
         List<XxlJobGroup> groupList = xxlJobGroupMapper.findAll();
         model.addAttribute("groupList", groupList);
 
-        return "user/user.index";
+        return "biz/user.list";
     }
 
     @RequestMapping("/pageList")
@@ -75,10 +76,10 @@ public class JobUserController {
         return Response.ofSuccess(pageModel);
     }
 
-    @RequestMapping("/add")
+    @RequestMapping("/insert")
     @ResponseBody
     @XxlSso(role = Consts.ADMIN_ROLE)
-    public Response<String> add(XxlJobUser xxlJobUser) {
+    public Response<String> insert(XxlJobUser xxlJobUser) {
 
         // valid username
         if (StringTool.isBlank(xxlJobUser.getUsername())) {
@@ -140,22 +141,27 @@ public class JobUserController {
         return Response.ofSuccess();
     }
 
-    @RequestMapping("/remove")
+    @RequestMapping("/delete")
     @ResponseBody
     @XxlSso(role = Consts.ADMIN_ROLE)
-    public Response<String> remove(HttpServletRequest request, @RequestParam("id") int id) {
+    public Response<String> delete(HttpServletRequest request, @RequestParam("ids[]") List<Integer> ids) {
+
+        // valid
+        if (CollectionTool.isEmpty(ids) || ids.size()!=1) {
+            return Response.ofFail(I18nUtil.getString("system_please_choose") + I18nUtil.getString("system_one") + I18nUtil.getString("system_data"));
+        }
 
         // avoid opt login seft
         Response<LoginInfo> loginInfoResponse = XxlSsoHelper.loginCheckWithAttr(request);
-        if (Integer.parseInt(loginInfoResponse.getData().getUserId()) == id) {
+        if (ids.contains(Integer.parseInt(loginInfoResponse.getData().getUserId()))) {
             return Response.ofFail(I18nUtil.getString("user_update_loginuser_limit"));
         }
 
-        xxlJobUserMapper.delete(id);
+        xxlJobUserMapper.delete(ids.get(0));
         return Response.ofSuccess();
     }
 
-    @RequestMapping("/updatePwd")
+    /*@RequestMapping("/updatePwd")
     @ResponseBody
     public Response<String> updatePwd(HttpServletRequest request,
                                      @RequestParam("password") String password,
@@ -189,6 +195,6 @@ public class JobUserController {
         xxlJobUserMapper.update(existUser);
 
         return Response.ofSuccess();
-    }
+    }*/
 
 }

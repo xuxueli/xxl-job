@@ -1,14 +1,12 @@
 package com.xxl.job.admin.scheduler.config;
 
-import com.xxl.job.admin.scheduler.alarm.JobAlarmer;
 import com.xxl.job.admin.mapper.*;
+import com.xxl.job.admin.scheduler.alarm.JobAlarmer;
 import com.xxl.job.admin.scheduler.complete.JobCompleter;
 import com.xxl.job.admin.scheduler.thread.*;
 import com.xxl.job.admin.scheduler.trigger.JobTrigger;
-import com.xxl.job.admin.util.I18nUtil;
 import com.xxl.job.core.constant.Const;
 import com.xxl.job.core.openapi.ExecutorBiz;
-import com.xxl.job.core.constant.ExecutorBlockStrategyEnum;
 import com.xxl.tool.core.StringTool;
 import com.xxl.tool.http.HttpTool;
 import jakarta.annotation.Resource;
@@ -82,9 +80,6 @@ public class XxlJobAdminBootstrap implements InitializingBean, DisposableBean {
      * do start
      */
     private void doStart() throws Exception {
-        // init i18n
-        initI18n();
-
         // trigger-pool start
         jobTriggerPoolHelper = new JobTriggerPoolHelper();
         jobTriggerPoolHelper.start();
@@ -137,14 +132,6 @@ public class XxlJobAdminBootstrap implements InitializingBean, DisposableBean {
         logger.info(">>>>>>>>> xxl-job admin stopped.");
     }
 
-
-    // ---------------------- I18n ----------------------
-
-    private void initI18n(){
-        for (ExecutorBlockStrategyEnum item : ExecutorBlockStrategyEnum.values()) {
-            item.setTitle(I18nUtil.getString("jobconf_block_".concat(item.name())));
-        }
-    }
 
     // ---------------------- executor-client ----------------------
 
