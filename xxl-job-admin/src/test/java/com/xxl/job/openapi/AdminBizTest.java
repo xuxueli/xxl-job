@@ -83,4 +83,11 @@ public class AdminBizTest {
 
     }
 
+    // ---------------------- job opt ----------------------
+
+    @Test
+    public void jobManage() throws Exception {
+        // jobAdd、jobUpdate、jobRemove、jobStart、jobStop
+    }
+
 }
