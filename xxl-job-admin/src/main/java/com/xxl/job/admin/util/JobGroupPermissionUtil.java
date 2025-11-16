@@ -52,7 +52,8 @@ public class JobGroupPermissionUtil {
             return jobGroupListTotal;
         } else {
             List<String> jobGroups = (loginInfoResponse.getData().getExtraInfo()!=null && loginInfoResponse.getData().getExtraInfo().containsKey("jobGroups"))
-                    ? StringTool.split(loginInfoResponse.getData().getExtraInfo().get("jobGroups"), ",") :new ArrayList<>();
+                    ? StringTool.split(loginInfoResponse.getData().getExtraInfo().get("jobGroups"), ",")
+                    :new ArrayList<>();
 
             return jobGroupListTotal
                     .stream()
