@@ -2609,7 +2609,7 @@ public void execute() {
 - 14、【修复】IDOR越权问题修复，提升任务操作及日志管理安全性；
 - 15、【升级】升级多项maven依赖至较新版本，如 netty、groovy、mybatis、spring、spring-ai、dify 等；
 
-### 7.41 版本 v3.2.1 Release Notes[规划中]
+### 7.41 版本 v3.3.0 Release Notes[规划中]
 - 1、【新增】执行器新增“任务扫描排除路径”配置项(xxl.job.executor.excludedpackage)，任务扫描时忽略指定包路径下的任务；
 - 2、【升级】调度中心UI框架升级，统一交互组件，支持多主题、多标签与局部渲染等，升级UI组件及性能；
 - 3、【优化】执行器任务Bean扫描逻辑调整，优化懒加载Bean检测及过滤机制，避免提前初始化类问题；
