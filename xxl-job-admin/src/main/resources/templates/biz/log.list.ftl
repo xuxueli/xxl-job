@@ -82,14 +82,10 @@
 			<div class="col-xs-12">
 				<div class="box">
 					<div class="box-header pull-left" id="data_operation" >
-						<button class="btn btn-sm btn-info selectOnlyOne logDetail" type="button"><#--<i class="fa fa-edit"></i>-->${I18n.joblog_rolling_log}</button>
 						<button class="btn btn-sm btn-warning selectOnlyOne logKill" type="button">${I18n.joblog_kill_log}</button>
-						｜
 						<button class="btn btn-sm btn-danger selectAny clearLog" type="button">${I18n.joblog_clean_log}</button>
-						<#--warning
-						danger
-						info
-						default-->
+						｜
+						<button class="btn btn-sm btn-primary selectOnlyOne logDetail" type="button"><#--<i class="fa fa-edit"></i>-->${I18n.joblog_rolling_log}</button>
 					</div>
 					<div class="box-body" >
 						<table id="data_list" class="table table-bordered table-striped" width="100%" >
@@ -226,13 +222,8 @@
 		var jobGroup = '${jobGroup}';
 		var jobId = '${jobId}';
 		function resetFilter(){
-			$('#filterTime').data("daterangepicker").setStartDate( rangesConf[I18n.daterangepicker_ranges_today][0] );
-			$('#filterTime').data("daterangepicker").setEndDate( rangesConf[I18n.daterangepicker_ranges_today][1] );
-
-			// todo
-			$('#filterTime').data("daterangepicker").setStartDate( rangesConf[I18n.daterangepicker_ranges_recent_month][0] );
-			$('#filterTime').data("daterangepicker").setEndDate( rangesConf[I18n.daterangepicker_ranges_recent_month][1] );
-
+			$('#filterTime').data("daterangepicker").setStartDate( rangesConf[I18n.daterangepicker_ranges_recent_week][0] );
+			$('#filterTime').data("daterangepicker").setEndDate( rangesConf[I18n.daterangepicker_ranges_recent_week][1] );
 
 			$("#jobGroup").val( jobGroup );
 			$("#jobId").val( jobId );

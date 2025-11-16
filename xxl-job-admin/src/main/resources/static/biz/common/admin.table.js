@@ -178,7 +178,7 @@
             // onLoadSuccess: function(data) {}
             onAll: function(name, args) {
                 // filter
-                if (!(['check.bs.table', "uncheck.bs.table", "check-all.bs.table", "uncheck-all.bs.table"].indexOf(name) > -1)) {
+                if (!(['check.bs.table', "uncheck.bs.table", "check-all.bs.table", "uncheck-all.bs.table", 'post-body.bs.table'].indexOf(name) > -1)) {
                     return false;
                 }
                 var rows = $(table).bootstrapTable('getSelections');

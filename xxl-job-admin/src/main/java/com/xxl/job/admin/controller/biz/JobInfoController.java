@@ -16,8 +16,10 @@ import com.xxl.sso.core.helper.XxlSsoHelper;
 import com.xxl.sso.core.model.LoginInfo;
 import com.xxl.tool.core.CollectionTool;
 import com.xxl.tool.core.DateTool;
+import com.xxl.tool.core.StringTool;
 import com.xxl.tool.response.PageModel;
 import com.xxl.tool.response.Response;
+import com.xxl.tool.response.ResponseCode;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
@@ -65,10 +67,16 @@ public class JobInfoController {
 			throw new XxlJobException(I18nUtil.getString("jobgroup_empty"));
 		}
 
+		// parse jobGroup
+		if (!(CollectionTool.isNotEmpty(jobGroupList)
+				&& jobGroupList.stream().map(XxlJobGroup::getId).toList().contains(jobGroup))) {
+			jobGroup = -1;
+		}
+
 		model.addAttribute("JobGroupList", jobGroupList);
 		model.addAttribute("jobGroup", jobGroup);
 
-		return "jobinfo/jobinfo.index";
+		return "biz/job.list";
 	}
 
 	@RequestMapping("/pageList")
@@ -89,7 +97,7 @@ public class JobInfoController {
 		return xxlJobService.pageList(offset, pagesize, jobGroup, triggerStatus, jobDesc, executorHandler, author);
 	}
 	
-	@RequestMapping("/add")
+	@RequestMapping("/insert")
 	@ResponseBody
 	public Response<String> add(HttpServletRequest request, XxlJobInfo jobInfo) {
 		// valid permission
@@ -109,25 +117,46 @@ public class JobInfoController {
 		return xxlJobService.update(jobInfo, loginInfo);
 	}
 	
-	@RequestMapping("/remove")
+	@RequestMapping("/delete")
 	@ResponseBody
-	public Response<String> remove(HttpServletRequest request, @RequestParam("id") int id) {
+	public Response<String> delete(HttpServletRequest request, @RequestParam("ids[]") List<Integer> ids) {
+
+		// valid
+		if (CollectionTool.isEmpty(ids) || ids.size()!=1) {
+			return Response.ofFail(I18nUtil.getString("system_please_choose") + I18nUtil.getString("system_one") + I18nUtil.getString("system_data"));
+		}
+
+		// invoke
 		Response<LoginInfo> loginInfoResponse = XxlSsoHelper.loginCheckWithAttr(request);
-		return xxlJobService.remove(id, loginInfoResponse.getData());
+		return xxlJobService.remove(ids.get(0), loginInfoResponse.getData());
 	}
 	
 	@RequestMapping("/stop")
 	@ResponseBody
-	public Response<String> pause(HttpServletRequest request, @RequestParam("id") int id) {
+	public Response<String> pause(HttpServletRequest request, @RequestParam("ids[]") List<Integer> ids) {
+
+		// valid
+		if (CollectionTool.isEmpty(ids) || ids.size()!=1) {
+			return Response.ofFail(I18nUtil.getString("system_please_choose") + I18nUtil.getString("system_one") + I18nUtil.getString("system_data"));
+		}
+
+		// invoke
 		Response<LoginInfo> loginInfoResponse = XxlSsoHelper.loginCheckWithAttr(request);
-		return xxlJobService.stop(id, loginInfoResponse.getData());
+		return xxlJobService.stop(ids.get(0), loginInfoResponse.getData());
 	}
 	
 	@RequestMapping("/start")
 	@ResponseBody
-	public Response<String> start(HttpServletRequest request, @RequestParam("id") int id) {
+	public Response<String> start(HttpServletRequest request, @RequestParam("ids[]") List<Integer> ids) {
+
+		// valid
+		if (CollectionTool.isEmpty(ids) || ids.size()!=1) {
+			return Response.ofFail(I18nUtil.getString("system_please_choose") + I18nUtil.getString("system_one") + I18nUtil.getString("system_data"));
+		}
+
+		// invoke
 		Response<LoginInfo> loginInfoResponse = XxlSsoHelper.loginCheckWithAttr(request);
-		return xxlJobService.start(id, loginInfoResponse.getData());
+		return xxlJobService.start(ids.get(0), loginInfoResponse.getData());
 	}
 	
 	@RequestMapping("/trigger")
@@ -145,10 +174,17 @@ public class JobInfoController {
 	public Response<List<String>> nextTriggerTime(@RequestParam("scheduleType") String scheduleType,
 												 @RequestParam("scheduleConf") String scheduleConf) {
 
+		// valid
+		if (StringTool.isBlank(scheduleType) || StringTool.isBlank(scheduleConf)) {
+			return Response.of(ResponseCode.FAILURE.getCode(), null, new ArrayList<>());
+		}
+
+		// param
 		XxlJobInfo paramXxlJobInfo = new XxlJobInfo();
 		paramXxlJobInfo.setScheduleType(scheduleType);
 		paramXxlJobInfo.setScheduleConf(scheduleConf);
 
+		// generate
 		List<String> result = new ArrayList<>();
 		try {
 			Date lastTime = new Date();
@@ -166,7 +202,7 @@ public class JobInfoController {
 				}
 			}
 		} catch (Exception e) {
-			logger.error(">>>>>>>>>>> nextTriggerTime error. scheduleType = {}, scheduleConf= {}", scheduleType, scheduleConf, e);
+			logger.error(">>>>>>>>>>> nextTriggerTime error. scheduleType = {}, scheduleConf= {}, error:{} ", scheduleType, scheduleConf, e.getMessage());
 			return Response.ofFail((I18nUtil.getString("schedule_type")+I18nUtil.getString("system_unvalid")) + e.getMessage());
 		}
 		return Response.ofSuccess(result);

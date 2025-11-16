@@ -27,7 +27,9 @@
 				<#-- left nav -->
 				<div class="collapse navbar-collapse pull-left" id="navbar-collapse">
 					<ul class="nav navbar-nav">
-						<#--<li class="active" ><a href="javascript:;">任务：<span class="sr-only">(current)</span></a></li>-->
+						<li class="active" >
+							<a href="javascript:;">${I18n.jobinfo_job}：${jobInfo.jobDesc}</a>
+						</li>
 					</ul>
 				</div>
 
@@ -38,6 +40,12 @@
 							<a href="javascript:window.location.reload();" >
 								<i class="fa fa-fw fa-refresh" ></i>
 								${I18n.joblog_rolling_log_refresh}
+							</a>
+						</li>
+						<li>
+							<a href="javascript:window.close();" >
+								<i class="fa fa-fw fa-close" ></i>
+								${I18n.system_close}
 							</a>
 						</li>
 					</ul>
