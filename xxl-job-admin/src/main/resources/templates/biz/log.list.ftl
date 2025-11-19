@@ -185,7 +185,6 @@
 		 * filter Time
 		 */
 		var rangesConf = {};
-		rangesConf[I18n.daterangepicker_ranges_recent_hour] = [moment().subtract(1, 'hours'), moment()];
 		rangesConf[I18n.daterangepicker_ranges_today] = [moment().startOf('day'), moment().endOf('day')];
 		rangesConf[I18n.daterangepicker_ranges_yesterday] = [moment().subtract(1, 'days').startOf('day'), moment().subtract(1, 'days').endOf('day')];
 		rangesConf[I18n.daterangepicker_ranges_this_month] = [moment().startOf('month'), moment().endOf('month')];
@@ -195,12 +194,13 @@
 
 		$('#filterTime').daterangepicker({
 			autoApply:false,
-			singleDatePicker:false,
-			showDropdowns:false,        // 是否显示年月选择条件
-			timePicker: true, 			// 是否显示小时和分钟选择条件
+			singleDatePicker:false,		// 范围选择 or 单时间选择
+			showDropdowns:true,         // 年月 选择条件是否为下拉框
+			timePicker: true,
+			timePicker24Hour: true,
 			timePickerIncrement: 10, 	// 时间的增量，单位为分钟
-			timePicker24Hour : true,
-			opens : 'left', //日期选择框的弹出位置
+			timePickerSeconds: true,	// 时间选择是否显示秒
+			opens : 'left', 			// 日期选择框的弹出位置
 			ranges: rangesConf,
 			locale : {
 				format: 'YYYY-MM-DD HH:mm:ss',
