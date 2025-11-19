@@ -198,7 +198,6 @@
 			showDropdowns:true,         // 年月 选择条件是否为下拉框
 			timePicker: true,
 			timePicker24Hour: true,
-			timePickerIncrement: 10, 	// 时间的增量，单位为分钟
 			timePickerSeconds: true,	// 时间选择是否显示秒
 			opens : 'left', 			// 日期选择框的弹出位置
 			ranges: rangesConf,
