@@ -51,7 +51,9 @@ public class JobGroupPermissionUtil {
         if (XxlSsoHelper.hasRole(loginInfoResponse.getData(), Consts.ADMIN_ROLE).isSuccess()) {
             return jobGroupListTotal;
         } else {
-            List<String> jobGroups = (loginInfoResponse.getData().getExtraInfo()!=null && loginInfoResponse.getData().getExtraInfo().containsKey("jobGroups"))
+            List<String> jobGroups = (loginInfoResponse.getData().getExtraInfo()!=null
+                    && loginInfoResponse.getData().getExtraInfo().get("jobGroups")!=null
+            )
                     ? StringTool.split(loginInfoResponse.getData().getExtraInfo().get("jobGroups"), ",")
                     :new ArrayList<>();
 

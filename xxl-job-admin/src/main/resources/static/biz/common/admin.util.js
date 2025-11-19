@@ -34,5 +34,14 @@ $(function(){
             }
         }
     }
-	
+
+    // ---------------------- isOpenWithTab ----------------------
+
+    /**
+     * 是否在Tab中打开
+     */
+    window.isOpenWithTab = function () {
+        return !!window.parent.$.adminTab;
+    }
+
 });
