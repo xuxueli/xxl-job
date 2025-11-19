@@ -19,7 +19,6 @@ import com.xxl.tool.core.DateTool;
 import com.xxl.tool.core.StringTool;
 import com.xxl.tool.response.PageModel;
 import com.xxl.tool.response.Response;
-import com.xxl.tool.response.ResponseCode;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
@@ -176,7 +175,7 @@ public class JobInfoController {
 
 		// valid
 		if (StringTool.isBlank(scheduleType) || StringTool.isBlank(scheduleConf)) {
-			return Response.of(ResponseCode.FAILURE.getCode(), null, new ArrayList<>());
+			return Response.ofSuccess(new ArrayList<>());
 		}
 
 		// param
