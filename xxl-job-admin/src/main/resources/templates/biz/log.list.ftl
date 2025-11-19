@@ -480,7 +480,8 @@
 						content: (I18n.joblog_clean_log + I18n.system_success) ,
 						icon: '1',
 						end: function(layero, index){
-							logTable.fnDraw();
+							// refresh table
+							$('#data_filter .searchBtn').click();
 						}
 					});
 				} else {
