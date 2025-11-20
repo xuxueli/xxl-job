@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>com.xuxueli</groupId>
 		<artifactId>xxl-job</artifactId>
-		<version>3.0.1-SNAPSHOT</version>
+		<version>3.3.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>xxl-job-admin</artifactId>
 	<packaging>jar</packaging>
@@ -44,13 +44,11 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-freemarker</artifactId>
 		</dependency>
-
 		<!-- mail-starter -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-mail</artifactId>
 		</dependency>
-
 		<!-- starter-actuator -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -77,6 +75,13 @@
 			<version>${project.parent.version}</version>
 		</dependency>
 
+		<!-- xxl-sso (xxl-tool、gson) -->
+		<dependency>
+			<groupId>com.xuxueli</groupId>
+			<artifactId>xxl-sso-core</artifactId>
+			<version>${xxl-sso.version}</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -84,7 +89,7 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<!--<version>${spring-boot.version}</version>-->
+				<version>${spring-boot.version}</version>
 				<executions>
 					<execution>
 						<goals>
@@ -93,25 +98,6 @@
 					</execution>
 				</executions>
 			</plugin>
-
-			<!-- docker -->
-			<!--<plugin>
-				<groupId>com.spotify</groupId>
-				<artifactId>docker-maven-plugin</artifactId>
-				<version>0.4.13</version>
-				<configuration>
-					&lt;!&ndash; made of '[a-z0-9-_.]' &ndash;&gt;
-					<imageName>${project.artifactId}:${project.version}</imageName>
-					<dockerDirectory>${project.basedir}</dockerDirectory>
-					<resources>
-						<resource>
-							<targetPath>/</targetPath>
-							<directory>${project.build.directory}</directory>
-							<include>${project.build.finalName}.jar</include>
-						</resource>
-					</resources>
-				</configuration>
-			</plugin>-->
 
 		</plugins>
 	</build>

@@ -1,7 +1,7 @@
 ## 《Distributed task scheduling framework XXL-JOB》
 
 [![Actions Status](https://github.com/xuxueli/xxl-job/workflows/Java%20CI/badge.svg)](https://github.com/xuxueli/xxl-job/actions)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.xuxueli/xxl-job-core/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.xuxueli/xxl-job-core/)
+[![Maven Central](https://img.shields.io/maven-central/v/com.xuxueli/xxl-job-core)](https://central.sonatype.com/artifact/com.xuxueli/xxl-job-core)
 [![GitHub release](https://img.shields.io/github/release/xuxueli/xxl-job.svg)](https://github.com/xuxueli/xxl-job/releases)
 [![GitHub stars](https://img.shields.io/github/stars/xuxueli/xxl-job)](https://github.com/xuxueli/xxl-job/)
 [![Docker Status](https://img.shields.io/docker/pulls/xuxueli/xxl-job-admin)](https://hub.docker.com/r/xuxueli/xxl-job-admin/)
@@ -1003,7 +1003,7 @@ The scheduling center provides API services for executors and business parties t
     3. Executor registration remove services;
     4. Triggers a single execution service, and support the task to be triggered according to the business event;
 
-The scheduling center API service location: com.xxl.job.core.biz.AdminBiz.java
+The scheduling center API service location: com.xxl.job.core.openapi.AdminBiz.java
 
 The scheduling center API service requests reference code：com.xxl.job.adminbiz.AdminBizTest.java
 

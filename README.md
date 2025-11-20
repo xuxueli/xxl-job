@@ -10,8 +10,8 @@
         <a href="https://github.com/xuxueli/xxl-job/actions">
             <img src="https://github.com/xuxueli/xxl-job/workflows/Java%20CI/badge.svg" >
         </a>
-        <a href="https://maven-badges.herokuapp.com/maven-central/com.xuxueli/xxl-job-core/">
-            <img src="https://maven-badges.herokuapp.com/maven-central/com.xuxueli/xxl-job-core/badge.svg" >
+        <a href="https://central.sonatype.com/artifact/com.xuxueli/xxl-job-core">
+            <img src="https://img.shields.io/maven-central/v/com.xuxueli/xxl-job-core" >
         </a>
         <a href="https://github.com/xuxueli/xxl-job/releases">
          <img src="https://img.shields.io/github/release/xuxueli/xxl-job.svg" >
@@ -112,7 +112,8 @@ XXL-JOB 是一个开源且免费项目，其正在进行的开发完全得益于
 - 34、线程池隔离：调度线程池进行隔离拆分，慢任务自动降级进入"Slow"线程池，避免耗尽调度线程，提高系统稳定性；
 - 35、用户管理：支持在线管理系统用户，存在管理员、普通用户两种角色；
 - 36、权限控制：执行器维度进行权限控制，管理员拥有全量权限，普通用户需要分配执行器权限后才允许相关操作；
-
+- 37、AI任务：原生提供AI执行器，并内置多个AI任务Handler，与spring-ai、ollama、dify等集成打通，支持快速开发AI类任务。
+- 38、审计日志：记录任务操作敏感信息，用于系统监控、审计和安全分析，可快速追溯异常行为以及定位排查问题。
 
 ## Development
 于2015年中，我在github上创建XXL-JOB项目仓库并提交第一个commit，随之进行系统结构设计，UI选型，交互设计……
@@ -842,6 +843,23 @@ XXL-JOB 是一个开源且免费项目，其正在进行的开发完全得益于
     - 688、陕西星邑空间技术有限公司
     - 689、广东西欧克实业有限公司
     - 690、唱吧麦颂KTV
+    - 691、联通云
+    - 692、北京爱话本科技有限公司
+    - 693、北京起创科技有限公司
+    - 694、平安证券【平安证券】
+    - 695、合肥中科类脑智能技术有限公司
+    - 696、南京同仁堂健康产业有限公司【同仁堂】
+    - 697、铜仁市碧江区智惠加油站
+    - 698、惟客数据
+    - 699、凤凰新闻【凤凰新闻】
+    - 700、深圳王力智能
+    - 701、返利网数字科技股份有限公司
+    - 702、上海阜能信息科技有限公司
+    - 703、深圳市极能超电数字科技有限公司
+    - 704、海目星激光科技集团股份有限公司
+    - 705、深圳市极能超电数字科技有限公司
+    - 706、安克创新科技股份有限公司【安克】
+    - 707、大庆点神科技有限公司
     - ……
 
 > 更多接入的公司，欢迎在 [登记地址](https://github.com/xuxueli/xxl-job/issues/1 ) 登记，登记仅仅为了产品推广。

@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.xuxueli</groupId>
         <artifactId>xxl-job-executor-samples</artifactId>
-        <version>3.0.1-SNAPSHOT</version>
+        <version>3.3.0-SNAPSHOT</version>
     </parent>
     <artifactId>xxl-job-executor-sample-springboot-ai</artifactId>
     <packaging>jar</packaging>
@@ -16,7 +16,8 @@
     <url>https://www.xuxueli.com/</url>
 
     <properties>
-        <spring-ai.version>1.0.0-M6</spring-ai.version>
+        <spring-ai.version>1.1.0</spring-ai.version>
+        <dify-java-client.version>	1.2.0</dify-java-client.version>
     </properties>
 
     <dependencyManagement>
@@ -53,19 +54,25 @@
         <!-- spring-ai -->
         <dependency>
             <groupId>org.springframework.ai</groupId>
-            <artifactId>spring-ai-ollama-spring-boot-starter</artifactId>
+            <artifactId>spring-ai-starter-model-ollama</artifactId>
             <version>${spring-ai.version}</version>
+        </dependency>
+
+        <!-- dify -->
+        <dependency>
+            <groupId>io.github.imfangs</groupId>
+            <artifactId>dify-java-client</artifactId>
+            <version>${dify-java-client.version}</version>
         </dependency>
 
     </dependencies>
 
     <build>
         <plugins>
-            <!-- spring-boot-maven-plugin (提供了直接运行项目的插件：如果是通过parent方式继承spring-boot-starter-parent则不用此插件) -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <!--<version>${spring-boot.version}</version>-->
+                <version>${spring-boot.version}</version>
                 <executions>
                     <execution>
                         <goals>
@@ -73,9 +80,6 @@
                         </goals>
                     </execution>
                 </executions>
-                <configuration>
-                    <fork>true</fork>
-                </configuration>
             </plugin>
         </plugins>
     </build>
