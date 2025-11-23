@@ -260,22 +260,39 @@
 					widthUnit: '%',
 					align: 'center',
 					valign: 'middle'
-				},{
-					title: I18n.jobinfo_field_id,
+				},
+                {
+                    title: I18n.joblog_name + 'ID',
+                    field: 'id',
+                    width: '10',
+                    widthUnit: '%',
+                    align: 'left'
+                },
+                {
+					title: I18n.jobinfo_job,
 					field: 'jobId',
 					width: '10',
 					widthUnit: '%',
 					align: 'left',
 					formatter: function(value, row, index) {
-						// logTips
+
+                        // job show info
+                        let jobDesc = $("#jobId").find("option[value='"+ row.jobId +"']").text();
+                        let jobShow = '['+ row.jobId +']' + jobDesc?jobDesc:'';
+                        if (jobShow.length > 10) {
+                            jobShow = jobShow.substr(0, 10) + '...';
+                        }
+
+						// job logTips
 						var temp = '';
 						temp += I18n.joblog_field_executorAddress + '：' + (row.executorAddress?row.executorAddress:'');
 						if (row.executorHandler) {
 							temp +=  "<br>JobHandler：" + row.executorHandler;
 						}
 						temp += '<br>'+ I18n.jobinfo_field_executorparam +'：' + row.executorParam;
+
 						// build
-						return '<a class="logTips" href="javascript:;" >'+ row.jobId +'<span style="display:none;">'+ temp +'</span></a>';
+						return '<a class="logTips" href="javascript:;" >'+ jobShow +'<span style="display:none;">'+ temp +'</span></a>';
 					}
 				},{
 					title: I18n.joblog_field_triggerTime,
