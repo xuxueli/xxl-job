@@ -271,33 +271,26 @@
                 {
 					title: I18n.jobinfo_job,
 					field: 'jobId',
-					width: '10',
+					width: '15',
 					widthUnit: '%',
 					align: 'left',
 					formatter: function(value, row, index) {
-
-                        // job show info
+                        // build
+                        let jobShow = '【'+ row.jobId +'】';
                         let jobDesc = $("#jobId").find("option[value='"+ row.jobId +"']").text();
-                        let jobShow = '['+ row.jobId +']' + jobDesc?jobDesc:'';
+                        if (jobDesc) {
+                            jobShow += jobDesc;
+                        }
                         if (jobShow.length > 10) {
                             jobShow = jobShow.substr(0, 10) + '...';
                         }
-
-						// job logTips
-						var temp = '';
-						temp += I18n.joblog_field_executorAddress + '：' + (row.executorAddress?row.executorAddress:'');
-						if (row.executorHandler) {
-							temp +=  "<br>JobHandler：" + row.executorHandler;
-						}
-						temp += '<br>'+ I18n.jobinfo_field_executorparam +'：' + row.executorParam;
-
-						// build
-						return '<a class="logTips" href="javascript:;" >'+ jobShow +'<span style="display:none;">'+ temp +'</span></a>';
+						// show
+						return jobShow;
 					}
 				},{
 					title: I18n.joblog_field_triggerTime,
 					field: 'triggerTime',
-					width: '16',
+					width: '15',
 					widthUnit: '%',
 					formatter: function(value, row, index) {
 						return value?moment(value).format("YYYY-MM-DD HH:mm:ss"):"";
@@ -329,7 +322,7 @@
 				},{
 					title: I18n.joblog_field_handleTime,
 					field: 'handleTime',
-					width: '16',
+					width: '15',
 					widthUnit: '%',
 					formatter: function(value, row, index) {
 						return value?moment(value).format("YYYY-MM-DD HH:mm:ss"):"";
@@ -360,37 +353,7 @@
 					formatter: function(value, row, index) {
 						return value?'<a class="logTips" href="javascript:;" >'+ I18n.system_show +'<span style="display:none;">'+ value +'</span></a>':I18n.system_empty;
 					}
-				}/*,{
-					title: I18n.system_opt,
-					field: 'handleMsg',
-					width: '13',
-					widthUnit: '%',
-					formatter: function(value, row, index) {
-						if (row.triggerCode == 200 || row.handleCode != 0){
-
-							var logKillDiv = '';
-							if(row.handleCode == 0 || true){
-								logKillDiv = '       <li class="divider"></li>\n' +
-										'       <li><a href="javascript:void(0);" class="logKill" _id="'+ row.id +'" >'+ I18n.joblog_kill_log +'</a></li>\n';
-							}
-
-							var html = '<div class="btn-group">\n' +
-									'     <button type="button" class="btn btn-primary btn-sm">'+ I18n.system_opt +'</button>\n' +
-									'     <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">\n' +
-									'       <span class="caret"></span>\n' +
-									'       <span class="sr-only">Toggle Dropdown</span>\n' +
-									'     </button>\n' +
-									'     <ul class="dropdown-menu dropdown-menu-right " role="menu" _id="'+ row.id +'" >\n' +
-									'       <li><a href="javascript:void(0);" class="logDetail" _id="'+ row.id +'" >'+ I18n.joblog_rolling_log +'</a></li>\n' +
-									logKillDiv +
-									'     </ul>\n' +
-									'   </div>';
-
-							return html;
-						}
-						return '';
-					}
-				}*/
+				}
 			]
 		});
 
