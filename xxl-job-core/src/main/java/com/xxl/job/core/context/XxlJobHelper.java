@@ -64,6 +64,20 @@ public class XxlJobHelper {
         return xxlJobContext.getJobLogFileName();
     }
 
+    /**
+     * current LogDateTime
+     *
+     * @return logDateTime
+     */
+    public static long getLogDateTime() {
+        XxlJobContext xxlJobContext = XxlJobContext.getXxlJobContext();
+        if (xxlJobContext == null) {
+            return -1;
+        }
+
+        return xxlJobContext.getLogDateTime();
+    }
+
     // ---------------------- for shard ----------------------
 
     /**
