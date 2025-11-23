@@ -7,10 +7,14 @@ import com.xxl.job.admin.model.XxlJobLogGlue;
 import com.xxl.job.admin.util.I18nUtil;
 import com.xxl.job.admin.util.JobGroupPermissionUtil;
 import com.xxl.job.core.glue.GlueTypeEnum;
+import com.xxl.sso.core.model.LoginInfo;
 import com.xxl.tool.core.StringTool;
+import com.xxl.tool.gson.GsonTool;
 import com.xxl.tool.response.Response;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,6 +31,7 @@ import java.util.List;
 @Controller
 @RequestMapping("/jobcode")
 public class JobCodeController {
+	private static final Logger logger = LoggerFactory.getLogger(JobCodeController.class);
 	
 	@Resource
 	private XxlJobInfoMapper xxlJobInfoMapper;
@@ -53,7 +58,7 @@ public class JobCodeController {
 
 		model.addAttribute("jobInfo", jobInfo);
 		model.addAttribute("jobLogGlues", jobLogGlues);
-		return "jobcode/jobcode.index";
+		return "biz/job.code";
 	}
 	
 	@RequestMapping("/save")
@@ -79,7 +84,7 @@ public class JobCodeController {
 		}
 
 		// valid jobGroup permission
-		JobGroupPermissionUtil.validJobGroupPermission(request, existsJobInfo.getJobGroup());
+		LoginInfo loginInfo = JobGroupPermissionUtil.validJobGroupPermission(request, existsJobInfo.getJobGroup());
 
 		// update new code
 		existsJobInfo.setGlueSource(glueSource);
@@ -103,7 +108,10 @@ public class JobCodeController {
 		// remove code backup more than 30
 		xxlJobLogGlueMapper.removeOld(existsJobInfo.getId(), 30);
 
+		// write operation log
+		logger.info(">>>>>>>>>>> xxl-job operation log: operator = {}, type = {}, content = {}",
+				loginInfo.getUserName(), "jobcode-update", GsonTool.toJson(xxlJobLogGlue));
 		return Response.ofSuccess();
 	}
-	
+
 }
