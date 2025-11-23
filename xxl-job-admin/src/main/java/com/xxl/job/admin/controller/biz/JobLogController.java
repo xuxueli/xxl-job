@@ -11,11 +11,11 @@ import com.xxl.job.admin.scheduler.exception.XxlJobException;
 import com.xxl.job.admin.service.XxlJobService;
 import com.xxl.job.admin.util.I18nUtil;
 import com.xxl.job.admin.util.JobGroupPermissionUtil;
+import com.xxl.job.core.context.XxlJobContext;
 import com.xxl.job.core.openapi.ExecutorBiz;
 import com.xxl.job.core.openapi.model.KillRequest;
 import com.xxl.job.core.openapi.model.LogRequest;
 import com.xxl.job.core.openapi.model.LogResult;
-import com.xxl.job.core.context.XxlJobContext;
 import com.xxl.tool.core.CollectionTool;
 import com.xxl.tool.core.DateTool;
 import com.xxl.tool.core.StringTool;
@@ -160,59 +160,6 @@ public class JobLogController {
 		return Response.ofSuccess(pageModel);
 	}
 
-	@RequestMapping("/logDetailPage")
-	public String logDetailPage(HttpServletRequest request, @RequestParam("id") long id, Model model){
-
-		// base check
-		XxlJobLog jobLog = xxlJobLogMapper.load(id);
-		if (jobLog == null) {
-            throw new RuntimeException(I18nUtil.getString("joblog_logid_unvalid"));
-		}
-
-		// valid permission
-		JobGroupPermissionUtil.validJobGroupPermission(request, jobLog.getJobGroup());
-
-		// data
-        model.addAttribute("triggerCode", jobLog.getTriggerCode());
-        model.addAttribute("handleCode", jobLog.getHandleCode());
-        model.addAttribute("logId", jobLog.getId());
-		return "joblog/joblog.detail";
-	}
-
-	@RequestMapping("/logDetailCat")
-	@ResponseBody
-	public Response<LogResult> logDetailCat(@RequestParam("logId") long logId, @RequestParam("fromLineNum") int fromLineNum){
-		try {
-			// valid
-			XxlJobLog jobLog = xxlJobLogMapper.load(logId);	// todo, need to improve performance
-			if (jobLog == null) {
-				return Response.ofFail(I18nUtil.getString("joblog_logid_unvalid"));
-			}
-
-			// log cat
-			ExecutorBiz executorBiz = XxlJobAdminBootstrap.getExecutorBiz(jobLog.getExecutorAddress());
-			Response<LogResult> logResult = executorBiz.log(new LogRequest(jobLog.getTriggerTime().getTime(), logId, fromLineNum));
-
-			// is end
-            if (logResult.getData()!=null && logResult.getData().getFromLineNum() > logResult.getData().getToLineNum()) {
-                if (jobLog.getHandleCode() > 0) {
-                    logResult.getData().setEnd(true);
-                }
-            }
-
-			// fix xss
-			if (logResult.getData()!=null && StringTool.isNotBlank(logResult.getData().getLogContent())) {
-				String newLogContent = filter(logResult.getData().getLogContent());
-				logResult.getData().setLogContent(newLogContent);
-			}
-
-			return logResult;
-		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
-			return Response.ofFail(e.getMessage());
-		}
-	}
-
 	/**
 	 * filter xss tag
 	 */
@@ -330,7 +277,7 @@ public class JobLogController {
 	}
 
 	@RequestMapping("/logDetailPage")
-	public String logDetailPage(HttpServletRequest request, @RequestParam("id") int id, Model model){
+	public String logDetailPage(HttpServletRequest request, @RequestParam("id") long id, Model model){
 
 		// base check
 		XxlJobLog jobLog = xxlJobLogMapper.load(id);
