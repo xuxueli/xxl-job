@@ -27,14 +27,14 @@ public class XxlJobContext {
     // ---------------------- for log ----------------------
 
     /**
+     * job log timestamp
+     */
+    private final long jobLogTime;
+    
+    /**
      * job log filename
      */
     private final String jobLogFileName;
-
-    /**
-     * log date time
-     */
-    private final long logDateTime;
 
     // ---------------------- for shard ----------------------
 
@@ -66,11 +66,16 @@ public class XxlJobContext {
     private String handleMsg;
 
 
-    public XxlJobContext(long jobId, String jobParam, String jobLogFileName, long logDateTime, int shardIndex, int shardTotal) {
+    public XxlJobContext(long jobId, 
+                         String jobParam,
+                         long jobLogTime,
+                         String jobLogFileName,
+                         int shardIndex, 
+                         int shardTotal) {
         this.jobId = jobId;
         this.jobParam = jobParam;
+        this.jobLogTime = jobLogTime;
         this.jobLogFileName = jobLogFileName;
-        this.logDateTime = logDateTime;
         this.shardIndex = shardIndex;
         this.shardTotal = shardTotal;
 
@@ -89,8 +94,8 @@ public class XxlJobContext {
         return jobLogFileName;
     }
 
-    public long getLogDateTime() {
-        return logDateTime;
+    public long getJobLogTime() {
+        return jobLogTime;
     }
 
     public int getShardIndex() {
@@ -119,12 +124,21 @@ public class XxlJobContext {
 
     // ---------------------- tool ----------------------
 
-    private static InheritableThreadLocal<XxlJobContext> contextHolder = new InheritableThreadLocal<XxlJobContext>(); // support for child thread of job handler)
+    /**
+     * xxl-job context store
+     */
+    private static final InheritableThreadLocal<XxlJobContext> contextHolder = new InheritableThreadLocal<XxlJobContext>(); // support for child thread of job handler)
 
+    /**
+     * set xxl-job context
+     */
     public static void setXxlJobContext(XxlJobContext xxlJobContext){
         contextHolder.set(xxlJobContext);
     }
 
+    /**
+     * get xxl-job context
+     */
     public static XxlJobContext getXxlJobContext(){
         return contextHolder.get();
     }

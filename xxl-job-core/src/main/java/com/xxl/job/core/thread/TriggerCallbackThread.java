@@ -207,8 +207,8 @@ public class TriggerCallbackThread {
             XxlJobContext.setXxlJobContext(new XxlJobContext(
                     -1,
                     null,
-                    logFileName,
                     -1,
+                    logFileName,
                     -1,
                     -1));
             XxlJobHelper.log(logContent);

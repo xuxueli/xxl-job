@@ -23,7 +23,7 @@ import java.util.concurrent.*;
  * @author xuxueli 2016-1-16 19:52:47
  */
 public class JobThread extends Thread{
-	private static Logger logger = LoggerFactory.getLogger(JobThread.class);
+	private static final Logger logger = LoggerFactory.getLogger(JobThread.class);
 
 	private int jobId;
 	private IJobHandler handler;
@@ -53,9 +53,6 @@ public class JobThread extends Thread{
 
     /**
      * new trigger to queue
-     *
-     * @param triggerParam
-     * @return
      */
 	public Response<String> pushTriggerQueue(TriggerRequest triggerParam) {
         // avoid repeat
@@ -71,8 +68,6 @@ public class JobThread extends Thread{
 
     /**
      * kill job thread
-     *
-     * @param stopReason
      */
 	public void toStop(String stopReason) {
 		/**
@@ -86,7 +81,6 @@ public class JobThread extends Thread{
 
     /**
      * is running job
-     * @return
      */
     public boolean isRunningOrHasQueue() {
         return running || triggerQueue.size()>0;
@@ -121,8 +115,8 @@ public class JobThread extends Thread{
 					XxlJobContext xxlJobContext = new XxlJobContext(
 							triggerParam.getJobId(),
 							triggerParam.getExecutorParams(),
-							logFileName,
-							triggerParam.getLogDateTime(),
+                            triggerParam.getLogDateTime(),
+                            logFileName,
 							triggerParam.getBroadcastIndex(),
 							triggerParam.getBroadcastTotal());
 

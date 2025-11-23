@@ -51,7 +51,21 @@ public class XxlJobHelper {
     // ---------------------- for log ----------------------
 
     /**
-     * current JobLogFileName
+     * current job log time
+     *
+     * @return logDateTime
+     */
+    public static long getJobLogTime() {
+        XxlJobContext xxlJobContext = XxlJobContext.getXxlJobContext();
+        if (xxlJobContext == null) {
+            return -1;
+        }
+
+        return xxlJobContext.getJobLogTime();
+    }
+
+    /**
+     * current job log filename
      *
      * @return logFileName
      */
@@ -62,20 +76,6 @@ public class XxlJobHelper {
         }
 
         return xxlJobContext.getJobLogFileName();
-    }
-
-    /**
-     * current LogDateTime
-     *
-     * @return logDateTime
-     */
-    public static long getLogDateTime() {
-        XxlJobContext xxlJobContext = XxlJobContext.getXxlJobContext();
-        if (xxlJobContext == null) {
-            return -1;
-        }
-
-        return xxlJobContext.getLogDateTime();
     }
 
     // ---------------------- for shard ----------------------
@@ -164,13 +164,11 @@ public class XxlJobHelper {
         StackTraceElement[] stackTraceElements = new Throwable().getStackTrace();
         StackTraceElement callInfo = stackTraceElements[1];*/
 
-        StringBuffer stringBuffer = new StringBuffer();
-        stringBuffer.append(DateTool.formatDateTime(new Date())).append(" ")
-                .append("["+ callInfo.getClassName() + "#" + callInfo.getMethodName() +"]").append("-")
-                .append("["+ callInfo.getLineNumber() +"]").append("-")
-                .append("["+ Thread.currentThread().getName() +"]").append(" ")
-                .append(appendLog!=null?appendLog:"");
-        String formatAppendLog = stringBuffer.toString();
+        String formatAppendLog = DateTool.formatDateTime(new Date()) + " " +
+                "[" + callInfo.getClassName() + "#" + callInfo.getMethodName() + "]" + "-" +
+                "[" + callInfo.getLineNumber() + "]" + "-" +
+                "[" + Thread.currentThread().getName() + "]" + " " +
+                (appendLog != null ? appendLog : "");
 
         // appendlog
         String logFileName = xxlJobContext.getJobLogFileName();

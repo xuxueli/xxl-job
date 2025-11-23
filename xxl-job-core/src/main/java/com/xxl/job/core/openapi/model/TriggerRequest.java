@@ -8,20 +8,25 @@ import java.io.Serializable;
 public class TriggerRequest implements Serializable{
     private static final long serialVersionUID = 42L;
 
+    // job base info
     private int jobId;
 
+    // job execute info
     private String executorHandler;
     private String executorParams;
     private String executorBlockStrategy;
     private int executorTimeout;
 
+    // log info
     private long logId;
     private long logDateTime;
 
+    // glue info
     private String glueType;
     private String glueSource;
     private long glueUpdatetime;
 
+    // broadcast info
     private int broadcastIndex;
     private int broadcastTotal;
 
