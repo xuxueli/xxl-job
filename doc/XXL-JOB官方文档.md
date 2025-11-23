@@ -2656,6 +2656,7 @@ public void execute() {
   （当前任务审计日志以Info级别输出在系统日志中，可通过关键词 "xxl-job operation log:" 检索过滤）
 - 19、【优化】调度组件日志完善，提升边界情况下问题定位效率；
 - 20、【升级】升级多项maven依赖至较新版本，如 netty、groovy、springboot、spring-ai、dify、mybatis、xxl-sso 等；
+- 21、【优化】优日志报告与清理逻辑，增加清理过期日志的异常捕获，避免线程异常退出；
 
 **备注：**
 a、本次升级数据模型向前兼容，v3.2.*版本可直接升级不需要进行数据库表调整；
