@@ -119,7 +119,7 @@ public class JobThread extends Thread{
                             logFileName,
 							triggerParam.getBroadcastIndex(),
 							triggerParam.getBroadcastTotal());
-
+					xxlJobContext.setLogId(triggerParam.getLogId());
 					// init job context
 					XxlJobContext.setXxlJobContext(xxlJobContext);
 

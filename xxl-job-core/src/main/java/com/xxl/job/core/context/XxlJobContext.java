@@ -20,6 +20,11 @@ public class XxlJobContext {
     private final long jobId;
 
     /**
+     * job log id
+     */
+    private long logId;
+
+    /**
      * job param
      */
     private final String jobParam;
@@ -84,6 +89,14 @@ public class XxlJobContext {
 
     public long getJobId() {
         return jobId;
+    }
+
+    public long getLogId() {
+        return logId;
+    }
+
+    public void setLogId(long logId) {
+        this.logId = logId;
     }
 
     public String getJobParam() {

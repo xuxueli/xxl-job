@@ -34,6 +34,14 @@ public class XxlJobHelper {
         return xxlJobContext.getJobId();
     }
 
+    public static long getLogId() {
+        XxlJobContext xxlJobContext = XxlJobContext.getXxlJobContext();
+        if (xxlJobContext == null) {
+            return -1;
+        }
+        return xxlJobContext.getLogId();
+    }
+
     /**
      * current JobParam
      *
