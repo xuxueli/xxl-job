@@ -82,6 +82,13 @@
 			<version>${xxl-sso.version}</version>
 		</dependency>
 
+		<!-- micrometer-registry-prometheus for metrics export -->
+		<dependency>
+			<groupId>io.micrometer</groupId>
+			<artifactId>micrometer-registry-prometheus</artifactId>
+			<version>${micrometer.version}</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>

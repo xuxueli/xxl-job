@@ -55,6 +55,8 @@
 		<xxl-sso.version>2.2.0</xxl-sso.version>
 		<!-- xxl-tool -->
 		<xxl-tool.version>2.3.2</xxl-tool.version>
+		<!-- micrometer -->
+		<micrometer.version>1.14.2</micrometer.version>
 	</properties>
 
 	<licenses>
