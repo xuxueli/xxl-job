@@ -44,7 +44,20 @@ XXL-JOB is a distributed task scheduling framework, the core design goal is to d
 - 22.Failure handling strategy:Handling strategy when scheduling fails, the strategy includes: failure alarm (default), failure retry;
 - 23.Sharding broadcast task: When an executor cluster is deployed, task routing strategy select "sharding broadcast", a task schedule will broadcast all the actuators in the cluster to perform it once, you can develop sharding tasks based on sharding parameters;
 - 24.Dynamic sharding: The sharding broadcast task is sharded by the executors to support the dynamic expansion of the executor cluster to dynamically increase the number of shardings and cooperate with the business handle; In the large amount of data operations can significantly improve the task processing capacity and speed.
-- 25、Event trigger：In addition to "Cron" and "Task Dependency" to trigger tasks, support event-based triggering tasks. The dispatch center provides API service that triggers a single execution of the task, it can be triggered flexibly according to business events. 
+- 25、Event trigger：In addition to "Cron" and "Task Dependency" to trigger tasks, support event-based triggering tasks. The dispatch center provides API service that triggers a single execution of the task, it can be triggered flexibly according to business events.
+- 26、Data encryption: Communication between the scheduling center and executor uses data encryption to enhance the security of scheduling information;
+- 27、Email alerts: Task failures support email alerts, with support for configuring multiple email addresses for bulk alert messages;
+- 28、Push to Maven Central: The latest stable version will be pushed to Maven Central for easy user access and integration;
+- 29、Operational reports: Support real-time viewing of operational data such as task count, scheduling count, executor count, etc.; and scheduling reports including scheduling date distribution charts, scheduling success distribution charts, etc.;
+- 30、Fully asynchronous: The task scheduling process is fully asynchronous, including asynchronous scheduling, asynchronous execution, asynchronous callbacks, etc., effectively handling traffic peaks for intensive scheduling and theoretically supporting tasks of any duration;
+- 31、Cross-language/OpenAPI: The scheduling center and executor provide language-agnostic OpenAPI (RESTful format), allowing third-party languages to integrate with the scheduling center or implement executors, enabling multi-language support. Additionally, "multi-task mode" and "httpJobHandler" provide other cross-language solutions;
+- 32、Internationalization: The scheduling center supports internationalization settings, providing Chinese and English language options, with Chinese as the default;
+- 33、Containerization: Official Docker images are provided and continuously updated on DockerHub, further enabling out-of-the-box deployment;
+- 34、Thread pool isolation: Scheduling thread pools are isolated and split; slow tasks automatically downgrade to the "Slow" thread pool to avoid exhausting scheduling threads and improve system stability;
+- 35、User management: Support online management of system users with two roles: administrator and regular user;
+- 36、Permission control: Permissions are controlled at the executor level; administrators have full permissions while regular users need executor permissions assigned before performing related operations;
+- 37、AI tasks: Native AI executor provided with built-in AI task handlers, integrated with spring-ai, ollama, dify, etc., supporting rapid development of AI-related tasks;
+- 38、Audit logs: Records sensitive task operation information for system monitoring, auditing, and security analysis, enabling quick tracing of abnormal behavior and problem diagnosis.
 
 
 ###  1.3 Development
