@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.xuxueli</groupId>
 	<artifactId>xxl-job</artifactId>
-	<version>3.3.0-SNAPSHOT</version>
+	<version>3.3.0</version>
 	<packaging>pom</packaging>
 
 	<name>${project.artifactId}</name>
@@ -38,8 +38,8 @@
 		<jakarta.annotation-api.version>3.0.0</jakarta.annotation-api.version>
 
 		<!-- spring -->
-		<spring-boot.version>3.5.7</spring-boot.version>
-		<spring.version>6.2.13</spring.version>
+		<spring-boot.version>3.5.8</spring-boot.version>
+		<spring.version>6.2.14</spring.version>
 		<!-- mybatis & db -->
 		<mybatis-spring-boot-starter.version>3.0.5</mybatis-spring-boot-starter.version>
 		<mysql-connector-j.version>9.5.0</mysql-connector-j.version>

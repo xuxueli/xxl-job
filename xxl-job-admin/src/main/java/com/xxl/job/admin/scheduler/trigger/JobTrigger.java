@@ -224,7 +224,7 @@ public class JobTrigger {
         if (triggerResult.isSuccess()) {
             triggerMsgSb.append("success");
         } else if (triggerResult.getMsg()!=null) {
-            triggerMsgSb.append("error <br><br>").append(triggerResult.getMsg());
+            triggerMsgSb.append("error, ").append(triggerResult.getMsg());
         } else {
             triggerMsgSb.append("fail");
         }
