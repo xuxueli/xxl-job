@@ -1,5 +1,6 @@
 package com.xxl.job.admin.scheduler.thread;
 
+import com.xxl.job.admin.constant.TriggerStatus;
 import com.xxl.job.admin.model.XxlJobInfo;
 import com.xxl.job.admin.scheduler.config.XxlJobAdminBootstrap;
 import com.xxl.job.admin.scheduler.misfire.MisfireStrategyEnum;
@@ -97,7 +98,7 @@ public class JobScheduleHelper {
                                     refreshNextTriggerTime(jobInfo, new Date());
 
                                     // next-trigger-time in 5s, pre-read again
-                                    if (jobInfo.getTriggerStatus()==1 && nowTime + PRE_READ_MS > jobInfo.getTriggerNextTime()) {
+                                    if (jobInfo.getTriggerStatus()== TriggerStatus.RUNNING.getValue() && nowTime + PRE_READ_MS > jobInfo.getTriggerNextTime()) {
 
                                         // 1、make ring second
                                         int ringSecond = (int)((jobInfo.getTriggerNextTime()/1000)%60);
@@ -252,7 +253,7 @@ public class JobScheduleHelper {
                 jobInfo.setTriggerNextTime(nextTriggerTime.getTime());
             } else {
                 // generate fail, stop job
-                jobInfo.setTriggerStatus(0);
+                jobInfo.setTriggerStatus(TriggerStatus.STOPPED.getValue());
                 jobInfo.setTriggerLastTime(0);
                 jobInfo.setTriggerNextTime(0);
                 logger.error(">>>>>>>>>>> xxl-job, refreshNextValidTime fail for job: jobId={}, scheduleType={}, scheduleConf={}",
@@ -260,7 +261,7 @@ public class JobScheduleHelper {
             }
         } catch (Throwable e) {
             // generate error, stop job
-            jobInfo.setTriggerStatus(0);
+            jobInfo.setTriggerStatus(TriggerStatus.STOPPED.getValue());
             jobInfo.setTriggerLastTime(0);
             jobInfo.setTriggerNextTime(0);
 

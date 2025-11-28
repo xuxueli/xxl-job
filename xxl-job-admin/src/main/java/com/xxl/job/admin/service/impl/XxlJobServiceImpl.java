@@ -1,5 +1,6 @@
 package com.xxl.job.admin.service.impl;
 
+import com.xxl.job.admin.constant.TriggerStatus;
 import com.xxl.job.admin.mapper.*;
 import com.xxl.job.admin.model.XxlJobGroup;
 import com.xxl.job.admin.model.XxlJobInfo;
@@ -273,7 +274,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 		long nextTriggerTime = exists_jobInfo.getTriggerNextTime();
 		boolean scheduleDataNotChanged = jobInfo.getScheduleType().equals(exists_jobInfo.getScheduleType())
 				&& jobInfo.getScheduleConf().equals(exists_jobInfo.getScheduleConf());		// 触发配置如果不变，避免重复计算；
-		if (exists_jobInfo.getTriggerStatus() == 1 && !scheduleDataNotChanged) {
+		if (exists_jobInfo.getTriggerStatus() == TriggerStatus.RUNNING.getValue() && !scheduleDataNotChanged) {
 			try {
 				// generate next trigger time
 				Date nextValidTime = scheduleTypeEnum.getScheduleType().generateNextTriggerTime(jobInfo, new Date(System.currentTimeMillis() + JobScheduleHelper.PRE_READ_MS));
@@ -372,7 +373,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 			return Response.ofFail ( (I18nUtil.getString("schedule_type")+I18nUtil.getString("system_unvalid")) );
 		}
 
-		xxlJobInfo.setTriggerStatus(1);
+		xxlJobInfo.setTriggerStatus(TriggerStatus.RUNNING.getValue());
 		xxlJobInfo.setTriggerLastTime(0);
 		xxlJobInfo.setTriggerNextTime(nextTriggerTime);
 
@@ -400,7 +401,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 		}
 
 		// stop
-		xxlJobInfo.setTriggerStatus(0);
+		xxlJobInfo.setTriggerStatus(TriggerStatus.STOPPED.getValue());
 		xxlJobInfo.setTriggerLastTime(0);
 		xxlJobInfo.setTriggerNextTime(0);
 
