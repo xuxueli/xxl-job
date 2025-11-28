@@ -94,10 +94,10 @@
 		var handleCode = '${handleCode}';
 		var logId = '${logId}';
 
-		// valid trigger fail, end
-		if ( !(triggerCode == 200 || handleCode != 0) ) {
+		// trigger fail and not handle
+        if (triggerCode != 200 && handleCode == 0) {
 			$('#logConsoleRunning').hide();
-			$('#logConsole').append('<span style="color: red;">'+ I18n.joblog_rolling_log_triggerfail +'</span>');
+			$('#logConsole').append('<span style="color: red;">['+ I18n.joblog_rolling_log_triggerfail +']</span>');
 			return;
 		}
 
@@ -107,15 +107,14 @@
 		var fromLineNum = 1;    // [from, to], start as 1
 		var pullFailCount = 0;
 		function pullLog() {
-			// pullFailCount, max=20
+            // limit max pull-fail count, max=20
 			if (pullFailCount++ > 20) {
-				logRunStop('<span style="color: red;">'+ I18n.joblog_rolling_log_failoften +'</span>');
+				logRunStop('<span style="color: red;">['+ I18n.joblog_rolling_log_failoften +']</span>');
 				return;
 			}
 
 			// load
 			console.log("pullLog, fromLineNum:" + fromLineNum);
-
 			$.ajax({
 				type : 'POST',
 				async: false,   // sync, make log ordered
@@ -128,6 +127,7 @@
 				success : function(data){
 
 					if (data.code == 200) {
+                        // pull fail
 						if (!data.data) {
 							console.log('pullLog fail');
 							return;
@@ -136,15 +136,15 @@
 							console.log('pullLog fromLineNum not match');
 							return;
 						}
+                        // pull to end
 						if (fromLineNum > data.data.toLineNum ) {
 							console.log('pullLog already line-end');
 
 							// valid end
 							if (data.data.end) {
-								logRunStop('<br><span style="color: green;">[Rolling Log Finish]</span>');
+								logRunStop('<br><span style="color: green;">[Rolling Log End]</span>');
 								return;
 							}
-
 							return;
 						}
 
@@ -157,7 +157,9 @@
 						scrollTo(0, document.body.scrollHeight);        // $('#logConsolePre').scrollTop( document.body.scrollHeight + 300 );
 
 					} else {
+                        // pull fail
 						console.log('pullLog fail:'+data.msg);
+                        $('#logConsole').append('<span style="color: red;">[Rolling Log Error]: '+ data.msg +'</span>');
 					}
 				}
 			});
@@ -168,7 +170,7 @@
 
 		// if handle already callback, stop cycle pull
 		if (handleCode > 0) {
-			logRunStop('<br><span style="color: green;">[Load Log Finish]</span>');
+			logRunStop('<br><span style="color: green;">[Rolling Log Finish]</span>');
 			return;
 		}
 

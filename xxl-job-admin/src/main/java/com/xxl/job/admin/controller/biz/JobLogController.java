@@ -328,7 +328,7 @@ public class JobLogController {
 
 			return logResult;
 		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
+			logger.error("logId({}) logDetailCat error: {}", logId, e.getMessage(), e);
 			return Response.ofFail(e.getMessage());
 		}
 	}
