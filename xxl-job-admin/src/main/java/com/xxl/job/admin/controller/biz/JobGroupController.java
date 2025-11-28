@@ -12,6 +12,7 @@ import com.xxl.job.core.constant.RegistType;
 import com.xxl.sso.core.annotation.XxlSso;
 import com.xxl.tool.core.CollectionTool;
 import com.xxl.tool.core.StringTool;
+import com.xxl.tool.http.HttpTool;
 import com.xxl.tool.response.PageModel;
 import com.xxl.tool.response.Response;
 import jakarta.annotation.Resource;
@@ -98,6 +99,9 @@ public class JobGroupController {
 				if (StringTool.isBlank(item)) {
 					return Response.ofFail( I18nUtil.getString("jobgroup_field_registryList_unvalid") );
 				}
+                if (!(HttpTool.isHttp(item) || HttpTool.isHttps(item))) {
+                    return Response.ofFail( I18nUtil.getString("jobgroup_field_registryList_unvalid")+"[2]" );
+                }
 			}
 		}
 
@@ -141,6 +145,9 @@ public class JobGroupController {
 				if (StringTool.isBlank(item)) {
 					return Response.ofFail(I18nUtil.getString("jobgroup_field_registryList_unvalid") );
 				}
+                if (!(HttpTool.isHttp(item) || HttpTool.isHttps(item))) {
+                    return Response.ofFail( I18nUtil.getString("jobgroup_field_registryList_unvalid")+"[2]" );
+                }
 			}
 		}
 
