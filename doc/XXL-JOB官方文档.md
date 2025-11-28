@@ -2609,10 +2609,10 @@ public void execute() {
 - 14、【修复】IDOR越权问题修复，提升任务操作及日志管理安全性；
 - 15、【升级】升级多项maven依赖至较新版本，如 netty、groovy、mybatis、spring、spring-ai、dify 等；
 
-### 7.41 版本 v3.3.0 Release Notes[规划中]
+### 7.41 版本 v3.3.0 Release Notes[2025-11-29]
 - 1、【新增】执行器新增“任务扫描排除路径”配置项(xxl.job.executor.excludedpackage)，任务扫描时忽略指定包路径下的任务；
 - 2、【优化】执行器任务Bean扫描逻辑调整，优化懒加载Bean检测及过滤机制，避免提前初始化类问题；
-- 3、【新增】合并PR-3840，执行器支持通过XxlJobHelper获取任务触发时间戳；
+- 3、【新增】合并PR-3840，执行器支持通过XxlJobHelper获取任务触发时间戳；XxlJobHelper组件完善，支持通过“XxlJobHelper.getLogId/getLogDateTime/getLogFileName”方法获取执行日志相关信息；
 - 4、【升级】调度中心UI框架升级，统一交互组件，支持多主题、多标签与局部渲染等，升级UI组件及性能；
 - 5、【优化】调度时间轮组件强化，保障不重不漏：调度时间轮单刻度数据去重，避免极端情况下任务重复执行；时间轮转动时校验临近刻度，避免极端情况下遗漏刻度；
 - 6、【优化】调度任务锁逻辑优化，事务SQL下沉至Mapper层统一管理，并增加测试用例，提升代码可读性以及可维护性；
