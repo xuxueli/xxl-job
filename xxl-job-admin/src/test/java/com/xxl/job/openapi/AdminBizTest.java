@@ -2,7 +2,7 @@ package com.xxl.job.openapi;
 
 import com.xxl.job.core.constant.RegistType;
 import com.xxl.job.core.openapi.AdminBiz;
-import com.xxl.job.core.openapi.model.HandleCallbackRequest;
+import com.xxl.job.core.openapi.model.CallbackRequest;
 import com.xxl.job.core.openapi.model.RegistryRequest;
 import com.xxl.job.core.context.XxlJobContext;
 import com.xxl.job.core.constant.Const;
@@ -42,11 +42,11 @@ public class AdminBizTest {
     public void callback() throws Exception {
         AdminBiz adminBiz = buildClient();
 
-        HandleCallbackRequest param = new HandleCallbackRequest();
+        CallbackRequest param = new CallbackRequest();
         param.setLogId(1);
         param.setHandleCode(XxlJobContext.HANDLE_CODE_SUCCESS);
 
-        List<HandleCallbackRequest> callbackParamList = Arrays.asList(param);
+        List<CallbackRequest> callbackParamList = Arrays.asList(param);
 
         Response<String> returnT = adminBiz.callback(callbackParamList);
         assertTrue(returnT.isSuccess());

@@ -2,7 +2,7 @@ package com.xxl.job.admin.service.impl;
 
 import com.xxl.job.admin.scheduler.config.XxlJobAdminBootstrap;
 import com.xxl.job.core.openapi.AdminBiz;
-import com.xxl.job.core.openapi.model.HandleCallbackRequest;
+import com.xxl.job.core.openapi.model.CallbackRequest;
 import com.xxl.job.core.openapi.model.RegistryRequest;
 import com.xxl.tool.response.Response;
 import org.springframework.stereotype.Service;
@@ -16,8 +16,8 @@ import java.util.List;
 public class AdminBizImpl implements AdminBiz {
 
     @Override
-    public Response<String> callback(List<HandleCallbackRequest> handleCallbackRequestList) {
-        return XxlJobAdminBootstrap.getInstance().getJobCompleteHelper().callback(handleCallbackRequestList);
+    public Response<String> callback(List<CallbackRequest> callbackRequestList) {
+        return XxlJobAdminBootstrap.getInstance().getJobCompleteHelper().callback(callbackRequestList);
     }
 
     @Override

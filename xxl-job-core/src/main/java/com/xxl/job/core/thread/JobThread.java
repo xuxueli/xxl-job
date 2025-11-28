@@ -1,6 +1,6 @@
 package com.xxl.job.core.thread;
 
-import com.xxl.job.core.openapi.model.HandleCallbackRequest;
+import com.xxl.job.core.openapi.model.CallbackRequest;
 import com.xxl.job.core.openapi.model.TriggerRequest;
 import com.xxl.job.core.context.XxlJobContext;
 import com.xxl.job.core.context.XxlJobHelper;
@@ -201,7 +201,7 @@ public class JobThread extends Thread{
                     // callback handler info
                     if (!toStop) {
                         // common
-                        TriggerCallbackThread.pushCallBack(new HandleCallbackRequest(
+                        TriggerCallbackThread.pushCallBack(new CallbackRequest(
                         		triggerParam.getLogId(),
 								triggerParam.getLogDateTime(),
 								XxlJobContext.getXxlJobContext().getHandleCode(),
@@ -209,7 +209,7 @@ public class JobThread extends Thread{
 						);
                     } else {
                         // is killed
-                        TriggerCallbackThread.pushCallBack(new HandleCallbackRequest(
+                        TriggerCallbackThread.pushCallBack(new CallbackRequest(
                         		triggerParam.getLogId(),
 								triggerParam.getLogDateTime(),
 								XxlJobContext.HANDLE_CODE_FAIL,
@@ -225,7 +225,7 @@ public class JobThread extends Thread{
 			TriggerRequest triggerParam = triggerQueue.poll();
 			if (triggerParam!=null) {
 				// is killed
-				TriggerCallbackThread.pushCallBack(new HandleCallbackRequest(
+				TriggerCallbackThread.pushCallBack(new CallbackRequest(
 						triggerParam.getLogId(),
 						triggerParam.getLogDateTime(),
 						XxlJobContext.HANDLE_CODE_FAIL,

@@ -3,7 +3,7 @@ package com.xxl.job.admin.scheduler.openapi;
 import com.xxl.job.admin.scheduler.config.XxlJobAdminBootstrap;
 import com.xxl.job.core.constant.Const;
 import com.xxl.job.core.openapi.AdminBiz;
-import com.xxl.job.core.openapi.model.HandleCallbackRequest;
+import com.xxl.job.core.openapi.model.CallbackRequest;
 import com.xxl.job.core.openapi.model.RegistryRequest;
 import com.xxl.sso.core.annotation.XxlSso;
 import com.xxl.tool.core.StringTool;
@@ -57,7 +57,7 @@ public class OpenApiController {
         try {
             switch (uri) {
                 case "callback": {
-                    List<HandleCallbackRequest> callbackParamList = GsonTool.fromJson(requestBody, List.class, HandleCallbackRequest.class);
+                    List<CallbackRequest> callbackParamList = GsonTool.fromJson(requestBody, List.class, CallbackRequest.class);
                     return adminBiz.callback(callbackParamList);
                 }
                 case "registry": {

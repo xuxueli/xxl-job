@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * Created by xuxueli on 17/3/2.
  */
-public class HandleCallbackRequest implements Serializable {
+public class CallbackRequest implements Serializable {
     private static final long serialVersionUID = 42L;
 
     private long logId;
@@ -14,8 +14,8 @@ public class HandleCallbackRequest implements Serializable {
     private int handleCode;
     private String handleMsg;
 
-    public HandleCallbackRequest(){}
-    public HandleCallbackRequest(long logId, long logDateTim, int handleCode, String handleMsg) {
+    public CallbackRequest(){}
+    public CallbackRequest(long logId, long logDateTim, int handleCode, String handleMsg) {
         this.logId = logId;
         this.logDateTim = logDateTim;
         this.handleCode = handleCode;

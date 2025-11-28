@@ -1,6 +1,6 @@
 package com.xxl.job.core.openapi;
 
-import com.xxl.job.core.openapi.model.HandleCallbackRequest;
+import com.xxl.job.core.openapi.model.CallbackRequest;
 import com.xxl.job.core.openapi.model.RegistryRequest;
 import com.xxl.tool.response.Response;
 
@@ -17,10 +17,10 @@ public interface AdminBiz {
     /**
      * callback
      *
-     * @param handleCallbackRequestList
+     * @param callbackRequestList
      * @return
      */
-    public Response<String> callback(List<HandleCallbackRequest> handleCallbackRequestList);
+    public Response<String> callback(List<CallbackRequest> callbackRequestList);
 
 
     // ---------------------- registry ----------------------

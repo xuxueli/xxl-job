@@ -3,7 +3,7 @@ package com.xxl.job.admin.scheduler.thread;
 import com.xxl.job.admin.model.XxlJobLog;
 import com.xxl.job.admin.scheduler.config.XxlJobAdminBootstrap;
 import com.xxl.job.admin.util.I18nUtil;
-import com.xxl.job.core.openapi.model.HandleCallbackRequest;
+import com.xxl.job.core.openapi.model.CallbackRequest;
 import com.xxl.job.core.context.XxlJobContext;
 import com.xxl.tool.core.DateTool;
 import com.xxl.tool.response.Response;
@@ -20,7 +20,7 @@ import java.util.concurrent.*;
  * @author xuxueli 2015-9-1 18:05:56
  */
 public class JobCompleteHelper {
-	private static Logger logger = LoggerFactory.getLogger(JobCompleteHelper.class);
+	private static final Logger logger = LoggerFactory.getLogger(JobCompleteHelper.class);
 	
 	// ---------------------- monitor ----------------------
 
@@ -137,15 +137,15 @@ public class JobCompleteHelper {
 
 	// ---------------------- helper ----------------------
 
-	public Response<String> callback(List<HandleCallbackRequest> callbackParamList) {
+	public Response<String> callback(List<CallbackRequest> callbackParamList) {
 
 		callbackThreadPool.execute(new Runnable() {
 			@Override
 			public void run() {
-				for (HandleCallbackRequest handleCallbackParam: callbackParamList) {
-					Response<String> callbackResult = doCallback(handleCallbackParam);
-					logger.debug(">>>>>>>>> JobApiController.callback {}, handleCallbackParam={}, callbackResult={}",
-							(callbackResult.isSuccess()?"success":"fail"), handleCallbackParam, callbackResult);
+				for (CallbackRequest callbackRequest: callbackParamList) {
+					Response<String> callbackResult = doCallback(callbackRequest);
+					logger.debug(">>>>>>>>> JobApiController.callback {}, callbackRequest={}, callbackResult={}",
+							(callbackResult.isSuccess()?"success":"fail"), callbackRequest, callbackResult);
 				}
 			}
 		});
@@ -153,7 +153,7 @@ public class JobCompleteHelper {
 		return Response.ofSuccess();
 	}
 
-	private Response<String> doCallback(HandleCallbackRequest handleCallbackParam) {
+	private Response<String> doCallback(CallbackRequest handleCallbackParam) {
 		// valid log item
 		XxlJobLog log = XxlJobAdminBootstrap.getInstance().getXxlJobLogMapper().load(handleCallbackParam.getLogId());
 		if (log == null) {
