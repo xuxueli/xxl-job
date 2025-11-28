@@ -27,14 +27,19 @@ public class XxlJobContext {
     // ---------------------- for log ----------------------
 
     /**
-     * job log timestamp
+     * log id
      */
-    private final long jobLogTime;
-    
+    private final long logId;
+
     /**
-     * job log filename
+     * log timestamp
      */
-    private final String jobLogFileName;
+    private final long logDateTime;
+
+    /**
+     * log filename
+     */
+    private final String logFileName;
 
     // ---------------------- for shard ----------------------
 
@@ -66,16 +71,18 @@ public class XxlJobContext {
     private String handleMsg;
 
 
-    public XxlJobContext(long jobId, 
+    public XxlJobContext(long jobId,
                          String jobParam,
-                         long jobLogTime,
-                         String jobLogFileName,
+                         long logId,
+                         long logDateTime,
+                         String logFileName,
                          int shardIndex, 
                          int shardTotal) {
         this.jobId = jobId;
         this.jobParam = jobParam;
-        this.jobLogTime = jobLogTime;
-        this.jobLogFileName = jobLogFileName;
+        this.logId = logId;
+        this.logDateTime = logDateTime;
+        this.logFileName = logFileName;
         this.shardIndex = shardIndex;
         this.shardTotal = shardTotal;
 
@@ -90,12 +97,16 @@ public class XxlJobContext {
         return jobParam;
     }
 
-    public String getJobLogFileName() {
-        return jobLogFileName;
+    public long getLogId() {
+        return logId;
     }
 
-    public long getJobLogTime() {
-        return jobLogTime;
+    public long getLogDateTime() {
+        return logDateTime;
+    }
+
+    public String getLogFileName() {
+        return logFileName;
     }
 
     public int getShardIndex() {

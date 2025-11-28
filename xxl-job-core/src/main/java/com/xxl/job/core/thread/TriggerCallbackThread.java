@@ -208,6 +208,7 @@ public class TriggerCallbackThread {
                     -1,
                     null,
                     -1,
+                    -1,
                     logFileName,
                     -1,
                     -1));

@@ -69,7 +69,7 @@ public class ScriptJobHandler extends IJobHandler {
         }
 
         // log file
-        String logFileName = XxlJobContext.getXxlJobContext().getJobLogFileName();
+        String logFileName = XxlJobContext.getXxlJobContext().getLogFileName();
 
         // script params：0=param、1=分片序号、2=分片总数
         String jobParam = XxlJobHelper.getJobParam();

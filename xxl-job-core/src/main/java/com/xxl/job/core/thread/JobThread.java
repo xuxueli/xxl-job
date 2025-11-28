@@ -115,6 +115,7 @@ public class JobThread extends Thread{
 					XxlJobContext xxlJobContext = new XxlJobContext(
 							triggerParam.getJobId(),
 							triggerParam.getExecutorParams(),
+                            triggerParam.getLogId(),
                             triggerParam.getLogDateTime(),
                             logFileName,
 							triggerParam.getBroadcastIndex(),
@@ -178,7 +179,7 @@ public class JobThread extends Thread{
 
 				} else {
 					if (idleTimes > 30) {
-						if(triggerQueue.size() == 0) {	// avoid concurrent trigger causes jobId-lost
+						if(triggerQueue.isEmpty()) {	// avoid concurrent trigger causes jobId-lost
 							XxlJobExecutor.removeJobThread(jobId, "excutor idle times over limit.");
 						}
 					}
@@ -221,7 +222,7 @@ public class JobThread extends Thread{
         }
 
 		// callback trigger request in queue
-		while(triggerQueue !=null && triggerQueue.size()>0){
+		while(triggerQueue !=null && !triggerQueue.isEmpty()){
 			TriggerRequest triggerParam = triggerQueue.poll();
 			if (triggerParam!=null) {
 				// is killed

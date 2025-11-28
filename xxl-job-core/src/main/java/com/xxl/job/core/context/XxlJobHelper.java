@@ -18,7 +18,7 @@ import java.util.Date;
  */
 public class XxlJobHelper {
 
-    // ---------------------- base info ----------------------
+    // ---------------------- job info ----------------------
 
     /**
      * current JobId
@@ -48,20 +48,34 @@ public class XxlJobHelper {
         return xxlJobContext.getJobParam();
     }
 
-    // ---------------------- for log ----------------------
+    // ---------------------- log info ----------------------
 
     /**
      * current job log time
      *
      * @return logDateTime
      */
-    public static long getJobLogTime() {
+    public static long getLogId() {
         XxlJobContext xxlJobContext = XxlJobContext.getXxlJobContext();
         if (xxlJobContext == null) {
             return -1;
         }
 
-        return xxlJobContext.getJobLogTime();
+        return xxlJobContext.getLogId();
+    }
+
+    /**
+     * current job log time
+     *
+     * @return logDateTime
+     */
+    public static long getLogDateTime() {
+        XxlJobContext xxlJobContext = XxlJobContext.getXxlJobContext();
+        if (xxlJobContext == null) {
+            return -1;
+        }
+
+        return xxlJobContext.getLogDateTime();
     }
 
     /**
@@ -69,16 +83,16 @@ public class XxlJobHelper {
      *
      * @return logFileName
      */
-    public static String getJobLogFileName() {
+    public static String getLogFileName() {
         XxlJobContext xxlJobContext = XxlJobContext.getXxlJobContext();
         if (xxlJobContext == null) {
             return null;
         }
 
-        return xxlJobContext.getJobLogFileName();
+        return xxlJobContext.getLogFileName();
     }
 
-    // ---------------------- for shard ----------------------
+    // ---------------------- shard info ----------------------
 
     /**
      * current ShardIndex
@@ -171,7 +185,7 @@ public class XxlJobHelper {
                 (appendLog != null ? appendLog : "");
 
         // appendlog
-        String logFileName = xxlJobContext.getJobLogFileName();
+        String logFileName = xxlJobContext.getLogFileName();
 
         if (logFileName!=null && !logFileName.trim().isEmpty()) {
             XxlJobFileAppender.appendLog(logFileName, formatAppendLog);
