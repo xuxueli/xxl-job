@@ -955,17 +955,17 @@ docker pull xuxueli/xxl-job-admin:{指定版本}
 
 ```
 /**
-* 如需自定义 mysql 等配置，可通过 "-e PARAMS" 指定，参数格式 PARAMS="--key=value  --key2=value2" ；
-* 配置项参考文件：/xxl-job/xxl-job-admin/src/main/resources/application.properties
-* 如需自定义 JVM内存参数 等配置，可通过 "-e JAVA_OPTS" 指定，参数格式 JAVA_OPTS="-Xmx512m" ；
+* 如需自定义 “项目配置文件” 中配置项，比如 mysql 配置，可通过 "-e PARAMS" 指定，参数格式: -e PARAMS="--key=value --key2=value2"；
+* （配置项参考文件：/xxl-job/xxl-job-admin/src/main/resources/application.properties）
+* 如需自定义 “JVM内存参数”，可通过 "-e JAVA_OPTS" 指定，参数格式: -e JAVA_OPTS="-Xmx512m"
+* 如需自定义 “日志文件目录”，可通过 "-e LOG_HOME" 指定，参数格式: -e LOG_HOME=/data/applogs
 */
-
 docker run -d \
- -e PARAMS="--spring.datasource.url=jdbc:mysql://127.0.0.1:3306/xxl_job?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai" \
- -p 8080:8080 \
- -v /tmp:/data/applogs \
- --name xxl-job-admin \
- xuxueli/xxl-job-admin:{指定版本}
+-e PARAMS="--spring.datasource.url=jdbc:mysql://127.0.0.1:3306/xxl_job?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai" \
+-p 8080:8080 \
+-v /tmp:/data/applogs \
+--name xxl-job-admin \
+xuxueli/xxl-job-admin:{指定版本}
 ```
 
 
@@ -1771,11 +1771,11 @@ mvn clean package
 docker build -t xuxueli/xxl-job-admin:{指定版本} ./xxl-job-admin
 
 /**
-* 如需自定义 mysql 等配置，可通过 "-e PARAMS" 指定，参数格式 PARAMS="--key=value  --key2=value2" ；
-* 配置项参考文件：/xxl-job/xxl-job-admin/src/main/resources/application.properties
-* 如需自定义 JVM内存参数 等配置，可通过 "-e JAVA_OPTS" 指定，参数格式 JAVA_OPTS="-Xmx512m" ；
+* 如需自定义 “项目配置文件” 中配置项，比如 mysql 配置，可通过 "-e PARAMS" 指定，参数格式: -e PARAMS="--key=value --key2=value2"；
+* （配置项参考文件：/xxl-job/xxl-job-admin/src/main/resources/application.properties）
+* 如需自定义 “JVM内存参数”，可通过 "-e JAVA_OPTS" 指定，参数格式: -e JAVA_OPTS="-Xmx512m"
+* 如需自定义 “日志文件目录”，可通过 "-e LOG_HOME" 指定，参数格式: -e LOG_HOME=/data/applogs
 */
-
 docker run -d \
 -e PARAMS="--spring.datasource.url=jdbc:mysql://127.0.0.1:3306/xxl_job?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai" \
 -p 8080:8080 \
