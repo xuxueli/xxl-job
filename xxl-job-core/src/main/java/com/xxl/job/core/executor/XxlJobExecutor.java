@@ -76,7 +76,7 @@ public class XxlJobExecutor  {
         XxlJobFileAppender.initLogPath(logPath);
 
         // init invoker, admin-client
-        initAdminBizList(adminAddresses, accessToken, timeout);
+        initAdminBizList(adminAddresses, accessToken);
 
 
         // init JobLogFileCleanThread
@@ -122,7 +122,7 @@ public class XxlJobExecutor  {
 
     // ---------------------- admin-client (rpc invoker) ----------------------
     private static List<AdminBiz> adminBizList;
-    private void initAdminBizList(String adminAddresses, String accessToken, int timeout) throws Exception {
+    private void initAdminBizList(String adminAddresses, String accessToken) throws Exception {
         if (StringTool.isNotBlank(adminAddresses)) {
             for (String address: adminAddresses.trim().split(",")) {
                 if (StringTool.isNotBlank(address)) {
@@ -137,7 +137,7 @@ public class XxlJobExecutor  {
                     // build
                     AdminBiz adminBiz = HttpTool.createClient()
                             .url(finalAddress)
-                            .timeout(timeout * 1000)
+                            .timeout(this.timeout * 1000)
                             .header(Const.XXL_JOB_ACCESS_TOKEN, accessToken)
                             .proxy(AdminBiz.class);
 
