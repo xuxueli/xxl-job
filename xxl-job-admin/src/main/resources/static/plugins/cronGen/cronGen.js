@@ -1064,15 +1064,15 @@
         cronResult : function() {
             var result;
             var second = $("#secondHidden").val();
-            second = second== "" ? "*":second;
+            second = second== "" ? "0":second;
             var minute = $("#minHidden").val();
-            minute = minute== "" ? "*":minute;
+            minute = minute== "" ? "0":minute;
             var hour = $("#hourHidden").val();
-            hour = hour== "" ? "*":hour;
+            hour = hour== "" ? "0":hour;
             var day = $("#dayHidden").val();
-            day = day== "" ? "*":day;
+            day = day== "" ? "1":day;
             var month = $("#monthHidden").val();
-            month = month== "" ? "*":month;
+            month = month== "" ? "1":month;
             var week = $("#weekHidden").val();
             week = week== "" ? "?":week;
             var year = $("#yearHidden").val();
