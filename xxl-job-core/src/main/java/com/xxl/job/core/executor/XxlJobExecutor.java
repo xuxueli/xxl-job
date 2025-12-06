@@ -33,6 +33,7 @@ public class XxlJobExecutor  {
     private String adminAddresses;
     private String accessToken;
     private int timeout;
+    private Boolean enabled;
     private String appname;
     private String address;
     private String ip;
@@ -48,6 +49,9 @@ public class XxlJobExecutor  {
     }
     public void setTimeout(int timeout) {
         this.timeout = timeout;
+    }
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
     }
     public void setAppname(String appname) {
         this.appname = appname;
@@ -71,6 +75,12 @@ public class XxlJobExecutor  {
 
     // ---------------------- start + stop ----------------------
     public void start() throws Exception {
+
+        // valid enabled
+        if (enabled!=null && !enabled) {
+            logger.info(">>>>>>>>>>> xxl-job executor start fail, enabled:{}", enabled);
+            return;
+        }
 
         // init logpath
         XxlJobFileAppender.initLogPath(logPath);

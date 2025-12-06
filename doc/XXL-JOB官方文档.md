@@ -989,13 +989,13 @@ xuxueli/xxl-job-admin:{指定版本}
 ```
 ### 调度中心部署根地址 [选填]：如调度中心集群部署存在多个地址则用逗号分隔。执行器将会使用该地址进行"执行器心跳注册"和"任务结果回调"；为空则关闭自动注册；
 xxl.job.admin.addresses=http://127.0.0.1:8080/xxl-job-admin
-
 ### 调度中心通讯TOKEN [选填]：非空时启用；
 xxl.job.admin.accessToken=default_token
-
 ### 调度中心通讯超时时间[选填]，单位秒；默认3s；
 xxl.job.admin.timeout=3
 
+### 执行器启用开关 [选填]：默认开启，关闭时不进行执行器初始化；
+xxl.job.executor.enabled=true
 ### 执行器AppName [选填]：执行器心跳注册分组依据；为空则关闭自动注册
 xxl.job.executor.appname=xxl-job-executor-sample
 ### 执行器注册 [选填]：优先使用该配置作为注册地址，为空时使用内嵌服务 ”IP:PORT“ 作为注册地址。从而更灵活的支持容器类型执行器动态IP和动态映射端口问题。
@@ -2700,7 +2700,7 @@ public void execute() {
 ### 7.42 版本 v3.3.1 Release Notes[ING]
 - 1、【修复】调度组件事务代码优化，修复DB超时等小概率情况下调度终止问题；
 - 2、【修复】合并PR-3869，修复底层通讯超时设置无效问题；
-- 3、【TODO】执行器新增“执行器运行开关”配置项(xxl.job.executor.enable)，关闭时执行器不进行初始化；
+- 3、【新增】新增“执行器启用开关”配置项(xxl.job.executor.enabled)，默认开启，关闭时不进行执行器初始化；
 - 4、【TODO】任务调度触发后分批批量更新，提升调度性能；
 
 
