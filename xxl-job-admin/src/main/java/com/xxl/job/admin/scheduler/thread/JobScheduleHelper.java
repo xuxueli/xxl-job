@@ -63,8 +63,9 @@ public class JobScheduleHelper {
                     boolean preReadSuc = true;
 
                     // transaction start
-                    TransactionStatus transactionStatus = XxlJobAdminBootstrap.getInstance().getTransactionManager().getTransaction(new DefaultTransactionDefinition());
+                    TransactionStatus transactionStatus = null;
                     try {
+                        transactionStatus = XxlJobAdminBootstrap.getInstance().getTransactionManager().getTransaction(new DefaultTransactionDefinition());
                         // 1、job lock
                         String lockedRecord = XxlJobAdminBootstrap.getInstance().getXxlJobLockMapper().scheduleLock();
                         long nowTime = System.currentTimeMillis();
