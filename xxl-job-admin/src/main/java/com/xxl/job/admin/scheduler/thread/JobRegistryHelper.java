@@ -66,7 +66,7 @@ public class JobRegistryHelper {
 
 							// remove dead address (admin/executor)
 							List<Integer> ids = XxlJobAdminBootstrap.getInstance().getXxlJobRegistryMapper().findDead(Const.DEAD_TIMEOUT, new Date());
-							if (ids!=null && ids.size()>0) {
+							if (ids!=null && !ids.isEmpty()) {
 								XxlJobAdminBootstrap.getInstance().getXxlJobRegistryMapper().removeDead(ids);
 							}
 

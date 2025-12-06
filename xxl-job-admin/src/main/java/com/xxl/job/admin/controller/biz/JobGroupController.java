@@ -183,24 +183,34 @@ public class JobGroupController {
 	@XxlSso(role = Consts.ADMIN_ROLE)
 	public Response<String> delete(@RequestParam("ids[]") List<Integer> ids){
 
-		// valid
+		// parse id
 		if (CollectionTool.isEmpty(ids) || ids.size()!=1) {
 			return Response.ofFail(I18nUtil.getString("system_please_choose") + I18nUtil.getString("system_one") + I18nUtil.getString("system_data"));
 		}
 		int id = ids.get(0);
 
-		// valid
+        // valid repeat operation
+        XxlJobGroup xxlJobGroup = xxlJobGroupMapper.load(id);
+        if (xxlJobGroup == null) {
+            return Response.ofSuccess();
+        }
+
+		// whether exists job
 		int count = xxlJobInfoMapper.pageListCount(0, 10, id, -1,  null, null, null);
 		if (count > 0) {
 			return Response.ofFail( I18nUtil.getString("jobgroup_del_limit_0") );
 		}
 
+        // whether only exists one group
 		List<XxlJobGroup> allList = xxlJobGroupMapper.findAll();
 		if (allList.size() == 1) {
 			return Response.ofFail( I18nUtil.getString("jobgroup_del_limit_1") );
 		}
 
+        // remove group
 		int ret = xxlJobGroupMapper.remove(id);
+        // remove registry-data
+        xxlJobRegistryMapper.removeByRegistryGroupAndKey(RegistType.EXECUTOR.name(), xxlJobGroup.getAppname());
 		return (ret>0)?Response.ofSuccess():Response.ofFail();
 	}
 

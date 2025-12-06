@@ -40,4 +40,7 @@ public interface XxlJobRegistryMapper {
                           @Param("registryKey") String registryKey,
                           @Param("registryValue") String registryValue);
 
+    public int removeByRegistryGroupAndKey(@Param("registryGroup") String registryGroup,
+                                           @Param("registryKey") String registryKey);
+
 }
