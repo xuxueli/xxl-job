@@ -123,31 +123,36 @@ public class XxlJobExecutor  {
     // ---------------------- admin-client (rpc invoker) ----------------------
     private static List<AdminBiz> adminBizList;
     private void initAdminBizList(String adminAddresses, String accessToken, int timeout) throws Exception {
-        if (StringTool.isNotBlank(adminAddresses)) {
-            for (String address: adminAddresses.trim().split(",")) {
-                if (StringTool.isNotBlank(address)) {
+        // valid
+        if (StringTool.isBlank(adminAddresses)) {
+            return;
+        }
 
-                    // valid
-                    String finalAddress = address.trim();
-                    finalAddress = finalAddress.endsWith("/") ? (finalAddress + "api") : (finalAddress + "/api");
-                    if (!(this.timeout >=1 && this.timeout <= 10)) {
-                        this.timeout = 3;
-                    }
-
-                    // build
-                    AdminBiz adminBiz = HttpTool.createClient()
-                            .url(finalAddress)
-                            .timeout(timeout * 1000)
-                            .header(Const.XXL_JOB_ACCESS_TOKEN, accessToken)
-                            .proxy(AdminBiz.class);
-
-                    // registry
-                    if (adminBizList == null) {
-                        adminBizList = new ArrayList<AdminBiz>();
-                    }
-                    adminBizList.add(adminBiz);
-                }
+        // build adminBizList
+        for (String address: adminAddresses.trim().split(",")) {
+            if (StringTool.isBlank(address)) {
+                continue;
             }
+
+            // parse param
+            String finalAddress = address.trim();
+            finalAddress = finalAddress.endsWith("/") ? (finalAddress + "api") : (finalAddress + "/api");
+            int finalTimeout = (timeout >=1 && timeout <= 10)
+                    ?timeout
+                    :3;
+
+            // build
+            AdminBiz adminBiz = HttpTool.createClient()
+                    .url(finalAddress)
+                    .timeout(finalTimeout * 1000)
+                    .header(Const.XXL_JOB_ACCESS_TOKEN, accessToken)
+                    .proxy(AdminBiz.class);
+
+            // registry
+            if (adminBizList == null) {
+                adminBizList = new ArrayList<AdminBiz>();
+            }
+            adminBizList.add(adminBiz);
         }
     }
 
