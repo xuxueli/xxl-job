@@ -46,6 +46,9 @@ public class XxlJobConfig {
     @Value("${xxl.job.executor.logretentiondays}")
     private int logRetentionDays;
 
+    @Value("${xxl.job.executor.excludedpackage}")
+    private String excludedPackage;
+
 
     @Bean
     public XxlJobSpringExecutor xxlJobExecutor() {
@@ -61,6 +64,7 @@ public class XxlJobConfig {
         xxlJobSpringExecutor.setPort(port);
         xxlJobSpringExecutor.setLogPath(logPath);
         xxlJobSpringExecutor.setLogRetentionDays(logRetentionDays);
+        xxlJobSpringExecutor.setExcludedPackage(excludedPackage);
 
         return xxlJobSpringExecutor;
     }
