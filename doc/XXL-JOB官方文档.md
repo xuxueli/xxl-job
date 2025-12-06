@@ -2705,7 +2705,8 @@ public void execute() {
 - 5、【升级】调度中心升级至 SpringBoot4；升级多项maven依赖至较新版本，如 mybatis、groovy 等；
 
 ### 7.43 版本 v3.3.2 Release Notes[ING]
-- 5、【TODO】任务调度触发后分批批量更新，提升调度性能；
+- 1、【优化】调度日志列表排序逻辑优化；
+- 2、【TODO】任务调度触发后分批批量更新，提升调度性能；
 
 
 ### TODO LIST
