@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class XxlJobConfig {
-    private Logger logger = LoggerFactory.getLogger(XxlJobConfig.class);
+    private static final Logger logger = LoggerFactory.getLogger(XxlJobConfig.class);
 
     @Value("${xxl.job.admin.addresses}")
     private String adminAddresses;
@@ -43,6 +43,9 @@ public class XxlJobConfig {
     @Value("${xxl.job.executor.logretentiondays}")
     private int logRetentionDays;
 
+    @Value("${xxl.job.executor.excludedpackage}")
+    private String excludedPackage;
+
 
     @Bean
     public XxlJobSpringExecutor xxlJobExecutor() {
@@ -57,6 +60,7 @@ public class XxlJobConfig {
         xxlJobSpringExecutor.setTimeout(timeout);
         xxlJobSpringExecutor.setLogPath(logPath);
         xxlJobSpringExecutor.setLogRetentionDays(logRetentionDays);
+        xxlJobSpringExecutor.setExcludedPackage(excludedPackage);
 
         return xxlJobSpringExecutor;
     }

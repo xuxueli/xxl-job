@@ -18,7 +18,7 @@ import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
 import org.springframework.ai.chat.memory.MessageWindowChatMemory;
 import org.springframework.ai.ollama.OllamaChatModel;
-import org.springframework.ai.ollama.api.OllamaOptions;
+import org.springframework.ai.ollama.api.OllamaChatOptions;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -57,20 +57,20 @@ public class IndexController {
      */
     @GetMapping("/chat/simple")
     @ResponseBody
-    public String simpleChat(@RequestParam(value = "input") String input) {
+    public String simpleChat(@RequestParam(value = "input", required = false, defaultValue = "介绍你自己") String input) {
 
         // build chat-client
         ChatClient ollamaChatClient = ChatClient
                 .builder(ollamaChatModel)
-                .defaultAdvisors(MessageChatMemoryAdvisor.builder(MessageWindowChatMemory.builder().build()).build())
-                .defaultAdvisors(SimpleLoggerAdvisor.builder().build())
+                .defaultAdvisors(MessageChatMemoryAdvisor.builder(MessageWindowChatMemory.builder().build()).build())       // add memory
+                .defaultAdvisors(SimpleLoggerAdvisor.builder().build())                                                     // add logger
+                .defaultOptions(OllamaChatOptions.builder().model(modle).build())                                           // assign model
                 .build();
 
         // call ollama
         String response = ollamaChatClient
                 .prompt(prompt)
                 .user(input)
-                .options(OllamaOptions.builder().model(modle).build())
                 .call()
                 .content();
 
@@ -82,7 +82,7 @@ public class IndexController {
      * ChatClient 流式调用
      */
     @GetMapping("/chat/stream")
-    public Flux<String> streamChat(HttpServletResponse response, @RequestParam(value = "input") String input) {
+    public Flux<String> streamChat(HttpServletResponse response, @RequestParam(value = "input", required = false, defaultValue = "介绍你自己") String input) {
         response.setCharacterEncoding("UTF-8");
 
         // build chat-client
@@ -90,13 +90,13 @@ public class IndexController {
                 .builder(ollamaChatModel)
                 .defaultAdvisors(MessageChatMemoryAdvisor.builder(MessageWindowChatMemory.builder().build()).build())
                 .defaultAdvisors(SimpleLoggerAdvisor.builder().build())
+                .defaultOptions(OllamaChatOptions.builder().model(modle).build())
                 .build();
 
         // call ollama
         return ollamaChatClient
                 .prompt(prompt)
                 .user(input)
-                .options(OllamaOptions.builder().model(modle).build())
                 .stream()
                 .content();
     }

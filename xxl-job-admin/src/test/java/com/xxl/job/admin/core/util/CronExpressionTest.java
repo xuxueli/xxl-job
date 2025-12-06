@@ -1,7 +1,7 @@
 package com.xxl.job.admin.core.util;
 
 import com.xxl.job.admin.scheduler.cron.CronExpression;
-import com.xxl.job.core.util.DateUtil;
+import com.xxl.tool.core.DateTool;
 import org.apache.groovy.util.Maps;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -32,7 +32,7 @@ public class CronExpressionTest {
         Date lastTriggerTime = cal.getTime();
         for (int i = 1; i <= 5; i++) {
             Date nextTriggerTime = cronExpression.getNextValidTimeAfter(lastTriggerTime);
-            Assertions.assertEquals(DateUtil.parseDateTime(expectedResults.get(i)), nextTriggerTime);
+            Assertions.assertEquals(DateTool.parseDateTime(expectedResults.get(i)), nextTriggerTime);
             lastTriggerTime = nextTriggerTime;
         }
     }
@@ -59,7 +59,7 @@ public class CronExpressionTest {
         Date lastTriggerTime = cal.getTime();
         for (int i = 1; i <= 5; i++) {
             Date nextTriggerTime = cronExpression.getNextValidTimeAfter(lastTriggerTime);
-            Assertions.assertEquals(DateUtil.parseDateTime(expectedResults.get(i)), nextTriggerTime);
+            Assertions.assertEquals(DateTool.parseDateTime(expectedResults.get(i)), nextTriggerTime);
             lastTriggerTime = nextTriggerTime;
         }
     }
@@ -94,7 +94,7 @@ public class CronExpressionTest {
         Date lastTriggerTime = cal.getTime();
         for (int i = 1; i <= 12; i++) {
             Date nextTriggerTime = cronExpression.getNextValidTimeAfter(lastTriggerTime);
-            Assertions.assertEquals(DateUtil.parseDateTime(expectedResults.get(i)), nextTriggerTime);
+            Assertions.assertEquals(DateTool.parseDateTime(expectedResults.get(i)), nextTriggerTime);
             lastTriggerTime = nextTriggerTime;
         }
     }
@@ -129,7 +129,7 @@ public class CronExpressionTest {
         Date lastTriggerTime = cal.getTime();
         for (int i = 1; i <= 12; i++) {
             Date nextTriggerTime = cronExpression.getNextValidTimeAfter(lastTriggerTime);
-            Assertions.assertEquals(DateUtil.parseDateTime(expectedResults.get(i)), nextTriggerTime);
+            Assertions.assertEquals(DateTool.parseDateTime(expectedResults.get(i)), nextTriggerTime);
             lastTriggerTime = nextTriggerTime;
         }
     }
@@ -164,7 +164,7 @@ public class CronExpressionTest {
             Date nextTriggerTime = cronExpression.getNextValidTimeAfter(lastTriggerTime);
             Calendar nextCal = Calendar.getInstance();
             nextCal.setTime(nextTriggerTime);
-            Assertions.assertEquals(expectedResults.get(i), DateUtil.formatDateTime(nextTriggerTime));
+            Assertions.assertEquals(expectedResults.get(i), DateTool.formatDateTime(nextTriggerTime));
             lastTriggerTime = nextTriggerTime;
         }
     }
@@ -181,7 +181,7 @@ public class CronExpressionTest {
 
         Date lastTriggerTime = cal.getTime();
         Date nextTriggerTime = cronExpression.getNextValidTimeAfter(lastTriggerTime);
-        Assertions.assertEquals(DateUtil.parseDateTime("2024-02-29 00:00:00"), nextTriggerTime);
+        Assertions.assertEquals(DateTool.parseDateTime("2024-02-29 00:00:00"), nextTriggerTime);
     }
 
     @Test
@@ -202,7 +202,7 @@ public class CronExpressionTest {
         Date lastTriggerTime = cal.getTime();
         for (int i = 1; i <= 5; i++) {
             Date nextTriggerTime = cronExpression.getNextValidTimeAfter(lastTriggerTime);
-            Assertions.assertEquals(DateUtil.parseDateTime(expectedResults.get(i)), nextTriggerTime);
+            Assertions.assertEquals(DateTool.parseDateTime(expectedResults.get(i)), nextTriggerTime);
             lastTriggerTime = nextTriggerTime;
         }
     }
@@ -225,7 +225,7 @@ public class CronExpressionTest {
         Date lastTriggerTime = cal.getTime();
         for (int i = 1; i <= 5; i++) {
             Date nextTriggerTime = cronExpression.getNextValidTimeAfter(lastTriggerTime);
-            Assertions.assertEquals(DateUtil.parseDateTime(expectedResults.get(i)), nextTriggerTime);
+            Assertions.assertEquals(DateTool.parseDateTime(expectedResults.get(i)), nextTriggerTime);
             lastTriggerTime = nextTriggerTime;
         }
     }
@@ -251,7 +251,7 @@ public class CronExpressionTest {
         Date lastTriggerTime = cal.getTime();
         for (int i = 1; i <= 5; i++) {
             Date nextTriggerTime = cronExpression.getNextValidTimeAfter(lastTriggerTime);
-            Assertions.assertEquals(DateUtil.parseDateTime(expectedResults.get(i)), nextTriggerTime);
+            Assertions.assertEquals(DateTool.parseDateTime(expectedResults.get(i)), nextTriggerTime);
             lastTriggerTime = nextTriggerTime;
         }
     }
@@ -278,7 +278,7 @@ public class CronExpressionTest {
         Date lastTriggerTime = cal.getTime();
         for (int i = 1; i <= 10; i++) {
             Date nextTriggerTime = cronExpression.getNextValidTimeAfter(lastTriggerTime);
-            Assertions.assertEquals(DateUtil.parseDateTime(expectedResults.get(i)), nextTriggerTime);
+            Assertions.assertEquals(DateTool.parseDateTime(expectedResults.get(i)), nextTriggerTime);
             lastTriggerTime = nextTriggerTime;
         }
     }
@@ -306,7 +306,7 @@ public class CronExpressionTest {
         Date lastTriggerTime = cal.getTime();
         for (int i = 1; i <= 10; i++) {
             Date nextTriggerTime = cronExpression.getNextValidTimeAfter(lastTriggerTime);
-            Assertions.assertEquals(DateUtil.parseDateTime(expectedResults.get(i)), nextTriggerTime);
+            Assertions.assertEquals(DateTool.parseDateTime(expectedResults.get(i)), nextTriggerTime);
             lastTriggerTime = nextTriggerTime;
         }
     }
@@ -339,7 +339,7 @@ public class CronExpressionTest {
         Date lastTriggerTime = cal.getTime();
         for (int i = 1; i <= 12; i++) {
             Date nextTriggerTime = cronExpression.getNextValidTimeAfter(lastTriggerTime);
-            Assertions.assertEquals(DateUtil.parseDateTime(expectedResults.get(i)), nextTriggerTime);
+            Assertions.assertEquals(DateTool.parseDateTime(expectedResults.get(i)), nextTriggerTime);
             lastTriggerTime = nextTriggerTime;
         }
     }
@@ -373,7 +373,7 @@ public class CronExpressionTest {
         Date lastTriggerTime = cal.getTime();
         for (int i = 1; i <= 12; i++) {
             Date nextTriggerTime = cronExpression.getNextValidTimeAfter(lastTriggerTime);
-            Assertions.assertEquals(DateUtil.parseDateTime(expectedResults.get(i)), nextTriggerTime);
+            Assertions.assertEquals(DateTool.parseDateTime(expectedResults.get(i)), nextTriggerTime);
             lastTriggerTime = nextTriggerTime;
         }
     }
@@ -408,7 +408,7 @@ public class CronExpressionTest {
         Date lastTriggerTime = cal.getTime();
         for (int i = 1; i <= 12; i++) {
             Date nextTriggerTime = cronExpression.getNextValidTimeAfter(lastTriggerTime);
-            Assertions.assertEquals(DateUtil.parseDateTime(expectedResults.get(i)), nextTriggerTime);
+            Assertions.assertEquals(DateTool.parseDateTime(expectedResults.get(i)), nextTriggerTime);
             lastTriggerTime = nextTriggerTime;
         }
     }
@@ -434,7 +434,7 @@ public class CronExpressionTest {
         Date lastTriggerTime = cal.getTime();
         for (int i = 1; i <= 8; i++) {
             Date nextTriggerTime = cronExpression.getNextValidTimeAfter(lastTriggerTime);
-            Assertions.assertEquals(DateUtil.parseDateTime(expectedResults.get(i)), nextTriggerTime);
+            Assertions.assertEquals(DateTool.parseDateTime(expectedResults.get(i)), nextTriggerTime);
             lastTriggerTime = nextTriggerTime;
         }
     }
@@ -465,7 +465,7 @@ public class CronExpressionTest {
         Date lastTriggerTime = cal.getTime();
         for (int i = 1; i <= 10; i++) {
             Date nextTriggerTime = cronExpression.getNextValidTimeAfter(lastTriggerTime);
-            Assertions.assertEquals(DateUtil.parseDateTime(expectedResults.get(i)), nextTriggerTime);
+            Assertions.assertEquals(DateTool.parseDateTime(expectedResults.get(i)), nextTriggerTime);
             lastTriggerTime = nextTriggerTime;
         }
     }
@@ -496,7 +496,7 @@ public class CronExpressionTest {
         Date lastTriggerTime = cal.getTime();
         for (int i = 1; i <= 8; i++) {
             Date nextTriggerTime = cronExpression.getNextValidTimeAfter(lastTriggerTime);
-            Assertions.assertEquals(DateUtil.parseDateTime(expectedResults.get(i)), nextTriggerTime);
+            Assertions.assertEquals(DateTool.parseDateTime(expectedResults.get(i)), nextTriggerTime);
             lastTriggerTime = nextTriggerTime;
         }
     }
@@ -522,7 +522,7 @@ public class CronExpressionTest {
         Date lastTriggerTime = cal.getTime();
         for (int i = 1; i <= 5; i++) {
             Date nextTriggerTime = cronExpression1.getNextValidTimeAfter(lastTriggerTime);
-            Assertions.assertEquals(DateUtil.parseDateTime(expectedResults1.get(i)), nextTriggerTime);
+            Assertions.assertEquals(DateTool.parseDateTime(expectedResults1.get(i)), nextTriggerTime);
             lastTriggerTime = nextTriggerTime;
         }
 
@@ -530,7 +530,7 @@ public class CronExpressionTest {
         cal.set(2024, Calendar.DECEMBER, 31, 23, 30, 0);
         lastTriggerTime = cal.getTime();
         Date nextTriggerTime = cronExpression2.getNextValidTimeAfter(lastTriggerTime);
-        Assertions.assertEquals(DateUtil.parseDateTime("2025-01-01 00:00:00"), nextTriggerTime);
+        Assertions.assertEquals(DateTool.parseDateTime("2025-01-01 00:00:00"), nextTriggerTime);
     }
 
     @Test
@@ -542,7 +542,7 @@ public class CronExpressionTest {
 
         Date lastTriggerTime = cal.getTime();
         Date nextTriggerTime = cronExpression.getNextValidTimeAfter(lastTriggerTime);
-        Assertions.assertEquals(DateUtil.parseDateTime("2024-01-01 08:30:00"), nextTriggerTime);
+        Assertions.assertEquals(DateTool.parseDateTime("2024-01-01 08:30:00"), nextTriggerTime);
     }
 
     @Test
@@ -566,7 +566,7 @@ public class CronExpressionTest {
         Date lastTriggerTime = cal.getTime();
         for (int i = 1; i <= 8; i++) {
             Date nextTriggerTime = cronExpression.getNextValidTimeAfter(lastTriggerTime);
-            Assertions.assertEquals(DateUtil.parseDateTime(expectedResults.get(i)), nextTriggerTime);
+            Assertions.assertEquals(DateTool.parseDateTime(expectedResults.get(i)), nextTriggerTime);
             lastTriggerTime = nextTriggerTime;
         }
     }
@@ -597,7 +597,7 @@ public class CronExpressionTest {
         Date lastTriggerTime = cal.getTime();
         for (int i = 1; i <= 10; i++) {
             Date nextTriggerTime = cronExpression.getNextValidTimeAfter(lastTriggerTime);
-            Assertions.assertEquals(DateUtil.parseDateTime(expectedResults.get(i)), nextTriggerTime);
+            Assertions.assertEquals(DateTool.parseDateTime(expectedResults.get(i)), nextTriggerTime);
             lastTriggerTime = nextTriggerTime;
         }
     }
@@ -617,7 +617,7 @@ public class CronExpressionTest {
         Calendar nextCal = Calendar.getInstance();
         nextCal.setTime(nextTriggerTime);
 
-        Assertions.assertEquals("2025-01-01 00:00:00", DateUtil.formatDateTime(nextTriggerTime));
+        Assertions.assertEquals("2025-01-01 00:00:00", DateTool.formatDateTime(nextTriggerTime));
     }
 
     /**
@@ -641,7 +641,7 @@ public class CronExpressionTest {
         Date lastTriggerTime = cal.getTime();
         for (int i = 1; i <= 5; i++) {
             Date nextTriggerTime = cronExpression.getNextValidTimeAfter(lastTriggerTime);
-            Assertions.assertEquals(DateUtil.parseDateTime(expectedResults.get(i)), nextTriggerTime);
+            Assertions.assertEquals(DateTool.parseDateTime(expectedResults.get(i)), nextTriggerTime);
             lastTriggerTime = nextTriggerTime;
         }
     }
@@ -667,7 +667,7 @@ public class CronExpressionTest {
         Date lastTriggerTime = cal.getTime();
         for (int i = 1; i <= 5; i++) {
             Date nextTriggerTime = cronExpression.getNextValidTimeAfter(lastTriggerTime);
-            Assertions.assertEquals(DateUtil.parseDateTime(expectedResults.get(i)), nextTriggerTime);
+            Assertions.assertEquals(DateTool.parseDateTime(expectedResults.get(i)), nextTriggerTime);
             lastTriggerTime = nextTriggerTime;
         }
     }
@@ -693,7 +693,7 @@ public class CronExpressionTest {
         Date lastTriggerTime = cal.getTime();
         for (int i = 1; i <= 5; i++) {
             Date nextTriggerTime = cronExpression.getNextValidTimeAfter(lastTriggerTime);
-            Assertions.assertEquals(DateUtil.parseDateTime(expectedResults.get(i)), nextTriggerTime);
+            Assertions.assertEquals(DateTool.parseDateTime(expectedResults.get(i)), nextTriggerTime);
             lastTriggerTime = nextTriggerTime;
         }
     }
@@ -722,7 +722,7 @@ public class CronExpressionTest {
         Date lastTriggerTime = cal.getTime();
         for (int i = 1; i <= 8; i++) {
             Date nextTriggerTime = cronExpression.getNextValidTimeAfter(lastTriggerTime);
-            Assertions.assertEquals(DateUtil.parseDateTime(expectedResults.get(i)), nextTriggerTime);
+            Assertions.assertEquals(DateTool.parseDateTime(expectedResults.get(i)), nextTriggerTime);
             lastTriggerTime = nextTriggerTime;
         }
     }
@@ -785,9 +785,10 @@ public class CronExpressionTest {
         Date lastTriggerTime = cal.getTime();
         for (int i = 1; i <= 10; i++) {
             Date nextTriggerTime = cronExpression.getNextValidTimeAfter(lastTriggerTime);
+            System.out.println(DateTool.formatDateTime(nextTriggerTime));
             Calendar nextCal = Calendar.getInstance();
             nextCal.setTime(nextTriggerTime);
-            Assertions.assertEquals(expectedResults.get(i), DateUtil.formatDateTime(nextTriggerTime));
+            Assertions.assertEquals(expectedResults.get(i), DateTool.formatDateTime(nextTriggerTime));
             lastTriggerTime = nextTriggerTime;
         }
     }
@@ -821,7 +822,7 @@ public class CronExpressionTest {
             Date nextTriggerTime = cronExpression.getNextValidTimeAfter(lastTriggerTime);
             Calendar nextCal = Calendar.getInstance();
             nextCal.setTime(nextTriggerTime);
-            Assertions.assertEquals(expectedResults.get(i), DateUtil.formatDateTime(nextTriggerTime));
+            Assertions.assertEquals(expectedResults.get(i), DateTool.formatDateTime(nextTriggerTime));
             lastTriggerTime = nextTriggerTime;
         }
     }
@@ -849,7 +850,7 @@ public class CronExpressionTest {
         Date lastTriggerTime = cal.getTime();
         for (int i = 1; i <= 12; i++) {
             Date nextTriggerTime = cronExpression.getNextValidTimeAfter(lastTriggerTime);
-            String actualTime = DateUtil.formatDateTime(nextTriggerTime);
+            String actualTime = DateTool.formatDateTime(nextTriggerTime);
             Assertions.assertEquals(expectedResults.get(i), actualTime);
             lastTriggerTime = nextTriggerTime;
         }
@@ -882,7 +883,7 @@ public class CronExpressionTest {
         Date lastTriggerTime = cal.getTime();
         for (int i = 1; i <= 12; i++) {
             Date nextTriggerTime = cronExpression.getNextValidTimeAfter(lastTriggerTime);
-            String actualTime = DateUtil.formatDateTime(nextTriggerTime);
+            String actualTime = DateTool.formatDateTime(nextTriggerTime);
             Assertions.assertEquals(expectedResults.get(i), actualTime);
             lastTriggerTime = nextTriggerTime;
         }
@@ -914,7 +915,7 @@ public class CronExpressionTest {
         Date lastTriggerTime = cal.getTime();
         for (int i = 1; i <= 12; i++) {
             Date nextTriggerTime = cronExpression.getNextValidTimeAfter(lastTriggerTime);
-            String actualTime = DateUtil.formatDateTime(nextTriggerTime);
+            String actualTime = DateTool.formatDateTime(nextTriggerTime);
             Assertions.assertEquals(expectedResults.get(i), actualTime);
             lastTriggerTime = nextTriggerTime;
         }

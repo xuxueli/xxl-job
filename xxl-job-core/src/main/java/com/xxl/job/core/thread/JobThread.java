@@ -1,21 +1,19 @@
 package com.xxl.job.core.thread;
 
-import com.xxl.job.core.biz.model.HandleCallbackParam;
-import com.xxl.job.core.biz.model.ReturnT;
-import com.xxl.job.core.biz.model.TriggerParam;
+import com.xxl.job.core.openapi.model.CallbackRequest;
+import com.xxl.job.core.openapi.model.TriggerRequest;
 import com.xxl.job.core.context.XxlJobContext;
 import com.xxl.job.core.context.XxlJobHelper;
 import com.xxl.job.core.executor.XxlJobExecutor;
 import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.log.XxlJobFileAppender;
+import com.xxl.tool.response.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.*;
 
@@ -25,11 +23,11 @@ import java.util.concurrent.*;
  * @author xuxueli 2016-1-16 19:52:47
  */
 public class JobThread extends Thread{
-	private static Logger logger = LoggerFactory.getLogger(JobThread.class);
+	private static final Logger logger = LoggerFactory.getLogger(JobThread.class);
 
 	private int jobId;
 	private IJobHandler handler;
-	private LinkedBlockingQueue<TriggerParam> triggerQueue;
+	private LinkedBlockingQueue<TriggerRequest> triggerQueue;
 	private Set<Long> triggerLogIdSet;		// avoid repeat trigger for the same TRIGGER_LOG_ID
 
 	private volatile boolean toStop = false;
@@ -42,7 +40,7 @@ public class JobThread extends Thread{
 	public JobThread(int jobId, IJobHandler handler) {
 		this.jobId = jobId;
 		this.handler = handler;
-		this.triggerQueue = new LinkedBlockingQueue<TriggerParam>();
+		this.triggerQueue = new LinkedBlockingQueue<TriggerRequest>();
 		//this.triggerLogIdSet = Collections.synchronizedSet(new HashSet<Long>());
 		this.triggerLogIdSet = ConcurrentHashMap.newKeySet();
 
@@ -55,26 +53,21 @@ public class JobThread extends Thread{
 
     /**
      * new trigger to queue
-     *
-     * @param triggerParam
-     * @return
      */
-	public ReturnT<String> pushTriggerQueue(TriggerParam triggerParam) {
+	public Response<String> pushTriggerQueue(TriggerRequest triggerParam) {
         // avoid repeat
 		if (!triggerLogIdSet.add(triggerParam.getLogId())) {
 			logger.info(">>>>>>>>>>> repeate trigger job, logId:{}", triggerParam.getLogId());
-			return ReturnT.ofFail("repeate trigger job, logId:" + triggerParam.getLogId());
+			return Response.of(XxlJobContext.HANDLE_CODE_FAIL, "repeate trigger job, logId:" + triggerParam.getLogId());
 		}
 
 		// push trigger queue
 		triggerQueue.add(triggerParam);
-        return ReturnT.ofSuccess();
+        return Response.ofSuccess();
 	}
 
     /**
      * kill job thread
-     *
-     * @param stopReason
      */
 	public void toStop(String stopReason) {
 		/**
@@ -88,7 +81,6 @@ public class JobThread extends Thread{
 
     /**
      * is running job
-     * @return
      */
     public boolean isRunningOrHasQueue() {
         return running || triggerQueue.size()>0;
@@ -109,7 +101,7 @@ public class JobThread extends Thread{
 			running = false;
 			idleTimes++;
 
-            TriggerParam triggerParam = null;
+            TriggerRequest triggerParam = null;
             try {
 				// to check toStop signal, we need cycle, so we cannot use queue.take(), instead of poll(timeout)
 				triggerParam = triggerQueue.poll(3L, TimeUnit.SECONDS);
@@ -123,7 +115,9 @@ public class JobThread extends Thread{
 					XxlJobContext xxlJobContext = new XxlJobContext(
 							triggerParam.getJobId(),
 							triggerParam.getExecutorParams(),
-							logFileName,
+                            triggerParam.getLogId(),
+                            triggerParam.getLogDateTime(),
+                            logFileName,
 							triggerParam.getBroadcastIndex(),
 							triggerParam.getBroadcastTotal());
 
@@ -185,7 +179,7 @@ public class JobThread extends Thread{
 
 				} else {
 					if (idleTimes > 30) {
-						if(triggerQueue.size() == 0) {	// avoid concurrent trigger causes jobId-lost
+						if(triggerQueue.isEmpty()) {	// avoid concurrent trigger causes jobId-lost
 							XxlJobExecutor.removeJobThread(jobId, "excutor idle times over limit.");
 						}
 					}
@@ -208,7 +202,7 @@ public class JobThread extends Thread{
                     // callback handler info
                     if (!toStop) {
                         // common
-                        TriggerCallbackThread.pushCallBack(new HandleCallbackParam(
+                        TriggerCallbackThread.pushCallBack(new CallbackRequest(
                         		triggerParam.getLogId(),
 								triggerParam.getLogDateTime(),
 								XxlJobContext.getXxlJobContext().getHandleCode(),
@@ -216,7 +210,7 @@ public class JobThread extends Thread{
 						);
                     } else {
                         // is killed
-                        TriggerCallbackThread.pushCallBack(new HandleCallbackParam(
+                        TriggerCallbackThread.pushCallBack(new CallbackRequest(
                         		triggerParam.getLogId(),
 								triggerParam.getLogDateTime(),
 								XxlJobContext.HANDLE_CODE_FAIL,
@@ -228,11 +222,11 @@ public class JobThread extends Thread{
         }
 
 		// callback trigger request in queue
-		while(triggerQueue !=null && triggerQueue.size()>0){
-			TriggerParam triggerParam = triggerQueue.poll();
+		while(triggerQueue !=null && !triggerQueue.isEmpty()){
+			TriggerRequest triggerParam = triggerQueue.poll();
 			if (triggerParam!=null) {
 				// is killed
-				TriggerCallbackThread.pushCallBack(new HandleCallbackParam(
+				TriggerCallbackThread.pushCallBack(new CallbackRequest(
 						triggerParam.getLogId(),
 						triggerParam.getLogDateTime(),
 						XxlJobContext.HANDLE_CODE_FAIL,
