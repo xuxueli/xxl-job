@@ -37,12 +37,11 @@
 						<div class="input-group">
 							<span class="input-group-addon">${I18n.jobinfo_job}</span>
 							<select class="form-control" id="jobId" >
+								<option value="0" >${I18n.system_all}</option>
 								<#if jobInfoList?size gt 0>
 									<#list jobInfoList as jobItem>
 										<option value="${jobItem.id}" >${jobItem.jobDesc}</option>
 									</#list>
-								<#else>
-									<option value="0" >${I18n.system_selected_nothing}</option>
 								</#if>
 							</select>
 						</div>
