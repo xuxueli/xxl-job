@@ -87,6 +87,11 @@
 						<button class="btn btn-sm btn-primary selectOnlyOne logDetail" type="button"><#--<i class="fa fa-edit"></i>-->${I18n.joblog_rolling_log}</button>
 					</div>
 					<div class="box-body" >
+						<style>
+							#data_list {
+								table-layout: fixed;
+							}
+						</style>
 						<table id="data_list" class="table table-bordered table-striped" width="100%" >
 							<thead></thead>
 							<tbody></tbody>
@@ -280,11 +285,8 @@
                         if (jobDesc) {
                             jobShow += jobDesc;
                         }
-                        if (jobShow.length > 10) {
-                            jobShow = jobShow.substr(0, 10) + '...';
-                        }
 						// show
-						return jobShow;
+						return '<div style="width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="' + jobShow + '">' + jobShow + '</div>';
 					}
 				},{
 					title: I18n.joblog_field_triggerTime,
