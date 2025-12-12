@@ -88,7 +88,7 @@ create index idx_xxl_job_log_handle_code on xxl_job_log (handle_code)
 create index idx_xxl_job_log_jobid_jobgroup on xxl_job_log (job_id,job_group)
 ;
 
-create index idx_xxl_job_log_job_id on xxl_job_log (job_id)
+create index idx_xxl_job_log_job_id on xxl_job_log (job_id desc,id desc)
 ;
 
 

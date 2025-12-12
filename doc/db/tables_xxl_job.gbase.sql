@@ -64,7 +64,7 @@ create index `I_jobid_jobgroup`
     on `xxl_job_log` (`job_id`,`job_group`);
 
 create index `I_job_id`
-    on `xxl_job_log` (`job_id`);
+    on `xxl_job_log` (`job_id` desc,`id` desc);
 
 CREATE TABLE `xxl_job_log_report`
 (
