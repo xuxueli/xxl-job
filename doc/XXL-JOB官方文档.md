@@ -1822,7 +1822,7 @@ docker compose down
 docker compose up -d
 
 // 其他：如需调整环境配置，如Mysql密码、端口等，可以在docker-compose.yml中修改；另外，如果需要修改Mysql数据持久化目录，可以通过 MYSQL_PATH 变量在启动时快速设置；
-MYSQL_PATH=/Users/admin/program/docker/instance/mysql/ docker compose up
+MYSQL_PATH={自定义数据库持久化目录} docker compose up -d
 ```
 
 
@@ -2738,7 +2738,7 @@ public void execute() {
     // 构建 XXL-JOB
     mvn clean package -Dmaven.test.skip=true
     // 启动 XXL-JOB
-    MYSQL_PATH={自定义数据库持久化目录} docker-compose up
+    MYSQL_PATH={自定义数据库持久化目录} docker compose up -d
     // 停止 XXL-JOB
     docker compose down
     ```
