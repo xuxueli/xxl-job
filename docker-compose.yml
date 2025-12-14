@@ -13,6 +13,7 @@ services:
       - "3306:3306"
     volumes:
       - ./doc/db/tables_xxl_job.sql:/docker-entrypoint-initdb.d/tables_xxl_job.sql:ro
+      # Mysql 数据卷
       - /Users/admin/program/docker/instance/mysql/v2/conf:/etc/mysql/conf.d
       - /Users/admin/program/docker/instance/mysql/v2/logs:/var/log/mysql
       - /Users/admin/program/docker/instance/mysql/v2/data:/var/lib/mysql
@@ -27,7 +28,10 @@ services:
       - xxl-job-network
 
   xxl-job-admin:
-    image: xuxueli/xxl-job-admin:3.3.1
+#    image: xuxueli/xxl-job-admin:{version}
+    build:
+      context: ./xxl-job-admin
+      dockerfile: Dockerfile
     container_name: xxl-job-admin
     environment:
       PARAMS: >-
@@ -42,20 +46,21 @@ services:
     networks:
       - xxl-job-network
 
-#  xxl-job-executor-sample-springboot:
-#    image: xuxueli/xxl-job-executor-sample-springboot:3.3.2-SNAPSHOT
-#    container_name: xxl-job-executor-sample-springboot
-#    environment:
-#      PARAMS: "--xxl.job.admin.addresses=http://xxl-job-admin:8080/xxl-job-admin"
-#    ports:
-#      - "9999:9999"
-#    depends_on:
-#      mysql:
-#        condition: service_healthy
-#      xxl-job-admin:
-#        condition: service_healthy
-#    networks:
-#      - xxl-job-network
+  xxl-job-executor-sample-springboot:
+#    image: xuxueli/xxl-job-executor-sample-springboot:{version}
+    build:
+      context: ./xxl-job-executor-samples/xxl-job-executor-sample-springboot
+      dockerfile: Dockerfile
+    container_name: xxl-job-executor-sample-springboot
+    environment:
+      PARAMS: "--xxl.job.admin.addresses=http://xxl-job-admin:8080/xxl-job-admin"
+    ports:
+      - "9999:9999"
+    depends_on:
+      xxl-job-admin:
+        condition: service_started
+    networks:
+      - xxl-job-network
 
 networks:
   xxl-job-network:
