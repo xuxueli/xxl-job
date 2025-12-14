@@ -6,17 +6,19 @@ services:
     image: mysql:8.4
     container_name: xxl-job-mysql
     environment:
+      # 1、数据库密码设置，需要与Admin中配置一致：
       MYSQL_ROOT_PASSWORD: root_pwd
+      # 2、数据库实例名称，需要与Admin中配置一致；
       MYSQL_DATABASE: xxl_job
-      MYSQL_BASE_PATH: /Users/admin/program/docker/instance/mysql/v2
     ports:
       - "3306:3306"
     volumes:
+      # 说明：仅数据库首次初始化时执行；
       - ./doc/db/tables_xxl_job.sql:/docker-entrypoint-initdb.d/tables_xxl_job.sql:ro
-      # Mysql 数据卷
-      - /Users/admin/program/docker/instance/mysql/v2/conf:/etc/mysql/conf.d
-      - /Users/admin/program/docker/instance/mysql/v2/logs:/var/log/mysql
-      - /Users/admin/program/docker/instance/mysql/v2/data:/var/lib/mysql
+      # 3、数据库持久化目录位置，建议自定义：
+      - ${MYSQL_PATH:-/Users/admin/program/docker/instance/mysql}/conf:/etc/mysql/conf.d
+      - ${MYSQL_PATH:-/Users/admin/program/docker/instance/mysql}/logs:/var/log/mysql
+      - ${MYSQL_PATH:-/Users/admin/program/docker/instance/mysql}/data:/var/lib/mysql
     command: >-
       --character-set-server=utf8mb4
       --collation-server=utf8mb4_unicode_ci
@@ -28,12 +30,15 @@ services:
       - xxl-job-network
 
   xxl-job-admin:
-#    image: xuxueli/xxl-job-admin:{version}
+    # 4、调度中心本地Build设置，如果期望使用推动DockerHub的镜像，可以注释当前启用的image、build配置，并启用如下设置版本的image配置；
+    #image: xuxueli/xxl-job-admin:{version}
+    image: xuxueli/xxl-job-admin:local
     build:
       context: ./xxl-job-admin
       dockerfile: Dockerfile
     container_name: xxl-job-admin
     environment:
+      # 5、数据库密码设置，需要与上文Mysql中保持一致：
       PARAMS: >-
         --spring.datasource.url=jdbc:mysql://mysql:3306/xxl_job?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai
         --spring.datasource.username=root 
@@ -47,7 +52,7 @@ services:
       - xxl-job-network
 
   xxl-job-executor-sample-springboot:
-#    image: xuxueli/xxl-job-executor-sample-springboot:{version}
+    image: xuxueli/xxl-job-executor-sample-springboot:local
     build:
       context: ./xxl-job-executor-samples/xxl-job-executor-sample-springboot
       dockerfile: Dockerfile

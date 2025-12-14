@@ -1802,6 +1802,28 @@ XXL-JOB日志主要包含如下两部分，均支持日志自动清理，说明�
 
 针对该问题，调度中心提供内置组件进行处理，逻辑为：调度记录停留在 "运行中" 状态超过10min，且对应执行器心跳注册失败不在线，则将本地调度主动标记失败；
 
+### 5.24 Docker Compose 快速部署    
+支持通过 Docker Compose 方式部署并启动 XXL-JOB，包括：数据库、调度中心、示例执行器。
+
+- 第一步：克隆 XXL-JOB    
+```
+git clone --branch "$(curl -s https://api.github.com/repos/xuxueli/xxl-job/releases/latest | jq -r .tag_name)" https://github.com/xuxueli/xxl-job.git
+```
+
+- 第二步：构建 XXL-JOB    
+```
+// 注意：如下命令需要在项目仓库根目录执行
+mvn clean package -Dmaven.test.skip=true
+```
+
+- 第三步：启动 XXL-JOB    
+```
+docker compose down
+docker-compose up -d
+
+// 其他：如需调整环境配置，如Mysql密码、端口等，可以在docker-compose.yml中修改；另外，如果需要修改Mysql数据持久化目录，可以通过 MYSQL_PATH 变量在启动时快速设置；
+MYSQL_PATH=/Users/admin/program/docker/instance/mysql/ docker-compose up
+```
 
 
 ## 六、调度中心/执行器 OpenApi
