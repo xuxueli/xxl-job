@@ -2706,6 +2706,7 @@ public void execute() {
 
 ### 7.43 版本 v3.3.2 Release Notes[ING]
 - 1、【优化】调度日志列表排序逻辑优化；
+- 2、【新增】新增 Docker Compose 配置，支持一键配置启动调度中心集群； 
 - 2、【TODO】任务调度触发后分批批量更新，提升调度性能；
 
 
