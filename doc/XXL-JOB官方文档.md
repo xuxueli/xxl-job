@@ -93,7 +93,7 @@ XXL-JOB是一个分布式任务调度平台，其核心设计目标是开发迅�
 于2021-12-06，XXL-JOB参与"[2021年度OSC中国开源项目评选](https://www.oschina.net/project/top_cn_2021) "评比，在当时已录入的一万多个开源项目中角逐，最终当选"最受欢迎项目"。
 
 > 我司大众点评目前已接入XXL-JOB，内部别名《Ferrari》（Ferrari基于XXL-JOB的V1.1版本定制而成，新接入应用推荐升级最新版本）。
-据最新统计, 自2016-01-21接入至2017-12-01期间，该系统已调度约100万次，表现优异。新接入应用推荐使用最新版本，因为经过数十个版本的更新，系统的任务模型、UI交互模型以及底层调度通讯模型都有了较大的优化和提升，核心功能更加稳定高效。
+> 据最新统计, 自2016-01-21接入至2017-12-01期间，该系统已调度约100万次，表现优异。新接入应用推荐使用最新版本，因为经过数十个版本的更新，系统的任务模型、UI交互模型以及底层调度通讯模型都有了较大的优化和提升，核心功能更加稳定高效。
 
 至今，XXL-JOB已接入多家公司的线上产品线，接入场景如电商业务，O2O业务和大数据作业等，截止最新统计时间为止，XXL-JOB已接入的公司包括不限于：
 
@@ -1819,10 +1819,10 @@ mvn clean package -Dmaven.test.skip=true
 - 第三步：启动 XXL-JOB    
 ```
 docker compose down
-docker-compose up -d
+docker compose up -d
 
 // 其他：如需调整环境配置，如Mysql密码、端口等，可以在docker-compose.yml中修改；另外，如果需要修改Mysql数据持久化目录，可以通过 MYSQL_PATH 变量在启动时快速设置；
-MYSQL_PATH=/Users/admin/program/docker/instance/mysql/ docker-compose up
+MYSQL_PATH=/Users/admin/program/docker/instance/mysql/ docker compose up
 ```
 
 
@@ -2727,8 +2727,25 @@ public void execute() {
 - 5、【升级】调度中心升级至 SpringBoot4；升级多项maven依赖至较新版本，如 mybatis、groovy 等；
 
 ### 7.43 版本 v3.3.2 Release Notes[ING]
-- 1、【优化】调度日志列表排序逻辑优化；
-- 2、【新增】新增 Docker Compose 配置，支持一键配置启动调度中心集群； 
+- 1、【新增】新增 Docker Compose 配置，支持一键配置启动调度中心集群；
+
+<details>
+    <summary>Docker Compose启动步骤：</summary>    
+
+    ```
+    // 下载 XXL-JOB
+    git clone --branch "$(curl -s https://api.github.com/repos/xuxueli/xxl-job/releases/latest | jq -r .tag_name)" https://github.com/xuxueli/xxl-job.git
+    // 构建 XXL-JOB
+    mvn clean package -Dmaven.test.skip=true
+    // 启动 XXL-JOB
+    MYSQL_PATH={自定义数据库持久化目录} docker-compose up
+    // 停止 XXL-JOB
+    docker compose down
+    ```
+</details>
+```
+
+- 2、【优化】调度日志列表排序逻辑优化；
 - 2、【TODO】任务调度触发后分批批量更新，提升调度性能；
 
 

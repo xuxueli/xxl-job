@@ -145,7 +145,9 @@ public class JobScheduleHelper {
                         }
                     } finally {
                         // transaction commit
-                        XxlJobAdminBootstrap.getInstance().getTransactionManager().commit(transactionStatus);   // avlid schedule repeat
+                        if (transactionStatus != null) {
+                            XxlJobAdminBootstrap.getInstance().getTransactionManager().commit(transactionStatus);   // avlid schedule repeat
+                        }
                     }
                     // transaction end
                     long cost = System.currentTimeMillis()-start;
