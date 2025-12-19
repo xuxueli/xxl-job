@@ -595,7 +595,7 @@ exit 0
                     <div class="form-group">
                         <label for="firstname" class="col-sm-2 control-label">${I18n.jobinfo_field_executorparam}<font color="black">*</font></label>
                         <div class="col-sm-10">
-                            <textarea class="textarea form-control" name="executorParam" placeholder="${I18n.system_please_input}${I18n.jobinfo_field_executorparam}" maxlength="512" style="height: 63px; line-height: 1.2;"></textarea>
+                            <textarea class="textarea form-control" name="executorParam" placeholder="${I18n.system_please_input}${I18n.jobinfo_field_executorparam}" maxlength="512" style="height: 180px; line-height: 1.2;"></textarea>
                         </div>
                     </div>
                     <div class="form-group">
