@@ -38,11 +38,17 @@ services:
       dockerfile: Dockerfile
     container_name: xxl-job-admin
     environment:
-      # 5、数据库密码设置，需要与上文Mysql中保持一致：
-      PARAMS: >-
-        --spring.datasource.url=jdbc:mysql://mysql:3306/xxl_job?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai
-        --spring.datasource.username=root 
-        --spring.datasource.password=root_pwd
+      # 5、数据库配置，使用环境变量方式（推荐）：
+      DB_INIT: "true"
+      DB_HOST: mysql
+      DB_PORT: "3306"
+      DB_DATABASE: xxl_job
+      DB_USERNAME: root
+      DB_PASSWORD: root_pwd
+      # 可选：额外的Spring Boot参数
+      # PARAMS: "--server.port=8080"
+      # 旧方式（仍然支持）：直接通过PARAMS传递Spring Boot参数
+      # PARAMS: "--spring.datasource.url=jdbc:mysql://mysql:3306/xxl_job?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai --spring.datasource.username=root --spring.datasource.password=root_pwd"
     ports:
       - "8080:8080"
     depends_on:
