@@ -216,7 +216,7 @@ public class JobGroupController {
 
 	@RequestMapping("/loadById")
 	@ResponseBody
-	@XxlSso(role = Consts.ADMIN_ROLE)
+	//@XxlSso(role = Consts.ADMIN_ROLE)
 	public Response<XxlJobGroup> loadById(@RequestParam("id") int id){
 		XxlJobGroup jobGroup = xxlJobGroupMapper.load(id);
 		return jobGroup!=null?Response.ofSuccess(jobGroup):Response.ofFail();
