@@ -25,6 +25,16 @@
         adminTable: {
             table :null,
             options: {},
+            selectIds: function () {
+                // get select rows
+                let rows = this.table.bootstrapTable('getSelections');
+                // find select ids
+                return (rows && rows.length > 0) ? rows.map(row => row.id) : [];
+            },
+            selectRows: function () {
+                // get select rows
+                return this.table.bootstrapTable('getSelections');
+            },
             initTable: function(options) {
                 // parse param
                 this.table = $(options.table);
@@ -159,19 +169,16 @@
             },
             columns: columns,
             clickToSelect: true, 			// 是否启用点击选中行
+            multipleSelectRow: true,        // 启动多选行：点击 选择单行，Shift+点击 选择连续行, Commond+点击 非连续选择多行
             sortable: false, 				// 是否启用排序
             pagination: true, 				// 是否显示分页
             pageNumber: 1, 					// 默认第一页
             pageList: [10, 25, 50, 100] , 	// 可供选择的每页的行数（*）
             smartDisplay: false,			// 当总记录数小于分页数，是否显示可选项
-            /*formatShowingRows: function(from, to, total) {
-                return '显示第 ' + from + ' 到 ' + to + ' 条，共 '+ total + '条记录';
-            },
-            formatRecordsPerPage: function(pageNumber) {
-                return '每页 '+ pageNumber +' 条';
-            },*/
+            paginationParts:  ['pageInfoShort', 'pageSize', 'pageList'],
             paginationPreText: '<<',		// 跳转页面的 上一页按钮
             paginationNextText: '>>',		// 跳转页面的 下一页按钮
+            paginationLoop: false,          // 是否循环翻页
             showRefresh: true,				// 显示刷新按钮
             showColumns: true,				// 显示/隐藏列
             minimumCountColumns: 2,			// 最少允许的列数
