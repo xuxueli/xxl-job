@@ -105,8 +105,8 @@ public class JobLogController {
 			jobId = 0;
 		} else {
 			if (!jobInfoList.stream().map(XxlJobInfo::getId).toList().contains(jobId)) {
-				// jobId not exist, use first
-				jobId = jobInfoList.get(0).getId();
+				// jobId not exist, use default jobId all
+				jobId = 0;
 			}
 		}
 
@@ -133,7 +133,7 @@ public class JobLogController {
 		JobGroupPermissionUtil.validJobGroupPermission(request, jobGroup);
 
 		// valid jobId
-		if (jobId < 1) {
+		if (jobId < 0) {
 			return Response.ofFail(I18nUtil.getString("system_please_choose") + I18nUtil.getString("jobinfo_job"));
 		}
 
