@@ -103,7 +103,7 @@ nav.page-tabs .page-tabs-content {
 }
 
 .roll-right.J_tabExit, .roll-right.tabReload {
-	right: 60px;
+    right: 60px;
     background: #fff;
     height: 35px;
     width: 60px;
@@ -157,44 +157,44 @@ nav.page-tabs .page-tabs-content {
 
 /** 遮罩层 **/
 .loaderbox {
-	display: inline-block;
-	min-width: 125px;
-	padding: 10px;
-	margin: 0 auto;
-	color: #000 !important;
-	font-size: 13px;
-	font-weight: 400;
-	text-align: center;
-	vertical-align: middle;
-	border: 1px solid #ddd;
-	background-color: #eee;
-	-webkit-border-radius: 2px;
-	-moz-border-radius: 2px;
-	-ms-border-radius: 2px;
-	-o-border-radius: 2px;
-	border-radius: 2px;
-	-webkit-box-shadow: 0 1px 8px rgba(0, 0, 0, 0.1);
-	-moz-box-shadow: 0 1px 8px rgba(0, 0, 0, 0.1);
-	box-shadow: 0 1px 8px rgba(0, 0, 0, 0.1);
+    display: inline-block;
+    min-width: 125px;
+    padding: 10px;
+    margin: 0 auto;
+    color: #000 !important;
+    font-size: 13px;
+    font-weight: 400;
+    text-align: center;
+    vertical-align: middle;
+    border: 1px solid #ddd;
+    background-color: #eee;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    -ms-border-radius: 2px;
+    -o-border-radius: 2px;
+    border-radius: 2px;
+    -webkit-box-shadow: 0 1px 8px rgba(0, 0, 0, 0.1);
+    -moz-box-shadow: 0 1px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.1);
 }
 
 .loaderbox .loading-activity {
-	float: left;
-	width: 18px;
-	height: 18px;
-	border: solid 2px transparent;
-	border-top-color: #000;
-	border-left-color: #000;
-	border-radius: 10px;
-	-webkit-animation: pace-spinner 400ms linear infinite;
-	-moz-animation: pace-spinner 400ms linear infinite;
-	-ms-animation: pace-spinner 400ms linear infinite;
-	-o-animation: pace-spinner 400ms linear infinite;
-	animation: pace-spinner 400ms linear infinite;
+    float: left;
+    width: 18px;
+    height: 18px;
+    border: solid 2px transparent;
+    border-top-color: #000;
+    border-left-color: #000;
+    border-radius: 10px;
+    -webkit-animation: pace-spinner 400ms linear infinite;
+    -moz-animation: pace-spinner 400ms linear infinite;
+    -ms-animation: pace-spinner 400ms linear infinite;
+    -o-animation: pace-spinner 400ms linear infinite;
+    animation: pace-spinner 400ms linear infinite;
 }
 
 .dropdown-menu {
-	min-width: 100px;
+    min-width: 100px;
 }
 
 .main-footer {
@@ -216,3 +216,10 @@ nav.page-tabs .page-tabs-content {
     border-left-color: #FFFFFF !important;
 }
 /* nprogress end */
+
+/* menu start */
+.treeview-menu>li>a {
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
+/* menu end */
