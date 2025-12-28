@@ -223,6 +223,13 @@
 								<div class="col-sm-4"><input type="text" class="form-control" name="executorFailRetryCount" placeholder="${I18n.jobinfo_field_executorFailRetryCount_placeholder}" maxlength="4" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" ></div>
 							</div>
 
+							<div class="form-group">
+								<label for="firstname" class="col-sm-2 control-label">${I18n.jobinfo_field_executorparam}<font color="black">*</font></label>
+								<div class="col-sm-10">
+									<textarea class="textarea form-control" name="remark" placeholder="${I18n.system_please_input}${I18n.jobinfo_field_executorparam}" maxlength="512" style="height: 63px; line-height: 1.2;"></textarea>
+								</div>
+							</div>
+
 							<hr>
 							<div class="form-group">
 								<div class="col-sm-offset-3 col-sm-6">
@@ -483,6 +490,13 @@ exit 0
 								<div class="col-sm-4"><input type="text" class="form-control" name="executorFailRetryCount" placeholder="${I18n.jobinfo_field_executorFailRetryCount_placeholder}" maxlength="4" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" ></div>
 							</div>
 
+							<div class="form-group">
+								<label for="firstname" class="col-sm-2 control-label">${I18n.jobinfo_field_executorparam}<font color="black">*</font></label>
+								<div class="col-sm-10">
+									<textarea class="textarea form-control" name="remark" placeholder="${I18n.system_please_input}${I18n.jobinfo_field_executorparam}" maxlength="512" style="height: 63px; line-height: 1.2;"></textarea>
+								</div>
+							</div>
+
 							<hr>
 							<div class="form-group">
 								<div class="col-sm-offset-3 col-sm-6">
@@ -665,7 +679,7 @@ exit 0
 				},{
 					title: I18n.system_status,
 					field: 'triggerStatus',
-					width: '10',
+					width: '5',
 					widthUnit: '%',
 					formatter: function(value, row, index) {
 						// 调度状态：0-停止，1-运行
@@ -679,8 +693,34 @@ exit 0
 				},{
 					title: I18n.jobinfo_field_author,
 					field: 'author',
-					width: '10',
+					width: '5',
 					widthUnit: '%'
+				},{
+					title: I18n.joblog_field_triggerCode,
+					field: 'newestLogStatus',
+					width: '5',
+					widthUnit: '%',
+					formatter: function(value, row, index) {
+						// status
+						if (1 == value) {
+							return '<small class="label label-success" >'+I18n.joblog_status_suc+'</small>';
+						}else if (2 == value) {
+							return '<small class="label label-danger" >'+I18n.joblog_status_fail+'</small>';
+						}else if (3 == value) {
+							return '<small class="label label-default" >'+I18n.joblog_status_running+'</small>';
+						}else if (-1 == value) { // 已经触发，但是还没开始执行，也算作执行中
+							return '<small class="label label-default" >'+I18n.joblog_status_running+'</small>';
+						}
+						return value;
+					}
+				},{
+					title: I18n.joblog_field_triggerTime,
+					field: 'newestTriggerTime',
+					width: '15',
+					widthUnit: '%',
+					formatter: function(value, row, index) {
+						return value?moment(new Date(value)).format("MM-DD HH:mm:ss"):"";
+					}
 				}
 			]
 		});
@@ -1215,6 +1255,7 @@ exit 0
 				$("#updateModal .form input[name='executorTimeout']").val( row.executorTimeout );
 				$("#updateModal .form input[name='executorFailRetryCount']").val( row.executorFailRetryCount );
 
+				$("#updateModal .form textarea[name='remark']").val( row.remark );
 			},
 			readFormData: function() {
 

@@ -6,6 +6,7 @@ import com.xxl.job.admin.mapper.XxlJobLogMapper;
 import com.xxl.job.admin.model.XxlJobGroup;
 import com.xxl.job.admin.model.XxlJobInfo;
 import com.xxl.job.admin.model.XxlJobLog;
+import com.xxl.job.admin.platform.pageable.data.PageDto;
 import com.xxl.job.admin.scheduler.config.XxlJobAdminBootstrap;
 import com.xxl.job.admin.scheduler.exception.XxlJobException;
 import com.xxl.job.admin.service.XxlJobService;
@@ -149,8 +150,9 @@ public class JobLogController {
 		}
 		
 		// page query
-		List<XxlJobLog> list = xxlJobLogMapper.pageList(offset, pagesize, jobGroup, jobId, triggerTimeStart, triggerTimeEnd, logStatus);
-		int list_count = xxlJobLogMapper.pageListCount(offset, pagesize, jobGroup, jobId, triggerTimeStart, triggerTimeEnd, logStatus);
+		PageDto page=PageDto.ofOffsetSize(offset,pagesize);
+		List<XxlJobLog> list = xxlJobLogMapper.pageList(page, jobGroup, jobId, triggerTimeStart, triggerTimeEnd, logStatus);
+		int list_count = xxlJobLogMapper.pageListCount(jobGroup, jobId, triggerTimeStart, triggerTimeEnd, logStatus);
 
 		// package result
 		PageModel<XxlJobLog> pageModel = new PageModel<>();

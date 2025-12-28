@@ -84,7 +84,11 @@
 							</div>
 							<div class="form-group">
 								<label for="lastname" class="col-sm-2 control-label">${I18n.user_password}<font color="red">*</font></label>
-								<div class="col-sm-8"><input type="text" class="form-control" name="password" placeholder="${I18n.system_please_input}${I18n.user_password}" maxlength="20" ></div>
+								<div class="col-sm-8"><input type="password" class="form-control" name="password" placeholder="${I18n.system_please_input}${I18n.user_password}" maxlength="20" ></div>
+							</div>
+							<div class="form-group">
+								<label for="lastname" class="col-sm-2 control-label">${I18n.user_password}<font color="red">*</font></label>
+								<div class="col-sm-8"><input type="password" class="form-control" name="repeatPassword" placeholder="${I18n.system_please_input}${I18n.user_password}" maxlength="20" ></div>
 							</div>
 							<div class="form-group">
 								<label for="lastname" class="col-sm-2 control-label">${I18n.user_role}<font color="red">*</font></label>
@@ -136,6 +140,10 @@
 							<div class="form-group">
 								<label for="lastname" class="col-sm-2 control-label">${I18n.user_password}<font color="red">*</font></label>
 								<div class="col-sm-8"><input type="text" class="form-control" name="password" placeholder="${I18n.user_password_update_placeholder}" maxlength="20" ></div>
+							</div>
+							<div class="form-group">
+								<label for="lastname" class="col-sm-2 control-label">${I18n.user_password}<font color="red">*</font></label>
+								<div class="col-sm-8"><input type="password" class="form-control" name="repeatPassword" placeholder="${I18n.user_password_update_placeholder}" maxlength="20" ></div>
 							</div>
 							<div class="form-group">
 								<label for="lastname" class="col-sm-2 control-label">${I18n.user_role}<font color="red">*</font></label>
@@ -267,6 +275,10 @@
 				password : {
 					required : true,
 					rangelength:[4, 20]
+				},
+				repeatPassword : {
+					required : true,
+					rangelength:[4, 20]
 				}
 			},
 			messages : {
@@ -277,6 +289,10 @@
 				password : {
 					required : I18n.system_please_input + I18n.user_password,
 					rangelength: I18n.system_lengh_limit + "[4-20]"
+				},
+				repeatPassword : {
+					required : I18n.system_please_input + I18n.user_password,
+					rangelength: I18n.system_lengh_limit + "[4-20]"
 				}
 			},
 			writeFormData: function() {
@@ -285,6 +301,41 @@
 			readFormData: function() {
 				// request
 				return $("#addModal .form").serializeArray();
+			},
+			formDataCallback(formData,callback){
+				let spkParam=new URLSearchParams()
+				let cpk=Sm2.generateKeyPairHex()
+				spkParam.set('pk',cpk.publicKey)
+				spkParam.set('sign',Sm3.sm3(spkParam.get('pk')))
+				$.post(base_url + "/spk",spkParam.toString() , function(data, status) {
+					if (data.code == "200") {
+						let publicKey=Sm2.doDecrypt(data.data,cpk.privateKey,1)
+						let sign=Sm3.sm3(publicKey)
+
+						for (let i = 0; i < formData.length; i++) {
+							let item=formData[i];
+							if(item.name=='password' || item.name=='repeatPassword'){
+								if(item.value && item.value!='') {
+									item.value = Sm2.doEncrypt(item.value, publicKey, 1);
+								}
+							}
+						}
+
+						formData.push({
+							name: 'sign',
+							value: sign
+						})
+
+						callback(formData)
+					}else{
+						layer.open({
+							title: I18n.system_tips,
+							btn: [ I18n.system_ok ],
+							content: (data.msg || I18n.login_fail ),
+							icon: '2'
+						});
+					}
+				});
 			}
 		});
 
@@ -310,6 +361,7 @@
 				$("#updateModal .form input[name='id']").val( row.id );
 				$("#updateModal .form input[name='username']").val( row.username );
 				$("#updateModal .form input[name='password']").val( '' );
+				$("#updateModal .form input[name='repeatPassword']").val( '' );
 				$("#updateModal .form input[name='role'][value='"+ row.role +"']").click();
 				var permissionArr = [];
 				if (row.permission) {
@@ -327,6 +379,41 @@
 			readFormData: function() {
 				// request
 				return $("#updateModal .form").serializeArray();
+			},
+			formDataCallback(formData,callback){
+				let spkParam=new URLSearchParams()
+				let cpk=Sm2.generateKeyPairHex()
+				spkParam.set('pk',cpk.publicKey)
+				spkParam.set('sign',Sm3.sm3(spkParam.get('pk')))
+				$.post(base_url + "/spk",spkParam.toString() , function(data, status) {
+					if (data.code == "200") {
+						let publicKey=Sm2.doDecrypt(data.data,cpk.privateKey,1)
+						let sign=Sm3.sm3(publicKey)
+
+						for (let i = 0; i < formData.length; i++) {
+							let item=formData[i];
+							if(item.name=='password' || item.name=='repeatPassword'){
+								if(item.value && item.value!='') {
+									item.value = Sm2.doEncrypt(item.value, publicKey, 1);
+								}
+							}
+						}
+
+						formData.push({
+							name: 'sign',
+							value: sign
+						})
+
+						callback(formData)
+					}else{
+						layer.open({
+							title: I18n.system_tips,
+							btn: [ I18n.system_ok ],
+							content: (data.msg || I18n.login_fail ),
+							icon: '2'
+						});
+					}
+				});
 			}
 		});
 

@@ -1,7 +1,10 @@
 package com.xxl.job.admin.controller.base;
 
+import com.antherd.smcrypto.sm2.Keypair;
+import com.antherd.smcrypto.sm2.Sm2;
 import com.xxl.job.admin.mapper.XxlJobUserMapper;
 import com.xxl.job.admin.model.XxlJobUser;
+import com.xxl.job.admin.platform.security.SecurityContext;
 import com.xxl.job.admin.util.I18nUtil;
 import com.xxl.sso.core.annotation.XxlSso;
 import com.xxl.sso.core.helper.XxlSsoHelper;
@@ -16,6 +19,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
@@ -48,7 +52,17 @@ public class LoginController {
 	@RequestMapping(value="/doLogin", method=RequestMethod.POST)
 	@ResponseBody
 	@XxlSso(login=false)
-	public Response<String> doLogin(HttpServletRequest request, HttpServletResponse response, String userName, String password, String ifRemember){
+	public Response<String> doLogin(HttpServletRequest request, HttpServletResponse response,
+									@RequestParam("userName") String userName,
+									@RequestParam("password") String password,
+									@RequestParam("sign") String sign,
+									@RequestParam(value = "ifRemember", required = false) String ifRemember) throws Exception {
+		Keypair keypair = SecurityContext.getInstance().findKeypair(sign);
+		if (keypair == null) {
+			return Response.ofFail(I18nUtil.getString("login_param_unvalid"));
+		}
+		password = Sm2.doDecrypt(password, keypair.getPrivateKey());
+
 
 		// param
 		boolean ifRem = StringTool.isNotBlank(ifRemember) && "on".equals(ifRemember);
@@ -63,9 +77,8 @@ public class LoginController {
 		}
 
 		// valid passowrd
-		String passwordHash = SHA256Tool.sha256(password);
-		if (!passwordHash.equals(xxlJobUser.getPassword())) {
-			return Response.ofFail( I18nUtil.getString("login_param_unvalid") );
+		if (!SecurityContext.getInstance().matchPassword(password,xxlJobUser.getPassword())) {
+			return Response.ofFail(I18nUtil.getString("login_param_unvalid"));
 		}
 
 		// xxl-sso, do login
@@ -89,7 +102,11 @@ public class LoginController {
 	@RequestMapping("/updatePwd")
 	@ResponseBody
 	@XxlSso
-	public Response<String> updatePwd(HttpServletRequest request, String oldPassword, String password){
+	public Response<String> updatePwd(HttpServletRequest request,
+									  @RequestParam("oldPassword") String oldPassword,
+									  @RequestParam("password") String password,
+									  @RequestParam("repeatPassword") String repeatPassword,
+									  @RequestParam("sign") String sign) throws Exception {
 
 		// valid
 		if (oldPassword==null || oldPassword.trim().isEmpty()){
@@ -98,19 +115,31 @@ public class LoginController {
 		if (password==null || password.trim().isEmpty()){
 			return Response.ofFail(I18nUtil.getString("system_please_input") + I18nUtil.getString("change_pwd_field_oldpwd"));
 		}
+
+		Keypair keypair = SecurityContext.getInstance().findKeypair(sign);
+		if (keypair == null) {
+			return Response.ofFail(I18nUtil.getString("login_param_unvalid"));
+		}
+
+		password = Sm2.doDecrypt(password, keypair.getPrivateKey());
+		oldPassword = Sm2.doDecrypt(oldPassword, keypair.getPrivateKey());
+		repeatPassword = Sm2.doDecrypt(repeatPassword, keypair.getPrivateKey());
+		if(!password.equals(repeatPassword)){
+			return Response.ofFail(I18nUtil.getString("repeat_password_not_match"));
+		}
+
 		password = password.trim();
 		if (!(password.length()>=4 && password.length()<=20)) {
 			return Response.ofFail(I18nUtil.getString("system_lengh_limit")+"[4-20]" );
 		}
 
 		// md5 password
-		String oldPasswordHash = SHA256Tool.sha256(oldPassword);
-		String passwordHash = SHA256Tool.sha256(password);
+		String passwordHash = SecurityContext.getInstance().encodePassword(password);
 
 		// valid old pwd
 		Response<LoginInfo> loginInfoResponse = XxlSsoHelper.loginCheckWithAttr(request);
 		XxlJobUser existUser = xxlJobUserMapper.loadByUserName(loginInfoResponse.getData().getUserName());
-		if (!oldPasswordHash.equals(existUser.getPassword())) {
+		if (!SecurityContext.getInstance().matchPassword(oldPassword,existUser.getPassword())) {
 			return Response.ofFail(I18nUtil.getString("change_pwd_field_oldpwd") + I18nUtil.getString("system_unvalid"));
 		}
 

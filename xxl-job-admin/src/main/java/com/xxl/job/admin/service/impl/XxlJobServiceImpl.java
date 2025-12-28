@@ -5,6 +5,7 @@ import com.xxl.job.admin.mapper.*;
 import com.xxl.job.admin.model.XxlJobGroup;
 import com.xxl.job.admin.model.XxlJobInfo;
 import com.xxl.job.admin.model.XxlJobLogReport;
+import com.xxl.job.admin.platform.pageable.data.PageDto;
 import com.xxl.job.admin.scheduler.config.XxlJobAdminBootstrap;
 import com.xxl.job.admin.scheduler.cron.CronExpression;
 import com.xxl.job.admin.scheduler.misfire.MisfireStrategyEnum;
@@ -54,8 +55,9 @@ public class XxlJobServiceImpl implements XxlJobService {
 	public Response<PageModel<XxlJobInfo>> pageList(int offset, int pagesize, int jobGroup, int triggerStatus, String jobDesc, String executorHandler, String author) {
 
 		// page list
-		List<XxlJobInfo> list = xxlJobInfoMapper.pageList(offset, pagesize, jobGroup, triggerStatus, jobDesc, executorHandler, author);
-		int list_count = xxlJobInfoMapper.pageListCount(offset, pagesize, jobGroup, triggerStatus, jobDesc, executorHandler, author);
+		PageDto page=PageDto.ofOffsetSize(offset,pagesize);
+		List<XxlJobInfo> list = xxlJobInfoMapper.pageList(page, jobGroup, triggerStatus, jobDesc, executorHandler, author);
+		int list_count = xxlJobInfoMapper.pageListCount( jobGroup, triggerStatus, jobDesc, executorHandler, author);
 
 		// package result
 		PageModel<XxlJobInfo> pageModel = new PageModel<>();

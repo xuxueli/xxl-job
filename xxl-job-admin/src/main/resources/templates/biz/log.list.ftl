@@ -268,6 +268,13 @@
                     widthUnit: '%',
                     align: 'left'
                 },
+				{
+					title: I18n.jobinfo_field_jobgroup,
+					field: 'groupTitle',
+					width: '10',
+					widthUnit: '%',
+					align: 'left'
+				},
                 {
 					title: I18n.jobinfo_job,
 					field: 'jobId',
@@ -298,7 +305,7 @@
 				},{
 					title: I18n.joblog_field_triggerCode,
 					field: 'triggerCode',
-					width: '10',
+					width: '8',
 					widthUnit: '%',
 					formatter: function(value, row, index) {
 						var html = value;
@@ -330,7 +337,7 @@
 				},{
 					title: I18n.joblog_field_handleCode,
 					field: 'handleCode',
-					width: '10',
+					width: '8',
 					widthUnit: '%',
 					formatter: function(value, row, index) {
 						var html = value;

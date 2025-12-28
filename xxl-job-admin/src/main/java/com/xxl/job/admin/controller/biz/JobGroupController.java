@@ -3,6 +3,7 @@ package com.xxl.job.admin.controller.biz;
 import com.xxl.job.admin.constant.Consts;
 import com.xxl.job.admin.model.XxlJobGroup;
 import com.xxl.job.admin.model.XxlJobRegistry;
+import com.xxl.job.admin.platform.pageable.data.PageDto;
 import com.xxl.job.admin.util.I18nUtil;
 import com.xxl.job.admin.mapper.XxlJobGroupMapper;
 import com.xxl.job.admin.mapper.XxlJobInfoMapper;
@@ -22,6 +23,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 
 /**
@@ -54,8 +57,9 @@ public class JobGroupController {
 													 String title) {
 
 		// page query
-		List<XxlJobGroup> list = xxlJobGroupMapper.pageList(offset, pagesize, appname, title);
-		int list_count = xxlJobGroupMapper.pageListCount(offset, pagesize, appname, title);
+		PageDto page=PageDto.ofOffsetSize(offset,pagesize);
+		List<XxlJobGroup> list = xxlJobGroupMapper.pageList(page, appname, title);
+		int list_count = xxlJobGroupMapper.pageListCount(appname, title);
 
 		// package result
 		PageModel<XxlJobGroup> pageModel = new PageModel<>();
@@ -160,7 +164,8 @@ public class JobGroupController {
 
 	private List<String> findRegistryByAppName(String appnameParam){
 		HashMap<String, List<String>> appAddressMap = new HashMap<>();
-		List<XxlJobRegistry> list = xxlJobRegistryMapper.findAll(Const.DEAD_TIMEOUT, new Date());
+		Date deadTime = Date.from(LocalDateTime.now().plusSeconds(-Const.DEAD_TIMEOUT).atZone(ZoneId.systemDefault()).toInstant());
+		List<XxlJobRegistry> list = xxlJobRegistryMapper.findAll(deadTime);
 		if (CollectionTool.isNotEmpty(list)) {
 			for (XxlJobRegistry item: list) {
 				if (!RegistType.EXECUTOR.name().equals(item.getRegistryGroup())) {
@@ -196,7 +201,7 @@ public class JobGroupController {
         }
 
 		// whether exists job
-		int count = xxlJobInfoMapper.pageListCount(0, 10, id, -1,  null, null, null);
+		int count = xxlJobInfoMapper.pageListCount(id, -1,  null, null, null);
 		if (count > 0) {
 			return Response.ofFail( I18nUtil.getString("jobgroup_del_limit_0") );
 		}
