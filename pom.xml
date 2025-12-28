@@ -38,23 +38,23 @@
 		<jakarta.annotation-api.version>3.0.0</jakarta.annotation-api.version>
 
 		<!-- spring -->
-		<spring-boot.version>4.0.0</spring-boot.version>
-		<spring.version>7.0.1</spring.version>
+		<spring-boot.version>4.0.1</spring-boot.version>
+		<spring.version>7.0.2</spring.version>
 		<!-- mybatis & db -->
 		<mybatis-spring-boot-starter.version>4.0.0</mybatis-spring-boot-starter.version>
 		<mysql-connector-j.version>9.5.0</mysql-connector-j.version>
 
 		<!-- net -->
-		<netty.version>4.2.7.Final</netty.version>
+		<netty.version>4.2.9.Final</netty.version>
 		<gson.version>2.13.2</gson.version>
 
 		<!-- groovy -->
 		<groovy.version>5.0.3</groovy.version>
 
 		<!-- xxl-sso (+xxl-tool、gson) -->
-		<xxl-sso.version>2.2.0</xxl-sso.version>
+		<xxl-sso.version>2.3.1</xxl-sso.version>
 		<!-- xxl-tool -->
-		<xxl-tool.version>2.3.2</xxl-tool.version>
+		<xxl-tool.version>2.4.2</xxl-tool.version>
 	</properties>
 
 	<licenses>

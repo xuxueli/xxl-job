@@ -7,7 +7,7 @@ import com.xxl.sso.core.annotation.XxlSso;
 import com.xxl.sso.core.helper.XxlSsoHelper;
 import com.xxl.sso.core.model.LoginInfo;
 import com.xxl.tool.core.StringTool;
-import com.xxl.tool.encrypt.SHA256Tool;
+import com.xxl.tool.crypto.Sha256Tool;
 import com.xxl.tool.id.UUIDTool;
 import com.xxl.tool.response.Response;
 import jakarta.annotation.Resource;
@@ -63,7 +63,7 @@ public class LoginController {
 		}
 
 		// valid passowrd
-		String passwordHash = SHA256Tool.sha256(password);
+		String passwordHash = Sha256Tool.sha256(password);
 		if (!passwordHash.equals(xxlJobUser.getPassword())) {
 			return Response.ofFail( I18nUtil.getString("login_param_unvalid") );
 		}
@@ -104,8 +104,8 @@ public class LoginController {
 		}
 
 		// md5 password
-		String oldPasswordHash = SHA256Tool.sha256(oldPassword);
-		String passwordHash = SHA256Tool.sha256(password);
+		String oldPasswordHash = Sha256Tool.sha256(oldPassword);
+		String passwordHash = Sha256Tool.sha256(password);
 
 		// valid old pwd
 		Response<LoginInfo> loginInfoResponse = XxlSsoHelper.loginCheckWithAttr(request);

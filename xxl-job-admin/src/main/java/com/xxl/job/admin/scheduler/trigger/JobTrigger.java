@@ -14,7 +14,7 @@ import com.xxl.job.core.context.XxlJobContext;
 import com.xxl.job.core.openapi.ExecutorBiz;
 import com.xxl.job.core.openapi.model.TriggerRequest;
 import com.xxl.tool.core.StringTool;
-import com.xxl.tool.exception.ThrowableTool;
+import com.xxl.tool.error.ThrowableTool;
 import com.xxl.tool.http.IPTool;
 import com.xxl.tool.response.Response;
 import jakarta.annotation.Resource;
