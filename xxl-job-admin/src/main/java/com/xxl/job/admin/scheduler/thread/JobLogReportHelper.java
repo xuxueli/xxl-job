@@ -118,7 +118,7 @@ public class JobLogReportHelper {
                             // update clean time
                             lastCleanLogTime = System.currentTimeMillis();
                         }
-                    } catch (Exception e) {
+                    } catch (Throwable e) {
                         if (!toStop) {
                             logger.error(">>>>>>>>>>> xxl-job, JobLogReportHelper(log-clean) error:{}", e.getMessage(), e);
                         }
