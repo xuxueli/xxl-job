@@ -14,7 +14,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author xuxueli 2018-07-03 21:08:07
  */
 public class JobTriggerPoolHelper {
-    private static Logger logger = LoggerFactory.getLogger(JobTriggerPoolHelper.class);
+    private static final Logger logger = LoggerFactory.getLogger(JobTriggerPoolHelper.class);
 
 
     // ---------------------- trigger pool ----------------------

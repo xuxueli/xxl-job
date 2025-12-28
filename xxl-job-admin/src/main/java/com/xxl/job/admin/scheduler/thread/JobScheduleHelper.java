@@ -24,7 +24,14 @@ public class JobScheduleHelper {
     private static final Logger logger = LoggerFactory.getLogger(JobScheduleHelper.class);
 
 
-    public static final long PRE_READ_MS = 5000;    // pre read
+    /**
+     * pre-read time for scheduler, increase efficiency
+     */
+    public static final long PRE_READ_MS = 5000;
+    /*
+    * elegant shutdown wait seconds
+     */
+    private static final long ELEGANT_SHUTDOWN_WAITING_SECONDS = 10;
 
     private Thread scheduleThread;
     private Thread ringThread;
@@ -316,7 +323,7 @@ public class JobScheduleHelper {
             }
         }
 
-        // if has ring data
+        // if has ring data, wait for elegent shutdown
         boolean hasRingData = false;
         if (MapTool.isNotEmpty(ringData)) {
             for (int second : ringData.keySet()) {
@@ -329,7 +336,7 @@ public class JobScheduleHelper {
         }
         if (hasRingData) {
             try {
-                TimeUnit.SECONDS.sleep(8);
+                TimeUnit.SECONDS.sleep(ELEGANT_SHUTDOWN_WAITING_SECONDS);
             } catch (Throwable e) {
                 logger.error(e.getMessage(), e);
             }
