@@ -68,4 +68,10 @@
 			AND registry_value = #{registryValue}
 	</delete>
 
+    <delete id="removeByRegistryGroupAndKey" >
+        DELETE FROM xxl_job_registry
+        WHERE registry_group = #{registryGroup}
+          AND registry_key = #{registryKey}
+    </delete>
+
 </mapper>

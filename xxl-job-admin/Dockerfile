@@ -1,40 +1,21 @@
-FROM openjdk:8-jre-slim
+# base image
+FROM openjdk:21-jdk-slim
+
+# maintainer
 MAINTAINER xuxueli
 
+# set params
 ENV PARAMS=""
 
-ENV SERVER_PORT=8080
-
-ENV ACCESS_TOKEN=default_token
-
-ENV STANDLONE=false
-
-ENV DATABASE_INIT=true
-ENV DATABASE_PLATEFORM=mysql
-ENV DATABASE_INIT_PLATEFORM=$DATABASE_PLATEFORM
-
-ENV LOGBACK_ENV=test
-
-ENV DATASOURCE_URL="jdbc:mysql://localhost:3306/xxl_job?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai"
-ENV DATASOURCE_USERNAME=root
-ENV DATASOURCE_PASSWORD=123456
-ENV DATASOURCE_DRIVER=com.mysql.cj.jdbc.Driver
-
-ENV DATASOURCE_TEST_QUERY="SELECT 1 FROM DUAL"
-
-ENV MAIL_HOST=smtp.qq.com
-ENV MAIL_PORT=25
-ENV MAIL_USERNAME=xxx@qq.com
-ENV MAIL_FROM=$MAIL_USERNAME
-ENV MAIL_PASSWORD=xxx
-
+# set timezone
 ENV TZ=PRC
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-ADD target/xxl-job-admin-*.jar /xxl-job-admin/xxl-job-admin.jar
+# copy jar
+ADD target/xxl-job-admin-*.jar /app.jar
 
-WORKDIR /xxl-job-admin
-
-EXPOSE $SERVER_PORT
-
-ENTRYPOINT ["sh","-c","java -jar $JAVA_OPTS -Dlogback.app.env=$LOGBACK_ENV -Dspring.profiles.active=image xxl-job-admin.jar $PARAMS"]
+# command
+# log home: -e LOG_HOME=/data/applogs
+# jvm options: -e JAVA_OPTS="-Xms128m -Xmx128m"
+# app params: -e PARAMS="--server.port=8080"
+ENTRYPOINT ["sh","-c","java ${LOG_HOME:+-DLOG_HOME=$LOG_HOME} -jar $JAVA_OPTS /app.jar $PARAMS"]

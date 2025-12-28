@@ -240,4 +240,34 @@
 		  AND trigger_status = 1
 	</update>
 
+	<!--int scheduleUpdateBatch(@Param("list") List<XxlJobInfo> jobs);
+	<update id="scheduleUpdateBatch" parameterType="java.util.List">
+		UPDATE xxl_job_info
+		SET
+			trigger_last_time = CASE id
+			<foreach collection="list" item="item">
+				WHEN #{item.id} THEN #{item.triggerLastTime}
+			</foreach>
+			END,
+			trigger_next_time = CASE id
+			<foreach collection="list" item="item">
+				WHEN #{item.id} THEN #{item.triggerNextTime}
+			</foreach>
+			END,
+			trigger_status = CASE id
+			<foreach collection="list" item="item">
+				WHEN #{item.id} THEN
+				<choose>
+					<when test="item.triggerStatus >= 0">#{item.triggerStatus}</when>
+					<otherwise>trigger_status</otherwise> &lt;!&ndash; 保持原值 &ndash;&gt;
+				</choose>
+			</foreach>
+			END
+		WHERE id IN
+			<foreach collection="list" item="item" open="(" separator="," close=")">
+				#{item.id}
+			</foreach>
+			AND trigger_status = 1
+	</update>-->
+
 </mapper>

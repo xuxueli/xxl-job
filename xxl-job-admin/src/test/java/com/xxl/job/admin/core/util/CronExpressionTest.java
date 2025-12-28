@@ -1,7 +1,7 @@
 package com.xxl.job.admin.core.util;
 
 import com.xxl.job.admin.scheduler.cron.CronExpression;
-import com.xxl.job.core.util.DateUtil;
+import com.xxl.tool.core.DateTool;
 import org.junit.jupiter.api.Test;
 
 import java.text.ParseException;
@@ -15,7 +15,7 @@ public class CronExpressionTest {
         Date lastTriggerTime = new Date();
         for (int i = 0; i < 5; i++) {
             Date nextTriggerTime = cronExpression.getNextValidTimeAfter(lastTriggerTime);
-            System.out.println(DateUtil.formatDateTime(nextTriggerTime));
+            System.out.println(DateTool.formatDateTime(nextTriggerTime));
 
             lastTriggerTime = nextTriggerTime;
         }

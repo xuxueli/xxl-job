@@ -125,7 +125,7 @@
 //    private static ConcurrentHashMap<String, ExecutorBiz> executorBizRepository = new ConcurrentHashMap<String, ExecutorBiz>();
 //    public static ExecutorBiz getExecutorBiz(String address) throws Exception {
 //        // valid
-//        if (!StringUtils.hasText(address)) {
+//        if (address==null || address.trim().length()==0) {
 //            return null;
 //        }
 //
@@ -383,12 +383,12 @@
 //        List<Map<String, Object>> jobList = new ArrayList<Map<String,Object>>();
 //
 //        try {
-//            if (scheduler.getJobGroupNames()==null || scheduler.getJobGroupNames().isEmpty()) {
+//            if (scheduler.getJobGroupNames()==null || scheduler.getJobGroupNames().size()==0) {
 //                return null;
 //            }
 //            String groupName = scheduler.getJobGroupNames().get(0);
 //            Set<JobKey> jobKeys = scheduler.getJobKeys(GroupMatcher.jobGroupEquals(groupName));
-//            if (jobKeys!=null && !jobKeys.isEmpty()) {
+//            if (jobKeys!=null && jobKeys.size()>0) {
 //                for (JobKey jobKey : jobKeys) {
 //                    TriggerKey triggerKey = TriggerKey.triggerKey(jobKey.getName(), Scheduler.DEFAULT_GROUP);
 //                    Trigger trigger = scheduler.getTrigger(triggerKey);

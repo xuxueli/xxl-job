@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.xuxueli</groupId>
         <artifactId>xxl-job-executor-samples</artifactId>
-        <version>3.2.1-SNAPSHOT</version>
+        <version>3.3.1</version>
     </parent>
     <artifactId>xxl-job-executor-sample-frameless</artifactId>
     <packaging>jar</packaging>
@@ -31,6 +31,12 @@
             <version>${junit-jupiter.version}</version>
             <scope>test</scope>
         </dependency>
+        <!--<dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-launcher</artifactId>
+            <version>${junit-jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>-->
 
         <!-- xxl-job-core -->
         <dependency>

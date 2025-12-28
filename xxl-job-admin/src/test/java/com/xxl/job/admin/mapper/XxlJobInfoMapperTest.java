@@ -1,15 +1,15 @@
 package com.xxl.job.admin.mapper;
 
 import com.xxl.job.admin.model.XxlJobInfo;
-import com.xxl.job.admin.scheduler.scheduler.MisfireStrategyEnum;
-import com.xxl.job.admin.scheduler.scheduler.ScheduleTypeEnum;
 import com.xxl.job.admin.platform.pageable.data.PageDto;
+import com.xxl.job.admin.scheduler.misfire.MisfireStrategyEnum;
+import com.xxl.job.admin.scheduler.type.ScheduleTypeEnum;
+import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
 
@@ -22,9 +22,9 @@ public class XxlJobInfoMapperTest {
 	
 	@Test
 	public void pageList(){
-		PageDto page=PageDto.of(0/20+1,20);
+		PageDto page=PageDto.ofOffsetSize(0,20);
 		List<XxlJobInfo> list = xxlJobInfoMapper.pageList(page, 0, -1, null, null, null);
-		int list_count = xxlJobInfoMapper.pageListCount( 0, -1, null, null, null);
+		int list_count = xxlJobInfoMapper.pageListCount(0, -1, null, null, null);
 
 		logger.info("", list);
 		logger.info("", list_count);

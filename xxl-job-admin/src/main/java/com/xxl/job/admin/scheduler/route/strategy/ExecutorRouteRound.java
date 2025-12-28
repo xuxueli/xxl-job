@@ -1,8 +1,8 @@
 package com.xxl.job.admin.scheduler.route.strategy;
 
 import com.xxl.job.admin.scheduler.route.ExecutorRouter;
-import com.xxl.job.core.biz.model.ReturnT;
-import com.xxl.job.core.biz.model.TriggerParam;
+import com.xxl.job.core.openapi.model.TriggerRequest;
+import com.xxl.tool.response.Response;
 
 import java.util.List;
 import java.util.Random;
@@ -22,7 +22,7 @@ public class ExecutorRouteRound extends ExecutorRouter {
         // cache clear
         if (System.currentTimeMillis() > CACHE_VALID_TIME) {
             routeCountEachJob.clear();
-            CACHE_VALID_TIME = System.currentTimeMillis() + 1000 * 60 * 60 * 24;
+            CACHE_VALID_TIME = System.currentTimeMillis() + 1000*60*60*24;
         }
 
         AtomicInteger count = routeCountEachJob.get(jobId);
@@ -38,9 +38,9 @@ public class ExecutorRouteRound extends ExecutorRouter {
     }
 
     @Override
-    public ReturnT<String> route(TriggerParam triggerParam, List<String> addressList) {
-        String address = addressList.get(count(triggerParam.getJobId()) % addressList.size());
-        return ReturnT.ofSuccess(address);
+    public Response<String> route(TriggerRequest triggerParam, List<String> addressList) {
+        String address = addressList.get(count(triggerParam.getJobId())%addressList.size());
+        return Response.ofSuccess(address);
     }
 
 }

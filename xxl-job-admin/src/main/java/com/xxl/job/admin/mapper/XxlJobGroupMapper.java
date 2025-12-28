@@ -25,7 +25,7 @@ public interface XxlJobGroupMapper {
 
     public XxlJobGroup load(@Param("id") int id);
 
-    public List<XxlJobGroup> pageList(@Param("page") PageDto page,
+    public List<XxlJobGroup> pageList(@Param("page")PageDto page,
                                       @Param("appname") String appname,
                                       @Param("title") String title);
 

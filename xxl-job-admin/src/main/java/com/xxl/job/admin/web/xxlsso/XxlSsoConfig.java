@@ -1,10 +1,8 @@
 package com.xxl.job.admin.web.xxlsso;
 
-import com.xxl.sso.core.helper.XxlSsoHelper;
 import com.xxl.sso.core.auth.interceptor.XxlSsoWebInterceptor;
 import com.xxl.sso.core.bootstrap.XxlSsoBootstrap;
-import javax.annotation.Resource;
-
+import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -45,8 +43,6 @@ public class XxlSsoConfig implements WebMvcConfigurer {
         bootstrap.setLoginStore(loginStore);
         bootstrap.setTokenKey(tokenKey);
         bootstrap.setTokenTimeout(tokenTimeout);
-
-        XxlSsoHelper.init(this.loginStore, this.tokenKey, this.tokenTimeout);
         return bootstrap;
     }
 

@@ -49,6 +49,11 @@ public class PageDto {
         return new PageDto(size);
     }
 
+    public static PageDto ofOffsetSize(int offset,int size){
+        int number=offset/size+1;
+        return new PageDto(number,size);
+    }
+
     public void setNumber(int number) {
         this.number = number;
     }

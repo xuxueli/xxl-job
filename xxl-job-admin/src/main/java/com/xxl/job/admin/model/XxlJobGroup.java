@@ -1,6 +1,6 @@
 package com.xxl.job.admin.model;
 
-import org.springframework.util.StringUtils;
+import com.xxl.tool.core.StringTool;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,10 +21,9 @@ public class XxlJobGroup {
 
     // registry list
     private List<String> registryList;  // 执行器地址列表(系统注册)
-
     public List<String> getRegistryList() {
-        if (StringUtils.hasText(addressList)) {
-            registryList = new ArrayList<String>(Arrays.asList(addressList.split(",")));
+        if (StringTool.isNotBlank(addressList)) {
+            registryList = new ArrayList<>(Arrays.asList(addressList.split(",")));
         }
         return registryList;
     }

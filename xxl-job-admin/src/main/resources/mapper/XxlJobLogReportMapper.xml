@@ -19,7 +19,7 @@
 		t.fail_count
 	</sql>
 	
-	<insert id="save" parameterType="com.xxl.job.admin.model.XxlJobLogReport" useGeneratedKeys="true" keyProperty="id" >
+	<!--<insert id="save" parameterType="com.xxl.job.admin.model.XxlJobLogReport" useGeneratedKeys="true" keyProperty="id" >
 		INSERT INTO xxl_job_log_report (
 			`trigger_day`,
 			`running_count`,
@@ -31,9 +31,9 @@
 			#{sucCount},
 			#{failCount}
 		);
-		<!--<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+		&lt;!&ndash;<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
 			SELECT LAST_INSERT_ID() 
-		</selectKey>-->
+		</selectKey>&ndash;&gt;
 	</insert>
 
 	<update id="update" >
@@ -42,7 +42,25 @@
         	`suc_count` = #{sucCount},
         	`fail_count` = #{failCount}
         WHERE `trigger_day` = #{triggerDay}
-    </update>
+    </update>-->
+
+	<insert id="saveOrUpdate" parameterType="com.xxl.job.admin.model.XxlJobLogReport" useGeneratedKeys="true" keyProperty="id" >
+		INSERT INTO xxl_job_log_report (
+			`trigger_day`,
+			`running_count`,
+			`suc_count`,
+			`fail_count`
+		) VALUES (
+			 #{triggerDay},
+			 #{runningCount},
+			 #{sucCount},
+			 #{failCount}
+		 )
+		ON DUPLICATE KEY UPDATE
+			`running_count` = #{runningCount},
+			`suc_count` = #{sucCount},
+			`fail_count` = #{failCount}
+	</insert>
 
 	<select id="queryLogReport" resultMap="XxlJobLogReport">
 		SELECT <include refid="Base_Column_List" />

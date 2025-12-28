@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>com.xuxueli</groupId>
 		<artifactId>xxl-job</artifactId>
-		<version>3.2.1-SNAPSHOT</version>
+		<version>3.3.1</version>
 	</parent>
 	<artifactId>xxl-job-core</artifactId>
 	<packaging>jar</packaging>
@@ -14,6 +14,22 @@
 	<url>https://www.xuxueli.com/</url>
 
 	<dependencies>
+
+		<!-- ********************** base ********************** -->
+		<!-- slf4j -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j-api.version}</version>
+		</dependency>
+
+		<!-- jakarta.annotation-api -->
+		<dependency>
+			<groupId>jakarta.annotation</groupId>
+			<artifactId>jakarta.annotation-api</artifactId>
+			<version>${jakarta.annotation-api.version}</version>
+			<scope>provided</scope>
+		</dependency>
 
 		<!-- ********************** embed server: netty + gson ********************** -->
 		<dependency>
@@ -27,7 +43,14 @@
 			<version>${gson.version}</version>
 		</dependency>
 
-		<!-- ********************** plugin ********************** -->
+		<!-- ********************** tool: xxl-tool ********************** -->
+		<dependency>
+			<groupId>com.xuxueli</groupId>
+			<artifactId>xxl-tool</artifactId>
+			<version>${xxl-tool.version}</version>
+		</dependency>
+
+		<!-- ********************** plugin: groovy + spring ********************** -->
 		<!-- groovy-all -->
 		<dependency>
 			<groupId>org.apache.groovy</groupId>
@@ -40,22 +63,6 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
 			<version>${spring.version}</version>
-			<scope>provided</scope>
-		</dependency>
-
-		<!-- ********************** base ********************** -->
-		<!-- slf4j -->
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>${slf4j-api.version}</version>
-		</dependency>
-
-		<!-- javax.annotation-api -->
-		<dependency>
-			<groupId>javax.annotation</groupId>
-			<artifactId>javax.annotation-api</artifactId>
-			<version>${javax.annotation-api.version}</version>
 			<scope>provided</scope>
 		</dependency>
 
