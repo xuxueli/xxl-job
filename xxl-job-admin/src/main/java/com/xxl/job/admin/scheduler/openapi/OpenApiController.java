@@ -33,7 +33,7 @@ public class OpenApiController {
     @XxlSso(login = false)
     public Object api(HttpServletRequest request,
                                @PathVariable("uri") String uri,
-                               @RequestHeader(Const.XXL_JOB_ACCESS_TOKEN) String accesstoken,
+                               @RequestHeader(value = Const.XXL_JOB_ACCESS_TOKEN, required = false) String accesstoken,
                                @RequestBody(required = false) String requestBody) {
 
         // valid
