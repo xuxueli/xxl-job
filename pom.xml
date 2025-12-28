@@ -46,8 +46,6 @@
 
 		<!-- net -->
 		<netty.version>4.2.9.Final</netty.version>
-		<gson.version>2.13.2</gson.version>
-
 		<!-- groovy -->
 		<groovy.version>5.0.3</groovy.version>
 
@@ -55,6 +53,8 @@
 		<xxl-sso.version>2.3.1</xxl-sso.version>
 		<!-- xxl-tool -->
 		<xxl-tool.version>2.4.2</xxl-tool.version>
+		<!-- gson -->
+		<gson.version>2.13.2</gson.version>
 	</properties>
 
 	<licenses>
