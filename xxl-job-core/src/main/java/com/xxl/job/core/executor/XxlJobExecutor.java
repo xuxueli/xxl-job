@@ -22,12 +22,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by xuxueli on 2016/3/2 21:14.
  */
 public class XxlJobExecutor  {
     private static final Logger logger = LoggerFactory.getLogger(XxlJobExecutor.class);
+
+    /*
+     * elegant shutdown wait seconds
+     */
+    private static final long ELEGANT_SHUTDOWN_WAITING_SECONDS = 5;
 
     // ---------------------- field ----------------------
     private String adminAddresses;
@@ -89,22 +95,31 @@ public class XxlJobExecutor  {
         initAdminBizList(adminAddresses, accessToken, timeout);
 
 
-        // init JobLogFileCleanThread
+        // 1、init JobLogFileCleanThread
         JobLogFileCleanThread.getInstance().start(logRetentionDays);
 
-        // init TriggerCallbackThread
+        // 2、init TriggerCallbackThread
         TriggerCallbackThread.getInstance().start();
 
-        // init executor-server
+        // 3、init executor-server
         initEmbedServer(address, ip, port, appname, accessToken);
     }
 
     public void destroy(){
-        // destroy executor-server
+        // 1、destroy executor-server
         stopEmbedServer();
 
         // destroy jobThreadRepository
         if (!jobThreadRepository.isEmpty()) {
+
+            // 1.1、elegant shutdown wait job finish
+            try {
+                TimeUnit.SECONDS.sleep(ELEGANT_SHUTDOWN_WAITING_SECONDS);
+            } catch (Throwable e) {
+                logger.error(e.getMessage(), e);
+            }
+
+            // 1.2、interupt all job-thread
             for (Map.Entry<Integer, JobThread> item: jobThreadRepository.entrySet()) {
                 JobThread oldJobThread = removeJobThread(item.getKey(), "web container destroy and kill the job.");
                 // wait for job thread push result to callback queue
@@ -121,10 +136,10 @@ public class XxlJobExecutor  {
         jobHandlerRepository.clear();
 
 
-        // destroy JobLogFileCleanThread
+        // 2、destroy JobLogFileCleanThread
         JobLogFileCleanThread.getInstance().toStop();
 
-        // destroy TriggerCallbackThread
+        // 3、destroy TriggerCallbackThread
         TriggerCallbackThread.getInstance().toStop();
 
     }
