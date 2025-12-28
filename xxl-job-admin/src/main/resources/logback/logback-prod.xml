@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<included>
+
+
+    <!-- WARN及以上级别日志，WARN，ERROR -->
+    <appender name="fileWarn" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--过滤-->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>WARN</level>
+        </filter>
+        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+            <charset>UTF-8</charset>
+            <layout class="ch.qos.logback.classic.PatternLayout">
+                <pattern>${LOG_PATTERN}</pattern>
+            </layout>
+        </encoder>
+        <!--滚动策略-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!--路径-->
+            <fileNamePattern>${log.dir.name}/${log.app.name}.warn.%d.%i.log</fileNamePattern>
+            <maxHistory>${log.max.count}</maxHistory>
+            <maxFileSize>${log.max.size}</maxFileSize>
+            <totalSizeCap>${log.total.size}</totalSizeCap>
+            <cleanHistoryOnStart>true</cleanHistoryOnStart>
+        </rollingPolicy>
+    </appender>
+
+    <!-- ERROR及以上级别日志，ERROR -->
+    <appender name="fileError" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--过滤-->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+            <charset>UTF-8</charset>
+            <layout class="ch.qos.logback.classic.PatternLayout">
+                <pattern>${LOG_PATTERN}</pattern>
+            </layout>
+        </encoder>
+        <!--滚动策略-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!--路径-->
+            <fileNamePattern>${log.dir.name}/${log.app.name}.error.%d.%i.log</fileNamePattern>
+            <maxHistory>${log.max.count}</maxHistory>
+            <maxFileSize>${log.max.size}</maxFileSize>
+            <totalSizeCap>${log.total.size}</totalSizeCap>
+            <cleanHistoryOnStart>true</cleanHistoryOnStart>
+        </rollingPolicy>
+    </appender>
+
+    <root level="warn">
+        <appender-ref ref="fileWarn"/>
+        <appender-ref ref="fileError"/>
+    </root>
+</included>
