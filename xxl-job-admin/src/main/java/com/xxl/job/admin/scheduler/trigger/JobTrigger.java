@@ -51,6 +51,8 @@ public class JobTrigger {
      * 			>=0: use this param
      * 			<0: use param from job info config
      * @param executorShardingParam
+     *          null: new sharding, all nodes
+     *          not null: for retry, only one node
      * @param executorParam
      *          null: use job param
      *          not null: cover job param
@@ -85,6 +87,7 @@ public class JobTrigger {
 
         // sharding param
         int[] shardingParam = null;
+        Date triggerTime = new Date();
         if (executorShardingParam!=null){
             String[] shardingArr = executorShardingParam.split("/");
             if (shardingArr.length==2 && StringTool.isNumeric(shardingArr[0]) && StringTool.isNumeric(shardingArr[1])) {
@@ -97,13 +100,13 @@ public class JobTrigger {
                 && group.getRegistryList()!=null && !group.getRegistryList().isEmpty()
                 && shardingParam==null) {
             for (int i = 0; i < group.getRegistryList().size(); i++) {
-                processTrigger(group, jobInfo, finalFailRetryCount, triggerType, i, group.getRegistryList().size());
+                processTrigger(group, jobInfo, finalFailRetryCount, triggerType, triggerTime, i, group.getRegistryList().size());
             }
         } else {
             if (shardingParam == null) {
                 shardingParam = new int[]{0, 1};
             }
-            processTrigger(group, jobInfo, finalFailRetryCount, triggerType, shardingParam[0], shardingParam[1]);
+            processTrigger(group, jobInfo, finalFailRetryCount, triggerType, triggerTime, shardingParam[0], shardingParam[1]);
         }
 
     }
@@ -124,6 +127,7 @@ public class JobTrigger {
      * @param jobInfo                   job info
      * @param finalFailRetryCount       the fail-retry count
      * @param triggerType               trigger type
+     * @param triggerTime               trigger time
      * @param index                     sharding index
      * @param total                     sharding index
      */
@@ -131,6 +135,7 @@ public class JobTrigger {
                                 XxlJobInfo jobInfo,
                                 int finalFailRetryCount,
                                 TriggerTypeEnum triggerType,
+                                Date triggerTime,
                                 int index,
                                 int total){
 
@@ -143,7 +148,7 @@ public class JobTrigger {
         XxlJobLog jobLog = new XxlJobLog();
         jobLog.setJobGroup(jobInfo.getJobGroup());
         jobLog.setJobId(jobInfo.getId());
-        jobLog.setTriggerTime(new Date());
+        jobLog.setTriggerTime(triggerTime);
         xxlJobLogMapper.save(jobLog);
         logger.debug(">>>>>>>>>>> xxl-job trigger start, jobId:{}", jobLog.getId());
 
@@ -251,22 +256,26 @@ public class JobTrigger {
      * @return return
      */
     private Response<String> doTrigger(TriggerRequest triggerParam, String address){
-        Response<String> runResult = null;
         try {
+            // build client
             ExecutorBiz executorBiz = XxlJobAdminBootstrap.getExecutorBiz(address);
-            runResult = executorBiz.run(triggerParam);
+
+            // invoke
+            Response<String> runResult = executorBiz.run(triggerParam);
+
+            // build result
+            StringBuffer runResultSB = new StringBuffer(I18nUtil.getString("jobconf_trigger_run") + "：");
+            runResultSB.append("<br>address：").append(address);
+            runResultSB.append("<br>code：").append(runResult.getCode());
+            runResultSB.append("<br>msg：").append(runResult.getMsg());
+
+            // return
+            runResult.setMsg(runResultSB.toString());
+            return runResult;
         } catch (Exception e) {
             logger.error(">>>>>>>>>>> xxl-job trigger error, please check if the executor[{}] is running.", address, e);
-            runResult = Response.of(XxlJobContext.HANDLE_CODE_FAIL, ThrowableTool.toString(e));
+            return Response.of(XxlJobContext.HANDLE_CODE_FAIL, ThrowableTool.toString(e));
         }
-
-        StringBuffer runResultSB = new StringBuffer(I18nUtil.getString("jobconf_trigger_run") + "：");
-        runResultSB.append("<br>address：").append(address);
-        runResultSB.append("<br>code：").append(runResult.getCode());
-        runResultSB.append("<br>msg：").append(runResult.getMsg());
-
-        runResult.setMsg(runResultSB.toString());
-        return runResult;
     }
 
 }
