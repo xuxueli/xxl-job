@@ -86,6 +86,11 @@
 						<button class="btn btn-sm btn-default selectOnlyOne job_next_time" type="button">${I18n.jobinfo_opt_next_time}</button>			<#-- 下次执行时间：row.scheduleType == 'CRON' || row.scheduleType == 'FIX_RATE' -->
 					</div>
 					<div class="box-body" >
+                        <style>
+                            #data_list {
+                                table-layout: fixed;
+                            }
+                        </style>
 						<table id="data_list" class="table table-bordered table-striped" width="100%" >
 							<thead></thead>
 							<tbody></tbody>
@@ -623,11 +628,7 @@ exit 0
 					widthUnit: '%',
 					align: 'left',
 					formatter: function(value, row, index) {
-						if (value.length > 15) {
-							return '<span title="' + value + '">' + value.substr(0, 15) + '...</span>';
-						} else {
-							return value;
-						}
+						return '<div style="width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="' + value + '">' + value + '</div>';
 					}
 				},{
 					title: I18n.schedule_type,
