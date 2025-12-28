@@ -50,7 +50,7 @@
 		<groovy.version>5.0.3</groovy.version>
 
 		<!-- xxl-sso (+xxl-tool、gson) -->
-		<xxl-sso.version>2.3.1</xxl-sso.version>
+		<xxl-sso.version>2.3.2</xxl-sso.version>
 		<!-- xxl-tool -->
 		<xxl-tool.version>2.4.2</xxl-tool.version>
 		<!-- gson -->
