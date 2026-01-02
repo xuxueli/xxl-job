@@ -55,7 +55,128 @@
 		<xxl-tool.version>2.4.2</xxl-tool.version>
 		<!-- gson -->
 		<gson.version>2.13.2</gson.version>
+
+		<!-- spring-ai -->
+		<spring-ai.version>2.0.0-M1</spring-ai.version>
+		<!-- dify -->
+		<dify-java-client.version>1.2.3</dify-java-client.version>
 	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+			<!-- springboot -->
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-dependencies</artifactId>
+				<version>${spring-boot.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+
+			<!-- slf4j -->
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>${slf4j-api.version}</version>
+			</dependency>
+			<!-- slf4j-reload4j -->
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-reload4j</artifactId>
+				<version>${slf4j-api.version}</version>
+			</dependency>
+
+			<!-- junit -->
+			<dependency>
+				<groupId>org.junit.jupiter</groupId>
+				<artifactId>junit-jupiter-engine</artifactId>
+				<version>${junit-jupiter.version}</version>
+			</dependency>
+
+			<!-- jakarta -->
+			<dependency>
+				<groupId>jakarta.annotation</groupId>
+				<artifactId>jakarta.annotation-api</artifactId>
+				<version>${jakarta.annotation-api.version}</version>
+			</dependency>
+
+			<!-- netty -->
+			<dependency>
+				<groupId>io.netty</groupId>
+				<artifactId>netty-codec-http</artifactId>
+				<version>${netty.version}</version>
+			</dependency>
+			<!-- gson -->
+			<dependency>
+				<groupId>com.google.code.gson</groupId>
+				<artifactId>gson</artifactId>
+				<version>${gson.version}</version>
+			</dependency>
+
+			<!-- xxl-tool -->
+			<dependency>
+				<groupId>com.xuxueli</groupId>
+				<artifactId>xxl-tool</artifactId>
+				<version>${xxl-tool.version}</version>
+			</dependency>
+
+			<!-- groovy -->
+			<dependency>
+				<groupId>org.apache.groovy</groupId>
+				<artifactId>groovy</artifactId>
+				<version>${groovy.version}</version>
+			</dependency>
+
+			<!-- spring-context -->
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-context</artifactId>
+				<version>${spring.version}</version>
+				<scope>provided</scope>
+			</dependency>
+
+			<!-- mybatis-starter：mybatis + mybatis-spring + hikari（default） -->
+			<dependency>
+				<groupId>org.mybatis.spring.boot</groupId>
+				<artifactId>mybatis-spring-boot-starter</artifactId>
+				<version>${mybatis-spring-boot-starter.version}</version>
+			</dependency>
+			<!-- mysql -->
+			<dependency>
+				<groupId>com.mysql</groupId>
+				<artifactId>mysql-connector-j</artifactId>
+				<version>${mysql-connector-j.version}</version>
+			</dependency>
+
+			<!-- xxl-job-core -->
+			<dependency>
+				<groupId>com.xuxueli</groupId>
+				<artifactId>xxl-job-core</artifactId>
+				<version>${project.parent.version}</version>
+			</dependency>
+
+			<!-- xxl-sso (xxl-tool、gson) -->
+			<dependency>
+				<groupId>com.xuxueli</groupId>
+				<artifactId>xxl-sso-core</artifactId>
+				<version>${xxl-sso.version}</version>
+			</dependency>
+
+			<!-- spring-ai -->
+			<dependency>
+				<groupId>org.springframework.ai</groupId>
+				<artifactId>spring-ai-starter-model-ollama</artifactId>
+				<version>${spring-ai.version}</version>
+			</dependency>
+			<!-- dify -->
+			<dependency>
+				<groupId>io.github.imfangs</groupId>
+				<artifactId>dify-java-client</artifactId>
+				<version>${dify-java-client.version}</version>
+			</dependency>
+
+		</dependencies>
+	</dependencyManagement>
 
 	<licenses>
 		<license>
