@@ -801,7 +801,7 @@ Source repository address | Release Download
 <dependency>
     <groupId>com.xuxueli</groupId>
     <artifactId>xxl-job-core</artifactId>
-    <version>1.8.2</version>
+    <version>${version}</version>
 </dependency>
 ```
 
@@ -810,11 +810,8 @@ Source repository address | Release Download
 - [Gitter](https://gitter.im/xuxueli/xxl-job)
 
 ### 1.5 Environment
-- JDK：1.7+
-- Servlet/JSP Spec：3.1/2.3
-- Tomcat：8.5.x/Jetty9.2.x
-- Spring-boot：1.5.x/Spring4.x
-- Mysql：5.6+
+- JDK：1.8+
+- Mysql：5.7+
 - Maven：3+
 
 
@@ -1655,17 +1652,34 @@ Tips: V1.3.x release has been published , enter the maintenance phase, branch  a
 - 2,Standardize project directory for extend multi executors;
 - 3,add JFinal type executor sample project;
 
-### TODO LIST
-- 1,Task privilege management:control privilege on executor, check privilege on core operations;
-- 2,Task slice routing:using consistent Hash algorithm to calculate slice order as stable as possible, even if there is fluctuation in the registration machine will not cause large fluctuations in the order of slice. Currently using IP natural sorting can meet the demand，to be determined;
-- 3,Failure retry optimization:The current failure to retry logic is execute the request logic once again after the scheduled request fails。The optimization point is retry for both scheduling and execution failures, retry a full schedule when retrying，This may lead schedule failure to an infinite loop，to be determined;
-- 4,write file when callback failed，read the log when viewing the log，callback confirm after rebooting;
-- 5,Task dependency，flow chart，child task + aggregation task，log of each node;
-- 6,Scheduled task priority;
-- 7,Remove quartz dependencies and rewrite scheduld module:insert the next execution record into delayqueue when add or resume task, schedule center cluster compete distributed lock，successful nodes bulk load expired delayqueue data and batch execution;
-- 8,springboot and docker image，and push docker image to the central warehouse，further realize product out of the box;
-- 9,globalization:schedule center interface and Official documents，add English version;
-- 10,executor removal:notify schedule center and remove the corresponding execute node when executor is destroyed, improve the timeliness of executor state recognized;
+### 6.43 version v3.3.2 Release Notes[2026-01-01]
+- 1、【Optimization】Graceful Shutdown: When the scheduling center shuts down, it actively waits for scheduling completion when detecting non-empty time wheels; when the client shuts down, it stops receiving new tasks and actively waits for task execution completion when detecting running tasks;
+- 2、【New Feature】Docker Compose Configuration: Added Docker Compose configuration to support one-click configuration and startup of scheduling center clusters;
+
+<details>
+    <summary>Docker Compose startup steps：</summary>    
+
+    ```
+    // Download XXL-JOB
+    git clone --branch "$(curl -s https://api.github.com/repos/xuxueli/xxl-job/releases/latest | jq -r .tag_name)" https://github.com/xuxueli/xxl-job.git
+    // Build XXL-JOB
+    mvn clean package -Dmaven.test.skip=true
+    // Start XXL-JOB
+    MYSQL_PATH={自定义数据库持久化目录} docker compose up -d
+    // Stop XXL-JOB
+    docker compose down
+    ```
+</details>
+
+- 3、【Optimization】 Scheduling Center Operation Experience: Table interaction adjusted to single-row selection mode; disabled pagination cycling; optimized pagination limit text;
+- 4、【Optimization】 Scheduling Thread Transaction Commit Logic: Adjusted to avoid thread abnormal exit under edge conditions, enhancing robustness;
+- 5、【Optimization】 Scheduling Log List Sorting Logic: Optimized for improved readability;
+- 6、【Optimization】 Scheduling Center OpenAPI Communication Token: Adjusted to optional instead of required; merged PR-3892;
+- 7、【Optimization】 Executor Detail Interface Permissions: Adjusted to support regular users viewing registered nodes; merged PR-3882;
+- 8、【Optimization】 Task Parameter LogDateTime Generation Logic: Adjusted to ensure consistency for the same batch of scheduling in sharding broadcast scenarios;
+- 9、【Upgrade】 Maven Dependencies: Upgraded multiple dependencies to newer versions, such as spring, netty, xxl-sso, xxl-tool, etc.;
+- 10、【Optimization】 Unified Project Dependency Management Structure: Unified dependency versions to parent pom for improved maintainability;
+
 
 ## 7. Other
 
