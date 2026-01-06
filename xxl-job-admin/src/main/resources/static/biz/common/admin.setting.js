@@ -70,8 +70,8 @@ $(function(){
                                 <div class="col-sm-10"><input type="password" class="form-control" name="password" placeholder="` + I18n.system_please_input + I18n.change_pwd_field_newpwd + `" maxlength="20" ></div>
                             </div>
                             <div class="form-group">
-                                <label for="lastname" class="col-sm-2 control-label">` + I18n.change_pwd_field_newpwd +` <font color="red">*</font></label>
-                                <div class="col-sm-10"><input type="password" class="form-control" name="repeatPassword" placeholder="` + I18n.system_please_input + I18n.change_pwd_field_newpwd + `" maxlength="20" ></div>
+                                <label for="lastname" class="col-sm-2 control-label">` + I18n.change_pwd_field_repeat_pwd +` <font color="red">*</font></label>
+                                <div class="col-sm-10"><input type="password" class="form-control" name="repeatPassword" placeholder="` + I18n.system_please_input + I18n.change_pwd_field_repeat_pwd + `" maxlength="20" ></div>
                             </div>
                             <hr>
                             <div class="form-group">
@@ -122,7 +122,7 @@ $(function(){
                 rangelength : "密码长度限制为4~50"
             },
             repeatPassword : {
-                required : I18n.system_please_input +I18n.change_pwd_field_newpwd,
+                required : I18n.system_please_input +I18n.change_pwd_field_repeat_pwd,
                 rangelength : "确认密码长度限制为4~50"
             }
         },

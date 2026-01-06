@@ -87,8 +87,8 @@
 								<div class="col-sm-8"><input type="password" class="form-control" name="password" placeholder="${I18n.system_please_input}${I18n.user_password}" maxlength="20" ></div>
 							</div>
 							<div class="form-group">
-								<label for="lastname" class="col-sm-2 control-label">${I18n.user_password}<font color="red">*</font></label>
-								<div class="col-sm-8"><input type="password" class="form-control" name="repeatPassword" placeholder="${I18n.system_please_input}${I18n.user_password}" maxlength="20" ></div>
+								<label for="lastname" class="col-sm-2 control-label">${I18n.change_pwd_field_repeat_pwd}<font color="red">*</font></label>
+								<div class="col-sm-8"><input type="password" class="form-control" name="repeatPassword" placeholder="${I18n.system_please_input}${I18n.change_pwd_field_repeat_pwd}" maxlength="20" ></div>
 							</div>
 							<div class="form-group">
 								<label for="lastname" class="col-sm-2 control-label">${I18n.user_role}<font color="red">*</font></label>
@@ -142,8 +142,8 @@
 								<div class="col-sm-8"><input type="text" class="form-control" name="password" placeholder="${I18n.user_password_update_placeholder}" maxlength="20" ></div>
 							</div>
 							<div class="form-group">
-								<label for="lastname" class="col-sm-2 control-label">${I18n.user_password}<font color="red">*</font></label>
-								<div class="col-sm-8"><input type="password" class="form-control" name="repeatPassword" placeholder="${I18n.user_password_update_placeholder}" maxlength="20" ></div>
+								<label for="lastname" class="col-sm-2 control-label">${I18n.change_pwd_field_repeat_pwd}<font color="red">*</font></label>
+								<div class="col-sm-8"><input type="password" class="form-control" name="repeatPassword" placeholder="${I18n.change_pwd_field_repeat_pwd}" maxlength="20" ></div>
 							</div>
 							<div class="form-group">
 								<label for="lastname" class="col-sm-2 control-label">${I18n.user_role}<font color="red">*</font></label>
@@ -291,7 +291,7 @@
 					rangelength: I18n.system_lengh_limit + "[4-20]"
 				},
 				repeatPassword : {
-					required : I18n.system_please_input + I18n.user_password,
+					required : I18n.system_please_input + I18n.change_pwd_field_repeat_pwd,
 					rangelength: I18n.system_lengh_limit + "[4-20]"
 				}
 			},
