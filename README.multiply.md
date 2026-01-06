@@ -33,6 +33,8 @@ xxl.job.platform.type=mysql
 
 ## notice
 - 2026-01-06
+    - 同步最新的3.4.0-SNAPSHOT版本，跟随官方依赖 springboot4,jdk17
+- 2026-01-06
     - 同步最新的3.3.2版本，跟随官方依赖 springboot4,jdk17
 - 2026-01-06
     - 同步最新的3.3.1版本，此版本开始跟随官方依赖到springboot4,jdk17
