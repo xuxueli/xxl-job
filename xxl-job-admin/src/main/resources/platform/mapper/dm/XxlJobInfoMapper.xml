@@ -84,6 +84,7 @@
 			WHERE "ID" IN (
 				SELECT MAX("ID") AS MAX_ID
 				FROM "XXL_JOB_LOG" b
+				WHERE "TRIGGER_TIME" >= #{newestTriggerTime}
 				GROUP BY "JOB_ID"
 			)
 		) b ON t."ID"=b."JOB_ID"

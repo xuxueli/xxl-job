@@ -84,6 +84,7 @@
 			where id in (
 				select max(id) as max_id
 				from xxl_job_log b
+				where trigger_time >= #{newestTriggerTime}
 				group by job_id
 			)
 		) b on t.id=b.job_id

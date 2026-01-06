@@ -5,6 +5,7 @@ import com.xxl.job.admin.platform.pageable.data.PageDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -16,12 +17,14 @@ import java.util.List;
 public interface XxlJobInfoMapper {
 
 	public List<XxlJobInfo> pageList(@Param("page")PageDto page,
+									 @Param("newestTriggerTime") Date newestTriggerTime,
 									 @Param("jobGroup") int jobGroup,
 									 @Param("triggerStatus") int triggerStatus,
 									 @Param("jobDesc") String jobDesc,
 									 @Param("executorHandler") String executorHandler,
 									 @Param("author") String author);
-	public int pageListCount(@Param("jobGroup") int jobGroup,
+	public int pageListCount(@Param("newestTriggerTime") Date newestTriggerTime,
+							 @Param("jobGroup") int jobGroup,
 							 @Param("triggerStatus") int triggerStatus,
 							 @Param("jobDesc") String jobDesc,
 							 @Param("executorHandler") String executorHandler,

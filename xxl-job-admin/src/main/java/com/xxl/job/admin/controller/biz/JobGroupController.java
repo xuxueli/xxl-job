@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * job group controller
@@ -201,7 +202,10 @@ public class JobGroupController {
         }
 
 		// whether exists job
-		int count = xxlJobInfoMapper.pageListCount(id, -1,  null, null, null);
+		long ts=System.currentTimeMillis();
+		long newestTriggerTs=ts- TimeUnit.MINUTES.toMillis(30);
+		Date newestTriggerTime=new Date(newestTriggerTs);
+		int count = xxlJobInfoMapper.pageListCount(newestTriggerTime,id, -1,  null, null, null);
 		if (count > 0) {
 			return Response.ofFail( I18nUtil.getString("jobgroup_del_limit_0") );
 		}

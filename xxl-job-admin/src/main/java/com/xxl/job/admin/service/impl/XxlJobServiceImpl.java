@@ -31,6 +31,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.MessageFormat;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * core job action for xxl-job
@@ -56,8 +57,11 @@ public class XxlJobServiceImpl implements XxlJobService {
 
 		// page list
 		PageDto page=PageDto.ofOffsetSize(offset,pagesize);
-		List<XxlJobInfo> list = xxlJobInfoMapper.pageList(page, jobGroup, triggerStatus, jobDesc, executorHandler, author);
-		int list_count = xxlJobInfoMapper.pageListCount( jobGroup, triggerStatus, jobDesc, executorHandler, author);
+		long ts=System.currentTimeMillis();
+		long newestTriggerTs=ts- TimeUnit.MINUTES.toMillis(30);
+		Date newestTriggerTime=new Date(newestTriggerTs);
+		List<XxlJobInfo> list = xxlJobInfoMapper.pageList(page, newestTriggerTime,jobGroup, triggerStatus, jobDesc, executorHandler, author);
+		int list_count = xxlJobInfoMapper.pageListCount( newestTriggerTime,jobGroup, triggerStatus, jobDesc, executorHandler, author);
 
 		// package result
 		PageModel<XxlJobInfo> pageModel = new PageModel<>();
