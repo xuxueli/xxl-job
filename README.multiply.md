@@ -3,9 +3,9 @@
 ## project
 - this project is a branch from https://github.com/xuxueli/xxl-job .
 - and this project was forked
-- it changes include in pull request https://github.com/xuxueli/xxl-job/pull/3462
+- it changes include in pull request https://github.com/xuxueli/xxl-job/pull/3899
 ```shell
-feat(database): support multiply database type & secure enhance #3462
+feat(多数据库): 支持多数据库类型、国密加密传输、Bcrypt慢速散列盐存储密码、批量操作
 ```
 - aim to adapt oracle/gbase xxl-job-admin.
 - those change not effect xxl-job-core,.
