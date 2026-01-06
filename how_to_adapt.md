@@ -4,8 +4,8 @@
 ## step 1
 - modify initial ddl sql script
 - first, remind your type is ***oracle***
-- copy ***doc/db/tables_xxl_job.official.sql*** as your database type
-- such as ***doc/db/tables_xxl_job.oracle.sql***
+- copy ***doc/platform/tables_xxl_job.official.sql*** as your database type ***doc/platform/tables_xxl_job.oracle.sql***
+- such as ***doc/platform/tables_xxl_job.oracle.sql***
 - use ***oracle*** replace ***official***
 - modify it to your database grammar, include column type, primary key auto increment,comment,index
 - usually, bigint,datetime,text maybe not different
@@ -14,8 +14,8 @@
 
 ## step 2
 - copy script to auto initialize resources path
-- make directory ***xxl-job-admin/src/main/resources/db/oracle***
-- copy file ***doc/db/tables_xxl_job.oracle.sql*** to ***xxl-job-admin/src/main/resources/db/oracle/tables_xxl_job.oracle.sql***
+- make directory ***xxl-job-admin/src/main/resources/platform/init/oracle***
+- copy file ***doc/platform/tables_xxl_job.oracle.sql*** to ***xxl-job-admin/src/main/resources/platform/init/oracle/tables_xxl_job.oracle.sql***
 
 ## step 3
 - add jdbc driver into ***pom.xml***
@@ -36,7 +36,7 @@
 - and, add this jar into classpath
 - separator is space, not newline
 ```shell
-xxl-job-admin/pom.xml / build / plugins / maven-jar-plugin / configuration / archive / manifestEntries / Class-Path 
+xxl-job-admin/pom.xml /build/plugins/maven-jar-plugin/configuration/archive/manifestEntries/Class-Path 
 ```
 
 ## step 4
@@ -46,7 +46,7 @@ xxl-job-admin/pom.xml / build / plugins / maven-jar-plugin / configuration / arc
 ```properties
 ## ############################# oracle ###################################
 ## database platform, mysql|oracle|postgre|gbase|h2|dm|kingbase
-xxl.job.database.platform.type=oracle
+xxl.job.platform.type=oracle
 
 ### xxl-job, datasource
 spring.datasource.url=jdbc:oracle:thin:@localhost:1521:orcl
@@ -57,8 +57,8 @@ spring.datasource.driver-class-name=oracle.jdbc.OracleDriver
 
 ## step 5
 - make mybatis mapper xml file
-- make directory ***xxl-job-admin/src/main/resources/mybatis-mapper/oracle***
-- copy files in ***xxl-job-admin/src/main/resources/mybatis-mapper/mysql*** into ***xxl-job-admin/src/main/resources/mybatis-mapper/oracle***
+- make directory ***xxl-job-admin/src/main/resources/platform/mapper/oracle***
+- copy files in ***xxl-job-admin/src/main/resources/platform/mapper/mysql*** into ***xxl-job-admin/src/main/resources/platform/mapper/oracle***
 - modify column or table character case while database is case sensitive
 - such as, oracle default is upper-case, mysql is lower-case
 - attention below locations
@@ -79,12 +79,12 @@ spring.datasource.driver-class-name=oracle.jdbc.OracleDriver
 - attention below locations
 ```shell
 1. every insert sql
-2. XxlJobGroupMapper.xml / save / selectKey
-3. XxlJobInfoMapper.xml / save / selectKey
-4. XxlJobLogGlueMapper.xml / save / selectKey
-5. XxlJobLogMapper.xml / save / selectKey
-6. XxlJobLogReportMapper.xml / save / selectKey
-7. XxlJobUserMapper.xml / save / selectKey
+2. XxlJobGroupMapper.xml /save/selectKey
+3. XxlJobInfoMapper.xml /save/selectKey
+4. XxlJobLogGlueMapper.xml /save/selectKey
+5. XxlJobLogMapper.xml /save/selectKey
+6. XxlJobLogReportMapper.xml /save/selectKey
+7. XxlJobUserMapper.xml /save/selectKey
 ```
 - modify page sql to your database grammar
 - such as, oracle use rownum, mysql use limit to implement page sql
@@ -92,14 +92,14 @@ spring.datasource.driver-class-name=oracle.jdbc.OracleDriver
 ```shell
 1. every select sql
 2. search in directory of keyword 'limit'
-3. XxlJobGroupMapper.xml / pageList
-4. XxlJobInfoMapper.xml / pageList
-5. XxlJobInfoMapper.xml / scheduleJobQuery
-6. XxlJobLogGlueMapper.xml / removeOld
-7. XxlJobLogMapper.xml / pageList
-8. XxlJobLogMapper.xml / findClearLogIds
-9. XxlJobLogMapper.xml / findFailJobLogIds
-10. XxlJobUserMapper.xml / pageList
+3. XxlJobGroupMapper.xml /pageList
+4. XxlJobInfoMapper.xml /pageList
+5. XxlJobInfoMapper.xml /scheduleJobQuery
+6. XxlJobLogGlueMapper.xml /removeOld
+7. XxlJobLogMapper.xml /pageList
+8. XxlJobLogMapper.xml /findClearLogIds
+9. XxlJobLogMapper.xml /findFailJobLogIds
+10. XxlJobUserMapper.xml /pageList
 ```
 - specially, please choose suitable fields implements pageable logic according to defined in ***PageDto***
 - and use those page parameters (number/size/...) in your mapper xml file
@@ -109,7 +109,7 @@ spring.datasource.driver-class-name=oracle.jdbc.OracleDriver
 - modify column alias while returnType is Map type
 - attention below locations
 ```shell
-1. XxlJobLogMapper.xml / findLogReport
+1. XxlJobLogMapper.xml /findLogReport
 ```
 
 ## step 6

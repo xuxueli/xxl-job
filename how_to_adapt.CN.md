@@ -4,9 +4,9 @@
 ## 步骤 1
 - 修改初始化DDL脚本
 - 首先，记住你的数据库类型是 ***oracle***
-- 复制 ***doc/db/tables_xxl_job.official.sql*** 为你的数据库类型
-- 比如 ***doc/db/tables_xxl_job.oracle.sql***
-- 使用 ***oracle*** 替换 ***official***
+- 从 ***doc/platform/tables_xxl_job.official.sql*** 复制一份到 ***doc/platform/tables_xxl_job.oracle.sql***
+- 比如 ***doc/platform/tables_xxl_job.oracle.sql***
+- 使用 ***oracle*** 替换文件名中的 ***official***
 - 修改这个脚本为你的数据库语法，包含列类型，主键自增，注释，索引
 - 通常，bigint,datetime,text 或许会不同
 - 一些数据库注释不支持嵌入在 create table 中定义
@@ -14,8 +14,8 @@
 
 ## 步骤 2
 - 复制脚本到自动初始化资源目录
-- 创建目录 ***xxl-job-admin/src/main/resources/db/oracle***
-- 复制文件 ***doc/db/tables_xxl_job.oracle.sql*** 到 ***xxl-job-admin/src/main/resources/db/oracle/tables_xxl_job.oracle.sql***
+- 创建目录 ***xxl-job-admin/src/main/resources/platform/init/oracle***
+- 复制文件 ***doc/platform/tables_xxl_job.oracle.sql*** 到 ***xxl-job-admin/src/main/resources/platform/init/oracle/tables_xxl_job.oracle.sql***
 
 ## 步骤 3
 - 添加JDBC驱动到 ***pom.xml***
@@ -36,7 +36,7 @@
 - 并且， 添加这个jar到classpath
 - 分隔符是空，不是换行
 ```shell
-xxl-job-admin/pom.xml / build / plugins / maven-jar-plugin / configuration / archive / manifestEntries / Class-Path 
+xxl-job-admin/pom.xml /build/plugins/maven-jar-plugin/configuration/archive/manifestEntries/Class-Path 
 ```
 
 ## 步骤 4
@@ -46,7 +46,7 @@ xxl-job-admin/pom.xml / build / plugins / maven-jar-plugin / configuration / arc
 ```properties
 ## ############################# oracle ###################################
 ## database platform, mysql|oracle|postgre|gbase|h2|dm|kingbase
-xxl.job.database.platform.type=oracle
+xxl.job.platform.type=oracle
 
 ### xxl-job, datasource
 spring.datasource.url=jdbc:oracle:thin:@localhost:1521:orcl
@@ -57,8 +57,8 @@ spring.datasource.driver-class-name=oracle.jdbc.OracleDriver
 
 ## 步骤 5
 - 创建mybatis的mapper-xml文件
-- 创建目录 ***xxl-job-admin/src/main/resources/mybatis-mapper/oracle***
-- 复制所有文件从 ***xxl-job-admin/src/main/resources/mybatis-mapper/mysql*** 到 ***xxl-job-admin/src/main/resources/mybatis-mapper/oracle***
+- 创建目录 ***xxl-job-admin/src/main/resources/platform/mapper/oracle***
+- 复制所有文件从 ***xxl-job-admin/src/main/resources/platform/mapper/mysql*** 到 ***xxl-job-admin/src/main/resources/platform/mapper/oracle***
 - 当数据库是大小写敏感时，修改表名和列名为对应的大小写
 - 例如, oracle 模式是大写，mysql 模式是小写
 - 注意下面的位置
@@ -79,12 +79,12 @@ spring.datasource.driver-class-name=oracle.jdbc.OracleDriver
 - 注意下面的位置
 ```shell
 1. 每一个 insert 插入语句
-2. XxlJobGroupMapper.xml / save / selectKey
-3. XxlJobInfoMapper.xml / save / selectKey
-4. XxlJobLogGlueMapper.xml / save / selectKey
-5. XxlJobLogMapper.xml / save / selectKey
-6. XxlJobLogReportMapper.xml / save / selectKey
-7. XxlJobUserMapper.xml / save / selectKey
+2. XxlJobGroupMapper.xml /save/selectKey
+3. XxlJobInfoMapper.xml /save/selectKey
+4. XxlJobLogGlueMapper.xml /save/selectKey
+5. XxlJobLogMapper.xml /save/selectKey
+6. XxlJobLogReportMapper.xml /save/selectKey
+7. XxlJobUserMapper.xml /save/selectKey
 ```
 - 修改分页为你的数据库实现方式
 - 例如, oracle 使用 rownum, mysql 使用 limit 来实现分页
@@ -92,14 +92,14 @@ spring.datasource.driver-class-name=oracle.jdbc.OracleDriver
 ```shell
 1. 每一个 select 查询语句
 2. 在目录中搜索关键字 'limit'
-3. XxlJobGroupMapper.xml / pageList
-4. XxlJobInfoMapper.xml / pageList
-5. XxlJobInfoMapper.xml / scheduleJobQuery
-6. XxlJobLogGlueMapper.xml / removeOld
-7. XxlJobLogMapper.xml / pageList
-8. XxlJobLogMapper.xml / findClearLogIds
-9. XxlJobLogMapper.xml / findFailJobLogIds
-10. XxlJobUserMapper.xml / pageList
+3. XxlJobGroupMapper.xml /pageList
+4. XxlJobInfoMapper.xml /pageList
+5. XxlJobInfoMapper.xml /scheduleJobQuery
+6. XxlJobLogGlueMapper.xml /removeOld
+7. XxlJobLogMapper.xml /pageList
+8. XxlJobLogMapper.xml /findClearLogIds
+9. XxlJobLogMapper.xml /findFailJobLogIds
+10. XxlJobUserMapper.xml /pageList
 ```
 - 特别地, 请根据***PageDto***定义的分页字段，选择合适的字段使用
 - 并且使用这些分页参数（number/size/...）在你的 mapper-xml 文件中
@@ -109,7 +109,7 @@ spring.datasource.driver-class-name=oracle.jdbc.OracleDriver
 - 修改列别名， 当 returnType 是 Map 类型的时候
 - 注意下面的位置
 ```shell
-1. XxlJobLogMapper.xml / findLogReport
+1. XxlJobLogMapper.xml /findLogReport
 ```
 
 ## 步骤 6

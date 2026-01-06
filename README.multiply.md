@@ -12,7 +12,7 @@ feat(database): support multiply database type & secure enhance #3462
 - below config database platform to switch target platform
 ```shell
 # database platform, mysql|oracle|postgre|gbase|h2|dm|kingbase|sqlserver
-xxl.job.database.platform.type=mysql
+xxl.job.platform.type=mysql
 ```
 - actually, mysql grammar adapted to gbase, or other, so that, other database could be use mysql platform.
 
@@ -27,11 +27,16 @@ feat(database): support multiply database type & secure enhance #3462
 - 下面的配置数据库平台为目标平台
 ```shell
 # database platform, mysql|oracle|postgre|gbase|h2|dm|kingbase|sqlserver
-xxl.job.database.platform.type=mysql
+xxl.job.platform.type=mysql
 ```
 - 实际上，mysql 的语法适用于 gbase ，或者其他兼容的数据库，所以其他数据库也可以使用 mysql 平台
 
 ## notice
+- 2026-01-06
+    - 同步最新的3.3.1版本，此版本开始跟随官方依赖到springboot4,jdk17
+    - 因为官方依赖SSO部分抽离为单独的依赖，适配难度较高，且不适合后续版本适配
+    - 因此，从此版本开始，不在区分springboot版本，仅维护一个对应官方的分支
+    - 新分支管理策略：v[官方版本]/multiply/master
 - 2025-01-11
     - 同步最新的3.0.0-SNAPSHOT版本，为最后一个同步官方的springboot2版本
     - 官方在此之后升级为springboot3+jdk17
@@ -142,7 +147,7 @@ xxl.job.database.platform.type=mysql
 - 1. download the package
     - xxl-job-admin-all.tar.gz
 ```shell
-wget https://gitee.com/ice2faith/xxl-job/releases/download/v3.2.1-SNAPSHOT-springboot3/xxl-job-admin-all.tar.gz
+wget https://gitee.com/ice2faith/xxl-job/releases/download/v3.3.1/xxl-job-admin-all.tar.gz
 ```
 ```
 - 2. release it
