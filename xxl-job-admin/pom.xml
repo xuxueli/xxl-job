@@ -10,10 +10,19 @@
 	<packaging>jar</packaging>
 
 	<properties>
+		<java.version>17</java.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.deploy.skip>true</maven.deploy.skip>
 	</properties>
 
 	<dependencies>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.30</version>
+			<scope>provided</scope>
+			<optional>true</optional>
+		</dependency>
 
 		<!-- starter-web -->
 		<dependency>
@@ -66,24 +75,276 @@
 			<artifactId>xxl-sso-core</artifactId>
 		</dependency>
 
+
+		<dependency>
+			<groupId>com.oracle.database.jdbc</groupId>
+			<artifactId>ojdbc8</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.oracle.database.nls</groupId>
+			<artifactId>orai18n</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.gbase</groupId>
+			<artifactId>gbase-connector-java</artifactId>
+			<version>8.3.81.53</version>
+			<scope>system</scope>
+			<systemPath>${pom.basedir}/lib/gbase-connector-java-8.3.81.53-build55.2.1-bin.jar</systemPath>
+		</dependency>
+
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>42.7.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<version>2.2.224</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.xerial</groupId>
+			<artifactId>sqlite-jdbc</artifactId>
+			<version>3.43.0.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.dameng</groupId>
+			<artifactId>DmJdbcDriver18</artifactId>
+			<version>8.1.1.193</version>
+		</dependency>
+
+		<dependency>
+			<groupId>cn.com.kingbase</groupId>
+			<artifactId>kingbase8</artifactId>
+			<version>8.6.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.microsoft.sqlserver</groupId>
+			<artifactId>mssql-jdbc</artifactId>
+			<version>7.4.1.jre8</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>com.antherd</groupId>
+			<artifactId>sm-crypto</artifactId>
+			<version>0.3.2.1-RELEASE</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.openjdk.nashorn</groupId>
+			<artifactId>nashorn-core</artifactId>
+			<version>15.4</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-crypto</artifactId>
+			<version>5.7.11</version>
+		</dependency>
+
 	</dependencies>
 
+
 	<build>
+		<!-- 指定资源路径，部分项目的xml写在java路径中，需要包含进来 -->
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+			<resource>
+				<directory>src/main/java</directory>
+				<includes>
+					<include>**/*.xml</include>
+					<include>**/*.json</include>
+					<include>**/*.ftl</include>
+				</includes>
+			</resource>
+		</resources>
+
 		<plugins>
+			<!-- 规定java版本等信息，防止每次都要设置jdk版本和编码 -->
 			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<version>${spring-boot.version}</version>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+					<encoding>${project.build.sourceEncoding}</encoding>
+					<compilerArgument>-parameters</compilerArgument>
+					<compilerArgs>
+						<arg>-Xlint:unchecked</arg>
+						<arg>-Xlint:deprecation</arg>
+					</compilerArgs>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.6</version>
+				<configuration>
+					<encoding>${project.build.sourceEncoding}</encoding>
+					<nonFilteredFileExtensions>
+						<nonFilteredFileExtension>doc</nonFilteredFileExtension>
+						<nonFilteredFileExtension>xls</nonFilteredFileExtension>
+						<nonFilteredFileExtension>ppt</nonFilteredFileExtension>
+						<nonFilteredFileExtension>docx</nonFilteredFileExtension>
+						<nonFilteredFileExtension>xlsx</nonFilteredFileExtension>
+						<nonFilteredFileExtension>pptx</nonFilteredFileExtension>
+						<nonFilteredFileExtension>pdf</nonFilteredFileExtension>
+						<nonFilteredFileExtension>lib</nonFilteredFileExtension>
+						<nonFilteredFileExtension>so</nonFilteredFileExtension>
+						<nonFilteredFileExtension>dll</nonFilteredFileExtension>
+						<nonFilteredFileExtension>js</nonFilteredFileExtension>
+						<nonFilteredFileExtension>css</nonFilteredFileExtension>
+						<nonFilteredFileExtension>eot</nonFilteredFileExtension>
+						<nonFilteredFileExtension>svg</nonFilteredFileExtension>
+						<nonFilteredFileExtension>ttf</nonFilteredFileExtension>
+						<nonFilteredFileExtension>woff</nonFilteredFileExtension>
+						<nonFilteredFileExtension>woff2</nonFilteredFileExtension>
+						<nonFilteredFileExtension>otf</nonFilteredFileExtension>
+						<nonFilteredFileExtension>jpg</nonFilteredFileExtension>
+						<nonFilteredFileExtension>png</nonFilteredFileExtension>
+						<nonFilteredFileExtension>jpeg</nonFilteredFileExtension>
+						<nonFilteredFileExtension>ico</nonFilteredFileExtension>
+						<nonFilteredFileExtension>bmp</nonFilteredFileExtension>
+						<nonFilteredFileExtension>gif</nonFilteredFileExtension>
+					</nonFilteredFileExtensions>
+				</configuration>
 				<executions>
-					<execution>
-						<goals>
-							<goal>repackage</goal>
-						</goals>
-					</execution>
 				</executions>
 			</plugin>
 
+			<!-- 打包插件 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>3.0.2</version>
+				<configuration>
+					<!-- 指定生成的jar包名 -->
+					<finalName>${project.artifactId}</finalName>
+					<archive>
+						<!-- 去除maven描述信息 -->
+						<addMavenDescriptor>false</addMavenDescriptor>
+						<manifest>
+							<!-- 添加classpath,指定classpath前缀，指定启动类 -->
+							<addClasspath>true</addClasspath>
+							<classpathPrefix>lib/</classpathPrefix>
+							<!-- 指定启动类 -->
+							<mainClass>com.xxl.job.admin.platform.launcher.ExtApplicationLauncher</mainClass>
+							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+							<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+						</manifest>
+						<manifestEntries>
+							<!-- 添加自己的classpath，多个classpath之间直接空格隔开，写成多个Class-Path标签将被后面的覆盖 -->
+							<Class-Path>. ./resources/ lib/gbase-connector-java-8.3.81.53-build55.2.1-bin.jar</Class-Path>
+							<Timestamp>${maven.build.timestamp}</Timestamp>
+							<Ext-Main-Class>com.xxl.job.admin.XxlJobAdminApplication</Ext-Main-Class>
+							<Ext-Path>plugins</Ext-Path>
+						</manifestEntries>
+					</archive>
+					<excludes>
+						<!-- 打包时排除以下文件，这是实现分离配置文件的第一步 -->
+						<!-- 这样就得到了一个单纯的jar包，不包含配置信息 -->
+						<exclude>bin/**</exclude>
+						<exclude>assembly/**</exclude>
+						<exclude>*assembly*.xml</exclude>
+
+						<exclude>templates/**</exclude>
+						<exclude>static/**</exclude>
+						<exclude>public/**</exclude>
+
+						<exclude>i18n/**</exclude>
+						<exclude>META-INF/**</exclude>
+
+						<exclude>db/**</exclude>
+						<exclude>mapper/**</exclude>
+						<exclude>*mapper*/**</exclude>
+
+						<exclude>*mybatis*/**</exclude>
+
+						<exclude>*spring*.xml</exclude>
+
+						<exclude>logback/**</exclude>
+						<exclude>*logback*.xml</exclude>
+
+						<exclude>*.properties</exclude>
+						<exclude>*.yml</exclude>
+						<exclude>*.yaml</exclude>
+						<exclude>*.conf</exclude>
+						<exclude>*.j2</exclude>
+						<exclude>*.config</exclude>
+						<exclude>*.txt</exclude>
+
+					</excludes>
+				</configuration>
+			</plugin>
+
+			<!-- 打包插件 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.4.1</version>
+				<!-- 使用多个 execution 分别进行执行打包，以重新指定打包文件名 -->
+				<executions>
+					<execution>
+						<id>make-all</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+						<configuration>
+							<finalName>${project.artifactId}</finalName>
+							<descriptors>
+								<descriptor>src/main/resources/assembly.xml</descriptor>
+							</descriptors>
+						</configuration>
+					</execution>
+
+
+					<execution>
+						<id>make-upgrade</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+						<configuration>
+							<finalName>${project.artifactId}</finalName>
+							<descriptors>
+								<descriptor>src/main/resources/assembly-upgrade.xml</descriptor>
+							</descriptors>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- docker -->
+			<plugin>
+				<groupId>com.spotify</groupId>
+				<artifactId>docker-maven-plugin</artifactId>
+				<version>0.4.13</version>
+				<configuration>
+					<!-- made of '[a-z0-9-_.]' -->
+					<imageName>${project.artifactId}:${project.version}</imageName>
+					<dockerDirectory>${project.basedir}</dockerDirectory>
+					<resources>
+						<resource>
+							<targetPath>/</targetPath>
+							<directory>${project.build.directory}</directory>
+							<include>${project.build.finalName}.jar</include>
+						</resource>
+					</resources>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
+
 
 </project>

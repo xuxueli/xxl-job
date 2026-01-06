@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<included>
+
+
+    <!-- 控制台高亮转换 -->
+    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
+
+    <!-- 日志格式 -->
+    <property name="CONSOLE_LOG_PATTERN"
+              value="${CONSOLE_LOG_PATTERN:-%clr(%d{MM-dd HH:mm:ss.SSS}){faint} %clr([%-5level]) %clr([%-40.40logger{40}:%-4.5line]){cyan} %clr([%-24.24thread]){magenta} - %msg%n}"/>
+
+    <!-- 日志格式 -->
+    <property name="LOG_PATTERN"
+              value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] [%-40.40logger{40}:%-4.5line] [%-4.24thread] [%X{JOB_ID}] [%X{TASK_ID}] - %msg%n"/>
+
+
+</included>

@@ -1,6 +1,7 @@
 package com.xxl.job.admin.mapper;
 
 import com.xxl.job.admin.model.XxlJobUser;
+import com.xxl.job.admin.platform.pageable.data.PageDto;
 import com.xxl.tool.response.Response;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -12,13 +13,10 @@ import java.util.List;
 @Mapper
 public interface XxlJobUserMapper {
 
-	public List<XxlJobUser> pageList(@Param("offset") int offset,
-                                     @Param("pagesize") int pagesize,
-                                     @Param("username") String username,
+	public List<XxlJobUser> pageList(@Param("page")PageDto page,
+									 @Param("username") String username,
 									 @Param("role") int role);
-	public int pageListCount(@Param("offset") int offset,
-							 @Param("pagesize") int pagesize,
-							 @Param("username") String username,
+	public int pageListCount(@Param("username") String username,
 							 @Param("role") int role);
 
 	public XxlJobUser loadByUserName(@Param("username") String username);
