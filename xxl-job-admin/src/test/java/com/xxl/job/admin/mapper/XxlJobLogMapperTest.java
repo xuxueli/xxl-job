@@ -1,6 +1,7 @@
 package com.xxl.job.admin.mapper;
 
 import com.xxl.job.admin.model.XxlJobLog;
+import com.xxl.job.admin.platform.pageable.data.PageDto;
 import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,8 +17,9 @@ public class XxlJobLogMapperTest {
 
     @Test
     public void test(){
-        List<XxlJobLog> list = xxlJobLogMapper.pageList(0, 10, 1, 1, null, null, 1);
-        int list_count = xxlJobLogMapper.pageListCount(0, 10, 1, 1, null, null, 1);
+        PageDto page=PageDto.ofOffsetSize(0,10);
+        List<XxlJobLog> list = xxlJobLogMapper.pageList(page, 1, 1, null, null, 1);
+        int list_count = xxlJobLogMapper.pageListCount(1, 1, null, null, 1);
 
         XxlJobLog log = new XxlJobLog();
         log.setJobGroup(1);

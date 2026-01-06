@@ -1,17 +1,20 @@
 package com.xxl.job.admin.controller.biz;
 
+import com.antherd.smcrypto.sm2.Keypair;
+import com.antherd.smcrypto.sm2.Sm2;
 import com.xxl.job.admin.constant.Consts;
 import com.xxl.job.admin.mapper.XxlJobGroupMapper;
 import com.xxl.job.admin.mapper.XxlJobUserMapper;
 import com.xxl.job.admin.model.XxlJobGroup;
 import com.xxl.job.admin.model.XxlJobUser;
+import com.xxl.job.admin.platform.pageable.data.PageDto;
+import com.xxl.job.admin.platform.security.SecurityContext;
 import com.xxl.job.admin.util.I18nUtil;
 import com.xxl.sso.core.annotation.XxlSso;
 import com.xxl.sso.core.helper.XxlSsoHelper;
 import com.xxl.sso.core.model.LoginInfo;
 import com.xxl.tool.core.CollectionTool;
 import com.xxl.tool.core.StringTool;
-import com.xxl.tool.crypto.Sha256Tool;
 import com.xxl.tool.response.PageModel;
 import com.xxl.tool.response.Response;
 import jakarta.annotation.Resource;
@@ -58,8 +61,9 @@ public class JobUserController {
                                                     @RequestParam int role) {
 
         // page list
-        List<XxlJobUser> list = xxlJobUserMapper.pageList(offset, pagesize, username, role);
-        int list_count = xxlJobUserMapper.pageListCount(offset, pagesize, username, role);
+        PageDto page=PageDto.ofOffsetSize(offset,pagesize);
+        List<XxlJobUser> list = xxlJobUserMapper.pageList(page, username, role);
+        int list_count = xxlJobUserMapper.pageListCount( username, role);
 
         // filter
         if (list!=null && !list.isEmpty()) {
@@ -79,7 +83,18 @@ public class JobUserController {
     @RequestMapping("/insert")
     @ResponseBody
     @XxlSso(role = Consts.ADMIN_ROLE)
-    public Response<String> insert(XxlJobUser xxlJobUser) {
+    public Response<String> insert(XxlJobUser xxlJobUser) throws Exception {
+        Keypair keypair = SecurityContext.getInstance().findKeypair(xxlJobUser.getSign());
+        if (keypair == null) {
+            return Response.ofFail(I18nUtil.getString("login_param_unvalid"));
+        }
+        String password = Sm2.doDecrypt(xxlJobUser.getPassword(), keypair.getPrivateKey());
+        String repeatPassword = Sm2.doDecrypt(xxlJobUser.getRepeatPassword(), keypair.getPrivateKey());
+        if(!password.equals(repeatPassword)){
+            return Response.ofFail(I18nUtil.getString("repeat_password_not_match"));
+        }
+        xxlJobUser.setPassword(password);
+        xxlJobUser.setRepeatPassword(repeatPassword);
 
         // valid username
         if (StringTool.isBlank(xxlJobUser.getUsername())) {
@@ -98,7 +113,7 @@ public class JobUserController {
             return Response.ofFail(I18nUtil.getString("system_lengh_limit")+"[4-20]" );
         }
         // md5 password
-        String passwordHash = Sha256Tool.sha256(xxlJobUser.getPassword());
+        String passwordHash = SecurityContext.getInstance().encodePassword(xxlJobUser.getPassword());
         xxlJobUser.setPassword(passwordHash);
 
         // check repeat
@@ -115,7 +130,7 @@ public class JobUserController {
     @RequestMapping("/update")
     @ResponseBody
     @XxlSso(role = Consts.ADMIN_ROLE)
-    public Response<String> update(HttpServletRequest request, XxlJobUser xxlJobUser) {
+    public Response<String> update(HttpServletRequest request, XxlJobUser xxlJobUser) throws Exception {
 
         // avoid opt login seft
         Response<LoginInfo> loginInfoResponse = XxlSsoHelper.loginCheckWithAttr(request);
@@ -125,12 +140,24 @@ public class JobUserController {
 
         // valid password
         if (StringTool.isNotBlank(xxlJobUser.getPassword())) {
+            Keypair keypair = SecurityContext.getInstance().findKeypair(xxlJobUser.getSign());
+            if (keypair == null) {
+                return Response.ofFail(I18nUtil.getString("login_param_unvalid"));
+            }
+            String password = Sm2.doDecrypt(xxlJobUser.getPassword(), keypair.getPrivateKey());
+            String repeatPassword = Sm2.doDecrypt(xxlJobUser.getRepeatPassword(), keypair.getPrivateKey());
+            if(!password.equals(repeatPassword)){
+                return Response.ofFail(I18nUtil.getString("repeat_password_not_match"));
+            }
+            xxlJobUser.setPassword(password);
+            xxlJobUser.setRepeatPassword(repeatPassword);
+
             xxlJobUser.setPassword(xxlJobUser.getPassword().trim());
             if (!(xxlJobUser.getPassword().length()>=4 && xxlJobUser.getPassword().length()<=20)) {
                 return Response.ofFail(I18nUtil.getString("system_lengh_limit")+"[4-20]" );
             }
             // md5 password
-            String passwordHash = Sha256Tool.sha256(xxlJobUser.getPassword());
+            String passwordHash = SecurityContext.getInstance().encodePassword(xxlJobUser.getPassword());
             xxlJobUser.setPassword(passwordHash);
         } else {
             xxlJobUser.setPassword(null);
@@ -180,8 +207,8 @@ public class JobUserController {
         }
 
         // md5 password
-        String oldPasswordHash = Sha256Tool.sha256(oldPassword);
-        String passwordHash = Sha256Tool.sha256(password);
+        String oldPasswordHash = SHA256Tool.sha256(oldPassword);
+        String passwordHash = SHA256Tool.sha256(password);
 
         // valid old pwd
         Response<LoginInfo> loginInfoResponse = XxlSsoHelper.loginCheckWithAttr(request);

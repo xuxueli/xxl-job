@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration scan="true" scanPeriod="60 seconds" debug="false">
+    <!-- 从spring配置文件中获取配置属性 -->
+    <springProperty scope="context" name="spring.app.name" source="spring.application.name"/>
+    <springProperty scope="context" name="spring.app.profile" source="spring.profiles.active"/>
+
+    <!-- 配置外部属性 -->
+    <!-- 单日文件最多个数 -->
+    <property scope="local" name="log.max.count" value="${logback.app.log.max.cnt:-5}"/>
+    <!-- 单个日志最大大小 -->
+    <property scope="local" name="log.max.size" value="${logback.app.log.max.size:-100MB}"/>
+    <!-- 所有日志文件总大小 -->
+    <property scope="local" name="log.total.size" value="${logback.app.log.total.size:-2048MB}"/>
+    <!-- 日志的存放路径 -->
+    <property scope="local" name="log.dir.name" value="${logback.app.log.dir.name:-logs}"/>
+
+    <!-- 载入默认配置 -->
+    <include resource="logback/logback-conf.xml"/>
+
+
+    <!-- 日志的服务名称 -->
+    <!-- 支持手动指定启动参数 logback.app.name ，不指定则用 spring.app.name ， 都没有，用 noappname  -->
+    <property scope="local" name="log.app.name" value="${logback.app.name:-${spring.app.name:-noappname}}"/>
+
+    <!-- 使用手动指定的启动参数指定配置 logback.app.env -->
+    <!-- 支持手动指定启动参数 logback.app.env ，不指定则用 spring.app.profile ， 都没有，用 test  -->
+
+    <include resource="logback/logback-${logback.app.env:-${spring.app.profile:-test}}.xml"/>
+
+
+    <!-- 自动根据springboot的 spring.profiles.active 值配对日志 -->
+    <!-- 此方式较不太灵活 -->
+    <!--    <springProfile name="default">-->
+    <!--        <include resource="logback/logback-default.xml"/>-->
+    <!--    </springProfile>-->
+
+    <!--    <springProfile name="dev">-->
+    <!--        <include resource="logback/logback-dev.xml"/>-->
+    <!--    </springProfile>-->
+
+    <!--    <springProfile name="test">-->
+    <!--        <include resource="logback/logback-test.xml"/>-->
+    <!--    </springProfile>-->
+
+    <!--    <springProfile name="prod">-->
+    <!--        <include resource="logback/logback-prod.xml"/>-->
+    <!--    </springProfile>-->
+</configuration>

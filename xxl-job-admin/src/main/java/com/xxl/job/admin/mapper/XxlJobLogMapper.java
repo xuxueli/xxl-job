@@ -1,6 +1,8 @@
 package com.xxl.job.admin.mapper;
 
 import com.xxl.job.admin.model.XxlJobLog;
+import com.xxl.job.admin.platform.pageable.data.PageDto;
+import com.xxl.job.admin.platform.report.data.LogReportDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -16,16 +18,13 @@ import java.util.Map;
 public interface XxlJobLogMapper {
 
 	// exist jobId not use jobGroup, not exist use jobGroup
-	public List<XxlJobLog> pageList(@Param("offset") int offset,
-									@Param("pagesize") int pagesize,
+	public List<XxlJobLog> pageList(@Param("page")PageDto page,
 									@Param("jobGroup") int jobGroup,
 									@Param("jobId") int jobId,
 									@Param("triggerTimeStart") Date triggerTimeStart,
 									@Param("triggerTimeEnd") Date triggerTimeEnd,
 									@Param("logStatus") int logStatus);
-	public int pageListCount(@Param("offset") int offset,
-							 @Param("pagesize") int pagesize,
-							 @Param("jobGroup") int jobGroup,
+	public int pageListCount(@Param("jobGroup") int jobGroup,
 							 @Param("jobId") int jobId,
 							 @Param("triggerTimeStart") Date triggerTimeStart,
 							 @Param("triggerTimeEnd") Date triggerTimeEnd,
@@ -41,8 +40,8 @@ public interface XxlJobLogMapper {
 	
 	public int delete(@Param("jobId") int jobId);
 
-	public Map<String, Object> findLogReport(@Param("from") Date from,
-											 @Param("to") Date to);
+	public LogReportDto findLogReport(@Param("from") Date from,
+									  @Param("to") Date to);
 
 	public List<Long> findClearLogIds(@Param("jobGroup") int jobGroup,
 									  @Param("jobId") int jobId,

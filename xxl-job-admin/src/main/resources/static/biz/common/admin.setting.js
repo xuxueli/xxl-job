@@ -63,11 +63,15 @@ $(function(){
                         <form class="form-horizontal form" role="form" >
                             <div class="form-group">
                                 <label for="lastname" class="col-sm-2 control-label">` + I18n.change_pwd_field_oldpwd +`<font color="red">*</font></label>
-                                <div class="col-sm-10"><input type="text" class="form-control" name="oldPassword" placeholder="` + I18n.system_please_input + I18n.change_pwd_field_oldpwd + `" maxlength="20" ></div>
+                                <div class="col-sm-10"><input type="password" class="form-control" name="oldPassword" placeholder="` + I18n.system_please_input + I18n.change_pwd_field_oldpwd + `" maxlength="20" ></div>
                             </div>
                             <div class="form-group">
                                 <label for="lastname" class="col-sm-2 control-label">` + I18n.change_pwd_field_newpwd +` <font color="red">*</font></label>
-                                <div class="col-sm-10"><input type="text" class="form-control" name="password" placeholder="` + I18n.system_please_input + I18n.change_pwd_field_newpwd + `" maxlength="20" ></div>
+                                <div class="col-sm-10"><input type="password" class="form-control" name="password" placeholder="` + I18n.system_please_input + I18n.change_pwd_field_newpwd + `" maxlength="20" ></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="lastname" class="col-sm-2 control-label">` + I18n.change_pwd_field_repeat_pwd +` <font color="red">*</font></label>
+                                <div class="col-sm-10"><input type="password" class="form-control" name="repeatPassword" placeholder="` + I18n.system_please_input + I18n.change_pwd_field_repeat_pwd + `" maxlength="20" ></div>
                             </div>
                             <hr>
                             <div class="form-group">
@@ -102,6 +106,10 @@ $(function(){
             password : {
                 required : true ,
                 rangelength:[4,50]
+            },
+            repeatPassword : {
+                required : true ,
+                rangelength:[4,50]
             }
         },
         messages : {
@@ -112,6 +120,10 @@ $(function(){
             password : {
                 required : I18n.system_please_input +I18n.change_pwd_field_newpwd,
                 rangelength : "密码长度限制为4~50"
+            },
+            repeatPassword : {
+                required : I18n.system_please_input +I18n.change_pwd_field_repeat_pwd,
+                rangelength : "确认密码长度限制为4~50"
             }
         },
         highlight : function(element) {
@@ -125,27 +137,58 @@ $(function(){
             element.parent('div').append(error);
         },
         submitHandler : function(form) {
-            $.post(base_url + "/auth/updatePwd",  $("#updatePwdModal .form").serialize(), function(data, status) {
-                if (data.code == 200) {
-                    $('#updatePwdModal').modal('hide');
+            let spkParam=new URLSearchParams()
+            let cpk=Sm2.generateKeyPairHex()
+            spkParam.set('pk',cpk.publicKey)
+            spkParam.set('sign',Sm3.sm3(spkParam.get('pk')))
+            $.post(base_url + "/spk",spkParam.toString() , function(data, status) {
+                if (data.code == "200") {
+                    let publicKey=Sm2.doDecrypt(data.data,cpk.privateKey,1)
+                    let sign=Sm3.sm3(publicKey)
 
-                    layer.msg( I18n.change_pwd_suc_to_logout );
-                    setTimeout(function(){
-                        $.post(base_url + "/auth/logout", function(data, status) {
-                            if (data.code == 200) {
-                                window.location.href = base_url + "/";
-                            } else {
-                                layer.open({
-                                    icon: '2',
-                                    content: (data.msg|| I18n.logout_fail)
+                    let param=$("#updatePwdModal .form").serialize()
+                    let searchParams=new URLSearchParams(param)
+                    let oldPassword=searchParams.get("oldPassword")
+                    oldPassword=Sm2.doEncrypt(oldPassword,publicKey,1)
+                    searchParams.set('oldPassword',oldPassword)
+                    let password=searchParams.get("password")
+                    password=Sm2.doEncrypt(password,publicKey,1)
+                    searchParams.set('password',password)
+                    let repeatPassword=searchParams.get("repeatPassword")
+                    repeatPassword=Sm2.doEncrypt(repeatPassword,publicKey,1)
+                    searchParams.set('repeatPassword',repeatPassword)
+                    searchParams.set('sign',sign)
+                    param=searchParams.toString()
+                    $.post(base_url + "/auth/updatePwd", param , function(data, status) {
+                        if (data.code == 200) {
+                            $('#updatePwdModal').modal('hide');
+
+                            layer.msg( I18n.change_pwd_suc_to_logout );
+                            setTimeout(function(){
+                                $.post(base_url + "/auth/logout", function(data, status) {
+                                    if (data.code == 200) {
+                                        window.location.href = base_url + "/";
+                                    } else {
+                                        layer.open({
+                                            icon: '2',
+                                            content: (data.msg|| I18n.logout_fail)
+                                        });
+                                    }
                                 });
-                            }
-                        });
-                    }, 500);
-                } else {
+                            }, 500);
+                        } else {
+                            layer.open({
+                                icon: '2',
+                                content: (data.msg|| I18n.change_pwd + I18n.system_fail )
+                            });
+                        }
+                    });
+                }else{
                     layer.open({
-                        icon: '2',
-                        content: (data.msg|| I18n.change_pwd + I18n.system_fail )
+                        title: I18n.system_tips,
+                        btn: [ I18n.system_ok ],
+                        content: (data.msg || I18n.login_fail ),
+                        icon: '2'
                     });
                 }
             });

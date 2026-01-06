@@ -1,9 +1,13 @@
 package com.xxl.job.admin.mapper;
 
 import com.xxl.job.admin.model.XxlJobInfo;
+import com.xxl.job.admin.platform.batch.data.LogBatchOperateDto;
+import com.xxl.job.admin.platform.pageable.data.PageDto;
+import com.xxl.sso.core.model.LoginInfo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -14,15 +18,14 @@ import java.util.List;
 @Mapper
 public interface XxlJobInfoMapper {
 
-	public List<XxlJobInfo> pageList(@Param("offset") int offset,
-									 @Param("pagesize") int pagesize,
+	public List<XxlJobInfo> pageList(@Param("page")PageDto page,
+									 @Param("newestTriggerTime") Date newestTriggerTime,
 									 @Param("jobGroup") int jobGroup,
 									 @Param("triggerStatus") int triggerStatus,
 									 @Param("jobDesc") String jobDesc,
 									 @Param("executorHandler") String executorHandler,
 									 @Param("author") String author);
-	public int pageListCount(@Param("offset") int offset,
-							 @Param("pagesize") int pagesize,
+	public int pageListCount(@Param("newestTriggerTime") Date newestTriggerTime,
 							 @Param("jobGroup") int jobGroup,
 							 @Param("triggerStatus") int triggerStatus,
 							 @Param("jobDesc") String jobDesc,
@@ -62,4 +65,10 @@ public interface XxlJobInfoMapper {
 	public int scheduleUpdate(XxlJobInfo xxlJobInfo);
 
 
+    public int batchChangeTriggerStatus(@Param("post") LogBatchOperateDto post,
+                                        @Param("triggerStatus")int triggerStatus,
+                                        @Param("loginInfo") LoginInfo loginInfo);
+
+    public int batchUpdateScheduleConf(@Param("post")LogBatchOperateDto post,
+                                        @Param("loginInfo")LoginInfo loginInfo);
 }
