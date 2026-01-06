@@ -6,6 +6,7 @@ import com.xxl.job.admin.mapper.*;
 import com.xxl.job.admin.model.XxlJobGroup;
 import com.xxl.job.admin.model.XxlJobInfo;
 import com.xxl.job.admin.model.XxlJobLogReport;
+import com.xxl.job.admin.platform.JobInfoCollector;
 import com.xxl.job.admin.platform.batch.data.LogBatchOperateDto;
 import com.xxl.job.admin.platform.pageable.data.PageDto;
 import com.xxl.job.admin.scheduler.config.XxlJobAdminBootstrap;
@@ -67,6 +68,8 @@ public class XxlJobServiceImpl implements XxlJobService {
 		Date newestTriggerTime=new Date(newestTriggerTs);
 		List<XxlJobInfo> list = xxlJobInfoMapper.pageList(page, newestTriggerTime,jobGroup, triggerStatus, jobDesc, executorHandler, author);
 		int list_count = xxlJobInfoMapper.pageListCount( newestTriggerTime,jobGroup, triggerStatus, jobDesc, executorHandler, author);
+
+        JobInfoCollector.fillIfAbsentNewestFields(list);
 
 		// package result
 		PageModel<XxlJobInfo> pageModel = new PageModel<>();
