@@ -31,9 +31,13 @@ xxl.job.platform.type=mysql
 ```
 - 实际上，mysql 的语法适用于 gbase ，或者其他兼容的数据库，所以其他数据库也可以使用 mysql 平台
 
-## Mirror
+## Repository
+- fork github: https://github.com/Ice2Faith/xxl-job.git
+
 - mirror gitee: https://gitee.com/ice2faith/xxl-job.git 
 - release package maybe storage on mirror repository
+
+- fork 仓库 github: https://github.com/Ice2Faith/xxl-job.git
 
 - 镜像仓库 gitee: https://gitee.com/ice2faith/xxl-job.git
 - 发行版二进制包可能会发布在镜像仓库中
