@@ -31,6 +31,13 @@ xxl.job.platform.type=mysql
 ```
 - 实际上，mysql 的语法适用于 gbase ，或者其他兼容的数据库，所以其他数据库也可以使用 mysql 平台
 
+## Mirror
+- mirror gitee: https://gitee.com/ice2faith/xxl-job.git 
+- release package maybe storage on mirror repository
+
+- 镜像仓库 gitee: https://gitee.com/ice2faith/xxl-job.git
+- 发行版二进制包可能会发布在镜像仓库中
+
 ## notice
 - 2026-01-06
     - 同步最新的3.4.0-SNAPSHOT版本，跟随官方依赖 springboot4,jdk17
