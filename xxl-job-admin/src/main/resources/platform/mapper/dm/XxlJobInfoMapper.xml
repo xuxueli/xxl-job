@@ -107,6 +107,22 @@
 		</where>
 	</sql>
 
+	<select id="newestJobExecuteStatusList" resultMap="XxlJobInfo">
+		SELECT
+			"JOB_ID" as "ID","TRIGGER_TIME" AS "NEWEST_TRIGGER_TIME",
+			CASE WHEN "HANDLE_CODE" =200 THEN 1
+				 WHEN "TRIGGER_CODE" NOT IN (0,200) OR "HANDLE_CODE" NOT IN (0,200) THEN 2
+				 WHEN "TRIGGER_CODE" =200 AND "HANDLE_CODE" =0 THEN 3
+				 ELSE -1
+				END AS "NEWEST_LOG_STATUS"
+		FROM "XXL_JOB_LOG"
+		WHERE "ID" IN (
+			SELECT MAX("ID") AS MAX_ID
+			FROM "XXL_JOB_LOG" b
+			GROUP BY "JOB_ID"
+		)
+	</select>
+
 	<select id="pageList" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
 		SELECT <include refid="Base_Column_List" />
 		,
