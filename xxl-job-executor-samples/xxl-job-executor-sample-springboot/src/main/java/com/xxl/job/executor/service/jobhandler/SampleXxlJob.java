@@ -1,7 +1,8 @@
-package com.xxl.job.executor.service.jobhandler;
+package com.xxl.job.executor.jobhandler;
 
 import com.xxl.job.core.context.XxlJobHelper;
 import com.xxl.job.core.handler.annotation.XxlJob;
+import com.xxl.job.core.util.GsonTool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -12,7 +13,11 @@ import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -72,6 +77,8 @@ public class SampleXxlJob {
 
     /**
      * 3、命令行任务
+     *
+     *  参数示例："ls -a" 或者 "pwd"
      */
     @XxlJob("commandJobHandler")
     public void commandJobHandler() throws Exception {
@@ -80,9 +87,18 @@ public class SampleXxlJob {
 
         BufferedReader bufferedReader = null;
         try {
+            // valid
+            if (command==null || command.trim().length()==0) {
+                XxlJobHelper.handleFail("command empty.");
+                return;
+            }
+
+            // command split
+            String[] commandArray = command.split(" ");
+
             // command process
             ProcessBuilder processBuilder = new ProcessBuilder();
-            processBuilder.command(command);
+            processBuilder.command(commandArray);
             processBuilder.redirectErrorStream(true);
 
             Process process = processBuilder.start();
@@ -119,15 +135,20 @@ public class SampleXxlJob {
 
     /**
      * 4、跨平台Http任务
+     *
      *  参数示例：
-     *      "url: http://www.baidu.com\n" +
-     *      "method: get\n" +
-     *      "data: content\n";
+     *  <pre>
+     *      {
+     *          "url": "http://www.baidu.com",
+     *          "method": "get",
+     *          "data": "hello world"
+     *      }
+     *  </pre>
      */
     @XxlJob("httpJobHandler")
     public void httpJobHandler() throws Exception {
 
-        // param parse
+        // param
         String param = XxlJobHelper.getJobParam();
         if (param==null || param.trim().length()==0) {
             XxlJobHelper.log("param["+ param +"] invalid.");
@@ -136,35 +157,38 @@ public class SampleXxlJob {
             return;
         }
 
-        String[] httpParams = param.split("\n");
-        String url = null;
-        String method = null;
-        String data = null;
-        for (String httpParam: httpParams) {
-            if (httpParam.startsWith("url:")) {
-                url = httpParam.substring(httpParam.indexOf("url:") + 4).trim();
-            }
-            if (httpParam.startsWith("method:")) {
-                method = httpParam.substring(httpParam.indexOf("method:") + 7).trim().toUpperCase();
-            }
-            if (httpParam.startsWith("data:")) {
-                data = httpParam.substring(httpParam.indexOf("data:") + 5).trim();
-            }
+        // param parse
+        String url;
+        String method;
+        String data;
+        try {
+            Map<String, String> paramMap =GsonTool.fromJson(param, Map.class);
+            url = paramMap.get("url");
+            method = paramMap.get("method");
+            data = paramMap.get("data");
+        } catch (Exception e) {
+            XxlJobHelper.log(e);
+            XxlJobHelper.handleFail();
+            return;
         }
 
         // param valid
-        if (url==null || url.trim().length()==0) {
+        if (url==null || url.trim().isEmpty()) {
             XxlJobHelper.log("url["+ url +"] invalid.");
-
             XxlJobHelper.handleFail();
             return;
         }
-        if (method==null || !Arrays.asList("GET", "POST").contains(method)) {
+        if (!isValidDomain( url)) {
+            XxlJobHelper.log("url["+ url +"] not allowed.");
+            XxlJobHelper.handleFail();
+            return;
+        }
+        if (method==null || !Arrays.asList("GET", "POST").contains(method.toUpperCase())) {
             XxlJobHelper.log("method["+ method +"] invalid.");
-
             XxlJobHelper.handleFail();
             return;
         }
+        method = method.toUpperCase();
         boolean isPostMethod = method.equals("POST");
 
         // request
@@ -190,9 +214,9 @@ public class SampleXxlJob {
             connection.connect();
 
             // data
-            if (isPostMethod && data!=null && data.trim().length()>0) {
+            if (isPostMethod && data!=null && !data.trim().isEmpty()) {
                 DataOutputStream dataOutputStream = new DataOutputStream(connection.getOutputStream());
-                dataOutputStream.write(data.getBytes("UTF-8"));
+                dataOutputStream.write(data.getBytes(StandardCharsets.UTF_8));
                 dataOutputStream.flush();
                 dataOutputStream.close();
             }
@@ -204,7 +228,7 @@ public class SampleXxlJob {
             }
 
             // result
-            bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
+            bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8));
             StringBuilder result = new StringBuilder();
             String line;
             while ((line = bufferedReader.readLine()) != null) {
@@ -233,6 +257,24 @@ public class SampleXxlJob {
             }
         }
 
+    }
+
+    // domain white-list, for httpJobHandler
+    private static Set<String> DOMAIN_WHITE_LIST = new HashSet<String>(Arrays.asList(
+            "http://www.baidu.com",
+            "http://cn.bing.com"
+    ));
+    // valid if domain is in white-list
+    private boolean isValidDomain(String url) {
+        if (url == null || DOMAIN_WHITE_LIST.isEmpty()) {
+            return false;
+        }
+        for (String prefix : DOMAIN_WHITE_LIST) {
+            if (url.startsWith(prefix)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
