@@ -14,7 +14,7 @@ services:
       - "3306:3306"
     volumes:
       # 说明：仅数据库首次初始化时执行；
-      - ./doc/db/tables_xxl_job.sql:/docker-entrypoint-initdb.d/tables_xxl_job.sql:ro
+      - ./doc/db/tables_xxl_job_mysql.sql:/docker-entrypoint-initdb.d/tables_xxl_job.sql:ro
       # 3、数据库持久化目录位置，建议自定义：
       - ${MYSQL_PATH:-/Users/admin/program/docker/instance/mysql}/conf:/etc/mysql/conf.d
       - ${MYSQL_PATH:-/Users/admin/program/docker/instance/mysql}/logs:/var/log/mysql
