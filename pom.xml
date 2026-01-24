@@ -43,6 +43,7 @@
 		<!-- mybatis & db -->
 		<mybatis-spring-boot-starter.version>4.0.1</mybatis-spring-boot-starter.version>
 		<mysql-connector-j.version>9.5.0</mysql-connector-j.version>
+		<postgresql.version>42.7.8</postgresql.version>
 
 		<!-- net -->
 		<netty.version>4.2.9.Final</netty.version>
@@ -140,12 +141,6 @@
 				<groupId>org.mybatis.spring.boot</groupId>
 				<artifactId>mybatis-spring-boot-starter</artifactId>
 				<version>${mybatis-spring-boot-starter.version}</version>
-			</dependency>
-			<!-- mysql -->
-			<dependency>
-				<groupId>com.mysql</groupId>
-				<artifactId>mysql-connector-j</artifactId>
-				<version>${mysql-connector-j.version}</version>
 			</dependency>
 
 			<!-- xxl-job-core -->
