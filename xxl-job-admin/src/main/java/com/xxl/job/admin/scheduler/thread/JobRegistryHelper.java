@@ -1,5 +1,6 @@
 package com.xxl.job.admin.scheduler.thread;
 
+import com.xxl.job.admin.mapper.XxlJobRegistryMapper;
 import com.xxl.job.admin.model.XxlJobGroup;
 import com.xxl.job.admin.model.XxlJobRegistry;
 import com.xxl.job.admin.scheduler.config.XxlJobAdminBootstrap;
@@ -10,6 +11,7 @@ import com.xxl.tool.core.StringTool;
 import com.xxl.tool.response.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import java.util.*;
 import java.util.concurrent.*;
@@ -168,12 +170,28 @@ public class JobRegistryHelper {
 		registryOrRemoveThreadPool.execute(new Runnable() {
 			@Override
 			public void run() {
+				try {
+					XxlJobRegistryMapper mapper = XxlJobAdminBootstrap.getInstance().getXxlJobRegistryMapper();
+					XxlJobRegistry registry = mapper.findByRegistryGroupAndKeyAndValue(registryParam.getRegistryGroup(), registryParam.getRegistryKey(), registryParam.getRegistryValue());
+					if (registry == null) {
+						mapper.registrySave(registryParam.getRegistryGroup(), registryParam.getRegistryKey(), registryParam.getRegistryValue(), new Date());
+					} else {
+						mapper.registryUpdate(registryParam.getRegistryGroup(), registryParam.getRegistryKey(), registryParam.getRegistryValue(), new Date());
+					}
+				} catch (DataIntegrityViolationException e) {
+					logger.warn(">>>>>>>>>>> xxl-job, encounter race condition, but it should be ok. " +
+						"registryKey:{}, registryValue:{}", registryParam.getRegistryKey(), registryParam.getRegistryValue());
+				} catch (Exception e) {
+					logger.error(">>>>>>>>>>> xxl-job, registry failed. " +
+						"registryKey:{}, registryValue:{}, exception:{}", registryParam.getRegistryKey(), registryParam.getRegistryValue(), e.getMessage());
+				}
+				/*
 				// 0-fail; 1-save suc; 2-update suc;
 				int ret = XxlJobAdminBootstrap.getInstance().getXxlJobRegistryMapper().registrySaveOrUpdate(registryParam.getRegistryGroup(), registryParam.getRegistryKey(), registryParam.getRegistryValue(), new Date());
 				if (ret == 1) {
 					// fresh (add)
 					freshGroupRegistryInfo(registryParam);
-				}
+				}*/
 				/*int ret = XxlJobAdminConfig.getAdminConfig().getXxlJobRegistryDao().registryUpdate(registryParam.getRegistryGroup(), registryParam.getRegistryKey(), registryParam.getRegistryValue(), new Date());
 				if (ret < 1) {
 					XxlJobAdminConfig.getAdminConfig().getXxlJobRegistryDao().registrySave(registryParam.getRegistryGroup(), registryParam.getRegistryKey(), registryParam.getRegistryValue(), new Date());
