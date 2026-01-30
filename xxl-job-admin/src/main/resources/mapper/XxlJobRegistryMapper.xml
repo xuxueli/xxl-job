@@ -66,7 +66,7 @@
 		WHERE t.registry_group = #{registryGroup}
 		AND t.registry_key = #{registryKey}
 		AND t.registry_value = #{registryValue}
-		limit 1
+		LIMIT 1
 	</select>
 
 	<delete id="registryDelete" >
