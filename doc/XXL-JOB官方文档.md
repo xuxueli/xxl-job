@@ -1826,13 +1826,18 @@ git clone --branch "$(curl -s https://api.github.com/repos/xuxueli/xxl-job/relea
 mvn clean package -Dmaven.test.skip=true
 ```
 
-- 第三步：启动 XXL-JOB    
+- 第三步：配置 XXL-JOB    
 ```
+// 注意：前往docker目录，自定义 .env 配置；如修改 MYSQL_PATH 配置设置Mysql数据持久化目录；
+cd ./docker
+cat .env
+```
+
+- 第四步：启动 XXL-JOB    
+```
+// 启动 
 docker compose down
 docker compose up -d
-
-// 其他：如需调整环境配置，如Mysql密码、端口等，可以在docker-compose.yml中修改；另外，如果需要修改Mysql数据持久化目录，可以通过 MYSQL_PATH 变量在启动时快速设置；
-MYSQL_PATH={自定义数据库持久化目录} docker compose up -d
 ```
 
 ### 5.25 优雅停机   
@@ -2753,8 +2758,11 @@ public void execute() {
     git clone --branch "$(curl -s https://api.github.com/repos/xuxueli/xxl-job/releases/latest | jq -r .tag_name)" https://github.com/xuxueli/xxl-job.git
     // 构建 XXL-JOB
     mvn clean package -Dmaven.test.skip=true
+    // 配置 XXL-JOB（前往docker目录，自定义 .env）
+    cd ./docker
+    cat .env
     // 启动 XXL-JOB
-    MYSQL_PATH={自定义数据库持久化目录} docker compose up -d
+    docker compose up -d
     // 停止 XXL-JOB
     docker compose down
     ```
