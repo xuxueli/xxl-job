@@ -1836,8 +1836,10 @@ cat .env
 - 第四步：启动 XXL-JOB    
 ```
 // 启动 
-docker compose down
 docker compose up -d
+
+// 停止
+docker compose down
 ```
 
 ### 5.25 优雅停机   

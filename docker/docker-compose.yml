@@ -43,8 +43,10 @@ services:
         --spring.datasource.url=jdbc:mysql://mysql:3306/xxl_job?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai
         --spring.datasource.username=root 
         --spring.datasource.password=${MYSQL_ROOT_PASSWORD}
+        --server.port=${XXL_JOB_ADMIN_PORT}
+        --server.servlet.context-path=${XXL_JOB_ADMIN_CONTEXT_PATH}
     ports:
-      - "8080:${XXL_JOB_ADMIN_PORT}"
+      - "${XXL_JOB_ADMIN_PORT}:${XXL_JOB_ADMIN_PORT}"
     depends_on:
       mysql:
         condition: service_healthy
@@ -59,7 +61,7 @@ services:
     container_name: xxl-job-executor-sample-springboot
     environment:
       PARAMS: >-
-        --xxl.job.admin.addresses=http://xxl-job-admin:${XXL_JOB_ADMIN_PORT}/xxl-job-admin
+        --xxl.job.admin.addresses=http://xxl-job-admin:${XXL_JOB_ADMIN_PORT}${XXL_JOB_ADMIN_CONTEXT_PATH:-/}
     ports:
       - "9999:9999"
     depends_on:
