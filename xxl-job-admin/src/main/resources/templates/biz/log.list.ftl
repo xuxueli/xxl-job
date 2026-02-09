@@ -37,12 +37,11 @@
 						<div class="input-group">
 							<span class="input-group-addon">${I18n.jobinfo_job}</span>
 							<select class="form-control" id="jobId" >
+								<option value="0" >${I18n.system_all}</option>
 								<#if jobInfoList?size gt 0>
 									<#list jobInfoList as jobItem>
 										<option value="${jobItem.id}" >${jobItem.jobDesc}</option>
 									</#list>
-								<#else>
-									<option value="0" >${I18n.system_selected_nothing}</option>
 								</#if>
 							</select>
 						</div>
@@ -88,6 +87,11 @@
 						<button class="btn btn-sm btn-primary selectOnlyOne logDetail" type="button"><#--<i class="fa fa-edit"></i>-->${I18n.joblog_rolling_log}</button>
 					</div>
 					<div class="box-body" >
+						<style>
+							#data_list {
+								table-layout: fixed;
+							}
+						</style>
 						<table id="data_list" class="table table-bordered table-striped" width="100%" >
 							<thead></thead>
 							<tbody></tbody>
@@ -281,11 +285,8 @@
                         if (jobDesc) {
                             jobShow += jobDesc;
                         }
-                        if (jobShow.length > 10) {
-                            jobShow = jobShow.substr(0, 10) + '...';
-                        }
 						// show
-						return jobShow;
+						return '<div style="width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="' + jobShow + '">' + jobShow + '</div>';
 					}
 				},{
 					title: I18n.joblog_field_triggerTime,
