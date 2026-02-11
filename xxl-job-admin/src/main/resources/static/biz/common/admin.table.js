@@ -351,6 +351,12 @@
         let messages = options.messages;
         let writeFormData = options.writeFormData;
         let readFormData = options.readFormData;
+        let formDataCallback=options.formDataCallback
+        if(!formDataCallback){
+            formDataCallback=function(formData,callback){
+                callback(formData)
+            }
+        }
 
         // add
         $("#data_operation .add").click(function(){
@@ -384,23 +390,27 @@
                 element.parent('div').append(error);
             },
             submitHandler : function(form) {
-                // post
-                $.post(url, readFormData(), function(data, status) {
-                    if (data.code === 200) {
-                        $('#addModal').modal('hide');
-                        layer.msg( I18n.system_opt_add + I18n.system_success );
+                let formData = readFormData();
+                formDataCallback(formData,(param)=>{
+                    // post
+                    $.post(url, param, function(data, status) {
+                        if (data.code === 200) {
+                            $('#addModal').modal('hide');
+                            layer.msg( I18n.system_opt_add + I18n.system_success );
 
-                        // refresh table
-                        $('#data_filter .searchBtn').click();
-                    } else {
-                        layer.open({
-                            title: I18n.system_tips ,
-                            btn: [ I18n.system_ok ],
-                            content: (data.msg || I18n.system_opt_add + I18n.system_fail ),
-                            icon: '2'
-                        });
-                    }
-                });
+                            // refresh table
+                            $('#data_filter .searchBtn').click();
+                        } else {
+                            layer.open({
+                                title: I18n.system_tips ,
+                                btn: [ I18n.system_ok ],
+                                content: (data.msg || I18n.system_opt_add + I18n.system_fail ),
+                                icon: '2'
+                            });
+                        }
+                    });
+                })
+
             }
         });
     }
@@ -416,6 +426,12 @@
         let messages = options.messages;
         let writeFormData = options.writeFormData;
         let readFormData = options.readFormData;
+        let formDataCallback=options.formDataCallback
+        if(!formDataCallback){
+            formDataCallback=function(formData,callback){
+                callback(formData)
+            }
+        }
 
         // update
         $("#data_operation .update").click(function(){
@@ -459,24 +475,28 @@
             submitHandler : function(form) {
 
                 // request
-                var paramData = readFormData();
+                let formData = readFormData();
 
-                $.post(url, paramData, function(data, status) {
-                    if (data.code === 200) {
-                        $('#updateModal').modal('hide');
-                        layer.msg( I18n.system_opt_edit + I18n.system_success );
+                formDataCallback(formData,(param)=>{
+                    $.post(url, param, function(data, status) {
+                        if (data.code === 200) {
+                            $('#updateModal').modal('hide');
+                            layer.msg( I18n.system_opt_edit + I18n.system_success );
 
-                        // refresh table
-                        $('#data_filter .searchBtn').click();
-                    } else {
-                        layer.open({
-                            title: I18n.system_tips ,
-                            btn: [ I18n.system_ok ],
-                            content: (data.msg || I18n.system_opt_edit + I18n.system_fail ),
-                            icon: '2'
-                        });
-                    }
-                });
+                            // refresh table
+                            $('#data_filter .searchBtn').click();
+                        } else {
+                            layer.open({
+                                title: I18n.system_tips ,
+                                btn: [ I18n.system_ok ],
+                                content: (data.msg || I18n.system_opt_edit + I18n.system_fail ),
+                                icon: '2'
+                            });
+                        }
+                    });
+                })
+
+
             }
         });
     }

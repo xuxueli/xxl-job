@@ -1,0 +1,115 @@
+<assembly>
+    <id>upgrade</id>
+    <formats>
+        <!-- 指定最终生成全量包形式 -->
+        <!-- zip,tar,tar.gz,tar.bz2,jar,dir,war -->
+        <format>tar.gz</format>
+    </formats>
+    <!-- 使用包含基本目录，包含将会带一层目录 -->
+    <includeBaseDirectory>true</includeBaseDirectory>
+
+    <!-- 如果是多模块项目，需要包含其他模块依赖包的输出路径 -->
+    <dependencySets>
+        <dependencySet>
+            <outputDirectory>/lib</outputDirectory>
+            <excludes>
+                <exclude>${project.groupId}:${project.artifactId}</exclude>
+            </excludes>
+            <includes>
+                <include>${project.groupId}:*</include>
+            </includes>
+        </dependencySet>
+    </dependencySets>
+
+    <!-- 需要打包的文件 -->
+    <fileSets>
+
+        <!-- 每一个fileSet做的工作都是将编译出来的target目录下的文件directory，按照一定规则输出到outputDirectory -->
+        <!-- 项目根目录下的情况，也就是和src目录同级 -->
+        <fileSet>
+            <directory>lib</directory>
+            <outputDirectory>lib</outputDirectory>
+            <includes>
+                <include>*.jar</include>
+                <include>*.j2</include>
+            </includes>
+        </fileSet>
+        <!-- 如果是模块的情况，也就是本项目是子模块，依赖使用父项目根目录下的 -->
+        <fileSet>
+            <directory>${pom.basedir}/../lib</directory>
+            <outputDirectory>lib</outputDirectory>
+            <includes>
+                <include>*.jar</include>
+                <include>*.j2</include>
+            </includes>
+        </fileSet>
+        <!-- 如果是模块的情况，也就是本项目是子模块，依赖使用父项目根目录下的 -->
+        <fileSet>
+            <directory>${pom.basedir}/../jar</directory>
+            <outputDirectory>lib</outputDirectory>
+            <includes>
+                <include>*.jar</include>
+                <include>*.j2</include>
+            </includes>
+        </fileSet>
+        <!-- 如果将依赖放到resources/lib下面的情况 -->
+        <fileSet>
+            <directory>src/main/resources/lib</directory>
+            <outputDirectory>lib</outputDirectory>
+            <includes>
+                <include>*.jar</include>
+                <include>*.j2</include>
+            </includes>
+        </fileSet>
+
+        <!-- jar -->
+        <fileSet>
+            <directory>${project.build.directory}</directory>
+            <outputDirectory>.</outputDirectory>
+            <excludes>
+                <exclude>*-javadoc.jar</exclude>
+                <exclude>*-sources.jar</exclude>
+            </excludes>
+            <includes>
+                <include>*.jar</include>
+            </includes>
+        </fileSet>
+        <!-- config，打包配置文件到resource文件夹，之前在pom.xml中已经排除了这些不打包到jar中，这是分离配置的第二部 -->
+        <fileSet>
+            <directory>src/main/resources</directory>
+            <outputDirectory>resources</outputDirectory>
+            <excludes>
+                <exclude>bin/**</exclude>
+                <exclude>assembly/**</exclude>
+                <exclude>*assembly*.xml</exclude>
+                <exclude>logback/**</exclude>
+                <exclude>*logback*.xml</exclude>
+            </excludes>
+            <includes>
+                <include>templates/**</include>
+                <include>static/**</include>
+                <include>public/**</include>
+
+                <include>i18n/**</include>
+                <include>META-INF/**</include>
+
+                <include>db/**</include>
+                <include>mapper/**</include>
+                <include>*mapper*/**</include>
+
+                <include>*mybatis*/**</include>
+
+                <include>*spring*.xml</include>
+
+                <include>*.properties</include>
+                <include>*.yml</include>
+                <include>*.yaml</include>
+                <include>*.conf</include>
+                <include>*.j2</include>
+                <include>*.config</include>
+                <include>*.txt</include>
+            </includes>
+        </fileSet>
+
+    </fileSets>
+</assembly>

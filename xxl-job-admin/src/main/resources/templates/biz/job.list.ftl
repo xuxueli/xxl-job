@@ -64,7 +64,47 @@
 					</div>
 				</div>
 			</div>
+
+			<!-- batch operation -->
+			<div class="row" style="margin-top: 3px">
+				<div class="col-xs-3">
+					<div class="input-group">
+						<span class="input-group-addon">${I18n.jobinfo_batch_ops_group_range}</span>
+						<select class="form-control" id="batchOpsGroupRange" >
+							<option value="0" >${I18n.jobinfo_batch_ops_group_all}</option>
+							<option value="1" selected>${I18n.jobinfo_batch_ops_group_current}</option>
+						</select>
+					</div>
+				</div>
+				<div class="col-xs-1">
+					<button class="btn btn-block btn-info" style="width: auto;" id="batchOpsStop">${I18n.jobinfo_batch_ops_stop}</button>
+				</div>
+				<div class="col-xs-1">
+					<button class="btn btn-block btn-success" style="width: auto;" id="batchOpsRun">${I18n.jobinfo_batch_ops_run}</button>
+				</div>
+				<div class="col-xs-3">
+					<div class="input-group">
+						<span class="input-group-addon">${I18n.schedule_type}</span>
+						<select class="form-control scheduleType" id="batchOpsScheduleType" >
+							<option value="NOP" selected>${I18n.jobinfo_batch_ops_not_select}</option>
+							<#list ScheduleTypeEnum as item>
+							<option value="${item}" >${item.title}</option>
+							</#list>
+						</select>
+					</div>
+				</div>
+				<div class="col-xs-2">
+					<div class="input-group">
+						<input type="text" class="form-control" id="batchOpsScheduleConf" placeholder="${I18n.system_please_input}${I18n.jobinfo_conf_schedule}" >
+					</div>
+				</div>
+				<div class="col-xs-1">
+					<button class="btn btn-block btn-success" style="width: auto;" id="batchOpsUpdate">${I18n.jobinfo_batch_ops_update}</button>
+				</div>
+			</div>
 		</div>
+
+
 
 		<#-- 数据表格区域 -->
 		<div class="row">
@@ -221,6 +261,13 @@
 								<div class="col-sm-4"><input type="text" class="form-control" name="executorTimeout" placeholder="${I18n.jobinfo_field_executorTimeout_placeholder}" maxlength="6" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" ></div>
 								<label for="lastname" class="col-sm-2 control-label">${I18n.jobinfo_field_executorFailRetryCount}<font color="black">*</font></label>
 								<div class="col-sm-4"><input type="text" class="form-control" name="executorFailRetryCount" placeholder="${I18n.jobinfo_field_executorFailRetryCount_placeholder}" maxlength="4" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" ></div>
+							</div>
+
+							<div class="form-group">
+								<label for="firstname" class="col-sm-2 control-label">${I18n.jobinfo_remark}<font color="black">*</font></label>
+								<div class="col-sm-10">
+									<textarea class="textarea form-control" name="remark" placeholder="${I18n.system_please_input}${I18n.jobinfo_remark}" maxlength="512" style="height: 63px; line-height: 1.2;"></textarea>
+								</div>
 							</div>
 
 							<hr>
@@ -483,6 +530,13 @@ exit 0
 								<div class="col-sm-4"><input type="text" class="form-control" name="executorFailRetryCount" placeholder="${I18n.jobinfo_field_executorFailRetryCount_placeholder}" maxlength="4" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" ></div>
 							</div>
 
+							<div class="form-group">
+								<label for="firstname" class="col-sm-2 control-label">${I18n.jobinfo_remark}<font color="black">*</font></label>
+								<div class="col-sm-10">
+									<textarea class="textarea form-control" name="remark" placeholder="${I18n.system_please_input}${I18n.jobinfo_remark}" maxlength="512" style="height: 63px; line-height: 1.2;"></textarea>
+								</div>
+							</div>
+
 							<hr>
 							<div class="form-group">
 								<div class="col-sm-offset-3 col-sm-6">
@@ -510,7 +564,7 @@ exit 0
 							<div class="form-group">
 								<label for="firstname" class="col-sm-2 control-label">${I18n.jobinfo_field_executorparam}<font color="black">*</font></label>
 								<div class="col-sm-10">
-									<textarea class="textarea form-control" name="executorParam" placeholder="${I18n.system_please_input}${I18n.jobinfo_field_executorparam}" maxlength="512" style="height: 63px; line-height: 1.2;"></textarea>
+									<textarea class="textarea form-control" name="executorParam" placeholder="${I18n.system_please_input}${I18n.jobinfo_field_executorparam}" maxlength="512" style="height: 180px; line-height: 1.2;"></textarea>
 								</div>
 							</div>
 							<div class="form-group">
@@ -665,7 +719,7 @@ exit 0
 				},{
 					title: I18n.system_status,
 					field: 'triggerStatus',
-					width: '10',
+					width: '5',
 					widthUnit: '%',
 					formatter: function(value, row, index) {
 						// 调度状态：0-停止，1-运行
@@ -679,8 +733,34 @@ exit 0
 				},{
 					title: I18n.jobinfo_field_author,
 					field: 'author',
-					width: '10',
+					width: '5',
 					widthUnit: '%'
+				},{
+					title: I18n.joblog_field_triggerCode,
+					field: 'newestLogStatus',
+					width: '5',
+					widthUnit: '%',
+					formatter: function(value, row, index) {
+						// status
+						if (1 == value) {
+							return '<small class="label label-success" >'+I18n.joblog_status_suc+'</small>';
+						}else if (2 == value) {
+							return '<small class="label label-danger" >'+I18n.joblog_status_fail+'</small>';
+						}else if (3 == value) {
+							return '<small class="label label-default" >'+I18n.joblog_status_running+'</small>';
+						}else if (-1 == value) { // 已经触发，但是还没开始执行，也算作执行中
+							return '<small class="label label-default" >'+I18n.joblog_status_running+'</small>';
+						}
+						return value;
+					}
+				},{
+					title: I18n.joblog_field_triggerTime,
+					field: 'newestTriggerTime',
+					width: '15',
+					widthUnit: '%',
+					formatter: function(value, row, index) {
+						return value?moment(new Date(value)).format("MM-DD HH:mm:ss"):"";
+					}
 				}
 			]
 		});
@@ -1215,6 +1295,7 @@ exit 0
 				$("#updateModal .form input[name='executorTimeout']").val( row.executorTimeout );
 				$("#updateModal .form input[name='executorFailRetryCount']").val( row.executorFailRetryCount );
 
+				$("#updateModal .form textarea[name='remark']").val( row.remark );
 			},
 			readFormData: function() {
 
@@ -1305,6 +1386,122 @@ exit 0
 			$('#addModal .form select[name=executorBlockStrategy] option[value='+ row.executorBlockStrategy +']').prop('selected', true);
 			$("#addModal .form input[name='executorTimeout']").val( row.executorTimeout );
 			$("#addModal .form input[name='executorFailRetryCount']").val( row.executorFailRetryCount );
+		});
+
+		function doBatchOps(type){
+			// updates
+			var batchOpsScheduleType=$('#batchOpsScheduleType').val();
+			var batchOpsScheduleTypeText=$('#batchOpsScheduleType option:selected').text();
+			var batchOpsScheduleConf=$('#batchOpsScheduleConf').val().trim();
+
+			// conditions
+			var batchOpsGroupRange=$('#batchOpsGroupRange').val()
+			var batchOpsGroupRangeText=$('#batchOpsGroupRange option:selected').text()
+			var jobGroup=$('#jobGroup').val();
+			var jobGroupText=$('#jobGroup option:selected').text();
+			var triggerStatus=$('#triggerStatus').val();
+			var triggerStatusText=$('#triggerStatus option:selected').text();
+			var jobDesc=$('#jobDesc').val().trim();
+			var executorHandler=$('#executorHandler').val().trim();
+			var author=$('#author').val().trim();
+
+			var confirmText=``;
+			if(type=='stop'){
+				confirmText+=`${I18n.system_ok}${I18n.jobinfo_batch_ops_stop}？<br/>`;
+			}else if(type=='run'){
+				confirmText+=`${I18n.system_ok}${I18n.jobinfo_batch_ops_run}？<br/>`;
+			}else if(type=='update'){
+				confirmText+=`${I18n.system_ok}${I18n.jobinfo_batch_ops_update}？<br/>`;
+			}
+			if(type=='update'){
+				var updateText=''
+				if(batchOpsScheduleType!='NOP'){
+					updateText+='${I18n.schedule_type}='+batchOpsScheduleTypeText+'<br/>';
+				}
+				if(batchOpsScheduleConf.length>0) {
+					updateText += 'and ${I18n.jobinfo_conf_schedule} = '+batchOpsScheduleConf+'<br/>';
+				}
+				if(updateText.length==0){
+					layer.msg( I18n.jobinfo_batch_ops_no_update_item );
+					return;
+				}
+				confirmText+=`${I18n.jobinfo_batch_ops_update_item}：<br/>`;
+				confirmText+=updateText;
+
+			}
+			confirmText+=`${I18n.jobinfo_batch_ops_operate_condition}：<br/>`;
+			confirmText+='${I18n.jobinfo_batch_ops_group_range}='+batchOpsGroupRangeText+'<br/>';
+			if(batchOpsGroupRange==1) {
+				confirmText += 'and ${I18n.jobinfo_field_jobgroup}='+jobGroupText+'<br/>';
+			}
+			confirmText+='and ${I18n.joblog_status}='+triggerStatusText+'<br/>';
+			if(jobDesc.length>0) {
+				confirmText += "and ${I18n.jobinfo_field_jobdesc} like '%"+jobDesc+"+%'<br/>";
+			}
+			if(executorHandler.length>0) {
+				confirmText += "and JobHandler like '%"+executorHandler+"+'%'<br/>";
+			}
+			if(author.length>0) {
+				confirmText += "and ${I18n.jobinfo_field_author} like '%"+author+"%'<br/>";
+			}
+
+			layer.confirm( (confirmText) , {
+				icon: 3,
+				title: I18n.system_tips ,
+				btn: [ I18n.system_ok, I18n.system_cancel ]
+			}, function(index){
+				layer.close(index);
+
+				$.ajax({
+					type : 'POST',
+					url : base_url + '/jobinfo/batch-operate',
+					data : {
+						operateType: type,
+						scheduleType: batchOpsScheduleType,
+						scheduleConf: batchOpsScheduleConf,
+						groupRange: batchOpsGroupRange,
+						jobGroup: jobGroup,
+						triggerStatus: triggerStatus,
+						jobDesc: jobDesc,
+						executorHandler: executorHandler,
+						author: author
+					},
+					dataType : "json",
+					success : function(data){
+						if (data.code == 200) {
+							layer.open({
+								title: I18n.system_tips ,
+								btn: [ I18n.system_ok ],
+								content: ( I18n.system_success),
+								icon: '1',
+								end: function(layero, index){
+									// refresh table
+									$('#data_filter .searchBtn').click();
+								}
+							});
+						} else {
+							layer.open({
+								title: I18n.system_tips,
+								btn: [ I18n.system_ok ],
+								content: (data.msg || ( I18n.system_fail)),
+								icon: '2'
+							});
+						}
+					},
+				});
+			});
+		}
+
+		$("#batchOpsStop").on('click',function() {
+			doBatchOps('stop');
+		});
+
+		$("#batchOpsRun").on('click',function() {
+			doBatchOps('run');
+		});
+
+		$("#batchOpsUpdate").on('click',function() {
+			doBatchOps('update');
 		});
 
 	});

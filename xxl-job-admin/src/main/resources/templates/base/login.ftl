@@ -10,6 +10,21 @@
 	<link rel="stylesheet" href="${request.contextPath}/static/adminlte/plugins/iCheck/square/blue.css">
 	<!-- 1-style end -->
 
+	<style>
+		.login-footer{
+			position: fixed;
+			width: 100%;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			margin-left: 0;
+			background: linear-gradient(90deg, rgba(255,255,255,0.7), transparent,rgba(255,255,255,0.7));
+			border-radius: 18px 18px 0 0;
+			border: none;
+			background-size: 300%;
+			animation: aniHtml 13s infinite;
+		}
+	</style>
 </head>
 <body class="hold-transition login-page">
 
@@ -46,9 +61,21 @@
 	</div>
 	<!-- 2-biz end -->
 
+<footer class="main-footer login-footer">
+	Powered by <b>XXL-JOB</b> ${I18n.admin_version}
+	<div class="pull-right hidden-xs">
+		<strong>Copyright &copy; 2015-${.now?string('yyyy')} &nbsp;
+			<a href="https://www.xuxueli.com/" target="_blank" >xuxueli</a>
+			&nbsp;
+			<a href="https://github.com/xuxueli/xxl-job" target="_blank" >github</a>
+		</strong><!-- All rights reserved. -->
+	</div>
+</footer>
+
 <!-- 3-script start -->
 <@netCommon.commonScript />
 <script src="${request.contextPath}/static/adminlte/plugins/iCheck/icheck.min.js"></script>
+
 <script>
 $(function () {
 
@@ -58,6 +85,13 @@ $(function () {
 		radioClass: 'iradio_square-blue',
 		increaseArea: '20%' // optional
 	});
+
+	$("#loginForm").keypress(function(event) {
+		let keycode = event.which || event.keyCode;
+		if (keycode == '13') {
+			$("#loginForm").submit()
+		}
+	})
 
 	// login Form Valid
 	var loginFormValid = $("#loginForm").validate({
@@ -98,13 +132,38 @@ $(function () {
 			element.parent('div').append(error);
 		},
 		submitHandler : function(form) {
-			$.post(base_url + "/auth/doLogin", $("#loginForm").serialize(), function(data, status) {
-				if (data.code === 200) {
-					layer.msg( I18n.login_success );
-					setTimeout(function(){
-						window.location.href = base_url + "/";
-					}, 500);
-				} else {
+			let spkParam=new URLSearchParams()
+			let cpk=Sm2.generateKeyPairHex()
+			spkParam.set('pk',cpk.publicKey)
+			spkParam.set('sign',Sm3.sm3(spkParam.get('pk')))
+			$.post(base_url + "/spk",spkParam.toString() , function(data, status) {
+				if (data.code == "200") {
+					let publicKey=Sm2.doDecrypt(data.data,cpk.privateKey,1)
+					let sign=Sm3.sm3(publicKey)
+
+					let param=$("#loginForm").serialize()
+					let searchParams=new URLSearchParams(param)
+					let password=searchParams.get("password")
+					password=Sm2.doEncrypt(password,publicKey,1)
+					searchParams.set('password',password)
+					searchParams.set('sign',sign)
+					param=searchParams.toString()
+					$.post(base_url + "/auth/doLogin", param, function(data, status) {
+						if (data.code === 200) {
+							layer.msg( I18n.login_success );
+							setTimeout(function(){
+								window.location.href = base_url + "/";
+							}, 500);
+						} else {
+							layer.open({
+								title: I18n.system_tips,
+								btn: [ I18n.system_ok ],
+								content: (data.msg || I18n.login_fail ),
+								icon: '2'
+							});
+						}
+					});
+				}else{
 					layer.open({
 						title: I18n.system_tips,
 						btn: [ I18n.system_ok ],

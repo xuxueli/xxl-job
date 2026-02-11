@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xxl.job.admin.mapper.XxlJobInfoMapper">
+
+    <resultMap id="XxlJobInfo" type="com.xxl.job.admin.model.XxlJobInfo">
+        <result column="ID" property="id"/>
+
+        <result column="JOB_GROUP" property="jobGroup"/>
+        <result column="JOB_DESC" property="jobDesc"/>
+
+        <result column="ADD_TIME" property="addTime"/>
+        <result column="UPDATE_TIME" property="updateTime"/>
+
+        <result column="AUTHOR" property="author"/>
+        <result column="ALARM_EMAIL" property="alarmEmail"/>
+
+        <result column="SCHEDULE_TYPE" property="scheduleType"/>
+        <result column="SCHEDULE_CONF" property="scheduleConf"/>
+        <result column="MISFIRE_STRATEGY" property="misfireStrategy"/>
+
+        <result column="EXECUTOR_ROUTE_STRATEGY" property="executorRouteStrategy"/>
+        <result column="EXECUTOR_HANDLER" property="executorHandler"/>
+        <result column="EXECUTOR_PARAM" property="executorParam"/>
+        <result column="EXECUTOR_BLOCK_STRATEGY" property="executorBlockStrategy"/>
+        <result column="EXECUTOR_TIMEOUT" property="executorTimeout"/>
+        <result column="EXECUTOR_FAIL_RETRY_COUNT" property="executorFailRetryCount"/>
+
+        <result column="GLUE_TYPE" property="glueType"/>
+        <result column="GLUE_SOURCE" property="glueSource"/>
+        <result column="GLUE_REMARK" property="glueRemark"/>
+        <result column="GLUE_UPDATETIME" property="glueUpdatetime"/>
+
+        <result column="CHILD_JOBID" property="childJobId"/>
+
+        <result column="TRIGGER_STATUS" property="triggerStatus"/>
+        <result column="TRIGGER_LAST_TIME" property="triggerLastTime"/>
+        <result column="TRIGGER_NEXT_TIME" property="triggerNextTime"/>
+        <result column="REMARK" property="remark" />
+
+        <result column="NEWEST_TRIGGER_TIME" property="newestTriggerTime" />
+        <result column="NEWEST_LOG_STATUS" property="newestLogStatus" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        t."ID",
+		t."JOB_GROUP",
+		t."JOB_DESC",
+		t."ADD_TIME",
+		t."UPDATE_TIME",
+		t."AUTHOR",
+		t."ALARM_EMAIL",
+		t."SCHEDULE_TYPE",
+		t."SCHEDULE_CONF",
+		t."MISFIRE_STRATEGY",
+		t."EXECUTOR_ROUTE_STRATEGY",
+		t."EXECUTOR_HANDLER",
+		t."EXECUTOR_PARAM",
+		t."EXECUTOR_BLOCK_STRATEGY",
+		t."EXECUTOR_TIMEOUT",
+		t."EXECUTOR_FAIL_RETRY_COUNT",
+		t."GLUE_TYPE",
+		t."GLUE_SOURCE",
+		t."GLUE_REMARK",
+		t."GLUE_UPDATETIME",
+		t."CHILD_JOBID",
+		t."TRIGGER_STATUS",
+		t."TRIGGER_LAST_TIME",
+		t."TRIGGER_NEXT_TIME",
+		t."REMARK"
+    </sql>
+
+    <sql id="sqlPageListBody">
+        FROM XXL_JOB_INFO t
+        LEFT JOIN (
+            SELECT
+            "JOB_ID","TRIGGER_TIME" AS "NEWEST_TRIGGER_TIME",
+            CASE WHEN "HANDLE_CODE" =200 THEN 1
+            WHEN "TRIGGER_CODE" NOT IN (0,200) OR "HANDLE_CODE" NOT IN (0,200) THEN 2
+            WHEN "TRIGGER_CODE" =200 AND "HANDLE_CODE" =0 THEN 3
+            ELSE -1
+            END AS "NEWEST_LOG_STATUS"
+            FROM "XXL_JOB_LOG"
+            WHERE "ID" IN (
+                SELECT MAX("ID") AS MAX_ID
+                FROM "XXL_JOB_LOG" b
+                WHERE "TRIGGER_TIME" >= #{newestTriggerTime}
+                GROUP BY "JOB_ID"
+            )
+        ) b ON t."ID"=b."JOB_ID"
+        <where>
+            <if test="jobGroup gt 0">
+                AND t."JOB_GROUP" = #{jobGroup,jdbcType=NUMERIC}
+            </if>
+            <if test="triggerStatus gte 0">
+                AND t."TRIGGER_STATUS" = #{triggerStatus,jdbcType=NUMERIC}
+            </if>
+            <if test="jobDesc != null and jobDesc != ''">
+                AND t."JOB_DESC" like CONCAT(CONCAT('%', #{jobDesc,jdbcType=VARCHAR}), '%')
+            </if>
+            <if test="executorHandler != null and executorHandler != ''">
+                AND t."EXECUTOR_HANDLER" like CONCAT(CONCAT('%', #{executorHandler,jdbcType=VARCHAR}), '%')
+            </if>
+            <if test="author != null and author != ''">
+                AND t."AUTHOR" like CONCAT(CONCAT('%', #{author,jdbcType=VARCHAR}), '%')
+            </if>
+        </where>
+    </sql>
+
+    <select id="newestJobExecuteStatusList" resultMap="XxlJobInfo">
+        SELECT
+            "JOB_ID" as "ID","TRIGGER_TIME" AS "NEWEST_TRIGGER_TIME",
+            CASE WHEN "HANDLE_CODE" =200 THEN 1
+                 WHEN "TRIGGER_CODE" NOT IN (0,200) OR "HANDLE_CODE" NOT IN (0,200) THEN 2
+                 WHEN "TRIGGER_CODE" =200 AND "HANDLE_CODE" =0 THEN 3
+                 ELSE -1
+                END AS "NEWEST_LOG_STATUS"
+        FROM "XXL_JOB_LOG"
+        WHERE "ID" IN (
+            SELECT MAX("ID") AS MAX_ID
+            FROM "XXL_JOB_LOG" b
+            GROUP BY "JOB_ID"
+        )
+    </select>
+
+    <select id="pageList" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
+        SELECT *
+        FROM (SELECT TMP.*, ROWNUM ROW_ID
+        FROM (
+
+        SELECT
+        <include refid="Base_Column_List"/>
+        ,
+        b."NEWEST_TRIGGER_TIME",
+        b."NEWEST_LOG_STATUS"
+        <include refid="sqlPageListBody"></include>
+        ORDER BY "ID" DESC
+
+
+        ) TMP
+        WHERE ROWNUM &lt;= #{page.offsetEnd,jdbcType=NUMERIC}
+        ) TMP
+        WHERE ROW_ID &gt; #{page.offsetBegin,jdbcType=NUMERIC}
+    </select>
+
+    <select id="pageListCount" parameterType="java.util.HashMap" resultType="int">
+        SELECT count(1)
+        <include refid="sqlPageListBody"></include>
+    </select>
+
+    <insert id="save" parameterType="com.xxl.job.admin.model.XxlJobInfo">
+        <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Integer">
+            select SEQ_XXL_JOB_INFO_ID.nextval from dual
+        </selectKey>
+        INSERT INTO XXL_JOB_INFO (
+        "ID",
+        "JOB_GROUP",
+        "JOB_DESC",
+        "ADD_TIME",
+        "UPDATE_TIME",
+        "AUTHOR",
+        "ALARM_EMAIL",
+        "SCHEDULE_TYPE",
+        "SCHEDULE_CONF",
+        "MISFIRE_STRATEGY",
+        "EXECUTOR_ROUTE_STRATEGY",
+        "EXECUTOR_HANDLER",
+        "EXECUTOR_PARAM",
+        "EXECUTOR_BLOCK_STRATEGY",
+        "EXECUTOR_TIMEOUT",
+        "EXECUTOR_FAIL_RETRY_COUNT",
+        "GLUE_TYPE",
+        "GLUE_SOURCE",
+        "GLUE_REMARK",
+        "GLUE_UPDATETIME",
+        "CHILD_JOBID",
+        "TRIGGER_STATUS",
+        "TRIGGER_LAST_TIME",
+        "TRIGGER_NEXT_TIME",
+        "REMARK"
+        ) VALUES (
+        #{id,jdbcType=NUMERIC},
+        #{jobGroup,jdbcType=NUMERIC},
+        #{jobDesc,jdbcType=VARCHAR},
+        #{addTime,jdbcType=TIMESTAMP},
+        #{updateTime,jdbcType=TIMESTAMP},
+        #{author,jdbcType=VARCHAR},
+        #{alarmEmail,jdbcType=VARCHAR},
+        #{scheduleType,jdbcType=VARCHAR},
+        #{scheduleConf,jdbcType=VARCHAR},
+        #{misfireStrategy,jdbcType=VARCHAR},
+        #{executorRouteStrategy,jdbcType=VARCHAR},
+        #{executorHandler,jdbcType=VARCHAR},
+        #{executorParam,jdbcType=VARCHAR},
+        #{executorBlockStrategy,jdbcType=VARCHAR},
+        #{executorTimeout,jdbcType=NUMERIC},
+        #{executorFailRetryCount,jdbcType=NUMERIC},
+        #{glueType,jdbcType=VARCHAR},
+        #{glueSource,jdbcType=VARCHAR},
+        #{glueRemark,jdbcType=VARCHAR},
+        #{glueUpdatetime,jdbcType=TIMESTAMP},
+        #{childJobId,jdbcType=VARCHAR},
+        #{triggerStatus,jdbcType=NUMERIC},
+        #{triggerLastTime,jdbcType=NUMERIC},
+        #{triggerNextTime,jdbcType=NUMERIC},
+        #{remark,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <select id="loadById" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM XXL_JOB_INFO t
+        WHERE t."ID" = #{id,jdbcType=NUMERIC}
+    </select>
+
+    <update id="update" parameterType="com.xxl.job.admin.model.XxlJobInfo">
+        UPDATE XXL_JOB_INFO
+        SET "JOB_GROUP"                 = #{jobGroup,jdbcType=NUMERIC},
+            "JOB_DESC"                  = #{jobDesc,jdbcType=VARCHAR},
+            "UPDATE_TIME"               = #{updateTime,jdbcType=TIMESTAMP},
+            "AUTHOR"                    = #{author,jdbcType=VARCHAR},
+            "ALARM_EMAIL"               = #{alarmEmail,jdbcType=VARCHAR},
+            "SCHEDULE_TYPE"             = #{scheduleType,jdbcType=VARCHAR},
+            "SCHEDULE_CONF"             = #{scheduleConf,jdbcType=VARCHAR},
+            "MISFIRE_STRATEGY"          = #{misfireStrategy,jdbcType=VARCHAR},
+            "EXECUTOR_ROUTE_STRATEGY"   = #{executorRouteStrategy,jdbcType=VARCHAR},
+            "EXECUTOR_HANDLER"          = #{executorHandler,jdbcType=VARCHAR},
+            "EXECUTOR_PARAM"            = #{executorParam,jdbcType=VARCHAR},
+            "EXECUTOR_BLOCK_STRATEGY"   = #{executorBlockStrategy,jdbcType=VARCHAR},
+            "EXECUTOR_TIMEOUT"          = #{executorTimeout,jdbcType=NUMERIC},
+            "EXECUTOR_FAIL_RETRY_COUNT" = #{executorFailRetryCount,jdbcType=NUMERIC},
+            "GLUE_TYPE"                 = #{glueType,jdbcType=VARCHAR},
+            "GLUE_SOURCE"               = #{glueSource,jdbcType=VARCHAR},
+            "GLUE_REMARK"               = #{glueRemark,jdbcType=VARCHAR},
+            "GLUE_UPDATETIME"           = #{glueUpdatetime,jdbcType=TIMESTAMP},
+            "CHILD_JOBID"               = #{childJobId,jdbcType=VARCHAR},
+            "TRIGGER_STATUS"            = #{triggerStatus,jdbcType=NUMERIC},
+            "TRIGGER_LAST_TIME"         = #{triggerLastTime,jdbcType=NUMERIC},
+            "TRIGGER_NEXT_TIME"         = #{triggerNextTime,jdbcType=NUMERIC},
+            "REMARK"                    = #{remark,jdbcType=VARCHAR}
+        WHERE "ID" = #{id,jdbcType=NUMERIC}
+    </update>
+
+    <delete id="delete" parameterType="java.util.HashMap">
+        DELETE
+        FROM XXL_JOB_INFO
+        WHERE "ID" = #{id,jdbcType=NUMERIC}
+    </delete>
+
+    <select id="getJobsByGroup" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM XXL_JOB_INFO t
+        WHERE t."JOB_GROUP" = #{jobGroup,jdbcType=NUMERIC}
+    </select>
+
+    <select id="findAllCount" resultType="int">
+        SELECT count(1)
+        FROM XXL_JOB_INFO
+    </select>
+
+
+    <select id="scheduleJobQuery" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
+        SELECT TMP.*,ROWNUM
+        FROM (
+
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM XXL_JOB_INFO t
+        WHERE t."TRIGGER_STATUS" = 1
+        and t."TRIGGER_NEXT_TIME" &lt;= #{maxNextTime,jdbcType=NUMERIC}
+        ORDER BY "ID" ASC
+
+        ) TMP
+        where ROWNUM &lt;= #{pagesize,jdbcType=NUMERIC}
+    </select>
+
+    <update id="scheduleUpdate" parameterType="com.xxl.job.admin.model.XxlJobInfo">
+        UPDATE XXL_JOB_INFO
+        SET "TRIGGER_LAST_TIME" = #{triggerLastTime,jdbcType=NUMERIC},
+            "TRIGGER_NEXT_TIME" = #{triggerNextTime,jdbcType=NUMERIC}
+            <if test="triggerStatus gte 0">
+                , "TRIGGER_STATUS"    = #{triggerStatus,jdbcType=NUMERIC}
+            </if>
+        WHERE "ID" = #{id,jdbcType=NUMERIC}
+          AND "TRIGGER_STATUS" = 1
+    </update>
+
+    <sql id="batchCondition">
+        <choose>
+            <when test="post.operGroupIds!=null and !post.operGroupIds.isEmpty()">
+                and "JOB_GROUP" in
+                <foreach collection="post.operGroupIds" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </when>
+            <otherwise>
+                and "ID" > 0
+            </otherwise>
+        </choose>
+        <if test="post.triggerStatus!=null">
+            and "TRIGGER_STATUS"=#{post.triggerStatus}
+        </if>
+        <if test="post.jobDesc!=null and post.jobDesc!=''">
+            and "JOB_DESC" like #{post.jobDesc}
+        </if>
+        <if test="post.executorHandler!=null and post.executorHandler!=''">
+            and "EXECUTOR_HANDLER" like #{post.executorHandler}
+        </if>
+        <if test="post.author!=null and post.author!=''">
+            and "AUTHOR" like #{post.author}
+        </if>
+    </sql>
+    <update id="batchChangeTriggerStatus">
+        update XXL_JOB_INFO
+        set "TRIGGER_STATUS"=#{triggerStatus}
+        where
+        <trim prefixOverrides="and|or">
+            <include refid="batchCondition"></include>
+        </trim>
+    </update>
+    <update id="batchUpdateScheduleConf">
+        update XXL_JOB_INFO
+        set
+        <trim prefixOverrides="," suffixOverrides=",">
+            <if test="post.scheduleType!=null and post.scheduleType!=''">
+                "SCHEDULE_TYPE"=#{post.scheduleType},
+            </if>
+            <if test="post.scheduleConf!=null and post.scheduleConf!=''">
+                "SCHEDULE_CONF"=#{post.scheduleConf},
+            </if>
+        </trim>
+        where
+        <trim prefixOverrides="and|or">
+            <include refid="batchCondition"></include>
+        </trim>
+    </update>
+
+
+</mapper>

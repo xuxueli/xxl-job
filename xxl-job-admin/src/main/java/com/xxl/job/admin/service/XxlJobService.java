@@ -1,6 +1,7 @@
 package com.xxl.job.admin.service;
 
 import com.xxl.job.admin.model.XxlJobInfo;
+import com.xxl.job.admin.platform.batch.data.LogBatchOperateDto;
 import com.xxl.sso.core.model.LoginInfo;
 import com.xxl.tool.response.PageModel;
 import com.xxl.tool.response.Response;
@@ -60,4 +61,8 @@ public interface XxlJobService {
 	 */
 	public Response<Map<String,Object>> chartInfo(Date startDate, Date endDate);
 
+	/**
+	 * batch operate
+	 */
+    public Response<String> batchOperate(LogBatchOperateDto operateDto, LoginInfo loginInfo);
 }

@@ -3,6 +3,8 @@ package com.xxl.job.admin.controller.biz;
 import com.xxl.job.admin.mapper.XxlJobGroupMapper;
 import com.xxl.job.admin.model.XxlJobGroup;
 import com.xxl.job.admin.model.XxlJobInfo;
+import com.xxl.job.admin.model.XxlJobUser;
+import com.xxl.job.admin.platform.batch.data.LogBatchOperateDto;
 import com.xxl.job.admin.scheduler.exception.XxlJobException;
 import com.xxl.job.admin.scheduler.misfire.MisfireStrategyEnum;
 import com.xxl.job.admin.scheduler.route.ExecutorRouteStrategyEnum;
@@ -206,6 +208,16 @@ public class JobInfoController {
 		}
 		return Response.ofSuccess(result);
 
+	}
+
+	@RequestMapping("/batch-operate")
+	@ResponseBody
+	public Response<String> batchOperate(HttpServletRequest request, LogBatchOperateDto operateDto) {
+
+		// opt
+		Response<LoginInfo> loginInfoResponse = XxlSsoHelper.loginCheckWithAttr(request);
+		LoginInfo loginInfo = loginInfoResponse.getData();
+		return xxlJobService.batchOperate(operateDto, loginInfo);
 	}
 
 }
