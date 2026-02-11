@@ -120,6 +120,8 @@
         let $firstMenuItem = $(".J_menuItem:first");
         if ($firstMenuItem.length > 0) {
             $firstMenuItem.click();
+            // 首页菜单特殊逻辑，不允许关闭
+            $('.J_menuTab[data-id="' + $firstMenuItem.attr('href') + '"] i').remove();
         }
 
         // 2、URL匹配到菜单，初始化
@@ -188,14 +190,20 @@
             return false;
         }
 
-        // 3、Tab不存在，创新新Tab
+        // 3、Tab不存在，初始化新Tab + IFrame
         // build Tab (other tab no-active)
         $('.J_menuTab').removeClass('active');
         var tabStr = '<a href="javascript:;" class="active J_menuTab" data-id="' + tabSrc + '" title="'+ tabName +'" >' + tabNameShow + ' <i class="fa fa-times-circle"></i></a>';
 
         // build IFrame (other ifame hide)
         var iframeStr = '<iframe class="J_iframe" width="100%" height="100%" src="' + tabSrc + '" frameborder="0" data-id="' + tabSrc + '" seamless></iframe>';
-        $('.J_mainContent').find('iframe.J_iframe').hide().parents('.J_mainContent').append(iframeStr);
+
+        // 4、添加Tab + IFrame
+        // append iframe
+        $('.J_mainContent').find('iframe.J_iframe').hide();
+        $('.J_mainContent').append(iframeStr);
+        // append tab
+        $('.J_menuTabs .page-tabs-content').append(tabStr);
 
         // 添加遮罩层
         NProgress.inc(0.2);
@@ -216,8 +224,7 @@
             console.error('iframe load error, src = ' + $(this).attr('src'));
         });
 
-        // 添加Tab，切换Tab
-        $('.J_menuTabs .page-tabs-content').append(tabStr);
+        // 5、滚动到已激活的Tab
         scrollToTab($('.J_menuTab.active'));
         return false;
     }

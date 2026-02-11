@@ -49,8 +49,8 @@
                                 <a href="javascript:" style="height: 30px;padding: 3px 25px;color: #777;" ><i class="fa fa-sign-out"></i> ${I18n.logout_btn}</a>
                             </li>
                         </ul>
-                    </li>
 
+                    </li>
                 </ul>
             </div>
 
@@ -72,7 +72,7 @@
             <#macro renderMenu resourceList >
                 <#list resourceList as resource>
                     <#if resource.type ==0>
-                        <#-- catalog -->
+                    <#-- catalog -->
                         <li class="treeview" style="height: auto;"  >
                             <a href="javascript:void(0);">
                                 <i class="fa ${resource.icon}"></i>
@@ -88,13 +88,7 @@
                             </ul>
                         </li>
                     <#elseif resource.type ==1>
-                        <#-- mainMenu -->
-                        <#if !(mainMenu?exists) >
-                            <#assign mainMenu = resource />
-                        <#elseif resource.order lt mainMenu.order >
-                            <#assign mainMenu = resource />
-                        </#if>
-                        <#-- menu -->
+                    <#-- menu -->
                         <li class="nav-click">
                             <#-- url -->
                             <#assign resourceUrl = request.contextPath + resource.url />
@@ -125,10 +119,8 @@
             <!-- Tab -->
             <nav class="page-tabs J_menuTabs">
                 <div class="page-tabs-content">
-                    <#-- mainPage -->
-                    <#if mainMenu?exists >
-                        <a href="javascript:;" class="active J_menuTab noactive" data-id="${request.contextPath}${mainMenu.url}">${mainMenu.name}</a>
-                    </#if>
+                    <#-- Tab content -->
+                    <#-- <a href="javascript:;" class="active J_menuTab" data-id="' + tabSrc + '" title="'+ tabName +'" >' + tabNameShow + ' <i class="fa fa-times-circle"></i></a> -->
                 </div>
             </nav>
 
@@ -150,8 +142,8 @@
         </div>
         <!-- Iframe Content -->
         <div class="J_mainContent" id="content-main" >
-            <!-- Iframe -->
-            <iframe class="J_iframe" width="100%" height="100%" src="${request.contextPath}${mainMenu.url}" frameborder="0" data-id="${request.contextPath}${mainMenu.url}" seamless></iframe>
+            <!-- Iframe content -->
+            <#-- <iframe class="J_iframe" width="100%" height="100%" src="' + tabSrc + '" frameborder="0" data-id="' + tabSrc + '" seamless></iframe> -->
         </div>
 
     </div>
