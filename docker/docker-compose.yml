@@ -30,7 +30,7 @@ services:
       - xxl-job-network
 
   xxl-job-admin:
-    # 4、调度中心本地Build设置，如果期望使用推动DockerHub的镜像，可以注释当前启用的image、build配置，并启用如下设置版本的image配置；
+    # 4、本地Build设置，如果期望使用推动DockerHub的镜像，可以注释当前启用的image、build配置，并启用如下设置版本的image配置；
     #image: xuxueli/xxl-job-admin:{version}
     image: xuxueli/xxl-job-admin:local
     build:
