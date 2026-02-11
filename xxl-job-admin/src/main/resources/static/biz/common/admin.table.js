@@ -251,6 +251,7 @@
             },
             columns:columns,
             clickToSelect: true, 			// 是否启用点击选中行
+            multipleSelectRow: true,        // 启动多选行：点击 选择单行，Shift+点击 选择连续行, Commond+点击 非连续选择多行
             sortable: false, 				// 是否启用排序
             showRefresh: true,				// 显示刷新按钮
             showColumns: true,				// 显示/隐藏列
