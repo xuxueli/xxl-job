@@ -181,4 +181,7 @@ VALUES (1, 'admin', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923ad
 INSERT INTO `xxl_job_lock` (`lock_name`)
 VALUES ('schedule_lock');
 
+ALTER TABLE `xxl_job_group`
+    MODIFY COLUMN `title` varchar(64) CHARACTER SET utf8mb4 NOT NULL COMMENT '执行器名称' AFTER `app_name`;
+
 commit;
