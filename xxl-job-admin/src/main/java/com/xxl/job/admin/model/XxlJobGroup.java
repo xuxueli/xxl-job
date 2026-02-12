@@ -17,6 +17,7 @@ public class XxlJobGroup {
     private String title;
     private int addressType;        // 执行器地址类型：0=自动注册、1=手动录入
     private String addressList;     // 执行器地址列表，多地址逗号分隔(手动录入)
+    private String alarmEmail; 	    // 报警邮件
     private Date updateTime;
 
     // registry list
@@ -76,4 +77,11 @@ public class XxlJobGroup {
         this.addressList = addressList;
     }
 
+    public String getAlarmEmail() {
+        return alarmEmail;
+    }
+
+    public void setAlarmEmail(String alarmEmail) {
+        this.alarmEmail = alarmEmail;
+    }
 }

@@ -102,6 +102,10 @@
 								<div class="col-sm-10"><input type="text" class="form-control" name="title" placeholder="${I18n.system_please_input}${I18n.jobgroup_field_title}" maxlength="12" ></div>
 							</div>
 							<div class="form-group">
+								<label for="lastname" class="col-sm-2 control-label">${I18n.jobgroup_field_alarmemail}</label>
+								<div class="col-sm-10"><input type="text" class="form-control" name="alarmEmail" placeholder="${I18n.jobgroup_field_alarmemail_placeholder}" maxlength="100" ></div>
+							</div>
+							<div class="form-group">
 								<label for="lastname" class="col-sm-2 control-label">${I18n.jobgroup_field_addressType}<font color="red">*</font></label>
 								<div class="col-sm-10">
 									<input type="radio" name="addressType" value="0" checked />${I18n.jobgroup_field_addressType_0}
@@ -144,6 +148,10 @@
 							<div class="form-group">
 								<label for="lastname" class="col-sm-2 control-label">${I18n.jobgroup_field_title}<font color="red">*</font></label>
 								<div class="col-sm-10"><input type="text" class="form-control" name="title" placeholder="${I18n.system_please_input}${I18n.jobgroup_field_title}" maxlength="12" ></div>
+							</div>
+							<div class="form-group">
+								<label for="lastname" class="col-sm-2 control-label">${I18n.jobgroup_field_alarmemail}</label>
+								<div class="col-sm-10"><input type="text" class="form-control" name="alarmEmail" placeholder="${I18n.jobgroup_field_alarmemail_placeholder}" maxlength="100" ></div>
 							</div>
 							<div class="form-group">
 								<label for="lastname" class="col-sm-2 control-label">${I18n.jobgroup_field_addressType}<font color="red">*</font></label>
@@ -346,6 +354,8 @@
 				$("#updateModal .form input[name='addressType'][value='"+ row.addressType +"']").click();
 				// 机器地址
 				$("#updateModal .form textarea[name='addressList']").val( row.addressList );
+				// 报警邮件
+				$("#updateModal .form input[name='alarmEmail']").val( row.alarmEmail );
 
 			},
 			rules : {
