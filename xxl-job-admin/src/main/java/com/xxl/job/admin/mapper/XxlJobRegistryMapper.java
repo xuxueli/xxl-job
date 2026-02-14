@@ -26,7 +26,7 @@ public interface XxlJobRegistryMapper {
                             @Param("registryValue") String registryValue,
                             @Param("updateTime") Date updateTime);
 
-    /*public int registryUpdate(@Param("registryGroup") String registryGroup,
+    public int registryUpdate(@Param("registryGroup") String registryGroup,
                               @Param("registryKey") String registryKey,
                               @Param("registryValue") String registryValue,
                               @Param("updateTime") Date updateTime);
@@ -34,7 +34,7 @@ public interface XxlJobRegistryMapper {
     public int registrySave(@Param("registryGroup") String registryGroup,
                             @Param("registryKey") String registryKey,
                             @Param("registryValue") String registryValue,
-                            @Param("updateTime") Date updateTime);*/
+                            @Param("updateTime") Date updateTime);
 
     public int registryDelete(@Param("registryGroup") String registryGroup,
                           @Param("registryKey") String registryKey,
@@ -42,5 +42,11 @@ public interface XxlJobRegistryMapper {
 
     public int removeByRegistryGroupAndKey(@Param("registryGroup") String registryGroup,
                                            @Param("registryKey") String registryKey);
+
+    public XxlJobRegistry findByRegistryGroupAndKeyAndValue(
+        @Param("registryGroup") String registryGroup,
+        @Param("registryKey") String registryKey,
+        @Param("registryValue") String registryValue
+    );
 
 }
