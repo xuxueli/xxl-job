@@ -623,8 +623,8 @@ exit 0
 					widthUnit: '%',
 					align: 'left',
 					formatter: function(value, row, index) {
-						if (value.length > 15) {
-							return '<span title="' + value + '">' + value.substr(0, 15) + '...</span>';
+						if (value.length > 64) {
+							return '<span title="' + value + '">' + value.substr(0, 64) + '...</span>';
 						} else {
 							return value;
 						}
