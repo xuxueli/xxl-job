@@ -132,7 +132,6 @@
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-context</artifactId>
 				<version>${spring.version}</version>
-				<scope>provided</scope>
 			</dependency>
 
 			<!-- mybatis-starter：mybatis + mybatis-spring + hikari（default） -->
