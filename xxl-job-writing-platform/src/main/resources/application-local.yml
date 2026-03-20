@@ -1,0 +1,23 @@
+# 本地开发环境配置 - 可自定义的测试配置
+writing:
+  platform:
+    auth:
+      mock-credentials:
+        admin:
+          password: ${AUTH_MOCK_ADMIN_PASSWORD:localadmin}
+        expert:
+          password: ${AUTH_MOCK_EXPERT_PASSWORD:localexpert}
+
+# 本地开发数据库配置（覆盖开发环境）
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/writing_platform_local?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    username: localuser
+    password: localpass
+
+# 本地Redis配置
+  redis:
+    host: localhost
+    port: 6379
+    password:
+    database: 1
