@@ -1,0 +1,150 @@
+server:
+  port: 8082
+  servlet:
+    context-path: /writing
+
+spring:
+  application:
+    name: writing-platform
+
+  # 数据源配置
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/writing_platform?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: 123456
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+
+  # Redis配置
+  redis:
+    host: localhost
+    port: 6379
+    password:
+    database: 0
+    timeout: 3000ms
+    lettuce:
+      pool:
+        max-active: 20
+        max-idle: 10
+        min-idle: 5
+        max-wait: -1ms
+
+  # 文件上传配置
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 100MB
+
+  # 邮件配置（用于通知）
+  mail:
+    host: smtp.example.com
+    port: 587
+    username: your-email@example.com
+    password: your-password
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+  # 缓存配置
+  cache:
+    type: redis
+    redis:
+      time-to-live: 3600000  # 1小时
+      cache-null-values: false
+
+# MyBatis配置
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.xxl.job.writing.model
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl  # 开发环境开启SQL日志
+
+# XXL-JOB执行器配置
+xxl:
+  job:
+    # 调度中心部署地址（多个用逗号分隔）
+    admin:
+      addresses: http://localhost:8080/xxl-job-admin
+      # 调度中心访问令牌
+      accessToken:
+      # 调度中心连接超时时间（秒）
+      timeout: 3
+    # 执行器配置
+    executor:
+      # 是否启用执行器
+      enabled: true
+      # 执行器AppName，与调度中心AppName配置保持一致
+      appname: writing-platform-executor
+      # 执行器地址，默认为自动获取
+      address:
+      # 执行器IP，默认为空表示自动获取IP
+      ip:
+      # 执行器端口，默认为9999
+      port: 9999
+      # 执行器日志路径
+      logpath: /data/applogs/xxl-job/jobhandler
+      # 执行器日志保存天数，默认为30天
+      logretentiondays: 30
+      # 排除的包名（多个用逗号分隔）
+      excludedpackage:
+
+# 平台业务配置
+writing:
+  platform:
+    # 订单超时时间（小时）
+    order-timeout-hours: 24
+    # 支付提醒时间（分钟）
+    payment-reminder-minutes: 60
+    # 截止提醒时间（小时）
+    deadline-reminder-hours: 12
+    # 文件存储路径
+    file-storage-path: /data/writing-platform/files
+    # 允许的文件类型
+    allowed-file-types: .doc,.docx,.pdf,.txt,.md
+    # 最大文件大小（MB）
+    max-file-size-mb: 50
+    # 短信配置
+    sms:
+      enabled: true
+      provider: aliyun  # aliyun, tencent, etc.
+      template-code: SMS_123456789
+    # 支付配置
+    payment:
+      wechat:
+        enabled: true
+        app-id: your-app-id
+        mch-id: your-mch-id
+      alipay:
+        enabled: true
+        app-id: your-alipay-app-id
+
+# 日志配置
+logging:
+  level:
+    com.xxl.job.writing: DEBUG
+    org.springframework.web: INFO
+    org.mybatis: DEBUG
+  file:
+    name: /data/applogs/writing-platform/app.log
+  pattern:
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{50} - %msg%n"
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{50} - %msg%n"
+
+# Swagger配置
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
