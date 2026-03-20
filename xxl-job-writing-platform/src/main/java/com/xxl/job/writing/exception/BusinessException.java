@@ -49,6 +49,7 @@ public class BusinessException extends RuntimeException {
     public static final int FILE_UPLOAD_FAILED = 1013;
     public static final int DISTRIBUTED_LOCK_FAILED = 1014;
     public static final int INVALID_REQUEST = 1400;
+    public static final int UNAUTHORIZED = 1401;
     public static final int NOT_IMPLEMENTED = 1501;
 
     // 快速创建业务异常的方法
@@ -110,6 +111,14 @@ public class BusinessException extends RuntimeException {
 
     public static BusinessException invalidRequest(String message) {
         return new BusinessException(INVALID_REQUEST, message);
+    }
+
+    public static BusinessException unauthorized() {
+        return new BusinessException(UNAUTHORIZED, "Authentication is required");
+    }
+
+    public static BusinessException unauthorized(String message) {
+        return new BusinessException(UNAUTHORIZED, message);
     }
 
     public static BusinessException notImplemented(String operation) {

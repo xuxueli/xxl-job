@@ -130,6 +130,10 @@ writing:
       alipay:
         enabled: ${ALIPAY_PAYMENT_ENABLED:false}
         app-id: ${ALIPAY_APP_ID:}
+    # JWT配置
+    jwt:
+      secret: ${JWT_SECRET:default-jwt-secret-key-for-writing-platform-2024}
+      expiration-hours: ${JWT_EXPIRATION_HOURS:24}
 
 # 日志配置
 logging:

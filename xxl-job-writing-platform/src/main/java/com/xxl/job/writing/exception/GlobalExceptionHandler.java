@@ -89,6 +89,9 @@ public class GlobalExceptionHandler {
     }
 
     private HttpStatus resolveHttpStatus(int code) {
+        if (code == BusinessException.UNAUTHORIZED) {
+            return HttpStatus.UNAUTHORIZED;
+        }
         if (code == BusinessException.NOT_IMPLEMENTED) {
             return HttpStatus.NOT_IMPLEMENTED;
         }
