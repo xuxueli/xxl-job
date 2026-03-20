@@ -9,12 +9,17 @@ import com.xxl.job.writing.util.Result;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
+import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import java.util.Arrays;
 
 /**
  * 认证控制器
@@ -26,6 +31,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     private final JwtTokenUtil jwtTokenUtil;
+
+    @Autowired
+    private ApplicationContext applicationContext;
 
     @Value("${writing.platform.jwt.expiration-hours:24}")
     private Long expirationHours;
@@ -113,5 +121,23 @@ public class AuthController {
 
         log.warn("Mock authentication failed for user: {}", username);
         return null;
+    }
+
+    @PostConstruct
+    public void validateMockConfiguration() {
+        Environment env = applicationContext.getEnvironment();
+        boolean isProd = Arrays.asList(env.getActiveProfiles()).contains("prod");
+
+        if (mockEnabled && isProd) {
+            throw new IllegalStateException(
+                "Mock authentication cannot be enabled in production environment. " +
+                "Check application-prod.yml configuration."
+            );
+        }
+
+        if (mockEnabled) {
+            log.info("Mock authentication enabled for profiles: {}",
+                     String.join(",", env.getActiveProfiles()));
+        }
     }
 }

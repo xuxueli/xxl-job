@@ -1,0 +1,27 @@
+# 测试环境配置
+spring:
+  main:
+    banner-mode: off
+  datasource:
+    url: jdbc:h2:mem:testdb;MODE=MySQL;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  redis:
+    host: localhost
+    port: 6379
+    password:
+    database: 0
+
+writing:
+  platform:
+    jwt:
+      secret: test-jwt-secret-key-for-testing-only-32-chars
+      expiration-hours: 24
+      strict-validation: false
+    auth:
+      mock-enabled: false
+
+springdoc:
+  swagger-ui:
+    enabled: false

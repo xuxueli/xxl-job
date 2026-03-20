@@ -11,7 +11,10 @@ import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
+import java.util.Arrays;
 
 import javax.crypto.SecretKey;
 import jakarta.annotation.PostConstruct;
@@ -39,19 +42,39 @@ public class JwtTokenUtil {
     @Autowired
     private UserValidationService userValidationService;
 
+    @Autowired
+    private ApplicationContext applicationContext;
+
     @PostConstruct
     public void validateConfiguration() {
+        Environment env = applicationContext.getEnvironment();
+        boolean isProd = Arrays.asList(env.getActiveProfiles()).contains("prod");
+        boolean isDev = Arrays.asList(env.getActiveProfiles()).contains("dev");
+
+        // JWT密钥验证
         if (jwtSecret == null || jwtSecret.trim().isEmpty()) {
-            throw new IllegalStateException("JWT secret must be configured via writing.platform.jwt.secret property");
+            throw new IllegalStateException("JWT secret must be configured");
         }
 
-        // 验证密钥强度
+        // 生产环境强制严格验证
+        if (isProd && !strictValidation) {
+            throw new IllegalStateException(
+                "Strict validation must be enabled in production environment"
+            );
+        }
+
+        // 密钥长度警告（开发环境可宽松）
         if (jwtSecret.length() < 32) {
-            String message = String.format("JWT secret is too short (%d chars). Minimum required length is 32 characters.", jwtSecret.length());
-            if (strictValidation) {
-                throw new IllegalStateException(message);
-            } else {
-                log.warn(message + " Strict validation is disabled.");
+            if (strictValidation || isProd) {
+                throw new IllegalStateException(
+                    String.format("JWT secret is too short (%d chars). " +
+                                "Minimum required length is 32 characters.",
+                                jwtSecret.length())
+                );
+            } else if (isDev) {
+                log.warn("JWT secret is too short ({}) chars. " +
+                        "Minimum recommended length is 32 characters.",
+                        jwtSecret.length());
             }
         }
 
