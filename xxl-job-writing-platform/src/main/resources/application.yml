@@ -137,7 +137,8 @@ writing:
       strict-validation: ${JWT_STRICT_VALIDATION:true}
       # JWT密钥必须通过环境变量JWT_SECRET配置，长度至少32个字符
       # strict-validation为true时，密钥长度不足32字符将导致启动失败
-    # 认证配置
+
+    # 认证配置（将在profile-specific配置文件中被覆盖）
     auth:
       mock-enabled: ${AUTH_MOCK_ENABLED:false}
       mock-credentials:
