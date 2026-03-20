@@ -1,32 +1,35 @@
 server:
-  port: 8082
+  port: ${SERVER_PORT:8082}
   servlet:
     context-path: /writing
 
 spring:
   application:
-    name: writing-platform
+    name: ${SPRING_APPLICATION_NAME:writing-platform}
+
+  # Use environment variables or profile-specific config for production secrets.
+  # Keep local defaults non-sensitive and override them via application-dev.yml / application-prod.yml.
 
   # 数据源配置
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/writing_platform?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
-    username: root
-    password: 123456
+    url: ${DB_URL:jdbc:mysql://localhost:3306/writing_platform?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai}
+    username: ${DB_USERNAME:}
+    password: ${DB_PASSWORD:}
     hikari:
-      maximum-pool-size: 20
-      minimum-idle: 5
-      connection-timeout: 30000
-      idle-timeout: 600000
-      max-lifetime: 1800000
+      maximum-pool-size: ${DB_MAX_POOL_SIZE:20}
+      minimum-idle: ${DB_MIN_IDLE:5}
+      connection-timeout: ${DB_CONNECTION_TIMEOUT_MS:30000}
+      idle-timeout: ${DB_IDLE_TIMEOUT_MS:600000}
+      max-lifetime: ${DB_MAX_LIFETIME_MS:1800000}
 
   # Redis配置
   redis:
-    host: localhost
-    port: 6379
-    password:
-    database: 0
-    timeout: 3000ms
+    host: ${REDIS_HOST:localhost}
+    port: ${REDIS_PORT:6379}
+    password: ${REDIS_PASSWORD:}
+    database: ${REDIS_DATABASE:0}
+    timeout: ${REDIS_TIMEOUT:3000ms}
     lettuce:
       pool:
         max-active: 20
@@ -42,10 +45,10 @@ spring:
 
   # 邮件配置（用于通知）
   mail:
-    host: smtp.example.com
-    port: 587
-    username: your-email@example.com
-    password: your-password
+    host: ${MAIL_HOST:}
+    port: ${MAIL_PORT:587}
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
     properties:
       mail:
         smtp:
@@ -66,36 +69,37 @@ mybatis:
   type-aliases-package: com.xxl.job.writing.model
   configuration:
     map-underscore-to-camel-case: true
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl  # 开发环境开启SQL日志
+    # Enable SQL stdout logging only in local development if needed.
+    log-impl: ${MYBATIS_LOG_IMPL:}
 
 # XXL-JOB执行器配置
 xxl:
   job:
     # 调度中心部署地址（多个用逗号分隔）
     admin:
-      addresses: http://localhost:8080/xxl-job-admin
+      addresses: ${XXL_JOB_ADMIN_ADDRESSES:http://localhost:8080/xxl-job-admin}
       # 调度中心访问令牌
-      accessToken:
+      accessToken: ${XXL_JOB_ACCESS_TOKEN:}
       # 调度中心连接超时时间（秒）
-      timeout: 3
+      timeout: ${XXL_JOB_ADMIN_TIMEOUT:3}
     # 执行器配置
     executor:
       # 是否启用执行器
-      enabled: true
+      enabled: ${XXL_JOB_EXECUTOR_ENABLED:false}
       # 执行器AppName，与调度中心AppName配置保持一致
-      appname: writing-platform-executor
+      appname: ${XXL_JOB_EXECUTOR_APPNAME:writing-platform-executor}
       # 执行器地址，默认为自动获取
-      address:
+      address: ${XXL_JOB_EXECUTOR_ADDRESS:}
       # 执行器IP，默认为空表示自动获取IP
-      ip:
+      ip: ${XXL_JOB_EXECUTOR_IP:}
       # 执行器端口，默认为9999
-      port: 9999
+      port: ${XXL_JOB_EXECUTOR_PORT:9999}
       # 执行器日志路径
-      logpath: /data/applogs/xxl-job/jobhandler
+      logpath: ${XXL_JOB_LOG_PATH:./logs/xxl-job/jobhandler}
       # 执行器日志保存天数，默认为30天
-      logretentiondays: 30
+      logretentiondays: ${XXL_JOB_LOG_RETENTION_DAYS:30}
       # 排除的包名（多个用逗号分隔）
-      excludedpackage:
+      excludedpackage: ${XXL_JOB_EXCLUDED_PACKAGE:}
 
 # 平台业务配置
 writing:
@@ -106,35 +110,35 @@ writing:
     payment-reminder-minutes: 60
     # 截止提醒时间（小时）
     deadline-reminder-hours: 12
-    # 文件存储路径
-    file-storage-path: /data/writing-platform/files
+    # In production, override storage and integration settings via environment variables or profile files.
+    file-storage-path: ${WRITING_FILE_STORAGE_PATH:./data/files}
     # 允许的文件类型
     allowed-file-types: .doc,.docx,.pdf,.txt,.md
     # 最大文件大小（MB）
     max-file-size-mb: 50
     # 短信配置
     sms:
-      enabled: true
-      provider: aliyun  # aliyun, tencent, etc.
-      template-code: SMS_123456789
+      enabled: ${WRITING_SMS_ENABLED:false}
+      provider: ${WRITING_SMS_PROVIDER:}  # aliyun, tencent, etc.
+      template-code: ${WRITING_SMS_TEMPLATE_CODE:}
     # 支付配置
     payment:
       wechat:
-        enabled: true
-        app-id: your-app-id
-        mch-id: your-mch-id
+        enabled: ${WECHAT_PAYMENT_ENABLED:false}
+        app-id: ${WECHAT_APP_ID:}
+        mch-id: ${WECHAT_MCH_ID:}
       alipay:
-        enabled: true
-        app-id: your-alipay-app-id
+        enabled: ${ALIPAY_PAYMENT_ENABLED:false}
+        app-id: ${ALIPAY_APP_ID:}
 
 # 日志配置
 logging:
   level:
-    com.xxl.job.writing: DEBUG
+    com.xxl.job.writing: ${APP_LOG_LEVEL:INFO}
     org.springframework.web: INFO
-    org.mybatis: DEBUG
+    org.mybatis: ${MYBATIS_LOG_LEVEL:INFO}
   file:
-    name: /data/applogs/writing-platform/app.log
+    name: ${APP_LOG_FILE:./logs/writing-platform/app.log}
   pattern:
     file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{50} - %msg%n"
     console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{50} - %msg%n"
@@ -145,6 +149,6 @@ springdoc:
     path: /api-docs
   swagger-ui:
     path: /swagger-ui.html
-    enabled: true
+    enabled: ${SWAGGER_ENABLED:false}
   default-consumes-media-type: application/json
   default-produces-media-type: application/json

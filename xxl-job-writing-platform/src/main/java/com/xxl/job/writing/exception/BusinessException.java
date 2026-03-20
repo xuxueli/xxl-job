@@ -48,6 +48,8 @@ public class BusinessException extends RuntimeException {
     public static final int DELIVERY_NOT_FOUND = 1012;
     public static final int FILE_UPLOAD_FAILED = 1013;
     public static final int DISTRIBUTED_LOCK_FAILED = 1014;
+    public static final int INVALID_REQUEST = 1400;
+    public static final int NOT_IMPLEMENTED = 1501;
 
     // 快速创建业务异常的方法
     public static BusinessException taskNotFound() {
@@ -104,5 +106,13 @@ public class BusinessException extends RuntimeException {
 
     public static BusinessException distributedLockFailed() {
         return new BusinessException(DISTRIBUTED_LOCK_FAILED, "系统繁忙，请稍后重试");
+    }
+
+    public static BusinessException invalidRequest(String message) {
+        return new BusinessException(INVALID_REQUEST, message);
+    }
+
+    public static BusinessException notImplemented(String operation) {
+        return new BusinessException(NOT_IMPLEMENTED, operation + " is not implemented yet");
     }
 }

@@ -1,7 +1,9 @@
 package com.xxl.job.writing.dto;
 
 import lombok.Data;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * 支付订单DTO
@@ -9,15 +11,11 @@ import javax.validation.constraints.NotNull;
 @Data
 public class PayOrderDTO {
     /**
-     * 订单ID
-     */
-    @NotNull(message = "订单ID不能为空")
-    private Long orderId;
-
-    /**
      * 支付方式：1-微信支付，2-支付宝，3-银行卡
      */
     @NotNull(message = "支付方式不能为空")
+    @Min(value = 1, message = "支付方式最小值为1")
+    @Max(value = 3, message = "支付方式最大值为3")
     private Integer payMethod;
 
     /**

@@ -1,7 +1,7 @@
 package com.xxl.job.writing.dto;
 
 import lombok.Data;
-import javax.validation.constraints.*;
+import jakarta.validation.constraints.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
