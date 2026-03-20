@@ -1,0 +1,25 @@
+# 生产环境配置 - 强制禁用模拟认证
+writing:
+  platform:
+    jwt:
+      strict-validation: true  # 生产环境强制严格验证
+
+    auth:
+      mock-enabled: false  # 明确禁用模拟认证
+
+# 生产环境安全配置
+server:
+  ssl:
+    enabled: true  # 启用HTTPS
+
+springdoc:
+  swagger-ui:
+    enabled: false  # 生产环境禁用Swagger
+
+# 生产环境日志配置
+logging:
+  level:
+    com.xxl.job.writing: INFO
+    org.springframework.web: WARN
+  file:
+    name: /var/log/writing-platform/app.log
