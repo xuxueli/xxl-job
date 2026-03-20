@@ -1,6 +1,7 @@
 package com.xxl.job.writing.util;
 
 import com.xxl.job.writing.auth.AuthenticatedUser;
+import com.xxl.job.writing.auth.DefaultUserValidationService;
 import com.xxl.job.writing.auth.UserValidationService;
 import com.xxl.job.writing.exception.BusinessException;
 import io.jsonwebtoken.Claims;
@@ -32,7 +33,10 @@ public class JwtTokenUtil {
     @Value("${writing.platform.jwt.expiration-hours:24}")
     private Long expirationHours;
 
-    @Autowired(required = false)
+    @Value("${writing.platform.jwt.strict-validation:true}")
+    private boolean strictValidation;
+
+    @Autowired
     private UserValidationService userValidationService;
 
     @PostConstruct
@@ -40,11 +44,30 @@ public class JwtTokenUtil {
         if (jwtSecret == null || jwtSecret.trim().isEmpty()) {
             throw new IllegalStateException("JWT secret must be configured via writing.platform.jwt.secret property");
         }
+
+        // 验证密钥强度
         if (jwtSecret.length() < 32) {
-            log.warn("JWT secret is too short ({} chars). For production use, ensure secret has at least 32 characters.", jwtSecret.length());
+            String message = String.format("JWT secret is too short (%d chars). Minimum required length is 32 characters.", jwtSecret.length());
+            if (strictValidation) {
+                throw new IllegalStateException(message);
+            } else {
+                log.warn(message + " Strict validation is disabled.");
+            }
         }
+
+        // 验证过期时间
         if (expirationHours > 24) {
-            log.warn("JWT expiration time is long ({} hours). Consider shorter token lifetimes for better security.", expirationHours);
+            String message = String.format("JWT expiration time is too long (%d hours). Maximum recommended is 24 hours.", expirationHours);
+            if (strictValidation) {
+                log.warn(message + " Consider reducing token lifetime for better security.");
+            } else {
+                log.warn(message);
+            }
+        }
+
+        // 验证用户状态检查配置
+        if (strictValidation && userValidationService instanceof DefaultUserValidationService) {
+            log.warn("DefaultUserValidationService is being used. In production, a proper UserValidationService implementation is required.");
         }
     }
 

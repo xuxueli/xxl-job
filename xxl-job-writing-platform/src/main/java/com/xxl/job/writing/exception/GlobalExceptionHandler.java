@@ -28,8 +28,15 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<Result<?>> handleBusinessException(BusinessException e) {
         log.error("业务异常: {}", e.getMessage(), e);
+
+        // 对于认证失败，返回统一的错误消息，避免信息泄露
+        String responseMessage = e.getMessage();
+        if (e.getCode() == BusinessException.UNAUTHORIZED) {
+            responseMessage = "Authentication failed";
+        }
+
         return ResponseEntity.status(resolveHttpStatus(e.getCode()))
-                .body(Result.error(e.getCode(), e.getMessage()));
+                .body(Result.error(e.getCode(), responseMessage));
     }
 
     /**
