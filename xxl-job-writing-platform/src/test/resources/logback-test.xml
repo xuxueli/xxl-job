@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- 在测试环境中只使用控制台输出，禁用所有文件日志 -->
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+            <charset>utf8</charset>
+        </encoder>
+    </appender>
+
+    <!-- 禁用Spring Boot的文件日志配置 -->
+    <logger name="org.springframework.boot" level="WARN"/>
+
+    <logger name="com.xxl.job.writing" level="INFO"/>
+
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+
+    <!-- 显式禁用所有文件appender -->
+    <logger name="ch.qos.logback.core.FileAppender" level="OFF"/>
+</configuration>

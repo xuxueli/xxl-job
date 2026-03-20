@@ -39,7 +39,7 @@ public class JwtTokenUtil {
     @Value("${writing.platform.jwt.strict-validation:true}")
     private boolean strictValidation;
 
-    @Autowired
+    @Autowired(required = false)
     private UserValidationService userValidationService;
 
     @Autowired
@@ -89,7 +89,7 @@ public class JwtTokenUtil {
         }
 
         // 验证用户状态检查配置
-        if (strictValidation && userValidationService instanceof DefaultUserValidationService) {
+        if (strictValidation && userValidationService != null && userValidationService instanceof DefaultUserValidationService) {
             log.warn("DefaultUserValidationService is being used. In production, a proper UserValidationService implementation is required.");
         }
     }

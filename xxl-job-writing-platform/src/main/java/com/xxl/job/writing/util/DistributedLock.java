@@ -1,6 +1,7 @@
 package com.xxl.job.writing.util;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Component;
@@ -15,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 public class DistributedLock {
     private final RedisTemplate<String, String> redisTemplate;
 
-    public DistributedLock(RedisTemplate<String, String> redisTemplate) {
+    public DistributedLock(@Qualifier("customStringRedisTemplate") RedisTemplate<String, String> redisTemplate) {
         this.redisTemplate = redisTemplate;
     }
 

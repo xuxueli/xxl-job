@@ -37,9 +37,10 @@ public class RedisConfig {
 
     /**
      * 配置String类型的RedisTemplate（用于分布式锁等场景）
+     * 使用不同的bean名称避免与Spring Boot自动配置冲突
      */
-    @Bean
-    public RedisTemplate<String, String> stringRedisTemplate(RedisConnectionFactory connectionFactory) {
+    @Bean(name = "customStringRedisTemplate")
+    public RedisTemplate<String, String> customStringRedisTemplate(RedisConnectionFactory connectionFactory) {
         RedisTemplate<String, String> template = new RedisTemplate<>();
         template.setConnectionFactory(connectionFactory);
 
