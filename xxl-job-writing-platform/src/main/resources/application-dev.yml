@@ -1,0 +1,21 @@
+# 开发环境配置 - 启用模拟认证用于测试
+writing:
+  platform:
+    jwt:
+      strict-validation: false  # 开发环境允许较短密钥
+
+    auth:
+      mock-enabled: true
+      mock-credentials:
+        admin:
+          password: ${AUTH_MOCK_ADMIN_PASSWORD:admin123}
+        expert:
+          password: ${AUTH_MOCK_EXPERT_PASSWORD:expert123}
+
+# 开发环境特定配置
+springdoc:
+  swagger-ui:
+    enabled: true  # 开发环境启用Swagger
+logging:
+  level:
+    com.xxl.job.writing: DEBUG  # 开发环境启用DEBUG日志
