@@ -30,6 +30,27 @@ public class AuthController {
     @Value("${writing.platform.jwt.expiration-hours:24}")
     private Long expirationHours;
 
+    @Value("${writing.platform.auth.mock-enabled:false}")
+    private boolean mockEnabled;
+
+    @Value("${writing.platform.auth.mock-credentials.admin.password:}")
+    private String mockAdminPassword;
+
+    @Value("${writing.platform.auth.mock-credentials.admin.user-id:1}")
+    private Long mockAdminUserId;
+
+    @Value("${writing.platform.auth.mock-credentials.admin.user-type:0}")
+    private Integer mockAdminUserType;
+
+    @Value("${writing.platform.auth.mock-credentials.expert.password:}")
+    private String mockExpertPassword;
+
+    @Value("${writing.platform.auth.mock-credentials.expert.user-id:2}")
+    private Long mockExpertUserId;
+
+    @Value("${writing.platform.auth.mock-credentials.expert.user-type:1}")
+    private Integer mockExpertUserType;
+
     public AuthController(JwtTokenUtil jwtTokenUtil) {
         this.jwtTokenUtil = jwtTokenUtil;
     }
@@ -66,18 +87,31 @@ public class AuthController {
 
     /**
      * 模拟用户认证
-     * 实际项目中应该从数据库验证用户凭据并返回用户信息
+     * 仅用于开发和测试环境，生产环境应连接数据库验证
      */
     private AuthenticatedUser authenticateUser(String username, String password) {
-        // 模拟用户数据 - 实际项目中应该查询数据库
-        // 这里假设用户ID为1，用户类型为0（普通用户）
-        // 实际项目中应该根据用户名查询用户信息并验证密码
-        if ("admin".equals(username) && "password".equals(password)) {
-            return new AuthenticatedUser(1L, 0); // 普通用户
+        if (!mockEnabled) {
+            log.warn("Mock authentication is disabled. This endpoint should not be used in production.");
+            return null;
         }
-        if ("expert".equals(username) && "password".equals(password)) {
-            return new AuthenticatedUser(2L, 1); // 专家用户
+
+        // 检查admin用户
+        if ("admin".equals(username) && mockAdminPassword != null && !mockAdminPassword.isEmpty()) {
+            if (mockAdminPassword.equals(password)) {
+                log.info("Mock authentication successful for admin user");
+                return new AuthenticatedUser(mockAdminUserId, mockAdminUserType);
+            }
         }
+
+        // 检查expert用户
+        if ("expert".equals(username) && mockExpertPassword != null && !mockExpertPassword.isEmpty()) {
+            if (mockExpertPassword.equals(password)) {
+                log.info("Mock authentication successful for expert user");
+                return new AuthenticatedUser(mockExpertUserId, mockExpertUserType);
+            }
+        }
+
+        log.warn("Mock authentication failed for user: {}", username);
         return null;
     }
 }

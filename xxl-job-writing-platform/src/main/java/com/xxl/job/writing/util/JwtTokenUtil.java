@@ -1,16 +1,19 @@
 package com.xxl.job.writing.util;
 
 import com.xxl.job.writing.auth.AuthenticatedUser;
+import com.xxl.job.writing.auth.UserValidationService;
 import com.xxl.job.writing.exception.BusinessException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
+import jakarta.annotation.PostConstruct;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.HashMap;
@@ -23,11 +26,27 @@ import java.util.Map;
 @Component
 public class JwtTokenUtil {
 
-    @Value("${writing.platform.jwt.secret:default-jwt-secret-key-for-writing-platform-2024}")
+    @Value("${writing.platform.jwt.secret:}")
     private String jwtSecret;
 
     @Value("${writing.platform.jwt.expiration-hours:24}")
     private Long expirationHours;
+
+    @Autowired(required = false)
+    private UserValidationService userValidationService;
+
+    @PostConstruct
+    public void validateConfiguration() {
+        if (jwtSecret == null || jwtSecret.trim().isEmpty()) {
+            throw new IllegalStateException("JWT secret must be configured via writing.platform.jwt.secret property");
+        }
+        if (jwtSecret.length() < 32) {
+            log.warn("JWT secret is too short ({} chars). For production use, ensure secret has at least 32 characters.", jwtSecret.length());
+        }
+        if (expirationHours > 24) {
+            log.warn("JWT expiration time is long ({} hours). Consider shorter token lifetimes for better security.", expirationHours);
+        }
+    }
 
     private SecretKey getSigningKey() {
         return Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
@@ -68,7 +87,19 @@ public class JwtTokenUtil {
             Integer userType = claims.get("userType", Integer.class);
 
             if (userId == null || userType == null) {
-                throw BusinessException.unauthorized("Invalid token claims");
+                throw BusinessException.unauthorized("Invalid or expired token");
+            }
+
+            // 检查用户状态（如果配置了UserValidationService）
+            if (userValidationService != null) {
+                if (!userValidationService.isValidUser(userId, userType)) {
+                    log.warn("User validation failed for userId: {}, userType: {}", userId, userType);
+                    throw BusinessException.unauthorized("Invalid or expired token");
+                }
+                if (userValidationService.isUserLocked(userId)) {
+                    log.warn("User account is locked for userId: {}", userId);
+                    throw BusinessException.unauthorized("Invalid or expired token");
+                }
             }
 
             return new AuthenticatedUser(userId, userType);

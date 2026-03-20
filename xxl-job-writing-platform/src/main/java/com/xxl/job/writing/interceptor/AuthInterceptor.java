@@ -35,12 +35,12 @@ public class AuthInterceptor implements HandlerInterceptor {
 
         String authorizationHeader = request.getHeader(AUTHORIZATION_HEADER);
         if (authorizationHeader == null || !authorizationHeader.startsWith(BEARER_PREFIX)) {
-            throw BusinessException.unauthorized("Missing or invalid Authorization header");
+            throw BusinessException.unauthorized("Invalid or expired token");
         }
 
         String token = authorizationHeader.substring(BEARER_PREFIX.length()).trim();
         if (token.isEmpty()) {
-            throw BusinessException.unauthorized("Empty token");
+            throw BusinessException.unauthorized("Invalid or expired token");
         }
 
         AuthenticatedUser authenticatedUser = jwtTokenUtil.validateToken(token);
