@@ -2783,7 +2783,7 @@ public void execute() {
 - 1、【优化】父POM依赖配置优化，移除容易配置；合并PR-3926；
 - 2、【调整】Docker基础镜像调整为eclipse-temurin；
 - 3、【TODO】调度触发性能优化：调度触发后任务分批批量更新，提升调度性能；
-- 4、【TODO】执行器内嵌容器调整：由Netty调整为Tomcat，简化项目依赖；
+- 4、【TODO】调度中心OpenAPI完善，提供任务管理能力；封装Agent Skill并推送ClawHub；
 
 
 ### TODO LIST
