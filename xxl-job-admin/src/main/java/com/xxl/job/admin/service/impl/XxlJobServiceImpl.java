@@ -428,6 +428,25 @@ public class XxlJobServiceImpl implements XxlJobService {
 			return Response.ofFail(I18nUtil.getString("system_permission_limit"));
 		}
 
+		// valid addressList: must be a subset of the group's registered addresses (prevent SSRF)
+		if (StringTool.isNotBlank(addressList)) {
+			XxlJobGroup jobGroup = xxlJobGroupMapper.load(xxlJobInfo.getJobGroup());
+			if (jobGroup == null) {
+				return Response.ofFail(I18nUtil.getString("jobinfo_glue_jobid_unvalid"));
+			}
+			List<String> groupAddressList = jobGroup.getRegistryList();
+			if (groupAddressList == null || groupAddressList.isEmpty()) {
+				return Response.ofFail(I18nUtil.getString("jobgroup_field_registryList_unvalid"));
+			}
+			Set<String> allowedAddresses = new HashSet<>(groupAddressList);
+			String[] inputAddresses = addressList.trim().split(",");
+			for (String addr : inputAddresses) {
+				if (StringTool.isBlank(addr) || !allowedAddresses.contains(addr.trim())) {
+					return Response.ofFail(I18nUtil.getString("jobgroup_field_registryList_unvalid"));
+				}
+			}
+		}
+
 		// force cover job param
 		if (executorParam == null) {
 			executorParam = "";
