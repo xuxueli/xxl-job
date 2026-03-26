@@ -68,7 +68,7 @@
 	<select id="pageList" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
 		SELECT <include refid="Base_Column_List" />
 		FROM xxl_job_info AS t
-		<trim prefix="WHERE" prefixOverrides="AND | OR" >
+		<trim prefix="WHERE" prefixOverrides="AND |OR " >
 			<if test="jobGroup gt 0">
 				AND t.job_group = #{jobGroup}
 			</if>
@@ -92,7 +92,7 @@
 	<select id="pageListCount" parameterType="java.util.HashMap" resultType="int">
 		SELECT count(1)
 		FROM xxl_job_info AS t
-		<trim prefix="WHERE" prefixOverrides="AND | OR" >
+		<trim prefix="WHERE" prefixOverrides="AND |OR " >
 			<if test="jobGroup gt 0">
 				AND t.job_group = #{jobGroup}
 			</if>

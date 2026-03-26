@@ -47,7 +47,7 @@
 	<select id="pageList" resultMap="XxlJobLog">
 		SELECT <include refid="Base_Column_List" />
 		FROM xxl_job_log AS t
-		<trim prefix="WHERE" prefixOverrides="AND | OR" >
+		<trim prefix="WHERE" prefixOverrides="AND |OR " >
 			<if test="jobId==0 and jobGroup gt 0">
 				AND t.job_group = #{jobGroup}
 			</if>
@@ -81,7 +81,7 @@
 	<select id="pageListCount" resultType="int">
 		SELECT count(1)
 		FROM xxl_job_log AS t
-		<trim prefix="WHERE" prefixOverrides="AND | OR" >
+		<trim prefix="WHERE" prefixOverrides="AND |OR " >
 			<if test="jobId==0 and jobGroup gt 0">
 				AND t.job_group = #{jobGroup}
 			</if>
@@ -187,7 +187,7 @@
 
 	<select id="findClearLogIds" resultType="long" >
 		SELECT id FROM xxl_job_log
-		<trim prefix="WHERE" prefixOverrides="AND | OR" >
+		<trim prefix="WHERE" prefixOverrides="AND |OR " >
 			<if test="jobGroup gt 0">
 				AND job_group = #{jobGroup}
 			</if>
@@ -201,7 +201,7 @@
 				AND id NOT in(
 				SELECT id FROM(
 				SELECT id FROM xxl_job_log AS t
-				<trim prefix="WHERE" prefixOverrides="AND | OR" >
+				<trim prefix="WHERE" prefixOverrides="AND |OR " >
 					<if test="jobGroup gt 0">
 						AND t.job_group = #{jobGroup}
 					</if>

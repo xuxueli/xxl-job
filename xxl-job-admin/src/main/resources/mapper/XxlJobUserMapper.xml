@@ -24,7 +24,7 @@
 	<select id="pageList" parameterType="java.util.HashMap" resultMap="XxlJobUser">
 		SELECT <include refid="Base_Column_List" />
 		FROM xxl_job_user AS t
-		<trim prefix="WHERE" prefixOverrides="AND | OR" >
+		<trim prefix="WHERE" prefixOverrides="AND |OR " >
 			<if test="username != null and username != ''">
 				AND t.username like CONCAT(CONCAT('%', #{username}), '%')
 			</if>
@@ -39,7 +39,7 @@
 	<select id="pageListCount" parameterType="java.util.HashMap" resultType="int">
 		SELECT count(1)
 		FROM xxl_job_user AS t
-		<trim prefix="WHERE" prefixOverrides="AND | OR" >
+		<trim prefix="WHERE" prefixOverrides="AND |OR " >
 			<if test="username != null and username != ''">
 				AND t.username like CONCAT(CONCAT('%', #{username}), '%')
 			</if>
