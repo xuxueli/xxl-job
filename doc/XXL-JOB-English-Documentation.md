@@ -776,6 +776,11 @@ So far, XXL-JOB has access to a number of companies online product line, access 
     - 716、上海爱诚裕信息科技有限公司
     - 717、杭州迈瑞数字科技有限公司
     - 718、广州串联网络科技有限公司
+    - 719、上海乐研化学试剂
+    - 720、智现未来
+    - 721、大庆点神科技有限公司
+    - 722、深圳市中科环球科技有限公司
+    - 723、江苏金箭车业制造有限公司
 	- ……
 
 > The company that access and use this product is welcome to register at the [address](https://github.com/xuxueli/xxl-job/issues/1 ), only for product promotion. 
