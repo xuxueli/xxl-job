@@ -141,7 +141,7 @@ public class JobScheduleHelper {
                             /*for (XxlJobInfo jobInfo: scheduleList) {
                                 XxlJobAdminBootstrap.getInstance().getXxlJobInfoMapper().scheduleUpdate(jobInfo);
                             }*/
-                            int batchSize = 100;
+                            int batchSize = XxlJobAdminBootstrap.getInstance().getScheduleBatchSize();
                             List<List<XxlJobInfo>> scheduleListBatches = CollectionTool.split(scheduleList, batchSize);
                             for (List<XxlJobInfo> scheduleListBatch : scheduleListBatches) {
                                 int totalAffected = XxlJobAdminBootstrap.getInstance().getXxlJobInfoMapper().scheduleBatchUpdate(scheduleListBatch);
