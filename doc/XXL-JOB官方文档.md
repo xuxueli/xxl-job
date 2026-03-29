@@ -2794,7 +2794,9 @@ public void execute() {
 - 3、【调整】Docker基础镜像调整为eclipse-temurin；
 - 4、【优化】父POM依赖配置优化，移除容易配置；合并PR-3926；
 - 5、【升级】升级多项maven依赖至较新版本；
-- 6、【TODO】调度中心OpenAPI完善，提供任务管理能力；封装Agent Skill并推送ClawHub；
+- 6、【优化】调度日志优化：支持执行器维度查看调度日志；新增调度日志索引，提升查询效率；
+（数据库新增索引脚本：``` create index I_jobgroup on xxl_job_log (job_group); ``` ）
+- 7、【TODO】调度中心OpenAPI完善，提供任务管理能力；封装Agent Skill并推送ClawHub；
 
 
 ### TODO LIST
