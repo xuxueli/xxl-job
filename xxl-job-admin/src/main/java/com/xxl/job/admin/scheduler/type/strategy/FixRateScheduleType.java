@@ -10,7 +10,14 @@ public class FixRateScheduleType extends ScheduleType {
     @Override
     public Date generateNextTriggerTime(XxlJobInfo jobInfo, Date fromTime) throws Exception {
         // generate next trigger time, fix rate delay
-        return new Date(fromTime.getTime() + Long.parseLong(jobInfo.getScheduleConf()) * 1000L);
+        Date nextTriggerTime = new Date(jobInfo.getTriggerLastTime() + Long.parseLong(jobInfo.getScheduleConf()) * 1000L);
+        if (nextTriggerTime.after(fromTime)) {
+            // fix rate delay, after last-trigger-time
+            return nextTriggerTime;
+        } else {
+            // fix rate delay, after fromTime
+            return new Date(fromTime.getTime() + Long.parseLong(jobInfo.getScheduleConf()) * 1000L);
+        }
     }
 
 }
