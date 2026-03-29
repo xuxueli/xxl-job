@@ -50,7 +50,7 @@ public class IndexController {
     @Resource
     private OllamaChatModel ollamaChatModel;
     private String prompt = "你好，你是一个研发工程师，擅长解决技术类问题。";
-    private String modle = "qwen3:0.6b";
+    private String modle = "qwen3.5:2b";
 
     /**
      * ChatClient 简单调用

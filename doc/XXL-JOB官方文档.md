@@ -1276,7 +1276,7 @@ public void demoJobHandler() throws Exception {
 {
     "input": "{输入信息，必填信息}",
     "prompt": "{模型prompt，可选信息}",
-    "model": "{模型实现，如qwen3:0.6b，可选信息}"
+    "model": "{模型实现，如qwen3.5:2b，可选信息}"
 }
 ```
 - b、difyWorkflowJobHandler：DifyWorkflow 任务，支持自定义inputs、user、baseUrl、apiKey 等输入信息，示例参数如下；

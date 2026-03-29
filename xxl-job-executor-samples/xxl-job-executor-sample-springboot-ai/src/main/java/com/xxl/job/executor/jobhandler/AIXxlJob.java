@@ -70,7 +70,7 @@ public class AIXxlJob {
                 return;
             }
             if (ollamaParam.getModel()==null || ollamaParam.getModel().isBlank()) {
-                ollamaParam.setModel("qwen3:0.6b");
+                ollamaParam.setModel("qwen3.5:2b");
             }
         } catch (Exception e) {
             XxlJobHelper.log(new RuntimeException("OllamaParam parse error", e));
