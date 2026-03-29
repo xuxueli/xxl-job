@@ -61,5 +61,12 @@ public interface XxlJobInfoMapper {
 	 */
 	public int scheduleUpdate(XxlJobInfo xxlJobInfo);
 
+	/**
+	 * batch update job info
+	 *
+	 * @param jobInfoList
+	 * @return
+	 */
+	public int scheduleBatchUpdate(@Param("list") List<XxlJobInfo> jobInfoList);
 
 }

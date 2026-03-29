@@ -59,7 +59,7 @@ public class JobScheduleHelper {
                 }
                 logger.info(">>>>>>>>> init xxl-job admin scheduler success.");
 
-                // pre-read count: treadpool-size * trigger-qps (each trigger cost 100ms, qps = 1000/100 = 100)
+                // pre-read count: treadpool-size * 10 (trigger-qps: 1000ms / 100ms each trigger cost)
                 int preReadCount = (XxlJobAdminBootstrap.getInstance().getTriggerPoolFastMax() + XxlJobAdminBootstrap.getInstance().getTriggerPoolSlowMax()) * 10;
 
                 // do schedule
@@ -138,8 +138,14 @@ public class JobScheduleHelper {
                             }
 
                             // 3、update trigger info
-                            for (XxlJobInfo jobInfo: scheduleList) {
+                            /*for (XxlJobInfo jobInfo: scheduleList) {
                                 XxlJobAdminBootstrap.getInstance().getXxlJobInfoMapper().scheduleUpdate(jobInfo);
+                            }*/
+                            int batchSize = 100;
+                            List<List<XxlJobInfo>> scheduleListBatches = CollectionTool.split(scheduleList, batchSize);
+                            for (List<XxlJobInfo> scheduleListBatch : scheduleListBatches) {
+                                int totalAffected = XxlJobAdminBootstrap.getInstance().getXxlJobInfoMapper().scheduleBatchUpdate(scheduleListBatch);
+                                logger.debug(">>>>>>>>>>> xxl-job, JobScheduleHelper scheduleBatchUpdate records:" + totalAffected);
                             }
 
                         } else {
