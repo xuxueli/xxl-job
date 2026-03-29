@@ -929,6 +929,9 @@ xxl.job.i18n=zh_CN
 xxl.job.triggerpool.fast.max=300
 xxl.job.triggerpool.slow.max=200
 
+### 调度触发后，批量更新任务批次数量【必填】
+xxl.job.schedule.batchsize=100
+
 ### 调度中心日志表数据保存天数 [必填]：过期日志自动清理；限制大于等于7时生效，否则, 如-1，关闭自动清理功能；
 xxl.job.logretentiondays=30
 ```
