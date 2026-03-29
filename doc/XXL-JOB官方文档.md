@@ -2789,7 +2789,7 @@ public void execute() {
 
 ### 7.44 版本 v3.4.0 Release Notes[ING]
 - 1、【新增】调度性能提升：任务触发后分批批量更新，高频调度场景可百倍降低SQL操作合并执行，提升调度性能；
-（新增“任务批量更新（xxl.job.schedule.batchsize）”配置项，支持动态修改批量操作大小）
+（任务触发后批量更新配置“xxl.job.schedule.batchsize”）
 - 2、【调整】固定频率调度策略调整，修复小概率下触发时间偏差问题；
 - 3、【调整】Docker基础镜像调整为eclipse-temurin；
 - 4、【优化】父POM依赖配置优化，移除容易配置；合并PR-3926；
