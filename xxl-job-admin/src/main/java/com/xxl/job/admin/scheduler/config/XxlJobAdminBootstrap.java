@@ -181,6 +181,9 @@ public class XxlJobAdminBootstrap implements InitializingBean, DisposableBean {
     @Value("${xxl.job.triggerpool.slow.max}")
     private int triggerPoolSlowMax;
 
+    @Value("${xxl.job.schedule.batchsize}")
+    private int scheduleBatchSize;
+
     @Value("${xxl.job.logretentiondays}")
     private int logretentiondays;
 
@@ -242,6 +245,13 @@ public class XxlJobAdminBootstrap implements InitializingBean, DisposableBean {
             return 100;
         }
         return triggerPoolSlowMax;
+    }
+
+    public int getScheduleBatchSize() {
+        if (!(scheduleBatchSize >=50 && scheduleBatchSize <= 500)) {
+            return 100;
+        }
+        return scheduleBatchSize;
     }
 
     public int getLogretentiondays() {

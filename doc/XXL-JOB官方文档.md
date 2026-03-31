@@ -929,6 +929,9 @@ xxl.job.i18n=zh_CN
 xxl.job.triggerpool.fast.max=300
 xxl.job.triggerpool.slow.max=200
 
+### 调度触发后，批量更新任务批次数量【必填】
+xxl.job.schedule.batchsize=100
+
 ### 调度中心日志表数据保存天数 [必填]：过期日志自动清理；限制大于等于7时生效，否则, 如-1，关闭自动清理功能；
 xxl.job.logretentiondays=30
 ```
@@ -1273,7 +1276,7 @@ public void demoJobHandler() throws Exception {
 {
     "input": "{输入信息，必填信息}",
     "prompt": "{模型prompt，可选信息}",
-    "model": "{模型实现，如qwen3:0.6b，可选信息}"
+    "model": "{模型实现，如qwen3.5:2b，可选信息}"
 }
 ```
 - b、difyWorkflowJobHandler：DifyWorkflow 任务，支持自定义inputs、user、baseUrl、apiKey 等输入信息，示例参数如下；
@@ -2785,10 +2788,15 @@ public void execute() {
 - 10、【优化】统一项目依赖管理结构，依赖版本统一到父级pom提升可维护性；
 
 ### 7.44 版本 v3.4.0 Release Notes[ING]
-- 1、【优化】父POM依赖配置优化，移除容易配置；合并PR-3926；
-- 2、【调整】Docker基础镜像调整为eclipse-temurin；
-- 3、【TODO】调度触发性能优化：调度触发后任务分批批量更新，提升调度性能；
-- 4、【TODO】调度中心OpenAPI完善，提供任务管理能力；封装Agent Skill并推送ClawHub；
+- 1、【新增】调度性能提升：任务触发后分批批量更新，高频调度场景可百倍降低SQL操作合并执行，提升调度性能；
+（任务触发后批量更新配置“xxl.job.schedule.batchsize”）
+- 2、【调整】固定频率调度策略调整，修复小概率下触发时间偏差问题；
+- 3、【调整】Docker基础镜像调整为eclipse-temurin；
+- 4、【优化】父POM依赖配置优化，移除容易配置；合并PR-3926；
+- 5、【升级】升级多项maven依赖至较新版本；
+- 6、【优化】调度日志优化：支持执行器维度查看调度日志；新增调度日志索引，提升查询效率；
+（数据库新增索引脚本：``` create index I_jobgroup on xxl_job_log (job_group); ``` ）
+- 7、【TODO】调度中心OpenAPI完善，提供任务管理能力；封装Agent Skill并推送ClawHub；
 
 
 ### TODO LIST
@@ -2827,11 +2835,10 @@ public void execute() {
   - 调度日志：全局配置：废弃； 新增“调度日志策略”：任务维度自定义，保留3天、7天、1个月、3个月、一年、永久；
   - 执行日志：新增“执行RollingLog开关”：任务维度自定义，支持：RollingLog、普通日志（slf4j输出）、关闭（不输出）；
 - 21、AccessToken：废弃全局配置；支持在线管理，动态生成、动态启停；
-- 22、任务执行后分批批量更新，提升调度性能；
-- 23、任务管理OpenAPI;
-- 24、调度中心启动参数线上配置：告警发送邮箱、Token，支持线上配置生效，修改不需重启机器；
-- 25、执行器内嵌server切换tomcat，精简依赖；
-- 26、日志策略新增：
+- 22、任务管理OpenAPI;
+- 23、调度中心启动参数线上配置：告警发送邮箱、Token，支持线上配置生效，修改不需重启机器；
+- 24、执行器内嵌server切换tomcat，精简依赖；
+- 25、日志策略新增：
   - 调度日志策略：任务级设置，最少保留1天。 
   - 执行日志策略：可选 RollingLog、slf4jLog；
   - 清理逻辑，性能重构。

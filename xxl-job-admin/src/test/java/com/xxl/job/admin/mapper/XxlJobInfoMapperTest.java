@@ -1,8 +1,12 @@
 package com.xxl.job.admin.mapper;
 
+import com.xxl.job.admin.constant.TriggerStatus;
 import com.xxl.job.admin.model.XxlJobInfo;
+import com.xxl.job.admin.scheduler.config.XxlJobAdminBootstrap;
 import com.xxl.job.admin.scheduler.misfire.MisfireStrategyEnum;
 import com.xxl.job.admin.scheduler.type.ScheduleTypeEnum;
+import com.xxl.tool.core.CollectionTool;
+import com.xxl.tool.core.DateTool;
 import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -81,6 +85,30 @@ public class XxlJobInfoMapperTest {
 
 		int ret3 = xxlJobInfoMapper.findAllCount();
 
+	}
+
+	@Test
+	public void scheduleBatchUpdateTest(){
+
+		List<XxlJobInfo> list1 = xxlJobInfoMapper.pageList(0, 20, 0, -1, null, null, null);
+		int batchSize = 5;
+
+		// update
+		List<XxlJobInfo> list2 = list1.stream().filter(item -> (item.getId()>=4 && item.getId()<=14)).toList();
+		list2.forEach(item -> {
+			item.setTriggerLastTime(DateTool.addHours(new Date(), -1).getTime());
+			item.setTriggerNextTime(DateTool.addHours(new Date(), 1).getTime());
+			if (item.getId() == 5) {
+				item.setTriggerStatus(TriggerStatus.STOPPED.getValue());
+			}
+		});
+
+		// batch update
+		List<List<XxlJobInfo>> scheduleListBatches = CollectionTool.split(list2, batchSize);
+		for (List<XxlJobInfo> scheduleListBatch : scheduleListBatches) {
+			int totalAffected = XxlJobAdminBootstrap.getInstance().getXxlJobInfoMapper().scheduleBatchUpdate(scheduleListBatch);
+			logger.info("scheduleBatchUpdate records:" + totalAffected);
+		}
 	}
 
 }

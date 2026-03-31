@@ -100,8 +100,8 @@ CREATE TABLE `xxl_job_log`
     PRIMARY KEY (`id`),
     KEY `I_trigger_time` (`trigger_time`),
     KEY `I_handle_code` (`handle_code`),
-    KEY `I_jobid_jobgroup` (`job_id`,`job_group`),
-    KEY `I_job_id` (`job_id`)
+    KEY `I_jobgroup` (`job_group`),
+    KEY `I_jobid` (`job_id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4;
 
@@ -161,7 +161,7 @@ VALUES (1, 1, '示例任务01', now(), now(), 'XXL', '', 'CRON', '0 0 0 * * ? *'
         'DO_NOTHING', 'FIRST', 'ollamaJobHandler', '{
     "input": "慢SQL问题分析思路",
     "prompt": "你是一个研发工程师，擅长解决技术类问题。",
-    "model": "qwen3:0.6b"
+    "model": "qwen3.5:2b"
 }', 'SERIAL_EXECUTION', 0, 0, 'BEAN', '', 'GLUE代码初始化',
         now(), ''),
        (3, 2, 'Dify示例任务', now(), now(), 'XXL', '', 'NONE', '',

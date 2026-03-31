@@ -62,6 +62,7 @@ public class JobLogController {
 						@RequestParam(value = "jobGroup", required = false, defaultValue = "0") Integer jobGroup,
 						@RequestParam(value = "jobId", required = false, defaultValue = "0") Integer jobId) {
 
+		// 1、init JobGroupList
 		// find all jobGroup
 		List<XxlJobGroup> jobGroupListTotal =  xxlJobGroupMapper.findAll();
 
@@ -70,44 +71,31 @@ public class JobLogController {
 		if (CollectionTool.isEmpty(jobGroupList)) {
 			throw new XxlJobException(I18nUtil.getString("jobgroup_empty"));
 		}
+		List<Integer> jobGroupIds = jobGroupList.stream().map(XxlJobGroup::getId).toList();
 
-		// parse jobGroup
+		// 2、check jobId
 		if (jobId > 0) {
-			// assign jobId (+ jobGroup)
+			// valid jobId
 			XxlJobInfo jobInfo = xxlJobInfoMapper.loadById(jobId);
 			if (jobInfo == null) {
-				// jobId not exist, inteceptor
 				throw new RuntimeException(I18nUtil.getString("jobinfo_field_id") + I18nUtil.getString("system_unvalid"));
 			}
+			// valid jobGroup
 			jobGroup = jobInfo.getJobGroup();
-		} else if (jobGroup > 0) {
-			// assign jobGroup
-			Integer finalJobGroup = jobGroup;
-			if (CollectionTool.isEmpty(jobGroupListTotal.stream().filter(item -> item.getId() == finalJobGroup).toList())) {
-				// jobGroup not exist, use first
-				jobGroup = jobGroupList.get(0).getId();
-			}
-			jobId = 0;
-		} else {
-			// default first valid jobGroup
-			jobGroup = jobGroupList.get(0).getId();
-			jobId = 0;
 		}
 
-		/*// valid permission
-		JobGroupPermissionUtil.validJobGroupPermission(request, jobGroup);*/
+		// 3、init jobGroup, default first 1
+		if (!jobGroupIds.contains(jobGroup)) {
+			jobGroup = jobGroupList.get(0).getId();
+		}
 
-		// find jobList
+		// 4、init jobInfoList
 		List<XxlJobInfo> jobInfoList = xxlJobInfoMapper.getJobsByGroup(jobGroup);
+		List<Integer> jobIds = jobInfoList.stream().map(XxlJobInfo::getId).toList();
 
-		// parse jobId
-		if (CollectionTool.isEmpty(jobInfoList)) {
+		// 5、init JobId, default 0
+		if (!jobIds.contains(jobId)) {
 			jobId = 0;
-		} else {
-			if (!jobInfoList.stream().map(XxlJobInfo::getId).toList().contains(jobId)) {
-				// jobId not exist, use first
-				jobId = jobInfoList.get(0).getId();
-			}
 		}
 
 		// write
@@ -133,9 +121,9 @@ public class JobLogController {
 		JobGroupPermissionUtil.validJobGroupPermission(request, jobGroup);
 
 		// valid jobId
-		if (jobId < 1) {
+		/*if (jobId < 1) {
 			return Response.ofFail(I18nUtil.getString("system_please_choose") + I18nUtil.getString("jobinfo_job"));
-		}
+		}*/
 
 		// parse param
 		Date triggerTimeStart = null;
