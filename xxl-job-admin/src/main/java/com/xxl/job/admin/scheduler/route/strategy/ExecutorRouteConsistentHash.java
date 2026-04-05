@@ -8,7 +8,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
-import java.util.SortedMap;
+import java.util.Map;
 import java.util.TreeMap;
 
 /**
@@ -62,9 +62,10 @@ public class ExecutorRouteConsistentHash extends ExecutorRouter {
      */
     public String hashJob(int jobId, List<String> addressList) {
 
+        // 1、hash ring
         // ------A1------A2-------A3------
         // -----------J1------------------
-        TreeMap<Long, String> addressRing = new TreeMap<Long, String>();
+        TreeMap<Long, String> addressRing = new TreeMap<>();
         for (String address: addressList) {
             for (int i = 0; i < VIRTUAL_NODE_NUM; i++) {
                 long addressHash = hash("SHARD-" + address + "-NODE-" + i);
@@ -72,11 +73,20 @@ public class ExecutorRouteConsistentHash extends ExecutorRouter {
             }
         }
 
+        // 2、generate job-hash
         long jobHash = hash(String.valueOf(jobId));
-        SortedMap<Long, String> lastRing = addressRing.tailMap(jobHash);
+
+        // 3、route job-node
+        Map.Entry<Long, String> ceilingEntry = addressRing.ceilingEntry(jobHash);
+        if (ceilingEntry != null) {
+            return ceilingEntry.getValue();
+        }
+        /*SortedMap<Long, String> lastRing = addressRing.tailMap(jobHash);
         if (!lastRing.isEmpty()) {
             return lastRing.get(lastRing.firstKey());
-        }
+        }*/
+
+        // 4、default first node
         return addressRing.firstEntry().getValue();
     }
 
