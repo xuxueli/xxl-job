@@ -224,9 +224,9 @@ public class JobLogController {
 		JobGroupPermissionUtil.validJobGroupPermission(request, jobGroup);
 
 		// valid jobId
-		if (jobId < 1) {
+		/*if (jobId < 1) {
 			return Response.ofFail(I18nUtil.getString("system_please_choose") + I18nUtil.getString("jobinfo_job"));
-		}
+		}*/
 
 		// opt
 		Date clearBeforeTime = null;
