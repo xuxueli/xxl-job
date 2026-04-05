@@ -33,8 +33,8 @@ public class OllamaTest {
     public void chatTest() {
 
         String model = "qwen3.5:2b";
-        String prompt = "背景说明：你是一个研发工程师，擅长解决技术类问题。";
-        String input = "请写一个java程序，实现一个方法，输入一个字符串，返回字符串的长度。";
+        String prompt = "你是一个研发工程师，擅长解决技术类问题。";
+        String input = "慢SQL问题分析思路";
 
 
         // build chat-client
@@ -60,8 +60,8 @@ public class OllamaTest {
     public void chatStreamTest() throws InterruptedException {
 
         String model = "qwen3.5:2b";
-        String prompt = "背景说明：你是一个研发工程师，擅长解决技术类问题。";
-        String input = "请写一个java程序，实现一个方法，输入一个字符串，返回字符串的长度。";
+        String prompt = "你是一个研发工程师，擅长解决技术类问题。";
+        String input = "慢SQL问题分析思路";
 
 
         // build chat-client
