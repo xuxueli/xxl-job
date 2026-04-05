@@ -2811,16 +2811,21 @@ public void execute() {
 - 10、【优化】代码重构优化：I18N国际化、属性加载、报表SQL等逻辑重构，合并PR-2888、PR-3006、PR-3027、PR-3198、PR-3285；
 - 11、【优化】告警组件初始化重构，提升代码可维护性，合并PR-2903；
 - 12、【优化】一致性哈希路由算法优化，重构哈希环逻辑提升代码简洁性；
-- 13、【优化】执行器名称长度上限调整，最长支持64字符；
+- 13、【优化】执行器名称长度调整，最长支持64字符；
+- 14、【优化】执行器注册表调整，主键调整为long数据类型，防止大规模执行器集群注册数据溢出；
 
 数据库升级脚本：
 ``` 
 -- 添加索引：任务日志表
 create index I_jobgroup on xxl_job_log (job_group);
 
--- 修改字段长度：执行器名称
+-- 修改字段长度：执行器表
 alter table xxl_job_group
     modify title varchar(64) not null comment '执行器名称';
+
+-- 修改自增ID类型：执行器注册表
+alter table xxl_job_registry
+    modify id bigint(20)   NOT NULL AUTO_INCREMENT;
 ```
 
 ### 7.45 版本 v3.4.1 Release Notes[ING]

@@ -23,11 +23,11 @@ CREATE TABLE `xxl_job_group`
 
 CREATE TABLE `xxl_job_registry`
 (
-    `id`             int(11)      NOT NULL AUTO_INCREMENT,
-    `registry_group` varchar(50)  NOT NULL,
-    `registry_key`   varchar(255) NOT NULL,
-    `registry_value` varchar(255) NOT NULL,
-    `update_time`    datetime DEFAULT NULL,
+    `id`                bigint(20)   NOT NULL AUTO_INCREMENT,
+    `registry_group`    varchar(50)  NOT NULL,
+    `registry_key`      varchar(255) NOT NULL,
+    `registry_value`    varchar(255) NOT NULL,
+    `update_time`       datetime DEFAULT NULL,
     PRIMARY KEY (`id`),
     UNIQUE KEY `i_g_k_v` (`registry_group`, `registry_key`, `registry_value`) USING BTREE
 ) ENGINE = InnoDB
