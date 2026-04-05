@@ -1,12 +1,12 @@
 package com.xxl.job.core.thread;
 
+import com.xxl.job.core.openapi.model.CallbackRequest;
+import com.xxl.job.core.openapi.model.TriggerRequest;
 import com.xxl.job.core.context.XxlJobContext;
 import com.xxl.job.core.context.XxlJobHelper;
 import com.xxl.job.core.executor.XxlJobExecutor;
 import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.log.XxlJobFileAppender;
-import com.xxl.job.core.openapi.model.CallbackRequest;
-import com.xxl.job.core.openapi.model.TriggerRequest;
 import com.xxl.tool.response.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -131,7 +131,7 @@ public class JobThread extends Thread{
 						// limit timeout
 						Thread futureThread = null;
 						try {
-							FutureTask<Boolean> futureTask = new FutureTask<>(new Callable<Boolean>() {
+							FutureTask<Boolean> futureTask = new FutureTask<Boolean>(new Callable<Boolean>() {
 								@Override
 								public Boolean call() throws Exception {
 
