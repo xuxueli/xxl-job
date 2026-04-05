@@ -250,7 +250,7 @@ public class JobLogController {
 		} else if (type == 9) {
 			clearBeforeNum = 0;			// 清理所有日志数据
 		} else {
-			return Response.ofFail(I18nUtil.getString("joblog_clean_type_unvalid"));
+			return Response.ofFail(I18nUtil.getString("joblog_clean_type_invalid"));
 		}
 
 		List<Long> logIds = null;
@@ -270,7 +270,7 @@ public class JobLogController {
 		// base check
 		XxlJobLog jobLog = xxlJobLogMapper.load(id);
 		if (jobLog == null) {
-			throw new RuntimeException(I18nUtil.getString("joblog_logid_unvalid"));
+			throw new RuntimeException(I18nUtil.getString("joblog_logid_invalid"));
 		}
 
 		// valid permission
@@ -294,7 +294,7 @@ public class JobLogController {
 			// valid
 			XxlJobLog jobLog = xxlJobLogMapper.load(logId);	// todo, need to improve performance
 			if (jobLog == null) {
-				return Response.ofFail(I18nUtil.getString("joblog_logid_unvalid"));
+				return Response.ofFail(I18nUtil.getString("joblog_logid_invalid"));
 			}
 
 			// log cat
