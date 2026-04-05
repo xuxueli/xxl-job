@@ -2812,20 +2812,30 @@ public void execute() {
 - 11、【优化】告警组件初始化重构，提升代码可维护性，合并PR-2903；
 - 12、【优化】一致性哈希路由算法优化，重构哈希环逻辑提升代码简洁性；
 - 13、【优化】执行器名称长度调整，最长支持64字符；
-- 14、【优化】执行器注册表调整，主键调整为long数据类型，防止大规模执行器集群注册数据溢出；
+- 14、【优化】执行器注册表主键调整为long数据类型，防止大规模执行器集群注册数据溢出；
+- 15、【优化】任务参数长度调整，最长支持2048字符；
+
 
 数据库升级脚本：
 ``` 
--- 添加索引：任务日志表
+-- 任务日志表：添加索引
 create index I_jobgroup on xxl_job_log (job_group);
 
--- 修改字段长度：执行器表
+-- 执行器表：修改字段长度
 alter table xxl_job_group
     modify title varchar(64) not null comment '执行器名称';
 
--- 修改自增ID类型：执行器注册表
+-- 执行器注册表：修改自增ID类型
 alter table xxl_job_registry
     modify id bigint(20)   NOT NULL AUTO_INCREMENT;
+    
+-- 任务表：修改字段长度
+alter table xxl_job_info
+    modify executor_param text null comment '任务参数';
+    
+-- 日志表：修改字段长度
+alter table xxl_job_log
+    modify executor_param text null comment '任务参数';
 ```
 
 ### 7.45 版本 v3.4.1 Release Notes[ING]
