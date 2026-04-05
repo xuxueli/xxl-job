@@ -159,7 +159,7 @@ VALUES (1, 1, '示例任务01', now(), now(), 'XXL', '', 'CRON', '0 0 0 * * ? *'
         now(), ''),
        (2, 2, 'Ollama示例任务', now(), now(), 'XXL', '', 'NONE', '',
         'DO_NOTHING', 'FIRST', 'ollamaJobHandler', '{
-    "input": "慢SQL问题分析思路",
+    "input": "Java实现二叉树层序遍历",
     "prompt": "你是一个研发工程师，擅长解决技术类问题。",
     "model": "qwen3.5:2b"
 }', 'SERIAL_EXECUTION', 0, 0, 'BEAN', '', 'GLUE代码初始化',

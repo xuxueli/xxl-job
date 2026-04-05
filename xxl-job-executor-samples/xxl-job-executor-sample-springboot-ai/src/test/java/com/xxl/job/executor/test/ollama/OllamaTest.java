@@ -34,7 +34,7 @@ public class OllamaTest {
 
         String model = "qwen3.5:2b";
         String prompt = "你是一个研发工程师，擅长解决技术类问题。";
-        String input = "慢SQL问题分析思路";
+        String input = "Java实现二叉树层序遍历";
 
 
         // build chat-client
@@ -61,7 +61,7 @@ public class OllamaTest {
 
         String model = "qwen3.5:2b";
         String prompt = "你是一个研发工程师，擅长解决技术类问题。";
-        String input = "慢SQL问题分析思路";
+        String input = "Java实现二叉树层序遍历";
 
 
         // build chat-client
