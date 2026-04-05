@@ -1,12 +1,12 @@
 package com.xxl.job.core.thread;
 
-import com.xxl.job.core.openapi.model.CallbackRequest;
-import com.xxl.job.core.openapi.model.TriggerRequest;
 import com.xxl.job.core.context.XxlJobContext;
 import com.xxl.job.core.context.XxlJobHelper;
 import com.xxl.job.core.executor.XxlJobExecutor;
 import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.log.XxlJobFileAppender;
+import com.xxl.job.core.openapi.model.CallbackRequest;
+import com.xxl.job.core.openapi.model.TriggerRequest;
 import com.xxl.tool.response.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,7 +40,7 @@ public class JobThread extends Thread{
 	public JobThread(int jobId, IJobHandler handler) {
 		this.jobId = jobId;
 		this.handler = handler;
-		this.triggerQueue = new LinkedBlockingQueue<TriggerRequest>();
+		this.triggerQueue = new LinkedBlockingQueue<>();
 		//this.triggerLogIdSet = Collections.synchronizedSet(new HashSet<Long>());
 		this.triggerLogIdSet = ConcurrentHashMap.newKeySet();
 
@@ -131,7 +131,7 @@ public class JobThread extends Thread{
 						// limit timeout
 						Thread futureThread = null;
 						try {
-							FutureTask<Boolean> futureTask = new FutureTask<Boolean>(new Callable<Boolean>() {
+							FutureTask<Boolean> futureTask = new FutureTask<>(new Callable<Boolean>() {
 								@Override
 								public Boolean call() throws Exception {
 
@@ -143,6 +143,7 @@ public class JobThread extends Thread{
 								}
 							});
 							futureThread = new Thread(futureTask);
+							futureThread.setName("xxl-job, JobThread-future-"+jobId+"-"+System.currentTimeMillis());
 							futureThread.start();
 
 							Boolean tempResult = futureTask.get(triggerParam.getExecutorTimeout(), TimeUnit.SECONDS);
