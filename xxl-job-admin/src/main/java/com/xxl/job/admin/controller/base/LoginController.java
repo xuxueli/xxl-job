@@ -100,7 +100,7 @@ public class LoginController {
 		}
 		password = password.trim();
 		if (!(password.length()>=4 && password.length()<=20)) {
-			return Response.ofFail(I18nUtil.getString("system_lengh_limit")+"[4-20]" );
+			return Response.ofFail(I18nUtil.getString("system_length_limit")+"[4-20]" );
 		}
 
 		// md5 password
