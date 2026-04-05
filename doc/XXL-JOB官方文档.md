@@ -2805,13 +2805,23 @@ public void execute() {
 - 4、【调整】Docker基础镜像调整为eclipse-temurin；
 - 5、【优化】父POM依赖配置优化，移除容易配置；合并PR-3926；
 - 6、【优化】调度日志优化：支持执行器维度查看调度日志；新增调度日志索引，提升查询效率；
-（数据库新增索引脚本：``` create index I_jobgroup on xxl_job_log (job_group); ``` ）
 - 7、【升级】升级多项maven依赖至较新版本；
 - 8、【优化】调度组件触发判断优化，合并PR-2502；
 - 9、【优化】调度日志调整，完善日志参数信息，合并PR-2761；
 - 10、【优化】代码重构优化：I18N国际化、属性加载、报表SQL等逻辑重构，合并PR-2888、PR-3006、PR-3027、PR-3198、PR-3285；
 - 11、【优化】告警组件初始化重构，提升代码可维护性，合并PR-2903；
 - 12、【优化】一致性哈希路由算法优化，重构哈希环逻辑提升代码简洁性；
+- 13、【优化】执行器名称长度上限调整，最长支持64字符；
+
+数据库升级脚本：
+``` 
+-- 添加索引：任务日志表
+create index I_jobgroup on xxl_job_log (job_group);
+
+-- 修改字段长度：执行器名称
+alter table xxl_job_group
+    modify title varchar(64) not null comment '执行器名称';
+```
 
 ### 7.45 版本 v3.4.1 Release Notes[ING]
 - 1、【TODO】调度中心OpenAPI完善，提供任务管理能力；封装Agent Skill并推送ClawHub；
