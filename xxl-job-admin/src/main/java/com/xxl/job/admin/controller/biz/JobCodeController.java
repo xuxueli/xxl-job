@@ -47,7 +47,7 @@ public class JobCodeController {
 			throw new RuntimeException(I18nUtil.getString("jobinfo_glue_jobid_invalid"));
 		}
 		if (GlueTypeEnum.BEAN == GlueTypeEnum.match(jobInfo.getGlueType())) {
-			throw new RuntimeException(I18nUtil.getString("jobinfo_glue_gluetype_unvalid"));
+			throw new RuntimeException(I18nUtil.getString("jobinfo_glue_gluetype_invalid"));
 		}
 
 		// valid jobGroup permission

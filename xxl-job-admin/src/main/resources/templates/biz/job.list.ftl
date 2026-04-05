@@ -975,7 +975,7 @@ exit 0
 
 			// valid
 			if ('BEAN' === row.glueType) {
-				layer.msg(I18n.jobinfo_glue_gluetype_unvalid);
+				layer.msg(I18n.jobinfo_glue_gluetype_invalid);
 				return;
 			}
 
