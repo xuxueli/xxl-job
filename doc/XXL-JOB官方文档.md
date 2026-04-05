@@ -2798,9 +2798,9 @@ public void execute() {
 - 10、【优化】统一项目依赖管理结构，依赖版本统一到父级pom提升可维护性；
 
 ### 7.44 版本 v3.4.0 Release Notes[2026-04-05]
-- 1、【新增】AI执行器集成OpenClaw: 新增“openClawJobHandler”内置AI任务，与OpenClaw集成打通，支持快速开发AI类任务；
-- 2、【增强】任务调度后分批合并更新：高频调度场景可百倍降低SQL操作合并执行，提升调度性能；
-（任务调度后批量合并更新配置“xxl.job.schedule.batchsize”）
+- 1、【新增】集成OpenClaw: AI执行器新增“openClawJobHandler”内置任务，与OpenClaw集成打通，支持快速开发AI类任务；
+- 2、【增强】任务合并调度：任务调度后批量合并更新，高频调度场景可百倍降低SQL操作合并执行，提升调度性能；
+（任务调度后批量合并更新配置：“xxl.job.schedule.batchsize”）
 - 3、【优化】调度日志支持执行器维度查看，提升体验；新增调度日志索引，提升查询性能；
 - 4、【优化】一致性哈希路由算法优化，重构哈希环逻辑提升代码简洁性；
 - 5、【优化】Cron解析工具优化，解决day-of-month使用L时会跳过非31天的月份问题；
