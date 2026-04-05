@@ -175,7 +175,7 @@ VALUES (1, 1, '示例任务01', now(), now(), 'XXL', '', 'CRON', '0 0 0 * * ? *'
 }', 'SERIAL_EXECUTION', 0, 0, 'BEAN', '', 'GLUE代码初始化',
         now(), ''),
        (4, 2, 'OpenClaw示例任务', now(), now(), 'XXL', '', 'NONE', '',
-        'DO_NOTHING', 'FIRST', 'difyWorkflowJobHandler', '{
+        'DO_NOTHING', 'FIRST', 'openClawJobHandler', '{
     "input": "查看下上海今天得天气，给出出游建议",
     "prompt": "你是一个出游助手，擅长做旅游规划"
 }', 'SERIAL_EXECUTION', 0, 0, 'BEAN', '', 'GLUE代码初始化',
