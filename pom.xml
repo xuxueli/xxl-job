@@ -47,7 +47,7 @@
 		<!-- net -->
 		<netty.version>4.2.12.Final</netty.version>
 		<!-- groovy -->
-		<groovy.version>5.0.4</groovy.version>
+		<groovy.version>5.0.5</groovy.version>
 
 		<!-- xxl-sso -->
 		<xxl-sso.version>2.3.2</xxl-sso.version>
