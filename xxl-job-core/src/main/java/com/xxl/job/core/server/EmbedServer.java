@@ -104,6 +104,7 @@ public class EmbedServer {
             }
         });
         thread.setDaemon(true);    // daemon, service jvm, user thread leave >>> daemon leave >>> jvm leave
+        thread.setName("xxl-job, EmbedServer");
         thread.start();
     }
 
