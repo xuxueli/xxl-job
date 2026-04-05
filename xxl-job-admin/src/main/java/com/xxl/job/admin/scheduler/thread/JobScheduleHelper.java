@@ -95,7 +95,7 @@ public class JobScheduleHelper {
                                     // 2、fresh next
                                     refreshNextTriggerTime(jobInfo, new Date());
 
-                                } else if (nowTime > jobInfo.getTriggerNextTime()) {
+                                } else if (nowTime >= jobInfo.getTriggerNextTime()) {
                                     // 2.2、trigger-expire < 5s：direct-trigger && make next-trigger-time
 
                                     // 1、trigger direct

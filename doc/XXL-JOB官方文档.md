@@ -2807,7 +2807,9 @@ public void execute() {
 - 6、【优化】调度日志优化：支持执行器维度查看调度日志；新增调度日志索引，提升查询效率；
 （数据库新增索引脚本：``` create index I_jobgroup on xxl_job_log (job_group); ``` ）
 - 7、【升级】升级多项maven依赖至较新版本；
-- 8、【TODO】调度中心OpenAPI完善，提供任务管理能力；封装Agent Skill并推送ClawHub；
+- 8、【优化】调度组件触发判断优化，合并PR-2502；
+- 9、【TODO】调度中心OpenAPI完善，提供任务管理能力；封装Agent Skill并推送ClawHub；
+- 10、【TODO】AccessToken升级：执行器维度隔离，支持线上化配置；升级双端OpenApi，适配AccessToken升级；
 
 
 ### TODO LIST
