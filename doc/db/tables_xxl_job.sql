@@ -157,7 +157,7 @@ INSERT INTO `xxl_job_info`(`id`, `job_group`, `job_desc`, `add_time`, `update_ti
 VALUES (1, 1, '示例任务01', now(), now(), 'XXL', '', 'CRON', '0 0 0 * * ? *',
         'DO_NOTHING', 'FIRST', 'demoJobHandler', '', 'SERIAL_EXECUTION', 0, 0, 'BEAN', '', 'GLUE代码初始化',
         now(), ''),
-       (2, 2, 'Ollama示例任务01', now(), now(), 'XXL', '', 'NONE', '',
+       (2, 2, 'Ollama示例任务', now(), now(), 'XXL', '', 'NONE', '',
         'DO_NOTHING', 'FIRST', 'ollamaJobHandler', '{
     "input": "慢SQL问题分析思路",
     "prompt": "你是一个研发工程师，擅长解决技术类问题。",
@@ -172,6 +172,12 @@ VALUES (1, 1, '示例任务01', now(), now(), 'XXL', '', 'CRON', '0 0 0 * * ? *'
     "user": "xxl-job",
     "baseUrl": "http://localhost/v1",
     "apiKey": "app-OUVgNUOQRIMokfmuJvBJoUTN"
+}', 'SERIAL_EXECUTION', 0, 0, 'BEAN', '', 'GLUE代码初始化',
+        now(), ''),
+       (4, 2, 'OpenClaw示例任务', now(), now(), 'XXL', '', 'NONE', '',
+        'DO_NOTHING', 'FIRST', 'difyWorkflowJobHandler', '{
+    "input": "查看下上海今天得天气，给出出游建议",
+    "prompt": "你是一个出游助手，擅长做旅游规划"
 }', 'SERIAL_EXECUTION', 0, 0, 'BEAN', '', 'GLUE代码初始化',
         now(), '');
 

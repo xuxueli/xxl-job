@@ -37,10 +37,15 @@
             <artifactId>xxl-job-core</artifactId>
         </dependency>
 
-        <!-- spring-ai -->
+        <!-- spring-ai: ollama  -->
         <dependency>
             <groupId>org.springframework.ai</groupId>
             <artifactId>spring-ai-starter-model-ollama</artifactId>
+        </dependency>
+        <!-- spring-ai: openai -->
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-starter-model-openai</artifactId>
         </dependency>
         <!-- dify -->
         <dependency>

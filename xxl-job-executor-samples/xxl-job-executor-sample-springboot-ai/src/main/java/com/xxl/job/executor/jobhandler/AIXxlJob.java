@@ -15,6 +15,7 @@ import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
 import org.springframework.ai.chat.memory.MessageWindowChatMemory;
 import org.springframework.ai.ollama.OllamaChatModel;
 import org.springframework.ai.ollama.api.OllamaChatOptions;
+import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -32,6 +33,8 @@ public class AIXxlJob {
 
     @Resource
     private OllamaChatModel ollamaChatModel;
+    @Resource
+    private OpenAiChatModel openAiChatModel;
 
     /**
      * 1、ollama Chat任务
@@ -251,5 +254,92 @@ public class AIXxlJob {
         }
 
     }
+
+    // --------------------------------- openclaw ---------------------------------
+
+    /**
+     * 3、openclaw 任务
+     *
+     *  参数示例：格式见 OpenclawParam
+     *  <pre>
+     *      {
+     *          "input": "{输入信息，必填信息}",
+     *          "prompt": "{模型prompt，可选信息}"
+     *      }
+     *  </pre>
+     */
+    @XxlJob("openClawJobHandler")
+    public void openClawJobHandler() {
+
+        // param
+        String param = XxlJobHelper.getJobParam();
+        if (param == null || param.trim().isEmpty()) {
+            XxlJobHelper.log("param is empty.");
+
+            XxlJobHelper.handleFail();
+            return;
+        }
+
+        // openclaw param
+        OpenClawParam openClawParam = null;
+        try {
+            openClawParam = GsonTool.fromJson(param, OpenClawParam.class);
+            if (openClawParam.getPrompt()==null || openClawParam.getPrompt().isBlank()) {
+                openClawParam.setPrompt("你是一个出游助手，擅长做旅游规划");
+            }
+            if (openClawParam.getInput() == null || openClawParam.getInput().isBlank()) {
+                XxlJobHelper.log("input is empty.");
+
+                XxlJobHelper.handleFail();
+                return;
+            }
+        } catch (Exception e) {
+            XxlJobHelper.log(new RuntimeException("OpenclawParam parse error", e));
+            XxlJobHelper.handleFail();
+            return;
+        }
+
+        // input
+        XxlJobHelper.log("<br><br><b>【Input】: " + openClawParam.getInput()+ "</b><br><br>");
+
+        // build chat-client
+        ChatClient openclawChatClient = ChatClient
+                .builder(openAiChatModel)
+                .defaultAdvisors(MessageChatMemoryAdvisor.builder(MessageWindowChatMemory.builder().build()).build())
+                .defaultAdvisors(SimpleLoggerAdvisor.builder().build())
+                .build();
+
+        // call opencalw
+        String response = openclawChatClient
+                .prompt(openClawParam.getPrompt())
+                .user(openClawParam.getInput())
+                .call()
+                .content();
+
+        XxlJobHelper.log("<br><br><b>【Output】: " + response + "</b><br><br>");
+
+    }
+
+    private static class OpenClawParam {
+        private String input;
+        private String prompt;
+
+        public String getInput() {
+            return input;
+        }
+
+        public void setInput(String input) {
+            this.input = input;
+        }
+
+        public String getPrompt() {
+            return prompt;
+        }
+
+        public void setPrompt(String prompt) {
+            this.prompt = prompt;
+        }
+    }
+
 
 }
