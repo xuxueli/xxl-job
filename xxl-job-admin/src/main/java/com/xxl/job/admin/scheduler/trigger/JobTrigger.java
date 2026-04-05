@@ -150,7 +150,7 @@ public class JobTrigger {
         jobLog.setJobId(jobInfo.getId());
         jobLog.setTriggerTime(triggerTime);
         xxlJobLogMapper.save(jobLog);
-        logger.debug(">>>>>>>>>>> xxl-job trigger start, jobId:{}", jobLog.getId());
+        logger.debug(">>>>>>>>>>> xxl-job trigger start, jobId:{}", jobLog.getJobId());
 
         // 2、init trigger-param
         TriggerRequest triggerParam = new TriggerRequest();
@@ -245,7 +245,7 @@ public class JobTrigger {
         jobLog.setTriggerMsg(triggerMsgSb.toString());
         xxlJobLogMapper.updateTriggerInfo(jobLog);
 
-        logger.debug(">>>>>>>>>>> xxl-job trigger end, jobId:{}", jobLog.getId());
+        logger.debug(">>>>>>>>>>> xxl-job trigger end, jobId:{}", jobLog.getJobId());
     }
 
     /**
