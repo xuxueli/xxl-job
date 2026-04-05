@@ -27,6 +27,7 @@ public class XxlJobLogReportMapperTest {
         xxlJobLogReport.setRunningCount(444);
         xxlJobLogReport.setSucCount(555);
         xxlJobLogReport.setFailCount(666);
+        xxlJobLogReport.setUpdateTime(new Date());
 
         int ret = xxlJobLogReportMapper.saveOrUpdate(xxlJobLogReport);
         logger.info("ret:{}", ret);

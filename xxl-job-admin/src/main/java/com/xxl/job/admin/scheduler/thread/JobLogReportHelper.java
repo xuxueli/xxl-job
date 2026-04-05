@@ -66,7 +66,9 @@ public class JobLogReportHelper {
                             xxlJobLogReport.setRunningCount(0);
                             xxlJobLogReport.setSucCount(0);
                             xxlJobLogReport.setFailCount(0);
+                            xxlJobLogReport.setUpdateTime(new Date());
 
+                            // fill count-data
                             Map<String, Object> triggerCountMap = XxlJobAdminBootstrap.getInstance().getXxlJobLogMapper().findLogReport(todayFrom, todayTo);
                             if (triggerCountMap!=null && !triggerCountMap.isEmpty()) {
                                 int triggerDayCount = triggerCountMap.containsKey("triggerDayCount")?Integer.parseInt(String.valueOf(triggerCountMap.get("triggerDayCount"))):0;

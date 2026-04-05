@@ -9,6 +9,7 @@
 		<result column="running_count" property="runningCount" />
 	    <result column="suc_count" property="sucCount" />
 	    <result column="fail_count" property="failCount" />
+		<result column="update_time" property="updateTime" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -16,7 +17,8 @@
 		t.trigger_day,
 		t.running_count,
 		t.suc_count,
-		t.fail_count
+		t.fail_count,
+		t.update_time
 	</sql>
 	
 	<!--<insert id="save" parameterType="com.xxl.job.admin.model.XxlJobLogReport" useGeneratedKeys="true" keyProperty="id" >
@@ -49,17 +51,20 @@
 			`trigger_day`,
 			`running_count`,
 			`suc_count`,
-			`fail_count`
+			`fail_count`,
+			`update_time`
 		) VALUES (
 			 #{triggerDay},
 			 #{runningCount},
 			 #{sucCount},
-			 #{failCount}
+			 #{failCount},
+			 #{updateTime}
 		 )
 		ON DUPLICATE KEY UPDATE
 			`running_count` = #{runningCount},
 			`suc_count` = #{sucCount},
-			`fail_count` = #{failCount}
+			`fail_count` = #{failCount},
+			`update_time` = #{updateTime}
 	</insert>
 
 	<select id="queryLogReport" resultMap="XxlJobLogReport">
