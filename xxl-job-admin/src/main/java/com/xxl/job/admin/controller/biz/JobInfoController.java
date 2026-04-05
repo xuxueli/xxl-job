@@ -202,7 +202,7 @@ public class JobInfoController {
 			}
 		} catch (Exception e) {
 			logger.error(">>>>>>>>>>> nextTriggerTime error. scheduleType = {}, scheduleConf= {}, error:{} ", scheduleType, scheduleConf, e.getMessage());
-			return Response.ofFail((I18nUtil.getString("schedule_type")+I18nUtil.getString("system_unvalid")) + e.getMessage());
+			return Response.ofFail((I18nUtil.getString("schedule_type")+I18nUtil.getString("system_invalid")) + e.getMessage());
 		}
 		return Response.ofSuccess(result);
 

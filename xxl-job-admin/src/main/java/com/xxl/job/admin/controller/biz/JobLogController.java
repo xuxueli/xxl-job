@@ -78,7 +78,7 @@ public class JobLogController {
 			// valid jobId
 			XxlJobInfo jobInfo = xxlJobInfoMapper.loadById(jobId);
 			if (jobInfo == null) {
-				throw new RuntimeException(I18nUtil.getString("jobinfo_field_id") + I18nUtil.getString("system_unvalid"));
+				throw new RuntimeException(I18nUtil.getString("jobinfo_field_id") + I18nUtil.getString("system_invalid"));
 			}
 			// valid jobGroup
 			jobGroup = jobInfo.getJobGroup();
@@ -184,7 +184,7 @@ public class JobLogController {
 		XxlJobLog log = xxlJobLogMapper.load(id);
 		XxlJobInfo jobInfo = xxlJobInfoMapper.loadById(log.getJobId());
 		if (jobInfo==null) {
-			return Response.ofFail(I18nUtil.getString("jobinfo_glue_jobid_unvalid"));
+			return Response.ofFail(I18nUtil.getString("jobinfo_glue_jobid_invalid"));
 		}
 		if (XxlJobContext.HANDLE_CODE_SUCCESS != log.getTriggerCode()) {
 			return Response.ofFail( I18nUtil.getString("joblog_kill_log_limit"));

@@ -44,7 +44,7 @@ public class JobCodeController {
 		List<XxlJobLogGlue> jobLogGlues = xxlJobLogGlueMapper.findByJobId(jobId);
 
 		if (jobInfo == null) {
-			throw new RuntimeException(I18nUtil.getString("jobinfo_glue_jobid_unvalid"));
+			throw new RuntimeException(I18nUtil.getString("jobinfo_glue_jobid_invalid"));
 		}
 		if (GlueTypeEnum.BEAN == GlueTypeEnum.match(jobInfo.getGlueType())) {
 			throw new RuntimeException(I18nUtil.getString("jobinfo_glue_gluetype_unvalid"));
@@ -80,7 +80,7 @@ public class JobCodeController {
 		}
 		XxlJobInfo existsJobInfo = xxlJobInfoMapper.loadById(id);
 		if (existsJobInfo == null) {
-			return Response.ofFail( I18nUtil.getString("jobinfo_glue_jobid_unvalid"));
+			return Response.ofFail( I18nUtil.getString("jobinfo_glue_jobid_invalid"));
 		}
 
 		// valid jobGroup permission
