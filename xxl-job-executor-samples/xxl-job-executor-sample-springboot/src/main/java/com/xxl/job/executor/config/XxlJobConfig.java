@@ -49,6 +49,9 @@ public class XxlJobConfig {
     @Value("${xxl.job.executor.excludedpackage}")
     private String excludedPackage;
 
+    @Value("${xxl.job.executor.allowedGlueTypes:BEAN,GLUE_GROOVY}")
+    private String allowedGlueTypes;
+
 
     @Bean
     public XxlJobSpringExecutor xxlJobExecutor() {
@@ -65,6 +68,7 @@ public class XxlJobConfig {
         xxlJobSpringExecutor.setLogPath(logPath);
         xxlJobSpringExecutor.setLogRetentionDays(logRetentionDays);
         xxlJobSpringExecutor.setExcludedPackage(excludedPackage);
+        xxlJobSpringExecutor.setAllowedGlueTypes(allowedGlueTypes);
 
         return xxlJobSpringExecutor;
     }

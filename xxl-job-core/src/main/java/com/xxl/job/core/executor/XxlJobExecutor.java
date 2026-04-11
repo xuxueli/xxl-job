@@ -17,9 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
@@ -46,6 +44,12 @@ public class XxlJobExecutor  {
     private int port;
     private String logPath;
     private int logRetentionDays;
+
+    /**
+     * Allowed GLUE types (comma-separated). Only types in this set can be executed.
+     * Default: "BEAN,GLUE_GROOVY" (script types like Shell/Python/Node/PHP/PowerShell require explicit opt-in).
+     */
+    private static volatile Set<String> allowedGlueTypes = new HashSet<>(Arrays.asList("BEAN", "GLUE_GROOVY"));
 
     public void setAdminAddresses(String adminAddresses) {
         this.adminAddresses = adminAddresses;
@@ -76,6 +80,28 @@ public class XxlJobExecutor  {
     }
     public void setLogRetentionDays(int logRetentionDays) {
         this.logRetentionDays = logRetentionDays;
+    }
+
+    /**
+     * Set allowed GLUE types (comma-separated enum names).
+     * Example: "BEAN,GLUE_GROOVY" or "BEAN,GLUE_GROOVY,GLUE_SHELL,GLUE_PYTHON"
+     */
+    public void setAllowedGlueTypes(String allowedGlueTypesStr) {
+        if (allowedGlueTypesStr != null && !allowedGlueTypesStr.trim().isEmpty()) {
+            Set<String> types = new HashSet<>();
+            for (String type : allowedGlueTypesStr.split(",")) {
+                String trimmed = type.trim();
+                if (!trimmed.isEmpty()) {
+                    types.add(trimmed);
+                }
+            }
+            allowedGlueTypes = types;
+            logger.info(">>>>>>>>>>> xxl-job allowed GLUE types: {}", allowedGlueTypes);
+        }
+    }
+
+    public static Set<String> getAllowedGlueTypes() {
+        return allowedGlueTypes;
     }
 
 
@@ -201,9 +227,9 @@ public class XxlJobExecutor  {
             address = "http://{ip_port}/".replace("{ip_port}", ip_port_address);
         }
 
-        // accessToken
+        // accessToken: fail-closed — reject all requests if not configured
         if (StringTool.isBlank(accessToken)) {
-            logger.warn(">>>>>>>>>>> xxl-job accessToken is empty. To ensure system security, please set the accessToken.");
+            logger.error(">>>>>>>>>>> xxl-job accessToken is empty. The executor will reject ALL requests until a valid accessToken is configured via 'xxl.job.accessToken'.");
         }
 
         // start
