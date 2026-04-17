@@ -171,7 +171,8 @@ public class JobInfoController {
 	@RequestMapping("/nextTriggerTime")
 	@ResponseBody
 	public Response<List<String>> nextTriggerTime(@RequestParam("scheduleType") String scheduleType,
-												 @RequestParam("scheduleConf") String scheduleConf) {
+												 @RequestParam("scheduleConf") String scheduleConf,
+												 @RequestParam(value = "scheduleTimeZone", required = false) String scheduleTimeZone) {
 
 		// valid
 		if (StringTool.isBlank(scheduleType) || StringTool.isBlank(scheduleConf)) {
@@ -182,6 +183,7 @@ public class JobInfoController {
 		XxlJobInfo paramXxlJobInfo = new XxlJobInfo();
 		paramXxlJobInfo.setScheduleType(scheduleType);
 		paramXxlJobInfo.setScheduleConf(scheduleConf);
+		paramXxlJobInfo.setScheduleTimeZone(scheduleTimeZone);
 
 		// generate
 		List<String> result = new ArrayList<>();
