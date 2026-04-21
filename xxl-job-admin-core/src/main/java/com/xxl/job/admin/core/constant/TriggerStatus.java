@@ -1,4 +1,4 @@
-package com.xxl.job.admin.constant;
+package com.xxl.job.admin.core.constant;
 
 public enum TriggerStatus {
 
