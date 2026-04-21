@@ -60,6 +60,13 @@
 			<artifactId>xxl-job-core</artifactId>
 		</dependency>
 
+		<!-- xxl-job-admin-core -->
+		<dependency>
+			<groupId>com.xuxueli</groupId>
+			<artifactId>xxl-job-admin-core</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
+
 		<!-- xxl-sso -->
 		<dependency>
 			<groupId>com.xuxueli</groupId>
