@@ -43,58 +43,26 @@ public class JobGroupServiceImpl implements JobGroupService {
     @Override
     public int add(XxlJobGroup jobGroup, int userId) {
         // valid
-        if (StringTool.isBlank(jobGroup.getAppname())) {
-            throw new IllegalArgumentException("AppName cannot be blank");
-        }
-        if (jobGroup.getAppname().length() < 4 || jobGroup.getAppname().length() > 64) {
-            throw new IllegalArgumentException("AppName length must be between 4 and 64 characters");
-        }
-        if (jobGroup.getAppname().contains(">") || jobGroup.getAppname().contains("<")) {
-            throw new IllegalArgumentException("AppName contains invalid characters");
-        }
-        if (StringTool.isBlank(jobGroup.getTitle())) {
-            throw new IllegalArgumentException("Title cannot be blank");
-        }
-        if (jobGroup.getTitle().contains(">") || jobGroup.getTitle().contains("<")) {
-            throw new IllegalArgumentException("Title contains invalid characters");
-        }
-        if (jobGroup.getAddressType() != 0) {
-            if (StringTool.isBlank(jobGroup.getAddressList())) {
-                throw new IllegalArgumentException("AddressList cannot be blank when addressType is not 0");
-            }
-            if (jobGroup.getAddressList().contains(">") || jobGroup.getAddressList().contains("<")) {
-                throw new IllegalArgumentException("AddressList contains invalid characters");
-            }
-
-            String[] addresses = jobGroup.getAddressList().split(",");
-            for (String item : addresses) {
-                if (StringTool.isBlank(item)) {
-                    throw new IllegalArgumentException("AddressList contains invalid addresses");
-                }
-                if (!(HttpTool.isHttp(item) || HttpTool.isHttps(item))) {
-                    throw new IllegalArgumentException("AddressList contains invalid addresses");
-                }
-            }
-        }
+        validateAppName(jobGroup.getAppname());
+        validateTitle(jobGroup.getTitle());
+        validateAddressList(jobGroup.getAddressList(), jobGroup.getAddressType());
 
         // process
         jobGroup.setUpdateTime(new Date());
 
-        return xxlJobGroupMapper.save(jobGroup);
+        int ret = xxlJobGroupMapper.save(jobGroup);
+        if (ret > 0) {
+            logger.info("JobGroup added successfully. userId={}, appname={}, title={}",
+                    userId, jobGroup.getAppname(), jobGroup.getTitle());
+        }
+        return ret;
     }
 
     @Override
     public boolean update(XxlJobGroup jobGroup, int userId) {
         // valid
-        if (StringTool.isBlank(jobGroup.getAppname())) {
-            throw new IllegalArgumentException("AppName cannot be blank");
-        }
-        if (jobGroup.getAppname().length() < 4 || jobGroup.getAppname().length() > 64) {
-            throw new IllegalArgumentException("AppName length must be between 4 and 64 characters");
-        }
-        if (StringTool.isBlank(jobGroup.getTitle())) {
-            throw new IllegalArgumentException("Title cannot be blank");
-        }
+        validateAppName(jobGroup.getAppname());
+        validateTitle(jobGroup.getTitle());
         if (jobGroup.getAddressType() == 0) {
             // 0=自动注册
             List<String> registryList = findRegistryByAppName(jobGroup.getAppname());
@@ -106,24 +74,18 @@ public class JobGroupServiceImpl implements JobGroupService {
             jobGroup.setAddressList(addressListStr);
         } else {
             // 1=手动录入
-            if (StringTool.isBlank(jobGroup.getAddressList())) {
-                throw new IllegalArgumentException("AddressList cannot be blank when addressType is not 0");
-            }
-            String[] addresses = jobGroup.getAddressList().split(",");
-            for (String item : addresses) {
-                if (StringTool.isBlank(item)) {
-                    throw new IllegalArgumentException("AddressList contains invalid addresses");
-                }
-                if (!(HttpTool.isHttp(item) || HttpTool.isHttps(item))) {
-                    throw new IllegalArgumentException("AddressList contains invalid addresses");
-                }
-            }
+            validateAddressList(jobGroup.getAddressList(), jobGroup.getAddressType());
         }
 
         // process
         jobGroup.setUpdateTime(new Date());
 
-        return xxlJobGroupMapper.update(jobGroup) > 0;
+        boolean success = xxlJobGroupMapper.update(jobGroup) > 0;
+        if (success) {
+            logger.info("JobGroup updated successfully. userId={}, id={}, appname={}",
+                    userId, jobGroup.getId(), jobGroup.getAppname());
+        }
+        return success;
     }
 
     @Override
@@ -131,6 +93,7 @@ public class JobGroupServiceImpl implements JobGroupService {
         // valid exists
         XxlJobGroup jobGroup = xxlJobGroupMapper.load(id);
         if (jobGroup == null) {
+            logger.info("JobGroup already removed. userId={}, id={}", userId, id);
             return true;  // already removed
         }
 
@@ -151,6 +114,10 @@ public class JobGroupServiceImpl implements JobGroupService {
         // remove registry-data
         xxlJobRegistryMapper.removeByRegistryGroupAndKey(RegistType.EXECUTOR.name(), jobGroup.getAppname());
 
+        if (ret > 0) {
+            logger.info("JobGroup removed successfully. userId={}, id={}, appname={}",
+                    userId, id, jobGroup.getAppname());
+        }
         return ret > 0;
     }
 
@@ -168,24 +135,75 @@ public class JobGroupServiceImpl implements JobGroupService {
         return pageModel;
     }
 
+    /**
+     * Validate appname: not blank, length 4-64, no invalid characters
+     */
+    private void validateAppName(String appname) {
+        if (StringTool.isBlank(appname)) {
+            throw new IllegalArgumentException("AppName cannot be blank");
+        }
+        if (appname.length() < 4 || appname.length() > 64) {
+            throw new IllegalArgumentException("AppName length must be between 4 and 64 characters");
+        }
+        if (appname.contains(">") || appname.contains("<")) {
+            throw new IllegalArgumentException("AppName contains invalid characters");
+        }
+    }
+
+    /**
+     * Validate title: not blank, no invalid characters
+     */
+    private void validateTitle(String title) {
+        if (StringTool.isBlank(title)) {
+            throw new IllegalArgumentException("Title cannot be blank");
+        }
+        if (title.contains(">") || title.contains("<")) {
+            throw new IllegalArgumentException("Title contains invalid characters");
+        }
+    }
+
+    /**
+     * Validate addressList when addressType != 0: not blank, no invalid characters, valid HTTP addresses
+     */
+    private void validateAddressList(String addressList, int addressType) {
+        if (addressType != 0) {
+            if (StringTool.isBlank(addressList)) {
+                throw new IllegalArgumentException("AddressList cannot be blank when addressType is not 0");
+            }
+            if (addressList.contains(">") || addressList.contains("<")) {
+                throw new IllegalArgumentException("AddressList contains invalid characters");
+            }
+
+            String[] addresses = addressList.split(",");
+            for (String item : addresses) {
+                if (StringTool.isBlank(item)) {
+                    throw new IllegalArgumentException("AddressList contains invalid addresses");
+                }
+                if (!(HttpTool.isHttp(item) || HttpTool.isHttps(item))) {
+                    throw new IllegalArgumentException("AddressList contains invalid addresses");
+                }
+            }
+        }
+    }
+
     private List<String> findRegistryByAppName(String appnameParam) {
-        HashMap<String, List<String>> appAddressMap = new HashMap<>();
+        List<String> result = new ArrayList<>();
         List<XxlJobRegistry> list = xxlJobRegistryMapper.findAll(Const.DEAD_TIMEOUT, new Date());
         if (CollectionTool.isNotEmpty(list)) {
             for (XxlJobRegistry item : list) {
                 if (!RegistType.EXECUTOR.name().equals(item.getRegistryGroup())) {
                     continue;
                 }
-
-                String appname = item.getRegistryKey();
-                List<String> registryList = appAddressMap.computeIfAbsent(appname, k -> new ArrayList<>());
-
-                if (!registryList.contains(item.getRegistryValue())) {
-                    registryList.add(item.getRegistryValue());
+                if (!appnameParam.equals(item.getRegistryKey())) {
+                    continue;
+                }
+                String address = item.getRegistryValue();
+                if (!result.contains(address)) {
+                    result.add(address);
                 }
             }
         }
-        return appAddressMap.get(appnameParam);
+        return result;
     }
 
 }
