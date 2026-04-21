@@ -1,6 +1,6 @@
-package com.xxl.job.admin.mapper;
+package com.xxl.job.admin.core.mapper;
 
-import com.xxl.job.admin.model.XxlJobRegistry;
+import com.xxl.job.admin.core.model.XxlJobRegistry;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

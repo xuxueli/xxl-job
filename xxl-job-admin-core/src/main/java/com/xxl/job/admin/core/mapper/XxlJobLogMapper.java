@@ -1,6 +1,6 @@
-package com.xxl.job.admin.mapper;
+package com.xxl.job.admin.core.mapper;
 
-import com.xxl.job.admin.model.XxlJobLog;
+import com.xxl.job.admin.core.model.XxlJobLog;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -30,7 +30,7 @@ public interface XxlJobLogMapper {
 							 @Param("triggerTimeStart") Date triggerTimeStart,
 							 @Param("triggerTimeEnd") Date triggerTimeEnd,
 							 @Param("logStatus") int logStatus);
-	
+
 	public XxlJobLog load(@Param("id") long id);
 
 	public long save(XxlJobLog xxlJobLog);
@@ -38,7 +38,7 @@ public interface XxlJobLogMapper {
 	public int updateTriggerInfo(XxlJobLog xxlJobLog);
 
 	public int updateHandleInfo(XxlJobLog xxlJobLog);
-	
+
 	public int delete(@Param("jobId") int jobId);
 
 	public Map<String, Object> findLogReport(@Param("from") Date from,

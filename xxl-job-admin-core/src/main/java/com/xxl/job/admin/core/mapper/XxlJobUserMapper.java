@@ -1,7 +1,6 @@
-package com.xxl.job.admin.mapper;
+package com.xxl.job.admin.core.mapper;
 
-import com.xxl.job.admin.model.XxlJobUser;
-import com.xxl.tool.response.Response;
+import com.xxl.job.admin.core.model.XxlJobUser;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import java.util.List;
@@ -28,7 +27,7 @@ public interface XxlJobUserMapper {
 	public int save(XxlJobUser xxlJobUser);
 
 	public int update(XxlJobUser xxlJobUser);
-	
+
 	public int delete(@Param("id") int id);
 
 	public int updateToken(@Param("id") int id, @Param("token") String token);

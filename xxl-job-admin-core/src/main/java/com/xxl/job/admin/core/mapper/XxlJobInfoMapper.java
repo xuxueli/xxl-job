@@ -1,6 +1,6 @@
-package com.xxl.job.admin.mapper;
+package com.xxl.job.admin.core.mapper;
 
-import com.xxl.job.admin.model.XxlJobInfo;
+import com.xxl.job.admin.core.model.XxlJobInfo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -28,13 +28,13 @@ public interface XxlJobInfoMapper {
 							 @Param("jobDesc") String jobDesc,
 							 @Param("executorHandler") String executorHandler,
 							 @Param("author") String author);
-	
+
 	public int save(XxlJobInfo info);
 
 	public XxlJobInfo loadById(@Param("id") int id);
-	
+
 	public int update(XxlJobInfo xxlJobInfo);
-	
+
 	public int delete(@Param("id") long id);
 
 	public List<XxlJobInfo> getJobsByGroup(@Param("jobGroup") int jobGroup);

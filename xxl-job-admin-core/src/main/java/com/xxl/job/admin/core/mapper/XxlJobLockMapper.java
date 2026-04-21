@@ -1,4 +1,4 @@
-package com.xxl.job.admin.mapper;
+package com.xxl.job.admin.core.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
 

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.xxl.job.admin.mapper.XxlJobLogReportMapper">
-	
-	<resultMap id="XxlJobLogReport" type="com.xxl.job.admin.model.XxlJobLogReport" >
+<mapper namespace="com.xxl.job.admin.core.mapper.XxlJobLogReportMapper">
+
+	<resultMap id="XxlJobLogReport" type="com.xxl.job.admin.core.model.XxlJobLogReport" >
 		<result column="id" property="id" />
 	    <result column="trigger_day" property="triggerDay" />
 		<result column="running_count" property="runningCount" />
@@ -20,8 +20,8 @@
 		t.fail_count,
 		t.update_time
 	</sql>
-	
-	<!--<insert id="save" parameterType="com.xxl.job.admin.model.XxlJobLogReport" useGeneratedKeys="true" keyProperty="id" >
+
+	<!--<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobLogReport" useGeneratedKeys="true" keyProperty="id" >
 		INSERT INTO xxl_job_log_report (
 			`trigger_day`,
 			`running_count`,
@@ -34,7 +34,7 @@
 			#{failCount}
 		);
 		&lt;!&ndash;<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
-			SELECT LAST_INSERT_ID() 
+			SELECT LAST_INSERT_ID()
 		</selectKey>&ndash;&gt;
 	</insert>
 
@@ -46,7 +46,7 @@
         WHERE `trigger_day` = #{triggerDay}
     </update>-->
 
-	<insert id="saveOrUpdate" parameterType="com.xxl.job.admin.model.XxlJobLogReport" useGeneratedKeys="true" keyProperty="id" >
+	<insert id="saveOrUpdate" parameterType="com.xxl.job.admin.core.model.XxlJobLogReport" useGeneratedKeys="true" keyProperty="id" >
 		INSERT INTO xxl_job_log_report (
 			`trigger_day`,
 			`running_count`,
