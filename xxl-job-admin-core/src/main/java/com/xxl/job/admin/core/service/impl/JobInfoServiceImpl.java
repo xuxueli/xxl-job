@@ -26,7 +26,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -40,6 +39,8 @@ import java.util.List;
 @Service
 public class JobInfoServiceImpl implements JobInfoService {
     private static final Logger logger = LoggerFactory.getLogger(JobInfoServiceImpl.class);
+
+    private static final String CHILD_JOB_ID_SEPARATOR = ",";
 
     @Resource
     private XxlJobGroupMapper xxlJobGroupMapper;
@@ -66,25 +67,8 @@ public class JobInfoServiceImpl implements JobInfoService {
 
         // valid trigger
         ScheduleTypeEnum scheduleTypeEnum = ScheduleTypeEnum.match(jobInfo.getScheduleType(), null);
-        if (scheduleTypeEnum == null) {
+        if (!validateScheduleType(scheduleTypeEnum, jobInfo.getScheduleConf())) {
             return 0;
-        }
-        if (scheduleTypeEnum == ScheduleTypeEnum.CRON) {
-            if (jobInfo.getScheduleConf() == null || !CronExpression.isValidExpression(jobInfo.getScheduleConf())) {
-                return 0;
-            }
-        } else if (scheduleTypeEnum == ScheduleTypeEnum.FIX_RATE) {
-            if (jobInfo.getScheduleConf() == null) {
-                return 0;
-            }
-            try {
-                int fixSecond = Integer.parseInt(jobInfo.getScheduleConf());
-                if (fixSecond < 1) {
-                    return 0;
-                }
-            } catch (Exception e) {
-                return 0;
-            }
         }
 
         // valid job
@@ -111,27 +95,11 @@ public class JobInfoServiceImpl implements JobInfoService {
         }
 
         // ChildJobId valid
-        if (StringTool.isNotBlank(jobInfo.getChildJobId())) {
-            String[] childJobIds = jobInfo.getChildJobId().split(",");
-            for (String childJobIdItem : childJobIds) {
-                if (StringTool.isNotBlank(childJobIdItem) && StringTool.isNumeric(childJobIdItem)) {
-                    XxlJobInfo childJobInfo = xxlJobInfoMapper.loadById(Integer.parseInt(childJobIdItem));
-                    if (childJobInfo == null) {
-                        return 0;
-                    }
-                } else {
-                    return 0;
-                }
-            }
-
-            // join , avoid "xxx,,"
-            String temp = "";
-            for (String item : childJobIds) {
-                temp += item + ",";
-            }
-            temp = temp.substring(0, temp.length() - 1);
-            jobInfo.setChildJobId(temp);
+        String normalizedChildJobId = normalizeChildJobIds(jobInfo.getChildJobId(), jobInfo.getId());
+        if (normalizedChildJobId == null) {
+            return 0;
         }
+        jobInfo.setChildJobId(normalizedChildJobId);
 
         // add in db
         jobInfo.setAddTime(new Date());
@@ -163,25 +131,8 @@ public class JobInfoServiceImpl implements JobInfoService {
 
         // valid trigger
         ScheduleTypeEnum scheduleTypeEnum = ScheduleTypeEnum.match(jobInfo.getScheduleType(), null);
-        if (scheduleTypeEnum == null) {
+        if (!validateScheduleType(scheduleTypeEnum, jobInfo.getScheduleConf())) {
             return false;
-        }
-        if (scheduleTypeEnum == ScheduleTypeEnum.CRON) {
-            if (jobInfo.getScheduleConf() == null || !CronExpression.isValidExpression(jobInfo.getScheduleConf())) {
-                return false;
-            }
-        } else if (scheduleTypeEnum == ScheduleTypeEnum.FIX_RATE) {
-            if (jobInfo.getScheduleConf() == null) {
-                return false;
-            }
-            try {
-                int fixSecond = Integer.parseInt(jobInfo.getScheduleConf());
-                if (fixSecond < 1) {
-                    return false;
-                }
-            } catch (Exception e) {
-                return false;
-            }
         }
 
         // valid advanced
@@ -196,33 +147,9 @@ public class JobInfoServiceImpl implements JobInfoService {
         }
 
         // ChildJobId valid
-        if (StringTool.isNotBlank(jobInfo.getChildJobId())) {
-            String[] childJobIds = jobInfo.getChildJobId().split(",");
-            for (String childJobIdItem : childJobIds) {
-                if (StringTool.isNotBlank(childJobIdItem) && StringTool.isNumeric(childJobIdItem)) {
-                    // parse child
-                    int childJobId = Integer.parseInt(childJobIdItem);
-                    if (childJobId == jobInfo.getId()) {
-                        return false;
-                    }
-
-                    // valid child
-                    XxlJobInfo childJobInfo = xxlJobInfoMapper.loadById(childJobId);
-                    if (childJobInfo == null) {
-                        return false;
-                    }
-                } else {
-                    return false;
-                }
-            }
-
-            // join , avoid "xxx,,"
-            String temp = "";
-            for (String item : childJobIds) {
-                temp += item + ",";
-            }
-            temp = temp.substring(0, temp.length() - 1);
-            jobInfo.setChildJobId(temp);
+        String normalizedChildJobId = normalizeChildJobIds(jobInfo.getChildJobId(), jobInfo.getId());
+        if (normalizedChildJobId == null) {
+            return false;
         }
 
         // group valid
@@ -269,7 +196,7 @@ public class JobInfoServiceImpl implements JobInfoService {
         exists_jobInfo.setExecutorBlockStrategy(jobInfo.getExecutorBlockStrategy());
         exists_jobInfo.setExecutorTimeout(jobInfo.getExecutorTimeout());
         exists_jobInfo.setExecutorFailRetryCount(jobInfo.getExecutorFailRetryCount());
-        exists_jobInfo.setChildJobId(jobInfo.getChildJobId());
+        exists_jobInfo.setChildJobId(normalizedChildJobId);
         exists_jobInfo.setTriggerNextTime(nextTriggerTime);
 
         exists_jobInfo.setUpdateTime(new Date());
@@ -424,5 +351,61 @@ public class JobInfoServiceImpl implements JobInfoService {
             logger.error(">>>>>>>>>>> generateNextTriggerTime error. jobInfo = {}, error: {} ", GsonTool.toJson(jobInfo), e.getMessage());
         }
         return result;
+    }
+
+    /**
+     * Validate schedule type and schedule config.
+     * Returns true if valid, false otherwise.
+     */
+    private boolean validateScheduleType(ScheduleTypeEnum scheduleTypeEnum, String scheduleConf) {
+        if (scheduleTypeEnum == null) {
+            return false;
+        }
+        if (scheduleTypeEnum == ScheduleTypeEnum.CRON) {
+            return scheduleConf != null && CronExpression.isValidExpression(scheduleConf);
+        } else if (scheduleTypeEnum == ScheduleTypeEnum.FIX_RATE) {
+            if (scheduleConf == null) {
+                return false;
+            }
+            try {
+                int fixSecond = Integer.parseInt(scheduleConf);
+                return fixSecond >= 1;
+            } catch (Exception e) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Validate and normalize child job IDs.
+     * Returns normalized childJobId string if valid, null if invalid.
+     * If checkSelfId is -1, skip self-reference check (for add operation).
+     */
+    private String normalizeChildJobIds(String childJobId, int checkSelfId) {
+        if (StringTool.isBlank(childJobId)) {
+            return childJobId;
+        }
+        String[] childJobIds = childJobId.split(CHILD_JOB_ID_SEPARATOR);
+        List<String> validChildJobIds = new ArrayList<>();
+        for (String childJobIdItem : childJobIds) {
+            if (StringTool.isNotBlank(childJobIdItem) && StringTool.isNumeric(childJobIdItem)) {
+                int childId = Integer.parseInt(childJobIdItem);
+                if (checkSelfId != -1 && childId == checkSelfId) {
+                    return null;
+                }
+                XxlJobInfo childJobInfo = xxlJobInfoMapper.loadById(childId);
+                if (childJobInfo == null) {
+                    return null;
+                }
+                validChildJobIds.add(childJobIdItem);
+            } else {
+                return null;
+            }
+        }
+        if (validChildJobIds.isEmpty()) {
+            return "";
+        }
+        return String.join(CHILD_JOB_ID_SEPARATOR, validChildJobIds);
     }
 }
