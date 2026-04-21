@@ -1,4 +1,4 @@
-package com.xxl.job.admin.model;
+package com.xxl.job.admin.core.model;
 
 import com.xxl.tool.core.StringTool;
 

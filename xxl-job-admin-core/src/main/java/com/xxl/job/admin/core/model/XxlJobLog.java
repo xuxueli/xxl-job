@@ -1,4 +1,4 @@
-package com.xxl.job.admin.model;
+package com.xxl.job.admin.core.model;
 
 import java.util.Date;
 
@@ -7,9 +7,9 @@ import java.util.Date;
  * @author xuxueli  2015-12-19 23:19:09
  */
 public class XxlJobLog {
-	
+
 	private long id;
-	
+
 	// job info
 	private int jobGroup;
 	private int jobId;
@@ -20,12 +20,12 @@ public class XxlJobLog {
 	private String executorParam;
 	private String executorShardingParam;
 	private int executorFailRetryCount;
-	
+
 	// trigger info
 	private Date triggerTime;
 	private int triggerCode;
 	private String triggerMsg;
-	
+
 	// handle info
 	private Date handleTime;
 	private int handleCode;

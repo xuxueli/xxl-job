@@ -1,4 +1,4 @@
-package com.xxl.job.admin.model;
+package com.xxl.job.admin.core.model;
 
 import java.util.Date;
 
@@ -7,7 +7,7 @@ import java.util.Date;
  * @author xuxueli 2016-5-19 17:57:46
  */
 public class XxlJobLogGlue {
-	
+
 	private int id;
 	private int jobId;				// 任务主键ID
 	private String glueType;		// GLUE类型	#com.xxl.job.core.glue.GlueTypeEnum

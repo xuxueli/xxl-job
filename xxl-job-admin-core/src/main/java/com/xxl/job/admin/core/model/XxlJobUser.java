@@ -1,10 +1,10 @@
-package com.xxl.job.admin.model;
+package com.xxl.job.admin.core.model;
 
 /**
  * @author xuxueli 2019-05-04 16:43:12
  */
 public class XxlJobUser {
-	
+
 	private int id;
 	private String username;		// 账号
 	private String password;		// 密码

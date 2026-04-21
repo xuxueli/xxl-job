@@ -1,4 +1,4 @@
-package com.xxl.job.admin.model.dto;
+package com.xxl.job.admin.core.model.dto;
 
 import java.io.Serializable;
 import java.util.Date;
