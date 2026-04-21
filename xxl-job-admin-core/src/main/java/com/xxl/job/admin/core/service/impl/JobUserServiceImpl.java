@@ -23,6 +23,11 @@ import java.util.List;
 public class JobUserServiceImpl implements JobUserService {
     private static final Logger logger = LoggerFactory.getLogger(JobUserServiceImpl.class);
 
+    private static final int MIN_USERNAME_LENGTH = 4;
+    private static final int MAX_USERNAME_LENGTH = 20;
+    private static final int MIN_PASSWORD_LENGTH = 4;
+    private static final int MAX_PASSWORD_LENGTH = 20;
+
     @Resource
     private XxlJobUserMapper xxlJobUserMapper;
 
@@ -34,32 +39,37 @@ public class JobUserServiceImpl implements JobUserService {
     @Override
     public int add(XxlJobUser jobUser, int userId) {
         // valid username
-        if (StringTool.isBlank(jobUser.getUsername())) {
+        String username = jobUser.getUsername();
+        if (!validateUsername(username)) {
             return 0;
         }
-        jobUser.setUsername(jobUser.getUsername().trim());
-        if (!(jobUser.getUsername().length() >= 4 && jobUser.getUsername().length() <= 20)) {
+        username = username.trim();
+        if (!validateUsernameLength(username)) {
             return 0;
         }
 
         // valid password
-        if (StringTool.isBlank(jobUser.getPassword())) {
+        String password = jobUser.getPassword();
+        if (!validatePassword(password)) {
             return 0;
         }
-        jobUser.setPassword(jobUser.getPassword().trim());
-        if (!(jobUser.getPassword().length() >= 4 && jobUser.getPassword().length() <= 20)) {
+        password = password.trim();
+        if (!validatePasswordLength(password)) {
             return 0;
         }
 
         // hash password
-        String passwordHash = Sha256Tool.sha256(jobUser.getPassword());
-        jobUser.setPassword(passwordHash);
+        String passwordHash = Sha256Tool.sha256(password);
 
         // check if username already exists
-        XxlJobUser existUser = xxlJobUserMapper.loadByUserName(jobUser.getUsername());
+        XxlJobUser existUser = xxlJobUserMapper.loadByUserName(username);
         if (existUser != null) {
             return 0;
         }
+
+        // set processed values
+        jobUser.setUsername(username);
+        jobUser.setPassword(passwordHash);
 
         // save user
         int ret = xxlJobUserMapper.save(jobUser);
@@ -69,7 +79,7 @@ public class JobUserServiceImpl implements JobUserService {
 
         // write operation log
         logger.info(">>>>>>>>>>> xxl-job operation log: operatorId = {}, type = {}, content = {}",
-                userId, "user-add", jobUser.getUsername());
+                userId, "user-add", username);
 
         return jobUser.getId();
     }
@@ -77,13 +87,14 @@ public class JobUserServiceImpl implements JobUserService {
     @Override
     public boolean update(XxlJobUser jobUser, int userId) {
         // valid password
-        if (StringTool.isNotBlank(jobUser.getPassword())) {
-            jobUser.setPassword(jobUser.getPassword().trim());
-            if (!(jobUser.getPassword().length() >= 4 && jobUser.getPassword().length() <= 20)) {
+        String password = jobUser.getPassword();
+        if (StringTool.isNotBlank(password)) {
+            password = password.trim();
+            if (!validatePasswordLength(password)) {
                 return false;
             }
             // hash password
-            String passwordHash = Sha256Tool.sha256(jobUser.getPassword());
+            String passwordHash = Sha256Tool.sha256(password);
             jobUser.setPassword(passwordHash);
         } else {
             jobUser.setPassword(null);
@@ -166,5 +177,23 @@ public class JobUserServiceImpl implements JobUserService {
                 userId, "user-update-password", userId);
 
         return true;
+    }
+
+    private boolean validateUsername(String username) {
+        return StringTool.isNotBlank(username);
+    }
+
+    private boolean validateUsernameLength(String username) {
+        int length = username.length();
+        return length >= MIN_USERNAME_LENGTH && length <= MAX_USERNAME_LENGTH;
+    }
+
+    private boolean validatePassword(String password) {
+        return StringTool.isNotBlank(password);
+    }
+
+    private boolean validatePasswordLength(String password) {
+        int length = password.length();
+        return length >= MIN_PASSWORD_LENGTH && length <= MAX_PASSWORD_LENGTH;
     }
 }
