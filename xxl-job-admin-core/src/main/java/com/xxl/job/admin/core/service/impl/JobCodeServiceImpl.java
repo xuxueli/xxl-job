@@ -8,6 +8,7 @@ import com.xxl.job.admin.core.service.JobCodeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import jakarta.annotation.Resource;
 import java.util.Date;
 import java.util.List;
@@ -23,14 +24,11 @@ public class JobCodeServiceImpl implements JobCodeService {
 
     @Override
     public XxlJobInfo loadWithCode(int jobId) {
-        XxlJobInfo jobInfo = xxlJobInfoMapper.loadById(jobId);
-        if (jobInfo == null) {
-            return null;
-        }
-        return jobInfo;
+        return xxlJobInfoMapper.loadById(jobId);
     }
 
     @Override
+    @Transactional
     public boolean updateCode(int jobId, String glueSource, String glueRemark, int userId) {
         XxlJobInfo existsJobInfo = xxlJobInfoMapper.loadById(jobId);
         if (existsJobInfo == null) {
