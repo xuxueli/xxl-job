@@ -1,34 +1,33 @@
 package com.xxl.job.admin.core.service.impl;
 
+import com.xxl.job.admin.core.exception.XxlException;
 import com.xxl.job.admin.core.mapper.XxlJobGroupMapper;
 import com.xxl.job.admin.core.mapper.XxlJobInfoMapper;
 import com.xxl.job.admin.core.mapper.XxlJobRegistryMapper;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobRegistry;
 import com.xxl.job.admin.core.service.JobGroupService;
+import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.core.constant.Const;
 import com.xxl.job.core.constant.RegistType;
 import com.xxl.tool.core.CollectionTool;
 import com.xxl.tool.core.StringTool;
 import com.xxl.tool.http.HttpTool;
 import com.xxl.tool.response.PageModel;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import jakarta.annotation.Resource;
 import java.util.*;
 
 @Service
 public class JobGroupServiceImpl implements JobGroupService {
-
-    private static final Logger logger = LoggerFactory.getLogger(JobGroupServiceImpl.class);
-
     @Resource
     private XxlJobGroupMapper xxlJobGroupMapper;
-    @Resource
-    private XxlJobInfoMapper xxlJobInfoMapper;
+
     @Resource
     private XxlJobRegistryMapper xxlJobRegistryMapper;
+
+    @Resource
+    private XxlJobInfoMapper xxlJobInfoMapper;
 
     @Override
     public List<XxlJobGroup> findAll() {
@@ -41,28 +40,60 @@ public class JobGroupServiceImpl implements JobGroupService {
     }
 
     @Override
-    public int add(XxlJobGroup jobGroup, int userId) {
+    public int save(XxlJobGroup jobGroup) {
         // valid
-        validateAppName(jobGroup.getAppname());
-        validateTitle(jobGroup.getTitle());
-        validateAddressList(jobGroup.getAddressList(), jobGroup.getAddressType());
+        if (StringTool.isBlank(jobGroup.getAppname())) {
+            throw new XxlException(I18nUtil.getString("system_please_input") + "AppName");
+        }
+        if (jobGroup.getAppname().length() < 4 || jobGroup.getAppname().length() > 64) {
+            throw new XxlException(I18nUtil.getString("jobgroup_field_appname_length"));
+        }
+        if (jobGroup.getAppname().contains(">") || jobGroup.getAppname().contains("<")) {
+            throw new XxlException("AppName" + I18nUtil.getString("system_invalid"));
+        }
+        if (StringTool.isBlank(jobGroup.getTitle())) {
+            throw new XxlException(I18nUtil.getString("system_please_input") + I18nUtil.getString("jobgroup_field_title"));
+        }
+        if (jobGroup.getTitle().contains(">") || jobGroup.getTitle().contains("<")) {
+            throw new XxlException(I18nUtil.getString("jobgroup_field_title") + I18nUtil.getString("system_invalid"));
+        }
+        if (jobGroup.getAddressType() != 0) {
+            if (StringTool.isBlank(jobGroup.getAddressList())) {
+                throw new XxlException(I18nUtil.getString("jobgroup_field_addressType_limit"));
+            }
+            if (jobGroup.getAddressList().contains(">") || jobGroup.getAddressList().contains("<")) {
+                throw new XxlException(I18nUtil.getString("jobgroup_field_registryList") + I18nUtil.getString("system_invalid"));
+            }
+
+            String[] addresss = jobGroup.getAddressList().split(",");
+            for (String item : addresss) {
+                if (StringTool.isBlank(item)) {
+                    throw new XxlException(I18nUtil.getString("jobgroup_field_registryList_invalid"));
+                }
+                if (!(HttpTool.isHttp(item) || HttpTool.isHttps(item))) {
+                    throw new XxlException(I18nUtil.getString("jobgroup_field_registryList_invalid") + "[2]");
+                }
+            }
+        }
 
         // process
         jobGroup.setUpdateTime(new Date());
 
-        int ret = xxlJobGroupMapper.save(jobGroup);
-        if (ret > 0) {
-            logger.info("JobGroup added successfully. userId={}, appname={}, title={}",
-                    userId, jobGroup.getAppname(), jobGroup.getTitle());
-        }
-        return ret;
+        return xxlJobGroupMapper.save(jobGroup);
     }
 
     @Override
-    public boolean update(XxlJobGroup jobGroup, int userId) {
+    public int update(XxlJobGroup jobGroup) {
         // valid
-        validateAppName(jobGroup.getAppname());
-        validateTitle(jobGroup.getTitle());
+        if (StringTool.isBlank(jobGroup.getAppname())) {
+            throw new XxlException(I18nUtil.getString("system_please_input") + "AppName");
+        }
+        if (jobGroup.getAppname().length() < 4 || jobGroup.getAppname().length() > 64) {
+            throw new XxlException(I18nUtil.getString("jobgroup_field_appname_length"));
+        }
+        if (StringTool.isBlank(jobGroup.getTitle())) {
+            throw new XxlException(I18nUtil.getString("system_please_input") + I18nUtil.getString("jobgroup_field_title"));
+        }
         if (jobGroup.getAddressType() == 0) {
             // 0=自动注册
             List<String> registryList = findRegistryByAppName(jobGroup.getAppname());
@@ -74,58 +105,63 @@ public class JobGroupServiceImpl implements JobGroupService {
             jobGroup.setAddressList(addressListStr);
         } else {
             // 1=手动录入
-            validateAddressList(jobGroup.getAddressList(), jobGroup.getAddressType());
+            if (StringTool.isBlank(jobGroup.getAddressList())) {
+                throw new XxlException(I18nUtil.getString("jobgroup_field_addressType_limit"));
+            }
+            String[] addresss = jobGroup.getAddressList().split(",");
+            for (String item : addresss) {
+                if (StringTool.isBlank(item)) {
+                    throw new XxlException(I18nUtil.getString("jobgroup_field_registryList_invalid"));
+                }
+                if (!(HttpTool.isHttp(item) || HttpTool.isHttps(item))) {
+                    throw new XxlException(I18nUtil.getString("jobgroup_field_registryList_invalid") + "[2]");
+                }
+            }
         }
 
         // process
         jobGroup.setUpdateTime(new Date());
 
-        boolean success = xxlJobGroupMapper.update(jobGroup) > 0;
-        if (success) {
-            logger.info("JobGroup updated successfully. userId={}, id={}, appname={}",
-                    userId, jobGroup.getId(), jobGroup.getAppname());
-        }
-        return success;
+        return xxlJobGroupMapper.update(jobGroup);
     }
 
     @Override
-    public boolean remove(int id, int userId) {
-        // valid exists
-        XxlJobGroup jobGroup = xxlJobGroupMapper.load(id);
-        if (jobGroup == null) {
-            logger.info("JobGroup already removed. userId={}, id={}", userId, id);
-            return true;  // already removed
+    public int remove(List<Integer> ids) {
+        // parse id
+		if (CollectionTool.isEmpty(ids) || ids.size() != 1) {
+			throw new XxlException(I18nUtil.getString("system_please_choose") + I18nUtil.getString("system_one") + I18nUtil.getString("system_data"));
+		}
+		int id = ids.get(0);
+        // parse id
+        XxlJobGroup xxlJobGroup = xxlJobGroupMapper.load(id);
+        if (xxlJobGroup == null) {
+            return 1;
         }
 
         // whether exists job
         int count = xxlJobInfoMapper.pageListCount(0, 10, id, -1, null, null, null);
         if (count > 0) {
-            throw new IllegalArgumentException("Cannot remove group: there are jobs associated with this group");
+            throw new XxlException(I18nUtil.getString("jobgroup_del_limit_0"));
         }
 
         // whether only exists one group
         List<XxlJobGroup> allList = xxlJobGroupMapper.findAll();
         if (allList.size() == 1) {
-            throw new IllegalArgumentException("Cannot remove: this is the last remaining group");
+            throw new XxlException(I18nUtil.getString("jobgroup_del_limit_1"));
         }
 
         // remove group
         int ret = xxlJobGroupMapper.remove(id);
         // remove registry-data
-        xxlJobRegistryMapper.removeByRegistryGroupAndKey(RegistType.EXECUTOR.name(), jobGroup.getAppname());
-
-        if (ret > 0) {
-            logger.info("JobGroup removed successfully. userId={}, id={}, appname={}",
-                    userId, id, jobGroup.getAppname());
-        }
-        return ret > 0;
+        removeByRegistryByKey(RegistType.EXECUTOR.name(), xxlJobGroup.getAppname());
+        return ret;
     }
 
     @Override
-    public PageModel<XxlJobGroup> pageList(int offset, int pagesize, String searchName) {
+    public PageModel<XxlJobGroup> pageList(int offset, int pagesize, String appname, String title) {
         // page query
-        List<XxlJobGroup> list = xxlJobGroupMapper.pageList(offset, pagesize, searchName, searchName);
-        int list_count = xxlJobGroupMapper.pageListCount(offset, pagesize, searchName, searchName);
+        List<XxlJobGroup> list = xxlJobGroupMapper.pageList(offset, pagesize, appname, title);
+        int list_count = xxlJobGroupMapper.pageListCount(offset, pagesize, appname, title);
 
         // package result
         PageModel<XxlJobGroup> pageModel = new PageModel<>();
@@ -135,75 +171,29 @@ public class JobGroupServiceImpl implements JobGroupService {
         return pageModel;
     }
 
-    /**
-     * Validate appname: not blank, length 4-64, no invalid characters
-     */
-    private void validateAppName(String appname) {
-        if (StringTool.isBlank(appname)) {
-            throw new IllegalArgumentException("AppName cannot be blank");
-        }
-        if (appname.length() < 4 || appname.length() > 64) {
-            throw new IllegalArgumentException("AppName length must be between 4 and 64 characters");
-        }
-        if (appname.contains(">") || appname.contains("<")) {
-            throw new IllegalArgumentException("AppName contains invalid characters");
-        }
-    }
-
-    /**
-     * Validate title: not blank, no invalid characters
-     */
-    private void validateTitle(String title) {
-        if (StringTool.isBlank(title)) {
-            throw new IllegalArgumentException("Title cannot be blank");
-        }
-        if (title.contains(">") || title.contains("<")) {
-            throw new IllegalArgumentException("Title contains invalid characters");
-        }
-    }
-
-    /**
-     * Validate addressList when addressType != 0: not blank, no invalid characters, valid HTTP addresses
-     */
-    private void validateAddressList(String addressList, int addressType) {
-        if (addressType != 0) {
-            if (StringTool.isBlank(addressList)) {
-                throw new IllegalArgumentException("AddressList cannot be blank when addressType is not 0");
-            }
-            if (addressList.contains(">") || addressList.contains("<")) {
-                throw new IllegalArgumentException("AddressList contains invalid characters");
-            }
-
-            String[] addresses = addressList.split(",");
-            for (String item : addresses) {
-                if (StringTool.isBlank(item)) {
-                    throw new IllegalArgumentException("AddressList contains invalid addresses");
-                }
-                if (!(HttpTool.isHttp(item) || HttpTool.isHttps(item))) {
-                    throw new IllegalArgumentException("AddressList contains invalid addresses");
-                }
-            }
-        }
-    }
-
-    private List<String> findRegistryByAppName(String appnameParam) {
-        List<String> result = new ArrayList<>();
+    @Override
+    public List<String> findRegistryByAppName(String appNameParam) {
+        HashMap<String, List<String>> appAddressMap = new HashMap<>();
         List<XxlJobRegistry> list = xxlJobRegistryMapper.findAll(Const.DEAD_TIMEOUT, new Date());
         if (CollectionTool.isNotEmpty(list)) {
-            for (XxlJobRegistry item : list) {
+            for (XxlJobRegistry item: list) {
                 if (!RegistType.EXECUTOR.name().equals(item.getRegistryGroup())) {
                     continue;
                 }
-                if (!appnameParam.equals(item.getRegistryKey())) {
-                    continue;
-                }
-                String address = item.getRegistryValue();
-                if (!result.contains(address)) {
-                    result.add(address);
+
+                String appname = item.getRegistryKey();
+                List<String> registryList = appAddressMap.computeIfAbsent(appname, k -> new ArrayList<>());
+
+                if (!registryList.contains(item.getRegistryValue())) {
+                    registryList.add(item.getRegistryValue());
                 }
             }
         }
-        return result;
+        return appAddressMap.get(appNameParam);
     }
 
+    @Override
+    public void removeByRegistryByKey(String registryGroup, String registryKey) {
+        xxlJobRegistryMapper.removeByRegistryGroupAndKey(registryGroup, registryKey);
+    }
 }

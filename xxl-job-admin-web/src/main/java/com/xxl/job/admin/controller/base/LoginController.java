@@ -1,7 +1,7 @@
 package com.xxl.job.admin.controller.base;
 
-import com.xxl.job.admin.mapper.XxlJobUserMapper;
-import com.xxl.job.admin.model.XxlJobUser;
+import com.xxl.job.admin.core.mapper.XxlJobUserMapper;
+import com.xxl.job.admin.core.model.XxlJobUser;
 import com.xxl.job.admin.util.I18nUtil;
 import com.xxl.sso.core.annotation.XxlSso;
 import com.xxl.sso.core.helper.XxlSsoHelper;

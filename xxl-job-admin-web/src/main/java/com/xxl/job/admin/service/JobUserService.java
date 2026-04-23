@@ -1,4 +1,4 @@
-package com.xxl.job.admin.core.service;
+package com.xxl.job.admin.service;
 
 import com.xxl.job.admin.core.model.XxlJobUser;
 import com.xxl.tool.response.PageModel;
@@ -31,7 +31,7 @@ public interface JobUserService {
     /**
      * Page list query
      */
-    PageModel<XxlJobUser> pageList(int offset, int pagesize, String searchName);
+    PageModel<XxlJobUser> pageList(int offset, int pagesize, String searchName, int role);
 
     /**
      * Update password for a user

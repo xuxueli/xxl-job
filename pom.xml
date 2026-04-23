@@ -12,7 +12,8 @@
 
 	<modules>
 		<module>xxl-job-core</module>
-		<module>xxl-job-admin</module>
+		<module>xxl-job-admin-core</module>
+		<module>xxl-job-admin-web</module>
 		<module>xxl-job-executor-samples</module>
     </modules>
 
@@ -151,6 +152,13 @@
 			<dependency>
 				<groupId>com.xuxueli</groupId>
 				<artifactId>xxl-job-core</artifactId>
+				<version>${project.parent.version}</version>
+			</dependency>
+
+			<!-- xxl-job-admin-core -->
+			<dependency>
+				<groupId>com.xuxueli</groupId>
+				<artifactId>xxl-job-admin-core</artifactId>
 				<version>${project.parent.version}</version>
 			</dependency>
 

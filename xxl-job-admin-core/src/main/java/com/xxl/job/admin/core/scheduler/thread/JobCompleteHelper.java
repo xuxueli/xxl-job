@@ -2,7 +2,6 @@ package com.xxl.job.admin.core.scheduler.thread;
 
 import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.admin.core.scheduler.config.XxlJobAdminBootstrap;
-import com.xxl.job.admin.util.I18nUtil;
 import com.xxl.job.core.openapi.model.CallbackRequest;
 import com.xxl.job.core.context.XxlJobContext;
 import com.xxl.tool.core.DateTool;
@@ -15,7 +14,7 @@ import java.util.List;
 import java.util.concurrent.*;
 
 /**
- * job complate, for callback and result-lost
+ * job complete, for callback and result-lost
  *
  * @author xuxueli 2015-9-1 18:05:56
  */
@@ -85,7 +84,7 @@ public class JobCompleteHelper {
 
 								jobLog.setHandleTime(new Date());
 								jobLog.setHandleCode(XxlJobContext.HANDLE_CODE_FAIL);
-								jobLog.setHandleMsg( I18nUtil.getString("joblog_lost_fail") );
+								jobLog.setHandleMsg("Lost timeout, kill job.");
 
 								XxlJobAdminBootstrap.getInstance().getJobCompleter().complete(jobLog);
 							}

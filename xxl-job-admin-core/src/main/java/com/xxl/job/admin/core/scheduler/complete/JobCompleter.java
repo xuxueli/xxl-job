@@ -6,7 +6,6 @@ import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.admin.core.scheduler.config.XxlJobAdminBootstrap;
 import com.xxl.job.admin.core.scheduler.trigger.TriggerTypeEnum;
-import com.xxl.job.admin.util.I18nUtil;
 import com.xxl.job.core.context.XxlJobContext;
 import com.xxl.tool.core.StringTool;
 import com.xxl.tool.response.Response;
@@ -34,7 +33,7 @@ public class JobCompleter {
 
 
     /**
-     * complate job (limit only once)
+     * complete job (limit only once)
      */
     public int complete(XxlJobLog xxlJobLog) {
 
@@ -55,7 +54,7 @@ public class JobCompleter {
 
 
     /**
-     * do somethind to finish job
+     * do something to finish job
      */
     private void processChildJob(XxlJobLog xxlJobLog){
 
@@ -66,11 +65,11 @@ public class JobCompleter {
 
             // process child job
             if (xxlJobInfo!=null && StringTool.isNotBlank(xxlJobInfo.getChildJobId())) {
-                triggerChildMsg = "<br><br><span style=\"color:#00c0ef;\" > >>>>>>>>>>>"+ I18nUtil.getString("jobconf_trigger_child_run") +"<<<<<<<<<<< </span><br>";
+                triggerChildMsg = "<br><br><span style=\"color:#00c0ef;\" > >>>>>>>>>>>Child Run<<<<<<<<<<< </span><br>";
                 String[] childJobIds = xxlJobInfo.getChildJobId().split(",");
                 for (int i = 0; i < childJobIds.length; i++) {
 
-                    // process eath child
+                    // process each child
                     int childJobId = (StringTool.isNotBlank(childJobIds[i]) && StringTool.isNumeric(childJobIds[i]))
                             ?Integer.parseInt(childJobIds[i])
                             :-1;
@@ -86,14 +85,14 @@ public class JobCompleter {
                         Response<String> triggerChildResult = Response.ofSuccess();
 
                         // add msg
-                        triggerChildMsg += MessageFormat.format(I18nUtil.getString("jobconf_callback_child_msg1"),
+                        triggerChildMsg += MessageFormat.format("Child Job [{0}/{1}], JobId={2}, Result={3}, Msg={4}",
                                 (i+1),
                                 childJobIds.length,
                                 childJobIds[i],
-                                (triggerChildResult.isSuccess()?I18nUtil.getString("system_success"):I18nUtil.getString("system_fail")),
+                                (triggerChildResult.isSuccess()?"Success":"Fail"),
                                 triggerChildResult.getMsg());
                     } else {
-                        triggerChildMsg += MessageFormat.format(I18nUtil.getString("jobconf_callback_child_msg2"),
+                        triggerChildMsg += MessageFormat.format("Child Job [{0}/{1}], JobId={2}, Invalid",
                                 (i+1),
                                 childJobIds.length,
                                 childJobIds[i]);
@@ -109,14 +108,5 @@ public class JobCompleter {
         }
 
     }
-
-    /*private static boolean isNumeric(String str){
-        try {
-            int result = Integer.valueOf(str);
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
-        }
-    }*/
 
 }

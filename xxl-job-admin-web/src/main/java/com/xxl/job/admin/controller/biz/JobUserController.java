@@ -1,10 +1,10 @@
 package com.xxl.job.admin.controller.biz;
 
 import com.xxl.job.admin.constant.Consts;
-import com.xxl.job.admin.mapper.XxlJobGroupMapper;
-import com.xxl.job.admin.mapper.XxlJobUserMapper;
-import com.xxl.job.admin.model.XxlJobGroup;
-import com.xxl.job.admin.model.XxlJobUser;
+import com.xxl.job.admin.core.model.XxlJobGroup;
+import com.xxl.job.admin.core.model.XxlJobUser;
+import com.xxl.job.admin.core.service.JobGroupService;
+import com.xxl.job.admin.service.JobUserService;
 import com.xxl.job.admin.util.I18nUtil;
 import com.xxl.sso.core.annotation.XxlSso;
 import com.xxl.sso.core.helper.XxlSsoHelper;
@@ -22,9 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author xuxueli 2019-05-04 16:39:50
@@ -34,18 +32,15 @@ import java.util.Map;
 public class JobUserController {
 
     @Resource
-    private XxlJobUserMapper xxlJobUserMapper;
+    private JobUserService jobUserService;
     @Resource
-    private XxlJobGroupMapper xxlJobGroupMapper;
+    private JobGroupService jobGroupService;
 
     @RequestMapping
     @XxlSso(role = Consts.ADMIN_ROLE)
     public String index(Model model) {
-
-        // 执行器列表
-        List<XxlJobGroup> groupList = xxlJobGroupMapper.findAll();
+        List<XxlJobGroup> groupList = jobGroupService.findAll();
         model.addAttribute("groupList", groupList);
-
         return "biz/user.list";
     }
 
@@ -56,23 +51,7 @@ public class JobUserController {
                                                     @RequestParam(required = false, defaultValue = "10") int pagesize,
                                                     @RequestParam String username,
                                                     @RequestParam int role) {
-
-        // page list
-        List<XxlJobUser> list = xxlJobUserMapper.pageList(offset, pagesize, username, role);
-        int list_count = xxlJobUserMapper.pageListCount(offset, pagesize, username, role);
-
-        // filter
-        if (list!=null && !list.isEmpty()) {
-            for (XxlJobUser item: list) {
-                item.setPassword(null);
-            }
-        }
-
-        // package result
-        PageModel<XxlJobUser> pageModel = new PageModel<>();
-        pageModel.setData(list);
-        pageModel.setTotal(list_count);
-
+        PageModel<XxlJobUser> pageModel = jobUserService.pageList(offset, pagesize, username, role);
         return Response.ofSuccess(pageModel);
     }
 
@@ -80,7 +59,6 @@ public class JobUserController {
     @ResponseBody
     @XxlSso(role = Consts.ADMIN_ROLE)
     public Response<String> insert(XxlJobUser xxlJobUser) {
-
         // valid username
         if (StringTool.isBlank(xxlJobUser.getUsername())) {
             return Response.ofFail(I18nUtil.getString("system_please_input")+I18nUtil.getString("user_username") );
@@ -101,23 +79,15 @@ public class JobUserController {
         String passwordHash = Sha256Tool.sha256(xxlJobUser.getPassword());
         xxlJobUser.setPassword(passwordHash);
 
-        // check repeat
-        XxlJobUser existUser = xxlJobUserMapper.loadByUserName(xxlJobUser.getUsername());
-        if (existUser != null) {
-            return Response.ofFail( I18nUtil.getString("user_username_repeat") );
-        }
-
-        // write
-        xxlJobUserMapper.save(xxlJobUser);
-        return Response.ofSuccess();
+        int ret = jobUserService.add(xxlJobUser, 0);
+        return ret>0?Response.ofSuccess():Response.ofFail();
     }
 
     @RequestMapping("/update")
     @ResponseBody
     @XxlSso(role = Consts.ADMIN_ROLE)
     public Response<String> update(HttpServletRequest request, XxlJobUser xxlJobUser) {
-
-        // avoid opt login seft
+        // avoid opt login self
         Response<LoginInfo> loginInfoResponse = XxlSsoHelper.loginCheckWithAttr(request);
         if (loginInfoResponse.getData().getUserName().equals(xxlJobUser.getUsername())) {
             return Response.ofFail(I18nUtil.getString("user_update_loginuser_limit"));
@@ -136,65 +106,26 @@ public class JobUserController {
             xxlJobUser.setPassword(null);
         }
 
-        // write
-        xxlJobUserMapper.update(xxlJobUser);
-        return Response.ofSuccess();
+        boolean ret = jobUserService.update(xxlJobUser, 0);
+        return ret?Response.ofSuccess():Response.ofFail();
     }
 
     @RequestMapping("/delete")
     @ResponseBody
     @XxlSso(role = Consts.ADMIN_ROLE)
     public Response<String> delete(HttpServletRequest request, @RequestParam("ids[]") List<Integer> ids) {
-
-        // valid
         if (CollectionTool.isEmpty(ids) || ids.size()!=1) {
             return Response.ofFail(I18nUtil.getString("system_please_choose") + I18nUtil.getString("system_one") + I18nUtil.getString("system_data"));
         }
 
-        // avoid opt login seft
+        // avoid opt login self
         Response<LoginInfo> loginInfoResponse = XxlSsoHelper.loginCheckWithAttr(request);
         if (ids.contains(Integer.parseInt(loginInfoResponse.getData().getUserId()))) {
             return Response.ofFail(I18nUtil.getString("user_update_loginuser_limit"));
         }
 
-        xxlJobUserMapper.delete(ids.get(0));
-        return Response.ofSuccess();
+        boolean ret = jobUserService.remove(ids.get(0), 0);
+        return ret?Response.ofSuccess():Response.ofFail();
     }
-
-    /*@RequestMapping("/updatePwd")
-    @ResponseBody
-    public Response<String> updatePwd(HttpServletRequest request,
-                                     @RequestParam("password") String password,
-                                     @RequestParam("oldPassword") String oldPassword){
-
-        // valid
-        if (oldPassword==null || oldPassword.trim().isEmpty()){
-            return Response.ofFail(I18nUtil.getString("system_please_input") + I18nUtil.getString("change_pwd_field_oldpwd"));
-        }
-        if (password==null || password.trim().isEmpty()){
-            return Response.ofFail(I18nUtil.getString("system_please_input") + I18nUtil.getString("change_pwd_field_oldpwd"));
-        }
-        password = password.trim();
-        if (!(password.length()>=4 && password.length()<=20)) {
-            return Response.ofFail(I18nUtil.getString("system_length_limit")+"[4-20]" );
-        }
-
-        // md5 password
-        String oldPasswordHash = Sha256Tool.sha256(oldPassword);
-        String passwordHash = Sha256Tool.sha256(password);
-
-        // valid old pwd
-        Response<LoginInfo> loginInfoResponse = XxlSsoHelper.loginCheckWithAttr(request);
-        XxlJobUser existUser = xxlJobUserMapper.loadByUserName(loginInfoResponse.getData().getUserName());
-        if (!oldPasswordHash.equals(existUser.getPassword())) {
-            return Response.ofFail(I18nUtil.getString("change_pwd_field_oldpwd") + I18nUtil.getString("system_invalid"));
-        }
-
-        // write new
-        existUser.setPassword(passwordHash);
-        xxlJobUserMapper.update(existUser);
-
-        return Response.ofSuccess();
-    }*/
 
 }

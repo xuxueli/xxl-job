@@ -1,8 +1,8 @@
 package com.xxl.job.admin.web.xxlsso;
 
 import com.xxl.job.admin.constant.Consts;
-import com.xxl.job.admin.mapper.XxlJobUserMapper;
-import com.xxl.job.admin.model.XxlJobUser;
+import com.xxl.job.admin.core.mapper.XxlJobUserMapper;
+import com.xxl.job.admin.core.model.XxlJobUser;
 import com.xxl.sso.core.model.LoginInfo;
 import com.xxl.sso.core.store.LoginStore;
 import com.xxl.tool.core.MapTool;

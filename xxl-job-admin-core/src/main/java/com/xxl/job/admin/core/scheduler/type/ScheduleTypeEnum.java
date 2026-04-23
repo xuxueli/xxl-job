@@ -3,29 +3,28 @@ package com.xxl.job.admin.core.scheduler.type;
 import com.xxl.job.admin.core.scheduler.type.strategy.CronScheduleType;
 import com.xxl.job.admin.core.scheduler.type.strategy.FixRateScheduleType;
 import com.xxl.job.admin.core.scheduler.type.strategy.NoneScheduleType;
-import com.xxl.job.admin.util.I18nUtil;
 
 /**
  * @author xuxueli 2020-10-29 21:11:23
  */
 public enum ScheduleTypeEnum {
 
-    NONE(I18nUtil.getString("schedule_type_none"), new NoneScheduleType()),
+    NONE("None", new NoneScheduleType()),
 
     /**
      * schedule by cron
      */
-    CRON(I18nUtil.getString("schedule_type_cron"), new CronScheduleType()),
+    CRON("Cron", new CronScheduleType()),
 
     /**
      * schedule by fixed rate (in seconds)
      */
-    FIX_RATE(I18nUtil.getString("schedule_type_fix_rate"), new FixRateScheduleType()),
+    FIX_RATE("Fix Rate", new FixRateScheduleType()),
 
     /**
      * schedule by fix delay (in seconds)， after the last time
      */
-    /*FIX_DELAY(I18nUtil.getString("schedule_type_fix_delay"))*/;
+    /*FIX_DELAY("Fix Delay")*/;
 
     private final String title;
     private final ScheduleType scheduleType;;

@@ -1,6 +1,6 @@
 package com.xxl.job.admin.core.scheduler.thread;
 
-import com.xxl.job.admin.constant.TriggerStatus;
+import com.xxl.job.admin.core.constant.TriggerStatus;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.scheduler.config.XxlJobAdminBootstrap;
 import com.xxl.job.admin.core.scheduler.misfire.MisfireStrategyEnum;

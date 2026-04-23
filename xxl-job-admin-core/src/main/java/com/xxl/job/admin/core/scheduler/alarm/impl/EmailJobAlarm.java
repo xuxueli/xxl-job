@@ -5,7 +5,6 @@ import com.xxl.job.admin.core.scheduler.config.XxlJobAdminBootstrap;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
-import com.xxl.job.admin.util.I18nUtil;
 import com.xxl.job.core.context.XxlJobContext;
 import jakarta.mail.internet.MimeMessage;
 import org.slf4j.Logger;
@@ -50,8 +49,8 @@ public class EmailJobAlarm implements JobAlarm {
 
             // email info
             XxlJobGroup group = XxlJobAdminBootstrap.getInstance().getXxlJobGroupMapper().load(Integer.valueOf(info.getJobGroup()));
-            String personal = I18nUtil.getString("admin_name_full");
-            String title = I18nUtil.getString("jobconf_monitor");
+            String personal = "XXL-JOB";
+            String title = "XXL-JOB Task Alarm";
             String content = MessageFormat.format(loadEmailJobAlarmTemplate(),
                     group!=null?group.getTitle():"null",
                     info.getId(),
@@ -90,15 +89,15 @@ public class EmailJobAlarm implements JobAlarm {
      * @return
      */
     private static final String loadEmailJobAlarmTemplate(){
-        String mailBodyTemplate = "<h5>" + I18nUtil.getString("jobconf_monitor_detail") + "：</span>" +
+        String mailBodyTemplate = "<h5>Task Alarm Detail：</span>" +
                 "<table border=\"1\" cellpadding=\"3\" style=\"border-collapse:collapse; width:80%;\" >\n" +
                 "   <thead style=\"font-weight: bold;color: #ffffff;background-color: #ff8c00;\" >" +
                 "      <tr>\n" +
-                "         <td width=\"20%\" >"+ I18nUtil.getString("jobinfo_field_jobgroup") +"</td>\n" +
-                "         <td width=\"10%\" >"+ I18nUtil.getString("jobinfo_field_id") +"</td>\n" +
-                "         <td width=\"20%\" >"+ I18nUtil.getString("jobinfo_field_jobdesc") +"</td>\n" +
-                "         <td width=\"10%\" >"+ I18nUtil.getString("jobconf_monitor_alarm_title") +"</td>\n" +
-                "         <td width=\"40%\" >"+ I18nUtil.getString("jobconf_monitor_alarm_content") +"</td>\n" +
+                "         <td width=\"20%\" >JobGroup</td>\n" +
+                "         <td width=\"10%\" >JobId</td>\n" +
+                "         <td width=\"20%\" >Description</td>\n" +
+                "         <td width=\"10%\" >Alarm Title</td>\n" +
+                "         <td width=\"40%\" >Alarm Content</td>\n" +
                 "      </tr>\n" +
                 "   </thead>\n" +
                 "   <tbody>\n" +
@@ -106,7 +105,7 @@ public class EmailJobAlarm implements JobAlarm {
                 "         <td>{0}</td>\n" +
                 "         <td>{1}</td>\n" +
                 "         <td>{2}</td>\n" +
-                "         <td>"+ I18nUtil.getString("jobconf_monitor_alarm_type") +"</td>\n" +
+                "         <td>Task Alarm</td>\n" +
                 "         <td>{3}</td>\n" +
                 "      </tr>\n" +
                 "   </tbody>\n" +

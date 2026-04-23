@@ -2,7 +2,6 @@ package com.xxl.job.admin.core.scheduler.misfire;
 
 import com.xxl.job.admin.core.scheduler.misfire.strategy.MisfireDoNothing;
 import com.xxl.job.admin.core.scheduler.misfire.strategy.MisfireFireOnceNow;
-import com.xxl.job.admin.util.I18nUtil;
 
 /**
  * @author xuxueli 2020-10-29 21:11:23
@@ -12,12 +11,12 @@ public enum MisfireStrategyEnum {
     /**
      * do nothing
      */
-    DO_NOTHING(I18nUtil.getString("misfire_strategy_do_nothing"), new MisfireDoNothing()),
+    DO_NOTHING("Do Nothing", new MisfireDoNothing()),
 
     /**
      * fire once now
      */
-    FIRE_ONCE_NOW(I18nUtil.getString("misfire_strategy_fire_once_now"), new MisfireFireOnceNow());
+    FIRE_ONCE_NOW("Fire Once Now", new MisfireFireOnceNow());
 
     private final String title;
     private final MisfireHandler misfireHandler;

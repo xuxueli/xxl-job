@@ -1,6 +1,6 @@
 package com.xxl.job.admin.web.error;
 
-import com.xxl.job.admin.scheduler.exception.XxlJobException;
+import com.xxl.job.admin.core.scheduler.exception.XxlJobException;
 import com.xxl.tool.json.GsonTool;
 import com.xxl.tool.response.Response;
 import jakarta.servlet.http.HttpServletRequest;

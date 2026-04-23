@@ -1,8 +1,8 @@
-package com.xxl.job.admin.core.service.impl;
+package com.xxl.job.admin.service.impl;
 
 import com.xxl.job.admin.core.mapper.XxlJobUserMapper;
 import com.xxl.job.admin.core.model.XxlJobUser;
-import com.xxl.job.admin.core.service.JobUserService;
+import com.xxl.job.admin.service.JobUserService;
 import com.xxl.tool.core.StringTool;
 import com.xxl.tool.crypto.Sha256Tool;
 import com.xxl.tool.response.PageModel;
@@ -14,8 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * JobUser service implementation for xxl-job core module.
- * Refactored from JobUserController to remove web-layer dependencies.
+ * JobUser service implementation for xxl-job admin web module.
  *
  * @author xuxueli 2019-05-04
  */
@@ -128,10 +127,10 @@ public class JobUserServiceImpl implements JobUserService {
     }
 
     @Override
-    public PageModel<XxlJobUser> pageList(int offset, int pagesize, String searchName) {
-        // page list (use -1 for role to indicate all roles)
-        List<XxlJobUser> list = xxlJobUserMapper.pageList(offset, pagesize, searchName, -1);
-        int listCount = xxlJobUserMapper.pageListCount(offset, pagesize, searchName, -1);
+    public PageModel<XxlJobUser> pageList(int offset, int pagesize, String searchName, int role) {
+        // page list
+        List<XxlJobUser> list = xxlJobUserMapper.pageList(offset, pagesize, searchName, role);
+        int listCount = xxlJobUserMapper.pageListCount(offset, pagesize, searchName, role);
 
         // filter password from results
         if (list != null && !list.isEmpty()) {

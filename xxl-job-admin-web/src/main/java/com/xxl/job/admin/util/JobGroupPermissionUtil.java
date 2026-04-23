@@ -1,7 +1,7 @@
 package com.xxl.job.admin.util;
 
 import com.xxl.job.admin.constant.Consts;
-import com.xxl.job.admin.model.XxlJobGroup;
+import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.sso.core.helper.XxlSsoHelper;
 import com.xxl.sso.core.model.LoginInfo;
 import com.xxl.tool.core.StringTool;

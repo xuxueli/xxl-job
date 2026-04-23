@@ -1,36 +1,29 @@
 package com.xxl.job.admin.controller.biz;
 
-import com.xxl.job.admin.mapper.XxlJobGroupMapper;
-import com.xxl.job.admin.model.XxlJobGroup;
-import com.xxl.job.admin.model.XxlJobInfo;
-import com.xxl.job.admin.scheduler.exception.XxlJobException;
-import com.xxl.job.admin.scheduler.misfire.MisfireStrategyEnum;
-import com.xxl.job.admin.scheduler.route.ExecutorRouteStrategyEnum;
-import com.xxl.job.admin.scheduler.type.ScheduleTypeEnum;
-import com.xxl.job.admin.service.XxlJobService;
+import com.xxl.job.admin.core.model.XxlJobGroup;
+import com.xxl.job.admin.core.model.XxlJobInfo;
+import com.xxl.job.admin.core.scheduler.exception.XxlJobException;
+import com.xxl.job.admin.core.scheduler.misfire.MisfireStrategyEnum;
+import com.xxl.job.admin.core.scheduler.route.ExecutorRouteStrategyEnum;
+import com.xxl.job.admin.core.scheduler.type.ScheduleTypeEnum;
+import com.xxl.job.admin.core.service.JobGroupService;
+import com.xxl.job.admin.core.service.JobInfoService;
 import com.xxl.job.admin.util.I18nUtil;
 import com.xxl.job.admin.util.JobGroupPermissionUtil;
 import com.xxl.job.core.constant.ExecutorBlockStrategyEnum;
 import com.xxl.job.core.glue.GlueTypeEnum;
-import com.xxl.sso.core.helper.XxlSsoHelper;
 import com.xxl.sso.core.model.LoginInfo;
 import com.xxl.tool.core.CollectionTool;
-import com.xxl.tool.core.DateTool;
-import com.xxl.tool.core.StringTool;
 import com.xxl.tool.response.PageModel;
 import com.xxl.tool.response.Response;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -40,13 +33,12 @@ import java.util.List;
 @Controller
 @RequestMapping("/jobinfo")
 public class JobInfoController {
-	private static Logger logger = LoggerFactory.getLogger(JobInfoController.class);
+	@Resource
+	private JobGroupService jobGroupService;
 
 	@Resource
-	private XxlJobGroupMapper xxlJobGroupMapper;
-	@Resource
-	private XxlJobService xxlJobService;
-	
+	private JobInfoService jobInfoService;
+
 	@RequestMapping
 	public String index(HttpServletRequest request, Model model, @RequestParam(value = "jobGroup", required = false, defaultValue = "-1") int jobGroup) {
 
@@ -58,7 +50,7 @@ public class JobInfoController {
 		model.addAttribute("MisfireStrategyEnum", MisfireStrategyEnum.values());	    			// 调度过期策略
 
 		// 执行器列表
-		List<XxlJobGroup> jobGroupListTotal =  xxlJobGroupMapper.findAll();
+		List<XxlJobGroup> jobGroupListTotal = jobGroupService.findAll();
 
 		// filter group
 		List<XxlJobGroup> jobGroupList = JobGroupPermissionUtil.filterJobGroupByPermission(request, jobGroupListTotal);
@@ -93,79 +85,101 @@ public class JobInfoController {
 		JobGroupPermissionUtil.validJobGroupPermission(request, jobGroup);
 
 		// page
-		return xxlJobService.pageList(offset, pagesize, jobGroup, triggerStatus, jobDesc, executorHandler, author);
+		return Response.ofSuccess(
+			jobInfoService.pageList(
+				offset, pagesize, jobGroup,
+				triggerStatus, jobDesc, executorHandler, author)
+		);
 	}
-	
+
 	@RequestMapping("/insert")
 	@ResponseBody
 	public Response<String> add(HttpServletRequest request, XxlJobInfo jobInfo) {
-		// valid permission
+		// valid permission (SSO related, keep in controller)
 		LoginInfo loginInfo = JobGroupPermissionUtil.validJobGroupPermission(request, jobInfo.getJobGroup());
+		String userName = loginInfo.getUserName();
 
-		// opt
-		return xxlJobService.add(jobInfo, loginInfo);
+		// call service (validation logic is in service)
+		int ret = jobInfoService.add(jobInfo, userName, group -> JobGroupPermissionUtil.hasJobGroupPermission(loginInfo, group));
+		return ret > 0 ? Response.ofSuccess() : Response.ofFail();
 	}
 
 	@RequestMapping("/update")
 	@ResponseBody
 	public Response<String> update(HttpServletRequest request, XxlJobInfo jobInfo) {
-		// valid permission
+		// valid permission (SSO related, keep in controller)
 		LoginInfo loginInfo = JobGroupPermissionUtil.validJobGroupPermission(request, jobInfo.getJobGroup());
+		String userName = loginInfo.getUserName();
 
-		// opt
-		return xxlJobService.update(jobInfo, loginInfo);
+		// call service (validation logic is in service)
+		int ret = jobInfoService.update(jobInfo, userName, group -> JobGroupPermissionUtil.hasJobGroupPermission(loginInfo, group));
+		return ret > 0 ? Response.ofSuccess() : Response.ofFail();
 	}
-	
+
 	@RequestMapping("/delete")
 	@ResponseBody
 	public Response<String> delete(HttpServletRequest request, @RequestParam("ids[]") List<Integer> ids) {
-
 		// valid
 		if (CollectionTool.isEmpty(ids) || ids.size()!=1) {
 			return Response.ofFail(I18nUtil.getString("system_please_choose") + I18nUtil.getString("system_one") + I18nUtil.getString("system_data"));
 		}
 
-		// invoke
-		Response<LoginInfo> loginInfoResponse = XxlSsoHelper.loginCheckWithAttr(request);
-		return xxlJobService.remove(ids.get(0), loginInfoResponse.getData());
+		// valid permission (SSO related, keep in controller)
+		LoginInfo loginInfo = JobGroupPermissionUtil.validJobGroupPermission(request, -1);
+		String userName = loginInfo.getUserName();
+
+		// call service (validation is in service)
+		int ret = jobInfoService.remove(ids.get(0), userName, group -> JobGroupPermissionUtil.hasJobGroupPermission(loginInfo, group));
+		return ret > 0 ? Response.ofSuccess() : Response.ofFail();
 	}
-	
+
 	@RequestMapping("/stop")
 	@ResponseBody
 	public Response<String> pause(HttpServletRequest request, @RequestParam("ids[]") List<Integer> ids) {
-
 		// valid
 		if (CollectionTool.isEmpty(ids) || ids.size()!=1) {
 			return Response.ofFail(I18nUtil.getString("system_please_choose") + I18nUtil.getString("system_one") + I18nUtil.getString("system_data"));
 		}
 
-		// invoke
-		Response<LoginInfo> loginInfoResponse = XxlSsoHelper.loginCheckWithAttr(request);
-		return xxlJobService.stop(ids.get(0), loginInfoResponse.getData());
+		// valid permission (SSO related, keep in controller)
+		LoginInfo loginInfo = JobGroupPermissionUtil.validJobGroupPermission(request, -1);
+		String userName = loginInfo.getUserName();
+
+		// call service (validation is in service)
+		int ret = jobInfoService.stop(ids.get(0), userName, group -> JobGroupPermissionUtil.hasJobGroupPermission(loginInfo, group));
+		return ret > 0 ? Response.ofSuccess() : Response.ofFail();
 	}
-	
+
 	@RequestMapping("/start")
 	@ResponseBody
 	public Response<String> start(HttpServletRequest request, @RequestParam("ids[]") List<Integer> ids) {
-
 		// valid
 		if (CollectionTool.isEmpty(ids) || ids.size()!=1) {
 			return Response.ofFail(I18nUtil.getString("system_please_choose") + I18nUtil.getString("system_one") + I18nUtil.getString("system_data"));
 		}
 
-		// invoke
-		Response<LoginInfo> loginInfoResponse = XxlSsoHelper.loginCheckWithAttr(request);
-		return xxlJobService.start(ids.get(0), loginInfoResponse.getData());
+		// valid permission (SSO related, keep in controller)
+		LoginInfo loginInfo = JobGroupPermissionUtil.validJobGroupPermission(request, -1);
+		String userName = loginInfo.getUserName();
+
+		// call service (validation is in service)
+		int ret = jobInfoService.start(ids.get(0), userName, group -> JobGroupPermissionUtil.hasJobGroupPermission(loginInfo, group));
+		return ret > 0 ? Response.ofSuccess() : Response.ofFail();
 	}
-	
+
 	@RequestMapping("/trigger")
 	@ResponseBody
 	public Response<String> triggerJob(HttpServletRequest request,
 									  @RequestParam("id") int id,
 									  @RequestParam("executorParam") String executorParam,
 									  @RequestParam("addressList") String addressList) {
-		Response<LoginInfo> loginInfoResponse = XxlSsoHelper.loginCheckWithAttr(request);
-		return xxlJobService.trigger(loginInfoResponse.getData(), id, executorParam, addressList);
+		// valid permission (SSO related, keep in controller)
+		LoginInfo loginInfo = JobGroupPermissionUtil.validJobGroupPermission(request, -1);
+		String userName = loginInfo.getUserName();
+
+		// call service
+		int ret = jobInfoService.trigger(id, userName, executorParam, addressList, group -> JobGroupPermissionUtil.hasJobGroupPermission(loginInfo, group));
+		return ret > 0 ? Response.ofSuccess() : Response.ofFail();
 	}
 
 	@RequestMapping("/nextTriggerTime")
@@ -173,39 +187,9 @@ public class JobInfoController {
 	public Response<List<String>> nextTriggerTime(@RequestParam("scheduleType") String scheduleType,
 												 @RequestParam("scheduleConf") String scheduleConf) {
 
-		// valid
-		if (StringTool.isBlank(scheduleType) || StringTool.isBlank(scheduleConf)) {
-			return Response.ofSuccess(new ArrayList<>());
-		}
-
-		// param
-		XxlJobInfo paramXxlJobInfo = new XxlJobInfo();
-		paramXxlJobInfo.setScheduleType(scheduleType);
-		paramXxlJobInfo.setScheduleConf(scheduleConf);
-
-		// generate
-		List<String> result = new ArrayList<>();
-		try {
-			Date lastTime = new Date();
-			for (int i = 0; i < 5; i++) {
-
-				// generate next trigger time
-				ScheduleTypeEnum scheduleTypeEnum = ScheduleTypeEnum.match(paramXxlJobInfo.getScheduleType(), ScheduleTypeEnum.NONE);
-				lastTime = scheduleTypeEnum.getScheduleType().generateNextTriggerTime(paramXxlJobInfo, lastTime);
-
-				// collect data
-				if (lastTime != null) {
-					result.add(DateTool.formatDateTime(lastTime));
-				} else {
-					break;
-				}
-			}
-		} catch (Exception e) {
-			logger.error(">>>>>>>>>>> nextTriggerTime error. scheduleType = {}, scheduleConf= {}, error:{} ", scheduleType, scheduleConf, e.getMessage());
-			return Response.ofFail((I18nUtil.getString("schedule_type")+I18nUtil.getString("system_invalid")) + e.getMessage());
-		}
+		// call service (validation and logic is in service)
+		List<String> result = jobInfoService.generateNextTriggerTime(scheduleType, scheduleConf);
 		return Response.ofSuccess(result);
-
 	}
 
 }

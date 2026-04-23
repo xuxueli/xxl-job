@@ -1,4 +1,4 @@
-package com.xxl.job.admin.core.scheduler.openapi;
+package com.xxl.job.admin.controller.openapi;
 
 import com.xxl.job.admin.core.scheduler.config.XxlJobAdminBootstrap;
 import com.xxl.job.core.constant.Const;

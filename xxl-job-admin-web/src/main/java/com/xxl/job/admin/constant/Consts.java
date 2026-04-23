@@ -1,4 +1,4 @@
-package com.xxl.job.admin.core.constant;
+package com.xxl.job.admin.constant;
 
 public class Consts {
 

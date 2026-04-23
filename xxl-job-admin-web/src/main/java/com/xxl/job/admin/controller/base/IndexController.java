@@ -1,8 +1,8 @@
 package com.xxl.job.admin.controller.base;
 
 import com.xxl.job.admin.constant.Consts;
-import com.xxl.job.admin.model.dto.XxlBootResourceDTO;
-import com.xxl.job.admin.service.XxlJobService;
+import com.xxl.job.admin.core.model.dto.XxlBootResourceDTO;
+import com.xxl.job.admin.core.service.DashboardService;
 import com.xxl.job.admin.util.I18nUtil;
 import com.xxl.sso.core.annotation.XxlSso;
 import com.xxl.sso.core.helper.XxlSsoHelper;
@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
 public class IndexController {
 
 	@Resource
-	private XxlJobService xxlJobService;
+	private DashboardService dashboardService;
 
 	/**
 	 * index
@@ -43,7 +43,6 @@ public class IndexController {
 	@RequestMapping("/")
 	@XxlSso
 	public String index(HttpServletRequest request, Model model) {
-
 		// menu resource
 		List<XxlBootResourceDTO> resourceList = findResourceList(request);
 		model.addAttribute("resourceList", resourceList);
@@ -83,18 +82,16 @@ public class IndexController {
 	@RequestMapping("/dashboard")
 	@XxlSso
 	public String dashboard(HttpServletRequest request, Model model) {
-
-		Map<String, Object> dashboardMap = xxlJobService.dashboardInfo();
+		Map<String, Object> dashboardMap = dashboardService.getDashboardInfo();
 		model.addAllAttributes(dashboardMap);
-
 		return "base/dashboard";
 	}
 
 	@RequestMapping("/chartInfo")
 	@ResponseBody
 	public Response<Map<String, Object>> chartInfo(@RequestParam("startDate") Date startDate, @RequestParam("endDate") Date endDate) {
-		Response<Map<String, Object>> chartInfo = xxlJobService.chartInfo(startDate, endDate);
-		return chartInfo;
+		Map<String, Object> chartInfo = dashboardService.getChartInfo(startDate, endDate);
+		return Response.ofSuccess(chartInfo);
 	}
 
 	/**
@@ -109,9 +106,7 @@ public class IndexController {
 	@RequestMapping(value = "/errorpage")
 	@XxlSso(login = false)
 	public ModelAndView errorPage(HttpServletRequest request, HttpServletResponse response, ModelAndView mv) {
-
 		String exceptionMsg = "HTTP Status Code: "+response.getStatus();
-
 		mv.addObject("exceptionMsg", exceptionMsg);
 		mv.setViewName("common/common.errorpage");
 		return mv;
@@ -123,5 +118,5 @@ public class IndexController {
 		dateFormat.setLenient(false);
 		binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
 	}
-	
+
 }

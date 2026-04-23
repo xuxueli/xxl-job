@@ -2,7 +2,6 @@ package com.xxl.job.admin.core.scheduler.route.strategy;
 
 import com.xxl.job.admin.core.scheduler.config.XxlJobAdminBootstrap;
 import com.xxl.job.admin.core.scheduler.route.ExecutorRouter;
-import com.xxl.job.admin.util.I18nUtil;
 import com.xxl.job.core.openapi.ExecutorBiz;
 import com.xxl.job.core.openapi.model.TriggerRequest;
 import com.xxl.tool.response.Response;
@@ -29,7 +28,7 @@ public class ExecutorRouteFailover extends ExecutorRouter {
                 beatResult = Response.ofFail(e.getMessage() );
             }
             beatResultSB.append( (beatResultSB.length()>0)?"<br><br>":"")
-                    .append(I18nUtil.getString("jobconf_beat") + "：")
+                    .append("Beat：")
                     .append("<br>address：").append(address)
                     .append("<br>code：").append(beatResult.getCode())
                     .append("<br>msg：").append(beatResult.getMsg());
