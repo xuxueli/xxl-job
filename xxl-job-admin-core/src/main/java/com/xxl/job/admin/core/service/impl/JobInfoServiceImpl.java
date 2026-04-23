@@ -19,10 +19,13 @@ import com.xxl.job.admin.core.service.JobInfoService;
 import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.core.constant.ExecutorBlockStrategyEnum;
 import com.xxl.job.core.glue.GlueTypeEnum;
+import com.xxl.tool.core.CollectionTool;
 import com.xxl.tool.core.DateTool;
 import com.xxl.tool.core.StringTool;
 import com.xxl.tool.json.GsonTool;
 import com.xxl.tool.response.PageModel;
+import com.xxl.tool.response.Response;
+
 import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -266,7 +269,14 @@ public class JobInfoServiceImpl implements JobInfoService {
     }
 
     @Override
-    public int remove(int id, String userName, Function<Integer, Boolean> groupPermissionCheck) {
+    public int remove(List<Integer> ids, String userName, Function<Integer, Boolean> groupPermissionCheck) {
+        // valid
+		if (CollectionTool.isEmpty(ids) || ids.size()!=1) {
+			throw new XxlException(I18nUtil.getString("system_please_choose") + I18nUtil.getString("system_one") + I18nUtil.getString("system_data"));
+		}
+
+        int id = ids.get(0);
+
         // valid job
         XxlJobInfo xxlJobInfo = xxlJobInfoMapper.loadById(id);
         if (xxlJobInfo == null) {
@@ -290,7 +300,14 @@ public class JobInfoServiceImpl implements JobInfoService {
     }
 
     @Override
-    public int start(int id, String userName, Function<Integer, Boolean> groupPermissionCheck) {
+    public int start(List<Integer> ids, String userName, Function<Integer, Boolean> groupPermissionCheck) {
+        // valid
+		if (CollectionTool.isEmpty(ids) || ids.size()!=1) {
+			throw new XxlException(I18nUtil.getString("system_please_choose") + I18nUtil.getString("system_one") + I18nUtil.getString("system_data"));
+		}
+
+        int id = ids.get(0);
+        
         // load and valid
 		XxlJobInfo xxlJobInfo = xxlJobInfoMapper.loadById(id);
 		if (xxlJobInfo == null) {
@@ -338,7 +355,14 @@ public class JobInfoServiceImpl implements JobInfoService {
     }
 
     @Override
-    public int stop(int id, String userName, Function<Integer, Boolean> groupPermissionCheck) {
+    public int stop(List<Integer> ids, String userName, Function<Integer, Boolean> groupPermissionCheck) {
+        // valid
+		if (CollectionTool.isEmpty(ids) || ids.size()!=1) {
+			throw new XxlException(I18nUtil.getString("system_please_choose") + I18nUtil.getString("system_one") + I18nUtil.getString("system_data"));
+		}
+
+        int id = ids.get(0);
+
         // load and valid
         XxlJobInfo xxlJobInfo = xxlJobInfoMapper.loadById(id);
         if (xxlJobInfo == null) {
@@ -486,8 +510,8 @@ public class JobInfoServiceImpl implements JobInfoService {
             throw new XxlException(I18nUtil.getString("schedule_type") + I18nUtil.getString("system_invalid"));
         }
         if (scheduleTypeEnum == ScheduleTypeEnum.CRON) {
-            if (scheduleConf != null && CronExpression.isValidExpression(scheduleConf)) {
-				throw new XxlException( "Cron" + I18nUtil.getString("system_invalid"));
+            if (scheduleConf == null || !CronExpression.isValidExpression(scheduleConf)) {
+				throw new XxlException("Cron" + I18nUtil.getString("system_invalid"));
 			}
             return ;
         } else if (scheduleTypeEnum == ScheduleTypeEnum.FIX_RATE) {

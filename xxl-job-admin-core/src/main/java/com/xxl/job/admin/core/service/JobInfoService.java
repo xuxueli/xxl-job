@@ -49,7 +49,7 @@ public interface JobInfoService {
      * @return 1 if success
      * @throws XxlException if validation fails
      */
-    int remove(int id, String userName, Function<Integer, Boolean> groupPermissionCheck) throws XxlException;
+    int remove(List<Integer> ids, String userName, Function<Integer, Boolean> groupPermissionCheck) throws XxlException;
 
     /**
      * Start job scheduling
@@ -59,7 +59,7 @@ public interface JobInfoService {
      * @return 1 if success
      * @throws XxlException if validation fails
      */
-    int start(int id, String userName, Function<Integer, Boolean> groupPermissionCheck) throws XxlException;
+    int start(List<Integer> ids, String userName, Function<Integer, Boolean> groupPermissionCheck) throws XxlException;
 
     /**
      * Stop job scheduling
@@ -69,7 +69,7 @@ public interface JobInfoService {
      * @return 1 if success
      * @throws XxlException if validation fails
      */
-    int stop(int id, String userName, Function<Integer, Boolean> groupPermissionCheck) throws XxlException;
+    int stop(List<Integer> ids, String userName, Function<Integer, Boolean> groupPermissionCheck) throws XxlException;
 
     /**
      * Trigger job manually

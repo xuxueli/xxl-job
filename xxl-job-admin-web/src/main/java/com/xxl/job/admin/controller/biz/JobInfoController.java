@@ -119,51 +119,36 @@ public class JobInfoController {
 	@RequestMapping("/delete")
 	@ResponseBody
 	public Response<String> delete(HttpServletRequest request, @RequestParam("ids[]") List<Integer> ids) {
-		// valid
-		if (CollectionTool.isEmpty(ids) || ids.size()!=1) {
-			return Response.ofFail(I18nUtil.getString("system_please_choose") + I18nUtil.getString("system_one") + I18nUtil.getString("system_data"));
-		}
-
 		// valid permission (SSO related, keep in controller)
 		LoginInfo loginInfo = JobGroupPermissionUtil.validJobGroupPermission(request, -1);
 		String userName = loginInfo.getUserName();
 
 		// call service (validation is in service)
-		int ret = jobInfoService.remove(ids.get(0), userName, group -> JobGroupPermissionUtil.hasJobGroupPermission(loginInfo, group));
+		int ret = jobInfoService.remove(ids, userName, group -> JobGroupPermissionUtil.hasJobGroupPermission(loginInfo, group));
 		return ret > 0 ? Response.ofSuccess() : Response.ofFail();
 	}
 
 	@RequestMapping("/stop")
 	@ResponseBody
 	public Response<String> pause(HttpServletRequest request, @RequestParam("ids[]") List<Integer> ids) {
-		// valid
-		if (CollectionTool.isEmpty(ids) || ids.size()!=1) {
-			return Response.ofFail(I18nUtil.getString("system_please_choose") + I18nUtil.getString("system_one") + I18nUtil.getString("system_data"));
-		}
-
 		// valid permission (SSO related, keep in controller)
 		LoginInfo loginInfo = JobGroupPermissionUtil.validJobGroupPermission(request, -1);
 		String userName = loginInfo.getUserName();
 
 		// call service (validation is in service)
-		int ret = jobInfoService.stop(ids.get(0), userName, group -> JobGroupPermissionUtil.hasJobGroupPermission(loginInfo, group));
+		int ret = jobInfoService.stop(ids, userName, group -> JobGroupPermissionUtil.hasJobGroupPermission(loginInfo, group));
 		return ret > 0 ? Response.ofSuccess() : Response.ofFail();
 	}
 
 	@RequestMapping("/start")
 	@ResponseBody
 	public Response<String> start(HttpServletRequest request, @RequestParam("ids[]") List<Integer> ids) {
-		// valid
-		if (CollectionTool.isEmpty(ids) || ids.size()!=1) {
-			return Response.ofFail(I18nUtil.getString("system_please_choose") + I18nUtil.getString("system_one") + I18nUtil.getString("system_data"));
-		}
-
 		// valid permission (SSO related, keep in controller)
 		LoginInfo loginInfo = JobGroupPermissionUtil.validJobGroupPermission(request, -1);
 		String userName = loginInfo.getUserName();
 
 		// call service (validation is in service)
-		int ret = jobInfoService.start(ids.get(0), userName, group -> JobGroupPermissionUtil.hasJobGroupPermission(loginInfo, group));
+		int ret = jobInfoService.start(ids, userName, group -> JobGroupPermissionUtil.hasJobGroupPermission(loginInfo, group));
 		return ret > 0 ? Response.ofSuccess() : Response.ofFail();
 	}
 
