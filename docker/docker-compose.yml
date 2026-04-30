@@ -56,7 +56,7 @@ services:
   xxl-job-executor-sample-springboot:
     image: xuxueli/xxl-job-executor-sample-springboot:local
     build:
-      context: ./xxl-job-executor-samples/xxl-job-executor-sample-springboot
+      context: ../xxl-job-executor-samples/xxl-job-executor-sample-springboot
       dockerfile: Dockerfile
     container_name: xxl-job-executor-sample-springboot
     environment:
