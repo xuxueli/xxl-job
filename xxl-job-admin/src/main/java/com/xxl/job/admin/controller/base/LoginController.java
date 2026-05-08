@@ -21,7 +21,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 /**
- * index controller
+ * index controller 测试
  * @author xuxueli 2015-12-19 16:13:16
  */
 @Controller
