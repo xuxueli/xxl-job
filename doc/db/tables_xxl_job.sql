@@ -61,6 +61,7 @@ CREATE TABLE `xxl_job_info`
     `trigger_status`            tinyint(4)   NOT NULL DEFAULT '0' COMMENT '调度状态：0-停止，1-运行',
     `trigger_last_time`         bigint(13)   NOT NULL DEFAULT '0' COMMENT '上次调度时间',
     `trigger_next_time`         bigint(13)   NOT NULL DEFAULT '0' COMMENT '下次调度时间',
+    `schedule_time_zone`        varchar(50)           DEFAULT NULL COMMENT '调度时区，如 Asia/Shanghai',
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4;

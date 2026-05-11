@@ -42,6 +42,8 @@ public class XxlJobInfo {
 	private long triggerLastTime;	// 上次调度时间
 	private long triggerNextTime;	// 下次调度时间
 
+	private String scheduleTimeZone;	// 调度时区，如 Asia/Shanghai、Europe/Moscow
+
 
 	public int getId() {
 		return id;
@@ -233,5 +235,13 @@ public class XxlJobInfo {
 
 	public void setTriggerNextTime(long triggerNextTime) {
 		this.triggerNextTime = triggerNextTime;
+	}
+
+	public String getScheduleTimeZone() {
+		return scheduleTimeZone;
+	}
+
+	public void setScheduleTimeZone(String scheduleTimeZone) {
+		this.scheduleTimeZone = scheduleTimeZone;
 	}
 }

@@ -158,6 +158,9 @@ public class XxlJobServiceImpl implements XxlJobService {
 		}
 
 		// add in db
+		if (jobInfo.getScheduleTimeZone() == null || jobInfo.getScheduleTimeZone().isEmpty()) {
+			jobInfo.setScheduleTimeZone(TimeZone.getDefault().getID());
+		}
 		jobInfo.setAddTime(new Date());
 		jobInfo.setUpdateTime(new Date());
 		jobInfo.setGlueUpdatetime(new Date());
@@ -273,7 +276,8 @@ public class XxlJobServiceImpl implements XxlJobService {
 		// next trigger time (5s后生效，避开预读周期)
 		long nextTriggerTime = exists_jobInfo.getTriggerNextTime();
 		boolean scheduleDataNotChanged = jobInfo.getScheduleType().equals(exists_jobInfo.getScheduleType())
-				&& jobInfo.getScheduleConf().equals(exists_jobInfo.getScheduleConf());		// 触发配置如果不变，避免重复计算；
+				&& jobInfo.getScheduleConf().equals(exists_jobInfo.getScheduleConf())
+				&& (jobInfo.getScheduleTimeZone() != null ? jobInfo.getScheduleTimeZone().equals(exists_jobInfo.getScheduleTimeZone()) : exists_jobInfo.getScheduleTimeZone() == null);
 		if (exists_jobInfo.getTriggerStatus() == TriggerStatus.RUNNING.getValue() && !scheduleDataNotChanged) {
 			try {
 				// generate next trigger time
@@ -303,6 +307,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 		exists_jobInfo.setExecutorTimeout(jobInfo.getExecutorTimeout());
 		exists_jobInfo.setExecutorFailRetryCount(jobInfo.getExecutorFailRetryCount());
 		exists_jobInfo.setChildJobId(jobInfo.getChildJobId());
+		exists_jobInfo.setScheduleTimeZone(jobInfo.getScheduleTimeZone());
 		exists_jobInfo.setTriggerNextTime(nextTriggerTime);
 
 		exists_jobInfo.setUpdateTime(new Date());
