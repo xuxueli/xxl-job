@@ -21,6 +21,7 @@ import io.netty.util.CharsetUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.InetSocketAddress;
 import java.util.concurrent.*;
 
 /**
@@ -152,12 +153,20 @@ public class EmbedServer {
             boolean keepAlive = HttpUtil.isKeepAlive(msg);
             String accessTokenReq = msg.headers().get(Const.XXL_JOB_ACCESS_TOKEN);
 
+            // resolve remote address for audit logging
+            String remoteAddress = "unknown";
+            if (ctx.channel().remoteAddress() instanceof InetSocketAddress) {
+                InetSocketAddress addr = (InetSocketAddress) ctx.channel().remoteAddress();
+                remoteAddress = addr.getAddress().getHostAddress() + ":" + addr.getPort();
+            }
+            final String finalRemoteAddress = remoteAddress;
+
             // invoke
             bizThreadPool.execute(new Runnable() {
                 @Override
                 public void run() {
                     // do invoke
-                    Object responseObj = dispatchRequest(httpMethod, uri, requestData, accessTokenReq);
+                    Object responseObj = dispatchRequest(httpMethod, uri, requestData, accessTokenReq, finalRemoteAddress);
 
                     // to json
                     String responseJson = GsonTool.toJson(responseObj);
@@ -168,7 +177,7 @@ public class EmbedServer {
             });
         }
 
-        private Object dispatchRequest(HttpMethod httpMethod, String uri, String requestData, String accessTokenReq) {
+        private Object dispatchRequest(HttpMethod httpMethod, String uri, String requestData, String accessTokenReq, String remoteAddress) {
             // valid
             if (HttpMethod.POST != httpMethod) {
                 return Response.ofFail("invalid request, HttpMethod not support.");
@@ -176,10 +185,12 @@ public class EmbedServer {
             if (uri == null || uri.trim().isEmpty()) {
                 return Response.ofFail( "invalid request, uri-mapping empty.");
             }
-            if (accessToken != null
-                    && !accessToken.trim().isEmpty()
-                    && !accessToken.equals(accessTokenReq)) {
-                return Response.ofFail("The access token is wrong.");
+
+            // Security: fail-closed token validation — reject when token is not configured
+            String tokenError = validateAccessToken(accessToken, accessTokenReq);
+            if (tokenError != null) {
+                logger.warn(">>>>>>>>>>> xxl-job access token validation failed: {}, remote={}, uri={}", tokenError, remoteAddress, uri);
+                return Response.ofFail(tokenError);
             }
 
             // services mapping
@@ -192,6 +203,11 @@ public class EmbedServer {
                         return executorBiz.idleBeat(idleBeatParam);
                     case "/run":
                         TriggerRequest triggerParam = GsonTool.fromJson(requestData, TriggerRequest.class);
+                        // Security: audit logging for /run requests
+                        logger.info(">>>>>>>>>>> xxl-job /run request received: jobId={}, glueType={}, remote={}",
+                                triggerParam != null ? triggerParam.getJobId() : "null",
+                                triggerParam != null ? triggerParam.getGlueType() : "null",
+                                remoteAddress);
                         return executorBiz.run(triggerParam);
                     case "/kill":
                         KillRequest killParam = GsonTool.fromJson(requestData, KillRequest.class);
@@ -206,6 +222,22 @@ public class EmbedServer {
                 logger.error(e.getMessage(), e);
                 return Response.ofFail("request error:" + ThrowableTool.toString(e));
             }
+        }
+
+        /**
+         * Validate access token with fail-closed logic.
+         * Returns error message if validation fails, null if passed.
+         */
+        public static String validateAccessToken(String serverToken, String requestToken) {
+            // Fail-closed: reject if server token is not configured
+            if (serverToken == null || serverToken.trim().isEmpty()) {
+                return "The access token is not configured. For security, all requests are rejected. Please configure 'xxl.job.accessToken'.";
+            }
+            // Reject if request token is missing or does not match
+            if (requestToken == null || !serverToken.equals(requestToken)) {
+                return "The access token is wrong.";
+            }
+            return null;
         }
 
         /**

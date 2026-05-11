@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Date;
+import java.util.Set;
 
 /**
  * Created by xuxueli on 17/3/1.
@@ -52,8 +53,16 @@ public class ExecutorBizImpl implements ExecutorBiz {
         IJobHandler jobHandler = jobThread!=null?jobThread.getHandler():null;
         String removeOldReason = null;
 
-        // valid：jobHandler + jobThread
+        // Security: check allowed GLUE types
         GlueTypeEnum glueTypeEnum = GlueTypeEnum.match(triggerRequest.getGlueType());
+        Set<String> allowedTypes = XxlJobExecutor.getAllowedGlueTypes();
+        if (glueTypeEnum != null && allowedTypes != null && !allowedTypes.contains(glueTypeEnum.name())) {
+            logger.warn(">>>>>>>>>>> xxl-job GLUE type [{}] is not in allowed types: {}", glueTypeEnum.name(), allowedTypes);
+            return Response.of(XxlJobContext.HANDLE_CODE_FAIL,
+                    "glueType[" + triggerRequest.getGlueType() + "] is not allowed. Allowed types: " + allowedTypes);
+        }
+
+        // valid：jobHandler + jobThread
         if (GlueTypeEnum.BEAN == glueTypeEnum) {
 
             // new jobhandler
