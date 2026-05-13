@@ -58,6 +58,8 @@ public class JobLogReportServiceImpl extends ServiceImpl<XxlJobLogReportMapper, 
                     `fail_count` = #{failCount},
                     `update_time` = #{updateTime}
             </insert>
+            *  MySQL的 INSERT...ON DUPLICATE KEY UPDATE 是原子操作，
+            *  但为了支持多数据库（PostgreSQL/Oracle/SQL Server等）暂时忽略原子性
          */
         XxlJobLogReport existReport = this.getOne(new QueryWrapper<XxlJobLogReport>().eq("trigger_day", entity.getTriggerDay()));
 

@@ -262,7 +262,7 @@ public class JobGroupServiceImpl extends ServiceImpl<XxlJobGroupMapper, XxlJobGr
 
         QueryWrapper<XxlJobGroup> qw = new QueryWrapper<>();
         if (StringTool.isNotEmpty(appName))
-            qw = qw.like("appname", appName);
+            qw = qw.like("app_name", appName);
         if (StringTool.isNotEmpty(title))
             qw = qw.like("title", title);
 

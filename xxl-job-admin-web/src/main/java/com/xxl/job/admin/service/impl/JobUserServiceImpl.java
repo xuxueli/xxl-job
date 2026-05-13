@@ -61,7 +61,7 @@ public class JobUserServiceImpl extends ServiceImpl<XxlJobUserMapper, XxlJobUser
         if (username != null && username != "") {
             qw = qw.like("username", username);
         }
-        if (role >= -1) {
+        if (role > -1) {
             qw = qw.eq("role", role);
         }
         IPage<XxlJobUser> iPage = this.page(p, qw);
@@ -131,7 +131,7 @@ public class JobUserServiceImpl extends ServiceImpl<XxlJobUserMapper, XxlJobUser
         if (xxlJobUser.getPassword() != null && xxlJobUser.getPassword() != "") {
             uw = uw.set("password", xxlJobUser.getPassword());
         }
-        uw = uw.set("role ", xxlJobUser.getRole()).set("permission", xxlJobUser.getPermission()).eq("id", xxlJobUser.getId());
+        uw = uw.set("role", xxlJobUser.getRole()).set("permission", xxlJobUser.getPermission()).eq("id", xxlJobUser.getId());
         
         return this.update(uw);
     }

@@ -492,7 +492,7 @@ public class JobInfoServiceImpl extends ServiceImpl<XxlJobInfoMapper, XxlJobInfo
     public PageModel<XxlJobInfo> pageList(int page, int pagesize, int jobGroup, int triggerStatus, String jobDesc, String executorHandler, String author) {
         Page<XxlJobInfo> p = new Page<>(page, pagesize);
 
-        p.addOrder(new OrderItem().setColumn("id").setAsc(true));
+        p.addOrder(new OrderItem().setColumn("id").setAsc(false));
 
         IPage<XxlJobInfo> iPage = this.page(p, this.getQueryWrapper(jobGroup, triggerStatus, jobDesc, executorHandler, author));
         
@@ -587,7 +587,7 @@ public class JobInfoServiceImpl extends ServiceImpl<XxlJobInfoMapper, XxlJobInfo
     }
 
     @Override
-    public List<XxlJobInfo> getJobsByGroupId(int groupId) {
+    public List<XxlJobInfo> getJobsByGroupId(int job_group) {
         /** 原XxlJobInfoMapper
          *  <select id="getJobsByGroup" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
                 SELECT <include refid="Base_Column_List" />
@@ -595,7 +595,7 @@ public class JobInfoServiceImpl extends ServiceImpl<XxlJobInfoMapper, XxlJobInfo
                 WHERE t.job_group = #{jobGroup}
             </select>
          */
-        return this.list(new QueryWrapper<XxlJobInfo>().eq("job_group", groupId));
+        return this.list(new QueryWrapper<XxlJobInfo>().eq("job_group", job_group));
     }
 
     @Override

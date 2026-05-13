@@ -10,6 +10,9 @@ import org.springframework.stereotype.Service;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.ReentrantLock;
 
 @Service
 public class JobRegistryServiceImpl extends ServiceImpl<XxlJobRegistryMapper, XxlJobRegistry> implements JobRegistryService {
@@ -73,13 +76,14 @@ public class JobRegistryServiceImpl extends ServiceImpl<XxlJobRegistryMapper, Xx
                 ON DUPLICATE KEY UPDATE
                     `update_time` = #{updateTime}
             </insert>
+            *  MySQL的 INSERT...ON DUPLICATE KEY UPDATE 是原子操作，
+            *  但为了支持多数据库（PostgreSQL/Oracle/SQL Server等）暂时忽略原子性
          */
-
         // Try to find existing registry entry
         QueryWrapper<XxlJobRegistry> qw = new QueryWrapper<>();
         qw.eq("registry_group", registryGroup)
-          .eq("registry_key", registryKey)
-          .eq("registry_value", registryValue);
+        .eq("registry_key", registryKey)
+        .eq("registry_value", registryValue);
         XxlJobRegistry existing = this.getOne(qw);
 
         if (existing != null) {

@@ -134,7 +134,7 @@ public class JobLogServiceImpl extends ServiceImpl<XxlJobLogMapper, XxlJobLog> i
 
 		Page<XxlJobLog> p = new Page<XxlJobLog>(page, pagesize);
 
-        p.addOrder(new OrderItem().setColumn("trigger_time").setAsc(false));
+        p.addOrder(new OrderItem().setColumn("id").setAsc(false));
         
 		IPage<XxlJobLog> ipage =  this.page(p, this.getQueryWrapper(jobGroup, jobId, triggerTimeStart, triggerTimeEnd, logStatus));
 		
@@ -339,19 +339,24 @@ public class JobLogServiceImpl extends ServiceImpl<XxlJobLogMapper, XxlJobLog> i
             if (jobId > 0)
                 beforeQW = beforeQW.eq("job_id", jobId);
             beforeQW.orderByDesc("trigger_time");
-            List<XxlJobLog> xxlJobLogDOBefore = this.list(beforeQW);
+
+            IPage<XxlJobLog> iPage = this.page(
+                new Page<XxlJobLog>(1, clearBeforeNum), beforeQW);
+
+            List<XxlJobLog> xxlJobLogDOBefore = iPage.getRecords();
 
             List<Long> idsBefore = xxlJobLogDOBefore.stream().map(XxlJobLog::getId).collect(Collectors.toList());
-            if (idsBefore.size() > clearBeforeNum) {
-                idsBefore = idsBefore.subList(0, clearBeforeNum);
-            }
+
             qw = qw.notIn("id", idsBefore);
         }
 
-        List<Long> resultList = this.list(qw).stream().map(XxlJobLog::getId).collect(Collectors.toList());
-        if (resultList.size() > pagesize) {
-            return resultList.subList(0, pagesize);
-        }
+        IPage<XxlJobLog> iPage = this.page(
+                new Page<XxlJobLog>(1, pagesize), qw);
+
+        List<XxlJobLog> resultListXxlJobLogDO = iPage.getRecords();        
+
+        List<Long> resultList = resultListXxlJobLogDO.stream().map(XxlJobLog::getId).collect(Collectors.toList());
+
         return resultList;
     }
 
