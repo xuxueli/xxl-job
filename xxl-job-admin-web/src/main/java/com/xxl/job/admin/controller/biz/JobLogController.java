@@ -100,7 +100,14 @@ public class JobLogController {
 		JobGroupPermissionUtil.validJobGroupPermission(request, jobGroup);
 
 		// page query
-		PageModel<XxlJobLog> pageModel = jobLogService.pageList(offset, pagesize, jobGroup, jobId, logStatus, filterTime);
+		PageModel<XxlJobLog> pageModel = jobLogService.pageList(
+			(offset / pagesize) + 1, 
+			pagesize, 
+			jobGroup, 
+			jobId, 
+			logStatus, 
+			filterTime
+		);
 
 		return Response.ofSuccess(pageModel);
 	}

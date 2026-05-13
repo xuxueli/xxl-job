@@ -37,24 +37,24 @@ public class JobFailAlarmMonitorHelper {
 				while (!toStop) {
 					try {
 
-						List<Long> failLogIds = XxlJobAdminBootstrap.getInstance().getXxlJobLogMapper().findFailJobLogIds(1000);
+						List<Long> failLogIds = XxlJobAdminBootstrap.getInstance().getJobLogService().findFailJobLogIds(1000);
 						if (failLogIds!=null && !failLogIds.isEmpty()) {
 							for (long failLogId: failLogIds) {
 
 								// lock log
-								int lockRet = XxlJobAdminBootstrap.getInstance().getXxlJobLogMapper().updateAlarmStatus(failLogId, 0, -1);
+								int lockRet = XxlJobAdminBootstrap.getInstance().getJobLogService().updateAlarmStatus(failLogId, 0, -1);
 								if (lockRet < 1) {
 									continue;
 								}
-								XxlJobLog log = XxlJobAdminBootstrap.getInstance().getXxlJobLogMapper().load(failLogId);
-								XxlJobInfo info = XxlJobAdminBootstrap.getInstance().getXxlJobInfoMapper().loadById(log.getJobId());
+								XxlJobLog log = XxlJobAdminBootstrap.getInstance().getJobLogService().load(failLogId);
+								XxlJobInfo info = XxlJobAdminBootstrap.getInstance().getJobInfoService().getById(log.getJobId());
 
 								// 1、fail retry monitor
 								if (log.getExecutorFailRetryCount() > 0) {
 									XxlJobAdminBootstrap.getInstance().getJobTriggerPoolHelper().trigger(log.getJobId(), TriggerTypeEnum.RETRY, (log.getExecutorFailRetryCount()-1), log.getExecutorShardingParam(), log.getExecutorParam(), null);
 									String retryMsg = "<br><br><span style=\"color:#00c0ef;\" > >>>>>>>>>>>Retry<<<<<<<<<<< </span><br>";
 									log.setTriggerMsg(log.getTriggerMsg() + retryMsg);
-									XxlJobAdminBootstrap.getInstance().getXxlJobLogMapper().updateTriggerInfo(log);
+									XxlJobAdminBootstrap.getInstance().getJobLogService().updateTriggerInfo(log);
 								}
 
 								// 2、fail alarm monitor
@@ -66,7 +66,7 @@ public class JobFailAlarmMonitorHelper {
 									newAlarmStatus = 1;
 								}
 
-								XxlJobAdminBootstrap.getInstance().getXxlJobLogMapper().updateAlarmStatus(failLogId, -1, newAlarmStatus);
+								XxlJobAdminBootstrap.getInstance().getJobLogService().updateAlarmStatus(failLogId, -1, newAlarmStatus);
 							}
 						}
 

@@ -78,7 +78,7 @@ public class JobScheduleHelper {
                         long nowTime = System.currentTimeMillis();
 
                         // scan and process job
-                        List<XxlJobInfo> scheduleList = XxlJobAdminBootstrap.getInstance().getXxlJobInfoMapper().scheduleJobQuery(nowTime + PRE_READ_MS, preReadCount);
+                        List<XxlJobInfo> scheduleList = XxlJobAdminBootstrap.getInstance().getJobInfoService().scheduleJobQuery(nowTime + PRE_READ_MS, preReadCount);
                         if (CollectionTool.isNotEmpty(scheduleList)) {
 
                             // 2、push time-ring
@@ -144,7 +144,7 @@ public class JobScheduleHelper {
                             int batchSize = XxlJobAdminBootstrap.getInstance().getScheduleBatchSize();
                             List<List<XxlJobInfo>> scheduleListBatches = CollectionTool.split(scheduleList, batchSize);
                             for (List<XxlJobInfo> scheduleListBatch : scheduleListBatches) {
-                                int totalAffected = XxlJobAdminBootstrap.getInstance().getXxlJobInfoMapper().scheduleBatchUpdate(scheduleListBatch);
+                                int totalAffected = XxlJobAdminBootstrap.getInstance().getJobInfoService().scheduleBatchUpdate(scheduleListBatch);
                                 logger.debug(">>>>>>>>>>> xxl-job, JobScheduleHelper scheduleBatchUpdate records:" + totalAffected);
                             }
 

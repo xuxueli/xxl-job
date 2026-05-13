@@ -74,7 +74,7 @@ public class JobCompleteHelper {
 					try {
 						// 任务结果丢失处理：调度记录停留在 "运行中" 状态超过10min，且对应执行器心跳注册失败不在线，则将本地调度主动标记失败；
 						Date losedTime = DateTool.addMinutes(new Date(), -10);
-						List<Long> losedJobIds  = XxlJobAdminBootstrap.getInstance().getXxlJobLogMapper().findLostJobIds(losedTime);
+						List<Long> losedJobIds  = XxlJobAdminBootstrap.getInstance().getJobLogService().findLostJobIds(losedTime);
 
 						if (losedJobIds!=null && losedJobIds.size()>0) {
 							for (Long logId: losedJobIds) {
@@ -154,7 +154,7 @@ public class JobCompleteHelper {
 
 	private Response<String> doCallback(CallbackRequest handleCallbackParam) {
 		// valid log item
-		XxlJobLog log = XxlJobAdminBootstrap.getInstance().getXxlJobLogMapper().load(handleCallbackParam.getLogId());
+		XxlJobLog log = XxlJobAdminBootstrap.getInstance().getJobLogService().load(handleCallbackParam.getLogId());
 		if (log == null) {
 			return Response.ofFail( "log item not found.");
 		}

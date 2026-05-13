@@ -1,8 +1,8 @@
 package com.xxl.job.admin.web.xxlsso;
 
 import com.xxl.job.admin.constant.Consts;
-import com.xxl.job.admin.core.mapper.XxlJobUserMapper;
-import com.xxl.job.admin.core.model.XxlJobUser;
+import com.xxl.job.admin.model.XxlJobUser;
+import com.xxl.job.admin.service.JobUserService;
 import com.xxl.sso.core.model.LoginInfo;
 import com.xxl.sso.core.store.LoginStore;
 import com.xxl.tool.core.MapTool;
@@ -26,7 +26,7 @@ public class SimpleLoginStore implements LoginStore {
 
 
     @Resource
-    private XxlJobUserMapper xxlJobUserMapper;
+    private JobUserService jobUserService;
 
 
     @Override
@@ -36,8 +36,8 @@ public class SimpleLoginStore implements LoginStore {
         String token_sign = loginInfo.getSignature();
 
         // write token by UserId
-        int ret = xxlJobUserMapper.updateToken(Integer.parseInt(loginInfo.getUserId()), token_sign);
-        return ret > 0 ? Response.ofSuccess() : Response.ofFail("token set fail");
+        boolean ret = jobUserService.updateToken(Integer.parseInt(loginInfo.getUserId()), token_sign);
+        return ret ? Response.ofSuccess() : Response.ofFail("token set fail");
     }
 
     @Override
@@ -48,8 +48,8 @@ public class SimpleLoginStore implements LoginStore {
     @Override
     public Response<String> remove(String userId) {
         // delete token-signature
-        int ret = xxlJobUserMapper.updateToken(Integer.parseInt(userId), "");
-        return ret > 0 ? Response.ofSuccess() : Response.ofFail("token remove fail");
+        boolean ret = jobUserService.updateToken(Integer.parseInt(userId), "");
+        return ret ? Response.ofSuccess() : Response.ofFail("token remove fail");
     }
 
     /**
@@ -59,7 +59,7 @@ public class SimpleLoginStore implements LoginStore {
     public Response<LoginInfo> get(String userId) {
 
         // load login-user
-        XxlJobUser user = xxlJobUserMapper.loadById(Integer.parseInt(userId));
+        XxlJobUser user = jobUserService.loadById(Integer.parseInt(userId));
         if (user == null) {
             return Response.ofFail("userId invalid.");
         }

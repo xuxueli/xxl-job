@@ -1,11 +1,12 @@
 package com.xxl.job.admin.core.service.impl;
 
-import com.xxl.job.admin.core.mapper.XxlJobGroupMapper;
-import com.xxl.job.admin.core.mapper.XxlJobInfoMapper;
 import com.xxl.job.admin.core.mapper.XxlJobLogReportMapper;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobLogReport;
 import com.xxl.job.admin.core.service.DashboardService;
+import com.xxl.job.admin.core.service.JobGroupService;
+import com.xxl.job.admin.core.service.JobInfoService;
+import com.xxl.job.admin.core.service.JobLogReportService;
 import com.xxl.tool.core.DateTool;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
@@ -22,18 +23,18 @@ import java.util.*;
 public class DashboardServiceImpl implements DashboardService {
 
     @Resource
-    private XxlJobInfoMapper xxlJobInfoMapper;
+    private JobInfoService jobInfoService;
     @Resource
-    private XxlJobGroupMapper xxlJobGroupMapper;
+    private JobGroupService jobGroupService;
     @Resource
-    private XxlJobLogReportMapper xxlJobLogReportMapper;
+    private JobLogReportService jobLogReportService;
 
     @Override
     public Map<String, Object> getDashboardInfo() {
-        int jobInfoCount = xxlJobInfoMapper.findAllCount();
+        int jobInfoCount = Math.toIntExact(jobInfoService.count());
 		int jobLogCount = 0;
 		int jobLogSuccessCount = 0;
-		XxlJobLogReport xxlJobLogReport = xxlJobLogReportMapper.queryLogReportTotal();
+		XxlJobLogReport xxlJobLogReport = jobLogReportService.queryLogReportTotal();
 		if (xxlJobLogReport != null) {
 			jobLogCount = xxlJobLogReport.getRunningCount() + xxlJobLogReport.getSucCount() + xxlJobLogReport.getFailCount();
 			jobLogSuccessCount = xxlJobLogReport.getSucCount();
@@ -41,7 +42,7 @@ public class DashboardServiceImpl implements DashboardService {
 
 		// executor count
 		Set<String> executorAddressSet = new HashSet<String>();
-		List<XxlJobGroup> groupList = xxlJobGroupMapper.findAll();
+		List<XxlJobGroup> groupList = jobGroupService.findAll();
 
 		if (groupList!=null && !groupList.isEmpty()) {
 			for (XxlJobGroup group: groupList) {
@@ -72,7 +73,7 @@ public class DashboardServiceImpl implements DashboardService {
 		int triggerCountSucTotal = 0;
 		int triggerCountFailTotal = 0;
 
-		List<XxlJobLogReport> logReportList = xxlJobLogReportMapper.queryLogReport(startDate, endDate);
+		List<XxlJobLogReport> logReportList = jobLogReportService.queryLogReport(startDate, endDate);
 
 		if (logReportList!=null && !logReportList.isEmpty()) {
 			for (XxlJobLogReport item: logReportList) {

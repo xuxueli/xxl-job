@@ -74,7 +74,5 @@ public class OpenApiController {
         } catch (Exception e) {
             return Response.ofFail("openapi invoke error: " + e.getMessage());
         }
-
     }
-
 }

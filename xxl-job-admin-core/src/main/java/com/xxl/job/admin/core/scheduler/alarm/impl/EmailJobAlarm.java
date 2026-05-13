@@ -48,7 +48,7 @@ public class EmailJobAlarm implements JobAlarm {
             }
 
             // email info
-            XxlJobGroup group = XxlJobAdminBootstrap.getInstance().getXxlJobGroupMapper().load(Integer.valueOf(info.getJobGroup()));
+            XxlJobGroup group = XxlJobAdminBootstrap.getInstance().getJobGroupService().load(Integer.valueOf(info.getJobGroup()));
             String personal = "XXL-JOB";
             String title = "XXL-JOB Task Alarm";
             String content = MessageFormat.format(loadEmailJobAlarmTemplate(),

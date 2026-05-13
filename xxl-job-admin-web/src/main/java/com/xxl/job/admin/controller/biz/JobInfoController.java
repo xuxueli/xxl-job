@@ -87,8 +87,14 @@ public class JobInfoController {
 		// page
 		return Response.ofSuccess(
 			jobInfoService.pageList(
-				offset, pagesize, jobGroup,
-				triggerStatus, jobDesc, executorHandler, author)
+				(offset / pagesize) + 1, 
+				pagesize, 
+				jobGroup,
+				triggerStatus, 
+				jobDesc, 
+				executorHandler, 
+				author
+			)
 		);
 	}
 

@@ -1,11 +1,11 @@
 package com.xxl.job.admin.core.scheduler.complete;
 
-import com.xxl.job.admin.core.mapper.XxlJobInfoMapper;
-import com.xxl.job.admin.core.mapper.XxlJobLogMapper;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.admin.core.scheduler.config.XxlJobAdminBootstrap;
 import com.xxl.job.admin.core.scheduler.trigger.TriggerTypeEnum;
+import com.xxl.job.admin.core.service.JobInfoService;
+import com.xxl.job.admin.core.service.JobLogService;
 import com.xxl.job.core.context.XxlJobContext;
 import com.xxl.tool.core.StringTool;
 import com.xxl.tool.response.Response;
@@ -25,12 +25,11 @@ import java.text.MessageFormat;
 public class JobCompleter {
     private static final Logger logger = LoggerFactory.getLogger(JobCompleter.class);
 
+    @Resource
+    private JobInfoService jobInfoService;
 
     @Resource
-    private XxlJobInfoMapper xxlJobInfoMapper;
-    @Resource
-    private XxlJobLogMapper xxlJobLogMapper;
-
+    private JobLogService jobLogService;
 
     /**
      * complete job (limit only once)
@@ -49,7 +48,7 @@ public class JobCompleter {
         // on the way
 
         // 3、update job handle-info
-        return xxlJobLogMapper.updateHandleInfo(xxlJobLog);
+        return jobLogService.updateHandleInfo(xxlJobLog);
     }
 
 
@@ -61,7 +60,7 @@ public class JobCompleter {
         // 1、handle success, to trigger child job
         String triggerChildMsg = null;
         if (XxlJobContext.HANDLE_CODE_SUCCESS == xxlJobLog.getHandleCode()) {
-            XxlJobInfo xxlJobInfo = xxlJobInfoMapper.loadById(xxlJobLog.getJobId());
+            XxlJobInfo xxlJobInfo = jobInfoService.getById(xxlJobLog.getJobId());
 
             // process child job
             if (xxlJobInfo!=null && StringTool.isNotBlank(xxlJobInfo.getChildJobId())) {

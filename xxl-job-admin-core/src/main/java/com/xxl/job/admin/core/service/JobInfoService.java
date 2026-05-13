@@ -1,5 +1,6 @@
 package com.xxl.job.admin.core.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.xxl.job.admin.core.exception.XxlException;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.tool.response.PageModel;
@@ -12,7 +13,7 @@ import java.util.function.Function;
  *
  * @author xuxueli 2016-5-28 15:30:33
  */
-public interface JobInfoService {
+public interface JobInfoService extends IService<XxlJobInfo> {
 
     /**
      * Page list query
@@ -109,10 +110,17 @@ public interface JobInfoService {
     List<XxlJobInfo> getJobsByGroupId(int groupId);
 
     /**
-     * Check if user has permission for the job's jobGroup
-     * @param userId user id
-     * @param jobGroup job group id
-     * @return true if has permission
+     * Get jobs by group id
      */
-    boolean hasPermission(int userId, int jobGroup);
+    List<XxlJobInfo> scheduleJobQuery(long maxNextTime, int pagesize);
+
+    /**
+     * Update schedule info for a single job
+     */
+    int scheduleUpdate(XxlJobInfo xxlJobInfo);
+
+    /**
+     * Batch update schedule info for multiple jobs
+     */
+    int scheduleBatchUpdate(List<XxlJobInfo> jobInfoList);
 }

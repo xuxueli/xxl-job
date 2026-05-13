@@ -1,11 +1,11 @@
 package com.xxl.job.admin.core.service.impl;
 
 import com.xxl.job.admin.core.exception.XxlException;
-import com.xxl.job.admin.core.mapper.XxlJobInfoMapper;
-import com.xxl.job.admin.core.mapper.XxlJobLogGlueMapper;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLogGlue;
 import com.xxl.job.admin.core.service.JobCodeService;
+import com.xxl.job.admin.core.service.JobInfoService;
+import com.xxl.job.admin.core.service.JobLogGlueService;
 import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.core.glue.GlueTypeEnum;
 import com.xxl.tool.core.StringTool;
@@ -20,15 +20,14 @@ import java.util.List;
 @Service
 public class JobCodeServiceImpl implements JobCodeService {
     @Resource
-    private XxlJobInfoMapper xxlJobInfoMapper;
-    
-    @Resource
-    private XxlJobLogGlueMapper xxlJobLogGlueMapper;
+    private JobInfoService jobInfoService;
 
-    
+    @Resource
+    private JobLogGlueService jobLogGlueService;
+
     @Override
     public XxlJobInfo getValidJobInfo(int jobId) {
-        XxlJobInfo jobInfo = xxlJobInfoMapper.loadById(jobId);
+        XxlJobInfo jobInfo = jobInfoService.getById(jobId);
 
 		if (jobInfo == null) {
 			throw new RuntimeException(I18nUtil.getString("jobinfo_glue_jobid_invalid"));
@@ -42,10 +41,8 @@ public class JobCodeServiceImpl implements JobCodeService {
 
     @Override
     public List<XxlJobLogGlue> findJobLogGlues(int jobId) {
-        return xxlJobLogGlueMapper.findByJobId(jobId);
+        return jobLogGlueService.findByJobId(jobId);
     }
-
-    
 
     @Override
     public XxlJobInfo getValidExistsJob(int id, String glueSource, String glueRemark) {
@@ -59,7 +56,7 @@ public class JobCodeServiceImpl implements JobCodeService {
 		if (glueRemark.length()<4 || glueRemark.length()>100) {
 			throw new XxlException(I18nUtil.getString("jobinfo_glue_remark_limit"));
 		}
-		XxlJobInfo existsJobInfo = xxlJobInfoMapper.loadById(id);
+		XxlJobInfo existsJobInfo = jobInfoService.getById(id);
 		if (existsJobInfo == null) {
 			throw new XxlException(I18nUtil.getString("jobinfo_glue_jobid_invalid"));
 		}
@@ -74,7 +71,7 @@ public class JobCodeServiceImpl implements JobCodeService {
         existsJobInfo.setGlueRemark(glueRemark);
         existsJobInfo.setGlueUpdatetime(new Date());
         existsJobInfo.setUpdateTime(new Date());
-        xxlJobInfoMapper.update(existsJobInfo);
+        jobInfoService.updateById(existsJobInfo);
 
         // save glue history
         XxlJobLogGlue jobLogGlue = new XxlJobLogGlue();
@@ -84,11 +81,11 @@ public class JobCodeServiceImpl implements JobCodeService {
         jobLogGlue.setGlueRemark(glueRemark);
         jobLogGlue.setAddTime(new Date());
         jobLogGlue.setUpdateTime(new Date());
-        xxlJobLogGlueMapper.save(jobLogGlue);
+        jobLogGlueService.save(jobLogGlue);
 
         // remove old history
-        xxlJobLogGlueMapper.removeOld(existsJobInfo.getId(), 30);
-        
+        jobLogGlueService.removeOld(existsJobInfo.getId(), 30);
+
         return true;
     }
 

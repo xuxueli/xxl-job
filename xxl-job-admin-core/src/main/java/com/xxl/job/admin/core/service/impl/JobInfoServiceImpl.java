@@ -1,13 +1,17 @@
 package com.xxl.job.admin.core.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.metadata.OrderItem;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xxl.job.admin.core.constant.TriggerStatus;
 import com.xxl.job.admin.core.exception.XxlException;
-import com.xxl.job.admin.core.mapper.XxlJobGroupMapper;
 import com.xxl.job.admin.core.mapper.XxlJobInfoMapper;
-import com.xxl.job.admin.core.mapper.XxlJobLogGlueMapper;
-import com.xxl.job.admin.core.mapper.XxlJobLogMapper;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
+import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.admin.core.scheduler.config.XxlJobAdminBootstrap;
 import com.xxl.job.admin.core.scheduler.cron.CronExpression;
 import com.xxl.job.admin.core.scheduler.misfire.MisfireStrategyEnum;
@@ -15,7 +19,10 @@ import com.xxl.job.admin.core.scheduler.route.ExecutorRouteStrategyEnum;
 import com.xxl.job.admin.core.scheduler.thread.JobScheduleHelper;
 import com.xxl.job.admin.core.scheduler.trigger.TriggerTypeEnum;
 import com.xxl.job.admin.core.scheduler.type.ScheduleTypeEnum;
+import com.xxl.job.admin.core.service.JobGroupService;
 import com.xxl.job.admin.core.service.JobInfoService;
+import com.xxl.job.admin.core.service.JobLogGlueService;
+import com.xxl.job.admin.core.service.JobLogService;
 import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.core.constant.ExecutorBlockStrategyEnum;
 import com.xxl.job.core.glue.GlueTypeEnum;
@@ -24,7 +31,6 @@ import com.xxl.tool.core.DateTool;
 import com.xxl.tool.core.StringTool;
 import com.xxl.tool.json.GsonTool;
 import com.xxl.tool.response.PageModel;
-import com.xxl.tool.response.Response;
 
 import jakarta.annotation.Resource;
 import org.slf4j.Logger;
@@ -44,22 +50,23 @@ import java.util.function.Function;
  * @author xuxueli 2016-5-28 15:30:33
  */
 @Service
-public class JobInfoServiceImpl implements JobInfoService {
+public class JobInfoServiceImpl extends ServiceImpl<XxlJobInfoMapper, XxlJobInfo> implements JobInfoService {
     private static final Logger logger = LoggerFactory.getLogger(JobInfoServiceImpl.class);
 
     @Resource
-    private XxlJobGroupMapper xxlJobGroupMapper;
+    private JobGroupService jobGroupService;
+
     @Resource
-    private XxlJobInfoMapper xxlJobInfoMapper;
+    private JobLogService jobLogService;
+
     @Resource
-    private XxlJobLogMapper xxlJobLogMapper;
-    @Resource
-    private XxlJobLogGlueMapper xxlJobLogGlueMapper;
+    private JobLogGlueService jobLogGlueService;
+
 
     @Override
     public int add(XxlJobInfo jobInfo, String username, Function<Integer, Boolean> groupPermissionCheck) {
         // valid base
-		XxlJobGroup group = xxlJobGroupMapper.load(jobInfo.getJobGroup());
+		XxlJobGroup group = jobGroupService.load(jobInfo.getJobGroup());
 		if (group == null) {
 			throw new XxlException(I18nUtil.getString("system_please_choose")+I18nUtil.getString("jobinfo_field_jobgroup"));
 		}
@@ -102,7 +109,7 @@ public class JobInfoServiceImpl implements JobInfoService {
 			String[] childJobIds = jobInfo.getChildJobId().split(",");
 			for (String childJobIdItem: childJobIds) {
 				if (StringTool.isNotBlank(childJobIdItem) && StringTool.isNumeric(childJobIdItem)) {
-					XxlJobInfo childJobInfo = xxlJobInfoMapper.loadById(Integer.parseInt(childJobIdItem));
+					XxlJobInfo childJobInfo = this.getJobInfoById(Integer.parseInt(childJobIdItem));
 					if (childJobInfo==null) {
 						throw new XxlException(
 								MessageFormat.format((I18nUtil.getString("jobinfo_field_childJobId")+"({0})"+I18nUtil.getString("system_not_found")), childJobIdItem));
@@ -134,7 +141,12 @@ public class JobInfoServiceImpl implements JobInfoService {
         jobInfo.setGlueUpdatetime(new Date());
         // remove the whitespace
         jobInfo.setExecutorHandler(jobInfo.getExecutorHandler().trim());
-        xxlJobInfoMapper.save(jobInfo);
+        
+        /** 原XxlJobInfoMapper
+         * save
+         */
+
+        this.save(jobInfo);
         if (jobInfo.getId() < 1) {
             throw new XxlException(I18nUtil.getString("jobinfo_field_add")+I18nUtil.getString("system_fail"));
         }
@@ -184,7 +196,7 @@ public class JobInfoServiceImpl implements JobInfoService {
 					}
 
 					// valid child
-					XxlJobInfo childJobInfo = xxlJobInfoMapper.loadById(childJobId);
+					XxlJobInfo childJobInfo = this.getJobInfoById(childJobId);
 					if (childJobInfo==null) {
 						throw new XxlException(
 								MessageFormat.format((I18nUtil.getString("jobinfo_field_childJobId")+"({0})"+I18nUtil.getString("system_not_found")), childJobIdItem));
@@ -212,13 +224,13 @@ public class JobInfoServiceImpl implements JobInfoService {
 
 
         // group valid
-		XxlJobGroup jobGroup = xxlJobGroupMapper.load(jobInfo.getJobGroup());
+		XxlJobGroup jobGroup = jobGroupService.load(jobInfo.getJobGroup());
 		if (jobGroup == null) {
 			throw new XxlException(I18nUtil.getString("jobinfo_field_jobgroup")+I18nUtil.getString("system_invalid"));
 		}
 
 		// stage job info
-		XxlJobInfo exists_jobInfo = xxlJobInfoMapper.loadById(jobInfo.getId());
+		XxlJobInfo exists_jobInfo = this.getJobInfoById(jobInfo.getId());
 		if (exists_jobInfo == null) {
 			throw new XxlException(I18nUtil.getString("jobinfo_field_id")+I18nUtil.getString("system_not_found"));
 		}
@@ -259,7 +271,11 @@ public class JobInfoServiceImpl implements JobInfoService {
         exists_jobInfo.setTriggerNextTime(nextTriggerTime);
 
         exists_jobInfo.setUpdateTime(new Date());
-        xxlJobInfoMapper.update(exists_jobInfo);
+
+        /** 原XxlJobInfoMapper
+         * update
+         */
+        this.updateById(exists_jobInfo);
 
         // write operation log
         logger.info(">>>>>>>>>>> xxl-job operation log: operatorName = {}, type = {}, content = {}",
@@ -278,7 +294,7 @@ public class JobInfoServiceImpl implements JobInfoService {
         int id = ids.get(0);
 
         // valid job
-        XxlJobInfo xxlJobInfo = xxlJobInfoMapper.loadById(id);
+        XxlJobInfo xxlJobInfo = this.getJobInfoById(id);
         if (xxlJobInfo == null) {
             return 1;
         }
@@ -288,9 +304,17 @@ public class JobInfoServiceImpl implements JobInfoService {
             throw new XxlException(I18nUtil.getString("system_permission_limit"));
         }
 
-        xxlJobInfoMapper.delete(id);
-        xxlJobLogMapper.delete(id);
-        xxlJobLogGlueMapper.deleteByJobId(id);
+        /** 原XxlJobInfoMapper
+         *  <delete id="delete" parameterType="java.util.HashMap">
+                DELETE
+                FROM xxl_job_info
+                WHERE id = #{id}
+            </delete>
+         */
+
+        this.removeById(id);
+        jobLogService.removeById(id);
+        jobLogGlueService.deleteByJobId(id);
 
         // write operation log
         logger.info(">>>>>>>>>>> xxl-job operation log: operatorName = {}, type = {}, content = {}",
@@ -309,7 +333,7 @@ public class JobInfoServiceImpl implements JobInfoService {
         int id = ids.get(0);
         
         // load and valid
-		XxlJobInfo xxlJobInfo = xxlJobInfoMapper.loadById(id);
+		XxlJobInfo xxlJobInfo = this.getJobInfoById(id);
 		if (xxlJobInfo == null) {
 			throw new XxlException(I18nUtil.getString("jobinfo_glue_jobid_invalid"));
 		}
@@ -345,7 +369,7 @@ public class JobInfoServiceImpl implements JobInfoService {
 		xxlJobInfo.setTriggerNextTime(nextTriggerTime);
 
 		xxlJobInfo.setUpdateTime(new Date());
-		xxlJobInfoMapper.update(xxlJobInfo);
+		this.updateById(xxlJobInfo);
 
 		// write operation log
 		logger.info(">>>>>>>>>>> xxl-job operation log: operatorName = {}, type = {}, content = {}",
@@ -364,7 +388,7 @@ public class JobInfoServiceImpl implements JobInfoService {
         int id = ids.get(0);
 
         // load and valid
-        XxlJobInfo xxlJobInfo = xxlJobInfoMapper.loadById(id);
+        XxlJobInfo xxlJobInfo = this.getJobInfoById(id);
         if (xxlJobInfo == null) {
             throw new XxlException(I18nUtil.getString("jobinfo_glue_jobid_invalid"));
         }
@@ -380,7 +404,7 @@ public class JobInfoServiceImpl implements JobInfoService {
         xxlJobInfo.setTriggerNextTime(0);
 
         xxlJobInfo.setUpdateTime(new Date());
-        xxlJobInfoMapper.update(xxlJobInfo);
+        this.updateById(xxlJobInfo);
 
         // write operation log
         logger.info(">>>>>>>>>>> xxl-job operation log: operatorName = {}, type = {}, content = {}",
@@ -392,7 +416,7 @@ public class JobInfoServiceImpl implements JobInfoService {
     @Override
     public int trigger(int jobId, String userName, String executorParam, String addressList, Function<Integer, Boolean> groupPermissionCheck) {
         // valid job
-        XxlJobInfo xxlJobInfo = xxlJobInfoMapper.loadById(jobId);
+        XxlJobInfo xxlJobInfo = this.getJobInfoById(jobId);
         if (xxlJobInfo == null) {
             throw new XxlException(I18nUtil.getString("jobinfo_glue_jobid_invalid"));
         }
@@ -416,18 +440,89 @@ public class JobInfoServiceImpl implements JobInfoService {
         return 1;
     }
 
-    @Override
-    public PageModel<XxlJobInfo> pageList(int offset, int pagesize, int jobGroup, int triggerStatus, String jobDesc, String executorHandler, String author) {
-        // page list
-        List<XxlJobInfo> list = xxlJobInfoMapper.pageList(offset, pagesize, jobGroup, triggerStatus, jobDesc, executorHandler, author);
-        int list_count = xxlJobInfoMapper.pageListCount(offset, pagesize, jobGroup, triggerStatus, jobDesc, executorHandler, author);
+    /** 原XxlJobInfoMapper
+     * 	<select id="pageList" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
+            SELECT <include refid="Base_Column_List" />
+            FROM xxl_job_info AS t
+            <trim prefix="WHERE" prefixOverrides="AND | OR" >
+                <if test="jobGroup gt 0">
+                    AND t.job_group = #{jobGroup}
+                </if>
+                <if test="triggerStatus gte 0">
+                    AND t.trigger_status = #{triggerStatus}
+                </if>
+                <if test="jobDesc != null and jobDesc != ''">
+                    AND t.job_desc like CONCAT(CONCAT('%', #{jobDesc}), '%')
+                </if>
+                <if test="executorHandler != null and executorHandler != ''">
+                    AND t.executor_handler like CONCAT(CONCAT('%', #{executorHandler}), '%')
+                </if>
+                <if test="author != null and author != ''">
+                    AND t.author like CONCAT(CONCAT('%', #{author}), '%')
+                </if>
+            </trim>
+            ORDER BY id DESC
+            LIMIT #{offset}, #{pagesize}
+        </select>
 
+        <select id="pageListCount" parameterType="java.util.HashMap" resultType="int">
+            SELECT count(1)
+            FROM xxl_job_info AS t
+            <trim prefix="WHERE" prefixOverrides="AND | OR" >
+                <if test="jobGroup gt 0">
+                    AND t.job_group = #{jobGroup}
+                </if>
+                <if test="triggerStatus gte 0">
+                    AND t.trigger_status = #{triggerStatus}
+                </if>
+                <if test="jobDesc != null and jobDesc != ''">
+                    AND t.job_desc like CONCAT(CONCAT('%', #{jobDesc}), '%')
+                </if>
+                <if test="executorHandler != null and executorHandler != ''">
+                    AND t.executor_handler like CONCAT(CONCAT('%', #{executorHandler}), '%')
+                </if>
+                <if test="author != null and author != ''">
+                    AND t.author like CONCAT(CONCAT('%', #{author}), '%')
+                </if>
+            </trim>
+        </select>
+     */
+
+    @Override
+    public PageModel<XxlJobInfo> pageList(int page, int pagesize, int jobGroup, int triggerStatus, String jobDesc, String executorHandler, String author) {
+        Page<XxlJobInfo> p = new Page<>(page, pagesize);
+
+        p.addOrder(new OrderItem().setColumn("id").setAsc(true));
+
+        IPage<XxlJobInfo> iPage = this.page(p, this.getQueryWrapper(jobGroup, triggerStatus, jobDesc, executorHandler, author));
+        
         // package result
         PageModel<XxlJobInfo> pageModel = new PageModel<>();
-        pageModel.setData(list);
-        pageModel.setTotal(list_count);
+        pageModel.setData(iPage.getRecords());
+        pageModel.setTotal(Math.toIntExact(iPage.getTotal()));
 
         return pageModel;
+    }
+
+    @Override
+    public int pageListCount(int offset, int pagesize, int jobGroup, int triggerStatus, String jobDesc,
+            String executorHandler, String author) {
+        return (int) this.count(this.getQueryWrapper(jobGroup, triggerStatus, jobDesc, executorHandler, author));
+    }
+
+    private QueryWrapper<XxlJobInfo> getQueryWrapper(int jobGroup, int triggerStatus, String jobDesc, String executorHandler, String author) {
+        QueryWrapper<XxlJobInfo> qw = new QueryWrapper<>();
+        if (jobGroup > 0)
+            qw = qw.eq("job_group", jobGroup);
+        if (triggerStatus >= 0)
+            qw = qw.eq("trigger_status", triggerStatus);
+        if (StringTool.isNotEmpty(jobDesc))
+            qw = qw.like("job_desc", jobDesc);
+        if (StringTool.isNotEmpty(executorHandler))
+            qw = qw.like("executor_handler", executorHandler);
+        if (StringTool.isNotEmpty(author))
+            qw = qw.like("author", author);
+        return qw;
     }
 
     @Override
@@ -488,17 +583,55 @@ public class JobInfoServiceImpl implements JobInfoService {
 
     @Override
     public XxlJobInfo getJobInfoById(int id) {
-        return xxlJobInfoMapper.loadById(id);
+        return this.getById(id);
     }
 
     @Override
     public List<XxlJobInfo> getJobsByGroupId(int groupId) {
-        return xxlJobInfoMapper.getJobsByGroup(groupId);
+        /** 原XxlJobInfoMapper
+         *  <select id="getJobsByGroup" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
+                SELECT <include refid="Base_Column_List" />
+                FROM xxl_job_info AS t
+                WHERE t.job_group = #{jobGroup}
+            </select>
+         */
+        return this.list(new QueryWrapper<XxlJobInfo>().eq("job_group", groupId));
     }
 
     @Override
-    public boolean hasPermission(int userId, int jobGroup) {
-        return true;
+    public List<XxlJobInfo> scheduleJobQuery(long maxNextTime, int pagesize) {
+        /** 原XxlJobInfoMapper
+         *  <select id="scheduleJobQuery" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
+                SELECT <include refid="Base_Column_List" />
+                FROM xxl_job_info AS t
+                WHERE t.trigger_status = 1
+                    and t.trigger_next_time <![CDATA[ <= ]]> #{maxNextTime}
+                ORDER BY id ASC
+                LIMIT #{pagesize}
+            </select>
+         */
+        QueryWrapper<XxlJobInfo> qw = new QueryWrapper<XxlJobInfo>();
+
+        qw = qw
+            .eq("trigger_status", 1)
+            .le("trigger_next_time", maxNextTime)
+            .orderByAsc("id");
+
+        IPage<XxlJobInfo> iPage = this.page(new Page<XxlJobInfo>(1, pagesize), qw);
+
+        List<XxlJobInfo> res = iPage.getRecords();
+
+        return res;
+    }
+
+    @Override
+    public int scheduleUpdate(XxlJobInfo xxlJobInfo) {
+        return this.getBaseMapper().scheduleUpdate(xxlJobInfo);
+    }
+
+    @Override
+    public int scheduleBatchUpdate(List<XxlJobInfo> jobInfoList) {
+        return this.getBaseMapper().scheduleBatchUpdate(jobInfoList);
     }
 
     /**
@@ -527,13 +660,5 @@ public class JobInfoServiceImpl implements JobInfoService {
                 throw new XxlException(I18nUtil.getString("schedule_type")+I18nUtil.getString("system_invalid"));
             }
         }
-    }
-
-
-    @Override
-    public int pageListCount(int offset, int pagesize, int jobGroup, int triggerStatus, String jobDesc,
-            String executorHandler, String author) {
-        return xxlJobInfoMapper.pageListCount(offset, pagesize, jobGroup, triggerStatus, jobDesc, executorHandler, author);
-
     }
 }

@@ -2,12 +2,14 @@ package com.xxl.job.admin.core.scheduler.trigger;
 
 import com.xxl.job.admin.core.mapper.XxlJobGroupMapper;
 import com.xxl.job.admin.core.mapper.XxlJobInfoMapper;
-import com.xxl.job.admin.core.mapper.XxlJobLogMapper;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.admin.core.scheduler.config.XxlJobAdminBootstrap;
 import com.xxl.job.admin.core.scheduler.route.ExecutorRouteStrategyEnum;
+import com.xxl.job.admin.core.service.JobGroupService;
+import com.xxl.job.admin.core.service.JobInfoService;
+import com.xxl.job.admin.core.service.JobLogService;
 import com.xxl.job.core.constant.ExecutorBlockStrategyEnum;
 import com.xxl.job.core.context.XxlJobContext;
 import com.xxl.job.core.openapi.ExecutorBiz;
@@ -38,7 +40,11 @@ public class JobTrigger {
     @Resource
     private XxlJobGroupMapper xxlJobGroupMapper;
     @Resource
-    private XxlJobLogMapper xxlJobLogMapper;
+    private JobGroupService jobGroupService;
+    @Resource
+    private JobInfoService jobInfoService;
+    @Resource
+    private JobLogService jobLogService;
 
 
     /**
@@ -67,7 +73,7 @@ public class JobTrigger {
                                String addressList) {
 
         // load data
-        XxlJobInfo jobInfo = xxlJobInfoMapper.loadById(jobId);
+        XxlJobInfo jobInfo = jobInfoService.getById(jobId);
         if (jobInfo == null) {
             logger.warn(">>>>>>>>>>>> trigger fail, jobId invalid，jobId={}", jobId);
             return;
@@ -76,7 +82,7 @@ public class JobTrigger {
             jobInfo.setExecutorParam(executorParam);
         }
         int finalFailRetryCount = failRetryCount>=0?failRetryCount:jobInfo.getExecutorFailRetryCount();
-        XxlJobGroup group = xxlJobGroupMapper.load(jobInfo.getJobGroup());
+        XxlJobGroup group = jobGroupService.load(jobInfo.getJobGroup());
 
         // cover addressList
         if (StringTool.isNotBlank(addressList)) {
@@ -139,7 +145,7 @@ public class JobTrigger {
         jobLog.setJobGroup(jobInfo.getJobGroup());
         jobLog.setJobId(jobInfo.getId());
         jobLog.setTriggerTime(triggerTime);
-        xxlJobLogMapper.save(jobLog);
+        jobLogService.saveLog(jobLog);
         logger.debug(">>>>>>>>>>> xxl-job trigger start, jobId:{}", jobLog.getJobId());
 
         // 2、init trigger-param
@@ -233,7 +239,7 @@ public class JobTrigger {
         //jobLog.setTriggerTime();
         jobLog.setTriggerCode(triggerResult.getCode());
         jobLog.setTriggerMsg(triggerMsgSb.toString());
-        xxlJobLogMapper.updateTriggerInfo(jobLog);
+        jobLogService.updateTriggerInfo(jobLog);
 
         logger.debug(">>>>>>>>>>> xxl-job trigger end, jobId:{}", jobLog.getJobId());
     }

@@ -1,28 +1,20 @@
 package com.xxl.job.admin.core.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.xxl.job.admin.core.model.XxlJobLogReport;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.*;
 
-import java.util.Date;
-import java.util.List;
 
 /**
- * job log
+ * job log report
+ *
  * @author xuxueli 2019-11-22
  */
-@Mapper
-public interface XxlJobLogReportMapper {
-
-	/*public int save(XxlJobLogReport xxlJobLogReport);
-
-	public int update(XxlJobLogReport xxlJobLogReport);*/
-
-	public int saveOrUpdate(XxlJobLogReport xxlJobLogReport);
-
-	public List<XxlJobLogReport> queryLogReport(@Param("triggerDayFrom") Date triggerDayFrom,
-												@Param("triggerDayTo") Date triggerDayTo);
-
-	public XxlJobLogReport queryLogReportTotal();
-
+public interface XxlJobLogReportMapper extends BaseMapper<XxlJobLogReport> {
+    @Select("SELECT " +
+                "SUM(running_count) AS runningCount, " +
+                "SUM(suc_count) AS sucCount, " +
+                "SUM(fail_count) AS failCount " +
+            "FROM xxl_job_log_report")
+    XxlJobLogReport queryLogReportTotal();
 }

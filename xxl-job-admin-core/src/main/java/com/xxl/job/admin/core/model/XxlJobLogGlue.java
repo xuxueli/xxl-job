@@ -1,75 +1,79 @@
 package com.xxl.job.admin.core.model;
 
+import com.baomidou.mybatisplus.annotation.*;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * xxl-job log for glue, used to track job code process
- * @author xuxueli 2016-5-19 17:57:46
+ *
+ * @author xuxueli  2016-5-19 17:57:46
  */
-public class XxlJobLogGlue {
+@TableName("xxl_job_logglue")
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class XxlJobLogGlue implements Serializable {
 
-	private int id;
-	private int jobId;				// 任务主键ID
-	private String glueType;		// GLUE类型	#com.xxl.job.core.glue.GlueTypeEnum
-	private String glueSource;
-	private String glueRemark;
-	private Date addTime;
-	private Date updateTime;
+    private static final long serialVersionUID = 1L;
 
-	public int getId() {
-		return id;
-	}
+    /**
+     * 主键ID - 自增
+     */
+    @TableId(type = IdType.AUTO)
+    private int id;
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    /**
+     * 任务主键ID
+     */
+    private int jobId;
 
-	public int getJobId() {
-		return jobId;
-	}
+    /**
+     * GLUE类型
+     */
+    private String glueType;
 
-	public void setJobId(int jobId) {
-		this.jobId = jobId;
-	}
+    /**
+     * GLUE源代码
+     */
+    private String glueSource;
 
-	public String getGlueType() {
-		return glueType;
-	}
+    /**
+     * GLUE备注
+     */
+    private String glueRemark;
 
-	public void setGlueType(String glueType) {
-		this.glueType = glueType;
-	}
+    /**
+     * 创建时间 - 自动填充
+     */
+    @TableField(fill = FieldFill.INSERT)
+    private Date addTime;
 
-	public String getGlueSource() {
-		return glueSource;
-	}
+    /**
+     * 更新时间 - 自动填充
+     */
+    @TableField(fill = FieldFill.INSERT_UPDATE)
+    private Date updateTime;
 
-	public void setGlueSource(String glueSource) {
-		this.glueSource = glueSource;
-	}
+    // Getters and Setters
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
 
-	public String getGlueRemark() {
-		return glueRemark;
-	}
+    public int getJobId() { return jobId; }
+    public void setJobId(int jobId) { this.jobId = jobId; }
 
-	public void setGlueRemark(String glueRemark) {
-		this.glueRemark = glueRemark;
-	}
+    public String getGlueType() { return glueType; }
+    public void setGlueType(String glueType) { this.glueType = glueType; }
 
-	public Date getAddTime() {
-		return addTime;
-	}
+    public String getGlueSource() { return glueSource; }
+    public void setGlueSource(String glueSource) { this.glueSource = glueSource; }
 
-	public void setAddTime(Date addTime) {
-		this.addTime = addTime;
-	}
+    public String getGlueRemark() { return glueRemark; }
+    public void setGlueRemark(String glueRemark) { this.glueRemark = glueRemark; }
 
-	public Date getUpdateTime() {
-		return updateTime;
-	}
+    public Date getAddTime() { return addTime; }
+    public void setAddTime(Date addTime) { this.addTime = addTime; }
 
-	public void setUpdateTime(Date updateTime) {
-		this.updateTime = updateTime;
-	}
-
+    public Date getUpdateTime() { return updateTime; }
+    public void setUpdateTime(Date updateTime) { this.updateTime = updateTime; }
 }

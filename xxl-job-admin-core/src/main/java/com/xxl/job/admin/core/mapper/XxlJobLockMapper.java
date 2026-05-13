@@ -1,18 +1,19 @@
 package com.xxl.job.admin.core.mapper;
 
-import org.apache.ibatis.annotations.Mapper;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.xxl.job.admin.core.model.XxlJobLock;
+import org.apache.ibatis.annotations.*;
 
 /**
  * job lock
  *
  * @author xuxueli 2016-1-12 18:03:45
  */
-@Mapper
-public interface XxlJobLockMapper {
+public interface XxlJobLockMapper extends BaseMapper<XxlJobLock> {
 
     /**
-     * get schedule lock
+     * 获取调度锁（兼容旧方法名）
      */
+    @Select("SELECT lock_name FROM xxl_job_lock WHERE lock_name = 'schedule_lock' FOR UPDATE")
     String scheduleLock();
-
 }

@@ -1,8 +1,9 @@
 package com.xxl.job.admin.core.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.xxl.job.admin.core.model.XxlJobLog;
-import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.Date;
 import java.util.List;
@@ -10,53 +11,28 @@ import java.util.Map;
 
 /**
  * job log
+ *
  * @author xuxueli 2016-1-12 18:03:06
  */
-@Mapper
-public interface XxlJobLogMapper {
+public interface XxlJobLogMapper extends BaseMapper<XxlJobLog> {
 
-	// exist jobId not use jobGroup, not exist use jobGroup
-	public List<XxlJobLog> pageList(@Param("offset") int offset,
-									@Param("pagesize") int pagesize,
-									@Param("jobGroup") int jobGroup,
-									@Param("jobId") int jobId,
-									@Param("triggerTimeStart") Date triggerTimeStart,
-									@Param("triggerTimeEnd") Date triggerTimeEnd,
-									@Param("logStatus") int logStatus);
-	public int pageListCount(@Param("offset") int offset,
-							 @Param("pagesize") int pagesize,
-							 @Param("jobGroup") int jobGroup,
-							 @Param("jobId") int jobId,
-							 @Param("triggerTimeStart") Date triggerTimeStart,
-							 @Param("triggerTimeEnd") Date triggerTimeEnd,
-							 @Param("logStatus") int logStatus);
+    /**
+     * Query log report data (with COALESCE and CASE WHEN - complex SQL, kept here)
+     */
+    @Select("SELECT " +
+                "COALESCE(COUNT(handle_code),0) AS triggerDayCount, " +
+                "COALESCE(SUM(CASE WHEN (trigger_code IN (0, 200) AND handle_code = 0) THEN 1 ELSE 0 END),0) AS triggerDayCountRunning, " +
+                "COALESCE(SUM(CASE WHEN handle_code = 200 THEN 1 ELSE 0 END),0) AS triggerDayCountSuc " +
+            "FROM xxl_job_log " +
+            "WHERE trigger_time BETWEEN #{from} AND #{to}")
+    Map<String, Object> findLogReport(@Param("from") Date from, @Param("to") Date to);
 
-	public XxlJobLog load(@Param("id") long id);
-
-	public long save(XxlJobLog xxlJobLog);
-
-	public int updateTriggerInfo(XxlJobLog xxlJobLog);
-
-	public int updateHandleInfo(XxlJobLog xxlJobLog);
-
-	public int delete(@Param("jobId") int jobId);
-
-	public Map<String, Object> findLogReport(@Param("from") Date from,
-											 @Param("to") Date to);
-
-	public List<Long> findClearLogIds(@Param("jobGroup") int jobGroup,
-									  @Param("jobId") int jobId,
-									  @Param("clearBeforeTime") Date clearBeforeTime,
-									  @Param("clearBeforeNum") int clearBeforeNum,
-									  @Param("pagesize") int pagesize);
-	public int clearLog(@Param("logIds") List<Long> logIds);
-
-	public List<Long> findFailJobLogIds(@Param("pagesize") int pagesize);
-
-	public int updateAlarmStatus(@Param("logId") long logId,
-								 @Param("oldAlarmStatus") int oldAlarmStatus,
-								 @Param("newAlarmStatus") int newAlarmStatus);
-
-	public List<Long> findLostJobIds(@Param("losedTime") Date losedTime);
-
+    /**
+     * Find lost job ids (LEFT JOIN - complex SQL, kept here)
+     */
+    @Select("SELECT t.id FROM xxl_job_log t " +
+                "LEFT JOIN xxl_job_registry t2 ON t.executor_address = t2.registry_value " +
+            "WHERE t.trigger_code = 200 AND t.handle_code = 0 " +
+            "AND t.trigger_time <= #{losedTime} AND t2.id IS NULL")
+    List<Long> findLostJobIds(@Param("losedTime") Date losedTime);
 }

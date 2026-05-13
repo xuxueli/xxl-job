@@ -1,72 +1,62 @@
 package com.xxl.job.admin.core.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.xxl.job.admin.core.model.XxlJobInfo;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
-
 /**
  * job info
+ *
  * @author xuxueli 2016-1-12 18:03:45
  */
-@Mapper
-public interface XxlJobInfoMapper {
+public interface XxlJobInfoMapper extends BaseMapper<XxlJobInfo> {
+    /**
+     * 更新调度状态
+     * 只能更新 trigger_status = 1 的任务，避免停用任务被启用
+     */
+    @Update("<script>" +
+            "UPDATE xxl_job_info SET " +
+                "trigger_last_time = #{triggerLastTime}, " +
+                "trigger_next_time = #{triggerNextTime}" +
+                " <if test='triggerStatus != null and triggerStatus gte 0'>" +
+                        ", trigger_status = #{triggerStatus}" +
+                " </if>" +
+            " WHERE id = #{id} AND trigger_status = 1" +
+            "</script>")
+    int scheduleUpdate(XxlJobInfo xxlJobInfo);
 
-	public List<XxlJobInfo> pageList(@Param("offset") int offset,
-									 @Param("pagesize") int pagesize,
-									 @Param("jobGroup") int jobGroup,
-									 @Param("triggerStatus") int triggerStatus,
-									 @Param("jobDesc") String jobDesc,
-									 @Param("executorHandler") String executorHandler,
-									 @Param("author") String author);
-	public int pageListCount(@Param("offset") int offset,
-							 @Param("pagesize") int pagesize,
-							 @Param("jobGroup") int jobGroup,
-							 @Param("triggerStatus") int triggerStatus,
-							 @Param("jobDesc") String jobDesc,
-							 @Param("executorHandler") String executorHandler,
-							 @Param("author") String author);
-
-	public int save(XxlJobInfo info);
-
-	public XxlJobInfo loadById(@Param("id") int id);
-
-	public int update(XxlJobInfo xxlJobInfo);
-
-	public int delete(@Param("id") long id);
-
-	public List<XxlJobInfo> getJobsByGroup(@Param("jobGroup") int jobGroup);
-
-	public int findAllCount();
-
-	/**
-	 * find schedule job, limit "trigger_status = 1"
-	 *
-	 * @param maxNextTime
-	 * @param pagesize
-	 * @return
-	 */
-	public List<XxlJobInfo> scheduleJobQuery(@Param("maxNextTime") long maxNextTime, @Param("pagesize") int pagesize );
-
-	/**
-	 * update schedule job
-	 *
-	 * 	1、can only update "trigger_status = 1", Avoid stopping tasks from being opened
-	 * 	2、valid "triggerStatus gte 0", filter illegal state
-	 *
-	 * @param xxlJobInfo
-	 * @return
-	 */
-	public int scheduleUpdate(XxlJobInfo xxlJobInfo);
-
-	/**
-	 * batch update job info
-	 *
-	 * @param jobInfoList
-	 * @return
-	 */
-	public int scheduleBatchUpdate(@Param("list") List<XxlJobInfo> jobInfoList);
-
+    /**
+     * 批量更新调度状态
+     */
+    @Update("<script>" +
+                "UPDATE xxl_job_info " +
+                "SET " +
+                        "trigger_last_time = CASE id " +
+                        "<foreach collection='list' item='item' separator=' '>" +
+                                "WHEN #{item.id} THEN #{item.triggerLastTime} " +
+                        "</foreach>" +
+                        "ELSE trigger_last_time END, " +
+                        "trigger_next_time = CASE id " +
+                        "<foreach collection='list' item='item' separator=' '>" +
+                                "WHEN #{item.id} THEN #{item.triggerNextTime} " +
+                        "</foreach>" +
+                        "ELSE trigger_next_time END, " +
+                        "trigger_status = CASE id " +
+                        "<foreach collection='list' item='item' separator=' '>" +
+                                "WHEN #{item.id} THEN " +
+                                "<choose>" +
+                                        "<when test='item.triggerStatus != null and item.triggerStatus gte 0'>" + 
+                                                " #{item.triggerStatus}" +
+                                        "</when>" +
+                                        "<otherwise>trigger_status</otherwise>" +
+                                "</choose> " +
+                        "</foreach>" +
+                        "ELSE trigger_status END " +
+                "WHERE id IN " +
+                        "<foreach collection='list' item='item' open='(' separator=',' close=')'>#{item.id}</foreach>" +
+                        "AND trigger_status = 1" +
+            "</script>")
+    int scheduleBatchUpdate(@Param("list") List<XxlJobInfo> jobInfoList);
 }

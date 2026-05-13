@@ -5,6 +5,11 @@ import com.xxl.job.admin.core.scheduler.alarm.JobAlarmer;
 import com.xxl.job.admin.core.scheduler.complete.JobCompleter;
 import com.xxl.job.admin.core.scheduler.thread.*;
 import com.xxl.job.admin.core.scheduler.trigger.JobTrigger;
+import com.xxl.job.admin.core.service.JobGroupService;
+import com.xxl.job.admin.core.service.JobInfoService;
+import com.xxl.job.admin.core.service.JobLogReportService;
+import com.xxl.job.admin.core.service.JobLogService;
+import com.xxl.job.admin.core.service.JobRegistryService;
 import com.xxl.job.core.constant.Const;
 import com.xxl.job.core.openapi.ExecutorBiz;
 import com.xxl.tool.core.StringTool;
@@ -36,6 +41,7 @@ public class XxlJobAdminBootstrap implements InitializingBean, DisposableBean {
     // ---------------------- instance ----------------------
 
     private static XxlJobAdminBootstrap adminConfig = null;
+
     public static XxlJobAdminBootstrap getInstance() {
         return adminConfig;
     }
@@ -189,15 +195,15 @@ public class XxlJobAdminBootstrap implements InitializingBean, DisposableBean {
 
     // service, mapper
     @Resource
-    private XxlJobLogMapper xxlJobLogMapper;
+    private JobLogService jobLogService;
     @Resource
-    private XxlJobInfoMapper xxlJobInfoMapper;
+    private JobInfoService jobInfoService;
     @Resource
-    private XxlJobRegistryMapper xxlJobRegistryMapper;
+    private JobRegistryService jobRegistryService;
     @Resource
-    private XxlJobGroupMapper xxlJobGroupMapper;
+    private JobGroupService jobGroupService;
     @Resource
-    private XxlJobLogReportMapper xxlJobLogReportMapper;
+    private JobLogReportService jobLogReportService;
     @Resource
     private XxlJobLockMapper xxlJobLockMapper;
     @Resource
@@ -261,24 +267,24 @@ public class XxlJobAdminBootstrap implements InitializingBean, DisposableBean {
         return logretentiondays;
     }
 
-    public XxlJobLogMapper getXxlJobLogMapper() {
-        return xxlJobLogMapper;
+    public JobLogService getJobLogService() {
+        return jobLogService;
     }
 
-    public XxlJobInfoMapper getXxlJobInfoMapper() {
-        return xxlJobInfoMapper;
+    public JobInfoService getJobInfoService() {
+        return jobInfoService;
     }
 
-    public XxlJobRegistryMapper getXxlJobRegistryMapper() {
-        return xxlJobRegistryMapper;
+    public JobRegistryService getJobRegistryService() {
+        return jobRegistryService;
     }
 
-    public XxlJobGroupMapper getXxlJobGroupMapper() {
-        return xxlJobGroupMapper;
+    public JobGroupService getJobGroupService() {
+        return jobGroupService;
     }
 
-    public XxlJobLogReportMapper getXxlJobLogReportMapper() {
-        return xxlJobLogReportMapper;
+    public JobLogReportService getJobLogReportService() {
+        return jobLogReportService;
     }
 
     public XxlJobLockMapper getXxlJobLockMapper() {

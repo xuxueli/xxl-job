@@ -1,18 +1,21 @@
 package com.xxl.job.admin.core.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.xxl.job.admin.core.exception.XxlException;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.tool.response.PageModel;
 
 import java.util.List;
 
-public interface JobGroupService {
+public interface JobGroupService extends IService<XxlJobGroup> {
 
     List<XxlJobGroup> findAll();
 
+    List<XxlJobGroup> findByAddressType(int address_type);
+
     XxlJobGroup load(int id);
 
-    int save(XxlJobGroup jobGroup) throws XxlException;
+    int add(XxlJobGroup jobGroup) throws XxlException;
 
     int update(XxlJobGroup jobGroup) throws XxlException;
 

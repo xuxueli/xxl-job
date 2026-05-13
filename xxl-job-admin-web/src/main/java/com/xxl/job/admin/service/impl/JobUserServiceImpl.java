@@ -1,17 +1,17 @@
 package com.xxl.job.admin.service.impl;
 
-import com.xxl.job.admin.core.mapper.XxlJobUserMapper;
-import com.xxl.job.admin.core.model.XxlJobUser;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.metadata.OrderItem;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.xxl.job.admin.mapper.XxlJobUserMapper;
+import com.xxl.job.admin.model.XxlJobUser;
 import com.xxl.job.admin.service.JobUserService;
-import com.xxl.tool.core.StringTool;
-import com.xxl.tool.crypto.Sha256Tool;
 import com.xxl.tool.response.PageModel;
-import jakarta.annotation.Resource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 
-import java.util.List;
+import org.springframework.stereotype.Service;
 
 /**
  * JobUser service implementation for xxl-job admin web module.
@@ -19,180 +19,122 @@ import java.util.List;
  * @author xuxueli 2019-05-04
  */
 @Service
-public class JobUserServiceImpl implements JobUserService {
-    private static final Logger logger = LoggerFactory.getLogger(JobUserServiceImpl.class);
-
-    private static final int MIN_USERNAME_LENGTH = 4;
-    private static final int MAX_USERNAME_LENGTH = 20;
-    private static final int MIN_PASSWORD_LENGTH = 4;
-    private static final int MAX_PASSWORD_LENGTH = 20;
-
-    @Resource
-    private XxlJobUserMapper xxlJobUserMapper;
-
+public class JobUserServiceImpl extends ServiceImpl<XxlJobUserMapper, XxlJobUser> implements JobUserService {
     @Override
-    public XxlJobUser loadByUserName(String userName) {
-        return xxlJobUserMapper.loadByUserName(userName);
-    }
+    public PageModel<XxlJobUser> pageList(int page, int pagesize, String username, int role) {
+        /** 原XxlJobUserMapper
+         * 
+        <select id="pageList" parameterType="java.util.HashMap" resultMap="XxlJobUser">
+            SELECT <include refid="Base_Column_List" />
+            FROM xxl_job_user AS t
+            <trim prefix="WHERE" prefixOverrides="AND | OR" >
+                <if test="username != null and username != ''">
+                    AND t.username like CONCAT(CONCAT('%', #{username}), '%')
+                </if>
+                <if test="role gt -1">
+                    AND t.role = #{role}
+                </if>
+            </trim>
+            ORDER BY username ASC
+            LIMIT #{offset}, #{pagesize}
+        </select>
 
-    @Override
-    public int add(XxlJobUser jobUser, int userId) {
-        // valid username
-        String username = jobUser.getUsername();
-        if (!validateUsername(username)) {
-            return 0;
+        <select id="pageListCount" parameterType="java.util.HashMap" resultType="int">
+            SELECT count(1)
+            FROM xxl_job_user AS t
+            <trim prefix="WHERE" prefixOverrides="AND | OR" >
+                <if test="username != null and username != ''">
+                    AND t.username like CONCAT(CONCAT('%', #{username}), '%')
+                </if>
+                <if test="role gt -1">
+                    AND t.role = #{role}
+                </if>
+            </trim>
+        </select>
+         */
+        
+        Page<XxlJobUser> p = new Page<XxlJobUser>(page, pagesize);
+
+        p.addOrder(new OrderItem().setColumn("username").setAsc(true));
+
+        QueryWrapper<XxlJobUser> qw = new QueryWrapper<>();
+        if (username != null && username != "") {
+            qw = qw.like("username", username);
         }
-        username = username.trim();
-        if (!validateUsernameLength(username)) {
-            return 0;
+        if (role >= -1) {
+            qw = qw.eq("role", role);
         }
-
-        // valid password
-        String password = jobUser.getPassword();
-        if (!validatePassword(password)) {
-            return 0;
-        }
-        password = password.trim();
-        if (!validatePasswordLength(password)) {
-            return 0;
-        }
-
-        // hash password
-        String passwordHash = Sha256Tool.sha256(password);
-
-        // check if username already exists
-        XxlJobUser existUser = xxlJobUserMapper.loadByUserName(username);
-        if (existUser != null) {
-            return 0;
-        }
-
-        // set processed values
-        jobUser.setUsername(username);
-        jobUser.setPassword(passwordHash);
-
-        // save user
-        int ret = xxlJobUserMapper.save(jobUser);
-        if (ret < 1) {
-            return 0;
-        }
-
-        // write operation log
-        logger.info(">>>>>>>>>>> xxl-job operation log: operatorId = {}, type = {}, content = {}",
-                userId, "user-add", username);
-
-        return jobUser.getId();
-    }
-
-    @Override
-    public boolean update(XxlJobUser jobUser, int userId) {
-        // valid password
-        String password = jobUser.getPassword();
-        if (StringTool.isNotBlank(password)) {
-            password = password.trim();
-            if (!validatePasswordLength(password)) {
-                return false;
-            }
-            // hash password
-            String passwordHash = Sha256Tool.sha256(password);
-            jobUser.setPassword(passwordHash);
-        } else {
-            jobUser.setPassword(null);
-        }
-
-        // update user
-        int ret = xxlJobUserMapper.update(jobUser);
-        if (ret < 1) {
-            return false;
-        }
-
-        // write operation log
-        logger.info(">>>>>>>>>>> xxl-job operation log: operatorId = {}, type = {}, content = {}",
-                userId, "user-update", jobUser.getId());
-
-        return true;
-    }
-
-    @Override
-    public boolean remove(int id, int userId) {
-        int ret = xxlJobUserMapper.delete(id);
-        if (ret < 1) {
-            return false;
-        }
-
-        // write operation log
-        logger.info(">>>>>>>>>>> xxl-job operation log: operatorId = {}, type = {}, content = {}",
-                userId, "user-remove", id);
-
-        return true;
-    }
-
-    @Override
-    public PageModel<XxlJobUser> pageList(int offset, int pagesize, String searchName, int role) {
-        // page list
-        List<XxlJobUser> list = xxlJobUserMapper.pageList(offset, pagesize, searchName, role);
-        int listCount = xxlJobUserMapper.pageListCount(offset, pagesize, searchName, role);
-
-        // filter password from results
-        if (list != null && !list.isEmpty()) {
-            for (XxlJobUser item : list) {
-                item.setPassword(null);
-            }
-        }
+        IPage<XxlJobUser> iPage = this.page(p, qw);
 
         // package result
         PageModel<XxlJobUser> pageModel = new PageModel<>();
-        pageModel.setData(list);
-        pageModel.setTotal(listCount);
+        pageModel.setData(iPage.getRecords());
+        pageModel.setTotal(Math.toIntExact(iPage.getTotal()));
 
         return pageModel;
     }
 
     @Override
-    public boolean updatePassword(int userId, String oldPassword, String password) {
-        // load user
-        XxlJobUser existUser = xxlJobUserMapper.loadById(userId);
-        if (existUser == null) {
-            return false;
+    public XxlJobUser loadByUserName(String username) {
+        /** 原XxlJobUserMapper
+         *  <select id="loadByUserName" parameterType="java.util.HashMap" resultMap="XxlJobUser">
+                SELECT <include refid="Base_Column_List" />
+                FROM xxl_job_user AS t
+                WHERE t.username = #{username}
+            </select>
+         */
+        return this.getOne(new QueryWrapper<XxlJobUser>().eq("username", username));
+    }
+
+    @Override
+    public XxlJobUser loadById(int id) {
+        /** 原XxlJobUserMapper
+         *  <select id="loadById" parameterType="java.util.HashMap" resultMap="XxlJobUser">
+                SELECT <include refid="Base_Column_List" />
+                FROM xxl_job_user AS t
+                WHERE t.id = #{id}
+            </select>
+         */
+        return this.getById(id);
+    }
+
+    @Override
+    public boolean updateToken(int id, String token) {
+        /** 原XxlJobUserMapper
+         *  <update id="updateToken" parameterType="java.util.HashMap" >
+                UPDATE xxl_job_user
+                SET token = #{token}
+                WHERE id = #{id}
+            </update>
+         */
+        return this.update(new UpdateWrapper<XxlJobUser>()
+            .set("token", token)
+            .eq("id", id)
+        );
+    }
+
+    @Override
+    public boolean updateUser(XxlJobUser xxlJobUser) {
+        /** 原XxlJobUserMapper
+         *  <update id="update" parameterType="com.xxl.job.admin.model.XxlJobUser" >
+                UPDATE xxl_job_user
+                SET
+                    <if test="password != null and password != ''">
+                        password = #{password},
+                    </if>
+                    role = #{role},
+                    permission = #{permission}
+                WHERE id = #{id}
+            </update>
+         */
+        UpdateWrapper<XxlJobUser> uw = new UpdateWrapper<XxlJobUser>();
+        if (xxlJobUser.getPassword() != null && xxlJobUser.getPassword() != "") {
+            uw = uw.set("password", xxlJobUser.getPassword());
         }
-
-        // verify old password
-        String oldPasswordHash = Sha256Tool.sha256(oldPassword);
-        if (!oldPasswordHash.equals(existUser.getPassword())) {
-            return false;
-        }
-
-        // hash new password
-        String passwordHash = Sha256Tool.sha256(password);
-        existUser.setPassword(passwordHash);
-
-        // update user
-        int ret = xxlJobUserMapper.update(existUser);
-        if (ret < 1) {
-            return false;
-        }
-
-        // write operation log
-        logger.info(">>>>>>>>>>> xxl-job operation log: operatorId = {}, type = {}, content = {}",
-                userId, "user-update-password", userId);
-
-        return true;
+        uw = uw.set("role ", xxlJobUser.getRole()).set("permission", xxlJobUser.getPermission()).eq("id", xxlJobUser.getId());
+        
+        return this.update(uw);
     }
 
-    private boolean validateUsername(String username) {
-        return StringTool.isNotBlank(username);
-    }
-
-    private boolean validateUsernameLength(String username) {
-        int length = username.length();
-        return length >= MIN_USERNAME_LENGTH && length <= MAX_USERNAME_LENGTH;
-    }
-
-    private boolean validatePassword(String password) {
-        return StringTool.isNotBlank(password);
-    }
-
-    private boolean validatePasswordLength(String password) {
-        int length = password.length();
-        return length >= MIN_PASSWORD_LENGTH && length <= MAX_PASSWORD_LENGTH;
-    }
+    
 }

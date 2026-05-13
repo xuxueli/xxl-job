@@ -69,7 +69,7 @@ public class JobLogReportHelper {
                             xxlJobLogReport.setUpdateTime(new Date());
 
                             // fill count-data
-                            Map<String, Object> triggerCountMap = XxlJobAdminBootstrap.getInstance().getXxlJobLogMapper().findLogReport(todayFrom, todayTo);
+                            Map<String, Object> triggerCountMap = XxlJobAdminBootstrap.getInstance().getJobLogService().findLogReport(todayFrom, todayTo);
                             if (triggerCountMap!=null && !triggerCountMap.isEmpty()) {
                                 int triggerDayCount = triggerCountMap.containsKey("triggerDayCount")?Integer.parseInt(String.valueOf(triggerCountMap.get("triggerDayCount"))):0;
                                 int triggerDayCountRunning = triggerCountMap.containsKey("triggerDayCountRunning")?Integer.parseInt(String.valueOf(triggerCountMap.get("triggerDayCountRunning"))):0;
@@ -82,7 +82,7 @@ public class JobLogReportHelper {
                             }
 
                             // do refresh:
-                            XxlJobAdminBootstrap.getInstance().getXxlJobLogReportMapper().saveOrUpdate(xxlJobLogReport);      // 0-fail; 1-save suc; 2-update suc;
+                            XxlJobAdminBootstrap.getInstance().getJobLogReportService().saveOrUpdate(xxlJobLogReport);      // 0-fail; 1-save suc; 2-update suc;
                             /*if (ret < 1) {
                                 XxlJobAdminBootstrap.getInstance().getXxlJobLogReportMapper().save(xxlJobLogReport);
                             }*/
@@ -111,9 +111,9 @@ public class JobLogReportHelper {
                             // clean expired log
                             List<Long> logIds = null;
                             do {
-                                logIds = XxlJobAdminBootstrap.getInstance().getXxlJobLogMapper().findClearLogIds(0, 0, clearBeforeTime, 0, 1000);
+                                logIds = XxlJobAdminBootstrap.getInstance().getJobLogService().findClearLogIds(0, 0, clearBeforeTime, 0, 1000);
                                 if (logIds!=null && !logIds.isEmpty()) {
-                                    XxlJobAdminBootstrap.getInstance().getXxlJobLogMapper().clearLog(logIds);
+                                    XxlJobAdminBootstrap.getInstance().getJobLogService().clearLog(logIds);
                                 }
                             } while (logIds!=null && !logIds.isEmpty());
 

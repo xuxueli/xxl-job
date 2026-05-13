@@ -2,8 +2,8 @@ package com.xxl.job.admin.controller.biz;
 
 import com.xxl.job.admin.constant.Consts;
 import com.xxl.job.admin.core.model.XxlJobGroup;
-import com.xxl.job.admin.core.model.XxlJobUser;
 import com.xxl.job.admin.core.service.JobGroupService;
+import com.xxl.job.admin.model.XxlJobUser;
 import com.xxl.job.admin.service.JobUserService;
 import com.xxl.job.admin.util.I18nUtil;
 import com.xxl.sso.core.annotation.XxlSso;
@@ -33,6 +33,7 @@ public class JobUserController {
 
     @Resource
     private JobUserService jobUserService;
+
     @Resource
     private JobGroupService jobGroupService;
 
@@ -51,7 +52,12 @@ public class JobUserController {
                                                     @RequestParam(required = false, defaultValue = "10") int pagesize,
                                                     @RequestParam String username,
                                                     @RequestParam int role) {
-        PageModel<XxlJobUser> pageModel = jobUserService.pageList(offset, pagesize, username, role);
+        PageModel<XxlJobUser> pageModel = jobUserService.pageList(
+            (offset / pagesize) + 1, 
+            pagesize, 
+            username, 
+            role
+        );
         return Response.ofSuccess(pageModel);
     }
 
@@ -79,8 +85,14 @@ public class JobUserController {
         String passwordHash = Sha256Tool.sha256(xxlJobUser.getPassword());
         xxlJobUser.setPassword(passwordHash);
 
-        int ret = jobUserService.add(xxlJobUser, 0);
-        return ret>0?Response.ofSuccess():Response.ofFail();
+        // check repeat
+        XxlJobUser existUser = jobUserService.loadByUserName(xxlJobUser.getUsername());
+        if (existUser != null) {
+            return Response.ofFail( I18nUtil.getString("user_username_repeat") );
+        }
+
+        jobUserService.save(xxlJobUser);
+        return Response.ofSuccess();
     }
 
     @RequestMapping("/update")
@@ -106,8 +118,8 @@ public class JobUserController {
             xxlJobUser.setPassword(null);
         }
 
-        boolean ret = jobUserService.update(xxlJobUser, 0);
-        return ret?Response.ofSuccess():Response.ofFail();
+        jobUserService.updateUser(xxlJobUser);
+        return Response.ofSuccess();
     }
 
     @RequestMapping("/delete")
@@ -124,8 +136,8 @@ public class JobUserController {
             return Response.ofFail(I18nUtil.getString("user_update_loginuser_limit"));
         }
 
-        boolean ret = jobUserService.remove(ids.get(0), 0);
-        return ret?Response.ofSuccess():Response.ofFail();
+        boolean ret = jobUserService.removeBatchByIds(ids);
+        return ret ? Response.ofSuccess() : Response.ofFail();
     }
 
 }
