@@ -1,8 +1,8 @@
 package com.xxl.job.admin.controller.base;
 
 import com.xxl.job.admin.constant.Consts;
-import com.xxl.job.admin.core.model.dto.XxlBootResourceDTO;
-import com.xxl.job.admin.core.service.DashboardService;
+import com.xxl.job.admin.model.dto.XxlBootResourceDTO;
+import com.xxl.job.admin.service.DashboardService;
 import com.xxl.job.admin.util.I18nUtil;
 import com.xxl.sso.core.annotation.XxlSso;
 import com.xxl.sso.core.helper.XxlSsoHelper;

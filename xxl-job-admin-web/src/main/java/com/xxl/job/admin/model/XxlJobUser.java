@@ -18,7 +18,7 @@ public class XxlJobUser implements Serializable {
      * 主键ID - 自增
      */
     @TableId(type = IdType.AUTO)
-    private int id;
+    private Integer id;
 
     /**
      * 账号
@@ -46,8 +46,8 @@ public class XxlJobUser implements Serializable {
     private String permission;
 
     // Getters and Setters
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
 
     public String getUsername() { return username; }
     public void setUsername(String username) { this.username = username; }

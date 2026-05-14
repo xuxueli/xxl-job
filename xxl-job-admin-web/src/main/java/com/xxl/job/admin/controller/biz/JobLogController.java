@@ -1,12 +1,12 @@
 package com.xxl.job.admin.controller.biz;
 
-import com.xxl.job.admin.core.model.XxlJobGroup;
-import com.xxl.job.admin.core.model.XxlJobInfo;
-import com.xxl.job.admin.core.model.XxlJobLog;
-import com.xxl.job.admin.core.scheduler.exception.XxlJobException;
-import com.xxl.job.admin.core.service.JobGroupService;
-import com.xxl.job.admin.core.service.JobInfoService;
-import com.xxl.job.admin.core.service.JobLogService;
+import com.xxl.job.admin.model.XxlJobGroup;
+import com.xxl.job.admin.model.XxlJobInfo;
+import com.xxl.job.admin.model.XxlJobLog;
+import com.xxl.job.admin.scheduler.exception.XxlJobException;
+import com.xxl.job.admin.service.JobGroupService;
+import com.xxl.job.admin.service.JobInfoService;
+import com.xxl.job.admin.service.JobLogService;
 import com.xxl.job.admin.util.I18nUtil;
 import com.xxl.job.admin.util.JobGroupPermissionUtil;
 import com.xxl.job.core.openapi.model.LogResult;

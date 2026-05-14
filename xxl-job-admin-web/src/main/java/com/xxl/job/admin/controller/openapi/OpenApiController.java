@@ -1,6 +1,6 @@
 package com.xxl.job.admin.controller.openapi;
 
-import com.xxl.job.admin.core.scheduler.config.XxlJobAdminBootstrap;
+import com.xxl.job.admin.scheduler.config.XxlJobAdminBootstrap;
 import com.xxl.job.core.constant.Const;
 import com.xxl.job.core.openapi.AdminBiz;
 import com.xxl.job.core.openapi.model.CallbackRequest;

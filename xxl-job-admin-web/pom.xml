@@ -44,10 +44,10 @@
 		</dependency>
 
 		<!-- mybatis-starter -->
-		<dependency>
-			<groupId>org.mybatis.spring.boot</groupId>
-			<artifactId>mybatis-spring-boot-starter</artifactId>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>org.mybatis.spring.boot</groupId>-->
+<!--			<artifactId>mybatis-spring-boot-starter</artifactId>-->
+<!--		</dependency>-->
 		<!-- mysql -->
 		<dependency>
 			<groupId>com.mysql</groupId>

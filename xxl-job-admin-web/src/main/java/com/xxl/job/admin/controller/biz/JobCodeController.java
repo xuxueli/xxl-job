@@ -1,9 +1,9 @@
 package com.xxl.job.admin.controller.biz;
 
-import com.xxl.job.admin.core.model.XxlJobInfo;
-import com.xxl.job.admin.core.model.XxlJobLogGlue;
-import com.xxl.job.admin.core.service.JobCodeService;
-import com.xxl.job.admin.core.service.JobInfoService;
+import com.xxl.job.admin.model.XxlJobInfo;
+import com.xxl.job.admin.model.XxlJobLogGlue;
+import com.xxl.job.admin.service.JobCodeService;
+import com.xxl.job.admin.service.JobInfoService;
 import com.xxl.job.admin.util.JobGroupPermissionUtil;
 import com.xxl.job.core.glue.GlueTypeEnum;
 import com.xxl.sso.core.model.LoginInfo;

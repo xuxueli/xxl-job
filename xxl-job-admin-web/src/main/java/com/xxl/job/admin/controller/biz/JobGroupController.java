@@ -1,8 +1,8 @@
 package com.xxl.job.admin.controller.biz;
 
 import com.xxl.job.admin.constant.Consts;
-import com.xxl.job.admin.core.model.XxlJobGroup;
-import com.xxl.job.admin.core.service.JobGroupService;
+import com.xxl.job.admin.model.XxlJobGroup;
+import com.xxl.job.admin.service.JobGroupService;
 import com.xxl.sso.core.annotation.XxlSso;
 import com.xxl.tool.response.PageModel;
 import com.xxl.tool.response.Response;

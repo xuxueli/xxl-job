@@ -1,6 +1,6 @@
 package com.xxl.job.admin.web.exception;
 
-import com.xxl.job.admin.core.exception.XxlException;
+import com.xxl.job.admin.exception.XxlException;
 import com.xxl.tool.response.Response;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
