@@ -1,63 +1,66 @@
 package com.xxl.job.admin.model;
 
+import com.baomidou.mybatisplus.annotation.*;
+
+import java.io.Serializable;
+
 /**
- * @author xuxueli 2019-05-04 16:43:12
+ * xxl-job user
+ *
+ * @author xuxueli  2019-05-04 16:43:12
  */
-public class XxlJobUser {
-	
-	private int id;
-	private String username;		// 账号
-	private String password;		// 密码
-	private String token;			// 登录token
-	private int role;				// 角色：0-普通用户、1-管理员
-	private String permission;		// 权限：执行器ID列表，多个逗号分割
+@TableName("xxl_job_user")
+public class XxlJobUser implements Serializable {
 
-	public int getId() {
-		return id;
-	}
+    private static final long serialVersionUID = 1L;
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    /**
+     * 主键ID - 自增
+     */
+    @TableId(type = IdType.AUTO)
+    private Integer id;
 
-	public String getUsername() {
-		return username;
-	}
+    /**
+     * 账号
+     */
+    private String username;
 
-	public void setUsername(String username) {
-		this.username = username;
-	}
+    /**
+     * 密码
+     */
+    private String password;
 
-	public String getPassword() {
-		return password;
-	}
+    /**
+     * 登录token
+     */
+    private String token;
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    /**
+     * 角色：0-普通用户、1-管理员
+     */
+    private int role;
 
-	public String getToken() {
-		return token;
-	}
+    /**
+     * 权限：执行器ID列表，多个逗号分割
+     */
+    private String permission;
 
-	public void setToken(String token) {
-		this.token = token;
-	}
+    // Getters and Setters
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
 
-	public int getRole() {
-		return role;
-	}
+    public String getUsername() { return username; }
+    public void setUsername(String username) { this.username = username; }
 
-	public void setRole(int role) {
-		this.role = role;
-	}
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
 
-	public String getPermission() {
-		return permission;
-	}
+    public String getToken() { return token; }
+    public void setToken(String token) { this.token = token; }
 
-	public void setPermission(String permission) {
-		this.permission = permission;
-	}
+    public int getRole() { return role; }
+    public void setRole(int role) { this.role = role; }
 
+    public String getPermission() { return permission; }
+    public void setPermission(String permission) { this.permission = permission; }
 }

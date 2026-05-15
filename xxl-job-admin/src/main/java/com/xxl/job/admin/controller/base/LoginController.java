@@ -1,6 +1,6 @@
 package com.xxl.job.admin.controller.base;
 
-import com.xxl.job.admin.mapper.XxlJobUserMapper;
+import com.xxl.job.admin.service.JobUserService;
 import com.xxl.job.admin.model.XxlJobUser;
 import com.xxl.job.admin.util.I18nUtil;
 import com.xxl.sso.core.annotation.XxlSso;
@@ -29,7 +29,7 @@ import org.springframework.web.servlet.view.RedirectView;
 public class LoginController {
 
 	@Resource
-	private XxlJobUserMapper xxlJobUserMapper;
+	private JobUserService jobUserService;
 
 	@RequestMapping("/login")
 	@XxlSso(login = false)
@@ -57,7 +57,7 @@ public class LoginController {
 		}
 
 		// valid user、status
-		XxlJobUser xxlJobUser = xxlJobUserMapper.loadByUserName(userName);
+		XxlJobUser xxlJobUser = jobUserService.loadByUserName(userName);
 		if (xxlJobUser == null) {
 			return Response.ofFail( I18nUtil.getString("login_param_invalid") );
 		}
@@ -109,14 +109,14 @@ public class LoginController {
 
 		// valid old pwd
 		Response<LoginInfo> loginInfoResponse = XxlSsoHelper.loginCheckWithAttr(request);
-		XxlJobUser existUser = xxlJobUserMapper.loadByUserName(loginInfoResponse.getData().getUserName());
+		XxlJobUser existUser = jobUserService.loadByUserName(loginInfoResponse.getData().getUserName());
 		if (!oldPasswordHash.equals(existUser.getPassword())) {
 			return Response.ofFail(I18nUtil.getString("change_pwd_field_oldpwd") + I18nUtil.getString("system_invalid"));
 		}
 
 		// write new
 		existUser.setPassword(passwordHash);
-		xxlJobUserMapper.update(existUser);
+		jobUserService.updateUser(existUser);
 
 		return Response.ofSuccess();
 	}

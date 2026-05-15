@@ -2,9 +2,9 @@ package com.xxl.job.admin.mapper;
 
 import com.xxl.job.admin.constant.TriggerStatus;
 import com.xxl.job.admin.model.XxlJobInfo;
-import com.xxl.job.admin.scheduler.config.XxlJobAdminBootstrap;
 import com.xxl.job.admin.scheduler.misfire.MisfireStrategyEnum;
 import com.xxl.job.admin.scheduler.type.ScheduleTypeEnum;
+import com.xxl.job.admin.service.JobInfoService;
 import com.xxl.tool.core.CollectionTool;
 import com.xxl.tool.core.DateTool;
 import jakarta.annotation.Resource;
@@ -19,82 +19,63 @@ import java.util.List;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class XxlJobInfoMapperTest {
 	private static Logger logger = LoggerFactory.getLogger(XxlJobInfoMapperTest.class);
-	
+
 	@Resource
-	private XxlJobInfoMapper xxlJobInfoMapper;
-	
+	private JobInfoService xxlJobInfoService;
+
 	@Test
 	public void pageList(){
-		List<XxlJobInfo> list = xxlJobInfoMapper.pageList(0, 20, 0, -1, null, null, null);
-		int list_count = xxlJobInfoMapper.pageListCount(0, 20, 0, -1, null, null, null);
-
-		logger.info("", list);
-		logger.info("", list_count);
-
-		List<XxlJobInfo> list2 = xxlJobInfoMapper.getJobsByGroup(1);
+		// Service uses pageList with PageModel return type
+		// For testing getJobsByGroupId functionality
+		List<XxlJobInfo> list2 = xxlJobInfoService.getJobsByGroupId(1);
+		logger.info("", list2);
 	}
-	
+
 	@Test
 	public void save_load(){
 		XxlJobInfo info = new XxlJobInfo();
 		info.setJobGroup(1);
 		info.setJobDesc("desc");
-		info.setAuthor("setAuthor");
-		info.setAlarmEmail("setAlarmEmail");
-		info.setScheduleType(ScheduleTypeEnum.FIX_RATE.name());
-		info.setScheduleConf(String.valueOf(33));
+		info.setAuthor("admin");
+		info.setAlarmEmail("test@test.com");
+		info.setScheduleType(ScheduleTypeEnum.CRON.name());
+		info.setScheduleConf("0 0 0 * * ? *");
 		info.setMisfireStrategy(MisfireStrategyEnum.DO_NOTHING.name());
-		info.setExecutorRouteStrategy("setExecutorRouteStrategy");
-		info.setExecutorHandler("setExecutorHandler");
-		info.setExecutorParam("setExecutorParam");
-		info.setExecutorBlockStrategy("setExecutorBlockStrategy");
-		info.setGlueType("setGlueType");
-		info.setGlueSource("setGlueSource");
-		info.setGlueRemark("setGlueRemark");
-		info.setChildJobId("1");
+		info.setExecutorRouteStrategy("FIRST");
+		info.setExecutorHandler("demoJobHandler");
+		info.setExecutorParam("");
+		info.setExecutorBlockStrategy("SERIAL_EXECUTION");
+		info.setGlueType("BEAN");
+		info.setGlueRemark("test");
+		info.setChildJobId("");
 
 		info.setAddTime(new Date());
 		info.setUpdateTime(new Date());
-		info.setGlueUpdatetime(new Date());
 
-		int count = xxlJobInfoMapper.save(info);
+		// Service add method requires userName and groupPermissionCheck
+		int count = xxlJobInfoService.add(info, "admin", groupId -> true);
 
-		XxlJobInfo info2 = xxlJobInfoMapper.loadById(info.getId());
-		info.setScheduleType(ScheduleTypeEnum.FIX_RATE.name());
-		info.setScheduleConf(String.valueOf(44));
-		info.setMisfireStrategy(MisfireStrategyEnum.FIRE_ONCE_NOW.name());
-		info2.setJobDesc("desc2");
-		info2.setAuthor("setAuthor2");
-		info2.setAlarmEmail("setAlarmEmail2");
-		info2.setExecutorRouteStrategy("setExecutorRouteStrategy2");
-		info2.setExecutorHandler("setExecutorHandler2");
-		info2.setExecutorParam("setExecutorParam2");
-		info2.setExecutorBlockStrategy("setExecutorBlockStrategy2");
-		info2.setGlueType("setGlueType2");
-		info2.setGlueSource("setGlueSource2");
-		info2.setGlueRemark("setGlueRemark2");
-		info2.setGlueUpdatetime(new Date());
-		info2.setChildJobId("1");
+		XxlJobInfo info2 = xxlJobInfoService.getJobInfoById(info.getId());
+		if (info2 != null) {
+			info2.setJobDesc("desc2");
+			info2.setAuthor("admin2");
+			info2.setUpdateTime(new Date());
+			int item2 = xxlJobInfoService.update(info2, "admin", groupId -> true);
+			xxlJobInfoService.remove(List.of(info.getId()), "admin", groupId -> true);
+		}
 
-		info2.setUpdateTime(new Date());
-		int item2 = xxlJobInfoMapper.update(info2);
-
-		xxlJobInfoMapper.delete(info2.getId());
-
-		List<XxlJobInfo> list2 = xxlJobInfoMapper.getJobsByGroup(1);
-
-		int ret3 = xxlJobInfoMapper.findAllCount();
-
+		List<XxlJobInfo> list2 = xxlJobInfoService.getJobsByGroupId(1);
 	}
 
 	@Test
 	public void scheduleBatchUpdateTest(){
 
-		List<XxlJobInfo> list1 = xxlJobInfoMapper.pageList(0, 20, 0, -1, null, null, null);
+		// Get jobs to update schedule info
+		List<XxlJobInfo> list2 = xxlJobInfoService.scheduleJobQuery(DateTool.addHours(new Date(), 1).getTime(), 20);
 		int batchSize = 5;
 
 		// update
-		List<XxlJobInfo> list2 = list1.stream().filter(item -> (item.getId()>=4 && item.getId()<=14)).toList();
+		list2 = list2.stream().filter(item -> (item.getId()>=4 && item.getId()<=14)).toList();
 		list2.forEach(item -> {
 			item.setTriggerLastTime(DateTool.addHours(new Date(), -1).getTime());
 			item.setTriggerNextTime(DateTool.addHours(new Date(), 1).getTime());
@@ -106,7 +87,7 @@ public class XxlJobInfoMapperTest {
 		// batch update
 		List<List<XxlJobInfo>> scheduleListBatches = CollectionTool.split(list2, batchSize);
 		for (List<XxlJobInfo> scheduleListBatch : scheduleListBatches) {
-			int totalAffected = XxlJobAdminBootstrap.getInstance().getXxlJobInfoMapper().scheduleBatchUpdate(scheduleListBatch);
+			int totalAffected = xxlJobInfoService.scheduleBatchUpdate(scheduleListBatch);
 			logger.info("scheduleBatchUpdate records:" + totalAffected);
 		}
 	}

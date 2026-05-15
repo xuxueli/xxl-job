@@ -1,6 +1,7 @@
 package com.xxl.job.admin.mapper;
 
 import com.xxl.job.admin.model.XxlJobLogGlue;
+import com.xxl.job.admin.service.JobLogGlueService;
 import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,7 +13,7 @@ import java.util.List;
 public class XxlJobLogGlueMapperTest {
 
     @Resource
-    private XxlJobLogGlueMapper xxlJobLogGlueMapper;
+    private JobLogGlueService xxlJobLogGlueService;
 
     @Test
     public void test(){
@@ -24,13 +25,13 @@ public class XxlJobLogGlueMapperTest {
 
         logGlue.setAddTime(new Date());
         logGlue.setUpdateTime(new Date());
-        int ret = xxlJobLogGlueMapper.save(logGlue);
+        boolean ret = xxlJobLogGlueService.save(logGlue);
 
-        List<XxlJobLogGlue> list = xxlJobLogGlueMapper.findByJobId(1);
+        List<XxlJobLogGlue> list = xxlJobLogGlueService.findByJobId(1);
 
-        int ret2 = xxlJobLogGlueMapper.removeOld(1, 1);
+        xxlJobLogGlueService.removeOld(1, 1);
 
-        int ret3 = xxlJobLogGlueMapper.deleteByJobId(1);
+        xxlJobLogGlueService.deleteByJobId(1);
     }
 
 }

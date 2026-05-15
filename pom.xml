@@ -12,6 +12,7 @@
 
 	<modules>
 		<module>xxl-job-core</module>
+		<module>xxl-job-admin-core</module>
 		<module>xxl-job-admin</module>
 		<module>xxl-job-executor-samples</module>
     </modules>
@@ -41,6 +42,7 @@
 		<spring-boot.version>4.0.5</spring-boot.version>
 		<spring.version>7.0.6</spring.version>
 		<!-- mybatis & db -->
+		<mybatis-plus-boot-starter.version>3.5.16</mybatis-plus-boot-starter.version>
 		<mybatis-spring-boot-starter.version>4.0.1</mybatis-spring-boot-starter.version>
 		<mysql-connector-j.version>9.6.0</mysql-connector-j.version>
 
@@ -140,6 +142,18 @@
 				<artifactId>mybatis-spring-boot-starter</artifactId>
 				<version>${mybatis-spring-boot-starter.version}</version>
 			</dependency>
+			<!-- mybatis-plus-starter -->
+			<dependency>
+				<groupId>com.baomidou</groupId>
+				<artifactId>mybatis-plus-spring-boot3-starter</artifactId>
+				<version>${mybatis-plus-boot-starter.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.baomidou</groupId>
+				<artifactId>mybatis-plus-jsqlparser</artifactId>
+				<version>${mybatis-plus-boot-starter.version}</version>
+			</dependency>
 			<!-- mysql -->
 			<dependency>
 				<groupId>com.mysql</groupId>
@@ -151,6 +165,13 @@
 			<dependency>
 				<groupId>com.xuxueli</groupId>
 				<artifactId>xxl-job-core</artifactId>
+				<version>${project.parent.version}</version>
+			</dependency>
+
+			<!-- xxl-job-admin-core -->
+			<dependency>
+				<groupId>com.xuxueli</groupId>
+				<artifactId>xxl-job-admin-core</artifactId>
 				<version>${project.parent.version}</version>
 			</dependency>
 

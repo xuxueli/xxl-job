@@ -1,6 +1,7 @@
 package com.xxl.job.admin.mapper;
 
 import com.xxl.job.admin.model.XxlJobRegistry;
+import com.xxl.job.admin.service.JobRegistryService;
 import com.xxl.job.core.constant.RegistType;
 import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Test;
@@ -15,32 +16,24 @@ import java.util.concurrent.TimeUnit;
 public class XxlJobRegistryMapperTest {
 
     @Resource
-    private XxlJobRegistryMapper xxlJobRegistryMapper;
+    private JobRegistryService xxlJobRegistryService;
 
     @Test
     public void test(){
-        int ret = xxlJobRegistryMapper.registrySaveOrUpdate(RegistType.EXECUTOR.name(), "xxl-job-executor-z1", "v1", new Date());
-        /*int ret = xxlJobRegistryDao.registryUpdate("g1", "k1", "v1", new Date());
-        if (ret < 1) {
-            ret = xxlJobRegistryDao.registrySave("g1", "k1", "v1", new Date());
-        }*/
+        int ret = xxlJobRegistryService.registrySaveOrUpdate(RegistType.EXECUTOR.name(), "xxl-job-executor-z1", "v1", new Date());
 
-        List<XxlJobRegistry> list = xxlJobRegistryMapper.findAll(1, new Date());
+        List<XxlJobRegistry> list = xxlJobRegistryService.findAll(1, new Date());
 
-        int ret2 = xxlJobRegistryMapper.removeDead(Arrays.asList(1));
+        int ret2 = xxlJobRegistryService.removeDead(Arrays.asList(1));
     }
 
     @Test
     public void test2() throws InterruptedException {
         for (int i = 0; i < 100; i++) {
-            new Thread(()->{
-                int ret = xxlJobRegistryMapper.registrySaveOrUpdate("g1", "k1", "v1", new Date());
+            int finalI = i;
+            new Thread(() -> {
+                int ret = xxlJobRegistryService.registrySaveOrUpdate("g1", "k1", "v1", new Date());
                 System.out.println(ret);
-
-                /*int ret = xxlJobRegistryDao.registryUpdate("g1", "k1", "v1", new Date());
-                if (ret < 1) {
-                    ret = xxlJobRegistryDao.registrySave("g1", "k1", "v1", new Date());
-                }*/
             }).start();
         }
 

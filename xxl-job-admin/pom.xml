@@ -26,7 +26,6 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-
 		<!-- freemarker-starter -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -44,10 +43,10 @@
 		</dependency>
 
 		<!-- mybatis-starter -->
-		<dependency>
-			<groupId>org.mybatis.spring.boot</groupId>
-			<artifactId>mybatis-spring-boot-starter</artifactId>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>org.mybatis.spring.boot</groupId>-->
+<!--			<artifactId>mybatis-spring-boot-starter</artifactId>-->
+<!--		</dependency>-->
 		<!-- mysql -->
 		<dependency>
 			<groupId>com.mysql</groupId>
@@ -58,6 +57,13 @@
 		<dependency>
 			<groupId>com.xuxueli</groupId>
 			<artifactId>xxl-job-core</artifactId>
+		</dependency>
+
+		<!-- xxl-job-admin-core -->
+		<dependency>
+			<groupId>com.xuxueli</groupId>
+			<artifactId>xxl-job-admin-core</artifactId>
+			<version>${project.parent.version}</version>
 		</dependency>
 
 		<!-- xxl-sso -->
@@ -82,7 +88,11 @@
 					</execution>
 				</executions>
 			</plugin>
-
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>3.2.5</version>
+			</plugin>
 		</plugins>
 	</build>
 
