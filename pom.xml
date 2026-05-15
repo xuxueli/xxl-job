@@ -13,7 +13,7 @@
 	<modules>
 		<module>xxl-job-core</module>
 		<module>xxl-job-admin-core</module>
-		<module>xxl-job-admin-web</module>
+		<module>xxl-job-admin</module>
 		<module>xxl-job-executor-samples</module>
     </modules>
 

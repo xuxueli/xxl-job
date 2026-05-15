@@ -1,6 +1,7 @@
 package com.xxl.job.admin.mapper;
 
 import com.xxl.job.admin.model.XxlJobLogReport;
+import com.xxl.job.admin.service.JobLogReportService;
 import com.xxl.tool.core.DateTool;
 import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Test;
@@ -12,10 +13,10 @@ import java.util.Date;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class XxlJobLogReportMapperTest {
-    private static final Logger logger = LoggerFactory.getLogger(XxlJobLogMapperTest.class);
+    private static final Logger logger = LoggerFactory.getLogger(XxlJobLogReportMapperTest.class);
 
     @Resource
-    private XxlJobLogReportMapper xxlJobLogReportMapper;
+    private JobLogReportService xxlJobLogReportService;
 
     @Test
     public void test(){
@@ -29,7 +30,7 @@ public class XxlJobLogReportMapperTest {
         xxlJobLogReport.setFailCount(666);
         xxlJobLogReport.setUpdateTime(new Date());
 
-        int ret = xxlJobLogReportMapper.saveOrUpdate(xxlJobLogReport);
+        boolean ret = xxlJobLogReportService.saveOrUpdate(xxlJobLogReport);
         logger.info("ret:{}", ret);
     }
 }
