@@ -1,6 +1,7 @@
 package com.xxl.job.admin.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -21,6 +22,7 @@ import com.xxl.tool.http.HttpTool;
 import com.xxl.tool.response.PageModel;
 import org.springframework.stereotype.Service;
 import jakarta.annotation.Resource;
+
 import java.util.*;
 
 @Service
@@ -166,19 +168,38 @@ public class JobGroupServiceImpl extends ServiceImpl<XxlJobGroupMapper, XxlJobGr
         // process
         jobGroup.setUpdateTime(new Date());
 
-        /** 原XxlJobGroupMapper
-            <update id="update" parameterType="com.xxl.job.admin.model.XxlJobGroup" >
-                UPDATE xxl_job_group
-                SET `app_name` = #{appname},
-                    `title` = #{title},
-                    `address_type` = #{addressType},
-                    `address_list` = #{addressList},
-                    `update_time` = #{updateTime}
-                WHERE id = #{id}
-            </update>
-         */
+        return this.update(
+                jobGroup.getId(),
+                jobGroup.getAppname(),
+                jobGroup.getTitle(),
+                jobGroup.getAddressType(),
+                jobGroup.getAddressList(),
+                jobGroup.getUpdateTime()
+        ) ? 1 : 0;
+    }
 
-        return this.updateById(jobGroup) ? 1 : 0;
+    @Override
+    public boolean update(Integer id, String appName, String title, Integer addressType, String addressList, Date updateTime) throws XxlException {
+        /** 原XxlJobGroupMapper
+             <update id="update" parameterType="com.xxl.job.admin.model.XxlJobGroup" >
+                 UPDATE xxl_job_group
+                 SET `app_name` = #{appname},
+                 `title` = #{title},
+                 `address_type` = #{addressType},
+                 `address_list` = #{addressList},
+                 `update_time` = #{updateTime}
+                 WHERE id = #{id}
+             </update>
+         */
+        return this.update(
+                new UpdateWrapper<XxlJobGroup>()
+                        .eq("id", id)
+                        .set("app_name", appName)
+                        .set("title", title)
+                        .set("address_type", addressType)
+                        .set("address_list", addressList)
+                        .set("update_time", updateTime)
+        );
     }
 
     @Override

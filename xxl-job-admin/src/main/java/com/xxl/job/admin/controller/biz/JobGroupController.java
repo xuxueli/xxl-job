@@ -38,7 +38,8 @@ public class JobGroupController {
 	public Response<PageModel<XxlJobGroup>> pageList(
 		@RequestParam(required = false, defaultValue = "0") int offset,
 		@RequestParam(required = false, defaultValue = "10") int pagesize,
-		String appname, String title) {
+		String appname,
+		String title) {
 		return Response.ofSuccess(jobGroupService.pageList((offset / pagesize) + 1, pagesize, appname, title));
 	}
 
@@ -46,8 +47,8 @@ public class JobGroupController {
 	@ResponseBody
 	@XxlSso(role = Consts.ADMIN_ROLE)
 	public Response<String> insert(XxlJobGroup xxlJobGroup) {
-		boolean ret = jobGroupService.save(xxlJobGroup);
-		return ret ? Response.ofSuccess() : Response.ofFail();
+		int ret = jobGroupService.add(xxlJobGroup);
+		return ret > 0 ? Response.ofSuccess() : Response.ofFail();
 	}
 
 	@RequestMapping("/update")

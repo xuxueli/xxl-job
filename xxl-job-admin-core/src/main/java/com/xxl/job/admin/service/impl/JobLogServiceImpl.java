@@ -473,7 +473,17 @@ public class JobLogServiceImpl extends ServiceImpl<XxlJobLogMapper, XxlJobLog> i
                 WHERE `id`= #{id}
             </update>
          */
-        return this.updateById(xxlJobLog) ? 1 : 0;
+        return this.update(new UpdateWrapper<XxlJobLog>()
+                .set("trigger_time", xxlJobLog.getTriggerTime())
+                .set("trigger_code", xxlJobLog.getTriggerCode())
+                .set("trigger_msg", xxlJobLog.getTriggerMsg())
+                .set("executor_address", xxlJobLog.getExecutorAddress())
+                .set("executor_handler", xxlJobLog.getExecutorHandler())
+                .set("executor_param", xxlJobLog.getExecutorParam())
+                .set("executor_sharding_param", xxlJobLog.getExecutorShardingParam())
+                .set("executor_fail_retry_count", xxlJobLog.getExecutorFailRetryCount())
+                .eq("id", xxlJobLog.getId()
+        ))? 1 : 0;
     }
 
     @Override
@@ -488,7 +498,12 @@ public class JobLogServiceImpl extends ServiceImpl<XxlJobLogMapper, XxlJobLog> i
                 WHERE `id`= #{id}
             </update>
          */
-        return this.updateById(xxlJobLog) ? 1 : 0;
+        return this.update(new UpdateWrapper<XxlJobLog>()
+                .set("handle_time", xxlJobLog.getHandleTime())
+                .set("handle_code", xxlJobLog.getHandleCode())
+                .set("handle_msg", xxlJobLog.getHandleMsg())
+                .eq("id", xxlJobLog.getId())
+        ) ? 1 : 0;
     }
 
     @Override
@@ -499,7 +514,10 @@ public class JobLogServiceImpl extends ServiceImpl<XxlJobLogMapper, XxlJobLog> i
                 WHERE job_id = #{jobId}
             </delete>
          */
-        return this.remove(new QueryWrapper<XxlJobLog>().eq("job_id", jobId)) ? 1 : 0;
+        return this.remove(
+                new QueryWrapper<XxlJobLog>()
+                        .eq("job_id", jobId)
+        ) ? 1 : 0;
     }
 
     /**

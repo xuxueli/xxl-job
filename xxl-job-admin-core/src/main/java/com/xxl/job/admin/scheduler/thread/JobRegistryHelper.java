@@ -52,7 +52,8 @@ public class JobRegistryHelper {
 						r.run();
 						logger.warn(">>>>>>>>>>> xxl-job, registry or remove too fast, match threadpool rejected handler(run now).");
 					}
-				});
+				}
+		);
 
 		// for monitor
 		registryMonitorThread = new Thread(new Runnable() {
@@ -106,7 +107,14 @@ public class JobRegistryHelper {
 								group.setAddressList(addressListStr);
 								group.setUpdateTime(new Date());
 
-								XxlJobAdminBootstrap.getInstance().getJobGroupService().update(group);
+								XxlJobAdminBootstrap.getInstance().getJobGroupService().update(
+										group.getId(),
+										group.getAppname(),
+										group.getTitle(),
+										group.getAddressType(),
+										group.getAddressList(),
+										group.getUpdateTime()
+								);
 							}
 						}
 					} catch (Throwable e) {

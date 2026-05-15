@@ -5,7 +5,6 @@ import com.xxl.job.core.constant.Const;
 import com.xxl.job.core.openapi.AdminBiz;
 import com.xxl.job.core.openapi.model.CallbackRequest;
 import com.xxl.job.core.openapi.model.RegistryRequest;
-import com.xxl.sso.core.annotation.XxlSso;
 import com.xxl.tool.core.StringTool;
 import com.xxl.tool.json.GsonTool;
 import com.xxl.tool.response.Response;
@@ -30,7 +29,6 @@ public class OpenApiController {
      */
     @RequestMapping("/api/{uri}")
     @ResponseBody
-    @XxlSso(login = false)
     public Object api(HttpServletRequest request,
                                @PathVariable("uri") String uri,
                                @RequestHeader(value = Const.XXL_JOB_ACCESS_TOKEN, required = false) String accesstoken,

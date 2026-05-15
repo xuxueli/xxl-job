@@ -5,6 +5,7 @@ import com.xxl.job.admin.exception.XxlException;
 import com.xxl.job.admin.model.XxlJobGroup;
 import com.xxl.tool.response.PageModel;
 
+import java.util.Date;
 import java.util.List;
 
 public interface JobGroupService extends IService<XxlJobGroup> {
@@ -18,6 +19,8 @@ public interface JobGroupService extends IService<XxlJobGroup> {
     int add(XxlJobGroup jobGroup) throws XxlException;
 
     int update(XxlJobGroup jobGroup) throws XxlException;
+
+    boolean update(Integer id, String appName, String title, Integer addressType, String addressList, Date updateTime) throws XxlException;
 
     int remove(List<Integer> ids) throws XxlException;
 
