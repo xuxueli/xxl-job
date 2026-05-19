@@ -3,7 +3,6 @@ package com.xxl.job.admin.controller.biz;
 import com.xxl.job.admin.model.XxlJobInfo;
 import com.xxl.job.admin.model.XxlJobLogGlue;
 import com.xxl.job.admin.service.JobCodeService;
-import com.xxl.job.admin.service.JobInfoService;
 import com.xxl.job.admin.util.JobGroupPermissionUtil;
 import com.xxl.job.core.glue.GlueTypeEnum;
 import com.xxl.sso.core.model.LoginInfo;
@@ -31,9 +30,6 @@ public class JobCodeController {
 
 	@Resource
 	private JobCodeService jobCodeService;
-	
-	@Resource
-	private JobInfoService jobInfoService;
 
 	@RequestMapping
 	public String index(HttpServletRequest request, Model model, @RequestParam("jobId") int jobId) {

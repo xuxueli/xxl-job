@@ -1,9 +1,7 @@
 package com.xxl.job.admin.exception;
 
 /**
- * XxlException - core exception for xxl-job
- *
- * @author xuxueli 2026-04-22
+ * XxlException - proxy exception for xxl-job
  */
 public class XxlException extends RuntimeException {
 
