@@ -1,6 +1,3 @@
-# docker-compose version
-version: '3.8'
-
 services:
   mysql:
     image: mysql:8.4
@@ -11,7 +8,7 @@ services:
       # 2、数据库实例名称，需要与Admin中配置一致；
       MYSQL_DATABASE: xxl_job
     ports:
-      - "3306:3306"
+      - "13306:3306"
     volumes:
       # 说明：仅数据库首次初始化时执行；
       - ../doc/db/tables_xxl_job.sql:/docker-entrypoint-initdb.d/tables_xxl_job.sql:ro
@@ -56,7 +53,7 @@ services:
   xxl-job-executor-sample-springboot:
     image: xuxueli/xxl-job-executor-sample-springboot:local
     build:
-      context: ./xxl-job-executor-samples/xxl-job-executor-sample-springboot
+      context: ../xxl-job-executor-samples/xxl-job-executor-sample-springboot
       dockerfile: Dockerfile
     container_name: xxl-job-executor-sample-springboot
     environment:
