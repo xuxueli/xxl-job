@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
+import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.chat.memory.MessageWindowChatMemory;
 import org.springframework.ai.ollama.OllamaChatModel;
 import org.springframework.ai.ollama.api.OllamaChatOptions;
@@ -50,7 +51,7 @@ public class IndexController {
     @Resource
     private OllamaChatModel ollamaChatModel;
     private String prompt = "你好，你是一个研发工程师，擅长解决技术类问题。";
-    private String modle = "qwen3.5:2b";
+    private String modle = "qwen3.5:0.8b";
 
     /**
      * ChatClient 简单调用
@@ -64,12 +65,13 @@ public class IndexController {
                 .builder(ollamaChatModel)
                 .defaultAdvisors(MessageChatMemoryAdvisor.builder(MessageWindowChatMemory.builder().build()).build())       // add memory
                 .defaultAdvisors(SimpleLoggerAdvisor.builder().build())                                                     // add logger
-                .defaultOptions(OllamaChatOptions.builder().model(modle).build())                                           // assign model
+                .defaultOptions(OllamaChatOptions.builder().model(modle))                                                   // assign model
                 .build();
 
         // call ollama
         String response = ollamaChatClient
                 .prompt(prompt)
+                .advisors(a -> a.param(ChatMemory.CONVERSATION_ID, "conversationId-default"))
                 .user(input)
                 .call()
                 .content();
@@ -90,12 +92,13 @@ public class IndexController {
                 .builder(ollamaChatModel)
                 .defaultAdvisors(MessageChatMemoryAdvisor.builder(MessageWindowChatMemory.builder().build()).build())
                 .defaultAdvisors(SimpleLoggerAdvisor.builder().build())
-                .defaultOptions(OllamaChatOptions.builder().model(modle).build())
+                .defaultOptions(OllamaChatOptions.builder().model(modle))
                 .build();
 
         // call ollama
         return ollamaChatClient
                 .prompt(prompt)
+                .advisors(a -> a.param(ChatMemory.CONVERSATION_ID, "conversationId-default"))
                 .user(input)
                 .stream()
                 .content();

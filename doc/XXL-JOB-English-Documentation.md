@@ -881,7 +881,7 @@ The concrete contet describe as follows:
 
 #### Step 2:Deploy:
 If you has finished step 1,then you can compile the project in maven and deploy the war package to tomcat.
-the url to visit is :http://localhost:8080/xxl-job-admin (this address will be used by executor and use it as callback url),the index page after login in is as follow
+the url to visit is :http://localhost:8080 (this address will be used by executor and use it as callback url),the index page after login in is as follow
 
 ![index page after login in](https://www.xuxueli.com/project/static/xxl-job/images/img_6yC0.png "index page after login in")
 
@@ -910,7 +910,7 @@ Relative path of the executor configuration file is as follows:
 The concret content of configuration file as follows:
 
     ### xxl-job admin address list：xxl-job-admin address list: Multiple addresses are separated by commas,this address is used for "heart beat and register" and "task execution result callback" between the executor and xxl-job-admin.
-    xxl.job.admin.addresses=http://127.0.0.1:8080/xxl-job-admin
+    xxl.job.admin.addresses=http://127.0.0.1:8080
     
     ### xxl.job.executor.appname is used to group by executors
     xxl.job.executor.appname=xxl-job-executor-sample

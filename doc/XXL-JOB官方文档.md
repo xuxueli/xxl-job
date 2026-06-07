@@ -940,7 +940,7 @@ xxl.job.logretentiondays=30
 #### 步骤二：部署项目：
 如果已经正确进行上述配置，可将项目编译打包部署。
 
-调度中心访问地址：http://localhost:8080/xxl-job-admin (该地址执行器将会使用到，作为回调地址)
+调度中心访问地址：http://localhost:8080 (该地址执行器将会使用到，作为回调地址)
 
 默认登录账号 "admin/123456", 登录后运行界面如下图所示。
 
@@ -1006,7 +1006,7 @@ xuxueli/xxl-job-admin:{指定版本}
 
 ```
 ### 调度中心部署根地址 [选填]：如调度中心集群部署存在多个地址则用逗号分隔。执行器将会使用该地址进行"执行器心跳注册"和"任务结果回调"；为空则关闭自动注册；
-xxl.job.admin.addresses=http://127.0.0.1:8080/xxl-job-admin
+xxl.job.admin.addresses=http://127.0.0.1:8080
 ### 调度中心通讯TOKEN [选填]：非空时启用；
 xxl.job.admin.accessToken=default_token
 ### 调度中心通讯超时时间[选填]，单位秒；默认3s；
@@ -1277,7 +1277,7 @@ public void demoJobHandler() throws Exception {
 {
     "input": "{输入信息，必填信息}",
     "prompt": "{模型prompt，可选信息}",
-    "model": "{模型实现，如qwen3.5:2b，可选信息}"
+    "model": "{模型实现，如qwen3.5:0.8b，可选信息}"
 }
 ```
 
@@ -2840,8 +2840,12 @@ alter table xxl_job_log
 ```
 
 ### 7.45 版本 v3.4.1 Release Notes[ING]
-- 1、【TODO】调度中心OpenAPI完善，提供任务管理能力；封装Agent Skill并推送ClawHub；
-- 2、【TODO】AccessToken升级：执行器维度隔离，支持线上化配置；升级双端OpenApi，适配AccessToken升级；
+- 1、【重构】项目结构AI Ready重构，将业务逻辑与数据访问逻辑分离，提升项目可读性与可维护性；
+- 2、【调整】消息中心移除context-path前缀配置项，简化客户端配置；
+  （存量客户端升级需要注意：升级后需要将配置项 "xxl.job.admin.addresses" 中的 context-path 前缀移除）
+- 3、【升级】升级多项maven依赖至较新版本，如 spring、netty 等；
+- 4、【TODO】调度中心OpenAPI完善，提供任务管理能力；封装Agent Skill并推送ClawHub；
+- 5、【TODO】AccessToken升级：执行器维度隔离，支持线上化配置；升级双端OpenApi，适配AccessToken升级；
 
 
 ### TODO LIST
