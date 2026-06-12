@@ -77,6 +77,12 @@
 								${I18n.system_save}
 							</a>
 						</li>
+						<li id="aiGenerate" >
+							<a href="javascript:;" >
+								<i class="fa fa-magic"></i>
+								${I18n.jobinfo_ai_generate}
+							</a>
+						</li>
 						<li>
 							<a href="javascript:window.close();" >
 								<i class="fa fa-fw fa-close" ></i>
@@ -113,6 +119,44 @@
 							<div class="col-sm-offset-3 col-sm-6">
 								<button type="button" class="btn btn-primary ok" >${I18n.system_save}</button>
 								<button type="button" class="btn btn-default" data-dismiss="modal">${I18n.system_cancel}</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- AI生成.模态框 -->
+	<div class="modal fade" id="aiGenerateModal" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">
+						<i class="fa fa-magic"></i>${I18n.jobinfo_ai_generate}
+					</h4>
+				</div>
+				<div class="modal-body">
+					<div class="form-horizontal form" role="form">
+						<div class="form-group">
+							<label class="col-sm-2 control-label">
+								${I18n.jobinfo_ai_prompt}<font color="red">*</font>
+							</label>
+							<div class="col-sm-10">
+								<textarea class="form-control" id="aiPrompt" rows="6"
+									maxlength="2000"
+									placeholder="${I18n.jobinfo_ai_prompt_tip}"></textarea>
+							</div>
+						</div>
+						<hr>
+						<div class="form-group">
+							<div class="col-sm-offset-3 col-sm-6">
+								<button type="button" class="btn btn-primary ok">
+									${I18n.jobinfo_ai_generate_btn}
+								</button>
+								<button type="button" class="btn btn-default" data-dismiss="modal">
+									${I18n.system_cancel}
+								</button>
 							</div>
 						</div>
 					</div>
@@ -270,6 +314,79 @@
 				}
 			});
 
+		});
+
+		// AI generate button click
+		$("#aiGenerate").click(function() {
+			$('#aiPrompt').val('');
+			$('#aiGenerateModal').modal({backdrop: false, keyboard: false}).modal('show');
+		});
+
+		// AI generate confirm button
+		$("#aiGenerateModal .ok").click(function() {
+			var prompt = $('#aiPrompt').val();
+			if (!prompt) {
+				layer.open({
+					title: I18n.system_tips,
+					btn: [I18n.system_ok],
+					content: I18n.system_please_input + I18n.jobinfo_ai_prompt,
+					icon: '2'
+				});
+				return;
+			}
+
+			$('#aiGenerateModal').modal('hide');
+
+			// Show loading
+			var loadingIndex = layer.load(1, {shade: [0.3, '#fff']});
+
+			$.ajax({
+				type: 'POST',
+				url: base_url + '/jobcode/aiGenerate',
+				data: {
+					'prompt': prompt,
+					'id': id
+				},
+				dataType: "json",
+				success: function(data) {
+					layer.close(loadingIndex);
+					if (data.code == 200) {
+						// Append code (non-destructive)
+						var currentCode = codeEditor.getValue();
+						var separator = '\n\n# ===== AI Generated Code - '
+							+ new Date().toLocaleString() + ' =====\n';
+						var newCode = currentCode;
+						if (currentCode && currentCode.trim().length > 0) {
+							newCode += separator;
+						}
+						newCode += data.content.code;
+						codeEditor.setValue(newCode);
+
+						layer.open({
+							title: I18n.system_tips,
+							btn: [I18n.system_ok],
+							content: I18n.jobinfo_ai_success,
+							icon: '1'
+						});
+					} else {
+						layer.open({
+							title: I18n.system_tips,
+							btn: [I18n.system_ok],
+							content: data.msg || I18n.jobinfo_ai_fail,
+							icon: '2'
+						});
+					}
+				},
+				error: function(xhr, status, error) {
+					layer.close(loadingIndex);
+					layer.open({
+						title: I18n.system_tips,
+						btn: [I18n.system_ok],
+						content: I18n.jobinfo_ai_fail + ': ' + error,
+						icon: '2'
+					});
+				}
+			});
 		});
 
 	});
