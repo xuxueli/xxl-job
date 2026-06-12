@@ -1,9 +1,11 @@
 package com.xxl.job.admin.controller.biz;
 
+import com.xxl.job.admin.config.AiConfig;
 import com.xxl.job.admin.mapper.XxlJobInfoMapper;
 import com.xxl.job.admin.mapper.XxlJobLogGlueMapper;
 import com.xxl.job.admin.model.XxlJobInfo;
 import com.xxl.job.admin.model.XxlJobLogGlue;
+import com.xxl.job.admin.service.AiService;
 import com.xxl.job.admin.util.I18nUtil;
 import com.xxl.job.admin.util.JobGroupPermissionUtil;
 import com.xxl.job.core.glue.GlueTypeEnum;
@@ -22,7 +24,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * job code controller
@@ -37,6 +41,10 @@ public class JobCodeController {
 	private XxlJobInfoMapper xxlJobInfoMapper;
 	@Resource
 	private XxlJobLogGlueMapper xxlJobLogGlueMapper;
+	@Resource
+	private AiService aiService;
+	@Resource
+	private AiConfig aiConfig;
 
 	@RequestMapping
 	public String index(HttpServletRequest request, Model model, @RequestParam("jobId") int jobId) {
@@ -112,6 +120,53 @@ public class JobCodeController {
 		logger.info(">>>>>>>>>>> xxl-job operation log: operator = {}, type = {}, content = {}",
 				loginInfo.getUserName(), "jobcode-update", GsonTool.toJson(xxlJobLogGlue));
 		return Response.ofSuccess();
+	}
+
+	@RequestMapping("/aiGenerate")
+	@ResponseBody
+	public Response<Map<String, String>> aiGenerate(HttpServletRequest request,
+													  @RequestParam("prompt") String prompt,
+													  @RequestParam("id") int id) {
+		// Check if AI is enabled
+		if (!aiConfig.isEnabled()) {
+			return Response.ofFail(I18nUtil.getString("jobinfo_ai_not_enabled"));
+		}
+
+		// Validate prompt
+		if (StringTool.isBlank(prompt)) {
+			return Response.ofFail((I18nUtil.getString("system_please_input") + I18nUtil.getString("jobinfo_ai_prompt")));
+		}
+
+		// Load job info
+		XxlJobInfo jobInfo = xxlJobInfoMapper.loadById(id);
+		if (jobInfo == null) {
+			return Response.ofFail(I18nUtil.getString("jobinfo_glue_jobid_invalid"));
+		}
+
+		// Check if it's a GLUE mode (not BEAN)
+		GlueTypeEnum glueTypeEnum = GlueTypeEnum.match(jobInfo.getGlueType());
+		if (glueTypeEnum == null || glueTypeEnum == GlueTypeEnum.BEAN) {
+			return Response.ofFail(I18nUtil.getString("jobinfo_ai_not_supported"));
+		}
+
+		// Validate jobGroup permission
+		LoginInfo loginInfo = JobGroupPermissionUtil.validJobGroupPermission(request, jobInfo.getJobGroup());
+
+		// Generate code using AI service
+		Response<String> generateResult = aiService.generateCode(prompt, jobInfo.getGlueType());
+		if (!generateResult.isSuccess()) {
+			return Response.ofFail(generateResult.getMsg());
+		}
+
+		// Build response
+		Map<String, String> result = new HashMap<>();
+		result.put("code", generateResult.getContent());
+
+		// Write operation log
+		logger.info(">>>>>>>>>>> xxl-job operation log: operator = {}, type = {}, jobId = {}, glueType = {}, prompt = {}",
+				loginInfo.getUserName(), "jobcode-ai-generate", id, jobInfo.getGlueType(), prompt);
+
+		return Response.ofSuccess(result);
 	}
 
 }
