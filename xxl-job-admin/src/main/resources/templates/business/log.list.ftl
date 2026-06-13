@@ -5,6 +5,8 @@
 	<#import "../framework/common/common.macro.ftl" as netCommon>
 
 	<!-- 1-style start -->
+	<#-- select2：should before adminlte -->
+	<link rel="stylesheet" href="${request.contextPath}/static/adminlte/bower_components/select2/select2.min.css">
 	<@netCommon.commonStyle />
 	<link rel="stylesheet" href="${request.contextPath}/static/plugins/bootstrap-table/bootstrap-table.min.css">
 	<!-- daterangepicker -->
@@ -33,7 +35,7 @@
 							</select>
 						</div>
 					</div>
-					<div class="col-xs-2">
+					<div class="col-xs-3">
 						<div class="input-group">
 							<span class="input-group-addon">${I18n.jobinfo_job}</span>
 							<select class="form-control" id="jobId" >
@@ -46,9 +48,9 @@
 							</select>
 						</div>
 					</div>
-					<div class="col-xs-2">
+					<div class="col-xs-1">
 						<div class="input-group">
-							<span class="input-group-addon">${I18n.joblog_status}</span>
+							<#--<span class="input-group-addon">${I18n.joblog_status}</span>-->
 							<select class="form-control" id="logStatus" >
 								<option value="-1" >${I18n.joblog_status_all}</option>
 								<option value="1" >${I18n.joblog_status_suc}</option>
@@ -164,12 +166,18 @@
 <#--daterangepicker-->
 <script src="${request.contextPath}/static/adminlte/bower_components/moment/moment.min.js"></script>
 <script src="${request.contextPath}/static/adminlte/bower_components/bootstrap-daterangepicker/daterangepicker.js"></script>
+<#-- select2 -->
+<script src="${request.contextPath}/static/adminlte/bower_components/select2/select2.min.js"></script>
 <#-- admin table -->
 <script src="${request.contextPath}/static/biz/common/admin.table.js"></script>
 <script>
 	$(function() {
 
 		// ---------------------- filter ----------------------
+
+		// select2: init
+		$('#jobGroup').select2();
+		$('#jobId').select2();
 
 		/**
 		 * jobGroup change
@@ -224,7 +232,7 @@
 			$('#filterTime').data("daterangepicker").setEndDate( rangesConf[I18n.daterangepicker_ranges_recent_week][1] );
 
 			$("#jobGroup").val( jobGroup );
-			$("#jobId").val( jobId );
+			$("#jobId").val( jobId ).trigger("change");		// select2: change 	; $("#jobId").val( jobId );
 			$('#logStatus').prop('selectedIndex', 0);
 		}
 		resetFilter();

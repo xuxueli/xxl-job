@@ -5,6 +5,8 @@
 	<#import "../framework/common/common.macro.ftl" as netCommon>
 
 	<!-- 1-style start -->
+	<#-- select2：should before adminlte -->
+	<link rel="stylesheet" href="${request.contextPath}/static/adminlte/bower_components/select2/select2.min.css">
 	<@netCommon.commonStyle />
 	<link rel="stylesheet" href="${request.contextPath}/static/plugins/bootstrap-table/bootstrap-table.min.css">
 	<!-- 1-style end -->
@@ -548,12 +550,17 @@ exit 0
 <script src="${request.contextPath}/static/biz/common/admin.util.js"></script>
 <#-- moment -->
 <script src="${request.contextPath}/static/adminlte/bower_components/moment/moment.min.js"></script>
+<#-- select2 -->
+<script src="${request.contextPath}/static/adminlte/bower_components/select2/select2.min.js"></script>
 <#-- cronGen -->
 <script src="${request.contextPath}/static/plugins/cronGen/<#if I18n.admin_i18n?? && I18n.admin_i18n == 'en'>cronGen_en.js<#else>cronGen.js</#if>"></script>
 <script>
 	$(function() {
 
 		// ---------------------- filter ----------------------
+
+		// select2：init
+		$('#jobGroup').select2();
 
 		/**
 		 * jobGroup change
