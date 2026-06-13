@@ -2840,15 +2840,19 @@ alter table xxl_job_log
 ```
 
 ### 7.45 版本 v3.4.1 Release Notes[ING]
-- 1、【重构】项目结构AI Ready重构，业务逻辑与框架逻辑分离，提升项目可读性与可维护性；
-- 2、【调整】消息中心移除context-path前缀配置项，简化客户端配置；
-  （存量客户端升级需要注意：升级后需要将配置项 "xxl.job.admin.addresses" 中的 context-path 前缀移除）
-- 3、【优化】任务参数长度调整，最长支持2048字符；
-- 4、【升级】调度中心UI交互优化，任务及日志管理支持下拉框模糊搜索，提升交互体验；
-- 5、【修复】XxlJobFileAppender自定义地址callbackLogPath设置无效问题修复；合并ISSUS-3963；
-- 6、【优化】调度组件守护线程代码重构，提升稳定性以及可维护性；
-- 7、【TODO】调度中心OpenAPI完善，提供任务管理能力；封装Agent Skill并推送ClawHub；
-- 8、【TODO】AccessToken升级：执行器维度隔离，支持线上化配置；升级双端OpenApi，适配AccessToken升级；
+- 1、【重构】项目结构AI友好性重构，业务逻辑与框架逻辑分离，提升项目可读性与可维护性；
+- 2、【重构】调度中心与执行期组件重构，线程管理与内存队列升级，统一资源管理和生命周期控制，改进线程安全和资源清理逻辑；
+- 3、【调整】消息中心移除自身context-path前缀配置项，简化客户端配置；
+  （存量客户端升级需要注意：升级后需要将配置项 "xxl.job.admin.addresses" 中的 context-path 后缀移除）
+- 4、【优化】任务参数长度调整，最长支持2048字符；
+- 5、【升级】调度中心UI交互优化，任务及日志列表下拉框支持模糊搜索，提升交互体验；
+- 6、【修复】XxlJobFileAppender自定义地址callbackLogPath设置无效问题修复；合并ISSUS-3963；
+- 7、【优化】调度组件守护线程代码重构，提升稳定性以及可维护性；
+
+
+### 7.46 版本 v3.4.2 Release Notes[ING]
+- 1、【TODO】调度中心OpenAPI完善，提供任务管理能力；封装Agent Skill并推送ClawHub；
+- 2、【TODO】AccessToken升级：执行器维度隔离，支持线上化配置；升级双端OpenApi，适配AccessToken升级；
 
 
 ### TODO LIST
