@@ -2840,7 +2840,7 @@ alter table xxl_job_log
 ```
 
 ### 7.45 版本 v3.4.1 Release Notes[ING]
-- 1、【重构】项目结构AI Ready重构，将业务逻辑与数据访问逻辑分离，提升项目可读性与可维护性；
+- 1、【重构】项目结构AI Ready重构，业务逻辑与框架逻辑分离，提升项目可读性与可维护性；
 - 2、【调整】消息中心移除context-path前缀配置项，简化客户端配置；
   （存量客户端升级需要注意：升级后需要将配置项 "xxl.job.admin.addresses" 中的 context-path 前缀移除）
 - 3、【升级】升级多项maven依赖至较新版本，如 spring、netty 等；
