@@ -50,6 +50,11 @@ public class XxlJobFileAppender {
 		File glueBaseDir = new File(logPathDir, "gluesource");
         FileTool.createDirectories(glueBaseDir);
 		glueSrcPath = glueBaseDir.getPath();
+
+		// mk callback log dir
+		File callbackBaseDir = new File(logPathDir, "callbacklogs");
+        FileTool.createDirectories(callbackBaseDir);
+		callbackLogPath = callbackBaseDir.getPath();
 	}
 	public static String getLogPath() {
 		return logBasePath;
