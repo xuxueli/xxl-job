@@ -2,7 +2,7 @@
 <html>
 <head>
 	<#-- import macro -->
-	<#import "../common/common.macro.ftl" as netCommon>
+	<#import "./common.macro.ftl" as netCommon>
 
 	<meta charset="UTF-8">
 	<title>Error</title>

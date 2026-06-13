@@ -42,7 +42,7 @@ public class JobGroupController {
 	@RequestMapping
 	@XxlSso(role = Consts.ADMIN_ROLE)
 	public String index(Model model) {
-		return "biz/group.list";
+		return "business/group.list";
 	}
 
 	@RequestMapping("/pageList")

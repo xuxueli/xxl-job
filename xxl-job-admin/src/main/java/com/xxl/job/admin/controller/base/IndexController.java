@@ -48,7 +48,7 @@ public class IndexController {
 		List<XxlBootResourceDTO> resourceList = findResourceList(request);
 		model.addAttribute("resourceList", resourceList);
 
-		return "base/index";
+		return "framework/base/index";
 	}
 
 	/**
@@ -87,7 +87,7 @@ public class IndexController {
 		Map<String, Object> dashboardMap = xxlJobService.dashboardInfo();
 		model.addAllAttributes(dashboardMap);
 
-		return "base/dashboard";
+		return "framework/base/dashboard";
 	}
 
 	@RequestMapping("/chartInfo")
@@ -103,7 +103,7 @@ public class IndexController {
 	@RequestMapping("/help")
 	@XxlSso
 	public String help() {
-		return "base/help";
+		return "framework/base/help";
 	}
 
 	@RequestMapping(value = "/errorpage")
@@ -113,7 +113,7 @@ public class IndexController {
 		String exceptionMsg = "HTTP Status Code: "+response.getStatus();
 
 		mv.addObject("exceptionMsg", exceptionMsg);
-		mv.setViewName("common/common.errorpage");
+		mv.setViewName("framework/common/common.errorpage");
 		return mv;
 	}
 

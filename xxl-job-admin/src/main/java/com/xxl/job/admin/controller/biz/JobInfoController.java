@@ -75,7 +75,7 @@ public class JobInfoController {
 		model.addAttribute("JobGroupList", jobGroupList);
 		model.addAttribute("jobGroup", jobGroup);
 
-		return "biz/job.list";
+		return "business/job.list";
 	}
 
 	@RequestMapping("/pageList")

@@ -104,7 +104,7 @@ public class JobLogController {
 		model.addAttribute("jobGroup", jobGroup);
 		model.addAttribute("jobId", jobId);
 
-		return "biz/log.list";
+		return "business/log.list";
 	}
 	
 	@RequestMapping("/pageList")
@@ -284,7 +284,7 @@ public class JobLogController {
 		model.addAttribute("handleCode", jobLog.getHandleCode());
 		model.addAttribute("logId", jobLog.getId());
 		model.addAttribute("jobInfo", jobInfo);
-		return "biz/log.detail";
+		return "business/log.detail";
 	}
 
 	@RequestMapping("/logDetailCat")

@@ -46,7 +46,7 @@ public class JobUserController {
         List<XxlJobGroup> groupList = xxlJobGroupMapper.findAll();
         model.addAttribute("groupList", groupList);
 
-        return "biz/user.list";
+        return "business/user.list";
     }
 
     @RequestMapping("/pageList")
