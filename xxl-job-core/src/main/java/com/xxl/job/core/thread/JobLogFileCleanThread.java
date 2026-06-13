@@ -33,6 +33,7 @@ public class JobLogFileCleanThread {
             return;     // effective only when logRetentionDays >= 3
         }
 
+        toStop = false;
         localThread = new Thread(new Runnable() {
             @Override
             public void run() {

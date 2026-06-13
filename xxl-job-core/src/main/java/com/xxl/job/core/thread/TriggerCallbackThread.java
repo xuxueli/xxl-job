@@ -61,9 +61,13 @@ public class TriggerCallbackThread {
             return;
         }
 
+
+        toStop = false;
+
         /**
          * trigger callback thread
          */
+
         triggerCallbackThread = new Thread(new Runnable() {
 
             @Override
