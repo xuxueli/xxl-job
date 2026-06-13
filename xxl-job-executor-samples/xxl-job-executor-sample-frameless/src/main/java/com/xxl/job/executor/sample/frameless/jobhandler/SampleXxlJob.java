@@ -2,16 +2,20 @@ package com.xxl.job.executor.sample.frameless.jobhandler;
 
 import com.xxl.job.core.context.XxlJobHelper;
 import com.xxl.job.core.handler.annotation.XxlJob;
+import com.xxl.tool.core.StringTool;
+import com.xxl.tool.json.GsonTool;
+import com.xxl.tool.http.HttpTool;
+import com.xxl.tool.http.http.HttpResponse;
+import com.xxl.tool.http.http.enums.ContentType;
+import com.xxl.tool.http.http.enums.Method;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.Arrays;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -26,7 +30,7 @@ import java.util.concurrent.TimeUnit;
  * @author xuxueli 2019-12-11 21:52:51
  */
 public class SampleXxlJob {
-    private static Logger logger = LoggerFactory.getLogger(SampleXxlJob.class);
+    private static final Logger logger = LoggerFactory.getLogger(SampleXxlJob.class);
 
 
     /**
@@ -70,6 +74,8 @@ public class SampleXxlJob {
 
     /**
      * 3、命令行任务
+     *
+     *  参数示例："ls -a" 或者 "pwd"
      */
     @XxlJob("commandJobHandler")
     public void commandJobHandler() throws Exception {
@@ -78,9 +84,18 @@ public class SampleXxlJob {
 
         BufferedReader bufferedReader = null;
         try {
+            // valid
+            if (command==null || command.trim().isEmpty()) {
+                XxlJobHelper.handleFail("command empty.");
+                return;
+            }
+
+            // command split
+            String[] commandArray = command.split(" ");
+
             // command process
             ProcessBuilder processBuilder = new ProcessBuilder();
-            processBuilder.command(command);
+            processBuilder.command(commandArray);
             processBuilder.redirectErrorStream(true);
 
             Process process = processBuilder.start();
@@ -117,121 +132,243 @@ public class SampleXxlJob {
 
     /**
      * 4、跨平台Http任务
+     *
      *  参数示例：
-     *      "url: http://www.baidu.com\n" +
-     *      "method: get\n" +
-     *      "data: content\n";
+     *  <pre>
+     *      // 1、简单示例：
+     *      {
+     *          "url": "http://www.baidu.com",
+     *          "method": "get",
+     *          "data": "hello world"
+     *      }
+     *
+     *      // 2、完整参数示例：
+     *      {
+     *          "url": "http://www.baidu.com",
+     *          "method": "POST",
+     *          "contentType": "application/json",
+     *          "headers": {
+     *              "header01": "value01"
+     *          },
+     *          "cookies": {
+     *              "cookie01": "value01"
+     *          },
+     *          "timeout": 3000,
+     *          "data": "request body data",
+     *          "form": {
+     *              "key01": "value01"
+     *          },
+     *          "auth": "auth data"
+     *      }
+     *  </pre>
      */
     @XxlJob("httpJobHandler")
     public void httpJobHandler() throws Exception {
 
-        // param parse
+        // param data
         String param = XxlJobHelper.getJobParam();
-        if (param==null || param.trim().length()==0) {
+        if (param==null || param.trim().isEmpty()) {
             XxlJobHelper.log("param["+ param +"] invalid.");
 
             XxlJobHelper.handleFail();
             return;
         }
 
-        String[] httpParams = param.split("\n");
-        String url = null;
-        String method = null;
-        String data = null;
-        for (String httpParam: httpParams) {
-            if (httpParam.startsWith("url:")) {
-                url = httpParam.substring(httpParam.indexOf("url:") + 4).trim();
-            }
-            if (httpParam.startsWith("method:")) {
-                method = httpParam.substring(httpParam.indexOf("method:") + 7).trim().toUpperCase();
-            }
-            if (httpParam.startsWith("data:")) {
-                data = httpParam.substring(httpParam.indexOf("data:") + 5).trim();
-            }
+        // param parse
+        HttpJobParam httpJobParam = null;
+        try {
+            httpJobParam = GsonTool.fromJson(param, HttpJobParam.class);
+        } catch (Exception e) {
+            XxlJobHelper.log(new RuntimeException("HttpJobParam parse error", e));
+            XxlJobHelper.handleFail();
+            return;
         }
 
         // param valid
-        if (url==null || url.trim().length()==0) {
-            XxlJobHelper.log("url["+ url +"] invalid.");
-
+        if (httpJobParam == null) {
+            XxlJobHelper.log("param parse fail.");
             XxlJobHelper.handleFail();
             return;
         }
-        if (method==null || !Arrays.asList("GET", "POST").contains(method)) {
-            XxlJobHelper.log("method["+ method +"] invalid.");
-
+        if (StringTool.isBlank(httpJobParam.getUrl())) {
+            XxlJobHelper.log("url["+ httpJobParam.getUrl() +"] invalid.");
             XxlJobHelper.handleFail();
             return;
         }
-        boolean isPostMethod = method.equals("POST");
+        if (!isValidDomain(httpJobParam.getUrl())) {
+            XxlJobHelper.log("url["+ httpJobParam.getUrl() +"] not allowed.");
+            XxlJobHelper.handleFail();
+            return;
+        }
+        Method method = Method.POST;
+        if (StringTool.isNotBlank(httpJobParam.getMethod())) {
+            Method methodParam = Method.valueOf(httpJobParam.getMethod().toUpperCase());
+            if (methodParam == null) {
+                XxlJobHelper.log("method["+ httpJobParam.getMethod() +"] invalid.");
+                XxlJobHelper.handleFail();
+                return;
+            }
+            method = methodParam;
+        }
+        ContentType contentType = ContentType.JSON;
+        if (StringTool.isNotBlank(httpJobParam.getContentType())) {
+            for (ContentType contentTypeParam : ContentType.values()) {
+                if (contentTypeParam.getValue().equals(httpJobParam.getContentType())) {
+                    contentType = contentTypeParam;
+                    break;
+                }
+            }
+        }
+        if (httpJobParam.getTimeout() <= 0) {
+            httpJobParam.setTimeout(3000);
+        }
 
-        // request
-        HttpURLConnection connection = null;
-        BufferedReader bufferedReader = null;
+        // do request
         try {
-            // connection
-            URL realUrl = new URL(url);
-            connection = (HttpURLConnection) realUrl.openConnection();
+            HttpResponse httpResponse = HttpTool.createRequest()
+                    .url(httpJobParam.getUrl())
+                    .method(method)
+                    .contentType(contentType)
+                    .header(httpJobParam.getHeaders())
+                    .cookie(httpJobParam.getCookies())
+                    .body(httpJobParam.getData())
+                    .form(httpJobParam.getForm())
+                    .auth(httpJobParam.getAuth())
+                    .execute();
 
-            // connection setting
-            connection.setRequestMethod(method);
-            connection.setDoOutput(isPostMethod);
-            connection.setDoInput(true);
-            connection.setUseCaches(false);
-            connection.setReadTimeout(5 * 1000);
-            connection.setConnectTimeout(3 * 1000);
-            connection.setRequestProperty("connection", "Keep-Alive");
-            connection.setRequestProperty("Content-Type", "application/json;charset=UTF-8");
-            connection.setRequestProperty("Accept-Charset", "application/json;charset=UTF-8");
-
-            // do connection
-            connection.connect();
-
-            // data
-            if (isPostMethod && data!=null && data.trim().length()>0) {
-                DataOutputStream dataOutputStream = new DataOutputStream(connection.getOutputStream());
-                dataOutputStream.write(data.getBytes("UTF-8"));
-                dataOutputStream.flush();
-                dataOutputStream.close();
-            }
-
-            // valid StatusCode
-            int statusCode = connection.getResponseCode();
-            if (statusCode != 200) {
-                throw new RuntimeException("Http Request StatusCode(" + statusCode + ") Invalid.");
-            }
-
-            // result
-            bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
-            StringBuilder result = new StringBuilder();
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                result.append(line);
-            }
-            String responseMsg = result.toString();
-
-            XxlJobHelper.log(responseMsg);
-
-            return;
+            XxlJobHelper.log("StatusCode: " + httpResponse.statusCode());
+            XxlJobHelper.log("Response: <br>" + httpResponse.response());
         } catch (Exception e) {
             XxlJobHelper.log(e);
-
             XxlJobHelper.handleFail();
-            return;
-        } finally {
-            try {
-                if (bufferedReader != null) {
-                    bufferedReader.close();
-                }
-                if (connection != null) {
-                    connection.disconnect();
-                }
-            } catch (Exception e2) {
-                XxlJobHelper.log(e2);
+        }
+    }
+
+    /**
+     * domain white-list, for httpJobHandler
+     */
+    private static Set<String> DOMAIN_WHITE_LIST = Set.of(
+            "http://www.baidu.com",
+            "http://cn.bing.com"
+    );
+
+    /**
+     * valid if domain is in white-list
+     */
+    private boolean isValidDomain(String url) {
+        if (url == null || DOMAIN_WHITE_LIST.isEmpty()) {
+            return false;
+        }
+        for (String prefix : DOMAIN_WHITE_LIST) {
+            if (url.startsWith(prefix)) {
+                return true;
             }
         }
-
+        return false;
     }
+
+    /*public static void main(String[] args) {
+        HttpJobParam httpJobParam = new HttpJobParam();
+        httpJobParam.setUrl("http://www.baidu.com");
+        httpJobParam.setMethod(Method.POST.name());
+        httpJobParam.setContentType(ContentType.JSON.getValue());
+        httpJobParam.setHeaders(Map.of("header01", "value01"));
+        httpJobParam.setCookies(Map.of("cookie01", "value01"));
+        httpJobParam.setTimeout(3000);
+        httpJobParam.setData("request body data");
+        httpJobParam.setForm(Map.of("form01", "value01"));
+        httpJobParam.setAuth("auth data");
+
+        logger.info(GsonTool.toJson(httpJobParam));
+    }*/
+
+    /**
+     * http job param
+     */
+    private static class HttpJobParam{
+        private String url;                                     // 请求 Url
+        private String method;                                  // Method
+        private String contentType;                             // Content-Type
+        private Map<String, String> headers;                    // 存储请求头
+        private Map<String, String> cookies;                    // Cookie（需要格式转换）
+        private int timeout;                                    // 请求超时时间
+        private String data;                                    // 存储请求体
+        private Map<String, String> form;                       // 存储表单数据
+        private String auth;                                    // 鉴权信息
+
+        public String getUrl() {
+            return url;
+        }
+
+        public void setUrl(String url) {
+            this.url = url;
+        }
+
+        public String getMethod() {
+            return method;
+        }
+
+        public void setMethod(String method) {
+            this.method = method;
+        }
+
+        public String getContentType() {
+            return contentType;
+        }
+
+        public void setContentType(String contentType) {
+            this.contentType = contentType;
+        }
+
+        public Map<String, String> getHeaders() {
+            return headers;
+        }
+
+        public void setHeaders(Map<String, String> headers) {
+            this.headers = headers;
+        }
+
+        public Map<String, String> getCookies() {
+            return cookies;
+        }
+
+        public void setCookies(Map<String, String> cookies) {
+            this.cookies = cookies;
+        }
+
+        public int getTimeout() {
+            return timeout;
+        }
+
+        public void setTimeout(int timeout) {
+            this.timeout = timeout;
+        }
+
+        public String getData() {
+            return data;
+        }
+
+        public void setData(String data) {
+            this.data = data;
+        }
+
+        public Map<String, String> getForm() {
+            return form;
+        }
+
+        public void setForm(Map<String, String> form) {
+            this.form = form;
+        }
+
+        public String getAuth() {
+            return auth;
+        }
+
+        public void setAuth(String auth) {
+            this.auth = auth;
+        }
+    }
+
 
     /**
      * 5、生命周期任务示例：任务初始化与销毁时，支持自定义相关逻辑；

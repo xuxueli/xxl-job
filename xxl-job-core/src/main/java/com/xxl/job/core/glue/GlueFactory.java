@@ -21,6 +21,12 @@ public class GlueFactory {
 	public static GlueFactory getInstance(){
 		return glueFactory;
 	}
+
+	/**
+	 * refresh instance by type
+	 *
+	 * @param type		0-frameless, 1-spring;
+	 */
 	public static void refreshInstance(int type){
 		if (type == 0) {
 			glueFactory = new GlueFactory();

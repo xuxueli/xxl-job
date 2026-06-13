@@ -2,13 +2,13 @@ package com.xxl.job.core.glue.impl;
 
 import com.xxl.job.core.executor.impl.XxlJobSpringExecutor;
 import com.xxl.job.core.glue.GlueFactory;
+import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.annotation.AnnotationUtils;
 
-import javax.annotation.Resource;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
@@ -68,9 +68,7 @@ public class SpringGlueFactory extends GlueFactory {
                 field.setAccessible(true);
                 try {
                     field.set(instance, fieldBean);
-                } catch (IllegalArgumentException e) {
-                    logger.error(e.getMessage(), e);
-                } catch (IllegalAccessException e) {
+                } catch (Exception e) {
                     logger.error(e.getMessage(), e);
                 }
             }

@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.xuxueli</groupId>
         <artifactId>xxl-job-executor-samples</artifactId>
-        <version>2.4.1-SNAPSHOT</version>
+        <version>3.4.1-SNAPSHOT</version>
     </parent>
     <artifactId>xxl-job-executor-sample-frameless</artifactId>
     <packaging>jar</packaging>
@@ -21,14 +21,12 @@
         <!-- slf4j -->
         <dependency>
             <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <version>${slf4j-api.version}</version>
+            <artifactId>slf4j-reload4j</artifactId>
         </dependency>
         <!-- junit -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
-            <version>${junit-jupiter.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -36,7 +34,6 @@
         <dependency>
             <groupId>com.xuxueli</groupId>
             <artifactId>xxl-job-core</artifactId>
-            <version>${project.parent.version}</version>
         </dependency>
 
     </dependencies>
