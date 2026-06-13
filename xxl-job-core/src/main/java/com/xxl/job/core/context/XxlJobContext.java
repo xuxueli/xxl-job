@@ -138,7 +138,7 @@ public class XxlJobContext {
     /**
      * xxl-job context store
      */
-    private static final InheritableThreadLocal<XxlJobContext> contextHolder = new InheritableThreadLocal<XxlJobContext>(); // support for child thread of job handler)
+    private static final InheritableThreadLocal<XxlJobContext> contextHolder = new InheritableThreadLocal<>(); // support for child thread of job handler)
 
     /**
      * set xxl-job context
