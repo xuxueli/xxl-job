@@ -2845,8 +2845,9 @@ alter table xxl_job_log
   （存量客户端升级需要注意：升级后需要将配置项 "xxl.job.admin.addresses" 中的 context-path 前缀移除）
 - 3、【优化】任务参数长度调整，最长支持2048字符；
 - 4、【升级】调度中心UI交互优化，任务及日志管理支持下拉框模糊搜索，提升交互体验；
-- 5、【TODO】调度中心OpenAPI完善，提供任务管理能力；封装Agent Skill并推送ClawHub；
-- 6、【TODO】AccessToken升级：执行器维度隔离，支持线上化配置；升级双端OpenApi，适配AccessToken升级；
+- 5、【修复】XxlJobFileAppender自定义地址callbackLogPath设置无效问题修复；合并ISSUS-3963；
+- 6、【TODO】调度中心OpenAPI完善，提供任务管理能力；封装Agent Skill并推送ClawHub；
+- 7、【TODO】AccessToken升级：执行器维度隔离，支持线上化配置；升级双端OpenApi，适配AccessToken升级；
 
 
 ### TODO LIST
