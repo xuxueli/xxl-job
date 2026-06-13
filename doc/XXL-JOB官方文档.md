@@ -2846,8 +2846,9 @@ alter table xxl_job_log
 - 3、【优化】任务参数长度调整，最长支持2048字符；
 - 4、【升级】调度中心UI交互优化，任务及日志管理支持下拉框模糊搜索，提升交互体验；
 - 5、【修复】XxlJobFileAppender自定义地址callbackLogPath设置无效问题修复；合并ISSUS-3963；
-- 6、【TODO】调度中心OpenAPI完善，提供任务管理能力；封装Agent Skill并推送ClawHub；
-- 7、【TODO】AccessToken升级：执行器维度隔离，支持线上化配置；升级双端OpenApi，适配AccessToken升级；
+- 6、【优化】调度组件守护线程代码重构，提升稳定性以及可维护性；
+- 7、【TODO】调度中心OpenAPI完善，提供任务管理能力；封装Agent Skill并推送ClawHub；
+- 8、【TODO】AccessToken升级：执行器维度隔离，支持线上化配置；升级双端OpenApi，适配AccessToken升级；
 
 
 ### TODO LIST

@@ -3,8 +3,9 @@ package com.xxl.job.admin.business.scheduler.thread;
 import com.xxl.job.admin.business.model.XxlJobLog;
 import com.xxl.job.admin.business.scheduler.config.XxlJobAdminBootstrap;
 import com.xxl.job.admin.framework.util.I18nUtil;
-import com.xxl.job.core.openapi.model.CallbackRequest;
 import com.xxl.job.core.context.XxlJobContext;
+import com.xxl.job.core.openapi.model.CallbackRequest;
+import com.xxl.tool.concurrent.CyclicThread;
 import com.xxl.tool.core.DateTool;
 import com.xxl.tool.response.Response;
 import org.slf4j.Logger;
@@ -25,15 +26,14 @@ public class JobCompleteHelper {
 	// ---------------------- monitor ----------------------
 
 	private ThreadPoolExecutor callbackThreadPool = null;
-	private Thread monitorThread;
-	private volatile boolean toStop = false;
+	private CyclicThread jobMonitorThread;
 
 	/**
 	 * start
 	 */
 	public void start(){
 
-		// for callback
+		// 1、callbackThreadPool
 		callbackThreadPool = new ThreadPoolExecutor(
 				2,
 				20,
@@ -55,88 +55,55 @@ public class JobCompleteHelper {
 				});
 
 
-		// for monitor
-		monitorThread = new Thread(new Runnable() {
-
+		// 2、jobMonitorThread
+		jobMonitorThread = new CyclicThread("JobCompleteHelper#jobMonitorThread", true, new Runnable() {
 			@Override
 			public void run() {
+				// 任务结果丢失处理：调度记录停留在 "运行中" 状态超过10min，且对应执行器心跳注册失败不在线，则将本地调度主动标记失败；
+				Date losedTime = DateTool.addMinutes(new Date(), -10);
+				List<Long> losedJobIds  = XxlJobAdminBootstrap.getInstance().getXxlJobLogMapper().findLostJobIds(losedTime);
 
-				// wait for JobTriggerPoolHelper-init
-				try {
-					TimeUnit.MILLISECONDS.sleep(50);
-				} catch (Throwable e) {
-					if (!toStop) {
-						logger.error(e.getMessage(), e);
+				if (losedJobIds!=null && losedJobIds.size()>0) {
+					for (Long logId: losedJobIds) {
+
+						XxlJobLog jobLog = new XxlJobLog();
+						jobLog.setId(logId);
+
+						jobLog.setHandleTime(new Date());
+						jobLog.setHandleCode(XxlJobContext.HANDLE_CODE_FAIL);
+						jobLog.setHandleMsg( I18nUtil.getString("joblog_lost_fail") );
+
+						XxlJobAdminBootstrap.getInstance().getJobCompleter().complete(jobLog);
 					}
+
 				}
-
-				// monitor
-				while (!toStop) {
-					try {
-						// 任务结果丢失处理：调度记录停留在 "运行中" 状态超过10min，且对应执行器心跳注册失败不在线，则将本地调度主动标记失败；
-						Date losedTime = DateTool.addMinutes(new Date(), -10);
-						List<Long> losedJobIds  = XxlJobAdminBootstrap.getInstance().getXxlJobLogMapper().findLostJobIds(losedTime);
-
-						if (losedJobIds!=null && losedJobIds.size()>0) {
-							for (Long logId: losedJobIds) {
-
-								XxlJobLog jobLog = new XxlJobLog();
-								jobLog.setId(logId);
-
-								jobLog.setHandleTime(new Date());
-								jobLog.setHandleCode(XxlJobContext.HANDLE_CODE_FAIL);
-								jobLog.setHandleMsg( I18nUtil.getString("joblog_lost_fail") );
-
-								XxlJobAdminBootstrap.getInstance().getJobCompleter().complete(jobLog);
-							}
-
-						}
-					} catch (Throwable e) {
-						if (!toStop) {
-							logger.error(">>>>>>>>>>> xxl-job, job fail monitor thread error:{}", e);
-						}
-					}
-
-                    try {
-                        TimeUnit.SECONDS.sleep(60);
-                    } catch (Throwable e) {
-                        if (!toStop) {
-                            logger.error(e.getMessage(), e);
-                        }
-                    }
-
-                }
-
-				logger.info(">>>>>>>>>>> xxl-job, JobLosedMonitorHelper stop");
-
 			}
-		});
-		monitorThread.setDaemon(true);
-		monitorThread.setName("xxl-job, admin JobLosedMonitorHelper");
-		monitorThread.start();
+		}, 60 * 1000L, true);
+		jobMonitorThread.start();
+
 	}
 
 	/**
 	 * stop
 	 */
 	public void stop(){
-		toStop = true;
 
-		// stop registryOrRemoveThreadPool
+		// 1、callbackThreadPool
 		callbackThreadPool.shutdownNow();
 
-		// stop monitorThread (interrupt and wait)
-		monitorThread.interrupt();
-		try {
-			monitorThread.join();
-		} catch (Throwable e) {
-			logger.error(e.getMessage(), e);
-		}
+		// 2、jobMonitorThread
+		jobMonitorThread.stop();
 	}
 
 
 	// ---------------------- helper ----------------------
 
+	/**
+	 * callback
+	 *
+	 * @param callbackParamList callback param
+	 * @return callback result
+	 */
 	public Response<String> callback(List<CallbackRequest> callbackParamList) {
 
 		callbackThreadPool.execute(new Runnable() {

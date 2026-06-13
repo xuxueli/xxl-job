@@ -44,7 +44,11 @@ public class JobScheduleHelper {
      */
     public void start(){
 
-        // schedule thread
+        // init thread flag
+        scheduleThreadToStop = false;
+        ringThreadToStop = false;
+
+        // 1、schedule thread
         scheduleThread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -191,8 +195,7 @@ public class JobScheduleHelper {
         scheduleThread.setName("xxl-job, admin JobScheduleHelper#scheduleThread");
         scheduleThread.start();
 
-
-        // ring thread
+        // 2、ring thread
         ringThread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -348,7 +351,7 @@ public class JobScheduleHelper {
             }
         }
 
-        // stop ring (wait job-in-memory stop)
+        // 2、stop ring (wait job-in-memory stop)
         ringThreadToStop = true;
         try {
             TimeUnit.SECONDS.sleep(1);
