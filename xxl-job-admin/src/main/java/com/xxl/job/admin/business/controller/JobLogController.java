@@ -6,6 +6,7 @@ import com.xxl.job.admin.business.mapper.XxlJobLogMapper;
 import com.xxl.job.admin.business.model.XxlJobGroup;
 import com.xxl.job.admin.business.model.XxlJobInfo;
 import com.xxl.job.admin.business.model.XxlJobLog;
+import com.xxl.job.admin.business.model.dto.XxlJobLogDTO;
 import com.xxl.job.admin.business.scheduler.config.XxlJobAdminBootstrap;
 import com.xxl.job.admin.business.scheduler.exception.XxlJobException;
 import com.xxl.job.admin.business.service.XxlJobService;
@@ -110,13 +111,13 @@ public class JobLogController {
 	
 	@RequestMapping("/pageList")
 	@ResponseBody
-	public Response<PageModel<XxlJobLog>> pageList(HttpServletRequest request,
-										@RequestParam(required = false, defaultValue = "0") int offset,
-										@RequestParam(required = false, defaultValue = "10") int pagesize,
-										@RequestParam int jobGroup,
-										@RequestParam int jobId,
-										@RequestParam int logStatus,
-										@RequestParam String filterTime) {
+	public Response<PageModel<XxlJobLogDTO>> pageList(HttpServletRequest request,
+													  @RequestParam(required = false, defaultValue = "0") int offset,
+													  @RequestParam(required = false, defaultValue = "10") int pagesize,
+													  @RequestParam int jobGroup,
+													  @RequestParam int jobId,
+													  @RequestParam int logStatus,
+													  @RequestParam String filterTime) {
 
 		// valid jobGroup permission
 		JobGroupPermissionUtil.validJobGroupPermission(request, jobGroup);
@@ -141,9 +142,12 @@ public class JobLogController {
 		List<XxlJobLog> list = xxlJobLogMapper.pageList(offset, pagesize, jobGroup, jobId, triggerTimeStart, triggerTimeEnd, logStatus);
 		int list_count = xxlJobLogMapper.pageListCount(offset, pagesize, jobGroup, jobId, triggerTimeStart, triggerTimeEnd, logStatus);
 
+		// model > dto
+		List<XxlJobLogDTO> listDTO = list.stream().map(XxlJobLogDTO::new).toList();
+
 		// package result
-		PageModel<XxlJobLog> pageModel = new PageModel<>();
-		pageModel.setData(list);
+		PageModel<XxlJobLogDTO> pageModel = new PageModel<>();
+		pageModel.setData(listDTO);
 		pageModel.setTotal(list_count);
 
 		return Response.ofSuccess(pageModel);
