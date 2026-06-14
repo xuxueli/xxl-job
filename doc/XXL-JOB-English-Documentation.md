@@ -781,6 +781,8 @@ So far, XXL-JOB has access to a number of companies online product line, access 
     - 721、大庆点神科技有限公司
     - 722、深圳市中科环球科技有限公司
     - 723、江苏金箭车业制造有限公司
+    - 724、友邦保险
+    - 725、深圳市中科环球科技有限公司
 	- ……
 
 > The company that access and use this product is welcome to register at the [address](https://github.com/xuxueli/xxl-job/issues/1 ), only for product promotion. 
@@ -850,34 +852,41 @@ Source code is organized by maven,unzip it and structure is as follows:
 #### Step 1:Configure Schedule Center
 Configure file’s path of schedule center is as follows:
 
-    /xxl-job/xxl-job-admin/src/main/resources/application.properties
-
+```
+/xxl-job/xxl-job-admin/src/main/resources/application.properties
+```
 
 The concrete contet describe as follows:
 
-    ### JDBC connection info of schedule center：keep Consistent with chapter 2.1
-    xxl.job.db.driverClass=com.mysql.jdbc.Driver
-    xxl.job.db.url=jdbc:mysql://127.0.0.1:3306/xxl_job?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai
-    xxl.job.db.user=root
-    xxl.job.db.password=root_pwd
-    
-    ### Alarm mailbox
-    xxl.job.mail.host=smtp.163.com
-    xxl.job.mail.port=25
-    xxl.job.mail.username=ovono802302@163.com
-    xxl.job.mail.password=asdfzxcv
-    xxl.job.mail.sendFrom=ovono802302@163.com
-    xxl.job.mail.sendNick=《任务调度平台XXL-JOB》
-    
-    ### Login account
-    xxl.job.login.username=admin
-    xxl.job.login.password=123456
-    
-    ### TOKEN used for communication between the executor and schedule center, enabled if it’s not null
-    xxl.job.accessToken=
-    
-    ### Internationalized Settings, the default is Chinese version，Switch to English when the value is "en".
-    xxl.job.i18n=en
+```
+### JDBC connection info of schedule center：keep Consistent with chapter 2.1
+spring.datasource.url=jdbc:mysql://127.0.0.1:3306/xxl_job?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai
+spring.datasource.username=root
+spring.datasource.password=root_pwd
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+
+### Alarm mailbox
+spring.mail.host=smtp.qq.com
+spring.mail.port=25
+spring.mail.username=xxx@qq.com
+spring.mail.from=xxx@qq.com
+spring.mail.password=xxx
+spring.mail.properties.mail.smtp.auth=true
+spring.mail.properties.mail.smtp.starttls.enable=true
+spring.mail.properties.mail.smtp.starttls.required=true
+spring.mail.properties.mail.smtp.socketFactory.class=javax.net.ssl.SSLSocketFactory
+
+### Login account
+xxl.job.login.username=admin
+xxl.job.login.password=123456
+
+### TOKEN used for communication between the executor and schedule center, enabled if it’s not null
+xxl.job.accessToken=
+
+### Internationalized Settings, the default is Chinese version，Switch to English when the value is "en".
+xxl.job.i18n=zh_CN
+
+```
 
 #### Step 2:Deploy:
 If you has finished step 1,then you can compile the project in maven and deploy the war package to tomcat.
