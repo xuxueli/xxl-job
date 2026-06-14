@@ -7,6 +7,7 @@ import com.xxl.job.admin.framework.util.I18nUtil;
 import com.xxl.job.admin.business.mapper.XxlJobGroupMapper;
 import com.xxl.job.admin.business.mapper.XxlJobInfoMapper;
 import com.xxl.job.admin.business.mapper.XxlJobRegistryMapper;
+import com.xxl.job.admin.framework.util.XssUtil;
 import com.xxl.job.core.constant.Const;
 import com.xxl.job.core.constant.RegistTypeEnum;
 import com.xxl.sso.core.annotation.XxlSso;
@@ -71,27 +72,31 @@ public class JobGroupController {
 	@XxlSso(role = Consts.ADMIN_ROLE)
 	public Response<String> insert(XxlJobGroup xxlJobGroup){
 
-		// valid
+		// valid appname
 		if (StringTool.isBlank(xxlJobGroup.getAppname())) {
 			return Response.ofFail((I18nUtil.getString("system_please_input")+"AppName") );
 		}
 		if (xxlJobGroup.getAppname().length()<4 || xxlJobGroup.getAppname().length()>64) {
 			return Response.ofFail( I18nUtil.getString("jobgroup_field_appname_length") );
 		}
-		if (xxlJobGroup.getAppname().contains(">") || xxlJobGroup.getAppname().contains("<")) {
+		if (XssUtil.hasXss(xxlJobGroup.getAppname())) {
 			return Response.ofFail( "AppName"+I18nUtil.getString("system_invalid") );
 		}
+
+		// valid title
 		if (StringTool.isBlank(xxlJobGroup.getTitle())) {
 			return Response.ofFail((I18nUtil.getString("system_please_input") + I18nUtil.getString("jobgroup_field_title")) );
 		}
-		if (xxlJobGroup.getTitle().contains(">") || xxlJobGroup.getTitle().contains("<")) {
-			return Response.ofFail(I18nUtil.getString("jobgroup_field_title")+I18nUtil.getString("system_invalid") );
+		if (XssUtil.hasXss(xxlJobGroup.getTitle())) {
+			return Response.ofFail(I18nUtil.getString("jobgroup_field_title") + I18nUtil.getString("system_invalid"));
 		}
-		if (xxlJobGroup.getAddressType()!=0) {
+		if (xxlJobGroup.getAddressType() != 0) {
+
+			// valid addressList
 			if (StringTool.isBlank(xxlJobGroup.getAddressList())) {
 				return Response.ofFail( I18nUtil.getString("jobgroup_field_addressType_limit") );
 			}
-			if (xxlJobGroup.getAddressList().contains(">") || xxlJobGroup.getAddressList().contains("<")) {
+			if (XssUtil.hasXss(xxlJobGroup.getAddressList())) {
 				return Response.ofFail(I18nUtil.getString("jobgroup_field_registryList")+I18nUtil.getString("system_invalid") );
 			}
 
@@ -117,16 +122,26 @@ public class JobGroupController {
 	@ResponseBody
 	@XxlSso(role = Consts.ADMIN_ROLE)
 	public Response<String> update(XxlJobGroup xxlJobGroup){
-		// valid
+
+		// valid appname
 		if (StringTool.isBlank(xxlJobGroup.getAppname())) {
 			return Response.ofFail((I18nUtil.getString("system_please_input")+"AppName") );
 		}
 		if (xxlJobGroup.getAppname().length()<4 || xxlJobGroup.getAppname().length()>64) {
 			return Response.ofFail( I18nUtil.getString("jobgroup_field_appname_length") );
 		}
-		if (StringTool.isBlank(xxlJobGroup.getTitle())) {
-			return Response.ofFail( (I18nUtil.getString("system_please_input") + I18nUtil.getString("jobgroup_field_title")) );
+		if (XssUtil.hasXss(xxlJobGroup.getAppname())) {
+			return Response.ofFail( "AppName"+I18nUtil.getString("system_invalid") );
 		}
+
+		// valid title
+		if (StringTool.isBlank(xxlJobGroup.getTitle())) {
+			return Response.ofFail((I18nUtil.getString("system_please_input") + I18nUtil.getString("jobgroup_field_title")) );
+		}
+		if (XssUtil.hasXss(xxlJobGroup.getTitle())) {
+			return Response.ofFail(I18nUtil.getString("jobgroup_field_title") + I18nUtil.getString("system_invalid"));
+		}
+
 		if (xxlJobGroup.getAddressType() == 0) {
 			// 0=自动注册
 			List<String> registryList = findRegistryByAppName(xxlJobGroup.getAppname());
@@ -138,9 +153,15 @@ public class JobGroupController {
 			xxlJobGroup.setAddressList(addressListStr);
 		} else {
 			// 1=手动录入
+
+			// valid addressList
 			if (StringTool.isBlank(xxlJobGroup.getAddressList())) {
 				return Response.ofFail( I18nUtil.getString("jobgroup_field_addressType_limit") );
 			}
+			if (XssUtil.hasXss(xxlJobGroup.getAddressList())) {
+				return Response.ofFail(I18nUtil.getString("jobgroup_field_registryList")+I18nUtil.getString("system_invalid") );
+			}
+
 			String[] addresss = xxlJobGroup.getAddressList().split(",");
 			for (String item: addresss) {
 				if (StringTool.isBlank(item)) {

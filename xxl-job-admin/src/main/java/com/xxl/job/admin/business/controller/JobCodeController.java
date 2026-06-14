@@ -6,6 +6,7 @@ import com.xxl.job.admin.business.model.XxlJobInfo;
 import com.xxl.job.admin.business.model.XxlJobLogGlue;
 import com.xxl.job.admin.framework.util.I18nUtil;
 import com.xxl.job.admin.framework.util.JobGroupPermissionUtil;
+import com.xxl.job.admin.framework.util.XssUtil;
 import com.xxl.job.core.glue.GlueTypeEnum;
 import com.xxl.sso.core.model.LoginInfo;
 import com.xxl.tool.core.StringTool;
@@ -78,6 +79,9 @@ public class JobCodeController {
 		}
 		if (glueRemark.length()<4 || glueRemark.length()>100) {
 			return Response.ofFail(I18nUtil.getString("jobinfo_glue_remark_limit"));
+		}
+		if (XssUtil.hasXss(glueRemark)) {
+			return Response.ofFail(I18nUtil.getString("jobinfo_glue_remark") + I18nUtil.getString("system_invalid"));
 		}
 		XxlJobInfo existsJobInfo = xxlJobInfoMapper.loadById(id);
 		if (existsJobInfo == null) {

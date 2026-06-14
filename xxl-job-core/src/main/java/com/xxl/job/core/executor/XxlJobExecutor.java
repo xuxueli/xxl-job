@@ -37,6 +37,9 @@ public class XxlJobExecutor  {
 
     private static XxlJobExecutor xxlJobExecutor = null;
     public static XxlJobExecutor getInstance() {
+        if (xxlJobExecutor == null) {
+            throw new RuntimeException(">>>>>>>>>>> xxl-job load executor instance fail, please initialize it.");
+        }
         return xxlJobExecutor;
     }
 
@@ -367,7 +370,7 @@ public class XxlJobExecutor  {
     public JobThread registJobThread(int jobId, IJobHandler handler, String removeOldReason){
         JobThread newJobThread = new JobThread(jobId, handler);
         newJobThread.start();
-        logger.info(">>>>>>>>>>> xxl-job regist JobThread success, jobId:{}, handler:{}", new Object[]{jobId, handler});
+        logger.info(">>>>>>>>>>> xxl-job register JobThread success, jobId:{}, handler:{}", new Object[]{jobId, handler});
 
         JobThread oldJobThread = jobThreadRepository.put(jobId, newJobThread);	// putIfAbsent | oh my god, map's put method return the old value!!!
         if (oldJobThread != null) {
