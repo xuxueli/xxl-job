@@ -71,7 +71,6 @@ public class TriggerCallbackThreadHelper {
                 1,
                 50);
 
-
         /**
          * 2、retry callback-file thread
          */
@@ -130,7 +129,9 @@ public class TriggerCallbackThreadHelper {
         }
 
         // 2、stop retryCallbackThread
-        retryCallbackThread.stop();
+        if (callbackMessageQueue != null) {
+            retryCallbackThread.stop();
+        }
     }
 
 

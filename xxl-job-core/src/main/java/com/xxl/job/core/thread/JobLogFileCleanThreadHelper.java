@@ -102,7 +102,10 @@ public class JobLogFileCleanThreadHelper {
     public void stop() {
 
         // stop logFileCleanThread
-        logFileCleanThread.stop();
+        if (logFileCleanThread != null) {
+            logFileCleanThread.stop();
+        }
+
     }
 
 }

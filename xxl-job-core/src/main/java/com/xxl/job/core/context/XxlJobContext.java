@@ -8,9 +8,21 @@ package com.xxl.job.core.context;
  */
 public class XxlJobContext {
 
+    /**
+     * handle success
+     */
     public static final int HANDLE_CODE_SUCCESS = 200;
+
+    /**
+     * handle fail
+     */
     public static final int HANDLE_CODE_FAIL = 500;
+
+    /**
+     * handle timeout
+     */
     public static final int HANDLE_CODE_TIMEOUT = 502;
+
 
     // ---------------------- base info ----------------------
 
@@ -23,6 +35,7 @@ public class XxlJobContext {
      * job param
      */
     private final String jobParam;
+
 
     // ---------------------- for log ----------------------
 
@@ -41,6 +54,7 @@ public class XxlJobContext {
      */
     private final String logFileName;
 
+
     // ---------------------- for shard ----------------------
 
     /**
@@ -52,6 +66,7 @@ public class XxlJobContext {
      * shard total
      */
     private final int shardTotal;
+
 
     // ---------------------- for handle ----------------------
 
@@ -132,6 +147,7 @@ public class XxlJobContext {
     public String getHandleMsg() {
         return handleMsg;
     }
+
 
     // ---------------------- tool ----------------------
 

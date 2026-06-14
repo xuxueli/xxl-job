@@ -1,6 +1,6 @@
 package com.xxl.job.core.thread;
 
-import com.xxl.job.core.constant.RegistType;
+import com.xxl.job.core.constant.RegistTypeEnum;
 import com.xxl.job.core.openapi.AdminBiz;
 import com.xxl.job.core.openapi.model.RegistryRequest;
 import com.xxl.job.core.constant.Const;
@@ -48,7 +48,7 @@ public class ExecutorRegistryThreadHelper {
         registryThread = new CyclicThread("ExecutorRegistryThread#registryThread", true, new Runnable() {
             @Override
             public void run() {
-                RegistryRequest registryParam = new RegistryRequest(RegistType.EXECUTOR.name(), xxlJobExecutor.getAppname(), xxlJobExecutor.getAddress());
+                RegistryRequest registryParam = new RegistryRequest(RegistTypeEnum.EXECUTOR.name(), xxlJobExecutor.getAppname(), xxlJobExecutor.getAddress());
                 for (AdminBiz adminBiz: xxlJobExecutor.getAdminBizList()) {
                     try {
                         Response<String> registryResult = adminBiz.registry(registryParam);
@@ -78,7 +78,9 @@ public class ExecutorRegistryThreadHelper {
         /**
          * 1、stop registryThread
          */
-        registryThread.stop();
+        if (registryThread != null) {
+            registryThread.stop();
+        }
 
         /**
          * 2、registry remove
@@ -87,7 +89,7 @@ public class ExecutorRegistryThreadHelper {
     }
 
     private void registryRemove(final XxlJobExecutor xxlJobExecutor){
-        RegistryRequest registryParam = new RegistryRequest(RegistType.EXECUTOR.name(), xxlJobExecutor.getAppname(), xxlJobExecutor.getAddress());
+        RegistryRequest registryParam = new RegistryRequest(RegistTypeEnum.EXECUTOR.name(), xxlJobExecutor.getAppname(), xxlJobExecutor.getAddress());
         for (AdminBiz adminBiz: xxlJobExecutor.getAdminBizList()) {
             try {
                 Response<String> registryResult = adminBiz.registryRemove(registryParam);

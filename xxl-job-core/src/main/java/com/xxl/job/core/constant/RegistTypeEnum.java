@@ -3,7 +3,7 @@ package com.xxl.job.core.constant;
 /**
  * Created by xuxueli on 17/5/9.
  */
-public enum RegistType{
+public enum RegistTypeEnum {
 
     /**
      * executor registry

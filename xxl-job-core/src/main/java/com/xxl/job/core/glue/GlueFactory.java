@@ -2,6 +2,7 @@ package com.xxl.job.core.glue;
 
 import com.xxl.job.core.glue.impl.SpringGlueFactory;
 import com.xxl.job.core.handler.IJobHandler;
+import com.xxl.tool.core.StringTool;
 import groovy.lang.GroovyClassLoader;
 
 import java.math.BigInteger;
@@ -39,31 +40,28 @@ public class GlueFactory {
 	/**
 	 * groovy class loader
 	 */
-	private GroovyClassLoader groovyClassLoader = new GroovyClassLoader();
-	private ConcurrentMap<String, Class<?>> CLASS_CACHE = new ConcurrentHashMap<>();
+	private final GroovyClassLoader groovyClassLoader = new GroovyClassLoader();
+	private final ConcurrentMap<String, Class<?>> CLASS_CACHE = new ConcurrentHashMap<>();
 
 	/**
 	 * load new instance, prototype
 	 *
-	 * @param codeSource
-	 * @return
-	 * @throws Exception
+	 * @param codeSource  code source
+	 * @return IJobHandler
 	 */
 	public IJobHandler loadNewInstance(String codeSource) throws Exception{
-		if (codeSource!=null && codeSource.trim().length()>0) {
+		if (StringTool.isNotBlank(codeSource)) {
 			Class<?> clazz = getCodeSourceClass(codeSource);
 			if (clazz != null) {
 				Object instance = clazz.newInstance();
-				if (instance!=null) {
-					if (instance instanceof IJobHandler) {
-						this.injectService(instance);
-						return (IJobHandler) instance;
-					} else {
-						throw new IllegalArgumentException(">>>>>>>>>>> xxl-glue, loadNewInstance error, "
-								+ "cannot convert from instance["+ instance.getClass() +"] to IJobHandler");
-					}
-				}
-			}
+                if (instance instanceof IJobHandler) {
+                    this.injectService(instance);
+                    return (IJobHandler) instance;
+                } else {
+                    throw new IllegalArgumentException(">>>>>>>>>>> xxl-glue, loadNewInstance error, "
+                            + "cannot convert from instance[" + instance.getClass() + "] to IJobHandler");
+                }
+            }
 		}
 		throw new IllegalArgumentException(">>>>>>>>>>> xxl-glue, loadNewInstance error, instance is null");
 	}
@@ -87,7 +85,7 @@ public class GlueFactory {
 	/**
 	 * inject service of bean field
 	 *
-	 * @param instance
+	 * @param instance  instance
 	 */
 	public void injectService(Object instance) {
 		// do something

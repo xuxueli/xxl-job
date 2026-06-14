@@ -117,7 +117,7 @@ public class XxlJobExecutor  {
      */
     public void start() throws Exception {
 
-        // init instance
+        // bind instance
         xxlJobExecutor = this;
 
         // valid enabled

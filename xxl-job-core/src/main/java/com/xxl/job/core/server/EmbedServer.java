@@ -134,8 +134,8 @@ public class EmbedServer {
     // ---------------------- registry ----------------------
 
     /**
-     * netty_http
-     * <p>
+     * netty_http server handler
+     *
      * Copy from : https://github.com/xuxueli/xxl-rpc
      *
      * @author xuxueli 2015-11-24 22:25:15
