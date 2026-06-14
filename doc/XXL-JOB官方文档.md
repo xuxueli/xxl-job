@@ -2850,9 +2850,11 @@ alter table xxl_job_log
 - 7、【优化】调度组件守护线程代码重构，提升稳定性以及可维护性；
 
 
-### 7.46 版本 v3.4.2 Release Notes[ING]
-- 1、【TODO】调度中心OpenAPI完善，提供任务管理能力；封装Agent Skill并推送ClawHub；
-- 2、【TODO】AccessToken升级：执行器维度隔离，支持线上化配置；升级双端OpenApi，适配AccessToken升级；
+### 7.46 版本 v3.5.0 Release Notes[ING]
+- 1、【TODO】AccessToken线上化管理：执行期维度，限制操作当前执行期；
+- 2、【TODO】调度中心OpenAPI增强：提供任务管理能力；封装Agent Skill并推送ClawHub；
+- 3、【TODO】配置线上化：发送邮箱配置线上管理、线程池配置调整；
+- 4、【TODO】任务告警：支持Webhook、邮箱多种方式；
 
 
 ### TODO LIST
