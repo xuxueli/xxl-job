@@ -1,6 +1,6 @@
 package com.xxl.job.openapi;
 
-import com.xxl.job.core.constant.RegistType;
+import com.xxl.job.core.constant.RegistTypeEnum;
 import com.xxl.job.core.openapi.AdminBiz;
 import com.xxl.job.core.openapi.model.CallbackRequest;
 import com.xxl.job.core.openapi.model.RegistryRequest;
@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class AdminBizTest {
     private static final Logger logger = LoggerFactory.getLogger(AdminBizTest.class);
 
-    private static String addressUrl = "http://127.0.0.1:8080/xxl-job-admin";
+    private static String addressUrl = "http://127.0.0.1:8080";
     private static String accessToken = "default_token";
 
     private AdminBiz buildClient(){
@@ -61,7 +61,7 @@ public class AdminBizTest {
     public void registry() throws Exception {
         AdminBiz adminBiz = buildClient();
 
-        RegistryRequest registryParam = new RegistryRequest(RegistType.EXECUTOR.name(), "xxl-job-executor-example", "127.0.0.1:9999");
+        RegistryRequest registryParam = new RegistryRequest(RegistTypeEnum.EXECUTOR.name(), "xxl-job-executor-example", "127.0.0.1:9999");
 
         Response<String> returnT = adminBiz.registry(registryParam);
         assertTrue(returnT.isSuccess());
@@ -76,7 +76,7 @@ public class AdminBizTest {
     public void registryRemove() throws Exception {
         AdminBiz adminBiz = buildClient();
 
-        RegistryRequest registryParam = new RegistryRequest(RegistType.EXECUTOR.name(), "xxl-job-executor-example", "127.0.0.1:9999");
+        RegistryRequest registryParam = new RegistryRequest(RegistTypeEnum.EXECUTOR.name(), "xxl-job-executor-example", "127.0.0.1:9999");
 
         Response<String> returnT = adminBiz.registryRemove(registryParam);
         assertTrue(returnT.isSuccess());

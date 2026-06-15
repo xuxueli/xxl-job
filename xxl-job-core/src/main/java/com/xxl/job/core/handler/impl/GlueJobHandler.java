@@ -10,12 +10,21 @@ import com.xxl.job.core.handler.IJobHandler;
  */
 public class GlueJobHandler extends IJobHandler {
 
+	/**
+	 * glue update time
+	 */
 	private long glueUpdatetime;
+
+	/**
+	 * job handler
+	 */
 	private IJobHandler jobHandler;
+
 	public GlueJobHandler(IJobHandler jobHandler, long glueUpdatetime) {
 		this.jobHandler = jobHandler;
 		this.glueUpdatetime = glueUpdatetime;
 	}
+
 	public long getGlueUpdatetime() {
 		return glueUpdatetime;
 	}
@@ -23,7 +32,7 @@ public class GlueJobHandler extends IJobHandler {
 	@Override
 	public void execute() throws Exception {
 		XxlJobHelper.log("----------- glue.version:"+ glueUpdatetime +" -----------");
-		jobHandler.execute();
+		this.jobHandler.execute();
 	}
 
 	@Override

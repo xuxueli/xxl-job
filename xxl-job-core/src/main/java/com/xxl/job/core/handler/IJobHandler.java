@@ -10,8 +10,6 @@ public abstract class IJobHandler {
 
 	/**
 	 * execute handler, invoked when executor receives a scheduling request
-	 *
-	 * @throws Exception
 	 */
 	public abstract void execute() throws Exception;
 

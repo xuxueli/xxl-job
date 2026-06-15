@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
+import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.chat.memory.MessageWindowChatMemory;
 import org.springframework.ai.ollama.OllamaChatModel;
 import org.springframework.ai.ollama.api.OllamaChatOptions;
@@ -32,7 +33,7 @@ public class OllamaTest {
     @Test
     public void chatTest() {
 
-        String model = "qwen3.5:2b";
+        String model = "qwen3.5:0.8b";
         String prompt = "你是一个研发工程师，擅长解决技术类问题。";
         String input = "Java实现二叉树层序遍历";
 
@@ -42,12 +43,13 @@ public class OllamaTest {
                 .builder(ollamaChatModel)
                 .defaultAdvisors(MessageChatMemoryAdvisor.builder(MessageWindowChatMemory.builder().build()).build())
                 .defaultAdvisors(SimpleLoggerAdvisor.builder().build())
-                .defaultOptions(OllamaChatOptions.builder().model(model).build())
+                .defaultOptions(OllamaChatOptions.builder().model(model))
                 .build();
 
         // call ollama
         String response = ollamaChatClient
                 .prompt(prompt)
+                .advisors(a -> a.param(ChatMemory.CONVERSATION_ID, "conversationId-default"))
                 .user(input)
                 .call()
                 .content();
@@ -59,7 +61,7 @@ public class OllamaTest {
     @Test
     public void chatStreamTest() throws InterruptedException {
 
-        String model = "qwen3.5:2b";
+        String model = "qwen3.5:0.8b";
         String prompt = "你是一个研发工程师，擅长解决技术类问题。";
         String input = "Java实现二叉树层序遍历";
 
@@ -69,13 +71,14 @@ public class OllamaTest {
                 .builder(ollamaChatModel)
                 .defaultAdvisors(MessageChatMemoryAdvisor.builder(MessageWindowChatMemory.builder().build()).build())
                 .defaultAdvisors(SimpleLoggerAdvisor.builder().build())
-                .defaultOptions(OllamaChatOptions.builder().model(model).build())
+                .defaultOptions(OllamaChatOptions.builder().model(model))
                 .build();
 
         // call ollama
         logger.info("input: {}", input);
         Flux<String> flux = ollamaChatClient
                 .prompt(prompt)
+                .advisors(a -> a.param(ChatMemory.CONVERSATION_ID, "conversationId-default"))
                 .user(input)
                 .stream()
                 .content();

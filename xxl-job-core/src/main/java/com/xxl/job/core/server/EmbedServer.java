@@ -1,10 +1,13 @@
 package com.xxl.job.core.server;
 
 import com.xxl.job.core.constant.Const;
+import com.xxl.job.core.executor.XxlJobExecutor;
 import com.xxl.job.core.openapi.ExecutorBiz;
 import com.xxl.job.core.openapi.impl.ExecutorBizImpl;
-import com.xxl.job.core.openapi.model.*;
-import com.xxl.job.core.thread.ExecutorRegistryThread;
+import com.xxl.job.core.openapi.model.IdleBeatRequest;
+import com.xxl.job.core.openapi.model.KillRequest;
+import com.xxl.job.core.openapi.model.LogRequest;
+import com.xxl.job.core.openapi.model.TriggerRequest;
 import com.xxl.tool.error.ThrowableTool;
 import com.xxl.tool.json.GsonTool;
 import com.xxl.tool.response.Response;
@@ -44,6 +47,10 @@ public class EmbedServer {
 
     public void start(final String address, final String bindIp, final int port, final String appname, final String accessToken) {
         executorBiz = new ExecutorBizImpl();
+
+        /**
+         * start server
+         */
         thread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -80,7 +87,7 @@ public class EmbedServer {
                                             .addLast(new IdleStateHandler(0, 0, 30 * 3, TimeUnit.SECONDS))  // beat 3N, close if idle
                                             .addLast(new HttpServerCodec())
                                             .addLast(new HttpObjectAggregator(5 * 1024 * 1024))  // merge request & reponse to FULL
-                                            .addLast(new EmbedHttpServerHandler(executorBiz, accessToken, bizThreadPool));
+                                            .addLast(new EmbedHttpServerHandler(executorBiz, xxlJobExecutor.getAccessToken(), bizThreadPool));
                                 }
                             })
                             .childOption(ChannelOption.SO_KEEPALIVE, true);
@@ -97,7 +104,7 @@ public class EmbedServer {
                     logger.info(">>>>>>>>>>> xxl-job remoting server start success, nettype = {}, bindIp = {}, port = {}", EmbedServer.class, bindIp, port);
 
                     // start registry
-                    startRegistry(appname, address);
+                    xxlJobExecutor.getExecutorRegistryThreadHelper().start(xxlJobExecutor);
 
                     // wait util stop
                     future.channel().closeFuture().sync();
@@ -122,14 +129,14 @@ public class EmbedServer {
         thread.start();
     }
 
-    public void stop() throws Exception {
+    public void stop(final XxlJobExecutor xxlJobExecutor) throws Exception {
         // destroy server thread
         if (thread != null && thread.isAlive()) {
             thread.interrupt();
         }
 
         // stop registry
-        stopRegistry();
+        xxlJobExecutor.getExecutorRegistryThreadHelper().stop(xxlJobExecutor);
         logger.info(">>>>>>>>>>> xxl-job remoting server destroy success.");
     }
 
@@ -137,8 +144,8 @@ public class EmbedServer {
     // ---------------------- registry ----------------------
 
     /**
-     * netty_http
-     * <p>
+     * netty_http server handler
+     *
      * Copy from : https://github.com/xuxueli/xxl-rpc
      *
      * @author xuxueli 2015-11-24 22:25:15
@@ -258,15 +265,4 @@ public class EmbedServer {
         }
     }
 
-    // ---------------------- registry ----------------------
-
-    public void startRegistry(final String appname, final String address) {
-        // start registry
-        ExecutorRegistryThread.getInstance().start(appname, address);
-    }
-
-    public void stopRegistry() {
-        // stop registry
-        ExecutorRegistryThread.getInstance().toStop();
-    }
 }

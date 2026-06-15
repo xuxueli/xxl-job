@@ -1,7 +1,20 @@
-.idea
+# for backend
+*.iml
+/.idea
+**/target/
 .classpath
 .project
-*.iml
-target/
 .DS_Store
 .gitattributes
+
+# for fontend
+node_modules/
+dist/
+package-lock.json
+
+# for ai
+.opencode
+.omo
+.claude
+.specify
+specs

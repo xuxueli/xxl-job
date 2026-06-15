@@ -25,4 +25,12 @@ public class Const {
      */
     public static final int DEAD_TIMEOUT = BEAT_TIMEOUT * 3;
 
+
+    // ---------------------- for executor ----------------------
+
+    /*
+     * elegant shutdown wait seconds
+     */
+    public static final long ELEGANT_SHUTDOWN_WAITING_SECONDS = 5;
+
 }

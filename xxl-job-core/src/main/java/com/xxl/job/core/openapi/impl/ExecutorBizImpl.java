@@ -1,9 +1,7 @@
 package com.xxl.job.core.openapi.impl;
 
-import com.xxl.job.core.context.XxlJobContext;
-import com.xxl.job.core.openapi.ExecutorBiz;
-import com.xxl.job.core.openapi.model.*;
 import com.xxl.job.core.constant.ExecutorBlockStrategyEnum;
+import com.xxl.job.core.context.XxlJobContext;
 import com.xxl.job.core.executor.XxlJobExecutor;
 import com.xxl.job.core.glue.GlueFactory;
 import com.xxl.job.core.glue.GlueTypeEnum;
@@ -11,6 +9,8 @@ import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.handler.impl.GlueJobHandler;
 import com.xxl.job.core.handler.impl.ScriptJobHandler;
 import com.xxl.job.core.log.XxlJobFileAppender;
+import com.xxl.job.core.openapi.ExecutorBiz;
+import com.xxl.job.core.openapi.model.*;
 import com.xxl.job.core.thread.JobThread;
 import com.xxl.tool.response.Response;
 import org.slf4j.Logger;
@@ -22,7 +22,7 @@ import java.util.Date;
  * Created by xuxueli on 17/3/1.
  */
 public class ExecutorBizImpl implements ExecutorBiz {
-    private static Logger logger = LoggerFactory.getLogger(ExecutorBizImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(ExecutorBizImpl.class);
 
     @Override
     public Response<String> beat() {
@@ -34,7 +34,7 @@ public class ExecutorBizImpl implements ExecutorBiz {
 
         // isRunningOrHasQueue
         boolean isRunningOrHasQueue = false;
-        JobThread jobThread = XxlJobExecutor.loadJobThread(idleBeatRequest.getJobId());
+        JobThread jobThread = XxlJobExecutor.getInstance().loadJobThread(idleBeatRequest.getJobId());
         if (jobThread != null && jobThread.isRunningOrHasQueue()) {
             isRunningOrHasQueue = true;
         }
@@ -48,7 +48,7 @@ public class ExecutorBizImpl implements ExecutorBiz {
     @Override
     public Response<String> run(TriggerRequest triggerRequest) {
         // load old：jobHandler + jobThread
-        JobThread jobThread = XxlJobExecutor.loadJobThread(triggerRequest.getJobId());
+        JobThread jobThread = XxlJobExecutor.getInstance().loadJobThread(triggerRequest.getJobId());
         IJobHandler jobHandler = jobThread!=null?jobThread.getHandler():null;
         String removeOldReason = null;
 
@@ -57,7 +57,7 @@ public class ExecutorBizImpl implements ExecutorBiz {
         if (GlueTypeEnum.BEAN == glueTypeEnum) {
 
             // new jobhandler
-            IJobHandler newJobHandler = XxlJobExecutor.loadJobHandler(triggerRequest.getExecutorHandler());
+            IJobHandler newJobHandler = XxlJobExecutor.getInstance().loadJobHandler(triggerRequest.getExecutorHandler());
 
             // valid old jobThread
             if (jobThread!=null && jobHandler != newJobHandler) {
@@ -142,7 +142,7 @@ public class ExecutorBizImpl implements ExecutorBiz {
 
         // replace thread (new or exists invalid)
         if (jobThread == null) {
-            jobThread = XxlJobExecutor.registJobThread(triggerRequest.getJobId(), jobHandler, removeOldReason);
+            jobThread = XxlJobExecutor.getInstance().registJobThread(triggerRequest.getJobId(), jobHandler, removeOldReason);
         }
 
         // push data to queue
@@ -152,9 +152,9 @@ public class ExecutorBizImpl implements ExecutorBiz {
     @Override
     public Response<String> kill(KillRequest killRequest) {
         // kill handlerThread, and create new one
-        JobThread jobThread = XxlJobExecutor.loadJobThread(killRequest.getJobId());
+        JobThread jobThread = XxlJobExecutor.getInstance().loadJobThread(killRequest.getJobId());
         if (jobThread != null) {
-            XxlJobExecutor.removeJobThread(killRequest.getJobId(), "scheduling center kill job.");
+            XxlJobExecutor.getInstance().removeJobThread(killRequest.getJobId(), "scheduling center kill job.");
             return Response.ofSuccess();
         }
 

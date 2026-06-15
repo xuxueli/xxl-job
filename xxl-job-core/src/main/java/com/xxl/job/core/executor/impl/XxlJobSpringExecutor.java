@@ -157,6 +157,7 @@ public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationC
                 XxlJob xxlJob = jobMethodEntry.getValue();
                 // regist
                 registryJobHandler(xxlJob, jobBean, jobMethod);
+                // consider > jobhandler support Placeholders: applicationContext.getEnvironment().resolvePlaceholders(xxlJob.value());
             }
 
         }

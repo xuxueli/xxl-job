@@ -12,6 +12,7 @@ import jakarta.annotation.Resource;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
+import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.chat.memory.MessageWindowChatMemory;
 import org.springframework.ai.ollama.OllamaChatModel;
 import org.springframework.ai.ollama.api.OllamaChatOptions;
@@ -73,7 +74,7 @@ public class AIXxlJob {
                 return;
             }
             if (ollamaParam.getModel()==null || ollamaParam.getModel().isBlank()) {
-                ollamaParam.setModel("qwen3.5:2b");
+                ollamaParam.setModel("qwen3.5:0.8b");
             }
         } catch (Exception e) {
             XxlJobHelper.log(new RuntimeException("OllamaParam parse error", e));
@@ -89,12 +90,13 @@ public class AIXxlJob {
                 .builder(ollamaChatModel)
                 .defaultAdvisors(MessageChatMemoryAdvisor.builder(MessageWindowChatMemory.builder().build()).build())
                 .defaultAdvisors(SimpleLoggerAdvisor.builder().build())
-                .defaultOptions(OllamaChatOptions.builder().model(ollamaParam.getModel()).build())
+                .defaultOptions(OllamaChatOptions.builder().model(ollamaParam.getModel()))
                 .build();
 
         // call ollama
         String response = ollamaChatClient
                 .prompt(ollamaParam.getPrompt())
+                .advisors(a -> a.param(ChatMemory.CONVERSATION_ID, "conversationId-default"))
                 .user(ollamaParam.getInput())
                 .call()
                 .content();
@@ -312,6 +314,7 @@ public class AIXxlJob {
         // call opencalw
         String response = openclawChatClient
                 .prompt(openClawParam.getPrompt())
+                .advisors(a -> a.param(ChatMemory.CONVERSATION_ID, "conversationId-default"))
                 .user(openClawParam.getInput())
                 .call()
                 .content();

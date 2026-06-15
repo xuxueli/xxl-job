@@ -17,8 +17,8 @@ public interface AdminBiz {
     /**
      * callback
      *
-     * @param callbackRequestList
-     * @return
+     * @param callbackRequestList callback request list
+     * @return response
      */
     public Response<String> callback(List<CallbackRequest> callbackRequestList);
 
@@ -28,16 +28,16 @@ public interface AdminBiz {
     /**
      * registry
      *
-     * @param registryRequest
-     * @return
+     * @param registryRequest registry request
+     * @return  response
      */
     public Response<String> registry(RegistryRequest registryRequest);
 
     /**
      * registry remove
      *
-     * @param registryRequest
-     * @return
+     * @param registryRequest registry request
+     * @return  response
      */
     public Response<String> registryRemove(RegistryRequest registryRequest);
 
