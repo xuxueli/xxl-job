@@ -40,10 +40,10 @@ public class XxlJobLogDTO {
         this.executorParam = xxlJobLog.getExecutorParam();
         this.executorShardingParam = xxlJobLog.getExecutorShardingParam();
         this.executorFailRetryCount = xxlJobLog.getExecutorFailRetryCount();
-        this.triggerTime = DateTool.formatDateTime(xxlJobLog.getTriggerTime());
+        this.triggerTime = xxlJobLog.getTriggerTime() != null ? DateTool.formatDateTime(xxlJobLog.getTriggerTime()) : null;
         this.triggerCode = xxlJobLog.getTriggerCode();
         this.triggerMsg = xxlJobLog.getTriggerMsg();
-        this.handleTime = DateTool.formatDateTime(xxlJobLog.getHandleTime());
+        this.handleTime = xxlJobLog.getHandleTime() != null ? DateTool.formatDateTime(xxlJobLog.getHandleTime()) : null;
         this.handleCode = xxlJobLog.getHandleCode();
         this.handleMsg = xxlJobLog.getHandleMsg();
         this.alarmStatus = xxlJobLog.getAlarmStatus();
