@@ -242,6 +242,7 @@ public class XxlJobExecutor  {
                     .url(finalAddress)
                     .timeout(finalTimeout * 1000)
                     .header(Const.XXL_JOB_ACCESS_TOKEN, accessToken)
+                    .header(Const.XXL_JOB_APPNAME, appname)
                     .proxy(AdminBiz.class);
 
             // registry

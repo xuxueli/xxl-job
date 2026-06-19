@@ -1,5 +1,6 @@
 package com.xxl.job.admin.business.scheduler.openapi;
 
+import com.xxl.job.admin.business.model.XxlJobGroup;
 import com.xxl.job.admin.business.scheduler.config.XxlJobAdminBootstrap;
 import com.xxl.job.core.constant.Const;
 import com.xxl.job.core.openapi.admin.AdminBiz;
@@ -30,9 +31,10 @@ public class OpenApiController {
     @ResponseBody
     @XxlSso(login = false)
     public Object api(HttpServletRequest request,
-                               @PathVariable("uri") String uri,
-                               @RequestHeader(value = Const.XXL_JOB_ACCESS_TOKEN, required = false) String accesstoken,
-                               @RequestBody(required = false) String requestBody) {
+                      @PathVariable("uri") String uri,
+                      @RequestHeader(value = Const.XXL_JOB_ACCESS_TOKEN, required = false) String accessToken,
+                      @RequestHeader(value = Const.XXL_JOB_APPNAME, required = false) String appname,
+                      @RequestBody(required = false) String requestBody) {
 
         // valid
         if (!"POST".equalsIgnoreCase(request.getMethod())) {
@@ -45,10 +47,13 @@ public class OpenApiController {
             return Response.ofFail("invalid request, requestBody empty.");
         }
 
-        // valid token
-        if (StringTool.isNotBlank(XxlJobAdminBootstrap.getInstance().getAccessToken())
-                && !XxlJobAdminBootstrap.getInstance().getAccessToken().equals(accesstoken)) {
-            return Response.ofFail("The access token is wrong.");
+        // valid: appname + accessToken
+        if (StringTool.isBlank(accessToken) || StringTool.isBlank(appname)) {
+            return Response.ofFail("invalid request, accessToken or appname is empty.");
+        }
+        XxlJobGroup xxlJobGroup = XxlJobAdminBootstrap.getInstance().getJobRegistryHelper().loadByAppName(appname);
+        if (!(xxlJobGroup!=null && accessToken.equals(xxlJobGroup.getAccessToken()))) {
+            return Response.ofFail("invalid request, accessToken or appname invalid.");
         }
 
         // dispatch request

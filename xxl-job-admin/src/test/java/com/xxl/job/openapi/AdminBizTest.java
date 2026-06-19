@@ -13,7 +13,6 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -28,6 +27,7 @@ public class AdminBizTest {
 
     private static String addressUrl = "http://127.0.0.1:8080";
     private static String accessToken = "default_token";
+    private static String appname = "xxl-job-executor-sample";
 
     private AdminBiz buildClient(){
         String finalUrl = addressUrl + "/api";
@@ -36,6 +36,7 @@ public class AdminBizTest {
                 .url(finalUrl)
                 .timeout(3 * 1000)
                 .header(Const.XXL_JOB_ACCESS_TOKEN, accessToken)
+                .header(Const.XXL_JOB_APPNAME, appname)
                 .proxy(AdminBiz.class);
     }
 

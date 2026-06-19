@@ -17,13 +17,15 @@ public class XxlJobGroup {
     private String title;
     private int addressType;        // 执行器地址类型：0=自动注册、1=手动录入
     private String addressList;     // 执行器地址列表，多地址逗号分隔(手动录入)
+    private String accessToken;
     private Date updateTime;
 
     // registry list
     private List<String> registryList;  // 执行器地址列表(系统注册)
     public List<String> getRegistryList() {
+
         if (StringTool.isNotBlank(addressList)) {
-            registryList = new ArrayList<>(Arrays.asList(addressList.split(",")));
+            registryList = StringTool.split(addressList, ",");
         }
         return registryList;
     }
@@ -64,16 +66,24 @@ public class XxlJobGroup {
         return addressList;
     }
 
+    public void setAddressList(String addressList) {
+        this.addressList = addressList;
+    }
+
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
+    }
+
     public Date getUpdateTime() {
         return updateTime;
     }
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
-    }
-
-    public void setAddressList(String addressList) {
-        this.addressList = addressList;
     }
 
     @Override
@@ -84,8 +94,8 @@ public class XxlJobGroup {
                 ", title='" + title + '\'' +
                 ", addressType=" + addressType +
                 ", addressList='" + addressList + '\'' +
+                ", accessToken='" + accessToken + '\'' +
                 ", updateTime=" + updateTime +
-                ", registryList=" + registryList +
                 '}';
     }
 
