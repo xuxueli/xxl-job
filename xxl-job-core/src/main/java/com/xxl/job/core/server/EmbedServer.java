@@ -2,12 +2,12 @@ package com.xxl.job.core.server;
 
 import com.xxl.job.core.constant.Const;
 import com.xxl.job.core.executor.XxlJobExecutor;
-import com.xxl.job.core.openapi.ExecutorBiz;
-import com.xxl.job.core.openapi.impl.ExecutorBizImpl;
-import com.xxl.job.core.openapi.model.IdleBeatRequest;
-import com.xxl.job.core.openapi.model.KillRequest;
-import com.xxl.job.core.openapi.model.LogRequest;
-import com.xxl.job.core.openapi.model.TriggerRequest;
+import com.xxl.job.core.openapi.executor.ExecutorBiz;
+import com.xxl.job.core.openapi.executor.impl.ExecutorBizImpl;
+import com.xxl.job.core.openapi.executor.dto.IdleBeatRequest;
+import com.xxl.job.core.openapi.executor.dto.KillRequest;
+import com.xxl.job.core.openapi.executor.dto.LogRequest;
+import com.xxl.job.core.openapi.executor.dto.TriggerRequest;
 import com.xxl.tool.error.ThrowableTool;
 import com.xxl.tool.json.GsonTool;
 import com.xxl.tool.response.Response;

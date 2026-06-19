@@ -3,9 +3,9 @@ package com.xxl.job.admin.business.scheduler.route.strategy;
 import com.xxl.job.admin.business.scheduler.config.XxlJobAdminBootstrap;
 import com.xxl.job.admin.business.scheduler.route.ExecutorRouter;
 import com.xxl.job.admin.framework.util.I18nUtil;
-import com.xxl.job.core.openapi.ExecutorBiz;
-import com.xxl.job.core.openapi.model.IdleBeatRequest;
-import com.xxl.job.core.openapi.model.TriggerRequest;
+import com.xxl.job.core.openapi.executor.ExecutorBiz;
+import com.xxl.job.core.openapi.executor.dto.IdleBeatRequest;
+import com.xxl.job.core.openapi.executor.dto.TriggerRequest;
 import com.xxl.tool.response.Response;
 
 import java.util.List;

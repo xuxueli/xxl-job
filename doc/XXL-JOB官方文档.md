@@ -2903,7 +2903,7 @@ alter table xxl_job_log
 
 ### 7.47 版本 v3.5.0 Release Notes[ING]
 - 1、【新增】GLUE模式开关：新增GLUE模式开关（xxl.job.executor.glueenabled），支持执行器维度设置是否启用GLUE模式；
-- 2、【TODO】AccessToken线上化管理：执行期维度，限制操作当前执行期；
+- 2、【TODO】执行器AccessToken：执行器维度AccessToken，线上化动态管理；执行器间AccessToken隔离，提升安全性；
 - 3、【TODO】调度中心OpenAPI增强：提供任务管理能力；封装Agent Skill并推送ClawHub；
 - 4、【TODO】配置线上化：发送邮箱配置线上管理、线程池配置调整；
 - 5、【TODO】任务告警：拆分“告警类型、告警配置”属性，支持Webhook、邮箱多种方式；

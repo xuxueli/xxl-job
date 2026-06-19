@@ -1,7 +1,7 @@
 package com.xxl.job.core.thread;
 
-import com.xxl.job.core.openapi.model.CallbackRequest;
-import com.xxl.job.core.openapi.model.TriggerRequest;
+import com.xxl.job.core.openapi.admin.dto.CallbackRequest;
+import com.xxl.job.core.openapi.executor.dto.TriggerRequest;
 import com.xxl.job.core.context.XxlJobContext;
 import com.xxl.job.core.context.XxlJobHelper;
 import com.xxl.job.core.executor.XxlJobExecutor;

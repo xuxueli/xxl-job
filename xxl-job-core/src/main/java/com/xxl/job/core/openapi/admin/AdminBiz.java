@@ -1,7 +1,7 @@
-package com.xxl.job.core.openapi;
+package com.xxl.job.core.openapi.admin;
 
-import com.xxl.job.core.openapi.model.CallbackRequest;
-import com.xxl.job.core.openapi.model.RegistryRequest;
+import com.xxl.job.core.openapi.admin.dto.CallbackRequest;
+import com.xxl.job.core.openapi.admin.dto.RegistryRequest;
 import com.xxl.tool.response.Response;
 
 import java.util.List;

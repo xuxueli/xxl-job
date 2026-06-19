@@ -1,8 +1,8 @@
 package com.xxl.job.core.thread;
 
 import com.xxl.job.core.constant.RegistTypeEnum;
-import com.xxl.job.core.openapi.AdminBiz;
-import com.xxl.job.core.openapi.model.RegistryRequest;
+import com.xxl.job.core.openapi.admin.AdminBiz;
+import com.xxl.job.core.openapi.admin.dto.RegistryRequest;
 import com.xxl.job.core.constant.Const;
 import com.xxl.job.core.executor.XxlJobExecutor;
 import com.xxl.tool.concurrent.CyclicThread;

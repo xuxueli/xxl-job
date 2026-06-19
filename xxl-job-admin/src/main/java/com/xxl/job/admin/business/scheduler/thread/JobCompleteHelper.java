@@ -4,7 +4,7 @@ import com.xxl.job.admin.business.model.XxlJobLog;
 import com.xxl.job.admin.business.scheduler.config.XxlJobAdminBootstrap;
 import com.xxl.job.admin.framework.util.I18nUtil;
 import com.xxl.job.core.context.XxlJobContext;
-import com.xxl.job.core.openapi.model.CallbackRequest;
+import com.xxl.job.core.openapi.admin.dto.CallbackRequest;
 import com.xxl.tool.concurrent.CyclicThread;
 import com.xxl.tool.core.DateTool;
 import com.xxl.tool.response.Response;

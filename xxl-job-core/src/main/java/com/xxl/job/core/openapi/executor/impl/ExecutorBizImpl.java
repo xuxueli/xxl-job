@@ -1,4 +1,4 @@
-package com.xxl.job.core.openapi.impl;
+package com.xxl.job.core.openapi.executor.impl;
 
 import com.xxl.job.core.constant.ExecutorBlockStrategyEnum;
 import com.xxl.job.core.context.XxlJobContext;
@@ -9,8 +9,8 @@ import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.handler.impl.GlueJobHandler;
 import com.xxl.job.core.handler.impl.ScriptJobHandler;
 import com.xxl.job.core.log.XxlJobFileAppender;
-import com.xxl.job.core.openapi.ExecutorBiz;
-import com.xxl.job.core.openapi.model.*;
+import com.xxl.job.core.openapi.executor.ExecutorBiz;
+import com.xxl.job.core.openapi.executor.dto.*;
 import com.xxl.job.core.thread.JobThread;
 import com.xxl.tool.response.Response;
 import org.slf4j.Logger;

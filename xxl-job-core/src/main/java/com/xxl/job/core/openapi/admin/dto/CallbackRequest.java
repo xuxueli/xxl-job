@@ -1,4 +1,4 @@
-package com.xxl.job.core.openapi.model;
+package com.xxl.job.core.openapi.admin.dto;
 
 import java.io.Serializable;
 

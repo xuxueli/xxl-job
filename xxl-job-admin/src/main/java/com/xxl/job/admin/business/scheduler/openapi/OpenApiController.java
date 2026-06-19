@@ -2,9 +2,9 @@ package com.xxl.job.admin.business.scheduler.openapi;
 
 import com.xxl.job.admin.business.scheduler.config.XxlJobAdminBootstrap;
 import com.xxl.job.core.constant.Const;
-import com.xxl.job.core.openapi.AdminBiz;
-import com.xxl.job.core.openapi.model.CallbackRequest;
-import com.xxl.job.core.openapi.model.RegistryRequest;
+import com.xxl.job.core.openapi.admin.AdminBiz;
+import com.xxl.job.core.openapi.admin.dto.CallbackRequest;
+import com.xxl.job.core.openapi.admin.dto.RegistryRequest;
 import com.xxl.sso.core.annotation.XxlSso;
 import com.xxl.tool.core.StringTool;
 import com.xxl.tool.json.GsonTool;

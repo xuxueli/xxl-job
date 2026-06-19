@@ -5,7 +5,7 @@ import com.xxl.job.admin.business.model.XxlJobRegistry;
 import com.xxl.job.admin.business.scheduler.config.XxlJobAdminBootstrap;
 import com.xxl.job.core.constant.Const;
 import com.xxl.job.core.constant.RegistTypeEnum;
-import com.xxl.job.core.openapi.model.RegistryRequest;
+import com.xxl.job.core.openapi.admin.dto.RegistryRequest;
 import com.xxl.tool.concurrent.CyclicThread;
 import com.xxl.tool.core.StringTool;
 import com.xxl.tool.response.Response;

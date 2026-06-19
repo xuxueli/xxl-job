@@ -1,8 +1,8 @@
 package com.xxl.job.openapi;
 
 import com.xxl.job.core.constant.Const;
-import com.xxl.job.core.openapi.ExecutorBiz;
-import com.xxl.job.core.openapi.model.*;
+import com.xxl.job.core.openapi.executor.ExecutorBiz;
+import com.xxl.job.core.openapi.executor.dto.*;
 import com.xxl.job.core.constant.ExecutorBlockStrategyEnum;
 import com.xxl.job.core.glue.GlueTypeEnum;
 import com.xxl.tool.http.HttpTool;

@@ -1,7 +1,7 @@
 package com.xxl.job.admin.business.scheduler.route.strategy;
 
 import com.xxl.job.admin.business.scheduler.route.ExecutorRouter;
-import com.xxl.job.core.openapi.model.TriggerRequest;
+import com.xxl.job.core.openapi.executor.dto.TriggerRequest;
 import com.xxl.tool.response.Response;
 
 import java.util.ArrayList;

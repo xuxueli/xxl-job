@@ -1,9 +1,9 @@
 package com.xxl.job.openapi;
 
 import com.xxl.job.core.constant.RegistTypeEnum;
-import com.xxl.job.core.openapi.AdminBiz;
-import com.xxl.job.core.openapi.model.CallbackRequest;
-import com.xxl.job.core.openapi.model.RegistryRequest;
+import com.xxl.job.core.openapi.admin.AdminBiz;
+import com.xxl.job.core.openapi.admin.dto.CallbackRequest;
+import com.xxl.job.core.openapi.admin.dto.RegistryRequest;
 import com.xxl.job.core.context.XxlJobContext;
 import com.xxl.job.core.constant.Const;
 import com.xxl.tool.http.HttpTool;

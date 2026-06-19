@@ -5,7 +5,7 @@ import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.handler.annotation.XxlJob;
 import com.xxl.job.core.handler.impl.MethodJobHandler;
 import com.xxl.job.core.log.XxlJobFileAppender;
-import com.xxl.job.core.openapi.AdminBiz;
+import com.xxl.job.core.openapi.admin.AdminBiz;
 import com.xxl.job.core.server.EmbedServer;
 import com.xxl.job.core.thread.ExecutorRegistryThreadHelper;
 import com.xxl.job.core.thread.JobLogFileCleanThreadHelper;

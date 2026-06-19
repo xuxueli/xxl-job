@@ -1,6 +1,6 @@
-package com.xxl.job.core.openapi;
+package com.xxl.job.core.openapi.executor;
 
-import com.xxl.job.core.openapi.model.*;
+import com.xxl.job.core.openapi.executor.dto.*;
 import com.xxl.tool.response.Response;
 
 /**

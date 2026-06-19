@@ -6,7 +6,7 @@ import com.xxl.job.admin.business.scheduler.complete.JobCompleter;
 import com.xxl.job.admin.business.scheduler.thread.*;
 import com.xxl.job.admin.business.scheduler.trigger.JobTrigger;
 import com.xxl.job.core.constant.Const;
-import com.xxl.job.core.openapi.ExecutorBiz;
+import com.xxl.job.core.openapi.executor.ExecutorBiz;
 import com.xxl.tool.core.StringTool;
 import com.xxl.tool.http.HttpTool;
 import jakarta.annotation.Resource;
@@ -135,7 +135,7 @@ public class XxlJobAdminBootstrap implements InitializingBean, DisposableBean {
 
     // ---------------------- executor-client ----------------------
 
-    private static ConcurrentMap<String, ExecutorBiz> executorBizRepository = new ConcurrentHashMap<String, ExecutorBiz>();
+    private static ConcurrentMap<String, ExecutorBiz> executorBizRepository = new ConcurrentHashMap<>();
     public static ExecutorBiz getExecutorBiz(String address) throws Exception {
         // valid
         if (StringTool.isBlank(address)) {

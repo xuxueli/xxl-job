@@ -1,6 +1,6 @@
 package com.xxl.job.core.log;
 
-import com.xxl.job.core.openapi.model.LogResult;
+import com.xxl.job.core.openapi.executor.dto.LogResult;
 import com.xxl.tool.core.DateTool;
 import com.xxl.tool.core.StringTool;
 import com.xxl.tool.io.FileTool;
