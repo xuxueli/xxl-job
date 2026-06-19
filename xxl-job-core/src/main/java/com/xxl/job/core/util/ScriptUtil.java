@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  *  1、内嵌编译器如"PythonInterpreter"无法引用扩展包，因此推荐使用java调用控制台进程方式"Runtime.getRuntime().exec()"来运行脚本(shell或python)；
@@ -20,6 +21,13 @@ import java.util.List;
  * Created by xuxueli on 17/2/25.
  */
 public class ScriptUtil {
+    private static final byte[] UTF_8_BOM = new byte[]{(byte) 0xEF, (byte) 0xBB, (byte) 0xBF};
+    private static final String POWERSHELL_ENCODING_HEADER = "[Console]::OutputEncoding = [System.Text.Encoding]::UTF8"
+            + System.lineSeparator()
+            + "[Console]::InputEncoding = [System.Text.Encoding]::UTF8"
+            + System.lineSeparator()
+            + "$OutputEncoding = [System.Text.Encoding]::UTF8"
+            + System.lineSeparator();
 
     /**
      * make script file
@@ -29,15 +37,10 @@ public class ScriptUtil {
      * @throws IOException exception
      */
     public static void markScriptFile(String scriptFileName, String scriptContent) throws IOException {
-        if (scriptFileName != null && scriptFileName.toLowerCase().endsWith(".ps1")) {
-            String powerShellEncodingHeader = "[Console]::OutputEncoding = [System.Text.Encoding]::UTF8\r\n"
-                    + "[Console]::InputEncoding  = [System.Text.Encoding]::UTF8\r\n"
-                    + "$OutputEncoding = [System.Text.Encoding]::UTF8\r\n";
-            byte[] utf8Bom = new byte[]{(byte) 0xEF, (byte) 0xBB, (byte) 0xBF};
-
+        if (scriptFileName != null && scriptFileName.toLowerCase(Locale.ROOT).endsWith(".ps1")) {
             try (FileOutputStream fileOutputStream = new FileOutputStream(scriptFileName)) {
-                fileOutputStream.write(utf8Bom);
-                fileOutputStream.write(powerShellEncodingHeader.getBytes(StandardCharsets.UTF_8));
+                fileOutputStream.write(UTF_8_BOM);
+                fileOutputStream.write(POWERSHELL_ENCODING_HEADER.getBytes(StandardCharsets.UTF_8));
                 fileOutputStream.write((scriptContent != null ? scriptContent : "").getBytes(StandardCharsets.UTF_8));
             }
             return;
