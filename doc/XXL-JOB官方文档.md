@@ -1139,7 +1139,8 @@ public XxlJobSpringExecutor xxlJobExecutor() {
             GLUE模式(Python)：任务以源码方式维护在调度中心；该模式的任务实际上是一段 "python" 脚本；
             GLUE模式(PHP)：任务以源码方式维护在调度中心；该模式的任务实际上是一段 "php" 脚本；
             GLUE模式(NodeJS)：任务以源码方式维护在调度中心；该模式的任务实际上是一段 "nodejs" 脚本；
-            GLUE模式(PowerShell)：任务以源码方式维护在调度中心；该模式的任务实际上是一段 "PowerShell" 脚本；
+            GLUE模式(PowerShell)：任务以源码方式维护在调度中心；该模式的任务实际上是一段 "PowerShell 5.x (powershell)" 脚本；
+            GLUE模式(Pwsh)：任务以源码方式维护在调度中心；该模式的任务实际上是一段 "PowerShell 7+ (pwsh)" 脚本；
         - JobHandler：运行模式为 "BEAN模式" 时生效，对应执行器中新开发的JobHandler类“@XxlJob”注解自定义的value值；
         - 执行参数：任务执行所需的参数；     
         
@@ -1376,7 +1377,7 @@ dify.api-key={自行获取并修改}
 ### 3.6 GLUE模式(PHP)
 同上
 
-### 3.7 GLUE模式(PowerShell)
+### 3.7 GLUE模式(PowerShell / Pwsh)
 同上
 
 
@@ -1654,7 +1655,7 @@ xxl-job-admin#com.xxl.job.admin.controller.JobApiController.callback
 开发步骤：可参考 "章节三" ；
 原理：每个 "GLUE模式(Java)" 任务的代码，实际上是“一个继承自“IJobHandler”的实现类的类代码”，“执行器”接收到“调度中心”的调度请求时，会通过Groovy类加载器加载此代码，实例化成Java对象，同时注入此代码中声明的Spring服务（请确保Glue代码中的服务和类引用在“执行器”项目中存在），然后调用该对象的execute方法，执行任务逻辑。
 
-#### 5.5.3 GLUE模式(Shell) + GLUE模式(Python) + GLUE模式(PHP) + GLUE模式(NodeJS) + GLUE模式(Powershell)
+#### 5.5.3 GLUE模式(Shell) + GLUE模式(Python) + GLUE模式(PHP) + GLUE模式(NodeJS) + GLUE模式(Powershell/Pwsh)
 开发步骤：可参考 "章节三" ；
 原理：脚本任务的源码托管在调度中心，脚本逻辑在执行器运行。当触发脚本任务时，执行器会加载脚本源码在执行器机器上生成一份脚本文件，然后通过Java代码调用该脚本；并且实时将脚本输出日志写到任务日志文件中，从而在调度中心可以实时监控脚本运行情况；
 
@@ -1664,7 +1665,9 @@ xxl-job-admin#com.xxl.job.admin.controller.JobApiController.callback
     - python脚本：任务运行模式选择为 "GLUE模式(Python)"时支持 "Python" 脚本任务；
     - php脚本：任务运行模式选择为 "GLUE模式(PHP)"时支持 "PHP" 脚本任务；
     - nodejs脚本：任务运行模式选择为 "GLUE模式(NodeJS)"时支持 "NodeJS" 脚本任务；
-    - powershell：任务运行模式选择为 "GLUE模式(PowerShell)"时支持 "PowerShell" 脚本任务；
+    - powershell：任务运行模式选择为 "GLUE模式(PowerShell)" 时支持 "Windows PowerShell 5.x (powershell)" 脚本任务；
+    - pwsh：任务运行模式选择为 "GLUE模式(Pwsh)" 时支持 "PowerShell 7+ (pwsh)" 脚本任务；
+      两者都要求目标机器已安装对应命令并且 PATH 可访问；
 
 脚本任务通过 Exit Code 判断任务执行结果，状态码可参考章节 "5.15 任务执行结果说明"；
 

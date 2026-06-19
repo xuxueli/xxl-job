@@ -7,6 +7,7 @@ import com.xxl.tool.io.IOTool;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +29,20 @@ public class ScriptUtil {
      * @throws IOException exception
      */
     public static void markScriptFile(String scriptFileName, String scriptContent) throws IOException {
+        if (scriptFileName != null && scriptFileName.toLowerCase().endsWith(".ps1")) {
+            String powerShellEncodingHeader = "[Console]::OutputEncoding = [System.Text.Encoding]::UTF8\r\n"
+                    + "[Console]::InputEncoding  = [System.Text.Encoding]::UTF8\r\n"
+                    + "$OutputEncoding = [System.Text.Encoding]::UTF8\r\n";
+            byte[] utf8Bom = new byte[]{(byte) 0xEF, (byte) 0xBB, (byte) 0xBF};
+
+            try (FileOutputStream fileOutputStream = new FileOutputStream(scriptFileName)) {
+                fileOutputStream.write(utf8Bom);
+                fileOutputStream.write(powerShellEncodingHeader.getBytes(StandardCharsets.UTF_8));
+                fileOutputStream.write((scriptContent != null ? scriptContent : "").getBytes(StandardCharsets.UTF_8));
+            }
+            return;
+        }
+
         // make file: filePath/gluesource/666-123456789.py
         FileTool.writeString(scriptFileName, scriptContent);
 

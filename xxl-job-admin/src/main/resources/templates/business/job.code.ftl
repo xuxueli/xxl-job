@@ -161,7 +161,7 @@
 <#elseif jobInfo.glueType == "GLUE_NODEJS" >
 	<#assign glueTypeModeSrc = "${request.contextPath}/static/plugins/codemirror/mode/javascript/javascript.js" />
 	<#assign glueTypeIdeMode = "text/javascript" />
-<#elseif jobInfo.glueType == "GLUE_POWERSHELL" >
+<#elseif jobInfo.glueType == "GLUE_POWERSHELL" || jobInfo.glueType == "GLUE_PWSH" >
 	<#assign glueTypeModeSrc = "${request.contextPath}/static/plugins/codemirror/mode/powershell/powershell.js" />
 	<#assign glueTypeIdeMode = "powershell" />
 </#if>
