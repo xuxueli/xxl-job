@@ -122,11 +122,6 @@ public class JobLogController {
 		// valid jobGroup permission
 		JobGroupPermissionUtil.validJobGroupPermission(request, jobGroup);
 
-		// valid jobId
-		/*if (jobId < 1) {
-			return Response.ofFail(I18nUtil.getString("system_please_choose") + I18nUtil.getString("jobinfo_job"));
-		}*/
-
 		// parse param
 		Date triggerTimeStart = null;
 		Date triggerTimeEnd = null;
@@ -228,11 +223,6 @@ public class JobLogController {
 		// valid JobGroup permission
 		JobGroupPermissionUtil.validJobGroupPermission(request, jobGroup);
 
-		// valid jobId
-		/*if (jobId < 1) {
-			return Response.ofFail(I18nUtil.getString("system_please_choose") + I18nUtil.getString("jobinfo_job"));
-		}*/
-
 		// opt
 		Date clearBeforeTime = null;
 		int clearBeforeNum = 0;
@@ -294,13 +284,18 @@ public class JobLogController {
 
 	@RequestMapping("/logDetailCat")
 	@ResponseBody
-	public Response<LogResult> logDetailCat(@RequestParam("logId") long logId, @RequestParam("fromLineNum") int fromLineNum){
+	public Response<LogResult> logDetailCat(HttpServletRequest request,
+											@RequestParam("logId") long logId,
+											@RequestParam("fromLineNum") int fromLineNum){
 		try {
 			// valid
-			XxlJobLog jobLog = xxlJobLogMapper.load(logId);	// todo, need to improve performance
+			XxlJobLog jobLog = xxlJobLogMapper.load(logId);
 			if (jobLog == null) {
 				return Response.ofFail(I18nUtil.getString("joblog_logid_invalid"));
 			}
+
+			// valid permission
+			JobGroupPermissionUtil.validJobGroupPermission(request, jobLog.getJobGroup());
 
 			// log cat
 			ExecutorBiz executorBiz = XxlJobAdminBootstrap.getExecutorBiz(jobLog.getExecutorAddress());

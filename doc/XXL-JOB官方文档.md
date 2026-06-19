@@ -2855,7 +2855,12 @@ alter table xxl_job_log
 - 9、【优化】低层守护线程升级切换CyclicThread，提升稳定性以及可维护性；
 - 10、【优化】调度中心UI交互优化，任务及日志列表下拉框支持模糊搜索，提升多任务情况下交互体验；
 
-### 7.46 版本 v3.5.0 Release Notes[ING]
+### 7.46 版本 v3.4.2 Release Notes[ING]
+- 1、【修复】调度日志列表日期处理逻辑修复，兼容执行信息为空阻塞列表加载问题；
+- 2、【安全】任务RollingLog权限校验完善，防止越权查看任务日志；
+
+
+### 7.47 版本 v3.5.0 Release Notes[ING]
 - 1、【TODO】AccessToken线上化管理：执行期维度，限制操作当前执行期；
 - 2、【TODO】调度中心OpenAPI增强：提供任务管理能力；封装Agent Skill并推送ClawHub；
 - 3、【TODO】配置线上化：发送邮箱配置线上管理、线程池配置调整；
