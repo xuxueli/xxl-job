@@ -201,7 +201,7 @@ public class EmbedServer {
                     case "/idleBeat":
                         IdleBeatRequest idleBeatParam = GsonTool.fromJson(requestData, IdleBeatRequest.class);
                         return executorBiz.idleBeat(idleBeatParam);
-                    case "/run":
+                    case "/trigger":
                         TriggerRequest triggerParam = GsonTool.fromJson(requestData, TriggerRequest.class);
                         return executorBiz.trigger(triggerParam);
                     case "/kill":
