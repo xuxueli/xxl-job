@@ -193,10 +193,13 @@ public class JobLogController {
 		// valid JobGroup permission
 		JobGroupPermissionUtil.validJobGroupPermission(request, jobInfo.getJobGroup());
 
+		// load group
+		XxlJobGroup jobGroup = XxlJobAdminBootstrap.getInstance().getXxlJobGroupMapper().load(log.getJobGroup());
+
 		// request of kill
 		Response<String> runResult = null;
 		try {
-			ExecutorBiz executorBiz = XxlJobAdminBootstrap.getExecutorBiz(log.getExecutorAddress());
+			ExecutorBiz executorBiz = XxlJobAdminBootstrap.getExecutorBiz(log.getExecutorAddress(), jobGroup);
 			runResult = executorBiz.kill(new KillRequest(jobInfo.getId()));
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
@@ -297,8 +300,11 @@ public class JobLogController {
 			// valid permission
 			JobGroupPermissionUtil.validJobGroupPermission(request, jobLog.getJobGroup());
 
+			// load group
+			XxlJobGroup jobGroup = XxlJobAdminBootstrap.getInstance().getXxlJobGroupMapper().load(jobLog.getJobGroup());
+
 			// log cat
-			ExecutorBiz executorBiz = XxlJobAdminBootstrap.getExecutorBiz(jobLog.getExecutorAddress());
+			ExecutorBiz executorBiz = XxlJobAdminBootstrap.getExecutorBiz(jobLog.getExecutorAddress(), jobGroup);
 			Response<LogData> logResult = executorBiz.log(new LogRequest(logId, jobLog.getTriggerTime().getTime(), fromLineNum));
 
 			// is end

@@ -1,6 +1,7 @@
 package com.xxl.job.admin.business.scheduler.config;
 
 import com.xxl.job.admin.business.mapper.*;
+import com.xxl.job.admin.business.model.XxlJobGroup;
 import com.xxl.job.admin.business.scheduler.alarm.JobAlarmer;
 import com.xxl.job.admin.business.scheduler.complete.JobCompleter;
 import com.xxl.job.admin.business.scheduler.thread.*;
@@ -135,27 +136,41 @@ public class XxlJobAdminBootstrap implements InitializingBean, DisposableBean {
 
     // ---------------------- executor-client ----------------------
 
-    private static ConcurrentMap<String, ExecutorBiz> executorBizRepository = new ConcurrentHashMap<>();
-    public static ExecutorBiz getExecutorBiz(String address) throws Exception {
+    private static final ConcurrentMap<String, ExecutorBiz> executorBizRepository = new ConcurrentHashMap<>();
+    private static final int EXECUTOR_BIZ_CACHE_MAX_SIZE = 1000;
+
+    /**
+     * get executor-client
+     */
+    public static ExecutorBiz getExecutorBiz(String address, XxlJobGroup xxlJobGroup) throws Exception {
         // valid
-        if (StringTool.isBlank(address)) {
+        if (StringTool.isBlank(address) || xxlJobGroup == null) {
             return null;
         }
+        address = address.trim();
+        String accessToken = xxlJobGroup.getAccessToken();
+        String appname = xxlJobGroup.getAppname();
 
         // load-cache
-        address = address.trim();
-        ExecutorBiz executorBiz = executorBizRepository.get(address);
+        String cacheKey = address + "|" + accessToken + "|" + appname;
+        ExecutorBiz executorBiz = executorBizRepository.get(cacheKey);
         if (executorBiz != null) {
             return executorBiz;
         }
 
-        // set-cache
+        // new client
         executorBiz = HttpTool.createClient()
                 .url(address)
                 .timeout(XxlJobAdminBootstrap.getInstance().getTimeout() * 1000)
-                .header(Const.XXL_JOB_ACCESS_TOKEN, XxlJobAdminBootstrap.getInstance().getAccessToken())
+                .header(Const.XXL_JOB_ACCESS_TOKEN, accessToken)
+                .header(Const.XXL_JOB_APPNAME, appname)
                 .proxy(ExecutorBiz.class);
-        executorBizRepository.put(address, executorBiz);
+        executorBizRepository.put(cacheKey, executorBiz);
+
+        // avoid unbounded growth
+        if (executorBizRepository.size() > EXECUTOR_BIZ_CACHE_MAX_SIZE) {
+            executorBizRepository.clear();
+        }
         return executorBiz;
     }
 
@@ -165,9 +180,6 @@ public class XxlJobAdminBootstrap implements InitializingBean, DisposableBean {
     // conf
     @Value("${xxl.job.i18n}")
     private String i18n;
-
-    @Value("${xxl.job.accessToken}")
-    private String accessToken;
 
     @Value("${xxl.job.timeout}")
     private int timeout;
@@ -219,10 +231,6 @@ public class XxlJobAdminBootstrap implements InitializingBean, DisposableBean {
             return "zh_CN";
         }
         return i18n;
-    }
-
-    public String getAccessToken() {
-        return accessToken;
     }
 
     public int getTimeout() {

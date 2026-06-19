@@ -115,6 +115,10 @@
 									<textarea class="textarea" name="addressList" maxlength="20000" placeholder="${I18n.jobgroup_field_registryList_placeholder}" readonly="readonly" style="background-color:#eee; width: 100%; height: 100px; font-size: 14px; line-height: 15px; border: 1px solid #dddddd; padding: 5px;"></textarea>
 								</div>
 							</div>
+							<div class="form-group">
+								<label for="lastname" class="col-sm-2 control-label">AccessToken<font color="red">*</font></label>
+								<div class="col-sm-10"><input type="text" class="form-control" name="accessToken" placeholder="${I18n.system_please_input}AccessToken" maxlength="50" ></div>
+							</div>
 							<hr>
 							<div class="form-group">
 								<div class="col-sm-offset-4 col-sm-4">
@@ -158,6 +162,10 @@
 								<div class="col-sm-10">
 									<textarea class="textarea" name="addressList" maxlength="20000" placeholder="${I18n.jobgroup_field_registryList_placeholder}" readonly="readonly" style="background-color:#eee; width: 100%; height: 100px; font-size: 14px; line-height: 15px; border: 1px solid #dddddd; padding: 5px;"></textarea>
 								</div>
+							</div>
+							<div class="form-group">
+								<label for="lastname" class="col-sm-2 control-label">AccessToken<font color="red">*</font></label>
+								<div class="col-sm-10"><input type="text" class="form-control" name="accessToken" placeholder="${I18n.system_please_input}AccessToken" maxlength="50" ></div>
 							</div>
 							<hr>
 							<div class="form-group">
@@ -213,14 +221,20 @@
 				},{
 					title: 'AppName',
 					field: 'appname',
-					width: '30',
+					width: '25',
 					widthUnit: '%',
 					align: 'left'
 				},{
 					title: I18n.jobgroup_field_title,
 					field: 'title',
-					width: '30',
+					width: '25',
 					widthUnit: '%'
+				},{
+					title: 'AccessToken',
+					field: 'accessToken',
+					width: '20',
+					widthUnit: '%',
+					align: 'left'
 				},{
 					title: I18n.jobgroup_field_addressType,
 					field: 'addressType',
@@ -278,33 +292,46 @@
 		 * init add
 		 */
 		// add validator method
-		jQuery.validator.addMethod("myValid01", function(value, element) {
+		jQuery.validator.addMethod("appnameValid", function(value, element) {
 			var length = value.length;
 			var valid = /^[a-z][a-zA-Z0-9-]*$/;
 			return this.optional(element) || valid.test(value);
 		}, I18n.jobgroup_field_appname_limit );
+		// add validator method
+		jQuery.validator.addMethod("accessTokenValid", function(value, element) {
+			var valid = /^[a-z][a-z0-9]*$/;
+			return this.optional(element) || valid.test(value);
+		}, I18n.jobgroup_field_accesstoken_limit );
 		$.adminTable.initAdd( {
 			url: base_url + "/jobgroup/insert",
 			rules : {
 				appname : {
 					required : true,
 					rangelength:[4,64],
-					myValid01 : true
+					appnameValid : true
 				},
 				title : {
 					required : true,
 					rangelength:[4, 64]
+				},
+				accessToken : {
+					required : true,
+					rangelength:[4, 50],
+					accessTokenValid: true
 				}
 			},
 			messages : {
 				appname : {
 					required : I18n.system_please_input+"AppName",
-					rangelength: I18n.jobgroup_field_appname_length ,
-					myValid01: I18n.jobgroup_field_appname_limit
+					rangelength: I18n.system_length_limit + ' [4~64]'
 				},
 				title : {
 					required : I18n.system_please_input + I18n.jobgroup_field_title ,
-					rangelength: I18n.jobgroup_field_title_length
+					rangelength: I18n.system_length_limit + ' [4~12]' ,
+				},
+				accessToken : {
+					required : I18n.system_please_input,
+					rangelength: I18n.system_length_limit + " [4-50]"
 				}
 			},
 			writeFormData: function() {
@@ -346,28 +373,29 @@
 				$("#updateModal .form input[name='addressType'][value='"+ row.addressType +"']").click();
 				// 机器地址
 				$("#updateModal .form textarea[name='addressList']").val( row.addressList );
+				// accessToken
+				$("#updateModal .form input[name='accessToken']").val( row.accessToken );
 
 			},
 			rules : {
-				appname : {
-					required : true,
-					rangelength:[4,64],
-					myValid01 : true
-				},
 				title : {
 					required : true,
 					rangelength:[4, 64]
+				},
+				accessToken : {
+					required : false,
+					rangelength:[4, 50],
+					accessTokenValid: true
 				}
 			},
 			messages : {
-				appname : {
-					required : I18n.system_please_input+"AppName",
-					rangelength: I18n.jobgroup_field_appname_length ,
-					myValid01: I18n.jobgroup_field_appname_limit
-				},
 				title : {
 					required : I18n.system_please_input + I18n.jobgroup_field_title ,
-					rangelength: I18n.jobgroup_field_title_length
+					rangelength: I18n.system_length_limit + ' [4~12]'
+				},
+				accessToken : {
+					required : I18n.system_please_input,
+					rangelength: I18n.system_lengh_limit + " [4-50]"
 				}
 			},
 			readFormData: function() {

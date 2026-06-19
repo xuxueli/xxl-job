@@ -9,6 +9,7 @@
 	    <result column="title" property="title" />
 		<result column="address_type" property="addressType" />
 		<result column="address_list" property="addressList" />
+		<result column="access_token" property="accessToken" />
 		<result column="update_time" property="updateTime" />
 	</resultMap>
 
@@ -18,6 +19,7 @@
 		t.title,
 		t.address_type,
 		t.address_list,
+		t.access_token,
 		t.update_time
 	</sql>
 
@@ -35,8 +37,8 @@
 	</select>
 
 	<insert id="save" parameterType="com.xxl.job.admin.business.model.XxlJobGroup" useGeneratedKeys="true" keyProperty="id" >
-		INSERT INTO xxl_job_group ( `app_name`, `title`, `address_type`, `address_list`, `update_time`)
-		values ( #{appname}, #{title}, #{addressType}, #{addressList}, #{updateTime} );
+		INSERT INTO xxl_job_group ( `app_name`, `title`, `address_type`, `address_list`, `access_token`, `update_time`)
+		values ( #{appname}, #{title}, #{addressType}, #{addressList}, #{accessToken}, #{updateTime} );
 	</insert>
 
 	<update id="update" parameterType="com.xxl.job.admin.business.model.XxlJobGroup" >
@@ -44,6 +46,7 @@
 		SET `title` = #{title},
 			`address_type` = #{addressType},
 			`address_list` = #{addressList},
+			`access_token` = #{accessToken},
 			`update_time` = #{updateTime}
 		WHERE id = #{id}
 	</update>
@@ -59,7 +62,7 @@
 		WHERE t.id = #{id}
 	</select>
 
-	<select id="findByAppname" parameterType="java.lang.String" resultMap="XxlJobGroup">
+	<select id="loadByAppname" parameterType="java.lang.String" resultMap="XxlJobGroup">
 		SELECT <include refid="Base_Column_List" />
 		FROM xxl_job_group AS t
 		WHERE t.app_name = #{appname}

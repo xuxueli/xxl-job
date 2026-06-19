@@ -11,12 +11,13 @@ SET NAMES utf8mb4;
 
 CREATE TABLE `xxl_job_group`
 (
-    `id`           int(11)     NOT NULL AUTO_INCREMENT,
-    `app_name`     varchar(64) NOT NULL COMMENT '执行器AppName',
-    `title`        varchar(64) NOT NULL COMMENT '执行器名称',
-    `address_type` tinyint(4)  NOT NULL DEFAULT '0' COMMENT '执行器地址类型：0=自动注册、1=手动录入',
-    `address_list` text COMMENT '执行器地址列表，多地址逗号分隔',
-    `update_time`  datetime             DEFAULT NULL,
+    `id`                    int(11)             NOT NULL AUTO_INCREMENT,
+    `app_name`              varchar(64)         NOT NULL COMMENT '执行器AppName',
+    `title`                 varchar(64)         NOT NULL COMMENT '执行器名称',
+    `address_type`          tinyint(4)          NOT NULL DEFAULT '0' COMMENT '执行器地址类型：0=自动注册、1=手动录入',
+    `address_list`          text                DEFAULT NULL COMMENT '执行器地址列表，多地址逗号分隔',
+    `access_token`          varchar(255)        DEFAULT NULL COMMENT '执行器AccessToken',
+    `update_time`           datetime            DEFAULT NULL,
     PRIMARY KEY (`id`),
     UNIQUE KEY `i_app_name` (`app_name`) USING BTREE
 ) ENGINE = InnoDB
@@ -146,9 +147,9 @@ CREATE TABLE `xxl_job_user`
 
 ## —————————————————————— for default data ——————————————————
 
-INSERT INTO `xxl_job_group`(`id`, `app_name`, `title`, `address_type`, `address_list`, `update_time`)
-    VALUES (1, 'xxl-job-executor-sample', '通用执行器Sample', 0, NULL, now()),
-           (2, 'xxl-job-executor-sample-ai', 'AI执行器Sample', 0, NULL, now());
+INSERT INTO `xxl_job_group`(`id`, `app_name`, `title`, `address_type`, `address_list`, `access_token`, `update_time`)
+    VALUES (1, 'xxl-job-executor-sample', '通用执行器Sample', 0,  NULL, 'default_token', now()),
+           (2, 'xxl-job-executor-sample-ai', 'AI执行器Sample', 0, NULL, 'default_token', now());
 
 INSERT INTO `xxl_job_info`(`id`, `job_group`, `job_desc`, `add_time`, `update_time`, `author`, `alarm_email`,
                            `schedule_type`, `schedule_conf`, `misfire_strategy`, `executor_route_strategy`,

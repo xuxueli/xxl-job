@@ -178,7 +178,7 @@ public class JobTrigger {
                     address = group.getRegistryList().get(0);
                 }
             } else {
-                routeAddressResult = executorRouteStrategyEnum.getRouter().route(triggerParam, group.getRegistryList());
+                routeAddressResult = executorRouteStrategyEnum.getRouter().route(triggerParam, group);
                 if (routeAddressResult.isSuccess()) {
                     address = routeAddressResult.getData();
                 }
@@ -190,7 +190,7 @@ public class JobTrigger {
         // 4、trigger remote executor
         Response<String> triggerResult = null;
         if (address != null) {
-            triggerResult = doTrigger(triggerParam, address);
+            triggerResult = doTrigger(triggerParam, address, group);
         } else {
             triggerResult = Response.of(XxlJobContext.HANDLE_CODE_FAIL, "Address Router Fail.");
         }
@@ -253,12 +253,13 @@ public class JobTrigger {
      *
      * @param triggerParam  trigger param
      * @param address       the address
+     * @param jobGroup      job group
      * @return return
      */
-    private Response<String> doTrigger(TriggerRequest triggerParam, String address){
+    private Response<String> doTrigger(TriggerRequest triggerParam, String address, XxlJobGroup jobGroup){
         try {
             // build client
-            ExecutorBiz executorBiz = XxlJobAdminBootstrap.getExecutorBiz(address);
+            ExecutorBiz executorBiz = XxlJobAdminBootstrap.getExecutorBiz(address, jobGroup);
 
             // invoke
             Response<String> runResult = executorBiz.trigger(triggerParam);

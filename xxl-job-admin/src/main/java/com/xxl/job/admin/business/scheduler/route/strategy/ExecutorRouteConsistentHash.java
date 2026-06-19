@@ -1,5 +1,6 @@
 package com.xxl.job.admin.business.scheduler.route.strategy;
 
+import com.xxl.job.admin.business.model.XxlJobGroup;
 import com.xxl.job.admin.business.scheduler.route.ExecutorRouter;
 import com.xxl.job.core.openapi.executor.dto.TriggerRequest;
 import com.xxl.tool.response.Response;
@@ -91,7 +92,8 @@ public class ExecutorRouteConsistentHash extends ExecutorRouter {
     }
 
     @Override
-    public Response<String> route(TriggerRequest triggerParam, List<String> addressList) {
+    public Response<String> route(TriggerRequest triggerParam, XxlJobGroup jobGroup) {
+        List<String> addressList = jobGroup.getRegistryList();
         String address = hashJob(triggerParam.getJobId(), addressList);
         return Response.ofSuccess(address);
     }

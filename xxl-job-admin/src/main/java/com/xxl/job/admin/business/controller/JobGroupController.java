@@ -77,7 +77,7 @@ public class JobGroupController {
 			return Response.ofFail((I18nUtil.getString("system_please_input")+"AppName") );
 		}
 		if (xxlJobGroup.getAppname().length()<4 || xxlJobGroup.getAppname().length()>64) {
-			return Response.ofFail( I18nUtil.getString("jobgroup_field_appname_length") );
+			return Response.ofFail( "AppName " + I18nUtil.getString("system_length_limit") + "4~64");
 		}
 		if (XssUtil.hasXss(xxlJobGroup.getAppname())) {
 			return Response.ofFail( "AppName"+I18nUtil.getString("system_invalid") );

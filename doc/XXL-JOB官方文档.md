@@ -2903,13 +2903,14 @@ alter table xxl_job_log
 
 ### 7.47 版本 v3.5.0 Release Notes[ING]
 - 1、【新增】GLUE模式开关：新增GLUE模式开关（xxl.job.executor.glueenabled），支持执行器维度设置是否启用GLUE模式；
-- 2、【TODO】执行器AccessToken：执行器维度AccessToken，线上化动态管理；执行器间AccessToken隔离，提升安全性；
-  - 执行器：ExecutorBiz 服务处理、AdminBiz请求发起，统一附加 appname + accessToken；
-  - 调度中心：AppName 限制不可重复 + accessToken 必填；JobGoup本地缓存；AdminBiz 服务处理 校验参数；
-- 3、【TODO】调度中心OpenAPI增强：提供任务管理能力；封装Agent Skill并推送ClawHub；
-- 4、【TODO】配置线上化：发送邮箱配置线上管理、线程池配置调整；
-- 5、【TODO】任务告警：拆分“告警类型、告警配置”属性，支持Webhook、邮箱多种方式；
-- 6、【TODO】任务说明：拆分“任务名称、任务备注”属性，前者用于任务检索，后者用于补充任务描述。
+- 2、【新增】执行器AccessToken：执行器维度隔离设置，提升安全性；线上化动态管理，提升操作效率及体验；
+（注意：因为AccessToken调整为执行器维度，OpenAPI通讯协议部分发生变化，调度中心与执行器需要一并升级至v3.5.0；）
+- 3、【调整】执行器约束规则调整，AppName限制不可重复；
+- 4、【TODO】调度中心OpenAPI增强：提供任务管理能力；封装Agent Skill并推送ClawHub；
+- 5、【TODO】配置线上化：发送邮箱配置线上管理、线程池配置调整；
+- 6、【TODO】任务告警：拆分“告警类型、告警配置”属性，支持Webhook、邮箱多种方式；
+- 7、【TODO】任务说明：拆分“任务名称、任务备注”属性，前者用于任务检索，后者用于补充任务描述。
+
 
 ### TODO LIST
 - 1、调度隔离：调度中心针对不同执行器，各自维护不同的调度和远程触发组件。

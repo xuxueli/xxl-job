@@ -1,5 +1,6 @@
 package com.xxl.job.admin.business.scheduler.route.strategy;
 
+import com.xxl.job.admin.business.model.XxlJobGroup;
 import com.xxl.job.admin.business.scheduler.config.XxlJobAdminBootstrap;
 import com.xxl.job.admin.business.scheduler.route.ExecutorRouter;
 import com.xxl.job.admin.framework.util.I18nUtil;
@@ -16,13 +17,15 @@ import java.util.List;
 public class ExecutorRouteBusyover extends ExecutorRouter {
 
     @Override
-    public Response<String> route(TriggerRequest triggerParam, List<String> addressList) {
+    public Response<String> route(TriggerRequest triggerParam, XxlJobGroup jobGroup) {
+        List<String> addressList = jobGroup.getRegistryList();
+
         StringBuffer idleBeatResultSB = new StringBuffer();
         for (String address : addressList) {
             // beat
             Response<String> idleBeatResult = null;
             try {
-                ExecutorBiz executorBiz = XxlJobAdminBootstrap.getExecutorBiz(address);
+                ExecutorBiz executorBiz = XxlJobAdminBootstrap.getExecutorBiz(address, jobGroup);
                 idleBeatResult = executorBiz.idleBeat(new IdleBeatRequest(triggerParam.getJobId()));
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);

@@ -78,7 +78,7 @@ public class JobCodeController {
 			return Response.ofFail( (I18nUtil.getString("system_please_input") + I18nUtil.getString("jobinfo_glue_remark")) );
 		}
 		if (glueRemark.length()<4 || glueRemark.length()>100) {
-			return Response.ofFail(I18nUtil.getString("jobinfo_glue_remark_limit"));
+			return Response.ofFail(I18nUtil.getString("jobinfo_glue_remark") + I18nUtil.getString("system_length_limit") + " 4~100");
 		}
 		if (XssUtil.hasXss(glueRemark)) {
 			return Response.ofFail(I18nUtil.getString("jobinfo_glue_remark") + I18nUtil.getString("system_invalid"));

@@ -232,7 +232,7 @@
 				layer.open({
 					title: I18n.system_tips ,
 					btn: [ I18n.system_ok ],
-					content: I18n.jobinfo_glue_remark_limit ,
+					content: I18n.system_length_limit + ' [4-100]' ,
 					icon: '2'
 				});
 				return;
