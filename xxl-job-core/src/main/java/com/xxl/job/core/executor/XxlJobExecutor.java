@@ -47,10 +47,10 @@ public class XxlJobExecutor  {
     // ---------------------- field ----------------------
 
     private String adminAddresses;                                  // admin address list, such as "http://address" or "http://address01,http://address02"
-    private String accessToken;                                     // access token
     private int timeout = 3;                                        // timeout by second, default 3s
     private boolean enabled = true;                                 // executor enable, default true
     private String appname;                                         // executor appname
+    private String accessToken;                                     // access token
     private String ip;                                              // executor server-info
     private int port;
     private String address;                                         // executor registry-address: default use address to registry , otherwise use ip:port if address is null
@@ -61,9 +61,6 @@ public class XxlJobExecutor  {
     public void setAdminAddresses(String adminAddresses) {
         this.adminAddresses = adminAddresses;
     }
-    public void setAccessToken(String accessToken) {
-        this.accessToken = accessToken;
-    }
     public void setTimeout(int timeout) {
         this.timeout = timeout;
     }
@@ -72,6 +69,9 @@ public class XxlJobExecutor  {
     }
     public void setAppname(String appname) {
         this.appname = appname;
+    }
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
     }
     public void setIp(String ip) {
         this.ip = ip;
@@ -92,11 +92,11 @@ public class XxlJobExecutor  {
         this.glueEnabled = glueEnabled;
     }
 
-    public String getAccessToken() {
-        return accessToken;
-    }
     public String getAppname() {
         return appname;
+    }
+    public String getAccessToken() {
+        return accessToken;
     }
     public int getPort() {
         return port;

@@ -1016,8 +1016,6 @@ xuxueli/xxl-job-admin:{指定版本}
 ```
 ### 调度中心部署根地址 [必填]：如调度中心集群部署存在多个地址则用逗号分隔。执行器将会使用该地址进行"执行器心跳注册"和"任务结果回调"；为空则关闭自动注册；
 xxl.job.admin.addresses=http://127.0.0.1:8080
-### 调度中心通讯TOKEN [必填]：安全性校验；
-xxl.job.admin.accessToken=default_token
 ### 调度中心通讯超时时间[选填]，单位秒；默认3s；
 xxl.job.admin.timeout=3
 
@@ -1025,6 +1023,8 @@ xxl.job.admin.timeout=3
 xxl.job.executor.enabled=true
 ### 执行器AppName [必填]：执行器心跳注册分组依据；为空则关闭自动注册
 xxl.job.executor.appname=xxl-job-executor-sample
+### 调度中心通讯TOKEN [必填]：安全性校验；
+xxl.job.executor.accessToken=default_token
 ### 执行器IP [选填]：默认为空表示自动获取IP，多网卡时可手动设置指定IP，该IP不会绑定Host仅作为通讯使用；地址信息用于 "执行器注册" 和 "调度中心请求并触发任务"；
 xxl.job.executor.ip=
 ### 执行器端口号 [选填]：小于等于0则自动获取；默认端口为9999，单机部署多个执行器时，注意要配置不同执行器端口；
@@ -2914,7 +2914,7 @@ alter table xxl_job_log
 - 2、【新增】执行器AccessToken：执行器维度隔离设置，提升安全性；线上化动态管理，提升操作效率及体验；
 （注意：因为AccessToken调整为执行器维度，OpenAPI通讯协议部分发生变化，调度中心与执行器需要一并升级至v3.5.0；）
 - 3、【调整】执行器约束规则调整，AppName限制不可重复；
-- 4、【TODO】调度中心OpenAPI增强：提供任务管理能力；封装Agent Skill并推送ClawHub；
+- 4、【TODO】调度中心OpenAPI增强：提供任务管理能力，包括任务基础管理、状态启停、任务触发等；
 - 5、【TODO】配置线上化：发送邮箱配置线上管理、线程池配置调整；
 - 6、【TODO】任务告警：拆分“告警类型、告警配置”属性，支持Webhook、邮箱多种方式；
 - 7、【TODO】任务说明：拆分“任务名称、任务备注”属性，前者用于任务检索，后者用于补充任务描述。
