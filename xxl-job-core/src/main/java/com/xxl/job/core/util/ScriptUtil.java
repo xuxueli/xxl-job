@@ -30,19 +30,6 @@ public class ScriptUtil {
     public static void markScriptFile(String scriptFileName, String scriptContent) throws IOException {
         // make file: filePath/gluesource/666-123456789.py
         FileTool.writeString(scriptFileName, scriptContent);
-
-        /*FileOutputStream fileOutputStream = null;
-        try {
-            fileOutputStream = new FileOutputStream(scriptFileName);
-            fileOutputStream.write(scriptContent.getBytes("UTF-8"));
-            fileOutputStream.close();
-        } catch (Exception e) {
-            throw e;
-        }finally{
-            if(fileOutputStream != null){
-                fileOutputStream.close();
-            }
-        }*/
     }
 
     /**
