@@ -294,12 +294,12 @@
 		// add validator method
 		jQuery.validator.addMethod("appnameValid", function(value, element) {
 			var length = value.length;
-			var valid = /^[a-z][a-zA-Z0-9-]*$/;
+			var valid = /^[a-z][a-z0-9-]*$/;
 			return this.optional(element) || valid.test(value);
 		}, I18n.jobgroup_field_appname_limit );
 		// add validator method
 		jQuery.validator.addMethod("accessTokenValid", function(value, element) {
-			var valid = /^[a-z][a-z0-9]*$/;
+			var valid = /^[a-z][a-z0-9_]*$/;
 			return this.optional(element) || valid.test(value);
 		}, I18n.jobgroup_field_accesstoken_limit );
 		$.adminTable.initAdd( {

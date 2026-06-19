@@ -2911,6 +2911,23 @@ alter table xxl_job_log
 - 6、【TODO】任务告警：拆分“告警类型、告警配置”属性，支持Webhook、邮箱多种方式；
 - 7、【TODO】任务说明：拆分“任务名称、任务备注”属性，前者用于任务检索，后者用于补充任务描述。
 
+**备注：**     
+数据库升级脚本：
+```
+-- 1. 添加 access_token 列
+ALTER TABLE `xxl_job_group` 
+ADD COLUMN `access_token` varchar(255) DEFAULT NULL COMMENT '执行器AccessToken' AFTER `address_list`;
+
+-- 2. 创建 app_name 的唯一索引
+ALTER TABLE `xxl_job_group` 
+ADD UNIQUE KEY `i_app_name` (`app_name`) USING BTREE;
+
+-- 3. 将指定 AppName 的 access_token 更新为目标值；
+UPDATE `xxl_job_group`
+SET `access_token` = '<新Token值>'
+WHERE `app_name` = '<目标AppName>';
+```
+
 
 ### TODO LIST
 - 1、调度隔离：调度中心针对不同执行器，各自维护不同的调度和远程触发组件。

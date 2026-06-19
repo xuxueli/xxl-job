@@ -106,8 +106,8 @@ public class ExecutorBizTest {
     public void log(){
         ExecutorBiz executorBiz = buildClient();
 
-        final long logId = 0;
-        final long logDateTim = 0L;
+        final long logId = 2;
+        final long logDateTim = System.currentTimeMillis();
         final int fromLineNum = 0;
 
         // Act
