@@ -183,7 +183,7 @@ public class TriggerCallbackThreadHelper {
      */
     private void appendCallbackResult(List<CallbackRequest> callbackParamList, String logContent){
         for (CallbackRequest callbackParam: callbackParamList) {
-            String logFileName = XxlJobFileAppender.makeLogFileName(new Date(callbackParam.getLogDateTim()), callbackParam.getLogId());
+            String logFileName = XxlJobFileAppender.makeLogFileName(new Date(callbackParam.getLogDateTime()), callbackParam.getLogId());
             XxlJobContext.setXxlJobContext(new XxlJobContext(
                     -1,
                     null,

@@ -130,7 +130,7 @@ public class TriggerRequest implements Serializable{
 
     @Override
     public String toString() {
-        return "TriggerParam{" +
+        return "TriggerRequest{" +
                 "jobId=" + jobId +
                 ", executorHandler='" + executorHandler + '\'' +
                 ", executorParams='" + executorParams + '\'' +

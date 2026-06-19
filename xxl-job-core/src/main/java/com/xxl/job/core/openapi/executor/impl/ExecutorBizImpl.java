@@ -174,7 +174,7 @@ public class ExecutorBizImpl implements ExecutorBiz {
     @Override
     public Response<LogResult> log(LogRequest logRequest) {
         // log filename: logPath/yyyy-MM-dd/9999.log
-        String logFileName = XxlJobFileAppender.makeLogFileName(new Date(logRequest.getLogDateTim()), logRequest.getLogId());
+        String logFileName = XxlJobFileAppender.makeLogFileName(new Date(logRequest.getLogDateTime()), logRequest.getLogId());
 
         LogResult logResult = XxlJobFileAppender.readLog(logFileName, logRequest.getFromLineNum());
         return Response.ofSuccess(logResult);

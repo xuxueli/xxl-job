@@ -10,22 +10,22 @@ public class LogRequest implements Serializable {
 
     public LogRequest() {
     }
-    public LogRequest(long logDateTim, long logId, int fromLineNum) {
-        this.logDateTim = logDateTim;
+    public LogRequest(long logDateTime, long logId, int fromLineNum) {
+        this.logDateTime = logDateTime;
         this.logId = logId;
         this.fromLineNum = fromLineNum;
     }
 
-    private long logDateTim;
+    private long logDateTime;
     private long logId;
     private int fromLineNum;
 
-    public long getLogDateTim() {
-        return logDateTim;
+    public long getLogDateTime() {
+        return logDateTime;
     }
 
-    public void setLogDateTim(long logDateTim) {
-        this.logDateTim = logDateTim;
+    public void setLogDateTime(long logDateTime) {
+        this.logDateTime = logDateTime;
     }
 
     public long getLogId() {

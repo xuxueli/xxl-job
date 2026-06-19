@@ -9,15 +9,15 @@ public class CallbackRequest implements Serializable {
     private static final long serialVersionUID = 42L;
 
     private long logId;
-    private long logDateTim;
+    private long logDateTime;
 
     private int handleCode;
     private String handleMsg;
 
     public CallbackRequest(){}
-    public CallbackRequest(long logId, long logDateTim, int handleCode, String handleMsg) {
+    public CallbackRequest(long logId, long logDateTime, int handleCode, String handleMsg) {
         this.logId = logId;
-        this.logDateTim = logDateTim;
+        this.logDateTime = logDateTime;
         this.handleCode = handleCode;
         this.handleMsg = handleMsg;
     }
@@ -30,12 +30,12 @@ public class CallbackRequest implements Serializable {
         this.logId = logId;
     }
 
-    public long getLogDateTim() {
-        return logDateTim;
+    public long getLogDateTime() {
+        return logDateTime;
     }
 
-    public void setLogDateTim(long logDateTim) {
-        this.logDateTim = logDateTim;
+    public void setLogDateTime(long logDateTime) {
+        this.logDateTime = logDateTime;
     }
 
     public int getHandleCode() {
@@ -56,9 +56,9 @@ public class CallbackRequest implements Serializable {
 
     @Override
     public String toString() {
-        return "HandleCallbackParam{" +
+        return "CallbackRequest{" +
                 "logId=" + logId +
-                ", logDateTim=" + logDateTim +
+                ", logDateTime=" + logDateTime +
                 ", handleCode=" + handleCode +
                 ", handleMsg='" + handleMsg + '\'' +
                 '}';

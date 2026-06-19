@@ -45,7 +45,7 @@ public class RegistryRequest implements Serializable {
 
     @Override
     public String toString() {
-        return "RegistryParam{" +
+        return "RegistryRequest{" +
                 "registryGroup='" + registryGroup + '\'' +
                 ", registryKey='" + registryKey + '\'' +
                 ", registryValue='" + registryValue + '\'' +
