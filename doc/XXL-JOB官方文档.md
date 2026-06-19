@@ -1938,20 +1938,22 @@ API服务请求参考代码：com.xxl.job.adminbiz.AdminBizTest
 
 Header：
     XXL-JOB-ACCESS-TOKEN : {请求令牌}
- 
+    XXL-JOB-APPNAME : {执行器AppName}
+
 请求数据格式如下，放置在 RequestBody 中，JSON格式：
-    [{
-        "logId":1,              // 本次调度日志ID
-        "logDateTim":0,         // 本次调度日志时间
-        "handleCode":200,       // 200 表示任务执行正常，500表示失败
-        "handleMsg": null
-        }
-    }]
+    {
+        "callbackList":[{
+            "logId":1,              // 本次调度日志ID
+            "logDateTime":0,        // 本次调度日志时间
+            "handleCode":200,       // 200 表示任务执行正常，500表示失败
+            "handleMsg": null
+        }]
+    }
 
 响应数据格式：
     {
       "code": 200,      // 200 表示正常、其他失败
-      "msg": null      // 错误提示消息
+      "msg": null       // 错误提示消息
     }
 ```
 
@@ -1965,7 +1967,8 @@ Header：
 
 Header：
     XXL-JOB-ACCESS-TOKEN : {请求令牌}
- 
+    XXL-JOB-APPNAME : {执行器AppName}
+
 请求数据格式如下，放置在 RequestBody 中，JSON格式：
     {
         "registryGroup":"EXECUTOR",                     // 固定值
@@ -1976,7 +1979,7 @@ Header：
 响应数据格式：
     {
       "code": 200,      // 200 表示正常、其他失败
-      "msg": null      // 错误提示消息
+      "msg": null       // 错误提示消息
     }
 ```
 
@@ -1990,7 +1993,8 @@ Header：
 
 Header：
     XXL-JOB-ACCESS-TOKEN : {请求令牌}
- 
+    XXL-JOB-APPNAME : {执行器AppName}
+
 请求数据格式如下，放置在 RequestBody 中，JSON格式：
     {
         "registryGroup":"EXECUTOR",                     // 固定值
@@ -2001,7 +2005,7 @@ Header：
 响应数据格式：
     {
       "code": 200,      // 200 表示正常、其他失败
-      "msg": null      // 错误提示消息
+      "msg": null       // 错误提示消息
     }
 ```
 
@@ -2020,8 +2024,9 @@ API服务请求参考代码：com.xxl.job.executorbiz.ExecutorBizTest
 
 Header：
     XXL-JOB-ACCESS-TOKEN : {请求令牌}
- 
-请求数据格式如下，放置在 RequestBody 中，JSON格式：
+    XXL-JOB-APPNAME : {执行器AppName}
+
+请求数据：无
 
 响应数据格式：
     {
@@ -2040,7 +2045,8 @@ Header：
 
 Header：
     XXL-JOB-ACCESS-TOKEN : {请求令牌}
- 
+    XXL-JOB-APPNAME : {执行器AppName}
+
 请求数据格式如下，放置在 RequestBody 中，JSON格式：
     {
         "jobId":1       // 任务ID
@@ -2059,11 +2065,12 @@ Header：
 
 ------
 
-地址格式：{执行器内嵌服务根地址}/run
+地址格式：{执行器内嵌服务根地址}/trigger
 
 Header：
     XXL-JOB-ACCESS-TOKEN : {请求令牌}
- 
+    XXL-JOB-APPNAME : {执行器AppName}
+
 请求数据格式如下，放置在 RequestBody 中，JSON格式：
     {
         "jobId":1,                                  // 任务ID
@@ -2087,7 +2094,7 @@ Header：
     }
 ```
 
-#### f、终止任务
+#### d、终止任务
 ```
 说明：终止任务
 
@@ -2097,12 +2104,12 @@ Header：
 
 Header：
     XXL-JOB-ACCESS-TOKEN : {请求令牌}
- 
+    XXL-JOB-APPNAME : {执行器AppName}
+
 请求数据格式如下，放置在 RequestBody 中，JSON格式：
     {
         "jobId":1       // 任务ID
     }
-    
 
 响应数据格式：
     {
@@ -2111,7 +2118,7 @@ Header：
     }
 ```
 
-#### d、查看执行日志
+#### e、查看执行日志
 ```
 说明：查看任务日志，滚动方式加载
 
@@ -2121,11 +2128,12 @@ Header：
 
 Header：
     XXL-JOB-ACCESS-TOKEN : {请求令牌}
- 
+    XXL-JOB-APPNAME : {执行器AppName}
+
 请求数据格式如下，放置在 RequestBody 中，JSON格式：
     {
-        "logDateTim":0,     // 本次调度日志时间
         "logId":0,          // 本次调度日志ID
+        "logDateTime":0,    // 本次调度日志时间
         "fromLineNum":0     // 日志开始行号，滚动加载日志
     }
 
