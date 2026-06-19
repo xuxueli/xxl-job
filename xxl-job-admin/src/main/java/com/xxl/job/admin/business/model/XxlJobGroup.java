@@ -76,4 +76,17 @@ public class XxlJobGroup {
         this.addressList = addressList;
     }
 
+    @Override
+    public String toString() {
+        return "XxlJobGroup{" +
+                "id=" + id +
+                ", appname='" + appname + '\'' +
+                ", title='" + title + '\'' +
+                ", addressType=" + addressType +
+                ", addressList='" + addressList + '\'' +
+                ", updateTime=" + updateTime +
+                ", registryList=" + registryList +
+                '}';
+    }
+
 }

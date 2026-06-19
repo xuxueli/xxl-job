@@ -41,8 +41,7 @@
 
 	<update id="update" parameterType="com.xxl.job.admin.business.model.XxlJobGroup" >
 		UPDATE xxl_job_group
-		SET `app_name` = #{appname},
-			`title` = #{title},
+		SET `title` = #{title},
 			`address_type` = #{addressType},
 			`address_list` = #{addressList},
 			`update_time` = #{updateTime}
@@ -58,6 +57,12 @@
 		SELECT <include refid="Base_Column_List" />
 		FROM xxl_job_group AS t
 		WHERE t.id = #{id}
+	</select>
+
+	<select id="findByAppname" parameterType="java.lang.String" resultMap="XxlJobGroup">
+		SELECT <include refid="Base_Column_List" />
+		FROM xxl_job_group AS t
+		WHERE t.app_name = #{appname}
 	</select>
 
 	<select id="pageList" parameterType="java.util.HashMap" resultMap="XxlJobGroup">

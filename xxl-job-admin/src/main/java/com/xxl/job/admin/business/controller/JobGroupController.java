@@ -111,6 +111,11 @@ public class JobGroupController {
 			}
 		}
 
+		// valid appname duplicate
+		if (xxlJobGroupMapper.loadByAppname(xxlJobGroup.getAppname()) != null) {
+			return Response.ofFail("AppName "+I18nUtil.getString("system_repeat"));
+		}
+
 		// process
 		xxlJobGroup.setUpdateTime(new Date());
 
@@ -123,15 +128,10 @@ public class JobGroupController {
 	@XxlSso(role = Consts.ADMIN_ROLE)
 	public Response<String> update(XxlJobGroup xxlJobGroup){
 
-		// valid appname
-		if (StringTool.isBlank(xxlJobGroup.getAppname())) {
-			return Response.ofFail((I18nUtil.getString("system_please_input")+"AppName") );
-		}
-		if (xxlJobGroup.getAppname().length()<4 || xxlJobGroup.getAppname().length()>64) {
-			return Response.ofFail( I18nUtil.getString("jobgroup_field_appname_length") );
-		}
-		if (XssUtil.hasXss(xxlJobGroup.getAppname())) {
-			return Response.ofFail( "AppName"+I18nUtil.getString("system_invalid") );
+		// load existing, appname not allowed to change
+		XxlJobGroup exists = xxlJobGroupMapper.load(xxlJobGroup.getId());
+		if (exists == null) {
+			return Response.ofFail(I18nUtil.getString("system_opt_error"));
 		}
 
 		// valid title

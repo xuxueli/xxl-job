@@ -7,7 +7,9 @@ import com.xxl.job.core.constant.Const;
 import com.xxl.job.core.constant.RegistTypeEnum;
 import com.xxl.job.core.openapi.admin.dto.RegistryRequest;
 import com.xxl.tool.concurrent.CyclicThread;
+import com.xxl.tool.core.CollectionTool;
 import com.xxl.tool.core.StringTool;
+import com.xxl.tool.json.GsonTool;
 import com.xxl.tool.response.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +35,12 @@ public class JobRegistryHelper {
 	 * registry monitor thread
 	 */
 	private CyclicThread registryMonitorThread;
+
+	/**
+	 * job group cache
+	 */
+	private volatile Map<String, XxlJobGroup> appname2GroupCache = new ConcurrentHashMap<>();
+	private volatile Map<Integer, XxlJobGroup> id2GroupCache = new ConcurrentHashMap<>();
 
 	/**
 	 * start
@@ -64,24 +72,24 @@ public class JobRegistryHelper {
 		registryMonitorThread = new CyclicThread("JobRegistryHelper#registryMonitorThread", true, new Runnable() {
 			@Override
 			public void run() {
-				// auto registry group
+				// 2.1、refresh auto-registry group
 				List<XxlJobGroup> groupList = XxlJobAdminBootstrap.getInstance().getXxlJobGroupMapper().findByAddressType(0);
 				if (groupList!=null && !groupList.isEmpty()) {
 
-					// remove dead address (admin/executor)
+					// a、remove dead address (admin/executor)
 					List<Integer> ids = XxlJobAdminBootstrap.getInstance().getXxlJobRegistryMapper().findDead(Const.DEAD_TIMEOUT, new Date());
 					if (ids!=null && !ids.isEmpty()) {
 						XxlJobAdminBootstrap.getInstance().getXxlJobRegistryMapper().removeDead(ids);
 					}
 
-					// fresh online address (admin/executor)
-					HashMap<String, List<String>> appAddressMap = new HashMap<String, List<String>>();
+					// b、fresh online address (appname ： List<address>)
+					HashMap<String, List<String>> appnameAddressMap = new HashMap<>();
 					List<XxlJobRegistry> list = XxlJobAdminBootstrap.getInstance().getXxlJobRegistryMapper().findAll(Const.DEAD_TIMEOUT, new Date());
 					if (list != null) {
 						for (XxlJobRegistry item: list) {
 							if (RegistTypeEnum.EXECUTOR.name().equals(item.getRegistryGroup())) {
 								String appname = item.getRegistryKey();
-								List<String> registryList = appAddressMap.get(appname);
+								List<String> registryList = appnameAddressMap.get(appname);
 								if (registryList == null) {
 									registryList = new ArrayList<String>();
 								}
@@ -89,30 +97,46 @@ public class JobRegistryHelper {
 								if (!registryList.contains(item.getRegistryValue())) {
 									registryList.add(item.getRegistryValue());
 								}
-								appAddressMap.put(appname, registryList);
+								appnameAddressMap.put(appname, registryList);
 							}
 						}
 					}
 
-					// fresh group address
+					// c、write group address
 					for (XxlJobGroup group: groupList) {
-						List<String> registryList = appAddressMap.get(group.getAppname());
+						List<String> registryList = appnameAddressMap.get(group.getAppname());
+						// generate address list
 						String addressListStr = null;
-						if (registryList!=null && !registryList.isEmpty()) {
+						if (CollectionTool.isNotEmpty(registryList)) {
 							Collections.sort(registryList);
-							StringBuilder addressListSB = new StringBuilder();
-							for (String item:registryList) {
-								addressListSB.append(item).append(",");
-							}
-							addressListStr = addressListSB.toString();
-							addressListStr = addressListStr.substring(0, addressListStr.length()-1);
+							addressListStr = StringTool.join(registryList, ",");
 						}
+						// fill address
 						group.setAddressList(addressListStr);
 						group.setUpdateTime(new Date());
 
 						XxlJobAdminBootstrap.getInstance().getXxlJobGroupMapper().update(group);
 					}
 				}
+
+				// 2.2、refresh localcache
+				List<XxlJobGroup> jobGroupList = XxlJobAdminBootstrap.getInstance().getXxlJobGroupMapper().findAll();
+				Map<String, XxlJobGroup> appname2GroupCacheNew = new ConcurrentHashMap<>();
+				Map<Integer, XxlJobGroup> id2GroupCacheNew = new ConcurrentHashMap<>();
+				if (CollectionTool.isNotEmpty(jobGroupList)) {
+					for (XxlJobGroup group: jobGroupList) {
+						group.setUpdateTime(null);
+						appname2GroupCacheNew.put(group.getAppname(), group);
+						id2GroupCacheNew.put(group.getId(), group);
+					}
+				}
+				if (!GsonTool.toJson(appname2GroupCacheNew).equals(GsonTool.toJson(appname2GroupCache))) {
+					appname2GroupCache = appname2GroupCacheNew;
+					id2GroupCache = id2GroupCacheNew;
+					logger.info(">>>>>>>>>>> xxl-job, JobRegistryHelper, detect changes and refresh JobGroupCache success, appname2GroupCache:{}, id2GroupCache:{}", appname2GroupCache, id2GroupCache);
+				}
+				logger.debug(">>>>>>>>>>> xxl-job, JobRegistryHelper, refresh JobGroupCache success, appname2GroupCache:{}, id2GroupCache:{}", appname2GroupCache, id2GroupCache);
+
 			}
 		}, Const.BEAT_TIMEOUT * 1000L, true);
 		registryMonitorThread.start();
@@ -198,6 +222,22 @@ public class JobRegistryHelper {
 
 	private void freshGroupRegistryInfo(RegistryRequest registryParam){
 		// Under consideration, prevent affecting core tables
+	}
+
+	// ---------------------- cache ----------------------
+
+	/**
+	 * load JobGroup by id
+	 */
+	public XxlJobGroup load(int jobGroup){
+		return id2GroupCache.get(jobGroup);
+	}
+
+	/**
+	 * load JobGroup by appname
+	 */
+	public XxlJobGroup loadByAppName(String appname){
+		return appname2GroupCache.get(appname);
 	}
 
 
