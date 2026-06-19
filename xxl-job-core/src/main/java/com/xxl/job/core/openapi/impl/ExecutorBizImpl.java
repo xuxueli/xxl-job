@@ -47,13 +47,23 @@ public class ExecutorBizImpl implements ExecutorBiz {
 
     @Override
     public Response<String> run(TriggerRequest triggerRequest) {
-        // load old：jobHandler + jobThread
+
+        // load job info：jobHandler + jobThread + glueTypeEnum
         JobThread jobThread = XxlJobExecutor.getInstance().loadJobThread(triggerRequest.getJobId());
         IJobHandler jobHandler = jobThread!=null?jobThread.getHandler():null;
         String removeOldReason = null;
-
-        // valid：jobHandler + jobThread
         GlueTypeEnum glueTypeEnum = GlueTypeEnum.match(triggerRequest.getGlueType());
+
+        // valid glue (non-BEAN) enabled
+        if (glueTypeEnum != null && GlueTypeEnum.BEAN != glueTypeEnum) {
+            boolean glueEnabled = XxlJobExecutor.getInstance().getGlueEnabled();
+            if (!glueEnabled) {
+                logger.warn(">>>>>>>>>>> xxl-job executor not support current glue type[{}], please check executor configuration.", glueTypeEnum.getDesc());
+                return Response.of(XxlJobContext.HANDLE_CODE_FAIL, "fail, current glue type ["+ glueTypeEnum.getDesc() +"] not supported.");
+            }
+        }
+
+        // dispatch handler
         if (GlueTypeEnum.BEAN == glueTypeEnum) {
 
             // new jobhandler

@@ -1014,29 +1014,31 @@ xuxueli/xxl-job-admin:{指定版本}
 执行器配置，配置内容说明：
 
 ```
-### 调度中心部署根地址 [选填]：如调度中心集群部署存在多个地址则用逗号分隔。执行器将会使用该地址进行"执行器心跳注册"和"任务结果回调"；为空则关闭自动注册；
+### 调度中心部署根地址 [必填]：如调度中心集群部署存在多个地址则用逗号分隔。执行器将会使用该地址进行"执行器心跳注册"和"任务结果回调"；为空则关闭自动注册；
 xxl.job.admin.addresses=http://127.0.0.1:8080
 ### 调度中心通讯TOKEN [选填]：非空时启用；
 xxl.job.admin.accessToken=default_token
 ### 调度中心通讯超时时间[选填]，单位秒；默认3s；
 xxl.job.admin.timeout=3
 
-### 执行器启用开关 [选填]：默认开启，关闭时不进行执行器初始化；
+### 执行器启用开关 [必填]：默认开启，关闭时不进行执行器初始化；
 xxl.job.executor.enabled=true
-### 执行器AppName [选填]：执行器心跳注册分组依据；为空则关闭自动注册
+### 执行器AppName [必填]：执行器心跳注册分组依据；为空则关闭自动注册
 xxl.job.executor.appname=xxl-job-executor-sample
-### 执行器注册 [选填]：优先使用该配置作为注册地址，为空时使用内嵌服务 ”IP:PORT“ 作为注册地址。从而更灵活的支持容器类型执行器动态IP和动态映射端口问题。
-xxl.job.executor.address=
 ### 执行器IP [选填]：默认为空表示自动获取IP，多网卡时可手动设置指定IP，该IP不会绑定Host仅作为通讯使用；地址信息用于 "执行器注册" 和 "调度中心请求并触发任务"；
 xxl.job.executor.ip=
 ### 执行器端口号 [选填]：小于等于0则自动获取；默认端口为9999，单机部署多个执行器时，注意要配置不同执行器端口；
 xxl.job.executor.port=9999
+### 执行器注册 [选填]：优先使用该配置作为注册地址，为空时使用内嵌服务 ”IP:PORT“ 作为注册地址。从而更灵活的支持容器类型执行器动态IP和动态映射端口问题。
+xxl.job.executor.address=
 ### 执行器运行日志文件存储磁盘路径 [选填] ：需要对该路径拥有读写权限；为空则使用默认路径；
 xxl.job.executor.logpath=/data/applogs/xxl-job/jobhandler
 ### 执行器日志文件保存天数 [选填] ： 过期日志自动清理, 限制值大于等于3时生效; 否则, 如-1, 关闭自动清理功能；
 xxl.job.executor.logretentiondays=30
-### 任务扫描排除路径 [选填] ：任务扫描时忽略指定包路径下的Bean；支持配置包路径前缀，多个逗号分隔；
+### 执行器任务扫描排除路径 [选填] ：Bean模式任务扫描时，忽略指定包路径，非空时生效；支持配置包路径前缀，多个逗号分隔；例如"org.package01"或"org.package01,org.package02"
 xxl.job.executor.excludedpackage=org.springframework,spring
+### 执行器GLUE模式启用开关 [选填] ：默认开启，支持全部类型任务；关闭时只支持Bean模式任务、禁用GLUE模式任务；
+xxl.job.executor.glueenabled=true
 ```
 
 #### 步骤三：执行器组件配置
@@ -2900,12 +2902,12 @@ alter table xxl_job_log
 - 3、【安全】任务RollingLog权限校验完善，防止越权查看任务日志；
 
 ### 7.47 版本 v3.5.0 Release Notes[ING]
-- 1、【TODO】AccessToken线上化管理：执行期维度，限制操作当前执行期；
-- 2、【TODO】调度中心OpenAPI增强：提供任务管理能力；封装Agent Skill并推送ClawHub；
-- 3、【TODO】配置线上化：发送邮箱配置线上管理、线程池配置调整；
-- 4、【TODO】任务告警：拆分“告警类型、告警配置”属性，支持Webhook、邮箱多种方式；
-- 5、【TODO】任务说明：拆分“任务名称、任务描述”属性，前者用于任务检索，后者用于补充任务描述，如参数说明、功能详细介绍等。
-- 6、【TODO】GLUE模式开关：执行器新增GLUE模式配置，支持任务维度启停，满足差异化场景需求；
+- 1、【新增】GLUE模式开关：新增GLUE模式开关（xxl.job.executor.glueenabled），支持执行器维度设置是否启用GLUE模式；
+- 2、【TODO】AccessToken线上化管理：执行期维度，限制操作当前执行期；
+- 3、【TODO】调度中心OpenAPI增强：提供任务管理能力；封装Agent Skill并推送ClawHub；
+- 4、【TODO】配置线上化：发送邮箱配置线上管理、线程池配置调整；
+- 5、【TODO】任务告警：拆分“告警类型、告警配置”属性，支持Webhook、邮箱多种方式；
+- 6、【TODO】任务说明：拆分“任务名称、任务描述”属性，前者用于任务检索，后者用于补充任务描述，如参数说明、功能详细介绍等。
 
 
 ### TODO LIST

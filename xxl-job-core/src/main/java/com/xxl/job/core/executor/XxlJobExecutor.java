@@ -46,16 +46,17 @@ public class XxlJobExecutor  {
 
     // ---------------------- field ----------------------
 
-    private String adminAddresses;
-    private String accessToken;
-    private int timeout;
-    private Boolean enabled;
-    private String appname;
-    private String address;
-    private String ip;
+    private String adminAddresses;                                  // admin address list, such as "http://address" or "http://address01,http://address02"
+    private String accessToken;                                     // access token
+    private int timeout = 3;                                        // timeout by second, default 3s
+    private boolean enabled = true;                                 // executor enable, default true
+    private String appname;                                         // executor appname
+    private String ip;                                              // executor server-info
     private int port;
-    private String logPath;
-    private int logRetentionDays;
+    private String address;                                         // executor registry-address: default use address to registry , otherwise use ip:port if address is null
+    private String logPath = "/data/applogs/xxl-job/jobhandler";    // executor log-path
+    private int logRetentionDays = 30;                              // executor log-retention-days
+    private boolean glueEnabled = true;                             // executor glue (non-BEAN) task enable, default true
 
     public void setAdminAddresses(String adminAddresses) {
         this.adminAddresses = adminAddresses;
@@ -66,14 +67,11 @@ public class XxlJobExecutor  {
     public void setTimeout(int timeout) {
         this.timeout = timeout;
     }
-    public void setEnabled(Boolean enabled) {
+    public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
     public void setAppname(String appname) {
         this.appname = appname;
-    }
-    public void setAddress(String address) {
-        this.address = address;
     }
     public void setIp(String ip) {
         this.ip = ip;
@@ -81,11 +79,17 @@ public class XxlJobExecutor  {
     public void setPort(int port) {
         this.port = port;
     }
+    public void setAddress(String address) {
+        this.address = address;
+    }
     public void setLogPath(String logPath) {
         this.logPath = logPath;
     }
     public void setLogRetentionDays(int logRetentionDays) {
         this.logRetentionDays = logRetentionDays;
+    }
+    public void setGlueEnabled(boolean glueEnabled) {
+        this.glueEnabled = glueEnabled;
     }
 
     public String getAccessToken() {
@@ -94,11 +98,14 @@ public class XxlJobExecutor  {
     public String getAppname() {
         return appname;
     }
+    public int getPort() {
+        return port;
+    }
     public String getAddress() {
         return address;
     }
-    public int getPort() {
-        return port;
+    public boolean getGlueEnabled() {
+        return glueEnabled;
     }
 
 
@@ -120,14 +127,22 @@ public class XxlJobExecutor  {
      */
     public void start() throws Exception {
 
-        // bind instance
-        xxlJobExecutor = this;
-
         // valid enabled
-        if (enabled!=null && !enabled) {
+        if (!enabled) {
             logger.info(">>>>>>>>>>> xxl-job executor start fail, enabled:{}", enabled);
             return;
         }
+
+        // valid param
+        if (StringTool.isBlank(adminAddresses)) {
+            throw new RuntimeException("xxl-job executor adminAddresses empty.");
+        }
+        if (StringTool.isBlank(appname)) {
+            throw new RuntimeException("xxl-job executor appname empty.");
+        }
+
+        // bind instance
+        xxlJobExecutor = this;
 
         // init logpath
         XxlJobFileAppender.initLogPath(logPath);

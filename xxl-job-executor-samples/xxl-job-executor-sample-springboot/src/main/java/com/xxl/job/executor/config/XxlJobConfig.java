@@ -28,6 +28,9 @@ public class XxlJobConfig {
     @Value("${xxl.job.executor.enabled}")
     private Boolean enabled;
 
+    @Value("${xxl.job.executor.glueenabled:true}")
+    private Boolean glueEnabled;
+
     @Value("${xxl.job.executor.appname}")
     private String appname;
 
@@ -59,12 +62,13 @@ public class XxlJobConfig {
         xxlJobSpringExecutor.setTimeout(timeout);
         xxlJobSpringExecutor.setEnabled(enabled);
         xxlJobSpringExecutor.setAppname(appname);
-        xxlJobSpringExecutor.setAddress(address);
         xxlJobSpringExecutor.setIp(ip);
         xxlJobSpringExecutor.setPort(port);
+        xxlJobSpringExecutor.setAddress(address);
         xxlJobSpringExecutor.setLogPath(logPath);
         xxlJobSpringExecutor.setLogRetentionDays(logRetentionDays);
         xxlJobSpringExecutor.setExcludedPackage(excludedPackage);
+        xxlJobSpringExecutor.setGlueEnabled(glueEnabled);
 
         return xxlJobSpringExecutor;
     }

@@ -33,14 +33,20 @@ public class XxlJobFileAppender {
 	 * 	---/2017-12-25/821.log
 	 *
 	 */
-	private static String logBasePath = "/data/applogs/xxl-job/jobhandler";
-	private static String glueSrcPath = new File(logBasePath, "gluesource").getPath();
-	private static String callbackLogPath = new File(logBasePath, "callbacklogs").getPath();
+	private static String logBasePath;
+	private static String glueSrcPath;
+	private static String callbackLogPath;
+
+	/**
+	 * init log path
+	 */
 	public static void initLogPath(String logPath) throws IOException {
 		// init
-		if (StringTool.isNotBlank(logPath)) {
-			logBasePath = logPath.trim();
+		if (StringTool.isBlank(logPath)) {
+			throw new RuntimeException("xxl-job logPath cannot be empty");
 		}
+		logBasePath = logPath.trim();
+
 		// mk base dir
 		File logPathDir = new File(logBasePath);
         FileTool.createDirectories(logPathDir);
