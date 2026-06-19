@@ -3,11 +3,12 @@ package com.xxl.job.core.server;
 import com.xxl.job.core.constant.Const;
 import com.xxl.job.core.executor.XxlJobExecutor;
 import com.xxl.job.core.openapi.executor.ExecutorBiz;
-import com.xxl.job.core.openapi.executor.impl.ExecutorBizImpl;
 import com.xxl.job.core.openapi.executor.dto.IdleBeatRequest;
 import com.xxl.job.core.openapi.executor.dto.KillRequest;
 import com.xxl.job.core.openapi.executor.dto.LogRequest;
 import com.xxl.job.core.openapi.executor.dto.TriggerRequest;
+import com.xxl.job.core.openapi.executor.impl.ExecutorBizImpl;
+import com.xxl.tool.core.StringTool;
 import com.xxl.tool.error.ThrowableTool;
 import com.xxl.tool.json.GsonTool;
 import com.xxl.tool.response.Response;
@@ -83,7 +84,7 @@ public class EmbedServer {
                                             .addLast(new IdleStateHandler(0, 0, 30 * 3, TimeUnit.SECONDS))  // beat 3N, close if idle
                                             .addLast(new HttpServerCodec())
                                             .addLast(new HttpObjectAggregator(5 * 1024 * 1024))  // merge request & reponse to FULL
-                                            .addLast(new EmbedHttpServerHandler(executorBiz, xxlJobExecutor.getAccessToken(), bizThreadPool));
+                                            .addLast(new EmbedHttpServerHandler(executorBiz, xxlJobExecutor, bizThreadPool));
                                 }
                             })
                             .childOption(ChannelOption.SO_KEEPALIVE, true);
@@ -143,32 +144,33 @@ public class EmbedServer {
     public static class EmbedHttpServerHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
         private static final Logger logger = LoggerFactory.getLogger(EmbedHttpServerHandler.class);
 
-        private ExecutorBiz executorBiz;
-        private String accessToken;
-        private ThreadPoolExecutor bizThreadPool;
+        private final ExecutorBiz executorBiz;
+        private final XxlJobExecutor xxlJobExecutor;
+        private final ThreadPoolExecutor bizThreadPool;
 
-        public EmbedHttpServerHandler(ExecutorBiz executorBiz, String accessToken, ThreadPoolExecutor bizThreadPool) {
+        public EmbedHttpServerHandler(final ExecutorBiz executorBiz, final XxlJobExecutor xxlJobExecutor, final ThreadPoolExecutor bizThreadPool) {
             this.executorBiz = executorBiz;
-            this.accessToken = accessToken;
+            this.xxlJobExecutor = xxlJobExecutor;
             this.bizThreadPool = bizThreadPool;
         }
 
         @Override
         protected void channelRead0(final ChannelHandlerContext ctx, FullHttpRequest msg) throws Exception {
+
             // request parse
-            //final byte[] requestBytes = ByteBufUtil.getBytes(msg.content());    // byteBuf.toString(io.netty.util.CharsetUtil.UTF_8);
-            String requestData = msg.content().toString(CharsetUtil.UTF_8);
-            String uri = msg.uri();
             HttpMethod httpMethod = msg.method();
+            String uri = msg.uri();
+            String requestData = msg.content().toString(CharsetUtil.UTF_8);
             boolean keepAlive = HttpUtil.isKeepAlive(msg);
-            String accessTokenReq = msg.headers().get(Const.XXL_JOB_ACCESS_TOKEN);
+            String accessToken = msg.headers().get(Const.XXL_JOB_ACCESS_TOKEN);
+            String appname = msg.headers().get(Const.XXL_JOB_APPNAME);
 
             // invoke
             bizThreadPool.execute(new Runnable() {
                 @Override
                 public void run() {
                     // do invoke
-                    Object responseObj = dispatchRequest(httpMethod, uri, requestData, accessTokenReq);
+                    Object responseObj = dispatchRequest(httpMethod, uri, requestData, accessToken, appname);
 
                     // to json
                     String responseJson = GsonTool.toJson(responseObj);
@@ -179,7 +181,10 @@ public class EmbedServer {
             });
         }
 
-        private Object dispatchRequest(HttpMethod httpMethod, String uri, String requestData, String accessTokenReq) {
+        /**
+         * dispatch request
+         */
+        private Object dispatchRequest(HttpMethod httpMethod, String uri, String requestData, String accessToken, String appname) {
             // valid
             if (HttpMethod.POST != httpMethod) {
                 return Response.ofFail("invalid request, HttpMethod not support.");
@@ -187,10 +192,14 @@ public class EmbedServer {
             if (uri == null || uri.trim().isEmpty()) {
                 return Response.ofFail( "invalid request, uri-mapping empty.");
             }
-            if (accessToken != null
-                    && !accessToken.trim().isEmpty()
-                    && !accessToken.equals(accessTokenReq)) {
-                return Response.ofFail("The access token is wrong.");
+
+            // valid access token
+            if (StringTool.isBlank(accessToken) || StringTool.isBlank(appname)) {
+                return Response.ofFail("invalid request, accessToken or appname is empty.");
+            }
+            if (!(accessToken.equals(xxlJobExecutor.getAccessToken())
+                    && appname.equals(xxlJobExecutor.getAppname()))) {
+                return Response.ofFail("invalid request, accessToken or appname invalid.");
             }
 
             // services mapping

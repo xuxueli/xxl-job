@@ -12,6 +12,11 @@ public class Const {
      */
     public static final String XXL_JOB_ACCESS_TOKEN = "XXL-JOB-ACCESS-TOKEN";
 
+    /**
+     * app name
+     */
+    public static final String XXL_JOB_APPNAME = "XXL-JOB-APPNAME";
+
 
     // ---------------------- for registry ----------------------
 

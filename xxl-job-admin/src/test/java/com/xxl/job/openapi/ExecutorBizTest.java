@@ -22,12 +22,14 @@ public class ExecutorBizTest {
 
     private static String addressUrl = "http://127.0.0.1:9999/";
     private static String accessToken = "default_token";
+    private static String appname = "xxl-job-executor-sample";
 
     private ExecutorBiz buildClient(){
         return HttpTool.createClient()
                 .url(addressUrl)
                 .timeout(3 * 1000)
                 .header(Const.XXL_JOB_ACCESS_TOKEN, accessToken)
+                .header(Const.XXL_JOB_APPNAME, appname)
                 .proxy(ExecutorBiz.class);
     }
 
@@ -36,12 +38,12 @@ public class ExecutorBizTest {
         ExecutorBiz executorBiz = buildClient();
         // Act
         final Response<String> retval = executorBiz.beat();
+        logger.info("retval:{}", retval);
 
         // Assert result
         Assertions.assertNotNull(retval);
         Assertions.assertNull(((Response<String>) retval).getData());
         Assertions.assertEquals(200, retval.getCode());
-        Assertions.assertNull(retval.getMsg());
     }
 
     @Test

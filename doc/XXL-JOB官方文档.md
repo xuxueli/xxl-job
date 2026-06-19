@@ -923,7 +923,7 @@ spring.mail.properties.mail.smtp.starttls.enable=true
 spring.mail.properties.mail.smtp.starttls.required=true
 spring.mail.properties.mail.smtp.socketFactory.class=javax.net.ssl.SSLSocketFactory
 
-### 调度中心通讯TOKEN [选填]：非空时启用；
+### 调度中心通讯TOKEN [必填]：安全性校验；
 xxl.job.accessToken=
 
 ### 调度中心通讯超时时间[选填]，单位秒；默认3s；
@@ -1016,7 +1016,7 @@ xuxueli/xxl-job-admin:{指定版本}
 ```
 ### 调度中心部署根地址 [必填]：如调度中心集群部署存在多个地址则用逗号分隔。执行器将会使用该地址进行"执行器心跳注册"和"任务结果回调"；为空则关闭自动注册；
 xxl.job.admin.addresses=http://127.0.0.1:8080
-### 调度中心通讯TOKEN [选填]：非空时启用；
+### 调度中心通讯TOKEN [必填]：安全性校验；
 xxl.job.admin.accessToken=default_token
 ### 调度中心通讯超时时间[选填]，单位秒；默认3s；
 xxl.job.admin.timeout=3
@@ -2904,6 +2904,7 @@ alter table xxl_job_log
 ### 7.47 版本 v3.5.0 Release Notes[ING]
 - 1、【新增】GLUE模式开关：新增GLUE模式开关（xxl.job.executor.glueenabled），支持执行器维度设置是否启用GLUE模式；
 - 2、【TODO】执行器AccessToken：执行器维度AccessToken，线上化动态管理；执行器间AccessToken隔离，提升安全性；
+  - 执行器 AccessToken: 
 - 3、【TODO】调度中心OpenAPI增强：提供任务管理能力；封装Agent Skill并推送ClawHub；
 - 4、【TODO】配置线上化：发送邮箱配置线上管理、线程池配置调整；
 - 5、【TODO】任务告警：拆分“告警类型、告警配置”属性，支持Webhook、邮箱多种方式；

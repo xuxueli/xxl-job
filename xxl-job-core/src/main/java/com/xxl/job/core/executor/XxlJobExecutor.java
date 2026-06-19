@@ -140,6 +140,9 @@ public class XxlJobExecutor  {
         if (StringTool.isBlank(appname)) {
             throw new RuntimeException("xxl-job executor appname empty.");
         }
+        if (StringTool.isBlank(accessToken)) {
+            throw new RuntimeException("xxl-job executor accessToken empty.");
+        }
 
         // bind instance
         xxlJobExecutor = this;
