@@ -39,7 +39,7 @@ CREATE TABLE `xxl_job_info`
 (
     `id`                        int(11)      NOT NULL AUTO_INCREMENT,
     `job_group`                 int(11)      NOT NULL COMMENT '执行器主键ID',
-    `job_desc`                  varchar(255) NOT NULL,
+    `job_desc`                  varchar(255) NOT NULL COMMENT '执行器名称',
     `add_time`                  datetime              DEFAULT NULL,
     `update_time`               datetime              DEFAULT NULL,
     `author`                    varchar(64)           DEFAULT NULL COMMENT '作者',

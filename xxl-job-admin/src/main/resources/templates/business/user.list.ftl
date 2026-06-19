@@ -108,7 +108,7 @@
 
 							<hr>
 							<div class="form-group">
-								<div class="col-sm-offset-3 col-sm-6">
+								<div class="col-sm-offset-4 col-sm-4">
 									<button type="submit" class="btn btn-primary"  >${I18n.system_save}</button>
 									<button type="button" class="btn btn-default" data-dismiss="modal">${I18n.system_cancel}</button>
 								</div>
@@ -158,7 +158,7 @@
 
 							<hr>
 							<div class="form-group">
-								<div class="col-sm-offset-3 col-sm-6">
+								<div class="col-sm-offset-4 col-sm-4">
 									<button type="submit" class="btn btn-primary"  >${I18n.system_save}</button>
 									<button type="button" class="btn btn-default" data-dismiss="modal">${I18n.system_cancel}</button>
 									<input type="hidden" name="id" >
