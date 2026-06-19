@@ -6,6 +6,7 @@ import com.xxl.job.core.context.XxlJobHelper;
 import com.xxl.job.core.executor.XxlJobExecutor;
 import com.xxl.job.core.log.XxlJobFileAppender;
 import com.xxl.job.core.openapi.admin.AdminBiz;
+import com.xxl.job.core.openapi.admin.dto.CallbackData;
 import com.xxl.job.core.openapi.admin.dto.CallbackRequest;
 import com.xxl.tool.concurrent.CyclicThread;
 import com.xxl.tool.concurrent.MessageQueue;
@@ -38,7 +39,7 @@ public class TriggerCallbackThreadHelper {
     /**
      * callback message-queue
      */
-    private volatile MessageQueue<CallbackRequest> callbackMessageQueue;
+    private volatile MessageQueue<CallbackData> callbackMessageQueue;
 
     /**
      * retry callback-file thread
@@ -61,7 +62,7 @@ public class TriggerCallbackThreadHelper {
         /**
          * 1、callback message-queue
          */
-        callbackMessageQueue = new MessageQueue<CallbackRequest>(
+        callbackMessageQueue = new MessageQueue<CallbackData>(
                 "TriggerCallbackThreadHelper#callbackMessageQueue",
                 messages -> {
 
@@ -104,7 +105,7 @@ public class TriggerCallbackThreadHelper {
                         }
 
                         // parse callback param
-                        List<CallbackRequest> callbackParamList = GsonTool.fromJsonList(callbackData, CallbackRequest.class);
+                        List<CallbackData> callbackParamList = GsonTool.fromJsonList(callbackData, CallbackData.class);
                         FileTool.delete(callbackLogFile);
 
                         // retry callback
@@ -138,7 +139,7 @@ public class TriggerCallbackThreadHelper {
     /**
      * submit callback message
      */
-    public void pushCallBack(CallbackRequest callback){
+    public void pushCallBack(CallbackData callback){
         if (!callbackMessageQueue.produce(callback)) {
             doCallback(new ArrayList<>(Collections.singletonList(callback)), XxlJobExecutor.getInstance());
         }
@@ -151,38 +152,38 @@ public class TriggerCallbackThreadHelper {
     /**
      * do callback, will retry if error
      *
-     * @param callbackParamList callback param list
+     * @param callbackDataList callback data list
      */
-    private void doCallback(List<CallbackRequest> callbackParamList, final XxlJobExecutor xxlJobExecutor){
+    private void doCallback(List<CallbackData> callbackDataList, final XxlJobExecutor xxlJobExecutor){
         boolean callbackRet = false;
 
         // callback request, will retry + append-log if fail
         for (AdminBiz adminBiz: xxlJobExecutor.getAdminBizList()) {
             try {
-                Response<String> callbackResult = adminBiz.callback(callbackParamList);
+                Response<String> callbackResult = adminBiz.callback(new CallbackRequest(callbackDataList));
                 if (callbackResult!=null && callbackResult.isSuccess()) {
-                    appendCallbackResult(callbackParamList, "<br>----------- xxl-job job callback finish.");
+                    appendCallbackResult(callbackDataList, "<br>----------- xxl-job job callback finish.");
                     callbackRet = true;
                     break;
                 } else {
-                    appendCallbackResult(callbackParamList, "<br>----------- xxl-job job callback fail, callbackResult:" + callbackResult);
+                    appendCallbackResult(callbackDataList, "<br>----------- xxl-job job callback fail, callbackResult:" + callbackResult);
                 }
             } catch (Throwable e) {
-                appendCallbackResult(callbackParamList, "<br>----------- xxl-job job callback error, errorMsg:" + e.getMessage());
+                appendCallbackResult(callbackDataList, "<br>----------- xxl-job job callback error, errorMsg:" + e.getMessage());
             }
         }
 
         // write callback-file, will retry later
         if (!callbackRet) {
-            writeCallbackLog(callbackParamList);
+            writeCallbackLog(callbackDataList);
         }
     }
 
     /**
      * append callback result, to each joblog
      */
-    private void appendCallbackResult(List<CallbackRequest> callbackParamList, String logContent){
-        for (CallbackRequest callbackParam: callbackParamList) {
+    private void appendCallbackResult(List<CallbackData> callbackParamList, String logContent){
+        for (CallbackData callbackParam: callbackParamList) {
             String logFileName = XxlJobFileAppender.makeLogFileName(new Date(callbackParam.getLogDateTime()), callbackParam.getLogId());
             XxlJobContext.setXxlJobContext(new XxlJobContext(
                     -1,
@@ -213,7 +214,7 @@ public class TriggerCallbackThreadHelper {
      *
      * @param callbackParamList callback param list
      */
-    private void writeCallbackLog(List<CallbackRequest> callbackParamList) {
+    private void writeCallbackLog(List<CallbackData> callbackParamList) {
         // valid
         if (CollectionTool.isEmpty(callbackParamList)) {
             return;

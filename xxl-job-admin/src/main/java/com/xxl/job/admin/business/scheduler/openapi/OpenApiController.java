@@ -14,8 +14,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 /**
  * Created by xuxueli on 17/5/10.
  */
@@ -57,8 +55,8 @@ public class OpenApiController {
         try {
             switch (uri) {
                 case "callback": {
-                    List<CallbackRequest> callbackParamList = GsonTool.fromJson(requestBody, List.class, CallbackRequest.class);
-                    return adminBiz.callback(callbackParamList);
+                    CallbackRequest callbackParam = GsonTool.fromJson(requestBody, CallbackRequest.class);
+                    return adminBiz.callback(callbackParam);
                 }
                 case "registry": {
                     RegistryRequest registryParam = GsonTool.fromJson(requestBody, RegistryRequest.class);

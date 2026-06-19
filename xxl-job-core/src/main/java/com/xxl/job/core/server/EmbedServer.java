@@ -203,7 +203,7 @@ public class EmbedServer {
                         return executorBiz.idleBeat(idleBeatParam);
                     case "/run":
                         TriggerRequest triggerParam = GsonTool.fromJson(requestData, TriggerRequest.class);
-                        return executorBiz.run(triggerParam);
+                        return executorBiz.trigger(triggerParam);
                     case "/kill":
                         KillRequest killParam = GsonTool.fromJson(requestData, KillRequest.class);
                         return executorBiz.kill(killParam);

@@ -1,6 +1,6 @@
 package com.xxl.job.core.log;
 
-import com.xxl.job.core.openapi.executor.dto.LogResult;
+import com.xxl.job.core.openapi.executor.dto.LogData;
 import com.xxl.tool.core.DateTool;
 import com.xxl.tool.core.StringTool;
 import com.xxl.tool.io.FileTool;
@@ -123,14 +123,14 @@ public class XxlJobFileAppender {
 	 * @param fromLineNum	from line num
 	 * @return log content
 	 */
-	public static LogResult readLog(String logFileName, final int fromLineNum){
+	public static LogData readLog(String logFileName, final int fromLineNum){
 
 		// valid
 		if (StringTool.isBlank(logFileName)) {
-            return new LogResult(fromLineNum, 0, "readLog fail, logFile not found", true);
+            return new LogData(fromLineNum, 0, "readLog fail, logFile not found", true);
 		}
 		if (!FileTool.exists(logFileName)) {
-            return new LogResult(fromLineNum, 0, "readLog fail, logFile not exists", true);
+            return new LogData(fromLineNum, 0, "readLog fail, logFile not exists", true);
 		}
 
 		// read data
@@ -168,7 +168,7 @@ public class XxlJobFileAppender {
         }
 
         // result
-        return new LogResult(fromLineNum, toLineNum.get(), logContentBuilder.toString(), false);
+        return new LogData(fromLineNum, toLineNum.get(), logContentBuilder.toString(), false);
 	}
 
 }

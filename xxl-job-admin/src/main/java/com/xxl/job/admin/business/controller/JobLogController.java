@@ -16,7 +16,7 @@ import com.xxl.job.core.context.XxlJobContext;
 import com.xxl.job.core.openapi.executor.ExecutorBiz;
 import com.xxl.job.core.openapi.executor.dto.KillRequest;
 import com.xxl.job.core.openapi.executor.dto.LogRequest;
-import com.xxl.job.core.openapi.executor.dto.LogResult;
+import com.xxl.job.core.openapi.executor.dto.LogData;
 import com.xxl.tool.core.CollectionTool;
 import com.xxl.tool.core.DateTool;
 import com.xxl.tool.core.StringTool;
@@ -284,9 +284,9 @@ public class JobLogController {
 
 	@RequestMapping("/logDetailCat")
 	@ResponseBody
-	public Response<LogResult> logDetailCat(HttpServletRequest request,
-											@RequestParam("logId") long logId,
-											@RequestParam("fromLineNum") int fromLineNum){
+	public Response<LogData> logDetailCat(HttpServletRequest request,
+	                                      @RequestParam("logId") long logId,
+	                                      @RequestParam("fromLineNum") int fromLineNum){
 		try {
 			// valid
 			XxlJobLog jobLog = xxlJobLogMapper.load(logId);
@@ -299,7 +299,7 @@ public class JobLogController {
 
 			// log cat
 			ExecutorBiz executorBiz = XxlJobAdminBootstrap.getExecutorBiz(jobLog.getExecutorAddress());
-			Response<LogResult> logResult = executorBiz.log(new LogRequest(jobLog.getTriggerTime().getTime(), logId, fromLineNum));
+			Response<LogData> logResult = executorBiz.log(new LogRequest(logId, jobLog.getTriggerTime().getTime(), fromLineNum));
 
 			// is end
 			if (logResult.getData()!=null && logResult.getData().getFromLineNum() > logResult.getData().getToLineNum()) {

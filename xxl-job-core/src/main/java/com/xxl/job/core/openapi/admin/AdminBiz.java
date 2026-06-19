@@ -4,8 +4,6 @@ import com.xxl.job.core.openapi.admin.dto.CallbackRequest;
 import com.xxl.job.core.openapi.admin.dto.RegistryRequest;
 import com.xxl.tool.response.Response;
 
-import java.util.List;
-
 /**
  * @author xuxueli 2017-07-27 21:52:49
  */
@@ -17,10 +15,10 @@ public interface AdminBiz {
     /**
      * callback
      *
-     * @param callbackRequestList callback request list
+     * @param callbackRequest callback request
      * @return response
      */
-    public Response<String> callback(List<CallbackRequest> callbackRequestList);
+    public Response<String> callback(CallbackRequest callbackRequest);
 
 
     // ---------------------- registry ----------------------

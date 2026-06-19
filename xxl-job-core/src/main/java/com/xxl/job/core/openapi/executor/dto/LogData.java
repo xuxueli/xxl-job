@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * Created by xuxueli on 17/3/23.
  */
-public class LogResult implements Serializable {
+public class LogData implements Serializable {
     private static final long serialVersionUID = 42L;
 
     private int fromLineNum;
@@ -13,9 +13,9 @@ public class LogResult implements Serializable {
     private String logContent;
     private boolean isEnd;
 
-    public LogResult() {
+    public LogData() {
     }
-    public LogResult(int fromLineNum, int toLineNum, String logContent, boolean isEnd) {
+    public LogData(int fromLineNum, int toLineNum, String logContent, boolean isEnd) {
         this.fromLineNum = fromLineNum;
         this.toLineNum = toLineNum;
         this.logContent = logContent;

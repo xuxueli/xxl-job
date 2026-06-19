@@ -29,7 +29,7 @@ public interface ExecutorBiz {
      * @param triggerRequest triggerRequest
      * @return response
      */
-    public Response<String> run(TriggerRequest triggerRequest);
+    public Response<String> trigger(TriggerRequest triggerRequest);
 
     /**
      * kill
@@ -45,6 +45,6 @@ public interface ExecutorBiz {
      * @param logRequest logRequest
      * @return response
      */
-    public Response<LogResult> log(LogRequest logRequest);
+    public Response<LogData> log(LogRequest logRequest);
 
 }

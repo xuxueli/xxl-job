@@ -8,17 +8,17 @@ import java.io.Serializable;
 public class LogRequest implements Serializable {
     private static final long serialVersionUID = 42L;
 
+    private long logId;
+    private long logDateTime;
+    private int fromLineNum;
+
     public LogRequest() {
     }
-    public LogRequest(long logDateTime, long logId, int fromLineNum) {
-        this.logDateTime = logDateTime;
+    public LogRequest(long logId, long logDateTime, int fromLineNum) {
         this.logId = logId;
+        this.logDateTime = logDateTime;
         this.fromLineNum = fromLineNum;
     }
-
-    private long logDateTime;
-    private long logId;
-    private int fromLineNum;
 
     public long getLogDateTime() {
         return logDateTime;

@@ -46,7 +46,7 @@ public class ExecutorBizImpl implements ExecutorBiz {
     }
 
     @Override
-    public Response<String> run(TriggerRequest triggerRequest) {
+    public Response<String> trigger(TriggerRequest triggerRequest) {
 
         // load job info：jobHandler + jobThread + glueTypeEnum
         JobThread jobThread = XxlJobExecutor.getInstance().loadJobThread(triggerRequest.getJobId());
@@ -172,11 +172,11 @@ public class ExecutorBizImpl implements ExecutorBiz {
     }
 
     @Override
-    public Response<LogResult> log(LogRequest logRequest) {
+    public Response<LogData> log(LogRequest logRequest) {
         // log filename: logPath/yyyy-MM-dd/9999.log
         String logFileName = XxlJobFileAppender.makeLogFileName(new Date(logRequest.getLogDateTime()), logRequest.getLogId());
 
-        LogResult logResult = XxlJobFileAppender.readLog(logFileName, logRequest.getFromLineNum());
+        LogData logResult = XxlJobFileAppender.readLog(logFileName, logRequest.getFromLineNum());
         return Response.ofSuccess(logResult);
     }
 

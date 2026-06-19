@@ -61,7 +61,7 @@ public class ExecutorBizTest {
     }
 
     @Test
-    public void run(){
+    public void trigger(){
         ExecutorBiz executorBiz = buildClient();
 
         // trigger data
@@ -77,7 +77,7 @@ public class ExecutorBizTest {
         triggerParam.setLogDateTime(System.currentTimeMillis());
 
         // Act
-        final Response<String> retval = executorBiz.run(triggerParam);
+        final Response<String> retval = executorBiz.trigger(triggerParam);
 
         // Assert result
         Assertions.assertNotNull(retval);
@@ -104,12 +104,12 @@ public class ExecutorBizTest {
     public void log(){
         ExecutorBiz executorBiz = buildClient();
 
-        final long logDateTim = 0L;
         final long logId = 0;
+        final long logDateTim = 0L;
         final int fromLineNum = 0;
 
         // Act
-        final Response<LogResult> retval = executorBiz.log(new LogRequest(logDateTim, logId, fromLineNum));
+        final Response<LogData> retval = executorBiz.log(new LogRequest(logId, logDateTim, fromLineNum));
 
         // Assert result
         Assertions.assertNotNull(retval);

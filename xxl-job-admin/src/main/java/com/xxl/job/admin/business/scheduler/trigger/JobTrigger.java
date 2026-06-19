@@ -261,7 +261,7 @@ public class JobTrigger {
             ExecutorBiz executorBiz = XxlJobAdminBootstrap.getExecutorBiz(address);
 
             // invoke
-            Response<String> runResult = executorBiz.run(triggerParam);
+            Response<String> runResult = executorBiz.trigger(triggerParam);
 
             // build result
             StringBuffer runResultSB = new StringBuffer(I18nUtil.getString("jobconf_trigger_run") + "：");

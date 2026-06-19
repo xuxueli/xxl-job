@@ -7,8 +7,6 @@ import com.xxl.job.core.openapi.admin.dto.RegistryRequest;
 import com.xxl.tool.response.Response;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 /**
  * @author xuxueli 2017-07-27 21:54:20
  */
@@ -16,8 +14,8 @@ import java.util.List;
 public class AdminBizImpl implements AdminBiz {
 
     @Override
-    public Response<String> callback(List<CallbackRequest> callbackRequestList) {
-        return XxlJobAdminBootstrap.getInstance().getJobCompleteHelper().callback(callbackRequestList);
+    public Response<String> callback(CallbackRequest callbackRequest) {
+        return XxlJobAdminBootstrap.getInstance().getJobCompleteHelper().callback(callbackRequest.getCallbackList());
     }
 
     @Override
