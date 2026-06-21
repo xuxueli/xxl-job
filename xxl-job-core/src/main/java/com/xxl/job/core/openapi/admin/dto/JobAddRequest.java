@@ -9,7 +9,7 @@ public class JobAddRequest implements Serializable {
     private static final long serialVersionUID = 42L;
 
     private int jobGroup;
-    private String jobDesc;
+    private String name;
 
     private String author;
     private String alarmEmail;
@@ -40,12 +40,12 @@ public class JobAddRequest implements Serializable {
         this.jobGroup = jobGroup;
     }
 
-    public String getJobDesc() {
-        return jobDesc;
+    public String getName() {
+        return name;
     }
 
-    public void setJobDesc(String jobDesc) {
-        this.jobDesc = jobDesc;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getAuthor() {

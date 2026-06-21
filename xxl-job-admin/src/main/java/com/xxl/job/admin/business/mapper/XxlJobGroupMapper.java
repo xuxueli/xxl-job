@@ -29,11 +29,11 @@ public interface XxlJobGroupMapper {
     public List<XxlJobGroup> pageList(@Param("offset") int offset,
                                       @Param("pagesize") int pagesize,
                                       @Param("appname") String appname,
-                                      @Param("title") String title);
+                                      @Param("name") String name);
 
     public int pageListCount(@Param("offset") int offset,
                              @Param("pagesize") int pagesize,
                              @Param("appname") String appname,
-                             @Param("title") String title);
+                             @Param("name") String name);
 
 }

@@ -30,7 +30,7 @@
 							<span class="input-group-addon">${I18n.jobinfo_field_jobgroup}</span>
 							<select class="form-control" id="jobGroup"  >
 								<#list JobGroupList as group>
-									<option value="${group.id}" <#if jobGroup==group.id>selected</#if> >${group.title}</option>
+									<option value="${group.id}" <#if jobGroup==group.id>selected</#if> >${group.name}</option>
 								</#list>
 							</select>
 						</div>
@@ -42,7 +42,7 @@
 								<option value="0" >${I18n.system_all}</option>
 								<#if jobInfoList?size gt 0>
 									<#list jobInfoList as jobItem>
-										<option value="${jobItem.id}" >${jobItem.jobDesc}</option>
+										<option value="${jobItem.id}" >${jobItem.name}</option>
 									</#list>
 								</#if>
 							</select>
@@ -284,9 +284,9 @@
 					formatter: function(value, row, index) {
                         // build
                         let jobShow = '【'+ row.jobId +'】';
-                        let jobDesc = $("#jobId").find("option[value='"+ row.jobId +"']").text();
-                        if (jobDesc) {
-                            jobShow += jobDesc;
+                        let name = $("#jobId").find("option[value='"+ row.jobId +"']").text();
+                        if (name) {
+                            jobShow += name;
                         }
                         if (jobShow.length > 10) {
                             jobShow = jobShow.substr(0, 10) + '...';

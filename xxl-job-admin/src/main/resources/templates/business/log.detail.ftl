@@ -28,7 +28,7 @@
 				<div class="collapse navbar-collapse pull-left" id="navbar-collapse">
 					<ul class="nav navbar-nav">
 						<li class="active" >
-							<a href="javascript:;">${I18n.jobinfo_job}：${jobInfo.jobDesc}</a>
+							<a href="javascript:;">${I18n.jobinfo_job}：${jobInfo.name}</a>
 						</li>
 					</ul>
 				</div>

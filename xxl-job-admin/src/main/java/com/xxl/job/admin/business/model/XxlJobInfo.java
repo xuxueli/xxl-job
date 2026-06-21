@@ -12,7 +12,7 @@ public class XxlJobInfo {
 	private int id;				// 主键ID
 	
 	private int jobGroup;		// 执行器主键ID
-	private String jobDesc;
+	private String name;
 
 	private String author;		// 负责人
 	private String alarmEmail;	// 报警邮件
@@ -59,12 +59,12 @@ public class XxlJobInfo {
 		this.jobGroup = jobGroup;
 	}
 
-	public String getJobDesc() {
-		return jobDesc;
+	public String getName() {
+		return name;
 	}
 
-	public void setJobDesc(String jobDesc) {
-		this.jobDesc = jobDesc;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public String getAuthor() {

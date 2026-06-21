@@ -46,7 +46,7 @@ public class AdminJobBizTest {
 
         JobAddRequest request = new JobAddRequest();
         request.setJobGroup(1);
-        request.setJobDesc("openapi test job");
+        request.setName("openapi test job");
         request.setAuthor("openapi");
         request.setScheduleType("CRON");
         request.setScheduleConf("0/20 * * * * ?");
@@ -72,7 +72,7 @@ public class AdminJobBizTest {
         // update the job created by jobAdd (id should exist in test env)
         JobUpdateRequest request = new JobUpdateRequest();
         request.setId(jobId);
-        request.setJobDesc("openapi test job update");
+        request.setName("openapi test job update");
         request.setAuthor("openapi");
         request.setScheduleType("CRON");
         request.setScheduleConf("0/10 * * * * ?");

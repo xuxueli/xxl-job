@@ -53,9 +53,9 @@ public class EmailJobAlarm implements JobAlarm {
             String personal = I18nUtil.getString("admin_name_full");
             String title = I18nUtil.getString("jobconf_monitor");
             String content = MessageFormat.format(loadEmailJobAlarmTemplate(),
-                    group!=null?group.getTitle():"null",
+                    group!=null?group.getName():"null",
                     info.getId(),
-                    info.getJobDesc(),
+                    info.getName(),
                     alarmContent);
 
             Set<String> emailSet = new HashSet<String>(Arrays.asList(info.getAlarmEmail().split(",")));

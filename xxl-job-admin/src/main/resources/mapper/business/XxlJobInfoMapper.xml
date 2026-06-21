@@ -7,7 +7,7 @@
 		<result column="id" property="id" />
 
 		<result column="job_group" property="jobGroup" />
-	    <result column="job_desc" property="jobDesc" />
+	    <result column="name" property="name" />
 
 	    <result column="add_time" property="addTime" />
 	    <result column="update_time" property="updateTime" />
@@ -41,7 +41,7 @@
 	<sql id="Base_Column_List">
 		t.id,
 		t.job_group,
-		t.job_desc,
+		t.name,
 		t.add_time,
 		t.update_time,
 		t.author,
@@ -75,8 +75,8 @@
             <if test="triggerStatus gte 0">
                 AND t.trigger_status = #{triggerStatus}
             </if>
-			<if test="jobDesc != null and jobDesc != ''">
-				AND t.job_desc like CONCAT(CONCAT('%', #{jobDesc}), '%')
+			<if test="name != null and name != ''">
+				AND t.name like CONCAT(CONCAT('%', #{name}), '%')
 			</if>
 			<if test="executorHandler != null and executorHandler != ''">
 				AND t.executor_handler like CONCAT(CONCAT('%', #{executorHandler}), '%')
@@ -99,8 +99,8 @@
             <if test="triggerStatus gte 0">
                 AND t.trigger_status = #{triggerStatus}
             </if>
-			<if test="jobDesc != null and jobDesc != ''">
-				AND t.job_desc like CONCAT(CONCAT('%', #{jobDesc}), '%')
+			<if test="name != null and name != ''">
+				AND t.name like CONCAT(CONCAT('%', #{name}), '%')
 			</if>
 			<if test="executorHandler != null and executorHandler != ''">
 				AND t.executor_handler like CONCAT(CONCAT('%', #{executorHandler}), '%')
@@ -114,7 +114,7 @@
 	<insert id="save" parameterType="com.xxl.job.admin.business.model.XxlJobInfo" useGeneratedKeys="true" keyProperty="id" >
 		INSERT INTO xxl_job_info (
 			job_group,
-			job_desc,
+			name,
 			add_time,
 			update_time,
 			author,
@@ -138,7 +138,7 @@
 			trigger_next_time
 		) VALUES (
 			#{jobGroup},
-			#{jobDesc},
+			#{name},
 			#{addTime},
 			#{updateTime},
 			#{author},
@@ -177,7 +177,7 @@
 		UPDATE xxl_job_info
 		SET
 			job_group = #{jobGroup},
-			job_desc = #{jobDesc},
+			name = #{name},
 			update_time = #{updateTime},
 			author = #{author},
 			alarm_email = #{alarmEmail},

@@ -56,7 +56,7 @@ public class AdminJobBizImpl implements AdminJobBiz {
         // convert JobAddRequest to XxlJobInfo
         XxlJobInfo jobInfo = new XxlJobInfo();
         jobInfo.setJobGroup(request.getJobGroup());
-        jobInfo.setJobDesc(request.getJobDesc());
+        jobInfo.setName(request.getName());
         jobInfo.setAuthor(request.getAuthor());
         jobInfo.setAlarmEmail(request.getAlarmEmail());
         jobInfo.setScheduleType(request.getScheduleType());
@@ -89,7 +89,7 @@ public class AdminJobBizImpl implements AdminJobBiz {
         XxlJobInfo jobInfo = new XxlJobInfo();
         jobInfo.setId(request.getId());
         jobInfo.setJobGroup(0);
-        jobInfo.setJobDesc(request.getJobDesc());
+        jobInfo.setName(request.getName());
         jobInfo.setAuthor(request.getAuthor());
         jobInfo.setAlarmEmail(request.getAlarmEmail());
         jobInfo.setScheduleType(request.getScheduleType());

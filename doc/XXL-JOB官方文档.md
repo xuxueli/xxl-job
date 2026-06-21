@@ -2173,7 +2173,7 @@ Header：
 请求数据格式如下，放置在 RequestBody 中，JSON格式：
     {
         "jobGroup":1,                                           // 执行器主键ID（必填）
-        "jobDesc":"测试任务",                                     // 任务描述（必填）
+        "name":"测试任务",                                       // 任务描述（必填）
         "author":"admin",                                       // 负责人（必填）
         "alarmEmail":"",                                        // 报警邮件（选填）
         "scheduleType":"CRON",                                  // 调度类型：NONE、CRON、FIX_RATE（必填）
@@ -2213,7 +2213,7 @@ Header：
 请求数据格式如下，放置在 RequestBody 中，JSON格式：
     {
         "id":1,                                                 // 任务ID（必填）
-        "jobDesc":"测试任务",                                     // 任务描述（必填）
+        "name":"测试任务",                                       // 任务描述（必填）
         "author":"admin",                                       // 负责人（必填）
         "alarmEmail":"",                                        // 报警邮件（选填）
         "scheduleType":"CRON",                                  // 调度类型：NONE、CRON、FIX_RATE（必填）
@@ -3097,12 +3097,13 @@ alter table xxl_job_log
 - 1、【新增】GLUE模式开关：新增GLUE模式开关（xxl.job.executor.glueenabled），支持执行器维度设置是否启用GLUE模式；
 - 2、【新增】AccessToken升级：支持执行期维度隔离设置，废弃旧的全局AccessToken，提升系统安全性；
 （注意：因为AccessToken调整为执行器维度，OpenAPI通讯协议部分发生适配变化，调度中心与执行器需要一并升级至v3.5.0体验）
-- 3、【新增】AccessToken管理：支持线上化动态管理，执行期管理UI界面可操作，提升操作效率及体验；
-- 4、【新增】调度中心OpenAPI增强：提供任务管理能力，包括任务新建/更新/删除、启动/停止、任务触发等；
+- 3、【新增】AccessToken在线管理：支持线上化动态管理，执行期管理UI界面可操作，提升操作效率及体验；
+- 4、【新增】OpenAPI能力增强：提供任务管理能力，包括任务新建/更新/删除、启动/停止、任务触发等；
   （注意：任务管理OpenAPI及操作代码示例，详见官方文档）
-- 5、【TODO】配置线上化：发送邮箱配置线上管理、线程池配置调整；
-- 6、【TODO】任务告警：拆分“告警类型、告警配置”属性，支持Webhook、邮箱多种方式；
-- 7、【TODO】任务说明：拆分“任务名称、任务备注”属性，前者用于任务检索，后者用于补充任务描述。
+- 5、【新增】数据模型标准化，通用字段命名统一，建表SQL规范性完善；
+- 6、【TODO】配置线上化：发送邮箱配置线上管理、线程池配置调整；
+- 7、【TODO】任务告警：拆分“告警类型、告警配置”属性，支持Webhook、邮箱多种方式；
+- 8、【TODO】任务说明：拆分“任务名称、任务备注”属性，前者用于任务检索，后者用于补充任务描述。
 
 **备注：**     
 数据库升级脚本：
@@ -3115,10 +3116,12 @@ ADD COLUMN `access_token` varchar(255) DEFAULT NULL COMMENT '执行器AccessToke
 ALTER TABLE `xxl_job_group` 
 ADD UNIQUE KEY `i_app_name` (`app_name`) USING BTREE;
 
--- 3. 将指定 AppName 的 access_token 更新为目标值；
-UPDATE `xxl_job_group`
-SET `access_token` = '<新Token值>'
-WHERE `app_name` = '<目标AppName>';
+-- 3. 将指定 AppName 的 access_token 更新为目标值；默认值为 'default_token'，可自行修改;
+UPDATE `xxl_job_group` SET `access_token` = '<新Token值>' WHERE `app_name` = '<目标AppName>';
+
+-- 4. 执行器与任务表 name 字段标准化调整；
+ALTER TABLE `xxl_job_group` CHANGE `title` `name` VARCHAR(64) NOT NULL COMMENT '执行器名称';                                                                                                                            
+ALTER TABLE `xxl_job_info` CHANGE `job_desc` `name` VARCHAR(255) NOT NULL COMMENT '任务描述'; 
 ```
 
 

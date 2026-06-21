@@ -22,7 +22,7 @@ public class XxlJobGroupMapperTest {
 
         XxlJobGroup group = new XxlJobGroup();
         group.setAppname("setAppName");
-        group.setTitle("setTitle");
+        group.setName("setTitle");
         group.setAddressType(0);
         group.setAddressList("setAddressList");
         group.setUpdateTime(new Date());
@@ -31,7 +31,7 @@ public class XxlJobGroupMapperTest {
 
         XxlJobGroup group2 = xxlJobGroupMapper.load(group.getId());
         group2.setAppname("setAppName2");
-        group2.setTitle("setTitle2");
+        group2.setName("setTitle2");
         group2.setAddressType(2);
         group2.setAddressList("setAddressList2");
         group2.setUpdateTime(new Date());

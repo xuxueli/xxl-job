@@ -51,11 +51,11 @@ public class XxlJobServiceImpl implements XxlJobService {
 	private XxlJobLogReportMapper xxlJobLogReportMapper;
 	
 	@Override
-	public Response<PageModel<XxlJobInfo>> pageList(int offset, int pagesize, int jobGroup, int triggerStatus, String jobDesc, String executorHandler, String author) {
+	public Response<PageModel<XxlJobInfo>> pageList(int offset, int pagesize, int jobGroup, int triggerStatus, String name, String executorHandler, String author) {
 
 		// page list
-		List<XxlJobInfo> list = xxlJobInfoMapper.pageList(offset, pagesize, jobGroup, triggerStatus, jobDesc, executorHandler, author);
-		int list_count = xxlJobInfoMapper.pageListCount(offset, pagesize, jobGroup, triggerStatus, jobDesc, executorHandler, author);
+		List<XxlJobInfo> list = xxlJobInfoMapper.pageList(offset, pagesize, jobGroup, triggerStatus, name, executorHandler, author);
+		int list_count = xxlJobInfoMapper.pageListCount(offset, pagesize, jobGroup, triggerStatus, name, executorHandler, author);
 
 		// package result
 		PageModel<XxlJobInfo> pageModel = new PageModel<>();
@@ -69,7 +69,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 	public Response<String> add(XxlJobInfo jobInfo, LoginInfo loginInfo) {
 
 		// valid base
-		if (StringTool.isBlank(jobInfo.getJobDesc())) {
+		if (StringTool.isBlank(jobInfo.getName())) {
 			return Response.ofFail ( (I18nUtil.getString("system_please_input")+I18nUtil.getString("jobinfo_field_jobdesc")) );
 		}
 		if (StringTool.isBlank(jobInfo.getAuthor())) {
@@ -182,7 +182,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 	public Response<String> update(XxlJobInfo jobInfo, LoginInfo loginInfo) {
 
 		// valid base
-		if (StringTool.isBlank(jobInfo.getJobDesc())) {
+		if (StringTool.isBlank(jobInfo.getName())) {
 			return Response.ofFail ( (I18nUtil.getString("system_please_input")+I18nUtil.getString("jobinfo_field_jobdesc")) );
 		}
 		if (StringTool.isBlank(jobInfo.getAuthor())) {
@@ -296,7 +296,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 		if (jobInfo.getJobGroup() > 0) {
 			exists_jobInfo.setJobGroup(jobInfo.getJobGroup());
 		}
-		exists_jobInfo.setJobDesc(jobInfo.getJobDesc());
+		exists_jobInfo.setName(jobInfo.getName());
 		exists_jobInfo.setAuthor(jobInfo.getAuthor());
 		exists_jobInfo.setAlarmEmail(jobInfo.getAlarmEmail());
 		exists_jobInfo.setScheduleType(jobInfo.getScheduleType());

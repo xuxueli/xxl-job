@@ -53,11 +53,11 @@ public class JobGroupController {
 	public Response<PageModel<XxlJobGroup>> pageList(@RequestParam(required = false, defaultValue = "0") int offset,
 													 @RequestParam(required = false, defaultValue = "10") int pagesize,
 													 String appname,
-													 String title) {
+													 String name) {
 
 		// page query
-		List<XxlJobGroup> list = xxlJobGroupMapper.pageList(offset, pagesize, appname, title);
-		int list_count = xxlJobGroupMapper.pageListCount(offset, pagesize, appname, title);
+		List<XxlJobGroup> list = xxlJobGroupMapper.pageList(offset, pagesize, appname, name);
+		int list_count = xxlJobGroupMapper.pageListCount(offset, pagesize, appname, name);
 
 		// package result
 		PageModel<XxlJobGroup> pageModel = new PageModel<>();
@@ -84,10 +84,10 @@ public class JobGroupController {
 		}
 
 		// valid title
-		if (StringTool.isBlank(xxlJobGroup.getTitle())) {
+		if (StringTool.isBlank(xxlJobGroup.getName())) {
 			return Response.ofFail((I18nUtil.getString("system_please_input") + I18nUtil.getString("jobgroup_field_title")) );
 		}
-		if (XssUtil.hasXss(xxlJobGroup.getTitle())) {
+		if (XssUtil.hasXss(xxlJobGroup.getName())) {
 			return Response.ofFail(I18nUtil.getString("jobgroup_field_title") + I18nUtil.getString("system_invalid"));
 		}
 		if (xxlJobGroup.getAddressType() != 0) {
@@ -135,10 +135,10 @@ public class JobGroupController {
 		}
 
 		// valid title
-		if (StringTool.isBlank(xxlJobGroup.getTitle())) {
+		if (StringTool.isBlank(xxlJobGroup.getName())) {
 			return Response.ofFail((I18nUtil.getString("system_please_input") + I18nUtil.getString("jobgroup_field_title")) );
 		}
-		if (XssUtil.hasXss(xxlJobGroup.getTitle())) {
+		if (XssUtil.hasXss(xxlJobGroup.getName())) {
 			return Response.ofFail(I18nUtil.getString("jobgroup_field_title") + I18nUtil.getString("system_invalid"));
 		}
 

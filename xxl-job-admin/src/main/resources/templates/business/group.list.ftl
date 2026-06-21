@@ -31,7 +31,7 @@
 					<div class="col-xs-3">
 						<div class="input-group">
 							<span class="input-group-addon">${I18n.jobgroup_field_title}</span>
-							<input type="text" class="form-control" id="title" placeholder="${I18n.jobgroup_field_title}" >
+							<input type="text" class="form-control" id="name" placeholder="${I18n.jobgroup_field_title}" >
 						</div>
 					</div>
 
@@ -99,7 +99,7 @@
 							</div>
 							<div class="form-group">
 								<label for="lastname" class="col-sm-2 control-label">${I18n.jobgroup_field_title}<font color="red">*</font></label>
-								<div class="col-sm-10"><input type="text" class="form-control" name="title" placeholder="${I18n.system_please_input}${I18n.jobgroup_field_title}" maxlength="64" ></div>
+								<div class="col-sm-10"><input type="text" class="form-control" name="name" placeholder="${I18n.system_please_input}${I18n.jobgroup_field_title}" maxlength="64" ></div>
 							</div>
 							<div class="form-group">
 								<label for="lastname" class="col-sm-2 control-label">${I18n.jobgroup_field_addressType}<font color="red">*</font></label>
@@ -147,7 +147,7 @@
 							</div>
 							<div class="form-group">
 								<label for="lastname" class="col-sm-2 control-label">${I18n.jobgroup_field_title}<font color="red">*</font></label>
-								<div class="col-sm-10"><input type="text" class="form-control" name="title" placeholder="${I18n.system_please_input}${I18n.jobgroup_field_title}" maxlength="64" ></div>
+								<div class="col-sm-10"><input type="text" class="form-control" name="name" placeholder="${I18n.system_please_input}${I18n.jobgroup_field_title}" maxlength="64" ></div>
 							</div>
 							<div class="form-group">
 								<label for="lastname" class="col-sm-2 control-label">${I18n.jobgroup_field_addressType}<font color="red">*</font></label>
@@ -205,7 +205,7 @@
 			queryParams: function (params) {
 				var obj = {};
 				obj.appname = $('#appname').val();
-				obj.title = $('#title').val();
+				obj.name = $('#name').val();
 				obj.offset = params.offset;
 				obj.pagesize = params.limit;
 				return obj;
@@ -226,7 +226,7 @@
 					align: 'left'
 				},{
 					title: I18n.jobgroup_field_title,
-					field: 'title',
+					field: 'name',
 					width: '25',
 					widthUnit: '%'
 				},{
@@ -310,7 +310,7 @@
 					rangelength:[4,64],
 					appnameValid : true
 				},
-				title : {
+				name : {
 					required : true,
 					rangelength:[4, 64]
 				},
@@ -325,7 +325,7 @@
 					required : I18n.system_please_input+"AppName",
 					rangelength: I18n.system_length_limit + ' [4~64]'
 				},
-				title : {
+				name : {
 					required : I18n.system_please_input + I18n.jobgroup_field_title ,
 					rangelength: I18n.system_length_limit + ' [4~12]' ,
 				},
@@ -366,7 +366,7 @@
 
 				$("#updateModal .form input[name='id']").val( row.id );
 				$("#updateModal .form input[name='appname']").val( row.appname );
-				$("#updateModal .form input[name='title']").val( row.title );
+				$("#updateModal .form input[name='name']").val( row.name );
 
 				// 注册方式
 				$("#updateModal .form input[name='addressType']").removeAttr('checked');
@@ -378,7 +378,7 @@
 
 			},
 			rules : {
-				title : {
+				name : {
 					required : true,
 					rangelength:[4, 64]
 				},
@@ -389,7 +389,7 @@
 				}
 			},
 			messages : {
-				title : {
+				name : {
 					required : I18n.system_please_input + I18n.jobgroup_field_title ,
 					rangelength: I18n.system_length_limit + ' [4~12]'
 				},

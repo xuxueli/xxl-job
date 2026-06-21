@@ -18,7 +18,7 @@ public interface XxlJobService {
 	/**
 	 * page list
 	 */
-	public Response<PageModel<XxlJobInfo>> pageList(int offset, int pagesize, int jobGroup, int triggerStatus, String jobDesc, String executorHandler, String author);
+	public Response<PageModel<XxlJobInfo>> pageList(int offset, int pagesize, int jobGroup, int triggerStatus, String name, String executorHandler, String author);
 
 	/**
 	 * add job

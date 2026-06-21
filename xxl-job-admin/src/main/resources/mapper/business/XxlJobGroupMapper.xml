@@ -6,7 +6,7 @@
 	<resultMap id="XxlJobGroup" type="com.xxl.job.admin.business.model.XxlJobGroup" >
 		<result column="id" property="id" />
 	    <result column="app_name" property="appname" />
-	    <result column="title" property="title" />
+	    <result column="name" property="name" />
 		<result column="address_type" property="addressType" />
 		<result column="address_list" property="addressList" />
 		<result column="access_token" property="accessToken" />
@@ -16,7 +16,7 @@
 	<sql id="Base_Column_List">
 		t.id,
 		t.app_name,
-		t.title,
+		t.name,
 		t.address_type,
 		t.address_list,
 		t.access_token,
@@ -26,24 +26,24 @@
 	<select id="findAll" resultMap="XxlJobGroup">
 		SELECT <include refid="Base_Column_List" />
 		FROM xxl_job_group AS t
-		ORDER BY t.app_name, t.title, t.id ASC
+		ORDER BY t.app_name, t.name, t.id ASC
 	</select>
 
 	<select id="findByAddressType" parameterType="java.lang.Integer" resultMap="XxlJobGroup">
 		SELECT <include refid="Base_Column_List" />
 		FROM xxl_job_group AS t
 		WHERE t.address_type = #{addressType}
-		ORDER BY t.app_name, t.title, t.id ASC
+		ORDER BY t.app_name, t.name, t.id ASC
 	</select>
 
 	<insert id="save" parameterType="com.xxl.job.admin.business.model.XxlJobGroup" useGeneratedKeys="true" keyProperty="id" >
-		INSERT INTO xxl_job_group ( `app_name`, `title`, `address_type`, `address_list`, `access_token`, `update_time`)
-		values ( #{appname}, #{title}, #{addressType}, #{addressList}, #{accessToken}, #{updateTime} );
+		INSERT INTO xxl_job_group ( `app_name`, `name`, `address_type`, `address_list`, `access_token`, `update_time`)
+		values ( #{appname}, #{name}, #{addressType}, #{addressList}, #{accessToken}, #{updateTime} );
 	</insert>
 
 	<update id="update" parameterType="com.xxl.job.admin.business.model.XxlJobGroup" >
 		UPDATE xxl_job_group
-		SET `title` = #{title},
+		SET `name` = #{name},
 			`address_type` = #{addressType},
 			`address_list` = #{addressList},
 			`access_token` = #{accessToken},
@@ -75,11 +75,11 @@
 			<if test="appname != null and appname != ''">
 				AND t.app_name like CONCAT(CONCAT('%', #{appname}), '%')
 			</if>
-			<if test="title != null and title != ''">
-				AND t.title like CONCAT(CONCAT('%', #{title}), '%')
+			<if test="name != null and name != ''">
+				AND t.name like CONCAT(CONCAT('%', #{name}), '%')
 			</if>
 		</trim>
-		ORDER BY t.app_name, t.title, t.id ASC
+		ORDER BY t.app_name, t.name, t.id ASC
 		LIMIT #{offset}, #{pagesize}
 	</select>
 
@@ -90,8 +90,8 @@
 			<if test="appname != null and appname != ''">
 				AND t.app_name like CONCAT(CONCAT('%', #{appname}), '%')
 			</if>
-			<if test="title != null and title != ''">
-				AND t.title like CONCAT(CONCAT('%', #{title}), '%')
+			<if test="name != null and name != ''">
+				AND t.name like CONCAT(CONCAT('%', #{name}), '%')
 			</if>
 		</trim>
 	</select>

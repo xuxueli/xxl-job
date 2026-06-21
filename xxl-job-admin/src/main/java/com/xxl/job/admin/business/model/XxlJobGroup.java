@@ -14,7 +14,7 @@ public class XxlJobGroup {
 
     private int id;
     private String appname;
-    private String title;
+    private String name;
 
     private int addressType;        // 执行器地址类型：0=自动注册、1=手动录入
     private String addressList;     // 执行器地址列表，多地址逗号分隔(手动录入)
@@ -48,12 +48,12 @@ public class XxlJobGroup {
         this.appname = appname;
     }
 
-    public String getTitle() {
-        return title;
+    public String getName() {
+        return name;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public int getAddressType() {
@@ -93,7 +93,7 @@ public class XxlJobGroup {
         return "XxlJobGroup{" +
                 "id=" + id +
                 ", appname='" + appname + '\'' +
-                ", title='" + title + '\'' +
+                ", name='" + name + '\'' +
                 ", addressType=" + addressType +
                 ", addressList='" + addressList + '\'' +
                 ", accessToken='" + accessToken + '\'' +

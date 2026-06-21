@@ -28,7 +28,7 @@
 							<span class="input-group-addon">${I18n.jobinfo_field_jobgroup}</span>
 							<select class="form-control" id="jobGroup" >
 								<#list JobGroupList as group>
-									<option value="${group.id}" <#if jobGroup==group.id>selected</#if> >${group.title}</option>
+									<option value="${group.id}" <#if jobGroup==group.id>selected</#if> >${group.name}</option>
 								</#list>
 							</select>
 						</div>
@@ -44,7 +44,7 @@
 					</div>
 					<div class="col-xs-2">
 						<div class="input-group">
-							<input type="text" class="form-control" id="jobDesc" placeholder="${I18n.system_please_input}${I18n.jobinfo_field_jobdesc}" >
+							<input type="text" class="form-control" id="name" placeholder="${I18n.system_please_input}${I18n.jobinfo_field_jobdesc}" >
 						</div>
 					</div>
 					<div class="col-xs-2">
@@ -114,13 +114,13 @@
 								<div class="col-sm-4">
 									<select class="form-control" name="jobGroup" >
 										<#list JobGroupList as group>
-											<option value="${group.id}" <#if jobGroup==group.id>selected</#if> >${group.title}</option>
+											<option value="${group.id}" <#if jobGroup==group.id>selected</#if> >${group.name}</option>
 										</#list>
 									</select>
 								</div>
 
 								<label for="lastname" class="col-sm-2 control-label">${I18n.jobinfo_field_jobdesc}<font color="red">*</font></label>
-								<div class="col-sm-4"><input type="text" class="form-control" name="jobDesc" placeholder="${I18n.system_please_input}${I18n.jobinfo_field_jobdesc}" maxlength="50" ></div>
+								<div class="col-sm-4"><input type="text" class="form-control" name="name" placeholder="${I18n.system_please_input}${I18n.jobinfo_field_jobdesc}" maxlength="50" ></div>
 							</div>
 							<div class="form-group">
 								<label for="lastname" class="col-sm-2 control-label">${I18n.jobinfo_field_author}<font color="red">*</font></label>
@@ -374,13 +374,13 @@ exit 0
 								<div class="col-sm-4">
 									<select class="form-control" name="jobGroup" >
 										<#list JobGroupList as group>
-											<option value="${group.id}" >${group.title}</option>
+											<option value="${group.id}" >${group.name}</option>
 										</#list>
 									</select>
 								</div>
 
 								<label for="lastname" class="col-sm-2 control-label">${I18n.jobinfo_field_jobdesc}<font color="red">*</font></label>
-								<div class="col-sm-4"><input type="text" class="form-control" name="jobDesc" placeholder="${I18n.system_please_input}${I18n.jobinfo_field_jobdesc}" maxlength="50" ></div>
+								<div class="col-sm-4"><input type="text" class="form-control" name="name" placeholder="${I18n.system_please_input}${I18n.jobinfo_field_jobdesc}" maxlength="50" ></div>
 							</div>
 							<div class="form-group">
 								<label for="lastname" class="col-sm-2 control-label">${I18n.jobinfo_field_author}<font color="red">*</font></label>
@@ -592,7 +592,7 @@ exit 0
 				var obj = {};
 				obj.jobGroup = $('#jobGroup').val();
 				obj.triggerStatus = $('#triggerStatus').val();
-				obj.jobDesc = $('#jobDesc').val();
+				obj.name = $('#name').val();
 				obj.executorHandler = $('#executorHandler').val();
 				obj.author = $('#author').val();
 				obj.offset = params.offset;
@@ -625,7 +625,7 @@ exit 0
 				}
 				,{
 					title: I18n.jobinfo_field_jobdesc,
-					field: 'jobDesc',
+					field: 'name',
 					width: '25',
 					widthUnit: '%',
 					align: 'left',
@@ -1054,7 +1054,7 @@ exit 0
 		$.adminTable.initAdd( {
 			url: base_url + "/jobinfo/insert",
 			rules : {
-				jobDesc : {
+				name : {
 					required : true,
 					maxlength: 50
 				},
@@ -1063,7 +1063,7 @@ exit 0
 				}
 			},
 			messages : {
-				jobDesc : {
+				name : {
 					required : I18n.system_please_input + I18n.jobinfo_field_jobdesc
 				},
 				author : {
@@ -1163,7 +1163,7 @@ exit 0
 		$.adminTable.initUpdate( {
 			url: base_url + "/jobinfo/update",
 			rules : {
-				jobDesc : {
+				name : {
 					required : true,
 					maxlength: 50
 				},
@@ -1172,7 +1172,7 @@ exit 0
 				}
 			},
 			messages : {
-				jobDesc : {
+				name : {
 					required : I18n.system_please_input + I18n.jobinfo_field_jobdesc
 				},
 				author : {
@@ -1184,7 +1184,7 @@ exit 0
 				// fill base
 				$("#updateModal .form input[name='id']").val( row.id );
 				$('#updateModal .form select[name=jobGroup] option[value='+ row.jobGroup +']').prop('selected', true);
-				$("#updateModal .form input[name='jobDesc']").val( row.jobDesc );
+				$("#updateModal .form input[name='name']").val( row.name );
 				$("#updateModal .form input[name='author']").val( row.author );
 				$("#updateModal .form input[name='alarmEmail']").val( row.alarmEmail );
 
@@ -1275,7 +1275,7 @@ exit 0
 
 			// fill base
 			$('#addModal .form select[name=jobGroup] option[value='+ row.jobGroup +']').prop('selected', true);
-			$("#addModal .form input[name='jobDesc']").val( row.jobDesc );
+			$("#addModal .form input[name='name']").val( row.name );
 			$("#addModal .form input[name='author']").val( row.author );
 			$("#addModal .form input[name='alarmEmail']").val( row.alarmEmail );
 

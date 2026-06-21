@@ -38,7 +38,7 @@ public class XxlJobInfoMapperTest {
 	public void save_load(){
 		XxlJobInfo info = new XxlJobInfo();
 		info.setJobGroup(1);
-		info.setJobDesc("desc");
+		info.setName("desc");
 		info.setAuthor("setAuthor");
 		info.setAlarmEmail("setAlarmEmail");
 		info.setScheduleType(ScheduleTypeEnum.FIX_RATE.name());
@@ -63,7 +63,7 @@ public class XxlJobInfoMapperTest {
 		info.setScheduleType(ScheduleTypeEnum.FIX_RATE.name());
 		info.setScheduleConf(String.valueOf(44));
 		info.setMisfireStrategy(MisfireStrategyEnum.FIRE_ONCE_NOW.name());
-		info2.setJobDesc("desc2");
+		info2.setName("desc2");
 		info2.setAuthor("setAuthor2");
 		info2.setAlarmEmail("setAlarmEmail2");
 		info2.setExecutorRouteStrategy("setExecutorRouteStrategy2");
