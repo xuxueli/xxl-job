@@ -1,4 +1,4 @@
-package com.xxl.job.admin.business.service.impl;
+package com.xxl.job.admin.business.scheduler.openapi.impl;
 
 import com.xxl.job.admin.business.model.XxlJobInfo;
 import com.xxl.job.admin.business.service.XxlJobService;
@@ -10,7 +10,6 @@ import com.xxl.job.core.openapi.admin.dto.JobTriggerRequest;
 import com.xxl.job.core.openapi.admin.dto.JobUpdateRequest;
 import com.xxl.sso.core.model.LoginInfo;
 import com.xxl.tool.concurrent.TokenBucket;
-import com.xxl.tool.json.GsonTool;
 import com.xxl.tool.response.Response;
 import com.xxl.tool.response.ResponseCode;
 import jakarta.annotation.Resource;

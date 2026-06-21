@@ -1,4 +1,4 @@
-package com.xxl.job.admin.business.service.impl;
+package com.xxl.job.admin.business.scheduler.openapi.impl;
 
 import com.xxl.job.admin.business.scheduler.config.XxlJobAdminBootstrap;
 import com.xxl.job.core.openapi.admin.AdminBiz;

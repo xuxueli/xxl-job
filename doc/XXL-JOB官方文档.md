@@ -1914,19 +1914,22 @@ XXL-JOB 目标是一种跨平台、跨语言的任务调度规范和协议。
 
 针对非Java应用，可借助 XXL-JOB 的标准 OpenApi（RESTful API） 方便的实现多语言支持。
 
-- 调度中心 RESTful API：
-    - 说明：调度中心提供给执行器使用的API；不局限于官方执行器使用，第三方可使用该API来实现执行器；
-    - API列表：执行器注册、任务结果回调等；
-- 执行器 RESTful API ：
-    - 说明：执行器提供给调度中心使用的API；官方执行器默认已实现，第三方执行器需要实现并对接提供给调度中心；
-    - API列表：任务触发、任务终止、任务日志查询……等；
+- **调度中心 RESTful API**：
+  - 说明：调度中心提供给执行器使用的API；不局限于官方执行器使用，第三方可使用该API来实现执行器；
+  - API列表：执行器注册、任务结果回调等；
+- **执行器 RESTful API**：
+  - 说明：执行器提供给调度中心使用的API；官方执行器默认已实现，第三方执行器需要实现并对接提供给调度中心；
+  - API列表：任务触发、任务终止、任务日志查询……等；
+- **任务管理（调度中心） RESTful API**：
+  - 说明：调度中心提供给三方集成系统的API，用于任务管理；第三方可通过该API实现任务生命周期管理；
+  - API列表：任务新增、任务更新、任务删除、任务启动、任务停止、任务触发执行...等；
 
 此处 RESTful API 主要用于非Java语言定制个性化执行器使用，实现跨语言。除此之外，如果有需要通过API操作调度中心，可以个性化扩展 “调度中心 RESTful API” 并使用。
 
 ### 6.1 调度中心 RESTful API
 
-API服务位置：com.xxl.job.core.openapi.AdminBiz （ com.xxl.job.admin.controller.JobApiController ）
-API服务请求参考代码：com.xxl.job.adminbiz.AdminBizTest
+API服务位置：com.xxl.job.core.openapi.admin.AdminBiz
+API服务请求参考代码：com.xxl.job.openapi.AdminBizTest
 
 #### a、任务回调
 ```
@@ -2011,8 +2014,8 @@ Header：
 
 ### 6.2 执行器 RESTful API
 
-API服务位置：com.xxl.job.core.openapi.ExecutorBiz
-API服务请求参考代码：com.xxl.job.executorbiz.ExecutorBizTest
+API服务位置：com.xxl.job.core.openapi.executor.ExecutorBiz
+API服务请求参考代码：com.xxl.job.openapi.ExecutorBizTest
 
 #### a、心跳检测
 ```
@@ -2150,6 +2153,187 @@ Header：
     }
 ```
 
+### 6.3 任务管理（调度中心） RESTful API
+
+API服务位置：com.xxl.job.core.openapi.admin.AdminJobBiz
+API服务请求参考代码：com.xxl.job.openapi.AdminJobBizTest
+
+#### a、新增任务
+```
+说明：新增一个任务
+
+------
+
+地址格式：{调度中心根地址}/api/addJob
+
+Header：
+    XXL-JOB-ACCESS-TOKEN : {请求令牌}
+    XXL-JOB-APPNAME : {执行器AppName}
+
+请求数据格式如下，放置在 RequestBody 中，JSON格式：
+    {
+        "jobGroup":1,                                           // 执行器主键ID（必填）
+        "jobDesc":"测试任务",                                     // 任务描述（必填）
+        "author":"admin",                                       // 负责人（必填）
+        "alarmEmail":"",                                        // 报警邮件（选填）
+        "scheduleType":"CRON",                                  // 调度类型：NONE、CRON、FIX_RATE（必填）
+        "scheduleConf":"0 0/1 * * * ?",                         // 调度配置，CRON时填cron表达式，FIX_RATE时填秒数（必填）
+        "misfireStrategy":"DO_NOTHING",                         // 调度过期策略：DO_NOTHING、FIRE_ONCE_NOW（选填）
+        "executorRouteStrategy":"FIRST",                        // 路由策略：FIRST、LAST、ROUND、RANDOM、CONSISTENT_HASH、LEAST_FREQUENTLY_USED、LEAST_RECENTLY_USED、FAILOVER、BUSYOVER、SHARDING_BROADCAST（必填）
+        "executorHandler":"demoJobHandler",                     // 执行器任务Handler（BEAN模式必填）
+        "executorParam":"",                                     // 任务参数（选填）
+        "executorBlockStrategy":"SERIAL_EXECUTION",             // 阻塞处理策略：SERIAL_EXECUTION、DISCARD_LATER、COVER_EARLY（必填）
+        "executorTimeout":0,                                    // 任务超时时间，单位秒，大于零时生效（选填）
+        "executorFailRetryCount":0,                             // 失败重试次数（选填）
+        "glueType":"BEAN",                                      // 任务模式：BEAN、GLUE_GROOVY、GLUE_SHELL、GLUE_PYTHON、GLUE_NODEJS、GLUE_POWERSHELL、GLUE_PHP（必填）
+        "glueSource":"",                                        // GLUE脚本代码（GLUE模式必填）
+        "glueRemark":""                                         // GLUE脚本备注（GLUE模式选填）
+    }
+
+响应数据格式：
+    {
+      "code": 200,          // 200 表示正常、其他失败
+      "msg": null,          // 错误提示消息
+      "content": "123"      // 新增的任务ID
+    }
+```
+
+#### b、更新任务
+```
+说明：更新任务配置，需要传入任务ID
+
+------
+
+地址格式：{调度中心根地址}/api/updateJob
+
+Header：
+    XXL-JOB-ACCESS-TOKEN : {请求令牌}
+    XXL-JOB-APPNAME : {执行器AppName}
+
+请求数据格式如下，放置在 RequestBody 中，JSON格式：
+    {
+        "id":1,                                                 // 任务ID（必填）
+        "jobDesc":"测试任务",                                     // 任务描述（必填）
+        "author":"admin",                                       // 负责人（必填）
+        "alarmEmail":"",                                        // 报警邮件（选填）
+        "scheduleType":"CRON",                                  // 调度类型：NONE、CRON、FIX_RATE（必填）
+        "scheduleConf":"0 0/1 * * * ?",                         // 调度配置（必填）
+        "misfireStrategy":"DO_NOTHING",                         // 调度过期策略（选填）
+        "executorRouteStrategy":"FIRST",                        // 路由策略（必填）
+        "executorHandler":"demoJobHandler",                     // 执行器任务Handler（BEAN模式必填）
+        "executorParam":"",                                     // 任务参数（选填）
+        "executorBlockStrategy":"SERIAL_EXECUTION",             // 阻塞处理策略（必填）
+        "executorTimeout":0,                                    // 任务超时时间（选填）
+        "executorFailRetryCount":0,                             // 失败重试次数（选填）
+        "glueType":"BEAN",                                      // 任务模式（必填）
+        "glueSource":"",                                        // GLUE脚本代码（GLUE模式必填）
+        "glueRemark":""                                         // GLUE脚本备注（选填）
+    }
+
+响应数据格式：
+    {
+      "code": 200,          // 200 表示正常、其他失败
+      "msg": null           // 错误提示消息
+    }
+```
+
+#### c、删除任务
+```
+说明：删除指定任务
+
+------
+
+地址格式：{调度中心根地址}/api/removeJob
+
+Header：
+    XXL-JOB-ACCESS-TOKEN : {请求令牌}
+    XXL-JOB-APPNAME : {执行器AppName}
+
+请求数据格式如下，放置在 RequestBody 中，JSON格式：
+    {
+        "id":1              // 任务ID（必填）
+    }
+
+响应数据格式：
+    {
+      "code": 200,          // 200 表示正常、其他失败
+      "msg": null           // 错误提示消息
+    }
+```
+
+#### d、启动任务
+```
+说明：启动/启用一个任务，开始调度
+
+------
+
+地址格式：{调度中心根地址}/api/startJob
+
+Header：
+    XXL-JOB-ACCESS-TOKEN : {请求令牌}
+    XXL-JOB-APPNAME : {执行器AppName}
+
+请求数据格式如下，放置在 RequestBody 中，JSON格式：
+    {
+        "id":1              // 任务ID（必填）
+    }
+
+响应数据格式：
+    {
+      "code": 200,          // 200 表示正常、其他失败
+      "msg": null           // 错误提示消息
+    }
+```
+
+#### e、停止任务
+```
+说明：停止/禁用指定任务，暂停调度
+
+------
+
+地址格式：{调度中心根地址}/api/stopJob
+
+Header：
+    XXL-JOB-ACCESS-TOKEN : {请求令牌}
+    XXL-JOB-APPNAME : {执行器AppName}
+
+请求数据格式如下，放置在 RequestBody 中，JSON格式：
+    {
+        "id":1              // 任务ID（必填）
+    }
+
+响应数据格式：
+    {
+      "code": 200,          // 200 表示正常、其他失败
+      "msg": null           // 错误提示消息
+    }
+```
+
+#### f、触发任务执行
+```
+说明：手动触发一次任务执行
+
+------
+
+地址格式：{调度中心根地址}/api/triggerJob
+
+Header：
+    XXL-JOB-ACCESS-TOKEN : {请求令牌}
+    XXL-JOB-APPNAME : {执行器AppName}
+
+请求数据格式如下，放置在 RequestBody 中，JSON格式：
+    {
+        "id":1,                 // 任务ID（必填）
+        "executorParam":"",     // 任务参数（选填）
+        "addressList":""        // 执行器地址列表，多地址逗号分隔，为空则从注册中心获取（选填）
+    }
+
+响应数据格式：
+    {
+      "code": 200,          // 200 表示正常、其他失败
+      "msg": null           // 错误提示消息
+    }
+```
 
 ## 七、版本更新日志
 ### 7.1 版本 V1.1.x Release Notes[2015-12-05]
