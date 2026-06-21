@@ -43,7 +43,7 @@ public class AdminJobBizImpl implements AdminJobBiz {
     /**
      * token bucket, for rate limiting
      */
-    private final TokenBucket tokenBucket = TokenBucket.create(3, Duration.ofSeconds(30));
+    private final TokenBucket tokenBucket = TokenBucket.create(100, Duration.ofSeconds(30));
 
     @Override
     public Response<String> addJob(JobAddRequest request) {
