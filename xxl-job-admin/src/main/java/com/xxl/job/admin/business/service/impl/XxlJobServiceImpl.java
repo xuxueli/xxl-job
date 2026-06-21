@@ -168,7 +168,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 
 		xxlJobInfoMapper.save(jobInfo);
 		if (jobInfo.getId() < 1) {
-			return Response.ofFail ( (I18nUtil.getString("jobinfo_field_add")+I18nUtil.getString("system_fail")) );
+			return Response.ofFail ( (I18nUtil.getString("system_opt_add")+I18nUtil.getString("jobinfo_job")+I18nUtil.getString("system_fail")) );
 		}
 
 		// write operation log

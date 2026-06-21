@@ -74,7 +74,7 @@
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h4 class="modal-title" >${I18n.user_add}</h4>
+						<h4 class="modal-title" >${I18n.system_opt_add} ${I18n.user_name}</h4>
 					</div>
 					<div class="modal-body">
 						<form class="form-horizontal form" role="form" >
@@ -125,7 +125,7 @@
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h4 class="modal-title" >${I18n.user_update}</h4>
+						<h4 class="modal-title" >${I18n.system_opt_edit} ${I18n.user_name}</h4>
 					</div>
 					<div class="modal-body">
 						<form class="form-horizontal form" role="form" >

@@ -89,7 +89,7 @@
 			<div class="modal-dialog ">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h4 class="modal-title" >${I18n.jobgroup_add}</h4>
+						<h4 class="modal-title" >${I18n.system_opt_add} ${I18n.jobgroup}</h4>
 					</div>
 					<div class="modal-body">
 						<form class="form-horizontal form" role="form" >
@@ -137,7 +137,7 @@
 			<div class="modal-dialog ">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h4 class="modal-title" >${I18n.jobgroup_edit}</h4>
+						<h4 class="modal-title" >${I18n.system_opt_edit} ${I18n.jobgroup}</h4>
 					</div>
 					<div class="modal-body">
 						<form class="form-horizontal form" role="form" >
