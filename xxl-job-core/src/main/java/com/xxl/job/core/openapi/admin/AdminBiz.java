@@ -39,21 +39,4 @@ public interface AdminBiz {
      */
     public Response<String> registryRemove(RegistryRequest registryRequest);
 
-
-    // ---------------------- job operate ----------------------
-
-    // jobAdd
-
-    // jobUpdate
-
-    // jobDelete
-
-    // jobQuery
-
-    // jobStart
-
-    // jobStop
-
-    // jobTrigger
-
 }

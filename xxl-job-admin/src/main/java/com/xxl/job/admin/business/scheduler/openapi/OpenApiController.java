@@ -4,7 +4,12 @@ import com.xxl.job.admin.business.model.XxlJobGroup;
 import com.xxl.job.admin.business.scheduler.config.XxlJobAdminBootstrap;
 import com.xxl.job.core.constant.Const;
 import com.xxl.job.core.openapi.admin.AdminBiz;
+import com.xxl.job.core.openapi.admin.AdminJobBiz;
 import com.xxl.job.core.openapi.admin.dto.CallbackRequest;
+import com.xxl.job.core.openapi.admin.dto.JobAddRequest;
+import com.xxl.job.core.openapi.admin.dto.JobOperateRequest;
+import com.xxl.job.core.openapi.admin.dto.JobTriggerRequest;
+import com.xxl.job.core.openapi.admin.dto.JobUpdateRequest;
 import com.xxl.job.core.openapi.admin.dto.RegistryRequest;
 import com.xxl.sso.core.annotation.XxlSso;
 import com.xxl.tool.core.StringTool;
@@ -23,6 +28,9 @@ public class OpenApiController {
 
     @Resource
     private AdminBiz adminBiz;
+
+    @Resource
+    private AdminJobBiz adminJobBiz;
 
     /**
      * api
@@ -71,6 +79,30 @@ public class OpenApiController {
                     RegistryRequest registryParam = GsonTool.fromJson(requestBody, RegistryRequest.class);
                     return adminBiz.registryRemove(registryParam);
                     }
+                case "addJob": {
+                    JobAddRequest jobParam = GsonTool.fromJson(requestBody, JobAddRequest.class);
+                    return adminJobBiz.addJob(jobParam);
+                }
+                case "updateJob": {
+                    JobUpdateRequest jobParam = GsonTool.fromJson(requestBody, JobUpdateRequest.class);
+                    return adminJobBiz.updateJob(jobParam);
+                }
+                case "removeJob": {
+                    JobOperateRequest jobParam = GsonTool.fromJson(requestBody, JobOperateRequest.class);
+                    return adminJobBiz.removeJob(jobParam);
+                }
+                case "startJob": {
+                    JobOperateRequest jobParam = GsonTool.fromJson(requestBody, JobOperateRequest.class);
+                    return adminJobBiz.startJob(jobParam);
+                }
+                case "stopJob": {
+                    JobOperateRequest jobParam = GsonTool.fromJson(requestBody, JobOperateRequest.class);
+                    return adminJobBiz.stopJob(jobParam);
+                }
+                case "triggerJob": {
+                    JobTriggerRequest jobParam = GsonTool.fromJson(requestBody, JobTriggerRequest.class);
+                    return adminJobBiz.triggerJob(jobParam);
+                }
                 default:
                     return Response.ofFail("invalid request, uri-mapping("+ uri +") not found.");
             }

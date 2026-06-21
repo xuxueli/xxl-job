@@ -90,6 +90,12 @@ public class I18nUtil implements InitializingBean {
      * @return
      */
     public static String getString(String key) {
+        if (single==null) {
+            logger.debug(">>>>>>>>>>> xxl-job i18n fail, i18n not init.");
+            return null;
+        }
+
+        // load
         return loadI18nProp().getProperty(key);
     }
 
@@ -100,6 +106,12 @@ public class I18nUtil implements InitializingBean {
      * @return
      */
     public static String getMultString(String... keys) {
+        if (single==null) {
+            logger.debug(">>>>>>>>>>> xxl-job i18n fail, i18n not init.");
+            return null;
+        }
+
+        // build
         Map<String, String> map = new HashMap<>();
 
         Properties prop = loadI18nProp();

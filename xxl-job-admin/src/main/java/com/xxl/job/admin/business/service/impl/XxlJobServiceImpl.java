@@ -69,15 +69,17 @@ public class XxlJobServiceImpl implements XxlJobService {
 	public Response<String> add(XxlJobInfo jobInfo, LoginInfo loginInfo) {
 
 		// valid base
-		XxlJobGroup group = xxlJobGroupMapper.load(jobInfo.getJobGroup());
-		if (group == null) {
-			return Response.ofFail (I18nUtil.getString("system_please_choose")+I18nUtil.getString("jobinfo_field_jobgroup"));
-		}
 		if (StringTool.isBlank(jobInfo.getJobDesc())) {
 			return Response.ofFail ( (I18nUtil.getString("system_please_input")+I18nUtil.getString("jobinfo_field_jobdesc")) );
 		}
 		if (StringTool.isBlank(jobInfo.getAuthor())) {
 			return Response.ofFail ( (I18nUtil.getString("system_please_input")+I18nUtil.getString("jobinfo_field_author")) );
+		}
+
+		// valid group
+		XxlJobGroup group = xxlJobGroupMapper.load(jobInfo.getJobGroup());
+		if (group == null) {
+			return Response.ofFail (I18nUtil.getString("system_please_choose")+I18nUtil.getString("jobinfo_field_jobgroup"));
 		}
 
 		// valid trigger
@@ -163,6 +165,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 		jobInfo.setGlueUpdatetime(new Date());
 		// remove the whitespace
 		jobInfo.setExecutorHandler(jobInfo.getExecutorHandler().trim());
+
 		xxlJobInfoMapper.save(jobInfo);
 		if (jobInfo.getId() < 1) {
 			return Response.ofFail ( (I18nUtil.getString("jobinfo_field_add")+I18nUtil.getString("system_fail")) );
@@ -184,6 +187,14 @@ public class XxlJobServiceImpl implements XxlJobService {
 		}
 		if (StringTool.isBlank(jobInfo.getAuthor())) {
 			return Response.ofFail ( (I18nUtil.getString("system_please_input")+I18nUtil.getString("jobinfo_field_author")) );
+		}
+
+		// valid group
+		if (jobInfo.getJobGroup() > 0) {
+			XxlJobGroup jobGroup = xxlJobGroupMapper.load(jobInfo.getJobGroup());
+			if (jobGroup == null) {
+				return Response.ofFail ( (I18nUtil.getString("jobinfo_field_jobgroup")+I18nUtil.getString("system_invalid")) );
+			}
 		}
 
 		// valid trigger
@@ -258,12 +269,6 @@ public class XxlJobServiceImpl implements XxlJobService {
 			jobInfo.setChildJobId(temp);
 		}
 
-		// group valid
-		XxlJobGroup jobGroup = xxlJobGroupMapper.load(jobInfo.getJobGroup());
-		if (jobGroup == null) {
-			return Response.ofFail ( (I18nUtil.getString("jobinfo_field_jobgroup")+I18nUtil.getString("system_invalid")) );
-		}
-
 		// stage job info
 		XxlJobInfo exists_jobInfo = xxlJobInfoMapper.loadById(jobInfo.getId());
 		if (exists_jobInfo == null) {
@@ -288,7 +293,9 @@ public class XxlJobServiceImpl implements XxlJobService {
 			}
 		}
 
-		exists_jobInfo.setJobGroup(jobInfo.getJobGroup());
+		if (jobInfo.getJobGroup() > 0) {
+			exists_jobInfo.setJobGroup(jobInfo.getJobGroup());
+		}
 		exists_jobInfo.setJobDesc(jobInfo.getJobDesc());
 		exists_jobInfo.setAuthor(jobInfo.getAuthor());
 		exists_jobInfo.setAlarmEmail(jobInfo.getAlarmEmail());
@@ -296,8 +303,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 		exists_jobInfo.setScheduleConf(jobInfo.getScheduleConf());
 		exists_jobInfo.setMisfireStrategy(jobInfo.getMisfireStrategy());
 		exists_jobInfo.setExecutorRouteStrategy(jobInfo.getExecutorRouteStrategy());
-		// remove the whitespace
-		exists_jobInfo.setExecutorHandler(jobInfo.getExecutorHandler().trim());
+		exists_jobInfo.setExecutorHandler(jobInfo.getExecutorHandler().trim());				// remove the whitespace
 		exists_jobInfo.setExecutorParam(jobInfo.getExecutorParam());
 		exists_jobInfo.setExecutorBlockStrategy(jobInfo.getExecutorBlockStrategy());
 		exists_jobInfo.setExecutorTimeout(jobInfo.getExecutorTimeout());
@@ -334,7 +340,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 
 		// write operation log
 		logger.info(">>>>>>>>>>> xxl-job operation log: operator = {}, type = {}, content = {}",
-				loginInfo.getUserName(), "jobinfo-remove", id);
+				loginInfo.getUserName(), "jobinfo-remove", GsonTool.toJson(xxlJobInfo));
 
 		return Response.ofSuccess();
 	}
