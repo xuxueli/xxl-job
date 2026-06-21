@@ -8,9 +8,11 @@ import java.util.Date;
 public class XxlJobRegistry {
 
     private long id;
+
     private String registryGroup;
     private String registryKey;
     private String registryValue;
+
     private Date updateTime;
 
     public long getId() {

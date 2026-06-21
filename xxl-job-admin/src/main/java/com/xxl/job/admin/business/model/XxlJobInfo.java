@@ -13,10 +13,7 @@ public class XxlJobInfo {
 	
 	private int jobGroup;		// 执行器主键ID
 	private String jobDesc;
-	
-	private Date addTime;
-	private Date updateTime;
-	
+
 	private String author;		// 负责人
 	private String alarmEmail;	// 报警邮件
 
@@ -42,6 +39,9 @@ public class XxlJobInfo {
 	private long triggerLastTime;	// 上次调度时间
 	private long triggerNextTime;	// 下次调度时间
 
+	private Date addTime;
+	private Date updateTime;
+
 
 	public int getId() {
 		return id;
@@ -65,22 +65,6 @@ public class XxlJobInfo {
 
 	public void setJobDesc(String jobDesc) {
 		this.jobDesc = jobDesc;
-	}
-
-	public Date getAddTime() {
-		return addTime;
-	}
-
-	public void setAddTime(Date addTime) {
-		this.addTime = addTime;
-	}
-
-	public Date getUpdateTime() {
-		return updateTime;
-	}
-
-	public void setUpdateTime(Date updateTime) {
-		this.updateTime = updateTime;
 	}
 
 	public String getAuthor() {
@@ -234,4 +218,21 @@ public class XxlJobInfo {
 	public void setTriggerNextTime(long triggerNextTime) {
 		this.triggerNextTime = triggerNextTime;
 	}
+
+	public Date getAddTime() {
+		return addTime;
+	}
+
+	public void setAddTime(Date addTime) {
+		this.addTime = addTime;
+	}
+
+	public Date getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
+	}
+
 }
