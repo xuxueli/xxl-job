@@ -95,15 +95,15 @@
 						<form class="form-horizontal form" role="form" >
 							<div class="form-group">
 								<label for="lastname" class="col-sm-2 control-label">AppName<font color="red">*</font></label>
-								<div class="col-sm-10"><input type="text" class="form-control" name="appname" placeholder="${I18n.system_please_input}AppName" maxlength="64" ></div>
+								<div class="col-sm-9"><input type="text" class="form-control" name="appname" placeholder="${I18n.system_please_input}AppName" maxlength="64" ></div>
 							</div>
 							<div class="form-group">
 								<label for="lastname" class="col-sm-2 control-label">${I18n.jobgroup_field_title}<font color="red">*</font></label>
-								<div class="col-sm-10"><input type="text" class="form-control" name="name" placeholder="${I18n.system_please_input}${I18n.jobgroup_field_title}" maxlength="64" ></div>
+								<div class="col-sm-9"><input type="text" class="form-control" name="name" placeholder="${I18n.system_please_input}${I18n.jobgroup_field_title}" maxlength="64" ></div>
 							</div>
 							<div class="form-group">
 								<label for="lastname" class="col-sm-2 control-label">${I18n.jobgroup_field_addressType}<font color="red">*</font></label>
-								<div class="col-sm-10">
+								<div class="col-sm-9">
 									<input type="radio" name="addressType" value="0" checked />${I18n.jobgroup_field_addressType_0}
 									&nbsp;&nbsp;&nbsp;&nbsp;
 									<input type="radio" name="addressType" value="1" />${I18n.jobgroup_field_addressType_1}
@@ -111,13 +111,13 @@
 							</div>
 							<div class="form-group">
 								<label for="lastname" class="col-sm-2 control-label">${I18n.jobgroup_field_registryList}<font color="red">*</font></label>
-								<div class="col-sm-10">
+								<div class="col-sm-9">
 									<textarea class="textarea" name="addressList" maxlength="20000" placeholder="${I18n.jobgroup_field_registryList_placeholder}" readonly="readonly" style="background-color:#eee; width: 100%; height: 100px; font-size: 14px; line-height: 15px; border: 1px solid #dddddd; padding: 5px;"></textarea>
 								</div>
 							</div>
 							<div class="form-group">
 								<label for="lastname" class="col-sm-2 control-label">AccessToken<font color="red">*</font></label>
-								<div class="col-sm-10"><input type="text" class="form-control" name="accessToken" placeholder="${I18n.system_please_input}AccessToken" maxlength="50" ></div>
+								<div class="col-sm-9"><input type="text" class="form-control" name="accessToken" placeholder="${I18n.system_please_input}AccessToken" maxlength="50" ></div>
 							</div>
 							<hr>
 							<div class="form-group">
@@ -143,15 +143,15 @@
 						<form class="form-horizontal form" role="form" >
 							<div class="form-group">
 								<label for="lastname" class="col-sm-2 control-label">AppName<font color="red">*</font></label>
-								<div class="col-sm-10"><input type="text" class="form-control" name="appname" placeholder="${I18n.system_please_input}AppName" maxlength="64" readonly ></div>
+								<div class="col-sm-9"><input type="text" class="form-control" name="appname" placeholder="${I18n.system_please_input}AppName" maxlength="64" readonly ></div>
 							</div>
 							<div class="form-group">
 								<label for="lastname" class="col-sm-2 control-label">${I18n.jobgroup_field_title}<font color="red">*</font></label>
-								<div class="col-sm-10"><input type="text" class="form-control" name="name" placeholder="${I18n.system_please_input}${I18n.jobgroup_field_title}" maxlength="64" ></div>
+								<div class="col-sm-9"><input type="text" class="form-control" name="name" placeholder="${I18n.system_please_input}${I18n.jobgroup_field_title}" maxlength="64" ></div>
 							</div>
 							<div class="form-group">
 								<label for="lastname" class="col-sm-2 control-label">${I18n.jobgroup_field_addressType}<font color="red">*</font></label>
-								<div class="col-sm-10">
+								<div class="col-sm-9">
 									<input type="radio" name="addressType" value="0" />${I18n.jobgroup_field_addressType_0}
 									&nbsp;&nbsp;&nbsp;&nbsp;
 									<input type="radio" name="addressType" value="1" />${I18n.jobgroup_field_addressType_1}
@@ -159,13 +159,13 @@
 							</div>
 							<div class="form-group">
 								<label for="lastname" class="col-sm-2 control-label">${I18n.jobgroup_field_registryList}<font color="red">*</font></label>
-								<div class="col-sm-10">
+								<div class="col-sm-9">
 									<textarea class="textarea" name="addressList" maxlength="20000" placeholder="${I18n.jobgroup_field_registryList_placeholder}" readonly="readonly" style="background-color:#eee; width: 100%; height: 100px; font-size: 14px; line-height: 15px; border: 1px solid #dddddd; padding: 5px;"></textarea>
 								</div>
 							</div>
 							<div class="form-group">
 								<label for="lastname" class="col-sm-2 control-label">AccessToken<font color="red">*</font></label>
-								<div class="col-sm-10"><input type="text" class="form-control" name="accessToken" placeholder="${I18n.system_please_input}AccessToken" maxlength="50" ></div>
+								<div class="col-sm-9"><input type="text" class="form-control" name="accessToken" placeholder="${I18n.system_please_input}AccessToken" maxlength="50" ></div>
 							</div>
 							<hr>
 							<div class="form-group">

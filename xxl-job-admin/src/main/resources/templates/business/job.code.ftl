@@ -106,11 +106,11 @@
 					<div class="form-horizontal form" role="form" >
 						<div class="form-group">
 							<label for="lastname" class="col-sm-2 control-label">${I18n.jobinfo_glue_remark}<font color="red">*</font></label>
-							<div class="col-sm-10"><input type="text" class="form-control" id="glueRemark" placeholder="${I18n.system_please_input}${I18n.jobinfo_glue_remark}" maxlength="64" ></div>
+							<div class="col-sm-9"><input type="text" class="form-control" id="glueRemark" placeholder="${I18n.system_please_input}${I18n.jobinfo_glue_remark}" maxlength="64" ></div>
 						</div>
 						<hr>
 						<div class="form-group">
-							<div class="col-sm-offset-3 col-sm-6">
+							<div class="col-sm-offset-4 col-sm-4">
 								<button type="button" class="btn btn-primary ok" >${I18n.system_save}</button>
 								<button type="button" class="btn btn-default" data-dismiss="modal">${I18n.system_cancel}</button>
 							</div>

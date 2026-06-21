@@ -88,7 +88,7 @@
 							</div>
 							<div class="form-group">
 								<label for="lastname" class="col-sm-2 control-label">${I18n.user_role}<font color="red">*</font></label>
-								<div class="col-sm-10">
+								<div class="col-sm-8">
 									<input type="radio" name="role" value="0" checked />${I18n.user_role_normal}
 									&nbsp;&nbsp;&nbsp;&nbsp;
 									<input type="radio" name="role" value="1" />${I18n.user_role_admin}
@@ -96,7 +96,7 @@
 							</div>
 							<div class="form-group">
 								<label for="lastname" class="col-sm-2 control-label">${I18n.user_permission}<font color="black">*</font></label>
-								<div class="col-sm-10">
+								<div class="col-sm-8">
 									<#if groupList?exists && groupList?size gt 0>
 										<#list groupList as item>
 											<input type="checkbox" name="permission" value="${item.id}" />&nbsp;&nbsp;${item.name}：${item.appname}
@@ -139,7 +139,7 @@
 							</div>
 							<div class="form-group">
 								<label for="lastname" class="col-sm-2 control-label">${I18n.user_role}<font color="red">*</font></label>
-								<div class="col-sm-10">
+								<div class="col-sm-8">
 									<input type="radio" name="role" value="0" />${I18n.user_role_normal}
 									&nbsp;&nbsp;&nbsp;&nbsp;
 									<input type="radio" name="role" value="1" />${I18n.user_role_admin}
@@ -147,7 +147,7 @@
 							</div>
 							<div class="form-group">
 								<label for="lastname" class="col-sm-2 control-label">${I18n.user_permission}<font color="black">*</font></label>
-								<div class="col-sm-10">
+								<div class="col-sm-8">
 									<#if groupList?exists && groupList?size gt 0>
 										<#list groupList as item>
 											<input type="checkbox" name="permission" value="${item.id}" />${item.name}(${item.appname})<br>

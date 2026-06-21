@@ -109,7 +109,7 @@
 					<div class="modal-body">
 						<form class="form-horizontal form" role="form" >
 							<div class="form-group">
-								<label class="col-sm-3 control-label">${I18n.jobinfo_field_jobgroup}：</label>
+								<label class="col-sm-2 control-label">${I18n.jobinfo_field_jobgroup}：</label>
 								<div class="col-sm-9">
 									<input type="text" class="form-control jobGroupText" readonly >
 									<input type="hidden" name="jobGroup" >
@@ -117,7 +117,7 @@
 							</div>
 
 							<div class="form-group">
-								<label class="col-sm-3 control-label">${I18n.jobinfo_job}：</label>
+								<label class="col-sm-2 control-label">${I18n.jobinfo_job}：</label>
 								<div class="col-sm-9">
 									<input type="text" class="form-control jobIdText" readonly >
 									<input type="hidden" name="jobId" >
@@ -125,7 +125,7 @@
 							</div>
 
 							<div class="form-group">
-								<label class="col-sm-3 control-label">${I18n.joblog_clean_type}：</label>
+								<label class="col-sm-2 control-label">${I18n.joblog_clean_type}：</label>
 								<div class="col-sm-9">
 									<select class="form-control" name="type" >
 										<option value="1" >${I18n.joblog_clean_type_1}</option>
@@ -143,7 +143,7 @@
 
 							<hr>
 							<div class="form-group">
-								<div class="col-sm-offset-3 col-sm-6">
+								<div class="col-sm-offset-4 col-sm-4">
 									<button type="button" class="btn btn-primary ok" >${I18n.system_ok}</button>
 									<button type="button" class="btn btn-default" data-dismiss="modal">${I18n.system_cancel}</button>
 								</div>
