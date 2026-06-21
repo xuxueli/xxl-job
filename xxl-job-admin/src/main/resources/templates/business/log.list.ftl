@@ -169,7 +169,7 @@
 <#-- select2 -->
 <script src="${request.contextPath}/static/adminlte/bower_components/select2/select2.min.js"></script>
 <#-- admin table -->
-<script src="${request.contextPath}/static/biz/common/admin.table.js"></script>
+<script src="${request.contextPath}/static/framework/admin.table.js"></script>
 <script>
 	$(function() {
 

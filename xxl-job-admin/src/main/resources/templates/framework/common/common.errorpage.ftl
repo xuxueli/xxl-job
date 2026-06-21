@@ -32,7 +32,7 @@
 
 <!-- 3-script start -->
 <script src="${request.contextPath}/static/adminlte/bower_components/jquery/jquery.min.js"></script>
-<script src="${request.contextPath}/static/biz/common/admin.util.js"></script>
+<script src="${request.contextPath}/static/framework/admin.util.js"></script>
 <script>
 	$(function() {
 		if (isOpenWithTab()) {

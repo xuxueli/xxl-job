@@ -168,7 +168,7 @@
 
 <#-- script -->
 <@netCommon.commonScript />
-<script src="${request.contextPath}/static/biz/common/admin.setting.js?v=${I18n.admin_version}"></script>
+<script src="${request.contextPath}/static/framework/admin.setting.js?v=${I18n.admin_version}"></script>
 <#-- glue ide -->
 <script src="${request.contextPath}/static/plugins/codemirror/lib/codemirror.js"></script>
 <script src="${glueTypeModeSrc}"></script>

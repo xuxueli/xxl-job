@@ -545,9 +545,9 @@ exit 0
 <script src="${request.contextPath}/static/plugins/bootstrap-table/bootstrap-table.min.js"></script>
 <script src="${request.contextPath}/static/plugins/bootstrap-table/locale/<#if I18n.admin_i18n?? && I18n.admin_i18n == 'en'>bootstrap-table-en-US.min.js<#else>bootstrap-table-zh-CN.min.js</#if>"></script>
 <#-- admin table -->
-<script src="${request.contextPath}/static/biz/common/admin.table.js"></script>
+<script src="${request.contextPath}/static/framework/admin.table.js"></script>
 <#-- admin util -->
-<script src="${request.contextPath}/static/biz/common/admin.util.js"></script>
+<script src="${request.contextPath}/static/framework/admin.util.js"></script>
 <#-- moment -->
 <script src="${request.contextPath}/static/adminlte/bower_components/moment/moment.min.js"></script>
 <#-- select2 -->

@@ -192,7 +192,7 @@
 <script src="${request.contextPath}/static/plugins/bootstrap-table/locale/<#if I18n.admin_i18n?? && I18n.admin_i18n == 'en'>bootstrap-table-en-US.min.js<#else>bootstrap-table-zh-CN.min.js</#if>"></script>
 <script src="${request.contextPath}/static/adminlte/plugins/iCheck/icheck.min.js"></script>
 <#-- admin table -->
-<script src="${request.contextPath}/static/biz/common/admin.table.js"></script>
+<script src="${request.contextPath}/static/framework/admin.table.js"></script>
 <script>
 	$(function() {
 
