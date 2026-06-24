@@ -25,6 +25,7 @@ import io.netty.util.CharsetUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.InetSocketAddress;
 import java.util.concurrent.*;
 
 /**
@@ -38,11 +39,14 @@ public class EmbedServer {
     private ExecutorBiz executorBiz;
     private Thread thread;
 
-    public void start(final XxlJobExecutor xxlJobExecutor) {
+    static InetSocketAddress resolveBindAddress(String bindIp, int port) {
+        if (bindIp == null || bindIp.trim().isEmpty()) {
+            return null;
+        }
+        return new InetSocketAddress(bindIp.trim(), port);
+    }
 
-        /**
-         * init executor biz service
-         */
+    public void start(final String address, final String bindIp, final int port, final String appname, final String accessToken) {
         executorBiz = new ExecutorBizImpl();
 
         /**
@@ -90,9 +94,15 @@ public class EmbedServer {
                             .childOption(ChannelOption.SO_KEEPALIVE, true);
 
                     // bind
-                    ChannelFuture future = bootstrap.bind(xxlJobExecutor.getPort()).sync();
+                    ChannelFuture future;
+                    InetSocketAddress bindAddress = resolveBindAddress(bindIp, port);
+                    if (bindAddress != null) {
+                        future = bootstrap.bind(bindAddress).sync();
+                    } else {
+                        future = bootstrap.bind(port).sync();
+                    }
 
-                    logger.info(">>>>>>>>>>> xxl-job remoting server start success, nettype = {}, port = {}", EmbedServer.class, xxlJobExecutor.getPort());
+                    logger.info(">>>>>>>>>>> xxl-job remoting server start success, nettype = {}, bindIp = {}, port = {}", EmbedServer.class, bindIp, port);
 
                     // start registry
                     xxlJobExecutor.getExecutorRegistryThreadHelper().start(xxlJobExecutor);

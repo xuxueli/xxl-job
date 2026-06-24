@@ -59,6 +59,7 @@
 			<scope>provided</scope>
 		</dependency>
 
+		<!-- test -->
 		<!-- ********************** test ********************** -->
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
