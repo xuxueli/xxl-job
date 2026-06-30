@@ -180,6 +180,12 @@
 									<textarea class="textarea form-control" name="executorParam" placeholder="${I18n.system_please_input}${I18n.jobinfo_field_executorparam}" maxlength="2048" style="height: 70px; line-height: 1.2;"></textarea>
 								</div>
 							</div>
+							<div class="form-group">
+								<label for="firstname" class="col-sm-2 control-label">${I18n.jobinfo_field_executorparam_example}<font color="black">*</font></label>
+								<div class="col-sm-10">
+									<textarea class="textarea form-control" name="executorParamExample" placeholder="${I18n.system_please_input}${I18n.jobinfo_field_executorparam_example}" maxlength="2048" style="height: 70px; line-height: 1.2;"></textarea>
+								</div>
+							</div>
 
 							<br>
 							<p style="margin: 0 0 10px;text-align: left;border-bottom: 1px solid #e5e5e5;color: gray;">${I18n.jobinfo_conf_advanced}</p>    <#-- 高级配置 -->
@@ -440,6 +446,12 @@ exit 0
 									<textarea class="textarea form-control" name="executorParam" placeholder="${I18n.system_please_input}${I18n.jobinfo_field_executorparam}" maxlength="2048" style="height: 70px; line-height: 1.2;"></textarea>
 								</div>
 							</div>
+							<div class="form-group">
+								<label for="firstname" class="col-sm-2 control-label">${I18n.jobinfo_field_executorparam_example}<font color="black">*</font></label>
+								<div class="col-sm-10">
+									<textarea class="textarea form-control" name="executorParamExample" placeholder="${I18n.system_please_input}${I18n.jobinfo_field_executorparam_example}" maxlength="2048" style="height: 70px; line-height: 1.2;"></textarea>
+								</div>
+							</div>
 
 							<br>
 							<p style="margin: 0 0 10px;text-align: left;border-bottom: 1px solid #e5e5e5;color: gray;">${I18n.jobinfo_conf_advanced}</p>    <#-- 高级配置 -->
@@ -513,6 +525,10 @@ exit 0
 								<label for="firstname" class="col-sm-2 control-label">${I18n.jobinfo_field_executorparam}<font color="black">*</font></label>
 								<div class="col-sm-9">
 									<textarea class="textarea form-control" name="executorParam" placeholder="${I18n.system_please_input}${I18n.jobinfo_field_executorparam}" maxlength="2048" style="height: 70px; line-height: 1.2;"></textarea>
+									<div class="executorParamExampleHint" style="display:none; margin-top: 8px; padding: 8px 12px; background-color: #f8f9fa; border-left: 3px solid #17a2b8; border-radius: 3px; font-size: 12px; color: #666; line-height: 1.6;">
+										<div style="color: #17a2b8; font-weight: 600; margin-bottom: 4px;">${I18n.jobinfo_field_executorparam_example}：</div>
+										<pre class="executorParamExampleContent" style="margin: 0; padding: 6px 8px; background-color: #fff; border: 1px solid #e9ecef; border-radius: 3px; font-size: 12px; color: #333; white-space: pre-wrap; word-break: break-all; font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;"></pre>
+									</div>
 								</div>
 							</div>
 							<div class="form-group">
@@ -870,6 +886,13 @@ exit 0
 			// fill modal
 			$("#jobTriggerModal .form input[name='id']").val( row.id );
 			$("#jobTriggerModal .form textarea[name='executorParam']").val( row.executorParam );
+			var paramExample = row.executorParamExample || '';
+			if (paramExample) {
+				$("#jobTriggerModal .executorParamExampleContent").text(paramExample);
+				$("#jobTriggerModal .executorParamExampleHint").show();
+			} else {
+				$("#jobTriggerModal .executorParamExampleHint").hide();
+			}
 
 			$('#jobTriggerModal').modal({backdrop: false, keyboard: false}).modal('show');
 		});
@@ -1206,6 +1229,7 @@ exit 0
 				$('#updateModal .form select[name=glueType] option[value='+ row.glueType +']').prop('selected', true);
 				$("#updateModal .form input[name='executorHandler']").val( row.executorHandler );
 				$("#updateModal .form textarea[name='executorParam']").val( row.executorParam );
+				$("#updateModal .form textarea[name='executorParamExample']").val( row.executorParamExample );
 
 				// 》init glueType
 				$("#updateModal .form select[name=glueType]").change();
@@ -1297,6 +1321,7 @@ exit 0
 			$('#addModal .form select[name=glueType] option[value='+ row.glueType +']').prop('selected', true);
 			$("#addModal .form input[name='executorHandler']").val( row.executorHandler );
 			$("#addModal .form textarea[name='executorParam']").val( row.executorParam );
+			$("#addModal .form textarea[name='executorParamExample']").val( row.executorParamExample );
 
 			// 》init glueType
 			$("#addModal .form select[name=glueType]").change();
