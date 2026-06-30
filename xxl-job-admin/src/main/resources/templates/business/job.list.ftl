@@ -518,7 +518,11 @@ exit 0
 							<div class="form-group">
 								<label for="firstname" class="col-sm-2 control-label">${I18n.jobgroup_field_registryList}<font color="black">*</font></label>
 								<div class="col-sm-9">
-									<textarea class="textarea form-control" name="addressList" placeholder="${I18n.jobinfo_opt_run_tips}" maxlength="512" style="height: 63px; line-height: 1.2;"></textarea>
+									<select class="form-control" name="addressList">
+										<option value="">${I18n.jobinfo_opt_run_tips}</option>
+										<option value="__manual__">手动输入...</option>
+									</select>
+									<input type="text" class="form-control" name="addressListManual" placeholder="请输入机器地址，多个逗号分隔" style="display:none; margin-top:5px;" >
 								</div>
 							</div>
 							<hr>
@@ -870,17 +874,48 @@ exit 0
 			// fill modal
 			$("#jobTriggerModal .form input[name='id']").val( row.id );
 			$("#jobTriggerModal .form textarea[name='executorParam']").val( row.executorParam );
-
+		
+			// load registry list
+			var $registrySelect = $("#jobTriggerModal select[name='addressList']");
+			$registrySelect.html('<option value="">${I18n.jobinfo_opt_run_tips}</option><option value="__manual__">手动输入...</option>');
+			$("#jobTriggerModal input[name='addressListManual']").val('').hide();
+			$.ajax({
+				type : 'POST',
+				url : base_url + "/jobgroup/loadById",
+				data : { "id" : row.jobGroup },
+				dataType : "json",
+				success : function(data) {
+					if (data.code == 200 && data.data && data.data.registryList) {
+						var list = data.data.registryList;
+						for (var i = 0; i < list.length; i++) {
+							$registrySelect.append('<option value="' + list[i] + '">' + list[i] + '</option>');
+						}
+					}
+				}
+			});
+				
 			$('#jobTriggerModal').modal({backdrop: false, keyboard: false}).modal('show');
 		});
+		// addressList select change: toggle manual input
+		$("#jobTriggerModal select[name='addressList']").on('change', function() {
+			if ($(this).val() === '__manual__') {
+				$("#jobTriggerModal input[name='addressListManual']").show();
+			} else {
+				$("#jobTriggerModal input[name='addressListManual']").hide().val('');
+			}
+		});
 		$("#jobTriggerModal .ok").on('click',function() {
+			var addressListVal = $("#jobTriggerModal select[name='addressList']").val();
+			if (addressListVal === '__manual__') {
+				addressListVal = $("#jobTriggerModal input[name='addressListManual']").val();
+			}
 			$.ajax({
 				type : 'POST',
 				url : base_url + "/jobinfo/trigger",
 				data : {
 					"id" : $("#jobTriggerModal .form input[name='id']").val(),
 					"executorParam" : $("#jobTriggerModal .textarea[name='executorParam']").val(),
-					"addressList" : $("#jobTriggerModal .textarea[name='addressList']").val()
+					"addressList" : addressListVal
 				},
 				dataType : "json",
 				success : function(data){
@@ -896,6 +931,7 @@ exit 0
 		});
 		$("#jobTriggerModal").on('hide.bs.modal', function () {
 			$("#jobTriggerModal .form")[0].reset();
+			$("#jobTriggerModal input[name='addressListManual']").val('').hide();
 		});
 
 		// ---------------------- registryinfo ----------------------
