@@ -305,7 +305,7 @@ public class JobLogController {
 
 			// log cat
 			ExecutorBiz executorBiz = XxlJobAdminBootstrap.getExecutorBiz(jobLog.getExecutorAddress(), jobGroup);
-			Response<LogData> logResult = executorBiz.log(new LogRequest(logId, jobLog.getTriggerTime().getTime(), fromLineNum));
+			Response<LogData> logResult = executorBiz.log(new LogRequest(logId, jobLog.getTriggerTime().getTime(), jobLog.getJobId(), fromLineNum));
 
 			// is end
 			if (logResult.getData()!=null && logResult.getData().getFromLineNum() > logResult.getData().getToLineNum()) {

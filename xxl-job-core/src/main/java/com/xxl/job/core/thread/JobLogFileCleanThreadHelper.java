@@ -84,6 +84,10 @@ public class JobLogFileCleanThreadHelper {
                         // check expired
                         Date expiredDate = DateTool.addDays(logFileCreateDate, logRetentionDays);
                         if (todayDate.getTime() > expiredDate.getTime()) {
+                            // safety check: skip if file was recently written (long-running task may still be logging)
+                            if (System.currentTimeMillis() - childFile.lastModified() < 3600_000) {
+                                continue;
+                            }
                             // expired, remove all log of this day
                             FileTool.delete(childFile);
                             //FileUtil.deleteRecursively(childFile);

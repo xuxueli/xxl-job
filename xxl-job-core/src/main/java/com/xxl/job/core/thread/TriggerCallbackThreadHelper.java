@@ -184,7 +184,18 @@ public class TriggerCallbackThreadHelper {
      */
     private void appendCallbackResult(List<CallbackData> callbackParamList, String logContent){
         for (CallbackData callbackParam: callbackParamList) {
-            String logFileName = XxlJobFileAppender.makeLogFileName(new Date(callbackParam.getLogDateTime()), callbackParam.getLogId());
+            // determine log file: prefer new merged format, fallback to legacy
+            String logFileName;
+            if (callbackParam.getJobId() > 0) {
+                logFileName = XxlJobFileAppender.makeLogFileName(new Date(callbackParam.getLogDateTime()), callbackParam.getJobId());
+            } else {
+                logFileName = XxlJobFileAppender.makeLogFileNameLegacy(new Date(callbackParam.getLogDateTime()), callbackParam.getLogId());
+                // for legacy format, only write if file already exists
+                if (!new java.io.File(logFileName).exists()) {
+                    continue;
+                }
+            }
+
             XxlJobContext.setXxlJobContext(new XxlJobContext(
                     -1,
                     null,

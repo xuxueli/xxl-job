@@ -10,13 +10,15 @@ public class LogRequest implements Serializable {
 
     private long logId;
     private long logDateTime;
+    private int jobId;
     private int fromLineNum;
 
     public LogRequest() {
     }
-    public LogRequest(long logId, long logDateTime, int fromLineNum) {
+    public LogRequest(long logId, long logDateTime, int jobId, int fromLineNum) {
         this.logId = logId;
         this.logDateTime = logDateTime;
+        this.jobId = jobId;
         this.fromLineNum = fromLineNum;
     }
 
@@ -34,6 +36,14 @@ public class LogRequest implements Serializable {
 
     public void setLogId(long logId) {
         this.logId = logId;
+    }
+
+    public int getJobId() {
+        return jobId;
+    }
+
+    public void setJobId(int jobId) {
+        this.jobId = jobId;
     }
 
     public int getFromLineNum() {
