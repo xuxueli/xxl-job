@@ -68,4 +68,15 @@
 
 	</dependencies>
 
+	<build>
+		<plugins>
+			<!-- junit5 依赖 JUnit Platform，Maven 默认自带的 surefire 2.x 无法发现测试，需钉 3.x -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>3.5.2</version>
+			</plugin>
+		</plugins>
+	</build>
+
 </project>
