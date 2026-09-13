@@ -38,6 +38,19 @@ public class XxlJobFileAppender {
 	private static String callbackLogPath;
 
 	/**
+	 * whether write execution log to file; when false, no log file will be created for job runs
+	 * (helpful for high-frequency jobs, refer to issue #4001)
+	 */
+	private static volatile boolean logEnabled = true;
+
+	public static void setLogEnabled(boolean enabled) {
+		logEnabled = enabled;
+	}
+	public static boolean isLogEnabled() {
+		return logEnabled;
+	}
+
+	/**
 	 * init log path
 	 */
 	public static void initLogPath(String logPath) throws IOException {
@@ -104,6 +117,9 @@ public class XxlJobFileAppender {
 	public static void appendLog(String logFileName, String appendLog) {
 
 		// valid
+		if (!logEnabled) {
+			return;
+		}
 		if (StringTool.isBlank(logFileName) || appendLog == null) {
 			return;
 		}

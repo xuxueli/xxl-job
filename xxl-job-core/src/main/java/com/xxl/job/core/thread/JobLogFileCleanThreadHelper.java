@@ -34,8 +34,8 @@ public class JobLogFileCleanThreadHelper {
         /**
          * limit min value
           */
-        if (logRetentionDays < 3 ) {
-            return;     // effective only when logRetentionDays >= 3
+        if (logRetentionDays < 1 ) {
+            return;     // effective only when logRetentionDays >= 1
         }
 
         /**

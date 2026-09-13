@@ -56,6 +56,7 @@ public class XxlJobExecutor  {
     private String address;                                         // executor registry-address: default use address to registry , otherwise use ip:port if address is null
     private String logPath = "/data/applogs/xxl-job/jobhandler";    // executor log-path
     private int logRetentionDays = 30;                              // executor log-retention-days
+    private boolean logEnabled = true;                              // executor write execution log to file, default true
     private boolean glueEnabled = true;                             // executor glue (non-BEAN) task enable, default true
 
     public void setAdminAddresses(String adminAddresses) {
@@ -87,6 +88,9 @@ public class XxlJobExecutor  {
     }
     public void setLogRetentionDays(int logRetentionDays) {
         this.logRetentionDays = logRetentionDays;
+    }
+    public void setLogEnabled(boolean logEnabled) {
+        this.logEnabled = logEnabled;
     }
     public void setGlueEnabled(boolean glueEnabled) {
         this.glueEnabled = glueEnabled;
@@ -148,6 +152,7 @@ public class XxlJobExecutor  {
         xxlJobExecutor = this;
 
         // init logpath
+        XxlJobFileAppender.setLogEnabled(logEnabled);
         XxlJobFileAppender.initLogPath(logPath);
 
         // init invoker, admin-client
