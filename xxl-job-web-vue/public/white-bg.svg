@@ -1,0 +1,201 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <!-- 主背景渐变：纯白到极浅灰 -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="50%" stop-color="#fbfcfe"/>
+      <stop offset="100%" stop-color="#f4f7fb"/>
+    </linearGradient>
+
+    <!-- 网格 -->
+    <pattern id="grid" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
+      <path d="M 60 0 L 0 0 0 60" fill="none" stroke="#e3eaf3" stroke-width="0.6"/>
+    </pattern>
+
+    <!-- 细网格 -->
+    <pattern id="fineGrid" x="0" y="0" width="12" height="12" patternUnits="userSpaceOnUse">
+      <path d="M 12 0 L 0 0 0 12" fill="none" stroke="#eef3f9" stroke-width="0.3"/>
+    </pattern>
+
+    <!-- 蓝色光晕 -->
+    <radialGradient id="glowBlue" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.10"/>
+      <stop offset="60%" stop-color="#3b82f6" stop-opacity="0.03"/>
+      <stop offset="100%" stop-color="#3b82f6" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- 青色光晕 -->
+    <radialGradient id="glowCyan" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#06b6d4" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#06b6d4" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- 六边形 -->
+    <symbol id="hex" viewBox="-50 -50 100 100">
+      <polygon points="40,0 20,34.64 -20,34.64 -40,0 -20,-34.64 20,-34.64"
+               fill="none" stroke="#cdd9e8" stroke-width="1"/>
+    </symbol>
+
+    <!-- 实心六边形 -->
+    <symbol id="hexFill" viewBox="-50 -50 100 100">
+      <polygon points="40,0 20,34.64 -20,34.64 -40,0 -20,-34.64 20,-34.64"
+               fill="#eaf1fa" stroke="#bcd2ec" stroke-width="1"/>
+    </symbol>
+
+    <!-- 三角形 -->
+    <symbol id="tri" viewBox="-50 -50 100 100">
+      <polygon points="0,-40 34.64,20 -34.64,20"
+               fill="none" stroke="#c5d5ea" stroke-width="1"/>
+    </symbol>
+
+    <!-- 菱形 -->
+    <symbol id="diamond" viewBox="-50 -50 100 100">
+      <polygon points="0,-40 40,0 0,40 -40,0"
+               fill="none" stroke="#c5d5ea" stroke-width="1"/>
+    </symbol>
+
+    <!-- 圆环 -->
+    <symbol id="ring" viewBox="-50 -50 100 100">
+      <circle r="40" fill="none" stroke="#c5d5ea" stroke-width="1"/>
+    </symbol>
+
+    <!-- 实心圆 -->
+    <symbol id="dot" viewBox="-50 -50 100 100">
+      <circle r="6" fill="#bcd2ec" opacity="0.7"/>
+    </symbol>
+
+    <!-- 正方形 -->
+    <symbol id="square" viewBox="-50 -50 100 100">
+      <rect x="-38" y="-38" width="76" height="76" fill="none" stroke="#c5d5ea" stroke-width="1"/>
+    </symbol>
+
+    <!-- 旋转正方形 -->
+    <symbol id="squareRot" viewBox="-50 -50 100 100">
+      <rect x="-38" y="-38" width="76" height="76" fill="none" stroke="#c5d5ea" stroke-width="1" transform="rotate(45)"/>
+    </symbol>
+
+    <!-- 八边形 -->
+    <symbol id="octagon" viewBox="-50 -50 100 100">
+      <polygon points="-16,-40 16,-40 40,-16 40,16 16,40 -16,40 -40,16 -40,-16"
+               fill="none" stroke="#c5d5ea" stroke-width="1"/>
+    </symbol>
+  </defs>
+
+  <!-- 主背景 -->
+  <rect width="1920" height="1080" fill="url(#bgGrad)"/>
+  <rect width="1920" height="1080" fill="url(#fineGrid)"/>
+  <rect width="1920" height="1080" fill="url(#grid)"/>
+
+  <!-- 光晕氛围 -->
+  <circle cx="320" cy="240" r="520" fill="url(#glowBlue)"/>
+  <circle cx="1620" cy="860" r="600" fill="url(#glowCyan)"/>
+  <circle cx="1500" cy="180" r="380" fill="url(#glowBlue)" opacity="0.6"/>
+
+  <!-- 大型半透明几何装饰（中心区域） -->
+  <g opacity="0.3">
+    <use href="#hex" x="860" y="380" width="240" height="240"/>
+    <use href="#ring" x="1120" y="520" width="200" height="200"/>
+    <use href="#octagon" x="940" y="640" width="180" height="180"/>
+    <use href="#hex" x="1140" y="300" width="150" height="150"/>
+  </g>
+
+  <!-- 随机分布的几何图形 -->
+  <g opacity="0.75">
+    <!-- 六边形群 -->
+    <use href="#hex" x="120" y="80" width="110" height="110"/>
+    <use href="#hex" x="380" y="180" width="70" height="70"/>
+    <use href="#hex" x="640" y="60" width="90" height="90"/>
+    <use href="#hex" x="1480" y="120" width="100" height="100"/>
+    <use href="#hex" x="1760" y="280" width="80" height="80"/>
+    <use href="#hex" x="200" y="900" width="120" height="120"/>
+    <use href="#hex" x="540" y="980" width="80" height="80"/>
+    <use href="#hex" x="1320" y="940" width="90" height="90"/>
+    <use href="#hex" x="1700" y="880" width="100" height="100"/>
+
+    <!-- 实心六边形 -->
+    <use href="#hexFill" x="280" y="60" width="60" height="60"/>
+    <use href="#hexFill" x="900" y="160" width="70" height="70"/>
+    <use href="#hexFill" x="1620" y="380" width="60" height="60"/>
+    <use href="#hexFill" x="80" y="780" width="70" height="70"/>
+    <use href="#hexFill" x="1180" y="980" width="60" height="60"/>
+    <use href="#hexFill" x="1820" y="640" width="70" height="70"/>
+
+    <!-- 三角形 -->
+    <use href="#tri" x="500" y="220" width="90" height="90"/>
+    <use href="#tri" x="780" y="120" width="70" height="70"/>
+    <use href="#tri" x="1360" y="240" width="100" height="100"/>
+    <use href="#tri" x="1820" y="120" width="80" height="80"/>
+    <use href="#tri" x="320" y="780" width="90" height="90"/>
+    <use href="#tri" x="640" y="880" width="70" height="70"/>
+    <use href="#tri" x="1480" y="820" width="100" height="100"/>
+    <use href="#tri" x="1820" y="980" width="80" height="80"/>
+
+    <!-- 菱形 -->
+    <use href="#diamond" x="160" y="280" width="60" height="60"/>
+    <use href="#diamond" x="580" y="380" width="70" height="70"/>
+    <use href="#diamond" x="1180" y="200" width="60" height="60"/>
+    <use href="#diamond" x="1560" y="440" width="80" height="80"/>
+    <use href="#diamond" x="80" y="540" width="70" height="70"/>
+    <use href="#diamond" x="420" y="680" width="60" height="60"/>
+    <use href="#diamond" x="1280" y="640" width="70" height="70"/>
+    <use href="#diamond" x="1760" y="540" width="60" height="60"/>
+    <use href="#diamond" x="380" y="980" width="70" height="70"/>
+    <use href="#diamond" x="1620" y="780" width="80" height="80"/>
+
+    <!-- 圆环 -->
+    <use href="#ring" x="60" y="180" width="80" height="80"/>
+    <use href="#ring" x="700" y="280" width="70" height="70"/>
+    <use href="#ring" x="1280" y="80" width="90" height="90"/>
+    <use href="#ring" x="1720" y="180" width="60" height="60"/>
+    <use href="#ring" x="240" y="640" width="80" height="80"/>
+    <use href="#ring" x="980" y="860" width="70" height="70"/>
+    <use href="#ring" x="1380" y="780" width="90" height="90"/>
+    <use href="#ring" x="1780" y="780" width="60" height="60"/>
+
+    <!-- 正方形 -->
+    <use href="#square" x="440" y="100" width="70" height="70"/>
+    <use href="#square" x="1060" y="240" width="80" height="80"/>
+    <use href="#square" x="1680" y="540" width="70" height="70"/>
+    <use href="#square" x="160" y="820" width="80" height="80"/>
+    <use href="#square" x="780" y="940" width="70" height="70"/>
+    <use href="#square" x="1560" y="980" width="80" height="80"/>
+
+    <!-- 旋转正方形 -->
+    <use href="#squareRot" x="220" y="160" width="60" height="60"/>
+    <use href="#squareRot" x="820" y="320" width="70" height="70"/>
+    <use href="#squareRot" x="1460" y="380" width="80" height="80"/>
+    <use href="#squareRot" x="180" y="700" width="60" height="60"/>
+    <use href="#squareRot" x="1080" y="780" width="70" height="70"/>
+    <use href="#squareRot" x="1700" y="720" width="80" height="80"/>
+
+    <!-- 八边形 -->
+    <use href="#octagon" x="360" y="320" width="90" height="90"/>
+    <use href="#octagon" x="940" y="80" width="70" height="70"/>
+    <use href="#octagon" x="1600" y="200" width="90" height="90"/>
+    <use href="#octagon" x="540" y="780" width="80" height="80"/>
+    <use href="#octagon" x="1220" y="880" width="90" height="90"/>
+    <use href="#octagon" x="1820" y="420" width="70" height="70"/>
+
+    <!-- 实心圆点 -->
+    <use href="#dot" x="460" y="60" width="24" height="24"/>
+    <use href="#dot" x="720" y="200" width="20" height="20"/>
+    <use href="#dot" x="1120" y="180" width="24" height="24"/>
+    <use href="#dot" x="1500" y="60" width="20" height="20"/>
+    <use href="#dot" x="1800" y="360" width="24" height="24"/>
+    <use href="#dot" x="100" y="420" width="20" height="20"/>
+    <use href="#dot" x="560" y="540" width="24" height="24"/>
+    <use href="#dot" x="1340" y="540" width="20" height="20"/>
+    <use href="#dot" x="1820" y="860" width="24" height="24"/>
+    <use href="#dot" x="280" y="880" width="20" height="20"/>
+    <use href="#dot" x="880" y="980" width="24" height="24"/>
+    <use href="#dot" x="1460" y="900" width="20" height="20"/>
+  </g>
+
+  <!-- 角标 -->
+  <g stroke="#9db8d8" stroke-width="1.2" fill="none" opacity="0.6">
+    <path d="M 40 40 L 40 80 L 80 80"/>
+    <path d="M 1880 40 L 1880 80 L 1840 80"/>
+    <path d="M 40 1040 L 40 1000 L 80 1000"/>
+    <path d="M 1880 1040 L 1880 1000 L 1840 1000"/>
+  </g>
+</svg>

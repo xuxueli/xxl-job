@@ -1,0 +1,22 @@
+{
+  "name": "xxl-job-admin-vue",
+  "version": "2.5.0",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "axios": "0.27.2",
+    "echarts": "^6.0.0",
+    "element-ui": "2.15.13",
+    "vue": "2.6.14",
+    "vue-router": "3.6.5"
+  },
+  "devDependencies": {
+    "vite": "4.5.3",
+    "vite-plugin-vue2": "2.0.3",
+    "vue-template-compiler": "2.6.14"
+  }
+}

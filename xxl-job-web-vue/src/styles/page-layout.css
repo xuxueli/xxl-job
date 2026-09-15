@@ -1,0 +1,55 @@
+/* 页面级布局统一样式
+ *
+ * 由 main.js 全局引入。所有业务页面的根节点加 class="page-container" 即可，
+ * 页面自己的 <style scoped> 里不要再重复声明这些规则。
+ *
+ * 注意：这里是全局样式，不加 scoped，所以能直接命中 el-card 等子组件内部的
+ * DOM，页面里原先那些 `>>> .el-card__body` 深度选择器都不再需要。
+ */
+
+/* 页面留白与内容宽度：宽屏下各页内容边缘保持一致 */
+.page-container {
+  padding: 16px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.page-container .search-card {
+  margin-bottom: 16px;
+}
+
+/* el-card 默认 body 内边距是 20px，统一收成 16px */
+.page-container .el-card__body {
+  padding: 16px;
+}
+
+.page-container .search-card .el-form--inline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.page-container .search-card .el-form--inline .el-form-item {
+  margin: 0;
+}
+
+/* 表格操作列的按钮组
+ *
+ * element-ui 的按钮间距靠 `.el-button+.el-button{margin-left:10px}` 这条相邻兄弟
+ * 选择器。而 el-popconfirm 会把按钮包进自己的根元素，删除按钮的前一个兄弟变成
+ * 隐藏的 popover 节点而不是按钮，规则不命中，删除按钮就会贴住前一个按钮。
+ *
+ * 这里改用 flex + gap 控制间距，不再依赖兄弟关系，有没有 popconfirm 都一致。
+ */
+.table-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.table-actions .el-button {
+  margin: 0;
+}
