@@ -50,6 +50,7 @@ public class AdminJobBizTest {
         request.setAuthor("openapi");
         request.setScheduleType("CRON");
         request.setScheduleConf("0/20 * * * * ?");
+        request.setScheduleTimezone("Asia/Shanghai");
         request.setMisfireStrategy("DO_NOTHING");
         request.setExecutorRouteStrategy("FIRST");
         request.setExecutorHandler("demoJobHandler");
@@ -76,6 +77,7 @@ public class AdminJobBizTest {
         request.setAuthor("openapi");
         request.setScheduleType("CRON");
         request.setScheduleConf("0/10 * * * * ?");
+        request.setScheduleTimezone("Asia/Shanghai");
         request.setMisfireStrategy("DO_NOTHING");
         request.setExecutorRouteStrategy("FIRST");
         request.setExecutorHandler("demoJobHandler");

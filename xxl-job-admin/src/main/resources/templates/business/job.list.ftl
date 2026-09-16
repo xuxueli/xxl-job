@@ -128,7 +128,6 @@
 								<label for="lastname" class="col-sm-2 control-label">${I18n.jobinfo_field_alarmemail}<font color="black">*</font></label>
 								<div class="col-sm-4"><input type="text" class="form-control" name="alarmEmail" placeholder="${I18n.jobinfo_field_alarmemail_placeholder}" maxlength="100" ></div>
 							</div>
-
 							<br>
 							<p style="margin: 0 0 10px;text-align: left;border-bottom: 1px solid #e5e5e5;color: gray;">${I18n.jobinfo_conf_schedule}</p>    <#-- 调度 -->
 							<div class="form-group">
@@ -155,6 +154,16 @@
 								<div class="schedule_conf schedule_conf_FIX_DELAY" style="display: none" >
 									<label for="lastname" class="col-sm-2 control-label">${I18n.schedule_type_fix_delay}<font color="red">*</font></label>
 									<div class="col-sm-4"><input type="text" class="form-control" name="schedule_conf_FIX_DELAY" placeholder="${I18n.system_please_input} （ Second ）" maxlength="10" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" ></div>
+								</div>
+							</div>
+							<div class="form-group schedule_timezone">
+								<label class="col-sm-2 control-label" for="addScheduleTimezone">${I18n.schedule_timezone}<font color="red">*</font></label>
+								<div class="col-sm-4">
+									<select class="form-control" id="addScheduleTimezone" name="scheduleTimezone">
+										<#list ScheduleTimezoneIds as timezoneId>
+											<option value="${timezoneId}" <#if DefaultScheduleTimezone == timezoneId>selected</#if>>${timezoneId}</option>
+										</#list>
+									</select>
 								</div>
 							</div>
 
@@ -417,6 +426,16 @@ exit 0
 									<div class="col-sm-4"><input type="text" class="form-control" name="schedule_conf_FIX_DELAY" placeholder="${I18n.system_please_input} （ Second ）" maxlength="10" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" ></div>
 								</div>
 							</div>
+							<div class="form-group schedule_timezone">
+								<label class="col-sm-2 control-label" for="updateScheduleTimezone">${I18n.schedule_timezone}<font color="red">*</font></label>
+								<div class="col-sm-4">
+									<select class="form-control" id="updateScheduleTimezone" name="scheduleTimezone">
+										<#list ScheduleTimezoneIds as timezoneId>
+											<option value="${timezoneId}" <#if DefaultScheduleTimezone == timezoneId>selected</#if>>${timezoneId}</option>
+										</#list>
+									</select>
+								</div>
+							</div>
 
 							<br>
 							<p style="margin: 0 0 10px;text-align: left;border-bottom: 1px solid #e5e5e5;color: gray;">${I18n.jobinfo_conf_job}</p>    <#-- 任务配置 -->
@@ -561,6 +580,14 @@ exit 0
 
 		// select2：init
 		$('#jobGroup').select2();
+		$('#addScheduleTimezone').select2({
+			width: '100%',
+			dropdownParent: $('#addModal')
+		});
+		$('#updateScheduleTimezone').select2({
+			width: '100%',
+			dropdownParent: $('#updateModal')
+		});
 
 		/**
 		 * jobGroup change
@@ -643,7 +670,8 @@ exit 0
 					widthUnit: '%',
 					formatter: function(value, row, index) {
 						if (row.scheduleConf) {
-							return row.scheduleType + '：'+ row.scheduleConf;
+							var timezone = row.scheduleTimezone ? ' [' + row.scheduleTimezone + ']' : '';
+							return row.scheduleType + '：'+ row.scheduleConf + timezone;
 						} else {
 							return row.scheduleType;
 						}
@@ -1014,7 +1042,8 @@ exit 0
 				url : base_url + "/jobinfo/nextTriggerTime",
 				data : {
 					"scheduleType" : row.scheduleType,
-					"scheduleConf" : row.scheduleConf
+					"scheduleConf" : row.scheduleConf,
+					"scheduleTimezone" : row.scheduleTimezone
 				},
 				dataType : "json",
 				success : function(data){
@@ -1114,8 +1143,10 @@ exit 0
 		// scheduleType change
 		$(".scheduleType").change(function(){
 			var scheduleType = $(this).val();
-			$(this).parents("form").find(".schedule_conf").hide();
-			$(this).parents("form").find(".schedule_conf_" + scheduleType).show();
+			var $form = $(this).parents("form");
+			$form.find(".schedule_conf").hide();
+			$form.find(".schedule_conf_" + scheduleType).show();
+			$form.find(".schedule_timezone").toggle(scheduleType == 'CRON');
 
 		});
 
@@ -1191,6 +1222,7 @@ exit 0
 				// fill trigger
 				$('#updateModal .form select[name=scheduleType] option[value='+ row.scheduleType +']').prop('selected', true);
 				$("#updateModal .form input[name='scheduleConf']").val( row.scheduleConf );
+				$("#updateModal .form select[name='scheduleTimezone']").val(row.scheduleTimezone || '${DefaultScheduleTimezone}').trigger('change');
 				if (row.scheduleType == 'CRON') {
 					$("#updateModal .form input[name='schedule_conf_CRON']").val( row.scheduleConf );
 				} else if (row.scheduleType == 'FIX_RATE') {
@@ -1282,6 +1314,7 @@ exit 0
 			// fill trigger
 			$('#addModal .form select[name=scheduleType] option[value='+ row.scheduleType +']').prop('selected', true);
 			$("#addModal .form input[name='scheduleConf']").val( row.scheduleConf );
+			$("#addModal .form select[name='scheduleTimezone']").val(row.scheduleTimezone || '${DefaultScheduleTimezone}').trigger('change');
 			if (row.scheduleType == 'CRON') {
 				$("#addModal .form input[name='schedule_conf_CRON']").val( row.scheduleConf );
 			} else if (row.scheduleType == 'FIX_RATE') {

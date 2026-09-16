@@ -16,6 +16,7 @@ public class JobUpdateRequest implements Serializable {
 
     private String scheduleType;
     private String scheduleConf;
+    private String scheduleTimezone;
     private String misfireStrategy;
 
     private String executorRouteStrategy;
@@ -78,6 +79,14 @@ public class JobUpdateRequest implements Serializable {
 
     public void setScheduleConf(String scheduleConf) {
         this.scheduleConf = scheduleConf;
+    }
+
+    public String getScheduleTimezone() {
+        return scheduleTimezone;
+    }
+
+    public void setScheduleTimezone(String scheduleTimezone) {
+        this.scheduleTimezone = scheduleTimezone;
     }
 
     public String getMisfireStrategy() {
