@@ -1,0 +1,36 @@
+/* admin dialog start */
+
+/* 弹框展示期间：当前 iframe 临时撑满窗口、作为弹框承载层（正文由 JS 偏移回原内容区） */
+.J_iframe.J_dialogExpand {
+    position: fixed !important;
+    top: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    z-index: 1035;
+}
+
+/* 弹框展示期间（iframe 内）：页面正文透明化、锁定滚动，使被 iframe 覆盖的页面结构能够透出 */
+html.J_dialogOpen,
+html.J_dialogOpen body {
+    background-color: transparent !important;
+}
+html.J_dialogOpen {
+    overflow: hidden !important;
+}
+html.J_dialogOpen .wrapper {
+    box-shadow: none !important;
+}
+
+/* 弹框展示期间（iframe 内）：全屏遮罩，压暗页面正文与透出的页面结构（位于弹框之下） */
+.J_dialogChildMask {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: #000;
+    opacity: .3;
+    z-index: 1040;
+}
+/* admin dialog end */

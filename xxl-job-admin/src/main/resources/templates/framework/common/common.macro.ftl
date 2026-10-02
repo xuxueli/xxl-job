@@ -20,6 +20,7 @@
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 <link rel="stylesheet" href="${request.contextPath}/static/plugins/nprogress/nprogress.css">
+<link rel="stylesheet" href="${request.contextPath}/static/framework/admin.dialog.css">
 
 </#macro>
 
@@ -35,6 +36,7 @@
 <script src="${request.contextPath}/static/plugins/layer/layer.js"></script>
 <script src="${request.contextPath}/static/plugins/nprogress/nprogress.js"></script>
 <script src="${request.contextPath}/static/plugins/fullscreen/jquery.fullscreen.js"></script>
+<script src="${request.contextPath}/static/framework/admin.dialog.js"></script>
 <script>
 	// init page param
 	var base_url = '${request.contextPath}';
