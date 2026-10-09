@@ -48,6 +48,7 @@ CREATE TABLE `xxl_job_info`
     `executor_route_strategy`   VARCHAR(50)         DEFAULT NULL                    COMMENT '执行器路由策略',
     `executor_handler`          VARCHAR(255)        DEFAULT NULL                    COMMENT '任务handler',
     `executor_param`            TEXT                DEFAULT NULL                    COMMENT '任务参数',
+    `executor_param_example`    TEXT                DEFAULT NULL                    COMMENT '任务参数说明/示例',
     `executor_block_strategy`   VARCHAR(50)         DEFAULT NULL                    COMMENT '阻塞处理策略',
     `executor_timeout`          INT                 NOT NULL DEFAULT 0              COMMENT '任务执行超时时间，单位秒',
     `executor_fail_retry_count` INT                 NOT NULL DEFAULT 0              COMMENT '失败重试次数',

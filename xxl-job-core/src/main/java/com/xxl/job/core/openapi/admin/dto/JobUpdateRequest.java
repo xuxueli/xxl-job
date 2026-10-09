@@ -21,6 +21,7 @@ public class JobUpdateRequest implements Serializable {
     private String executorRouteStrategy;
     private String executorHandler;
     private String executorParam;
+    private String executorParamExample;
     private String executorBlockStrategy;
     private int executorTimeout;
     private int executorFailRetryCount;
@@ -110,6 +111,14 @@ public class JobUpdateRequest implements Serializable {
 
     public void setExecutorParam(String executorParam) {
         this.executorParam = executorParam;
+    }
+
+    public String getExecutorParamExample() {
+        return executorParamExample;
+    }
+
+    public void setExecutorParamExample(String executorParamExample) {
+        this.executorParamExample = executorParamExample;
     }
 
     public String getExecutorBlockStrategy() {

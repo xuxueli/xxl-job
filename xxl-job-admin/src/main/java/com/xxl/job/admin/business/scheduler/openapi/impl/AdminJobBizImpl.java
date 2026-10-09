@@ -65,6 +65,7 @@ public class AdminJobBizImpl implements AdminJobBiz {
         jobInfo.setExecutorRouteStrategy(request.getExecutorRouteStrategy());
         jobInfo.setExecutorHandler(request.getExecutorHandler());
         jobInfo.setExecutorParam(request.getExecutorParam());
+        jobInfo.setExecutorParamExample(request.getExecutorParamExample());
         jobInfo.setExecutorBlockStrategy(request.getExecutorBlockStrategy());
         jobInfo.setExecutorTimeout(request.getExecutorTimeout());
         jobInfo.setExecutorFailRetryCount(request.getExecutorFailRetryCount());
@@ -98,6 +99,7 @@ public class AdminJobBizImpl implements AdminJobBiz {
         jobInfo.setExecutorRouteStrategy(request.getExecutorRouteStrategy());
         jobInfo.setExecutorHandler(request.getExecutorHandler());
         jobInfo.setExecutorParam(request.getExecutorParam());
+        jobInfo.setExecutorParamExample(request.getExecutorParamExample());
         jobInfo.setExecutorBlockStrategy(request.getExecutorBlockStrategy());
         jobInfo.setExecutorTimeout(request.getExecutorTimeout());
         jobInfo.setExecutorFailRetryCount(request.getExecutorFailRetryCount());

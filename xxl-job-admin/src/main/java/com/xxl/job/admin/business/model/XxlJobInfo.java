@@ -24,6 +24,7 @@ public class XxlJobInfo {
 	private String executorRouteStrategy;	// 执行器路由策略：ExecutorRouteStrategyEnum
 	private String executorHandler;		    // 执行器，任务Handler名称
 	private String executorParam;		    // 执行器，任务参数
+	private String executorParamExample;     // 执行器，任务参数说明/示例
 	private String executorBlockStrategy;	// 阻塞处理策略：ExecutorBlockStrategyEnum
 	private int executorTimeout;     		// 任务执行超时时间，单位秒
 	private int executorFailRetryCount;		// 失败重试次数
@@ -129,6 +130,14 @@ public class XxlJobInfo {
 
 	public void setExecutorParam(String executorParam) {
 		this.executorParam = executorParam;
+	}
+
+	public String getExecutorParamExample() {
+		return executorParamExample;
+	}
+
+	public void setExecutorParamExample(String executorParamExample) {
+		this.executorParamExample = executorParamExample;
 	}
 
 	public String getExecutorBlockStrategy() {

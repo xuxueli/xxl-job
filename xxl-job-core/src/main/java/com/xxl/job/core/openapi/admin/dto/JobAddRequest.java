@@ -21,6 +21,7 @@ public class JobAddRequest implements Serializable {
     private String executorRouteStrategy;           // FIRST、LAST、ROUND、RANDOM、CONSISTENT_HASH、LEAST_FREQUENTLY_USED、LEAST_RECENTLY_USED、FAILOVER、BUSYOVER、SHARDING_BROADCAST
     private String executorHandler;
     private String executorParam;
+    private String executorParamExample;
     private String executorBlockStrategy;           // SERIAL_EXECUTION、DISCARD_LATER、COVER_EARLY
     private int executorTimeout;
     private int executorFailRetryCount;
@@ -110,6 +111,14 @@ public class JobAddRequest implements Serializable {
 
     public void setExecutorParam(String executorParam) {
         this.executorParam = executorParam;
+    }
+
+    public String getExecutorParamExample() {
+        return executorParamExample;
+    }
+
+    public void setExecutorParamExample(String executorParamExample) {
+        this.executorParamExample = executorParamExample;
     }
 
     public String getExecutorBlockStrategy() {
