@@ -3051,8 +3051,9 @@ public void execute() {
 - 15、【重构】告警组件初始化重构，提升代码可维护性，合并PR-2903；
 - 16、【升级】升级多项maven依赖至较新版本；
 
-**备注：**     
-数据库升级脚本：
+<details>
+    <summary>数据库升级脚本：</summary>    
+
 ``` 
 -- 任务日志表：添加索引
 create index I_jobgroup on xxl_job_log (job_group);
@@ -3074,6 +3075,9 @@ alter table xxl_job_log
     modify executor_param text null comment '任务参数';
 ```
 
+</details>
+
+
 ### 7.45 版本 v3.4.1 Release Notes[2026-06-14]
 - 1、【调整】Docker镜像调整，新增 EXPOSE 8080 指令暴露应用端口，提升容器编排工具操作体验；
 - 2、【调整】任务参数长度调整，最长支持2048字符，支持大参数任务托管执行； 
@@ -3093,7 +3097,7 @@ alter table xxl_job_log
 - 2、【修复】调度日志列表日期处理逻辑修复，兼容执行信息为空阻塞列表加载问题；
 - 3、【安全】任务RollingLog权限校验完善，防止越权查看任务日志；
 
-### 7.47 版本 v3.5.0 Release Notes[ING]
+### 7.47 版本 v3.5.0 Release Notes[2026-10-01]
 - 1、【新增】OpenAPI能力增强：提供任务管理能力，包括任务新建/更新/删除、启动/停止、任务触发等；
   （注意：任务管理OpenAPI及操作代码示例，详见官方文档）
 - 2、【新增】GLUE模式开关：新增GLUE模式开关（xxl.job.executor.glueenabled），支持执行器维度设置是否启用GLUE模式；
@@ -3108,8 +3112,9 @@ alter table xxl_job_log
 - 10、【优化】调度日志表索引优化，提升失败告警巡检查询性能；
 - 11、【升级】升级多项maven依赖至较新版本；
 
-**备注：**     
-数据库升级脚本：
+<details>
+    <summary>数据库升级脚本：</summary>    
+
 ```
 -- 1. 执行器表：添加 access_token 列
 ALTER TABLE `xxl_job_group` 
@@ -3135,6 +3140,8 @@ WHERE `alarm_status` = 0
   AND `handle_code` = 200
 LIMIT 10000;
 ```
+
+</details>
 
 ### 7.48 版本 v3.5.1 Release Notes[ING]
 - 1、【TODO】任务日志重构：
