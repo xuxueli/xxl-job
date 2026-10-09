@@ -262,10 +262,8 @@ public class XxlJobExecutor  {
 
     private EmbedServer embedServer = null;
 
-    /**
-     * start embed server
-     */
-    private void startEmbedServer() throws Exception {
+    private void initEmbedServer(String address, String ip, int port, String appname, String accessToken) throws Exception {
+        String bindIp = ip;
 
         // fill ip port
         this.port = this.port>0?this.port: IPTool.getAvailablePort(9999);
@@ -285,7 +283,7 @@ public class XxlJobExecutor  {
 
         // start
         embedServer = new EmbedServer();
-        embedServer.start(this);
+        embedServer.start(address, bindIp, port, appname, accessToken);
     }
 
     /**
