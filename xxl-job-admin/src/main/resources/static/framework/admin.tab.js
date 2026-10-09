@@ -157,6 +157,11 @@
         if (tabSrc === undefined || $.trim(tabSrc).length === 0){
             return false;
         }
+        // 拦截 javascript: 协议，避免 URL hash 注入执行脚本（如 #javascript:alert(1)）
+        if (/^\s*javascript:/i.test(tabSrc)) {
+            console.log('openTab fail, invalid tabSrc:' + tabSrc)
+            return false;
+        }
         if (tabName === undefined || $.trim(tabName).length === 0){
             tabName = tabSrc;
         }
