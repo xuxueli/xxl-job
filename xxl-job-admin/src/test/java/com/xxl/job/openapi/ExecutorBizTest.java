@@ -27,7 +27,8 @@ public class ExecutorBizTest {
     private ExecutorBiz buildClient(){
         return HttpTool.createClient()
                 .url(addressUrl)
-                .timeout(3 * 1000)
+                .connectTimeout(3 * 1000)
+                .readTimeout(3 * 1000)
                 .header(Const.XXL_JOB_ACCESS_TOKEN, accessToken)
                 .header(Const.XXL_JOB_APPNAME, appname)
                 .proxy(ExecutorBiz.class);

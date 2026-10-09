@@ -161,7 +161,8 @@ public class XxlJobAdminBootstrap implements InitializingBean, DisposableBean {
         // new client
         executorBiz = HttpTool.createClient()
                 .url(address)
-                .timeout(XxlJobAdminBootstrap.getInstance().getTimeout() * 1000)
+                .connectTimeout(XxlJobAdminBootstrap.getInstance().getTimeout() * 1000)
+                .readTimeout(XxlJobAdminBootstrap.getInstance().getTimeout() * 1000)
                 .header(Const.XXL_JOB_ACCESS_TOKEN, accessToken)
                 .header(Const.XXL_JOB_APPNAME, appname)
                 .proxy(ExecutorBiz.class);

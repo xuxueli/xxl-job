@@ -34,7 +34,8 @@ public class AdminBizTest {
 
         return HttpTool.createClient()
                 .url(finalUrl)
-                .timeout(3 * 1000)
+                .connectTimeout(3 * 1000)
+                .readTimeout(3 * 1000)
                 .header(Const.XXL_JOB_ACCESS_TOKEN, accessToken)
                 .header(Const.XXL_JOB_APPNAME, appname)
                 .proxy(AdminBiz.class);

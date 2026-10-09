@@ -240,7 +240,8 @@ public class XxlJobExecutor  {
             // build
             AdminBiz adminBiz = HttpTool.createClient()
                     .url(finalAddress)
-                    .timeout(finalTimeout * 1000)
+                    .connectTimeout(finalTimeout * 1000)
+                    .readTimeout(finalTimeout * 1000)
                     .header(Const.XXL_JOB_ACCESS_TOKEN, accessToken)
                     .header(Const.XXL_JOB_APPNAME, appname)
                     .proxy(AdminBiz.class);
