@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 
 /**
  * Created by xuxueli on 2016/3/2 21:14.
@@ -385,33 +386,76 @@ public class XxlJobExecutor  {
 
     // ---------------------- job thread repository ----------------------
 
+    // Stores the current JobThread for each job ID.
     private final ConcurrentMap<Integer, JobThread> jobThreadRepository = new ConcurrentHashMap<>();
-    public JobThread registJobThread(int jobId, IJobHandler handler, String removeOldReason){
+
+    // A dedicated lock for each job ID. Individual locks are not removed during the JVM lifecycle,
+    // preventing mutual exclusion from being broken if a new lock is created while threads still wait on the old one.
+    private final ConcurrentMap<Integer, Object> jobThreadLockRepository = new ConcurrentHashMap<>();
+
+    private Object getJobThreadLock(int jobId) {
+        return jobThreadLockRepository.computeIfAbsent(jobId, key -> new Object());
+    }
+
+    public <T> T executeWithJobThreadLock(int jobId, Supplier<T> operation) {
+        synchronized (getJobThreadLock(jobId)) {
+            return operation.get();
+        }
+    }
+
+    public JobThread registJobThread(int jobId, IJobHandler handler, String removeOldReason) {
+        return executeWithJobThreadLock(jobId,
+                () -> doRegistJobThread(jobId, handler, removeOldReason));
+    }
+
+    private JobThread doRegistJobThread(int jobId, IJobHandler handler, String removeOldReason) {
         JobThread newJobThread = new JobThread(jobId, handler);
         newJobThread.start();
-        logger.info(">>>>>>>>>>> xxl-job register JobThread success, jobId:{}, handler:{}", new Object[]{jobId, handler});
 
-        JobThread oldJobThread = jobThreadRepository.put(jobId, newJobThread);	// putIfAbsent | oh my god, map's put method return the old value!!!
+        JobThread oldJobThread = jobThreadRepository.put(jobId, newJobThread);
         if (oldJobThread != null) {
-            oldJobThread.toStop(removeOldReason);
+            oldJobThread.toStop(StringTool.isNotBlank(removeOldReason) ? removeOldReason : "replace old job thread.");
             oldJobThread.interrupt();
         }
 
+        logger.info(">>>>>>>>>>> xxl-job register JobThread success, jobId:{}, handler:{}, newThread:{}, oldThread:{}",
+                jobId, handler, newJobThread.getName(), oldJobThread == null ? null : oldJobThread.getName());
         return newJobThread;
     }
 
-    public JobThread removeJobThread(int jobId, String removeOldReason){
-        JobThread oldJobThread = jobThreadRepository.remove(jobId);
-        if (oldJobThread != null) {
-            oldJobThread.toStop(removeOldReason);
-            oldJobThread.interrupt();
-
-            return oldJobThread;
-        }
-        return null;
+    public JobThread removeJobThread(int jobId, String removeOldReason) {
+        return executeWithJobThreadLock(jobId,
+                () -> doRemoveJobThread(jobId, null, removeOldReason));
     }
 
-    public JobThread loadJobThread(int jobId){
+    public JobThread removeJobThreadIfIdle(int jobId, JobThread expectedJobThread, String removeOldReason) {
+        if (expectedJobThread == null) {
+            return null;
+        }
+        return executeWithJobThreadLock(jobId, () -> {
+            JobThread currentJobThread = jobThreadRepository.get(jobId);
+            if (currentJobThread != expectedJobThread || currentJobThread.isRunningOrHasQueue()) {
+                return null;
+            }
+            return doRemoveJobThread(jobId, expectedJobThread, removeOldReason);
+        });
+    }
+
+    private JobThread doRemoveJobThread(int jobId, JobThread expectedJobThread, String removeOldReason) {
+        JobThread currentJobThread = jobThreadRepository.get(jobId);
+        if (currentJobThread == null || (expectedJobThread != null && currentJobThread != expectedJobThread)) {
+            return null;
+        }
+        if (!jobThreadRepository.remove(jobId, currentJobThread)) {
+            return null;
+        }
+
+        currentJobThread.toStop(StringTool.isNotBlank(removeOldReason) ? removeOldReason : "remove job thread.");
+        currentJobThread.interrupt();
+        return currentJobThread;
+    }
+
+    public JobThread loadJobThread(int jobId) {
         return jobThreadRepository.get(jobId);
     }
 

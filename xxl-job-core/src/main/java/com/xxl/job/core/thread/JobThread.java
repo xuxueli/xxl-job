@@ -179,9 +179,8 @@ public class JobThread extends Thread{
 
 				} else {
 					if (idleTimes > 30) {
-						if(triggerQueue.isEmpty()) {	// avoid concurrent trigger causes jobId-lost
-							XxlJobExecutor.getInstance().removeJobThread(jobId, "excutor idle times over limit.");
-						}
+						XxlJobExecutor.getInstance().removeJobThreadIfIdle(
+								jobId, this, "executor idle times over limit.");
 					}
 				}
 			} catch (Throwable e) {
