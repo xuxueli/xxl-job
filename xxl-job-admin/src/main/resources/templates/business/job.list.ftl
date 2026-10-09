@@ -626,12 +626,12 @@ exit 0
 				,{
 					title: I18n.jobinfo_field_jobdesc,
 					field: 'name',
-					width: '25',
+					width: '30',
 					widthUnit: '%',
 					align: 'left',
 					formatter: function(value, row, index) {
-						if (value.length > 15) {
-							return '<span title="' + value + '">' + value.substr(0, 15) + '...</span>';
+						if (value.length > 20) {
+							return '<span title="' + value + '">' + value.substr(0, 20) + '...</span>';
 						} else {
 							return value;
 						}

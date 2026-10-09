@@ -278,7 +278,7 @@
                 {
 					title: I18n.jobinfo_job,
 					field: 'jobId',
-					width: '15',
+					width: '25',
 					widthUnit: '%',
 					align: 'left',
 					formatter: function(value, row, index) {
@@ -288,8 +288,8 @@
                         if (name) {
                             jobShow += name;
                         }
-                        if (jobShow.length > 10) {
-                            jobShow = jobShow.substr(0, 10) + '...';
+                        if (jobShow.length > 15) {
+                            jobShow = jobShow.substr(0, 15) + '...';
                         }
 						// show
 						return jobShow;
@@ -297,7 +297,7 @@
 				},{
 					title: I18n.joblog_field_triggerTime,
 					field: 'triggerTime',
-					width: '15',
+					width: '20',
 					widthUnit: '%',
 					formatter: function(value, row, index) {
 						return value?moment(value).format("YYYY-MM-DD HH:mm:ss"):"";
@@ -305,7 +305,7 @@
 				},{
 					title: I18n.joblog_field_triggerCode,
 					field: 'triggerCode',
-					width: '10',
+					width: '5',
 					widthUnit: '%',
 					formatter: function(value, row, index) {
 						var html = value;
@@ -321,7 +321,7 @@
 				},{
 					title: I18n.joblog_field_triggerMsg,
 					field: 'triggerMsg',
-					width: '10',
+					width: '5',
 					widthUnit: '%',
 					formatter: function(value, row, index) {
 						return value?'<a class="logTips" href="javascript:;" >'+ I18n.system_show +'<span style="display:none;">'+ value +'</span></a>':I18n.system_empty;
@@ -329,7 +329,7 @@
 				},{
 					title: I18n.joblog_field_handleTime,
 					field: 'handleTime',
-					width: '15',
+					width: '20',
 					widthUnit: '%',
 					formatter: function(value, row, index) {
 						return value?moment(value).format("YYYY-MM-DD HH:mm:ss"):"";
@@ -337,7 +337,7 @@
 				},{
 					title: I18n.joblog_field_handleCode,
 					field: 'handleCode',
-					width: '10',
+					width: '5',
 					widthUnit: '%',
 					formatter: function(value, row, index) {
 						var html = value;
@@ -355,7 +355,7 @@
 				},{
 					title: I18n.joblog_field_handleMsg,
 					field: 'handleMsg',
-					width: '10',
+					width: '5',
 					widthUnit: '%',
 					formatter: function(value, row, index) {
 						return value?'<a class="logTips" href="javascript:;" >'+ I18n.system_show +'<span style="display:none;">'+ value +'</span></a>':I18n.system_empty;
