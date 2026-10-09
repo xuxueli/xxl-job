@@ -145,6 +145,9 @@
 <#if jobInfo.glueType == "GLUE_GROOVY" >
 	<#assign glueTypeModeSrc = "${request.contextPath}/static/plugins/codemirror/mode/clike/clike.js" />
 	<#assign glueTypeIdeMode = "text/x-java" />
+<#elseif jobInfo.glueType == "GLUE_HIVESQL" >
+	<#assign glueTypeModeSrc = "${request.contextPath}/static/plugins/codemirror/mode/sql/sql.js" />
+	<#assign glueTypeIdeMode = "text/x-hive" />
 <#elseif jobInfo.glueType == "GLUE_SHELL" >
 	<#assign glueTypeModeSrc = "${request.contextPath}/static/plugins/codemirror/mode/shell/shell.js" />
 	<#assign glueTypeIdeMode = "text/x-sh" />
