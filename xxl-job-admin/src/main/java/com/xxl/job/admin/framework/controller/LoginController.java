@@ -97,7 +97,7 @@ public class LoginController {
 			return Response.ofFail(I18nUtil.getString("system_please_input") + I18nUtil.getString("change_pwd_field_oldpwd"));
 		}
 		if (password==null || password.trim().isEmpty()){
-			return Response.ofFail(I18nUtil.getString("system_please_input") + I18nUtil.getString("change_pwd_field_oldpwd"));
+			return Response.ofFail(I18nUtil.getString("system_please_input") + I18nUtil.getString("change_pwd_field_newpwd"));
 		}
 		password = password.trim();
 		if (!(password.length()>=4 && password.length()<=20)) {
