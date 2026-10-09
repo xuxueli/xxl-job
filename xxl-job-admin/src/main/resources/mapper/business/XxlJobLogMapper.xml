@@ -156,6 +156,9 @@
 			`handle_time`= #{handleTime}, 
 			`handle_code`= #{handleCode},
 			`handle_msg`= #{handleMsg}
+			<if test="handleCode == 200">
+			,`alarm_status`= 1
+			</if>
 		WHERE `id`= #{id}
 	</update>
 	
@@ -229,12 +232,9 @@
 
 	<select id="findFailJobLogIds" resultType="long" >
 		SELECT id FROM `xxl_job_log`
-		WHERE !(
-			(trigger_code in (0, 200) and handle_code = 0)
-			OR
-			(handle_code = 200)
-		)
-		AND `alarm_status` = 0
+		WHERE `alarm_status` = 0
+			AND `handle_code` != 200
+			AND (`handle_code` != 0 OR `trigger_code` NOT IN (0, 200))
 		ORDER BY id ASC
 		LIMIT #{pagesize}
 	</select>

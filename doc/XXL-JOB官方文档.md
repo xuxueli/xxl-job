@@ -3094,37 +3094,45 @@ alter table xxl_job_log
 - 3、【安全】任务RollingLog权限校验完善，防止越权查看任务日志；
 
 ### 7.47 版本 v3.5.0 Release Notes[ING]
-- 1、【新增】GLUE模式开关：新增GLUE模式开关（xxl.job.executor.glueenabled），支持执行器维度设置是否启用GLUE模式；
-- 2、【新增】AccessToken升级：支持执行期维度隔离设置，废弃旧的全局AccessToken，提升系统安全性；
-（注意：因为AccessToken调整为执行器维度，OpenAPI通讯协议部分发生适配变化，调度中心与执行器需要一并升级至v3.5.0体验）
-- 3、【新增】AccessToken在线管理：支持线上化动态管理，执行期管理UI界面可操作，提升操作效率及体验；
-- 4、【新增】OpenAPI能力增强：提供任务管理能力，包括任务新建/更新/删除、启动/停止、任务触发等；
+- 1、【新增】OpenAPI能力增强：提供任务管理能力，包括任务新建/更新/删除、启动/停止、任务触发等；
   （注意：任务管理OpenAPI及操作代码示例，详见官方文档）
+- 2、【新增】GLUE模式开关：新增GLUE模式开关（xxl.job.executor.glueenabled），支持执行器维度设置是否启用GLUE模式；
+- 3、【新增】AccessToken升级：支持执行期维度隔离设置，废弃旧的全局AccessToken，提升系统安全性；
+  （注意：因为AccessToken调整为执行器维度，OpenAPI通讯协议部分发生适配变化，调度中心与执行器需要一并升级至v3.5.0体验）
+- 4、【新增】AccessToken在线管理：支持线上化动态管理，执行期管理UI界面可操作，提升操作效率及体验；
 - 5、【重构】数据模型标准化，通用字段命名统一，建表SQL规范性完善；
 - 6、【重构】I18N资源精简，通过配置组合替换重复资源，避免资源配置无序增长；
 - 7、【优化】弹框交互优化：单体版本项目，iframe中内容弹框(modal/layer)，支持自适应性居中并在顶层展示；
 - 8、【优化】密码修改错误文案修复、gitignore规则优化；合并PR-4011；
 - 9、【修复】调度中心Tab打开XSS问题修复；合并PR-4003；
-
-- 99、【ING】OpenAPI权限处理；防越权强化处理；
-- 99、【ING】调度中心配置线上化：告警发送邮箱、I18N、线程池配置等，支持线上化配置并准实时生效；
+- 10、【优化】调度日志表索引优化，提升失败告警巡检查询性能；
 
 **备注：**     
 数据库升级脚本：
 ```
--- 1. 添加 access_token 列
+-- 1. 执行器表：添加 access_token 列
 ALTER TABLE `xxl_job_group` 
 ADD COLUMN `access_token` varchar(255) DEFAULT NULL COMMENT '执行器AccessToken' AFTER `address_list`;
 
--- 2. 创建 app_name 的唯一索引
+-- 2. 执行器表：创建 app_name 的唯一索引
 ALTER TABLE `xxl_job_group` ADD UNIQUE KEY `i_app_name` (`app_name`) USING BTREE;
 
--- 3. 将指定 AppName 的 access_token 更新为目标值；（ 默认值为 'default_token'，可自行修改）
+-- 3. 执行器表：将指定 AppName 的 access_token 更新为目标值；（ 默认值为 'default_token'，可自行修改）
 UPDATE `xxl_job_group` SET `access_token` = '<新Token值>' WHERE `app_name` = '<目标AppName>';
 
 -- 4. 执行器与任务表 name 字段标准化调整；
 ALTER TABLE `xxl_job_group` CHANGE `title` `name` VARCHAR(64) NOT NULL COMMENT '执行器名称';                                                                                                                            
 ALTER TABLE `xxl_job_info` CHANGE `job_desc` `name` VARCHAR(255) NOT NULL COMMENT '任务描述'; 
+
+-- 5. 日志表：添加 alarm_status 索引 + 历史数据循环处理（单次处理1W条，防止大表执行压力过大）
+ALTER TABLE `xxl_job_log`
+    ADD INDEX `i_alarm_status` (`alarm_status`);
+
+UPDATE `xxl_job_log`
+SET `alarm_status` = 1
+WHERE `alarm_status` = 0
+  AND `handle_code` = 200
+LIMIT 10000;
 ```
 
 ### 7.48 版本 v3.5.1 Release Notes[ING]
@@ -3149,6 +3157,7 @@ ALTER TABLE `xxl_job_info` CHANGE `job_desc` `name` VARCHAR(255) NOT NULL COMMEN
   - 观测及告警：
     - 日志保留策略（永久/3天…）、执行日志类型（rolling、普通） 【TODO】
     - 告警类型（whook、邮箱） 、告警配置（json） 【TODO】
+- 5、【TODO】调度中心配置线上化：告警发送邮箱、I18N、线程池配置等，支持线上化配置并准实时生效；
 
 
 ### TODO LIST
@@ -3177,6 +3186,7 @@ ALTER TABLE `xxl_job_info` CHANGE `job_desc` `name` VARCHAR(255) NOT NULL COMMEN
 - 11、任务标签：方便搜索；
 - 12、GLUE 模式 Web Ide 版本对比功能；
 - 13、自定义失败重试时间间隔；
+- 14、OpenAPI处理，防越权强化；
 
 
 ## 八、其他

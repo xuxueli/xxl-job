@@ -96,12 +96,13 @@ CREATE TABLE `xxl_job_log`
     `handle_time`               DATETIME            DEFAULT NULL            COMMENT '执行-时间',
     `handle_code`               INT                 NOT NULL                COMMENT '执行-状态',
     `handle_msg`                TEXT                DEFAULT NULL            COMMENT '执行-日志',
-    `alarm_status`              TINYINT             NOT NULL DEFAULT 0      COMMENT '告警状态：0-默认、1-无需告警、2-告警成功、3-告警失败',
+    `alarm_status`              TINYINT             NOT NULL DEFAULT 0      COMMENT '告警状态：0-默认、-1=锁定状态、1-无需告警、2-告警成功、3-告警失败',
     PRIMARY KEY (`id`),
     KEY `i_trigger_time` (`trigger_time`),
     KEY `i_handle_code` (`handle_code`),
     KEY `i_job_group` (`job_group`),
-    KEY `i_job_id` (`job_id`)
+    KEY `i_job_id` (`job_id`),
+    KEY `i_alarm_status` (`alarm_status`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4;
 
