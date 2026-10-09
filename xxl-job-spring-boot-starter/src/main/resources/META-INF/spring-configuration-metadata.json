@@ -1,0 +1,77 @@
+{
+  "groups": [
+    {
+      "name": "xxl.job.enabled",
+      "type": "java.lang.Boolean",
+      "description": "xxl job enabled",
+      "defaultValue": false,
+      "sourceType": "com.xxl.job.spring.boot.autoconfigure.XxlJobProperties",
+      "sourceMethod": "isEnabled"
+    },
+    {
+      "name": "xxl.job.admin.addresses",
+      "type": "java.lang.String",
+      "description": "xxl job admin addresses",
+      "defaultValue": "http://localhost:8080/xxl-job-admin",
+      "sourceType": "com.xxl.job.spring.boot.autoconfigure.XxlJobProperties$Admin",
+      "sourceMethod": "getAddresses"
+    },
+    {
+      "name": "xxl.job.accessToken",
+      "type": "java.lang.String",
+      "description": "xxl job access token",
+      "defaultValue": "defaultToken",
+      "sourceType": "com.xxl.job.spring.boot.autoconfigure.XxlJobProperties",
+      "sourceMethod": "getAccessToken"
+    },
+    {
+      "name": "xxl.job.executor.appname",
+      "type": "java.lang.String",
+      "description": "xxl job executor app name",
+      "defaultValue": "",
+      "sourceType": "com.xxl.job.spring.boot.autoconfigure.XxlJobProperties$Executor",
+      "sourceMethod": "getAppname"
+    },
+    {
+      "name": "xxl.job.executor.address",
+      "type": "java.lang.String",
+      "description": "xxl job executor address",
+      "defaultValue": "",
+      "sourceType": "com.xxl.job.spring.boot.autoconfigure.XxlJobProperties$Executor",
+      "sourceMethod": "getAddress"
+    },
+    {
+      "name": "xxl.job.executor.ip",
+      "type": "java.lang.String",
+      "description": "xxl job executor ip",
+      "defaultValue": "",
+      "sourceType": "com.xxl.job.spring.boot.autoconfigure.XxlJobProperties$Executor",
+      "sourceMethod": "getIp"
+    },
+    {
+      "name": "xxl.job.executor.port",
+      "type": "java.lang.Integer",
+      "description": "xxl job executor port",
+      "defaultValue": 0,
+      "sourceType": "com.xxl.job.spring.boot.autoconfigure.XxlJobProperties$Executor",
+      "sourceMethod": "getPort"
+    },
+    {
+      "name": "xxl.job.executor.logPath",
+      "type": "java.lang.String",
+      "description": "xxl job executor log path",
+      "defaultValue": "",
+      "sourceType": "com.xxl.job.spring.boot.autoconfigure.XxlJobProperties$Executor",
+      "sourceMethod": "getLogPath"
+    },
+    {
+      "name": "xxl.job.executor.logretentiondays",
+      "type": "java.lang.Integer",
+      "description": "xxl job executor log retention days",
+      "defaultValue": 0,
+      "sourceType": "com.xxl.job.spring.boot.autoconfigure.XxlJobProperties$Executor",
+      "sourceMethod": "getLogretentiondays"
+    }
+  ],
+  "hints": []
+}
