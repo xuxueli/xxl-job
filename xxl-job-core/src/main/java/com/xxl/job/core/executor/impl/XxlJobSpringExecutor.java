@@ -29,6 +29,11 @@ import java.util.Map;
 public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationContextAware, SmartInitializingSingleton, DisposableBean {
     private static final Logger logger = LoggerFactory.getLogger(XxlJobSpringExecutor.class);
 
+    /**
+     * scoped proxy 目标 Bean 定义名前缀（ScopedProxyUtils 生成，如 @RefreshScope 的 scopedTarget.refreshScopeJob）
+     */
+    private static final String SCOPED_TARGET_NAME_PREFIX = "scopedTarget.";
+
     // ---------------------- field ----------------------
 
     /**
@@ -94,8 +99,20 @@ public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationC
         }
 
         // 2、scan bean form jobhandler
-        String[] beanNames = applicationContext.getBeanNamesForType(Object.class, false, false);  // allowEagerInit=false, avoid early initialization
+        // includeNonSingletons=true：非单例作用域的目标定义（如 @RefreshScope 生成 scopedTarget.*）也要被扫描到
+        String[] beanNames = applicationContext.getBeanNamesForType(Object.class, true, false);  // allowEagerInit=false, avoid early initialization
         for (String beanName : beanNames) {
+
+            /**
+             * 2.0、scoped proxy 结构（如 @RefreshScope 生成 scopedTarget.<name> 目标定义）：
+             *      公开代理 Bean 定义交由对应的目标定义统一处理，避免同一 handler 重复注册
+              */
+            if (!beanName.startsWith(SCOPED_TARGET_NAME_PREFIX)
+                    && applicationContext instanceof BeanDefinitionRegistry scopedProxyRegistry
+                    && scopedProxyRegistry.containsBeanDefinition(SCOPED_TARGET_NAME_PREFIX + beanName)) {
+                logger.debug(">>>>>>>>>>> xxl-job bean-definition scan, skip scoped-proxy beanName:{}", beanName);
+                continue;
+            }
 
             /**
              * 2.1、skip by BeanDefinition:
@@ -151,7 +168,16 @@ public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationC
             }
 
             // 2.3、scan + registry Jobhandler
-            Object jobBean = applicationContext.getBean(beanName);
+            // scoped proxy 结构（如 @RefreshScope 生成 scopedTarget.<name> 目标定义）：
+            // 注册时使用公开代理 Bean，handler 每次调用经代理路由到作用域内的当前实例，保留刷新能力
+            String registryBeanName = beanName;
+            if (beanName.startsWith(SCOPED_TARGET_NAME_PREFIX)) {
+                String publicBeanName = beanName.substring(SCOPED_TARGET_NAME_PREFIX.length());
+                if (applicationContext.containsBean(publicBeanName)) {
+                    registryBeanName = publicBeanName;
+                }
+            }
+            Object jobBean = applicationContext.getBean(registryBeanName);
             for (Map.Entry<Method, XxlJob> jobMethodEntry : annotatedMethods.entrySet()) {
                 Method jobMethod = jobMethodEntry.getKey();
                 XxlJob xxlJob = jobMethodEntry.getValue();
