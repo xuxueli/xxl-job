@@ -7,6 +7,7 @@ import com.xxl.job.admin.business.scheduler.exception.XxlJobException;
 import com.xxl.job.admin.business.scheduler.misfire.MisfireStrategyEnum;
 import com.xxl.job.admin.business.scheduler.route.ExecutorRouteStrategyEnum;
 import com.xxl.job.admin.business.scheduler.type.ScheduleTypeEnum;
+import com.xxl.job.admin.business.scheduler.util.ScheduleTimezoneUtil;
 import com.xxl.job.admin.business.service.XxlJobService;
 import com.xxl.job.admin.framework.util.I18nUtil;
 import com.xxl.job.admin.framework.util.JobGroupPermissionUtil;
@@ -56,6 +57,8 @@ public class JobInfoController {
 		model.addAttribute("ExecutorBlockStrategyEnum", ExecutorBlockStrategyEnum.values());	    // 阻塞处理策略-字典
 		model.addAttribute("ScheduleTypeEnum", ScheduleTypeEnum.values());	    				// 调度类型
 		model.addAttribute("MisfireStrategyEnum", MisfireStrategyEnum.values());	    			// 调度过期策略
+		model.addAttribute("ScheduleTimezoneIds", ScheduleTimezoneUtil.getAvailableTimezoneIds());
+		model.addAttribute("DefaultScheduleTimezone", ScheduleTimezoneUtil.getDefaultTimezoneId());
 
 		// 执行器列表
 		List<XxlJobGroup> jobGroupListTotal =  xxlJobGroupMapper.findAll();
@@ -171,7 +174,8 @@ public class JobInfoController {
 	@RequestMapping("/nextTriggerTime")
 	@ResponseBody
 	public Response<List<String>> nextTriggerTime(@RequestParam("scheduleType") String scheduleType,
-												 @RequestParam("scheduleConf") String scheduleConf) {
+											 @RequestParam("scheduleConf") String scheduleConf,
+											 @RequestParam(value = "scheduleTimezone", required = false) String scheduleTimezone) {
 
 		// valid
 		if (StringTool.isBlank(scheduleType) || StringTool.isBlank(scheduleConf)) {
@@ -182,6 +186,7 @@ public class JobInfoController {
 		XxlJobInfo paramXxlJobInfo = new XxlJobInfo();
 		paramXxlJobInfo.setScheduleType(scheduleType);
 		paramXxlJobInfo.setScheduleConf(scheduleConf);
+		paramXxlJobInfo.setScheduleTimezone(scheduleTimezone);
 
 		// generate
 		List<String> result = new ArrayList<>();
@@ -201,7 +206,8 @@ public class JobInfoController {
 				}
 			}
 		} catch (Exception e) {
-			logger.error(">>>>>>>>>>> nextTriggerTime error. scheduleType = {}, scheduleConf= {}, error:{} ", scheduleType, scheduleConf, e.getMessage());
+			logger.error(">>>>>>>>>>> nextTriggerTime error. scheduleType = {}, scheduleConf= {}, scheduleTimezone= {}, error:{} ",
+					scheduleType, scheduleConf, scheduleTimezone, e.getMessage());
 			return Response.ofFail((I18nUtil.getString("schedule_type")+I18nUtil.getString("system_invalid")) + e.getMessage());
 		}
 		return Response.ofSuccess(result);

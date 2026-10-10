@@ -17,6 +17,7 @@
 
 		<result column="schedule_type" property="scheduleType" />
 		<result column="schedule_conf" property="scheduleConf" />
+		<result column="schedule_timezone" property="scheduleTimezone" />
 		<result column="misfire_strategy" property="misfireStrategy" />
 
 		<result column="executor_route_strategy" property="executorRouteStrategy" />
@@ -48,6 +49,7 @@
 		t.alarm_email,
 		t.schedule_type,
 		t.schedule_conf,
+		t.schedule_timezone,
 		t.misfire_strategy,
 		t.executor_route_strategy,
 		t.executor_handler,
@@ -121,6 +123,7 @@
 			alarm_email,
 			schedule_type,
 			schedule_conf,
+			schedule_timezone,
 			misfire_strategy,
             executor_route_strategy,
 			executor_handler,
@@ -145,6 +148,7 @@
 			#{alarmEmail},
 			#{scheduleType},
 			#{scheduleConf},
+			#{scheduleTimezone},
 			#{misfireStrategy},
 			#{executorRouteStrategy},
 			#{executorHandler},
@@ -183,6 +187,7 @@
 			alarm_email = #{alarmEmail},
 			schedule_type = #{scheduleType},
 			schedule_conf = #{scheduleConf},
+			schedule_timezone = #{scheduleTimezone},
 			misfire_strategy = #{misfireStrategy},
 			executor_route_strategy = #{executorRouteStrategy},
 			executor_handler = #{executorHandler},

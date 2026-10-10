@@ -12,6 +12,7 @@ import com.xxl.job.admin.business.scheduler.route.ExecutorRouteStrategyEnum;
 import com.xxl.job.admin.business.scheduler.thread.JobScheduleHelper;
 import com.xxl.job.admin.business.scheduler.trigger.TriggerTypeEnum;
 import com.xxl.job.admin.business.scheduler.type.ScheduleTypeEnum;
+import com.xxl.job.admin.business.scheduler.util.ScheduleTimezoneUtil;
 import com.xxl.job.admin.business.service.XxlJobService;
 import com.xxl.job.admin.framework.util.I18nUtil;
 import com.xxl.job.admin.framework.util.JobGroupPermissionUtil;
@@ -90,6 +91,9 @@ public class XxlJobServiceImpl implements XxlJobService {
 		if (scheduleTypeEnum == ScheduleTypeEnum.CRON) {
 			if (jobInfo.getScheduleConf()==null || !CronExpression.isValidExpression(jobInfo.getScheduleConf())) {
 				return Response.ofFail ( "Cron"+I18nUtil.getString("system_invalid"));
+			}
+			if (!ScheduleTimezoneUtil.isValidTimezone(jobInfo.getScheduleTimezone())) {
+				return Response.ofFail(I18nUtil.getString("schedule_timezone") + I18nUtil.getString("system_invalid"));
 			}
 		} else if (scheduleTypeEnum == ScheduleTypeEnum.FIX_RATE/* || scheduleTypeEnum == ScheduleTypeEnum.FIX_DELAY*/) {
 			if (jobInfo.getScheduleConf() == null) {
@@ -206,6 +210,9 @@ public class XxlJobServiceImpl implements XxlJobService {
 			if (jobInfo.getScheduleConf()==null || !CronExpression.isValidExpression(jobInfo.getScheduleConf())) {
 				return Response.ofFail ( "Cron"+I18nUtil.getString("system_invalid") );
 			}
+			if (!ScheduleTimezoneUtil.isValidTimezone(jobInfo.getScheduleTimezone())) {
+				return Response.ofFail(I18nUtil.getString("schedule_timezone") + I18nUtil.getString("system_invalid"));
+			}
 		} else if (scheduleTypeEnum == ScheduleTypeEnum.FIX_RATE /*|| scheduleTypeEnum == ScheduleTypeEnum.FIX_DELAY*/) {
 			if (jobInfo.getScheduleConf() == null) {
 				return Response.ofFail ( (I18nUtil.getString("schedule_type")+I18nUtil.getString("system_invalid")) );
@@ -274,11 +281,15 @@ public class XxlJobServiceImpl implements XxlJobService {
 		if (exists_jobInfo == null) {
 			return Response.ofFail ( (I18nUtil.getString("jobinfo_field_id")+I18nUtil.getString("system_not_found")) );
 		}
+		if (jobInfo.getScheduleTimezone() == null) {
+			jobInfo.setScheduleTimezone(exists_jobInfo.getScheduleTimezone());
+		}
 
 		// next trigger time (5s后生效，避开预读周期)
 		long nextTriggerTime = exists_jobInfo.getTriggerNextTime();
 		boolean scheduleDataNotChanged = jobInfo.getScheduleType().equals(exists_jobInfo.getScheduleType())
-				&& jobInfo.getScheduleConf().equals(exists_jobInfo.getScheduleConf());		// 触发配置如果不变，避免重复计算；
+				&& jobInfo.getScheduleConf().equals(exists_jobInfo.getScheduleConf())
+				&& Objects.equals(jobInfo.getScheduleTimezone(), exists_jobInfo.getScheduleTimezone());	// 触发配置如果不变，避免重复计算；
 		if (exists_jobInfo.getTriggerStatus() == TriggerStatus.RUNNING.getValue() && !scheduleDataNotChanged) {
 			try {
 				// generate next trigger time
@@ -301,6 +312,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 		exists_jobInfo.setAlarmEmail(jobInfo.getAlarmEmail());
 		exists_jobInfo.setScheduleType(jobInfo.getScheduleType());
 		exists_jobInfo.setScheduleConf(jobInfo.getScheduleConf());
+		exists_jobInfo.setScheduleTimezone(jobInfo.getScheduleTimezone());
 		exists_jobInfo.setMisfireStrategy(jobInfo.getMisfireStrategy());
 		exists_jobInfo.setExecutorRouteStrategy(jobInfo.getExecutorRouteStrategy());
 		exists_jobInfo.setExecutorHandler(jobInfo.getExecutorHandler().trim());				// remove the whitespace

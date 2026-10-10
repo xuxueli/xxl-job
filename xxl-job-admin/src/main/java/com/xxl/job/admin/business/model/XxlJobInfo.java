@@ -19,6 +19,7 @@ public class XxlJobInfo {
 
 	private String scheduleType;			// 调度类型：ScheduleTypeEnum
 	private String scheduleConf;			// 调度配置，值含义取决于调度类型
+	private String scheduleTimezone;		// CRON 调度时区，空值使用调度中心默认时区
 	private String misfireStrategy;			// 调度过期策略：MisfireStrategyEnum
 
 	private String executorRouteStrategy;	// 执行器路由策略：ExecutorRouteStrategyEnum
@@ -97,6 +98,14 @@ public class XxlJobInfo {
 
 	public void setScheduleConf(String scheduleConf) {
 		this.scheduleConf = scheduleConf;
+	}
+
+	public String getScheduleTimezone() {
+		return scheduleTimezone;
+	}
+
+	public void setScheduleTimezone(String scheduleTimezone) {
+		this.scheduleTimezone = scheduleTimezone;
 	}
 
 	public String getMisfireStrategy() {

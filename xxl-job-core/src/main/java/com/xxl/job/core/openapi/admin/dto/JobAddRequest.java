@@ -16,6 +16,7 @@ public class JobAddRequest implements Serializable {
 
     private String scheduleType;                    // NONE、CRON、FIX_RATE
     private String scheduleConf;
+    private String scheduleTimezone;                // optional IANA timezone for CRON
     private String misfireStrategy;                 // DO_NOTHING、FIRE_ONCE_NOW
 
     private String executorRouteStrategy;           // FIRST、LAST、ROUND、RANDOM、CONSISTENT_HASH、LEAST_FREQUENTLY_USED、LEAST_RECENTLY_USED、FAILOVER、BUSYOVER、SHARDING_BROADCAST
@@ -78,6 +79,14 @@ public class JobAddRequest implements Serializable {
 
     public void setScheduleConf(String scheduleConf) {
         this.scheduleConf = scheduleConf;
+    }
+
+    public String getScheduleTimezone() {
+        return scheduleTimezone;
+    }
+
+    public void setScheduleTimezone(String scheduleTimezone) {
+        this.scheduleTimezone = scheduleTimezone;
     }
 
     public String getMisfireStrategy() {

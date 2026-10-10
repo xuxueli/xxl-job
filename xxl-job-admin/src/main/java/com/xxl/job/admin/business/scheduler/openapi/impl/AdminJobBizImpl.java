@@ -61,6 +61,7 @@ public class AdminJobBizImpl implements AdminJobBiz {
         jobInfo.setAlarmEmail(request.getAlarmEmail());
         jobInfo.setScheduleType(request.getScheduleType());
         jobInfo.setScheduleConf(request.getScheduleConf());
+        jobInfo.setScheduleTimezone(request.getScheduleTimezone());
         jobInfo.setMisfireStrategy(request.getMisfireStrategy());
         jobInfo.setExecutorRouteStrategy(request.getExecutorRouteStrategy());
         jobInfo.setExecutorHandler(request.getExecutorHandler());
@@ -94,6 +95,7 @@ public class AdminJobBizImpl implements AdminJobBiz {
         jobInfo.setAlarmEmail(request.getAlarmEmail());
         jobInfo.setScheduleType(request.getScheduleType());
         jobInfo.setScheduleConf(request.getScheduleConf());
+        jobInfo.setScheduleTimezone(request.getScheduleTimezone());
         jobInfo.setMisfireStrategy(request.getMisfireStrategy());
         jobInfo.setExecutorRouteStrategy(request.getExecutorRouteStrategy());
         jobInfo.setExecutorHandler(request.getExecutorHandler());

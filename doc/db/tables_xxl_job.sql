@@ -2,6 +2,8 @@
 -- XXL-JOB
 -- Copyright (c) 2015-present, xuxueli.
 
+SET NAMES utf8mb4;
+
 CREATE DATABASE IF NOT EXISTS `xxl_job` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE `xxl_job`;
 
@@ -44,6 +46,7 @@ CREATE TABLE `xxl_job_info`
     `alarm_email`               VARCHAR(255)        DEFAULT NULL                    COMMENT '报警邮件',
     `schedule_type`             VARCHAR(50)         NOT NULL DEFAULT 'NONE'         COMMENT '调度类型',
     `schedule_conf`             VARCHAR(128)        DEFAULT NULL                    COMMENT '调度配置，值含义取决于调度类型',
+    `schedule_timezone`         VARCHAR(64)         DEFAULT NULL                    COMMENT 'CRON调度时区，空值使用调度中心默认时区',
     `misfire_strategy`          VARCHAR(50)         NOT NULL DEFAULT 'DO_NOTHING'   COMMENT '调度过期策略',
     `executor_route_strategy`   VARCHAR(50)         DEFAULT NULL                    COMMENT '执行器路由策略',
     `executor_handler`          VARCHAR(255)        DEFAULT NULL                    COMMENT '任务handler',

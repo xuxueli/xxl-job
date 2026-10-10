@@ -2180,6 +2180,7 @@ Header：
         "alarmEmail":"",                                        // 报警邮件（选填）
         "scheduleType":"CRON",                                  // 调度类型：NONE、CRON、FIX_RATE（必填）
         "scheduleConf":"0 0/1 * * * ?",                         // 调度配置，CRON时填cron表达式，FIX_RATE时填秒数（必填）
+        "scheduleTimezone":"Asia/Shanghai",                     // CRON时区，IANA时区ID（选填，默认调度中心时区）
         "misfireStrategy":"DO_NOTHING",                         // 调度过期策略：DO_NOTHING、FIRE_ONCE_NOW（选填）
         "executorRouteStrategy":"FIRST",                        // 路由策略：FIRST、LAST、ROUND、RANDOM、CONSISTENT_HASH、LEAST_FREQUENTLY_USED、LEAST_RECENTLY_USED、FAILOVER、BUSYOVER、SHARDING_BROADCAST（必填）
         "executorHandler":"demoJobHandler",                     // 执行器任务Handler（BEAN模式必填）
@@ -2220,6 +2221,7 @@ Header：
         "alarmEmail":"",                                        // 报警邮件（选填）
         "scheduleType":"CRON",                                  // 调度类型：NONE、CRON、FIX_RATE（必填）
         "scheduleConf":"0 0/1 * * * ?",                         // 调度配置（必填）
+        "scheduleTimezone":"Asia/Shanghai",                     // CRON时区，IANA时区ID（选填，默认保留原时区）
         "misfireStrategy":"DO_NOTHING",                         // 调度过期策略（选填）
         "executorRouteStrategy":"FIRST",                        // 路由策略（必填）
         "executorHandler":"demoJobHandler",                     // 执行器任务Handler（BEAN模式必填）
