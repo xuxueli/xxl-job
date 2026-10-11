@@ -102,7 +102,8 @@ public class ExecutorBizImpl implements ExecutorBiz {
             // valid handler
             if (jobHandler == null) {
                 try {
-                    IJobHandler originJobHandler = GlueFactory.getInstance().loadNewInstance(triggerRequest.getGlueSource());
+                    IJobHandler originJobHandler = GlueFactory.getInstance().loadNewInstance(
+                            triggerRequest.getJobId(), triggerRequest.getGlueSource());
                     jobHandler = new GlueJobHandler(originJobHandler, triggerRequest.getGlueUpdatetime());
                 } catch (Exception e) {
                     logger.error(e.getMessage(), e);

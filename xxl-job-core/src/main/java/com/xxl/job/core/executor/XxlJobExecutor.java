@@ -1,6 +1,7 @@
 package com.xxl.job.core.executor;
 
 import com.xxl.job.core.constant.Const;
+import com.xxl.job.core.glue.GlueFactory;
 import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.handler.annotation.XxlJob;
 import com.xxl.job.core.handler.impl.MethodJobHandler;
@@ -406,6 +407,8 @@ public class XxlJobExecutor  {
         if (oldJobThread != null) {
             oldJobThread.toStop(removeOldReason);
             oldJobThread.interrupt();
+            // drop glue class cache so outdated ClassLoader is not retained by the factory
+            GlueFactory.getInstance().clear(jobId);
 
             return oldJobThread;
         }
