@@ -101,6 +101,7 @@ XXL-JOB 是一个开源且免费项目，其正在进行的开发完全得益于
 - 18、Rolling实时日志：支持在线查看调度结果，并且支持以Rolling方式实时查看执行器输出的完整的执行日志；
 - 19、GLUE：提供Web IDE，支持在线开发任务逻辑代码，动态发布，实时编译生效，省略部署上线的过程。支持30个版本的历史版本回溯。
 - 20、脚本任务：支持以GLUE模式开发和运行脚本任务，包括Shell、Python、NodeJS、PHP、PowerShell等类型脚本;
+- 20-1、HiveSQL任务：支持以GLUE(HiveSQL)模式在线编写并运行Hive SQL，通过beeline客户端连接HiveServer2执行，支持任务入参和分片参数引用;
 - 21、命令行任务：原生提供通用命令行任务Handler（Bean任务，"CommandJobHandler"）；业务方只需要提供命令行即可；
 - 22、任务依赖：支持配置子任务依赖，当父任务执行结束且执行成功后将会主动触发一次子任务的执行, 多个子任务用逗号分隔；
 - 23、一致性：“调度中心”通过DB锁保证集群分布式调度的一致性, 一次任务调度只会触发一次执行；
@@ -120,6 +121,39 @@ XXL-JOB 是一个开源且免费项目，其正在进行的开发完全得益于
 - 37、AI任务：原生提供AI执行器，并内置多个AI任务Handler，与spring-ai、ollama、openclaw、dify等集成打通，支持快速开发AI类任务。
 - 38、审计日志：记录任务操作敏感信息，用于系统监控、审计和安全分析，可快速追溯异常行为以及定位排查问题。
 - 39、优雅停机：调度中心停机，检测时间轮非空时主动等待调度完成；客户端停机，检测存在运行中任务时，停止接收新任务并主动等待任务执行完成；
+
+## HiveSQL 任务
+支持以 GLUE(HiveSQL) 模式在线编写并运行 Hive SQL：调度中心在线维护 SQL，执行器通过本机 Hive 安装目录下的 beeline 客户端连接 HiveServer2 执行，实时输出执行日志，支持多语句 SQL、任务入参和分片参数引用。
+
+### 使用方式
+1. 调度中心新增任务，GLUE类型选择 "GLUE(HiveSQL)"；
+2. 在 GLUE IDE 中编写 Hive SQL（支持多条 SQL，默认遇错即停，执行器在线实时打印日志）；
+3. 任务入参通过 `${jobParam}` 引用，分片参数通过 `${shardIndex}`、`${shardTotal}` 引用，例如：
+
+```sql
+insert overwrite table dwd.demo_01 partition(dt='${jobParam}')
+select ... from ods.demo_01 where dt = '${jobParam}';
+```
+
+### 执行器配置
+执行器所在机器需安装 Hive（提供 beeline 客户端）。HiveServer2 连接信息按 "JVM 系统属性 > 环境变量 > 默认值" 的优先级读取，均适配本机默认 HiveServer2（127.0.0.1:10000）：
+
+| 配置项（系统属性 / 环境变量） | 说明 | 默认值 |
+| --- | --- | --- |
+| xxl.job.hive.home / XXL_JOB_HIVE_HOME | Hive 安装目录（用于定位 bin/beeline），未配置时读取环境变量 HIVE_HOME，仍不存在则使用 PATH 中的 beeline | 空 |
+| xxl.job.hive.jdbc-url / XXL_JOB_HIVE_JDBC_URL | HiveServer2 JDBC 地址 | jdbc:hive2://127.0.0.1:10000/default |
+| xxl.job.hive.user / XXL_JOB_HIVE_USER | HiveServer2 用户名（未开启认证时可不配置） | 空 |
+| xxl.job.hive.password / XXL_JOB_HIVE_PASSWORD | HiveServer2 密码 | 空 |
+
+示例（执行器启动参数）：
+```
+-Dxxl.job.hive.home=/Users/yu/java/hive/apache-hive-4.0.1-bin
+-Dxxl.job.hive.jdbc-url=jdbc:hive2://127.0.0.1:10000/default
+-Dxxl.job.hive.user=hive
+-Dxxl.job.hive.password=hive
+```
+
+注意：密码会以命令行参数形式传给 beeline 子进程，请勿配置高权限账号明文密码。
 
 ## Development
 于2015年中，我在github上创建XXL-JOB项目仓库并提交第一个commit，随之进行系统结构设计，UI选型，交互设计……

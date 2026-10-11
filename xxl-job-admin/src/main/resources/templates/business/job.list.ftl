@@ -352,6 +352,11 @@ Write-Host "${I18n.jobinfo_shard_total}: " $args[$args.Count-1]
 Write-Host "Good bye!"
 exit 0
 </textarea>
+<textarea class="glueSource_hivesql" style="display:none;" >
+-- xxl-job: hello hive sql
+-- 任务入参：<#noparse>${jobParam}</#noparse>；分片参数：<#noparse>${shardIndex}</#noparse> / <#noparse>${shardTotal}</#noparse>
+show databases;
+</textarea>
 						</form>
 					</div>
 				</div>
@@ -1150,6 +1155,8 @@ exit 0
 				$("#addModal .form textarea[name='glueSource']").val( $("#addModal .form .glueSource_nodejs").val() );
 			} else if ('GLUE_POWERSHELL'==glueType){
 				$("#addModal .form textarea[name='glueSource']").val( $("#addModal .form .glueSource_powershell").val() );
+			} else if ('GLUE_HIVESQL'==glueType){
+				$("#addModal .form textarea[name='glueSource']").val( $("#addModal .form .glueSource_hivesql").val() );
 			} else {
 				$("#addModal .form textarea[name='glueSource']").val("");
 			}

@@ -25,7 +25,7 @@ public class JobAddRequest implements Serializable {
     private int executorTimeout;
     private int executorFailRetryCount;
 
-    private String glueType;                        // BEAN、GLUE_GROOVY、GLUE_SHELL、GLUE_PYTHON、GLUE_NODEJS、GLUE_POWERSHELL、GLUE_PHP
+    private String glueType;                        // BEAN、GLUE_GROOVY、GLUE_HIVESQL、GLUE_SHELL、GLUE_PYTHON、GLUE_NODEJS、GLUE_POWERSHELL、GLUE_PHP
     private String glueSource;
     private String glueRemark;
 

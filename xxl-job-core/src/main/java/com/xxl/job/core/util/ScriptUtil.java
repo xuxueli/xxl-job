@@ -44,6 +44,29 @@ public class ScriptUtil {
      */
     public static int execToFile(String command, String scriptFile, String logFile, String... params) throws IOException {
 
+        // build command
+        List<String> cmdarray = new ArrayList<>();
+        cmdarray.add(command);
+        cmdarray.add(scriptFile);
+        if (ArrayTool.isNotEmpty(params)) {
+            for (String param:params) {
+                cmdarray.add(param);
+            }
+        }
+
+        return execToFile(cmdarray, logFile);
+    }
+
+    /**
+     * 脚本执行，日志文件实时输出
+     *
+     * @param cmdarray      command + args
+     * @param logFile       log file
+     * @return  exit code
+     * @throws IOException exception
+     */
+    public static int execToFile(List<String> cmdarray, String logFile) throws IOException {
+
         FileOutputStream fileOutputStream = null;
         Thread inputThread = null;
         Thread errorThread = null;
@@ -52,18 +75,8 @@ public class ScriptUtil {
             // 1、build file OutputStream
             fileOutputStream = new FileOutputStream(logFile, true);
 
-            // 2、build command
-            List<String> cmdarray = new ArrayList<>();
-            cmdarray.add(command);
-            cmdarray.add(scriptFile);
-            if (ArrayTool.isNotEmpty(params)) {
-                for (String param:params) {
-                    cmdarray.add(param);
-                }
-            }
+            // 2、process：exec
             String[] cmdarrayFinal = cmdarray.toArray(new String[0]);
-
-            // 3、process：exec
             process = Runtime.getRuntime().exec(cmdarrayFinal);
             Process finalProcess = process;
 
