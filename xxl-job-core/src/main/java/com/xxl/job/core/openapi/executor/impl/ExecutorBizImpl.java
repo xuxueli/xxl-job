@@ -31,27 +31,17 @@ public class ExecutorBizImpl implements ExecutorBiz {
 
     @Override
     public Response<String> idleBeat(IdleBeatRequest idleBeatRequest) {
-
-        // isRunningOrHasQueue
-        boolean isRunningOrHasQueue = false;
-        JobThread jobThread = XxlJobExecutor.getInstance().loadJobThread(idleBeatRequest.getJobId());
-        if (jobThread != null && jobThread.isRunningOrHasQueue()) {
-            isRunningOrHasQueue = true;
-        }
-
-        if (isRunningOrHasQueue) {
-            return Response.ofFail("job thread is running or has trigger queue.");
-        }
-        return Response.ofSuccess();
+        XxlJobExecutor executor = XxlJobExecutor.getInstance();
+        return executor.executeWithJobThreadLock(idleBeatRequest.getJobId(), () -> {
+            JobThread jobThread = executor.loadJobThread(idleBeatRequest.getJobId());
+            return jobThread != null && jobThread.isRunningOrHasQueue()
+                    ? Response.ofFail("job thread is running or has trigger queue.")
+                    : Response.ofSuccess();
+        });
     }
 
     @Override
     public Response<String> trigger(TriggerRequest triggerRequest) {
-
-        // load job info：jobHandler + jobThread + glueTypeEnum
-        JobThread jobThread = XxlJobExecutor.getInstance().loadJobThread(triggerRequest.getJobId());
-        IJobHandler jobHandler = jobThread!=null?jobThread.getHandler():null;
-        String removeOldReason = null;
         GlueTypeEnum glueTypeEnum = GlueTypeEnum.match(triggerRequest.getGlueType());
 
         // valid glue (non-BEAN) enabled
@@ -63,11 +53,25 @@ public class ExecutorBizImpl implements ExecutorBiz {
             }
         }
 
+        XxlJobExecutor executor = XxlJobExecutor.getInstance();
+        // Keep handler selection, thread replacement, and queue insertion atomic for this job ID.
+        return executor.executeWithJobThreadLock(triggerRequest.getJobId(),
+                () -> triggerWithJobThreadLock(executor, triggerRequest, glueTypeEnum));
+    }
+
+    private Response<String> triggerWithJobThreadLock(XxlJobExecutor executor,
+                                                       TriggerRequest triggerRequest,
+                                                       GlueTypeEnum glueTypeEnum) {
+        // load job info：jobHandler + jobThread
+        JobThread jobThread = executor.loadJobThread(triggerRequest.getJobId());
+        IJobHandler jobHandler = jobThread!=null?jobThread.getHandler():null;
+        String removeOldReason = null;
+
         // dispatch handler
         if (GlueTypeEnum.BEAN == glueTypeEnum) {
 
             // new jobhandler
-            IJobHandler newJobHandler = XxlJobExecutor.getInstance().loadJobHandler(triggerRequest.getExecutorHandler());
+            IJobHandler newJobHandler = executor.loadJobHandler(triggerRequest.getExecutorHandler());
 
             // valid old jobThread
             if (jobThread!=null && jobHandler != newJobHandler) {
@@ -152,7 +156,7 @@ public class ExecutorBizImpl implements ExecutorBiz {
 
         // replace thread (new or exists invalid)
         if (jobThread == null) {
-            jobThread = XxlJobExecutor.getInstance().registJobThread(triggerRequest.getJobId(), jobHandler, removeOldReason);
+            jobThread = executor.registJobThread(triggerRequest.getJobId(), jobHandler, removeOldReason);
         }
 
         // push data to queue
@@ -161,14 +165,11 @@ public class ExecutorBizImpl implements ExecutorBiz {
 
     @Override
     public Response<String> kill(KillRequest killRequest) {
-        // kill handlerThread, and create new one
-        JobThread jobThread = XxlJobExecutor.getInstance().loadJobThread(killRequest.getJobId());
-        if (jobThread != null) {
-            XxlJobExecutor.getInstance().removeJobThread(killRequest.getJobId(), "scheduling center kill job.");
-            return Response.ofSuccess();
-        }
-
-        return Response.ofSuccess( "job thread already killed.");
+        JobThread jobThread = XxlJobExecutor.getInstance().removeJobThread(
+                killRequest.getJobId(), "scheduling center kill job.");
+        return jobThread != null
+                ? Response.ofSuccess()
+                : Response.ofSuccess("job thread already killed.");
     }
 
     @Override
