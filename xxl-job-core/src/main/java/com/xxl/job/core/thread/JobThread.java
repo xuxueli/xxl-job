@@ -109,8 +109,12 @@ public class JobThread extends Thread{
 					idleTimes = 0;
 					triggerLogIdSet.remove(triggerParam.getLogId());
 
-					// log filename, like "logPath/yyyy-MM-dd/9999.log"
-					String logFileName = XxlJobFileAppender.makeLogFileName(new Date(triggerParam.getLogDateTime()), triggerParam.getLogId());
+					// log filename, like "logPath/yyyy-MM-dd/job-7.log"
+					String logFileName = XxlJobFileAppender.makeLogFileName(new Date(triggerParam.getLogDateTime()), triggerParam.getJobId());
+
+					// write START marker and index entry
+					XxlJobFileAppender.appendLogStart(logFileName, triggerParam.getLogId());
+
 					XxlJobContext xxlJobContext = new XxlJobContext(
 							triggerParam.getJobId(),
 							triggerParam.getExecutorParams(),
@@ -199,12 +203,20 @@ public class JobThread extends Thread{
 				XxlJobHelper.log("<br>----------- JobThread Exception:" + errorMsg + "<br>----------- xxl-job job execute end(error) -----------");
 			} finally {
                 if(triggerParam != null) {
+                    // write END marker
+                    String logFileName = XxlJobContext.getXxlJobContext() != null
+                            ? XxlJobContext.getXxlJobContext().getLogFileName() : null;
+                    if (logFileName != null) {
+                        XxlJobFileAppender.appendLogEnd(logFileName, triggerParam.getLogId());
+                    }
+
                     // callback handler info
                     if (!toStop) {
                         // common
                         XxlJobExecutor.getInstance().getTriggerCallbackThreadHelper().pushCallBack(new CallbackData(
                         		triggerParam.getLogId(),
 								triggerParam.getLogDateTime(),
+								triggerParam.getJobId(),
 								XxlJobContext.getXxlJobContext().getHandleCode(),
 								XxlJobContext.getXxlJobContext().getHandleMsg() )
 						);
@@ -213,6 +225,7 @@ public class JobThread extends Thread{
 						XxlJobExecutor.getInstance().getTriggerCallbackThreadHelper().pushCallBack(new CallbackData(
                         		triggerParam.getLogId(),
 								triggerParam.getLogDateTime(),
+								triggerParam.getJobId(),
 								XxlJobContext.HANDLE_CODE_FAIL,
 								stopReason + " [job running, killed]" )
 						);
@@ -229,6 +242,7 @@ public class JobThread extends Thread{
 				XxlJobExecutor.getInstance().getTriggerCallbackThreadHelper().pushCallBack(new CallbackData(
 						triggerParam.getLogId(),
 						triggerParam.getLogDateTime(),
+						triggerParam.getJobId(),
 						XxlJobContext.HANDLE_CODE_FAIL,
 						stopReason + " [job not executed, in the job queue, killed.]")
 				);

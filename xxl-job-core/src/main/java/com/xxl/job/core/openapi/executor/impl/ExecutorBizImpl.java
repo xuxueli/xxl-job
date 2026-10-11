@@ -173,10 +173,21 @@ public class ExecutorBizImpl implements ExecutorBiz {
 
     @Override
     public Response<LogData> log(LogRequest logRequest) {
-        // log filename: logPath/yyyy-MM-dd/9999.log
-        String logFileName = XxlJobFileAppender.makeLogFileName(new Date(logRequest.getLogDateTime()), logRequest.getLogId());
+        // try new format first: logPath/yyyy-MM-dd/job-{jobId}.log
+        if (logRequest.getJobId() > 0) {
+            String newLogFileName = XxlJobFileAppender.makeLogFileName(
+                    new Date(logRequest.getLogDateTime()), logRequest.getJobId());
+            if (new java.io.File(newLogFileName).exists()) {
+                LogData logResult = XxlJobFileAppender.readLogByLogId(
+                        newLogFileName, logRequest.getLogId(), logRequest.getFromLineNum());
+                return Response.ofSuccess(logResult);
+            }
+        }
 
-        LogData logResult = XxlJobFileAppender.readLog(logFileName, logRequest.getFromLineNum());
+        // fallback to legacy format: logPath/yyyy-MM-dd/logId.log
+        String legacyLogFileName = XxlJobFileAppender.makeLogFileNameLegacy(
+                new Date(logRequest.getLogDateTime()), logRequest.getLogId());
+        LogData logResult = XxlJobFileAppender.readLog(legacyLogFileName, logRequest.getFromLineNum());
         return Response.ofSuccess(logResult);
     }
 

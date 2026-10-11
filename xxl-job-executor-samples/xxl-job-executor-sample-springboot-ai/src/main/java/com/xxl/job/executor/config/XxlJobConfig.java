@@ -52,6 +52,9 @@ public class XxlJobConfig {
     @Value("${xxl.job.executor.glueenabled:true}")
     private Boolean glueEnabled;
 
+    @Value("${xxl.job.executor.logIsolatedByAddress:false}")
+    private Boolean logIsolatedByAddress;
+
     @Bean
     public XxlJobSpringExecutor xxlJobExecutor() {
         logger.info(">>>>>>>>>>> xxl-job config init.");
@@ -68,6 +71,7 @@ public class XxlJobConfig {
         xxlJobSpringExecutor.setLogRetentionDays(logRetentionDays);
         xxlJobSpringExecutor.setExcludedPackage(excludedPackage);
         xxlJobSpringExecutor.setGlueEnabled(glueEnabled);
+        xxlJobSpringExecutor.setLogIsolatedByAddress(logIsolatedByAddress);
 
         return xxlJobSpringExecutor;
     }

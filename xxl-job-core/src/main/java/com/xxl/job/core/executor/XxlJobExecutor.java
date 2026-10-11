@@ -56,6 +56,7 @@ public class XxlJobExecutor  {
     private String address;                                         // executor registry-address: default use address to registry , otherwise use ip:port if address is null
     private String logPath = "/data/applogs/xxl-job/jobhandler";    // executor log-path
     private int logRetentionDays = 30;                              // executor log-retention-days
+    private boolean logIsolatedByAddress = false;                   // executor log isolated by address (for shared PVC), default false
     private boolean glueEnabled = true;                             // executor glue (non-BEAN) task enable, default true
 
     public void setAdminAddresses(String adminAddresses) {
@@ -87,6 +88,9 @@ public class XxlJobExecutor  {
     }
     public void setLogRetentionDays(int logRetentionDays) {
         this.logRetentionDays = logRetentionDays;
+    }
+    public void setLogIsolatedByAddress(boolean logIsolatedByAddress) {
+        this.logIsolatedByAddress = logIsolatedByAddress;
     }
     public void setGlueEnabled(boolean glueEnabled) {
         this.glueEnabled = glueEnabled;
@@ -164,6 +168,11 @@ public class XxlJobExecutor  {
         // 3、EmbedServer + ExecutorRegistryThreadHelper
         executorRegistryThreadHelper = new ExecutorRegistryThreadHelper();
         startEmbedServer();
+
+        // 4、init log isolation (after address resolved)
+        if (logIsolatedByAddress) {
+            XxlJobFileAppender.setLogIsolation(true, this.address);
+        }
     }
 
     /**

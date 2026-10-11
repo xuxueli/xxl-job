@@ -10,14 +10,16 @@ public class CallbackData implements Serializable {
 
     private long logId;
     private long logDateTime;
+    private int jobId;
 
     private int handleCode;
     private String handleMsg;
 
     public CallbackData(){}
-    public CallbackData(long logId, long logDateTime, int handleCode, String handleMsg) {
+    public CallbackData(long logId, long logDateTime, int jobId, int handleCode, String handleMsg) {
         this.logId = logId;
         this.logDateTime = logDateTime;
+        this.jobId = jobId;
         this.handleCode = handleCode;
         this.handleMsg = handleMsg;
     }
@@ -36,6 +38,14 @@ public class CallbackData implements Serializable {
 
     public void setLogDateTime(long logDateTime) {
         this.logDateTime = logDateTime;
+    }
+
+    public int getJobId() {
+        return jobId;
+    }
+
+    public void setJobId(int jobId) {
+        this.jobId = jobId;
     }
 
     public int getHandleCode() {
@@ -59,6 +69,7 @@ public class CallbackData implements Serializable {
         return "CallbackRequest{" +
                 "logId=" + logId +
                 ", logDateTime=" + logDateTime +
+                ", jobId=" + jobId +
                 ", handleCode=" + handleCode +
                 ", handleMsg='" + handleMsg + '\'' +
                 '}';
