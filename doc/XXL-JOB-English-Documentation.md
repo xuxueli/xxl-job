@@ -1459,6 +1459,70 @@ The scheduling center API service location: com.xxl.job.core.openapi.AdminBiz.ja
 The scheduling center API service requests reference code：com.xxl.job.adminbiz.AdminBizTest.java
 
 
+### 5.12 OIDC Single Sign-On (optional)
+The scheduling center supports OpenID Connect (OIDC) single sign-on using the Authorization Code + PKCE flow. After a successful login the existing xxl-sso login state is reused, so downstream permission checks are unchanged. The feature is disabled by default and, when enabled, coexists with username/password login.
+
+Configure it in the scheduling center's application.properties:
+```
+### enable OIDC login, disabled by default
+xxl.job.oidc.enabled=false
+### issuer URI of the IdP, used to discover OIDC metadata (/.well-known/openid-configuration)
+xxl.job.oidc.issuer-uri=
+### client ID registered at the IdP
+xxl.job.oidc.client-id=
+### client secret; if non-empty it is sent via client_secret_basic, if empty the client is a public client (PKCE only)
+xxl.job.oidc.client-secret=
+### callback URL, must exactly match the redirect URI registered at the IdP
+xxl.job.oidc.redirect-uri=http://localhost:8080/auth/oidc/callback
+### requested scopes
+xxl.job.oidc.scope=openid profile email
+### id_token claim used as the scheduling center username
+xxl.job.oidc.username-claim=preferred_username
+### roles claim, full key (e.g. https://x/roles) or dotted path (e.g. realm_access.roles), string array or single string; roles are synced only when admin-role is also set
+xxl.job.oidc.roles-claim=
+### if the roles contain this value the user is admin (role=1), otherwise normal user (role=0); effective only together with roles-claim
+xxl.job.oidc.admin-role=
+### create the user automatically if it does not exist
+xxl.job.oidc.auto-create-user=true
+```
+
+When enabled, the login page shows a "Login with SSO" button below the login button. It redirects to the IdP, which calls back `/auth/oidc/callback` after authentication. The callback validates state and PKCE, plus the id_token signature, iss, aud, exp and nonce. Any failure aborts the login and returns to the login page with an error message.
+
+**User mapping and role rules**
+- Username: the value of username-claim in the id_token, matched against xxl_job_user.username; it must match `^[A-Za-z0-9][A-Za-z0-9._@-]{0,49}$` and equal the stored username exactly (case-sensitive), otherwise the login fails;
+- Missing user: with auto-create-user=true the user is created automatically (username = claim value, random unusable password, empty permission, i.e. no executor-group access until an admin assigns it); with auto-create-user=false the login fails;
+- Role sync: when both roles-claim and admin-role are non-empty, the role is synced from the IdP on every login (contains admin-role -> admin, role=1; otherwise normal user, role=0), overriding roles edited manually in user management. If either is empty, new users get role=0 and existing users keep their stored role;
+
+**IdP-side configuration**
+- Register a client with Authorization Code flow and PKCE (S256) enabled;
+- Set the redirect URI to `{admin address}/auth/oidc/callback`, matching xxl.job.oidc.redirect-uri;
+- Make sure the username-claim field is present in the id_token;
+- To sync roles, put the roles into the id_token field named by roles-claim (e.g. in Keycloak, use a client mapper to add realm roles to the id_token as `roles`);
+
+**Keycloak example**
+```
+xxl.job.oidc.enabled=true
+xxl.job.oidc.issuer-uri=https://keycloak.example.com/realms/xxl-job
+xxl.job.oidc.client-id=xxl-job-admin
+xxl.job.oidc.client-secret=******
+xxl.job.oidc.redirect-uri=https://xxl-job.example.com/auth/oidc/callback
+xxl.job.oidc.username-claim=preferred_username
+xxl.job.oidc.roles-claim=roles
+xxl.job.oidc.admin-role=xxl-job-admin
+```
+
+**Notes**
+- The IdP should be exposed over https; issuer-uri must be https in production;
+- username-claim must be unique in the IdP and not user-editable: in Keycloak disable editUsernameAllowed and self-registration, or restrict who can access the client; for IdPs that allow renaming, use `sub` or a verified `email` as username-claim;
+- Without role sync, a local account with the same username as the SSO user (including admin) is inherited by that SSO user; verify the mapping between IdP usernames and local accounts;
+- Roles are synced only at login: if the IdP revokes a role, existing sessions (7 days by default) and local password login are unaffected;
+- auto-create-user defaults to true and any user the IdP authenticates is created; restrict which users can access the client on the IdP side;
+- Behind a reverse proxy set `server.forward-headers-strategy=native` so https is detected correctly;
+- Users auto-created on first login have a random unusable password and can only sign in via SSO (an admin can reset the password in user management);
+- Logout only clears the local scheduling center login state; it does not log out of the IdP;
+- An unavailable IdP at startup does not prevent the scheduling center from starting; IdP metadata is loaded lazily on the first SSO login;
+
+
 ## 6 Version update log
 ### 6.1 version V1.1.x，New features [2015-12-05]
 **【since V1.1.x，XXL-JOB was used by company hiring me，alias Ferrari inner company，the latest version is recommended for new project】**

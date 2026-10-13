@@ -1909,6 +1909,70 @@ docker compose down
 - 执行器优雅停机：执行器停机时，如果检测到存在运行中任务，在停止接收新任务后会主动等待一段时间，等待任务执行完成；否则立即停机；
 
 
+### 5.26 OIDC 单点登录（可选）
+调度中心支持基于 OpenID Connect（OIDC）的单点登录，采用 Authorization Code + PKCE 流程。登录成功后复用现有 xxl-sso 登录态，下游权限校验无需改动；该功能默认关闭，开启后与账号密码登录并存，互不影响。
+
+在调度中心配置文件 application.properties 中配置，示例如下：
+```
+### 是否开启 OIDC 登录，默认关闭
+xxl.job.oidc.enabled=false
+### IdP 的 issuer 地址，用于自动发现 OIDC 元数据（/.well-known/openid-configuration）
+xxl.job.oidc.issuer-uri=
+### 在 IdP 注册的客户端 ID
+xxl.job.oidc.client-id=
+### 客户端密钥；非空时以 client_secret_basic 方式提交，为空则按 public client 处理（仅依赖 PKCE）
+xxl.job.oidc.client-secret=
+### 回调地址，需与 IdP 中注册的 redirect URI 完全一致
+xxl.job.oidc.redirect-uri=http://localhost:8080/auth/oidc/callback
+### 申请的 scope
+xxl.job.oidc.scope=openid profile email
+### 取 id_token 中哪个 claim 作为调度中心用户名
+xxl.job.oidc.username-claim=preferred_username
+### 角色 claim，支持完整 key（如 https://x/roles）或点号路径（如 realm_access.roles），值可为字符串数组或单个字符串；需与 admin-role 同时配置才同步角色
+xxl.job.oidc.roles-claim=
+### 命中该角色值则为管理员（role=1），否则为普通用户（role=0）；与 roles-claim 同时非空才生效
+xxl.job.oidc.admin-role=
+### 用户不存在时是否自动创建
+xxl.job.oidc.auto-create-user=true
+```
+
+开启后，登录页将在登录按钮下方展示 "SSO 登录" 入口；点击后跳转 IdP 认证，认证成功回调 `/auth/oidc/callback` 并完成登录。回调阶段会校验 state、PKCE，以及 id_token 的签名、iss、aud、exp 与 nonce；任一校验失败均登录失败，并跳转回登录页提示。
+
+**用户映射与角色规则**
+- 用户名：取 id_token 中 username-claim 对应的值，与 xxl_job_user 表的 username 匹配；须符合 `^[A-Za-z0-9][A-Za-z0-9._@-]{0,49}$`（字母数字开头，可含 . _ @ -，最长 50），且与库中已有用户名大小写完全一致，否则登录失败；
+- 用户不存在：auto-create-user=true 时自动创建用户（username 为 claim 值，密码为随机不可用值，permission 为空，即无任何执行器权限，需管理员后续分配）；auto-create-user=false 时登录失败；
+- 角色同步：roles-claim 与 admin-role 都非空时，每次登录均按 IdP 同步角色，包含 admin-role 则为管理员（role=1），否则为普通用户（role=0），会覆盖在用户管理中手动修改的角色；任一为空则不同步，新用户为普通用户（role=0），已有用户保持库中角色不变；
+
+**IdP 侧需要配置**
+- 注册客户端，开启 Authorization Code 流程与 PKCE（S256）；
+- 配置 redirect URI 为：`{调度中心地址}/auth/oidc/callback`，需与 xxl.job.oidc.redirect-uri 一致；
+- 确保 username-claim 对应的字段出现在 id_token 中；
+- 如需同步角色，需把角色放进 id_token 的 roles-claim 对应字段中（例如 Keycloak 通过 client mapper 将 realm roles 写入 id_token 的 roles）；
+
+**Keycloak 配置示例**
+```
+xxl.job.oidc.enabled=true
+xxl.job.oidc.issuer-uri=https://keycloak.example.com/realms/xxl-job
+xxl.job.oidc.client-id=xxl-job-admin
+xxl.job.oidc.client-secret=******
+xxl.job.oidc.redirect-uri=https://xxl-job.example.com/auth/oidc/callback
+xxl.job.oidc.username-claim=preferred_username
+xxl.job.oidc.roles-claim=roles
+xxl.job.oidc.admin-role=xxl-job-admin
+```
+
+**注意事项**
+- IdP 对外应使用 https 提供服务，生产环境 issuer-uri 必须为 https；
+- username-claim 必须在 IdP 中唯一，且用户不可自行修改：Keycloak 请关闭 editUsernameAllowed 与自助注册，或限制可访问该 client 的用户；允许用户改名的 IdP，建议改用 `sub` 或已验证的 `email` 作为 username-claim；
+- 未配置角色同步时，与 SSO 用户名相同的本地账号（包括 admin）会被该 SSO 用户继承其权限，请确认 IdP 用户名与本地账号的对应关系；
+- 角色同步只在登录时发生：IdP 收回角色后，已登录用户的会话（默认 7 天）与本地账号密码登录不受影响；
+- auto-create-user 默认为 true，任何能通过 IdP 认证的用户都会被自动创建，建议在 IdP 侧限制可访问该 client 的用户；
+- 调度中心部署在反向代理之后时，请设置 `server.forward-headers-strategy=native`，以便正确识别 https；
+- 首次登录自动创建的用户，其密码为随机不可用值，无法通过账号密码登录，只能通过 SSO 登录（管理员可在用户管理中重置密码）；
+- 登出仅清理调度中心本地登录态，不会同时登出 IdP；
+- 启动时 IdP 不可用不影响调度中心启动，首次 SSO 登录时才会加载 IdP 元数据；
+
+
 ## 六、调度中心/执行器 OpenApi
 XXL-JOB 目标是一种跨平台、跨语言的任务调度规范和协议。
 
@@ -3168,6 +3232,7 @@ LIMIT 10000;
     - 日志保留策略（永久/3天…）、执行日志类型（rolling、普通） 【TODO】
     - 告警类型（whook、邮箱） 、告警配置（json） 【TODO】
 - 5、【TODO】调度中心配置线上化：告警发送邮箱、I18N、线程池配置等，支持线上化配置并准实时生效；
+- 6、【新增】调度中心支持 OIDC 单点登录（Authorization Code + PKCE），可对接 Keycloak、Authing、Azure AD 等 IdP；默认关闭，支持用户自动创建与角色映射；
 
 
 ### TODO LIST

@@ -2,6 +2,7 @@ package com.xxl.job.admin.framework.controller;
 
 import com.xxl.job.admin.framework.mapper.XxlJobUserMapper;
 import com.xxl.job.admin.framework.model.XxlJobUser;
+import com.xxl.job.admin.framework.oidc.OidcProperties;
 import com.xxl.job.admin.framework.util.I18nUtil;
 import com.xxl.sso.core.annotation.XxlSso;
 import com.xxl.sso.core.helper.XxlSsoHelper;
@@ -31,6 +32,8 @@ public class LoginController {
 
 	@Resource
 	private XxlJobUserMapper xxlJobUserMapper;
+	@Resource
+	private OidcProperties oidcProperties;
 
 	@RequestMapping("/login")
 	@XxlSso(login = false)
@@ -43,7 +46,9 @@ public class LoginController {
 			modelAndView.setView(new RedirectView("/",true,false));
 			return modelAndView;
 		}
-		return new ModelAndView("framework/base/login");
+		ModelAndView loginView = new ModelAndView("framework/base/login");
+		loginView.addObject("oidcEnabled", oidcProperties.isEnabled());
+		return loginView;
 	}
 
 	@RequestMapping(value="/doLogin", method=RequestMethod.POST)

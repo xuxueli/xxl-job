@@ -65,6 +65,11 @@
 			<groupId>com.xuxueli</groupId>
 			<artifactId>xxl-sso-core</artifactId>
 		</dependency>
+		<!-- oidc -->
+		<dependency>
+			<groupId>com.nimbusds</groupId>
+			<artifactId>oauth2-oidc-sdk</artifactId>
+		</dependency>
 
 	</dependencies>
 

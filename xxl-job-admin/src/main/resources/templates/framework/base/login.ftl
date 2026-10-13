@@ -41,6 +41,13 @@
 						<button type="submit" class="btn btn-primary btn-block btn-flat">${I18n.login_btn}</button>
 					</div>
 				</div>
+				<#if oidcEnabled!false>
+				<div class="row" style="margin-top: 10px;">
+					<div class="col-xs-12">
+						<a href="${request.contextPath}/auth/oidc/login" class="btn btn-default btn-block btn-flat">${I18n.login_oidc_btn}</a>
+					</div>
+				</div>
+				</#if>
 			</div>
 		</form>
 	</div>
@@ -58,6 +65,16 @@ $(function () {
 		radioClass: 'iradio_square-blue',
 		increaseArea: '20%' // optional
 	});
+
+	// oidc login fail
+	if (new URLSearchParams(window.location.search).has('oidcError')) {
+		layer.open({
+			title: I18n.system_tips,
+			btn: [ I18n.system_ok ],
+			content: I18n.login_oidc_fail,
+			icon: '2'
+		});
+	}
 
 	// login Form Valid
 	var loginFormValid = $("#loginForm").validate({
