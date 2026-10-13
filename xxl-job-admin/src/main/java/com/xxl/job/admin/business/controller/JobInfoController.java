@@ -171,41 +171,8 @@ public class JobInfoController {
 	@RequestMapping("/nextTriggerTime")
 	@ResponseBody
 	public Response<List<String>> nextTriggerTime(@RequestParam("scheduleType") String scheduleType,
-												 @RequestParam("scheduleConf") String scheduleConf) {
-
-		// valid
-		if (StringTool.isBlank(scheduleType) || StringTool.isBlank(scheduleConf)) {
-			return Response.ofSuccess(new ArrayList<>());
-		}
-
-		// param
-		XxlJobInfo paramXxlJobInfo = new XxlJobInfo();
-		paramXxlJobInfo.setScheduleType(scheduleType);
-		paramXxlJobInfo.setScheduleConf(scheduleConf);
-
-		// generate
-		List<String> result = new ArrayList<>();
-		try {
-			Date lastTime = new Date();
-			for (int i = 0; i < 5; i++) {
-
-				// generate next trigger time
-				ScheduleTypeEnum scheduleTypeEnum = ScheduleTypeEnum.match(paramXxlJobInfo.getScheduleType(), ScheduleTypeEnum.NONE);
-				lastTime = scheduleTypeEnum.getScheduleType().generateNextTriggerTime(paramXxlJobInfo, lastTime);
-
-				// collect data
-				if (lastTime != null) {
-					result.add(DateTool.formatDateTime(lastTime));
-				} else {
-					break;
-				}
-			}
-		} catch (Exception e) {
-			logger.error(">>>>>>>>>>> nextTriggerTime error. scheduleType = {}, scheduleConf= {}, error:{} ", scheduleType, scheduleConf, e.getMessage());
-			return Response.ofFail((I18nUtil.getString("schedule_type")+I18nUtil.getString("system_invalid")) + e.getMessage());
-		}
-		return Response.ofSuccess(result);
-
+												  @RequestParam("scheduleConf") String scheduleConf) {
+		return xxlJobService.nextTriggerTime(scheduleType, scheduleConf);
 	}
 
 }

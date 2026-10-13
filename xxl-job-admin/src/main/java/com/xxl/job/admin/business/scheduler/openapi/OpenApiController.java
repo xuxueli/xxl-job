@@ -1,5 +1,6 @@
 package com.xxl.job.admin.business.scheduler.openapi;
 
+import com.xxl.job.admin.business.controller.JobInfoController;
 import com.xxl.job.admin.business.model.XxlJobGroup;
 import com.xxl.job.admin.business.scheduler.config.XxlJobAdminBootstrap;
 import com.xxl.job.core.constant.Const;
@@ -102,6 +103,10 @@ public class OpenApiController {
                 case "triggerJob": {
                     JobTriggerRequest jobParam = GsonTool.fromJson(requestBody, JobTriggerRequest.class);
                     return adminJobBiz.triggerJob(jobParam);
+                }
+                case "nextTriggerTime":{
+                    JobTriggerRequest jobParam = GsonTool.fromJson(requestBody, JobTriggerRequest.class);
+                    return adminJobBiz.nextTriggerTime(jobParam);
                 }
                 default:
                     return Response.ofFail("invalid request, uri-mapping("+ uri +") not found.");

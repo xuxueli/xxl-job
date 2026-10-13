@@ -6,6 +6,8 @@ import com.xxl.job.core.openapi.admin.dto.JobTriggerRequest;
 import com.xxl.job.core.openapi.admin.dto.JobUpdateRequest;
 import com.xxl.tool.response.Response;
 
+import java.util.List;
+
 /**
  * openapi admin job interface for job lifecycle management
  *
@@ -42,5 +44,7 @@ public interface AdminJobBiz {
      * trigger a job manually once
      */
     Response<String> triggerJob(JobTriggerRequest request);
+
+    Response<List<String>> nextTriggerTime(JobTriggerRequest request);
 
 }

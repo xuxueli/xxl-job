@@ -11,6 +11,8 @@ public class JobTriggerRequest implements Serializable {
     private int id;
     private String executorParam;
     private String addressList;
+    private String scheduleType;
+    private String scheduleConf;
 
     public JobTriggerRequest() {
     }
@@ -39,4 +41,19 @@ public class JobTriggerRequest implements Serializable {
         this.addressList = addressList;
     }
 
+    public String getScheduleType() {
+        return scheduleType;
+    }
+
+    public void setScheduleType(String scheduleType) {
+        this.scheduleType = scheduleType;
+    }
+
+    public String getScheduleConf() {
+        return scheduleConf;
+    }
+
+    public void setScheduleConf(String scheduleConf) {
+        this.scheduleConf = scheduleConf;
+    }
 }

@@ -6,6 +6,7 @@ import com.xxl.tool.response.PageModel;
 import com.xxl.tool.response.Response;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -49,6 +50,11 @@ public interface XxlJobService {
 	 * trigger
 	 */
 	public Response<String> trigger(LoginInfo loginInfo, int jobId, String executorParam, String addressList);
+
+	/**
+	 * nextTriggerTime
+	 */
+	public Response<List<String>> nextTriggerTime(String scheduleType,String scheduleConf);
 
 	/**
 	 * dashboard info

@@ -158,4 +158,9 @@ public class AdminJobBizImpl implements AdminJobBiz {
                 request.getAddressList());
     }
 
+    @Override
+    public Response<List<String>> nextTriggerTime(JobTriggerRequest request) {
+        return xxlJobService.nextTriggerTime(request.getScheduleType(),request.getScheduleConf());
+    }
+
 }
