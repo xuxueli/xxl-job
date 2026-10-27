@@ -200,6 +200,9 @@ public class XxlJobAdminBootstrap implements InitializingBean, DisposableBean {
     @Value("${xxl.job.logretentiondays}")
     private int logretentiondays;
 
+    @Value("${xxl.job.alarm.failcount:1}")
+    private int alarmFailCount;
+
     // service, mapper
     @Resource
     private XxlJobLogMapper xxlJobLogMapper;
@@ -261,6 +264,13 @@ public class XxlJobAdminBootstrap implements InitializingBean, DisposableBean {
             return 100;
         }
         return scheduleBatchSize;
+    }
+
+    public int getAlarmFailCount() {
+        if (alarmFailCount < 1) {
+            return 1;  // alarm on every failure by default
+        }
+        return alarmFailCount;
     }
 
     public int getLogretentiondays() {

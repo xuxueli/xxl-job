@@ -239,6 +239,13 @@
 		LIMIT #{pagesize}
 	</select>
 
+	<select id="findRecentJobLogs" resultMap="XxlJobLog" >
+		SELECT <include refid="Base_Column_List" /> FROM `xxl_job_log` AS t
+		WHERE `t`.`job_id` = #{jobId}
+		ORDER BY `t`.`id` DESC
+		LIMIT #{limitN}
+	</select>
+
 	<update id="updateAlarmStatus" >
 		UPDATE xxl_job_log
 		SET
