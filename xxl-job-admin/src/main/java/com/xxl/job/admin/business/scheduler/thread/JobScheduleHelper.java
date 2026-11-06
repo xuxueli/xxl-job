@@ -110,7 +110,7 @@ public class JobScheduleHelper {
                                     refreshNextTriggerTime(jobInfo, new Date());
 
                                     // next-trigger-time in 5s, pre-read again
-                                    if (jobInfo.getTriggerStatus()== TriggerStatus.RUNNING.getValue() && nowTime + PRE_READ_MS > jobInfo.getTriggerNextTime()) {
+                                    if (shouldPreReadNextTriggerTime(jobInfo, nowTime)) {
 
                                         // 1、make ring second
                                         int ringSecond = (int)((jobInfo.getTriggerNextTime()/1000)%60);
@@ -256,6 +256,10 @@ public class JobScheduleHelper {
         ringThread.start();
     }
 
+    static boolean shouldPreReadNextTriggerTime(XxlJobInfo jobInfo, long nowTime) {
+        return jobInfo.getTriggerStatus() != TriggerStatus.STOPPED.getValue()
+                && nowTime + PRE_READ_MS > jobInfo.getTriggerNextTime();
+    }
     /**
      * refresh next trigger time of job
      *
