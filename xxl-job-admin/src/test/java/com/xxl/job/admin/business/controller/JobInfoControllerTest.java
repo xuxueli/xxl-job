@@ -2,6 +2,7 @@ package com.xxl.job.admin.business.controller;
 
 import com.xxl.sso.core.constant.Const;
 import jakarta.servlet.http.Cookie;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -44,6 +45,25 @@ public class JobInfoControllerTest extends AbstractSpringMvcTest {
     ).andReturn();
 
     logger.info(ret.getResponse().getContentAsString());
+  }
+
+  @Test
+  public void testListAll() throws Exception {
+    // query all jobs under permitted jobGroups
+    MvcResult ret = mockMvc.perform(
+        post("/jobinfo/listAll").cookie(cookie)
+    ).andReturn();
+    logger.info(ret.getResponse().getContentAsString());
+    Assertions.assertEquals(200, ret.getResponse().getStatus());
+
+    // query all jobs under single jobGroup
+    ret = mockMvc.perform(
+        post("/jobinfo/listAll")
+            .param("jobGroup", "1")
+            .cookie(cookie)
+    ).andReturn();
+    logger.info(ret.getResponse().getContentAsString());
+    Assertions.assertEquals(200, ret.getResponse().getStatus());
   }
 
 }

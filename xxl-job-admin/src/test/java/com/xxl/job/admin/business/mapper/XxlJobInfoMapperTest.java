@@ -35,6 +35,17 @@ public class XxlJobInfoMapperTest {
 	}
 	
 	@Test
+	public void listAllByGroups(){
+		// single group
+		List<XxlJobInfo> list1 = xxlJobInfoMapper.listAllByGroups(List.of(1));
+		logger.info("listAllByGroups single: {}", list1!=null?list1.size():null);
+
+		// multiple groups
+		List<XxlJobInfo> list2 = xxlJobInfoMapper.listAllByGroups(List.of(1, 2));
+		logger.info("listAllByGroups multiple: {}", list2!=null?list2.size():null);
+	}
+
+	@Test
 	public void save_load(){
 		XxlJobInfo info = new XxlJobInfo();
 		info.setJobGroup(1);

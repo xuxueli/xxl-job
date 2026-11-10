@@ -39,6 +39,14 @@ public interface XxlJobInfoMapper {
 
 	public List<XxlJobInfo> getJobsByGroup(@Param("jobGroup") int jobGroup);
 
+	/**
+	 * query all jobs under the given jobGroups, without paging.
+	 *
+	 * @param jobGroupIds
+	 * @return
+	 */
+	public List<XxlJobInfo> listAllByGroups(@Param("jobGroupIds") List<Integer> jobGroupIds);
+
 	public int findAllCount();
 
 	/**

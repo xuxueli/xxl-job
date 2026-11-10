@@ -213,6 +213,16 @@
 		WHERE t.job_group = #{jobGroup}
 	</select>
 
+	<select id="listAllByGroups" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
+		SELECT <include refid="Base_Column_List" />
+		FROM xxl_job_info AS t
+		WHERE t.job_group IN
+		<foreach collection="jobGroupIds" item="item" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+		ORDER BY id DESC
+	</select>
+
 	<select id="findAllCount" resultType="int">
 		SELECT count(1)
 		FROM xxl_job_info

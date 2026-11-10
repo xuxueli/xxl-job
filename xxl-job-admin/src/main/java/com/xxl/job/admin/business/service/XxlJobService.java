@@ -6,6 +6,7 @@ import com.xxl.tool.response.PageModel;
 import com.xxl.tool.response.Response;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -19,6 +20,11 @@ public interface XxlJobService {
 	 * page list
 	 */
 	public Response<PageModel<XxlJobInfo>> pageList(int offset, int pagesize, int jobGroup, int triggerStatus, String name, String executorHandler, String author);
+
+	/**
+	 * list all jobs under the given jobGroups, without paging.
+	 */
+	public Response<List<XxlJobInfo>> listAll(List<Integer> jobGroupIds);
 
 	/**
 	 * add job
