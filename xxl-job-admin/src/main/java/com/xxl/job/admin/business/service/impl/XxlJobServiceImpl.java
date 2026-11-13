@@ -66,6 +66,15 @@ public class XxlJobServiceImpl implements XxlJobService {
 	}
 
 	@Override
+	public Response<List<XxlJobInfo>> listAll(List<Integer> jobGroupIds) {
+
+		// list all, no paging
+		List<XxlJobInfo> list = xxlJobInfoMapper.listAllByGroups(jobGroupIds);
+
+		return Response.ofSuccess(list);
+	}
+
+	@Override
 	public Response<String> add(XxlJobInfo jobInfo, LoginInfo loginInfo) {
 
 		// valid base

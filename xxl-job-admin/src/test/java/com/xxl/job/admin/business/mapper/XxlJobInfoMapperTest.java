@@ -8,6 +8,7 @@ import com.xxl.job.admin.business.scheduler.type.ScheduleTypeEnum;
 import com.xxl.tool.core.CollectionTool;
 import com.xxl.tool.core.DateTool;
 import jakarta.annotation.Resource;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +35,18 @@ public class XxlJobInfoMapperTest {
 		List<XxlJobInfo> list2 = xxlJobInfoMapper.getJobsByGroup(1);
 	}
 	
+	@Test
+	public void listAllByGroups(){
+		List<XxlJobInfo> singleGroup = xxlJobInfoMapper.listAllByGroups(List.of(1));
+		Assertions.assertEquals(1, singleGroup.size());
+		Assertions.assertEquals(1, singleGroup.get(0).getJobGroup());
+
+		List<XxlJobInfo> multipleGroups = xxlJobInfoMapper.listAllByGroups(List.of(1, 2));
+		Assertions.assertEquals(4, multipleGroups.size());
+		Assertions.assertEquals(List.of(4, 3, 2, 1), multipleGroups.stream().map(XxlJobInfo::getId).toList());
+		Assertions.assertTrue(multipleGroups.stream().allMatch(item -> item.getJobGroup() == 1 || item.getJobGroup() == 2));
+	}
+
 	@Test
 	public void save_load(){
 		XxlJobInfo info = new XxlJobInfo();

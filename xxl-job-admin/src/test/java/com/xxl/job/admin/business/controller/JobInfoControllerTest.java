@@ -1,7 +1,7 @@
 package com.xxl.job.admin.business.controller;
 
-import com.xxl.sso.core.constant.Const;
 import jakarta.servlet.http.Cookie;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -12,6 +12,8 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class JobInfoControllerTest extends AbstractSpringMvcTest {
   private static Logger logger = LoggerFactory.getLogger(JobInfoControllerTest.class);
@@ -26,7 +28,9 @@ public class JobInfoControllerTest extends AbstractSpringMvcTest {
             .param("userName", "admin")
             .param("password", "123456")
     ).andReturn();
-    cookie = ret.getResponse().getCookie(Const.XXL_SSO_TOKEN);
+    logger.info("login response: {}", ret.getResponse().getContentAsString());
+    cookie = ret.getResponse().getCookie("xxl_job_login_token");
+    Assertions.assertNotNull(cookie, "Login should issue an SSO cookie");
   }
 
   @Test
@@ -44,6 +48,26 @@ public class JobInfoControllerTest extends AbstractSpringMvcTest {
     ).andReturn();
 
     logger.info(ret.getResponse().getContentAsString());
+  }
+
+  @Test
+  public void testListAll() throws Exception {
+    mockMvc.perform(post("/jobinfo/listAll").cookie(cookie))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.code").value(200))
+        .andExpect(jsonPath("$.data.length()").value(4));
+
+    mockMvc.perform(post("/jobinfo/listAll").param("jobGroup", "1").cookie(cookie))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.code").value(200))
+        .andExpect(jsonPath("$.data.length()").value(1))
+        .andExpect(jsonPath("$.data[0].jobGroup").value(1));
+
+    mockMvc.perform(post("/jobinfo/listAll").param("jobGroup", "2").cookie(cookie))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.code").value(200))
+        .andExpect(jsonPath("$.data.length()").value(3))
+        .andExpect(jsonPath("$.data[0].jobGroup").value(2));
   }
 
 }

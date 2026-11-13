@@ -95,6 +95,31 @@ public class JobInfoController {
 		// page
 		return xxlJobService.pageList(offset, pagesize, jobGroup, triggerStatus, name, executorHandler, author);
 	}
+
+	@RequestMapping("/listAll")
+	@ResponseBody
+	public Response<List<XxlJobInfo>> listAll(HttpServletRequest request,
+											  @RequestParam(required = false, defaultValue = "-1") int jobGroup) {
+
+		// valid jobGroup permission
+		List<Integer> jobGroupIds;
+		if (jobGroup > 0) {
+			// single jobGroup
+			JobGroupPermissionUtil.validJobGroupPermission(request, jobGroup);
+			jobGroupIds = new ArrayList<>();
+			jobGroupIds.add(jobGroup);
+		} else {
+			// all permitted jobGroups
+			List<XxlJobGroup> jobGroupList = JobGroupPermissionUtil.filterJobGroupByPermission(request, xxlJobGroupMapper.findAll());
+			jobGroupIds = jobGroupList.stream().map(XxlJobGroup::getId).toList();
+		}
+		if (CollectionTool.isEmpty(jobGroupIds)) {
+			return Response.ofSuccess(new ArrayList<XxlJobInfo>());
+		}
+
+		// list all
+		return xxlJobService.listAll(jobGroupIds);
+	}
 	
 	@RequestMapping("/insert")
 	@ResponseBody
