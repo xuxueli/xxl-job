@@ -32,6 +32,7 @@ public class XxlJobServiceImplTest {
         jobInfoMapper = mock(XxlJobInfoMapper.class);
         XxlJobGroupMapper jobGroupMapper = mock(XxlJobGroupMapper.class);
         when(jobGroupMapper.load(1)).thenReturn(new XxlJobGroup());
+        when(jobGroupMapper.load(2)).thenReturn(new XxlJobGroup());
 
         service = new XxlJobServiceImpl();
         ReflectionTestUtils.setField(service, "xxlJobInfoMapper", jobInfoMapper);
@@ -44,6 +45,17 @@ public class XxlJobServiceImplTest {
         when(jobInfoMapper.loadById(42)).thenReturn(existing);
 
         Response<String> response = service.update(updateRequest(1), userWithJobGroups("1"));
+
+        assertFalse(response.isSuccess());
+        verify(jobInfoMapper, never()).update(any());
+    }
+
+    @Test
+    public void updateRejectsUnauthorizedTargetGroup() {
+        XxlJobInfo existing = existingJob(1);
+        when(jobInfoMapper.loadById(42)).thenReturn(existing);
+
+        Response<String> response = service.update(updateRequest(2), userWithJobGroups("1"));
 
         assertFalse(response.isSuccess());
         verify(jobInfoMapper, never()).update(any());

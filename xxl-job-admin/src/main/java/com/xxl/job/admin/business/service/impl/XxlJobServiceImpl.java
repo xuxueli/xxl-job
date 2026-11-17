@@ -279,6 +279,9 @@ public class XxlJobServiceImpl implements XxlJobService {
 		if (!JobGroupPermissionUtil.hasJobGroupPermission(loginInfo, exists_jobInfo.getJobGroup())) {
 			return Response.ofFail(I18nUtil.getString("system_permission_limit"));
 		}
+		if (jobInfo.getJobGroup() > 0 && !JobGroupPermissionUtil.hasJobGroupPermission(loginInfo, jobInfo.getJobGroup())) {
+			return Response.ofFail(I18nUtil.getString("system_permission_limit"));
+		}
 
 		// next trigger time (5s后生效，避开预读周期)
 		long nextTriggerTime = exists_jobInfo.getTriggerNextTime();
