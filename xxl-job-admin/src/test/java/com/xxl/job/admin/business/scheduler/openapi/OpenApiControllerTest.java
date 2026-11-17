@@ -6,6 +6,7 @@ import com.xxl.job.admin.business.model.XxlJobInfo;
 import com.xxl.job.admin.business.scheduler.config.XxlJobAdminBootstrap;
 import com.xxl.job.admin.business.scheduler.thread.JobRegistryHelper;
 import com.xxl.job.core.constant.Const;
+import com.xxl.job.core.openapi.admin.AdminBiz;
 import com.xxl.job.core.openapi.admin.AdminJobBiz;
 import com.xxl.job.core.openapi.admin.dto.JobOperateRequest;
 import com.xxl.tool.response.Response;
@@ -33,6 +34,7 @@ import static org.mockito.Mockito.when;
 public class OpenApiControllerTest {
 
     private AdminJobBiz adminJobBiz;
+    private AdminBiz adminBiz;
     private XxlJobInfoMapper jobInfoMapper;
     private OpenApiController controller;
     private MockedStatic<XxlJobAdminBootstrap> bootstrapMock;
@@ -40,8 +42,10 @@ public class OpenApiControllerTest {
     @BeforeEach
     public void setUp() {
         adminJobBiz = mock(AdminJobBiz.class);
+        adminBiz = mock(AdminBiz.class);
         jobInfoMapper = mock(XxlJobInfoMapper.class);
         controller = new OpenApiController();
+        ReflectionTestUtils.setField(controller, "adminBiz", adminBiz);
         ReflectionTestUtils.setField(controller, "adminJobBiz", adminJobBiz);
         Field mapperField = ReflectionUtils.findField(OpenApiController.class, "xxlJobInfoMapper");
         if (mapperField != null) {
@@ -109,6 +113,25 @@ public class OpenApiControllerTest {
 
         assertTrue(response.isSuccess());
         verify(adminJobBiz).removeJob(any(JobOperateRequest.class));
+    }
+
+    @Test
+    public void invalidTokenCannotReachJobOperations() {
+        Response<?> response = (Response<?>) controller.api(request("{\"id\":42}"), "removeJob", "wrong-token", "group-one", "{\"id\":42}");
+
+        assertFalse(response.isSuccess());
+        verifyNoInteractions(adminJobBiz, jobInfoMapper);
+    }
+
+    @Test
+    public void registryRemainsAvailableWithAuthenticatedGroup() {
+        when(adminBiz.registry(any())).thenReturn(Response.ofSuccess());
+
+        Response<?> response = (Response<?>) controller.api(request("{}"), "registry", "token-one", "group-one", "{}");
+
+        assertTrue(response.isSuccess());
+        verify(adminBiz).registry(any());
+        verifyNoInteractions(adminJobBiz, jobInfoMapper);
     }
 
     private static MockHttpServletRequest request(String body) {
