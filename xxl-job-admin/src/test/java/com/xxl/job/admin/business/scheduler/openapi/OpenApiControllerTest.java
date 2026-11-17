@@ -9,6 +9,7 @@ import com.xxl.job.core.constant.Const;
 import com.xxl.job.core.openapi.admin.AdminBiz;
 import com.xxl.job.core.openapi.admin.AdminJobBiz;
 import com.xxl.job.core.openapi.admin.dto.JobOperateRequest;
+import com.xxl.job.core.openapi.admin.dto.RegistryRequest;
 import com.xxl.tool.response.Response;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -134,14 +135,40 @@ public class OpenApiControllerTest {
         verifyNoInteractions(adminJobBiz, jobInfoMapper);
     }
 
-    @Test
-    public void registryRemainsAvailableWithAuthenticatedGroup() {
-        when(adminBiz.registry(any())).thenReturn(Response.ofSuccess());
+    @ParameterizedTest
+    @ValueSource(strings = {"registry", "registryRemove"})
+    public void registryOperationsRejectAnotherGroup(String uri) {
+        String body = "{\"registryGroup\":\"EXECUTOR\",\"registryKey\":\"group-two\",\"registryValue\":\"http://127.0.0.1:9999/\"}";
+        if (uri.equals("registry")) {
+            when(adminBiz.registry(any())).thenReturn(Response.ofSuccess());
+        } else {
+            when(adminBiz.registryRemove(any())).thenReturn(Response.ofSuccess());
+        }
 
-        Response<?> response = (Response<?>) controller.api(request("{}"), "registry", "token-one", "group-one", "{}");
+        Response<?> response = (Response<?>) controller.api(request(body), uri, "token-one", "group-one", body);
+
+        assertFalse(response.isSuccess());
+        verifyNoInteractions(adminBiz, adminJobBiz, jobInfoMapper);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"registry", "registryRemove"})
+    public void registryOperationsAllowAuthenticatedGroup(String uri) {
+        String body = "{\"registryGroup\":\"EXECUTOR\",\"registryKey\":\"group-one\",\"registryValue\":\"http://127.0.0.1:9999/\"}";
+        if (uri.equals("registry")) {
+            when(adminBiz.registry(any())).thenReturn(Response.ofSuccess());
+        } else {
+            when(adminBiz.registryRemove(any())).thenReturn(Response.ofSuccess());
+        }
+
+        Response<?> response = (Response<?>) controller.api(request(body), uri, "token-one", "group-one", body);
 
         assertTrue(response.isSuccess());
-        verify(adminBiz).registry(any());
+        if (uri.equals("registry")) {
+            verify(adminBiz).registry(any(RegistryRequest.class));
+        } else {
+            verify(adminBiz).registryRemove(any(RegistryRequest.class));
+        }
         verifyNoInteractions(adminJobBiz, jobInfoMapper);
     }
 

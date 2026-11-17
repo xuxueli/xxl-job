@@ -79,10 +79,16 @@ public class OpenApiController {
                 }
                 case "registry": {
                     RegistryRequest registryParam = GsonTool.fromJson(requestBody, RegistryRequest.class);
+                    if (!appname.equals(registryParam.getRegistryKey())) {
+                        return permissionDenied();
+                    }
                     return adminBiz.registry(registryParam);
                 }
                 case "registryRemove": {
                     RegistryRequest registryParam = GsonTool.fromJson(requestBody, RegistryRequest.class);
+                    if (!appname.equals(registryParam.getRegistryKey())) {
+                        return permissionDenied();
+                    }
                     return adminBiz.registryRemove(registryParam);
                     }
                 case "addJob": {
