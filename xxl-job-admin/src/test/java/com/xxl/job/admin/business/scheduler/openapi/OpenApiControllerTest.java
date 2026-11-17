@@ -83,6 +83,17 @@ public class OpenApiControllerTest {
         verifyNoInteractions(adminJobBiz);
     }
 
+    @ParameterizedTest
+    @ValueSource(strings = {"updateJob", "removeJob", "startJob", "stopJob", "triggerJob"})
+    public void jobOperationsRejectMissingJob(String uri) {
+        when(jobInfoMapper.loadById(42)).thenReturn(null);
+
+        Response<?> response = (Response<?>) controller.api(request("{\"id\":42}"), uri, "token-one", "group-one", "{\"id\":42}");
+
+        assertFalse(response.isSuccess());
+        verifyNoInteractions(adminJobBiz);
+    }
+
     @Test
     public void addRejectsAnotherGroup() {
         Response<?> response = (Response<?>) controller.api(request("{\"jobGroup\":2}"), "addJob", "token-one", "group-one", "{\"jobGroup\":2}");
