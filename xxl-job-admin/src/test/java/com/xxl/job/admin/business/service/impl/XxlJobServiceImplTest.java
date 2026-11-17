@@ -4,6 +4,7 @@ import com.xxl.job.admin.business.mapper.XxlJobGroupMapper;
 import com.xxl.job.admin.business.mapper.XxlJobInfoMapper;
 import com.xxl.job.admin.business.model.XxlJobGroup;
 import com.xxl.job.admin.business.model.XxlJobInfo;
+import com.xxl.job.admin.framework.constant.Consts;
 import com.xxl.sso.core.model.LoginInfo;
 import com.xxl.tool.response.Response;
 import org.junit.jupiter.api.BeforeEach;
@@ -54,6 +55,28 @@ public class XxlJobServiceImplTest {
         when(jobInfoMapper.loadById(42)).thenReturn(existing);
 
         Response<String> response = service.update(updateRequest(1), userWithJobGroups("1"));
+
+        assertTrue(response.isSuccess());
+        verify(jobInfoMapper).update(existing);
+    }
+
+    @Test
+    public void updateRejectsMissingJob() {
+        when(jobInfoMapper.loadById(42)).thenReturn(null);
+
+        Response<String> response = service.update(updateRequest(1), userWithJobGroups("1"));
+
+        assertFalse(response.isSuccess());
+        verify(jobInfoMapper, never()).update(any());
+    }
+
+    @Test
+    public void updateAllowsAdministrator() {
+        XxlJobInfo existing = existingJob(2);
+        when(jobInfoMapper.loadById(42)).thenReturn(existing);
+        LoginInfo admin = new LoginInfo("1", "admin", "Admin", null, List.of(Consts.ADMIN_ROLE), List.of(), -1L, null);
+
+        Response<String> response = service.update(updateRequest(1), admin);
 
         assertTrue(response.isSuccess());
         verify(jobInfoMapper).update(existing);
