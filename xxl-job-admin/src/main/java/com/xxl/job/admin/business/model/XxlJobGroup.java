@@ -1,6 +1,6 @@
 package com.xxl.job.admin.business.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.xxl.tool.core.StringTool;
 
 import java.util.ArrayList;
@@ -20,7 +20,7 @@ public class XxlJobGroup {
     private int addressType;        // 执行器地址类型：0=自动注册、1=手动录入
     private String addressList;     // 执行器地址列表，多地址逗号分隔(手动录入)
 
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String accessToken;
     private Date updateTime;
 
