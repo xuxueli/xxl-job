@@ -1,16 +1,22 @@
 package com.xxl.job.admin.business.scheduler.openapi;
 
+import com.xxl.job.admin.business.mapper.XxlJobInfoMapper;
+import com.xxl.job.admin.business.mapper.XxlJobLogMapper;
 import com.xxl.job.admin.business.model.XxlJobGroup;
+import com.xxl.job.admin.business.model.XxlJobInfo;
+import com.xxl.job.admin.business.model.XxlJobLog;
 import com.xxl.job.admin.business.scheduler.config.XxlJobAdminBootstrap;
 import com.xxl.job.core.constant.Const;
 import com.xxl.job.core.openapi.admin.AdminBiz;
 import com.xxl.job.core.openapi.admin.AdminJobBiz;
 import com.xxl.job.core.openapi.admin.dto.CallbackRequest;
+import com.xxl.job.core.openapi.admin.dto.CallbackData;
 import com.xxl.job.core.openapi.admin.dto.JobAddRequest;
 import com.xxl.job.core.openapi.admin.dto.JobOperateRequest;
 import com.xxl.job.core.openapi.admin.dto.JobTriggerRequest;
 import com.xxl.job.core.openapi.admin.dto.JobUpdateRequest;
 import com.xxl.job.core.openapi.admin.dto.RegistryRequest;
+import com.xxl.job.admin.framework.util.I18nUtil;
 import com.xxl.sso.core.annotation.XxlSso;
 import com.xxl.tool.core.StringTool;
 import com.xxl.tool.json.GsonTool;
@@ -31,6 +37,12 @@ public class OpenApiController {
 
     @Resource
     private AdminJobBiz adminJobBiz;
+
+    @Resource
+    private XxlJobInfoMapper xxlJobInfoMapper;
+
+    @Resource
+    private XxlJobLogMapper xxlJobLogMapper;
 
     /**
      * api
@@ -69,38 +81,65 @@ public class OpenApiController {
             switch (uri) {
                 case "callback": {
                     CallbackRequest callbackParam = GsonTool.fromJson(requestBody, CallbackRequest.class);
+                    if (!hasCallbackPermission(xxlJobGroup, callbackParam)) {
+                        return permissionDenied();
+                    }
                     return adminBiz.callback(callbackParam);
                 }
                 case "registry": {
                     RegistryRequest registryParam = GsonTool.fromJson(requestBody, RegistryRequest.class);
+                    if (!appname.equals(registryParam.getRegistryKey())) {
+                        return permissionDenied();
+                    }
                     return adminBiz.registry(registryParam);
                 }
                 case "registryRemove": {
                     RegistryRequest registryParam = GsonTool.fromJson(requestBody, RegistryRequest.class);
+                    if (!appname.equals(registryParam.getRegistryKey())) {
+                        return permissionDenied();
+                    }
                     return adminBiz.registryRemove(registryParam);
                     }
                 case "addJob": {
                     JobAddRequest jobParam = GsonTool.fromJson(requestBody, JobAddRequest.class);
+                    if (jobParam.getJobGroup() != xxlJobGroup.getId()) {
+                        return permissionDenied();
+                    }
                     return adminJobBiz.addJob(jobParam);
                 }
                 case "updateJob": {
                     JobUpdateRequest jobParam = GsonTool.fromJson(requestBody, JobUpdateRequest.class);
+                    if (!hasJobPermission(xxlJobGroup, jobParam.getId())) {
+                        return permissionDenied();
+                    }
                     return adminJobBiz.updateJob(jobParam);
                 }
                 case "removeJob": {
                     JobOperateRequest jobParam = GsonTool.fromJson(requestBody, JobOperateRequest.class);
+                    if (!hasJobPermission(xxlJobGroup, jobParam.getId())) {
+                        return permissionDenied();
+                    }
                     return adminJobBiz.removeJob(jobParam);
                 }
                 case "startJob": {
                     JobOperateRequest jobParam = GsonTool.fromJson(requestBody, JobOperateRequest.class);
+                    if (!hasJobPermission(xxlJobGroup, jobParam.getId())) {
+                        return permissionDenied();
+                    }
                     return adminJobBiz.startJob(jobParam);
                 }
                 case "stopJob": {
                     JobOperateRequest jobParam = GsonTool.fromJson(requestBody, JobOperateRequest.class);
+                    if (!hasJobPermission(xxlJobGroup, jobParam.getId())) {
+                        return permissionDenied();
+                    }
                     return adminJobBiz.stopJob(jobParam);
                 }
                 case "triggerJob": {
                     JobTriggerRequest jobParam = GsonTool.fromJson(requestBody, JobTriggerRequest.class);
+                    if (!hasJobPermission(xxlJobGroup, jobParam.getId())) {
+                        return permissionDenied();
+                    }
                     return adminJobBiz.triggerJob(jobParam);
                 }
                 default:
@@ -110,6 +149,31 @@ public class OpenApiController {
             return Response.ofFail("openapi invoke error: " + e.getMessage());
         }
 
+    }
+
+    private boolean hasJobPermission(XxlJobGroup authenticatedGroup, int jobId) {
+        XxlJobInfo jobInfo = xxlJobInfoMapper.loadById(jobId);
+        return jobInfo != null && jobInfo.getJobGroup() == authenticatedGroup.getId();
+    }
+
+    private boolean hasCallbackPermission(XxlJobGroup authenticatedGroup, CallbackRequest callbackParam) {
+        if (callbackParam.getCallbackList() == null) {
+            return false;
+        }
+        for (CallbackData callbackData : callbackParam.getCallbackList()) {
+            if (callbackData == null) {
+                return false;
+            }
+            XxlJobLog jobLog = xxlJobLogMapper.load(callbackData.getLogId());
+            if (jobLog == null || jobLog.getJobGroup() != authenticatedGroup.getId()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private Response<String> permissionDenied() {
+        return Response.ofFail(I18nUtil.getString("system_permission_limit"));
     }
 
 }
