@@ -1,13 +1,16 @@
 package com.xxl.job.admin.business.scheduler.openapi;
 
 import com.xxl.job.admin.business.mapper.XxlJobInfoMapper;
+import com.xxl.job.admin.business.mapper.XxlJobLogMapper;
 import com.xxl.job.admin.business.model.XxlJobGroup;
 import com.xxl.job.admin.business.model.XxlJobInfo;
+import com.xxl.job.admin.business.model.XxlJobLog;
 import com.xxl.job.admin.business.scheduler.config.XxlJobAdminBootstrap;
 import com.xxl.job.core.constant.Const;
 import com.xxl.job.core.openapi.admin.AdminBiz;
 import com.xxl.job.core.openapi.admin.AdminJobBiz;
 import com.xxl.job.core.openapi.admin.dto.CallbackRequest;
+import com.xxl.job.core.openapi.admin.dto.CallbackData;
 import com.xxl.job.core.openapi.admin.dto.JobAddRequest;
 import com.xxl.job.core.openapi.admin.dto.JobOperateRequest;
 import com.xxl.job.core.openapi.admin.dto.JobTriggerRequest;
@@ -37,6 +40,9 @@ public class OpenApiController {
 
     @Resource
     private XxlJobInfoMapper xxlJobInfoMapper;
+
+    @Resource
+    private XxlJobLogMapper xxlJobLogMapper;
 
     /**
      * api
@@ -75,6 +81,9 @@ public class OpenApiController {
             switch (uri) {
                 case "callback": {
                     CallbackRequest callbackParam = GsonTool.fromJson(requestBody, CallbackRequest.class);
+                    if (!hasCallbackPermission(xxlJobGroup, callbackParam)) {
+                        return permissionDenied();
+                    }
                     return adminBiz.callback(callbackParam);
                 }
                 case "registry": {
@@ -145,6 +154,22 @@ public class OpenApiController {
     private boolean hasJobPermission(XxlJobGroup authenticatedGroup, int jobId) {
         XxlJobInfo jobInfo = xxlJobInfoMapper.loadById(jobId);
         return jobInfo != null && jobInfo.getJobGroup() == authenticatedGroup.getId();
+    }
+
+    private boolean hasCallbackPermission(XxlJobGroup authenticatedGroup, CallbackRequest callbackParam) {
+        if (callbackParam.getCallbackList() == null) {
+            return false;
+        }
+        for (CallbackData callbackData : callbackParam.getCallbackList()) {
+            if (callbackData == null) {
+                return false;
+            }
+            XxlJobLog jobLog = xxlJobLogMapper.load(callbackData.getLogId());
+            if (jobLog == null || jobLog.getJobGroup() != authenticatedGroup.getId()) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private Response<String> permissionDenied() {

@@ -1,14 +1,17 @@
 package com.xxl.job.admin.business.scheduler.openapi;
 
 import com.xxl.job.admin.business.mapper.XxlJobInfoMapper;
+import com.xxl.job.admin.business.mapper.XxlJobLogMapper;
 import com.xxl.job.admin.business.model.XxlJobGroup;
 import com.xxl.job.admin.business.model.XxlJobInfo;
+import com.xxl.job.admin.business.model.XxlJobLog;
 import com.xxl.job.admin.business.scheduler.config.XxlJobAdminBootstrap;
 import com.xxl.job.admin.business.scheduler.thread.JobRegistryHelper;
 import com.xxl.job.core.constant.Const;
 import com.xxl.job.core.openapi.admin.AdminBiz;
 import com.xxl.job.core.openapi.admin.AdminJobBiz;
 import com.xxl.job.core.openapi.admin.dto.JobOperateRequest;
+import com.xxl.job.core.openapi.admin.dto.CallbackRequest;
 import com.xxl.job.core.openapi.admin.dto.RegistryRequest;
 import com.xxl.tool.response.Response;
 import org.junit.jupiter.api.AfterEach;
@@ -37,6 +40,7 @@ public class OpenApiControllerTest {
     private AdminJobBiz adminJobBiz;
     private AdminBiz adminBiz;
     private XxlJobInfoMapper jobInfoMapper;
+    private XxlJobLogMapper jobLogMapper;
     private OpenApiController controller;
     private MockedStatic<XxlJobAdminBootstrap> bootstrapMock;
 
@@ -45,12 +49,17 @@ public class OpenApiControllerTest {
         adminJobBiz = mock(AdminJobBiz.class);
         adminBiz = mock(AdminBiz.class);
         jobInfoMapper = mock(XxlJobInfoMapper.class);
+        jobLogMapper = mock(XxlJobLogMapper.class);
         controller = new OpenApiController();
         ReflectionTestUtils.setField(controller, "adminBiz", adminBiz);
         ReflectionTestUtils.setField(controller, "adminJobBiz", adminJobBiz);
         Field mapperField = ReflectionUtils.findField(OpenApiController.class, "xxlJobInfoMapper");
         if (mapperField != null) {
             ReflectionTestUtils.setField(controller, "xxlJobInfoMapper", jobInfoMapper);
+        }
+        Field logMapperField = ReflectionUtils.findField(OpenApiController.class, "xxlJobLogMapper");
+        if (logMapperField != null) {
+            ReflectionTestUtils.setField(controller, "xxlJobLogMapper", jobLogMapper);
         }
 
         XxlJobGroup authenticatedGroup = new XxlJobGroup();
@@ -135,6 +144,55 @@ public class OpenApiControllerTest {
         verifyNoInteractions(adminJobBiz, jobInfoMapper);
     }
 
+    @Test
+    public void callbackRejectsAnotherGroup() {
+        when(jobLogMapper.load(42)).thenReturn(jobLog(2));
+        when(adminBiz.callback(any())).thenReturn(Response.ofSuccess());
+        String body = "{\"callbackList\":[{\"logId\":42,\"logDateTime\":1,\"handleCode\":200,\"handleMsg\":\"done\"}]}";
+
+        Response<?> response = (Response<?>) controller.api(request(body), "callback", "token-one", "group-one", body);
+
+        assertFalse(response.isSuccess());
+        verifyNoInteractions(adminBiz);
+    }
+
+    @Test
+    public void callbackRejectsMissingLog() {
+        when(jobLogMapper.load(42)).thenReturn(null);
+        when(adminBiz.callback(any())).thenReturn(Response.ofSuccess());
+        String body = "{\"callbackList\":[{\"logId\":42,\"logDateTime\":1,\"handleCode\":200,\"handleMsg\":\"done\"}]}";
+
+        Response<?> response = (Response<?>) controller.api(request(body), "callback", "token-one", "group-one", body);
+
+        assertFalse(response.isSuccess());
+        verifyNoInteractions(adminBiz);
+    }
+
+    @Test
+    public void callbackRejectsMixedGroupBatch() {
+        when(jobLogMapper.load(41)).thenReturn(jobLog(1));
+        when(jobLogMapper.load(42)).thenReturn(jobLog(2));
+        when(adminBiz.callback(any())).thenReturn(Response.ofSuccess());
+        String body = "{\"callbackList\":[{\"logId\":41,\"logDateTime\":1,\"handleCode\":200},{\"logId\":42,\"logDateTime\":2,\"handleCode\":200}]}";
+
+        Response<?> response = (Response<?>) controller.api(request(body), "callback", "token-one", "group-one", body);
+
+        assertFalse(response.isSuccess());
+        verifyNoInteractions(adminBiz);
+    }
+
+    @Test
+    public void callbackAllowsAuthenticatedGroup() {
+        when(jobLogMapper.load(42)).thenReturn(jobLog(1));
+        when(adminBiz.callback(any())).thenReturn(Response.ofSuccess());
+        String body = "{\"callbackList\":[{\"logId\":42,\"logDateTime\":1,\"handleCode\":200,\"handleMsg\":\"done\"}]}";
+
+        Response<?> response = (Response<?>) controller.api(request(body), "callback", "token-one", "group-one", body);
+
+        assertTrue(response.isSuccess());
+        verify(adminBiz).callback(any(CallbackRequest.class));
+    }
+
     @ParameterizedTest
     @ValueSource(strings = {"registry", "registryRemove"})
     public void registryOperationsRejectAnotherGroup(String uri) {
@@ -170,6 +228,12 @@ public class OpenApiControllerTest {
             verify(adminBiz).registryRemove(any(RegistryRequest.class));
         }
         verifyNoInteractions(adminJobBiz, jobInfoMapper);
+    }
+
+    private static XxlJobLog jobLog(int jobGroup) {
+        XxlJobLog log = new XxlJobLog();
+        log.setJobGroup(jobGroup);
+        return log;
     }
 
     private static MockHttpServletRequest request(String body) {
