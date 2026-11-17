@@ -19,7 +19,9 @@ public class XxlJobGroupTest {
         String json = new ObjectMapper().writeValueAsString(group);
 
         assertTrue(json.contains("executor-one"));
+        assertFalse(json.contains("accessToken"));
         assertFalse(json.contains("secret-token"));
+        assertFalse(group.toString().contains("accessToken"));
         assertFalse(group.toString().contains("secret-token"));
     }
 
