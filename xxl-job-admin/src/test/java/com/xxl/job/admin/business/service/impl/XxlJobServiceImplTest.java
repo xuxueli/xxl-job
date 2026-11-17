@@ -14,6 +14,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import java.util.List;
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -59,6 +60,18 @@ public class XxlJobServiceImplTest {
 
         assertFalse(response.isSuccess());
         verify(jobInfoMapper, never()).update(any());
+    }
+
+    @Test
+    public void updateAllowsAuthorizedTargetGroupChange() {
+        XxlJobInfo existing = existingJob(1);
+        when(jobInfoMapper.loadById(42)).thenReturn(existing);
+
+        Response<String> response = service.update(updateRequest(2), userWithJobGroups("1,2"));
+
+        assertTrue(response.isSuccess());
+        assertEquals(2, existing.getJobGroup());
+        verify(jobInfoMapper).update(existing);
     }
 
     @Test
