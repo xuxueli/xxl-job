@@ -275,6 +275,11 @@ public class XxlJobServiceImpl implements XxlJobService {
 			return Response.ofFail ( (I18nUtil.getString("jobinfo_field_id")+I18nUtil.getString("system_not_found")) );
 		}
 
+		// valid jobGroup permission
+		if (!JobGroupPermissionUtil.hasJobGroupPermission(loginInfo, exists_jobInfo.getJobGroup())) {
+			return Response.ofFail(I18nUtil.getString("system_permission_limit"));
+		}
+
 		// next trigger time (5s后生效，避开预读周期)
 		long nextTriggerTime = exists_jobInfo.getTriggerNextTime();
 		boolean scheduleDataNotChanged = jobInfo.getScheduleType().equals(exists_jobInfo.getScheduleType())
