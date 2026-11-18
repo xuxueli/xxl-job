@@ -25,7 +25,7 @@
 
 	<div class="dialog"> 
 	    <h1>System Error</h1>
-		<p><#if exceptionMsg?exists>${exceptionMsg}<#else>Unknown Error.</#if></p>
+		<p><#if exceptionMsg?exists>${exceptionMsg?html}<#else>Unknown Error.</#if></p>
 		<a href="javascript:window.location.href='${request.contextPath}/'" id="go_back" >Back</a>
 	    </p> 
 	</div>
