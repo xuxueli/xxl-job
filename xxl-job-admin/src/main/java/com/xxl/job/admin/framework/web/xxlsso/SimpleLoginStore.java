@@ -31,12 +31,19 @@ public class SimpleLoginStore implements LoginStore {
 
     @Override
     public Response<String> set(LoginInfo loginInfo) {
+        if (loginInfo == null) {
+            return Response.ofFail("userId invalid.");
+        }
+        Integer userId = parsePositiveUserId(loginInfo.getUserId());
+        if (userId == null) {
+            return Response.ofFail("userId invalid.");
+        }
 
         // parse token-signature
         String token_sign = loginInfo.getSignature();
 
         // write token by UserId
-        int ret = xxlJobUserMapper.updateToken(Integer.parseInt(loginInfo.getUserId()), token_sign);
+        int ret = xxlJobUserMapper.updateToken(userId, token_sign);
         return ret > 0 ? Response.ofSuccess() : Response.ofFail("token set fail");
     }
 
@@ -47,8 +54,13 @@ public class SimpleLoginStore implements LoginStore {
 
     @Override
     public Response<String> remove(String userId) {
+        Integer parsedUserId = parsePositiveUserId(userId);
+        if (parsedUserId == null) {
+            return Response.ofFail("token remove fail");
+        }
+
         // delete token-signature
-        int ret = xxlJobUserMapper.updateToken(Integer.parseInt(userId), "");
+        int ret = xxlJobUserMapper.updateToken(parsedUserId, "");
         return ret > 0 ? Response.ofSuccess() : Response.ofFail("token remove fail");
     }
 
@@ -57,9 +69,13 @@ public class SimpleLoginStore implements LoginStore {
      */
     @Override
     public Response<LoginInfo> get(String userId) {
+        Integer parsedUserId = parsePositiveUserId(userId);
+        if (parsedUserId == null) {
+            return Response.ofFail("userId invalid.");
+        }
 
         // load login-user
-        XxlJobUser user = xxlJobUserMapper.loadById(Integer.parseInt(userId));
+        XxlJobUser user = xxlJobUserMapper.loadById(parsedUserId);
         if (user == null) {
             return Response.ofFail("userId invalid.");
         }
@@ -79,6 +95,14 @@ public class SimpleLoginStore implements LoginStore {
         loginInfo.setExtraInfo(extraInfo);
 
         return Response.ofSuccess(loginInfo);
+    }
+
+    private static Integer parsePositiveUserId(String userId) {
+        if (userId == null || !userId.matches("^[1-9]\\d{0,9}$")) {
+            return null;
+        }
+        long parsed = Long.parseLong(userId);
+        return parsed <= Integer.MAX_VALUE ? (int) parsed : null;
     }
 
 }

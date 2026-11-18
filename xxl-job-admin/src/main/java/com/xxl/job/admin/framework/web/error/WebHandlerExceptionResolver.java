@@ -38,12 +38,14 @@ public class WebHandlerExceptionResolver implements HandlerExceptionResolver {
 			isJson = method.getMethodAnnotation(ResponseBody.class)!=null;
 		}
 
+		// Avoid leaking raw exception details (including user-controlled input) to clients.
+		String safeClientMsg = (ex instanceof XxlJobException) ? ex.getMessage() : "System Error.";
+
 		// process error
 		ModelAndView mv = new ModelAndView();
 		if (isJson) {
 			try {
-				// errorMsg
-				String errorMsg = GsonTool.toJson(Response.ofFail(ex.toString()));
+				String errorMsg = GsonTool.toJson(Response.ofFail(safeClientMsg));
 
 				// write response
 				response.setStatus(HttpServletResponse.SC_OK);
@@ -55,7 +57,7 @@ public class WebHandlerExceptionResolver implements HandlerExceptionResolver {
 			return mv;
 		} else {
 
-			mv.addObject("exceptionMsg", ex.toString());
+			mv.addObject("exceptionMsg", safeClientMsg);
 			mv.setViewName("framework/common/common.errorpage");
 			return mv;
 		}
